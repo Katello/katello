@@ -1,0 +1,33 @@
+= include_javascripts :provider_edit
+
+%h2
+  = _("Provider: ") + @provider.name
+%h3
+  = _("Edit Product")
+
+%fieldset
+  .grid_2.ra
+    %label #{_("Name")}:
+  .grid_5.la.editable.edit_providername#product_name{'name' => 'product[name]', :url => provider_product_path(@provider.id)} #{@product.name}
+
+%fieldset
+  .grid_2.ra
+    %label #{_("Description")}:
+  .grid_5.la.editable.edit_textarea{:style => "word-wrap: break-word;", 'name' => 'product[description]', :url => provider_product_path(@provider.id)}<> #{@product.description}
+
+/ A product url isn't currently available; therefore, it is stubbed out and cannot be edited. Custom repo discover in pulp will be required to support this.
+%fieldset
+  .grid_2.ra
+    %label #{_("URL")}:
+  .grid_5.la.editable
+    #{_("Click to edit")}
+/  .grid_5.la.editable.edit_textfield{'name' => 'product[feed]', :url => provider_product_path(@provider.id)}
+
+/ Type is not currently available
+/%fieldset
+/  .grid_2.ra
+/    %label #{_("Type")}:
+/  .grid_5.la #{@provider[:provider_type]}
+
+%a.remove_item.product_delete{"data-url"=>provider_product_path(@provider.id, @product.id), "data-forward"=>products_repos_provider_path(@provider.id), "data-confirm-text"=>_('Are you sure?')}
+  = _("Remove Product")

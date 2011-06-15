@@ -1,0 +1,2 @@
+module SyncPlansHelper
+end

@@ -1,0 +1,28 @@
+= include_javascripts :user_edit
+%h3 #{_("New User")}
+#new_user
+  .grid_8#new_user
+    %fieldset
+      .grid_2.ra
+        = label :user, :username, _("Username")
+      .grid_5.la
+        = text_field :user, :username, :id=>"username_field", :tabindex => 1
+    %fieldset        
+      .grid_2.ra
+        = label :user, :username, _("Password")
+      .grid_5.la
+        = text_field :user, :username, :id=>"password_field", :type=>"password", :tabindex => 2
+    .grid_6.la.prefix_2
+      #password_meter             
+    %fieldset
+      .grid_2.ra
+        = label :user, :username, _("Confirm")
+      .grid_5.la
+        = text_field :user, :username, :id=>"confirm_field", :type=>"password", :tabindex => 3
+      .grid_2.ra
+      .grid_5.la
+        #password_conflict
+      
+  .grid_6.la.prefix_2
+    #save_user.verify_password.button{:tabindex => 4}
+      #{_("Save User")}

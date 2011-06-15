@@ -1,0 +1,24 @@
+
+%h2 #{_("Create Environment")}
+.clear
+  &nbsp;
+= form_tag organization_environments_path(@organization.name), :method => "post" do |f|
+  %fieldset.clearfix
+    %b
+      %label.grid_2 #{_("Name")}:
+    .grid_5
+      = text_field_tag :name, params[:name], :class=>'grid_5', :tabindex => 1
+  %fieldset.clearfix
+    %b
+      %label.grid_2
+        #{_("Description")}:
+    .grid_5
+      = text_area_tag :description, params[:description], :class=>'grid_5', :tabindex => 2
+  %fieldset.clearfix
+    %b
+      %label.grid_2 #{_("Prior Environment")}:
+    .grid_5
+      = select_tag "prior", options_for_select(@env_labels, @selected),{:include_blank => _("Locker"), :id => "environment_prior", :class => 'grid_5', :tabindex => 3}
+  .grid_7
+    .button.dialogbutton.environment_create{:class=>"fr", 'data-url'=>edit_organization_path(@organization.name), :tabindex => 4}
+      #{_("Create")}

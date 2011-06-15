@@ -1,0 +1,43 @@
+!!!
+%html
+  %head
+    %meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
+    %title
+      = project_name
+      = "-"
+      = content_for?(:title) ? yield(:title) : default_title
+
+    = include_stylesheets  :common 
+    = include_javascripts  :common
+    = csrf_meta_tag
+    = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery?
+
+    / [if lt IE 9]
+      = include_javascripts  :html5
+
+  - if controller.respond_to?(:section_id)
+    - section_id = controller.section_id
+  - else
+    - section_id = "generic"
+  %body{:id => controller.section_id}
+    = render :partial => '/layouts/ajax_notices'
+    = render :partial => '/layouts/notification'
+    %div#head
+      %header.container_16
+        = render :partial => '/layouts/header'
+    - if not current_user
+      #maincontent.container_16
+        #formwindow
+          = yield
+    - else
+      #subheader
+        %nav.container_16.tab_nav
+          = render_navigation(:expand_all => true, :level => 1)
+      #maincontent
+        %nav.subnav.container_16
+          = render_navigation(:expand_all => true, :level => 2)      
+        .inner.container_16
+          = yield
+    %footer
+      = render :partial => "layouts/footer"
+      = render :partial => "/common/common_i18n"

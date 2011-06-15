@@ -1,0 +1,91 @@
+#!/usr/bin/python
+#
+# Katello Repos actions
+# Copyright (c) 2010 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public License,
+# version 2 (GPLv2). There is NO WARRANTY for this software, express or
+# implied, including the implied warranties of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. You should have received a copy of GPLv2
+# along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+#
+# Red Hat trademarks are not licensed under GPLv2. No permission is
+# granted to use or replicate Red Hat trademarks that are incorporated
+# in this software or its documentation.
+#
+
+from gettext import gettext as _
+from katello.client.api.package import PackageAPI
+from katello.client.api.environment import EnvironmentAPI
+from katello.client.api.product import ProductAPI
+from katello.client.api.repo import RepoAPI
+from katello.client.api.provider import ProviderAPI
+from katello.client.api.template import TemplateAPI
+from pprint import pprint
+
+
+def get_environment(orgName, envName=None):
+    environment_api = EnvironmentAPI()
+  
+    if envName == None:
+        env = environment_api.locker_by_org(orgName)
+        envName = "locker"
+    else:
+        env = environment_api.environment_by_name(orgName, envName)
+        
+    if env == None:
+        print _("Could not find environment [ %s ] within organization [ %s ]") % (envName, orgName)
+    return env
+
+
+def get_product(orgName, prodName):
+    product_api = ProductAPI()
+  
+    prov = product_api.product_by_name(orgName, prodName)
+    if prov == None:
+        print _("Could not find product [ %s ] within organization [ %s ]") % (prodName, orgName)
+    return prov
+    
+    
+def get_repo(orgName, prodName, repoName, envName=None):
+    repo_api = RepoAPI()
+  
+    env  = get_environment(orgName, envName)
+    prod = get_product(orgName, prodName)
+    
+    if env == None or prod == None:
+        return None
+  
+    repos = repo_api.repos_by_org_env_product(orgName, env["id"], prod["cp_id"])
+    for repo in repos:
+        if repo["name"] == repoName:
+            return repo
+    
+    print _("Could not find repository [ %s ] within organization [ %s ], product [ %s ] and environemnt [ %s ]") % (repoName, orgName, prodName, env["name"])
+    return None
+
+
+def get_provider(orgName, provName):
+    provider_api = ProviderAPI()
+  
+    prov = provider_api.provider_by_name(orgName, provName)
+    if prov == None:
+        print _("Could not find provider [ %s ] within organization [ %s ]") % (provName, orgName)
+    return prov
+    
+    
+def get_template(orgName, envName, tplName):
+    template_api = TemplateAPI()
+    
+    env = get_environment(orgName, envName)
+    if env == None:
+        return None
+        
+    tpl = template_api.template_by_name(env["id"], tplName)
+    if tpl == None:
+        print _("Could not find template [ %s ] within environment [ %s ]") % (tplName, env["name"])
+    return tpl
+
+    
+    

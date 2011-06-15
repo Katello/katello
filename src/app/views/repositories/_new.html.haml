@@ -1,0 +1,20 @@
+%h2
+  = _("Product: ") + @product.name
+%h3
+  = _("Create Repository")
+.clear
+  &nbsp;
+= form_tag provider_product_repositories_path(@provider.id, @product.id), :method => "post" do |f|
+  %fieldset.clearfix
+    .grid_2.ra
+      = label :repo, :name, _("Name")
+    .grid_5.la
+      = text_field :repo, :name, :id=>"repo_name_field"
+  %fieldset.clearfix
+    .grid_2.ra
+      = label :repo, :feed, _("URL")
+    .grid_5.la
+      = text_field :repo, :feed, :id=>"repo_url_field"
+  .grid_6.ra
+    .button.dialogbutton.repo_create#save_repository_button{:style=>"float:right;", 'data-url'=>products_repos_provider_path(@provider.id), "data-product_id" => @product.id}
+      #{_("Create")}

@@ -1,0 +1,17 @@
+%ul#search_list
+  - unless @search_histories.nil?
+    - for i in (0..history_entries-1)
+      %li.item
+        %a.recent{:href => search_string(@search_histories[i])} #{@search_histories[i].params}
+
+  - unless @search_favorites.nil?
+    - for i in (0..favorite_entries-1)
+      %li.item
+        %a.favorite{:href => search_string(@search_favorites[i])} #{@search_favorites[i].params}
+        .delete#search_favorite_destroy{"data-id" => @search_favorites[i].id, "data-url" => destroy_favorite_search_index_path(@search_favorites[i].id)}
+
+%ul
+  %li
+    %a.add#search_favorite_save{:href => "#", "data-url" => url_for(favorite_search_index_path())} #{_("Save as Favorite")}
+  %li
+    %a.clear{:href => "?search="} #{_("Clear the Search")}

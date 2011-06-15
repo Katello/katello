@@ -1,0 +1,1039 @@
+@charset "UTF-8";
+@import "base";
+@import "compass/css3/gradient";
+
+html {
+}
+
+body {
+  background:  #FFF url(/images/outer-background.png) repeat-x top;
+}
+
+a {
+  color: $linkfg;
+  text-decoration: none;
+  &:hover, &:focus {
+    color: lighten($linkfg, 10%);
+    text-decoration: underline;
+  }
+  &:active {
+    color: darken($linkfg, 20%);
+  }
+}
+
+strong {
+    font-weight: bold;
+}
+
+/* TEXT ENTRIES */
+input,textarea {
+  @include inset-box-shadow(0,1px,1px,rgba(0, 0, 0, 0.2));
+  border: 1px solid darken($strokecl,20%);
+  background-color: #f0f0f0;
+  background: #f0f0f0 url(/images/input-bg.png) repeat-x 0 0;
+  padding: 4px;
+  margin: 0;
+  &:focus {
+    border-width: 2px;
+    padding: 3px;
+    background-color: #fff;
+    outline: none;
+  }
+  &.disabled, &[disabled] {
+    opacity: 0.4;
+  }
+}
+  input[type="search"] {
+    @include border-radius(20px);
+    padding: 4px 30px 4px 10px;
+    &:focus {
+      padding: 3px 29px 3px 9px;
+    }
+  }
+  /* CHECKBOXES and RADIOBUTTONS*/
+  input[type="checkbox"],input[type="radio"] {
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    padding: 2px;
+    &:focus {
+      border-width: 1px;
+      padding: 1px;
+    }
+  }
+
+/* FILE INPUT */
+input[type="file"] {
+  /* FIXME */
+}
+
+/* compensate grid_* for padding+border of the inputboxes and textareas */
+input.grid_1 { width: 30px !important; }
+input.grid_2 { width: 90px !important; }
+  .grid_2 input[type="file"] { width: 90px; }
+input.grid_3 { width: 150px !important; }
+  .grid_3 input[type="search"] { width: 118px; }
+input.grid_4 { width: 210px !important; }
+input.grid_5 { width: 270px !important; }
+
+
+/* BUTTONS */
+input[type='submit'],button,.button {
+  font-family: $screenfont; /* for some reason ff3.6 won't inherit from body */
+  font-size: 10px;
+  display: inline-block;
+  background: -moz-linear-gradient(top, #f9f9f9, #f0f0f0, #e5e5e5, #e9e9e9);
+  background: -webkit-gradient(linear, left top, left bottom, from(#f9f9f9), color-stop(0.9, #e5e5e5), to(#e9e9e9));
+  @include no-box-shadow;
+  border: 1px solid darken($strokecl, 20%);
+  color: #221e1f;
+  cursor: pointer;
+  margin: 4px;
+  padding: 4px 12px;
+  @include border-radius(5px);
+  @include text-shadow(0, 1px, 0, #fff);
+   min-height: 14px;
+  .nomargin {
+    margin: 0;
+  }
+  &:hover {
+    background: -moz-linear-gradient(top, #fff, #fff, #cfcfcf);
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(0.6, #fff), to(#cfcfcf));
+    @include box-shadow(0, 1px, 2px, rgba(0,0,0,0.5));
+    text-decoration: none;
+    color: black;
+  }
+  &:active {
+    background: -moz-linear-gradient(top, #c2c3c0, #e4e5e4);
+    background: -webkit-gradient(linear, left top, left bottom, from(#c2c3c0), to(#e4e5e4));
+    @include no-box-shadow;
+    padding: 5px 12px 3px;
+    text-decoration: none;
+  }
+  &:focus {
+    text-decoration: none;
+    color: #000;
+    border-width: 2px;
+    padding: 3px 11px;
+  }
+  &.dialogbutton {
+    float: right;
+    margin-left: 3px;
+    margin: 40px 4px 4px;
+  }
+  &.formbutton {
+    display: inline-block;
+    margin-left: 3px;
+    margin: 40px 4px 4px;
+  }
+  &.actionlink {
+    margin: 40px 0 0;
+  }
+  &.disabled, &[disabled] {
+    cursor: default;
+    background: transparent;
+    opacity: 0.4;
+    /* @include no-box-shadow; */
+    &:hover {
+      background: transparent;
+      @include no-box-shadow;
+    }
+  }
+  &.iconbutton {
+    display: inline-block;
+  }
+  &.tiny {
+    padding: 4px;
+    margin: 0;
+    &:active, &:focus {
+      margin: 0;
+      padding: 3px;
+    }
+  }
+}
+
+.clear {
+  clear: both;
+}
+
+.wrap { /* wrapper around floated elements */
+  overflow: hidden;
+  margin-bottom: 2em;
+}
+
+.nomargin {
+  margin: none;
+}
+
+/* text align left */
+.la { text-align: left; }
+/* text align right */
+.ra { text-align: right; }
+/* text align right */
+.ca { text-align: center; }
+/* float  right */
+.fr { float: right; }
+/* float left */
+.fl { float: left; }
+/* "float", center */
+.fc { display: inline-block; margin: 0 auto; }
+
+.twocolumn {
+  @include column-count(2);
+  @include column-gap(10px);
+}
+
+.placeholder { margin-bottom: 2em; }
+.disabled { opacity: 0.4; cursor: default; }
+.nomargin { margin: 0; }
+
+div,section,fieldset {
+  display: block;
+}
+
+/* TABLES */
+
+table {
+  border-collapse: collapse;
+  border: 1px solid $strokecl !important;
+  margin: 10px 0 40px; width: 100%;
+  font-size: 95%;
+  thead {
+    background-color: lighten($strokecl,25%);
+    th {
+      font-size: 95%;
+      padding: 2px 6px;
+      font-family: $headlinefont;
+      font-weight: bold;
+      color: lighten($headercl,20%);
+      text-transform: uppercase;
+      border-right: 1px dotted darken($strokecl,20%);
+        &:last-child {
+           border-right: 0 none;
+        }
+      a, a:hover {
+        display: block;
+        margin: 0;
+        color: inherit;
+        text-decoration: none;
+        &.active {
+          &.sortable {
+            display: inline-block;
+            padding-right: 20px;
+          }
+          &.desc {
+            background: url(/images/order-desc.png) no-repeat center right;
+          }
+          &.asc {
+            background: url(/images/order-asc.png) no-repeat center right;
+          }
+        }
+      }
+    }
+  }
+  td {
+    padding: 4px;
+    vertical-align: top;
+    min-height: 16px;
+  }
+  &.noborder {
+    border: none;
+    thead {
+      background-color: transparent;
+      th {
+        border: none;
+        span {
+          color: lighten($headercl,30%);
+        }
+      }
+    }
+    td {
+      color: #888;
+      .percentBlock {
+        border:1px solid #909090;
+        padding: 0;
+        width:100px;
+        font-size: 9px;
+        text-align: center;
+        color: #555;
+        .percentBlockInner {
+        }
+        .gradGreen {
+          background-color: $goodcl;
+        }
+      }
+      .min {
+        background: url(/images/arrow-min.png) no-repeat top center;
+        float:left;
+        padding-top:5px;
+        width:50%;
+      }
+      .max {
+        background: url(/images/arrow-max.png) no-repeat top center;
+        float:right;
+        padding-top:5px;
+        width:50%;
+      }
+    }
+  }
+  &.gap {
+    margin-bottom: 7em;
+  }
+}
+
+.action {
+  background: url(/images/icons/action-icons.png) no-repeat 0 0;
+  &:hover {
+    background: url(/images/icons/action-icons.png) no-repeat 0 0;
+  }
+  &:active {
+    background: url(/images/icons/action-icons.png) no-repeat 0 0;
+  }
+}
+
+.actionsidebar {
+  border-right: 1px solid darken($footerbg, 10%);
+  width: 159px !important;
+  img {
+    margin: 7px 0px 0px 0px;
+  }
+  dt {
+    background-color: $footerbg;
+    border-bottom: 1px solid darken($footerbg, 10%);
+    border-top: 1px solid darken($footerbg, 10%);
+    color: $headercl;
+    font-family: $headlinefont;
+    font-size: 110%;
+    font-weight: bold;
+    margin: 3px 0 20px;
+    padding:14px 10px 12px;
+    text-transform: uppercase;
+  }
+  dd {
+    margin: 0 0 0 10px;
+    font-size: 110%;
+    position: relative;
+    a {
+      display: block;
+      padding: 4px 4px 4px 20px;
+      &.selected {
+        background: url("/images/actionsidebar-bullet.png") no-repeat left center;
+        font-weight: bold;
+        color: $kselected;
+      }
+    }
+    h5 {
+      margin: 3em 0 .5em 0;
+      &:first-child {
+        margin: 0 0 .5em 0;
+      }
+    }
+    ul {
+      display: block;
+      li {
+        display: block;
+        margin: 0;
+        padding: 0 0 0 16px;
+        position: relative;
+      }
+    }
+  }
+  form.buttononly {
+    display: inline-block;
+  }
+  input[type='submit'].icon {
+    border: none;
+    background: transparent;
+    font-size: 100%;
+    padding: 0;
+    &:hover {
+      @include no-box-shadow;
+      color: $kselected;
+      &[disabled] {
+        color: #000;
+      }
+    }
+  }
+  span {
+          display: block;
+          position: absolute;
+          width: 16px; height: 16px;
+          left: 0; top: 50%; margin-top: -8px;
+          background: url(/images/icons/action-icons.png) no-repeat 0 0;
+  }
+  .edit span { background-position: -16px 0;}
+  .delete span { background-position: -32px 0;}
+  .rename span { background-position: -80px 0;}
+  .copy span { background-position: -48px 0;}
+  .build span { background-position: -64px 0;}
+  .add span { background-position: -48px 0;}
+  label {
+    font-weight: normal;
+  }
+}
+
+.actions {
+  span {
+          display: inline-block;
+          position: relative;
+          width: 16px; height: 16px;
+          margin: 2px 2px 0px 6px;
+          background: url(/images/icons/action-icons.png) no-repeat 0 0;
+          float: left;
+    &.edit  { background-position: -16px 0;}
+    &.delete  { background-position: -32px 0;}
+    &.rename  { background-position: -80px 0;}
+    &.copy  { background-position: -48px 0;}
+    &.build  { background-position: -64px 0;}
+    &.add  { background-position: -48px 0;}
+    &:first-child  { margin-left: 2px; }
+  }
+  label {
+    font-weight: normal;
+    float: left;
+    border-right: 2px solid #BEBEBE;
+    padding-right: 6px;
+    &:last-child {
+      border-right: none 0;
+    }
+  }
+  /* BUTTONS */
+  input[type='submit'],button,.button {
+    margin: 0px 4px 4px;
+  }
+}
+
+/* ICONS */
+
+img.icon {
+  width: 16px; height: 16px;
+  vertical-align: middle;
+  background: url(/images/icons/statusicons.png) no-repeat 0 0;
+  &.large {
+    width: 48px; height: 16px;
+  }
+  &.yes { background-position: -16px 0; }
+  &.no { background-position: -32px 0; }
+  &.platform {
+    background: url(/images/icons/platformicons.png) no-repeat 0 0;
+    &.rhel {
+      background-position: 0 0;
+    }
+  }
+}
+
+#notification {
+  &>div {
+    padding: 10px;
+    @include border-radius(5px);
+    margin-bottom: 2em;
+    ul {
+      display: block;
+      margin: 0;
+      li {
+        display: block;
+        margin: 0;
+      }
+    }
+  }
+  .success {
+    background-color: lighten($goodcl,40%);
+    border: 1px solid $goodcl;
+  }
+  .error {
+    background-color: lighten($badcl,40%);
+    border: 1px solid $badcl;
+  }
+  .close {
+    display: block;
+    position: absolute;
+    width: 16px; height: 16px;
+    top: 0; right: 0;
+    background: url(/images/icons/close.png) no-repeat 0 0;
+    cursor: pointer;
+  }
+}
+
+ul.block {
+  display: block;
+  margin: 0;
+  li {
+    display: block;
+    margin: 0;
+  }
+}
+
+#head {
+    font-size: 12px;
+    padding: 5px 0 0 0;
+    overflow: hidden;
+    @include text-shadow(0, 1px, 0, #000);
+    height: 40px;
+    header {
+      display: block;
+      ul {
+        margin-top: 9px;
+        display: inline-block;
+        float: right;
+        li {
+          display: inline-block;
+          margin: 0 5px;
+          &.hello {
+            margin-left: 30px;
+          }
+          a {
+            color: #fff;
+          }
+        }
+      }
+      h1 {
+        font-size: 14px;
+        color: #FFF;
+        margin: 7px 0 0 8px;
+        float: left;
+      }
+      img {
+        margin: 6px;
+        float: left;
+        &:first-child {
+          margin-top: 2px !important;
+          margin-left: 0 !important;
+        }
+        &:last-child {
+          margin: 0;
+        }
+      }    
+      #loading {
+        display: none; 
+        position: relative;
+        width: 16px;
+        padding: 8px 0 0 0;
+      }
+    }
+    
+    /* HEADER BUTTONS */
+    input[type='submit'],button,.button {
+      font-family: $screenfont;
+      font-weight: bold;
+      font-size: 10px;
+      display: inline-block;
+      background: -moz-linear-gradient(top, lighten($kprimary, 20%), $kprimary );
+      background: -webkit-gradient(linear, left top, left bottom, from(lighten($kprimary, 20%)),  to($kprimary));
+      @include no-box-shadow;
+      border: 0 none;
+      color: #FFF;
+      cursor: pointer;
+      @include border-radius(5px);
+      @include text-shadow(0, 1px, 0, #000);
+       min-height: 14px;
+      .nomargin {
+        margin: 0;
+      }
+      &:hover {
+        background: -moz-linear-gradient(top, lighten($kprimary, 30%), lighten($kprimary, 20%));
+        background: -webkit-gradient(linear, left top, left bottom, from(lighten($kprimary, 30%)), to(lighten($kprimary, 20%)));
+        @include box-shadow(0, 1px, 2px, rgba(0,0,0,0.5));
+        text-decoration: none;
+        color: #fff;
+      }
+      &:active {
+        background: -moz-linear-gradient(top, lighten($kprimary, 30%), lighten($kprimary, 20%));
+        background: -webkit-gradient(linear, left top, left bottom, from(lighten($kprimary, 30%)), to(lighten($kprimary, 20%)));
+        @include no-box-shadow;
+        text-decoration: none;
+        @include text-shadow(0, 2px, 2px, #000);
+      }
+      &:focus {
+        text-decoration: none;
+        color: #FFF;
+      }
+      &.disabled, &[disabled] {
+        cursor: default;
+        background: transparent;
+        opacity: 0.4;
+        /* @include no-box-shadow; */
+        &:hover {
+          background: transparent;
+          @include no-box-shadow;
+        }
+      }
+    }
+}
+
+#subheader {
+  position: relative;
+  min-height: 62px;
+  height: 62px;
+  #s {
+    font-size: 80%;
+    text-align: right;
+    overflow: hidden;
+    padding: 10px 0 0;
+    p {
+      margin: 0;
+    }
+    div {
+      position: relative;
+      margin-bottom: 0;
+      button {
+        position: absolute;
+        width: 16px; height: 16px;
+        text-indent: -200em;
+        right: 8px; top: 50%;
+        margin: -8px 0 0;
+        background-position: 0 0;
+        border: none;
+        padding: 0;
+        &:hover {
+            @include no-box-shadow;
+        }
+      }
+      input[type="search"] {
+        border-color: $headerbg;
+        width: 80%;
+      }
+    }
+    a {
+      color: #fff;
+      margin-right: 10px;
+    }
+  }
+}
+
+nav {
+  &.tab_nav { /* main tabs navigation */
+    display: block;
+    font-weight: bold;
+    font-family: $headlinefont;
+    font-size: 125%;
+    &>ul {
+      display: block;
+      position: absolute;
+      bottom: 0;
+      &>li {
+        display: inline-block;
+        margin: 0 4px 0 0;
+        padding: 0;
+        color: #888;
+        background-color: #ddd;
+        background: -moz-linear-gradient(top, #fff, #ddd 2px, #ddd 70%, lighten($strokecl, 10%));
+        background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(lighten($strokecl,10%)), color-stop(.01, #ddd), color-stop(.7,#ddd));
+        border: 1px solid $strokecl;
+        &.selected {
+          background: #fff;
+          padding-bottom: 1px;
+          border-bottom: none;
+          &>a {
+            color: $tabon;
+            @include no-text-shadow();
+          }
+        }
+        &>a {
+          display: block;
+          padding: 9px 18px;
+          text-decoration: none;
+          color: $taboff;
+          @include text-shadow(0,1px,0,#fff);
+          &:hover {
+            color: lighten($kselected,10%);
+          }
+        }
+      }
+    }
+  }
+  &.subnav { /* subnavigation */
+    position: relative;
+    display: block;
+    background: transparent url(/images/subnav-shadow.png) repeat-x 0 bottom;
+    font-family: $headlinefont;
+    font-size: 115%;
+    padding-bottom: 9px;
+    &>ul {
+      display: block;
+      li {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        a {
+          cursor: pointer;
+          text-transform: none;
+          text-decoration: none;
+          @include text-shadow(0,1px,0,#fff);
+          display: block;
+          margin: 0;
+          padding: 8px 16px 6px;
+          color: $taboff;
+          &.selected {
+            color: $tabon;
+            font-weight: bold;
+            border-bottom: 3px solid $kselected;
+            padding-bottom: 3px;
+          }
+          &:hover {
+                color: lighten($kselected,10%);
+          }
+        }
+      }
+    }
+  }
+  &.subsubnav { /* in page tabs */
+    @include border-radius(16px);
+    position: static;
+    overflow: hidden;
+    bottom: inherit;
+    left: inherit;
+    right: inherit;
+    margin-bottom: 2em;
+    border: none;
+    &>ul {
+      display: inline-block;
+      height: 3.5em;
+      background-color: lighten($kselected, 65%);
+      @include border-radius(5px);
+      li {
+        display: block;
+        float: left;
+        margin: 5px;
+        a {
+          cursor: pointer;
+          font-family: $screenfont;
+          text-transform: none;
+          font-weight: normal;
+          color: black;
+          display: block;
+          padding: 6px 12px; margin-right: 10px;
+          &.selected {
+            background-color: $kselected;
+            @include border-radius(5px);
+            color: #FFF;
+          }
+        }
+      }
+    }
+  }
+} /*end nav*/
+
+.modalbox {
+  margin: 130px auto;
+  @include box-shadow(0,1px,5px,rgba(0, 0, 0, 0.6));
+  width: 550px;
+  overflow: hidden;
+  background-color: #FFF;
+  h2 {
+    background-color: $formheadbg;
+    color: $formheadfg;
+    text-transform: uppercase;
+    font-size: 120%;
+    padding: 10px;
+  }
+  .katello_form {
+    margin: 40px;
+    overflow: hidden;
+  }
+  .errorExplanation {
+    h2 {
+      text-transform: none;
+    }
+  }
+}
+
+#maincontent {
+  background: transparent url(/images/center-background.png) no-repeat center top;
+  overflow: hidden;
+  min-height: 200px;
+  .inner {
+    margin-top: 16px;
+    min-height: 325px;
+    p {
+      margin-left: 10px;
+    }
+  }
+  a {
+    cursor: pointer;
+    cursor: hand;
+  }
+}
+/* FORMS */
+/* generic */
+label {
+  text-align: right;
+  font-weight: bold;
+  color: $labelfg;
+  &.header {
+    text-align: left;
+    font-weight: normal;
+    font-size: 90%;
+    margin-bottom: 1em;
+  }
+  &.big {
+    text-align: left;
+    text-transform: uppercase;
+    font-family: $headlinefont;
+    font-size: 110%;
+    font-weight: bold;
+    color: $formheadfg;
+  }
+}
+
+legend {
+  font-size: 130%;
+  font-family: $headlinefont;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: $headercl;
+}
+
+/* When you need to seperate items within a fieldset */
+.fielditem {
+   margin-top: 5px;
+   margin-bottom: 5px;
+}
+
+/* simple two column label + input pairs */
+.katello_form {
+  fieldset {
+    overflow: hidden;
+    margin: 10px 0 0;
+    text-align: right;
+    label {
+      display: inline-block;
+      font-weight: bold !important;
+      padding: 4px 10px 0 0;
+      max-width: 10em;
+    }
+    input {
+      display: inline-block;
+      width: 20em;
+    }
+    .fieldWithErrors {
+      display: inline-block;
+      border: 0; margin: 0; padding: 0;
+      input {
+        background-color: lighten($errorcl, 45%);
+        color: $errorcl;
+      }
+      label {
+        color: $errorcl;
+      }
+    }
+  }
+  .indented {
+    margin: 10px 0 0;
+    text-align: right;
+    input[type="text"],label,a,div,p {
+      text-align: left;
+      display: inline-block;
+      width: 20em;
+    }
+  }
+}
+
+/* search forms */
+
+.search {
+  position: absolute;
+  button {
+    position: absolute;
+    width: 16px; height: 16px;
+    text-indent: -4000em;
+    right: 10px; top: 50%;
+    margin: -8px 0 0;
+    background-position: 0 0;
+    border: none;
+    padding: 0;
+    &:hover {
+        @include no-box-shadow;
+    }
+  }
+  input[type="search"] {
+    float: right; /* webkit adds an extra padding and makes the widget narrower */
+    width: 220px;
+  }
+}
+
+/*footer*/
+footer {
+  font-size: 95%;
+  margin: 20px 0 0;
+  padding: 20px 10px 10px 10px;
+  display: block;
+  background: transparent url(/images/footer-shade.png) repeat-x 0 0;
+  ul {
+    display: block;
+    padding: 10px 10px 0 0;
+    min-height: 50px;
+    width: 99%;
+    li {
+      &:first-child {
+        float: left;
+      }
+      display: block;
+      float: right;
+      margin-left: 1em;
+    }
+  }
+
+  &.fixed {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+  }
+}
+#toTop {
+  display:none;
+  text-decoration:none;
+  position:fixed;
+  bottom:10px;
+  left:10px;
+  overflow:hidden;
+  width:32px;
+  height:32px;
+  border:none;
+  text-indent:-999px;
+  background:url(/images//ui.totop.png) no-repeat left top;
+}
+
+#toTopHover {
+  background:url(/images//ui.totop.png) no-repeat left -32px;
+  width:32px;
+  height:32px;
+  display:block;
+  overflow:hidden;
+  float:left;
+  opacity: 0;
+  -moz-opacity: 0;
+  filter:alpha(opacity=0);
+}
+
+#toTop:active, #toTop:focus {
+  outline:none;
+}
+/* end footer */
+
+/* RIGHT SIDEBAR */
+.sidebarcontainer {
+  /* height: 300px; overflow: scroll; */
+  display: block;
+  li {
+    display: block;
+    margin: 0;
+  }
+  h5 {
+    text-transform: none;
+    margin-top: 3em;
+  }
+}
+
+/* PAGE SPECIFIC */
+/* Sytems::Facts */
+#facts {
+    table {
+      td {
+        padding-left: 18px;
+      }
+    }
+}
+
+
+/* GRINDS */
+.status {
+  span {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: url(/images/icons/status.png) no-repeat 0 0;
+    &.good {
+      background-position: 0 0;
+    }
+    &.ok {
+      background-position: 0 -10px;
+    }
+    &.bad {
+      background-position: 0 -20px;
+    }
+  }
+}
+
+a.iconbutton {
+  padding: 4px 4px 4px 24px;
+  position: relative;
+  overflow: hidden;
+  @include border-radius(2px);
+  &:active  {
+    padding: 4px 4px 4px 24px;
+  }
+  &:focus {
+    padding: 3px 3px 3px 23px;
+  }
+  img {
+    position: absolute;
+    width: 18px;
+    height: 54px;
+    left: 0; top: 50%;
+    margin-top: -27px;
+    background: url(/images/icons/launchinstance.png) no-repeat 0 0;
+  }
+}
+
+/* IE and other horror browser workarounds */
+
+/* basic image styling for buttons in older browsers */
+.no-cssgradients input[type='submit'], .no-cssgradients button, .no-cssgradients .button {
+  /* FIXME image based buttons */
+}
+
+/* when modalbox miss dropshadow set some border */
+.no-boxshadow .modalbox { border: 2px solid $strokecl; }
+
+/* DEBUG GRID */
+#grid {
+  display: none;
+  position: fixed;
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 1020px;
+  margin-left: -510px;
+  background: url(/images/960.png) repeat-y top center;
+}
+
+.outlined {
+  outline: 2px solid $kselected;
+}
+
+.remove_item {
+    color: darkRed;
+    right: 82px;
+    position: absolute;
+    top: 9px;
+}
+
+/*provides same styling as .remove_item without the bound action*/
+.remove_item_custom {
+    @extend .remove_item;
+}
+
+.notifications {
+    tr.success {
+        @include linear-gradient(color-stops(white, white, "#F2FFE5"));
+        &:hover {
+            @include linear-gradient(color-stops(white, "#F2FFE5"));
+        }
+    }
+    tr.error {
+        @include linear-gradient(color-stops(white, white, "#FFE5E5"));
+        &:hover {
+            @include linear-gradient(color-stops(white, "#FFE5E5"));
+        }
+    }
+    tr.message {
+        @include linear-gradient(color-stops(white, white, "#EFEFEF"));
+        &:hover {
+            @include linear-gradient(color-stops(white, "#EFEFEF"));
+        }
+    }
+    tr.warning {
+        @include linear-gradient(color-stops(white, white, "#FFFFE5"));
+        &:hover {
+            @include linear-gradient(color-stops(white, "#FFFFE5"));
+        }
+    }
+}

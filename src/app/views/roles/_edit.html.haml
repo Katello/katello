@@ -1,0 +1,25 @@
+
+= include_javascripts :role_edit
+
+.grid_8
+  %h2 #{_("Role")}
+#role
+  .grid_8#role
+    = form_for role, :url => role_path(role) do |f|
+      .grid_1.ra.fieldset
+        = label :role, :name, _("Name")
+      .grid_6.la.editable.edit_rolename#role_name{'name' => 'role[name]', :url=>role_path(@role.id)} #{@role[:name]}
+      .grid_7
+        &nbsp;
+    #permissions.grid_8
+      - role.permissions.each do |perm|
+        = render "permission", :perm=>perm, :data_new=>false, :role=>role
+      / Chrome bug fix, need the %nbsp; below or add permission does not work correctly in chrome
+      &nbsp;
+      #add_permission{:data_id=>role.id, :data_url=>roles_show_permission_path(), :class=>"button"}
+        = _("Add Permission")
+.grid_8
+  &nbsp;
+
+= link_to _("Remove Role"), {:action => "destroy", :controller => "roles"}, :method => :delete, :confirm => _('Are you sure?'), :class => "remove_item", :remote=>true
+

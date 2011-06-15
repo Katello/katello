@@ -1,0 +1,113 @@
+#!/usr/bin/python
+#
+# Katello Shell
+# Copyright (c) 2010 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public License,
+# version 2 (GPLv2). There is NO WARRANTY for this software, express or
+# implied, including the implied warranties of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. You should have received a copy of GPLv2
+# along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+#
+# Red Hat trademarks are not licensed under GPLv2. No permission is
+# granted to use or replicate Red Hat trademarks that are incorporated
+# in this software or its documentation.
+#
+
+import sys
+from katello.client.cli.admin import AdminCLI
+from katello.client.shell import KatelloShell
+from katello.client.core.utils import system_exit
+from katello.client.core import (
+  environment,
+  organization,
+  provider,
+  ping,
+  product,
+  repo,
+  distribution,  
+  package,
+  errata,
+  system,
+  shell_command,
+  template
+)
+
+def setup_admin(admin):
+    env_cmd = environment.Environment()
+    env_cmd.add_action('create', environment.Create())
+    env_cmd.add_action('info', environment.Info())
+    env_cmd.add_action('list', environment.List())
+    env_cmd.add_action('update', environment.Update())
+    env_cmd.add_action('delete', environment.Delete())
+    admin.add_command('environment', env_cmd)
+
+    org_cmd = organization.Organization()
+    org_cmd.add_action('create', organization.Create())
+    org_cmd.add_action('info', organization.Info())
+    org_cmd.add_action('list', organization.List())
+    org_cmd.add_action('update', organization.Update())
+    org_cmd.add_action('delete', organization.Delete())
+    admin.add_command('org', org_cmd)
+
+    admin.add_command("ping", ping.Status())
+
+    prod_cmd = product.Product()
+    prod_cmd.add_action('create', product.Create())
+    prod_cmd.add_action('list', product.List())
+    prod_cmd.add_action('synchronize', product.Sync())
+    admin.add_command('product', prod_cmd)
+
+    repo_cmd = repo.Repo()
+    repo_cmd.add_action('create', repo.Create())
+    repo_cmd.add_action('info', repo.Info())
+    repo_cmd.add_action('list', repo.List())
+    repo_cmd.add_action('status', repo.Status())
+    repo_cmd.add_action('synchronize', repo.Sync())
+    admin.add_command('repo', repo_cmd)
+
+    dist_cmd = distribution.Distribution()
+    dist_cmd.add_action('info', distribution.Info())
+    dist_cmd.add_action('list', distribution.List())
+    admin.add_command('distribution', dist_cmd)
+
+    pack_cmd = package.Package()
+    pack_cmd.add_action('info', package.Info())
+    pack_cmd.add_action('list', package.List())
+    admin.add_command('package', pack_cmd)
+
+    errata_cmd = errata.Errata()
+    errata_cmd.add_action('list', errata.List())
+    errata_cmd.add_action('info', errata.Info())
+    admin.add_command('errata', errata_cmd)
+
+    system_cmd = system.System()
+    system_cmd.add_action('list', system.List())
+    system_cmd.add_action('register', system.Register())
+    admin.add_command('system', system_cmd)
+
+    template_cmd = template.Template()
+    template_cmd.add_action('create', template.Create())
+    template_cmd.add_action('list', template.List())
+    template_cmd.add_action('info', template.Info())
+    admin.add_command('template', template_cmd)
+
+    admin.add_command("shell", shell_command.ShellAction(admin))
+
+    prov_cmd = provider.Provider()
+    prov_cmd.add_action('create', provider.Update(create=True))
+    prov_cmd.add_action('info', provider.Info())
+    prov_cmd.add_action('list', provider.List())
+    prov_cmd.add_action('update', provider.Update())
+    prov_cmd.add_action('delete', provider.Delete())
+    prov_cmd.add_action('sync', provider.Sync())
+    prov_cmd.add_action('import_manifest', provider.ImportManifest())
+    admin.add_command('provider', prov_cmd)
+
+
+if __name__ == "__main__":
+    admin = AdminCLI()
+    setup_admin(admin)
+    system_exit(admin.main())
+
