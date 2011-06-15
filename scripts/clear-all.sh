@@ -93,7 +93,7 @@ fi
 
 if [ $LOCAL_PULP == 1 ] && [ $LOCAL_CP == 1 ]; then
   sudo $KATELLO/script/reset-oauth
-  sudo service pulp-server restart
+  sudo SYSTEMCTL_SKIP_REDIRECT=1 service pulp-server restart
 fi
 if [ $LOCAL_CP == 1 ]; then
   sudo service tomcat6 restart
