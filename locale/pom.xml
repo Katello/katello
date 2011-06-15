@@ -1,0 +1,35 @@
+<project>
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>null</groupId>
+   <artifactId>null</artifactId>
+   <version>0</version>
+   
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>net.openl10n.flies</groupId>
+            <artifactId>flies-maven-plugin</artifactId>
+            <version>1.1.1</version>
+            <configuration>
+               <srcDir>.</srcDir>
+               <srcDirPot>.</srcDirPot>
+               <dstDir>.</dstDir>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
+   <!-- NB: this is not needed if you have the jboss 'public' repository group enabled -->
+   <pluginRepositories>
+      <pluginRepository>
+         <id>openl10n-public-repository-group</id>
+         <name>OpenL10n Public Repository Group</name>
+         <url>http://nexus.openl10n.net/content/groups/public</url>
+         <releases>
+            <enabled>true</enabled>
+         </releases>
+         <snapshots>
+            <enabled>true</enabled>
+         </snapshots>
+      </pluginRepository>
+   </pluginRepositories>
+</project>

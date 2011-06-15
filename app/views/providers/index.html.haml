@@ -1,0 +1,15 @@
+= include_javascripts :katello_client
+= include_javascripts :edit
+= include_javascripts :form
+= include_common_i18n
+= include_editable_i18n
+= include_javascripts :provider
+
+.grid_16
+  = help_tip_button
+  = help_tip(_("Providers provide many types of content such as packages, errata, " + |
+             "kickstart trees, and installation disc images.  A provider may be delivering " + |
+             "all of your paid content or it could simply be a local yum repostory providing a few yum repos.")) |
+
+.grid_16#main
+  = two_panel(@providers, @panel_options)

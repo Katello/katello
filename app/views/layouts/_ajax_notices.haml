@@ -1,0 +1,9 @@
+= include_javascripts :notices
+
+- if current_user
+
+  %script(type="text/javascript")
+    notices.setup_notices(#{notification_polling_time});
+    notices.addNotices(
+    != current_user.notices.to_json
+    );

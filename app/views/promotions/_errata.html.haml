@@ -1,0 +1,16 @@
+%ul
+  -if @errata.empty?
+    #{_("No errata available.")}
+  - @errata.each do |e|
+    %li.clear
+      %span.item.block{:id => e.id, "data-ajax_url" => erratum_path(e.id)}
+        = e.title
+      - if @changeset
+        - if @changeset.errata_ids.include?(e.id)
+          %a{:class => "fl content_add_remove remove_errata button", "data-id" => e.id, "data-display_name"=> e.title, "data-type" => "errata", :id => "add_remove_errata_#{e.id}"}
+            #{_("Remove")}
+        - else
+          %a{ :class => "fl content_add_remove add_errata button", "data-id" => e.id, "data-display_name"=> e.title, "data-type" => "errata", :id => "add_remove_errata_#{e.id}"}
+            #{_("Add")}
+      %br.clear
+      

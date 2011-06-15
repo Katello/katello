@@ -1,0 +1,49 @@
+%h2
+  = @errata.title
+  
+%nav.subnav
+  = render_navigation(:expand_all => true, :level => 3)
+
+
+.clear
+
+%fieldset
+  .grid_2.ra
+    %label #{_("Type")}:
+  .grid_5.la
+    = @errata.type  
+    
+    
+%fieldset
+  .grid_2.ra
+    %label #{_("Issued")}:
+  .grid_5.la
+    = @errata.issued
+    
+%fieldset
+  .grid_2.ra
+    %label #{_("Updated")}:
+  .grid_5.la
+    = @errata.updated 
+
+/%fieldset
+/  .grid_2.ra
+/    %label #{_("Affected Products")}:
+/  .grid_5.la    
+/    Red Hat Enterprise Linux 5
+/    %br
+/    Red Hat Super Product
+    
+%fieldset
+  .grid_2.ra
+    %label #{_("Associated Bugs")}:
+  .grid_5.la    
+    = @errata.references.inspect
+
+%fieldset
+  .grid_2.suffix_5.ra
+    %label #{_("Description")}:
+  .grid_7
+    %pre{:style=>"white-space:pre-wrap"}
+      = @errata.description
+

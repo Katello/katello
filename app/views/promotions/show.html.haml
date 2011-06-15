@@ -1,0 +1,67 @@
+= include_javascripts :bbq
+= include_javascripts :katello_client
+= include_javascripts :promotion
+= include_javascripts :panel
+
+
+
+
+:javascript
+  var breadcrumb = eval('(#{escape_javascript(generate_breadcrumb())})');
+
+
+#error_dialog{:style=>"display: none"}
+  = _("An error has occured when communicating with the server, please refresh the page to retrieve the current changeset.")
+
+
+//Div for dep. content 
+#dialog_content{:style => "word-wrap: break-word;", :title=>"#{_('Package Dependencies')}"}
+
+
+.grid_1
+  = help_tip_button
+  &nbsp;
+.grid_16
+  = environment_selector(:url_proc=>lambda {|args|  promotions_path(args[:organization].name, args[:environment].name, :next_env_id=>(args[:next_environment].id if args[:next_environment] and args[:environment].locker?) )})
+
+%br.clear
+          
+.grid_12.prefix_2.suffix_2
+  = help_tip(_('Promotions allow you to promote content from one environment to the next along ' + |
+                'a promotion path. Clicking "Add" next to one or more products will add them to '+ |
+                'the change set. If products already exist in the next environment, you may '    + |
+                'promote other types of content. Once you have created a change set, click the ' + |
+                '"Promote" button to commit it to the next environment.'))   |
+
+.grid_16
+  #container
+    .right
+      %h2 #{_("Current Changeset")}
+      %br
+      %br
+      = render(:partial => "changesets/changeset", :content_type => 'text/html')
+
+    #panel-frame
+      #panel.panel.closed
+        .head
+          %a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}
+        .data
+          #spinner{:style=>"display: none"}
+            = image_tag ("spinner.gif")
+          .panel-content
+          %br.clear
+  
+    .left
+      %h2 #{@environment.name + _(" Content")}
+      #breadcrumb.clickable.clear  
+      #list.shadowbox.outlined{"data-page_size"=>current_user.page_size}
+        #slider.has_content.slider
+          = render(:partial=>"detail")
+        #slider-two.no_content.slider
+
+
+          
+          
+          
+
+ 

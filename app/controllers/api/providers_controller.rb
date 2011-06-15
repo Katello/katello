@@ -1,0 +1,106 @@
+#
+# Copyright 2011 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+require 'resources/candlepin'
+require 'rest_client'
+
+class Api::ProvidersController < Api::ApiController
+
+  before_filter :find_organization, :only => [:create]
+  before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products, :import_manifest, :sync, :product_create]
+
+  def index
+    render :json => (Provider.where query_params).to_json
+  end
+
+  def show
+    render :json => @provider.to_json
+  end
+
+  def create
+    provider = Provider.create!(params[:provider]) do |p|
+      p.organization = @organization
+    end
+    render :json => provider.to_json and return
+  end
+
+  def update
+    @provider.update_attributes!(params[:provider])
+    render :json => @provider.to_json and return
+  end
+
+  def destroy
+    @provider.destroy
+    if @provider.destroyed?
+      render :text => _("Deleted provider '#{params[:id]}'"), :status => 200
+    else
+      render :text => _("Error while deleting provider '#{params[:id]}'"), :status => 500
+    end
+  end
+
+  def products
+    render :json => @provider.products.to_json
+  end
+  
+  def import_manifest
+
+    begin
+      temp_file = File.new(File.join("#{Rails.root}/tmp", "import_#{SecureRandom.hex(10)}.zip"), 'w+', 0600)
+      temp_file.write params[:import].read
+    ensure
+      temp_file.close
+    end
+    
+    @provider.import_manifest File.expand_path(temp_file.path)
+    render :text => "Manifest imported", :status => 200
+  rescue => e
+    render :text => _("Manifest import for provider '#{params[:id]}' failed"), :status => 500
+  end
+  
+  
+  def import_products
+    results = params[:products].collect do |p|
+      to_create = Product.new(p) do |product|
+        product.provider = @provider
+        product.organization = @provider.organization
+      end
+      to_create.save!
+    end
+    render :json => results.to_json
+  rescue => e
+    render :json => { :error => e.backtrace.join("\n").to_s }, :status => 500
+  end
+
+  def product_create
+    product_params = params[:product]
+    prod = @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url])
+    render_to_json(prod)
+  end
+
+  def sync
+    @provider.sync
+    render :text => "syncing provider: #{@provider.id}", :status => 200
+  end
+
+  private
+
+  def find_provider
+    @provider = Provider.find(params[:id])
+    render(:text => _("Couldn't find provider '#{params[:id]}'"), :status => 404) and return if @provider.nil?
+  end
+
+  def find_organization
+    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id]})
+    render(:text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404) and return if @organization.nil?
+  end
+
+end

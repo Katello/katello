@@ -1,0 +1,23 @@
+.grid_3
+  %a{:href => '/dashboard', :class => "fl"}
+    %img{:src => '/images/katello_32x32_icon.png', :alt => 'Katello Logo'}
+    %img.kp{:src => '/images/nav_pipe.png', :alt => 'Pipe Separator'}
+    %h1 Katello
+  #loading.fr
+    %img{:src => '/images/spinner_head.gif', :alt => 'Spinning Work Indicator'}
+.grid_13
+  - if current_user
+    /
+      %div.org
+        = render :partial => '/layouts/org'
+    %ul
+      %li.hello
+        = link_to account_path do
+          %strong
+            = current_user.username
+      %li
+        %a{ :id => "unread_notices", :href => "/notices", :title => "System Notifications"}
+          #{current_user.user_notices.length}
+      %li.logout
+        %a{ :href => "/logout"}
+          #{_("Logout")}

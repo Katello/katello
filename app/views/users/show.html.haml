@@ -1,0 +1,9 @@
+= include_javascripts :password
+= include_javascripts :multiselect
+= include_javascripts :user
+= include_javascripts :user_edit
+
+
+= collection_select(:user, :roles, Role.all, :id, :name, {}, {:multiple=>:multiple, :class=>"multiselect", :style=>"width:500px; height:400px"})
+    
+  

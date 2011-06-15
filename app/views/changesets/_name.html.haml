@@ -1,0 +1,6 @@
+%fieldset
+  .grid_3.ra
+    = label_tag :name, _("Name:")
+  .grid_4.la
+    %input.changeset_name{ :id => "name", :name => "name", :type => "text", :value => @changeset.name, "data-environment_id" => @environment.id }
+

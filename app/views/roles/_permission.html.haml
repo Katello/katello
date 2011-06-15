@@ -1,0 +1,47 @@
+%div{:class=>"permission", :id=>"permission_#{perm_id(perm)}"}
+  = form_for perm,:url => perm.new_record? ? role_create_permission_path(role) : permission_update_path(role, perm), :html => {:data_type => "forms"} do |f|
+    .grid_6.la
+      %h6 #{_("Permission")}
+    .grid_1.la
+      - if !perm.new_record?
+        #delete_permission{:data_role_id=>role.id, :data_perm_id=>perm.id}
+          = image_tag("/images/icons/close.png")
+    %div{:id=>opened_id(f), :style=> (f.object.new_record? ? "" : "display: none;")}
+      .clear
+      = f.fields_for :resource_type do |res|
+        .grid_1.ra.fielditem
+          = f.label :type, _("Type")
+        .grid_6.la.fielditem
+          = res.select :name, @resource_type_names.collect {|name| [name.capitalize(), name]}, {}, :data_type => "types"
+      
+      
+
+      .grid_1.fielditem.ra
+        = f.label :scope, _("Scope")
+      .grid_6.fielditem
+        = f.radio_button("all_tags", "true",  :data_type => "tags")
+        = f.label :all, _("All")
+      .grid_6.prefix_1.fielditem
+        = f.radio_button("all_tags", "false", :style=>"vertical-align: top;",:data_type => "tags")
+        = f.select :tag_names, get_scopes(f).collect {|t| [t.name, t.name]}, {}, {:multiple=>true, :data_type => "tags"}
+      
+      
+      .grid_1.ra.fielditem
+        = f.label :verbs, _("Verbs")
+      .grid_6.la.fielditem
+        = f.radio_button("all_verbs", "true", :data_type =>"verbs")
+        = f.label :all, _("All")
+      .grid_6.prefix_1.fielditem
+        = f.radio_button("all_verbs", "false", :style=>"vertical-align: top;", :data_type =>"verbs")
+        = f.select :verb_values, get_verbs(f).collect {|t| [t.verb, t.verb]}, {}, {:multiple=>true, :data_type => "verbs"}
+      .grid_5.ra
+        #save_permission{:class=>[perm.new_record? ? "new_permission_save" : "", "button"]}
+          = _("Save")
+      .grid_1.ra.suffix_1
+        %div{:id=>"cancel_button_#{perm_id(f)}", :class=>"button", :data_is_new=>perm.new_record?.to_s, :data_role_id=>role.id, :data_perm_id=>perm.id, :data_url=>roles_show_permission_path()}
+          = _("Cancel")
+    - unless f.object.new_record?
+      %div{:id=>closed_id(f), :style=> (f.object.new_record? ? "display: none;" : "") }
+        = render "closed_permission", :perm => f.object
+/ Chrome bug fix, need the %nbsp; below or add permission does not work correctly in chrome
+&nbsp;

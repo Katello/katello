@@ -1,0 +1,9 @@
+= include_javascripts :katello_client
+= include_javascripts :edit, :multiselect
+= include_editable_i18n
+= include_javascripts :system
+
+= include_javascripts :form
+= include_javascripts :treetable
+.grid_16#main
+  = two_panel(@systems, @panel_options)

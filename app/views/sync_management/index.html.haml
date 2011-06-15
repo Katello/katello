@@ -1,0 +1,12 @@
+= include_javascripts :content
+:javascript
+  localize({
+    "cancel": '#{_('Cancel')}',
+    "error": '#{_('Error')}',
+    "complete": '#{_('Sync complete.')}',
+  });
+
+#main.grid_16
+  %nav.subsubnav
+    = render_navigation(:expand_all => true, :level => 3)
+  = render "products"

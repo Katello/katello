@@ -1,0 +1,50 @@
+= include_javascripts :user_edit
+%h3 #{_("Edit User")}
+#users
+  .grid_8
+    %fieldset
+      .grid_2.ra
+        = label :name, _("Username")
+      .grid_5.la 
+        #{user.username}
+    %fieldset
+      .grid_2.ra
+        = label :helptips_enable, _("Enable inline help")
+      .grid_5.la
+        = check_box("user", "helptips_enabled", :id=>"helptips_enabled", :data_username=>@user.username, :checked=>@user.helptips_enabled ? "checked": "")
+    %fieldset
+      .grid_2.ra
+        = label :user, :username, _("Clear Disabled Helptips")
+      .grid_5.la
+        #clear_helptips{:username=>@user.username, :class=>"button"}
+          = _("Clear")
+    %fieldset 
+      .grid_2.ra
+        = label :user, :password, _("Change Password")
+      .grid_5.la
+        = text_field :user, :password, :id=>"password_field", :value=>"", :type=>"password"
+    .grid_6.la.prefix_2
+      #password_meter           
+    %fieldset
+      .grid_2.ra
+        = label :user, :username, _("Confirm")
+      .grid_5.la
+        = text_field :user, :username, :id=>"confirm_field", :value=>"", :type=>"password"     
+    .grid_6.la.prefix_2
+      #save_password.verify_password.button{:data_username=>@user.username}
+        #{_("Save")}
+    .grid_6.la.prefix_2
+      #password_conflict
+
+    = form_for @user, :url => user_path(@user) do |f|
+      %fieldset
+        .grid_2.la
+          = label :user, :roles, _("Roles")
+      .grid_7
+        = f.collection_select(:defined_role_ids, Role.non_self_roles, :id, :name, {}, {:name=>"user[role_ids][]", :id=>:user_role_ids, :multiple=>:multiple, :class=>"multiselect", :style=>"width:400px; height:200px"})
+      %fieldset
+        .grid_2
+          #save_roles{:data_username=>@user.username, :class=>"button"}
+            = _("Save Roles")
+
+  = link_to _("Remove User"), { :controller => "users", :action => "destroy" }, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true

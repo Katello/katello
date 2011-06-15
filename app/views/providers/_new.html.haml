@@ -1,0 +1,8 @@
+= include_javascripts :provider_create
+
+.grid_16
+  %h2 #{_("New Provider")}
+  #provider
+    .grid_8#new_provider
+      = form_for @provider, :html => {:method => :post}, :url => providers_path do |f|
+        = render :partial => 'form', :locals => { :form =>f }

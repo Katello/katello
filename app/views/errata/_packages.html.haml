@@ -1,0 +1,16 @@
+
+%h2
+  = @errata.title
+
+%nav.subnav
+  = render_navigation(:expand_all => true, :level => 3)
+
+
+%h2
+  = _("Packages")
+.clear
+  &nbsp;
+  
+- @errata.pkglist.each do |pkg|
+  .li.grid_6
+    = pkg
