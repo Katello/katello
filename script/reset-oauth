@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ $1 ]; then
+  SECRET=$1
+else
+  SECRET=`openssl rand -base64 24 | cut -c1-24`
+fi
+
+sed -i "s;\(.*oauth_secret.*:\).*;\1 $SECRET;g" /etc/katello/katello.yml
+
+CP_CONF=/etc/candlepin/candlepin.conf
+if [ -f $CP_CONF ]; then
+  if ( ! grep -q "candlepin.auth.oauth.enabled" $CP_CONF ); then
+    echo "candlepin.auth.oauth.enabled = true" >> $CP_CONF
+  else
+    sed -i "s;candlepin.auth.oauth.enabled.*;candlepin.auth.oauth.enabled = true;" $CP_CONF
+  fi
+  
+  CP_LINE="candlepin.auth.oauth.consumer.katello.secret = $SECRET"
+  if ( ! grep -q "candlepin.auth.oauth.consumer." $CP_CONF); then
+    echo $CP_LINE >> $CP_CONF
+  else
+    sed -i "s;^\(candlepin.auth.oauth.consumer.katello.*=\).*;$CP_LINE;" /etc/candlepin/candlepin.conf
+  fi
+fi
+
+test -f /etc/pulp/pulp.conf && sed -i "s;.*oauth_secret:.*;oauth_secret: $SECRET;" /etc/pulp/pulp.conf
+test -f /etc/pulp/pulp.conf && sed -i "s;.*oauth_key:.*;oauth_key: katello;" /etc/pulp/pulp.conf
+

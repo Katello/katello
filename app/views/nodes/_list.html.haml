@@ -1,0 +1,5 @@
+%table
+  %th Hostname
+  - nodes.each do |node|
+    %tr{:class => cycle(nil, 'alt')}
+      %td= link_to node.uuid, node_path(node.uuid)

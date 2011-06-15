@@ -1,0 +1,17 @@
+%ul
+  -if @packages.empty?
+    #{_("No packages available for promotion")}
+  - @packages.each do |pack|
+    %li
+      - if @changeset
+        - if @next_env_pkgs.include? pack.id
+          .fl.promoted
+            = _("Promoted")
+        - elsif @changeset.package_ids.include?(pack.id)
+          %a{:class => "fl content_add_remove remove_package button", "data-display_name"=> pack.nvrea, "data-id" => pack.id, "data-type" => "package", :id => "add_remove_package_#{pack.id}"}
+            #{_("Remove")}
+        - elsif @environment.successor
+          %a{ :class => "fl content_add_remove add_package button", "data-display_name"=> pack.nvrea, "data-id" => pack.id, "data-type" => "package", :id => "add_remove_package_#{pack.id}"}
+            #{_("Add")}
+      %span.item.block{:id => pack.id, "data-ajax_url" => "/packages/#{pack.id}"}
+        = pack.nvrea          

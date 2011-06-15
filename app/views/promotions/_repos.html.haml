@@ -1,0 +1,17 @@
+%ul
+  -if @repos.empty?
+    #{_("No repos available for promotion")}
+  - @repos.each do |repo|
+    %li
+      - if @changeset
+        - if @changeset.repos.collect{|tmp| tmp.repo_id}.include?(repo.id)
+          %a{:class => "fl content_add_remove remove_repo button","data-display_name"=> repo.name, "data-id" => repo.id, "data-type" => "repo", :id => "add_remove_repo_#{repo.id}"}
+            #{_("Remove")}
+        - elsif !(@next_env_repos & repo.clone_ids).empty?
+          .fl.promoted
+            = _("Promoted")
+        - elsif @next_environment
+          %a{ :class => "fl content_add_remove add_repo button", "data-display_name"=> repo.name, "data-id" => repo.id, "data-type" => "repo", :id => "add_remove_repo_#{repo.id}"}
+            #{_("Add")}
+      %span.item
+        = repo.name

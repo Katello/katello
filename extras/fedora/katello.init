@@ -1,0 +1,134 @@
+#!/bin/bash
+#
+# Init script for katello
+#
+# chkconfig: - 86 14
+# description: Init script for katello
+
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+if [ -f /etc/sysconfig/katello ]; then
+    . /etc/sysconfig/katello
+fi
+
+prog=katello
+RETVAL=0
+KATELLO_PORT=${KATELLO_PORT:-3000}
+KATELLO_USER=${KATELLO_USER:-katello}
+KATELLO_HOME=${KATELLO_HOME:-/usr/lib/katello}
+KATELLO_ENV=${KATELLO_ENV:-production}
+KATELLO_PID=${KATELLO_PID:-${KATELLO_HOME}/tmp/pids/server.pid}
+
+check_privilege() {
+    runuser -s /bin/sh ${KATELLO_USER} -c "echo x > /dev/null" 2> /dev/null || RETVAL=4
+    if [ $RETVAL = 4 ]; then
+        echo "User had insufficient privilege";
+        exit $RETVAL
+    fi
+}
+
+status() {
+    #check if pid file exists
+    if [ -f ${KATELLO_PID} ]; then
+        pid=`cat ${KATELLO_PID}`
+        #check if proces with pid from the file is running
+        if `ps -p $pid > /dev/null`; then
+            echo "$prog is running."
+            RETVAL=0
+        else
+            echo "$prog is not running."
+            RETVAL=1
+        fi
+    else
+        echo "$prog is not running."
+        RETVAL=3
+    fi
+
+    return $RETVAL
+}
+
+status_q() {
+    status &> /dev/null
+    return $?
+}
+
+start() {
+    check_privilege
+
+    echo -n $"Starting $prog: "
+    if status_q; then
+        echo -n $"$prog is already running. "
+        RETVAL=0
+        echo_success
+    else
+        cd ${KATELLO_HOME} #rails expects you to run from the root of the app
+        #daemon --user ${KATELLO_USER} /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} -d > /dev/null
+        daemon --user ${KATELLO_USER} bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} -d > /dev/null
+        RETVAL=$?
+        if [ $RETVAL = 0 ]; then
+            echo_success
+        else
+            echo_failure
+        fi
+    fi
+
+    echo
+    return $RETVAL
+}
+
+stop() {
+    check_privilege
+
+    echo -n $"Stopping $prog: "
+    if status_q; then
+        killproc -p ${KATELLO_PID}
+        RETVAL=$?
+    else
+        echo -n $"$prog was not running. "
+        RETVAL=0
+        echo_success
+    fi
+
+    echo
+    return $RETVAL
+}
+
+restart() {
+    stop
+    start
+}
+
+condrestart() {
+    if status_q; then
+        restart
+    else
+        RETVAL=0
+    fi
+}
+
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        restart
+        ;;
+    condrestart|try-restart)
+        condrestart
+        ;;
+    status)
+        status
+        ;;
+    *)
+        echo "Usage: {start|stop|restart|condrestart|status}"
+        exit 1
+        ;;
+esac
+
+exit $RETVAL

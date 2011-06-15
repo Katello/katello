@@ -1,0 +1,16 @@
+= include_javascripts :user, :password, :katello_client, :edit, :multiselect
+:javascript
+  var current_username = '#{_(user.username)}';
+  //what button should be disabled when passwords don't match    
+  
+  localize({
+    "password_match": '#{_('The passwords do not match')}',
+    "very_weak": '#{_("Very Weak")}',
+    "weak": '#{_("Weak")}',
+    "good": '#{_("Good")}',
+    "strong": '#{_("Strong")}',
+    "meterText": '#{_("Password Strength")}'
+  });
+
+.grid_16#main
+  = two_panel(@users, @panel_options)

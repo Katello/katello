@@ -1,0 +1,217 @@
+@charset "UTF-8";
+
+/* GENERIC TEXT ENTRIES */
+input, textarea {
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+  /* -webkit-box-shadow: inset $x $y $blur $color; breaks on border-radius */
+  border: 1px solid #aaaaaa;
+  background-color: #f0f0f0;
+  background: #f0f0f0 url(/images/input-bg.png) repeat-x 0 0;
+  padding: 4px;
+  margin: 0; 
+
+  &:focus {
+    border-width: 2px;
+    padding: 3px;
+    background-color: #fff;
+    outline: none; 
+  }
+  &.disabled, &[disabled] {
+    opacity: 0.6; 
+  }
+}
+
+/* search forms */
+.search {
+  position: relative;
+  display: inline-block;
+  overflow: visible;
+  /* search widget dropdown list */ 
+
+  button {
+    z-index: 3;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    text-indent: -300em;
+    color: rgba(0, 0, 0, 0);
+    right: 8px;
+    top: 50%;
+    margin: -8px 0 0;
+    background-position: 0 0;
+    border: none;
+    padding: 0; 
+    background: url(/images/icons/icon_search.png) no-repeat 0 0;
+
+    &:hover {
+      box-shadow: none;
+      -webkit-shadow: none;
+      -moz-box-shadow: none; 
+    }
+  }
+
+  input[type="search"], input[type="text"] {
+    z-index: 2;
+    position: relative;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    padding: 4px 30px 4px 10px;
+    float: right; 
+
+    &:focus {
+      padding: 3px 29px 3px 9px; 
+    }
+  }
+
+  .queries {
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    -moz-border-radius-topleft: 20px;
+    -moz-border-radius-bottomleft: 20px;
+    -webkit-border-top-left-radius: 20px;
+    -webkit-border-bottom-left-radius: 20px;
+    background-color: #ddd;
+    /* for IE */
+    background: -moz-linear-gradient(top, #f0f0f0, #dddddd);
+    background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#dddddd));
+    border: 1px solid #aaa; 
+
+    .arrow {
+      display: block;
+      position: relative;
+      width: 18px;
+      height: 6px;
+      top: 10px;
+      left: 3px;
+      margin-top: -1px;
+      background: url(/images/icons/icon_menu_arrow.gif) no-repeat 0 0;
+    }
+
+    &:active {
+      background: -moz-linear-gradient(top, #d0d0d0, #f0f0f0);
+      background: -webkit-gradient(linear, left top, left bottom, from(#d0d0d0), to(#f0f0f0));
+    }
+
+    .open {
+      background: #f6f6f6;
+      border-radius: 0;
+      -moz-border-radius: 0;
+      -webkit-border-radius: 0;
+      border-top-left-radius: 14px;
+      -moz-border-radius-topleft: 14px;
+      -webkit-border-top-left-radius: 14px;
+    }
+    .queryeditor {
+      background: #bbb;
+      border-radius: 0;
+      -moz-border-radius: 0;
+      -webkit-border-radius: 0;
+      border-top-left-radius: 14px;
+      -moz-border-radius-topleft: 14px;
+      -webkit-border-top-left-radius: 14px;
+    }
+  }
+
+  .qdropdown {
+    position: absolute;
+    border: 1px solid #bbb;
+    background-color: #f6f6f6;
+    top: 100%;
+    /* Providing a very high z-index.  The intent is to not have other elements over top of the dropdown. */
+    z-index: 100000; 
+
+    .left-menu {
+      left: 0;
+    }
+    .right-menu {
+      right: 12px;
+    }
+    ul {
+      display: block;
+      margin: 0; 
+      li {
+        display: block;
+        padding: 0 16px 0 0;
+        &:hover {
+          cursor: pointer !important;
+          text-decoration: none;
+          background-color: #E6E6E6;
+          color: #000000;
+        }
+        a {
+          display: block;
+          padding: 4px 10px 4px 24px;
+          white-space: nowrap; 
+          &:hover {
+            cursor: pointer !important;
+            text-decoration: none;
+            background-color: #E6E6E6;
+            color: #000000;
+          }
+        }
+        .delete {
+          position: absolute;
+          right: 3px;
+          width: 16px;
+          height: 16px;
+          margin: -22px 0 0 0;
+          background: url("/images/icons/action-icons.png") no-repeat -160px 0px;
+          &:hover {
+            background: url("/images/icons/action-icons.png") no-repeat -160px -16px #E6E6E6;
+          }
+        }
+        .favorite {
+          background: url(/images/icons/favorite.png) no-repeat 4px center; 
+        }
+        .recent {
+          background: url(/images/icons/recent.png) no-repeat 4px center; 
+        }
+      }
+    }
+/*
+.qdropdown ul {
+  margin: 0; padding: 0;
+}
+*/
+    .showmore {
+      display: block;
+      font-size: 80%;
+      text-align: right;
+      padding-right: 10px;
+      text-decoration: none;
+      color: #888; 
+
+      &:hover {
+        cursor: pointer;
+        background-color: #fff;
+        color: #000; 
+      }
+    }
+
+    .queryeditor {
+      h1 {
+        font-size: 80%;
+        color: #fff;
+        background-color: #bbb;
+        text-align: right;
+        padding: 0.25em 0.5em; margin: 0; 
+      }
+      h2 {
+        margin: 0 0 1em; 
+      }
+      div {
+        padding: 12px; 
+      }
+    }
+  }
+}

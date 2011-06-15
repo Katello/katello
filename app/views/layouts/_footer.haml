@@ -1,0 +1,7 @@
+%ul.container_16
+  - if current_user
+    %li
+      %a{ :href => "/logout"}
+        #{_("Logout")}
+  %li 
+    #{_("Copyright &copy; ") + (Time.now).year.to_s + _(" Red Hat, Inc.") }

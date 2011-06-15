@@ -1,0 +1,201 @@
+#
+# Copyright 2011 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+class Role < ActiveRecord::Base
+  include Authorization
+  has_and_belongs_to_many :users
+  has_many :permissions, :dependent => :destroy,:inverse_of =>:role, :class_name=>"Permission"
+  has_one :owner, :class_name => 'User', :foreign_key => "own_role_id"
+  has_many :search_tags, :class_name => 'Tag'
+  has_many :search_verbs, :class_name => 'Verb'
+  has_many :resource_types, :through => :permissions
+
+  validates :name, :uniqueness => true, :presence => true, :username => true
+  #validates_associated :permissions
+  accepts_nested_attributes_for :permissions, :allow_destroy => true
+
+  scoped_search :on => :name, :complete_value => true, :rename => :'role.name'
+  scoped_search :in => :resource_types, :on => :name, :complete_value => true, :rename => :'permission.type'
+  scoped_search :in => :search_verbs, :on => :verb, :complete_value => true, :ext_method => :search_by_verb, :only_explicit => true, :rename => :'permission.verb'
+  scoped_search :in => :search_tags, :on => :name, :complete_value => true, :ext_method => :search_by_tag, :rename => :'permission.scope', :only_explicit => true
+
+  def self.search_by_tag(key, operator, value)
+    permissions = Permission.all(:conditions => "tags.name #{operator} '#{value_to_sql(operator, value)}'", :include => :tags)
+    roles = permissions.map(&:role)
+    opts  = roles.empty? ? "= 'nil'" : "IN (#{roles.map(&:id).join(',')})"
+
+    return {:conditions => " roles.id #{opts} " }
+  end
+
+
+  def self.search_by_verb(key, operator, value)
+    permissions = Permission.all(:conditions => "verbs.verb #{operator} '#{value_to_sql(operator, value)}'", :include => :verbs)
+    roles = permissions.map(&:role)
+    opts  = roles.empty? ? "= 'nil'" : "IN (#{roles.map(&:id).join(',')})"
+
+    return {:conditions => " roles.id #{opts} " }
+  end
+
+  def self.value_to_sql(operator, value)
+    return value if (operator !~ /LIKE/i)
+    return (value =~ /%|\*/) ? value.tr_s('%*', '%') : "%#{value}%"
+  end
+  
+  # Is this role allowed to verb? or
+  # is this role allowed to verb, type and tag(s) combination?
+  #
+  # @param [String or Hash] verb string or hash with two strings [:controller] and [:action]
+  # @param [String] resource type
+  # @param [String or Array] one or more tags
+  def allowed_to?(verb, resource_type = nil, tags = nil)
+    allowed_to_tags? verb, resource_type, tags
+  end
+
+  # Create permission for given role - for more info see allow
+  #
+  # @param [Role or Array] one or more roles to allow (accepts also String for role name)
+  def self.allow(role, verb, resource_type = nil, tags = nil)
+    raise ArgumentError, "role can't be nil" if role.nil?
+    raise ArgumentError, "verb can't be nil" if verb.nil?
+    roles = role.is_a?(Array) ? role : [role]
+
+    roles.each do |r|
+      allow_role = r.is_a?(String)? Role.find_or_create_by_name(r) : r
+      allow_role.allow(verb, resource_type, tags)
+    end
+  end
+
+  def self.non_self_roles()
+    #gotta be a better way to do this, but others wouldn't work
+    Role.all(:conditions=>{"users.own_role_id"=>nil}, :include=> :owner)
+  end
+
+  # create permission with verb for the role or
+  # create permission with verb, type and tag(s) for the role
+  def allow(verb, resource_type = nil, tags = nil)
+    raise ArgumentError, "verb can't be nil" if verb.nil?
+
+    # handle :controller => [ :action1, :action2 ] format
+    if verb.is_a? Hash
+      raise ArgumentError, "type and tags must be nil" unless (resource_type.nil? or tags.nil?)
+      verbs = []
+      tags = []
+      verb.each_pair do |c, a|
+        tags << c
+        if a.is_a? Array
+          verbs = verbs + a
+        else
+          verbs << a
+        end
+      end
+    else
+      verbs = verb.is_a?(Array) ? verb : [verb]
+    end
+
+    resource_type = nil_to_string resource_type
+    tags = nil_to_string tags
+    tags = [tags] unless tags.is_a? Array
+
+    # create permissions
+    Permission.transaction do
+      p = Permission.create!(:role => self)
+      verbs.each do |verb|
+        p.verbs << Verb.find_or_create_by_verb(verb)
+      end
+      tags.each do |tag|
+        p.tags << Tag.find_or_create_by_name(tag)
+      end
+      p.resource_type = ResourceType.find_or_create_by_name(resource_type)
+      p.save!
+      Rails.logger.info "Permission created: #{p.to_text}"
+    end
+  end
+
+  def disallow(verb, resource_type = nil, tags = nil)
+    raise ArgumentError, "verb can't be nil" if verb.nil?
+    raise ArgumentError, "tag(s) can't be nil" if tags.nil?
+    verbs = verb.is_a?(Array) ? verb : [verb]
+    resource_type = nil_to_string resource_type
+    tags = nil_to_string tags
+
+    # delete permissions
+    Permission.transaction do
+      Permission.select('DISTINCT(permissions.id)').joins(:resource_type, :verbs, :tags).where(
+        :role_id => id,
+        :resource_types => { :name => resource_type },
+        :tags => { :name => tags },
+        :verbs => { :verb => verb }).find_each do |p|
+          Permission.destroy(p.id)
+      end
+    end
+  end
+
+  # returns the candlepin role (for RHSM)
+  def self.candlepin_role
+    Role.find_by_name('candlepin_role')
+  end
+
+  private
+  # convert nil object to string "NIL"
+  def nil_to_string(object)
+    (object.nil? or object == '') ? 'NIL' : object
+  end
+
+  def allowed_to_tags?(verb, resource_type, tags)
+
+    # handle :controller => :x, :action => :y format
+    if verb.is_a? Hash
+      raise ArgumentError, "type and tags must be nil" unless (resource_type.nil? or tags.nil?)
+      tags = [ verb[:controller] ]
+      verb = verb[:action]
+    end
+
+    resource_type = nil_to_string resource_type
+    tags = nil_to_string tags
+    tags = [tags] unless tags.is_a? Array
+    verb = action_to_verb(verb, tags)
+    Rails.logger.debug "Checking if role #{name} is allowed to #{verb.inspect} in #{resource_type.inspect} scoped #{tags.inspect}"
+    Permission.joins(:resource_type, :verbs, :tags).where(
+      :role_id => id,
+      :resource_types => { :name => resource_type },
+      :tags => { :name => tags },
+      :verbs => { :verb => verb }).count('tags.name', :distinct => true) == tags.count
+    # TODO - for now we just compare count - this is dangerous - we need to compare the content
+  end
+
+  DEFAULT_VERBS = {
+    :edit => 'update', :update=> 'update',
+    :new => 'create', :create => 'create', :create_favorite => 'create',
+    :index => 'read', :show => 'read', :auto_complete_search => 'read',
+    :destroy => 'delete', :destroy_favorite => 'delete',
+    :items => 'read'
+  }
+
+  ACTION_TO_VERB = {
+    :notices => {:get_new => 'read', :details => 'read', :note_count => 'read',
+                 :destroy_all => 'delete'},
+    :sync_management => {:status => 'read',:product_status => 'read'},
+    :certificates => {:serials => 'read'},
+    :consumers => {:export_status => 'read'},
+    :owners => {:import_status => 'read'}
+  }
+
+  def action_to_verb(verb, tags)
+    tags.each  do |tag|
+      return ACTION_TO_VERB[tag.to_sym][verb.to_sym] if ACTION_TO_VERB[tag.to_sym] and ACTION_TO_VERB[tag.to_sym][verb.to_sym]
+    end
+    return DEFAULT_VERBS[verb.to_sym] if DEFAULT_VERBS[verb.to_sym]
+
+    return verb
+  end
+
+end

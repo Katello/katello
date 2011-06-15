@@ -1,0 +1,75 @@
+
+%h2 #{_("Products") }
+= form_tag("sync", :method => :post, :remote => true, :id => 'sync_product_form') do
+  %table.products
+    %thead
+      %th #{_("Product")}
+      %th #{_("Start Time")}
+      %th #{_("Finish Time")}
+      %th #{_("Est Size (Packages)")}
+      %th #{_("Progress")}
+    %tbody
+      :javascript
+        var product_ids = new Array();
+        var repo_status = new Array();
+
+      -for p in @products
+        -for r in p.repos p.organization.locker
+          :javascript
+            var sync_status = new Array(3);
+            sync_status[0] = '#{r.id}';
+            sync_status[1] = '#{@repo_status[r.id][:sync_id]}';
+            sync_status[2] = '#{p.id.to_s}';
+            repo_status.push(sync_status);
+        %tr
+          %td{:class=>'product'}
+            =check_box_tag "product[#{p.id}]"
+            .clickable
+              %a{ :href => "#", :onclick => ""}
+                /= image_tag ("icons/expander-collapsed.png", :alt => "Expand")
+                %img{:src => "/images/icons/expander-collapsed.png", :alt => "Expand"}
+              #{p.name}
+            %ul
+              -for r in p.repos(p.organization.locker)
+                %li{:class=>'repo'}
+                  / put the product's id in the value field so we know what product is syncing
+                  =check_box_tag "repo[#{r.id}]", value="#{p.id}"
+                  #{r.name}
+          %td
+            %div{:id =>"#{'prod_sync_start_' + p.id.to_s}"}
+              #{@product_status[p.id][:start_time]}
+            %ul
+              -for r in p.repos(p.organization.locker)
+                %li{:id =>"#{'repo_sync_start_' + r.id.to_s}", :class=>'repo'}
+                  #{@repo_status[r.id][:start_time]}
+          %td
+            %div{:id =>"#{'prod_sync_finish_' + p.id.to_s}"}
+              #{@product_status[p.id][:finish_time]}
+            %ul
+              -for r in p.repos(p.organization.locker)
+                %li{:id =>"#{'repo_sync_finish_' + r.id.to_s}", :class=>'repo'}
+                  #{@repo_status[r.id][:finish_time]}
+          %td
+            %div{:id =>"#{'prod_size_' + p.id.to_s}"}
+              #{@product_size[p.id]}
+            %ul
+              -for r in p.repos(p.organization.locker)
+                %li{:id =>"#{'repo_sync_size_' + r.id.to_s}", :class=>'repo'}
+                  #{@repo_status[r.id][:size]}
+                  #{'(' + @repo_status[r.id][:packages].to_s + ')'}
+          %td{:id =>"#{'table_' + p.id.to_s}"}
+            .productstatus
+              #{@product_status[p.id][:state]}
+            %ul{:id =>"#{'prod_' + p.id.to_s}"}
+              -for r in p.repos(p.organization.locker)
+                %li{:id =>"#{'repo_bar_' + r.id}"}
+                  #{@repo_status[r.id][:state]}
+
+  .actions
+    .grid_2
+      %a{ :href => "#", :id=>"select_none", :class=>"fl" }
+        #{_("Select None")}
+    .grid_2
+      %a{ :href => "#", :id=>"select_all", :class=>"fl" }
+        #{_("Select All")}      
+    = submit_tag _('Synchronize Now'), :class => 'dialogbutton fr', :id => 'sync_button'
