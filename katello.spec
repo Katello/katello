@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:       katello		
-Version:	0.1.46
+Version:	0.1.47
 Release:	1%{?dist}
 Summary:	A package for managing application lifecycle for Linux systems
 	
@@ -164,5 +164,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Jun 16 2011 Justin Sherrill <jsherril@redhat.com> 0.1.47-1
+- initial public build 
+
 * Tue Jun 14 2011 Mike McCune <mmccune@redhat.com> 0.1.46-1
 - initial changelog
