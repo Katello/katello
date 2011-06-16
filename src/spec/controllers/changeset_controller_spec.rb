@@ -33,8 +33,7 @@ describe ChangesetsController do
     controller.stub!(:notice)
     controller.stub!(:errors)
 
-    @org = new_test_org #controller.current_organization
-    controller.stub!(:current_organization).and_return(@org)
+    @org = new_test_org 
 
     CSControllerTest::ENVIRONMENT["organization"] = @org
     @env = KPEnvironment.create(CSControllerTest::ENVIRONMENT)
