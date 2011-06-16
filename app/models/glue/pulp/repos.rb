@@ -165,7 +165,6 @@ module Glue::Pulp::Repos
     end
 
     def add_repo(name, url)
-      # TODO: Make this async
       repo = Glue::Pulp::Repo.new(:id => repo_id(name),
           :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
           :arch => arch,
@@ -207,20 +206,20 @@ module Glue::Pulp::Repos
     def update_repos
       return true unless productContent_changed?
 
-      old_content_ids = productContent_change[0].map {|pc| pc.content.id}
-      new_content_ids = productContent_change[1].map {|pc| pc.content.id}
+      old_content = productContent_change[0].nil? ? [] : productContent_change[0].map {|pc| pc.content.label}
+      new_content = productContent_change[1].map {|pc| pc.content.label}
 
-      added_content_ids = new_content_ids - old_content_ids
-      deleted_content_ids = old_content_ids - new_content_ids
+      added_content   = new_content - old_content
+      deleted_content = old_content - new_content
 
-      self.productContent.select {|pc| deleted_content_ids.include?(pc.content.id)}.each do |pc|
+      self.productContent.select {|pc| deleted_content.include?(pc.content.label)}.each do |pc|
         Rails.logger.debug "deleting repository #{repo_id(pc.content.name)}"
         Pulp::Repository.destroy(repo_id(pc.content.name))
       end
 
-      self.productContent.select {|pc| added_content_ids.include?(pc.content.id)}.each do |pc|
+      self.productContent.select {|pc| added_content.include?(pc.content.label)}.each do |pc|
         if !(self.environments.map(&:name).any? {|name| pc.content.name.include?(name)}) || pc.content.name.include?('locker')
-          Rails.logger.debug "creating repository #{repo_id(pc.content.name)}"
+        Rails.logger.debug "creating repository #{repo_id(pc.content.name)}"
           self.add_repo(pc.content.name, repository_url(pc.content.contentUrl))
         else
           raise "new content was added to environment other than locker. use promotion instead."

@@ -33,7 +33,8 @@ module LazyAccessor
 
       args.each do |symbol|
         send :define_method, "#{symbol.to_s}_will_change!" do
-          changed_remote_attributes[symbol.to_s] ||= cached_remote_attribute_value(symbol.to_s)
+          changed_remote_attributes[symbol.to_s] ||=
+              instance_variable_get("@#{symbol.to_s}").nil? ? remote_attribute_value(symbol.to_s, initializer, args.size > 1) : instance_variable_get("@#{symbol.to_s}")
         end
 
         send :define_method, "#{symbol.to_s}_changed?" do
@@ -43,21 +44,20 @@ module LazyAccessor
         send :define_method, "#{symbol.to_s}_change" do
           attr = symbol.to_s
           if remote_attribute_changed?(attr)
-            old = old_remote_attribute_value(attr, initializer, args.size > 1)
-            return [old, __send__(attr)]
+            return [changed_remote_attributes[attr], __send__(attr)]
           end
           nil
         end
 
         send :define_method, "#{symbol.to_s}_was" do
           attr = symbol.to_s
-          remote_attribute_changed?(attr) ? old_remote_attribute_value(attr, initializer, args.size > 1) : __send__(attr)
+          remote_attribute_changed?(attr) ? changed_remote_attributes[attr] : __send__(attr)
         end
 
         send :define_method, "#{symbol.to_s}=" do |val|
           attr = symbol.to_s
 
-          old = cached_remote_attribute_value(attr)
+          old = instance_variable_get("@#{symbol.to_s}").nil? ? remote_attribute_value(symbol.to_s, initializer, args.size > 1) : instance_variable_get("@#{symbol.to_s}")
           changed_remote_attributes[attr] = old if old != val
 
           instance_variable_set("@#{attr}", val)
@@ -86,6 +86,10 @@ module LazyAccessor
       @changed_remote_attributes ||= {}
     end
 
+    def changed_remote_attributes=(val)
+      @changed_remote_attributes = val
+    end
+
     def remote_attribute_changed?(attr)
       changed_remote_attributes.has_key?(attr)
     end
@@ -110,16 +114,11 @@ module LazyAccessor
     end
 
     private
-    def cached_remote_attribute_value(attr)
-      instance_variable_get("@#{attr}").nil? ? nil : instance_variable_get("@#{attr}")
-    end
+    def remote_attribute_value(attr, initializer, in_group)
+      return nil if new_record?
 
-    def old_remote_attribute_value(attr, initializer, in_group)
-      if changed_remote_attributes[attr].nil?
-        remote_values = run_initializer(in_group, initializer)
-        changed_remote_attributes[attr] = in_group ? remote_values["#{attr}"] : remote_values
-      end
-      changed_remote_attributes[attr]
+      remote_values = run_initializer(in_group, initializer)
+      changed_remote_attributes[attr] = in_group ? remote_values["#{attr}"] : remote_values
     end
 
     def run_initializer(in_group, initializer)

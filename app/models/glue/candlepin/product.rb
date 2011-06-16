@@ -91,7 +91,6 @@ module Glue::Candlepin::Product
       raise e
     end
 
-
     def del_product
       Rails.logger.info "Deleting product in candlepin: #{name}"
       Candlepin::Product.destroy self.cp_id
@@ -99,7 +98,6 @@ module Glue::Candlepin::Product
       Rails.logger.error "Failed to delete candlepin product #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
-
 
     def set_content
       self.productContent.each do |pc|
@@ -126,6 +124,7 @@ module Glue::Candlepin::Product
 
       self.productContent_will_change!
       self.productContent << pc
+      save!
       pc
     end
 
@@ -142,18 +141,19 @@ module Glue::Candlepin::Product
     def update_content
       return true unless productContent_changed?
 
-      old_content = productContent_change[0].nil? ? [] : productContent_change[0].map {|pc| pc.hash}
-      new_content = productContent_change[1].map {|pc| pc.hash}
+      # can't use content id, as it will be nil for new content, content label is unique however, will use that
+      old_content = productContent_change[0].nil? ? [] : productContent_change[0].map {|pc| pc.content.label}
+      new_content = productContent_change[1].map {|pc| pc.content.label}
 
       added_content   = new_content - old_content
       deleted_content = old_content - new_content
 
-      self.productContent.select {|pc| deleted_content.include?(pc.hash)}.each do |pc|
+      self.productContent.select {|pc| deleted_content.include?(pc.content.label)}.each do |pc|
         Rails.logger.debug "deleting content #{pc.content.id}"
         Candlepin::Content.destroy(pc.content.id)
       end
 
-      self.productContent.select {|pc| added_content.include?(pc.hash)}.each do |pc|
+      self.productContent.select {|pc| added_content.include?(pc.content.label)}.each do |pc|
         Rails.logger.debug "creating content #{pc.content.name}"
         new_content = Candlepin::Content.create pc.content
         pc.content.id = new_content[:id] # candlepin generates id for new content
@@ -200,5 +200,6 @@ module Glue::Candlepin::Product
       queue.create(:name => "delete subscriptions for product in candlepin: #{self.name}", :priority => 7, :action => [self, :delete_subscriptions])
       queue.create(:name => "candlepin product: #{self.name}", :priority => 8, :action => [self, :del_product])
     end
+
   end
 end

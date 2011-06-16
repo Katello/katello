@@ -240,6 +240,8 @@ Src::Application.routes.draw do
       resources :errata, :only => [:index]
       resources :distributions, :only => [:index]
     end
+    match '/repositories/discovery' => 'repositories#discovery', :via => :post
+    match '/repositories/discovery/:id' => 'repositories#discovery_status', :via => :get
 
     resources :packages, :only => [:show]
     resources :errata, :only => [:show]

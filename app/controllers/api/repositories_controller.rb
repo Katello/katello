@@ -18,12 +18,8 @@ class Api::RepositoriesController < Api::ApiController
   before_filter :find_product, :only => [:create]
   
   def create
-    # create product content in Candlepin
-    productContent = @product.add_new_content(params[:name], params[:url], 'yum')
-    # let glue layer to create repo in Pulp
-    @product.save
-    
-    render_to_json(productContent)
+    content = @product.add_new_content(params[:name], params[:url], 'yum')
+    render_to_json(content)
   end
 
   def index
@@ -33,6 +29,17 @@ class Api::RepositoriesController < Api::ApiController
 
   def show
     render :json => @repository
+  end
+
+  # proxy repository discovery call to pulp, so we don't have to create an async task to keep track of async task on pulp side
+  def discovery
+    r = ::Pulp::Proxy.post('/services/discovery/repo/', @_request.body)
+    render :text => r, :content_type => :json
+  end
+
+  def discovery_status
+    r = ::Pulp::Proxy.get("/services/discovery/repo/#{params[:id]}/")
+    render :text => r, :content_type => :json
   end
   
   def find_repository
