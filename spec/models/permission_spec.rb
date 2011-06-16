@@ -25,41 +25,41 @@ describe Permission do
     user_bob.roles << role_repoadmin
     user_bob.save
 
-    Role.allow 'super_admin', :organization => [:create]
-    Role.allow 'super_admin', :organization => [:new]
-    Role.allow 'super_admin', :test1 => [:test]
-    Role.allow 'super_admin', :test2 => [:test]
-    Role.allow 'super_admin', :test3 => [:test]
+    Role.allow 'super_admin', [:create], :organization
+    Role.allow 'super_admin', [:new], :organization
+    Role.allow 'super_admin', [:test], :test1
+    Role.allow 'super_admin', [:test], :test2
+    Role.allow 'super_admin', [:test], :test3
     Role.allow 'repo_admin', :create_repo, :repogroup, :repogroup_internal
     Role.allow 'repo_admin', :delete_repo, :repo, [:repogroup_internal, :repo_rhel6]
   end
 
   it "should list tags properly" do
-    Tag.tags_for('NIL').collect{|t| t.name}.sort.should ==  ["organization", "test1", "test2", "test3"]
+    ResourceType.all.collect{|t| t.name}.sort.should ==  ["organization", "test1", "test2", "test3", "repo", "repogroup"].sort
   end
 
   it "should list verbs properly" do
-    Verb.verbs_for('NIL').collect{|t| t.verb}.sort.should ==  ["create", "new", "test"]
+    Verb.verbs_for("repogroup").collect{|t| t.verb}.sort.should ==  ["create_repo"]
   end
 
   it "should allow superadmin to organization/create in rails" do
     r = Role.find_by_name('super_admin')
-    r.allowed_to?({:controller => 'organization', :action => 'create'}).should be_true
+    r.allowed_to?('create', 'organization').should be_true
   end
 
   it "should allow superadmin to organization/new in rails" do
     r = Role.find_by_name('super_admin')
-    r.allowed_to?({:controller => 'organization', :action => 'new'}).should be_true
+    r.allowed_to?('new', 'organization').should be_true
   end
 
   it "should deny repoadmin to organization/create in rails" do
     r = Role.find_by_name('repo_admin')
-    r.allowed_to?({:controller => 'organization', :action => 'create'}).should be_false
+    r.allowed_to?('create', 'organization').should be_false
   end
 
   it "should deny superadmin to xxx/create in rails" do
     r = Role.find_by_name('super_admin')
-    r.allowed_to?({:controller => 'xxx', :action => 'create'}).should be_false
+    r.allowed_to?('create', 'xxx').should be_false
   end
 
   it "allow repoadmin to create_repo in repogroup with tags repogroup:internal" do
