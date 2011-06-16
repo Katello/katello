@@ -83,12 +83,6 @@ describe SystemsController do
       @system = System.create!(:name=>"bar", :cp_type=>"system", :facts=>{"Test" => ""})
     end
     
-    it "should update the system facts" do
-      put :update, { :id => 1, :system => { :facts=> {"Test" => "NewData" }}}
-      response.should be_success
-      assigns[:system].facts["Test"].should == "NewData"
-    end
-    
     it "should update the system name" do
       put :update, { :id => 1, :system => { :name=> "foo" }}
       response.should be_success
