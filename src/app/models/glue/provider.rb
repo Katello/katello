@@ -113,13 +113,21 @@ module Glue::Provider
       raise e
     end
 
-    def del_product attrs
-      Rails.logger.info "Deleting product #{attrs['name']} for provider: #{name}"
-      Product.first(:conditions => {:cp_id => attrs['id']}).destroy
+    def import_product_from_cp attrs
+      Rails.logger.info "Importing product #{attrs['name']} for provider: #{name}"
+      productContent_attrs = attrs.delete(:productContent) if attrs.has_key?(:productContent)
+      product = Product.new(attrs) do |p|
+        p.provider = self
+        p.environments << self.organization.locker
+        p.productContent = p.build_productContent(productContent_attrs)
+      end
+      product.orchestration_for = :import_from_cp
+      product.save!
     rescue => e
-      Rails.logger.error "Failed to delete product #{attrs['name']} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
+      Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
+
 
     def owner_import zip_file_path
       Candlepin::Owner.import self.organization.cp_key, zip_file_path
@@ -130,8 +138,8 @@ module Glue::Provider
       queue.create(:name => "import of products in manifest #{zip_file_path}", :priority => 5, :action => [self, :queue_pool_product_creation])
     end
 
-    def queue_create_product attrs
-      queue.create(:name => "create product imported from candlepin: #{attrs['name']}", :priority => 4, :action => [self, :set_product, attrs])
+    def queue_import_product_from_cp attrs
+      queue.create(:name => "create product imported from candlepin: #{attrs['name']}", :priority => 4, :action => [self, :import_product_from_cp, attrs])
     end
 
     def queue_pool_product_creation
@@ -149,7 +157,7 @@ module Glue::Provider
 
       products_to_create.each do |p|
         Rails.logger.info "product: "+p.to_json
-        queue_create_product p
+        queue_import_product_from_cp p
       end
       process queue
     end
