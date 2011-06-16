@@ -60,7 +60,10 @@ module Glue::Candlepin::Product
 
     def arch
       attrs.each do |attr|
-        return attr[:value] if attr[:name] == 'arch'
+        if attr[:name] == 'arch'
+          return "noarch" if attr[:value] == 'ALL'
+          return attr[:value]
+        end
       end
       default_arch
     end
@@ -188,6 +191,8 @@ module Glue::Candlepin::Product
           end
         when :update, :promote
           queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])
+        when :import_from_cp
+          #do nothing
       end
     end
 
