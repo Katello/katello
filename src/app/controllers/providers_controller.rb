@@ -12,7 +12,7 @@
 
 class ProvidersController < ApplicationController
   include AutoCompleteSearch
-  before_filter :find_provider, :only => [:subscriptions, :edit, :update, :destroy, :product_create]
+  before_filter :find_provider, :only => [:edit, :update, :destroy]
   before_filter :require_user
   before_filter :panel_options, :only => [:index, :items]
   respond_to :html, :js
@@ -21,9 +21,6 @@ class ProvidersController < ApplicationController
     'contents'
   end
 
-  def schedule
-    @provider = Provider.find(params[:id])
-  end
 
   def products_repos
     @providers = current_organization.providers

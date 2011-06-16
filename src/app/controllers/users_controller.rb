@@ -17,9 +17,6 @@ class UsersController < ApplicationController
      'operations'
   end
    
-  # We don't want authorization on helptips, as they are a function of a user
-  skip_before_filter :authorize, :only => [:enable_helptip, :disable_helptip, :clear_helptips]
-  before_filter :authorize_update, :only => [:clear_helptips]
   before_filter :setup_options, :only => [:items, :index]
 
   
@@ -108,6 +105,7 @@ class UsersController < ApplicationController
   end
 
   def clear_helptips
+
     @user = User.where(:username => params[:id])[0]
     @user.clear_helptips
     notice _("Disabled help tips have been re-enabled.")
@@ -124,11 +122,6 @@ class UsersController < ApplicationController
     render :text => ""
   end
 
-  private
-
-  def authorize_update
-    authorize(params[:controller], "update")
-  end
   
   
 end
