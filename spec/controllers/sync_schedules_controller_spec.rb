@@ -14,7 +14,9 @@ describe SyncSchedulesController do
 
     @org = new_test_org
     for i in 1..10
-      @plan = SyncPlan.create!({:name => 'some plan_' + i.to_s, :organization => @org})
+      @plan = SyncPlan.create!(:name => 'some plan_' + i.to_s,
+                                  :sync_date => DateTime.now, :interval => 'daily',
+                                    :organization => @org)
     end
     @p = new_test_product_with_locker(@org)
     controller.stub!(:current_organization).and_return(@org)
@@ -27,12 +29,12 @@ describe SyncSchedulesController do
     end
   end
 
-  describe "POST 'apply_schedules'" do
-    it "should recieve a notice" do
+  describe "POST 'apply'" do
+    it "should receive a notice" do
       controller.should_receive(:notice)
       plans = [SyncPlan.first.id.to_s]
       products = [Product.first.id.to_s]
-      post 'apply_schedules', {:selected_items => {:plans=> plans, :products=> products}}
+      post 'apply', {:data => {:plans=> plans, :products=> products}.to_json}
     end
   end
 

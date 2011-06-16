@@ -15,11 +15,6 @@ class ChangesetsController < ApplicationController
   before_filter :find_changeset, :except => [:index, :list, :items]
   before_filter :find_environment, :except => [:index, :list, :items]
 
-  skip_before_filter :authorize, :only => [:dependency_size, :dependency_list, :show_content]
-  before_filter :changeset_auth, :only=> [:dependency_size, :dependency_list, :show_content]
-
-  skip_before_filter :authorize, :only => [:list, :edit, :show]
-  before_filter :index_auth, :only=>[:list, :edit, :show]
 
   before_filter :setup_options, :only => [:index, :items]
 
@@ -182,13 +177,6 @@ class ChangesetsController < ApplicationController
     @changeset = Changeset.find(params[:id])
   end
 
-  def changeset_auth
-      authorize params[:controller], :changeset
-  end
-
-  def index_auth
-      authorize params[:controller], :index
-  end
 
 
 end

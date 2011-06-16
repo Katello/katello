@@ -14,10 +14,6 @@ class PromotionsController < ApplicationController
   
   before_filter :find_environment
   
-  skip_before_filter :authorize, :only => [:detail, :repos]
-  before_filter :promote_auth, :only=> [:detail, :repos]
-   
-  
   def section_id
     'contents'
   end
@@ -149,11 +145,5 @@ class PromotionsController < ApplicationController
     @product = Product.find(params[:product_id]) if params[:product_id]
   end
 
-  private 
-  
-  def promote_auth
-      authorize params[:controller], :show
-  end
-  
 
 end
