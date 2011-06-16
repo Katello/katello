@@ -90,10 +90,6 @@ Role.allow 'admin_role', { :packages =>        [:read]}
 Role.allow 'admin_role', { :errata =>          [:read]}
 
 
-Role.allow 'product_shopper', ["create", "read","delete"], "product", ["Fedora 14", "RHUI","Red Hat Enterprise Linux 6 Server"]
-Role.allow 'environment_lord', ["create", "read", "update","delete"], "environment", ["root", "dev","qa","stage","prod"]
-Role.allow 'organization_czar', ["create", "read", "update","delete"], "organization", ["HR", "QA","IT","Development"]
-
 # ActiveRecord protection - allow admin_role all actions for all models
 ActiveRecord::Base.connection.tables.each do |t|
   Role.allow 'admin_role', [:create, :update, :delete], "ar_#{t}"
