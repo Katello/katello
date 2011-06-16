@@ -9,7 +9,7 @@ namespace :hudson do
       gem 'ci_reporter'
       require 'ci/reporter/rake/rspec'
     end
-    task :rspec => [:pre_ci, "ci:setup:rspec"]
+    task :rspec => [:pre_ci]
   end
 end
 
