@@ -7,6 +7,30 @@
 <link href="styles/text.css" rel="stylesheet" type="text/css" />
 <link href="styles/960grid/960.css" rel="stylesheet" type="text/css" />
 <link href="styles/styles.css" rel="stylesheet" type="text/css" />
+<link href="styles/slimbox2.css" rel="stylesheet" type="text/css" />
+<script type="text/JavaScript" src="js/jquery-1.6.1.min.js"></script>
+<script type="text/JavaScript" src="js/slimbox2.js"></script>
+<script type="text/JavaScript" src="js/cloud-carousel.1.0.5.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	$("#katello-screenshot-carousel").CloudCarousel( { 
+		minScale: 0.45,
+		reflHeight: 23,
+		reflGap:0,
+		xRadius: 150,
+		yRadius:10,
+		xPos: 200,
+		yPos: 120,
+		speed:0.10,
+		mouseWheel: false,
+		autoRotate: 'right',
+		autoRotateDelay: 5000
+	});
+	$("#katello-screenshot-carousel").css({"overflow":"visible"}).fadeIn();
+	
+});
+</script>
 </head>
 
 <body>
@@ -27,6 +51,22 @@
   </div>  
   <div id="header" class="container_16 clearfix">
     <div class="grid_8"><h1>Katello Project - System and Environment Management</h1></div>
+    <div class="grid_8" id="katello-screenshot-carousel">
+    	<a href="images/screenshots/katello_organization_screen.png" rel='lightbox' title="Katello Organization Screen">
+    		<img class="cloudcarousel" src="images/screenshots/katello_organization_screen_thumbnail.png" width="200" height="147" alt="Organization Screen for managing multiple organizations." title="Katello Organization Screen" />
+    	</a>
+    	<a href="images/screenshots/katello_provider_screen.png" rel='lightbox' title="Katello Provider Management Screen">
+    		<img class="cloudcarousel" src="images/screenshots/katello_provider_screen_thumbnail.png" width="200" height="147" alt="Provider Screen for managing various content providers." title="Katello Provider Screen" />
+    	</a>
+    	<a href="images/screenshots/katello_system_facts_screen.png" rel='lightbox' title="Katello System Facts Screen">
+    		<img class="cloudcarousel" src="images/screenshots/katello_system_facts_screen_thumbnail.png" width="200" height="147" alt="System Facts Screen for viewing a single system's facts." title="Katello System Facts Screen" />
+    	</a>  
+    	<a href="images/screenshots/katello_user_edit_screen.png" rel='lightbox' title="Katello User Edit Screen">
+    		<img class="cloudcarousel" src="images/screenshots/katello_user_edit_screen_thumbnail.png" width="200" height="147" alt="User Edit Screen for modifying the properties of a single user." title="Katello User Edit Screen" />
+    	</a>      	    	    	
+      <div id="katello-screenshot-title"></div>
+      <div id="katello-screenshot-alt" ></div>
+	 </div>
   </div>
   <div id="container" class="container_16 clearfix">
       <div class="grid_11" id="info_block">
