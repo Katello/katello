@@ -11,8 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class RolesController < ApplicationController
-  skip_before_filter :authorize, :only => [:verbs_and_scopes, :create_permission, :update_permission, :show_permission, :items]
-  before_filter :create_update_auth, :only=> [:verbs_and_scopes, :create_permission, :update_permission, :show_permission]
+
   before_filter :setup_options, :only => [:index, :items]
   
   include AutoCompleteSearch
@@ -143,15 +142,6 @@ class RolesController < ApplicationController
 
 
   private
-
-  #for edit/create ajax calls, allow if user can update or create
-  def create_update_auth
-    begin
-      authorize params[:controller], :update
-    rescue
-      authorize params[:controller], :create
-    end
-  end
 
 
   def setup_resource_types
