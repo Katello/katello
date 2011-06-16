@@ -86,8 +86,8 @@ class RolesController < ApplicationController
 
   def destroy
     @id = params[:id]
-    @role = Role.find(@id)
     begin
+      @role = Role.find(@id)
       #remove the user
       @role.destroy
       if @role.destroyed?
@@ -97,8 +97,9 @@ class RolesController < ApplicationController
       else
         raise
       end
-    rescue Exception => e
-      errors e.to_s
+    rescue Exception => error
+      errors error.to_s
+      render :text=> error.to_s, :status=>:bad_request and return
     end
   end
 
