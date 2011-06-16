@@ -41,7 +41,7 @@ describe Provider do
     @organization.save!
   end
 
-  context "set_product creates product with correct attributes" do
+  context "import_product_from_cp creates product with correct attributes" do
     before(:each) do
       Glue::Candlepin::ProductContent.stub(:create)
       Glue::Candlepin::ProductContent.stub(:new)
@@ -81,7 +81,7 @@ describe Provider do
       Candlepin::Product.should_receive(:get).once.with("3").and_return([@product_to_return])
       Candlepin::Product.should_receive(:get).once.with("4").and_return([@product_to_return])
 
-      @provider.should_receive(:queue_create_product).exactly(4).times.with(@product_to_return)
+      @provider.should_receive(:queue_import_product_from_cp).exactly(4).times.with(@product_to_return)
       @provider.should_receive(:process).once
 
       @provider.queue_pool_product_creation
@@ -110,7 +110,7 @@ describe Provider do
       @provider.set_product({ :name => "product1", :id => "product1_id", :productContent => [] })
       @provider.set_product({ :name => "product2", :id => "product2_id", :productContent => [] })
     end
-    
+
     it "should create sync for all it's products" do
       @provider.products.each do |p|
         p.should_receive(:sync).once()
@@ -118,7 +118,7 @@ describe Provider do
       @provider.sync
     end
   end
-  
+
   context "Provider in invalid state should not pass validation" do
     before(:each) { @provider = Provider.new }
 
@@ -159,18 +159,18 @@ describe Provider do
       @provider.repository_url = "notavalidurl"
       @provider.should_not be_valid
     end
-    
+
     it "should be invalid to create two providers with the same name" do
       @provider.name = "some name"
       @provider.repository_url = "https://some.url.here"
       @provider.provider_type = Provider::REDHAT
       @provider.save!
-      
+
       @provider2 = Provider.new
       @provider2.name = "some name"
       @provider2.repository_url = "https://some.url.here"
       @provider2.provider_type = Provider::REDHAT
-      
+
       @provider2.should_not be_valid
       @provider2.errors[:name].should_not be_empty
     end
@@ -189,18 +189,18 @@ describe Provider do
       @provider.should be_valid
       @provider.errors[:repository_url].should be_empty
     end
-    
+
   end
-  
+
   context "Delete a provider" do
-    
+
     it "should delete the RH provider" do
       @provider = Provider.create(to_create_rh)
       id = @provider.id
       @provider.destroy
       lambda{Provider.find(id)}.should raise_error(ActiveRecord::RecordNotFound)
     end
-    
+
     it "should delete the Custom provider" do
       @provider = Provider.create(to_create_rh)
       id = @provider.id
@@ -208,5 +208,5 @@ describe Provider do
       lambda{Provider.find(id)}.should raise_error(ActiveRecord::RecordNotFound)
     end
   end
-  
+
 end

@@ -256,7 +256,7 @@ module Glue::Pulp::Repos
 
     def save_repos_orchestration
       case orchestration_for
-        when :create
+        when :create, :import_from_cp
           queue.create(:name => "create pulp repositories for product: #{self.name}", :priority => 6, :action => [self, :set_repos])
           queue.create(:name => "setting up pulp sync schedule for product: #{self.name}",
                               :priority => 7, :action => [self, :setup_sync_schedule]) if self.sync_plan_id_changed?

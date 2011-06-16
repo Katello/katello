@@ -37,17 +37,20 @@ class Product < ActiveRecord::Base
   def initialize(attrs = nil)
 
     unless attrs.nil?
-      id_key = attrs.has_key?('id') ? 'id' : :id
+      attrs = attrs.with_indifferent_access
+
       #rename "id" to "cp_id" (activerecord and candlepin variable name conflict)
-      if attrs.has_key?(id_key) && !(attrs.has_key?(:cp_id) || attrs.has_key?('cp_id')) && new_record?
-        attrs[:cp_id] = attrs[id_key]
-        attrs.delete(id_key)
+      if attrs.has_key?(:id)
+        if !attrs.has_key?(:cp_id)
+          attrs[:cp_id] = attrs[:id]
+        end
+        attrs.delete(:id)
       end
 
-        # ugh. hack-ish. otherwise we have to modify code every time things change on cp side
-        attrs = attrs.reject do |k, v|
-          !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
-        end
+      # ugh. hack-ish. otherwise we have to modify code every time things change on cp side
+      attrs = attrs.reject do |k, v|
+        !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+      end
     end
 
     super(attrs)
