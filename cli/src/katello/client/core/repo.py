@@ -16,16 +16,19 @@
 #
 
 import os
+import time
 import urlparse
 from gettext import gettext as _
 from pprint import pprint
 
+from katello.client import constants
 from katello.client.core.utils import is_valid_record, format_date
 from katello.client.api.repo import RepoAPI
 from katello.client.api.environment import EnvironmentAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_product, get_repo
+from katello.client.core.utils import system_exit, run_spinner_in_bg
 
 _cfg = Config()
 
@@ -49,6 +52,7 @@ class RepoAction(Action):
 class Create(RepoAction):
 
     description = _('create a repository')
+    selected = []
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
@@ -56,7 +60,9 @@ class Create(RepoAction):
         self.parser.add_option('--name', dest='name',
                                help=_("repository name (required)"))
         self.parser.add_option("--url", dest="url",
-                               help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/ (required)"))
+                               help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
+        self.parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
+                               help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
         self.parser.add_option('--product', dest='prod',
                                help=_("product name (required)"))
 
@@ -69,16 +75,88 @@ class Create(RepoAction):
     def run(self):
         name     = self.get_option('name')
         url      = self.get_option('url')
+        assumeyes = self.get_option('assumeyes')
         prodName = self.get_option('prod')
         orgName  = self.get_option('org')
 
+        print(_("Discovering repository urls, this could take some time..."))
+        try:
+            task = self.api.repo_discovery(url, 'yum')
+        except Exception,e:
+            system_exit(os.EX_DATAERR, _("Error: %s" % e))
+
+        discoveryResult = run_spinner_in_bg(self.wait_for_discovery, [task])
+        repourls = discoveryResult['result'] or []
+
+        if not len(repourls):
+            system_exit(os.EX_OK, "No repositories discovered @ url location [%s]" % url)
+
+        self.printer.printHeader(_("Repository Urls discovered @ [%s]" % url))
+        if not assumeyes:
+            proceed = ''
+            num_selects = [str(i+1) for i in range(len(repourls))]
+            select_range_str = constants.SELECTION_QUERY % len(repourls)
+            while proceed.strip().lower() not in  ['q', 'y']:
+                if not proceed.strip().lower() == 'h':
+                    self.__print_urls(repourls)
+                proceed = raw_input(_("\nSelect urls for which candidate repos should be created; use `y` to confirm (h for help):"))
+                select_val = proceed.strip().lower()
+                if select_val == 'h':
+                    print select_range_str
+                elif select_val == 'a':
+                    self.__add_selection(repourls)
+                elif select_val in num_selects:
+                    self.__add_selection([repourls[int(proceed.strip().lower())-1]])
+                elif select_val == 'q':
+                    self.selection = []
+                    system_exit(os.EX_OK, _("Operation aborted upon user request."))
+                elif set(select_val.split(":")).issubset(num_selects):
+                    lower, upper = tuple(select_val.split(":"))
+                    self.__add_selection(repourls[int(lower)-1:int(upper)])
+                elif select_val == 'c':
+                    self.selected = []
+                elif select_val == 'y':
+                    if not len(self.selected):
+                        proceed = ''
+                        continue
+                    else:
+                        break
+                else:
+                    continue
+        else:
+            #select all
+            self.__add_selection( repourls)
+            self.__print_urls(repourls)
+
         prod = get_product(orgName, prodName)
         if prod != None:
-          
-            repo = self.api.create(prod["cp_id"], name, url)
-            print _("Successfully created repository [ %s ]") % name
+            for repourl in self.selected:
+                parsedUrl = urlparse.urlparse(repourl)
+                repoName = "%s%s" % (name, parsedUrl.path.replace("/", "_"))
+                repo = self.api.create(prod["cp_id"], repoName, repourl)
+                print _("Successfully created repository [ %s ]") % repoName
                 
         return os.EX_OK
+
+    def __add_selection(self, urls):
+        for url in urls:
+            if url not in self.selected:
+                self.selected.append(url)
+
+    def __print_urls(self, repourls):
+        for index, url in enumerate(repourls):
+            if url in self.selected:
+                print "(+)  [%s] %-5s" % (index+1, url)
+            else:
+                print "(-)  [%s] %-5s" % (index+1, url)
+
+    def wait_for_discovery(self, discoveryTask):
+        task = discoveryTask
+        while discoveryTask['state'] not in ('finished', 'error', 'timed out', 'canceled'):
+            time.sleep(0.25)
+            discoveryTask = self.api.repo_discovery_status(discoveryTask['id'])
+
+        return discoveryTask
 
 
 class Status(RepoAction):
@@ -218,7 +296,6 @@ class List(RepoAction):
                 self.printer.printItems(repos)
         
         return os.EX_OK
-
 
 # command --------------------------------------------------------------------
 

@@ -65,8 +65,7 @@ class Api::ProvidersController < Api::ApiController
   rescue => e
     render :text => _("Manifest import for provider '#{params[:id]}' failed"), :status => 500
   end
-  
-  
+
   def import_products
     results = params[:products].collect do |p|
       to_create = Product.new(p) do |product|

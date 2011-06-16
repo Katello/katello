@@ -17,33 +17,34 @@ require 'http_resource'
 module Pulp
 
   class Proxy
-    def self.post request
-      Rails.logger.debug "Sending POST request to Pulp: #{request.fullpath}"
-      Proxy.resource[request.fullpath].post request.body, :accept => :json, :content_type => :json
+    def self.post path, body
+      Rails.logger.debug "Sending POST request to Pulp: #{path}"
+      client = PulpResource.rest_client(Net::HTTP::Post, :post, path_with_pulp_prefix(path))
+      client.post body, PulpResource.default_headers
     end
 
-    def self.delete request
-      Rails.logger.debug "Sending DELETE request to Pulp: #{request.fullpath}"
-      Proxy.resource[request.fullpath].delete
+    def self.delete path
+      Rails.logger.debug "Sending DELETE request to Pulp: #{path}"
+      client = PulpResource.rest_client(Net::HTTP::Delete, :delete, path_with_pulp_prefix(path))
+      client.delete(PulpResource.default_headers)
     end
 
-    def self.get request
-      # Force the / at the end
-      path = request.fullpath + "/"
-      Rails.logger.debug "Sending GET request to Pulp: #{request.fullpath}"
-      ret = Proxy.resource[path].get :accept => :json
+    def self.get path
+      Rails.logger.debug "Sending GET request to Pulp: #{path}"
+      client = PulpResource.rest_client(Net::HTTP::Get, :get, path_with_pulp_prefix(path))
+      client.get(PulpResource.default_headers)
     end
 
-    def self.resource
-      cfg = AppConfig.pulp
-      RestClient::Resource.new(cfg.url, cfg.username, cfg.password)
+    def self.path_with_pulp_prefix path
+      PulpResource.prefix + path
     end
   end
 
   class PulpResource < HttpResource
     cfg = AppConfig.pulp
     url = cfg.url
-    self.site = url.gsub(URI.parse(url).path, "")
+    self.prefix = URI.parse(url).path
+    self.site = url.gsub(self.prefix, "")
     self.consumer_secret = cfg.oauth_secret
     self.consumer_key = cfg.oauth_key
     self.ca_cert_file = cfg.ca_cert_file
@@ -159,6 +160,18 @@ module Pulp
       rescue RestClientException => e
         return nil if e.code.to_i == 404 && !yell_on_404
         raise e
+      end
+
+      def start_discovery url, type
+        response = post("/pulp/api/services/discovery/repo/", JSON.generate(:url => url, :type => type), self.default_headers)
+        return JSON.parse(response.body).with_indifferent_access if response.code == 202
+        Rails.logger.error("Failed to start repository discovery. HTTP status: #{response.code}. #{response.body}")
+        raise RuntimeError, "#{response.code}, failed to start repository discovery: #{response.body}"
+      end
+
+      def discovery_status task_id
+        response = get("/pulp/api/services/discovery/repo/#{task_id}/", self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
       end
 
       def repository_path
