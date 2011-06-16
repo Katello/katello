@@ -101,6 +101,8 @@ s  end
         @system.uuid = uuid
         @system.save
         Candlepin::Consumer.stub!(:get).and_return({:href => href, :uuid => uuid})
+        Candlepin::Consumer.stub!(:entitlements).and_return({})        
+        Candlepin::Consumer.stub!(:available_pools).and_return([])
       end
 
       it "should access candlepin if uninialized" do

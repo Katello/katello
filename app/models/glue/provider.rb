@@ -47,7 +47,6 @@ module Glue::Provider
     end
 
     def add_custom_product(name, description, url)
-      Product.new()
       # URL isn't used yet until we can do custom repo discovery in pulp
       begin
         Rails.logger.info "Creating custom product #{name} for provider: #{self.name}"

@@ -21,6 +21,7 @@ class Product < ActiveRecord::Base
   include Glue::Pulp::Repos if (AppConfig.use_cp and AppConfig.use_pulp)
   include Glue if AppConfig.use_cp
   include Authorization
+  include AsyncOrchestration
 
   has_and_belongs_to_many :environments, {:class_name => "KPEnvironment", :uniq => true}
   has_and_belongs_to_many :changesets
@@ -59,7 +60,6 @@ class Product < ActiveRecord::Base
   def organization
     provider.organization
   end
-
 
   def locker
     environments.select {|e| e.locker}.first
