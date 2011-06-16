@@ -7,7 +7,7 @@ module ProductHelperMethods
     @locker.name = "Locker"
     @locker.stub!(:products).and_return([])
     org.stub!(:locker).and_return(@locker)
-    new_test_product_with_locker org
+    new_test_product org, @locker
   end
 
   def new_test_product org, env
