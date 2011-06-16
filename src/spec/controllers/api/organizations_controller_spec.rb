@@ -37,24 +37,47 @@ describe Api::OrganizationsController do
   
   describe "show a organization" do
     it 'should call katello organization find api' do
-      Organization.should_receive(:first).once.with(:conditions => {:cp_key => 1})
-      get 'show', :id => 1 
+      Organization.should_receive(:first).once.with(:conditions => {:cp_key => "spec"})
+      get 'show', :id => "spec"
     end
   end
-  
+
+  describe "show a organization" do
+    it 'should call katello organization find api and account for spaces in search name' do
+      Organization.should_receive(:first).once.with(:conditions => {:cp_key => "show_org_with_spaces"})
+      get 'show', :id => "show org with spaces"
+    end
+  end
+
   describe "delete a organization" do    
     it 'should call organization destroy method' do
-      Organization.should_receive(:first).once.with(:conditions => {:cp_key => 1}).and_return(@org)
+      Organization.should_receive(:first).once.with(:conditions => {:cp_key => "spec"}).and_return(@org)
       @org.should_receive(:destroy).once
-      delete 'destroy', :id => 1 
+      delete 'destroy', :id => "spec"
     end
   end
-  
+
+  describe "delete a organization" do
+    it 'should call organization destroy method while accounting for spaces in search name' do
+      Organization.should_receive(:first).once.with(:conditions => {:cp_key => "delete_org_with_spaces"}).and_return(@org)
+      @org.should_receive(:destroy).once
+      delete 'destroy', :id => "delete org with spaces"
+    end
+  end
+
   describe "update a organization" do
     it 'should call org update_attributes' do
-      Organization.should_receive(:first).once.with(:conditions => {:cp_key => 1}).and_return(@org)
+      Organization.should_receive(:first).once.with(:conditions => {:cp_key => "spec"}).and_return(@org)
       @org.should_receive(:update_attributes!).once
-      put 'update', :id => 1
+      put 'update', :id => "spec"
+    end
+  end
+
+  describe "update a organization" do
+    it 'should call org update_attributes while accounting for spaces in the search name' do
+      Organization.should_receive(:first).once.with(:conditions => {:cp_key => "update_org_with_spaces"}).and_return(@org)
+      @org.should_receive(:update_attributes!).once
+      put 'update', :id => "update org with spaces"
     end
   end
 end
