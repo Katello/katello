@@ -2,14 +2,14 @@
 # for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
 namespace :hudson do
   task :spec => ["rake:configuration", "hudson:setup:rspec", 'rake:spec']
-
+  require 'ci/reporter/rake/rspec'
+  
   namespace :setup do
     task :pre_ci do
       ENV["CI_REPORTS"] = 'hudson/reports/spec/'
       gem 'ci_reporter'
-      require 'ci/reporter/rake/rspec'
     end
-    task :rspec => [:pre_ci]
+    task :rspec => [:pre_ci, "ci:setup:rspec"]
   end
 end
 
