@@ -181,12 +181,19 @@ class Role < ActiveRecord::Base
   }
 
   ACTION_TO_VERB = {
+    :certificates => {:serials => 'read'},
+    :changesets => {:list=>'read', :edit=>'read', :show=>'read', :dependency_size=>'read', :dependency_list=>'read', :show_content=>'read'},
+    :consumers => {:export_status => 'read'},
     :notices => {:get_new => 'read', :details => 'read', :note_count => 'read',
                  :destroy_all => 'delete'},
+    :owners => {:import_status => 'read'},
+    :promotions => {:products=>'read', :packages=>'read', :trees=>'read', :errata=>'read', :detail=>'read', :repos=>'read'},
+    :providers => {:subscriptions=>'read', :products_repos=>'read'},
+    :roles => {:verbs_and_scopes => 'read', :create_permission=>'update', :update_permission=>'update', :show_permission=>'read'},
     :sync_management => {:status => 'read',:product_status => 'read'},
-    :certificates => {:serials => 'read'},
-    :consumers => {:export_status => 'read'},
-    :owners => {:import_status => 'read'}
+    :systems=> {:packages=>'read', :subscriptions=>'read', :facts=>'read', :update_subscriptions=>'update'},
+    :users => {:enable_helptip=>'update', :disable_helptip=>'update', :clear_helptips=>'update'},
+    
   }
 
   def action_to_verb(verb, tags)

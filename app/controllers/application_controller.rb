@@ -228,6 +228,7 @@ class ApplicationController < ActionController::Base
 
   # authorize the user for the requested action
   def authorize(ctrl = params[:controller], action = params[:action])
+
     user = current_user
     user = User.anonymous unless user
     logger.debug "Authorizing #{current_user.username} for #{ctrl}/#{action}"
