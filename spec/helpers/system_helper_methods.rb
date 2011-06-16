@@ -3,7 +3,10 @@ include OrganizationHelperMethods
 module SystemHelperMethods
   def setup_system_creation
     new_test_org
-    Candlepin::Consumer.should_receive(:create).at_least(:once).and_return({:owner=> { :key=> 'test_organization'}})
+    Candlepin::Consumer.stub(:create).and_return({:owner=> { :key=> 'test_organization'}})
+    Candlepin::Consumer.stub(:update).and_return({})
+    Candlepin::Consumer.stub(:entitlements).and_return({})
+    Candlepin::Consumer.stub(:available_pools).and_return([])
   end
 
 end

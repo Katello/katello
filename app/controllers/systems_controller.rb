@@ -71,7 +71,8 @@ class SystemsController < ApplicationController
   end  
 
   def update
-    if @system.update_attributes(params[:system])
+    begin 
+      @system.update_attributes(params[:system])
       notice _("System updated.")
       
       respond_to do |format|
@@ -79,7 +80,7 @@ class SystemsController < ApplicationController
         format.js  
       end
       
-    else
+    rescue Exception => e
       errors @system.errors
       respond_to do |format|
         format.html { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
