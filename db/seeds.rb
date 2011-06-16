@@ -56,8 +56,7 @@ Role.allow 'admin_role', { :sync_schedules =>  [:read, :apply] }
 Role.allow 'admin_role', { :sync_plans =>      [:create, :read, :update, :delete] }
 Role.allow 'admin_role', { :dashboard =>       [:create, :read, :update, :delete] }
 Role.allow 'admin_role', { :content =>         [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :systems =>         [:create, :read, :update, :delete,
-                                                :packages, :subscriptions, :update_subscriptions, :facts] }
+Role.allow 'admin_role', { :systems =>         [:create, :read, :update, :delete] }
 Role.allow 'admin_role', { :operations =>      [:create, :read, :update, :delete] }
 Role.allow 'admin_role', { :products =>        [:create, :read, :update, :delete] }
 Role.allow 'admin_role', { :owners =>          [:create, :read, :update, :delete, :import] }
@@ -70,17 +69,15 @@ Role.allow 'admin_role', { :users =>           [:create, :read, :update, :delete
 Role.allow 'admin_role', { :roles =>           [:create, :read, :update, :delete] }
 Role.allow 'admin_role', { :nodes =>           [:read] }
 Role.allow 'admin_role', { :puppetclasses =>   [:read] }
-Role.allow 'admin_role', { :providers =>       [:create, :read, :update, :delete,
-                                                :subscriptions, :schedule, :repos, :products_repos, :repo_create,
-                                                :repo_update, :repo_destroy, :product_create, :product_update, :product_destroy] }
+Role.allow 'admin_role', { :providers =>       [:create, :read, :update, :delete] }
 Role.allow 'admin_role', { :repositories =>    [:create, :read, :update, :delete] }
 Role.allow 'admin_role', { :search =>          [:create, :read, :delete] }
 Role.allow 'admin_role', { :environments =>    [:create, :read, :update, :delete] }
 Role.allow 'admin_role', { :lockers =>         [:create, :read, :update, :delete] }
 Role.allow 'admin_role', { :organizations =>   [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :changesets =>      [:create, :read, :update, :delete, :changeset, :promote] }
+Role.allow 'admin_role', { :changesets =>      [:create, :read, :update, :delete, :promote] }
 
-Role.allow 'admin_role', { :promotions =>      [:read, :products, :packages, :trees, :errata] }
+Role.allow 'admin_role', { :promotions =>      [:read] }
 Role.allow 'admin_role', { :user_sessions =>   [:create, :read, :update, :delete] }
 Role.allow 'admin_role', { :accounts =>        [:create, :read, :update, :delete] }
 Role.allow 'admin_role', { :jammit =>          [:package] }

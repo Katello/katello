@@ -98,13 +98,16 @@ describe UsersController do
       @user.username = "foo-user"
       @user.password = "password"
       @user.helptips_enabled = true
-      @user.save 
+      @user.save!
+      @user.stub(:allowed_to?).and_return true
+
       login_user :user => @user
     end    
     
     it "should enable and disable a helptip if user's helptips are enabled" do
       assert @user.help_tips.empty?
       post 'disable_helptip', {:key=>"apples"}
+      response.should be_success
       user = User.find(@user.id)
       assert !user.help_tips.empty?
       
