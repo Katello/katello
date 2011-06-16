@@ -1,5 +1,5 @@
 %div{:class=>"permission", :id=>"permission_#{perm_id(perm)}"}
-  = form_for perm,:url => perm.new_record? ? role_create_permission_path(role) : permission_update_path(role, perm), :html => {:data_type => "forms"} do |f|
+  = form_for perm,:url => perm.new_record? ? role_create_permission_path(role) : role_permission_update_path(role, perm), :html => {:data_type => "forms"} do |f|
     .grid_6.la
       %h6 #{_("Permission")}
     .grid_1.la
