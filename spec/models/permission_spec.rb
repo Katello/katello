@@ -69,12 +69,12 @@ describe Permission do
 
   it "deny repoadmin to create_repo in repogroup" do
     r = Role.find_by_name('repo_admin')
-    r.allowed_to?("create_repo", "repogroup").should be_false
+    r.allowed_to?("create_repo", "repogroup", 'repogroup_external').should be_false
   end
 
   it "deny repoadmin to create_repo" do
     r = Role.find_by_name('repo_admin')
-    r.allowed_to?("create_repo").should be_false
+    r.allowed_to?("create_repo", "repo-bad").should be_false
   end
 
   it "allow repoadmin to delete_repo in repo with tags repogroup:internal repo:rhel6" do
