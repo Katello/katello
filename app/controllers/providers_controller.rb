@@ -12,7 +12,7 @@
 
 class ProvidersController < ApplicationController
   include AutoCompleteSearch
-  before_filter :find_provider, :only => [:edit, :update, :destroy]
+  before_filter :find_provider, :only => [:subscriptions, :edit, :update, :destroy]
   before_filter :require_user
   before_filter :panel_options, :only => [:index, :items]
   respond_to :html, :js
