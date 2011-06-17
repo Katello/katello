@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:       katello		
-Version:	0.1.47
+Version:	0.1.48
 Release:	1%{?dist}
 Summary:	A package for managing application lifecycle for Linux systems
 	
@@ -165,6 +165,32 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Jun 17 2011 Justin Sherrill <jsherril@redhat.com> 0.1.48-1
+- removing hudson task during rpm building (jsherril@redhat.com)
+- added api repository controller tests for repository discovery
+  (dmitri@redhat.com)
+- Search - adding some spec tests (bbuckingham@redhat.com)
+- Removed improper test case from systems controller. (ehelms@redhat.com)
+- Added systems_controller spec tests for wider coverage. (ehelms@redhat.com)
+- Added system_helper_methods for spec testing that mocks the backend
+  Candlepin:Consumer call to allow for controller testing against ActiveRecord.
+  (ehelms@redhat.com)
+- adding qunit test files for testswarm server (shughes@scooby.rdu.redhat.com)
+- 6489: added support for repository discovery during custom product creation
+  (dmitri@appliedlogic.ca)
+- forcing a Require when task runs, doesnt seem to pick it up otherwise
+  (katello-devel@redhat.com)
+- testing taking out the ci_reports section for now (katello-devel@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (adprice@redhat.com)
+- added specs to test against fix for bug #701406 (adprice@redhat.com)
+- Fixed the unit tests for sync schedule controller (paji@redhat.com)
+- converting some legacy role work arounds to the new role map in role.rb
+  (jsherril@redhat.com)
+- adding missing katello.yml (jsherril@redhat.com)
+- 701406 - fixed issue where api was looking for org via displayName instead of
+  key (adprice@redhat.com)
+
 * Thu Jun 16 2011 Justin Sherrill <jsherril@redhat.com> 0.1.47-1
 - initial public build 
 
