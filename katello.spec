@@ -113,6 +113,7 @@ rm -rf %{buildroot}%{homedir}/%{name}.spec
 #remove development tasks
 rm %{buildroot}%{homedir}/lib/tasks/rcov.rake
 rm %{buildroot}%{homedir}/lib/tasks/yard.rake
+rm %{buildroot}%{homedir}/lib/tasks/hudson.rake
 
 #correct permissions
 find %{buildroot}%{homedir} -type d -print0 | xargs -0 chmod 755
