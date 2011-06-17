@@ -70,6 +70,7 @@ Role.allow 'admin_role', [:read, :delete, :sync], "sync_management"
 Role.allow 'admin_role', [:read], "packages"
 Role.allow 'admin_role', [:read], "errata"
 Role.allow 'admin_role', [:create, :delete, :read], "search"
+Role.allow 'admin_role', [:read], "operations"
 
 #These are candlepin proxy actions
 Role.allow 'admin_role', [:create, :read, :update, :delete, :import], "owners"
