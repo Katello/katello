@@ -94,7 +94,7 @@ class Role < ActiveRecord::Base
 
 
     resource_type = nil_to_string resource_type
-    tags = nil_to_string tags
+    tags = [] if tags.nil?
     tags = [tags] unless tags.is_a? Array
 
     # create permissions
