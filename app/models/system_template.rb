@@ -16,6 +16,7 @@ class SystemTemplate < ActiveRecord::Base
   belongs_to :environment, {:class_name => "KPEnvironment"}
 
   validates_presence_of :name
+  validates_uniqueness_of :name
 
   attr_accessor :packages, :errata, :products, :host_group, :kickstart_attrs
 
@@ -116,7 +117,7 @@ class SystemTemplate < ActiveRecord::Base
     json["errata"].collect   do |e| self.add_erratum(e) end if not json["errata"].nil?
 
     self.host_group = json["host_group"] if not json["host_group"].nil?
-    
+
     if not json["kickstart_attributes"].nil?
       json["kickstart_attributes"].each_pair do |k,v|
         self.kickstart_attrs[k] = v
@@ -140,11 +141,17 @@ class SystemTemplate < ActiveRecord::Base
 
 
   def add_package package_name
-      package = self.find_package_in_env(package_name)
-      if package == nil
-        raise Errors::TemplateContentException.new("Package #{package_name} not found in this environment.")
-      end
-      self.packages << package
+    package = self.find_package_in_env(package_name)
+    if package == nil
+      raise Errors::TemplateContentException.new("Package #{package_name} not found in this environment.")
+    end
+    self.packages = (self.packages << package).uniq
+  end
+
+
+  def remove_package package_name
+    idx = self.packages.map(&:name).index(package_name)
+    self.packages.delete_at(idx) if not idx.nil?
   end
 
 
@@ -153,7 +160,13 @@ class SystemTemplate < ActiveRecord::Base
     if erratum == nil
       raise Errors::TemplateContentException.new("Errata #{erratum_id} not found in this environment.")
     end
-    self.errata << erratum
+    self.errata = (self.errata << erratum).uniq
+  end
+
+
+  def remove_erratum erratum_id
+    idx = self.errata.map(&:id).index(erratum_id)
+    self.errata.delete_at(idx) if not idx.nil?
   end
 
 
@@ -162,7 +175,13 @@ class SystemTemplate < ActiveRecord::Base
     if product == nil
       raise Errors::TemplateContentException.new("Product #{product_name} not found in this environment.")
     end
-    self.products << product
+    self.products = (self.products << product).uniq
+  end
+
+
+  def remove_product product_name
+    idx = self.products.map(&:name).index(product_name)
+    self.products.delete_at(idx) if not idx.nil?
   end
 
 
@@ -177,31 +196,17 @@ class SystemTemplate < ActiveRecord::Base
      )
   end
 
+
   protected
 
-  def packages_json= attrs
-    @attributes['packages_json'] = attrs
+
+  def attrs_to_json
+    self.products_json = self.products.map(&:name).to_json
+    self.errata_json   = self.errata.map(&:id).to_json
+    self.packages_json = self.packages.map(&:name).to_json
+    self.kickstart_attrs_json = self.kickstart_attrs.to_json
+    self.host_group_json      = self.host_group.to_json
   end
-
-  def errata_json= attrs
-    @attributes['errata_json'] = attrs
-  end
-
-
-  def products_json= attrs
-    @attributes['products_json'] = attrs
-  end
-
-
-  def host_groups_json= attrs
-    @attributes['host_groups_json'] = attrs
-  end
-
-
-  def kickstart_attrs_json= attrs
-    @attributes['kickstart_attrs_json'] = attrs
-  end
-
 
   def find_errata_in_env(erratum_id)
 
@@ -231,12 +236,6 @@ class SystemTemplate < ActiveRecord::Base
   end
 
 
-  def attrs_to_json
-    self.products_json = self.products.map(&:name).to_json
-    self.errata_json   = self.errata.map(&:id).to_json
-    self.packages_json = self.packages.map(&:name).to_json
-    self.kickstart_attrs_json = self.kickstart_attrs.to_json
-    self.host_group_json      = self.host_group.to_json
-  end
+
 
 end
