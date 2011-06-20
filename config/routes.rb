@@ -207,7 +207,7 @@ Src::Application.routes.draw do
 
     resources :templates do
       post :promote, :on => :member
-      put :edit_content, :on => :member
+      put :update_content, :on => :member
       post :import, :on => :collection
       get :export, :on => :member
     end
