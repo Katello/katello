@@ -41,9 +41,10 @@ class ProvidersController < ApplicationController
 
       rescue Exception => error
         errors _("There was a format error with your Subscription Manifest"), {:synchronous_request => false}
-
         Rails.logger.error "error uploading subscriptions."
         Rails.logger.error error
+        Rails.logger.error error.backtrace.join("\n")
+       render :partial => "subscriptions", :locals => {:provider => @provider},:status => :bad_request and return
       end
     end
 
