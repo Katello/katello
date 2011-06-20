@@ -51,13 +51,13 @@
           .panel-content
           %br.clear
   
-    .left
+    #content_tree.left
       %h2 #{@environment.name + _(" Content")}
-      #breadcrumb.clickable.clear  
-      #list.shadowbox.outlined{"data-page_size"=>current_user.page_size}
-        #slider.has_content.slider
+      .tree_breadcrumb.clickable.clear
+      #list.sliding_list.shadowbox.outlined{"data-page_size"=>current_user.page_size}
+        .slider_one.has_content.slider
           = render(:partial=>"detail")
-        #slider-two.no_content.slider
+        .slider_two.no_content.slider
 
 
           
