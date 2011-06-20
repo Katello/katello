@@ -46,58 +46,44 @@ end
 
 Permission.delete_all
 
+# ActiveRecord protection - allow admin_role all actions for all models
+ActiveRecord::Base.connection.tables.each do |t|
+  Role.allow 'admin_role', [:create, :update, :delete, :read], "#{t}"
+end
+
+
 # configure limited permissions for the anonymous user
-Role.allow 'anonymous_role', [:create, :update], :ar_notices
-Role.allow 'anonymous_role', [:create, :update], :ar_user_notices
+Role.allow 'anonymous_role', [:create, :update], :notices
+Role.allow 'anonymous_role', [:create, :update], :user_notices
 
-# configure permissions for the super admin
-Role.allow 'admin_role', { :sync_management => [:read, :delete, :sync] }
-Role.allow 'admin_role', { :sync_schedules =>  [:read, :apply] }
-Role.allow 'admin_role', { :sync_plans =>      [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :dashboard =>       [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :content =>         [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :systems =>         [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :operations =>      [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :products =>        [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :owners =>          [:create, :read, :update, :delete, :import] }
-Role.allow 'admin_role', { :consumers =>       [:create, :read, :update, :delete,
-                                                :export, :re_register] }
-Role.allow 'admin_role', { :entitlements =>    [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :certificates =>    [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :pools =>           [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :users =>           [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :roles =>           [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :nodes =>           [:read] }
-Role.allow 'admin_role', { :puppetclasses =>   [:read] }
-Role.allow 'admin_role', { :providers =>       [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :repositories =>    [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :search =>          [:create, :read, :delete] }
-Role.allow 'admin_role', { :environments =>    [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :lockers =>         [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :organizations =>   [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :changesets =>      [:create, :read, :update, :delete, :promote] }
-
-Role.allow 'admin_role', { :promotions =>      [:read] }
-Role.allow 'admin_role', { :user_sessions =>   [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :accounts =>        [:create, :read, :update, :delete] }
-Role.allow 'admin_role', { :jammit =>          [:package] }
-Role.allow 'admin_role', { :notices =>         [:read, :delete] }
 
 # TODO protection of all /api controllers (currently all roles authorized by default)
 #Role.allow 'admin_role', { :"api/xxx" => [:read] }
 
-Role.allow 'admin_role', { :packages =>        [:read]}
-Role.allow 'admin_role', { :errata =>          [:read]}
+#These have associated models, but have extra actions
+Role.allow 'admin_role', [:promote], "changesets"
+
+#These do not have associated models
+Role.allow 'admin_role', [:read], "dashboard"
+Role.allow 'admin_role', [:read], "promotions"
+Role.allow 'admin_role', [:read, :delete, :sync], "sync_management"
+Role.allow 'admin_role', [:read], "packages"
+Role.allow 'admin_role', [:read], "errata"
+Role.allow 'admin_role', [:create, :delete, :read], "search"
+Role.allow 'admin_role', [:read], "operations"
+Role.allow 'admin_role', [:create, :delete, :read], "repositories"
+Role.allow 'admin_role', [:read, :apply], "sync_schedules"
+
+#These are candlepin proxy actions
+Role.allow 'admin_role', [:create, :read, :update, :delete, :import], "owners"
+Role.allow 'admin_role', [:create, :read, :update, :delete], "entitlements"
+Role.allow 'admin_role', [:create, :read, :update, :delete], "pools"
+Role.allow 'admin_role', [:create, :read, :update, :delete], "certificates"
+Role.allow 'admin_role', [:export, :re_register, :create, :read, :update, :delete], "consumers"
 
 
-Role.allow 'product_shopper', ["create", "read","delete"], "product", ["Fedora 14", "RHUI","Red Hat Enterprise Linux 6 Server"]
-Role.allow 'environment_lord', ["create", "read", "update","delete"], "environment", ["root", "dev","qa","stage","prod"]
-Role.allow 'organization_czar', ["create", "read", "update","delete"], "organization", ["HR", "QA","IT","Development"]
+Role.allow 'admin_role', [:package], "jammit"
 
-# ActiveRecord protection - allow admin_role all actions for all models
-ActiveRecord::Base.connection.tables.each do |t|
-  Role.allow 'admin_role', [:create, :update, :delete], "ar_#{t}"
-end
 
 # candlepin_role permissions for RHSM
-[:systems].each { |t| Role.allow 'candlepin_role', [:create, :update, :delete], "ar_#{t}" }
+[:systems].each { |t| Role.allow 'candlepin_role', [:create, :update, :delete], "#{t}" }
