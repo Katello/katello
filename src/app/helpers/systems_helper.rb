@@ -11,4 +11,23 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module SystemsHelper
+  
+  def render_columns(options)
+    render :partial=>"list_system", 
+            :collection=>options[:collection], :as=>:item, 
+            :locals=>{:accessor=>options[:accessor], :columns=>options[:columns]}
+  end
+  
+  def get_checkin(system)
+    if system.lastCheckin.nil?
+      return _("Never checked in.")
+    else
+      convert_time(system.lastCheckin)
+    end
+  end
+  
+  def convert_time(item)
+    Time.parse(item).localtime.strftime('%m/%d/%y %I:%M:%S %p %Z')
+  end
+  
 end
