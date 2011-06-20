@@ -164,111 +164,6 @@ var promotion_page = {
 
 
 
-
-
-
-var sliding_tree = (function() { return {
-    current_tab: undefined,
-	direction : undefined,
-	fetching: 0, //Used to control fetching, and ignore content when we've already mgirated off the page'
-	change_content : function(id) {
-          sliding_tree.current_tab = id;
-		  sliding_tree.fetching = 0;
-	      sliding_tree.reset_breadcrumb(id);
-	      var url = breadcrumb[id].url;
-	      var newPanel = $('.no_content');
-	      var oldPanel = $('.has_content');
-          var list = $('#list');
-	      
-	      //If we aren't sliding, we only worry about 1 panel'
-	      if (!sliding_tree.direction) {
-	      	newPanel = oldPanel;
-	      }
-	      
-	      //If we are to use a cached copy, use it
-	      if (breadcrumb[id].cache) {
-	        newPanel.html(breadcrumb[id].content)
-	      }
-	      else { //Else fetch the data and place it in the new panel when we are done
-	      	//we set fetching to the id, so once its done we know whether to actually
-	      	// display the data, or throw it away.
-	      	sliding_tree.fetching = id;
-	        $.get(url, function(data) {
-	        	if (sliding_tree.fetching == id) {
-	                newPanel.html(data);
-	                sliding_tree.fetching = 0;
-	            }
-	          });
-	         newPanel.html("<img src='/images/spinner.gif' >");
-	      }
-
-         if (breadcrumb[id].scrollable) {
-            list.addClass("ajaxScroll");
-            list.attr("data-scroll_url", url);
-         }
-         else {
-            list.removeClass("ajaxScroll");
-         }
-
-
-	      //If we have a direction, we need to slide
-		  if(sliding_tree.direction) {
-		  	  var leaving = sliding_tree.direction == "right"? "left" : "right";
-		      //The old pane, we need to hide it away, remove the contents, and reset the classes
-		      oldPanel.css({"position":"absolute"}).hide("slide" ,{"direction":leaving}, 500, function() {
-		                                                           oldPanel.html("");
-		                                                           oldPanel.removeClass("has_content");
-		                                                           oldPanel.addClass("no_content");
-		                                                           oldPanel.css({"position":"relative"})});
-		      //the new pane, move it into view
-		      newPanel.css({"position":"absolute"}).effect("slide" ,{"direction":sliding_tree.direction}, 500, function() {
-		                                                          newPanel.removeClass("no_content");
-		                                                          newPanel.addClass("has_content");
-		                                                          newPanel.css({"position":"relative"})});
-		                                                          
-		      sliding_tree.direction = undefined;
-	      }
-	      
-	      return false  
-	},
-	content_clicked: function() {
-      	if($(this).hasClass("slide_left")) {
-          sliding_tree.direction = "left";
-        }else {
-          sliding_tree.direction = "right";
-        }
-		$.bbq.pushState({tab:this.id});
-	},
-
-	reset_breadcrumb: function(id) {
-	    //Clear the breadcrumb
-	    var trail = breadcrumb[id].trail;
-	    $("#breadcrumb").html("");
-	    for(var i = 0; i < trail.length; i++) {
-	        $("#breadcrumb").append(sliding_tree.create_crumb(trail[i]))
-	    }
-	    $("#breadcrumb").append(breadcrumb[id].name)
-	},
-
-	create_crumb: function(id) {
-	    return jQuery('<div/>', {
-	        id:id,
-	        "class": 'slide_link slide_left',
-	        text: breadcrumb[id].name +  "\u2002\u00BB\u2002"
-	    });    
-	    
-	},
-
-	hash_change: function() {
-        var newContent = $.bbq.getState("tab") || "content";
-        if (sliding_tree.current_tab != newContent) {
-            sliding_tree.change_content(newContent);
-            sliding_tree.reset_breadcrumb(newContent);
-        }
-	}
-}})();
-
-
 $(document).ready(function() {
 
     promotion_page.update_dep_size();
@@ -294,10 +189,11 @@ $(document).ready(function() {
       promotion_page.modify_changeset(id, display, type);
     });     
 
-    $('.slide_link').live('click', sliding_tree.content_clicked);
+    //initiate the left tree
+  	var tree1 = sliding_tree("content_tree", {breadcrumb:breadcrumb,
+                                      default_tab:"content",
+                                      bbq_tag:"content"});
   	
-  	$(window).bind( 'hashchange', sliding_tree.hash_change);
-  	$(window).trigger( 'hashchange' );
 
     $('#depend_list').live('click', promotion_page.show_dependencies);
 
