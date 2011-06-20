@@ -85,6 +85,8 @@ class Info(TemplateAction):
         envName = self.get_option('env')
       
         template = get_template(orgName, envName, tplName)
+        if template == None:
+            return os.EX_OK
         
         template["errata"]   = "\n".join([e["id"] for e in template["errata"]])
         template["products"] = "\n".join([p["name"] for p in template["products"]])
@@ -103,9 +105,9 @@ class Info(TemplateAction):
         return os.EX_OK
 
 # ==============================================================================
-class Create(TemplateAction):
+class Import(TemplateAction):
 
-    description = _('import a template file')
+    description = _('create a template file and import data')
 
     
     def setup_parser(self):
@@ -147,6 +149,76 @@ class Create(TemplateAction):
         
         f.close()
         return os.EX_OK
+
+# ==============================================================================
+class Create(TemplateAction):
+
+    description = _('create an empty template file')
+
+    
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("template name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--environment', dest='env',
+                               help=_("environment name eg: foo.example.com (required)"))
+        self.parser.add_option("--description", dest="description",
+                               help=_("provider description"))
+
+    
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+
+    
+    def run(self):
+        name    = self.get_option('name')
+        desc    = self.get_option('description')
+        orgName = self.get_option('org')
+        envName = self.get_option('env')
+    
+            
+        env = get_environment(orgName, envName)
+        if env != None:
+            template = self.api.create(env["id"], name, desc)
+            if is_valid_record(template):
+                print _("Successfully created template [ %s ]") % template['name']
+            else:
+                print _("Could not create template [ %s ]") % template['name']
+        
+        return os.EX_OK
+
+
+# ==============================================================================
+class Delete(TemplateAction):
+  
+    description = _('deletes a template')
+     
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("template name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--environment', dest='env',
+                               help=_("environment name eg: foo.example.com (required)"))
+
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+
+    def run(self):
+        tplName = self.get_option('name')
+        orgName = self.get_option('org')
+        envName = self.get_option('env')
+      
+        template = get_template(orgName, envName, tplName)
+        if template != None:
+            msg = self.api.delete(template["id"])
+            print msg
+          
+        return os.EX_OK
+
 
 # provider command =============================================================
 

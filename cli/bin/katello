@@ -89,8 +89,10 @@ def setup_admin(admin):
 
     template_cmd = template.Template()
     template_cmd.add_action('create', template.Create())
+    template_cmd.add_action('import', template.Import())
     template_cmd.add_action('list', template.List())
     template_cmd.add_action('info', template.Info())
+    template_cmd.add_action('delete', template.Delete())
     admin.add_command('template', template_cmd)
 
     admin.add_command("shell", shell_command.ShellAction(admin))

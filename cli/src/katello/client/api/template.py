@@ -23,10 +23,12 @@ class TemplateAPI(KatelloAPI):
         tpls = self.server.GET(path)[1]
         return tpls
         
+        
     def template(self, tplId):
         path = "/api/templates/%s" % str(tplId)
         tpl = self.server.GET(path)[1]
         return tpl
+        
         
     def template_by_name(self, envId, tplName):
         path = "/api/templates/"
@@ -36,6 +38,7 @@ class TemplateAPI(KatelloAPI):
             return self.template(tpls[0]["id"])
         else:
             return None
+        
         
     def import_tpl(self, envId, name, description, tplFile):
         tplData = {
@@ -49,3 +52,22 @@ class TemplateAPI(KatelloAPI):
         
         path = "/api/templates/import"
         return self.server.POST(path, tplData, multipart=True)[1]
+        
+        
+    def create(self, envId, name, description):
+        tplData = {
+            "template": {
+                "name": name,
+                "description": description
+            },
+            "environment_id": envId
+        }
+        
+        path = "/api/templates/"
+        return self.server.POST(path, tplData)[1]
+        
+        
+    def delete(self, id):
+        path = "/api/templates/%s" % str(id)
+        return self.server.DELETE(path)[1]
+        

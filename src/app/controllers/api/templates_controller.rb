@@ -14,8 +14,8 @@ require 'rest_client'
 
 class Api::TemplatesController < Api::ApiController
 
-  before_filter :find_environment, :only => [:import]
-  before_filter :find_template, :only => [:show, :promote]
+  before_filter :find_environment, :only => [:create, :import]
+  before_filter :find_template, :only => [:show, :update, :edit_content, :destroy, :promote, :export]
 
   def index
     templates = SystemTemplate.where query_params
@@ -27,21 +27,70 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def create
-    @template = SystemTemplate.create(params[:template])
-    render :json => "create"
+    @template = SystemTemplate.new(params[:template])
+    @template.environment = @environment
+    @template.save!
+
+    render :json => @template.to_json
   end
 
   def update
-    render :json => "update"
+    render :text => "update"
+  end
+
+  def edit_content
+
+    case params[:do].to_s
+      when 'add_product'
+        @template.add_product(params[:product])
+        @template.save!
+        render :text => _("Added product '#{params[:product]}'"), :status => 200 and return
+
+      when 'remove_product'
+        @template.remove_product(params[:product])
+        @template.save!
+        render :text => _("Removed product '#{params[:product]}'"), :status => 200 and return
+
+      when 'add_package'
+        @template.add_package(params[:package])
+        @template.save!
+        render :text => _("Added package '#{params[:package]}'"), :status => 200 and return
+
+      when 'remove_package'
+        @template.remove_package(params[:package])
+        @template.save!
+        render :text => _("Removed package '#{params[:package]}'"), :status => 200 and return
+
+      when 'add_erratum'
+        @template.add_erratum(params[:erratum])
+        @template.save!
+        render :text => _("Added erratum '#{params[:erratum]}'"), :status => 200 and return
+
+      when 'remove_erratum'
+        @template.remove_erratum(params[:erratum])
+        @template.save!
+        render :text => _("Removed erratum '#{params[:erratum]}'"), :status => 200 and return
+
+
+      when 'add_kickstart_attr'
+        @template.kickstart_attrs[params[:name]] = params[:value]
+        @template.save!
+        render :text => _("Added kickstart attribute '#{params[:name]}': '#{params[:value]}'"), :status => 200 and return
+
+      when 'remove_kickstart_attr'
+        @template.kickstart_attrs.delete(params[:name])
+        @template.save!
+        render :text => _("Removed kickstart attribute '#{params[:name]}'"), :status => 200 and return
+    end
+
   end
 
   def destroy
-    #TODO: deletes the template from an environment
-    render :json => "destroy"
+    @template.destroy
+    render :text => _("Deleted system template '#{params[:id]}'"), :status => 200
   end
 
   def import
-    #TODO: add this to routes
     begin
       temp_file = File.new(File.join("#{Rails.root}/tmp", "template_#{SecureRandom.hex(10)}.json"), 'w+', 0600)
       temp_file.write params[:template_file].read
@@ -58,8 +107,8 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def export
-    #TODO: exports current state of the template in json
-    render :json => "export"
+    json = @template.string_export
+    render :json => json
   end
 
   def promote
