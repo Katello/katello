@@ -92,6 +92,7 @@ def setup_admin(admin):
     template_cmd.add_action('import', template.Import())
     template_cmd.add_action('list', template.List())
     template_cmd.add_action('info', template.Info())
+    template_cmd.add_action('update', template.Update())
     template_cmd.add_action('delete', template.Delete())
     admin.add_command('template', template_cmd)
 

@@ -166,7 +166,7 @@ class Create(TemplateAction):
         self.parser.add_option('--environment', dest='env',
                                help=_("environment name eg: foo.example.com (required)"))
         self.parser.add_option("--description", dest="description",
-                               help=_("provider description"))
+                               help=_("template description"))
 
     
     def check_options(self):
@@ -191,6 +191,44 @@ class Create(TemplateAction):
         
         return os.EX_OK
 
+
+# ==============================================================================
+class Update(TemplateAction):
+  
+    description = _('updates name and description of a template')
+     
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("template name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--environment', dest='env',
+                               help=_("environment name eg: foo.example.com (required)"))
+        self.parser.add_option('--new_name', dest='new_name',
+                               help=_("new template name"))
+        self.parser.add_option("--description", dest="description",
+                               help=_("template description"))
+                               
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+
+    def run(self):
+        tplName = self.get_option('name')
+        orgName = self.get_option('org')
+        envName = self.get_option('env')
+        newName = self.get_option('new_name')
+        desc    = self.get_option('description')
+        
+        env = get_environment(orgName, envName)
+        template = get_template(orgName, envName, tplName)
+        
+        if env != None and template != None:
+            self.api.update(env["id"], template["id"], newName, desc)
+            print _("Successfully updated template [ %s ]") % template['name']
+          
+        return os.EX_OK
+        
 
 # ==============================================================================
 class Delete(TemplateAction):
