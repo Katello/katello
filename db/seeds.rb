@@ -53,8 +53,8 @@ end
 
 
 # configure limited permissions for the anonymous user
-Role.allow 'anonymous_role', [:create, :update], :ar_notices
-Role.allow 'anonymous_role', [:create, :update], :ar_user_notices
+Role.allow 'anonymous_role', [:create, :update], :notices
+Role.allow 'anonymous_role', [:create, :update], :user_notices
 
 
 # TODO protection of all /api controllers (currently all roles authorized by default)
