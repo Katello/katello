@@ -60,7 +60,7 @@ module Authorization
   private
 
   def type_name
-    "ar_#{self.class.table_name}"
+    "#{self.class.table_name}"
   end
 
   # enforce permissions from database for regular users

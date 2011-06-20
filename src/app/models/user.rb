@@ -74,7 +74,7 @@ class User < ActiveRecord::Base
   # * a permission Symbol (eg. :edit_project)
   #
   # This method is called by every protected controller.
-  def allowed_to?(verb, resource_type = nil, tags = nil)
+  def allowed_to?(verb, resource_type, tags = nil)
     return false if roles.empty?
     not roles.detect {|role| role.allowed_to?(verb, resource_type, tags)}.nil?
   end
