@@ -7,7 +7,7 @@ Rails.configuration.middleware.use RailsWarden::Manager do |config|
   # all UI requests are handled in the default scope
   config.scope_defaults(
     :user,
-    :strategies   => AppConfig.warden.to_sym,
+    :strategies   => [:sso, AppConfig.warden.to_sym],
     :store        => true,
     :action       => 'unauthenticated_ui'
   )
@@ -15,7 +15,7 @@ Rails.configuration.middleware.use RailsWarden::Manager do |config|
   # API requests are handled in the :api scope
   config.scope_defaults(
     :api,
-    :strategies   => [:certificate, AppConfig.warden.to_sym],
+    :strategies   => [:sso, :certificate, AppConfig.warden.to_sym],
     :store        => false,
     :action       => 'unauthenticated_api'
   )
@@ -85,3 +85,18 @@ Warden::Strategies.add(:certificate) do
     subject_string.sub(/\/CN=/i, '')
   end
 end
+
+Warden::Strategies.add(:sso) do
+  def valid?
+    true
+  end
+
+  def authenticate!
+    return fail('No X-Forwarded-User header, skipping sso authentication') if request.env['X-Forwarded-User'].blank?
+
+    user_id = request.env['X-Forwarded-User']
+    u = User.User.where(:username => user_id).first
+    u ? success!(u) : fail!("Username is not correct - could not log in")
+  end
+end
+
