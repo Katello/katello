@@ -155,9 +155,18 @@ class Role < ActiveRecord::Base
       :resource_types => { :name => resource_type },
       :verbs => { :verb => verb }}
     query_hash[:tags] = {:name=> tags} if !tags.empty?
+
+    if tags.empty?
+      item_count = 1
+      to_count = "verbs.verb"
+    else
+      item_count = tags.length
+      to_count = "tags.name"
+    end
+
     Permission.joins(:verbs, :resource_type).joins(
         "left outer join 'permissions_tags' on permissions.id == permissions_tags.permission_id").joins(
-        "left outer join 'tags' on tags.id == permissions_tags.tag_id").where(query_hash).length > 0
+        "left outer join 'tags' on tags.id == permissions_tags.tag_id").where(query_hash).count(to_count, :distinct => true) == item_count
     # TODO - for now we just compare count - this is dangerous - we need to compare the content
   end
 
