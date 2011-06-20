@@ -14,7 +14,7 @@ require 'rest_client'
 
 class Api::TemplatesController < Api::ApiController
 
-  before_filter :find_environment, :only => [:create]
+  before_filter :find_environment, :only => [:import]
   before_filter :find_template, :only => [:show, :promote]
 
   def index
@@ -27,6 +27,21 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def create
+    @template = SystemTemplate.create(params[:template])
+    render :json => "create"
+  end
+
+  def update
+    render :json => "update"
+  end
+
+  def destroy
+    #TODO: deletes the template from an environment
+    render :json => "destroy"
+  end
+
+  def import
+    #TODO: add this to routes
     begin
       temp_file = File.new(File.join("#{Rails.root}/tmp", "template_#{SecureRandom.hex(10)}.json"), 'w+', 0600)
       temp_file.write params[:template_file].read
@@ -42,27 +57,19 @@ class Api::TemplatesController < Api::ApiController
     render :text => _("Template imported"), :status => 200
   end
 
-  def update
-    render :json => "update"
-  end
-
-  def destroy
-    render :json => "destroy"
-  end
-
   def export
+    #TODO: exports current state of the template in json
     render :json => "export"
   end
 
   def promote
+    #TODO: check functionality
     @changeset = Changeset.create!(:environment => @template.environment)
 
     @changeset.products << @template.products
     @changeset.errata   << changeset_errata(@template.errata)
     @changeset.packages << changeset_packages(@template.packages)
     @changeset.promote
-
-
 
     render :json => "promote"
   end

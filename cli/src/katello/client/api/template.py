@@ -47,5 +47,5 @@ class TemplateAPI(KatelloAPI):
             "environment_id": envId
         }
         
-        path = "/api/templates/"
+        path = "/api/templates/import"
         return self.server.POST(path, tplData, multipart=True)[1]
