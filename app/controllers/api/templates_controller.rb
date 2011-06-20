@@ -35,7 +35,14 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def update
-    render :text => "update"
+    params[:template].delete(:products_json)
+    params[:template].delete(:packages_json)
+    params[:template].delete(:errata_json)
+    params[:template].delete(:kickstart_attrs_json)
+    params[:template].delete(:host_group_json)
+
+    @template.update_attributes!(params[:template])
+    render :json => @template
   end
 
   def edit_content

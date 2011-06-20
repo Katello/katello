@@ -16,15 +16,11 @@ class SystemTemplate < ActiveRecord::Base
   belongs_to :environment, {:class_name => "KPEnvironment"}
 
   validates_presence_of :name
-  validates_uniqueness_of :name
+  validates_uniqueness_of :name, :scope => :environment_id
 
   attr_accessor :packages, :errata, :products, :host_group, :kickstart_attrs
 
   before_validation :attrs_to_json
-
-  def initialize attrs
-    super(attrs)
-  end
 
 
   def packages
