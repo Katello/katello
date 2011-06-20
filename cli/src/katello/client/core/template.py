@@ -20,6 +20,7 @@ import urlparse
 import time
 from pprint import pprint
 from gettext import gettext as _
+from sets import Set
 
 from katello.client.api.template import TemplateAPI
 from katello.client.config import Config
@@ -220,12 +221,82 @@ class Update(TemplateAction):
         newName = self.get_option('new_name')
         desc    = self.get_option('description')
         
-        env = get_environment(orgName, envName)
+
+        template = get_template(orgName, envName, tplName)     
+        if template != None:
+            self.api.update(template["id"], newName, desc)
+            print _("Successfully updated template [ %s ]") % template['name']
+          
+        return os.EX_OK
+        
+        
+# ==============================================================================
+class UpdateContent(TemplateAction):
+
+    actions = {
+      'add_product':    ['product'],
+      'remove_product': ['product'],
+      'add_package':    ['package'],
+      'remove_package': ['package'],
+      'add_erratum':    ['erratum'],
+      'remove_erratum': ['erratum'],
+      'add_kickstart_attr':    ['attribute', 'value'],
+      'remove_kickstart_attr': ['erratum']
+    }
+
+    description = _('updates content of a template')
+
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("template name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--environment', dest='env',
+                               help=_("environment name eg: foo.example.com (required)"))
+                               
+        #add all actions
+        actionParams = Set()
+        for action, params in self.actions.iteritems():
+            self.parser.add_option('--'+action, dest=action, action="store_true")
+            #save action parameters
+            actionParams.update(params)
+                
+        #add action parameters
+        for param in actionParams:
+            self.parser.add_option('--'+param, dest=param)
+
+                               
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+        
+        self.selectedAction = None
+        for action, params in self.actions.iteritems():
+            if self.has_option(action):
+                self.selectedAction = action
+                for param in params:
+                    self.require_option(param)
+                return
+        
+        self.add_option_error(_("No action was set!"))
+
+
+    def run(self):
+        tplName = self.get_option('name')
+        orgName = self.get_option('org')
+        envName = self.get_option('env')
+
+        
         template = get_template(orgName, envName, tplName)
         
-        if env != None and template != None:
-            self.api.update(env["id"], template["id"], newName, desc)
-            print _("Successfully updated template [ %s ]") % template['name']
+        if template != None:
+            updateParams = {}
+            for paramName in self.actions[self.selectedAction]:
+                updateParams[paramName] = self.get_option(paramName)
+                
+            msg = self.api.update_content(template["id"], self.selectedAction, updateParams)
+            print msg
           
         return os.EX_OK
         

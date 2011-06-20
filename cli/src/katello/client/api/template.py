@@ -67,20 +67,28 @@ class TemplateAPI(KatelloAPI):
         return self.server.POST(path, tplData)[1]
         
         
-    def update(self, envId, tplId, newName, description=None):
+    def update(self, tplId, newName, description=None):
 
         tplData = {}
         tplData = self.update_dict(tplData, "name", newName)
         tplData = self.update_dict(tplData, "description", description)
 
         tplData = {
-            "template": tplData,
-            "environment_id": envId
+            "template": tplData
         }
 
         path = "/api/templates/%s" % str(tplId)
         return self.server.PUT(path, tplData)[1]
-        
+
+
+    def update_content(self, tplId, actionName, params):
+        action = {
+            'do': actionName
+        }
+        action.update(params)
+    
+        path = "/api/templates/%s/update_content" % str(tplId)
+        return self.server.PUT(path, action)[1]
         
     def delete(self, id):
         path = "/api/templates/%s" % str(id)

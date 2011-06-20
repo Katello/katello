@@ -21,6 +21,7 @@ class SystemTemplate < ActiveRecord::Base
   attr_accessor :packages, :errata, :products, :host_group, :kickstart_attrs
 
   before_validation :attrs_to_json
+  before_save :update_revision
 
 
   def packages
@@ -203,6 +204,19 @@ class SystemTemplate < ActiveRecord::Base
     self.kickstart_attrs_json = self.kickstart_attrs.to_json
     self.host_group_json      = self.host_group.to_json
   end
+
+
+  def update_revision
+
+    self.revision = 1 if self.revision.nil?
+
+    #increase revision number only on content attribute change
+    if not self.new_record?
+      content_changes = @changed_attributes.select {|k, v| (k!=:name && k!=:description && k!=:revision) }
+      self.revision += 1 if not content_changes.empty?
+    end
+  end
+
 
   def find_errata_in_env(erratum_id)
 
