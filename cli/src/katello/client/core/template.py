@@ -91,6 +91,7 @@ class Info(TemplateAction):
         template["errata"]   = "\n".join([e["id"] for e in template["errata"]])
         template["products"] = "\n".join([p["name"] for p in template["products"]])
         template["packages"] = "\n".join([p["id"] for p in template["packages"]])
+        template["kickstart_attributes"] = "\n".join([ key+":\t"+value for key, value in template["kickstart_attrs"].iteritems() ])
         
         self.printer.addColumn('id')
         self.printer.addColumn('name')
@@ -99,6 +100,7 @@ class Info(TemplateAction):
         self.printer.addColumn('errata', multiline=True, show_in_grep=False)
         self.printer.addColumn('products', multiline=True, show_in_grep=False)
         self.printer.addColumn('packages', multiline=True, show_in_grep=False)
+        self.printer.addColumn('kickstart_attributes', multiline=True, show_in_grep=False)
 
         self.printer.printHeader(_("Template Info"))
         self.printer.printItem(template)
