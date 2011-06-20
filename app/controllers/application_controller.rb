@@ -232,7 +232,7 @@ class ApplicationController < ActionController::Base
     user = current_user
     user = User.anonymous unless user
     logger.debug "Authorizing #{current_user.username} for #{ctrl}/#{action}"
-    allowed = user.allowed_to?({:controller => ctrl, :action => action})
+    allowed = user.allowed_to?(action, ctrl)
     if allowed
       return true
     else

@@ -63,9 +63,11 @@ class Role < ActiveRecord::Base
   # Create permission for given role - for more info see allow
   #
   # @param [Role or Array] one or more roles to allow (accepts also String for role name)
-  def self.allow(role, verb, resource_type = nil, tags = nil)
+  def self.allow(role, verb, resource_type, tags = nil)
     raise ArgumentError, "role can't be nil" if role.nil?
     raise ArgumentError, "verb can't be nil" if verb.nil?
+    raise ArgumentError, "Resource Type can't be nil" if verb.nil?
+    
     roles = role.is_a?(Array) ? role : [role]
 
     roles.each do |r|
@@ -81,28 +83,18 @@ class Role < ActiveRecord::Base
 
   # create permission with verb for the role or
   # create permission with verb, type and tag(s) for the role
-  def allow(verb, resource_type = nil, tags = nil)
+  def allow(verb, resource_type, tags = nil)
     raise ArgumentError, "verb can't be nil" if verb.nil?
+    raise ArgumentError, "Resource Type can't be nil" if verb.nil?
 
-    # handle :controller => [ :action1, :action2 ] format
-    if verb.is_a? Hash
-      raise ArgumentError, "type and tags must be nil" unless (resource_type.nil? or tags.nil?)
-      verbs = []
-      tags = []
-      verb.each_pair do |c, a|
-        tags << c
-        if a.is_a? Array
-          verbs = verbs + a
-        else
-          verbs << a
-        end
-      end
-    else
-      verbs = verb.is_a?(Array) ? verb : [verb]
-    end
+    #throw error if using old format, shouldn't overload methods like this
+    raise ArgumentError, "Role#allow cannot take a hash as a verb" if verb.is_a? Hash
+
+    verbs = verb.is_a?(Array) ? verb : [verb]
+
 
     resource_type = nil_to_string resource_type
-    tags = nil_to_string tags
+    tags = [] if tags.nil?
     tags = [tags] unless tags.is_a? Array
 
     # create permissions
@@ -120,9 +112,11 @@ class Role < ActiveRecord::Base
     end
   end
 
-  def disallow(verb, resource_type = nil, tags = nil)
+  def disallow(verb, resource_type, tags = nil)
     raise ArgumentError, "verb can't be nil" if verb.nil?
     raise ArgumentError, "tag(s) can't be nil" if tags.nil?
+    raise ArgumentError, "Resource Type can't be nil" if verb.nil?
+    
     verbs = verb.is_a?(Array) ? verb : [verb]
     resource_type = nil_to_string resource_type
     tags = nil_to_string tags
@@ -133,7 +127,7 @@ class Role < ActiveRecord::Base
         :role_id => id,
         :resource_types => { :name => resource_type },
         :tags => { :name => tags },
-        :verbs => { :verb => verb }).find_each do |p|
+        :verbs => { :verb => verbs }).find_each do |p|
           Permission.destroy(p.id)
       end
     end
@@ -145,30 +139,34 @@ class Role < ActiveRecord::Base
   end
 
   private
+  
   # convert nil object to string "NIL"
   def nil_to_string(object)
     (object.nil? or object == '') ? 'NIL' : object
   end
 
   def allowed_to_tags?(verb, resource_type, tags)
+    raise _("Resource type cannot be null") if resource_type.nil?
+    tags = [] if tags.nil?
+    tags = [tags] unless tags.is_a? Array
+    verb = action_to_verb(verb, resource_type)
+    Rails.logger.debug "Checking if role #{name} is allowed to #{verb.inspect} in #{resource_type.inspect} scoped #{tags.inspect}"
+    query_hash = {:role_id => id,
+      :resource_types => { :name => resource_type },
+      :verbs => { :verb => verb }}
+    query_hash[:tags] = {:name=> tags} if !tags.empty?
 
-    # handle :controller => :x, :action => :y format
-    if verb.is_a? Hash
-      raise ArgumentError, "type and tags must be nil" unless (resource_type.nil? or tags.nil?)
-      tags = [ verb[:controller] ]
-      verb = verb[:action]
+    if tags.empty?
+      item_count = 1
+      to_count = "verbs.verb"
+    else
+      item_count = tags.length
+      to_count = "tags.name"
     end
 
-    resource_type = nil_to_string resource_type
-    tags = nil_to_string tags
-    tags = [tags] unless tags.is_a? Array
-    verb = action_to_verb(verb, tags)
-    Rails.logger.debug "Checking if role #{name} is allowed to #{verb.inspect} in #{resource_type.inspect} scoped #{tags.inspect}"
-    Permission.joins(:resource_type, :verbs, :tags).where(
-      :role_id => id,
-      :resource_types => { :name => resource_type },
-      :tags => { :name => tags },
-      :verbs => { :verb => verb }).count('tags.name', :distinct => true) == tags.count
+    Permission.joins(:verbs, :resource_type).joins(
+        "left outer join 'permissions_tags' on permissions.id == permissions_tags.permission_id").joins(
+        "left outer join 'tags' on tags.id == permissions_tags.tag_id").where(query_hash).count(to_count, :distinct => true) == item_count
     # TODO - for now we just compare count - this is dangerous - we need to compare the content
   end
 
@@ -178,7 +176,7 @@ class Role < ActiveRecord::Base
     :index => 'read', :show => 'read', :auto_complete_search => 'read',
     :destroy => 'delete', :destroy_favorite => 'delete',
     :items => 'read'
-  }
+  }.with_indifferent_access
 
   ACTION_TO_VERB = {
     :certificates => {:serials => 'read'},
@@ -194,14 +192,11 @@ class Role < ActiveRecord::Base
     :systems=> {:packages=>'read', :subscriptions=>'read', :facts=>'read', :update_subscriptions=>'update'},
     :users => {:enable_helptip=>'update', :disable_helptip=>'update', :clear_helptips=>'update'},
     
-  }
+  }.with_indifferent_access
 
-  def action_to_verb(verb, tags)
-    tags.each  do |tag|
-      return ACTION_TO_VERB[tag.to_sym][verb.to_sym] if ACTION_TO_VERB[tag.to_sym] and ACTION_TO_VERB[tag.to_sym][verb.to_sym]
-    end
-    return DEFAULT_VERBS[verb.to_sym] if DEFAULT_VERBS[verb.to_sym]
-
+  def action_to_verb(verb, type)
+    return ACTION_TO_VERB[type][verb] if ACTION_TO_VERB[type] and ACTION_TO_VERB[type][verb]
+    return DEFAULT_VERBS[verb] if DEFAULT_VERBS[verb]
     return verb
   end
 
