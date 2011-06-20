@@ -1,5 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE HTML>
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Katello Project - System Environment Management</title>
@@ -41,11 +41,11 @@ $(document).ready(function(){
 	  <div class="ribbon">
 	    <ul>
 	      <li><a href="/">Home</a></li>
-	      <li><a href="https://fedorahosted.org/katello/wiki/Install" name="Get Started Downloading Katello" title="Get Started Downloading Katello">Get Started</li>
-	      <li><a href="https://fedorahosted.org/katello/" name="Katello Project Wiki" title="Katello Project Wiki">Project Wiki</li>
-	      <li><a href="#" name="Frequently Asked Questions about Katello" title="Frequently Asked Questions about Katello">FAQ</li>
-	      <li><a href="https://fedorahosted.org/mailman/listinfo/katello" name="Fedora Project Mailing List for Katello" title="Fedora Project Mailing List for Katello">Mailing List</li>
-	      <li><a href="http://webchat.freenode.net/?channels=#katello" target="_blank" name="Katello IRC on Freenode" title="Katello IRC on Freenode">IRC</a></li>            
+	      <li><a href="https://fedorahosted.org/katello/wiki/Install" title="Get Started Downloading Katello">Get Started</a></li>
+	      <li><a href="https://fedorahosted.org/katello/" title="Katello Project Wiki">Project Wiki</a></li>
+	      <li><a href="faq.html" title="Frequently Asked Questions about Katello">FAQ</a></li>
+	      <li><a href="https://fedorahosted.org/mailman/listinfo/katello" title="Fedora Project Mailing List for Katello">Mailing List</a></li>
+	      <li><a href="http://webchat.freenode.net/?channels=#katello" target="_blank" title="Katello IRC on Freenode">IRC</a></li>            
 	    </ul>
 	  </div>  
   </div>  
@@ -84,7 +84,7 @@ $(document).ready(function(){
             <li>Ensure that new systems consume your products based on your business rules?</li>
           </ul>
           <h4 class="ra">That's what Katello does!</h4>          
-		</div>          
+		  </div>          
       </div>    
       <div class="grid_5" id="download_area">
         <div class="inner">
@@ -103,25 +103,29 @@ $(document).ready(function(){
            can pull in content from remote repositories, local directories and ISOs.  You can then organize that content into repositories that are easily searchable, filtered, 
            manipulated and controlled in a locked-down container called an <strong>Environment.</strong> Below is an example showing 'Dev,' 'Test,' and 'Prod' environments:
            </p>
-        <img src="images/flow.png" width="506" height="261" align="texttop" alt="katello flow" class="centered"/>
+        <img src="images/flow.png" width="506" height="261"  alt="katello flow" class="centered"/>
         <p>Katello integrates the open-source projects <a href="http://pulpproject.org">Pulp</a>, <a href="http://candlepinproject.org">Candlepin</a>, 
            and <a href="http://theforeman.org/">Foreman</a> with using a modern Rails front end and a Python CLI to make it easier than ever to 
            manage your system and content the way you do business.</p>
-			<img id="katello_arch" src="images/arch-diagram.png" usemap="#katello_arch" border="0" width="500" height="236" alt="katello architecture" align="texttop" />
-			<map id="_katello_arch" name="katello_arch">
-			</map>        
+			<img id="_katello_arch" src="images/arch-diagram.png" usemap="#katello_arch" width="500" height="236" alt="katello architecture" class="centered"/>
+			<map id="katello_arch" name="katello_arch">
+			<area shape="rect" coords="349,0,495,85" href="http://www.pulpproject.org" alt="Pulp Project - Open Source Repository Management" title="Pulp Project - Open Source Repository Management"    />
+			<area shape="rect" coords="349,85,495,156" href="http://www.candlepinproject.org/" alt="Candlepin Project - Opensource Subscription Managment" title="Candlepin Project - Opensource Subscription Managment"    />
+			<area shape="rect" coords="349,154,495,231" href="http://www.theforeman.org" alt="Foreman - Open Source Provisioning and Configuration" title="Foreman - Open Source Provisioning and Configuration"    />
+			<area shape="rect" coords="498,234,500,236" href="http://www.image-maps.com/index.php?aff=mapped_users_9201106200939567" alt="Image Map" title="Image Map" />
+			</map>
         </div>
-    </div>
+      </div>
       <div class="grid_5" id="sidebar">
         <div class="inner">
           <h2>Join the Community!</h2>
-          <h5><a href="https://fedorahosted.org/katello/" name="Katello Project Wiki" title="Katello Project Wiki">Project Wiki</a></h5>
-          <h5><a href="https://fedorahosted.org/mailman/listinfo/katello" name="Katello Project Mailing List" title="Katello Project Mailing List">Mailing List</a></h5>
-          <h5>Chat on IRC: <br/> <a href="http://webchat.freenode.net/?channels=#katello" target="_blank" name="Katello on Freenode" title="Katello on Freenode">#katello on Freenode</a></h5>
+          <h5><a href="https://fedorahosted.org/katello/" title="Katello Project Wiki">Project Wiki</a></h5>
+          <h5><a href="faq.html" title="Frequently Asked Questions about Katello">FAQ</a></h5>
+          <h5><a href="https://fedorahosted.org/mailman/listinfo/katello" title="Katello Project Mailing List">Mailing List</a></h5>
+          <h5>Chat on IRC: <br/> <a href="http://webchat.freenode.net/?channels=#katello" target="_blank" title="Katello on Freenode">#katello on Freenode</a></h5>
         </div>
       </div>      
   </div>
-</div>
 </div>
 <div id="footer" class="container_16 clearfix">
   <br />
@@ -130,7 +134,7 @@ $(document).ready(function(){
 	  <p>This website (not the Katello code) is released under a <br />
 	  <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a></p>
   </div>
-  <div class="grid_8 ra"
+  <div class="grid_8 ra">
   	<p>&copy; Copyright 2011 Red Hat, Inc.</p>
   </div>
 </div>
