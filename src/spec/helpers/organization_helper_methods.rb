@@ -7,4 +7,9 @@ module OrganizationHelperMethods
     return @organization
   end
 
+
+  def current_organization=(org)
+    controller.stub!(:current_organization).and_return(org)
+  end
+
 end
