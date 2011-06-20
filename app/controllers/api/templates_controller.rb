@@ -15,7 +15,7 @@ require 'rest_client'
 class Api::TemplatesController < Api::ApiController
 
   before_filter :find_environment, :only => [:create, :import]
-  before_filter :find_template, :only => [:show, :update, :edit_content, :destroy, :promote, :export]
+  before_filter :find_template, :only => [:show, :update, :update_content, :destroy, :promote, :export]
 
   def index
     templates = SystemTemplate.where query_params
@@ -45,7 +45,7 @@ class Api::TemplatesController < Api::ApiController
     render :json => @template
   end
 
-  def edit_content
+  def update_content
 
     case params[:do].to_s
       when 'add_product'
@@ -78,16 +78,15 @@ class Api::TemplatesController < Api::ApiController
         @template.save!
         render :text => _("Removed erratum '#{params[:erratum]}'"), :status => 200 and return
 
-
       when 'add_kickstart_attr'
-        @template.kickstart_attrs[params[:name]] = params[:value]
+        @template.kickstart_attrs[params[:attribute]] = params[:value]
         @template.save!
-        render :text => _("Added kickstart attribute '#{params[:name]}': '#{params[:value]}'"), :status => 200 and return
+        render :text => _("Added kickstart attribute '#{params[:attribute]}': '#{params[:value]}'"), :status => 200 and return
 
       when 'remove_kickstart_attr'
-        @template.kickstart_attrs.delete(params[:name])
+        @template.kickstart_attrs.delete(params[:attribute])
         @template.save!
-        render :text => _("Removed kickstart attribute '#{params[:name]}'"), :status => 200 and return
+        render :text => _("Removed kickstart attribute '#{params[:attribute]}'"), :status => 200 and return
     end
 
   end
