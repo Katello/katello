@@ -53,11 +53,13 @@
     %fieldset
       .grid_2.ra.fieldset
         = label :checked_in, :checked_in, _("Checked In")
-      .grid_5.la #{system.lastCheckin}
+      .grid_5.la
+        = get_checkin(system)
     %fieldset
       .grid_2.ra.fieldset
         = label :registered_date, :registered_date, _("Registered")
-      .grid_5.la #{system.created}
+      .grid_5.la 
+        = convert_time(system.created)
     %fieldset
       .grid_2.ra.fieldset
         = label :last_booted, :last_booted, _("Last Booted")
