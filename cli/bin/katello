@@ -95,6 +95,7 @@ def setup_admin(admin):
     template_cmd.add_action('update', template.Update())
     template_cmd.add_action('update_content', template.UpdateContent())
     template_cmd.add_action('delete', template.Delete())
+    template_cmd.add_action('promote', template.Promote())
     admin.add_command('template', template_cmd)
 
     admin.add_command("shell", shell_command.ShellAction(admin))

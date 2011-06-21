@@ -74,7 +74,7 @@ class Info(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (required)"))
+                               help=_("environment name eg: foo.example.com (locker by default)"))
 
     def check_options(self):
         self.require_option('name')
@@ -119,7 +119,7 @@ class Import(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (required)"))
+                               help=_("environment name eg: foo.example.com (locker by default)"))
         self.parser.add_option("--file", dest="file",
                                help=_("path to the template file (required)"))
         self.parser.add_option("--description", dest="description",
@@ -165,7 +165,7 @@ class Create(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (required)"))
+                               help=_("environment name eg: foo.example.com (locker by default)"))
         self.parser.add_option("--description", dest="description",
                                help=_("template description"))
 
@@ -204,7 +204,7 @@ class Update(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (required)"))
+                               help=_("environment name eg: foo.example.com (locker by default)"))
         self.parser.add_option('--new_name', dest='new_name',
                                help=_("new template name"))
         self.parser.add_option("--description", dest="description",
@@ -253,7 +253,7 @@ class UpdateContent(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (required)"))
+                               help=_("environment name eg: foo.example.com (locker by default)"))
                                
         #add all actions
         actionParams = Set()
@@ -312,7 +312,7 @@ class Delete(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (required)"))
+                               help=_("environment name eg: foo.example.com (locker by default)"))
 
     def check_options(self):
         self.require_option('name')
@@ -327,6 +327,36 @@ class Delete(TemplateAction):
         if template != None:
             msg = self.api.delete(template["id"])
             print msg
+          
+        return os.EX_OK
+
+
+# ==============================================================================
+class Promote(TemplateAction):
+  
+    description = _('promotes template content to a successor environment')
+     
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("template name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--environment', dest='env',
+                               help=_("environment name eg: foo.example.com (locker by default)"))
+
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+
+    def run(self):
+        tplName = self.get_option('name')
+        orgName = self.get_option('org')
+        envName = self.get_option('env')
+      
+        template = get_template(orgName, envName, tplName)
+        if template != None:
+            response = self.api.promote(template["id"])
+            print _("Template [ %s ] promoted to environment [ %s ]" % (tplName, envName or "locker"))
           
         return os.EX_OK
 
