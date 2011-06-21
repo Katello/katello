@@ -10,7 +10,7 @@
       - else
         = item.send(col)
   %div
-    %div{:class => 'column_3'}
+    %div{:class => 'column_1'}
       %ul
         %li
           = _('Kernel: ')
@@ -18,12 +18,4 @@
         %li
           = _('IP: ')
           = item.send('ip')
-    %div{:class => 'column_3'}
-      %ul
-        %li
-          = _('Uptime: ') 
-          = get_uptime
-        %li
-          %a{:href=>'', :title=>'Schedule Reboot'} 
-            = _('Schedule Reboot')
   .arrow-right
