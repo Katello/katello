@@ -79,6 +79,10 @@ module Candlepin
     def self.default_headers
       {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.current.cp_oauth_header)
     end
+
+    def self.name_to_key a_name
+      a_name.tr(' ', '_')
+    end
   end
 
   class CandlepinPing < CandlepinResource
@@ -155,10 +159,6 @@ module Candlepin
 
   class Owner < CandlepinResource
     class << self
-      def name_to_key a_name
-         a_name.tr(' ', '_')
-      end
-
       # Set the contentPrefic at creation time so that the client will get
       # content only for the org it has been subscribed to
       def create key, description
