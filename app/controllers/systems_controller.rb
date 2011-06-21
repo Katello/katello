@@ -36,7 +36,7 @@ class SystemsController < ApplicationController
   def setup_options
     @panel_options = { :title => _('Systems'),
                       :col => ['name','lastCheckin','created'],
-                      :custom_columns => :render_columns,
+                      :custom_rows => true,
                       :enable_create => false,
                       :name => _('system'),
                       :list_partial => 'systems/list_systems',
