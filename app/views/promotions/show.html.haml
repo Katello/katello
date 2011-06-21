@@ -43,6 +43,9 @@
         #cslist.list.sliding_list.shadowbox.outlined{"data-page_size"=>current_user.page_size}
           .slider_one.has_content.slider
           .slider_two.no_content.slider
+      - else
+        %h2 #{_("Changesets")}
+        = _("An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment.")
 
     #panel-frame
       #panel.panel.closed
