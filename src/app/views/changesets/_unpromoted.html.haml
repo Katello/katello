@@ -1,8 +1,9 @@
 %ul
   -if @changesets.nil? or @changesets.empty?
     #{_("No Changesets available.")}
-  - @changesets.each do |cs|
-    %li
-      .slide_link{:id=>changeset_bc_id(@changeset)}
-        = cs.name
+  -else
+    - @changesets.each do |cs|
+      %li
+        .slide_link{:id=>changeset_bc_id(@changeset)}
+          = cs.name
       

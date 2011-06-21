@@ -14,6 +14,9 @@ module BreadcrumbHelper
     add_crumb_node!(bc, "changesets", unpromoted_changesets_path(), _("Changesets"), [],
                     {:cache =>true, :content=>render(:partial=>"changesets/unpromoted")})
 
+
+
+
     @changesets.each{|cs|
       add_crumb_node!(bc, changeset_bc_id(cs), products_changeset_path(cs), @changeset.name, ['changesets'],
                     {:cache=>true, :content=>render(:partial=>"changesets/products", :locals=>{:changeset=>cs})})
@@ -21,7 +24,7 @@ module BreadcrumbHelper
 
       
 
-    }     
+    } if @changesets
 
 
     bc.to_json
