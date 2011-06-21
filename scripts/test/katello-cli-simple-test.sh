@@ -99,8 +99,8 @@ test "environment info" environment info --org="$FIRST_ORG" --name="$TEST_ENV"
 
 #testing provider
 YUM_PROVIDER="yum_provider_$RAND"
-FEWUPS_REPO="http://lzap.fedorapeople.org/fakerepos/fewupdates/"
-FEWUPS_REPO_2="http://lzap.fedorapeople.org/fakerepos/fewupdates/2/"
+FEWUPS_REPO="http://lzap.fedorapeople.org/fakerepos/"
+FEWUPS_REPO_2="http://lzap.fedorapeople.org/fakerepos/2/"
 test "provider create" provider create --name="$YUM_PROVIDER" --org="$FIRST_ORG" --type=yum --url="$FEWUPS_REPO" --description="prov description"
 test "provider update" provider update --name="$YUM_PROVIDER" --org="$FIRST_ORG" --url="$FEWUPS_REPO_2" --description="prov description 2"
 test "provider list" provider list --org="$FIRST_ORG"
@@ -115,10 +115,11 @@ test "product list by org and provider" product list --org="$FIRST_ORG" --provid
 
 #testing repositories
 REPO="repo_$RAND"
-test "repo create" repo create --product="$FEWUPS_PRODUCT" --org="$FIRST_ORG" --name="$REPO" --url="$FEWUPS_REPO"
+test "repo create" repo create --product="$FEWUPS_PRODUCT" --org="$FIRST_ORG" --name="$REPO" --url="$FEWUPS_REPO" --assumeyes
 test "repo list by org and env" repo list --org="$FIRST_ORG" --environment="$TEST_ENV"
 test "repo list by org only" repo list --org="$FIRST_ORG"
 test "repo list by org and product" repo list --org="$FIRST_ORG" --product="$FEWUPS_PRODUCT"
+REPO_NAME=`$CMD repo list --org="$FIRST_ORG" | grep $REPO | awk '{print $2}'`
 REPO_ID=`$CMD repo list --org="$FIRST_ORG" | grep $REPO | awk '{print $1}'`
 test "repo status" repo status --id="$REPO_ID"
 
@@ -134,11 +135,11 @@ test "system list" system list --org="$FIRST_ORG"
 
 #testing distributions
 test "distribution list by repo id" distribution list --repo_id="$REPO_ID"
-test "distribution list" distribution list --repo="$REPO" --org="$FIRST_ORG" --product="$FEWUPS_PRODUCT"
+test "distribution list" distribution list --repo="$REPO_NAME" --org="$FIRST_ORG" --product="$FEWUPS_PRODUCT"
 
 #testing packages
 test "package list by repo id" package list --repo_id="$REPO_ID"
-test "package list" package list --repo="$REPO" --org="$FIRST_ORG" --product="$FEWUPS_PRODUCT"
+test "package list" package list --repo="$REPO_NAME" --org="$FIRST_ORG" --product="$FEWUPS_PRODUCT"
 PACK_ID=`$CMD package list --repo_id="$REPO_ID" | tail -n 1 | awk '{print $1}'`
 if valid_id $PACK_ID; then
     test "package info" package info --id="$PACK_ID"
@@ -146,7 +147,7 @@ fi
 
 #testing erratas
 test "errata list by repo id" errata list --repo_id="$REPO_ID"
-test "errata list" errata list --repo="$REPO" --org="$FIRST_ORG" --product="$FEWUPS_PRODUCT"
+test "errata list" errata list --repo="$REPO_NAME" --org="$FIRST_ORG" --product="$FEWUPS_PRODUCT"
 ERRATA_ID=`$CMD errata list --repo_id="$REPO_ID" | tail -n 1 | awk '{print $1}'`
 if valid_id $ERRATA_ID; then
     test "errata info" errata info --id="$ERRATA_ID"

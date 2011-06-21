@@ -15,16 +15,17 @@ require 'spec_helper'
 describe ProvidersController do
   include LoginHelperMethods
   include LocaleHelperMethods
+  include OrganizationHelperMethods
 
   before(:each) do
     login_user
-    setup_current_organization
     set_default_locale
     controller.stub!(:notice)
     controller.stub!(:errors)
 
-    @org = controller.current_organization
+    @org = new_test_org
     @org.stub!(:providers).and_return([@provider])
+    current_organization=@org
   end
 
   PROVIDER_NAME = "a name"
@@ -35,14 +36,15 @@ describe ProvidersController do
       :name => PROVIDER_NAME,
       :description => "a description",
       :repository_url => "https://some.url",
-      :provider_type => Provider::REDHAT
+      :provider_type => Provider::REDHAT,
+       :organization => @org
     }
   end
 
   describe "update a provider subscriptions" do
     before(:each) do
       @provider = Provider.create!(to_create)
-      Candlepin::Owner.stub!(:import)
+      Candlepin::Owner.should_receive(:import).once.and_return("")
       Candlepin::Owner.stub!(:pools).and_return({})
     end
 
@@ -52,6 +54,7 @@ describe ProvidersController do
       id = @provider.id.to_s
       
       post 'subscriptions', {:id => id, :provider => contents}
+      response.should be_success
     end
   end
 
