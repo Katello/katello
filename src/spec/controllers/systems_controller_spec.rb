@@ -42,7 +42,7 @@ describe SystemsController do
     it "should return a portion of systems" do
       get :items, :offset=>25
       response.should be_success
-      response.should render_template("list_items")
+      response.should render_template("list_systems")
       assigns[:systems].should include System.find(30)
       assigns[:systems].should_not include System.find(8)
     end

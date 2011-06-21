@@ -71,5 +71,8 @@
         #{_("Select None")}
     .grid_2
       %a{ :href => "#", :id=>"select_all", :class=>"fl" }
-        #{_("Select All")}      
+        #{_("Select All")}
+    .grid_3
+      %a{ :href => "#", :id=>"toggle_all", :class=>"fl" }
+        #{_("Expand/Contract All")}
     = submit_tag _('Synchronize Now'), :class => 'dialogbutton fr', :id => 'sync_button'
