@@ -21,7 +21,7 @@ class PromotionsController < ApplicationController
   def show
     setup_environment_selector(current_organization)
     @products = @environment.products.reject{|p| p.repos(@environment).empty?}.sort{|a,b| a.name <=> b.name}
-    
+    @changesets = @next_environment.working_changesets if @next_environment
     @changeset_product_ids = @changeset.products.collect { |p| p.cp_id } if @changeset
     @changeset_product_ids ||= []
 

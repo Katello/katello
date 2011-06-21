@@ -190,9 +190,13 @@ $(document).ready(function() {
     });     
 
     //initiate the left tree
-  	var tree1 = sliding_tree("content_tree", {breadcrumb:breadcrumb,
+  	var tree1 = sliding_tree("content_tree", {breadcrumb:content_breadcrumb,
                                       default_tab:"content",
                                       bbq_tag:"content"});
+
+  	var tree2 = sliding_tree("changeset_tree", {breadcrumb:changeset_breadcrumb,
+                                      default_tab:"changesets",
+                                      bbq_tag:"changeset"});
   	
 
     $('#depend_list').live('click', promotion_page.show_dependencies);

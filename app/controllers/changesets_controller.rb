@@ -12,33 +12,29 @@
 
 class ChangesetsController < ApplicationController
 
-  before_filter :find_changeset, :except => [:index, :list, :items]
+  before_filter :find_changeset, :except => [:index, :list, :items, :unpublished]
   before_filter :find_environment, :except => [:index, :list, :items]
 
 
   before_filter :setup_options, :only => [:index, :items]
 
+  ####
+  # Changeset history methods
+  ####
 
+  #changeset history index
   def index
     setup_environment_selector(current_organization)
     @changesets = @environment.changeset_history.limit(current_user.page_size)
 
   end
 
+  #extended scroll for changeset_history
   def items
     setup_environment_selector(current_organization)
     start = params[:offset]
     @changesets = @environment.changeset_history.limit(current_user.page_size).offset(start)
     render_panel_items @changesets, @panel_options
-  end
-
-  def setup_options
-    @panel_options = { :title => _('Changesets'),
-                 :col => ['name'],
-                 :enable_create => false,
-                 :name => _('changeset'),
-                 :accessor => :id,
-                 :ajax_scroll => items_changesets_path()}
   end
 
   #similar to index, but only renders the actual list of the 2 pane
@@ -47,10 +43,6 @@ class ChangesetsController < ApplicationController
     @changesets = @environment.changeset_history
     @columns = ['name'] #from index
     render :partial=>"list"
-  end
-
-  def section_id
-    'contents'
   end
 
 
@@ -65,6 +57,25 @@ class ChangesetsController < ApplicationController
 
   def show_content
     render(:partial => "changesets/changeset", :content_type => 'text/html')
+  end
+
+  def section_id
+    'contents'
+  end
+
+
+
+  ####
+  # Promotion methods
+  ####
+
+  def unpromoted_index
+    @changesets = @environment.working_changesets
+  end
+
+  def products
+    @products = @changeset.products
+    render :partial=>"products", :locals=>{:changeset=>@changeset}
   end
 
 
@@ -122,7 +133,6 @@ class ChangesetsController < ApplicationController
 
   def promote
 
-
     begin
       @changeset.promote
       @environment.create_changeset
@@ -146,6 +156,7 @@ class ChangesetsController < ApplicationController
 
   private
 
+  #produce a simple datastructure of a changeset
   def changeset_simplify cs
     to_ret = {}
     [:product, :repo, :errata, :package].each{ |type|
@@ -167,16 +178,29 @@ class ChangesetsController < ApplicationController
   end
 
   def find_environment
-    @environment = @changeset.environment
-    if @environment.nil?
-      errors _("Couldn't find environment '#{params[:environment_id]}'")
+    if @changeset
+      @environment = @changeset.environment
+
+    elsif params[:env_id]
+      @environment = KPEnvironment.find(params[:env_id])
+    else
+      raise "Couldn't find environment."
     end
+
   end
 
   def find_changeset
     @changeset = Changeset.find(params[:id])
   end
 
+  def setup_options
+    @panel_options = { :title => _('Changesets'),
+                 :col => ['name'],
+                 :enable_create => false,
+                 :name => _('changeset'),
+                 :accessor => :id,
+                 :ajax_scroll => items_changesets_path()}
+  end
 
 
 end
