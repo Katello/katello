@@ -49,7 +49,7 @@
           = auto_complete_field_tag_jquery(:search, params[:search], {:type => "text", :placeholder => "Filter..."},{ :delay => 100, :min_length => -1 })
           %button.action{:form => "search_form"} #{_("Search")}
 
-    #list.clear{:class=>("ajaxScroll" if ajax_scroll), "data-scroll_url"=>ajax_scroll, "data-page_size"=>current_user.page_size}
+    #list.clear.expand_list{:class=>("ajaxScroll" if ajax_scroll), "data-scroll_url"=>ajax_scroll, "data-page_size"=>current_user.page_size}
       .block_head.clear
         - for col in columns
           %div{:class => 'column_' + columns.length.to_s}
