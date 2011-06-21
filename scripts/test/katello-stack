@@ -1,0 +1,74 @@
+#!/bin/bash
+#
+# Start/stop script for katello stack (Pulp/Candlepin/Foreman...)
+#
+# Usage: katello-stack start|stop|restart|status|update|on|off
+#
+# Run as root. Update command issues yum update and enables repositories
+# named fedora-pulp and fedora-candlepin respectively since I keep them
+# disabled (e.g. enabled=0) by default. On/off commands calls chkconfig.
+
+SERVICES_START=(mongod pulp-server postgresql tomcat6)
+SERVICES_STOP=(tomcat6 pulp-server mongod postgresql)
+
+print_usage()
+{
+  echo "Usage: `basename $0` start|restart|stop|status|on|off" && exit 1
+}
+
+EXPECTED_ARGS=1
+if [ $# -lt $EXPECTED_ARGS ]; then
+  print_usage
+fi
+
+case "$1" in
+  start|status)
+    for SERVICE in ${SERVICES_START[*]}; do
+      service $SERVICE $1
+    done
+    ;;
+  stop)
+    for SERVICE in ${SERVICES_STOP[*]}; do
+      service $SERVICE $1
+    done
+    ;;
+  restart)
+    for SERVICE in ${SERVICES_STOP[*]}; do
+      service $SERVICE stop
+    done
+    echo
+    for SERVICE in ${SERVICES_START[*]}; do
+      service $SERVICE start
+    done
+    ;;
+  on|off)
+    for SERVICE in ${SERVICES_START[*]}; do
+      chkconfig $SERVICE $1
+    done
+    ;;
+  update)
+    yum --enablerepo=fedora-pulp --enablerepo=fedora-candlepin \
+      update pulp candlepin-tomcat6
+    pulp-migrate
+    /usr/share/candlepin/cpsetup
+    su - postgres -c \
+      'pg_dump -c candlepin > /var/lib/pgsql/backups/candlepin_clean.sql'
+    ;;
+  fast-clean)
+    # clean pulp
+    echo 'db.dropDatabase();' | mongo pulp_database
+    pulp-migrate
+    # fast clean candlepin
+    su - postgres -c \
+      'psql candlepin < /var/lib/pgsql/backups/candlepin_clean.sql'
+    service pulp-server restart
+    service tomcat6 restart
+    ;;
+  *)
+    print_usage
+    ;;
+esac
+
+exit 0
+
+# :vim:sw=2:ts=2:et:
