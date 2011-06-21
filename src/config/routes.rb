@@ -140,10 +140,15 @@ Src::Application.routes.draw do
       get :dependency_size
       get :dependency_list
       post :promote
+      get :packages
+      get :products
+      get :errata
+      get :repositories
     end
     collection do
       get :list
       get :items
+      get :unpromoted
     end
   end
 

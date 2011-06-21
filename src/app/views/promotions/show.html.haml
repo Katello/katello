@@ -7,8 +7,8 @@
 
 
 :javascript
-  var breadcrumb = eval('(#{escape_javascript(generate_breadcrumb())})');
-
+  var content_breadcrumb = eval('(#{escape_javascript(generate_content_breadcrumb())})');
+  var changeset_breadcrumb = eval('(#{escape_javascript(generate_cs_breadcrumb())})');
 
 #error_dialog{:style=>"display: none"}
   = _("An error has occured when communicating with the server, please refresh the page to retrieve the current changeset.")
@@ -35,11 +35,14 @@
 
 .grid_16
   #container
-    .right
-      %h2 #{_("Current Changeset")}
-      %br
-      %br
-      = render(:partial => "changesets/changeset", :content_type => 'text/html')
+    
+    #changeset_tree.right_tree
+      - if @next_environment
+        %h2 #{@next_environment.name + _(" Changesets")}
+        .tree_breadcrumb.clickable.clear
+        #cslist.list.sliding_list.shadowbox.outlined{"data-page_size"=>current_user.page_size}
+          .slider_one.has_content.slider
+          .slider_two.no_content.slider
 
     #panel-frame
       #panel.panel.closed

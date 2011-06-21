@@ -13,6 +13,7 @@
 module PromotionsHelper 
 
   include ActionView::Helpers::JavaScriptHelper
+  include BreadcrumbHelper
 
   def details_path product_id=nil
     promotion_details_path(@organization.cp_key, @environment.name, :product_id=>product_id)
@@ -22,7 +23,7 @@ module PromotionsHelper
   #   :id =>  {:url, :name, :trail}   where name is a human readable name, and :trail is 
   #                                    a list of other :ids creating the trail leading up to it
   #
-  def generate_breadcrumb
+  def generate_content_breadcrumb
    bc = {}
    content_crumb_id = "content"
    products_crumb_id = "products"   
@@ -54,13 +55,11 @@ module PromotionsHelper
    end   
    bc.to_json
   end
+
+
   
-  def add_crumb_node! hash, id, url, name, trail, params={}
-    cache = false || params[:cache] #default to false
-    hash[id] = {:name=>name, :url=>url, :trail=>trail, :cache=>cache}
-    hash[id][:content] = params[:content] if params[:content]
-    hash[id][:scrollable] = true if params[:scrollable]
-  end
+
+
 
 
   def product_bc_id product
