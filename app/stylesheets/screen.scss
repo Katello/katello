@@ -265,6 +265,9 @@ fieldset {
       width: 0;
       z-index: 220;
     }
+    a, a:hover, a:visited, a:active, a:link {
+     font-color: #FFF;
+    }
   }
   &.add {
     background-color: $listhover;
@@ -276,8 +279,58 @@ fieldset {
       .arrow-right {
         border-left: 21px solid $listhover;
       }
+      a, a:hover, a:visited, a:active, a:link {
+        font-color: #FFF;
+      }
   }
 
+}
+#systems{
+  .block{
+    border-bottom: solid 1px #F2F2F2;
+    padding:  4px 10px 8px 5px;
+    cursor:pointer;
+    position: relative;
+    width: 96.6%;
+    height: 95px;
+    font-size: 90%;
+    &.active {
+      background-color: $kselected;
+      color: #FFF;
+      .arrow-right {
+        border-bottom: 21px solid transparent;
+        border-left: 21px solid $kselected;
+        border-top: 21px solid transparent;
+        height: 0;
+        margin: 0;
+        position: absolute;
+        right: -21px;
+        top: 0px;
+        width: 0;
+        z-index: 220;
+      }
+    }
+    &.add {
+      background-color: $listhover;
+      color: #FFF;
+    }
+    &:hover {
+        background-color: $listhover;
+        color: #FFF;
+        .arrow-right {
+          border-left: 21px solid $listhover;
+        }
+    }
+    li {
+      font-size: 90%;
+      padding: 0;
+      height: 1.5em;
+      margin-bottom: 1.3em;
+    }
+    .column_3 {
+      height: 40px;
+    }
+  }
 }
 #plans {
   .block {

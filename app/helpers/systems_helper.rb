@@ -13,9 +13,8 @@
 module SystemsHelper
   
   def render_columns(options)
-    render :partial=>"list_system", 
-            :collection=>options[:collection], :as=>:item, 
-            :locals=>{:accessor=>options[:accessor], :columns=>options[:columns]}
+    render :partial=>"systems/list_systems",  
+            :locals=>{:accessor=>options[:accessor], :columns=>options[:columns], :collection=>options[:collection]}
   end
   
   def get_checkin(system)
@@ -27,7 +26,11 @@ module SystemsHelper
   end
   
   def convert_time(item)
-    Time.parse(item).localtime.strftime('%m/%d/%y %I:%M:%S %p %Z')
+    Time.parse(item).localtime.strftime('%m/%d/%y %I:%M %p %Z')
+  end
+  
+  def get_uptime
+    return '0 days'
   end
   
 end
