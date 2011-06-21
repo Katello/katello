@@ -12,7 +12,7 @@
 
 module SystemsHelper
   
-  def render_columns(options)
+  def render_rows(options)
     render :partial=>"systems/list_systems",  
             :locals=>{:accessor=>options[:accessor], :columns=>options[:columns], :collection=>options[:collection]}
   end
