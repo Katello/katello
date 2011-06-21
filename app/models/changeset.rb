@@ -27,6 +27,7 @@ class Changeset < ActiveRecord::Base
 
   has_and_belongs_to_many :products
   has_many :packages, :class_name=>"ChangesetPackage", :inverse_of=>:changeset
+  has_many :users, :class_name=>"ChangesetUser", :inverse_of=>:changeset
   has_many :errata, :class_name=>"ChangesetErratum", :inverse_of=>:changeset
   has_many :repos, :class_name=>"ChangesetRepo", :inverse_of => :changeset
   belongs_to :environment, :class_name=>"KPEnvironment"
