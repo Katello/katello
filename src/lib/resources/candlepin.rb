@@ -154,7 +154,6 @@ module Candlepin
   end
 
   class Owner < CandlepinResource
-
     class << self
       def name_to_key a_name
          a_name.tr(' ', '_')
