@@ -126,7 +126,7 @@ class Api::TemplatesController < Api::ApiController
     @changeset.packages << changeset_packages(@template.packages)
     @changeset.promote
 
-    render :json => "promote"
+    render :json => @changeset.to_json
   end
 
   def find_environment
