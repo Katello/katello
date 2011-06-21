@@ -14,7 +14,7 @@ class CpConsumerUser < User
 
   attr_accessor :uuid
 
-  def oauth_header
+  def cp_oauth_header
     { 'cp-consumer' => self.uuid }
   end
 
