@@ -103,6 +103,12 @@ class Server(object):
         @raise RuntimeError: if either of the files cannot be found or read
         """
         raise NotImplementedError('base server class method called')
+        
+    def set_kerberos_auth(self):
+        """
+        Set kerberos authentication
+        """
+        raise NotImplementedError('base server class method called')
 
     def has_credentials_set(self):
         raise NotImplementedError('base server class method called')
@@ -406,7 +412,17 @@ class KatelloServer(Server):
                                % keyfile)
         self.__certfile = certfile
         self.__keyfile = keyfile
-
+        
+    def set_kerberos_auth(self):
+        _ignore, ctx = authGSSClientInit(‘HTTP@’ + self.host, gssflags=GSS_C_DELEG_FLAG|GSS_C_MUTUAL_FLAG|GSS_C_SEQUENCE_FLAG)
+        _ignore = authGSSClientStep(ctx, ”)
+        self.__tgt = authGSSClientResponse(ctx)
+        
+        if self.__tgt:
+            self.headers['Authorization'] = 'Negotiate %s' % self.__tgt
+        else:
+            raise RuntimeError(_("Couldn't authenticate via kerberos"))
+            
     def has_credentials_set(self):
         return 'Authorization' in self.headers or \
                 None not in (self.__certfile, self.__keyfile)

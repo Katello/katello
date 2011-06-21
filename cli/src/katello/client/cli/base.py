@@ -138,6 +138,9 @@ class KatelloCLI(object):
         elif None not in (self.opts.certfile, self.opts.keyfile):
             self._server.set_ssl_credentials(self.opts.certfile,
                                              self.opts.keyfile)
+        else:
+            self._server.set_kerberos_auth
+                                            
                                              
     def command_names(self):
         return self._commands.keys()
