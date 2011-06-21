@@ -35,8 +35,9 @@ $(document).ready(function() {
       }
   }
 
-  $('#select_all').click(function(){$('.products input:checkbox').attr('checked',true)});
-  $('#select_none').click(function(){$('.products input:checkbox').attr('checked',false)});
+  $('#select_all').click(function(){$('.products input:checkbox').attr('checked',true); return false;});
+  $('#select_none').click(function(){$('.products input:checkbox').attr('checked',false); return false;});
+  $('#toggle_all').click(function(){$('.clickable').click(); return false;});
 
   $('#sync_product_form')
    .bind("ajax:success", function(evt, data, status, xhr){
@@ -65,7 +66,7 @@ $(document).ready(function() {
           arrow.attr("src", "/images/icons/expander-expanded.png");
       }
       return false;
-  })
+  });
 
   $('.product input:checkbox').click(function() {
     $(this).siblings().find('input:checkbox').attr('checked', this.checked);
