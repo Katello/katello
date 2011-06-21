@@ -9,4 +9,21 @@
         = get_checkin(item)
       - else
         = item.send(col)
+  %div
+    %div{:class => 'column_3'}
+      %ul
+        %li
+          = _('Kernel: ')
+          = item.send('kernel')
+        %li
+          = _('IP: ')
+          = item.send('ip')
+    %div{:class => 'column_3'}
+      %ul
+        %li
+          = _('Uptime: ') 
+          = get_uptime
+        %li
+          %a{:href=>'', :title=>'Schedule Reboot'} 
+            = _('Schedule Reboot')
   .arrow-right

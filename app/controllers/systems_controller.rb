@@ -39,6 +39,7 @@ class SystemsController < ApplicationController
                       :custom_columns => :render_columns,
                       :enable_create => false,
                       :name => _('system'),
+                      :list_partial => 'systems/list_systems',
                       :ajax_scroll => items_systems_path()}
   end
 
