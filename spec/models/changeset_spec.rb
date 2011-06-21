@@ -23,8 +23,8 @@ describe Changeset do
 
     it "changeset first user should equal current user" do
       cs = @environment.working_changesets.first
-      @cu = ChangesetUser.new(:changeset => cs, :user => User.current)
-      @cu.save!
+      cu = ChangesetUser.new(:changeset => cs, :user => User.current)
+      cu.save!
       cs.users.first.user_id.should == User.current.id
       cs.users.first.changeset_id.should == cs.id
     end
