@@ -2,20 +2,71 @@
 #
 # Start/stop script for katello stack (Pulp/Candlepin/Foreman...)
 #
-# Usage: katello-stack start|stop|restart|status|update|on|off
+# Usage:
 #
-# Run as root. Update command issues yum update and enables repositories
-# named fedora-pulp and fedora-candlepin respectively since I keep them
-# disabled (e.g. enabled=0) by default. On/off commands calls chkconfig.
-# Initdb quickly inits all databases from the initial data snapshot
-# that is made during update.
+# katello-stack start|stop|restart|status
+#  Working with all Katello services
+#
+# katello-stack update|update-disabled
+#  Updates RPMs using yum (disabled = use --enablerepo option) and
+#  stores database snapshots for later initialization
+#
+# katello-stack on|off
+#  Controls services autostart (using chkconfig)
+#
+# katello-stack initdb
+#  Initializes all backend engine databases from snapshots (faster than
+#  full redeployment)
+#
+# Run as root.
+#
+# Typical use (from src/ directory):
+#
+# sudo ../scripts/test/katello-stack initdb && rake setup --trace &&
+#  ../scripts/test/katello-cli-simple-test.sh
+#
 
 SERVICES_START=(mongod pulp-server postgresql tomcat6)
 SERVICES_STOP=(tomcat6 pulp-server mongod postgresql)
 
 print_usage()
 {
-  echo "Usage: `basename $0` start|restart|stop|status|on|off|initdb" && exit 1
+  echo "Usage: `basename $0` start|restart|stop|status|on|off|update|update-disabled|initdb" && exit 1
+}
+
+post_update()
+{
+  pulp-migrate
+  # we dont store snapshot for mongodb - its fast enough
+  /usr/share/candlepin/cpsetup
+  su - postgres -c \
+    'pg_dump -c candlepin > /var/lib/pgsql/backups/candlepin_clean.sql'
+}
+
+update_system()
+{
+  yum update pulp candlepin-tomcat6
+  post_update
+}
+
+update_disabled()
+{
+  yum --enablerepo=fedora-pulp --enablerepo=fedora-candlepin \
+    update pulp candlepin-tomcat6
+  post_update
+}
+
+initdb()
+{
+  # clean pulp
+  echo 'db.dropDatabase();' | mongo pulp_database
+  pulp-migrate
+
+  # clean candlepin from snapshot
+  su - postgres -c \
+    'psql candlepin < /var/lib/pgsql/backups/candlepin_clean.sql'
+  service pulp-server restart
+  service tomcat6 restart
 }
 
 EXPECTED_ARGS=1
@@ -49,22 +100,13 @@ case "$1" in
     done
     ;;
   update)
-    yum --enablerepo=fedora-pulp --enablerepo=fedora-candlepin \
-      update pulp candlepin-tomcat6
-    pulp-migrate
-    /usr/share/candlepin/cpsetup
-    su - postgres -c \
-      'pg_dump -c candlepin > /var/lib/pgsql/backups/candlepin_clean.sql'
+    update_system
+    ;;
+  update-disabled)
+    update_disabled
     ;;
   initdb)
-    # clean pulp
-    echo 'db.dropDatabase();' | mongo pulp_database
-    pulp-migrate
-    # clean candlepin from snapshot
-    su - postgres -c \
-      'psql candlepin < /var/lib/pgsql/backups/candlepin_clean.sql'
-    service pulp-server restart
-    service tomcat6 restart
+    initdb
     ;;
   *)
     print_usage
