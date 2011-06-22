@@ -41,7 +41,8 @@ describe User do
       @user.own_role.name.should match("testuser")
     end
 
-    specify { @user.oauth_header.should == {'cp-user' => @user.username}}
+    specify { @user.cp_oauth_header.should == {'cp-user' => @user.username}}
+    specify { @user.pulp_oauth_header.should == {'pulp-user' => @user.username}}
   end
 
 end
