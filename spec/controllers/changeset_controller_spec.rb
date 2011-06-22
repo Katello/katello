@@ -50,6 +50,11 @@ describe ChangesetsController do
       response.should be_success
     end
 
+    it "changesetuser should be empty" do
+      get :index
+      @changeset.users.should be_empty
+    end
+
     it "should return a portion of changesets for an environment" do
       get :items
       response.should be_success
