@@ -11,12 +11,12 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ChangesetsController < ApplicationController
-
-  before_filter :find_changeset, :except => [:index, :list, :items, :unpublished]
-  before_filter :find_environment, :except => [:index, :list, :items]
-
-
+  
+  before_filter :find_changeset, :except => [:index, :list, :items, :unpublished, :create]
+  before_filter :find_environment, :except => [:index, :list, :items, :create]
   before_filter :setup_options, :only => [:index, :items]
+  
+  rescue_from Exception, :with => :handle_exceptions
 
   ####
   # Changeset history methods
@@ -26,7 +26,6 @@ class ChangesetsController < ApplicationController
   def index
     setup_environment_selector(current_organization)
     @changesets = @environment.changeset_history.limit(current_user.page_size)
-
   end
 
   #extended scroll for changeset_history
@@ -44,7 +43,6 @@ class ChangesetsController < ApplicationController
     @columns = ['name'] #from index
     render :partial=>"list"
   end
-
 
   def edit
     render :partial=>"edit"
@@ -88,9 +86,13 @@ class ChangesetsController < ApplicationController
     render :partial=>"dependency_list"
   end
 
+  def create
+    @changeset = Changeset.create!(params[:changesets])
+    notice _("Changeset '#{@changeset["name"]}' was created.")
+    render :partial=>"common/list_item", :locals=>{:item=>@changeset, :accessor=>"id", :columns=>['name']}
+  end
 
   def update
-
     send_changeset = params[:timestamp] && params[:timestamp] != @changeset.updated_at.to_i.to_s
 
     #if you are just updating the name, set it and return the new name
@@ -130,16 +132,23 @@ class ChangesetsController < ApplicationController
     to_ret[:changeset] = changeset_simplify(@changeset) if send_changeset
     render :json=>to_ret
   end
+  
+  def destroy
+    name = @changeset.name
+    id = @changeset.id
+    @changeset.destroy
+    notice _("Changeset '#{name}' was deleted.")
+    render :text=>""
+  end
 
   def promote
-
     begin
       @changeset.promote
       @environment.create_changeset
 
-      notice "promoted changeset to #{@environment.name} environment"
+      notice _("Promoted changeset to #{@environment.name} environment.")
     rescue Exception => e
-        errors  "Failed to promote: #{e.to_s}"
+        errors  _("Failed to promote: #{e.to_s}")
         logger.error $!, $!.backtrace.join("\n\t")
     end
 
@@ -180,13 +189,11 @@ class ChangesetsController < ApplicationController
   def find_environment
     if @changeset
       @environment = @changeset.environment
-
     elsif params[:env_id]
       @environment = KPEnvironment.find(params[:env_id])
     else
-      raise "Couldn't find environment."
+      raise _("Couldn't find environment.")
     end
-
   end
 
   def find_changeset
@@ -201,6 +208,11 @@ class ChangesetsController < ApplicationController
                  :accessor => :id,
                  :ajax_scroll => items_changesets_path()}
   end
-
-
+  
+  def handle_exceptions(error)
+    errors error
+    render :text => error.to_s, :status => :bad_request
+    Rails.logger.info error.backtrace.join("\n")
+  end
+  
 end
