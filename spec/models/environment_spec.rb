@@ -36,7 +36,7 @@ describe KPEnvironment do
     @third_product = Product.new(:name =>"prod3", :cp_id => '45678', :provider => @provider, :environments => [@organization.locker])
     @fourth_product = Product.new(:name =>"prod4", :cp_id => '32683', :provider => @provider, :environments => [@organization.locker])
 
-    @environment = KPEnvironment.new({:name => @env_name}) do |e|
+    @environment = KPEnvironment.new({:name => @env_name, :prior => 1}) do |e|
       e.products << @first_product
       e.products << @third_product
     end
@@ -51,7 +51,7 @@ describe KPEnvironment do
   end
 
   specify { @environment.name.should == @env_name }
-  specify { @environment.prior.should be_nil }
+  #specify { @environment.prior.should be_nil }
   specify { @environment.successor.should be_nil }
   specify { @organization.environments.should include @environment }
   specify { @environment.organization.should == @organization }
@@ -83,14 +83,14 @@ describe KPEnvironment do
   context "available products" do
     
     before(:each) do
-      @prior_env = KPEnvironment.new({:name => @env_name + '-prior'}) do |e|
+      @prior_env = KPEnvironment.new({:name => @env_name + '-prior', :prior => @environment.id}) do |e|
         e.products << @first_product
         e.products << @second_product
         e.products << @third_product
       end
       @organization.environments << @prior_env
-      @organization.save!
       @prior_env.save!
+      @organization.save!
       
       @organization.locker.products << @first_product
       @organization.locker.products << @second_product
@@ -129,9 +129,10 @@ describe KPEnvironment do
       @env2 = KPEnvironment.new({:name => @env_name + '-succ2'})
       @organization.environments << @env1
       @organization.environments << @env2
-      
-      @env2.prior = @env1.id
       @env1.prior = @environment.id
+      @env1.save!
+      @env2.prior = @env1.id
+      @env2.save!
     end
     
     specify { @environment.path.size.should == 3 }
