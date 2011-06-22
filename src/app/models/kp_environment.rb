@@ -113,14 +113,14 @@ class KPEnvironment < ActiveRecord::Base
   #  and then give me that entire path
   def full_path
     p = self
-    until p.prior.nil?
+    until p.prior.locker 
       p = p.prior
     end
     p.path
   end
 
   def available_products
-    if self.prior.nil?
+    if self.prior.locker
       # if there is no prior, then the prior is the locker, which has all products
       prior_products = self.organization.locker.products
     else
