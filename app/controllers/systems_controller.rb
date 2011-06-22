@@ -63,9 +63,7 @@ class SystemsController < ApplicationController
   end
   
   def packages
-    packages = (0..25).collect do |p|
-      OpenStruct.new(:name => "package-#{p}", :arch => ["noarch", "i686", "x86_64"].choice)
-    end
+    packages = @system.packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
     render :partial=>"packages", :locals=>{:system=>@system, :packages => packages}
   end
   
