@@ -145,8 +145,12 @@ class User < ActiveRecord::Base
     self.role_ids - [self.own_role_id]
   end
 
-  def oauth_header
+  def cp_oauth_header
     { 'cp-user' => self.username }
+  end
+
+  def pulp_oauth_header
+    { 'pulp-user' => self.username }
   end
 
   protected
