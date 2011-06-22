@@ -124,6 +124,8 @@ class ChangesetsController < ApplicationController
       end
       @changeset.updated_at = Time.now
       @changeset.save!
+      csu = ChangesetUser.find_or_create_by_user_id_and_changeset_id(current_user.id, cs.id)
+      csu.save!
 
     end
     to_ret = {:timestamp=>@changeset.updated_at.to_i.to_s}
@@ -136,6 +138,8 @@ class ChangesetsController < ApplicationController
     begin
       @changeset.promote
       @environment.create_changeset
+      # remove user edit tracking for this changeset
+      ChangesetUser.destroy_all(:changeset_id => @changeset.id) 
 
       notice "promoted changeset to #{@environment.name} environment"
     rescue Exception => e
