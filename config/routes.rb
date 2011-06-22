@@ -144,6 +144,7 @@ Src::Application.routes.draw do
       get :products
       get :errata
       get :repositories
+      get :object
     end
     collection do
       get :list

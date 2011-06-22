@@ -15,5 +15,7 @@
 class ChangesetRepo < ActiveRecord::Base
 
   belongs_to :changeset, :inverse_of=>:repos
+  belongs_to :product
 
+  
 end
