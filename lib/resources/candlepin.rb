@@ -21,19 +21,19 @@ module Candlepin
     def self.post path, body
       Rails.logger.debug "Sending POST request to Candlepin: #{path}"
       client = CandlepinResource.rest_client(Net::HTTP::Post, :post, path_with_cp_prefix(path))
-      client.post body, {:accept => :json, :content_type => :json}.merge(User.current.cp_oauth_header)
+      client.post body, {:accept => :json, :content_type => :json}.merge(::User.current.cp_oauth_header)
     end
 
     def self.delete path
       Rails.logger.debug "Sending DELETE request to Candlepin: #{path}"
       client = CandlepinResource.rest_client(Net::HTTP::Delete, :delete, path_with_cp_prefix(path))
-      client.delete({:accept => :json, :content_type => :json}.merge(User.current.cp_oauth_header))
+      client.delete({:accept => :json, :content_type => :json}.merge(::User.current.cp_oauth_header))
     end
 
     def self.get path
       Rails.logger.debug "Sending GET request to Candlepin: #{path}"
       client = CandlepinResource.rest_client(Net::HTTP::Get, :get, path_with_cp_prefix(path))
-      client.get({:accept => :json}.merge(User.current.cp_oauth_header))
+      client.get({:accept => :json}.merge(::User.current.cp_oauth_header))
     end
 
     def self.path_with_cp_prefix path
@@ -50,19 +50,19 @@ module Candlepin
     after_post('/owners/') do |match, request, reply|
       name = JSON.parse(reply)['key']
       verbs = [:create, :read, :update, :delete]
-      User.current.allow(verbs, :owner, "owner_#{name}")
+      ::User.current.allow(verbs, :owner, "owner_#{name}")
     end
 
     # DELETE /candlepin/owners/ - delete owner
     before_delete('/owners/:name') do |match, request, reply|
       name = match[1]
-      User.allowed_to_or_error?(:destroy, :owner, "owner_#{name}")
+      ::User.allowed_to_or_error?(:destroy, :owner, "owner_#{name}")
     end
 
     after_delete('/owners/:name') do |match, request, reply|
       name = match[1]
       verbs = [:create, :read, :update, :delete]
-      User.current.disallow(verbs, :owner, "owner_#{name}")
+      ::User.current.disallow(verbs, :owner, "owner_#{name}")
     end
   end
 
@@ -77,7 +77,7 @@ module Candlepin
     self.resource_permissions = CandlepinResourcePermissions
 
     def self.default_headers
-      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.current.cp_oauth_header)
+      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(::User.current.cp_oauth_header)
     end
 
     def self.name_to_key a_name
@@ -124,7 +124,7 @@ module Candlepin
       end
 
       def destroy uuid
-        self.delete(path(uuid), User.current.cp_oauth_header).code.to_i
+        self.delete(path(uuid), ::User.current.cp_oauth_header).code.to_i
       end
 
       def available_pools(uuid)
@@ -171,7 +171,7 @@ module Candlepin
       def create_user key, username, password
         # TODO: the first user should not be superAdmin but with role that has proper permissions (e.g. ALL)
         # for this we would need to create: user, role, permission and membership resources
-        CPUser.create({:username => name_to_key(username), :password => name_to_key(password), :superAdmin => true})
+        User.create({:username => name_to_key(username), :password => name_to_key(password), :superAdmin => true})
       end
 
       def destroy key
@@ -214,7 +214,7 @@ module Candlepin
     end
   end
 
-  class CPUser < CandlepinResource
+  class User < CandlepinResource
     class << self
       def create attrs
         JSON.parse(self.post(path(), JSON.generate(attrs), self.default_headers).body).with_indifferent_access
