@@ -48,9 +48,10 @@ module Pulp
     self.consumer_secret = cfg.oauth_secret
     self.consumer_key = cfg.oauth_key
     self.ca_cert_file = cfg.ca_cert_file
-    self.default_headers = {'pulp-user' => 'admin',
-                            'accept' => 'application/json',
-                            'content-type' => 'application/json'}
+
+    def self.default_headers
+      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.current.pulp_oauth_header)
+    end
   end
 
   class PulpPing < PulpResource
@@ -252,6 +253,34 @@ module Pulp
         body = response.body
         JSON.parse(body)
       end
+
+    end
+  end
+
+  class Consumer < PulpResource
+
+    class << self
+      def find consumer_id
+        response = get(consumer_path(consumer_id), self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def installed_packages consumer_id
+        response = get(consumer_path(consumer_id) + "/package_profile/", self.default_headers)
+        JSON.parse(response.body)
+      end
+
+      def destroy consumer_id
+        raise ArgumentError, "consumer_id id has to be specified" unless consumer_id
+        self.delete(consumer_path(consumer_id), self.default_headers).code.to_i
+      end
+
+      def consumer_path id = nil
+        url = "/pulp/api/consumers/#{id}"
+        url = url + "/" if id
+        url
+      end
+
 
     end
   end
