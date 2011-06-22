@@ -133,7 +133,7 @@ class PromotionsController < ApplicationController
     @next_environment ||= @environment.successor
 
     @path = @next_environment.full_path if @next_environment
-    @path ||= @environment.full_path
+    @path ||= [current_organization.locker]
     @path = [current_organization.locker] + @path if !@path.first.locker?
 
     if params[:changeset_id]
