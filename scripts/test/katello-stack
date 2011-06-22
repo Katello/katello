@@ -7,13 +7,15 @@
 # Run as root. Update command issues yum update and enables repositories
 # named fedora-pulp and fedora-candlepin respectively since I keep them
 # disabled (e.g. enabled=0) by default. On/off commands calls chkconfig.
+# Initdb quickly inits all databases from the initial data snapshot
+# that is made during update.
 
 SERVICES_START=(mongod pulp-server postgresql tomcat6)
 SERVICES_STOP=(tomcat6 pulp-server mongod postgresql)
 
 print_usage()
 {
-  echo "Usage: `basename $0` start|restart|stop|status|on|off" && exit 1
+  echo "Usage: `basename $0` start|restart|stop|status|on|off|initdb" && exit 1
 }
 
 EXPECTED_ARGS=1
@@ -54,11 +56,11 @@ case "$1" in
     su - postgres -c \
       'pg_dump -c candlepin > /var/lib/pgsql/backups/candlepin_clean.sql'
     ;;
-  fast-clean)
+  initdb)
     # clean pulp
     echo 'db.dropDatabase();' | mongo pulp_database
     pulp-migrate
-    # fast clean candlepin
+    # clean candlepin from snapshot
     su - postgres -c \
       'psql candlepin < /var/lib/pgsql/backups/candlepin_clean.sql'
     service pulp-server restart
