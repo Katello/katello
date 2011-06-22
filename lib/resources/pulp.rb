@@ -48,9 +48,10 @@ module Pulp
     self.consumer_secret = cfg.oauth_secret
     self.consumer_key = cfg.oauth_key
     self.ca_cert_file = cfg.ca_cert_file
-    self.default_headers = {'pulp-user' => 'admin',
-                            'accept' => 'application/json',
-                            'content-type' => 'application/json'}
+
+    def self.default_headers
+      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.current.pulp_oauth_header)
+    end
   end
 
   class PulpPing < PulpResource
