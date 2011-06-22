@@ -118,7 +118,6 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def promote
-    #TODO: check functionality
     @changeset = Changeset.create!(:environment => @template.environment)
 
     @changeset.products << @template.products
