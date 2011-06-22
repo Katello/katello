@@ -17,7 +17,6 @@ describe ChangesetsController do
   include LocaleHelperMethods
   include OrganizationHelperMethods
 
-
   module CSControllerTest
     ENV_NAME = "environment_name"
     ENVIRONMENT = {:id => 1, :name => ENV_NAME, :description => nil, :prior => nil}
@@ -37,13 +36,14 @@ describe ChangesetsController do
 
     CSControllerTest::ENVIRONMENT["organization"] = @org
     @env = KPEnvironment.create(CSControllerTest::ENVIRONMENT)
-
     CSControllerTest::CHANGESET["environment"] = @env
-    @changeset = Changeset.create(CSControllerTest::CHANGESET)
   end
 
 
   describe "viewing changesets" do
+    before (:each) do
+      @changeset = Changeset.create(CSControllerTest::CHANGESET)
+    end
 
     it "should show the changeset 2 pane list" do
       get :index
@@ -76,6 +76,49 @@ describe ChangesetsController do
       response.should be_success
     end
     
+  end
+  
+  describe 'creating a changeset' do
+    
+    it 'should create a changeset correctly and send a notification' do
+      controller.should_receive(:notice)
+      post 'create', {:changesets => {:name => "Changeset 7055"}}
+      response.should be_success
+      Changeset.exists?(:name=>'Changeset 7055').should be_true
+    end
+    
+    it 'should cause an error notification if name is left blank' do
+      controller.should_receive(:errors)
+      post 'create', {:changesets => { :name => ''}}
+      response.should_not be_success
+    end
+
+    it 'should cause an error notification if the Katello name format is violated' do
+      controller.should_receive(:errors)
+      post 'create', {:changesets => { :name => 'Test/Changeset 4.5'}}
+      response.should_not be_success
+    end
+    
+  end
+
+  describe 'deleting a changeset' do
+    before (:each) do
+      @changeset = Changeset.create(CSControllerTest::CHANGESET)
+    end
+    
+    it 'should successfully delete a changeset' do
+      controller.should_receive(:notice)
+      delete 'destroy', :id=>@changeset.id
+      response.should be_success
+      Changeset.exists?(:id=>@changeset.id).should be_false
+    end
+        
+    it 'should raise an exception if no such changeset exists' do
+      controller.should_receive(:errors)
+      delete 'destroy', :id=>20
+      response.should_not be_success
+      Changeset.exists?(:id=>@changeset.id).should be_true
+    end
   end
 
 end
