@@ -92,10 +92,10 @@ Warden::Strategies.add(:sso) do
   end
 
   def authenticate!
-    return fail('No X-Forwarded-User header, skipping sso authentication') if request.env['X-Forwarded-User'].blank?
+    return fail('No X-Forwarded-User header, skipping sso authentication') if request.env['HTTP_X_FORWARDED_USER'].blank?
 
-    user_id = request.env['X-Forwarded-User']
-    u = User.User.where(:username => user_id).first
+    user_id = request.env['HTTP_X_FORWARDED_USER'].split("@").first
+    u = User.where(:username => user_id).first
     u ? success!(u) : fail!("Username is not correct - could not log in")
   end
 end
