@@ -24,7 +24,8 @@ class Changeset < ActiveRecord::Base
     :allow_blank => false,
     :message => "A changeset must have one of the following states: #{STATES.join(', ')}."
 
-
+  validates :name, :presence => true, :katello_name_format => true, :allow_blank => false
+  validates_uniqueness_of :name, :scope => :environment_id, :message => N_("Must be unique within an environment")
   has_and_belongs_to_many :products
   has_many :packages, :class_name=>"ChangesetPackage", :inverse_of=>:changeset
   has_many :users, :class_name=>"ChangesetUser", :inverse_of=>:changeset

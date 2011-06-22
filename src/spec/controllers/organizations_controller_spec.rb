@@ -28,7 +28,6 @@ describe OrganizationsController do
     set_default_locale
     controller.stub!(:notice)
     controller.stub!(:errors)
-
   end
   
   describe "create a root org" do        
