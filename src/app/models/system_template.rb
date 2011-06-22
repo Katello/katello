@@ -78,7 +78,7 @@ class SystemTemplate < ActiveRecord::Base
   end
 
 
-  #TODO: comment, do we really need this function?
+  #TODO: comment
   def content_valid?
     self.packages
     self.errata

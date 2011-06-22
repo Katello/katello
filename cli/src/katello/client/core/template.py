@@ -91,7 +91,7 @@ class Info(TemplateAction):
         
         template["errata"]   = "\n".join([e["id"] for e in template["errata"]])
         template["products"] = "\n".join([p["name"] for p in template["products"]])
-        template["packages"] = "\n".join([p["id"] for p in template["packages"]])
+        template["packages"] = "\n".join([p["name"] for p in template["packages"]])
         template["kickstart_attributes"] = "\n".join([ key+":\t"+value for key, value in template["kickstart_attrs"].iteritems() ])
         
         self.printer.addColumn('id')
