@@ -10,13 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require_dependency "resources/pulp"
-class Glue::Pulp::Package < Glue::Pulp::SimplePackage
-  attr_accessor :id, :download_url, :checksum, :license, :group, :filename, :requires,  :provides, :description, :size, :buildhost
-
-
-  def self.find id
-    Glue::Pulp::Package.new(Pulp::Package.find(id))
+class Glue::Pulp::SimplePackage
+  # {"epoch", "name", "arch", "version", "vendor", "release"}
+  attr_accessor :name,:arch
+  def initialize(params = {})
+    params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
   end
 
+  def nvrea
+    "#{@name}-#{@version}-#{@release}.#{@arch}"
+  end
 end
