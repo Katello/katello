@@ -25,7 +25,7 @@ class Changeset < ActiveRecord::Base
     :message => "A changeset must have one of the following states: #{STATES.join(', ')}."
 
 
-  has_and_belongs_to_many :products
+  has_and_belongs_to_many :products, :uniq => true
   has_many :packages, :class_name=>"ChangesetPackage", :inverse_of=>:changeset
   has_many :users, :class_name=>"ChangesetUser", :inverse_of=>:changeset
   has_many :errata, :class_name=>"ChangesetErratum", :inverse_of=>:changeset

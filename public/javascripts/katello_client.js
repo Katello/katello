@@ -199,6 +199,9 @@ var change_set = {
           item["mod_id"] = value[1];
           item["mod_name"] = value[2];
           item["adding"] = value[3];
+          if (value[4]) {
+              item["product_id"] = value[4];
+          }
           data.push(item);
         });
       $.ajax({

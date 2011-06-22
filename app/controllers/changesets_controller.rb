@@ -88,6 +88,9 @@ class ChangesetsController < ApplicationController
     render :partial=>"dependency_list"
   end
 
+  def object
+    render :json => simplify_changeset(@changeset), :content_type => :json
+  end
 
   def update
 
@@ -106,19 +109,20 @@ class ChangesetsController < ApplicationController
         type = item["type"]
         id = item["mod_id"] #id of item being added/removed
         name = item["mod_name"] #display of item being added/removed
+        pid = item["product_id"];
         case type
         when "product"
           @changeset.products << Product.where(:id => id) if adding
           @changeset.products.delete Product.find(id) if !adding
         when "errata"
-          @changeset.errata << ChangesetErratum.new(:errata_id=>id, :display_name=>name, :changeset => @changeset) if adding
+          @changeset.errata << ChangesetErratum.new(:errata_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
           ChangesetErrata.destroy_all(:errata_id =>id, :changeset_id => @changeset.id) if !adding
         when "package"
-          @changeset.packages << ChangesetPackage.new(:package_id=>id, :display_name=>name, :changeset => @changeset) if adding
+          @changeset.packages << ChangesetPackage.new(:package_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
           ChangesetPackage.destroy_all(:package_id =>id, :changeset_id => @changeset.id) if !adding
 
         when "repo"
-            @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :changeset => @changeset) if adding
+            @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
             ChangesetRepo.destroy_all(:repo_id =>id, :changeset_id => @changeset.id) if !adding
         end
       end
@@ -129,7 +133,7 @@ class ChangesetsController < ApplicationController
 
     end
     to_ret = {:timestamp=>@changeset.updated_at.to_i.to_s}
-    to_ret[:changeset] = changeset_simplify(@changeset) if send_changeset
+    to_ret[:changeset] = simplify_changeset(@changeset) if send_changeset
     render :json=>to_ret
   end
 
@@ -160,26 +164,7 @@ class ChangesetsController < ApplicationController
 
   private
 
-  #produce a simple datastructure of a changeset
-  def changeset_simplify cs
-    to_ret = {}
-    [:product, :repo, :errata, :package].each{ |type|
-      to_ret[type] = []
-    }
-    cs.packages.each{|pkg|
-      to_ret[:package] << {:id=>pkg.package_id, :name=>pkg.display_name}
-    }
-    cs.errata.each{|err|
-      to_ret[:errata] << {:id=>err.errata_id, :name=>err.display_name}
-    }
-    cs.products.each{|product|
-      to_ret[:product] << {:id=>product.id, :name=>product.name}
-    }
-    cs.repos.each{|repo|
-      to_ret[:repo] << {:id=>repo.repo_id, :name=>repo.display_name}
-    }
-    to_ret
-  end
+
 
   def find_environment
     if @changeset
