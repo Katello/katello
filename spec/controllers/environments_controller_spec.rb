@@ -20,8 +20,9 @@ describe EnvironmentsController do
     ENV_NAME = "environment_name"
     NEW_ENV_NAME = "another_environment_name"
     
-    ENVIRONMENT = {:id => 1, :name => ENV_NAME, :description => nil, :prior => nil, :path => []}
-    UPDATED_ENVIRONMENT = {:id => 1, :name => NEW_ENV_NAME, :description => nil, :prior => nil, :path => []}
+    ENVIRONMENT = {:id => 2, :name => ENV_NAME, :description => nil, :prior => nil, :path => []}
+    LOCKER = {:id => 1, :name => "locker", :description => nil, :prior => nil, :path => []}
+    UPDATED_ENVIRONMENT = {:id => 3, :name => NEW_ENV_NAME, :description => nil, :prior => nil, :path => []}
     EMPTY_ENVIRONMENT = {:name => "", :description => "", :prior => nil}
     
     ORG_ID = 1
@@ -38,9 +39,12 @@ describe EnvironmentsController do
     @env = mock(KPEnvironment, EnvControllerTest::ENVIRONMENT)
     @env.stub!(:successor).and_return("")
     
+    @locker = mock(KPEnvironment, EnvControllerTest::LOCKER)
+    
     @org = mock(Organization, EnvControllerTest::ORGANIZATION)
     @org.stub!(:environments).and_return([@env])
     @org.environments.stub!(:first).with(:conditions => {:name => @env.name}).and_return(@env)
+    @org.stub!(:locker).and_return(@locker)
 
     Organization.stub!(:first).with(:conditions => {:cp_key=>@org.cp_key}).and_return(@org)
     KPEnvironment.stub!(:find).and_return(@env)
@@ -76,7 +80,7 @@ describe EnvironmentsController do
     describe "with valid params" do
       
       it "assigns a newly created environment as @environment" do
-        post :create, :organization_id => @org.cp_key, :name => 'production'
+        post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
        
         assigns(:environment).should_not be_nil
         assigns(:environment).name.should == 'production'
@@ -84,7 +88,7 @@ describe EnvironmentsController do
       end
 
       it "redirects to the created environment" do
-        post :create, :organization_id => @org.cp_key, :name => 'production'
+        post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
         
         env = assigns(:environment)
         response.should be_success
