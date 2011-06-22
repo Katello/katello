@@ -256,4 +256,32 @@ module Pulp
     end
   end
 
+  class Consumer < PulpResource
+
+    class << self
+      def find consumer_id
+        response = get(consumer_path(consumer_id), self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def installed_packages consumer_id
+        response = get(consumer_path(consumer_id) + "/package_profile/", self.default_headers)
+        JSON.parse(response.body)
+      end
+
+      def destroy consumer_id
+        raise ArgumentError, "consumer_id id has to be specified" unless consumer_id
+        self.delete(consumer_path(consumer_id), self.default_headers).code.to_i
+      end
+
+      def consumer_path id = nil
+        url = "/pulp/api/consumers/#{id}"
+        url = url + "/" if id
+        url
+      end
+
+
+    end
+  end
+
 end
