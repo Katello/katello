@@ -22,9 +22,11 @@ class PriorValidator < ActiveModel::Validator
     #environment already doesnot have a successor
     #this is because in v1.0 we want
     # prior to have only one child (unless its the locker)
-    return if record.prior.nil?
     has_no_prior = record.organization.environments.reject{|env| env == record || env.prior != record.prior}.empty?
     record.errors[:prior] << _("environment cannot be a prior to a different environment") unless has_no_prior
+    
+    # only locker can have prior=nil
+    record.errors[:prior] << _("environment must have a prior") unless !record.prior.nil? || record.locker?
   end
 end
 
