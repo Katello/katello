@@ -4,6 +4,7 @@
  *  breadcrumb { }  :   a hash making up the breadcrumb
  *  bbq_tag : the tag to use for this list for BBQ bookmarking/history
  *  default_tab : default entry in the hashtab to load upon initial page load
+ *  tab_change_cb : callback to happen once a new tab is selected, the tab 'key' that was is the first paramter
  */
 
 var sliding_tree = function(id, options) {
@@ -67,6 +68,8 @@ var sliding_tree = function(id, options) {
             settings.direction = undefined;
         }
 
+
+        settings.tab_change_cb(id);
         return false
     };
     var content_clicked = function() {
@@ -110,6 +113,7 @@ var sliding_tree = function(id, options) {
           default_tab : "",
           current_tab: undefined,
           direction  : undefined,
+          tab_change_cb: function() {},
           fetching   : 0 //Used to control fetching, and ignore content when we've already mgirated off the page'
     };
 

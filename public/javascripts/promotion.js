@@ -15,8 +15,10 @@
 var promotion_page = {
     types: ["errata", "product", "package", "repo"],
     changeset_queue:[],
-    timestamp: undefined,
+    changeset_data: {},
     interval_id: undefined,
+    current_changeset: undefined,
+    current_product: undefined,
     start_timer: function() {
         interval_id = setInterval(promotion_page.push_changeset, 1000);
     },
@@ -53,21 +55,21 @@ var promotion_page = {
         });
     },
     push_changeset: function() {
-        if(promotion_page.changeset_queue.length > 0) {
+        if(promotion_page.changeset_queue.length > 0 &&  promotion_page.current_changeset) {
             promotion_page.stop_timer();
             data = [];
             while(promotion_page.changeset_queue.length > 0) {
                 data.push(promotion_page.changeset_queue.shift());
             }
             
-            var changeset_id = $('#changeset').attr("data-id");
-            change_set.update(changeset_id, data, promotion_page.timestamp,
+            var changeset_id = promotion_page.current_changeset.id;
+            change_set.update(changeset_id, data, promotion_page.current_changeset.timestamp,
                 function(data) {
-                    if (promotion_page.changeset_queue.length == 0) {
+                    if (promotion_page.changeset_queue.length === 0) {
                         if(data.changeset) {
                             promotion_page.reset_changeset(data.changeset);
                         }
-                        promotion_page.timestamp = data.timestamp;
+                        promotion_page.current_changeset.timestamp = data.timestamp;
                     }
                     promotion_page.update_dep_size();
                     promotion_page.start_timer();
@@ -86,7 +88,6 @@ var promotion_page = {
 
     },
     modify_changeset: function(id, display, type) {
-        var changeset_id = $('#changeset').attr("data-id");
         var adding = true;
         if (promotion_page.find_changeset_button(id, type).length) {
             adding = false;
@@ -94,8 +95,6 @@ var promotion_page = {
 
         var ids = {};
         ids[id] = display;
-        //can Remove when javascript handles changeset
-        //$('#changeset-items').html("<img src='/images/spinner.gif'>");
 
 
         if (adding) {
@@ -105,7 +104,7 @@ var promotion_page = {
         else {
             promotion_page.remove_changeset_page_item(id, type, display);
         }
-        promotion_page.changeset_queue.push([type, id, display, adding]);
+        promotion_page.changeset_queue.push([type, id, display, adding, promotion_page.current_product]);
     },
     //Resets the changeset list from a given changeset hash
     reset_changeset: function(data) {
@@ -159,14 +158,52 @@ var promotion_page = {
     env_change: function(env_id, element) {
         var url = element.attr("data-url");
         window.location = url;
+    },
+    set_current_changeset: function(hash_id) {
+        var id = hash_id.split("_");
+        if (id[0] === "changeset") {
+            $.ajax({
+                type: "GET",
+                url: "/changesets/" + id[1] + "/object/",
+                cache: false,
+                success: function(data) {
+                    console.log(data);
+                    promotion_page.current_changeset = changeset_obj(data);
+                }
+            });
+        }
+        else if (id[0] === "changesets") {
+            promotion_page.current_changeset = undefined;
+        }
+    },
+    set_current_product: function(hash_id) {
+        var id = hash_id.split("_");
+        if (id.length > 1) {
+            promotion_page.current_product = id[id.length - 1];
+        }
+        else {
+            promotion_page.current_product = undefined; //reset product
+        }
     }
 };
 
 
+var changeset_obj = function(data_struct) {
+    var id = data_struct["id"];
+    var timestamp = data_struct["timestamp"];
+
+    return {
+        id:id,
+        products:data_struct,
+        set_timestamp:function(ts) { timestamp = ts},
+        timestamp: function(){return timestamp}
+    }
+}
+
 
 $(document).ready(function() {
 
-    promotion_page.update_dep_size();
+    //promotion_page.update_dep_size();
     promotion_page.start_timer();
 
     $(".content_add_remove").live('click', function() {
@@ -192,11 +229,13 @@ $(document).ready(function() {
     //initiate the left tree
   	var tree1 = sliding_tree("content_tree", {breadcrumb:content_breadcrumb,
                                       default_tab:"content",
-                                      bbq_tag:"content"});
+                                      bbq_tag:"content",
+                                      tab_change_cb: promotion_page.set_current_product});
 
   	var tree2 = sliding_tree("changeset_tree", {breadcrumb:changeset_breadcrumb,
                                       default_tab:"changesets",
-                                      bbq_tag:"changeset"});
+                                      bbq_tag:"changeset",
+                                      tab_change_cb: promotion_page.set_current_changeset});
   	
 
     $('#depend_list').live('click', promotion_page.show_dependencies);
@@ -204,7 +243,6 @@ $(document).ready(function() {
     //set function for env selection callback
     env_select.click_callback = promotion_page.env_change;
 
-    promotion_page.timestamp = $('#changeset').attr("data-timestamp");
 
 });
 
