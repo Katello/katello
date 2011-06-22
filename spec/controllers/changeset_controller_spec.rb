@@ -36,7 +36,7 @@ describe ChangesetsController do
 
     CSControllerTest::ENVIRONMENT["organization"] = @org
     @env = KPEnvironment.create(CSControllerTest::ENVIRONMENT)
-    CSControllerTest::CHANGESET["environment"] = @env
+    CSControllerTest::CHANGESET["environment_id"] = @env.id
   end
 
 
@@ -82,7 +82,7 @@ describe ChangesetsController do
     
     it 'should create a changeset correctly and send a notification' do
       controller.should_receive(:notice)
-      post 'create', {:changesets => {:name => "Changeset 7055"}}
+      post 'create', {:changesets => {:name => "Changeset 7055"}, :env_id=>@env.id}
       response.should be_success
       Changeset.exists?(:name=>'Changeset 7055').should be_true
     end
@@ -93,7 +93,7 @@ describe ChangesetsController do
       response.should_not be_success
     end
 
-    it 'should cause an error notification if the Katello name format is violated' do
+    it 'should cause an exception if no environment id is present' do
       controller.should_receive(:errors)
       post 'create', {:changesets => { :name => 'Test/Changeset 4.5'}}
       response.should_not be_success
