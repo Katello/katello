@@ -12,7 +12,7 @@
 
 class Changeset < ActiveRecord::Base
   include Authorization
-  before_create :generate_name
+  before_validation_on_create :generate_name
 
   NEW = 'new'
   REVIEW = 'review'
@@ -24,7 +24,7 @@ class Changeset < ActiveRecord::Base
     :allow_blank => false,
     :message => "A changeset must have one of the following states: #{STATES.join(', ')}."
 
-  validates :name, :presence => true, :katello_name_format => true, :allow_blank => false
+  validates :name, :presence => true, :allow_blank => false
   validates_uniqueness_of :name, :scope => :environment_id, :message => N_("Must be unique within an environment")
   has_and_belongs_to_many :products
   has_many :packages, :class_name=>"ChangesetPackage", :inverse_of=>:changeset
@@ -32,12 +32,13 @@ class Changeset < ActiveRecord::Base
   has_many :errata, :class_name=>"ChangesetErratum", :inverse_of=>:changeset
   has_many :repos, :class_name=>"ChangesetRepo", :inverse_of => :changeset
   belongs_to :environment, :class_name=>"KPEnvironment"
+  validates :environment, :presence=>true
   before_save :uniquify_artifacts
 
 
 
-  def generate_name
-    self.name = I18n.l(DateTime.now, :format=>:long) if name.blank?
+  def generate_name 
+    self.name = I18n.l(DateTime.now, :format=>:long) if name.blank? || name.nil?
   end
 
 

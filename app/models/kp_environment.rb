@@ -128,7 +128,7 @@ class KPEnvironment < ActiveRecord::Base
   end
 
   def create_changeset
-    Changeset.create!(:name=>"#{self.name} #{Date.today().strftime('%d %b %Y')}", :environment=>self)
+    Changeset.create!(:environment=>self)
   end
 
 
