@@ -29,6 +29,14 @@ describe Changeset do
       cs.users.first.changeset_id.should == cs.id
     end
 
+    it "changeset find or create should work" do
+      cs = @environment.working_changesets.first
+      cu = ChangesetUser.find_or_create_by_user_id_and_changeset_id(User.current.id, cs.id)
+      cu.save!
+      cs.users.first.user_id.should == User.current.id
+      cs.users.first.changeset_id.should == cs.id
+    end
+
   end
 
 end
