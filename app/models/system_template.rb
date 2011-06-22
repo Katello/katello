@@ -18,7 +18,7 @@ class SystemTemplate < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :environment_id
 
-  attr_accessor :packages, :errata, :products, :host_group, :kickstart_attrs
+  attr_accessor :packages, :errata, :products, :host_group, :group_parameters
 
   before_validation :attrs_to_json
   before_save :update_revision
@@ -72,9 +72,9 @@ class SystemTemplate < ActiveRecord::Base
   end
 
 
-  def kickstart_attrs
-    return @kickstart_attrs if not @kickstart_attrs.nil?
-    @kickstart_attrs = ActiveSupport::JSON.decode((self.kickstart_attrs_json or "{}"))
+  def group_parameters
+    return @group_parameters if not @group_parameters.nil?
+    @group_parameters = ActiveSupport::JSON.decode((self.group_parameters_json or "{}"))
   end
 
 
@@ -83,7 +83,7 @@ class SystemTemplate < ActiveRecord::Base
     self.packages
     self.errata
     self.host_group
-    self.kickstart_attrs
+    self.group_parameters
     self.packages
 
     return true
@@ -113,11 +113,11 @@ class SystemTemplate < ActiveRecord::Base
     json["packages"].collect do |p| self.add_package(p) end if not json["packages"].nil?
     json["errata"].collect   do |e| self.add_erratum(e) end if not json["errata"].nil?
 
-    self.host_group = json["host_group"] if not json["host_group"].nil?
+    self.host_group_name = json["host_group_name"] if not json["host_group_name"].nil?
 
-    if not json["kickstart_attributes"].nil?
-      json["kickstart_attributes"].each_pair do |k,v|
-        self.kickstart_attrs[k] = v
+    if not json["group_parameters"].nil?
+      json["group_parameters"].each_pair do |k,v|
+        self.group_parameters[k] = v
       end
     end
 
@@ -125,13 +125,13 @@ class SystemTemplate < ActiveRecord::Base
 
 
   def string_export
+    #TODO: fix after all changes
     tpl = {
       :revision => self.revision,
       :packages => ActiveSupport::JSON.decode(self.packages_json),
       :errata => ActiveSupport::JSON.decode(self.errata_json),
       :products => ActiveSupport::JSON.decode(self.products_json),
-      :host_group => ActiveSupport::JSON.decode(self.host_group_json),
-      :kickstart_attrs => ActiveSupport::JSON.decode(self.kickstart_attrs_json)
+      :group_parameters => ActiveSupport::JSON.decode(self.group_parameters_json)
     }
     tpl.to_json
   end
@@ -187,8 +187,7 @@ class SystemTemplate < ActiveRecord::Base
         :methods => [:products,
                      :packages,
                      :errata,
-                     :host_group,
-                     :kickstart_attrs]
+                     :group_parameters]
         })
      )
   end
@@ -201,8 +200,7 @@ class SystemTemplate < ActiveRecord::Base
     self.products_json = self.products.map(&:name).to_json
     self.errata_json   = self.errata.map(&:id).to_json
     self.packages_json = self.packages.map(&:name).to_json
-    self.kickstart_attrs_json = self.kickstart_attrs.to_json
-    self.host_group_json      = self.host_group.to_json
+    self.group_parameters_json = self.group_parameters.to_json
   end
 
 
