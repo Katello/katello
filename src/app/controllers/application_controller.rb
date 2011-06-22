@@ -270,7 +270,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  private
   def build_notice notice, list_items
     items = { "notices" => [] }
 
@@ -289,7 +288,6 @@ class ApplicationController < ActionController::Base
     return items
   end
 
-  private
   def handle_notice_type notice, items
     if notice.kind_of? ActiveRecord::RecordInvalid
       items["validation_errors"] = notice.record.errors.full_messages.to_a
@@ -325,6 +323,28 @@ class ApplicationController < ActionController::Base
     else
       render :partial=>"common/list_items", :locals=>options
     end
+  end
+
+  #produce a simple datastructure of a changeset for the browser
+  def simplify_changeset cs
+    to_ret = {:id=>cs.id, :timestamp =>cs.updated_at.to_i.to_s}
+
+    cs.products.each{|product|
+      to_ret[product.id] = {:all => true, :name=>product.name, 'packages'=>[], 'errata'=>[], 'repos'=>[]}
+    }
+
+    ['repo', 'errata', 'package'].each{ |type|
+      cs.send(type.pluralize).each{|item|
+        pid = item.product_id
+        cs_product = to_ret[pid]
+        if cs_product.nil?
+          cs_product = {:name=>Product.find(pid).name, 'packages'=>[], 'errata'=>[], 'repos'=>[]}
+          to_ret[pid] = cs_product
+        end
+        cs_product[type.pluralize] << {:id=>item.send("#{type}_id"), :name=>item.display_name}
+      }
+    }
+    to_ret
   end
 
 
