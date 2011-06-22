@@ -13,7 +13,7 @@
 class ChangesetsController < ApplicationController
   
   before_filter :find_changeset, :except => [:index, :list, :items, :unpublished, :create]
-  before_filter :find_environment, :except => [:index, :list, :items, :create]
+  before_filter :find_environment, :except => [:index, :list, :items]
   before_filter :setup_options, :only => [:index, :items]
   
   rescue_from Exception, :with => :handle_exceptions
@@ -87,6 +87,7 @@ class ChangesetsController < ApplicationController
   end
 
   def create
+    params[:changesets][:environment_id] = @environment.id
     @changeset = Changeset.create!(params[:changesets])
     notice _("Changeset '#{@changeset["name"]}' was created.")
     render :partial=>"common/list_item", :locals=>{:item=>@changeset, :accessor=>"id", :columns=>['name']}
