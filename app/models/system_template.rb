@@ -12,69 +12,56 @@
 
 
 class SystemTemplate < ActiveRecord::Base
+  include LazyAccessor
+
   #has_many :products
   belongs_to :environment, {:class_name => "KPEnvironment"}
 
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :environment_id
 
-  attr_accessor :packages, :errata, :products, :host_group, :group_parameters
+  attr_accessor :host_group, :group_parameters
+  lazy_accessor :packages, :initializer => lambda { init_packages }, :unless => lambda { false } #set 'unless' to false -> load also for new records
+  lazy_accessor :products, :initializer => lambda { init_products }, :unless => lambda { false }
+  lazy_accessor :errata,   :initializer => lambda { init_errata },   :unless => lambda { false }
+  lazy_accessor :group_parameters, :initializer => lambda { init_group_parameters }, :unless => lambda { false }
 
   before_validation :attrs_to_json
   before_save :update_revision
 
 
-  def packages
-    return @packages if not @packages.nil?
-
+  def init_packages
     packages = ActiveSupport::JSON.decode((self.packages_json or "[]"))
-    @packages = packages.collect do |p|
+    packages.collect do |p|
       package = self.find_package_in_env(p)
-      if package == nil
-        raise Errors::TemplateContentException.new("Package #{p} not found in this environment.")
-      end
+      raise Errors::TemplateContentException.new("Package #{p} not found in this environment.") if package == nil
       package
     end
   end
 
 
-  def errata
-    return @errata if not @errata.nil?
-
+  def init_errata
     errata = ActiveSupport::JSON.decode((self.errata_json or "[]"))
-    @errata = errata.collect do |e|
+    errata.collect do |e|
       erratum = self.find_errata_in_env(e)
-      if erratum == nil
-        raise Errors::TemplateContentException.new("Errata #{e} not found in this environment.")
-      end
+      raise Errors::TemplateContentException.new("Errata #{e} not found in this environment.") if erratum == nil
       erratum
     end
   end
 
 
-  def products
-    return @products if not @products.nil?
-
+  def init_products
     products = ActiveSupport::JSON.decode((self.products_json or "[]"))
-    @products = products.collect do |p|
+    products.collect do |p|
       product = self.environment.products.find_by_name(p)
-      if product == nil
-        raise Errors::TemplateContentException.new("Product #{p} not found in this environment.")
-      end
+      raise Errors::TemplateContentException.new("Product #{p} not found in this environment.") if product == nil
       product
     end
   end
 
 
-  def host_group
-    return @host_group if not @host_group.nil?
-    @host_group = ActiveSupport::JSON.decode((self.host_group_json or "{}"))
-  end
-
-
-  def group_parameters
-    return @group_parameters if not @group_parameters.nil?
-    @group_parameters = ActiveSupport::JSON.decode((self.group_parameters_json or "{}"))
+  def init_group_parameters
+    ActiveSupport::JSON.decode((self.group_parameters_json or "{}"))
   end
 
 
