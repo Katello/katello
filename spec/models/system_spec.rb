@@ -53,6 +53,7 @@ describe System do
 
     it "should delete consumer in candlepin" do
       Candlepin::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
+      Pulp::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
       @system.destroy
     end
   end
