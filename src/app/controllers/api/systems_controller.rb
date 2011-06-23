@@ -18,6 +18,7 @@ class Api::SystemsController < Api::ApiController
 
   def create
     org = Organization.find_by_name(params[:org_name])
+    raise _("Couldn't find organization '#{params[:org_name]}'") if org.nil?
     system = System.create!(params.merge({:organization => org})).to_json
     render :json => system
   end
