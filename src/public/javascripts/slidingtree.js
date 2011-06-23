@@ -27,7 +27,7 @@ var sliding_tree = function(id, options) {
         }
 
         if (settings.breadcrumb[id].client_render) {
-            settings.render_cb(id);
+            newPanel.html(settings.render_cb(id));
             settings.tab_change_cb(id);
         }
         else if (settings.breadcrumb[id].cache) { //If we are to use a cached copy, use it

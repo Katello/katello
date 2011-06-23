@@ -374,13 +374,12 @@ var registerEvents = function(changesetTree){
 
 var promotionsRenderer = (function($){
     var renderChangesets = function(){
-            var html = templateLibrary.changesetsList(changeset_breadcrumb);
-            $('#cslist').append(html);
-            return html;
+            return templateLibrary.changesetsList(changeset_breadcrumb);
         },
         renderPromotionsContent = function(hash){
+            console.log(hash);
             if( hash === 'changesets'){
-                renderChangesets();
+                return renderChangesets();
             }
         };
     
