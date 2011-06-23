@@ -169,8 +169,7 @@ module Candlepin
 
       # create the first user for owner
       def create_user key, username, password
-        # TODO: the first user should not be superAdmin but with role that has proper permissions (e.g. ALL)
-        # for this we would need to create: user, role, permission and membership resources
+        # create user with superadmin flag (no role, permissions etc)
         User.create({:username => name_to_key(username), :password => name_to_key(password), :superAdmin => true})
       end
 
@@ -218,11 +217,6 @@ module Candlepin
     class << self
       def create attrs
         JSON.parse(self.post(path(), JSON.generate(attrs), self.default_headers).body).with_indifferent_access
-      end
-
-      def get id
-        pool_json = super(path(id), self.default_headers).body
-        JSON.parse(pool_json).with_indifferent_access
       end
 
       def path(id=nil)
