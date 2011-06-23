@@ -12,7 +12,7 @@
 
 class Changeset < ActiveRecord::Base
   include Authorization
-  before_validation_on_create :generate_name
+  before_validation(:generate_name, :on=>:create)
 
   NEW = 'new'
   REVIEW = 'review'
