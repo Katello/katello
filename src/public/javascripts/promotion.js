@@ -242,13 +242,33 @@ var changeset_obj = function(data_struct) {
         products: data_struct,
         set_timestamp:function(ts) { timestamp = ts},
         timestamp: function(){return timestamp},
-        has_item: function(type, item_id, product) {
+        has_item: function(type, id, product) {
+            var found = undefined;
             jQuery.each(data_struct[product][type], function(index, item) {
-                if(item.id === item_id){
-                    return true;
+                if(item.id == id){
+                    found = true;
+                    return false;
                 }
             });
-            return false;
+            return found !== undefined;
+        },
+        add_item:function (type, id, display_name, product_id) {
+            if (data_struct[product_id] === undefined) {
+                data_struct[product_id] = {'package':[], 'errata':[], 'repo':[]}
+            }
+            data_struct[product_id][type].push({name:display_name, id:id})
+        },
+        remove_item:function(type, id, product_id) {
+            if (data_struct[product_id] !== undefined) {
+                jQuery.each(data_struct[product_id][type], function(index,item) {
+                    if (item.id === id) {
+                        data_struct[product_id][type].splice(index,index+1);
+                        return false;//Exit out of the loop
+                    }
+                });
+
+
+            }
         }
     }
 };
