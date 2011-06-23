@@ -14,6 +14,7 @@
 # in this software or its documentation.
 
 import base64
+import kerberos
 import httplib
 import locale
 import os
@@ -414,15 +415,15 @@ class KatelloServer(Server):
         self.__keyfile = keyfile
         
     def set_kerberos_auth(self):
-        _ignore, ctx = authGSSClientInit(‘HTTP@’ + self.host, gssflags=GSS_C_DELEG_FLAG|GSS_C_MUTUAL_FLAG|GSS_C_SEQUENCE_FLAG)
-        _ignore = authGSSClientStep(ctx, ”)
-        self.__tgt = authGSSClientResponse(ctx)
-        
+        _ignore, ctx = kerberos.authGSSClientInit("HTTP@" + self.host, gssflags=kerberos.GSS_C_DELEG_FLAG|kerberos.GSS_C_MUTUAL_FLAG|kerberos.GSS_C_SEQUENCE_FLAG)
+        _ignore = kerberos.authGSSClientStep(ctx, '')
+        self.__tgt = kerberos.authGSSClientResponse(ctx)
+
         if self.__tgt:
             self.headers['Authorization'] = 'Negotiate %s' % self.__tgt
         else:
             raise RuntimeError(_("Couldn't authenticate via kerberos"))
-            
+       
     def has_credentials_set(self):
         return 'Authorization' in self.headers or \
                 None not in (self.__certfile, self.__keyfile)

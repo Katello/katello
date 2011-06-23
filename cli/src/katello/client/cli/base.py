@@ -78,6 +78,7 @@ class KatelloCLI(object):
         Add options to the command line parser.
         @note: this method may be overridden to define new options
         """
+
         self.parser = OptionParser()   
         self.parser.disable_interspersed_args()
         self.parser.set_usage(self.usage)            
@@ -139,7 +140,7 @@ class KatelloCLI(object):
             self._server.set_ssl_credentials(self.opts.certfile,
                                              self.opts.keyfile)
         else:
-            self._server.set_kerberos_auth
+            self._server.set_kerberos_auth()
                                             
                                              
     def command_names(self):
