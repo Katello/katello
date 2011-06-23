@@ -18,6 +18,7 @@ class ChangesetsController < ApplicationController
   before_filter :setup_options, :only => [:index, :items]
   
   rescue_from Exception, :with => :handle_exceptions
+  after_filter :update_editors, :only => [:update]
 
   ####
   # Changeset history methods
@@ -196,6 +197,11 @@ class ChangesetsController < ApplicationController
     end
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor
+  end
+
+  def update_editors
+    usernames = @changeset.users.collect { |c| User.where(:id => c.user_id)[0].username }
+    response.headers['X-ChangesetUsers'] = usernames.to_json
   end
 
   def find_changeset
