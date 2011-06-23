@@ -51,6 +51,8 @@
       - else
         %h2 #{_("Changesets")}
         = _("An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment.")
+      %button#delete_changeset.button{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
+        = _("Remove Changeset")
         
     #panel-frame
       #panel.panel.closed
