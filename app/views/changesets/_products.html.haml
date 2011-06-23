@@ -1,12 +1,12 @@
 %ul
   -if changeset.products.empty?
-    #{_("No products")}
+    #{_("No products exist in the changeset for this product")}
   -for product in changeset.products
     %li.clear
       %a.content_add_remove.remove_product.button.fl{ "data-id" => product.id, "data-type"=>"product", "data-display_name"=>product.name, :id => "add_remove_product_#{product.id}" }
         #{_("Remove")}
 
-      .slide_link{:id=>product_bc_id(product)}
+      .slide_link{:id=>product_cs_bc_id(changeset, product)}
         - if product.provider.provider_type == Provider::REDHAT
           %span.rh-product-sprite
         - else

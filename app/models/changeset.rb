@@ -55,6 +55,16 @@ class Changeset < ActiveRecord::Base
     errata.collect{|erratum| erratum.errata_id}
   end
 
+  #get a list of all the products involved in teh changeset
+  #  but not necessarily 'in' the changeset
+  def involved_products
+    to_ret = self.products.clone #get a copy
+    to_ret =  to_ret + self.packages.collect{|pkg| pkg.product}
+    to_ret =  to_ret + self.errata.collect{|pkg| pkg.product}
+    to_ret =  to_ret + self.repos.collect{|pkg| pkg.product}
+    to_ret.uniq
+  end
+
 
   def dependencies
     repoids = []
