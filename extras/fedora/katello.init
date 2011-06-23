@@ -127,7 +127,7 @@ case "$1" in
         ;;
     initdb)
         pushd $KATELLO_HOME
-        su $KATELLO_USER -s /bin/bash -c "rake setup --trace"
+        su $KATELLO_USER -s /bin/bash -c "RAILS_ENV=$KATELLO_ENV rake setup --trace"
         popd
         ;;
     *)
