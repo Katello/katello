@@ -56,6 +56,7 @@ describe SystemsController do
     describe 'and requesting individual data' do
       before (:each) do 
         @system = System.create!(:name=>"verbose", :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
+        Pulp::Consumer.stub!(:installed_packages).and_return([])
       end
       
       it "it should show facts" do

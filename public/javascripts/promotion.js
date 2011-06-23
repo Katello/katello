@@ -14,6 +14,7 @@
 
 var promotion_page = {
     types: ["errata", "product", "package", "repo"],
+    subtypes: ["errata", "package", "repo"],
     changeset_queue:[],
     changeset_data: {},
     interval_id: undefined,
@@ -167,13 +168,14 @@ var promotion_page = {
                 url: "/changesets/" + id[1] + "/object/",
                 cache: false,
                 success: function(data) {
-                    console.log(data);
                     promotion_page.current_changeset = changeset_obj(data);
+                    promotion_page.reset_page();
                 }
             });
         }
         else if (id[0] === "changesets") {
             promotion_page.current_changeset = undefined;
+            promotion_page.reset_page();
         }
     },
     set_current_product: function(hash_id) {
@@ -184,6 +186,41 @@ var promotion_page = {
         else {
             promotion_page.current_product = undefined; //reset product
         }
+        promotion_page.reset_page();
+
+    },
+    /*
+     *  Resets anything that is listed to have the correct button value
+     *    if there is no changeset selected this will reset everything
+     *    This will be called when a new changeset is loaded, or when the user
+     *    moves from page to page in the content (left hand) side
+     *    //TODO make more efficient by identify exactly which page we are on and only reseting those buttons
+     */
+    reset_page: function() {
+        if (promotion_page.current_product) {
+            if (promotion_page.current_changeset) {
+                var product = promotion_page.current_changeset.products[promotion_page.current_product];
+                jQuery.each(promotion_page.subtypes, function(index, type){
+                    var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
+                    buttons.html(i18n.add).removeClass('remove_' + type).addClass("add_" + type).removeClass("disabled");
+                    jQuery.each(product[type], function(index, item) {
+                        $("a[class~=content_add_remove][data-type=" + type+ "][data-id=" + item.id +"]").html(i18n.remove).removeClass('add_' + type).addClass("remove_" + type);
+                    });
+                });
+            }
+            else {
+                jQuery.each(promotion_page.subtypes, function(index, type){
+                    var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
+                    buttons.addClass('disabled');
+                });
+            }
+        }
+    },
+    /*
+     *
+     */
+    reset_changeset: function() {
+
     }
 };
 
@@ -194,7 +231,7 @@ var changeset_obj = function(data_struct) {
 
     return {
         id:id,
-        products:data_struct,
+        products: data_struct,
         set_timestamp:function(ts) { timestamp = ts},
         timestamp: function(){return timestamp}
     }
