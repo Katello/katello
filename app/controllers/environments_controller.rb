@@ -104,9 +104,11 @@ class EnvironmentsController < ApplicationController
 
   def setup_new_edit_screen
     envs_no_successors = @organization.environments.reject {|item| !item.successor.nil?}
+    envs_no_successors << @organization.locker
     @env_labels = (envs_no_successors - [@environment]).collect {|p| [ p.name, p.id ]}
     @selected = @environment.prior.nil? ? "" : @environment.prior.id
   end
+  
   def envs_no_successors
     @organization.environments.reject {|item| !item.successor.nil?}
   end
