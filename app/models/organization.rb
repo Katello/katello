@@ -36,7 +36,8 @@ class Organization < ActiveRecord::Base
   validates :description, :katello_description_format => true
   def promotion_paths
     #I'm sure there's a better way to do this
-    (self.environments - environments.joins(:priors)).collect do |env|
+    
+    self.environments.joins(:priors).where("prior_id = #{self.locker.id}").collect do |env|
       env.path
     end
   end
