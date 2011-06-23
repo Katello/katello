@@ -20,9 +20,8 @@ describe SystemsController do
   before (:each) do
     login_user
     set_default_locale
-    setup_system_creation
     
-    @organization = Organization.create(:name => 'test_organization', :cp_key => 'test_organization')
+    @organization = setup_system_creation
     controller.stub!(:errors)
     controller.stub!(:notice)
   end
@@ -32,7 +31,7 @@ describe SystemsController do
       100.times{|a| System.create!(:name=>"bar#{a}", :organization=>@organization, :cp_type=>"system", :facts=>{"Test" => ""})}
     end
 
-    pending "should show the system 2 pane list" do
+    it "should show the system 2 pane list" do
       get :index
       response.should be_success
       response.should render_template("index")
