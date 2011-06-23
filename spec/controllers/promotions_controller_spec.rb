@@ -40,7 +40,7 @@ describe PromotionsController do
     end
 
     it "should be successful on the locker and a next environment" do
-      @env2 = KPEnvironment.new(:organization=>@org, :locker=>false, :name=>"otherenv")
+      @env2 = KPEnvironment.new(:organization=>@org, :locker=>false, :name=>"otherenv", :prior=>@org.locker)
       @env2.save!
       get 'show', :org_id=>@org.cp_key, :env_id=>@env.name
       response.should be_success
@@ -50,7 +50,7 @@ describe PromotionsController do
     end
 
     it "should be successful on the next environment with no changeset" do
-      @env2 = KPEnvironment.new(:organization=>@org, :locker=>false, :name=>"otherenv")
+      @env2 = KPEnvironment.new(:organization=>@org, :locker=>false, :name=>"otherenv", :prior=>@org.locker)
       @env2.save!
       get 'show', :org_id=>@org.cp_key, :env_id=>@env2.name
       response.should be_success
