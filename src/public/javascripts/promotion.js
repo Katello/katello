@@ -221,6 +221,12 @@ var promotion_page = {
      */
     reset_changeset: function() {
 
+    },
+    checkUsersInResponse: function(users) {
+      //TODO: update the div for which users are editing
+      var l = users.length
+      var user = users[0];
+      return;
     }
 };
 
@@ -282,6 +288,14 @@ $(document).ready(function() {
 
     registerEvents(changesetTree);
 
+    $(document).ajaxComplete(function(event, xhr, options){
+        var userHeader = xhr.getResponseHeader('X-ChangesetUsers');
+        if(userHeader != null) {
+          var userj = $.parseJSON(userHeader); 
+          promotion_page.checkUsersInResponse(userj);
+        }
+    });
+        
 });
 
 var registerEvents = function(changesetTree){
