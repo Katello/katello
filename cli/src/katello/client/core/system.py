@@ -69,7 +69,7 @@ class Register(SystemAction):
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
-                               help=_("system name eg: foo.example.com (required)"))
+                               help=_("system name (required)"))
 
     def check_options(self):
         self.require_option('name')
