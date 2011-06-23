@@ -85,23 +85,3 @@ Warden::Strategies.add(:certificate) do
     subject_string.sub(/\/CN=/i, '')
   end
 end
-
-# bypass authentication and return the first user (admin)
-Warden::Strategies.add(:bypass) do
-
-  # accept everything
-  def valid?
-    true
-  end
-
-  def authenticate!
-    #return fail!("Testing authentication")
-
-    # try to find provided username and ignore the password
-    Rails.logger.debug("Warden is authenticating #{params[:username]} against bypass")
-    user = User.where({:username => params[:username]}).first
-    # if none found get the first user (admin)
-    user = User.find(1) if user.nil?
-    user ? success!(user) : fail!("Cannot bypass authentication - you need at least one user in the Katello database")
-  end
-end
