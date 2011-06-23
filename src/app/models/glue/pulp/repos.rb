@@ -1,5 +1,4 @@
 #
-#      debugger
 # Copyright 2011 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
