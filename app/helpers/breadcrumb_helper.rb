@@ -18,7 +18,7 @@ module BreadcrumbHelper
 
 
     @changesets.each{|cs|
-      add_crumb_node!(bc, changeset_bc_id(cs), products_changeset_path(cs), @changeset.name, ['changesets'],
+      add_crumb_node!(bc, changeset_bc_id(cs), products_changeset_path(cs), cs.name, ['changesets'],
                     {:cache=>true, :content=>render(:partial=>"changesets/products", :locals=>{:changeset=>cs})})
 
 
