@@ -137,7 +137,7 @@ var sliding_tree = function(id, options) {
 
     return {
         render_content: render_content
-    };  //Nothing public at the moment
+    };  
     
 };
 

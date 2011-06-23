@@ -1,0 +1,10 @@
+%ul
+  -if cs_packages.empty?
+    #{_("No packages exist in this changeset")}
+  -else
+    - for pack in cs_packages
+      %li
+        %a{:class => "fl content_add_remove content_remove button", "data-id" => pack.package_id, "data-type" => "package", "data-product_id"=>product.id}
+          #{_("Remove")}
+        %span.item{:id => pack.id}
+          = pack.display_name
