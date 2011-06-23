@@ -47,11 +47,11 @@ module BreadcrumbHelper
   end
 
   def product_cs_bc_id cs, product
-    "product_cs_#{product.id}_#{cs.id}" if cs
+    "product_cs_#{cs.id}_#{product.id}" if cs
   end
 
   def packages_cs_bc_id cs, product
-    "packages-cs_#{product.id}_#{cs.id}" if cs
+    "packages-cs_#{cs.id}_#{product.id}" if cs
   end
 
 
