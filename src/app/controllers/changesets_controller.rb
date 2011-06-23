@@ -11,8 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ChangesetsController < ApplicationController
+  include BreadcrumbHelper
   
-  before_filter :find_changeset, :except => [:index, :list, :items, :unpublished, :create]
+  before_filter :find_changeset, :except => [:index, :list, :items, :unpublished, :create, :new]
   before_filter :find_environment, :except => [:index, :list, :items]
   before_filter :setup_options, :only => [:index, :items]
   
@@ -90,11 +91,22 @@ class ChangesetsController < ApplicationController
     render :json => simplify_changeset(@changeset), :content_type => :json
   end
 
+  def new
+    render :partial=>"new"
+  end
+
   def create
-    params[:changesets][:environment_id] = @environment.id
-    @changeset = Changeset.create!(params[:changesets])
+    @changeset = Changeset.create!(:name=>params[:name], :environment_id=>@next_environment.id)
     notice _("Changeset '#{@changeset["name"]}' was created.")
-    render :partial=>"common/list_item", :locals=>{:item=>@changeset, :accessor=>"id", :columns=>['name']}
+    bc = {}
+    add_crumb_node!(bc, changeset_bc_id(@changeset), products_changeset_path(@changeset), @changeset.name, ['changesets'],
+                    {:cache=>true, :content=>render_to_string(:partial=>"changesets/products", :locals=>{:changeset=>@changeset})})
+    render :json => {
+      'breadcrumb' => bc,
+      'id' => @changeset.id,
+      'html' => render_to_string(:partial=>"changesets/unpromoted_item", :locals=>{:cs=>@changeset})
+    }
+  end
 
   def update
     send_changeset = params[:timestamp] && params[:timestamp] != @changeset.updated_at.to_i.to_s
@@ -174,8 +186,6 @@ class ChangesetsController < ApplicationController
 
   private
 
-
-
   def find_environment
     if @changeset
       @environment = @changeset.environment
@@ -184,6 +194,8 @@ class ChangesetsController < ApplicationController
     else
       raise _("Couldn't find environment.")
     end
+    @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
+    @next_environment ||= @environment.successor
   end
 
   def find_changeset
