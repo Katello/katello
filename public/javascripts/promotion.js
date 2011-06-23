@@ -289,6 +289,7 @@ $(document).ready(function() {
   	var changesetTree = sliding_tree("changeset_tree", {breadcrumb:changeset_breadcrumb,
                                       default_tab:"changesets",
                                       bbq_tag:"changeset",
+                                      render_cb: promotionsRenderer.renderPromotionsContent,
                                       tab_change_cb: promotion_page.set_current_changeset});
   	
 
@@ -350,3 +351,43 @@ var registerEvents = function(changesetTree){
        }
     });
 };
+
+var promotionsRenderer = (function($){
+    var renderChangesets = function(){
+            var html = templateLibrary.changesetsList(changeset_breadcrumb);
+            $('#cslist').append(html);
+            return html;
+        },
+        renderPromotionsContent = function(hash){
+            if( hash === 'changesets'){
+                renderChangesets();
+            }
+        };
+    
+    return {
+        renderPromotionsContent: renderPromotionsContent  
+    };
+})(jQuery);
+
+var templateLibrary = (function(){
+    var changesetsListItem = function(id, name){
+            return '<li>' + '<div class="slide_link" id="' + id + '">'
+                    + name + '</div></li>';    
+        },
+        changesetsList = function(changesets){
+            var html = '<ul>';
+            for( item in changesets){
+                if( changesets.hasOwnProperty(item) ){
+                    if( changesets[item].name !== 'Changesets' ){
+                        html += changesetsListItem(item, changesets[item].name);
+                    }
+                }
+            }
+            html += '</ul>';
+            return html;
+        };
+    
+    return {
+        changesetsList: changesetsList   
+    };
+})();
