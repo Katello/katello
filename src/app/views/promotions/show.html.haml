@@ -9,6 +9,10 @@
 :javascript
   var content_breadcrumb = eval('(#{escape_javascript(generate_content_breadcrumb())})');
   var changeset_breadcrumb = eval('(#{escape_javascript(generate_cs_breadcrumb())})');
+  localize({
+    "add": '#{_('Add')}',
+    "remove": '#{_('Remove')}'
+  });
 
 
 #error_dialog{:style=>"display: none"}

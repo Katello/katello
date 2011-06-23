@@ -26,7 +26,8 @@ var sliding_tree = function(id, options) {
 
         //If we are to use a cached copy, use it
         if (settings.breadcrumb[id].cache) {
-            newPanel.html(settings.breadcrumb[id].content)
+            newPanel.html(settings.breadcrumb[id].content);
+            settings.tab_change_cb(id);
         }
         else { //Else fetch the data and place it in the new panel when we are done
         //we set fetching to the id, so once its done we know whether to actually
@@ -36,6 +37,7 @@ var sliding_tree = function(id, options) {
                 if (settings.fetching == id) {
                     newPanel.html(data);
                     settings.fetching = 0;
+                    settings.tab_change_cb(id);
                 }
               });
               newPanel.html("<img src='/images/spinner.gif' >");
@@ -67,9 +69,6 @@ var sliding_tree = function(id, options) {
 
             settings.direction = undefined;
         }
-
-
-        settings.tab_change_cb(id);
         return false
     };
     var content_clicked = function() {
