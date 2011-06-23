@@ -227,12 +227,12 @@ $(document).ready(function() {
     });     
 
     //initiate the left tree
-  	var tree1 = sliding_tree("content_tree", {breadcrumb:content_breadcrumb,
+  	var contentTree = sliding_tree("content_tree", {breadcrumb:content_breadcrumb,
                                       default_tab:"content",
                                       bbq_tag:"content",
                                       tab_change_cb: promotion_page.set_current_product});
 
-  	var tree2 = sliding_tree("changeset_tree", {breadcrumb:changeset_breadcrumb,
+  	var changesetTree = sliding_tree("changeset_tree", {breadcrumb:changeset_breadcrumb,
                                       default_tab:"changesets",
                                       bbq_tag:"changeset",
                                       tab_change_cb: promotion_page.set_current_changeset});
@@ -243,7 +243,30 @@ $(document).ready(function() {
     //set function for env selection callback
     env_select.click_callback = promotion_page.env_change;
 
+    registerEvents(changesetTree);
 
 });
 
-
+var registerEvents = function(changesetTree){
+    $('#save_changeset_button').live('click', function(){
+        $.ajax({
+          type: "POST",
+          url: "/changesets/",
+          data: $('#new_changeset').serialize(),
+          cache: false,
+          success: function(data){
+              var split;
+              if( $('#cslist').length !== 0){
+                $('#cslist').append(data.html);
+              } else {
+                  split = changeset_breadcrumb['changesets'].content.split('</ul>');
+                  split = split[0] + data.html + '</ul>';
+                  changeset_breadcrumb['changesets'].content = split;
+              }
+              $.extend(changeset_breadcrumb, data.breadcrumb);
+              changesetTree.render_content('changeset_' + data.id);
+              panel.closePanel($('#panel'));
+          }
+        });
+    });
+};

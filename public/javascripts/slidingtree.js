@@ -73,14 +73,18 @@ var sliding_tree = function(id, options) {
         return false
     };
     var content_clicked = function() {
-        if($(this).hasClass("slide_left")) {
+        var element = $(this);
+        if(element.hasClass("slide_left")) {
           settings.direction = "left";
         }else {
           settings.direction = "right";
         }
+        render_content(element.attr('id'));
+    };
+    var render_content = function(id){
         var bbq = {};
-        bbq[settings.bbq_tag] = this.id;
-        $.bbq.pushState(bbq);
+        bbq[settings.bbq_tag] = id;
+        $.bbq.pushState(bbq);        
     };
     var reset_breadcrumb = function(id) {
         //Clear the breadcrumb
@@ -132,7 +136,9 @@ var sliding_tree = function(id, options) {
 
     container.find('.slide_link').live('click', content_clicked);
 
-    return {};  //Nothing public at the moment
-
+    return {
+        render_content: render_content
+    };  //Nothing public at the moment
+    
 };
 
