@@ -121,6 +121,14 @@ describe KPEnvironment do
       @environment2.should_not be_valid
       @environment2.errors[:name].should_not be_empty
     end
+    
+    it "should be invalid to create an environment without a prior" do
+      @environment2 = KPEnvironment.new({:name => @env_name})
+      @organization.environments << @environment2
+    
+      @environment2.should_not be_valid
+      @environment2.errors[:prior].should_not be_empty
+    end
   end
   
   context "environment path" do
@@ -141,7 +149,7 @@ describe KPEnvironment do
   end
   
   context "Test priors" do
-    before do
+    before(:each) do
       @e1 = KPEnvironment.create!({:name => @env_name + '-succ1', 
                 :organization => @organization, :prior => @environment})
       @e2 = KPEnvironment.create!({:name => @env_name + '-succ2', 
@@ -150,8 +158,25 @@ describe KPEnvironment do
       @organization.environments << @e1
       @organization.environments << @e2
     end
+    
     specify{ lambda {KPEnvironment.create!({:name => @env_name + '-succ3', 
-              :organization => @organization, :prior => @e1})}.should raise_error(ActiveRecord::RecordInvalid)} 
+              :organization => @organization, :prior => @e1})}.should raise_error(ActiveRecord::RecordInvalid)}
+              
+  end
+  
+  context "Lockers" do
+    it "should be the only KPEnvironment that can have multiple priors" do
+      @env1 = KPEnvironment.new({:name => @env_name + '1',
+                :organization => @organization, :prior => @organization.locker})
+      @env2 = KPEnvironment.new({:name => @env_name + '2',
+                :organization => @organization, :prior => @organization.locker})
+      @env3 = KPEnvironment.new({:name => @env_name + '3',
+                :organization => @organization, :prior => @organization.locker})
+                
+      @env1.should be_valid
+      @env2.should be_valid
+      @env3.should be_valid
+    end
   end
 end
 
