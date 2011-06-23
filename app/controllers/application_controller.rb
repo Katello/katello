@@ -330,7 +330,7 @@ class ApplicationController < ActionController::Base
     to_ret = {:id=>cs.id, :timestamp =>cs.updated_at.to_i.to_s}
 
     cs.products.each{|product|
-      to_ret[product.id] = {:all => true, :name=>product.name, 'packages'=>[], 'errata'=>[], 'repos'=>[]}
+      to_ret[product.id] = {:all => true, :name=>product.name, 'package'=>[], 'errata'=>[], 'repo'=>[]}
     }
 
     ['repo', 'errata', 'package'].each{ |type|
@@ -338,10 +338,10 @@ class ApplicationController < ActionController::Base
         pid = item.product_id
         cs_product = to_ret[pid]
         if cs_product.nil?
-          cs_product = {:name=>Product.find(pid).name, 'packages'=>[], 'errata'=>[], 'repos'=>[]}
+          cs_product = {:name=>Product.find(pid).name, 'package'=>[], 'errata'=>[], 'repo'=>[]}
           to_ret[pid] = cs_product
         end
-        cs_product[type.pluralize] << {:id=>item.send("#{type}_id"), :name=>item.display_name}
+        cs_product[type] << {:id=>item.send("#{type}_id"), :name=>item.display_name}
       }
     }
     to_ret
