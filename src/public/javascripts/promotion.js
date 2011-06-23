@@ -170,12 +170,14 @@ var promotion_page = {
                 success: function(data) {
                     promotion_page.current_changeset = changeset_obj(data);
                     promotion_page.reset_page();
+                    $("#delete_changeset").removeClass("disabled");
                 }
             });
         }
         else if (id[0] === "changesets") {
             promotion_page.current_changeset = undefined;
             promotion_page.reset_page();
+            $("#delete_changeset").addClass("disabled");
         }
     },
     set_current_product: function(hash_id) {
@@ -305,5 +307,27 @@ var registerEvents = function(changesetTree){
               panel.closePanel($('#panel'));
           }
         });
+    });
+    
+    $("#delete_changeset").click(function() {
+        var button = $(this);
+        var id = promotion_page.current_changeset.id;
+        if (button.hasClass('disabled')){
+            return false;
+        }
+        var answer = confirm(button.attr('data-confirm-text'));
+        if (answer) {
+            button.addClass('disabled');
+            $.ajax({
+                type: "DELETE",
+                url: button.attr('data-url') + '/' + id,
+                cache: false,
+                success: function(data){
+                    delete changeset_breadcrumb['changeset_' + id];
+                    promotion_page.set_current_changeset('changesets');
+                    changesetTree.render_content('changesets');
+                }
+            });
+       }
     });
 };
