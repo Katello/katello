@@ -140,7 +140,7 @@ module Glue::Pulp::Repos
     end
 
     def sync_size
-      size = repos(environments.first.locker).inject(0) { |sum,v| sum + v.sync_status.total_size }
+      size = self.repos(locker).inject(0) { |sum,v| sum + v.sync_status.total_size }
     end
 
     def cancel_sync
