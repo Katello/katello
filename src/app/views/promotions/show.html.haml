@@ -7,8 +7,8 @@
 
 
 :javascript
-  var content_breadcrumb = eval('(#{escape_javascript(generate_content_breadcrumb())})');
-  var changeset_breadcrumb = eval('(#{escape_javascript(generate_cs_breadcrumb())})');
+  var content_breadcrumb = $.parseJSON('#{escape_javascript(generate_content_breadcrumb())}');
+  var changeset_breadcrumb = $.parseJSON('#{escape_javascript(generate_cs_breadcrumb())}');
   localize({
     "add": '#{_('Add')}',
     "remove": '#{_('Remove')}'
