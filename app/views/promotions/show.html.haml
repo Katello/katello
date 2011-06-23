@@ -46,7 +46,7 @@
         %h2 #{@next_environment.name + _(" Changesets")}
         .tree_breadcrumb.clickable.clear
         .list.sliding_list.shadowbox.outlined{"data-page_size"=>current_user.page_size}
-          .slider_one.has_content.slider
+          .slider_one.has_content.slider#cslist
           .slider_two.no_content.slider
       - else
         %h2 #{_("Changesets")}
