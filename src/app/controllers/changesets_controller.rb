@@ -92,8 +92,17 @@ class ChangesetsController < ApplicationController
     render :json => simplify_changeset(@changeset), :content_type => :json
   end
 
+
   def new
     render :partial=>"new"
+  end
+
+
+  def packages
+    raise "Missing product_id as param" if params[:product_id].nil?
+    product = Product.find(params[:product_id])
+    pkgs = ChangesetPackage.where(:changeset_id => @changeset.id, :product_id => product.id)
+    render :partial => "packages", :locals => {:cs_packages => pkgs, :product => product}
   end
 
   def create
