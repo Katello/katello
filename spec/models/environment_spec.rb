@@ -24,9 +24,9 @@ describe KPEnvironment do
     @env_name =  'test_environment'
     
     @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
-    @provider = Provider.new({
+    @provider = Provider.create!({
       :name => 'test_provider',
-      :repository_url => 'https://something',
+      :repository_url => 'https://something.url',
       :provider_type => Provider::REDHAT,
       :organization => @organization
     })
