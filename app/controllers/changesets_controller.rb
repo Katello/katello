@@ -18,6 +18,7 @@ class ChangesetsController < ApplicationController
   before_filter :setup_options, :only => [:index, :items]
   
   rescue_from Exception, :with => :handle_exceptions
+  after_filter :update_editors, :only => [:update]
 
   ####
   # Changeset history methods
@@ -91,8 +92,17 @@ class ChangesetsController < ApplicationController
     render :json => simplify_changeset(@changeset), :content_type => :json
   end
 
+
   def new
     render :partial=>"new"
+  end
+
+
+  def packages
+    raise "Missing product_id as param" if params[:product_id].nil?
+    product = Product.find(params[:product_id])
+    pkgs = ChangesetPackage.where(:changeset_id => @changeset.id, :product_id => product.id)
+    render :partial => "packages", :locals => {:cs_packages => pkgs, :product => product}
   end
 
   def create
@@ -196,6 +206,11 @@ class ChangesetsController < ApplicationController
     end
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor
+  end
+
+  def update_editors
+    usernames = @changeset.users.collect { |c| User.where(:id => c.user_id)[0].username }
+    response.headers['X-ChangesetUsers'] = usernames.to_json
   end
 
   def find_changeset
