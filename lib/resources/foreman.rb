@@ -24,26 +24,25 @@ module Foreman
   end
 
   class ForemanResource
-    attr_reader :url, :username, :password
+    attr_reader :url
 
     def initialize options = {}
       @url = AppConfig.foreman.url || raise("no foreman url was given")
-      @username = AppConfig.foreman.username || raise("no foreman username was given")
-      @password = AppConfig.foreman.password || raise("no foreman password was given")
-
-      @resource = RestClient::Resource.new url, username, password
+      @resource = RestClient::Resource.new url
     end
 
     def get(path, headers={})
+      set_username_password
       @resource[path].get headers
     end
 
     def post(path, params = {})
+      set_username_password
       @resource[path].post headers
     end
 
     def opts
-      {:url => url, :username => username, :password => password}
+      {:url => url, :username => User.current.username, :password => User.current.password}
     end
 
     # Encode url element if its not nil. This helper method is used mainly in resource path methods.
@@ -52,6 +51,11 @@ module Foreman
     # @return [String] encoded element or nil
     def url_encode(element)
       CGI::escape element unless element.nil?
+    end
+
+    def set_username_password
+      @resource.options[:user] = User.current.username || raise("no foreman username was given")
+      @resource.options[:password] = User.current.password || raise("no foreman password was given")
     end
   end
 

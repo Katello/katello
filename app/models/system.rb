@@ -12,6 +12,7 @@
 
 class System < ActiveRecord::Base
   include Glue::Candlepin::Consumer
+  include Glue::Pulp::Consumer
   include Glue
   include Authorization
 
