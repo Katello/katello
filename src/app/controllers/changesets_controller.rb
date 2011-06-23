@@ -143,7 +143,7 @@ class ChangesetsController < ApplicationController
       end
       @changeset.updated_at = Time.now
       @changeset.save!
-      csu = ChangesetUser.find_or_create_by_user_id_and_changeset_id(current_user.id, cs.id)
+      csu = ChangesetUser.find_or_create_by_user_id_and_changeset_id(current_user.id, @changeset.id)
       csu.save!
 
     end
