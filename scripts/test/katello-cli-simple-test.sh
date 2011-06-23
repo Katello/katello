@@ -128,9 +128,10 @@ test "provider sync" provider sync --name="$YUM_PROVIDER" --org="$FIRST_ORG"
 sleep 1 #give the provider some time to get synced
 
 #testing systems
-SYSTEM_NAME="mysystem_$RAND"
+SYSTEM_NAME="_system_$RAND"
 CONSUMER_FIRST="$(echo $FIRST_ORG|perl -e 'print lc <>;')_user"
-test "system register" -u $CONSUMER_FIRST -p $CONSUMER_FIRST system register --name="$SYSTEM_NAME"
+test "system register as admin" system register --name="admin$SYSTEM_NAME" --org="$FIRST_ORG"
+test "system register as user" -u $CONSUMER_FIRST -p $CONSUMER_FIRST system register --name="user$SYSTEM_NAME" --org="$FIRST_ORG"
 test "system list" system list --org="$FIRST_ORG"
 
 #testing distributions
