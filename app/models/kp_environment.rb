@@ -26,7 +26,7 @@ class PriorValidator < ActiveModel::Validator
     record.errors[:prior] << _("environment cannot be a prior to a different environment") unless has_no_prior
     
     # only locker can have prior=nil
-    record.errors[:prior] << _("environment must have a prior") unless !record.prior.nil? || record.locker?
+    record.errors[:prior] << _("environment required") unless !record.prior.nil? || record.locker?
   end
 end
 
