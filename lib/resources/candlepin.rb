@@ -110,9 +110,10 @@ module Candlepin
         JSON.parse(super(path(uuid), self.default_headers).body).with_indifferent_access
       end
 
-      def create name, type, facts
+      def create key, name, type, facts
+        url = path() + "?owner=#{key}"
         attrs = {:name => name, :type => type, :facts => facts}
-        response = self.post(path(), attrs.to_json, self.default_headers).body
+        response = self.post(url, attrs.to_json, self.default_headers).body
         JSON.parse(response).with_indifferent_access
       end
 
