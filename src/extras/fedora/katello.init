@@ -125,8 +125,13 @@ case "$1" in
     status)
         status
         ;;
+    initdb)
+        pushd $KATELLO_HOME
+        su $KATELLO_USER -s /bin/bash -c "rake setup --trace"
+        popd
+        ;;
     *)
-        echo "Usage: {start|stop|restart|condrestart|status}"
+        echo "Usage: {start|stop|restart|condrestart|status|initdb}"
         exit 1
         ;;
 esac
