@@ -192,6 +192,8 @@ Src::Application.routes.draw do
   match '/login' => 'user_sessions#new'
   match '/logout' => 'user_sessions#destroy'
   match '/user_session/logout' => 'user_sessions#destroy'
+  match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
+
 
   namespace :api do
 

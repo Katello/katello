@@ -19,6 +19,12 @@ class UserSessionsController < ApplicationController
   skip_before_filter :authorize
 
   def new
+    if !request.env['HTTP_X_FORWARDED_USER'].blank?
+      # if we received the X-Forwarded-User, the user must have logged in via SSO; therefore,
+      # attempt to authenticate and log the user in now versus requiring them to enter 
+      # credentials 
+      login_user
+    end
   end
 
   # this is called when invalid user/pass combination is submitted
@@ -32,6 +38,19 @@ class UserSessionsController < ApplicationController
   end  
   
   def create
+    login_user
+  end
+  
+  def destroy
+    logout
+    self.current_organization = nil
+    notice _("Logout Successful"), {:persist => false}
+    redirect_to root_url
+  end
+  
+  private
+
+  def login_user
     authenticate! :scope => :user
     self.current_organization = Organization.first
     if logged_in?
@@ -49,15 +68,6 @@ class UserSessionsController < ApplicationController
       redirect_to dashboard_index_url
     end
   end
-  
-  def destroy
-    logout
-    self.current_organization = nil
-    notice _("Logout Successful"), {:persist => false}
-    redirect_to root_url
-  end
-  
-  private
 
   # return simple 401 page (for API authentication errors)
   def return_401
