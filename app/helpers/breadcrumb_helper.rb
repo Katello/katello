@@ -5,6 +5,7 @@ module BreadcrumbHelper
     hash[id] = {:name=>name, :url=>url, :trail=>trail, :cache=>cache}
     hash[id][:content] = params[:content] if params[:content]
     hash[id][:scrollable] = true if params[:scrollable]
+    hash[id][:client_render] = true if params[:client_render]
   end
 
   def generate_cs_breadcrumb
@@ -12,7 +13,7 @@ module BreadcrumbHelper
 
 
     add_crumb_node!(bc, "changesets", unpromoted_changesets_path(), _("Changesets"), [],
-                    {:cache =>true, :content=>render(:partial=>"changesets/unpromoted")})
+                    {:client_render => true})
 
 
 
