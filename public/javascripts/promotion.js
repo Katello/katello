@@ -366,8 +366,14 @@ var promotionsRenderer = (function($){
             else if (hash.split("_")[0] === 'packages-cs'){
                 var product_id = hash.split("_")[2]; 
                 return templateLibrary.listItems("package", product_id);
-                
-
+            }
+            else if (hash.split("_")[0] === 'errata-cs'){
+                var product_id = hash.split("_")[2];
+                return templateLibrary.listItems("errata", product_id);
+            }
+            else if (hash.split("_")[0] === 'repos-cs'){
+                var product_id = hash.split("_")[2];
+                return templateLibrary.listItems("repo", product_id);
             }
         };
 
