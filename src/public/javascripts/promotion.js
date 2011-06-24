@@ -102,9 +102,13 @@ var promotion_page = {
         promotion_page.changeset_queue.push([type, id, display, adding, product_id]);
     },
     sort_changeset: function() {
+        return false;
         console.log("SORTING");
         $(".right_tree .will_have_content").find("li").sortElements(function(a,b){
-            return $(a).children("span").first().html().toUpperCase() > $(b).children("span").first().html().toUpperCase() ? 1 : -1;
+            if (a && b) {
+                return $(a).children("span").first().html().toUpperCase() >
+                        $(b).children("span").first().html().toUpperCase() ? 1 : -1;
+            }
         });
     },
 
