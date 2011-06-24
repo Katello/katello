@@ -327,23 +327,26 @@ class ApplicationController < ActionController::Base
 
   #produce a simple datastructure of a changeset for the browser
   def simplify_changeset cs
+
     to_ret = {:id=>cs.id, :timestamp =>cs.updated_at.to_i.to_s}
 
-    cs.products.each{|product|
-      to_ret[product.id] = {:all => true, :name=>product.name, 'package'=>[], 'errata'=>[], 'repo'=>[]}
+    cs.involved_products.each{|product|
+      to_ret[product.id] = {:name=>product.name, 'package'=>[], 'errata'=>[], 'repo'=>[]}
+    }
+
+    cs.products.each {|product|
+      to_ret[product.id][:all] =  true;
     }
 
     ['repo', 'errata', 'package'].each{ |type|
       cs.send(type.pluralize).each{|item|
+        p item
         pid = item.product_id
         cs_product = to_ret[pid]
-        if cs_product.nil?
-          cs_product = {:name=>Product.find(pid).name, 'package'=>[], 'errata'=>[], 'repo'=>[]}
-          to_ret[pid] = cs_product
-        end
         cs_product[type] << {:id=>item.send("#{type}_id"), :name=>item.display_name}
       }
     }
+
     to_ret
   end
 
