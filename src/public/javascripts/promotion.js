@@ -129,8 +129,9 @@ var promotion_page = {
         promotion_page.find_changeset_button(id, type).remove();
     },
     sort_changeset: function(type) {
-        $('.changeset_remove_' + type).sortElements(function(a,b){
-           return $(a).attr("data-display_name") > $(b).attr("data-display_name") ? 1 : -1;
+        $(".right_tree").find("li").sortElements(function(a,b){
+            return $(a).children().first().html() > $(b).children().first().html() ? 1 : -1;
+           //return $(a).attr("data-display_name") > $(b).attr("data-display_name") ? 1 : -1;
         });
     },
 
@@ -171,13 +172,16 @@ var promotion_page = {
                 type: "GET",
                 url: "/changesets/" + id[1] + "/object/",
                 cache: false,
+                async: false,
                 success: function(data) {
                     promotion_page.current_changeset = changeset_obj(data);
                     promotion_page.reset_page();
                     $("#delete_changeset").removeClass("disabled");
+                    return promotionsRenderer.renderPromotionsContent(hash_id);
                 }
             });
         }
+        return promotionsRenderer.renderPromotionsContent(hash_id);
     },
     set_current_product: function(hash_id) {
         var id = hash_id.split("_");
@@ -308,8 +312,8 @@ $(document).ready(function() {
   	var changesetTree = sliding_tree("changeset_tree", {breadcrumb:changeset_breadcrumb,
                                       default_tab:"changesets",
                                       bbq_tag:"changeset",
-                                      render_cb: promotionsRenderer.renderPromotionsContent,
-                                      tab_change_cb: promotion_page.set_current_changeset});
+                                      render_cb: promotion_page.set_current_changeset,
+                                      tab_change_cb: promotion_page.sort_changeset});
   	
 
     $('#depend_list').live('click', promotion_page.show_dependencies);
@@ -375,7 +379,14 @@ var promotionsRenderer = (function($){
             if( hash === 'changesets'){
                 return renderChangesets();
             }
-        };
+            else if (hash.split("_")[0] === 'packages-cs'){
+                var product_id = hash.split("_")[2]; 
+                return templateLibrary.listItems("package", product_id);
+                
+
+            }
+        }
+
     
     return {
         renderPromotionsContent: renderPromotionsContent  
@@ -398,9 +409,29 @@ var templateLibrary = (function(){
             }
             html += '</ul>';
             return html;
-        };
+        },
+        listItems = function(type, product_id) {
+            if (promotion_page.current_changeset === undefined) {
+                console.log("No current");
+                return false;
+            }
+
+            var html = '<ul>';
+            jQuery.each(promotion_page.current_changeset.products[product_id][type], function(index, item) {
+               html += listItem(item.id, item.name, type, product_id);
+            });
+            html += '</ul>';
+            return html;
+        },
+        listItem = function(id, name, type, product_id) {
+            return '<li>' + '<div class="slide_link"' + 'data-type="' + type + '" data-product_id="' + product_id
+                    + '" data-id="' + id + '">'  + name + '</div></li>';
+
+        }
+
     
     return {
-        changesetsList: changesetsList   
+        changesetsList: changesetsList,
+        listItems : listItems
     };
 })();
