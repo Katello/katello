@@ -61,13 +61,13 @@ var sliding_tree = function(id, options) {
         if(settings.direction) {
             var leaving = settings.direction == "right"? "left" : "right";
             //The old pane, we need to hide it away, remove the contents, and reset the classes
-            oldPanel.css({"position":"absolute"}).hide("slide" ,{"direction":leaving}, 500, function() {
+            oldPanel.hide("slide" ,{"direction":leaving}, 500, function() {
                                                                oldPanel.html("");
                                                                oldPanel.removeClass("has_content");
                                                                oldPanel.addClass("no_content");
                                                                oldPanel.css({"position":"relative"})});
             //the new pane, move it into view
-            newPanel.css({"position":"absolute"}).effect("slide" ,{"direction":settings.direction}, 500, function() {
+            newPanel.effect("slide" ,{"direction":settings.direction}, 500, function() {
                                                               newPanel.removeClass("no_content");
                                                               newPanel.addClass("has_content");
                                                               newPanel.css({"position":"relative"})});

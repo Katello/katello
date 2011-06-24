@@ -41,18 +41,19 @@
 .grid_16
   #container
     
-    #changeset_tree.right_tree
-      - if @next_environment
-        %h2 #{@next_environment.name + _(" Changesets")}
-        .tree_breadcrumb.clickable.clear
-        .list.sliding_list.shadowbox.outlined{"data-page_size"=>current_user.page_size}
-          .slider_one.has_content.slider#cslist
-          .slider_two.no_content.slider
-      - else
-        %h2 #{_("Changesets")}
-        = _("An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment.")
-      %button#delete_changeset.button{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
-        = _("Remove Changeset")
+    .right_tree
+      #changeset_tree
+        - if @next_environment
+          %h2 #{@next_environment.name + _(" Changesets")}
+          .tree_breadcrumb.clickable.clear
+          #cslist.list.sliding_list.shadowbox.outlined{"data-page_size"=>current_user.page_size}
+            .slider_one.has_content.slider
+            .slider_two.no_content.slider
+        - else
+          %h2 #{_("Changesets")}
+          = _("An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment.")
+        %button#delete_changeset.button{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
+          = _("Remove Changeset")
         
     #panel-frame
       #panel.panel.closed
