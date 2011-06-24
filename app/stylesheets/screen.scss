@@ -120,8 +120,8 @@ fieldset {
 }
 
 .right_tree {
-  float:right;
-  width:460px;
+  float: right;
+  width: 450px;
   h2 {
     margin-bottom: 0;
   }
@@ -510,7 +510,7 @@ fieldset {
     padding: 0;
     list-style-type: none;
     li {
-      margin: 0;
+      margin: 0 10px 0 0;
     }
   }
 }
@@ -641,6 +641,15 @@ $repo_color: #4A9FB1;
   }
   &:after {
     border-left-color: $kselected !important;
+  }
+}
+
+#changeset_tree {
+  
+  #cslist {
+    height: 415px;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 }
 /* end content locker custom css */
