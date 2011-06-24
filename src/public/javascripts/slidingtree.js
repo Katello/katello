@@ -4,7 +4,8 @@
  *  breadcrumb { }  :   a hash making up the breadcrumb
  *  bbq_tag : the tag to use for this list for BBQ bookmarking/history
  *  default_tab : default entry in the hashtab to load upon initial page load
- *  tab_change_cb : callback to happen once a new tab is selected, the tab 'key' that was is the first paramter
+ *  prerender_cb : callback to happen just before rendering, once a new tab is selected
+ *  tab_change_cb : callback to happen once a new tab is selected and rendered, the tab 'key' that was is the first paramter
  *  render_cb : callback to use for rendering if client_render is set to true in the crumb, the hash_id is
  *                      passed as a parameter, should return the html to display
  */
@@ -25,6 +26,8 @@ var sliding_tree = function(id, options) {
         if (!settings.direction) {
             newPanel = oldPanel;
         }
+
+        settings.prerender_cb(id);
 
         if (settings.breadcrumb[id].client_render) {
             newPanel.html(settings.render_cb(id));
@@ -122,6 +125,7 @@ var sliding_tree = function(id, options) {
           current_tab: undefined,
           direction  : undefined,
           tab_change_cb: function() {},
+          prerender_cb: function() {},
           render_cb: function() {},
           fetching   : 0 //Used to control fetching, and ignore content when we've already mgirated off the page'
     };
