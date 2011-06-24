@@ -57,6 +57,10 @@ Provides a package for managing application lifecycle for Linux systems
 %setup -q
 
 %build
+#remove the Gemfile.lock and create new one
+rm -f Gemfile.lock
+bundle install --without "test development" --local
+
 #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
 echo Generating gettext files...
 ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
@@ -72,8 +76,6 @@ install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
 install -d -m0750 %{buildroot}%{_localstatedir}/log/%{name}
 
 #copy the application to the target directory
-mkdir .bundle
-mv ./extras/bundle-config .bundle/config
 cp -R .bundle * %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
