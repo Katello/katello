@@ -159,6 +159,7 @@ class ChangesetsController < ApplicationController
     end
     to_ret = {:timestamp=>@changeset.updated_at.to_i.to_s}
     to_ret[:changeset] = simplify_changeset(@changeset) if send_changeset
+    Rails.logger.debug("Sending full changeset")
     render :json=>to_ret
   end
   
