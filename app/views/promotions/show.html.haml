@@ -22,21 +22,15 @@
 //Div for dep. content 
 #dialog_content{:style => "word-wrap: break-word;", :title=>"#{_('Package Dependencies')}"}
 
-
-.grid_1
-  = help_tip_button
-  &nbsp;
-.grid_16
-  = environment_selector(:url_proc=>lambda {|args|  promotions_path(args[:organization].name, args[:environment].name, :next_env_id=>(args[:next_environment].id if args[:next_environment] and args[:environment].locker?) )})
-
-%br.clear
-          
+= help_tip_button
 .grid_12.prefix_2.suffix_2
   = help_tip(_('Promotions allow you to promote content from one environment to the next along ' + |
                 'a promotion path. Clicking "Add" next to one or more products will add them to '+ |
                 'the change set. If products already exist in the next environment, you may '    + |
                 'promote other types of content. Once you have created a change set, click the ' + |
                 '"Promote" button to commit it to the next environment.'))   |
+.grid_16
+  = environment_selector(:url_proc=>lambda {|args|  promotions_path(args[:organization].name, args[:environment].name, :next_env_id=>(args[:next_environment].id if args[:next_environment] and args[:environment].locker?) )})
 
 .grid_16
   #container
