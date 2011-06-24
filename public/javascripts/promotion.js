@@ -89,21 +89,20 @@ var promotion_page = {
 
     },
     modify_changeset: function(id, display, type, product_id) {
+        var changeset = promotion_page.current_changeset;
         var adding = true;
-        if (promotion_page.current_changeset && promotion_page.current_changeset.has_item(type, id, product_id)) {
+        if ( changeset && changeset.has_item(type, id, product_id)) {
             adding = false;
         }
 
-        var ids = {};
-        ids[id] = display;
-
-
         if (adding) {
-            promotion_page.add_changeset_page_item(id, type, display);
-            promotion_page.sort_changeset(type);
+            changeset.add_item(type, id, display, product_id);
+            //promotion_page.add_changeset_page_item(id, type, display);
+            //promotion_page.sort_changeset(type);
         }
         else {
-            promotion_page.remove_changeset_page_item(id, type, display);
+            changeset.remove_item(type, id, product_id);
+            //promotion_page.remove_changeset_page_item(id, type, display);
         }
         promotion_page.changeset_queue.push([type, id, display, adding, product_id]);
     },
