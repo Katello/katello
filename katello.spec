@@ -48,6 +48,7 @@ BuildRequires: 	coreutils findutils sed
 BuildRequires: 	rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
+BuildRequires:  rubygem(bundler)
 BuildArch: noarch
 
 %description
