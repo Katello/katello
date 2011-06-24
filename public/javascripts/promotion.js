@@ -385,9 +385,8 @@ var promotionsRenderer = (function($){
                 
 
             }
-        }
+        };
 
-    
     return {
         renderPromotionsContent: renderPromotionsContent  
     };
@@ -402,7 +401,7 @@ var templateLibrary = (function(){
             var html = '<ul>';
             for( item in changesets){
                 if( changesets.hasOwnProperty(item) ){
-                    if( changesets[item].name !== 'Changesets' ){
+                    if( item.split("_")[0] === 'changeset' ){
                         html += changesetsListItem(item, changesets[item].name);
                     }
                 }
@@ -417,7 +416,7 @@ var templateLibrary = (function(){
             }
 
             var html = '<ul>';
-            jQuery.each(promotion_page.current_changeset.products[product_id][type], function(index, item) {
+            $.each(promotion_page.current_changeset.products[product_id][type], function(index, item) {
                html += listItem(item.id, item.name, type, product_id);
             });
             html += '</ul>';
