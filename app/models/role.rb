@@ -180,7 +180,8 @@ class Role < ActiveRecord::Base
 
   ACTION_TO_VERB = {
     :certificates => {:serials => 'read'},
-    :changesets => {:list=>'read', :edit=>'read', :object=>'read', :show=>'read', :dependency_size=>'read', :dependency_list=>'read', :show_content=>'read'},
+    :changesets => {:list=>'read', :edit=>'read', :object=>'read', :show=>'read', :packages=>'read', :repos=>'read',
+                    :errata=>'read', :dependency_size=>'read', :dependency_list=>'read', :show_content=>'read'},
     :consumers => {:export_status => 'read'},
     :notices => {:get_new => 'read', :details => 'read', :note_count => 'read',
                  :destroy_all => 'delete'},
