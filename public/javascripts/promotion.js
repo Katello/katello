@@ -402,6 +402,7 @@ var templateLibrary = (function(){
             var html = '<ul>';
             for( item in changesets){
                 if( changesets.hasOwnProperty(item) ){
+                    //do the search filter here
                     if( changesets[item].name !== 'Changesets' ){
                         html += changesetsListItem(item, changesets[item].name);
                     }
@@ -418,6 +419,7 @@ var templateLibrary = (function(){
 
             var html = '<ul>';
             jQuery.each(promotion_page.current_changeset.products[product_id][type], function(index, item) {
+               //for item names that mach item.name from search hash
                html += listItem(item.id, item.name, type, product_id);
             });
             html += '</ul>';
