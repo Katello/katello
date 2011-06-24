@@ -337,10 +337,6 @@ var registerEvents = function(changesetTree){
           data: $('#new_changeset').serialize(),
           cache: false,
           success: function(data){
-              var split = changeset_breadcrumb['changesets'].content.split('</ul>');
-              split = split[0] + data.html + '</ul>';
-              changeset_breadcrumb['changesets'].content = split;
-
               $.extend(changeset_breadcrumb, data.breadcrumb);
               changesetTree.render_content('changeset_' + data.id);
               panel.closePanel($('#panel'));
@@ -376,7 +372,6 @@ var promotionsRenderer = (function($){
             return templateLibrary.changesetsList(changeset_breadcrumb);
         },
         renderPromotionsContent = function(hash){
-            console.log(hash);
             if( hash === 'changesets'){
                 return renderChangesets();
             }
