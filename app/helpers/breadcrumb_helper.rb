@@ -28,7 +28,7 @@ module BreadcrumbHelper
                       {:cache=>true, :content=>render(:partial=>"changesets/product", :locals=>{:product=>product, :changeset=>cs})})
         #packages
         add_crumb_node!(bc, packages_cs_bc_id(cs, product), packages_changeset_path(cs, {:product_id => product.id}),  _("Packages"),
-                        ['changesets', changeset_bc_id(cs),product_cs_bc_id(cs, product)])
+                        ['changesets', changeset_bc_id(cs),product_cs_bc_id(cs, product)], {:client_render => true})
 
 
 
