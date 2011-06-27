@@ -36,6 +36,7 @@ describe ChangesetsController do
     @org = new_test_org 
 
     CSControllerTest::ENVIRONMENT["organization"] = @org
+    CSControllerTest::ENVIRONMENT["prior"] = @org.locker
     @env = KPEnvironment.create(CSControllerTest::ENVIRONMENT)
     CSControllerTest::NEXT_ENVIRONMENT["organization"] = @org
     @next_env = KPEnvironment.create(CSControllerTest::NEXT_ENVIRONMENT)

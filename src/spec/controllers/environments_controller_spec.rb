@@ -20,8 +20,9 @@ describe EnvironmentsController do
     ENV_NAME = "environment_name"
     NEW_ENV_NAME = "another_environment_name"
     
-    ENVIRONMENT = {:id => 1, :name => ENV_NAME, :description => nil, :prior => nil, :path => []}
-    UPDATED_ENVIRONMENT = {:id => 1, :name => NEW_ENV_NAME, :description => nil, :prior => nil, :path => []}
+    ENVIRONMENT = {:id => 2, :name => ENV_NAME, :description => nil, :prior => nil, :path => []}
+    LOCKER = {:id => 1, :name => "locker", :description => nil, :prior => nil, :path => []}
+    UPDATED_ENVIRONMENT = {:id => 3, :name => NEW_ENV_NAME, :description => nil, :prior => nil, :path => []}
     EMPTY_ENVIRONMENT = {:name => "", :description => "", :prior => nil}
     
     ORG_ID = 1
@@ -38,28 +39,25 @@ describe EnvironmentsController do
     @env = mock(KPEnvironment, EnvControllerTest::ENVIRONMENT)
     @env.stub!(:successor).and_return("")
     
+    @locker = mock(KPEnvironment, EnvControllerTest::LOCKER)
+    
     @org = mock(Organization, EnvControllerTest::ORGANIZATION)
     @org.stub!(:environments).and_return([@env])
     @org.environments.stub!(:first).with(:conditions => {:name => @env.name}).and_return(@env)
+    @org.stub!(:locker).and_return(@locker)
 
     Organization.stub!(:first).with(:conditions => {:cp_key=>@org.cp_key}).and_return(@org)
     KPEnvironment.stub!(:find).and_return(@env)
-
-
   end
-  
-
 
   describe "GET new" do
     before (:each) do
       @new_env = mock(KPEnvironment, EnvControllerTest::EMPTY_ENVIRONMENT)
     end
-    
+
     it "assigns a new environment as @environment" do
       KPEnvironment.should_receive(:new).and_return(@new_env)
-      
       get :new, :organization_id => @org.cp_key
-      
       assigns(:environment).should_not be_nil
     end
   end
@@ -72,28 +70,41 @@ describe EnvironmentsController do
   end
 
   describe "POST create" do
-
     describe "with valid params" do
-      
+      before(:each) do
+        @new_env = mock(KPEnvironment, EnvControllerTest::EMPTY_ENVIRONMENT)
+        KPEnvironment.stub!(:new).and_return(@new_env)
+        @new_env.stub!(:save!).and_return(true)
+      end
+
+
+      it "should create new environment" do
+        KPEnvironment.should_receive(:new).with({:name => 'production',
+              :organization_id => @org.id, :prior => @org.locker, :description => nil}).and_return(@new_env)
+        post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
+      end
+
+      it "should save new environment" do
+        @new_env.should_receive(:save!).and_return(true)
+        post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
+      end
+
       it "assigns a newly created environment as @environment" do
-        post :create, :organization_id => @org.cp_key, :name => 'production'
-       
+        post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
         assigns(:environment).should_not be_nil
-        assigns(:environment).name.should == 'production'
-        assigns(:environment).organization_id.should == @org.id
       end
 
       it "redirects to the created environment" do
-        post :create, :organization_id => @org.cp_key, :name => 'production'
-        
+        post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
         env = assigns(:environment)
         response.should be_success
       end
 
       it "does not allow same name" do
-        post :create, :organization_id => @org.cp_key, :name => 'production'
-        post :create, :organization_id => @org.cp_key, :name => 'production'
-        response.should_not be_success
+        pending "this test shouldn't be here - validation of uniqueness constrain should be tested at the model level"
+        #post :create, :organization_id => @org.cp_key, :name => 'production'
+        #post :create, :organization_id => @org.cp_key, :name => 'production'
+        #response.should_not be_success
       end
 
     end

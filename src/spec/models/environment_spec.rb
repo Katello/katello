@@ -24,9 +24,9 @@ describe KPEnvironment do
     @env_name =  'test_environment'
     
     @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
-    @provider = Provider.new({
+    @provider = Provider.create!({
       :name => 'test_provider',
-      :repository_url => 'https://something',
+      :repository_url => 'https://something.url',
       :provider_type => Provider::REDHAT,
       :organization => @organization
     })
@@ -36,7 +36,7 @@ describe KPEnvironment do
     @third_product = Product.new(:name =>"prod3", :cp_id => '45678', :provider => @provider, :environments => [@organization.locker])
     @fourth_product = Product.new(:name =>"prod4", :cp_id => '32683', :provider => @provider, :environments => [@organization.locker])
 
-    @environment = KPEnvironment.new({:name => @env_name}) do |e|
+    @environment = KPEnvironment.new({:name => @env_name, :prior => 1}) do |e|
       e.products << @first_product
       e.products << @third_product
     end
@@ -51,7 +51,7 @@ describe KPEnvironment do
   end
 
   specify { @environment.name.should == @env_name }
-  specify { @environment.prior.should be_nil }
+  #specify { @environment.prior.should be_nil }
   specify { @environment.successor.should be_nil }
   specify { @organization.environments.should include @environment }
   specify { @environment.organization.should == @organization }
@@ -83,14 +83,14 @@ describe KPEnvironment do
   context "available products" do
     
     before(:each) do
-      @prior_env = KPEnvironment.new({:name => @env_name + '-prior'}) do |e|
+      @prior_env = KPEnvironment.new({:name => @env_name + '-prior', :prior => @environment.id}) do |e|
         e.products << @first_product
         e.products << @second_product
         e.products << @third_product
       end
       @organization.environments << @prior_env
-      @organization.save!
       @prior_env.save!
+      @organization.save!
       
       @organization.locker.products << @first_product
       @organization.locker.products << @second_product
@@ -121,6 +121,14 @@ describe KPEnvironment do
       @environment2.should_not be_valid
       @environment2.errors[:name].should_not be_empty
     end
+    
+    it "should be invalid to create an environment without a prior" do
+      @environment2 = KPEnvironment.new({:name => @env_name})
+      @organization.environments << @environment2
+    
+      @environment2.should_not be_valid
+      @environment2.errors[:prior].should_not be_empty
+    end
   end
   
   context "environment path" do
@@ -129,9 +137,10 @@ describe KPEnvironment do
       @env2 = KPEnvironment.new({:name => @env_name + '-succ2'})
       @organization.environments << @env1
       @organization.environments << @env2
-      
-      @env2.prior = @env1.id
       @env1.prior = @environment.id
+      @env1.save!
+      @env2.prior = @env1.id
+      @env2.save!
     end
     
     specify { @environment.path.size.should == 3 }
@@ -140,7 +149,7 @@ describe KPEnvironment do
   end
   
   context "Test priors" do
-    before do
+    before(:each) do
       @e1 = KPEnvironment.create!({:name => @env_name + '-succ1', 
                 :organization => @organization, :prior => @environment})
       @e2 = KPEnvironment.create!({:name => @env_name + '-succ2', 
@@ -149,8 +158,25 @@ describe KPEnvironment do
       @organization.environments << @e1
       @organization.environments << @e2
     end
+    
     specify{ lambda {KPEnvironment.create!({:name => @env_name + '-succ3', 
-              :organization => @organization, :prior => @e1})}.should raise_error(ActiveRecord::RecordInvalid)} 
+              :organization => @organization, :prior => @e1})}.should raise_error(ActiveRecord::RecordInvalid)}
+              
+  end
+  
+  context "Lockers" do
+    it "should be the only KPEnvironment that can have multiple priors" do
+      @env1 = KPEnvironment.new({:name => @env_name + '1',
+                :organization => @organization, :prior => @organization.locker})
+      @env2 = KPEnvironment.new({:name => @env_name + '2',
+                :organization => @organization, :prior => @organization.locker})
+      @env3 = KPEnvironment.new({:name => @env_name + '3',
+                :organization => @organization, :prior => @organization.locker})
+                
+      @env1.should be_valid
+      @env2.should be_valid
+      @env3.should be_valid
+    end
   end
 end
 

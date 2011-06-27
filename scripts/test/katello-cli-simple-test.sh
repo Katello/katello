@@ -6,10 +6,11 @@ else
   script_dir=$script_dir_link
 fi
 export PYTHONPATH=$script_dir/../../cli/src
-CMD=$script_dir/../../cli/bin/katello
 
 RAND=$(date | md5sum | cut -c1-6)
-
+USER='admin'
+PASSWORD='password123'
+CMD="$script_dir/../../cli/bin/katello -u $USER -p $PASSWORD"
 
 test_cnt=0
 failed_cnt=0
@@ -121,16 +122,17 @@ test "repo list by org only" repo list --org="$FIRST_ORG"
 test "repo list by org and product" repo list --org="$FIRST_ORG" --product="$FEWUPS_PRODUCT"
 REPO_NAME=`$CMD repo list --org="$FIRST_ORG" | grep $REPO | awk '{print $2}'`
 REPO_ID=`$CMD repo list --org="$FIRST_ORG" | grep $REPO | awk '{print $1}'`
-test "repo status" repo status --id="$REPO_ID"
+test "repo status" repo status --id="$REPO_ID" -v
 
 #testing provider sync
 test "provider sync" provider sync --name="$YUM_PROVIDER" --org="$FIRST_ORG"
 sleep 1 #give the provider some time to get synced
 
 #testing systems
-SYSTEM_NAME="mysystem_$RAND"
+SYSTEM_NAME="_system_$RAND"
 CONSUMER_FIRST="$(echo $FIRST_ORG|perl -e 'print lc <>;')_user"
-test "system register" -u $CONSUMER_FIRST -p $CONSUMER_FIRST system register --name="$SYSTEM_NAME"
+test "system register as admin" system register --name="admin$SYSTEM_NAME" --org="$FIRST_ORG"
+test "system register as user" -u $CONSUMER_FIRST -p $CONSUMER_FIRST system register --name="user$SYSTEM_NAME" --org="$FIRST_ORG"
 test "system list" system list --org="$FIRST_ORG"
 
 #testing distributions

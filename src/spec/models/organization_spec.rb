@@ -70,7 +70,7 @@ describe Organization do
       org_id = @organization.id
       
       env_name = "prod"      
-      @env = KPEnvironment.new(:name => env_name, :locker => false)
+      @env = KPEnvironment.new(:name => env_name, :locker => false, :prior => 1)
       @organization.environments << @env
       @env.save!
       
@@ -87,11 +87,11 @@ describe Organization do
       
       @org2 = Organization.create!(:name => "foobar", :cp_key => 'foobar')
 
-      @env1 = KPEnvironment.new(:name => env_name, :organization => @organization)
+      @env1 = KPEnvironment.new(:name => env_name, :organization => @organization, :prior => 1)
       @organization.environments << @env1
       @env1.save!    
       
-      @env2 = KPEnvironment.new(:name => env_name, :organization => @org2)
+      @env2 = KPEnvironment.new(:name => env_name, :organization => @org2, :prior => 1)
       @org2.environments << @env2
       @env2.save!
       
