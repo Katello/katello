@@ -38,7 +38,7 @@ class Api::TemplatesController < Api::ApiController
     params[:template].delete(:products_json)
     params[:template].delete(:packages_json)
     params[:template].delete(:errata_json)
-    params[:template].delete(:group_parameters_json)
+    params[:template].delete(:parameters_json)
     params[:template].delete(:host_group_json)
 
     @template.update_attributes!(params[:template])
@@ -79,12 +79,12 @@ class Api::TemplatesController < Api::ApiController
         render :text => _("Removed erratum '#{params[:erratum]}'"), :status => 200 and return
 
       when 'add_parameter'
-        @template.group_parameters[params[:parameter]] = params[:value]
+        @template.parameters[params[:parameter]] = params[:value]
         @template.save!
         render :text => _("Added kickstart attribute '#{params[:attribute]}': '#{params[:value]}'"), :status => 200 and return
 
       when 'remove_parameter'
-        @template.group_parameters.delete(params[:parameter])
+        @template.parameters.delete(params[:parameter])
         @template.save!
         render :text => _("Removed kickstart attribute '#{params[:attribute]}'"), :status => 200 and return
     end
