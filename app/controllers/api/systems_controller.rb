@@ -17,7 +17,7 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates]
 
   def create
-    org = Organization.find_by_name(params[:org_name])
+    org = Organization.find_by_name(params[:owner])
     raise _("Couldn't find organization '#{params[:org_name]}'") if org.nil?
     system = System.create!(params.merge({:organization => org})).to_json
     render :json => system
