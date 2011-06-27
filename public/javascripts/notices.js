@@ -24,6 +24,7 @@ var notices = (function() {
           notices.start();
         },
         displayNotice: function(level, notices) {
+            console.log(notices);
             var notices = $.parseJSON(notices),
                 options = {
                 type: level, 
