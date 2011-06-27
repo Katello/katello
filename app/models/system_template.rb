@@ -12,6 +12,7 @@
 
 
 class SystemTemplate < ActiveRecord::Base
+  #include Authorization
   include LazyAccessor
 
   #has_many :products
@@ -20,9 +21,10 @@ class SystemTemplate < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :environment_id
 
+  has_and_belongs_to_many :products
+
   attr_accessor :host_group, :group_parameters
   lazy_accessor :packages, :initializer => lambda { init_packages }, :unless => lambda { false } #set 'unless' to false -> load also for new records
-  lazy_accessor :products, :initializer => lambda { init_products }, :unless => lambda { false }
   lazy_accessor :errata,   :initializer => lambda { init_errata },   :unless => lambda { false }
   lazy_accessor :group_parameters, :initializer => lambda { init_group_parameters }, :unless => lambda { false }
 
