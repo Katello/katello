@@ -19,6 +19,17 @@ class ParentTemplateValidator < ActiveModel::Validator
   end
 end
 
+class TemplateContentValidator < ActiveModel::Validator
+  def validate(record)
+    #check if packages and errate are valid
+    for p in record.packages
+      record.errors[:packages] << _("Package '#{p.package_name}' has doesn't belong to any product in this template") if not p.valid?
+    end
+    for e in record.errata
+      record.errors[:errata] << _("Erratum '#{p.erratum_id}' has doesn't belong to any product in this template") if not e.valid?
+    end
+  end
+end
 
 class SystemTemplate < ActiveRecord::Base
   #include Authorization
@@ -30,6 +41,7 @@ class SystemTemplate < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :environment_id
   validates_with ParentTemplateValidator
+  validates_with TemplateContentValidator
 
   belongs_to :parent, :class_name => "SystemTemplate"
   has_and_belongs_to_many :products, :uniq => true
@@ -41,6 +53,7 @@ class SystemTemplate < ActiveRecord::Base
 
   before_validation :attrs_to_json
   before_save :update_revision
+  before_destroy :check_children
 
 
   def init_parameters
@@ -68,6 +81,7 @@ class SystemTemplate < ActiveRecord::Base
     end
 
     self.revision = json["revision"]
+    self.description = json["description"]
     json["products"].collect do |p| self.add_product(p) end if not json["products"].nil?
     json["packages"].collect do |p| self.add_package(p) end if not json["packages"].nil?
     json["errata"].collect   do |e| self.add_erratum(e) end if not json["errata"].nil?
@@ -92,6 +106,7 @@ class SystemTemplate < ActiveRecord::Base
       :products => self.products.map(&:name),
       :parameters => ActiveSupport::JSON.decode(self.parameters_json)
     }
+    tpl[:description] = self.description if not self.description.nil?
     tpl[:parent] = self.parent.name if not self.parent.nil?
 
     tpl.to_json
@@ -134,6 +149,10 @@ class SystemTemplate < ActiveRecord::Base
   def remove_product product_name
     product = self.environment.products.find_by_name(product_name)
     self.products.delete(product)
+    if not self.valid?
+      self.products << product
+      raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{product_name}.")
+    end
   end
 
 
@@ -148,13 +167,62 @@ class SystemTemplate < ActiveRecord::Base
   end
 
 
+  def promote
+    #return if there id nowhere to promote
+    return if self.environment.successor.nil?
+
+    #promote parents
+    for template in self.get_inheritance_chain
+      template.promote
+    end
+
+    #promote self
+    @changeset = Changeset.create!(:environment => self.environment)
+
+    @changeset.products << self.products
+    @changeset.errata   << changeset_errata(self.errata)
+    @changeset.packages << changeset_packages(self.packages)
+    @changeset.promote
+
+    #copy self to the environment
+    self.copy_to_env self.environment.successor
+  end
+
   protected
 
+  def changeset_errata(errata)
+    errata.collect do |e|
+      ChangesetErratum.new(:errata_id=>e.id, :display_name=>e.title, :changeset => @changeset)
+    end
+  end
 
+  def changeset_packages(packages)
+    packages.collect do |p|
+      ChangesetPackage.new(:package_id=>p.id, :display_name=>p.name, :changeset => @changeset)
+    end
+  end
+
+  def get_inheritance_chain
+    chain = []
+    tpl = self
+    while not tpl.parent.nil?
+      chain << tpl.parent
+      tpl = tpl.parent
+    end
+    chain.reverse
+  end
+
+  def copy_to_env env
+    new_tpl = SystemTemplate.new
+    new_tpl.environment = env
+    new_tpl.string_import(self.string_export)
+    new_tpl.save!
+  end
+
+  #TODO: to be deleted after we switch to save parameters in foreman
   def attrs_to_json
     self.parameters_json = self.parameters.to_json
   end
-
 
   def update_revision
     self.revision = 1 if self.revision.nil?
@@ -166,5 +234,10 @@ class SystemTemplate < ActiveRecord::Base
     end
   end
 
-
+  def check_children
+    children = SystemTemplate.find(:all, :conditions => {:parent_id => self.id})
+    if not children.empty?
+      raise Errors::TemplateContentException.new("The template has children templates.")
+    end
+  end
 end

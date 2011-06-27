@@ -10,11 +10,20 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+class PackageValidator < ActiveModel::Validator
+  def validate(record)
+    if record.to_package.nil?
+      record.errors[:base] <<  _("Package '#{record.package_name}' has doesn't belong to any product in this template")
+    end
+  end
+end
+
 class SystemTemplatePackage < ActiveRecord::Base
   include Authorization
 
   belongs_to :system_template, :inverse_of => :packages
   validates_uniqueness_of :package_name, :scope =>  :system_template_id
+  validates_with PackageValidator
 
   def to_package
 
@@ -29,8 +38,5 @@ class SystemTemplatePackage < ActiveRecord::Base
     nil
   end
 
-  def valid?(context = nil)
-    super and not self.to_package.nil?
-  end
 
 end

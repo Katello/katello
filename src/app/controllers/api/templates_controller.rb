@@ -118,14 +118,8 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def promote
-    @changeset = Changeset.create!(:environment => @template.environment)
-
-    @changeset.products << @template.products
-    @changeset.errata   << changeset_errata(@template.errata)
-    @changeset.packages << changeset_packages(@template.packages)
-    @changeset.promote
-
-    render :json => @changeset.to_json
+    @template.promote
+    render :text => _("Template promoted"), :status => 200
   end
 
   def find_environment
@@ -140,16 +134,5 @@ class Api::TemplatesController < Api::ApiController
     @template
   end
 
-  def changeset_errata(errata)
-    errata.collect do |e|
-      ChangesetErratum.new(:errata_id=>e.id, :display_name=>e.title, :changeset => @changeset)
-    end
-  end
-
-  def changeset_packages(packages)
-    packages.collect do |p|
-      ChangesetPackage.new(:package_id=>p.id, :display_name=>p.name, :changeset => @changeset)
-    end
-  end
 
 end

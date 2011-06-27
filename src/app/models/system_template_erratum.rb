@@ -10,12 +10,20 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+class ErratumValidator < ActiveModel::Validator
+  def validate(record)
+    if record.to_erratum.nil?
+      record.errors[:base] <<  _("Erratum '#{record.erratum_id}' has doesn't belong to any product in this template")
+    end
+  end
+end
+
 class SystemTemplateErratum < ActiveRecord::Base
   include Authorization
 
   belongs_to :system_template, :inverse_of => :errata
   validates_uniqueness_of :erratum_id, :scope =>  :system_template_id
-
+  validates_with ErratumValidator
 
   def to_erratum
     self.system_template.products.each do |product|
@@ -27,10 +35,6 @@ class SystemTemplateErratum < ActiveRecord::Base
       end
     end
     nil
-  end
-
-  def valid?(context = nil)
-    super and not self.to_erratum.nil?
   end
 
 end
