@@ -7,11 +7,10 @@ else
 fi
 export PYTHONPATH=$script_dir/../../cli/src
 
-CMD=$script_dir/../../cli/bin/katello
 RAND=$(date | md5sum | cut -c1-6)
 USER='admin'
 PASSWORD='password123'
-
+CMD="$script_dir/../../cli/bin/katello -u $USER -p $PASSWORD"
 
 test_cnt=0
 failed_cnt=0
@@ -31,13 +30,13 @@ function test() {
     if [ $PRINT_ALL -eq 1 ]; then
         shift
         echo katello $*
-        $CMD -u $USER -p $PASSWORD $*
+        $CMD $*
         return
     fi
   
     printf "%-40s" "$1"    
     shift
-    result=`$CMD -u $USER -p $PASSWORD $* 2>&1`
+    result=`$CMD $* 2>&1`
     
     if [ $? -ne 0 ] || [ "`echo $result | egrep -i "'nt\b|\bnot\b|\bfail|\berror\b"`" ]; then
         printf "[ ${txtred}FAILED${txtrst} ]\n"
@@ -123,7 +122,7 @@ test "repo list by org only" repo list --org="$FIRST_ORG"
 test "repo list by org and product" repo list --org="$FIRST_ORG" --product="$FEWUPS_PRODUCT"
 REPO_NAME=`$CMD repo list --org="$FIRST_ORG" | grep $REPO | awk '{print $2}'`
 REPO_ID=`$CMD repo list --org="$FIRST_ORG" | grep $REPO | awk '{print $1}'`
-test "repo status" repo status --id="$REPO_ID"
+test "repo status" repo status --id="$REPO_ID" -v
 
 #testing provider sync
 test "provider sync" provider sync --name="$YUM_PROVIDER" --org="$FIRST_ORG"
