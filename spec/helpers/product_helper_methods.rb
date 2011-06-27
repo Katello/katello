@@ -1,8 +1,9 @@
 module ProductHelperMethods
+  
   def new_test_product_with_locker org
 
     @locker = KPEnvironment.new
-    @locker.locker=true
+    @locker.locker = true
     @locker.organization = org
     @locker.name = "Locker"
     @locker.stub!(:products).and_return([])
