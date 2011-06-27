@@ -97,14 +97,6 @@ class ChangesetsController < ApplicationController
     render :partial=>"new"
   end
 
-
-  def packages
-    raise "Missing product_id as param" if params[:product_id].nil?
-    product = Product.find(params[:product_id])
-    pkgs = ChangesetPackage.where(:changeset_id => @changeset.id, :product_id => product.id)
-    render :partial => "packages", :locals => {:cs_packages => pkgs, :product => product}
-  end
-
   def create
     @changeset = Changeset.create!(:name=>params[:name], :environment_id=>@next_environment.id)
     notice _("Changeset '#{@changeset["name"]}' was created.")
@@ -159,6 +151,7 @@ class ChangesetsController < ApplicationController
     end
     to_ret = {:timestamp=>@changeset.updated_at.to_i.to_s}
     to_ret[:changeset] = simplify_changeset(@changeset) if send_changeset
+    Rails.logger.debug("Sending full changeset")
     render :json=>to_ret
   end
   
