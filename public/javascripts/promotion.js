@@ -388,7 +388,7 @@ var templateLibrary = (function(){
             for( item in changesets){
                 if( changesets.hasOwnProperty(item) ){
                     //do the search filter here
-                    if( changesets[item].name !== 'Changesets' ){
+                    if( item.split("_")[0] === "changeset" ){
                         html += changesetsListItem(item, changesets[item].name);
                     }
                 }
