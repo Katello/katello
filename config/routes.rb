@@ -243,6 +243,9 @@ Src::Application.routes.draw do
     match '/repositories/discovery' => 'repositories#discovery', :via => :post
     match '/repositories/discovery/:id' => 'repositories#discovery_status', :via => :get
 
+    resources :environment, :only => [:show, :update, :destroy] do
+      resources :systems, :only => [:index, :create]
+    end
     resources :packages, :only => [:show]
     resources :errata, :only => [:show]
     resources :distributions, :only => [:show]
@@ -257,6 +260,7 @@ Src::Application.routes.draw do
 
     # support for rhsm
     resources :consumers, :controller => 'systems'
+    match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
     match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
     match '/consumers/:id/certificates' => 'proxies#get', :via => :get
     match '/consumers/:id/certificates/serials' => 'proxies#get', :via => :get

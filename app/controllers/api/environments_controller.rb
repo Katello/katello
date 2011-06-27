@@ -12,7 +12,7 @@
 
 class Api::EnvironmentsController < Api::ApiController
   respond_to :json
-  before_filter :find_organization, :only => [:index, :show, :create, :update, :destroy, :repositories]
+  before_filter :find_organization, :only => [:index, :create]
   before_filter :find_environment, :only => [:show, :update, :destroy, :repositories]
 
 
