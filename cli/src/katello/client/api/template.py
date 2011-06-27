@@ -40,11 +40,10 @@ class TemplateAPI(KatelloAPI):
             return None
         
         
-    def import_tpl(self, envId, name, description, tplFile):
+    def import_tpl(self, envId, description, tplFile):
         tplData = {
             "template_file": tplFile, 
             "template": {
-                "name": name,
                 "description": description
             },
             "environment_id": envId

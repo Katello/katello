@@ -89,9 +89,9 @@ class Info(TemplateAction):
         if template == None:
             return os.EX_OK
         
-        template["errata"]   = "\n".join([e["id"] for e in template["errata"]])
+        template["errata"]   = "\n".join([e["erratum_id"] for e in template["errata"]])
         template["products"] = "\n".join([p["name"] for p in template["products"]])
-        template["packages"] = "\n".join([p["name"] for p in template["packages"]])
+        template["packages"] = "\n".join([p["package_name"] for p in template["packages"]])
         template["group_parameters"] = "\n".join([ key+":\t"+value for key, value in template["group_parameters"].iteritems() ])
         
         self.printer.addColumn('id')
@@ -114,8 +114,6 @@ class Import(TemplateAction):
 
     
     def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
-                               help=_("template name (required)"))
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
@@ -127,13 +125,11 @@ class Import(TemplateAction):
 
     
     def check_options(self):
-        self.require_option('name')
         self.require_option('org')
         self.require_option('file')
 
     
     def run(self):
-        name    = self.get_option('name')
         desc    = self.get_option('description')
         orgName = self.get_option('org')
         envName = self.get_option('env')
@@ -147,7 +143,7 @@ class Import(TemplateAction):
             
         env = get_environment(orgName, envName)
         if env != None:
-            response = run_spinner_in_bg(self.api.import_tpl, (env["id"], name, desc, f), message=_("Importing template, please wait... "))
+            response = run_spinner_in_bg(self.api.import_tpl, (env["id"], desc, f), message=_("Importing template, please wait... "))
             print response
         
         f.close()
