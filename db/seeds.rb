@@ -73,6 +73,8 @@ Role.allow 'admin_role', [:create, :delete, :read], "search"
 Role.allow 'admin_role', [:read], "operations"
 Role.allow 'admin_role', [:create, :delete, :read], "repositories"
 Role.allow 'admin_role', [:read, :apply], "sync_schedules"
+Role.allow 'admin_role', [:read], "subscriptions"
+
 
 #These are candlepin proxy actions
 Role.allow 'admin_role', [:create, :read, :update, :delete, :import], "owners"
