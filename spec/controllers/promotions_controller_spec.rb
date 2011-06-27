@@ -34,35 +34,35 @@ describe PromotionsController do
     it "should be successful with locker and no next environment" do
       get 'show', :org_id=>@org.cp_key, :env_id=>@env.name
       response.should be_success
-      assigns(:changeset).should == nil
+      assigns(:changeset).should == @env.working_changesets.first
       assigns(:environment).should  == @env
       assigns(:next_environment).should == nil
     end
 
     it "should be successful on the locker and a next environment" do
-      @env2 = KPEnvironment.new(:organization=>@org, :locker=>false, :name=>"otherenv")
+      @env2 = KPEnvironment.new(:organization=>@org, :locker=>false, :name=>"otherenv", :prior=>@org.locker)
       @env2.save!
       get 'show', :org_id=>@org.cp_key, :env_id=>@env.name
       response.should be_success
-      assigns(:changeset).should == @env2.working_changesets.first
+      assigns(:changeset).should == @env.working_changesets.first
       assigns(:next_environment).should == @env2
       assigns(:environment).should  == @env
     end
 
     it "should be successful on the next environment with no changeset" do
-      @env2 = KPEnvironment.new(:organization=>@org, :locker=>false, :name=>"otherenv")
+      @env2 = KPEnvironment.new(:organization=>@org, :locker=>false, :name=>"otherenv", :prior=>@org.locker)
       @env2.save!
       get 'show', :org_id=>@org.cp_key, :env_id=>@env2.name
       response.should be_success
       assigns(:environment).should == @env2
       assigns(:next_environment).should == nil
-      assigns(:changeset).should == nil
+      assigns(:changeset).should == @env2.working_changesets.first
     end
 
   end
 
-  
-  
+
+
 
 
 end

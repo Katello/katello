@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:       katello		
-Version:	0.1.48
+Version:	0.1.49
 Release:	1%{?dist}
 Summary:	A package for managing application lifecycle for Linux systems
 	
@@ -48,6 +48,7 @@ BuildRequires: 	coreutils findutils sed
 BuildRequires: 	rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
+BuildRequires:  rubygem(bundler)
 BuildArch: noarch
 
 %description
@@ -57,6 +58,10 @@ Provides a package for managing application lifecycle for Linux systems
 %setup -q
 
 %build
+#remove the Gemfile.lock and create new one
+rm -f Gemfile.lock
+bundle install --without "test development" --local
+
 #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
 echo Generating gettext files...
 ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
@@ -72,11 +77,9 @@ install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
 install -d -m0750 %{buildroot}%{_localstatedir}/log/%{name}
 
 #copy the application to the target directory
-mkdir .bundle
-mv ./extras/bundle-config .bundle/config
 cp -R .bundle * %{buildroot}%{homedir}
 
-#copy configs (will be all overwriten with symlinks)
+#copy configs and other var files (will be all overwriten with symlinks)
 install -m 644 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
 install -m 644 config/database.yml %{buildroot}%{_sysconfdir}/%{name}/database.yml
 install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/prod_env.rb
@@ -93,6 +96,9 @@ ln -svf %{_sysconfdir}/%{name}/katello.yml %{buildroot}%{homedir}/config/katello
 ln -svf %{_sysconfdir}/%{name}/database.yml %{buildroot}%{homedir}/config/database.yml
 ln -svf %{_sysconfdir}/%{name}/prod_env.rb %{buildroot}%{homedir}/config/environments/production.rb
 ln -svf %{_sysconfdir}/%{name}/dev_env.rb %{buildroot}%{homedir}/config/environments/development.rb
+
+#create symlinks for some db/ files
+ln -svf %{datadir}/schema.rb %{buildroot}%{homedir}/db/schema.rb
 
 #create symlinks for data
 ln -sv %{_localstatedir}/log/%{name} %{buildroot}%{homedir}/log
@@ -165,6 +171,71 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Jun 23 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.49-1
+- fixing db/schema.rb symlink in the spec
+- adding environment support to initdb script
+- remove commented debugger in header
+- 715421: fix for product size after successful repo(s) sync
+- ownergeddon - fixing unit tests
+- ownergeddon - organization is needed for systems now
+- db/schema.rb now symlinked into /var/lib/katello
+- new initscript 'initdb' command
+- ownergeddon - bumping version to 0.4.4 for candlepin
+- ownergeddon - improving error message
+- ownergeddon - support for explicit org
+- ownergeddon - user now created using new API
+- ownergeddon - user refactoring
+- ownergeddon - introducing CPUser entity
+- ownergeddon - refactoring name_to_key
+- ownergeddon - whitespace
+- fixed tests that contained failing environment creation
+- fixed failing environment creation test
+- Small change for padding around helptip.
+- 6692 & 6691: removed hardcoded admin user, as well as usernames and passwords
+  from katello config file
+- 707274
+- Added coded related to listing system's packages
+- Stylesheets import cleanup to remove redundancies.
+- Refactored systems page css to extend basic block and modify only specific
+  attributes.
+- Re-factored creating custom rows in lists to be a true/false option that when
+  true attempts to call render_rows.  Any page implementing custom rows in a
+  list view should provide a render_rows function in the helper to handle it.
+- Added toggle all to sync management page.
+- Removal of schedule reboot and uptime from systems detail.
+- Adds to the custom system list display to show additional details within a
+  system information block.  Follows the three column convention placing
+  details in a particular column.
+- Added new css class to lists that are supposed to be ajax scrollable to
+  provide better support across variations of ajax scroll usage.
+- Change to fix empty columns in the left panel from being displayed without
+  width and causing column misalignment.
+- Changes system list to display registered and last checkin date as main
+  column headers.  Switches from standard column rendering to use custom column
+  rendering function via custom_columns in the systems helper module.
+- Adds new option to the two panel display, :custom_columns, whereby a function
+  name can be passed that will do the work of rendering the columns in the left
+  side of the panel.  This is for cases when column data needs custom
+  manipulation or data rows need a customized look and feel past the standard
+  table look and feel.
+- Made an initializer change so that cp_type is handled right
+- Updated a test to create tmp dir unless it exists
+- Fixed the provider_spec to actually test if the subscriptions called the
+  right thing in candlepin
+- fixing sql error to hopefully work with postgresql
+- adding missing permission for sync_schedules
+- using a better authenication checking query with some more tests
+- migrating anonymous_role to not user ar_
+- a couple more roles fixes
+- changing roles to not populate nil resource types or nil tags
+- Added spec tests for notices_controller.
+- adding missing operations resource_type to seeds
+- changing the roles subsystem to use the same types/verbs for active record
+  and controller access
+- removing old roles that were adding errant types to the database
+- fixing odd sudden broken path link, possibly due to rails upgrade
+- adding back subscriptions to provider filter
+
 * Fri Jun 17 2011 Justin Sherrill <jsherril@redhat.com> 0.1.48-1
 - removing hudson task during rpm building (jsherril@redhat.com)
 - added api repository controller tests for repository discovery

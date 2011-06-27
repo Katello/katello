@@ -48,7 +48,7 @@ describe Provider do
       Candlepin::Product.stub!(:create).and_return({:id => "product_id"})
       @provider = Provider.new({
         :name => 'test_provider',
-        :repository_url => 'https://something',
+        :repository_url => 'https://something.net',
         :provider_type => Provider::REDHAT,
         :organization => @organization
       })
@@ -138,28 +138,6 @@ describe Provider do
       @provider.errors[:name].should_not be_empty
     end
 
-    it "should be invalid without url" do
-      @provider.name = "some name"
-      @provider.provider_type = Provider::REDHAT
-
-      @provider.should_not be_valid
-      @provider.errors[:repository_url].should_not be_empty
-    end
-
-    it "shouldn't care about invalid url for custom provider" do
-      @provider.name = "url test"
-      @provider.provider_type = Provider::CUSTOM
-      @provider.repository_url = "notavalidurl"
-      @provider.should be_valid
-    end
-
-    it "should handle invalid urls for RH provider" do
-      @provider.name = "url test"
-      @provider.provider_type = Provider::REDHAT
-      @provider.repository_url = "notavalidurl"
-      @provider.should_not be_valid
-    end
-
     it "should be invalid to create two providers with the same name" do
       @provider.name = "some name"
       @provider.repository_url = "https://some.url.here"
@@ -174,6 +152,7 @@ describe Provider do
       @provider2.should_not be_valid
       @provider2.errors[:name].should_not be_empty
     end
+    
   end
 
   context "Provider in valid state" do
@@ -207,6 +186,104 @@ describe Provider do
       @provider.destroy
       lambda{Provider.find(id)}.should raise_error(ActiveRecord::RecordNotFound)
     end
+    
+  end
+  
+  context "RH provider URL validation" do
+    
+    before(:each) do
+      @provider = Provider.new
+      @provider.name = "url test"
+      @provider.provider_type = Provider::REDHAT
+    end
+    
+    context "should accept" do
+      
+      it "'https://www.redhat.com'" do
+        @provider.repository_url = "https://redhat.com"
+        @provider.should be_valid
+      end
+      
+      it "'https://normallength.url/with/sub/directory/'" do
+        @provider.repository_url = "https://normallength.url/with/sub/directory/"
+        @provider.should be_valid
+      end
+      
+      it "'https://ltl.url/'" do
+        @provider.repository_url = "https://tiny.url/"
+        @provider.should be_valid 
+      end
+      
+      it "'https://reallyreallyreallyreallyreallyextremelylongurl.com/with/lots/of/sub/directories/'" do
+        @provider.repository_url = "https://reallyreallyreallyreallyreallyextremelylongurl.com/with/lots/of/sub/directories/over/kill/"
+        @provider.should be_valid
+      end
+      
+      it "'https://dr.pepper.yum:123/nutrition/facts/'" do
+        @provider.repository_url = "https://dr.pepper.yum:123/nutrition/facts/"
+        @provider.should be_valid
+      end
+      
+    end
+    
+    context "should refuse" do
+    
+      it "blank url" do
+        @provider.should_not be_valid
+        @provider.errors[:repository_url].should_not be_empty
+      end
+      
+      it "'notavalidurl'" do
+        @provider.repository_url = "notavalidurl"
+        @provider.should_not be_valid
+      end
+      
+      it "'http://repo.fedoraproject.org'" do
+        @provider.repository_url = "http://repo.fedoraproject.org"
+        @provider.should_not be_valid
+      end
+      
+      it "'https://'" do
+        @provider.repository_url = "https://"
+        @provider.should_not be_valid
+      end
+    
+      it "'https://.bogus'" do
+        @provider.repository_url = "https://.bogus"
+        @provider.should_not be_valid 
+      end
+      
+      it "'https://something'" do
+        @provider.repository_url = "https://something"
+        @provider.should_not be_valid
+      end
+      
+      it "'repo.fedorahosted.org/reposity'" do
+        @provider.repository_url = "repo.fedorahosted.org/reposity"
+        @provider.should_not be_valid
+      end
+      
+      it "'http://lzap.fedorapeople.org/fakerepos/fewupdates/'" do
+        @provider.repository_url = "http://lzap.fedorapeople.org/fakerepos/fewupdates/"
+        @provider.should_not be_valid
+      end
+        
+    end
+    
+  end
+  
+  context "Custom provider URL validation" do
+    before(:each) do
+      @provider = Provider.new
+      @provider.name = "url test"
+      @provider.provider_type = Provider::CUSTOM
+    end
+    
+    it "shouldn't care about invalid url" do
+      @provider.repository_url = "notavalidurl"
+      @provider.should be_valid
+    end
+    
   end
 
 end
