@@ -72,10 +72,6 @@ module Pulp
   class Package < PulpResource
 
     class << self
-      def find package_id
-        response = get(package_path + package_id + "/", self.default_headers)
-        JSON.parse(response.body).with_indifferent_access
-      end
 
       # Get all the Repositories known by Pulp
       def all
