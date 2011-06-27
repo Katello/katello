@@ -6,9 +6,11 @@ else
   script_dir=$script_dir_link
 fi
 export PYTHONPATH=$script_dir/../../cli/src
-CMD=$script_dir/../../cli/bin/katello
 
+CMD=$script_dir/../../cli/bin/katello
 RAND=$(date | md5sum | cut -c1-6)
+USER='admin'
+PASSWORD='password123'
 
 
 test_cnt=0
@@ -29,13 +31,13 @@ function test() {
     if [ $PRINT_ALL -eq 1 ]; then
         shift
         echo katello $*
-        $CMD $*
+        $CMD -u $USER -p $PASSWORD $*
         return
     fi
   
     printf "%-40s" "$1"    
     shift
-    result=`$CMD $* 2>&1`
+    result=`$CMD -u $USER -p $PASSWORD $* 2>&1`
     
     if [ $? -ne 0 ] || [ "`echo $result | egrep -i "'nt\b|\bnot\b|\bfail|\berror\b"`" ]; then
         printf "[ ${txtred}FAILED${txtrst} ]\n"
