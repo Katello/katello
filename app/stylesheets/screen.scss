@@ -111,6 +111,7 @@ fieldset {
     word-wrap: break-word;
     outline: 2px solid $kselected;
     padding: 5px;
+    margin-bottom: 2px;
   }
 }
 /* right side of 2 pane below the sliding pane */
@@ -413,7 +414,8 @@ fieldset {
   min-height:450px;
   border: 1px solid #B5B5B5;
   background-color: #FFF;
-  font-size: 110%;
+  font-size: 105%;
+  clear: both;
   .ajax_scroll {
     margin-left: auto;
     margin-right: auto;
@@ -560,6 +562,9 @@ $repo_color: #4A9FB1;
 .changeset_errata { color: $errata_color; }
 .changeset_repo {color: $repo_color;}
 
+
+
+
 .breadcrumb { 
     list-style: none; 
     overflow: hidden; 
@@ -644,6 +649,28 @@ $repo_color: #4A9FB1;
   &:after {
     border-left-color: $kselected !important;
   }
+}
+
+
+#changeset_loading {
+    position: absolute;
+    opacity: .8;
+    background-color: white;
+    z-index: -1;
+    width: 440px; 
+    height: 415px;
+    .text {
+        //vertically center
+        height: 10em;
+        margin-top:-5em;
+        top: 50%;
+        width: 50%;
+        text-align: center; 
+       // display:inline;
+        position:relative;
+        margin-left:auto;
+        margin-right:auto;
+    }
 }
 
 #changeset_tree {

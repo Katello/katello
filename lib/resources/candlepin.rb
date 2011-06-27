@@ -21,19 +21,19 @@ module Candlepin
     def self.post path, body
       Rails.logger.debug "Sending POST request to Candlepin: #{path}"
       client = CandlepinResource.rest_client(Net::HTTP::Post, :post, path_with_cp_prefix(path))
-      client.post body, {:accept => :json, :content_type => :json}.merge(User.current.cp_oauth_header)
+      client.post body, {:accept => :json, :content_type => :json}.merge(::User.current.cp_oauth_header)
     end
 
     def self.delete path
       Rails.logger.debug "Sending DELETE request to Candlepin: #{path}"
       client = CandlepinResource.rest_client(Net::HTTP::Delete, :delete, path_with_cp_prefix(path))
-      client.delete({:accept => :json, :content_type => :json}.merge(User.current.cp_oauth_header))
+      client.delete({:accept => :json, :content_type => :json}.merge(::User.current.cp_oauth_header))
     end
 
     def self.get path
       Rails.logger.debug "Sending GET request to Candlepin: #{path}"
       client = CandlepinResource.rest_client(Net::HTTP::Get, :get, path_with_cp_prefix(path))
-      client.get({:accept => :json}.merge(User.current.cp_oauth_header))
+      client.get({:accept => :json}.merge(::User.current.cp_oauth_header))
     end
 
     def self.path_with_cp_prefix path
@@ -50,19 +50,19 @@ module Candlepin
     after_post('/owners/') do |match, request, reply|
       name = JSON.parse(reply)['key']
       verbs = [:create, :read, :update, :delete]
-      User.current.allow(verbs, :owner, "owner_#{name}")
+      ::User.current.allow(verbs, :owner, "owner_#{name}")
     end
 
     # DELETE /candlepin/owners/ - delete owner
     before_delete('/owners/:name') do |match, request, reply|
       name = match[1]
-      User.allowed_to_or_error?(:destroy, :owner, "owner_#{name}")
+      ::User.allowed_to_or_error?(:destroy, :owner, "owner_#{name}")
     end
 
     after_delete('/owners/:name') do |match, request, reply|
       name = match[1]
       verbs = [:create, :read, :update, :delete]
-      User.current.disallow(verbs, :owner, "owner_#{name}")
+      ::User.current.disallow(verbs, :owner, "owner_#{name}")
     end
   end
 
@@ -77,7 +77,11 @@ module Candlepin
     self.resource_permissions = CandlepinResourcePermissions
 
     def self.default_headers
-      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.current.cp_oauth_header)
+      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(::User.current.cp_oauth_header)
+    end
+
+    def self.name_to_key a_name
+      a_name.tr(' ', '_')
     end
   end
 
@@ -106,9 +110,10 @@ module Candlepin
         JSON.parse(super(path(uuid), self.default_headers).body).with_indifferent_access
       end
 
-      def create name, type, facts
+      def create key, name, type, facts
+        url = path() + "?owner=#{key}"
         attrs = {:name => name, :type => type, :facts => facts}
-        response = self.post(path(), attrs.to_json, self.default_headers).body
+        response = self.post(url, attrs.to_json, self.default_headers).body
         JSON.parse(response).with_indifferent_access
       end
 
@@ -120,7 +125,7 @@ module Candlepin
       end
 
       def destroy uuid
-        self.delete(path(uuid), User.current.cp_oauth_header).code.to_i
+        self.delete(path(uuid), ::User.current.cp_oauth_header).code.to_i
       end
 
       def available_pools(uuid)
@@ -154,12 +159,7 @@ module Candlepin
   end
 
   class Owner < CandlepinResource
-
     class << self
-      def name_to_key a_name
-         a_name.tr(' ', '_')
-      end
-
       # Set the contentPrefic at creation time so that the client will get
       # content only for the org it has been subscribed to
       def create key, description
@@ -168,9 +168,10 @@ module Candlepin
         JSON.parse(owner_json).with_indifferent_access
       end
 
+      # create the first user for owner
       def create_user key, username, password
-        attrs = {:username => name_to_key(username), :password => name_to_key(password), :superAdmin => true}
-        self.post(join_path(path(key), 'users'), attrs.to_json, self.default_headers).body
+        # create user with superadmin flag (no role, permissions etc)
+        User.create({:username => name_to_key(username), :password => name_to_key(password), :superAdmin => true})
       end
 
       def destroy key
@@ -209,6 +210,18 @@ module Candlepin
 
       def path(id=nil)
         "/candlepin/owners/#{url_encode id}"
+      end
+    end
+  end
+
+  class User < CandlepinResource
+    class << self
+      def create attrs
+        JSON.parse(self.post(path(), JSON.generate(attrs), self.default_headers).body).with_indifferent_access
+      end
+
+      def path(id=nil)
+        "/candlepin/users/#{url_encode id}"
       end
     end
   end

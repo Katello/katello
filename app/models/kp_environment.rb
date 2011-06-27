@@ -22,9 +22,11 @@ class PriorValidator < ActiveModel::Validator
     #environment already doesnot have a successor
     #this is because in v1.0 we want
     # prior to have only one child (unless its the locker)
-    return if record.prior.nil?
-    has_no_prior = record.organization.environments.reject{|env| env == record || env.prior != record.prior}.empty?
+    has_no_prior = record.organization.environments.reject{|env| env == record || env.prior != record.prior || env.prior == env.organization.locker}.empty?
     record.errors[:prior] << _("environment cannot be a prior to a different environment") unless has_no_prior
+    
+    # only locker can have prior=nil
+    record.errors[:prior] << _("environment required") unless !record.prior.nil? || record.locker?
   end
 end
 
@@ -111,14 +113,14 @@ class KPEnvironment < ActiveRecord::Base
   #  and then give me that entire path
   def full_path
     p = self
-    until p.prior.nil?
+    until p.prior.locker 
       p = p.prior
     end
     p.path
   end
 
   def available_products
-    if self.prior.nil?
+    if self.prior.locker
       # if there is no prior, then the prior is the locker, which has all products
       prior_products = self.organization.locker.products
     else
