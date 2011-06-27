@@ -20,6 +20,7 @@ var promotion_page = {
     interval_id: undefined,
     current_changeset: undefined,
     current_product: undefined,
+    changeset_tree: undefined,
     start_timer: function() {
         interval_id = setInterval(promotion_page.push_changeset, 1000);
     },
@@ -42,19 +43,8 @@ var promotion_page = {
     find_button: function(id, type) {
         return $("a[class~=content_add_remove][data-id=" + common.escapeId(id) + "][data-type=" + type + "]")
     },
-    //Finds the remove button/label in the right pane
-    find_changeset_button: function(id, type) {
-        return $(".right").find("a[data-id=" + common.escapeId(id) + "][data-type=" + type + "]")
-    },
-    new_changeset_button: function(id, type, display_name) {
-        return jQuery('<a/>', {
-            'data-id': id,
-            'data-type': type,
-            'data-display_name':display_name,
-            'class': 'changeset_remove changeset_remove_' + type, //These classes come from changesets/_changeset.html.haml
-            'text': display_name
-        });
-    },
+
+
     push_changeset: function() {
         if(promotion_page.changeset_queue.length > 0 &&  promotion_page.current_changeset) {
             promotion_page.stop_timer();
@@ -68,11 +58,14 @@ var promotion_page = {
                 function(data) {
                     if (promotion_page.changeset_queue.length === 0) {
                         if(data.changeset) {
-                            promotion_page.reset_changeset(data.changeset);
+                            promotion_page.current_changeset = changeset_obj(data.changeset);
+                            console.log("Resetting page - after refresh")
+                            promotion_page.reset_page();
+                            promotion_page.changeset_tree.rerender_content();
                         }
                         promotion_page.current_changeset.timestamp = data.timestamp;
                     }
-                    promotion_page.update_dep_size();
+                    //promotion_page.update_dep_size();
                     promotion_page.start_timer();
                 },
                 function() { //Got an error, revert
@@ -95,52 +88,28 @@ var promotion_page = {
             adding = false;
         }
 
+        var button = promotion_page.find_button(id, type);
         if (adding) {
+            button.html(i18n.remove).addClass("remove_" + type).removeClass('add_'+type);
             changeset.add_item(type, id, display, product_id);
-            //promotion_page.add_changeset_page_item(id, type, display);
-            //promotion_page.sort_changeset(type);
         }
         else {
+            button.html(i18n.add).addClass("add_" + type).removeClass('remove_' + type);
             changeset.remove_item(type, id, product_id);
-            //promotion_page.remove_changeset_page_item(id, type, display);
         }
+        promotion_page.changeset_tree.rerender_content();
+        promotion_page.sort_changeset();
         promotion_page.changeset_queue.push([type, id, display, adding, product_id]);
     },
-    //Resets the changeset list from a given changeset hash
-    reset_changeset: function(data) {
-        //Reset the left panel buttons to 'add', they will get flipped to remove if needed
-        $("a[class~=content_add_remove][data-id=" + id + "]").addClass("add_" + type).removeClass('remove_' + type);
-
-        jQuery.each(promotion_page.types, function(index, type){
-            $('#changeset-items-' + type).html("");
-           jQuery.each(data[type], function(index, item) {
-                promotion_page.add_changeset_page_item(item.id, type, item.name)
-            });
+    sort_changeset: function() {
+        return false;
+        console.log("SORTING");
+        $(".right_tree .will_have_content").find("li").sortElements(function(a,b){
+            if (a && b) {
+                return $(a).children("span").first().html().toUpperCase() >
+                        $(b).children("span").first().html().toUpperCase() ? 1 : -1;
+            }
         });
-    },
-    add_changeset_page_item: function(id,type, display) {
-        var button = promotion_page.find_button(id, type);
-        button.html('Remove').addClass("remove_" + type).removeClass('add_'+type);
-        $('#changeset-items-' + type).append(promotion_page.new_changeset_button(id, type, display));
-    },
-    remove_changeset_page_item: function(id, type, display) {
-        var button = promotion_page.find_button(id, type);
-        button.html('Add').addClass("add_" + type).removeClass('remove_' + type);
-        promotion_page.find_changeset_button(id, type).remove();
-    },
-    sort_changeset: function(type) {
-        $(".right_tree").find("li").sortElements(function(a,b){
-            return $(a).children().first().html() > $(b).children().first().html() ? 1 : -1;
-           //return $(a).attr("data-display_name") > $(b).attr("data-display_name") ? 1 : -1;
-        });
-    },
-
-    ids_in_changeset: function(type) {
-        var ids = {};
-        $("a[class~=changeset_remove][data-type=" + type + "]").each(function() {
-            ids[$(this).attr("data-id")] = $(this).attr("data-display_name") || "";
-        });
-        return ids;
     },
     show_dependencies: function() {
         var dialog = $('#dialog_content');
@@ -167,21 +136,35 @@ var promotion_page = {
             promotion_page.reset_page();
             $("#delete_changeset").addClass("disabled");
         }
-        else if (id[0] === "changeset" || promotion_page.current_changeset === undefined) {
-            $.ajax({
+        else if (promotion_page.current_changeset === undefined ||
+                (id[0] === "changeset" && id[1] !==  promotion_page.current_changeset.id)) {
+            promotion_page.fetch_changeset(id[1]);
+            /*$.ajax({
                 type: "GET",
                 url: "/changesets/" + id[1] + "/object/",
                 cache: false,
-                async: false,
                 success: function(data) {
                     promotion_page.current_changeset = changeset_obj(data);
                     promotion_page.reset_page();
                     $("#delete_changeset").removeClass("disabled");
-                    return promotionsRenderer.renderPromotionsContent(hash_id);
                 }
-            });
+            });*/
         }
-        return promotionsRenderer.renderPromotionsContent(hash_id);
+        else {
+            promotion_page.reset_page();
+        }
+    },
+    fetch_changeset: function(changeset_id, synchronous) {
+            $.ajax({
+                type: "GET",
+                url: "/changesets/" + changeset_id + "/object/",
+                cache: false,
+                async: !synchronous,
+                success: function(data) {
+                    promotion_page.current_changeset = changeset_obj(data);
+                    promotion_page.reset_page();
+                    $("#delete_changeset").removeClass("disabled");
+                }});
     },
     set_current_product: function(hash_id) {
         var id = hash_id.split("_");
@@ -208,9 +191,11 @@ var promotion_page = {
                 jQuery.each(promotion_page.subtypes, function(index, type){
                     var buttons = $('#list').find("a[class~=content_add_remove][data-type=" + type + "]");
                     buttons.html(i18n.add).removeClass('remove_' + type).addClass("add_" + type).removeClass("disabled");
-                    jQuery.each(product[type], function(index, item) {
-                        $("a[class~=content_add_remove][data-type=" + type+ "][data-id=" + item.id +"]").html(i18n.remove).removeClass('add_' + type).addClass("remove_" + type);
-                    });
+                    if (product) {
+                        jQuery.each(product[type], function(index, item) {
+                            $("a[class~=content_add_remove][data-type=" + type+ "][data-id=" + item.id +"]").html(i18n.remove).removeClass('add_' + type).addClass("remove_" + type);
+                        });
+                    }
                 });
             }
             else {
@@ -220,12 +205,6 @@ var promotion_page = {
                 });
             }
         }
-    },
-    /*
-     *
-     */
-    reset_changeset: function() {
-
     },
     checkUsersInResponse: function(users) {
       //TODO: update the div for which users are editing
@@ -263,9 +242,9 @@ var changeset_obj = function(data_struct) {
         },
         remove_item:function(type, id, product_id) {
             if (data_struct[product_id] !== undefined) {
-                jQuery.each(data_struct[product_id][type], function(index,item) {
+                $.each(data_struct[product_id][type], function(index,item) {
                     if (item.id === id) {
-                        data_struct[product_id][type].splice(index,index+1);
+                        data_struct[product_id][type].splice(index,1);
                         return false;//Exit out of the loop
                     }
                 });
@@ -293,15 +272,7 @@ $(document).ready(function() {
       promotion_page.modify_changeset(id, display, type, prod_id);
     });
     
-    
-    $(".changeset_remove").live('click', function() {
-    
-      var id = $(this).attr('data-id');
-      var display = $(this).attr('data-display_name');
-      var type = $(this).attr('data-type');
-      
-      promotion_page.modify_changeset(id, display, type);
-    });     
+       
 
     //initiate the left tree
   	var contentTree = sliding_tree("content_tree", {breadcrumb:content_breadcrumb,
@@ -309,19 +280,24 @@ $(document).ready(function() {
                                       bbq_tag:"content",
                                       tab_change_cb: promotion_page.set_current_product});
 
-  	var changesetTree = sliding_tree("changeset_tree", {breadcrumb:changeset_breadcrumb,
+  	promotion_page.changeset_tree = sliding_tree("changeset_tree", {breadcrumb:changeset_breadcrumb,
                                       default_tab:"changesets",
                                       bbq_tag:"changeset",
-                                      render_cb: promotion_page.set_current_changeset,
-                                      tab_change_cb: promotion_page.sort_changeset});
-  	
+                                      //render_cb: promotion_page.set_current_changeset,
+                                      render_cb: promotionsRenderer.renderPromotionsContent,
+                                      tab_change_cb: function(hash_id) {
+                                          promotion_page.set_current_changeset(hash_id);
+                                          promotion_page.sort_changeset();
+                                      }});
+
+
 
     $('#depend_list').live('click', promotion_page.show_dependencies);
 
     //set function for env selection callback
     env_select.click_callback = promotion_page.env_change;
 
-    registerEvents(changesetTree);
+    registerEvents(promotion_page.changeset_tree);
 
     $(document).ajaxComplete(function(event, xhr, options){
         var userHeader = xhr.getResponseHeader('X-ChangesetUsers');
@@ -380,10 +356,19 @@ var promotionsRenderer = (function($){
                 return renderChangesets();
             }
             else if (hash.split("_")[0] === 'packages-cs'){
+                var changeset_id = hash.split("_")[1];
                 var product_id = hash.split("_")[2]; 
-                return templateLibrary.listItems("package", product_id);
-                
-
+                return templateLibrary.listItems("package", product_id, changeset_id);
+            }
+            else if (hash.split("_")[0] === 'errata-cs'){
+                var changeset_id = hash.split("_")[1];
+                var product_id = hash.split("_")[2];
+                return templateLibrary.listItems("errata", product_id, changeset_id);
+            }
+            else if (hash.split("_")[0] === 'repos-cs'){
+                var changeset_id = hash.split("_")[1];
+                var product_id = hash.split("_")[2];
+                return templateLibrary.listItems("repo", product_id, changeset_id);
             }
         }
 
@@ -411,10 +396,9 @@ var templateLibrary = (function(){
             html += '</ul>';
             return html;
         },
-        listItems = function(type, product_id) {
+        listItems = function(type, product_id, changeset_id) {
             if (promotion_page.current_changeset === undefined) {
-                console.log("No current");
-                return false;
+                promotion_page.fetch_changeset(changeset_id, true);
             }
 
             var html = '<ul>';
@@ -426,8 +410,10 @@ var templateLibrary = (function(){
             return html;
         },
         listItem = function(id, name, type, product_id) {
-            return '<li>' + '<div class="slide_link"' + 'data-type="' + type + '" data-product_id="' + product_id
-                    + '" data-id="' + id + '">'  + name + '</div></li>';
+            var anchor = '<a ' + 'class="fl content_add_remove remove_' + type + ' + button"'
+                + 'data-type="' + type + '" data-product_id="' + product_id +  '" data-id="' + id + '">';
+            anchor += i18n.remove + "</a>";
+            return '<li>' + anchor + '<span class="item">'  + name + '</span></li>';
 
         }
 
