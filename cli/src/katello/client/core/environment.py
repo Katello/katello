@@ -37,9 +37,6 @@ class EnvironmentAction(Action):
         
         
     def get_prior_id(self, orgName, priorName):
-        if priorName == None:
-            return None
-           
         prior = get_environment(orgName, priorName)
         if prior != None:
             return prior["id"]
@@ -176,7 +173,10 @@ class Update(EnvironmentAction):
         
         env = get_environment(orgName, envName)
         if env != None:
-            priorId = self.get_prior_id(orgName, priorName)
+            if priorName != None:
+              priorId = self.get_prior_id(orgName, priorName)
+            else:
+              priorId = None
             env = self.api.update(orgName, env["id"], newName, description, priorId)
             print _("Successfully updated environment [ %s ]") % env['name']
 

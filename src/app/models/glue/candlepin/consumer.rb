@@ -58,17 +58,12 @@ module Glue::Candlepin::Consumer
 
     def set_consumer
       Rails.logger.info "Creating a consumer in candlepin: #{name}"
-      consumer_json = Candlepin::Consumer.create(self.name, self.cp_type, self.facts)
+      consumer_json = Candlepin::Consumer.create(self.organization.name, self.name, self.cp_type, self.facts)
 
       self.uuid = consumer_json[:uuid]
       convert_from_cp_fields(consumer_json).each do |k,v|
         instance_variable_set("@#{k}", v) if respond_to?("#{k}=")
       end
-
-      # TODO: this will have to change once cp disambiguates owners explicitly (for example, based on url)
-      organization = Organization.first(:conditions => {:cp_key => consumer_json[:owner][:key]})
-      raise _("Couldn't find organization '#{consumer_json[:owner][:key]}'") if organization.nil?
-      self.organization = organization
     rescue => e
       Rails.logger.error "Failed to create candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
