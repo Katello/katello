@@ -11,7 +11,8 @@
   var changeset_breadcrumb = $.parseJSON('#{escape_javascript(generate_cs_breadcrumb())}');
   localize({
     "add": '#{_('Add')}',
-    "remove": '#{_('Remove')}'
+    "remove": '#{_('Remove')}',
+    "loading": "#{_('Loading Changeset')}"
   });
 
 
@@ -43,6 +44,10 @@
           %a.fr{:href=>"", :class=>"search_button"}
             #{_('Search')}
           #cslist.list.sliding_list.shadowbox.outlined{"data-page_size"=>current_user.page_size}
+            #changeset_loading.slider
+              .text
+                = _("Loading Changeset")
+                = image_tag ("spinner.gif")
             .slider_one.has_content.slider
             .slider_two.no_content.slider
         - else
