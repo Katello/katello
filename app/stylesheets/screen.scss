@@ -560,6 +560,9 @@ $repo_color: #4A9FB1;
 .changeset_errata { color: $errata_color; }
 .changeset_repo {color: $repo_color;}
 
+
+
+
 .breadcrumb { 
     list-style: none; 
     overflow: hidden; 
@@ -644,6 +647,28 @@ $repo_color: #4A9FB1;
   &:after {
     border-left-color: $kselected !important;
   }
+}
+
+
+#changeset_loading {
+    position: absolute;
+    opacity: .8;
+    background-color: white;
+    z-index: -1;
+    width: 440px; 
+    height: 415px;
+    .text {
+        //vertically center
+        height: 10em;
+        margin-top:-5em;
+        top: 50%;
+        width: 50%;
+        text-align: center; 
+       // display:inline;
+        position:relative;
+        margin-left:auto;
+        margin-right:auto;
+    }
 }
 
 #changeset_tree {
