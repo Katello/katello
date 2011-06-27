@@ -136,35 +136,32 @@ var promotion_page = {
             promotion_page.reset_page();
             $("#delete_changeset").addClass("disabled");
         }
-        else if (promotion_page.current_changeset === undefined ||
-                (id[0] === "changeset" && id[1] !==  promotion_page.current_changeset.id)) {
-            promotion_page.fetch_changeset(id[1]);
-            /*$.ajax({
-                type: "GET",
-                url: "/changesets/" + id[1] + "/object/",
-                cache: false,
-                success: function(data) {
-                    promotion_page.current_changeset = changeset_obj(data);
-                    promotion_page.reset_page();
-                    $("#delete_changeset").removeClass("disabled");
-                }
-            });*/
+        else if (promotion_page.current_changeset === undefined) {
+            
+        }
+        else if (id[0] === "changeset" && id[1] !==  promotion_page.current_changeset.id) {
+           promotion_page.current_changeset = undefined;
         }
         else {
             promotion_page.reset_page();
         }
     },
     fetch_changeset: function(changeset_id, synchronous) {
+            console.log("FETCHING");
+          //  $("#changeset_loading").css("z-index", 300);
+            
             $.ajax({
                 type: "GET",
                 url: "/changesets/" + changeset_id + "/object/",
                 cache: false,
                 async: !synchronous,
                 success: function(data) {
+                   // $("#changeset_loading").css("z-index", -1);
                     promotion_page.current_changeset = changeset_obj(data);
                     promotion_page.reset_page();
                     $("#delete_changeset").removeClass("disabled");
                 }});
+        console.log("FINISHED FETCHING");
     },
     set_current_product: function(hash_id) {
         var id = hash_id.split("_");
@@ -285,8 +282,9 @@ $(document).ready(function() {
                                       bbq_tag:"changeset",
                                       //render_cb: promotion_page.set_current_changeset,
                                       render_cb: promotionsRenderer.renderPromotionsContent,
+                                      prerender_cb: promotion_page.set_current_changeset,
                                       tab_change_cb: function(hash_id) {
-                                          promotion_page.set_current_changeset(hash_id);
+                                          //promotion_page.set_current_changeset(hash_id);
                                           promotion_page.sort_changeset();
                                       }});
 
@@ -355,20 +353,22 @@ var promotionsRenderer = (function($){
             if( hash === 'changesets'){
                 return renderChangesets();
             }
-            else if (hash.split("_")[0] === 'packages-cs'){
+            else {
                 var changeset_id = hash.split("_")[1];
                 var product_id = hash.split("_")[2]; 
-                return templateLibrary.listItems("package", product_id, changeset_id);
-            }
-            else if (hash.split("_")[0] === 'errata-cs'){
-                var changeset_id = hash.split("_")[1];
-                var product_id = hash.split("_")[2];
-                return templateLibrary.listItems("errata", product_id, changeset_id);
-            }
-            else if (hash.split("_")[0] === 'repos-cs'){
-                var changeset_id = hash.split("_")[1];
-                var product_id = hash.split("_")[2];
-                return templateLibrary.listItems("repo", product_id, changeset_id);
+                if (promotion_page.current_changeset === undefined) {
+                    promotion_page.fetch_changeset(changeset_id, true);
+                }
+                
+                if (hash.split("_")[0] === 'packages-cs'){
+                    return templateLibrary.listItems("package", product_id, changeset_id);
+                }
+                else if (hash.split("_")[0] === 'errata-cs'){
+                    return templateLibrary.listItems("errata", product_id, changeset_id);
+                }
+                else if (hash.split("_")[0] === 'repos-cs'){
+                    return templateLibrary.listItems("repo", product_id, changeset_id);
+                }
             }
         }
 
@@ -397,10 +397,6 @@ var templateLibrary = (function(){
             return html;
         },
         listItems = function(type, product_id, changeset_id) {
-            if (promotion_page.current_changeset === undefined) {
-                promotion_page.fetch_changeset(changeset_id, true);
-            }
-
             var html = '<ul>';
             jQuery.each(promotion_page.current_changeset.products[product_id][type], function(index, item) {
                //for item names that mach item.name from search hash
