@@ -12,19 +12,16 @@
 
 var sliding_tree = function(id, options) {
 
-    //functions
-    var change_content = function(id) {
-        
+
+    var prerender = function(id) {
         settings.current_tab = id;
         settings.fetching = 0;
         reset_breadcrumb(id);
         var crumb = settings.breadcrumb[id];
-
         var newPanel = list.children('.no_content');
-        newPanel.addClass("will_have_content");
-
         var oldPanel = list.children('.has_content');
         oldPanel.removeClass("will_have_content");
+        newPanel.addClass("will_have_content");
 
         //If we aren't sliding, we only worry about 1 panel'
         if (!settings.direction) {
@@ -32,51 +29,24 @@ var sliding_tree = function(id, options) {
         }
 
         settings.prerender_cb(id);
-        inject_content(id, newPanel);
 
+        render(id, newPanel);
 
-        if (crumb.scrollable) {
-            list.addClass("ajaxScroll");
-            list.attr("data-scroll_url", crumb.url);
-        }
-        else {
-            list.removeClass("ajaxScroll");
-        }
-        
-        //If we have a direction, we need to slide
-        if(settings.direction) {
-            var leaving = settings.direction == "right"? "left" : "right";
-            //The old pane, we need to hide it away, remove the contents, and reset the classes
-            
-            oldPanel.hide("slide", {"direction":leaving}, 500, 
-                            function() {
-                               oldPanel.html("");
-                               oldPanel.removeClass("has_content");
-                               oldPanel.addClass("no_content");
-                           });
-            //the new pane, move it into view
-            setTimeout(function(){
-                        newPanel.effect("slide", {"direction":settings.direction}, 500, 
-                                    function() {
-                                       newPanel.removeClass("no_content");
-                                       newPanel.addClass("has_content");                              
-                                    });
-            }, 500);
-
-            settings.direction = undefined;
-        }
-        return false
     };
-    var inject_content = function (id, newPanel) {
+    var render = function (id, newPanel) {
         var crumb = settings.breadcrumb[id];
 
         if (crumb.client_render) {
-            newPanel.html(settings.render_cb(id));
-            settings.tab_change_cb(id);
+            settings.render_cb(id, function(html) {
+                    newPanel.html(html);
+                    settings.tab_change_cb(id);
+                    postrender(id);
+                });
         }
         else if (crumb.cache) { //If we are to use a cached copy, use it
             newPanel.html(crumb.content);
             settings.tab_change_cb(id);
+            postrender(id);
         }
         else { //Else fetch the data and place it in the new panel when we are done
                //  we set fetching to the id, so once its done we know whether to actually
@@ -87,11 +57,49 @@ var sliding_tree = function(id, options) {
                     newPanel.html(data);
                     settings.fetching = 0;
                     settings.tab_change_cb(id);
+
                 }
               });
+              postrender(id);
               newPanel.html("<img src='/images/spinner.gif' >");
         }
     };
+    var postrender = function(id) {
+        var crumb = settings.breadcrumb[id];
+        var newPanel = list.children('.no_content');
+        var oldPanel = list.children('.has_content');
+        if (crumb.scrollable) {
+            list.addClass("ajaxScroll");
+            list.attr("data-scroll_url", crumb.url);
+        }
+        else {
+            list.removeClass("ajaxScroll");
+        }
+
+        //If we have a direction, we need to slide
+        if(settings.direction) {
+            var leaving = settings.direction == "right"? "left" : "right";
+            //The old pane, we need to hide it away, remove the contents, and reset the classes
+
+            oldPanel.hide("slide", {"direction":leaving}, 500,
+                            function() {
+                               oldPanel.html("");
+                               oldPanel.removeClass("has_content");
+                               oldPanel.addClass("no_content");
+                           });
+            //the new pane, move it into view
+            setTimeout(function(){
+                        newPanel.effect("slide", {"direction":settings.direction}, 500,
+                                    function() {
+                                       newPanel.removeClass("no_content");
+                                       newPanel.addClass("has_content");
+                                    });
+            }, 500);
+
+            settings.direction = undefined;
+        }        
+    };
+
     var content_clicked = function() {
         var element = $(this);
         if(element.hasClass("slide_left")) {
@@ -126,7 +134,7 @@ var sliding_tree = function(id, options) {
     var hash_change = function() {
         var newContent = $.bbq.getState(settings.bbq_tag) || settings.default_tab;
         if (settings.current_tab != newContent) {
-            change_content(newContent);
+            prerender(newContent);
             reset_breadcrumb(newContent);
         }
     };
@@ -161,7 +169,7 @@ var sliding_tree = function(id, options) {
     return {
         render_content: render_content,
         rerender_content: function() {
-                inject_content($.bbq.getState(settings.bbq_tag), list.children('.has_content'));
+                render($.bbq.getState(settings.bbq_tag), list.children('.has_content'));
             }
 
     };  
