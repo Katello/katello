@@ -40,7 +40,7 @@
         - if @next_environment
           %h2 #{@next_environment.name + _(" Changesets")}
           .tree_breadcrumb.clickable.fl
-          %a.fr{:href=>"", :class=>".search_button"}
+          %a.fr{:href=>"", :class=>"search_button"}
             #{_('Search')}
           #cslist.list.sliding_list.shadowbox.outlined{"data-page_size"=>current_user.page_size}
             .slider_one.has_content.slider
