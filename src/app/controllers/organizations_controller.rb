@@ -30,7 +30,7 @@ class OrganizationsController < ApplicationController
       retain_search_history
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
-      @organizations = Organization.search_for ''w
+      @organizations = Organization.search_for ''
       render :index, :status => :bad_request and return
     end
   end
