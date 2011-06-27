@@ -24,7 +24,7 @@ class PriorValidator < ActiveModel::Validator
     # prior to have only one child (unless its the locker)
     has_no_prior = record.organization.environments.reject{|env| env == record || env.prior != record.prior || env.prior == env.organization.locker}.empty?
     record.errors[:prior] << _("environment cannot be a prior to a different environment") unless has_no_prior
-    
+
     # only locker can have prior=nil
     record.errors[:prior] << _("environment required") unless !record.prior.nil? || record.locker?
   end
@@ -62,11 +62,12 @@ class KPEnvironment < ActiveRecord::Base
   has_and_belongs_to_many :successors, {:class_name => "KPEnvironment", :foreign_key => "prior_id",
     :join_table => "environment_priors", :association_foreign_key => :environment_id, :readonly => true}
   has_and_belongs_to_many :products, { :uniq=>true }
+  has_many :system_templates, :class_name => "SystemTemplate"
 
   has_many :working_changesets, :conditions => ["state = '#{Changeset::NEW}' OR state = '#{Changeset::REVIEW}'"], :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
-  
+
 
   after_create :create_changeset
 
@@ -76,7 +77,7 @@ class KPEnvironment < ActiveRecord::Base
   validates :description, :katello_description_format => true
   validates_with PriorValidator
   validates_with PathDescendentsValidator
-  
+
   def locker?
     self.locker
   end
@@ -113,7 +114,7 @@ class KPEnvironment < ActiveRecord::Base
   #  and then give me that entire path
   def full_path
     p = self
-    until p.prior.locker 
+    until p.prior.locker
       p = p.prior
     end
     p.path

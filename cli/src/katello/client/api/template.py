@@ -53,12 +53,14 @@ class TemplateAPI(KatelloAPI):
         return self.server.POST(path, tplData, multipart=True)[1]
         
         
-    def create(self, envId, name, description):
+    def create(self, envId, name, description, parentId):
         tplData = {
-            "template": {
-                "name": name,
-                "description": description
-            },
+            "name": name,
+            "description": description
+         }
+        tplData = self.update_dict(tplData, "parent_id", parentId)
+        tplData = {
+            "template": tplData,
             "environment_id": envId
         }
         
@@ -66,11 +68,12 @@ class TemplateAPI(KatelloAPI):
         return self.server.POST(path, tplData)[1]
         
         
-    def update(self, tplId, newName, description=None):
+    def update(self, tplId, newName, description, parentId):
 
         tplData = {}
         tplData = self.update_dict(tplData, "name", newName)
         tplData = self.update_dict(tplData, "description", description)
+        tplData = self.update_dict(tplData, "parent_id", parentId)
 
         tplData = {
             "template": tplData

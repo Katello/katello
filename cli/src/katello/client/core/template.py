@@ -39,6 +39,12 @@ class TemplateAction(Action):
         self.api = TemplateAPI() 
 
 
+    def get_parent_id(self, orgName, envName, parentName):
+        parent = get_template(orgName, envName, parentName)
+        if parent != None:
+            return parent["id"]
+        return None
+
 # ==============================================================================
 class List(TemplateAction):
   
@@ -57,6 +63,7 @@ class List(TemplateAction):
         self.printer.addColumn('name')
         self.printer.addColumn('description', multiline=True)
         self.printer.addColumn('environment_id')
+        self.printer.addColumn('parent_id')
 
         self.printer.printHeader(_("Template List"))
         self.printer.printItems(templates)
@@ -98,6 +105,7 @@ class Info(TemplateAction):
         self.printer.addColumn('name')
         self.printer.addColumn('description', multiline=True)
         self.printer.addColumn('environment_id')
+        self.printer.addColumn('parent_id')
         self.printer.addColumn('errata', multiline=True, show_in_grep=False)
         self.printer.addColumn('products', multiline=True, show_in_grep=False)
         self.printer.addColumn('packages', multiline=True, show_in_grep=False)
@@ -158,6 +166,8 @@ class Create(TemplateAction):
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
                                help=_("template name (required)"))
+        self.parser.add_option('--parent', dest='parent',
+                               help=_("name of the parent template"))
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
@@ -176,11 +186,17 @@ class Create(TemplateAction):
         desc    = self.get_option('description')
         orgName = self.get_option('org')
         envName = self.get_option('env')
-    
+        parentName = self.get_option('parent')
+        
             
         env = get_environment(orgName, envName)
         if env != None:
-            template = self.api.create(env["id"], name, desc)
+            if parentName != None:
+              parentId = self.get_parent_id(orgName, env['name'] ,parentName)
+            else:
+              parentId = None
+              
+            template = self.api.create(env["id"], name, desc, parentId)
             if is_valid_record(template):
                 print _("Successfully created template [ %s ]") % template['name']
             else:
@@ -197,6 +213,8 @@ class Update(TemplateAction):
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
                                help=_("template name (required)"))
+        self.parser.add_option('--parent', dest='parent',
+                               help=_("name of the parent template"))
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
@@ -216,11 +234,16 @@ class Update(TemplateAction):
         envName = self.get_option('env')
         newName = self.get_option('new_name')
         desc    = self.get_option('description')
+        parentName = self.get_option('parent')
         
 
         template = get_template(orgName, envName, tplName)     
         if template != None:
-            self.api.update(template["id"], newName, desc)
+            if parentName != None:
+              parentId = self.get_parent_id(orgName, envName, parentName)
+            else:
+              parentId = None
+            self.api.update(template["id"], newName, desc, parentId)
             print _("Successfully updated template [ %s ]") % template['name']
           
         return os.EX_OK
