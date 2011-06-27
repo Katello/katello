@@ -21,7 +21,7 @@ describe EnvironmentsController do
     NEW_ENV_NAME = "another_environment_name"
     
     ENVIRONMENT = {:id => 2, :name => ENV_NAME, :description => nil, :prior => nil, :path => []}
-    LOCKER = {:id => 1, :name => "locker", :description => nil, :prior => nil, :path => []}
+    LOCKER = {:id => 1, :name => "Locker", :description => nil, :prior => nil, :path => []}
     UPDATED_ENVIRONMENT = {:id => 3, :name => NEW_ENV_NAME, :description => nil, :prior => nil, :path => []}
     EMPTY_ENVIRONMENT = {:name => "", :description => "", :prior => nil}
     
