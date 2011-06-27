@@ -70,15 +70,15 @@ var sliding_tree = function(id, options) {
                                oldPanel.html("");
                                oldPanel.removeClass("has_content");
                                oldPanel.addClass("no_content");
+                               //oldPanel.css({"position": "relative"})
                            });
             //the new pane, move it into view
-            setTimeout(function(){
-                        newPanel.effect("slide", {"direction":settings.direction}, 500, 
-                                    function() {
-                                       newPanel.removeClass("no_content");
-                                       newPanel.addClass("has_content");                              
-                                    });
-            }, 500);
+            newPanel.effect("slide", {"direction":settings.direction}, 500, 
+                                function() {
+                                   newPanel.removeClass("no_content");
+                                   newPanel.addClass("has_content");
+                                   //newPanel.css({"position": "relative"})                              
+                                });
 
             settings.direction = undefined;
         }
