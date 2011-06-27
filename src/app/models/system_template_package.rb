@@ -10,25 +10,27 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class TemplateErratum < ActiveRecord::Base
+class SystemTemplatePackage < ActiveRecord::Base
   include Authorization
 
-  belongs_to :system_template, :inverse_of => :errata
+  belongs_to :system_template, :inverse_of => :packages
+  validates_uniqueness_of :package_name, :scope =>  :system_template_id
 
-  def to_erratum
+  def to_package
+
     self.system_template.products.each do |product|
-      product.repos(self.system_template.environment).each do |repo|
+       product.repos(self.system_template.environment).each do |repo|
         #search for errata in all repos in a product
-        idx = repo.errata.index do |e| e.id == erratum_id end
-        return repo.errata[idx] if idx != nil
+        idx = repo.packages.index do |p| p.name == self.package_name end
+        return repo.packages[idx] if idx != nil
 
       end
     end
     nil
   end
 
-  # returns list of virtual permission tags for the current user
-  #def self.list_tags
-  #  select('id,display_name').all.collect { |m| VirtualTag.new(m.id, m.display_name) }
-  #end
+  def valid?(context = nil)
+    super and not self.to_package.nil?
+  end
+
 end
