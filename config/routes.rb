@@ -23,6 +23,9 @@ Src::Application.routes.draw do
   match 'notices' => 'notices#show', :via => :get
   match 'notices' => 'notices#destroy_all', :via => :delete
 
+  resources :subscriptions do
+  end
+
   resources :dashboard do
   end
   resources :content do
