@@ -43,7 +43,7 @@ class Organization < ActiveRecord::Base
   end
 
   def create_locker
-    self.locker = KPEnvironment.new(:name => "locker", :locker => true, :organization => self)
+    self.locker = KPEnvironment.new(:name => "Locker", :locker => true, :organization => self)
   end
 
   # returns list of virtual permission tags for the current user
