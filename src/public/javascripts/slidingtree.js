@@ -18,9 +18,13 @@ var sliding_tree = function(id, options) {
         settings.current_tab = id;
         settings.fetching = 0;
         reset_breadcrumb(id);
-        var url = settings.breadcrumb[id].url;
+        var crumb = settings.breadcrumb[id];
+
         var newPanel = list.children('.no_content');
+        newPanel.addClass("will_have_content");
+
         var oldPanel = list.children('.has_content');
+        oldPanel.removeClass("will_have_content");
 
         //If we aren't sliding, we only worry about 1 panel'
         if (!settings.direction) {
@@ -28,38 +32,17 @@ var sliding_tree = function(id, options) {
         }
 
         settings.prerender_cb(id);
+        inject_content(id, newPanel);
 
-        if (settings.breadcrumb[id].client_render) {
-            newPanel.html(settings.render_cb(id));
-            settings.tab_change_cb(id);
-        }
-        else if (settings.breadcrumb[id].cache) { //If we are to use a cached copy, use it
-            newPanel.html(settings.breadcrumb[id].content);
-            settings.tab_change_cb(id);
-        }
-        else { //Else fetch the data and place it in the new panel when we are done
-               //  we set fetching to the id, so once its done we know whether to actually
-               //  display the data, or throw it away.
-        settings.fetching = id;
-            $.get(url, function(data) {
-                if (settings.fetching == id) {
-                    newPanel.html(data);
-                    settings.fetching = 0;
-                    settings.tab_change_cb(id);
-                }
-              });
-              newPanel.html("<img src='/images/spinner.gif' >");
-        }
 
-        if (settings.breadcrumb[id].scrollable) {
+        if (crumb.scrollable) {
             list.addClass("ajaxScroll");
-            list.attr("data-scroll_url", url);
+            list.attr("data-scroll_url", crumb.url);
         }
         else {
             list.removeClass("ajaxScroll");
         }
-
-
+        
         //If we have a direction, we need to slide
         if(settings.direction) {
             var leaving = settings.direction == "right"? "left" : "right";
@@ -83,6 +66,31 @@ var sliding_tree = function(id, options) {
             settings.direction = undefined;
         }
         return false
+    };
+    var inject_content = function (id, newPanel) {
+        var crumb = settings.breadcrumb[id];
+
+        if (crumb.client_render) {
+            newPanel.html(settings.render_cb(id));
+            settings.tab_change_cb(id);
+        }
+        else if (crumb.cache) { //If we are to use a cached copy, use it
+            newPanel.html(crumb.content);
+            settings.tab_change_cb(id);
+        }
+        else { //Else fetch the data and place it in the new panel when we are done
+               //  we set fetching to the id, so once its done we know whether to actually
+               //  display the data, or throw it away.
+             settings.fetching = id;
+            $.get(crumb.url, function(data) {
+                if (settings.fetching == id) {
+                    newPanel.html(data);
+                    settings.fetching = 0;
+                    settings.tab_change_cb(id);
+                }
+              });
+              newPanel.html("<img src='/images/spinner.gif' >");
+        }
     };
     var content_clicked = function() {
         var element = $(this);
@@ -151,7 +159,11 @@ var sliding_tree = function(id, options) {
     container.find('.slide_link').live('click', content_clicked);
 
     return {
-        render_content: render_content
+        render_content: render_content,
+        rerender_content: function() {
+                inject_content($.bbq.getState(settings.bbq_tag), list.children('.has_content'));
+            }
+
     };  
     
 };

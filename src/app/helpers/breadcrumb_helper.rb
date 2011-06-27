@@ -27,10 +27,16 @@ module BreadcrumbHelper
         add_crumb_node!(bc, product_cs_bc_id(cs, product), "url", product.name, ['changesets', changeset_bc_id(cs)],
                       {:cache=>true, :content=>render(:partial=>"changesets/product", :locals=>{:product=>product, :changeset=>cs})})
         #packages
-        add_crumb_node!(bc, packages_cs_bc_id(cs, product), packages_changeset_path(cs, {:product_id => product.id}),  _("Packages"),
+        add_crumb_node!(bc, packages_cs_bc_id(cs, product), "",  _("Packages"),
                         ['changesets', changeset_bc_id(cs),product_cs_bc_id(cs, product)], {:client_render => true})
 
+        #errata
+        add_crumb_node!(bc, errata_cs_bc_id(cs, product), "",  _("Errata"),
+                        ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true})
 
+        #repos
+        add_crumb_node!(bc, repos_cs_bc_id(cs, product), "",  _("Repositories"),
+                        ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true})
 
 
       }
@@ -52,6 +58,14 @@ module BreadcrumbHelper
 
   def packages_cs_bc_id cs, product
     "packages-cs_#{cs.id}_#{product.id}" if cs
+  end
+
+  def errata_cs_bc_id cs, product
+    "errata-cs_#{cs.id}_#{product.id}" if cs
+  end
+
+  def repos_cs_bc_id cs, product
+    "repos-cs_#{cs.id}_#{product.id}" if cs
   end
 
 
