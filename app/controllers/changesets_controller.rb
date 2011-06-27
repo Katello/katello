@@ -158,7 +158,7 @@ class ChangesetsController < ApplicationController
   def destroy
     name = @changeset.name
     id = @changeset.id
-    @changeset.destroy
+    @changeset.destroyq
     notice _("Changeset '#{name}' was deleted.")
     render :text=>""
   end
@@ -170,9 +170,9 @@ class ChangesetsController < ApplicationController
       # remove user edit tracking for this changeset
       ChangesetUser.destroy_all(:changeset_id => @changeset.id) 
 
-      notice _("Promoted changeset to #{@environment.name} environment.")
+      notice _("Promoted changeset to #{@environment.name} environment")
     rescue Exception => e
-        errors  _("Failed to promote: #{e.to_s}")
+        errors  "Failed to promote: #{e.to_s}"
         logger.error $!, $!.backtrace.join("\n\t")
     end
 
