@@ -4,7 +4,8 @@ class CreateTemplates < ActiveRecord::Migration
       t.integer :revision
       t.string :name
       t.string :description
-      t.string :group_parameters_json
+      t.string :parameters_json
+      t.integer :parent_id
       t.references :environment, :null => false
       t.timestamps
     end
