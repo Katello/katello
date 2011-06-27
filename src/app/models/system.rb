@@ -17,6 +17,8 @@ class System < ActiveRecord::Base
   include Authorization
 
   belongs_to :organization, :inverse_of => :systems
+  belongs_to :environment, :inverse_of => :systems, :class_name => "KPEnvironment"
+
   validates :organization, :presence => true
   validates :name, :presence => true, :no_trailing_space => true
   validates :description, :katello_description_format => true

@@ -14,8 +14,8 @@ class Api::SystemsController < Api::ApiController
   respond_to :json
 
   before_filter :find_organization, :only => [:index]
-  before_filter :find_environment, :only => [:create, :index]
-  before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index]
+  before_filter :find_environment, :only => [:index]
+  before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates]
 
   def create
@@ -40,6 +40,7 @@ class Api::SystemsController < Api::ApiController
   end
 
   def index
+    (render :json => @environment.systems.to_json and return) unless @environment.nil?
     render :json => @organization.systems.to_json
   end
 
@@ -70,7 +71,7 @@ class Api::SystemsController < Api::ApiController
 
   def verify_presence_of_organization_or_environment
     return if @organization or @environment
-    render :text => _("Either organization id or environment id needs to be specified"), :status => 404 and return if @organization.nil?
+    render :text => _("Either organization id or environment id needs to be specified"), :status => 400 and return
   end
 
   def find_system
