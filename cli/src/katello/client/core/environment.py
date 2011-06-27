@@ -114,12 +114,13 @@ class Create(EnvironmentAction):
         self.parser.add_option('--name', dest='name',
                                help=_("environment name (required)"))
         self.parser.add_option('--prior', dest='prior',
-                               help=_("name of prior environment"))
+                               help=_("name of prior environment (required)"))
 
 
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
+        self.require_option('prior')
 
 
     def run(self):
