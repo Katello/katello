@@ -33,5 +33,8 @@ class SystemAPI(KatelloAPI):
     def systems_by_org(self, orgId):
         path = "/api/organizations/%s/systems" % orgId
         return self.server.GET(path)[1]
-
+        
+    def systems_by_env(self, orgId, envId):
+        path = "/api/environments/%s/systems" % envId
+        return self.server.GET(path)[1]
 

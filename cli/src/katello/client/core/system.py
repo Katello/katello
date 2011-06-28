@@ -44,18 +44,24 @@ class List(SystemAction):
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--environment', dest='environment', 
+                       help=_("environment name eg: development"))
 
     def check_options(self):
         self.require_option('org')
 
     def run(self):
         org_name = self.get_option('org')
+        env_name = self.get_option('environment')
 
         self.printer.addColumn('id')
         self.printer.addColumn('uuid')
         self.printer.addColumn('name')
 
-        systems = self.api.systems_by_org(org_name)
+        if not env_name:
+            systems = self.api.systems_by_org(org_name)
+        else:
+            systems = self.api.systems_by_env(org_name, env_name)
 
         self.printer.printHeader(_("Systems List For Org %s") % org_name)
         self.printer.printItems(systems)
