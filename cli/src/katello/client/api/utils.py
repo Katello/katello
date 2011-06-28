@@ -22,6 +22,7 @@ from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
 from katello.client.api.provider import ProviderAPI
 from katello.client.api.template import TemplateAPI
+from katello.client.core.utils import Spinner
 from pprint import pprint
 
 
@@ -54,9 +55,14 @@ def get_repo(orgName, prodName, repoName, envName=None):
     env  = get_environment(orgName, envName)
     prod = get_product(orgName, prodName)
     
-    if env == None or prod == None:
+    if env == None:
+        print _("Could not find environment [ %s ]") % envName
         return None
-  
+        
+    if prod == None:
+        print _("Could not find product [ %s ]") % prodName
+        return None
+        
     repos = repo_api.repos_by_org_env_product(orgName, env["id"], prod["cp_id"])
     for repo in repos:
         if repo["name"] == repoName:
@@ -80,6 +86,7 @@ def get_template(orgName, envName, tplName):
     
     env = get_environment(orgName, envName)
     if env == None:
+        print _("Could not find environment [ %s ]") % envName
         return None
         
     tpl = template_api.template_by_name(env["id"], tplName)

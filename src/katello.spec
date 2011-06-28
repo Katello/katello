@@ -36,19 +36,22 @@ Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
 Requires:       rubygem(gettext_i18n_rails)
 Requires:       rubygem(simple-navigation) >= 3.1.0
+Requires:       rubygem(sqlite3) 
+Requires:       rubygem(pg)
+Requires:       rubygem(scoped_search)
+
 Requires(pre):  shadow-utils
 Requires(preun): chkconfig
 Requires(preun): initscripts
 Requires(post): chkconfig
 Requires(postun): initscripts 
-Requires: rubygem(sqlite3) 
-Requires:       rubygem(pg)
-Requires:       rubygem(scoped_search)
+
 BuildRequires: 	coreutils findutils sed
 BuildRequires: 	rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
-BuildRequires:  rubygem(bundler)
+BuildRequires:  rubygem(haml)
+
 BuildArch: noarch
 
 %description
@@ -58,9 +61,13 @@ Provides a package for managing application lifecycle for Linux systems
 %setup -q
 
 %build
-#remove the Gemfile.lock and create new one
-rm -f Gemfile.lock
-bundle install --without "test development" --local
+#check the ruby syntax of all .rb files
+echo "Checking Ruby syntax"
+find -type f -name \*.rb | xargs -n1 ruby -c >/dev/null
+
+#check the syntax of all .haml files
+echo "Checking HAML syntax"
+find -type f -name \*.haml | xargs -n1 haml -c >/dev/null
 
 #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
 echo Generating gettext files...
@@ -77,6 +84,8 @@ install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
 install -d -m0750 %{buildroot}%{_localstatedir}/log/%{name}
 
 #copy the application to the target directory
+mkdir .bundle
+mv ./extras/bundle-config .bundle/config
 cp -R .bundle * %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)

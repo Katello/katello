@@ -5,8 +5,9 @@ mkdir -p reports/xref/{rails,cli,js} 2>/dev/null
 
 # generate routes in HTML
 pushd src
-TEXT=1 rake pretty_routes
-rake pretty_routes
+bundle install --path=vendor
+TEXT=1 bundle exec rake pretty_routes --trace
+bundle exec rake pretty_routes --trace
 mv routes.{html,txt} ../reports
 popd
 
