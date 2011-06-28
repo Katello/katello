@@ -46,6 +46,7 @@ var promotion_page = {
 
 
     push_changeset: function() {
+        console.log("Queue call");
         if(promotion_page.changeset_queue.length > 0 &&  promotion_page.current_changeset) {
             promotion_page.stop_timer();
             data = [];
@@ -56,15 +57,21 @@ var promotion_page = {
             //var changeset_id = promotion_page.current_changeset.id;
             promotion_page.current_changeset.update(data,
                 function(data) {
-                    if (promotion_page.changeset_queue.length === 0) {
+                    if (promotion_page.changeset_queue.length !== 0 && data.changeset) {
+                        //don't update timestamp
+                    }
+                    else {
                         if(data.changeset) {
                             promotion_page.current_changeset = changeset_obj(data.changeset);
-                            console.log("Resetting page - after refresh")
+                            console.log("Resetting page - after refresh");
                             promotion_page.reset_page();
                             promotion_page.changeset_tree.rerender_content();
                         }
-                        promotion_page.current_changeset.timestamp = data.timestamp;
+                        else {
+                            promotion_page.current_changeset.set_timestamp(data.timestamp);
+                        }
                     }
+
                     //promotion_page.update_dep_size();
                     promotion_page.start_timer();
                 },
