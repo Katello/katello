@@ -12,7 +12,7 @@ module BreadcrumbHelper
     bc = {}
 
 
-    add_crumb_node!(bc, "changesets", unpromoted_changesets_path(), _("Changesets"), [],
+    add_crumb_node!(bc, "changesets", "", _("Changesets"), [],
                     {:client_render => true})
 
 

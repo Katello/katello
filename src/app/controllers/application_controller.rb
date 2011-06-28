@@ -328,7 +328,7 @@ class ApplicationController < ActionController::Base
   #produce a simple datastructure of a changeset for the browser
   def simplify_changeset cs
 
-    to_ret = {:id=>cs.id.to_s, :timestamp =>cs.updated_at.to_i.to_s, :products=>{}}
+    to_ret = {:id=>cs.id.to_s, :timestamp =>cs.updated_at.to_i.to_s, :products=>{}, :is_new => cs.state == Changeset::NEW}
 
     cs.involved_products.each{|product|
       to_ret[:products][product.id] = {:id=> product.id, :name=>product.name, :provider=>product.provider.provider_type, 'package'=>[], 'errata'=>[], 'repo'=>[]}

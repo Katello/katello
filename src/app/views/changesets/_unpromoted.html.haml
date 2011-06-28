@@ -1,7 +1,0 @@
-%ul#cslist
-  -if @changesets.nil? or @changesets.empty?
-    #{_("No Changesets available.")}
-  -else
-    - @changesets.each do |cs|
-      = render :partial => "changesets/unpromoted_item", :locals=>{:cs=>cs}
-      
