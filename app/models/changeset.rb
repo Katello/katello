@@ -39,8 +39,7 @@ class Changeset < ActiveRecord::Base
 
 
   def generate_name
-    #self.name = I18n.l(DateTime.now, :format=>:long) if name.blank?
-    self.name = "XXX" if name.blank?
+    self.name = I18n.l(DateTime.now, :format=>:long) if name.blank?
   end
 
 
