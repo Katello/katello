@@ -20,7 +20,10 @@
     "errata": "#{_("Errata")}",
     "package": "#{_("Packages")}",
     "repo": "#{_("Repositories")}",
-    "viewing": '#{_('currently editing this changeset')}'
+    "viewing": '#{_('currently editing this changeset')}',
+    "review": '#{_("Review for Promotion")}',
+    "promote": '#{_("Promote Changeset to ")}',
+    "promote_confirm": '#{_("promote_confirm")}'
   });
 
 
@@ -62,8 +65,16 @@
         - else
           %h2 #{_("Changesets")}
           = _("An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment.")
-        %button#delete_changeset.button{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
+        #delete_changeset.button{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
           = _("Remove Changeset")
+
+
+        #changeset_action.button.fr
+        #review_cancel.button.fr{:style=>"display: none;"}
+          = _('Cancel Review')
+
+          
+
         
     #panel-frame
       #panel.panel.closed
