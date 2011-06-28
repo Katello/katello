@@ -19,11 +19,11 @@ describe ChangesetsController do
 
   module CSControllerTest
     ENV_NAME = "environment_name"
-    ENVIRONMENT = {:id => 1, :name => ENV_NAME, :description => nil, :prior => nil}
-    NEXT_ENVIRONMENT = {:id => 2, :name => "next_env_name", :description => nil, :prior => nil}
-    CHANGESET = {:id=>1, :promotion_date=>Time.now, :name=>"oldname",
-                 :packages=>[ChangesetPackage.new({:display_name=>"foo-1.2.3", :package_id=>"123"})],
-                 :errata=>[ChangesetErratum.new({:display_name=>"RHSA-2011-23-2", :id=>"123"})]}
+    ENVIRONMENT = {:name => ENV_NAME, :description => nil}
+    NEXT_ENVIRONMENT = {:name => "next_env_name", :description => nil}
+    CHANGESET = {:id=>1, :promotion_date=>Time.now, :name=>"oldname"}
+                 #:packages=>[ChangesetPackage.new({:display_name=>"foo-1.2.3", :package_id=>"123"})],
+                 #:errata=>[ChangesetErratum.new({:display_name=>"RHSA-2011-23-2", :id=>"123"})]}
     
   end
 
@@ -36,12 +36,13 @@ describe ChangesetsController do
     @org = new_test_org 
 
     CSControllerTest::ENVIRONMENT["organization"] = @org
-    CSControllerTest::ENVIRONMENT["prior"] = @org.locker
-    @env = KPEnvironment.create(CSControllerTest::ENVIRONMENT)
+    CSControllerTest::ENVIRONMENT["prior"] = @org.locker.id
+    @env = KPEnvironment.create!(CSControllerTest::ENVIRONMENT)
     CSControllerTest::NEXT_ENVIRONMENT["organization"] = @org
-    @next_env = KPEnvironment.create(CSControllerTest::NEXT_ENVIRONMENT)
+    @next_env = KPEnvironment.new(CSControllerTest::NEXT_ENVIRONMENT)
     @next_env.prior = @env;
     @next_env.save!
+    
     CSControllerTest::CHANGESET["environment_id"] = @env.id
   end
 
