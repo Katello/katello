@@ -121,7 +121,6 @@ class ChangesetsController < ApplicationController
     end
 
     if params.has_key? :data
-      debugger
       params[:data].each do |item|
         adding = item["adding"]
         type = item["type"]
