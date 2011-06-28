@@ -184,15 +184,19 @@ var promotion_page = {
         if (promotion_page.current_changeset) {
             if (promotion_page.current_product) {
                 var product = promotion_page.current_changeset.products[promotion_page.current_product];
-                jQuery.each(promotion_page.subtypes, function(index, type){
-                    var buttons = $('#list').find("a[class~=content_add_remove][data-type=" + type + "]");
-                    buttons.html(i18n.add).removeClass('remove_' + type).addClass("add_" + type).removeClass("disabled");
-                    if (product) {
-                        jQuery.each(product[type], function(index, item) {
-                            $("a[class~=content_add_remove][data-type=" + type+ "][data-id=" + item.id +"]").html(i18n.remove).removeClass('add_' + type).addClass("remove_" + type);
-                        });
-                    }
-                });
+                if( product.all ){
+                    promotion_page.disable_all();
+                } else {
+                    jQuery.each(promotion_page.subtypes, function(index, type){
+                        var buttons = $('#list').find("a[class~=content_add_remove][data-type=" + type + "]");
+                        buttons.html(i18n.add).removeClass('remove_' + type).addClass("add_" + type).removeClass("disabled");
+                        if (product) {
+                            jQuery.each(product[type], function(index, item) {
+                                $("a[class~=content_add_remove][data-type=" + type+ "][data-id=" + item.id +"]").html(i18n.remove).removeClass('add_' + type).addClass("remove_" + type);
+                            });
+                        }
+                    });
+                }
             } else {
                 var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
                 buttons.removeClass('disabled');
@@ -203,11 +207,14 @@ var promotion_page = {
                 });
             }
         } else {
-            jQuery.each(promotion_page.types, function(index, type){
-                var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
-                buttons.addClass('disabled').html(i18n.add);
-            });
+            promotion_page.disable_all();
         }
+    },
+    disable_all: function(){
+        jQuery.each(promotion_page.types, function(index, type){
+            var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
+            buttons.addClass('disabled').html(i18n.add);
+        });        
     },
     checkUsersInResponse: function(users) {
       //TODO: update the div for which users are editing

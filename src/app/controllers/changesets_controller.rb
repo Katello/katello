@@ -158,7 +158,7 @@ class ChangesetsController < ApplicationController
   def destroy
     name = @changeset.name
     id = @changeset.id
-    @changeset.destroyq
+    @changeset.destroy
     notice _("Changeset '#{name}' was deleted.")
     render :text=>""
   end
