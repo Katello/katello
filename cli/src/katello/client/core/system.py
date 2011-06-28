@@ -60,10 +60,11 @@ class List(SystemAction):
 
         if not env_name:
             systems = self.api.systems_by_org(org_name)
+            self.printer.printHeader(_("Systems List For Org %s") % org_name)            
         else:
             systems = self.api.systems_by_env(org_name, env_name)
+            self.printer.printHeader(_("Systems List For Environment %s in Org %s") % (env_name, org_name))            
 
-        self.printer.printHeader(_("Systems List For Org %s") % org_name)
         self.printer.printItems(systems)
 
         return os.EX_OK
