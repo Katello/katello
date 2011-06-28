@@ -20,7 +20,7 @@
     "errata": "#{_("Errata")}",
     "package": "#{_("Packages")}",
     "repo": "#{_("Repositories")}",
-    "viewing": '#{_('viewing')}'
+    "viewing": '#{_('currently editing this changeset')}'
   });
 
 
@@ -58,8 +58,7 @@
                 = image_tag ("spinner.gif")
             .slider_one.has_content.slider
             .slider_two.no_content.slider
-            #changeset_users 
-              = @changeset_users.join(", ")
+          #changeset_users 
         - else
           %h2 #{_("Changesets")}
           = _("An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment.")
