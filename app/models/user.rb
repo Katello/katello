@@ -22,6 +22,8 @@ class User < ActiveRecord::Base
   has_many :notices, :through => :user_notices
   has_many :search_favorites, :dependent => :destroy
   has_many :search_histories, :dependent => :destroy
+  has_and_belongs_to_many :organization
+
 
   validates :username, :uniqueness => true, :presence => true, :username => true
   validate :own_role_included_in_roles

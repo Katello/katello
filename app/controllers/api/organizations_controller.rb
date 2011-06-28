@@ -46,6 +46,14 @@ class Api::OrganizationsController < Api::ApiController
     render :text => _("Deleted organization '#{params[:id]}'"), :status => 200
   end
 
+  def list_owners
+    # we only need key and displayName
+    @user = User.find_by_username(params[:username])
+    render :text => _("Couldn't find user '#{params[:username]}'"), :status => 404 and return if @user.nil?
+    @owners = @user.organization.map {|o| {:key => o.cp_key, :displayName => o.name} }
+    render :json => @owners.to_json
+  end
+
   def find_organization
     @organization = Organization.first(:conditions => {:cp_key => params[:id].tr(' ', '_')})
     render :text => _("Couldn't find organization '#{params[:id]}'"), :status => 404 and return if @organization.nil?
