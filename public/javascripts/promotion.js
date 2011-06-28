@@ -91,7 +91,13 @@ var promotion_page = {
         var button = promotion_page.find_button(id, type);
         if (adding) {
             button.html(i18n.remove).addClass("remove_" + type).removeClass('add_'+type);
-            changeset.add_item(type, id, display, product_id);
+            if( type !== 'product'){
+                product_name = content_breadcrumb['details_' + product_id].name;
+                if( changeset.productCount() === 0 ){
+                    promotion_page.add_product_breadcrumbs(changeset.id, product_id, product_name);
+                }
+            }
+            changeset.add_item(type, id, display, product_id, product_name);
         }
         else {
             button.html(i18n.add).addClass("add_" + type).removeClass('remove_' + type);
@@ -223,6 +229,37 @@ var promotion_page = {
       }
       $('#changeset_users').html(msg);
       return;
+    },
+    add_product_breadcrumbs: function(changeset_id, product_id, product_name){
+        var productBC = 'product-cs_' + changeset_id + '_' + product_id;
+        changeset_breadcrumb[productBC] = {
+            cache: null,
+            client_render: true,
+            name: product_name,
+            trail: ['changesets', 'changeset_8'],
+            url: 'url'
+        }
+        changeset_breadcrumb['package-cs_' + changeset_id + '_' + product_id] = {
+            cache: null,
+            client_render: true,
+            name: "Packages",
+            trail: ['changesets', 'changeset_8', productBC],
+            url: ''
+        }
+        changeset_breadcrumb['errata-cs_' + changeset_id + '_' + product_id] = {
+            cache: null,
+            client_render: true,
+            name: "Errata",
+            trail: ['changesets', 'changeset_8', productBC],
+            url: ''
+        }
+        changeset_breadcrumb['repo-cs_' + changeset_id + '_' + product_id] = {
+            cache: null,
+            client_render: true,
+            name: "Repositories",
+            trail: ['changesets', 'changeset_8', productBC],
+            url: ''
+        }
     }
 };
 
@@ -237,6 +274,16 @@ var changeset_obj = function(data_struct) {
         products: products,
         set_timestamp:function(ts) { timestamp = ts},
         timestamp: function(){return timestamp},
+        productCount: function(){
+            var count = 0;
+            
+            for( item in products ){
+                if( products.hasOwnProperty(item) ){
+                    count += 1;
+                }
+            }
+            return count;
+        },
         has_item: function(type, id, product_id) {
             var found = undefined;
             if( type === 'product'){
@@ -254,12 +301,12 @@ var changeset_obj = function(data_struct) {
             }
             return found !== undefined;
         },
-        add_item:function (type, id, display_name, product_id) {
+        add_item:function (type, id, display_name, product_id, product_name) {
             if( type === 'product' ){
                 products[id] = {'name': display_name, 'package':[], 'errata':[], 'repo':[], 'all': true}
             } else { 
                 if ( products[product_id] === undefined ) {
-                    products[product_id] = {'package':[], 'errata':[], 'repo':[]}
+                    products[product_id] = {'name': product_name, 'package':[], 'errata':[], 'repo':[]}
                 }
                 products[product_id][type].push({name:display_name, id:id})
             } 
