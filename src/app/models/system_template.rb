@@ -26,7 +26,7 @@ class TemplateContentValidator < ActiveModel::Validator
       record.errors[:packages] << _("Package '#{p.package_name}' has doesn't belong to any product in this template") if not p.valid?
     end
     for e in record.errata
-      record.errors[:errata] << _("Erratum '#{p.erratum_id}' has doesn't belong to any product in this template") if not e.valid?
+      record.errors[:errata] << _("Erratum '#{e.erratum_id}' has doesn't belong to any product in this template") if not e.valid?
     end
   end
 end
@@ -170,10 +170,29 @@ class SystemTemplate < ActiveRecord::Base
   def promote
     #return if there id nowhere to promote
     return if self.environment.successor.nil?
+    from_env = self.environment
+    to_env   = self.environment.successor
 
-    #promote parents
-    for template in self.get_inheritance_chain
-      template.promote
+    #collect all parent templates into one changeset
+    @changeset = Changeset.create!(:environment => from_env)
+    for tpl in self.get_inheritance_chain
+
+      @changeset.products << tpl.products
+      @changeset.errata   << changeset_errata(tpl.errata)
+      @changeset.packages << changeset_packages(tpl.packages)
+    end
+    @changeset.promote
+
+    for tpl in self.get_inheritance_chain
+      #copy template to the environment
+      tpl.copy_to_env to_env
+    end
+
+    return
+
+    #promote parent
+    if not self.parent.nil?
+      self.parent.promote
     end
 
     #promote self
@@ -192,18 +211,20 @@ class SystemTemplate < ActiveRecord::Base
 
   def changeset_errata(errata)
     errata.collect do |e|
+      e = e.to_erratum
       ChangesetErratum.new(:errata_id=>e.id, :display_name=>e.title, :changeset => @changeset)
     end
   end
 
   def changeset_packages(packages)
     packages.collect do |p|
+      p = p.to_package
       ChangesetPackage.new(:package_id=>p.id, :display_name=>p.name, :changeset => @changeset)
     end
   end
 
   def get_inheritance_chain
-    chain = []
+    chain = [self]
     tpl = self
     while not tpl.parent.nil?
       chain << tpl.parent

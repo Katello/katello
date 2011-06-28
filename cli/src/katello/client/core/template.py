@@ -103,6 +103,7 @@ class Info(TemplateAction):
         
         self.printer.addColumn('id')
         self.printer.addColumn('name')
+        self.printer.addColumn('revision', show_in_grep=False)
         self.printer.addColumn('description', multiline=True)
         self.printer.addColumn('environment_id')
         self.printer.addColumn('parent_id')
@@ -375,7 +376,7 @@ class Promote(TemplateAction):
         template = get_template(orgName, envName, tplName)
         if template != None:
             response = run_spinner_in_bg(self.api.promote, (template["id"],), message=_("Promoting template, please wait... "))
-            print _("Template [ %s ] promoted to environment [ %s ]" % (tplName, envName or "locker"))
+            print _("Template [ %s ] promoted" % tplName)
           
         return os.EX_OK
 
