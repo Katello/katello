@@ -25,7 +25,7 @@ class PromotionsController < ApplicationController
     @changesets = @next_environment.working_changesets if @next_environment
     @changeset_product_ids = @changeset.products.collect { |p| p.cp_id } if @changeset
     @changeset_product_ids ||= []
-
+    @changeset_users = get_changeset_users
   end
 
   def detail
@@ -144,6 +144,15 @@ class PromotionsController < ApplicationController
     end
 
     @product = Product.find(params[:product_id]) if params[:product_id]
+  end
+
+  def get_changeset_users
+    changeset_users = []
+    if @changeset
+      changeset_users = @changeset.users.collect { |c| User.where(:id => c.user_id ).order("updated_at desc")[0].username }
+      changeset_users.delete(current_user.username)
+    end
+    return changeset_users
   end
 
 
