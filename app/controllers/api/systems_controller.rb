@@ -54,7 +54,7 @@ class Api::SystemsController < Api::ApiController
   end
 
   def find_organization
-    return if params.has_key?(:organization_id)
+    return unless params.has_key?(:organization_id)
 
     @organization = Organization.first(:conditions => {:cp_key => params[:organization_id]})
     render :text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404 and return if @organization.nil?
@@ -62,9 +62,9 @@ class Api::SystemsController < Api::ApiController
   end
 
   def find_environment
-    return if params.has_key?(:environment_id)
+    return unless params.has_key?(:environment_id)
 
-    @environment = KPEnvironment.first(params[:environment_id])
+    @environment = KPEnvironment.find(params[:environment_id])
     render :text => _("Couldn't find environment '#{params[:environment_id]}'"), :status => 404 and return if @environment.nil?
     @environment
   end

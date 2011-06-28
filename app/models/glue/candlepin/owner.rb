@@ -69,8 +69,8 @@ module Glue::Candlepin::Owner
         when :create
           queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 3, :action => [self, :set_owner])
           # TODO: the following two steps are very temporary. currently candlepin (in some cases) disambiguates owner based on credentials of the super admin
-          queue.create(:name => "candlepin user for owner: #{self.name}", :priority => 4, :action => [self, :set_owner_user])
-          queue.create(:name => "kaplana user for owner: #{self.name}", :priority => 5, :action => [self, :set_kp_user])
+          #queue.create(:name => "candlepin user for owner: #{self.name}", :priority => 4, :action => [self, :set_owner_user])
+          #queue.create(:name => "kaplana user for owner: #{self.name}", :priority => 5, :action => [self, :set_kp_user])
       end
     end
 
