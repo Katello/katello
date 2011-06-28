@@ -176,7 +176,7 @@ class ApplicationController < ActionController::Base
     CGI::escapeHTML(input)
   end
 
-  private
+  #private
   # TODO: default organization will be stored within the logged user - this method will be removed
   def require_org
     unless session && current_organization
@@ -342,7 +342,7 @@ class ApplicationController < ActionController::Base
       cs.send(type.pluralize).each{|item|
         p item
         pid = item.product_id
-        cs_product = to_ret[pid]
+        cs_product = to_ret[:products][pid]
         cs_product[type] << {:id=>item.send("#{type}_id"), :name=>item.display_name}
       }
     }
