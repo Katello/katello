@@ -187,24 +187,6 @@ class SystemTemplate < ActiveRecord::Base
       #copy template to the environment
       tpl.copy_to_env to_env
     end
-
-    return
-
-    #promote parent
-    if not self.parent.nil?
-      self.parent.promote
-    end
-
-    #promote self
-    @changeset = Changeset.create!(:environment => self.environment)
-
-    @changeset.products << self.products
-    @changeset.errata   << changeset_errata(self.errata)
-    @changeset.packages << changeset_packages(self.packages)
-    @changeset.promote
-
-    #copy self to the environment
-    self.copy_to_env self.environment.successor
   end
 
   protected
