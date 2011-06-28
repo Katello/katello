@@ -41,7 +41,7 @@ var promotion_page = {
     },
     //Finds the add/remove buttons in the left pane
     find_button: function(id, type) {
-        return $("a[class~=content_add_remove][data-id=" + common.escapeId(id) + "][data-type=" + type + "]")
+        return $("a[class~=content_add_remove][data-id=" + common.escapeId(id) + "][data-type=" + type + "]");
     },
 
 
@@ -360,6 +360,7 @@ var registerEvents = function(changesetTree){
           cache: false,
           success: function(data){
               $.extend(changeset_breadcrumb, data.breadcrumb);
+              promotion_page.current_changeset = changeset_obj(data.changeset);
               changesetTree.render_content('changeset_' + data.id);
               panel.closePanel($('#panel'));
           }
@@ -517,12 +518,8 @@ var templateLibrary = (function(){
     
     return {
         changesetsList: changesetsList,
-<<<<<<< HEAD
         productList: productList,
-        listItems : listItems
-=======
         listItems : listItems,
         productDetailList: productDetailList
->>>>>>> 92bb654c725070332f4cddcc4700a086cacd1adb
     };
 })();

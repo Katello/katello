@@ -106,7 +106,7 @@ class ChangesetsController < ApplicationController
     render :json => {
       'breadcrumb' => bc,
       'id' => @changeset.id,
-      'html' => render_to_string(:partial=>"changesets/unpromoted_item", :locals=>{:cs=>@changeset})
+      'changeset' => simplify_changeset(@changeset)
     }
   end
 
