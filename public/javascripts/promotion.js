@@ -184,7 +184,7 @@ var promotion_page = {
         if (promotion_page.current_changeset) {
             if (promotion_page.current_product) {
                 var product = promotion_page.current_changeset.products[promotion_page.current_product];
-                if( product.all ){
+                if( product !== undefined && product.all !== undefined ){
                     promotion_page.disable_all();
                 } else {
                     jQuery.each(promotion_page.subtypes, function(index, type){
