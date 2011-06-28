@@ -72,10 +72,6 @@ module Pulp
   class Package < PulpResource
 
     class << self
-      def find package_id
-        response = get(package_path + package_id + "/", self.default_headers)
-        JSON.parse(response.body).with_indifferent_access
-      end
 
       # Get all the Repositories known by Pulp
       def all
@@ -134,7 +130,7 @@ module Pulp
     class << self
 
       def clone_repo from_repo, to_repo, feed = "parent"  #clone is a built in method, hence redundant name
-        data = {:clone_id => to_repo.id, :feed =>feed, :clone_name => "clone:#{to_repo.name}", :groupid=>to_repo.groupid}
+        data = {:clone_id => to_repo.id, :feed =>feed, :clone_name => to_repo.name, :groupid=>to_repo.groupid}
         path = Repository.repository_path + from_repo.id + "/clone/"
         post(path, JSON.generate(data), self.default_headers).body
         nil #it seems that pulp can be slow to update repos
