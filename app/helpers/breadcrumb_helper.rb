@@ -57,7 +57,7 @@ module BreadcrumbHelper
   end
 
   def packages_cs_bc_id cs, product
-    "packages-cs_#{cs.id}_#{product.id}" if cs
+    "package-cs_#{cs.id}_#{product.id}" if cs
   end
 
   def errata_cs_bc_id cs, product
@@ -65,7 +65,7 @@ module BreadcrumbHelper
   end
 
   def repos_cs_bc_id cs, product
-    "repos-cs_#{cs.id}_#{product.id}" if cs
+    "repo-cs_#{cs.id}_#{product.id}" if cs
   end
 
 
