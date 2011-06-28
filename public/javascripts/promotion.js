@@ -364,16 +364,21 @@ var promotionsRenderer = (function($){
         },
     getContent =  function(hash) {
                 var changeset_id = hash.split("_")[1];
-                var product_id = hash.split("_")[2];         
-                if (hash.split("_")[0] === 'packages-cs'){
+                var product_id = hash.split("_")[2];
+                var key = hash.split("_")[0];
+                if (key === 'package-cs'){
                     return templateLibrary.listItems("package", product_id, changeset_id);
                 }
-                else if (hash.split("_")[0] === 'errata-cs'){
+                else if (key === 'errata-cs'){
                     return templateLibrary.listItems("errata", product_id, changeset_id);
                 }
-                else if (hash.split("_")[0] === 'repos-cs'){
+                else if (key === 'repo-cs'){
                     return templateLibrary.listItems("repo", product_id, changeset_id);
                 }
+                else if (key === 'product-cs'){
+                    return templateLibrary.productDetailList(product_id, changeset_id);
+                }
+
     };
 
     return {
@@ -399,9 +404,23 @@ var templateLibrary = (function(){
             html += '</ul>';
             return html;
         },
+        productDetailList = function(product_id, changeset_id) {
+            var html = '<ul>';
+             jQuery.each(promotion_page.subtypes, function(index, type) {
+                html += '<li><div class="slide_link" id="' + type +'-cs_' + changeset_id + '_' + product_id + '">';
+                html += '<span>' + i18n[type] + ' (' + promotion_page.current_changeset.products[product_id][type].length
+                        + ')</span></li>';
+             });
+            html += '</ul>';
+            return html;
+        },
         listItems = function(type, product_id, changeset_id) {
             var html = '<ul>';
-            jQuery.each(promotion_page.current_changeset.products[product_id][type], function(index, item) {
+            var items = promotion_page.current_changeset.products[product_id][type];
+            if (items.length === 0) {
+                return i18n["no_" + type]; //no_errata no_package no_repo
+            }
+            jQuery.each(items, function(index, item) {
                //for item names that mach item.name from search hash
                html += listItem(item.id, item.name, type, product_id);
             });
@@ -419,6 +438,7 @@ var templateLibrary = (function(){
     
     return {
         changesetsList: changesetsList,
-        listItems : listItems
+        listItems : listItems,
+        productDetailList: productDetailList
     };
 })();
