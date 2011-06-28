@@ -121,12 +121,13 @@ class ChangesetsController < ApplicationController
     end
 
     if params.has_key? :data
+      debugger
       params[:data].each do |item|
         adding = item["adding"]
         type = item["type"]
-        id = item["mod_id"] #id of item being added/removed
-        name = item["mod_name"] #display of item being added/removed
-        pid = item["product_id"];
+        id = item["item_id"] #id of item being added/removed
+        name = item["item_name"] #display of item being added/removed
+        pid = item["product_id"]
         case type
         when "product"
           @changeset.products << Product.where(:id => id) if adding
