@@ -68,11 +68,7 @@ class ChangesetsController < ApplicationController
   ####
   # Promotion methods
   ####
-
-  def unpromoted_index
-    @changesets = @environment.working_changesets
-  end
-
+  
   def products
     @products = @changeset.products
     render :partial=>"products", :locals=>{:changeset=>@changeset}
@@ -118,6 +114,19 @@ class ChangesetsController < ApplicationController
       @changeset.name = params[:name]
       @changeset.save!
       render :text=>params[:name] and return
+    end
+
+    if params[:state]
+      raise _('Invalid state') if !["review", "new"].index(params[:state])
+      if send_changeset
+        to_ret = {}
+        to_ret[:changeset] = simplify_changeset(@changeset) if send_changeset
+        render :json=>to_ret, :status=>:bad_request and return
+      end
+      @changeset.state = Changeset::REVIEW if params[:state] == "review"
+      @changeset.state = Changeset::NEW if params[:state] == "new"
+      @changeset.save!
+      render :json=>{:timestamp=>@changeset.updated_at.to_i.to_s} and return
     end
 
     if params.has_key? :data
@@ -220,9 +229,11 @@ class ChangesetsController < ApplicationController
   end
   
   def handle_exceptions(error)
+    Rails.logger.info  error.to_s
+    Rails.logger.info error.backtrace.join("\n")
     errors error
     render :text => error.to_s, :status => :bad_request
-    Rails.logger.info error.backtrace.join("\n")
+
   end
   
 end
