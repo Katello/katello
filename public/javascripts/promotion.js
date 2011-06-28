@@ -223,12 +223,13 @@ var promotion_page = {
         });        
     },
     checkUsersInResponse: function(users) {
-      var msg = "";
       if (users.length > 0) {
-        msg = users.join(",") + ' ' + i18n.viewing; 
+        var msg = users.join(", ") + ' ' + i18n.viewing;
+        $('#changeset_users').html(msg).fadeIn(); 
       }
-      $('#changeset_users').html(msg);
-      return;
+      else {
+        $('#changeset_users').fadeOut("slow", function() { $(this).html(""); });
+      }
     },
     add_product_breadcrumbs: function(changeset_id, product_id, product_name){
         var productBC = 'product-cs_' + changeset_id + '_' + product_id;
@@ -371,7 +372,7 @@ $(document).ready(function() {
        }
     });
     
-       
+    $('#changeset_users').hide();
 
     //initiate the left tree
   	var contentTree = sliding_tree("content_tree", {breadcrumb:content_breadcrumb,
