@@ -53,8 +53,8 @@ var promotion_page = {
                 data.push(promotion_page.changeset_queue.shift());
             }
             
-            var changeset_id = promotion_page.current_changeset.id;
-            change_set.update(changeset_id, data, promotion_page.current_changeset.timestamp,
+            //var changeset_id = promotion_page.current_changeset.id;
+            promotion_page.current_changeset.update(data,
                 function(data) {
                     if (promotion_page.changeset_queue.length === 0) {
                         if(data.changeset) {
@@ -182,8 +182,8 @@ var promotion_page = {
      *    //TODO make more efficient by identify exactly which page we are on and only reseting those buttons
      */
     reset_page: function() {
-        if (promotion_page.current_product) {
-            if (promotion_page.current_changeset) {
+        if (promotion_page.current_changeset) {
+            if (promotion_page.current_product) {
                 var product = promotion_page.current_changeset.products[promotion_page.current_product];
                 jQuery.each(promotion_page.subtypes, function(index, type){
                     var buttons = $('#list').find("a[class~=content_add_remove][data-type=" + type + "]");
@@ -194,13 +194,23 @@ var promotion_page = {
                         });
                     }
                 });
-            }
-            else {
-                jQuery.each(promotion_page.subtypes, function(index, type){
-                    var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
-                    buttons.addClass('disabled');
+                /*} else {
+                    jQuery.each(promotion_page.subtypes, function(index, type){
+                        var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
+                        buttons.addClass('disabled').html(i18n.add);
+                    });                    
+                }*/
+            } else {
+                jQuery.each(promotion_page.current_changeset.products, function(index, item) {
+                    var buttons = $('#list').find("#add_remove_product_" + item.id);
+                    buttons.html(i18n.remove).removeClass('add_product').addClass("remove_product").removeClass("disabled");
                 });
             }
+        } else {
+            jQuery.each(promotion_page.types, function(index, type){
+                var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
+                buttons.addClass('disabled').html(i18n.add);
+            });
         }
     },
     checkUsersInResponse: function(users) {
@@ -213,42 +223,77 @@ var promotion_page = {
 
 
 var changeset_obj = function(data_struct) {
-    var id = data_struct["id"];
-    var timestamp = data_struct["timestamp"];
+    var id = data_struct["id"],
+        timestamp = data_struct["timestamp"],
+        products = data_struct.products;
 
     return {
         id:id,
-        products: data_struct,
+        products: products,
         set_timestamp:function(ts) { timestamp = ts},
         timestamp: function(){return timestamp},
-        has_item: function(type, id, product) {
+        has_item: function(type, id, product_id) {
             var found = undefined;
-            jQuery.each(data_struct[product][type], function(index, item) {
-                if(item.id == id){
-                    found = true;
-                    return false;
+            if( type === 'product'){
+                if( products.hasOwnProperty(id) ){
+                    return true;
                 }
-            });
+            }
+            if( products.hasOwnProperty(product_id) ){
+                jQuery.each(products[product_id][type], function(index, item) {
+                    if(item.id == id){
+                        found = true;
+                        return false;
+                    }
+                });
+            }
             return found !== undefined;
         },
         add_item:function (type, id, display_name, product_id) {
-            if (data_struct[product_id] === undefined) {
-                data_struct[product_id] = {'package':[], 'errata':[], 'repo':[]}
-            }
-            data_struct[product_id][type].push({name:display_name, id:id})
+            if( type === 'product' ){
+                products[id] = {'name': display_name, 'package':[], 'errata':[], 'repo':[], 'all': true}
+            } else { 
+                if ( products[product_id] === undefined ) {
+                    products[product_id] = {'package':[], 'errata':[], 'repo':[]}
+                }
+                products[product_id][type].push({name:display_name, id:id})
+            } 
         },
         remove_item:function(type, id, product_id) {
-            if (data_struct[product_id] !== undefined) {
-                $.each(data_struct[product_id][type], function(index,item) {
+            if( type === 'product' ){
+                delete products[id];
+            } else if (data_struct[product_id] !== undefined) { 
+                $.each(products[product_id][type], function(index,item) {
                     if (item.id === id) {
-                        data_struct[product_id][type].splice(index,1);
+                        products[product_id][type].splice(index,1);
                         return false;//Exit out of the loop
-                    }
+                    }  
                 });
-
-
             }
-        }
+        },
+        update: function(items, on_success, on_error) {
+          var data = [];
+          $.each(items, function(index, value) {
+              var item = {};
+              item["type"] = value[0];
+              item["item_id"] = value[1];
+              item["item_name"] = value[2];
+              item["adding"] = value[3];
+              if (value[4]) {
+                  item["product_id"] = value[4];
+              }
+              data.push(item);
+            });
+          $.ajax({
+            contentType:"application/json",
+            type: "PUT",
+            url: "/changesets/" + id,
+            data: JSON.stringify({data:data, timestamp:timestamp}),
+            cache: false,
+            success: on_success,
+            error: on_error
+          });
+        },
     }
 };
 
@@ -356,6 +401,7 @@ var promotionsRenderer = (function($){
             else {
                 var changeset_id = hash.split("_")[1];
                 var product_id = hash.split("_")[2]; 
+
                 if (promotion_page.current_changeset === undefined) {
                     promotion_page.fetch_changeset(changeset_id, true);
                 }
@@ -368,6 +414,9 @@ var promotionsRenderer = (function($){
                 }
                 else if (hash.split("_")[0] === 'repos-cs'){
                     return templateLibrary.listItems("repo", product_id, changeset_id);
+                }
+                else if (hash.split("_")[0] === 'changeset'){
+                    return templateLibrary.productList(promotion_page.current_changeset.products, promotion_page.current_changeset.id);
                 }
             }
         }
@@ -411,11 +460,43 @@ var templateLibrary = (function(){
             anchor += i18n.remove + "</a>";
             return '<li>' + anchor + '<span class="item">'  + name + '</span></li>';
 
-        }
-
+        },
+        productList = function(products, changeset_id){
+            var html = '<ul>', 
+                product, provider,
+                all, 
+                count = 0;
+            
+            for( key in products ){
+                if( products.hasOwnProperty(key) ){
+                    product = products[key];
+                    provider = (product.provider === 'REDHAT') ? 'rh' : 'custom';
+                    all = product.all ? 'no_slide' : 'slide_link';
+                    html += productListItem(changeset_id, key, product.name, provider, all)
+                }
+                count += 1;
+            }
+            if( count === 0 ){
+                html += i18n['no_products'];
+            }
+            html += '</ul>';
+            return html;
+        },
+        productListItem = function(changeset_id, product_id, name, provider, slide_link){
+            return '<li class="clear">' + 
+                    '<a class="content_add_remove button fl remove_product" data-display_name="' + 
+                    name +'" data-id="' + 
+                    product_id + '" data-type="product" id="add_remove_product_' + product_id + 
+                    '">Remove</a>' +
+                    '<div class="' + slide_link + '" id="product_cs_' + changeset_id + '_' + product_id + '">' +
+                    '<span class="' + provider + '-product-sprite"></span>' +
+                    '<span class="product-icon" >' + name + '</span>' +
+                    '</div></li>';
+        };
     
     return {
         changesetsList: changesetsList,
+        productList: productList,
         listItems : listItems
     };
 })();

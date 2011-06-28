@@ -20,12 +20,12 @@ module BreadcrumbHelper
 
     @changesets.each{|cs|
       add_crumb_node!(bc, changeset_bc_id(cs), products_changeset_path(cs), cs.name, ['changesets'],
-                    {:cache=>true, :content=>render(:partial=>"changesets/products", :locals=>{:changeset=>cs})})
+                    {:client_render => true})
 
       cs.involved_products.each{|product|
         #product details 
         add_crumb_node!(bc, product_cs_bc_id(cs, product), "url", product.name, ['changesets', changeset_bc_id(cs)],
-                      {:cache=>true, :content=>render(:partial=>"changesets/product", :locals=>{:product=>product, :changeset=>cs})})
+                      {:client_render => true})
         #packages
         add_crumb_node!(bc, packages_cs_bc_id(cs, product), "",  _("Packages"),
                         ['changesets', changeset_bc_id(cs),product_cs_bc_id(cs, product)], {:client_render => true})
@@ -53,7 +53,7 @@ module BreadcrumbHelper
   end
 
   def product_cs_bc_id cs, product
-    "product_cs_#{cs.id}_#{product.id}" if cs
+    "product-cs_#{cs.id}_#{product.id}" if cs
   end
 
   def packages_cs_bc_id cs, product

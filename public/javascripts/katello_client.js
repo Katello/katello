@@ -196,8 +196,8 @@ var change_set = {
       $.each(items, function(index, value) {
           var item = {};
           item["type"] = value[0];
-          item["mod_id"] = value[1];
-          item["mod_name"] = value[2];
+          item["item_id"] = value[1];
+          item["item_name"] = value[2];
           item["adding"] = value[3];
           if (value[4]) {
               item["product_id"] = value[4];
