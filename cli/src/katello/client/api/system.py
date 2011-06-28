@@ -14,6 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.api.utils import get_environment
 
 class SystemAPI(KatelloAPI):
     """
@@ -35,9 +36,10 @@ class SystemAPI(KatelloAPI):
         return self.server.GET(path)[1]
         
     def systems_by_env(self, orgId, envName):
-        environment_api = EnvironmentAPI()
-        envId = environment_api.environment_by_name(orgId, envName)
+        environment = get_environment(orgId, envName)
+        if environment is None:
+            return None
         
-        path = "/api/environments/%s/systems" % envId
+        path = "/api/environments/%s/systems" % environment["id"]
         return self.server.GET(path)[1]
 

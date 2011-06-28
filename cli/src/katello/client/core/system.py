@@ -58,11 +58,17 @@ class List(SystemAction):
         self.printer.addColumn('uuid')
         self.printer.addColumn('name')
 
-        if not env_name:
+        if env_name is None:
             systems = self.api.systems_by_org(org_name)
-            self.printer.printHeader(_("Systems List For Org %s") % org_name)            
         else:
             systems = self.api.systems_by_env(org_name, env_name)
+            
+        if systems is None:
+            return 1
+            
+        if env_name is None:
+            self.printer.printHeader(_("Systems List For Org %s") % org_name)            
+        else:
             self.printer.printHeader(_("Systems List For Environment %s in Org %s") % (env_name, org_name))            
 
         self.printer.printItems(systems)
