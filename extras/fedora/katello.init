@@ -135,6 +135,12 @@ case "$1" in
     status)
         status
         ;;
+    depcheck)
+        # check if required dependencies from Gemfile are installed
+        pushd $KATELLO_HOME
+        su $KATELLO_USER -s /bin/bash -c "bundle install --without 'test development' --local"
+        popd
+        ;;
     initdb)
         # stop if it is running
         condstop
