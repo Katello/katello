@@ -176,7 +176,7 @@ class ApplicationController < ActionController::Base
     CGI::escapeHTML(input)
   end
 
-  #private
+  private
   # TODO: default organization will be stored within the logged user - this method will be removed
   def require_org
     unless session && current_organization
