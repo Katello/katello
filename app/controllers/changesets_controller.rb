@@ -27,7 +27,6 @@ class ChangesetsController < ApplicationController
   #changeset history index
   def index
     setup_environment_selector(current_organization)
-    debugger
     @changesets = @environment.changeset_history.limit(current_user.page_size)
   end
 
@@ -53,7 +52,6 @@ class ChangesetsController < ApplicationController
 
   #list item
   def show
-    debugger
     render :partial=>"common/list_update", :locals=>{:item=>@changeset, :accessor=>"id", :columns=>['name'], :chgusers=>changeset_users}
   end
 
