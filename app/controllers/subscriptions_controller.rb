@@ -17,14 +17,18 @@ class SubscriptionsController < ApplicationController
     all_subs = Candlepin::Owner.pools current_organization.cp_key
     @subscriptions = []
     all_subs.each do |sub|
-      sub['providedProducts'].each do |cp_product|
-        product = Product.where(:cp_id =>cp_product["productId"]).first
-        # Convert to OpenStruct so we can access fields with dot notation
-        # in the haml. This reduces the code changes we pull in from headpin
-        converted_sub = OpenStruct.new(sub)
-        converted_sub.product = product
-        @subscriptions << converted_sub if !@subscriptions.include? converted_sub
-      end
+      product = Product.where(:cp_id =>sub["productId"]).first
+      converted_product = OpenStruct.new
+      converted_product.id = product.id
+      converted_product.support_level = product.support_level
+      converted_product.arch = product.arch
+      # Convert to OpenStruct so we can access fields with dot notation
+      # in the haml. This reduces the code changes we pull in from headpin
+      converted_sub = OpenStruct.new(sub)
+      converted_sub.product = converted_product
+      converted_sub.startDate = Date.parse(converted_sub.startDate)
+      converted_sub.endDate = Date.parse(converted_sub.endDate)
+      @subscriptions << converted_sub if !@subscriptions.include? converted_sub
     end
     @subscriptions
   end
