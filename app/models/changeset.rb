@@ -24,9 +24,8 @@ class Changeset < ActiveRecord::Base
     :allow_blank => false,
     :message => "A changeset must have one of the following states: #{STATES.join(', ')}."
 
-
   validates :name, :presence => true, :allow_blank => false
-  validates_uniqueness_of :name, :scope => :environment_id, :message => N_("Must be unique within an environment") 
+  validates_uniqueness_of :name, :scope => :environment_id, :message => N_("Must be unique within an environment")
   has_and_belongs_to_many :products, :uniq => true
   has_many :packages, :class_name=>"ChangesetPackage", :inverse_of=>:changeset
   has_many :users, :class_name=>"ChangesetUser", :inverse_of=>:changeset
@@ -36,13 +35,16 @@ class Changeset < ActiveRecord::Base
   validates :environment, :presence=>true
   before_save :uniquify_artifacts
 
-
+  scoped_search :on => :name, :complete_value => true, :rename => :'changeset.name'
+  scoped_search :on => :created_at, :complete_value => true, :rename => :'changeset.create_date'
+  scoped_search :on => :promotion_date, :complete_value => true, :rename => :'changeset.promotion_date'
+  scoped_search :in => :products, :on => :name, :complete_value => true, :rename => :'custom_product.name'
+  scoped_search :in => :products, :on => :description, :complete_value => true, :rename => :'custom_product.description'
 
   def generate_name
     #self.name = I18n.l(DateTime.now, :format=>:long) if name.blank?
     self.name = "XXX" if name.blank?
   end
-
 
   def key_for item
     "changeset_#{id}_#{item}"
@@ -65,7 +67,6 @@ class Changeset < ActiveRecord::Base
     to_ret =  to_ret + self.repos.collect{|pkg| pkg.product}
     to_ret.uniq
   end
-
 
   def dependencies
     from_env = self.environment
@@ -180,7 +181,6 @@ class Changeset < ActiveRecord::Base
       repo.add_packages(pkgs)
     end
   end
-
 
   def promote_errata from_env, to_env
     #repo->list of errata_ids
