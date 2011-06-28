@@ -217,9 +217,11 @@ var promotion_page = {
         });        
     },
     checkUsersInResponse: function(users) {
-      //TODO: update the div for which users are editing
-      var l = users.length
-      var user = users[0];
+      var msg = "";
+      if (users.length > 0) {
+        msg = users.join(",") + ' ' + i18n.viewing; 
+      }
+      $('#changeset_users').html(msg);
       return;
     }
 };
@@ -263,9 +265,11 @@ var changeset_obj = function(data_struct) {
             } 
         },
         remove_item:function(type, id, product_id) {
+            console.log(type + "," + id + "," + product_id);
+
             if( type === 'product' ){
                 delete products[id];
-            } else if (data_struct[product_id] !== undefined) { 
+            } else if (products[product_id] !== undefined) {
                 $.each(products[product_id][type], function(index,item) {
                     if (item.id === id) {
                         products[product_id][type].splice(index,1);
@@ -296,7 +300,7 @@ var changeset_obj = function(data_struct) {
             success: on_success,
             error: on_error
           });
-        },
+        }
     }
 };
 
@@ -309,12 +313,13 @@ $(document).ready(function() {
     $(".content_add_remove").live('click', function() {
 	
 	   if( !$(this).hasClass('disabled') ){
+
+
           var environment_id = $(this).attr('data-environment_id');
           var id = $(this).attr('data-id');
           var display = $(this).attr('data-display_name');
           var type = $(this).attr('data-type');
           var prod_id = $(this).attr('data-product_id');
-          
           promotion_page.modify_changeset(id, display, type, prod_id);
        }
     });
