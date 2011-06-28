@@ -36,19 +36,22 @@ Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
 Requires:       rubygem(gettext_i18n_rails)
 Requires:       rubygem(simple-navigation) >= 3.1.0
+Requires:       rubygem(sqlite3) 
+Requires:       rubygem(pg)
+Requires:       rubygem(scoped_search)
+
 Requires(pre):  shadow-utils
 Requires(preun): chkconfig
 Requires(preun): initscripts
 Requires(post): chkconfig
 Requires(postun): initscripts 
-Requires: rubygem(sqlite3) 
-Requires:       rubygem(pg)
-Requires:       rubygem(scoped_search)
+
 BuildRequires: 	coreutils findutils sed
 BuildRequires: 	rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
 BuildRequires:  rubygem(haml)
+
 BuildArch: noarch
 
 %description
