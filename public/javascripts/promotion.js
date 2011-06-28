@@ -208,7 +208,7 @@ var promotion_page = {
         } else {
             jQuery.each(promotion_page.types, function(index, type){
                 var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
-                buttons.addClass('disabled').html(i18n.add);
+                buttons.addClass('disabled').html(i18n.add).attr("disabled", "disabled");
             });
         }
     },
@@ -510,7 +510,7 @@ var templateLibrary = (function(){
                     name +'" data-id="' + 
                     product_id + '" data-type="product" id="add_remove_product_' + product_id + 
                     '">Remove</a>' +
-                    '<div class="' + slide_link + '" id="product_cs_' + changeset_id + '_' + product_id + '">' +
+                    '<div class="' + slide_link + '" id="product-cs_' + changeset_id + '_' + product_id + '">' +
                     '<span class="' + provider + '-product-sprite"></span>' +
                     '<span class="product-icon" >' + name + '</span>' +
                     '</div></li>';
