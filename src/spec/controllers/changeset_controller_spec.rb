@@ -144,4 +144,22 @@ describe ChangesetsController do
     end
   end
 
+  describe 'deleting a changeset' do
+    before (:each) do
+      @changeset = Changeset.create(CSControllerTest::CHANGESET)
+    end
+
+    it 'should successfully update a changeset' do
+      put 'update', {:id=>@changeset.id, :name=> 'newname'}
+      response.should be_success
+      response.headers.should include("X-ChangesetUsers")
+      Changeset.exists?(:name=>'newname').should be_true
+    end
+
+    it 'should not have a changeset user for name-only updates ' do
+      put 'update', {:id=>@changeset.id, :name=> 'anothername'}
+      response.should be_success
+      @changeset.users.length.should == 0
+    end
+  end
 end
