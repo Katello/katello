@@ -244,7 +244,7 @@ Src::Application.routes.draw do
     match '/repositories/discovery/:id' => 'repositories#discovery_status', :via => :get
 
     resources :environment, :only => [:show, :update, :destroy] do
-      resources :systems, :only => [:index, :create]
+      resources :systems, :only => [:index]
     end
     resources :packages, :only => [:show]
     resources :errata, :only => [:show]
