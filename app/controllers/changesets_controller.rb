@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ChangesetsController < ApplicationController
+  include AutoCompleteSearch
   include BreadcrumbHelper
   
   before_filter :find_changeset, :except => [:index, :list, :items, :unpublished, :create, :new]
@@ -27,7 +28,8 @@ class ChangesetsController < ApplicationController
   #changeset history index
   def index
     setup_environment_selector(current_organization)
-    @changesets = @environment.changeset_history.limit(current_user.page_size)
+    @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size)
+    retain_search_history
   end
 
   #extended scroll for changeset_history

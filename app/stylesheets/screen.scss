@@ -672,11 +672,37 @@ $repo_color: #4A9FB1;
 }
 
 #changeset_tree {
-  
   #cslist {
     height: 415px;
     overflow-x: hidden;
     overflow-y: auto;
+  }
+  .breadcrumb_search {
+    display: block;
+    width: 450px;
+    font-weight: bold;
+    color: #FFF;
+    background-color: $kselected;
+    word-wrap: break-word;
+    margin: -2px 0 0 -2px;
+    border: 2px solid $kselected;
+    #search_form {
+        display: none;
+        margin-right: 106px;
+    }
+    .search {
+        position: relative;
+        clear: both;
+        display: inline-block;
+        margin: 5px auto;
+
+    }
+    .tree_breadcrumb {
+        display: inline-block;
+        outline: 0 none;
+        width: 90%;
+        padding-bottom: 3px;
+    }
   }
 }
 /* end content locker custom css */
