@@ -27,6 +27,7 @@ class ChangesetsController < ApplicationController
   #changeset history index
   def index
     setup_environment_selector(current_organization)
+    debugger
     @changesets = @environment.changeset_history.limit(current_user.page_size)
   end
 
@@ -52,7 +53,8 @@ class ChangesetsController < ApplicationController
 
   #list item
   def show
-    render :partial=>"common/list_update", :locals=>{:item=>@changeset, :accessor=>"id", :columns=>['name']}
+    debugger
+    render :partial=>"common/list_update", :locals=>{:item=>@changeset, :accessor=>"id", :columns=>['name'], :chgusers=>changeset_users}
   end
 
   def show_content
@@ -202,8 +204,10 @@ class ChangesetsController < ApplicationController
   end
 
   def update_editors
-    usernames = @changeset.users.collect { |c| User.where(:id => c.user_id)[0].username }
-    response.headers['X-ChangesetUsers'] = usernames.to_json
+    usernames = @changeset.users.collect { |c| User.where(:id => c.user_id ).order("updated_at desc")[0].username }
+    usernames.delete(current_user.username)  
+    #usernames << "shaggy" << "scooby" 
+    response.headers['X-ChangesetUsers'] = names.to_json
   end
 
   def find_changeset
