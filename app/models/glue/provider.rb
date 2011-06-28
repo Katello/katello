@@ -70,9 +70,9 @@ module Glue::Provider
       Rails.logger.info "Updating products for provider: #{name}"
       self.products.each do |p|
         p.provider = self
-        p.update_attributes!({
-            :productContent => [Glue::Candlepin::ProductContent.new(:content => {:id => p.name})] # FIX ME: don't think this is correct
-        })
+        # p.update_attributes!({
+        #     :productContent => [Glue::Candlepin::ProductContent.new(:content => {:id => p.name})] # FIX ME: don't think this is correct
+        # })
         #update name only for custom products
         if p.name == old.name
           p.update_attributes!({:name => name})

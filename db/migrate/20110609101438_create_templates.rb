@@ -4,11 +4,8 @@ class CreateTemplates < ActiveRecord::Migration
       t.integer :revision
       t.string :name
       t.string :description
-      t.string :products_json
-      t.string :packages_json
-      t.string :errata_json
-      t.string :host_group_json
-      t.string :kickstart_attrs_json
+      t.string :parameters_json
+      t.integer :parent_id
       t.references :environment, :null => false
       t.timestamps
     end
