@@ -217,9 +217,11 @@ var promotion_page = {
         });        
     },
     checkUsersInResponse: function(users) {
-      //TODO: update the div for which users are editing
-      var l = users.length
-      var user = users[0];
+      var msg = "";
+      if (users.length > 0) {
+        msg = users.join(",") + ' ' + i18n.viewing; 
+      }
+      $('#changeset_users').html(msg);
       return;
     }
 };
