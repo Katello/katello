@@ -1,13 +1,13 @@
 class AddEnvironmentSystem < ActiveRecord::Migration
   def self.up
     change_table :systems do |t|
-      t.references :environment
+      t.references :kp_environment
     end
   end
 
   def self.down
     change_table :systems do |t|
-      t.remove :environment_id
+      t.remove :kp_environment_id
     end
   end
 end

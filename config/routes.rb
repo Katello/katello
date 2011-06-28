@@ -243,7 +243,7 @@ Src::Application.routes.draw do
     match '/repositories/discovery' => 'repositories#discovery', :via => :post
     match '/repositories/discovery/:id' => 'repositories#discovery_status', :via => :get
 
-    resources :environment, :only => [:show, :update, :destroy] do
+    resources :environments, :only => [:show, :update, :destroy] do
       resources :systems, :only => [:index]
     end
     resources :packages, :only => [:show]
