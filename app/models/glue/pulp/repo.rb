@@ -88,8 +88,15 @@ class Glue::Pulp::Repo
   end
 
   def has_package? id
-    self.packages.each{|pkg|
+    self.packages.each {|pkg|
       return true if pkg.id == id
+    }
+    return false
+  end
+
+  def has_erratum? id
+    self.errata.each {|err|
+      return true if err.id == id
     }
     return false
   end
@@ -131,6 +138,10 @@ class Glue::Pulp::Repo
     Pulp::Repository.add_packages self.id,  pkg_id_list
   end
 
+  def add_errata errata_id_list
+    Pulp::Repository.add_errata self.id,  errata_id_list
+  end
+
   def sync_finish
     status = _get_most_recent_sync_status()
     retval = nil
@@ -160,13 +171,14 @@ class Glue::Pulp::Repo
   end
 
   def promote(to_environment, product)
-    cloned = returning Glue::Pulp::Repo.new do |c|
-      c.id = Glue::Pulp::Repos.clone_repo_id(id, to_environment.name)
-      %w[groupid arch name feed].each {|v| c.instance_variable_set("@#{v}", instance_variable_get("@#{v}"))}
-    end
+    cloned = Glue::Pulp::Repo.new
+    cloned.id = Glue::Pulp::Repos.clone_repo_id(id, to_environment.name)
+    cloned.arch = arch
+    cloned.name = name
+    cloned.feed = feed
     cloned.groupid = Glue::Pulp::Repos.groupid(product, to_environment)
-   Pulp::Repository.clone_repo(self, cloned)
-   cloned
+    Pulp::Repository.clone_repo(self, cloned)
+    cloned
   end
 
   def self.find(id)

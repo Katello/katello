@@ -35,7 +35,8 @@ class Changeset < ActiveRecord::Base
 
 
   def generate_name
-    self.name = I18n.l(DateTime.now, :format=>:long) if name.blank?
+    #self.name = I18n.l(DateTime.now, :format=>:long) if name.blank?
+    self.name = "XXX" if name.blank?
   end
 
 
@@ -53,14 +54,14 @@ class Changeset < ActiveRecord::Base
 
 
   def dependencies
+    from_env = self.environment
+    to_env   = self.environment.successor
+
     repoids = []
 
-    prior = self.environment.prior
-    prior ||= self.environment.organization.locker #if no prior, then prior must be locker
-
     #get source repos to depsolve for
-    prior.products.each{|prod|
-      repoids += prod.repos(prior).collect{|repo| repo.id}
+    from_env.products.each{|prod|
+      repoids += prod.repos(from_env).collect{|repo| repo.id}
     }
 
     #TODO  look up NEVRA from pulp instead of relying on display_name
@@ -75,13 +76,11 @@ class Changeset < ActiveRecord::Base
          Glue::Pulp::Package.new(package)
     end
 
-    #remove pkgs that are in the next environment's repos
+    #remove pkgs that are in the target environment's repos
     repo_pkg_ids = []
-    if environment
-      environment.products do |prod|
-        prod.repos do |repo|
-          repo_pkg_ids += repo.packages.collect{|pkg| pkg.id}
-        end
+    to_env.products do |prod|
+      prod.repos to_env do |repo|
+        repo_pkg_ids += repo.packages.collect{|pkg| pkg.id}
       end
     end
 
@@ -100,48 +99,124 @@ class Changeset < ActiveRecord::Base
   end
 
   def promote
-    self.products.each do |product|
-      product.promote self,  self.environment
-    end
+    from_env = self.environment
+    to_env   = self.environment.successor
 
-    #repo->list of pkg_ids
-    pkgs_promote = {}
-
-
-    #Identify which repos need what packages
-    #self.environment.products.each do |product|
-      #skip the product if we are promoting it anyways
-    #  next if self.products.include?(product)
-    #  product.repos(self).each do |repo|
-        #bring in the clones, for caching
-    #    clones = []
-    #    repo.clone_ids.each{|id|  clones << Glue::Pulp::Repo.find(id)}
-
-    #    self.packages.each do |pkg|
-          #if this repo has the package and the clone doesn't, then we should promote it
-    #       if repo.has_package? pkg.package_id
-    #         clones.each do |clone|
-    #           if !clone.has_package? pkg.package_id
-    #             pkgs_promote[clone] ||= []
-    #             pkgs_promote[clone] << pkg.package_id
-    #           end
-    #         end
-    #       end
-    #     end
-    #   end
-    # end
-
-    #pkgs_promote.each_pair do |repo, pkgs|
-    #  repo.add_packages(pkgs)
-    #end
+    promote_products from_env, to_env
+    promote_repos    from_env, to_env
+    promote_packages from_env, to_env
+    promote_errata   from_env, to_env
 
     self.promotion_date = Time.now
     self.state = Changeset::PROMOTED
     self.save!
-
   end
 
   private
+
+  def promote_products from_env, to_env
+    #promote all products stacked for promotion
+    self.products.each do |product|
+      product.promote from_env, to_env
+    end
+  end
+
+  def promote_repos from_env, to_env
+
+    #promote only repos that haven't already been promoted with products
+    for_not_promoted_products from_env do |product|
+
+      #get repos that should be promoted and belong to this product
+      #{all repos stacked for promotion} AND {repos in this product and env}
+      repo_ids_to_promote = self.repos.map(&:repo_id) & product.repos(from_env).map(&:id)
+
+      repo_ids_to_promote.each do |repo_id|
+        #check if product with the repo has been promoted (= repo cloned)
+        #if yes then sync the promoted repo
+        repo = Glue::Pulp::Repo.find(repo_id)
+        if product.is_cloned_in?(repo, to_env)
+          repo.sync
+        end
+      end
+    end
+
+  end
+
+  def promote_packages from_env, to_env
+    #repo->list of pkg_ids
+    pkgs_promote = {}
+
+    #promote only packages that haven't already been promoted with products
+    for_not_promoted_repos from_env do |repo, clones|
+
+      self.packages.each do |pkg|
+        #if this repo has the package and the clone doesn't, then we should promote it
+        if repo.has_package? pkg.package_id
+          clones.each do |clone|
+            if !clone.has_package? pkg.package_id
+              pkgs_promote[clone] ||= []
+              pkgs_promote[clone] << pkg.package_id
+            end
+          end
+        end
+      end
+    end
+
+    pkgs_promote.each_pair do |repo, pkgs|
+      repo.add_packages(pkgs)
+    end
+  end
+
+
+  def promote_errata from_env, to_env
+    #repo->list of errata_ids
+    errata_promote = {}
+
+    #promote only errata that haven't already been promoted with products
+    for_not_promoted_repos from_env do |repo, clones|
+
+      self.errata.each do |err|
+        #if this repo has the package and the clone doesn't, then we should promote it
+        if repo.has_erratum? err.errata_id
+          clones.each do |clone|
+            if !clone.has_erratum? err.errata_id
+              errata_promote[clone] ||= []
+              errata_promote[clone] << err.errata_id
+            end
+          end
+        end
+      end
+    end
+
+    errata_promote.each_pair do |repo, errata|
+      repo.add_errata(errata)
+    end
+  end
+
+  def for_not_promoted_products from_env, &block
+    #executes block for every product not stacked for promotion
+
+    from_env.products.each do |product|
+      next if self.products.include?(product)
+      yield product
+    end
+  end
+
+  def for_not_promoted_repos from_env, &block
+    #executes block for all repos from products not stacked for promotion
+
+    for_not_promoted_products from_env do |product|
+      product.repos(from_env).each do |repo|
+        #get clones of the repo
+        clones = repo.clone_ids.collect do |id|
+          Glue::Pulp::Repo.find(id)
+        end
+
+        yield repo, clones
+      end
+    end
+  end
+
   def uniquify_artifacts
     self.products.uniq! unless self.products.nil?
     [[:packages,:package_id],[:errata, :errata_id],[:repos, :repo_id]].each do |items, item_id|

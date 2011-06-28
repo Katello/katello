@@ -28,8 +28,13 @@ module Glue::Pulp::Repos
   end
 
   def self.clone_repo_id(repo_id, environment_name)
-    /(\w+\.\w+)-(\w+)-(\w+)$/.match(repo_id) or /(\w+\.\w+)-(\w+)-\w+-(\w+)$/.match(repo_id)
-    "#{$1}-#{$2}-#{environment_name}-#{$3}"
+    parts = repo_id.split("-")
+    if parts.length == 3
+      parts << parts[2]
+    end
+    parts[2] = environment_name
+
+    parts.join("-")
   end
 
   def self.env_orgid(org)
@@ -66,12 +71,10 @@ module Glue::Pulp::Repos
 
       queue_promote_repos repos(from_env), to_env
       if !to_env.products.include? self
-        to_env.products << self
         self.environments << to_env
       end
 
       save!
-      to_env.save! # TODO: do i need to call this?
     end
 
     #is the repo cloned in the specified environment
@@ -277,7 +280,7 @@ module Glue::Pulp::Repos
       repos.each do |repo|
         if self.is_cloned_in?(repo, to_env)
           #repo is already cloned, so lets just re-sync it from its parent
-          print "Should be syncing repos"
+          repo.sync
         else
           new_repo = repo.promote(to_env, self)
 
