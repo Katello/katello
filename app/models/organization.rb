@@ -20,6 +20,7 @@ class Organization < ActiveRecord::Base
   has_many :systems, :dependent => :destroy, :inverse_of => :organization
   has_many :environments, :class_name => "KPEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
   has_one :locker, :class_name =>"KPEnvironment", :conditions => {:locker => true}, :dependent => :destroy
+  has_and_belongs_to_many :user
   attr_accessor :parent_id,:pools
 
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'organization.name'
