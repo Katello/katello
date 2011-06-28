@@ -52,7 +52,7 @@ class ChangesetsController < ApplicationController
 
   #list item
   def show
-    render :partial=>"common/list_update", :locals=>{:item=>@changeset, :accessor=>"id", :columns=>['name']}
+    render :partial=>"common/list_update", :locals=>{:item=>@changeset, :accessor=>"id", :columns=>['name'], :chgusers=>changeset_users}
   end
 
   def show_content
@@ -202,7 +202,8 @@ class ChangesetsController < ApplicationController
   end
 
   def update_editors
-    usernames = @changeset.users.collect { |c| User.where(:id => c.user_id)[0].username }
+    usernames = @changeset.users.collect { |c| User.where(:id => c.user_id ).order("updated_at desc")[0].username }
+    usernames.delete(current_user.username)  
     response.headers['X-ChangesetUsers'] = usernames.to_json
   end
 
