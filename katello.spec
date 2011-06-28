@@ -57,6 +57,10 @@ Provides a package for managing application lifecycle for Linux systems
 %setup -q
 
 %build
+#check the ruby syntax of all .rb files
+echo "Checking Ruby syntax"
+find -type f -name \*.rb | xargs -n1 ruby -c >/dev/null
+
 #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
 echo Generating gettext files...
 ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
