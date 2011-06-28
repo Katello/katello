@@ -193,22 +193,19 @@ var promotion_page = {
                         });
                     }
                 });
-                /*} else {
-                    jQuery.each(promotion_page.subtypes, function(index, type){
-                        var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
-                        buttons.addClass('disabled').html(i18n.add);
-                    });                    
-                }*/
             } else {
+                var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
+                buttons.removeClass('disabled');
                 jQuery.each(promotion_page.current_changeset.products, function(index, item) {
-                    var buttons = $('#list').find("#add_remove_product_" + item.id);
-                    buttons.html(i18n.remove).removeClass('add_product').addClass("remove_product").removeClass("disabled");
+                    if( buttons.attr('id') === ('add_remove_product_' + item.id) ){
+                        buttons.html(i18n.remove).removeClass('add_product').addClass("remove_product").removeClass("disabled");
+                    }
                 });
             }
         } else {
             jQuery.each(promotion_page.types, function(index, type){
                 var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
-                buttons.addClass('disabled').html(i18n.add).attr("disabled", "disabled");
+                buttons.addClass('disabled').html(i18n.add);
             });
         }
     },
@@ -304,13 +301,15 @@ $(document).ready(function() {
 
     $(".content_add_remove").live('click', function() {
 	
-      var environment_id = $(this).attr('data-environment_id');
-      var id = $(this).attr('data-id');
-      var display = $(this).attr('data-display_name');
-      var type = $(this).attr('data-type');
-      var prod_id = $(this).attr('data-product_id');
-      
-      promotion_page.modify_changeset(id, display, type, prod_id);
+	   if( !$(this).hasClass('disabled') ){
+          var environment_id = $(this).attr('data-environment_id');
+          var id = $(this).attr('data-id');
+          var display = $(this).attr('data-display_name');
+          var type = $(this).attr('data-type');
+          var prod_id = $(this).attr('data-product_id');
+          
+          promotion_page.modify_changeset(id, display, type, prod_id);
+       }
     });
     
        
