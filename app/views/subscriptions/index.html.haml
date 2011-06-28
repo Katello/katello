@@ -37,11 +37,10 @@
               = sub.consumed
               = "/"
               = sub.quantity
-            -# TODO: Got to get the stats line stuff imported
-            -#%td
-            -#  =stats_line(sub.consumed_stats)
-            %td=sub.contractNumber
-            -#%td=sub.product.support_level
-            -#%td=sub.product.arch
-            %td=sub.startDate
-            %td=sub.endDate
+            %td
+              ="stats_line(sub.consumed_stats)"
+            %td=sub.contractNumber or ""
+            %td=sub.product.arch
+            %td=sub.product.support_level or ""
+            %td=l sub.startDate
+            %td=l sub.endDate

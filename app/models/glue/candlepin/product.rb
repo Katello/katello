@@ -58,6 +58,10 @@ module Glue::Candlepin::Product
       @productContent = attrs.collect { |pc| Glue::Candlepin::ProductContent.new pc }
     end
 
+    def support_level
+      return _attr(:support_level)
+    end
+
     def arch
       attrs.each do |attr|
         if attr[:name] == 'arch'
@@ -66,6 +70,17 @@ module Glue::Candlepin::Product
         end
       end
       default_arch
+    end
+
+    def _attr(key)
+      puts "Looking for: #{key}"
+      attrs.each do |attr|
+        puts "attr: name: #{attr[:name]} value: #{attr[:value]}"
+        if attr[:name] == key.to_s
+          return attr[:value]
+        end
+      end
+      nil
     end
 
     def default_arch
