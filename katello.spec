@@ -48,6 +48,7 @@ BuildRequires: 	coreutils findutils sed
 BuildRequires: 	rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
+BuildRequires:  rubygem(haml)
 BuildArch: noarch
 
 %description
@@ -60,6 +61,10 @@ Provides a package for managing application lifecycle for Linux systems
 #check the ruby syntax of all .rb files
 echo "Checking Ruby syntax"
 find -type f -name \*.rb | xargs -n1 ruby -c >/dev/null
+
+#check the syntax of all .haml files
+echo "Checking HAML syntax"
+find -type f -name \*.haml | xargs -n1 haml -c >/dev/null
 
 #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
 echo Generating gettext files...
