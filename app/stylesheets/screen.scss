@@ -444,8 +444,13 @@ fieldset {
     height: 2.7em;
     &:hover {
       background-color: $listhover;
-      color: #FFF;    
+      color: #FFF;
+      
+      .st_button {
+        color: #FFF;
+      }    
     }
+    //span { vertical-align: middle; }
   }
   .slide_link {
     background: url(/images/icons/right-arrow.png) no-repeat  right center transparent;
@@ -453,16 +458,25 @@ fieldset {
   }
   .no_slide {
     margin: 6px 0;
+    padding-left: 5px;
   }
   .item {
     position: relative;
-    top: 8px;
+    top: 4px;
     padding-left: 4px;
     @include border-radius(4px);
+    font-size: 100%;
   }
   .button {
     text-align: center;
     width: 3.7em;
+  }
+  .st_button {
+    margin: 2px 20px 4px 4px;
+    background: transparent;
+    font-weight: bolder;
+    text-align: center;
+    padding: 4px 12px;
   }
   #slider {
     .block {
