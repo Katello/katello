@@ -182,7 +182,10 @@ Src::Application.routes.draw do
     delete 'favorite/:id' => 'search#destroy_favorite', :on => :collection, :as => 'destroy_favorite'
   end
 
-  resource :user_session
+  resource :user_session do
+    get 'invalid'
+  end
+
   resource :account
   root :to => "user_sessions#new"
 
