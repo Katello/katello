@@ -10,8 +10,8 @@
   var content_breadcrumb = $.parseJSON('#{escape_javascript(generate_content_breadcrumb())}');
   var changeset_breadcrumb = $.parseJSON('#{escape_javascript(generate_cs_breadcrumb())}');
   localize({
-    "add": '#{_('Add')}',
-    "remove": '#{_('Remove')}',
+    "add": '+ #{_('Add')}',
+    "remove": '&mdash; #{_('Remove')}',
     "loading": "#{_('Loading Changeset')}",
     "no_products":"#{_('No products exist in the changeset for this product')}",
     "no_errata": "#{_('No errata exist in this changeset.')}",

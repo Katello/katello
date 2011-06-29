@@ -196,7 +196,7 @@ var promotion_page = {
             if (promotion_page.current_product) {
                 var product = promotion_page.current_changeset.products[promotion_page.current_product];
                 if( product !== undefined && product.all !== undefined ){
-                    promotion_page.disable_all();
+                    promotion_page.disable_all(promotion_page.subtypes);
                 } else {
                     jQuery.each(promotion_page.subtypes, function(index, type){
                         var buttons = $('#list').find("a[class~=content_add_remove][data-type=" + type + "]");
@@ -218,7 +218,7 @@ var promotion_page = {
                 });
             }
         } else {
-            promotion_page.disable_all();
+            promotion_page.disable_all(promotion_page.types);
         }
 
         //Reset the review/promote/cancel button
@@ -251,8 +251,9 @@ var promotion_page = {
 
 
     },
-    disable_all: function(){
-        jQuery.each(promotion_page.types, function(index, type){
+    disable_all: function(types){
+        var types = types || promotion_page.subtypes;
+        jQuery.each(types, function(index, type){
             var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
             buttons.addClass('disabled').html(i18n.add);
         });        
@@ -644,12 +645,12 @@ var templateLibrary = (function(){
         listItem = function(id, name, type, product_id) {
             var anchor = "";
             if (promotion_page.current_changeset.is_new()){
-                anchor = '<a ' + 'class="fl content_add_remove remove_' + type + ' + button"'
+                anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"'
                                 + 'data-type="' + type + '" data-product_id="' + product_id +  '" data-id="' + id + '">';
                             anchor += i18n.remove + "</a>";
                         
             }
-            return '<li>' + anchor + '<span class="item">'  + name + '</span></li>';
+            return '<li>' + anchor + '<div class="no_slide"><span>'  + name + '</div></span></li>';
 
         },
         productList = function(changeset, changeset_id, showButton){
@@ -677,16 +678,15 @@ var templateLibrary = (function(){
         productListItem = function(changeset_id, product_id, name, provider, slide_link, showButton){
             var anchor = "";
             if ( showButton ){
-                anchor = '<a class="content_add_remove button fl remove_product" data-display_name="' +
+                anchor = '<a class="st_button content_add_remove fr remove_product" data-display_name="' +
                     name +'" data-id="' + product_id + '" data-type="product" id="add_remove_product_' + product_id +
                     '" data-product_id="' + product_id +
-                    '">Remove</a>';
+                    '">' + i18n.remove + '</a>';
             }
-
             return '<li class="clear">' + anchor +
                     '<div class="' + slide_link + '" id="product-cs_' + changeset_id + '_' + product_id + '">' +
                     '<span class="' + provider + '-product-sprite"></span>' +
-                    '<span class="product-icon" >' + name + '</span>' +
+                    '<span class="product-icon" >' + name + '</span>' + 
                     '</div></li>';
         };
     

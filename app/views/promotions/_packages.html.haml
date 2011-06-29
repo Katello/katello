@@ -8,10 +8,11 @@
           .fl.promoted
             = _("Promoted")
         - elsif @changeset.package_ids.include?(pack.id)
-          %a{:class => "fl content_add_remove remove_package button", "data-display_name"=> pack.nvrea, "data-id" => pack.id, "data-type" => "package", "data-product_id"=>@product.id, :id => "add_remove_package_#{pack.id}"}
+          %a{:class => "fr content_add_remove remove_package st_button", "data-display_name"=> pack.nvrea, "data-id" => pack.id, "data-type" => "package", "data-product_id"=>@product.id, :id => "add_remove_package_#{pack.id}"}
             #{_("Remove")}
         - elsif @environment.successor
-          %a{ :class => "fl content_add_remove add_package button", "data-display_name"=> pack.nvrea, "data-id" => pack.id, "data-type" => "package", "data-product_id"=>@product.id, :id => "add_remove_package_#{pack.id}"}
+          %a{ :class => "fr content_add_remove add_package st_button", "data-display_name"=> pack.nvrea, "data-id" => pack.id, "data-type" => "package", "data-product_id"=>@product.id, :id => "add_remove_package_#{pack.id}"}
             #{_("Add")}
-      %span.item.block{:id => pack.id, "data-ajax_url" => "/packages/#{pack.id}"}
-        = pack.nvrea          
+      .no_slide
+        %span.item.block{:id => pack.id, "data-ajax_url" => "/packages/#{pack.id}"}
+          = pack.nvrea          
