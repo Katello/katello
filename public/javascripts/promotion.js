@@ -229,13 +229,19 @@ var promotion_page = {
             if (promotion_page.current_changeset.is_new()) {
                 cancel_btn.hide();
                 action_btn.html(i18n.review);
+                $("#changeset_tree .tree_breadcrumb").removeClass("locked_breadcrumb");
+                $("#cslist").removeClass("locked");
             }
             else {
                 cancel_btn.show();
                 action_btn.html(i18n.promote);
+                $("#changeset_tree .tree_breadcrumb").addClass("locked_breadcrumb");
+                $("#cslist").addClass("locked");
             }
         }
         else {
+            $("#changeset_tree .tree_breadcrumb").removeClass("locked_breadcrumb");
+            $("#cslist").removeClass("locked");
             cancel_btn.hide();
             action_btn.hide();
         }
@@ -523,6 +529,7 @@ var registerEvents = function(changesetTree){
                 $("#changeset_action").html(i18n.promote).attr("data-confirm", i18n.promote_confirm);
                 $("#review_cancel").show();
                 button.removeClass("disabled");
+                promotion_page.reset_page();
             });
         }
         else {
@@ -537,6 +544,7 @@ var registerEvents = function(changesetTree){
             $("#changeset_action").html(i18n.review);
             $("#review_cancel").hide();
             $("#review_cancel").removeClass("disabled");
+            promotion_page.reset_page();
         });
     });
 
@@ -629,9 +637,13 @@ var templateLibrary = (function(){
             return html;
         },
         listItem = function(id, name, type, product_id) {
-            var anchor = '<a ' + 'class="fl content_add_remove remove_' + type + ' + button"'
-                + 'data-type="' + type + '" data-product_id="' + product_id +  '" data-id="' + id + '">';
-            anchor += i18n.remove + "</a>";
+            var anchor = "";
+            if (promotion_page.current_changeset.is_new()){
+                anchor = '<a ' + 'class="fl content_add_remove remove_' + type + ' + button"'
+                                + 'data-type="' + type + '" data-product_id="' + product_id +  '" data-id="' + id + '">';
+                            anchor += i18n.remove + "</a>";
+                        
+            }
             return '<li>' + anchor + '<span class="item">'  + name + '</span></li>';
 
         },
@@ -657,11 +669,14 @@ var templateLibrary = (function(){
             return html;
         },
         productListItem = function(changeset_id, product_id, name, provider, slide_link){
-            return '<li class="clear">' + 
-                    '<a class="content_add_remove button fl remove_product" data-display_name="' + 
-                    name +'" data-id="' + 
-                    product_id + '" data-type="product" id="add_remove_product_' + product_id + 
-                    '">Remove</a>' +
+            var anchor = "";
+            if (promotion_page.current_changeset.is_new()){
+                anchor = '<a class="content_add_remove button fl remove_product" data-display_name="' +
+                    name +'" data-id="' + product_id + '" data-type="product" id="add_remove_product_' + product_id +
+                    '">Remove</a>';
+            }
+
+            return '<li class="clear">' + anchor +
                     '<div class="' + slide_link + '" id="product-cs_' + changeset_id + '_' + product_id + '">' +
                     '<span class="' + provider + '-product-sprite"></span>' +
                     '<span class="product-icon" >' + name + '</span>' +
