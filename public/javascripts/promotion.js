@@ -96,10 +96,10 @@ var promotion_page = {
         }
 
         var button = promotion_page.find_button(id, type);
+        var product_name = content_breadcrumb['details_' + product_id].name;
         if (adding) {
             button.html(i18n.remove).addClass("remove_" + type).removeClass('add_'+type);
             if( type !== 'product'){
-                product_name = content_breadcrumb['details_' + product_id].name;
                 if( changeset.productCount() === 0 ){
                     promotion_page.add_product_breadcrumbs(changeset.id, product_id, product_name);
                 }
@@ -574,7 +574,8 @@ var templateLibrary = (function(){
             return '<li class="clear">' + 
                     '<a class="content_add_remove button fl remove_product" data-display_name="' + 
                     name +'" data-id="' + 
-                    product_id + '" data-type="product" id="add_remove_product_' + product_id + 
+                    product_id + '" data-type="product" id="add_remove_product_' + product_id +
+                    '" data-product_id="' + product_id + 
                     '">Remove</a>' +
                     '<div class="' + slide_link + '" id="product-cs_' + changeset_id + '_' + product_id + '">' +
                     '<span class="' + provider + '-product-sprite"></span>' +
