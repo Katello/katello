@@ -17,4 +17,4 @@
   %h5.grid_8 #{_("Permissions")}  
   = render :partial => 'permissions', :locals => {:role => role}
 
-= link_to _("Remove User"), { :controller => "users", :action => "destroy" }, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
+= link_to _("Remove User"), { :controller => "users", :action => "destroy", :id => @user.id }, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
