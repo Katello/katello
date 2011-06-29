@@ -48,9 +48,10 @@ module Pulp
     self.consumer_secret = cfg.oauth_secret
     self.consumer_key = cfg.oauth_key
     self.ca_cert_file = cfg.ca_cert_file
-    self.default_headers = {'pulp-user' => 'admin',
-                            'accept' => 'application/json',
-                            'content-type' => 'application/json'}
+
+    def self.default_headers
+      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.current.pulp_oauth_header)
+    end
   end
 
   class PulpPing < PulpResource
@@ -71,10 +72,6 @@ module Pulp
   class Package < PulpResource
 
     class << self
-      def find package_id
-        response = get(package_path + package_id + "/", self.default_headers)
-        JSON.parse(response.body).with_indifferent_access
-      end
 
       # Get all the Repositories known by Pulp
       def all
@@ -133,7 +130,7 @@ module Pulp
     class << self
 
       def clone_repo from_repo, to_repo, feed = "parent"  #clone is a built in method, hence redundant name
-        data = {:clone_id => to_repo.id, :feed =>feed, :clone_name => "clone:#{to_repo.name}", :groupid=>to_repo.groupid}
+        data = {:clone_id => to_repo.id, :feed =>feed, :clone_name => to_repo.name, :groupid=>to_repo.groupid}
         path = Repository.repository_path + from_repo.id + "/clone/"
         post(path, JSON.generate(data), self.default_headers).body
         nil #it seems that pulp can be slow to update repos
@@ -194,6 +191,10 @@ module Pulp
         body = post(Repository.repository_path + repo_id +"/add_package/", {:packageid=>pkg_id_list}.to_json, self.default_headers).body
       end
 
+      def add_errata repo_id, errata_id_list
+        body = post(Repository.repository_path + repo_id +"/add_errata/", {:errataid=>errata_id_list}.to_json, self.default_headers).body
+      end
+
       def destroy repo_id
         raise ArgumentError, "repo id has to be specified" unless repo_id
         self.delete(repository_path  + repo_id + "/", self.default_headers).code.to_i
@@ -252,6 +253,34 @@ module Pulp
         body = response.body
         JSON.parse(body)
       end
+
+    end
+  end
+
+  class Consumer < PulpResource
+
+    class << self
+      def find consumer_id
+        response = get(consumer_path(consumer_id), self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def installed_packages consumer_id
+        response = get(consumer_path(consumer_id) + "/package_profile/", self.default_headers)
+        JSON.parse(response.body)
+      end
+
+      def destroy consumer_id
+        raise ArgumentError, "consumer_id id has to be specified" unless consumer_id
+        self.delete(consumer_path(consumer_id), self.default_headers).code.to_i
+      end
+
+      def consumer_path id = nil
+        url = "/pulp/api/consumers/#{id}"
+        url = url + "/" if id
+        url
+      end
+
 
     end
   end

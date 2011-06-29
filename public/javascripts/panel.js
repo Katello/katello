@@ -336,15 +336,11 @@ var panel = (function(){
                     url: jQuery.param.querystring(url, params),
                     cache: false,
                     success: function(data) {
+                        var expand_list = $('.expand_list');
                         panel.retrievingNewContent = false;
-                        var ul = list.find("ul")[0];
-                        if (ul) {
-                            $(ul).append(data); //The promotions page(s) uses a <ul> for each item instead of divs
-                        }
-                        else {
-                            list.append(data);
-                        }
+                        expand_list.append(data);
                         $('#list-spinner').remove();
+                        
                         if (data.length == 0) {
                             list.removeClass("ajaxScroll");
                         }

@@ -1,0 +1,21 @@
+.block{:id => item.send(accessor), "data-ajax_url" => url_for(:action=> 'edit', :id => item.send(accessor))}
+  - for col in columns
+    %div{:class => 'column_' + columns.length.to_s}
+      - if col.to_s == 'name'
+        = item.send('name')[0...32]
+      - elsif col.to_s == 'created'
+        = convert_time(item.created)
+      - elsif col.to_s == 'lastCheckin'
+        = get_checkin(item)
+      - else
+        = item.send(col)
+  %div
+    %div{:class => 'column_1'}
+      %ul
+        %li
+          = _('Kernel: ')
+          = item.send('kernel')
+        %li
+          = _('IP: ')
+          = item.send('ip')
+  .arrow-right

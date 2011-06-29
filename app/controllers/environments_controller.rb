@@ -36,7 +36,7 @@ class EnvironmentsController < ApplicationController
     # the edit view
     prior_envs = envs_no_successors - [@environment] - @environment.path
     env_labels = Hash[ *prior_envs.collect { |p| [ p.id, p.name ] }.flatten]
-    env_labels[''] = _("Locker")
+    #env_labels[''] = _("Locker")
     @env_labels_json = ActiveSupport::JSON.encode(env_labels)
 
     @selected = @environment.prior.nil? ? env_labels[""] : env_labels[@environment.prior.id]
@@ -103,12 +103,14 @@ class EnvironmentsController < ApplicationController
   end
 
   def setup_new_edit_screen
-    envs_no_successors = @organization.environments.reject {|item| !item.successor.nil?}
     @env_labels = (envs_no_successors - [@environment]).collect {|p| [ p.name, p.id ]}
     @selected = @environment.prior.nil? ? "" : @environment.prior.id
   end
+  
   def envs_no_successors
-    @organization.environments.reject {|item| !item.successor.nil?}
+    envs = [@organization.locker]
+    envs += @organization.environments.reject {|item| !item.successor.nil?}
+    envs
   end
 
   def catch_exceptions

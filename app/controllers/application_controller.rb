@@ -320,7 +320,11 @@ class ApplicationController < ActionController::Base
     options[:accessor] ||= "id"
     options[:collection] = items
     options[:columns] = options[:col]
-    render :partial=>"common/list_items", :locals=>options
+    if options[:list_partial]
+      render :partial=>options[:list_partial], :locals=>options
+    else
+      render :partial=>"common/list_items", :locals=>options
+    end
   end
 
 

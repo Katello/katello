@@ -88,6 +88,7 @@ module ApplicationHelper
              :create => options[:create],
              :enable_create => enable_create,
              :columns => options[:col],
+             :custom_rows => options[:custom_rows],
              :collection => collection,
              :accessor=>options[:accessor],
              :url=>options[:url], 
@@ -106,6 +107,7 @@ module ApplicationHelper
              :title => options[:title],
              :name => options[:name],
              :columns => options[:col],
+             :custom_rows => options[:custom_rows],
              :collection => collection,
              :accessor=>options[:accessor] }
   end
