@@ -105,8 +105,6 @@ function valid_id() {
     fi
 }
 
-test "org delete" org delete --name="XXX"
-exit
 
 #testing organization
 FIRST_ORG=ACME_Corporation
