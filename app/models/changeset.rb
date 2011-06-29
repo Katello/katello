@@ -42,8 +42,7 @@ class Changeset < ActiveRecord::Base
   scoped_search :in => :products, :on => :description, :complete_value => true, :rename => :'custom_product.description'
 
   def generate_name
-    #self.name = I18n.l(DateTime.now, :format=>:long) if name.blank?
-    self.name = "XXX" if name.blank?
+    self.name = I18n.l(DateTime.now, :format=>:long) if name.blank?
   end
 
   def key_for item

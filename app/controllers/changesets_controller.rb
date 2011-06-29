@@ -54,7 +54,7 @@ class ChangesetsController < ApplicationController
 
   #list item
   def show
-    render :partial=>"common/list_update", :locals=>{:item=>@changeset, :accessor=>"id", :columns=>['name']}
+    render :partial=>"common/list_update", :locals=>{:item=>@changeset, :accessor=>"id", :columns=>['name'], :chgusers=>changeset_users}
   end
 
   def show_content
@@ -70,11 +70,7 @@ class ChangesetsController < ApplicationController
   ####
   # Promotion methods
   ####
-
-  def unpromoted_index
-    @changesets = @environment.working_changesets
-  end
-
+  
   def products
     @products = @changeset.products
     render :partial=>"products", :locals=>{:changeset=>@changeset}
@@ -108,7 +104,7 @@ class ChangesetsController < ApplicationController
     render :json => {
       'breadcrumb' => bc,
       'id' => @changeset.id,
-      'html' => render_to_string(:partial=>"changesets/unpromoted_item", :locals=>{:cs=>@changeset})
+      'changeset' => simplify_changeset(@changeset)
     }
   end
 
@@ -122,13 +118,26 @@ class ChangesetsController < ApplicationController
       render :text=>params[:name] and return
     end
 
+    if params[:state]
+      raise _('Invalid state') if !["review", "new"].index(params[:state])
+      if send_changeset
+        to_ret = {}
+        to_ret[:changeset] = simplify_changeset(@changeset) if send_changeset
+        render :json=>to_ret, :status=>:bad_request and return
+      end
+      @changeset.state = Changeset::REVIEW if params[:state] == "review"
+      @changeset.state = Changeset::NEW if params[:state] == "new"
+      @changeset.save!
+      render :json=>{:timestamp=>@changeset.updated_at.to_i.to_s} and return
+    end
+
     if params.has_key? :data
       params[:data].each do |item|
         adding = item["adding"]
         type = item["type"]
-        id = item["mod_id"] #id of item being added/removed
-        name = item["mod_name"] #display of item being added/removed
-        pid = item["product_id"];
+        id = item["item_id"] #id of item being added/removed
+        name = item["item_name"] #display of item being added/removed
+        pid = item["product_id"]
         case type
         when "product"
           @changeset.products << Product.where(:id => id) if adding
@@ -153,14 +162,13 @@ class ChangesetsController < ApplicationController
     end
     to_ret = {:timestamp=>@changeset.updated_at.to_i.to_s}
     to_ret[:changeset] = simplify_changeset(@changeset) if send_changeset
-    Rails.logger.debug("Sending full changeset")
     render :json=>to_ret
   end
   
   def destroy
     name = @changeset.name
     id = @changeset.id
-    @changeset.destroyq
+    @changeset.destroy
     notice _("Changeset '#{name}' was deleted.")
     render :text=>""
   end
@@ -204,7 +212,8 @@ class ChangesetsController < ApplicationController
   end
 
   def update_editors
-    usernames = @changeset.users.collect { |c| User.where(:id => c.user_id)[0].username }
+    usernames = @changeset.users.collect { |c| User.where(:id => c.user_id ).order("updated_at desc")[0].username }
+    usernames.delete(current_user.username)  
     response.headers['X-ChangesetUsers'] = usernames.to_json
   end
 
@@ -222,9 +231,11 @@ class ChangesetsController < ApplicationController
   end
   
   def handle_exceptions(error)
+    Rails.logger.info  error.to_s
+    Rails.logger.info error.backtrace.join("\n")
     errors error
     render :text => error.to_s, :status => :bad_request
-    Rails.logger.info error.backtrace.join("\n")
+
   end
   
 end
