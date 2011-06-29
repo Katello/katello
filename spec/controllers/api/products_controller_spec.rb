@@ -68,7 +68,7 @@ describe Api::ProductsController do
 
   context "show all products in an environment" do
     it "should find organization" do
-      Organization.should_receive(:first).once.with({:conditions => {:name => organization_id}}).and_return(@organization)
+      Organization.should_receive(:first).once.with({:conditions => {:cp_key => organization_id}}).and_return(@organization)
       get 'index', :organization_id => organization_id
     end
 
@@ -90,7 +90,7 @@ describe Api::ProductsController do
 
   context "show all products in locker" do
     it "should find organization" do
-      Organization.should_receive(:first).once.with({:conditions => {:name => organization_id}}).and_return(@organization)
+      Organization.should_receive(:first).once.with({:conditions => {:cp_key => organization_id}}).and_return(@organization)
       get 'index', :organization_id => organization_id
     end
 
@@ -113,7 +113,7 @@ describe Api::ProductsController do
   context "show repositories for a product in an environment" do
 
     it "should find organization" do
-      Organization.should_receive(:first).once.with({:conditions => {:name => organization_id}}).and_return(@organization)
+      Organization.should_receive(:first).once.with({:conditions => {:cp_key => organization_id}}).and_return(@organization)
       get 'repositories', :organization_id => organization_id, :environment_id => environment_id, :id => product_id
     end
 
