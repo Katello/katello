@@ -38,7 +38,7 @@ SimpleNavigation::Configuration.run do |navigation|
         sync_sub.item :schedule, _("Sync Schedule"), :controller => 'sync_schedules'
       end
       #TODO: tie in Content Locker page
-      content_sub.item :promotions, _("Promotions"), promotions_path(current_organization().name, 'locker'), :highlights_on =>/\/organizations\/.*\/environments\/.*\/promotions/ ,:class => 'content' do |package_sub|
+      content_sub.item :promotions, _("Promotions"), promotions_path(current_organization().name, current_organization().locker.name), :highlights_on =>/\/organizations\/.*\/environments\/.*\/promotions/ ,:class => 'content' do |package_sub|
           if !@package.nil?
               package_sub.item :details, _("Details"), package_path(@package.id), :class=>"navigation_element"
               package_sub.item :details, _("Dependencies"), dependencies_package_path(@package.id), :class=>"navigation_element"
