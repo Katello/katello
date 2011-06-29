@@ -120,7 +120,7 @@ class User < ActiveRecord::Base
   end
 
   # Create permission for the user's own role - for more info see Role.allow
-  def allow(verb, resource_type, tags)
+  def allow(verb, resource_type, tags = nil)
     raise ArgumentError, "user has no own role" if own_role.nil? or not own_role.is_a? Role
     own_role.allow(verb, resource_type, tags)
   end
