@@ -10,7 +10,7 @@ export PYTHONPATH=$script_dir/../../cli/src
 
 RAND=$(date | md5sum | cut -c1-6)
 USER='admin'
-PASSWORD='password123'
+PASSWORD='admin'
 CMD="$script_dir/../../cli/bin/katello -u $USER -p $PASSWORD"
 
 test_cnt=0
