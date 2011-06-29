@@ -20,7 +20,7 @@ class Organization < ActiveRecord::Base
   has_many :systems, :dependent => :destroy, :inverse_of => :organization
   has_many :environments, :class_name => "KPEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
   has_one :locker, :class_name =>"KPEnvironment", :conditions => {:locker => true}, :dependent => :destroy
-  attr_accessor :parent_id,:pools
+  attr_accessor :parent_id,:pools,:statistics
 
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'organization.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'organization.description'

@@ -15,7 +15,18 @@ class SubscriptionsController < ApplicationController
 
   def index
     all_subs = Candlepin::Owner.pools current_organization.cp_key
-    @subscriptions = []
+    @subscriptions = reformat_subscriptions(all_subs)
+  end
+
+  # Reformat the subscriptions from our API to a format that the headpin HAML expects
+  def reformat_subscriptions(all_subs)
+    subscriptions = []
+    org_stats = Candlepin::Owner.statistics current_organization.cp_key
+    converted_stats = []
+    org_stats.each do |stat|
+      converted_stats << OpenStruct.new(stat)
+    end
+    debugger
     all_subs.each do |sub|
       product = Product.where(:cp_id =>sub["productId"]).first
       converted_product = OpenStruct.new
@@ -25,12 +36,13 @@ class SubscriptionsController < ApplicationController
       # Convert to OpenStruct so we can access fields with dot notation
       # in the haml. This reduces the code changes we pull in from headpin
       converted_sub = OpenStruct.new(sub)
+      converted_sub.consumed_stats = converted_stats
       converted_sub.product = converted_product
       converted_sub.startDate = Date.parse(converted_sub.startDate)
       converted_sub.endDate = Date.parse(converted_sub.endDate)
-      @subscriptions << converted_sub if !@subscriptions.include? converted_sub
+      subscriptions << converted_sub if !subscriptions.include? converted_sub
     end
-    @subscriptions
+    subscriptions
   end
 
 end

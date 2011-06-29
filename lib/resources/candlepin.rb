@@ -207,6 +207,11 @@ module Candlepin
         JSON.parse(jsonStr).collect {|p| p.with_indifferent_access }
       end
 
+      def statistics key
+        jsonStr = self.get(join_path(path(key), 'statistics'), self.default_headers).body
+        JSON.parse(jsonStr).collect {|p| p.with_indifferent_access }
+      end
+
       def path(id=nil)
         "/candlepin/owners/#{url_encode id}"
       end
