@@ -231,17 +231,20 @@ var promotion_page = {
                 action_btn.html(i18n.review);
                 $("#changeset_tree .tree_breadcrumb").removeClass("locked_breadcrumb");
                 $("#cslist").removeClass("locked");
+                $(".content_add_remove").show();
             }
-            else {
+            else { //in review stage
                 cancel_btn.show();
                 action_btn.html(i18n.promote);
                 $("#changeset_tree .tree_breadcrumb").addClass("locked_breadcrumb");
                 $("#cslist").addClass("locked");
+                $(".content_add_remove").hide();
             }
         }
         else {
             $("#changeset_tree .tree_breadcrumb").removeClass("locked_breadcrumb");
             $("#cslist").removeClass("locked");
+            $(".content_add_remove").show();
             cancel_btn.hide();
             action_btn.hide();
         }
