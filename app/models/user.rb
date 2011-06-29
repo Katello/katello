@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   has_many :search_histories, :dependent => :destroy
 
   validates :username, :uniqueness => true, :presence => true, :username => true
-  validates :password, :presence => true, :length=>{:within=>6..100}
+  validates :password, :presence => true, :length=>{:within=>5..100}
   validate :own_role_included_in_roles
 
   # check if the role does not already exist for new username
