@@ -328,21 +328,21 @@ class ApplicationController < ActionController::Base
   #produce a simple datastructure of a changeset for the browser
   def simplify_changeset cs
 
-    to_ret = {:id=>cs.id.to_s, :timestamp =>cs.updated_at.to_i.to_s}
+    to_ret = {:id=>cs.id.to_s, :timestamp =>cs.updated_at.to_i.to_s, :products=>{}, :is_new => cs.state == Changeset::NEW}
 
     cs.involved_products.each{|product|
-      to_ret[product.id] = {:name=>product.name, 'package'=>[], 'errata'=>[], 'repo'=>[]}
+      to_ret[:products][product.id] = {:id=> product.id, :name=>product.name, :provider=>product.provider.provider_type, 'package'=>[], 'errata'=>[], 'repo'=>[]}
     }
 
     cs.products.each {|product|
-      to_ret[product.id][:all] =  true;
+      to_ret[:products][product.id][:all] =  true;
     }
 
     ['repo', 'errata', 'package'].each{ |type|
       cs.send(type.pluralize).each{|item|
         p item
         pid = item.product_id
-        cs_product = to_ret[pid]
+        cs_product = to_ret[:products][pid]
         cs_product[type] << {:id=>item.send("#{type}_id"), :name=>item.display_name}
       }
     }

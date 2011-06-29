@@ -146,7 +146,6 @@ Src::Application.routes.draw do
     collection do
       get :list
       get :items
-      get :unpromoted
     end
   end
 
