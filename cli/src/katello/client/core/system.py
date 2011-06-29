@@ -84,16 +84,19 @@ class Register(SystemAction):
                                help=_("system name (required)"))
         self.parser.add_option('--org', dest='org',
                        help=_("organization name (required)"))
+        self.parser.add_option('--environment', dest='environment', 
+                       help=_("environment name eg: development"))
 
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
 
     def run(self):
-
         name = self.get_option('name')
         org = self.get_option('org')
-        system = self.api.register(name, org, 'system')
+        environment = self.get_option('environment')
+        
+        system = self.api.register(name, org, environment, 'system')
 
         if is_valid_record(system):
           print _("Successfully created system [ %s ]") % system['name']
