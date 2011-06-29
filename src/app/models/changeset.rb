@@ -112,8 +112,10 @@ class Changeset < ActiveRecord::Base
   end
 
   def promote
-    from_env = self.environment
-    to_env   = self.environment.successor
+    raise _("Cannot promote a changeset when it is not in the reivew phase") if self.state != Changeset::REVIEW
+
+    from_env = self.environment.prior
+    to_env   = self.environment
 
     promote_products from_env, to_env
     promote_repos    from_env, to_env

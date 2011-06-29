@@ -11,6 +11,12 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
+
+/*
+ * THIS FILE IS DEPRECATED, DO NOT MAKE ADDITIONS
+ */
+
+
 var client_common = {
     create: function(data, url, on_success, on_error) {
       $.ajax({
@@ -116,7 +122,7 @@ var search = {
         success: on_success,
         error: on_error
       });
-    },
+    }
 }
 
 var user = {
@@ -191,30 +197,6 @@ var environment = {
 
 
 var change_set = {
-    update: function(changeset_id, items, timestamp, on_success, on_error) {
-      var data = [];
-      $.each(items, function(index, value) {
-          var item = {};
-          item["type"] = value[0];
-          item["item_id"] = value[1];
-          item["item_name"] = value[2];
-          item["adding"] = value[3];
-          if (value[4]) {
-              item["product_id"] = value[4];
-          }
-          data.push(item);
-        });
-      $.ajax({
-        contentType:"application/json",
-        type: "PUT",
-        url: "/changesets/" + changeset_id,
-        data: JSON.stringify({data:data, timestamp:timestamp}),
-        cache: false,
-        success: on_success,
-        error: on_error
-      });
-    },
-
     update_name: function(changeset_id, name, on_success, on_error) {
         $.ajax({
           type: "PUT",
@@ -224,18 +206,8 @@ var change_set = {
           success: on_success,
           error: on_error
         });
-    },
-
-    get: function(changeset_id, on_success, on_error, data_type) {
-      $.ajax({
-        type: "GET",
-        dataType: data_type === undefined ? "html" : data_type,
-        url: "/changesetss/" + changeset_id,
-        cache: false,
-        success: on_success,
-        error: on_error
-      });
     }
+
 };
 
 var notice = {
