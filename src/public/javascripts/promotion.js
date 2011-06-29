@@ -94,10 +94,10 @@ var promotion_page = {
         }
 
         var button = promotion_page.find_button(id, type);
+        var product_name = content_breadcrumb['details_' + product_id].name;
         if (adding) {
             button.html(i18n.remove).addClass("remove_" + type).removeClass('add_'+type);
             if( type !== 'product'){
-                product_name = content_breadcrumb['details_' + product_id].name;
                 if( changeset.productCount() === 0 ){
                     promotion_page.add_product_breadcrumbs(changeset.id, product_id, product_name);
                 }
@@ -589,7 +589,8 @@ var promotionsRenderer = (function($){
                 return templateLibrary.productDetailList(product_id, changeset_id);
             }
             else if (hash.split("_")[0] === 'changeset'){
-                return templateLibrary.productList(promotion_page.current_changeset.products, promotion_page.current_changeset.id);
+                var reviewPhase = promotion_page.current_changeset.is_new();
+                return templateLibrary.productList(promotion_page.current_changeset, promotion_page.current_changeset.id, reviewPhase);
             }
         };
 
@@ -650,32 +651,34 @@ var templateLibrary = (function(){
             return '<li>' + anchor + '<span class="item">'  + name + '</span></li>';
 
         },
-        productList = function(products, changeset_id){
+        productList = function(changeset, changeset_id, showButton){
             var html = '<ul>', 
                 product, provider,
                 all, 
-                count = 0;
+                products = changeset.products;
             
-            for( key in products ){
-                if( products.hasOwnProperty(key) ){
-                    product = products[key];
-                    provider = (product.provider === 'REDHAT') ? 'rh' : 'custom';
-                    all = product.all ? 'no_slide' : 'slide_link';
-                    html += productListItem(changeset_id, key, product.name, provider, all)
-                }
-                count += 1;
-            }
-            if( count === 0 ){
+            if( changeset.productCount() === 0 ){
                 html += i18n['no_products'];
+            } else {
+                for( key in products ){
+                    if( products.hasOwnProperty(key) ){
+                        product = products[key];
+                        provider = (product.provider === 'REDHAT') ? 'rh' : 'custom';
+                        all = product.all ? 'no_slide' : 'slide_link';
+                        html += productListItem(changeset_id, key, product.name, provider, all, showButton)
+                    }
+                }
             }
+            
             html += '</ul>';
             return html;
         },
-        productListItem = function(changeset_id, product_id, name, provider, slide_link){
+        productListItem = function(changeset_id, product_id, name, provider, slide_link, showButton){
             var anchor = "";
-            if (promotion_page.current_changeset.is_new()){
+            if ( showButton ){
                 anchor = '<a class="content_add_remove button fl remove_product" data-display_name="' +
                     name +'" data-id="' + product_id + '" data-type="product" id="add_remove_product_' + product_id +
+                    '" data-product_id="' + product_id +
                     '">Remove</a>';
             }
 
