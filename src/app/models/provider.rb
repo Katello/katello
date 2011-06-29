@@ -29,7 +29,8 @@ class Provider < ActiveRecord::Base
     :in => TYPES,
     :allow_blank => false,
     :message => "Please select provider type from one of the following: #{TYPES.join(', ')}."
-  validates_format_of :repository_url, :with => URI::regexp(%w(https)), :if => :rh_repo?
+  #validates_format_of :repository_url, :with => URI::regexp(%w(https)), :if => :rh_repo?
+  validates_format_of :repository_url, :with => /^https:\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix, :if => :rh_repo?
 
   scoped_search :on => :name, :complete_value => true, :rename => :'provider.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'provider.description'

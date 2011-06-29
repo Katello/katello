@@ -23,26 +23,27 @@ describe System do
   let(:entitlements) { {} }
   let(:pools) { {} }
   let(:available_pools) { {} }
+
   before(:each) do
     disable_org_orchestretion
 
-    @system = System.new(:name => system_name, :cp_type => cp_type, :facts => facts)
-    Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Candlepin::Consumer.stub!(:update).and_return(true)
-
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
     Organization.stub!(:first).and_return(@organization)
+
+    @system = System.new(:name => system_name, :organization => @organization, :cp_type => cp_type, :facts => facts)
+    Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Candlepin::Consumer.stub!(:update).and_return(true)
   end
 
   context "system in invalid state should not be valid" do
     before(:each) { @system = System.new }
-    specify { System.new(:name => 'name', :cp_type => cp_type).should_not be_valid }
-    specify { System.new(:name => 'name', :facts => facts).should_not be_valid }
-    specify { System.new(:cp_type => cp_type, :facts => facts).should_not be_valid }
+    specify { System.new(:name => 'name', :organization => @organization, :cp_type => cp_type).should_not be_valid }
+    specify { System.new(:name => 'name', :organization => @organization, :facts => facts).should_not be_valid }
+    specify { System.new(:cp_type => cp_type, :organization => @organization, :facts => facts).should_not be_valid }
   end
 
   it "registers system in candlepin on create" do
-    Candlepin::Consumer.should_receive(:create).once.with(system_name, cp_type, facts).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Candlepin::Consumer.should_receive(:create).once.with(@organization.name, system_name, cp_type, facts).and_return({:uuid => uuid, :owner => {:key => uuid}})
     @system.save!
   end
 
@@ -53,6 +54,7 @@ describe System do
 
     it "should delete consumer in candlepin" do
       Candlepin::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
+      Pulp::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
       @system.destroy
     end
   end

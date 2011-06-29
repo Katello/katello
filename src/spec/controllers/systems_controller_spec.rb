@@ -20,15 +20,15 @@ describe SystemsController do
   before (:each) do
     login_user
     set_default_locale
-    setup_system_creation
     
+    @organization = setup_system_creation
     controller.stub!(:errors)
     controller.stub!(:notice)
   end
   
   describe "viewing systems" do
     before (:each) do
-      100.times{|a| System.create!(:name=>"bar#{a}", :cp_type=>"system", :facts=>{"Test" => ""})}
+      100.times{|a| System.create!(:name=>"bar#{a}", :organization=>@organization, :cp_type=>"system", :facts=>{"Test" => ""})}
     end
 
     it "should show the system 2 pane list" do
@@ -42,7 +42,7 @@ describe SystemsController do
     it "should return a portion of systems" do
       get :items, :offset=>25
       response.should be_success
-      response.should render_template("list_items")
+      response.should render_template("list_systems")
       assigns[:systems].should include System.find(30)
       assigns[:systems].should_not include System.find(8)
     end
@@ -55,7 +55,8 @@ describe SystemsController do
     
     describe 'and requesting individual data' do
       before (:each) do 
-        @system = System.create!(:name=>"verbose", :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
+        @system = System.create!(:name=>"verbose", :organization=>@organization, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
+        Pulp::Consumer.stub!(:installed_packages).and_return([])
       end
       
       it "it should show facts" do
@@ -80,7 +81,7 @@ describe SystemsController do
   
   describe 'updating a system' do
     before (:each) do
-      @system = System.create!(:name=>"bar", :cp_type=>"system", :facts=>{"Test" => ""})
+      @system = System.create!(:name=>"bar", :organization=>@organization, :cp_type=>"system", :facts=>{"Test" => ""})
     end
     
     it "should update the system name" do

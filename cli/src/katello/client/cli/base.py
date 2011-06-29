@@ -39,6 +39,12 @@ class KatelloCLI(object):
         self._commands = {}
         self.usage_line = 'Usage: %s <options> <command>' % self.name
 
+        self._username = None
+        self._password = None
+
+        self._certfile = None
+        self._keyfile  = None
+        
     @property
     def usage(self):
         """
@@ -119,9 +125,16 @@ class KatelloCLI(object):
         """
         Setup up request credentials with the active server.
         """
-        if None not in (self.opts.username, self.opts.password):
-            self._server.set_basic_auth_credentials(self.opts.username,
-                                                    self.opts.password)
+
+        self._username = self._username or self.opts.username
+        self._password = self._password or self.opts.password
+        
+        self._certfile = self._certfile or self.opts.certfile
+        self._keyfile = self._keyfile or self.opts.keyfile
+        
+        if None not in (self._username, self._password):
+            self._server.set_basic_auth_credentials(self._username,
+                                                    self._password)
         elif None not in (self.opts.certfile, self.opts.keyfile):
             self._server.set_ssl_credentials(self.opts.certfile,
                                              self.opts.keyfile)

@@ -1,7 +1,6 @@
 @charset "UTF-8";
-@import "compass/reset";
 @import "base";
-@import "text";
+@import "grid";
 
 #main {
   ul {
@@ -225,14 +224,17 @@ fieldset {
   .column_1 {
     width: 100%;
     float: left;
+    height: inherit;
   }
   .column_2 {
     width: 50%;
     float: left;
+    height: inherit;
   }
   .column_3 {
     width: 33%;
     float: left;
+    height: inherit;
     &:last-child {
       width: 34%;
     }
@@ -262,6 +264,9 @@ fieldset {
       width: 0;
       z-index: 220;
     }
+    a, a:hover, a:visited, a:active, a:link {
+     font-color: #FFF;
+    }
   }
   &.add {
     background-color: $listhover;
@@ -275,6 +280,20 @@ fieldset {
       }
   }
 
+}
+#systems{
+  .block{
+    @extend .block;
+    height: 70px;
+
+    li {
+      padding: 0;
+      height: 1.2em;
+    }
+    .column_3 {
+      height: 35px;
+    }
+  }
 }
 #plans {
   .block {
@@ -622,7 +641,7 @@ $repo_color: #4A9FB1;
   padding: 12px;
   border: 1px solid #DDD;
   width: 80%;
-  margin: 0 auto 5px auto;
+  margin: 10px auto 5px auto;
   @extend .clearfix;
 }
 

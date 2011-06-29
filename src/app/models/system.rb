@@ -12,10 +12,12 @@
 
 class System < ActiveRecord::Base
   include Glue::Candlepin::Consumer
+  include Glue::Pulp::Consumer
   include Glue
   include Authorization
 
   belongs_to :organization, :inverse_of => :systems
+  validates :organization, :presence => true
   validates :name, :presence => true, :no_trailing_space => true
   validates :description, :katello_description_format => true
   before_create  :fill_defaults

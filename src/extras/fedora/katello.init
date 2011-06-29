@@ -100,6 +100,14 @@ restart() {
     start
 }
 
+condstop() {
+    if status_q; then
+        stop
+    else
+        RETVAL=0
+    fi
+}
+
 condrestart() {
     if status_q; then
         restart
@@ -107,7 +115,6 @@ condrestart() {
         RETVAL=0
     fi
 }
-
 
 case "$1" in
     start)
@@ -122,11 +129,27 @@ case "$1" in
     condrestart|try-restart)
         condrestart
         ;;
+    condstop)
+        condstop
+        ;;
     status)
         status
         ;;
+    depcheck)
+        # check if required dependencies from Gemfile are installed
+        pushd $KATELLO_HOME
+        su $KATELLO_USER -s /bin/bash -c "bundle install --without 'test development' --local"
+        popd
+        ;;
+    initdb)
+        # stop if it is running
+        condstop
+        pushd $KATELLO_HOME
+        su $KATELLO_USER -s /bin/bash -c "RAILS_ENV=$KATELLO_ENV rake setup --trace"
+        popd
+        ;;
     *)
-        echo "Usage: {start|stop|restart|condrestart|status}"
+        echo "Usage: {start|stop|restart|condrestart|status|initdb}"
         exit 1
         ;;
 esac

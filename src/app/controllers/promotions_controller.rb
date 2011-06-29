@@ -11,9 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class PromotionsController < ApplicationController
-  
+
   before_filter :find_environment
-  
+
   def section_id
     'contents'
   end
@@ -21,7 +21,7 @@ class PromotionsController < ApplicationController
   def show
     setup_environment_selector(current_organization)
     @products = @environment.products.reject{|p| p.repos(@environment).empty?}.sort{|a,b| a.name <=> b.name}
-    
+
     @changeset_product_ids = @changeset.products.collect { |p| p.cp_id } if @changeset
     @changeset_product_ids ||= []
 
@@ -45,20 +45,20 @@ class PromotionsController < ApplicationController
   def packages
       package_hash = {}
       @product.repos(@environment).each{|repo|
-        repo.packages.each{|pkg| 
+        repo.packages.each{|pkg|
           package_hash[pkg.id] = pkg if package_hash[pkg.id].nil?
-        }  
+        }
       }
-      
+
      @next_env_pkgs = []
      if @next_environment
        @product.repos(@next_environment).each{|repo|
-          repo.packages.each{|pkg| 
+          repo.packages.each{|pkg|
             @next_env_pkgs << pkg.id
-          }  
-        }         
-     end      
-    
+          }
+        }
+     end
+
       @packages = package_hash.values
       @packages.sort! {|a,b| a.nvrea <=> b.nvrea}
       offset = params[:offset]
@@ -70,7 +70,7 @@ class PromotionsController < ApplicationController
         @packages = @packages[0..current_user.page_size]
       end
 
-      render :partial=>"packages"    
+      render :partial=>"packages"
   end
 
 
@@ -124,23 +124,23 @@ class PromotionsController < ApplicationController
   end
 
 
-  private 
-  
+  private
+
   def find_environment
     @organization = Organization.first(:conditions => {:cp_key => params[:org_id]})
-    @environment = KPEnvironment.first(:conditions => {:name=>params[:env_id]})
+    @environment = KPEnvironment.first(:conditions => {:name=>params[:env_id], :organization_id=>@organization.id})
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor
 
     @path = @next_environment.full_path if @next_environment
-    @path ||= @environment.full_path
+    @path ||= [current_organization.locker]
     @path = [current_organization.locker] + @path if !@path.first.locker?
 
     if params[:changeset_id]
       @changeset = Changeset.find(params[:changeset_id])
-    elsif @next_environment
-      @changeset = @next_environment.working_changesets.first
-    end    
+    elsif @environment
+      @changeset = @environment.working_changesets.first
+    end
 
     @product = Product.find(params[:product_id]) if params[:product_id]
   end

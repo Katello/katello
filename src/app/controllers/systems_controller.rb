@@ -12,6 +12,7 @@
 
 class SystemsController < ApplicationController
   include AutoCompleteSearch
+  include SystemsHelper
   before_filter :find_system, :except =>[:index, :auto_complete_search, :items]
   before_filter :setup_options, :only => [:index, :items]
   
@@ -34,9 +35,11 @@ class SystemsController < ApplicationController
 
   def setup_options
     @panel_options = { :title => _('Systems'),
-                      :col => ['name',"ip","kernel"],
+                      :col => ['name','lastCheckin','created'],
+                      :custom_rows => true,
                       :enable_create => false,
                       :name => _('system'),
+                      :list_partial => 'systems/list_systems',
                       :ajax_scroll => items_systems_path()}
   end
 
@@ -60,9 +63,7 @@ class SystemsController < ApplicationController
   end
   
   def packages
-    packages = (0..25).collect do |p|
-      OpenStruct.new(:name => "package-#{p}", :arch => ["noarch", "i686", "x86_64"].choice)
-    end
+    packages = @system.packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
     render :partial=>"packages", :locals=>{:system=>@system, :packages => packages}
   end
   

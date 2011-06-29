@@ -37,9 +37,6 @@ class EnvironmentAction(Action):
         
         
     def get_prior_id(self, orgName, priorName):
-        if priorName == None:
-            return None
-           
         prior = get_environment(orgName, priorName)
         if prior != None:
             return prior["id"]
@@ -117,12 +114,13 @@ class Create(EnvironmentAction):
         self.parser.add_option('--name', dest='name',
                                help=_("environment name (required)"))
         self.parser.add_option('--prior', dest='prior',
-                               help=_("name of prior environment"))
+                               help=_("name of prior environment (required)"))
 
 
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
+        self.require_option('prior')
 
 
     def run(self):
@@ -176,7 +174,10 @@ class Update(EnvironmentAction):
         
         env = get_environment(orgName, envName)
         if env != None:
-            priorId = self.get_prior_id(orgName, priorName)
+            if priorName != None:
+              priorId = self.get_prior_id(orgName, priorName)
+            else:
+              priorId = None
             env = self.api.update(orgName, env["id"], newName, description, priorId)
             print _("Successfully updated environment [ %s ]") % env['name']
 

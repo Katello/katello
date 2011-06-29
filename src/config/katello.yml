@@ -13,7 +13,7 @@ common:
     host: localhost
     base: ou=People,dc=redhat,dc=com
 
-  warden: bypass
+  warden: database
   use_cp: true
   use_pulp: true
   use_ssl: false
@@ -53,8 +53,6 @@ common:
 #   specified here.. 
   candlepin:
     url: https://localhost:8443/candlepin
-    username: admin
-    password: admin
     oauth_key: katello
     oauth_secret: shhhh
 
@@ -68,8 +66,6 @@ common:
 #   to connect to pulp over https.
   pulp:
     url: https://localhost/pulp/api
-    username: admin
-    password: admin
     oauth_key: katello
     oauth_secret: shhhh
     sync_threads: 15
@@ -78,8 +74,6 @@ common:
 # Setup your foreman environment here
   foreman:
     url: https://foreman.sat.lab.tlv.redhat.com:443
-    username: admin
-    password: changeme
 
 #
 # Production environment configuration

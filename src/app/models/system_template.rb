@@ -10,175 +10,237 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+class ParentTemplateValidator < ActiveModel::Validator
+  def validate(record)
+    #check if the parent is from
+    if not record.parent.nil?
+      record.errors[:parent] << _("Template can have parent templates only from the same environment") if record.environment_id != record.parent.environment_id
+    end
+  end
+end
+
+class TemplateContentValidator < ActiveModel::Validator
+  def validate(record)
+    #check if packages and errate are valid
+    for p in record.packages
+      record.errors[:packages] << _("Package '#{p.package_name}' has doesn't belong to any product in this template") if not p.valid?
+    end
+    for e in record.errata
+      record.errors[:errata] << _("Erratum '#{e.erratum_id}' has doesn't belong to any product in this template") if not e.valid?
+    end
+  end
+end
 
 class SystemTemplate < ActiveRecord::Base
+  #include Authorization
+  include LazyAccessor
+
   #has_many :products
-  belongs_to :environment, {:class_name => "KPEnvironment"}
+  belongs_to :environment, :class_name => "KPEnvironment", :inverse_of => :system_templates
 
   validates_presence_of :name
+  validates_uniqueness_of :name, :scope => :environment_id
+  validates_with ParentTemplateValidator
+  validates_with TemplateContentValidator
 
-  attr_reader :packages, :errata, :products, :host_group, :kickstart_attrs
+  belongs_to :parent, :class_name => "SystemTemplate"
+  has_and_belongs_to_many :products, :uniq => true
+  has_many :errata,   :class_name => "SystemTemplateErratum", :inverse_of => :system_template, :dependent => :destroy
+  has_many :packages, :class_name => "SystemTemplatePackage", :inverse_of => :system_template, :dependent => :destroy
+
+  attr_accessor :host_group
+  lazy_accessor :parameters, :initializer => lambda { init_parameters }, :unless => lambda { false }
+
+  before_validation :attrs_to_json
+  before_save :update_revision
+  before_destroy :check_children
 
 
-  def initialize attrs
-    super(attrs)
+  def init_parameters
+    ActiveSupport::JSON.decode((self.parameters_json or "{}"))
   end
 
-
-  def packages_json= attrs
-    @packages = nil
-    @attributes['packages_json'] = attrs
-  end
-
-  def errata_json= attrs
-    @errata = nil
-    @attributes['errata_json'] = attrs
-  end
-
-  def products_json= attrs
-    @products = nil
-    @attributes['products_json'] = attrs
-  end
-
-
-  def packages
-    return @packages if not @packages.nil?
-
-    packages = ActiveSupport::JSON.decode(self.packages_json)
-    @packages = packages.collect do |p|
-      package = self.find_package_in_env(p)
-      if package == nil
-        raise Errors::TemplateContentException.new("Package #{p} not found in this environment.")
-      end
-      package
-    end
-  end
-
-
-  def errata
-    return @errata if not @errata.nil?
-
-    errata = ActiveSupport::JSON.decode(self.errata_json)
-    @errata = errata.collect do |e|
-      erratum = self.find_errata_in_env(e)
-      if erratum == nil
-        raise Errors::TemplateContentException.new("Errata #{e} not found in this environment.")
-      end
-      erratum
-    end
-  end
-
-
-  def products
-    return @products if not @products.nil?
-
-    products = ActiveSupport::JSON.decode(self.products_json)
-    @products = products.collect do |p|
-      product = self.environment.products.find_by_name(p)
-      if product == nil
-        raise Errors::TemplateContentException.new("Product #{p} not found in this environment.")
-      end
-      product
-    end
-  end
-
-
-  def host_group
-    ActiveSupport::JSON.decode(self.host_group_json)
-  end
-
-
-  def kickstart_attrs
-    ActiveSupport::JSON.decode(self.kickstart_attrs_json)
-  end
-
-
-  #TODO: comment
-  def content_valid?
-    self.packages
-    self.errata
-    self.host_group
-    self.kickstart_attrs
-    self.packages
-
-    return true
-  rescue
-
-    return false
-  end
 
   def import tpl_file_path
     Rails.logger.info "Importing into template #{name}"
 
     file = File.open(tpl_file_path,"r")
     content = file.read
-    json = ActiveSupport::JSON.decode(content)
-
-    self.revision      = json["revision"]
-    self.packages_json = (json["packages"] or []).to_json
-    self.errata_json   = (json["errata"] or []).to_json
-    self.products_json = (json["products"] or []).to_json
-    self.host_group_json      = (json["host_group"] or {}).to_json
-    self.kickstart_attrs_json = (json["kickstart_attributes"] or []).to_json
-
-    if not self.content_valid?
-      raise Errors::TemplateContentException.new("Specified template content not found in this environment.")
-    end
+    self.string_import content
 
   ensure
     file.close
   end
 
+
+  def string_import content
+    json = ActiveSupport::JSON.decode(content)
+
+    if not json["parent"].nil?
+      self.parent = SystemTemplate.find(:first, :conditions => {:name => json["parent"], :environment_id => self.environment_id})
+    end
+
+    self.revision = json["revision"]
+    self.description = json["description"]
+    json["products"].collect do |p| self.add_product(p) end if not json["products"].nil?
+    json["packages"].collect do |p| self.add_package(p) end if not json["packages"].nil?
+    json["errata"].collect   do |e| self.add_erratum(e) end if not json["errata"].nil?
+
+    self.name = json["name"] if not json["name"].nil?
+
+    if not json["parameters"].nil?
+      json["parameters"].each_pair do |k,v|
+        self.parameters[k] = v
+      end
+    end
+
+  end
+
+
   def string_export
     tpl = {
+      :name => self.name,
       :revision => self.revision,
-      :packages => ActiveSupport::JSON.decode(self.packages_json),
-      :errata => ActiveSupport::JSON.decode(self.errata_json),
-      :products => ActiveSupport::JSON.decode(self.products_json),
-      :host_group => ActiveSupport::JSON.decode(self.host_group_json),
-      :kickstart_attrs => ActiveSupport::JSON.decode(self.kickstart_attrs_json)
+      :packages => self.packages.map(&:package_name),
+      :errata   => self.errata.map(&:erratum_id),
+      :products => self.products.map(&:name),
+      :parameters => ActiveSupport::JSON.decode(self.parameters_json)
     }
+    tpl[:description] = self.description if not self.description.nil?
+    tpl[:parent] = self.parent.name if not self.parent.nil?
+
     tpl.to_json
   end
+
+
+  def add_package package_name
+    package = SystemTemplatePackage.new(:package_name => package_name)
+    self.packages << package
+  end
+
+
+  def remove_package package_name
+    package = self.packages.find(:first, :conditions => {:package_name => package_name})
+    package.destroy
+  end
+
+
+  def add_erratum erratum_id
+    err = SystemTemplateErratum.new(:erratum_id => erratum_id)
+    self.errata << err
+  end
+
+
+  def remove_erratum erratum_id
+    err = self.errata.find(:first, :conditions => {:erratum_id => erratum_id})
+    err.destroy
+  end
+
+
+  def add_product product_name
+    product = self.environment.products.find_by_name(product_name)
+    if product == nil
+      raise Errors::TemplateContentException.new("Product #{product_name} not found in this environment.")
+    end
+    self.products = (self.products << product).uniq
+  end
+
+
+  def remove_product product_name
+    product = self.environment.products.find_by_name(product_name)
+    self.products.delete(product)
+    if not self.valid?
+      self.products << product
+      raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{product_name}.")
+    end
+  end
+
 
   def to_json(options={})
      super(options.merge({
         :methods => [:products,
                      :packages,
                      :errata,
-                     :host_group,
-                     :kickstart_attrs]
+                     :parameters]
         })
      )
   end
 
-  protected
 
-  def find_errata_in_env(erratum_id)
+  def promote
+    #return if there id nowhere to promote
+    return if self.environment.successor.nil?
+    from_env = self.environment
+    to_env   = self.environment.successor
 
-    self.products.each do |product|
-      product.repos(self.environment).each do |repo|
-        #search for errata in all repos in a product
-        idx = repo.errata.index do |e| e.id == erratum_id end
-        return repo.errata[idx] if idx != nil
+    #collect all parent templates into one changeset
+    @changeset = Changeset.create!(:environment => from_env)
+    for tpl in self.get_inheritance_chain
 
-      end
+      @changeset.products << tpl.products
+      @changeset.errata   << changeset_errata(tpl.errata)
+      @changeset.packages << changeset_packages(tpl.packages)
     end
+    @changeset.promote
 
-    nil
+    for tpl in self.get_inheritance_chain
+      #copy template to the environment
+      tpl.copy_to_env to_env
+    end
   end
 
-  def find_package_in_env(package_name)
+  protected
 
-    self.products.each do |product|
-      product.repos(self.environment).each do |repo|
-        #search for errata in all repos in a product
-        idx = repo.packages.index do |p| p.name == package_name end
-        return repo.packages[idx] if idx != nil
-
-      end
+  def changeset_errata(errata)
+    errata.collect do |e|
+      e = e.to_erratum
+      ChangesetErratum.new(:errata_id=>e.id, :display_name=>e.title, :changeset => @changeset)
     end
+  end
 
-    nil
+  def changeset_packages(packages)
+    packages.collect do |p|
+      p = p.to_package
+      ChangesetPackage.new(:package_id=>p.id, :display_name=>p.name, :changeset => @changeset)
+    end
+  end
+
+  def get_inheritance_chain
+    chain = [self]
+    tpl = self
+    while not tpl.parent.nil?
+      chain << tpl.parent
+      tpl = tpl.parent
+    end
+    chain.reverse
+  end
+
+  def copy_to_env env
+    new_tpl = SystemTemplate.new
+    new_tpl.environment = env
+    new_tpl.string_import(self.string_export)
+    new_tpl.save!
+  end
+
+  #TODO: to be deleted after we switch to save parameters in foreman
+  def attrs_to_json
+    self.parameters_json = self.parameters.to_json
+  end
+
+  def update_revision
+    self.revision = 1 if self.revision.nil?
+
+    #increase revision number only on content attribute change
+    if not self.new_record?
+      content_changes = @changed_attributes.select {|k, v| (k!=:name && k!=:description && k!=:revision) }
+      self.revision += 1 if not content_changes.empty?
+    end
+  end
+
+  def check_children
+    children = SystemTemplate.find(:all, :conditions => {:parent_id => self.id})
+    if not children.empty?
+      raise Errors::TemplateContentException.new("The template has children templates.")
+    end
   end
 end

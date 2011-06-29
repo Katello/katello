@@ -11,12 +11,12 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class FailedAuthenticationController < ActionController::Base
+  # warning: this class is NOT based on ApplicationController
 
   # This method is called when warden stack cannot authenticate UI request
   def unauthenticated_ui
     Rails.logger.warn "Request is unauthenticated_ui for #{request.remote_ip}"
-    errors _("You've entered an incorrect username or password combination, please try again."), {:persist => false}
-    redirect_to new_user_session_url
+    redirect_to invalid_user_session_url
     return false
   end
 

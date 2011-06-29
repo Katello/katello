@@ -2,10 +2,10 @@
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 
 # create the super admin if none exist - it must be created before any statement in the seed.rb script
-User.current = user_admin = User.find_or_create_by_username(:username => 'admin', :password => 'password123')
+User.current = user_admin = User.find_or_create_by_username(:username => 'admin', :password => 'admin')
 
 # "nobody" user
-user_anonymous = User.find_or_create_by_username(:username => 'anonymous', :password => 'password123')
+user_anonymous = User.find_or_create_by_username(:username => 'anonymous', :password => 'admin')
 
 # candlepin_role for RHSM
 candlepin_role = Role.find_or_create_by_name(:name => 'candlepin_role')
@@ -71,7 +71,7 @@ Role.allow 'admin_role', [:read], "packages"
 Role.allow 'admin_role', [:read], "errata"
 Role.allow 'admin_role', [:create, :delete, :read], "search"
 Role.allow 'admin_role', [:read], "operations"
-Role.allow 'admin_role', [:create, :delete, :read], "repositories"
+Role.allow 'admin_role', [:create, :read, :update, :delete], "repositories"
 Role.allow 'admin_role', [:read, :apply], "sync_schedules"
 Role.allow 'admin_role', [:read], "subscriptions"
 

@@ -62,22 +62,25 @@ class List(SystemAction):
 
         return os.EX_OK
 
-
 class Register(SystemAction):
 
     description = _('register a system')
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
-                               help=_("system name eg: foo.example.com (required)"))
+                               help=_("system name (required)"))
+        self.parser.add_option('--org', dest='org',
+                       help=_("organization name (required)"))
 
     def check_options(self):
         self.require_option('name')
+        self.require_option('org')
 
     def run(self):
 
         name = self.get_option('name')
-        system = self.api.register(name, 'system')
+        org = self.get_option('org')
+        system = self.api.register(name, org, 'system')
 
         if is_valid_record(system):
           print _("Successfully created system [ %s ]") % system['name']
