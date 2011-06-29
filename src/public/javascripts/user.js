@@ -18,17 +18,22 @@ $(document).ready(function() {
     $('#confirm_field').live('keyup.katello',verifyPassword);
     $('#save_user').live('click',createNewUser);
     $('#clear_helptips').live('click',clear_helptips);
-    $('#save_roles').live('click',save_roles);
     $('#save_password').live('click',changePassword);
+
+    $('#update_roles').live('submit', function(e) {
+        e.preventDefault();
+        var button = $(this).find('input[type|="submit"]');
+        button.attr("disabled","disabled");
+        $(this).ajaxSubmit({
+            success: function(data) {
+                button.removeAttr('disabled');
+            },
+            error: function(e) {
+                button.removeAttr('disabled');
+            }
+        });
+    });
 });
-
-
-function save_roles() {
-    var form = $(this).closest("form");
-    var dataToSend = form.serialize();
-    var username = $(this).attr('data_username');
-    user.update_user(username, dataToSend, function() {},function() {});
-}
 
 function clear_helptips() {
 	var obj = $(this);
