@@ -50,7 +50,7 @@ class Api::OrganizationsController < Api::ApiController
     # we only need key and displayName
     @user = User.find_by_username(params[:username])
     render :text => _("Couldn't find user '#{params[:username]}'"), :status => 404 and return if @user.nil?
-    @owners = @user.organization.map {|o| {:key => o.cp_key, :displayName => o.name} }
+    @owners = @user.organizations.map {|o| {:key => o.cp_key, :displayName => o.name} }
     render :json => @owners.to_json
   end
 
