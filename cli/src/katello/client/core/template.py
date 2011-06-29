@@ -261,7 +261,7 @@ class UpdateContent(TemplateAction):
       'add_erratum':    ['erratum'],
       'remove_erratum': ['erratum'],
       'add_parameter':  ['parameter', 'value'],
-      'remove_kickstart_attr': ['erratum']
+      'remove_parameter': ['parameter']
     }
 
     description = _('updates content of a template')
