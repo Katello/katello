@@ -59,7 +59,7 @@
               .text
                 = _("Loading Changeset")
                 = image_tag ("spinner.gif")
-            .slider_one.has_content.slider
+            .slider_one.has_content.slider.will_have_content
             .slider_two.no_content.slider
           #changeset_users
           #delete_changeset.button{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
