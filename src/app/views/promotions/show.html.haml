@@ -61,17 +61,19 @@
                 = image_tag ("spinner.gif")
             .slider_one.has_content.slider
             .slider_two.no_content.slider
-          #changeset_users 
+          #changeset_users
+          #delete_changeset.button{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
+            = _("Remove Changeset")
+          #changeset_action.button.fr
+          #review_cancel.button.fr{:style=>"display: none;"}
+            = _('Cancel Review')
         - else
           %h2 #{_("Changesets")}
           = _("An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment.")
-        #delete_changeset.button{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
-          = _("Remove Changeset")
 
 
-        #changeset_action.button.fr
-        #review_cancel.button.fr{:style=>"display: none;"}
-          = _('Cancel Review')
+
+
 
           
 
