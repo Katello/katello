@@ -463,7 +463,8 @@ $(document).ready(function() {
                                           promotion_page.sort_changeset();
                                       }});
 
-
+    //need to reset page during the extended scroll
+    panel.extended_cb = promotion_page.reset_page;
 
     $('#depend_list').live('click', promotion_page.show_dependencies);
 
