@@ -182,7 +182,10 @@ Src::Application.routes.draw do
     delete 'favorite/:id' => 'search#destroy_favorite', :on => :collection, :as => 'destroy_favorite'
   end
 
-  resource :user_session
+  resource :user_session do
+    get 'invalid'
+  end
+
   resource :account
   root :to => "user_sessions#new"
 
@@ -271,6 +274,7 @@ Src::Application.routes.draw do
     match '/products/:id' => 'proxies#get', :via => :get
     match '/entitlements/:id' => 'proxies#get', :via => :get
     match '/subscriptions' => 'proxies#post', :via => :post
+    match '/users/:username/owners' => 'organizations#list_owners', :via => :get
 
     # development / debugging support
     get 'status/memory'
