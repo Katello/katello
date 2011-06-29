@@ -16,7 +16,7 @@ describe Api::EnvironmentsController do
   include LoginHelperMethods
 
   before (:each) do
-    @org         = Organization.new
+    @org         = Organization.new(:cp_key => "1")
     @environment = KPEnvironment.new
     Organization.stub!(:first).and_return(@org)
     @request.env["HTTP_ACCEPT"] = "application/json"
@@ -30,21 +30,21 @@ describe Api::EnvironmentsController do
     end
 
     it 'should call katello create environment api' do
-      post 'create', :organization_id => 1, :environment => {:name => "production", :description =>"a"}
+      post 'create', :organization_id => "1", :environment => {:name => "production", :description =>"a"}
     end
   end
   
   describe "get a listing of environments" do
     it 'should call kalpana environment find api' do
       KPEnvironment.should_receive(:where).once
-      get 'index', :organization_id => 1
+      get 'index', :organization_id => "1"
     end
   end
   
   describe "show a environment" do
     it 'should call KPEnvironment.first' do
       KPEnvironment.should_receive(:find).once().and_return(@environment)
-      get 'show', :id => 1, :organization_id => 1
+      get 'show', :id => 1, :organization_id => "1"
     end 
   end
   
@@ -55,7 +55,7 @@ describe Api::EnvironmentsController do
 
     it 'should call katello environment find api' do
         @environment.should_receive(:destroy).once
-        delete 'destroy', :id => 1 , :organization_id => 1
+        delete 'destroy', :id => 1 , :organization_id => "1"
     end       
   end
   
@@ -63,7 +63,7 @@ describe Api::EnvironmentsController do
     it 'should call KPEnvironment update_attributes' do
       KPEnvironment.should_receive(:find).once().and_return(@environment)
       @environment.should_receive(:update_attributes!).once.and_return(@environment)
-      put 'update', :id => 'to_update', :organization_id => 1
+      put 'update', :id => 'to_update', :organization_id => "1"
     end
   end
   
