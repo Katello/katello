@@ -12,7 +12,18 @@
   localize({
     "add": '#{_('Add')}',
     "remove": '#{_('Remove')}',
-    "loading": "#{_('Loading Changeset')}"
+    "loading": "#{_('Loading Changeset')}",
+    "no_products":"#{_('No products exist in the changeset for this product')}",
+    "no_errata": "#{_('No errata exist in this changeset.')}",
+    "no_package": "#{_('No packages exist in this changeset.')}",
+    "no_repo": "#{_('No repositories exist in this changeset.')}",
+    "errata": "#{_("Errata")}",
+    "package": "#{_("Packages")}",
+    "repo": "#{_("Repositories")}",
+    "viewing": '#{_('currently editing this changeset')}',
+    "review": '#{_("Review for Promotion")}',
+    "promote": '#{_("Promote Changeset to ")}',
+    "promote_confirm": '#{_("promote_confirm")}'
   });
 
 
@@ -48,7 +59,9 @@
 
           .search_button.fr.clickable
             #{_('Search')}
+
           .tree_breadcrumb
+
         #cslist.list.sliding_list.shadowbox.outlined{"data-page_size"=>current_user.page_size}
           #changeset_loading.slider
             .text
@@ -56,12 +69,18 @@
               = image_tag ("spinner.gif")
           .slider_one.has_content.slider
           .slider_two.no_content.slider
+        #changeset_users
       - else
         %h2 #{_("Changesets")}
         = _("An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment.")
-      %button#delete_changeset.button{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
+      %a#delete_changeset.remove{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
         = _("Remove Changeset")
-        
+
+
+      #changeset_action.button.fr
+      #review_cancel.button.fr{:style=>"display: none;"}
+        = _('Cancel Review')
+
     #panel-frame
       #panel.panel.closed
         .head

@@ -25,7 +25,6 @@ class PromotionsController < ApplicationController
     @changesets = @next_environment.working_changesets if @next_environment
     @changeset_product_ids = @changeset.products.collect { |p| p.cp_id } if @changeset
     @changeset_product_ids ||= []
-
   end
 
   def detail
@@ -145,6 +144,5 @@ class PromotionsController < ApplicationController
 
     @product = Product.find(params[:product_id]) if params[:product_id]
   end
-
 
 end
