@@ -124,13 +124,14 @@ var promotion_page = {
         promotion_page.changeset_queue.push([type, id, display, adding, product_id]);
     },
     sort_changeset: function() {
-        return false;
         console.log("SORTING");
         $(".right_tree .will_have_content").find("li").sortElements(function(a,b){
-            if (a && b) {
-                return $(a).children("span").first().html().toUpperCase() >
-                        $(b).children("span").first().html().toUpperCase() ? 1 : -1;
-            }
+                var a_html = $(a).find(".sort_attr").html();
+                var b_html = $(b).find(".sort_attr").html();
+                if (a_html && b_html ) {
+                    return  a_html.toUpperCase() >
+                            b_html.toUpperCase() ? 1 : -1;
+                }
         });
     },
     show_dependencies: function() {
@@ -637,7 +638,7 @@ var templateLibrary = (function(){
                 html += '<img  class="fl locked_icon" src="/images/icons/locked.png">'
             }
 
-            html += name + '</div></li>';
+            html += '<span class="sort_attr">'+ name + '</span></div></li>';
             return html;
         },
         changesetsList = function(changesets){
@@ -657,7 +658,7 @@ var templateLibrary = (function(){
             var html = '<ul>';
              jQuery.each(promotion_page.subtypes, function(index, type) {
                 html += '<li><div class="slide_link" id="' + type +'-cs_' + changeset_id + '_' + product_id + '">';
-                html += '<span>' + i18n[type] + ' (' + promotion_page.current_changeset.products[product_id][type].length
+                html += '<span class="sort_attr">' + i18n[type] + ' (' + promotion_page.current_changeset.products[product_id][type].length
                         + ')</span></li>';
              });
             html += '</ul>';
@@ -684,7 +685,7 @@ var templateLibrary = (function(){
                             anchor += i18n.remove + "</a>";
                         
             }
-            return '<li>' + anchor + '<div class="no_slide"><span>'  + name + '</div></span></li>';
+            return '<li>' + anchor + '<div class="no_slide"><span class="sort_attr">'  + name + '</div></span></li>';
 
         },
         productList = function(changeset, changeset_id, showButton){
@@ -720,7 +721,7 @@ var templateLibrary = (function(){
             return '<li class="clear">' + anchor +
                     '<div class="' + slide_link + '" id="product-cs_' + changeset_id + '_' + product_id + '">' +
                     '<span class="' + provider + '-product-sprite"></span>' +
-                    '<span class="product-icon" >' + name + '</span>' + 
+                    '<span class="product-icon sort_attr" >' + name + '</span>' +
                     '</div></li>';
         };
     
