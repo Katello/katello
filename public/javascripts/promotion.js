@@ -103,12 +103,23 @@ var promotion_page = {
                 }
             }
             changeset.add_item(type, id, display, product_id, product_name);
+            promotion_page.changeset_tree.rerender_content();
         }
         else {
             button.html(i18n.add).addClass("add_" + type).removeClass('remove_' + type);
             changeset.remove_item(type, id, product_id);
+            if( type !== 'product' ){
+                var product = changeset.products[product_id];
+                if( !product.errata.length && !product.package.length && !product.repo.length ){
+                    delete changeset.products[product_id];
+                    promotion_page.changeset_tree.render_content('changeset_' + changeset.id);
+                } else {
+                    promotion_page.changeset_tree.rerender_content();
+                }
+            } else {
+                promotion_page.changeset_tree.rerender_content();       
+            }
         }
-        promotion_page.changeset_tree.rerender_content();
         promotion_page.sort_changeset();
         promotion_page.changeset_queue.push([type, id, display, adding, product_id]);
     },
