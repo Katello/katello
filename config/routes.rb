@@ -192,7 +192,7 @@ Src::Application.routes.draw do
 
   namespace :api do
 
-    resources :systems, :only => [:show, :destroy, :create]
+    resources :systems, :only => [:show, :destroy]
     resources :providers do
       resources :sync, :only => [:index, :show, :create] do
         delete :index, :on => :collection, :action => :cancel
@@ -224,7 +224,7 @@ Src::Application.routes.draw do
           get :repositories
         end
       end
-      resources :systems, :only => [:index]
+      resources :systems, :only => [:create, :index]
       member do
         get :providers
       end
@@ -244,7 +244,7 @@ Src::Application.routes.draw do
     match '/repositories/discovery/:id' => 'repositories#discovery_status', :via => :get
 
     resources :environments, :only => [:show, :update, :destroy] do
-      resources :systems, :only => [:index]
+      resources :systems, :only => [:create, :index]
     end
     resources :packages, :only => [:show]
     resources :errata, :only => [:show]

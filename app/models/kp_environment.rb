@@ -63,7 +63,7 @@ class KPEnvironment < ActiveRecord::Base
     :join_table => "environment_priors", :association_foreign_key => :environment_id, :readonly => true}
   has_and_belongs_to_many :products, { :uniq=>true }
 
-  has_many :systems, :inverse_of => :environment
+  has_many :systems, :inverse_of => :environment, :foreign_key => :environment_id
   has_many :working_changesets, :conditions => ["state = '#{Changeset::NEW}' OR state = '#{Changeset::REVIEW}'"], :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
