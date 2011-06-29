@@ -11,7 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'ldap'
-require 'util/threadsession.rb'
+require 'util/threadsession'
+require 'util/password'
 
 class User < ActiveRecord::Base
   has_and_belongs_to_many :roles
@@ -21,9 +22,10 @@ class User < ActiveRecord::Base
   has_many :notices, :through => :user_notices
   has_many :search_favorites, :dependent => :destroy
   has_many :search_histories, :dependent => :destroy
+  has_and_belongs_to_many :organization
+
 
   validates :username, :uniqueness => true, :presence => true, :username => true
-  validates :password, :presence => true, :length=>{:within=>6..100}
   validate :own_role_included_in_roles
 
   # check if the role does not already exist for new username
@@ -36,6 +38,18 @@ class User < ActiveRecord::Base
 
   scoped_search :on => :username, :complete_value => true, :rename => :name
   scoped_search :in => :roles, :on => :name, :complete_value => true, :rename => :role
+
+  # validate the password length before hashing
+  validates_each :password do |model, attr, value|
+    if model.password_changed?
+      model.errors.add(attr, "at least 5 characters") if value.length < 5
+    end
+  end
+
+  # hash the password before creating or updateing the record
+  before_save do |u|
+    u.password = Password::update(u.password) if u.password.length != 192
+  end
 
   # create own role for new user
   after_create do |u|
@@ -57,7 +71,10 @@ class User < ActiveRecord::Base
   end
 
   def self.authenticate!(username, password)
-    User.where({:username => username, :password => password}).first
+    u = User.where({:username => username}).first
+    # check if hash is valid
+    return nil unless u and Password.check(password, u.password)
+    u
   end
 
   def self.authenticate_using_ldap!(username, password)
