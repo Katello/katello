@@ -54,7 +54,8 @@ class User < ActiveRecord::Base
   # create own role for new user
   after_create do |u|
     if u.own_role.nil?
-      r = Role.create!(:name => u.username.downcase + "_role")
+      # create the own_role where the name will be a string consisting of 32 random digits
+      r = Role.create!(:name => rand(10**32).to_s)
       u.roles << r unless u.roles.include? r
       u.own_role = r
       u.save!
