@@ -20,7 +20,7 @@ describe ChangesetsController do
 
   module CSControllerTest
     ENV_NAME = "environment_name"
-    ENVIRONMENT = {:id => 1, :name => ENV_NAME, :description => nil, :prior => nil}
+    ENVIRONMENT = {:id => 1, :name => ENV_NAME, :description => nil}
     CHANGESET = {:id=>1, :promotion_date=>Time.now, :name=>"oldname",
                  :packages=>[ChangesetPackage.new({:display_name=>"foo-1.2.3", :package_id=>"123"})],
                  :errata=>[ChangesetErratum.new({:display_name=>"RHSA-2011-23-2", :id=>"123"})]}
@@ -36,6 +36,7 @@ describe ChangesetsController do
     @org = new_test_org 
 
     CSControllerTest::ENVIRONMENT["organization"] = @org
+    CSControllerTest::ENVIRONMENT["prior"] = @org.locker
     @env = KPEnvironment.create(CSControllerTest::ENVIRONMENT)
 
     CSControllerTest::CHANGESET["environment"] = @env

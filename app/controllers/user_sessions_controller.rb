@@ -20,6 +20,12 @@ class UserSessionsController < ApplicationController
 
   def new
   end
+
+  # this is called when invalid user/pass combination is submitted
+  def invalid
+    errors _("You've entered an incorrect username or password combination, please try again."), {:persist => false}
+    redirect_to new_user_session_url
+  end
   
   def section_id
     "loginpage"

@@ -20,6 +20,7 @@ class Organization < ActiveRecord::Base
   has_many :systems, :dependent => :destroy, :inverse_of => :organization
   has_many :environments, :class_name => "KPEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
   has_one :locker, :class_name =>"KPEnvironment", :conditions => {:locker => true}, :dependent => :destroy
+  has_and_belongs_to_many :user
   attr_accessor :parent_id,:pools,:statistics
 
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'organization.name'
@@ -36,13 +37,14 @@ class Organization < ActiveRecord::Base
   validates :description, :katello_description_format => true
   def promotion_paths
     #I'm sure there's a better way to do this
-    (self.environments - environments.joins(:priors)).collect do |env|
+    
+    self.environments.joins(:priors).where("prior_id = #{self.locker.id}").collect do |env|
       env.path
     end
   end
 
   def create_locker
-    self.locker = KPEnvironment.new(:name => "locker", :locker => true, :organization => self)
+    self.locker = KPEnvironment.new(:name => "Locker", :locker => true, :organization => self)
   end
 
   # returns list of virtual permission tags for the current user

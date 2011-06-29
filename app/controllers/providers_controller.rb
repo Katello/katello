@@ -33,7 +33,9 @@ class ProvidersController < ApplicationController
     if !params[:provider].blank? and params[:provider].has_key? :contents
       temp_file = nil
       begin
-        temp_file = File.new(File.join("#{Rails.root}/tmp", "import_#{SecureRandom.hex(10)}.zip"), 'w+', 0600)
+        dir = "#{Rails.root}/tmp"
+        Dir.mkdir(dir) unless File.directory? dir
+        temp_file = File.new(File.join(dir, "import_#{SecureRandom.hex(10)}.zip"), 'w+', 0600)
         temp_file.write params[:provider][:contents].read
         temp_file.close
         @provider.import_manifest File.expand_path(temp_file.path)
@@ -41,9 +43,10 @@ class ProvidersController < ApplicationController
 
       rescue Exception => error
         errors _("There was a format error with your Subscription Manifest"), {:synchronous_request => false}
-
         Rails.logger.error "error uploading subscriptions."
         Rails.logger.error error
+        Rails.logger.error error.backtrace.join("\n")
+       render :partial => "subscriptions", :locals => {:provider => @provider},:status => :bad_request and return
       end
     end
 
