@@ -396,8 +396,15 @@ var changeset_obj = function(data_struct) {
         cancel_review: function(on_success, on_error) {
             change_state("new", on_success, on_error);
         },
-        promote: function() {
-
+        promote: function(on_success, on_error) {
+         $.ajax({
+            contentType:"application/json",
+            type: "POST",
+            url: "/changesets/" + id + "/promote",
+            cache: false,
+            success: function(data) {
+                on_success();
+            }});
         },
         update: function(items, on_success, on_error) {
           var data = [];
@@ -535,10 +542,13 @@ var registerEvents = function(changesetTree){
                 $("#review_cancel").show();
                 button.removeClass("disabled");
                 promotion_page.reset_page();
+                promotion_page.changeset_tree.rerender_content();
             });
         }
         else {
-            cs.promote();
+            cs.promote(function() {
+                
+            });
         }
     });
 
@@ -550,6 +560,7 @@ var registerEvents = function(changesetTree){
             $("#review_cancel").hide();
             $("#review_cancel").removeClass("disabled");
             promotion_page.reset_page();
+            promotion_page.changeset_tree.rerender_content();
         });
     });
 
