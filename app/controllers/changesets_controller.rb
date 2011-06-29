@@ -13,7 +13,7 @@
 class ChangesetsController < ApplicationController
   include BreadcrumbHelper
   
-  before_filter :find_changeset, :except => [:index, :list, :items, :unpublished, :create, :new]
+  before_filter :find_changeset, :except => [:index, :list, :items, :create, :new]
   before_filter :find_environment, :except => [:index, :list, :items]
   before_filter :setup_options, :only => [:index, :items]
   

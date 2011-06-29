@@ -242,12 +242,14 @@ var promotion_page = {
                 action_btn.html(i18n.review);
                 $("#changeset_tree .tree_breadcrumb").removeClass("locked_breadcrumb");
                 $("#cslist").removeClass("locked");
+                $('#locked_icon').remove();
                 $(".content_add_remove").show();
             }
             else { //in review stage
                 cancel_btn.show();
                 action_btn.html(i18n.promote);
                 $("#changeset_tree .tree_breadcrumb").addClass("locked_breadcrumb");
+                $("#changeset_tree .tree_breadcrumb").append('<img id="locked_icon" class="fl locked_icon" src="/images/icons/locked.png">');
                 $("#cslist").addClass("locked");
                 $(".content_add_remove").hide();
             }
@@ -255,10 +257,13 @@ var promotion_page = {
         else {
             $("#changeset_tree .tree_breadcrumb").removeClass("locked_breadcrumb");
             $("#cslist").removeClass("locked");
+            $('#locked_icon').remove();
             $(".content_add_remove").show();
             cancel_btn.hide();
             action_btn.hide();
         }
+
+
 
 
     },
@@ -403,9 +408,11 @@ var changeset_obj = function(data_struct) {
         },
         review: function(on_success, on_error) {
             change_state("review", on_success, on_error);
+            changeset_breadcrumb['changeset_' + id].is_new = false;
         },
         cancel_review: function(on_success, on_error) {
             change_state("new", on_success, on_error);
+            changeset_breadcrumb['changeset_' + id].is_new = true;
         },
         promote: function(on_success, on_error) {
          $.ajax({
@@ -625,8 +632,13 @@ var promotionsRenderer = (function($){
 
 var templateLibrary = (function(){
     var changesetsListItem = function(id, name){
-            return '<li>' + '<div class="slide_link" id="' + id + '">'
-                    + name + '</div></li>';    
+            var html ='<li>' + '<div class="slide_link" id="' + id + '">'
+            if (!changeset_breadcrumb[id].is_new) {
+                html += '<img  class="fl locked_icon" src="/images/icons/locked.png">'
+            }
+
+            html += name + '</div></li>';
+            return html;
         },
         changesetsList = function(changesets){
             var html = '<ul>';
