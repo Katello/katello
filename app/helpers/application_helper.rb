@@ -57,6 +57,25 @@ module ApplicationHelper
     render :partial => "common/helptip_button", :locals=>{:key=>key}
   end  
 
+  # Headpin inclusion
+  def stats_line(stats, options ={})
+    render :partial => "common/stats_line",
+      :locals => {:stats => stats}
+  end
+
+  # Headpin inclusion
+  def to_value_list(stats)
+    list = ""
+    prepend = ""
+    stats.each do |stat|
+      list += prepend
+      prepend = ","
+      list += stat.value.to_s
+    end
+    list
+  end
+
+
   def two_panel(collection, options)
     options[:accessor] ||= "id"
     enable_create = options[:enable_create]
