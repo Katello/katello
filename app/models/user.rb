@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
   has_many :notices, :through => :user_notices
   has_many :search_favorites, :dependent => :destroy
   has_many :search_histories, :dependent => :destroy
-  has_and_belongs_to_many :organization
+  has_and_belongs_to_many :organizations
 
 
   validates :username, :uniqueness => true, :presence => true, :username => true
