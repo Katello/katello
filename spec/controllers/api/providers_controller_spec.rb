@@ -20,7 +20,7 @@ describe Api::ProvidersController do
   ANOTHER_PROVIDER_NAME = "another name"
 
   before(:each) do
-    @organization = Organization.new(:name => "organization100")
+    @organization = Organization.new(:name => "organization100", :cp_key => "organization100")
     Organization.stub!(:first).and_return(@organization)
 
     @provider = Provider.new(:name => PROVIDER_NAME)
