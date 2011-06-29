@@ -188,6 +188,7 @@ var list = (function(){
 
 var panel = (function(){
     return {
+        extended_cb : function() {}, //callback for post extended scroll
         select_item :    function(activeBlockId) {
             thisPanel = $("#panel");
             subpanel = $('#subpanel');
@@ -344,6 +345,7 @@ var panel = (function(){
                         if (data.length == 0) {
                             list.removeClass("ajaxScroll");
                         }
+                        panel.extended_cb();
                     },
                     error: function() {
                         $('#list-spinner').remove();
