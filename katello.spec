@@ -63,11 +63,11 @@ Provides a package for managing application lifecycle for Linux systems
 %build
 #check the ruby syntax of all .rb files
 echo "Checking Ruby syntax"
-find -type f -name \*.rb | xargs -n1 ruby -c >/dev/null
+find -type f -name \*.rb | xargs -t -n1 ruby -c >/dev/null
 
 #check the syntax of all .haml files
 echo "Checking HAML syntax"
-find -type f -name \*.haml | xargs -n1 haml -c >/dev/null
+find -type f -name \*.haml | xargs -t -n1 haml -c >/dev/null
 
 #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
 echo Generating gettext files...

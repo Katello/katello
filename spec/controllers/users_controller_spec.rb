@@ -66,7 +66,7 @@ describe UsersController do
     it "should be allowed to change the password" do 
        put 'update', {:id => @user.id, :user => {:password=>"password1234"}}
        response.should be_success
-       assert User.where(:username=>@user.username)[0].password == "password1234"
+       User.authenticate!(@user.username, "password1234").should be_true
     end
     
     it "should not change the username" do 
