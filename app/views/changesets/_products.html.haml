@@ -3,7 +3,7 @@
     #{_("No products exist in the changeset for this product")}
   -for product in changeset.products
     %li.clear
-      %a.content_add_remove.remove_product.button.fl{ "data-id" => product.id, "data-type"=>"product", "data-display_name"=>product.name, :id => "add_remove_product_#{product.id}" }
+      %a.content_add_remove.remove_product.button.fl{ "data-id" => product.id, "data-product_id" => product.id, "data-type"=>"product", "data-display_name"=>product.name, :id => "add_remove_product_#{product.id}" }
         #{_("Remove")}
 
       .slide_link{:id=>product_cs_bc_id(changeset, product)}

@@ -7,10 +7,10 @@
     %li.clear
       - if @changeset
         - if @changeset_product_ids.include?(product.cp_id)
-          %a.content_add_remove.remove_product.button.fl{ "data-id" => product.id, "data-type"=>"product", "data-display_name"=>product.name, :id => "add_remove_product_#{product.id}" }
+          %a.content_add_remove.remove_product.button.fl{ "data-id" => product.id, "data-product_id" => product.id, "data-type"=>"product", "data-display_name"=>product.name, :id => "add_remove_product_#{product.id}" }
             #{_("Remove")}
         - else
-          %a.content_add_remove.add_product.button.fl{ "data-id" => product.id, "data-type"=>"product", "data-display_name"=>product.name, :id => "add_remove_product_#{product.id}" }
+          %a.content_add_remove.add_product.button.fl{ "data-id" => product.id, "data-product_id" => product.id, "data-type"=>"product", "data-display_name"=>product.name, :id => "add_remove_product_#{product.id}" }
             #{_("Add")}
       .slide_link{:id=>product_bc_id(product)}
         - if product.provider.provider_type == Provider::REDHAT
