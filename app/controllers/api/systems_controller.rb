@@ -13,15 +13,14 @@
 class Api::SystemsController < Api::ApiController
   respond_to :json
 
-  before_filter :find_organization, :only => [:index]
-  before_filter :find_environment, :only => [:index]
-  before_filter :verify_presence_of_organization_or_environment, :only => [:index]
+  before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index]
+  before_filter :find_organization, :only => [:create, :index]
+  before_filter :find_only_environment, :only => [:create]
+  before_filter :find_environment, :only => [:create, :index]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates]
 
   def create
-    org = Organization.find_by_cp_key(params[:org_name])
-    raise _("Couldn't find organization '#{params[:org_name]}'") if org.nil?
-    system = System.create!(params.merge({:organization => org})).to_json
+    system = System.create!(params.merge({:environment => @environment})).to_json
     render :json => system
   end
 
@@ -61,6 +60,13 @@ class Api::SystemsController < Api::ApiController
     @organization
   end
 
+  def find_only_environment
+    if @organization && !params.has_key?(:environment_id)
+      render :text => _("Organization #{@organization.name} has more than one environment. Please specify target environment for system registration."), :status => 400 and return if @organization.environments.size > 1
+      @environment = @organization.environments.first and return
+    end
+  end
+
   def find_environment
     return unless params.has_key?(:environment_id)
 
@@ -70,7 +76,7 @@ class Api::SystemsController < Api::ApiController
   end
 
   def verify_presence_of_organization_or_environment
-    return if @organization or @environment
+    return if params.has_key?(:organization_id) or params.has_key?(:environment_id)
     render :text => _("Either organization id or environment id needs to be specified"), :status => 400 and return
   end
 

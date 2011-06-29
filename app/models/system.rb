@@ -16,8 +16,7 @@ class System < ActiveRecord::Base
   include Glue
   include Authorization
 
-  belongs_to :organization, :inverse_of => :systems
-  belongs_to :environment, :inverse_of => :systems, :class_name => "KPEnvironment"
+  belongs_to :environment, :class_name => "KPEnvironment", :inverse_of => :systems
 
   validates :organization, :presence => true
   validates :name, :presence => true, :no_trailing_space => true
@@ -28,6 +27,11 @@ class System < ActiveRecord::Base
   scoped_search :on => :description, :complete_value => true
   scoped_search :on => :location, :complete_value => true
   scoped_search :on => :uuid, :complete_value => true
+
+
+  def organization
+    environment.organization
+  end
 
   def consumed_pool_ids
     self.pools.collect {|t| t['id']}

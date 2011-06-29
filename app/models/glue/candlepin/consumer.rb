@@ -58,7 +58,7 @@ module Glue::Candlepin::Consumer
 
     def set_consumer
       Rails.logger.info "Creating a consumer in candlepin: #{name}"
-      consumer_json = Candlepin::Consumer.create(self.organization.name, self.name, self.cp_type, self.facts)
+      consumer_json = Candlepin::Consumer.create(self.organization.cp_key, self.name, self.cp_type, self.facts)
 
       self.uuid = consumer_json[:uuid]
       convert_from_cp_fields(consumer_json).each do |k,v|
