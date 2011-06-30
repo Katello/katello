@@ -113,7 +113,7 @@ class KPEnvironment < ActiveRecord::Base
   #  and then give me that entire path
   def full_path
     p = self
-    until p.prior.locker 
+    until p.prior.nil? or p.prior.locker
       p = p.prior
     end
     p.path
