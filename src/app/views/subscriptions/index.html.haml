@@ -45,3 +45,7 @@
               %td=sub.product.support_level or ""
               %td=l sub.startDate
               %td=l sub.endDate
+      .actions
+        .grid_3
+          %a{ :href => "#", :id=>"toggle_all", :class=>"fl" }
+            #{_("Expand/Contract All")}
