@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
   has_many :notices, :through => :user_notices
   has_many :search_favorites, :dependent => :destroy
   has_many :search_histories, :dependent => :destroy
-  has_and_belongs_to_many :organization
+  has_and_belongs_to_many :organizations
 
 
   validates :username, :uniqueness => true, :presence => true, :username => true
@@ -77,6 +77,11 @@ class User < ActiveRecord::Base
   # return the special "nobody" user account
   def self.anonymous
     find_by_username('anonymous')
+  end
+
+  # has the current user at least one superadmin role?
+  def superadmin?
+    @superadmin |= roles.select { |r| r.superadmin }.length > 0
   end
 
   def self.authenticate!(username, password)
