@@ -22,15 +22,15 @@ Requires:       candlepin-tomcat6
 Requires:       rubygems
 Requires:       rubygem(rails) >= 3.0.5
 Requires:       rubygem(multimap)
-Requires:       rubygem(haml)
+Requires:       rubygem(haml) >= 3.0.16
 Requires:       rubygem(haml-rails)
 Requires:       rubygem(json)
 Requires:       rubygem(rest-client)
 Requires:       rubygem(jammit)
 Requires:       rubygem(rails_warden)
 Requires:       rubygem(net-ldap)
-Requires:       rubygem(compass)
-Requires:       rubygem(compass-960-plugin)
+Requires:       rubygem(compass) >= 0.10.5
+Requires:       rubygem(compass-960-plugin) >= 0.10.0
 Requires:       rubygem(capistrano)
 Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
