@@ -518,7 +518,7 @@ $(document).ready(function() {
     //set function for env selection callback
     env_select.click_callback = promotion_page.env_change;
 
-    registerEvents(promotion_page.get_changeset_tree());
+    registerEvents();
 
     $(document).ajaxComplete(function(event, xhr, options){
         var userHeader = xhr.getResponseHeader('X-ChangesetUsers');
@@ -538,7 +538,7 @@ $(document).ready(function() {
     }
 });
 
-var registerEvents = function(changesetTree){
+var registerEvents = function(){
     $('#save_changeset_button').live('click', function(){
         $.ajax({
           type: "POST",
@@ -548,7 +548,7 @@ var registerEvents = function(changesetTree){
           success: function(data){
               $.extend(changeset_breadcrumb, data.breadcrumb);
               promotion_page.set_changeset(changeset_obj(data.changeset));
-              changesetTree.render_content('changeset_' + data.id);
+              promotion_page.get_chaneset_tree().render_content('changeset_' + data.id);
               panel.closePanel($('#panel'));
           }
         });
@@ -570,7 +570,7 @@ var registerEvents = function(changesetTree){
                 success: function(data){
                     delete changeset_breadcrumb['changeset_' + id];
                     promotion_page.set_current_changeset('changesets');
-                    changesetTree.render_content('changesets');
+                    promotion_page.get_changeset_tree().render_content('changesets');
                 }
             });
        }
