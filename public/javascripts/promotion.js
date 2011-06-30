@@ -12,7 +12,7 @@
 */
 
 
-var promotion_page = (function(){
+var promotion_page = (function($){
     var types =             ["errata", "product", "package", "repo"],
         subtypes =          ["errata", "package", "repo"],
         changeset_queue =   [],
@@ -335,7 +335,7 @@ var promotion_page = (function(){
         reset_page:             reset_page,
         throw_error:            throw_error
     };
-}());
+}(jQuery));
 
 
 var changeset_obj = function(data_struct) {
@@ -613,7 +613,7 @@ var registerEvents = function(changesetTree){
 
 };
 
-var promotionsRenderer = (function($){
+var promotionsRenderer = (function(){
     var render = function(hash, render_cb){
             if( hash === 'changesets'){
                 render_cb(templateLibrary.changesetsList(changeset_breadcrumb));
@@ -637,29 +637,29 @@ var promotionsRenderer = (function($){
                 product_id = hash.split("_")[2],
                 key = hash.split("_")[0],
                 changeset = promotion_page.get_changeset(),
-                reviewPhase = changeset.is_new();
+                inReviewPhase = changeset.is_new();
             
             if (key === 'package-cs'){
-                return templateLibrary.listItems("package", product_id, changeset_id);
+                return templateLibrary.listItems(changeset.products, "package", product_id, inReviewPhase);
             }
             else if (key === 'errata-cs'){
-                return templateLibrary.listItems("errata", product_id, changeset_id);
+                return templateLibrary.listItems(changeset.products, "errata", product_id, inReviewPhase);
             }
             else if (key === 'repo-cs'){
-                return templateLibrary.listItems("repo", product_id, changeset_id);
+                return templateLibrary.listItems(changeset.products, "repo", product_id, inReviewPhase);
             }
             else if (key === 'product-cs'){
-                return templateLibrary.productDetailList(product_id, changeset_id);
+                return templateLibrary.productDetailList(changeset.products[product_id], promotion_page.subtypes, changeset_id);
             }
             else if (hash.split("_")[0] === 'changeset'){
-                return templateLibrary.productList(changeset, changeset.id, reviewPhase);
+                return templateLibrary.productList(changeset, changeset.id, inReviewPhase);
             }
         };
 
     return {
         render: render
     };
-})(jQuery);
+})();
 
 var templateLibrary = (function(){
     var changesetsListItem = function(id, name){
@@ -684,32 +684,32 @@ var templateLibrary = (function(){
             html += '</ul>';
             return html;
         },
-        productDetailList = function(product_id, changeset_id) {
+        productDetailList = function(product, subtypes, changeset_id) {
             var html = '<ul>';
-             jQuery.each(promotion_page.subtypes, function(index, type) {
-                html += '<li><div class="slide_link" id="' + type +'-cs_' + changeset_id + '_' + product_id + '">';
-                html += '<span class="sort_attr">' + i18n[type] + ' (' + promotion_page.get_changeset().products[product_id][type].length
+             jQuery.each(subtypes, function(index, type) {
+                html += '<li><div class="slide_link" id="' + type +'-cs_' + changeset_id + '_' + product.id + '">';
+                html += '<span class="sort_attr">' + i18n[type] + ' (' + product[type].length
                         + ')</span></li>';
              });
             html += '</ul>';
             return html;
         },
-        listItems = function(type, product_id, changeset_id) {
+        listItems = function(products, type, product_id, showButton) {
             var html = '<ul>';
-            var items = promotion_page.get_changeset().products[product_id][type];
+            var items = products[product_id][type];
             if (items.length === 0) {
                 return i18n["no_" + type]; //no_errata no_package no_repo
             }
             jQuery.each(items, function(index, item) {
                //for item names that mach item.name from search hash
-               html += listItem(item.id, item.name, type, product_id);
+               html += listItem(item.id, item.name, type, product_id, showButton);
             });
             html += '</ul>';
             return html;
         },
-        listItem = function(id, name, type, product_id) {
+        listItem = function(id, name, type, product_id, showButton) {
             var anchor = "";
-            if (promotion_page.get_changeset().is_new()){
+            if ( showButton ){
                 anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"'
                                 + 'data-type="' + type + '" data-product_id="' + product_id +  '" data-id="' + id + '">';
                             anchor += i18n.remove + "</a>";
