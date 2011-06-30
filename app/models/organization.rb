@@ -35,6 +35,12 @@ class Organization < ActiveRecord::Base
   before_create :create_locker
   validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
   validates :description, :katello_description_format => true
+
+  # relationship user-org is created for current user automatically
+  after_create do |org|
+    org.users << User.current
+  end
+
   def promotion_paths
     #I'm sure there's a better way to do this
     
