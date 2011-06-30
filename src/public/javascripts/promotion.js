@@ -281,12 +281,14 @@ var promotion_page = (function($){
             //Reset the review/promote/cancel button
             var action_btn =  $("#changeset_action");
             var cancel_btn = $("#review_cancel");
+            console.log(current_changeset);
             if (current_changeset) {
                action_btn.show();
                 if (current_changeset.is_new()) {
                     cancel_btn.hide();
                     action_btn.html(i18n.review);
                     $("#changeset_tree .tree_breadcrumb").removeClass("locked_breadcrumb");
+                    $(".breadcrumb_search").removeClass("locked_breadcrumb_search");
                     $("#cslist").removeClass("locked");
                     $('#locked_icon').remove();
                     $(".content_add_remove").show();
@@ -295,13 +297,17 @@ var promotion_page = (function($){
                     cancel_btn.show();
                     action_btn.html(i18n.promote);
                     $("#changeset_tree .tree_breadcrumb").addClass("locked_breadcrumb");
-                    $("#changeset_tree .tree_breadcrumb").append('<img id="locked_icon" class="fl locked_icon" src="/images/icons/locked.png">');
+                    $(".breadcrumb_search").addClass("locked_breadcrumb_search");
+                    if( $('#locked_icon').length === 0 ){
+                        $("#changeset_tree .tree_breadcrumb").append('<img id="locked_icon" class="fl locked_icon" src="/images/icons/locked.png">');
+                    }
                     $("#cslist").addClass("locked");
                     $(".content_add_remove").hide();
                 }
             }
             else {
                 $("#changeset_tree .tree_breadcrumb").removeClass("locked_breadcrumb");
+                $(".breadcrumb_search").removeClass("locked_breadcrumb_search");
                 $("#cslist").removeClass("locked");
                 $('#locked_icon').remove();
                 $(".content_add_remove").show();
@@ -621,6 +627,7 @@ $(document).ready(function() {
          var bodyY = parseInt(container.offset().top, 10) - 20;
          $(window).scroll(function () {
              panel.handleScroll($('#changeset_tree'), container, original_top, bodyY, 0);
+             $('.breadcrumb_search').css({width: '451px', 'margin-right': '-2px'});
          });
     }
 });
