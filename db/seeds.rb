@@ -2,7 +2,7 @@
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 
 # create superadmin role
-superadmin_role = Role.find_or_create_by_name(:name => 'superadmin_role')
+superadmin_role = Role.find_or_create_by_name(:name => 'superadmin_role', :superadmin => true)
 
 # create the super admin if none exist - it must be created before any statement in the seed.rb script
 User.current = user_admin = User.find_or_create_by_username(
