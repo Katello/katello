@@ -1,7 +1,8 @@
 = include_javascripts :bbq
 = include_javascripts :katello_client
+= include_javascripts :panel #has to be before promotion to disable resize
 = include_javascripts :promotion
-= include_javascripts :panel
+
 
 :javascript
   var content_breadcrumb = $.parseJSON('#{escape_javascript(generate_content_breadcrumb())}');
