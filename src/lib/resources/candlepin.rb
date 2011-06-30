@@ -175,11 +175,11 @@ module Candlepin
       end
 
       def destroy key
-        self.delete(path(key), User.current.cp_oauth_header).code.to_i
+        self.delete(path(key), ::User.current.cp_oauth_header).code.to_i
       end
 
       def find key
-          owner_json = self.get(path(key), {'accept' => 'application/json'}.merge(User.current.cp_oauth_header)).body
+          owner_json = self.get(path(key), {'accept' => 'application/json'}.merge(::User.current.cp_oauth_header)).body
           JSON.parse(owner_json).with_indifferent_access
       end
 
