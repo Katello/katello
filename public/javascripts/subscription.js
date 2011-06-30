@@ -6,4 +6,9 @@ $(document).ready(function() {
     onNodeShow: function(){$.sparkline_display_visible()}  	
   });
 
+  $('#toggle_all').toggle(
+          function(){$('.collapsed td:first-child').click(); return false;},
+          function(){$('.expanded td:first-child').click(); return false;}
+    );
+
 });
