@@ -1,4 +1,4 @@
-#!/bin/bash -xe
+#!/bin/bash
 
 
 KATELLO=$1
