@@ -60,6 +60,7 @@ class Role < ActiveRecord::Base
   # @param [String] resource type
   # @param [String or Array] one or more tags
   def allowed_to?(verb, resource_type = nil, tags = nil)
+    return true if superadmin
     allowed_to_tags? verb, resource_type, tags
   end
 
