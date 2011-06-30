@@ -40,9 +40,9 @@ describe System do
 
   context "system in invalid state should not be valid" do
     before(:each) { @system = System.new }
-    specify { System.new(:name => 'name', :organization => @organization.environments.first, :cp_type => cp_type).should_not be_valid }
-    specify { System.new(:name => 'name', :organization => @organization.environments.first, :facts => facts).should_not be_valid }
-    specify { System.new(:cp_type => cp_type, :organization => @organization.environments.first, :facts => facts).should_not be_valid }
+    specify { System.new(:name => 'name', :environment => @organization.environments.first, :cp_type => cp_type).should_not be_valid }
+    specify { System.new(:name => 'name', :environment => @organization.environments.first, :facts => facts).should_not be_valid }
+    specify { System.new(:cp_type => cp_type, :environment => @organization.environments.first, :facts => facts).should_not be_valid }
   end
 
   it "registers system in candlepin on create" do
