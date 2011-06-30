@@ -18,7 +18,7 @@ class System < ActiveRecord::Base
 
   belongs_to :environment, :class_name => "KPEnvironment", :inverse_of => :systems
 
-  validates :organization, :presence => true
+  validates :environment, :presence => true
   validates :name, :presence => true, :no_trailing_space => true
   validates :description, :katello_description_format => true
   before_create  :fill_defaults
