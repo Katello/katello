@@ -162,22 +162,6 @@ var sliding_tree = function(id, options) {
         $.extend( settings, options );
     }
 
-    //click and animate the filter for changeset
-    var bcs = null;
-    var bcs_height = 0;
-    $('.search_button').toggle(
-    function() {
-        bcs = $('.breadcrumb_search');
-        bcs_height = bcs.height();
-        bcs.animate({ "height": bcs_height+36}, { duration: 200, queue: false });
-        $("#search_form").css("opacity", "0").show();
-        $("#search_form").animate({"width":"240px", "opacity":"1"}, { duration: 200, queue: false });
-        $(this).animate({backgroundPosition:"-32px 0"}, { duration: 200, queue: false });
-    },function() {
-        $("#search_form").fadeOut('fast', function(){bcs.animate({ "height": bcs_height }, 'fast');});
-        $(this).animate({backgroundPosition:"0 0"}, { duration: 200, queue: false });
-    });
-
     $(window).bind( 'hashchange', hash_change);
     $(window).trigger( 'hashchange' );
 
@@ -188,11 +172,5 @@ var sliding_tree = function(id, options) {
         rerender_content: function() {
                 render($.bbq.getState(settings.bbq_tag), list.children('.has_content'));
             }
-
-    };  
-    
+    };
 };
-$(document).ready(function() {
-    //bind to the #search_form to make it useful
-    $('#search_form').submit(function(){alert("submitted!");return false;});
-});
