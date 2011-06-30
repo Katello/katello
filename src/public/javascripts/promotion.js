@@ -530,6 +530,8 @@ $.expr[':'].contains = function(a, i, m) {
 //doc ready
 $(document).ready(function() {
 
+    $('.left').resizable('destroy');
+
     //promotion_page.update_dep_size();
     promotion_page.start_timer();
 
