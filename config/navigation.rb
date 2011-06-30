@@ -78,7 +78,7 @@ SimpleNavigation::Configuration.run do |navigation|
     
     top_level.item :organizations, _("Organizations"), {:controller => 'organizations'}, :class=>'organizations' do |orgs_sub|
        orgs_sub.item :index, _("List"), organizations_path
-
+       orgs_sub.item :subscriptions, _("Subscriptions"), subscriptions_path
     end #end organization 
 
     top_level.item :operations, _("Administration"), {:controller => 'operations'}, :class=>'operations' do |operations_sub|
