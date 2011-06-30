@@ -28,18 +28,21 @@ describe System do
     disable_org_orchestretion
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+    @environment = KPEnvironment.create!(:name => 'test', :prior => @organization.locker.id, :organization => @organization)
+
     Organization.stub!(:first).and_return(@organization)
 
-    @system = System.new(:name => system_name, :organization => @organization, :cp_type => cp_type, :facts => facts)
+    @system = System.new(:name => system_name, :environment => @environment, :cp_type => cp_type, :facts => facts)
+
     Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Candlepin::Consumer.stub!(:update).and_return(true)
   end
 
   context "system in invalid state should not be valid" do
     before(:each) { @system = System.new }
-    specify { System.new(:name => 'name', :organization => @organization, :cp_type => cp_type).should_not be_valid }
-    specify { System.new(:name => 'name', :organization => @organization, :facts => facts).should_not be_valid }
-    specify { System.new(:cp_type => cp_type, :organization => @organization, :facts => facts).should_not be_valid }
+    specify { System.new(:name => 'name', :organization => @organization.environments.first, :cp_type => cp_type).should_not be_valid }
+    specify { System.new(:name => 'name', :organization => @organization.environments.first, :facts => facts).should_not be_valid }
+    specify { System.new(:cp_type => cp_type, :organization => @organization.environments.first, :facts => facts).should_not be_valid }
   end
 
   it "registers system in candlepin on create" do

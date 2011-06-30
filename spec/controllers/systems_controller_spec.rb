@@ -22,13 +22,16 @@ describe SystemsController do
     set_default_locale
     
     @organization = setup_system_creation
+    @environment = KPEnvironment.new(:name => 'test', :prior => @organization.locker.id, :organization => @organization)
+    @environment.save!
+
     controller.stub!(:errors)
     controller.stub!(:notice)
   end
   
   describe "viewing systems" do
     before (:each) do
-      100.times{|a| System.create!(:name=>"bar#{a}", :organization=>@organization, :cp_type=>"system", :facts=>{"Test" => ""})}
+      100.times{|a| System.create!(:name=>"bar#{a}", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})}
     end
 
     it "should show the system 2 pane list" do
@@ -55,7 +58,7 @@ describe SystemsController do
     
     describe 'and requesting individual data' do
       before (:each) do 
-        @system = System.create!(:name=>"verbose", :organization=>@organization, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
+        @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
         Pulp::Consumer.stub!(:installed_packages).and_return([])
       end
       
@@ -81,7 +84,7 @@ describe SystemsController do
   
   describe 'updating a system' do
     before (:each) do
-      @system = System.create!(:name=>"bar", :organization=>@organization, :cp_type=>"system", :facts=>{"Test" => ""})
+      @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
     end
     
     it "should update the system name" do
