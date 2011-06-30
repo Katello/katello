@@ -19,6 +19,9 @@ class Role < ActiveRecord::Base
   has_many :search_verbs, :class_name => 'Verb'
   has_many :resource_types, :through => :permissions
 
+  # scope to facilitate retrieving roles that are 'non-self' roles... group() so that unique roles are returned
+  scope :non_self, group('roles.id').joins("left outer join users on users.own_role_id = roles.id").where('users.own_role_id'=>nil)
+
   validates :name, :uniqueness => true, :presence => true, :username => true
   #validates_associated :permissions
   accepts_nested_attributes_for :permissions, :allow_destroy => true
@@ -57,6 +60,7 @@ class Role < ActiveRecord::Base
   # @param [String] resource type
   # @param [String or Array] one or more tags
   def allowed_to?(verb, resource_type = nil, tags = nil)
+    return true if superadmin
     allowed_to_tags? verb, resource_type, tags
   end
 
@@ -76,9 +80,13 @@ class Role < ActiveRecord::Base
     end
   end
 
-  def self.non_self_roles()
+  def self.non_self_roles
     #gotta be a better way to do this, but others wouldn't work
     Role.all(:conditions=>{"users.own_role_id"=>nil}, :include=> :owner)
+  end
+
+  def self_role_for_user
+    User.where(:own_role_id => self.id).first
   end
 
   # create permission with verb for the role or

@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
   has_many :notices, :through => :user_notices
   has_many :search_favorites, :dependent => :destroy
   has_many :search_histories, :dependent => :destroy
-  has_and_belongs_to_many :organization
+  has_and_belongs_to_many :organizations
 
 
   validates :username, :uniqueness => true, :presence => true, :username => true
@@ -54,10 +54,19 @@ class User < ActiveRecord::Base
   # create own role for new user
   after_create do |u|
     if u.own_role.nil?
-      r = Role.create!(:name => u.username.downcase + "_role")
+      # create the own_role where the name will be a string consisting of 32 random digits
+      r = Role.create!(:name => rand(10**32).to_s)
       u.roles << r unless u.roles.include? r
       u.own_role = r
       u.save!
+    end
+  end
+
+  # destroy own role for user
+  before_destroy do |u|
+    u.own_role.destroy
+    unless u.own_role.destroyed?
+      Rails.logger.error error.to_s
     end
   end
 
@@ -68,6 +77,11 @@ class User < ActiveRecord::Base
   # return the special "nobody" user account
   def self.anonymous
     find_by_username('anonymous')
+  end
+
+  # has the current user at least one superadmin role?
+  def superadmin?
+    @superadmin |= roles.select { |r| r.superadmin }.length > 0
   end
 
   def self.authenticate!(username, password)
@@ -119,7 +133,7 @@ class User < ActiveRecord::Base
   end
 
   # Create permission for the user's own role - for more info see Role.allow
-  def allow(verb, resource_type, tags)
+  def allow(verb, resource_type, tags = nil)
     raise ArgumentError, "user has no own role" if own_role.nil? or not own_role.is_a? Role
     own_role.allow(verb, resource_type, tags)
   end
