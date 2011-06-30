@@ -5,14 +5,14 @@
     %li
       - if @changeset
         - if @changeset.repos.collect{|tmp| tmp.repo_id}.include?(repo.id)
-          %a{:class => "fl content_add_remove remove_repo button","data-display_name"=> repo.name, "data-id" => repo.id,
+          %a{:class => "fr content_add_remove remove_repo st_button","data-display_name"=> repo.name, "data-id" => repo.id,
                             "data-type" => "repo", "data-product_id" => @product.id, :id => "add_remove_repo_#{repo.id}"}
             #{_("Remove")}
         - elsif !(@next_env_repos & repo.clone_ids).empty?
           .fl.promoted
             = _("Promoted")
         - elsif @next_environment
-          %a{ :class => "fl content_add_remove add_repo button", "data-display_name"=> repo.name, "data-id" => repo.id,
+          %a{ :class => "fr content_add_remove add_repo st_button", "data-display_name"=> repo.name, "data-id" => repo.id,
                             "data-type" => "repo", "data-product_id" => @product.id, :id => "add_remove_repo_#{repo.id}"}
             #{_("Add")}
       %span.item
