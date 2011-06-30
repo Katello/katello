@@ -2,6 +2,8 @@
 %h3 #{_("Edit User")}
 #users
   .grid_8
+    %nav.subnav
+      = render_navigation(:expand_all => true, :level => 3)
     %fieldset
       .grid_2.ra
         = label :name, _("Username")
@@ -35,16 +37,5 @@
         #{_("Save")}
     .grid_6.la.prefix_2
       #password_conflict
-
-    = form_for @user, :url => user_path(@user) do |f|
-      %fieldset
-        .grid_2.la
-          = label :user, :roles, _("Roles")
-      .grid_7
-        = f.collection_select(:defined_role_ids, Role.non_self_roles, :id, :name, {}, {:name=>"user[role_ids][]", :id=>:user_role_ids, :multiple=>:multiple, :class=>"multiselect", :style=>"width:400px; height:200px"})
-      %fieldset
-        .grid_2
-          #save_roles{:data_username=>@user.username, :class=>"button"}
-            = _("Save Roles")
 
   = link_to _("Remove User"), { :controller => "users", :action => "destroy" }, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
