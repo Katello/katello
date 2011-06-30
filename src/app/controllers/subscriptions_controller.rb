@@ -26,7 +26,6 @@ class SubscriptionsController < ApplicationController
     org_stats.each do |stat|
       converted_stats << OpenStruct.new(stat)
     end
-    debugger
     all_subs.each do |sub|
       product = Product.where(:cp_id =>sub["productId"]).first
       converted_product = OpenStruct.new
