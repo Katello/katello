@@ -20,8 +20,12 @@ var sliding_tree = function(id, options) {
         var crumb = settings.breadcrumb[id];
         var newPanel = list.children('.no_content');
         var oldPanel = list.children('.has_content');
-        oldPanel.removeClass("will_have_content");
-        newPanel.addClass("will_have_content");
+
+        //If we are really 'sliding' indicate what will actually have the content once we're done
+        if (settings.direction) {
+            oldPanel.removeClass("will_have_content");
+            newPanel.addClass("will_have_content");
+        }
 
         //If we aren't sliding, we only worry about 1 panel'
         if (!settings.direction) {
@@ -98,7 +102,7 @@ var sliding_tree = function(id, options) {
                                 });
 
             settings.direction = undefined;
-        }        
+        }
     };
 
     var content_clicked = function() {
