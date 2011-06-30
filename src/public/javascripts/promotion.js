@@ -527,7 +527,15 @@ $(document).ready(function() {
           promotion_page.checkUsersInResponse(userj);
         }
     });
-        
+    
+     var container = $('#container');
+     var original_top = Math.floor($('.left').position(top).top);
+     if(container.length > 0){
+         var bodyY = parseInt(container.offset().top, 10) - 20;
+         $(window).scroll(function () {
+             panel.handleScroll($('#changeset_tree'), container, original_top, bodyY, 0);
+         });
+    }
 });
 
 var registerEvents = function(changesetTree){
