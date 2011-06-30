@@ -58,7 +58,7 @@
       #changeset_tree
         - if @next_environment
           %h2 #{@next_environment.name + _(" Changesets")}
-          .breadcrumb_search.fl.clear
+          .breadcrumb_search.fl.clear.clickable
 
             %form#search_form.search.clear
               %input{ :name => "s", :type => "search", :placeholder => "Filter...", :id=>"search"}
