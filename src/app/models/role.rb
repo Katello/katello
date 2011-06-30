@@ -57,6 +57,7 @@ class Role < ActiveRecord::Base
   # @param [String] resource type
   # @param [String or Array] one or more tags
   def allowed_to?(verb, resource_type = nil, tags = nil)
+    return true if superadmin
     allowed_to_tags? verb, resource_type, tags
   end
 
@@ -131,12 +132,6 @@ class Role < ActiveRecord::Base
           Permission.destroy(p.id)
       end
     end
-  end
-
-  # Returns the superadmin role. Superadmin has special permissions that are hardcoded in the
-  # code base.
-  def self.superadmin_role
-    Role.find_by_name('superadmin_role')
   end
 
   # returns the candlepin role (for RHSM)

@@ -38,7 +38,7 @@ class Organization < ActiveRecord::Base
 
   # relationship user-org is created for current user automatically
   after_create do |org|
-    org.users << User.current
+    org.users << User.current if User.current
   end
 
   def promotion_paths
