@@ -126,7 +126,7 @@ var sliding_tree = function(id, options) {
         for(var i = 0; i < trail.length; i++) {
             breadcrumb.append(create_crumb(trail[i]))
         }
-        breadcrumb.append(settings.breadcrumb[id].name)
+        breadcrumb.append(settings.breadcrumb[id].name);
     };
     var create_crumb = function(id) {
         return jQuery('<div/>', {
