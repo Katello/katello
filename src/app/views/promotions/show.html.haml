@@ -3,15 +3,12 @@
 = include_javascripts :promotion
 = include_javascripts :panel
 
-
-
-
 :javascript
   var content_breadcrumb = $.parseJSON('#{escape_javascript(generate_content_breadcrumb())}');
   var changeset_breadcrumb = $.parseJSON('#{escape_javascript(generate_cs_breadcrumb())}');
   localize({
-    "add": '#{_('Add')}',
-    "remove": '#{_('Remove')}',
+    "add": '+ #{_('Add')}',
+    "remove": '&mdash; #{_('Remove')}',
     "loading": "#{_('Loading Changeset')}",
     "no_products":"#{_('No products exist in the changeset for this product')}",
     "no_errata": "#{_('No errata exist in this changeset.')}",
@@ -23,7 +20,17 @@
     "viewing": '#{_('currently editing this changeset')}',
     "review": '#{_("Review for Promotion")}',
     "promote": '#{_("Promote Changeset to ")}',
-    "promote_confirm": '#{_("promote_confirm")}'
+    "promote_confirm": '#{_("promote_confirm")}',
+    "package_singular": '#{_("Package")}',
+    "package_plural": '#{_("Packages")}',
+    "product_singular": '#{_("Product")}',
+    "product_plural": '#{_("Products")}',
+    "errata_singular": '#{_("Erratum")}',
+    "errata_plural": '#{_("Errata")}',
+    "repo_singular": '#{_("Repository")}',
+    "repo_plural": '#{_("Repositories")}',
+    "changeset_empty": '#{_("Changeset is empty.")}',
+    "summary": '#{_("Summary:")}'
   });
 
 
@@ -59,27 +66,24 @@
 
           .search_button.fr.clickable
             #{_('Search')}
-
           .tree_breadcrumb
-
         #cslist.list.sliding_list.shadowbox.outlined{"data-page_size"=>current_user.page_size}
           #changeset_loading.slider
             .text
               = _("Loading Changeset")
               = image_tag ("spinner.gif")
-          .slider_one.has_content.slider
+          .slider_one.has_content.slider.will_have_content
           .slider_two.no_content.slider
         #changeset_users
+        #changeset_status
+        #delete_changeset.button{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
+          = _("Remove Changeset")
+        #changeset_action.button.fr
+        #review_cancel.button.fr{:style=>"display: none;"}
+          = _('Cancel Review')
       - else
         %h2 #{_("Changesets")}
         = _("An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment.")
-      %a#delete_changeset.remove{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
-        = _("Remove Changeset")
-
-
-      #changeset_action.button.fr
-      #review_cancel.button.fr{:style=>"display: none;"}
-        = _('Cancel Review')
 
     #panel-frame
       #panel.panel.closed
