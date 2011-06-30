@@ -23,7 +23,17 @@
     "viewing": '#{_('currently editing this changeset')}',
     "review": '#{_("Review for Promotion")}',
     "promote": '#{_("Promote Changeset to ")}',
-    "promote_confirm": '#{_("promote_confirm")}'
+    "promote_confirm": '#{_("promote_confirm")}',
+    "package_singular": '#{_("Package")}',
+    "package_plural": '#{_("Packages")}',
+    "product_singular": '#{_("Product")}',
+    "product_plural": '#{_("Products")}',
+    "errata_singular": '#{_("Erratum")}',
+    "errata_plural": '#{_("Errata")}',
+    "repo_singular": '#{_("Repository")}',
+    "repo_plural": '#{_("Repositories")}',
+    "changeset_empty": '#{_("Changeset is empty.")}',
+    "summary": '#{_("Summary:")}'
   });
 
 
@@ -62,6 +72,7 @@
             .slider_one.has_content.slider.will_have_content
             .slider_two.no_content.slider
           #changeset_users
+          #changeset_status
           #delete_changeset.button{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
             = _("Remove Changeset")
           #changeset_action.button.fr

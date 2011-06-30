@@ -62,7 +62,6 @@ var promotion_page = (function($){
                         else {
                             if(data.changeset) {
                                 current_changeset = changeset_obj(data.changeset);
-                                console.log("Resetting page - after refresh");
                                 reset_page();
                                 changeset_tree.rerender_content();
                             }
@@ -122,10 +121,10 @@ var promotion_page = (function($){
                 }
             }
             sort_changeset();
+            draw_status();
             changeset_queue.push([type, id, display, adding, product_id]);
         },
         sort_changeset = function() {
-            console.log("SORTING");
             $(".right_tree .will_have_content").find("li").sortElements(function(a,b){
                     var a_html = $(a).find(".sort_attr").html();
                     var b_html = $(b).find(".sort_attr").html();
@@ -197,6 +196,51 @@ var promotion_page = (function($){
             reset_page();
     
         },
+        draw_status = function() {
+            if (current_changeset === undefined) {
+                $('#changeset_status').html('');
+            }
+            else {
+                //array of  [type, quantity] arrays
+                var counts = [];
+
+                var prod_count = 0;
+                $.each(current_changeset.products, function(key, product){
+                    if (product.all) {
+                        prod_count+=1;
+                    }
+                });
+                counts.push(["product", prod_count]);
+
+
+                $.each(subtypes, function(index,type) {
+                    var amount = 0;
+                    $.each(current_changeset.products, function(key, product){
+                        amount += product[type].length;
+                    });
+                    counts.push([type, amount]);
+                });
+
+                //convert counts into human readable format
+                var strings = [];
+                $.each(counts, function(index, item){
+                     if (item[1] === 1) {
+                        strings.push(item[1] + " " + i18n[item[0] + "_singular"]);
+                    }
+                    else if (item[1] > 1) {
+                         strings.push(item[1] + " " + i18n[item[0] + "_plural"]);
+                    }                   
+                });
+
+                if(strings.length === 0) {
+                    $('#changeset_status').html(i18n.summary + " " + i18n.changeset_empty);
+                }
+                else {
+                    $('#changeset_status').html(i18n.summary + " " + strings.join(", "));
+                }
+            }
+
+        },
         /*
          *  Resets anything that is listed to have the correct button value
          *    if there is no changeset selected this will reset everything
@@ -265,7 +309,7 @@ var promotion_page = (function($){
                 action_btn.hide();
             }
     
-    
+            draw_status();
     
     
         },
@@ -353,9 +397,7 @@ var changeset_obj = function(data_struct) {
             cache: false,
             success: function(data) {
                 timestamp = data.timestamp;
-                
                 is_new = (state === "new");
-                console.log("ISNEW: " + is_new);
                 on_success();
             },
             error: function(data) {
@@ -414,8 +456,6 @@ var changeset_obj = function(data_struct) {
             } 
         },
         remove_item:function(type, id, product_id) {
-            console.log(type + "," + id + "," + product_id);
-
             if( type === 'product' ){
                 delete products[id];
             } else if (products[product_id] !== undefined) {
