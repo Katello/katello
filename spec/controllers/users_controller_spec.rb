@@ -64,13 +64,13 @@ describe UsersController do
     end    
     
     it "should be allowed to change the password" do 
-       put 'update', {:id => @user.username, :user => {:password=>"password1234"}}
+       put 'update', {:id => @user.id, :user => {:password=>"password1234"}}
        response.should be_success
        User.authenticate!(@user.username, "password1234").should be_true
     end
     
     it "should not change the username" do 
-       put 'update', {:id => @user.username, :user => {:username=>"FOO"}}
+       put 'update', {:id => @user.id, :user => {:username=>"FOO"}}
        response.should be_success
        assert User.where(:username=>"FOO").empty?
        assert !User.where(:username=>@user.username).empty?      
@@ -79,10 +79,10 @@ describe UsersController do
     it "should allow roles to be changed" do
        role = Role.where(:name=>"Test")[0]
        assert !role.nil?
-       put 'update', {:id => @user.username, :user=>{:role_ids=>[role.id]}}
+       put 'update', {:id => @user.id, :user=>{:role_ids=>[role.id]}}
        response.should be_success
        assert User.find(@user.id).roles.size == 2
-       put 'update', {:id => @user.username, :user=>{:role_ids=>[]}}
+       put 'update', {:id => @user.id, :user=>{:role_ids=>[]}}
        response.should be_success
        #should still have self role
        assert User.find(@user.id).roles.size == 1
