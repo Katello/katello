@@ -609,6 +609,7 @@ $(document).ready(function() {
         },function() {
             $("#search_form").fadeOut('fast', function(){bcs.animate({ "height": bcs_height }, 'fast');});
             $(this).animate({backgroundPosition:"0 0"}, { duration: 200, queue: false });
+            $('#search').val("").change();
             $("#cslist .has_content li").fadeIn('fast');
         }
     );
