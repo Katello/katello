@@ -34,6 +34,8 @@ describe OrganizationsController do
   describe "create a root org" do        
     describe 'with valid parameters' do
       before (:each) do
+        # for these tests we need full user
+        login_user :mock => false
 
         @organization = new_test_org #controller.current_organization
         controller.stub!(:current_organization).and_return(@organization)
