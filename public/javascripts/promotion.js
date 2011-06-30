@@ -153,21 +153,20 @@ var promotion_page = (function($){
             window.location = url;
         },
         set_current_changeset = function(hash_id) {
+
             var id = hash_id.split("_");
             if (id[0] === "changesets") {
                 current_changeset = undefined;
-                reset_page();
+
                 $("#delete_changeset").addClass("disabled");
             }
             else if (current_changeset === undefined) {
-                
+             //do nothing
             }
             else if (id[0] === "changeset" && id[1] !==  current_changeset.id) {
                current_changeset = undefined;
             }
-            else {
-                reset_page();
-            }
+            reset_page();
         },
         fetch_changeset = function(changeset_id, callback) {
     
@@ -249,6 +248,7 @@ var promotion_page = (function($){
          *    //TODO make more efficient by identify exactly which page we are on and only reseting those buttons
          */
         reset_page = function() {
+
             if (current_changeset) {
                 if (current_product) {
                     var product = current_changeset.products[current_product];
@@ -301,6 +301,7 @@ var promotion_page = (function($){
                 }
             }
             else {
+
                 $("#changeset_tree .tree_breadcrumb").removeClass("locked_breadcrumb");
                 $("#cslist").removeClass("locked");
                 $('#locked_icon').remove();
@@ -554,8 +555,8 @@ $(document).ready(function() {
                                       //render_cb: promotion_page.set_current_changeset,
                                       render_cb: promotionsRenderer.render,
                                       //use this do do anything before the next changeset or pane is rendered
-                                      prerender_cb: function() {
-                                          promotion_page.set_current_changeset
+                                      prerender_cb: function(hash_id) {
+                                          promotion_page.set_current_changeset(hash_id);
                                       },
                                       tab_change_cb: function(hash_id) {
                                           //promotion_page.set_current_changeset(hash_id);
