@@ -331,32 +331,33 @@ var promotion_page = (function($){
         },
         add_product_breadcrumbs = function(changeset_id, product_id, product_name){
             var productBC = 'product-cs_' + changeset_id + '_' + product_id;
+            var changesetBC = "changeset_" + changeset_id;
             changeset_breadcrumb[productBC] = {
                 cache: null,
                 client_render: true,
                 name: product_name,
-                trail: ['changesets', 'changeset_8'],
+                trail: ['changesets', changesetBC],
                 url: 'url'
             }
             changeset_breadcrumb['package-cs_' + changeset_id + '_' + product_id] = {
                 cache: null,
                 client_render: true,
                 name: "Packages",
-                trail: ['changesets', 'changeset_8', productBC],
+                trail: ['changesets', changesetBC, productBC],
                 url: ''
             }
             changeset_breadcrumb['errata-cs_' + changeset_id + '_' + product_id] = {
                 cache: null,
                 client_render: true,
                 name: "Errata",
-                trail: ['changesets', 'changeset_8', productBC],
+                trail: ['changesets', changesetBC, productBC],
                 url: ''
             }
             changeset_breadcrumb['repo-cs_' + changeset_id + '_' + product_id] = {
                 cache: null,
                 client_render: true,
                 name: "Repositories",
-                trail: ['changesets', 'changeset_8', productBC],
+                trail: ['changesets', changesetBC, productBC],
                 url: ''
             }
         };
@@ -447,10 +448,10 @@ var changeset_obj = function(data_struct) {
         },
         add_item:function (type, id, display_name, product_id, product_name) {
             if( type === 'product' ){
-                products[id] = {'name': display_name, 'package':[], 'errata':[], 'repo':[], 'all': true}
+                products[id] = {'name': display_name, 'id': id, 'package':[], 'errata':[], 'repo':[], 'all': true}
             } else { 
                 if ( products[product_id] === undefined ) {
-                    products[product_id] = {'name': product_name, 'package':[], 'errata':[], 'repo':[]}
+                    products[product_id] = {'name': product_name, 'id': product_id, 'package':[], 'errata':[], 'repo':[]}
                 }
                 products[product_id][type].push({name:display_name, id:id})
             } 
