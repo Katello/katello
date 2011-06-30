@@ -265,28 +265,32 @@ var promotion_page = {
             name: product_name,
             trail: ['changesets', 'changeset_8'],
             url: 'url'
-        }
+        };
         changeset_breadcrumb['package-cs_' + changeset_id + '_' + product_id] = {
             cache: null,
             client_render: true,
             name: "Packages",
             trail: ['changesets', 'changeset_8', productBC],
             url: ''
-        }
+        };
         changeset_breadcrumb['errata-cs_' + changeset_id + '_' + product_id] = {
             cache: null,
             client_render: true,
             name: "Errata",
             trail: ['changesets', 'changeset_8', productBC],
             url: ''
-        }
+        };
         changeset_breadcrumb['repo-cs_' + changeset_id + '_' + product_id] = {
             cache: null,
             client_render: true,
             name: "Repositories",
             trail: ['changesets', 'changeset_8', productBC],
             url: ''
-        }
+        };
+    },
+    cs_filter : function(word){
+        console.log($("li:contains('" + word + "')"));
+        return false;
     }
 };
 
@@ -415,7 +419,17 @@ var changeset_obj = function(data_struct) {
     }
 };
 
+//make jQuery Contains case insensitive
+$.expr[':'].Contains = function(a, i, m) {
+  return $(a).text().toUpperCase()
+      .indexOf(m[3].toUpperCase()) >= 0;
+};
+$.expr[':'].contains = function(a, i, m) {
+  return $(a).text().toUpperCase()
+      .indexOf(m[3].toUpperCase()) >= 0;
+};
 
+//doc ready
 $(document).ready(function() {
 
     //promotion_page.update_dep_size();
@@ -448,7 +462,10 @@ $(document).ready(function() {
                                       bbq_tag:"changeset",
                                       //render_cb: promotion_page.set_current_changeset,
                                       render_cb: promotionsRenderer.render,
-                                      prerender_cb: promotion_page.set_current_changeset,
+                                      //use this do do anything before the next changeset or pane is rendered
+                                      prerender_cb: function() {
+                                          promotion_page.set_current_changeset
+                                      },
                                       tab_change_cb: function(hash_id) {
                                           //promotion_page.set_current_changeset(hash_id);
                                           promotion_page.sort_changeset();
@@ -470,6 +487,38 @@ $(document).ready(function() {
           promotion_page.checkUsersInResponse(userj);
         }
     });
+
+    //click and animate the filter for changeset
+    var bcs = null;
+    var bcs_height = 0;
+    $('.search_button').toggle(
+        function() {
+            bcs = $('.breadcrumb_search');
+            bcs_height = bcs.height();
+            bcs.animate({ "height": bcs_height+36}, { duration: 200, queue: false });
+            $("#search_form").css("opacity", "0").show();
+            $("#search_form").animate({"width":"240px", "opacity":"1"}, { duration: 200, queue: false });
+            $(this).animate({backgroundPosition:"-32px 0"}, { duration: 200, queue: false });
+        },function() {
+            $("#search_form").fadeOut('fast', function(){bcs.animate({ "height": bcs_height }, 'fast');});
+            $(this).animate({backgroundPosition:"0 0"}, { duration: 200, queue: false });
+        }
+    );
+
+    //bind to the #search_form to make it useful
+    $('#search_form').submit(function(){
+        $('#search').keyup();
+        return false;
+    });
+
+    $('#search').live('keyup', function(){
+        if ($.trim($(this).val()).length >= 2) {
+            $("#cslist .has_content li:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut();
+        } else {
+            $(".has_content li").fadeIn();
+        }
+    });
+    $('#search').val("").keyup();
         
 });
 
