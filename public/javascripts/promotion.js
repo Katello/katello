@@ -548,7 +548,7 @@ var registerEvents = function(){
           success: function(data){
               $.extend(changeset_breadcrumb, data.breadcrumb);
               promotion_page.set_changeset(changeset_obj(data.changeset));
-              promotion_page.get_chaneset_tree().render_content('changeset_' + data.id);
+              promotion_page.get_changeset_tree().render_content('changeset_' + data.id);
               panel.closePanel($('#panel'));
           }
         });
