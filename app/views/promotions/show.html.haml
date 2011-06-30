@@ -54,36 +54,37 @@
 .grid_16
   #container
 
-    .right_tree#changeset_tree
-      - if @next_environment
-        %h2 #{@next_environment.name + _(" Changesets")}
-        .breadcrumb_search.fl
+    .right_tree
+      #changeset_tree
+        - if @next_environment
+          %h2 #{@next_environment.name + _(" Changesets")}
+          .breadcrumb_search.fl
 
-          %form#search_form.search.clear
-            %input{ :name => "s", :type => "search", :placeholder => "Filter...", :id=>"search"}
-            %button.action #{_("Search")}
-            %br.clear
+            %form#search_form.search.clear
+              %input{ :name => "s", :type => "search", :placeholder => "Filter...", :id=>"search"}
+              %button.action #{_("Search")}
+              %br.clear
 
-          .search_button.fr.clickable
-            #{_('Search')}
-          .tree_breadcrumb
-        #cslist.list.sliding_list.shadowbox.outlined{"data-page_size"=>current_user.page_size}
-          #changeset_loading.slider
-            .text
-              = _("Loading Changeset")
-              = image_tag ("spinner.gif")
-          .slider_one.has_content.slider.will_have_content
-          .slider_two.no_content.slider
-        #changeset_users
-        #changeset_status
-        #delete_changeset.button{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
-          = _("Remove Changeset")
-        #changeset_action.button.fr
-        #review_cancel.button.fr{:style=>"display: none;"}
-          = _('Cancel Review')
-      - else
-        %h2 #{_("Changesets")}
-        = _("An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment.")
+            .search_button.fr.clickable
+              #{_('Search')}
+            .tree_breadcrumb
+          #cslist.list.sliding_list.shadowbox.outlined{"data-page_size"=>current_user.page_size}
+            #changeset_loading.slider
+              .text
+                = _("Loading Changeset")
+                = image_tag ("spinner.gif")
+            .slider_one.has_content.slider.will_have_content
+            .slider_two.no_content.slider
+          #changeset_users
+          #changeset_status
+          #delete_changeset.button{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
+            = _("Remove Changeset")
+          #changeset_action.button.fr
+          #review_cancel.button.fr{:style=>"display: none;"}
+            = _('Cancel Review')
+        - else
+          %h2 #{_("Changesets")}
+          = _("An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment.")
 
     #panel-frame
       #panel.panel.closed
