@@ -80,13 +80,14 @@ module ApplicationHelper
     options[:accessor] ||= "id"
     enable_create = options[:enable_create]
     enable_create = true if enable_create.nil?
-    
+    enable_sort = options[:enable_sort] ? options[:enable_sort] : false
     render :partial => "common/panel", 
            :locals => {
              :title => options[:title], 
              :name => options[:name], 
              :create => options[:create],
              :enable_create => enable_create,
+             :enable_sort => enable_sort,
              :columns => options[:col],
              :custom_rows => options[:custom_rows],
              :collection => collection,
