@@ -133,6 +133,12 @@ class Role < ActiveRecord::Base
     end
   end
 
+  # Returns the superadmin role. Superadmin has special permissions that are hardcoded in the
+  # code base.
+  def self.superadmin_role
+    Role.find_by_name('superadmin_role')
+  end
+
   # returns the candlepin role (for RHSM)
   def self.candlepin_role
     Role.find_by_name('candlepin_role')

@@ -70,6 +70,11 @@ class User < ActiveRecord::Base
     find_by_username('anonymous')
   end
 
+  # is the current user superadmin (has superadmin_role)?
+  def superadmin?
+    @superadmin |= roles.include? Role.superadmin_role
+  end
+
   def self.authenticate!(username, password)
     u = User.where({:username => username}).first
     # check if hash is valid
