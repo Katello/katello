@@ -38,7 +38,7 @@ Requires:       rubygem(gettext_i18n_rails)
 Requires:       rubygem(simple-navigation) >= 3.1.0
 Requires:       rubygem(sqlite3) 
 Requires:       rubygem(pg)
-Requires:       rubygem(scoped_search)
+Requires:       rubygem(scoped_search) >= 2.3.1
 
 Requires(pre):  shadow-utils
 Requires(preun): chkconfig
