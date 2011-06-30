@@ -14,7 +14,7 @@ class ChangesetsController < ApplicationController
   include AutoCompleteSearch
   include BreadcrumbHelper
   
-  before_filter :find_changeset, :except => [:index, :list, :items, :unpublished, :create, :new]
+  before_filter :find_changeset, :except => [:index, :list, :items, :create, :new]
   before_filter :find_environment, :except => [:index, :list, :items]
   before_filter :setup_options, :only => [:index, :items]
   
@@ -100,7 +100,7 @@ class ChangesetsController < ApplicationController
     notice _("Changeset '#{@changeset["name"]}' was created.")
     bc = {}
     add_crumb_node!(bc, changeset_bc_id(@changeset), products_changeset_path(@changeset), @changeset.name, ['changesets'],
-                    {:cache=>true, :content=>render_to_string(:partial=>"changesets/products", :locals=>{:changeset=>@changeset})})
+                    {:client_render => true})
     render :json => {
       'breadcrumb' => bc,
       'id' => @changeset.id,
@@ -131,6 +131,9 @@ class ChangesetsController < ApplicationController
       render :json=>{:timestamp=>@changeset.updated_at.to_i.to_s} and return
     end
 
+    render :text => "The changeset is currently under review, no modifications can occur during this phase.",
+           :status => :bad_request if @changeset.state == Changeset::PROMOTED
+
     if params.has_key? :data
       params[:data].each do |item|
         adding = item["adding"]
@@ -143,10 +146,12 @@ class ChangesetsController < ApplicationController
           @changeset.products << Product.where(:id => id) if adding
           @changeset.products.delete Product.find(id) if !adding
         when "errata"
-          @changeset.errata << ChangesetErratum.new(:errata_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
+          @changeset.errata << ChangesetErratum.new(:errata_id=>id, :display_name=>name,
+                                              :product_id => pid, :changeset => @changeset) if adding
           ChangesetErrata.destroy_all(:errata_id =>id, :changeset_id => @changeset.id) if !adding
         when "package"
-          @changeset.packages << ChangesetPackage.new(:package_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
+          @changeset.packages << ChangesetPackage.new(:package_id=>id, :display_name=>name, :product_id => pid,
+                                              :changeset => @changeset) if adding
           ChangesetPackage.destroy_all(:package_id =>id, :changeset_id => @changeset.id) if !adding
 
         when "repo"
@@ -174,6 +179,8 @@ class ChangesetsController < ApplicationController
   end
 
   def promote
+    errors "The changeset must be moved to the review stage before promotion" and return if @changeset.state != Changeset::REVIEW
+
     begin
       @changeset.promote
       @environment.create_changeset
