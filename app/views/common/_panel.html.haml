@@ -53,9 +53,9 @@
       .block_head.clear
         - for col in columns
           %div{:class => 'column_' + columns.length.to_s}
-            - if col.to_s.sub(/[_]/, " ") == "name"
-              = col.to_s.sub(/[_]/, " ") + " (abbr.)"
-            - else
+            -if enable_sort 
+              = sort(col.to_s.sub(/[_]/, " "))
+            -else
               = col.to_s.sub(/[_]/, " ")
       .arrow-right
       - if custom_rows
