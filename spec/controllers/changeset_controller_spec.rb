@@ -19,8 +19,6 @@ describe ChangesetsController do
 
 
   module CSControllerTest
-    ENV_NAME = "environment_name"
-    ENVIRONMENT = {:id => 1, :name => ENV_NAME, :description => nil}
     CHANGESET = {:id=>1, :promotion_date=>Time.now, :name=>"oldname",
                  :packages=>[ChangesetPackage.new({:display_name=>"foo-1.2.3", :package_id=>"123"})],
                  :errata=>[ChangesetErratum.new({:display_name=>"RHSA-2011-23-2", :id=>"123"})]}
@@ -33,11 +31,9 @@ describe ChangesetsController do
     controller.stub!(:notice)
     controller.stub!(:errors)
 
-    @org = new_test_org 
-
-    CSControllerTest::ENVIRONMENT["organization"] = @org
-    CSControllerTest::ENVIRONMENT["prior"] = @org.locker
-    @env = KPEnvironment.create(CSControllerTest::ENVIRONMENT)
+    @org = new_test_org
+    @env = KPEnvironment.new(:name => 'test', :prior => @organization.locker.id, :organization => @organization)
+    @env.save!
 
     CSControllerTest::CHANGESET["environment"] = @env
     @changeset = Changeset.create(CSControllerTest::CHANGESET)
