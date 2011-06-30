@@ -36,11 +36,6 @@ describe User do
       @user.own_role.should_not be_nil
     end
 
-    it "have own role with the same name as username" do
-      #pending "implement own_role functionality"
-      @user.own_role.name.should match("testuser")
-    end
-
     specify { @user.cp_oauth_header.should == {'cp-user' => @user.username}}
     specify { @user.pulp_oauth_header.should == {'pulp-user' => @user.username}}
   end
