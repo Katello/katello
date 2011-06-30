@@ -62,6 +62,14 @@ class User < ActiveRecord::Base
     end
   end
 
+  # destroy own role for user
+  before_destroy do |u|
+    u.own_role.destroy
+    unless u.own_role.destroyed?
+      Rails.logger.error error.to_s
+    end
+  end
+
   # support for session (thread-local) variables
   include Katello::ThreadSession::UserModel
   include Ldap
