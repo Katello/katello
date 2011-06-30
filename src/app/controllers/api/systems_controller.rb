@@ -51,11 +51,11 @@ class Api::SystemsController < Api::ApiController
     render :text => _("Deleted system '#{params[:id]}'"), :status => 204
   end
 
-  def find_organization
-    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id]})
-    render :text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404 and return if @organization.nil?
-    @organization
-  end
+#  def find_organization
+#    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id]})
+#    render :text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404 and return if @organization.nil?
+#    @organization
+#  end
 
   def find_system
     @system = System.first(:conditions => {:uuid => params[:id]})

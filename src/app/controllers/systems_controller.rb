@@ -15,11 +15,15 @@ class SystemsController < ApplicationController
   include SystemsHelper
   before_filter :find_system, :except =>[:index, :auto_complete_search, :items]
   before_filter :setup_options, :only => [:index, :items]
+
+  # two pane columns and mapping for sortable fields
+  COLUMNS = {'name' => 'name', 'lastCheckin' => 'lastCheckin', 'created' => 'created_at' }
   
   def index
     begin
       @systems = System.search_for(params[:search]).where(:organization_id => current_organization.id).limit(current_user.page_size)
       retain_search_history
+      sort_systems if params[:order]
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
       @systems = System.search_for ''
@@ -35,9 +39,10 @@ class SystemsController < ApplicationController
 
   def setup_options
     @panel_options = { :title => _('Systems'),
-                      :col => ['name','lastCheckin','created'],
+                      :col => COLUMNS.keys,
                       :custom_rows => true,
                       :enable_create => false,
+                      :enable_sort => true,
                       :name => _('system'),
                       :list_partial => 'systems/list_systems',
                       :ajax_scroll => items_systems_path()}
@@ -107,6 +112,16 @@ class SystemsController < ApplicationController
   
   def find_system
     @system = System.find(params[:id])
+  end
+
+  def sort_systems
+    field = params[:order].split(" ").first
+    if (COLUMNS.keys.include?(field))
+      # sort based on column name and push any nils to end of array
+      @systems.sort! { |a,b| (a.send(COLUMNS[field]) and b.send(COLUMNS[field])) ? 
+                       (a.send(COLUMNS[field]) <=> b.send(COLUMNS[field])) : (a ? -1 : 1) }
+      @systems.reverse! if params[:order].split(" ").last.downcase == "desc"
+    end
   end
  
 end
