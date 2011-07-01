@@ -2,9 +2,16 @@
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 
 # create basic roles
-superadmin_role = Role.find_or_create_by_name(:name => 'Administrator', :superadmin => true)
-anonymous_role = Role.find_or_create_by_name(:name => 'Anonymous')
-reader_role = Role.find_or_create_by_name(:name => 'Read Everything')
+superadmin_role = Role.find_or_create_by_name(
+  :name => 'Administrator', 
+  :description => 'Super administrator with all access.',
+  :superadmin => true)
+anonymous_role = Role.find_or_create_by_name(
+  :name => 'Anonymous',
+  :description => 'Used when user is not logged in. No permissions except reading notifications. Not to be used by regular users.')
+reader_role = Role.find_or_create_by_name(
+  :name => 'Read Everything',
+  :description => 'Permissions to read everything.')
 
 # create the super admin if none exist - it must be created before any statement in the seed.rb script
 User.current = user_admin = User.find_or_create_by_username(
@@ -19,7 +26,9 @@ user_anonymous = User.find_or_create_by_username(
   :password => 'admin')
 
 # candlepin_role for RHSM
-candlepin_role = Role.find_or_create_by_name(:name => 'Candlepin')
+candlepin_role = Role.find_or_create_by_name(
+  :name => 'Candlepin',
+  :description => 'Special role for RHSM. Not to be used by regular users.')
 throw "Unable to create candlepin_role: #{candlepin_role.errors}" if candlepin_role and candlepin_role.errors.size > 0
 
 # create the default org = "admin" if none exist
