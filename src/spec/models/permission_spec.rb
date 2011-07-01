@@ -14,23 +14,24 @@ require 'spec_helper'
 
 describe Permission do
   before(:all) do
-    @super_admin = Role.create!(:name => 'super_admin')
+    @some_role = Role.create!(:name => 'some_role')
     @repo_admin = Role.create!(:name => 'repo_admin')
+    @super_admin = Role.create!(:name => 'super_admin', :superadmin => true)
 
     user_admin = User.create!(
       :username => 'admin',
       :password => "password",
-      :roles => [ @super_admin ])
+      :roles => [ @some_role ])
     user_bob = User.create!(
       :username => 'bob',
       :password => "password",
       :roles => [ @repo_admin ])
 
-    @super_admin.allow [:create], :organization
-    @super_admin.allow [:new], :organization
-    @super_admin.allow [:test], :test1
-    @super_admin.allow [:test], :test2
-    @super_admin.allow [:test], :test3
+    @some_role.allow [:create], :organization
+    @some_role.allow [:new], :organization
+    @some_role.allow [:test], :test1
+    @some_role.allow [:test], :test2
+    @some_role.allow [:test], :test3
     @repo_admin.allow :create_repo, :repogroup, :repogroup_internal
     @repo_admin.allow :delete_repo, :repo, [:repogroup_internal, :repo_rhel6]
   end
@@ -45,9 +46,15 @@ describe Permission do
 
   context "super_admin" do
     it { @super_admin.allowed_to?('create', 'organization').should be_true }
-    it { @super_admin.allowed_to?('new', 'organization').should be_true }
-    it { @super_admin.allowed_to?('destroy', 'organization').should be_false }
-    it { @super_admin.allowed_to?('create', 'xxx').should be_false }
+    it { @super_admin.allowed_to?('anything', 'anything').should be_true }
+    it { @super_admin.allowed_to?('anything', 'anything', 'anything').should be_true }
+  end
+
+  context "some_role" do
+    it { @some_role.allowed_to?('create', 'organization').should be_true }
+    it { @some_role.allowed_to?('new', 'organization').should be_true }
+    it { @some_role.allowed_to?('destroy', 'organization').should be_false }
+    it { @some_role.allowed_to?('create', 'xxx').should be_false }
   end
 
   context "repo_admin" do
