@@ -4,6 +4,7 @@
 # create basic roles
 superadmin_role = Role.find_or_create_by_name(:name => 'superadmin_role', :superadmin => true)
 anonymous_role = Role.find_or_create_by_name(:name => 'anonymous_role')
+reader_role = Role.find_or_create_by_name(:name => 'reader_role')
 
 # create the super admin if none exist - it must be created before any statement in the seed.rb script
 User.current = user_admin = User.find_or_create_by_username(
@@ -11,7 +12,7 @@ User.current = user_admin = User.find_or_create_by_username(
   :username => 'admin',
   :password => 'admin')
 
-# "nobody" user
+# "nobody" user (do not change his name 'anonymous')
 user_anonymous = User.find_or_create_by_username(
   :roles => [ anonymous_role ],
   :username => 'anonymous',
@@ -64,33 +65,62 @@ anonymous_role.allow [:create, :update], :user_notices
 [:systems].each { |t| Role.allow 'candlepin_role', [:create, :update, :delete], "#{t}" }
 
 # ADMIN - already allowed to all actions
+##Allow for all models
+#ActiveRecord::Base.connection.tables.each do |t|
+  #superadmin_role.allow [:create, :update, :delete, :read], "#{t}"
+#end
+#
+##These have associated models, but have extra actions
+#superadmin_role.allow [:promote], "changesets"
+#
+##These do not have associated models
+#superadmin_role.allow [:read], "dashboard"
+#superadmin_role.allow [:read], "promotions"
+#superadmin_role.allow [:read, :delete, :sync], "sync_management"
+#superadmin_role.allow [:read], "packages"
+#superadmin_role.allow [:read], "errata"
+#superadmin_role.allow [:create, :delete, :read], "search"
+#superadmin_role.allow [:read], "operations"
+#superadmin_role.allow [:create, :read, :update, :delete], "repositories"
+#superadmin_role.allow [:read, :apply], "sync_schedules"
+#
+##These are candlepin proxy actions
+#superadmin_role.allow [:create, :read, :update, :delete, :import], "owners"
+#superadmin_role.allow [:create, :read, :update, :delete], "entitlements"
+#superadmin_role.allow [:create, :read, :update, :delete], "pools"
+#superadmin_role.allow [:create, :read, :update, :delete], "certificates"
+#superadmin_role.allow [:export, :re_register, :create, :read, :update, :delete], "consumers"
+#
+#superadmin_role.allow [:package], "jammit"
+
+# READER ROLE - read everything only
 #Allow for all models
 ActiveRecord::Base.connection.tables.each do |t|
-  superadmin_role.allow [:create, :update, :delete, :read], "#{t}"
+  reader_role.allow [:read], "#{t}"
 end
 
-#These have associated models, but have extra actions
-superadmin_role.allow [:promote], "changesets"
+#Need write/special access to some actions/models
+reader_role.allow [:create, :update], :notices
+reader_role.allow [:create, :update], :user_notices
+reader_role.allow [:package], "jammit"
 
 #These do not have associated models
-superadmin_role.allow [:read], "dashboard"
-superadmin_role.allow [:read], "promotions"
-superadmin_role.allow [:read, :delete, :sync], "sync_management"
-superadmin_role.allow [:read], "packages"
-superadmin_role.allow [:read], "errata"
-superadmin_role.allow [:create, :delete, :read], "search"
-superadmin_role.allow [:read], "operations"
-superadmin_role.allow [:create, :read, :update, :delete], "repositories"
-superadmin_role.allow [:read, :apply], "sync_schedules"
+reader_role.allow [:read], "dashboard"
+reader_role.allow [:read], "promotions"
+reader_role.allow [:read], "sync_management"
+reader_role.allow [:read], "packages"
+reader_role.allow [:read], "errata"
+reader_role.allow [:read], "search"
+reader_role.allow [:read], "operations"
+reader_role.allow [:read], "repositories"
+reader_role.allow [:read], "sync_schedules"
 
 #These are candlepin proxy actions
-superadmin_role.allow [:create, :read, :update, :delete, :import], "owners"
-superadmin_role.allow [:create, :read, :update, :delete], "entitlements"
-superadmin_role.allow [:create, :read, :update, :delete], "pools"
-superadmin_role.allow [:create, :read, :update, :delete], "certificates"
-superadmin_role.allow [:export, :re_register, :create, :read, :update, :delete], "consumers"
-
-superadmin_role.allow [:package], "jammit"
+reader_role.allow [:read], "owners"
+reader_role.allow [:read], "entitlements"
+reader_role.allow [:read], "pools"
+reader_role.allow [:read], "certificates"
+reader_role.allow [:read], "consumers"
 
 # TODO protection of all /api controllers (currently all roles authorized by default)
 #superadmin_role.allow { :"api/xxx" => [:read] }
