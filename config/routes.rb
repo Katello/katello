@@ -191,6 +191,7 @@ Src::Application.routes.draw do
   match '/user_session/logout' => 'user_sessions#destroy'
 
   namespace :api do
+    match '/' => 'root#resource_list'
 
     resources :systems, :only => [:show, :destroy]
     resources :providers do
