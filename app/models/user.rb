@@ -86,8 +86,12 @@ class User < ActiveRecord::Base
 
   def self.authenticate!(username, password)
     u = User.where({:username => username}).first
+    # check if user exists
+    return nil unless u
+    # check if not disabled
+    return nil if u.disabled
     # check if hash is valid
-    return nil unless u and Password.check(password, u.password)
+    return nil unless Password.check(password, u.password)
     u
   end
 
