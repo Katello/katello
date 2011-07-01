@@ -62,7 +62,7 @@ anonymous_role.allow [:create, :update], :notices
 anonymous_role.allow [:create, :update], :user_notices
 
 # CANDLEPIN ROLE - for RHSM
-[:systems].each { |t| Role.allow 'candlepin_role', [:create, :update, :delete], "#{t}" }
+[:systems].each { |t| candlepin_role.allow [:create, :update, :delete], "#{t}" }
 
 # ADMIN - already allowed to all actions
 ##Allow for all models
