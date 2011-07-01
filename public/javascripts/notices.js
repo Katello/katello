@@ -62,17 +62,19 @@ var notices = (function() {
             }  
         },
         addNotices: function(data) {
-            $("#unread_notices").text(data.unread_count);
-
-            //skip if there are no new messages
-            var new_notices = data.new_notices;
-
-            if ((new_notices === null) || (new_notices === undefined) || (new_notices.length === 0)) {
+            if (!data || data.new_notices.length === 0) {
                 return true;
             }
 
-            $.each(new_notices, function(key, val) {
-                notices.displayNotice(val.level, window.JSON.stringify({ "notices": [val.text] }));
+            //if comfing from the server may have new count
+            if (data.unread_count) {
+                $("#unread_notices").text(data.unread_count);
+            }
+
+            
+            
+            $.each(data.new_notices, function(index, notice) {
+                notices.displayNotice(notice.level, window.JSON.stringify({ "notices": [notice.text] }));
             });
 
             return true;
