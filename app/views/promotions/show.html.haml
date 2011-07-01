@@ -20,7 +20,7 @@
     "repo": "#{_("Repositories")}",
     "viewing": '#{_('currently editing this changeset')}',
     "review": '#{_("Review for Promotion")}',
-    "promote": '#{_("Promote Changeset to ")}',
+    "promote": "#{_('Promote to ') + (@next_environment.nil? ? '' : @next_environment.name)}",
     "promote_confirm": '#{_("promote_confirm")}',
     "package_singular": '#{_("Package")}',
     "package_plural": '#{_("Packages")}',
