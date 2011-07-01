@@ -268,10 +268,16 @@ var promotion_page = (function($){
                 } else {
                     var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
                     buttons.removeClass('disabled');
-                    $.each(current_changeset.products, function(index, item) {
-                        if( buttons.attr('id') === ('add_remove_product_' + item.id) ){
-                            buttons.html(i18n.remove).removeClass('add_product').addClass("remove_product").removeClass("disabled");
-                        }
+                    $.each(current_changeset.products, function(index, product) {
+                        $.each(buttons, function(button_index, button){
+                            if( $(button).attr('id') === ('add_remove_product_' + product.id) ){ 
+                                if( product.all === true){
+                                    $(button).html(i18n.remove).removeClass('add_product').addClass("remove_product").removeClass("disabled");
+                                } else {
+                                    $(button).html('');
+                                }
+                            }
+                        });
                     });
                 }
             } else {
@@ -281,7 +287,7 @@ var promotion_page = (function($){
             //Reset the review/promote/cancel button
             var action_btn =  $("#changeset_action");
             var cancel_btn = $("#review_cancel");
-            console.log(current_changeset);
+
             if (current_changeset) {
                action_btn.show();
                 if (current_changeset.is_new()) {
@@ -483,12 +489,15 @@ var changeset_obj = function(data_struct) {
         },
         promote: function(on_success, on_error) {
          $.ajax({
-            contentType:"application/json",
             type: "POST",
             url: "/changesets/" + id + "/promote",
             cache: false,
             success: function(data) {
-                on_success();
+                if (on_success) {
+                    on_success();
+                }
+                window.location = data;
+
             }});
         },
         update: function(items, on_success, on_error) {
@@ -734,22 +743,22 @@ var promotionsRenderer = (function(){
                 product_id = hash.split("_")[2],
                 key = hash.split("_")[0],
                 changeset = promotion_page.get_changeset(),
-                inReviewPhase = changeset.is_new();
+                inReviewPhase = !changeset.is_new();
             
             if (key === 'package-cs'){
-                return templateLibrary.listItems(changeset.products, "package", product_id, inReviewPhase);
+                return templateLibrary.listItems(changeset.products, "package", product_id, !inReviewPhase);
             }
             else if (key === 'errata-cs'){
-                return templateLibrary.listItems(changeset.products, "errata", product_id, inReviewPhase);
+                return templateLibrary.listItems(changeset.products, "errata", product_id, !inReviewPhase);
             }
             else if (key === 'repo-cs'){
-                return templateLibrary.listItems(changeset.products, "repo", product_id, inReviewPhase);
+                return templateLibrary.listItems(changeset.products, "repo", product_id, !inReviewPhase);
             }
             else if (key === 'product-cs'){
                 return templateLibrary.productDetailList(changeset.products[product_id], promotion_page.subtypes, changeset_id);
             }
             else if (hash.split("_")[0] === 'changeset'){
-                return templateLibrary.productList(changeset, changeset.id, inReviewPhase);
+                return templateLibrary.productList(changeset, changeset.id, !inReviewPhase);
             }
         };
 
@@ -816,9 +825,10 @@ var templateLibrary = (function(){
 
         },
         productList = function(changeset, changeset_id, showButton){
-            var html = '<ul>', 
+            var html = '<ul>',
+                all_list = '',
+                partial_list = '',
                 product, provider,
-                all, 
                 products = changeset.products;
             
             if( changeset.productCount() === 0 ){
@@ -828,12 +838,23 @@ var templateLibrary = (function(){
                     if( products.hasOwnProperty(key) ){
                         product = products[key];
                         provider = (product.provider === 'REDHAT') ? 'rh' : 'custom';
-                        all = product.all ? 'no_slide' : 'slide_link';
-                        html += productListItem(changeset_id, key, product.name, provider, all, showButton)
+                        toSlide = product.all ? 'no_slide' : 'slide_link';
+                        if( product.all ){
+                            if( showButton ){
+                                all_list += productListItem(changeset_id, key, product.name, provider, toSlide, showButton);
+                            } else {
+                                all_list += productListItem(changeset_id, key, product.name, provider, toSlide, showButton);
+                            }
+                        }
+                        else {
+                            partial_list += productListItem(changeset_id, key, product.name, provider, toSlide, false);
+                        }
                     }
                 }
             }
             
+            html += all_list ? ('<h5>'+i18n.full_product+'</h5>' + all_list) : '';
+            html += partial_list ? ('<h5>'+i18n.partial_product+'</h5>' + partial_list) : '';
             html += '</ul>';
             return html;
         },
