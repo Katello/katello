@@ -25,6 +25,7 @@ class ApplicationController < ActionController::Base
   before_filter :authorize
   after_filter :flash_to_headers
 
+
   # support for session (thread-local) variables must be the last filter in this class
   include Katello::ThreadSession::Controller
 
@@ -105,7 +106,8 @@ class ApplicationController < ActionController::Base
       # retrieved by the client on it's next polling interval.
       #
       # create & store notice... and mark as 'not viewed'
-      Notice.create!(:text => notice_string, :details => details, :level => level, :global => global, :user_notices => [UserNotice.new(:user => current_user)])
+      Notice.create!(:text => notice_string, :details => details, :level => level, :global => global, :user_notices => [UserNotice.new(:user => current_user, :viewed=>false)])
+      
     end
   end
 
@@ -131,6 +133,7 @@ class ApplicationController < ActionController::Base
     options[:level] = :error
     notice summary, options
   end
+
 
   def flash_to_headers
     return if @_response.nil? or @_response.response_code == 302
