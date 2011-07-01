@@ -489,12 +489,15 @@ var changeset_obj = function(data_struct) {
         },
         promote: function(on_success, on_error) {
          $.ajax({
-            contentType:"application/json",
             type: "POST",
             url: "/changesets/" + id + "/promote",
             cache: false,
             success: function(data) {
-                on_success();
+                if (on_success) {
+                    on_success();
+                }
+                window.location = data;
+
             }});
         },
         update: function(items, on_success, on_error) {
