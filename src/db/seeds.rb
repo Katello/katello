@@ -66,31 +66,32 @@ anonymous_role.allow [:create, :update], :user_notices
 # ADMIN - already allowed to all actions
 #Allow for all models
 ActiveRecord::Base.connection.tables.each do |t|
-  user_admin.allow [:create, :update, :delete, :read], "#{t}"
+  superadmin_role.allow [:create, :update, :delete, :read], "#{t}"
 end
 
 #These have associated models, but have extra actions
-user_admin.allow [:promote], "changesets"
+superadmin_role.allow [:promote], "changesets"
 
 #These do not have associated models
-user_admin.allow [:read], "dashboard"
-user_admin.allow [:read], "promotions"
-user_admin.allow [:read, :delete, :sync], "sync_management"
-user_admin.allow [:read], "packages"
-user_admin.allow [:read], "errata"
-user_admin.allow [:create, :delete, :read], "search"
-user_admin.allow [:read], "operations"
-user_admin.allow [:create, :read, :update, :delete], "repositories"
-user_admin.allow [:read, :apply], "sync_schedules"
+superadmin_role.allow [:read], "dashboard"
+superadmin_role.allow [:read], "promotions"
+superadmin_role.allow [:read, :delete, :sync], "sync_management"
+superadmin_role.allow [:read], "packages"
+superadmin_role.allow [:read], "errata"
+superadmin_role.allow [:create, :delete, :read], "search"
+superadmin_role.allow [:read], "operations"
+superadmin_role.allow [:create, :read, :update, :delete], "repositories"
+superadmin_role.allow [:read, :apply], "sync_schedules"
 
 #These are candlepin proxy actions
-user_admin.allow [:create, :read, :update, :delete, :import], "owners"
-user_admin.allow [:create, :read, :update, :delete], "entitlements"
-user_admin.allow [:create, :read, :update, :delete], "pools"
-user_admin.allow [:create, :read, :update, :delete], "certificates"
-user_admin.allow [:export, :re_register, :create, :read, :update, :delete], "consumers"
+superadmin_role.allow [:create, :read, :update, :delete, :import], "owners"
+superadmin_role.allow [:create, :read, :update, :delete], "entitlements"
+superadmin_role.allow [:create, :read, :update, :delete], "pools"
+superadmin_role.allow [:create, :read, :update, :delete], "certificates"
+superadmin_role.allow [:export, :re_register, :create, :read, :update, :delete], "consumers"
 
-user_admin.allow [:package], "jammit"
+superadmin_role.allow [:package], "jammit"
 
 # TODO protection of all /api controllers (currently all roles authorized by default)
-#user_admin.allow { :"api/xxx" => [:read] }
+#superadmin_role.allow { :"api/xxx" => [:read] }
+
