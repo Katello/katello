@@ -14,7 +14,7 @@ class ChangesetsController < ApplicationController
   include AutoCompleteSearch
   include BreadcrumbHelper
   
-  before_filter :find_changeset, :except => [:index, :list, :items, :create, :new]
+  before_filter :find_changeset, :except => [:index, :list, :items, :create, :new, :auto_complete_search]
   before_filter :find_environment, :except => [:index, :list, :items]
   before_filter :setup_options, :only => [:index, :items]
   
@@ -34,16 +34,17 @@ class ChangesetsController < ApplicationController
 
   #extended scroll for changeset_history
   def items
+    @environment = KPEnvironment.find(params['env_id'])
     setup_environment_selector(current_organization)
     start = params[:offset]
-    @changesets = @environment.changeset_history.limit(current_user.page_size).offset(start)
+    @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size).offset(start)
     render_panel_items @changesets, @panel_options
   end
 
   #similar to index, but only renders the actual list of the 2 pane
   def list
     @environment = KPEnvironment.find(params['env_id'])
-    @changesets = @environment.changeset_history
+    @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size)
     @columns = ['name'] #from index
     render :partial=>"list"
   end
