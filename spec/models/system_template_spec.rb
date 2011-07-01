@@ -17,7 +17,7 @@ include OrchestrationHelper
 describe SystemTemplate do
 
   before(:each) do
-    disable_org_orchestretion
+    disable_org_orchestration
     disable_product_orchestration
 
     @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')

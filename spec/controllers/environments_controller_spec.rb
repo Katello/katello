@@ -100,13 +100,6 @@ describe EnvironmentsController do
         response.should be_success
       end
 
-      it "does not allow same name" do
-        pending "this test shouldn't be here - validation of uniqueness constrain should be tested at the model level"
-        #post :create, :organization_id => @org.cp_key, :name => 'production'
-        #post :create, :organization_id => @org.cp_key, :name => 'production'
-        #response.should_not be_success
-      end
-
     end
   end
 
