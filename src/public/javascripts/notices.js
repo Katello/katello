@@ -62,11 +62,18 @@ var notices = (function() {
             }  
         },
         addNotices: function(data) {
-            if (!data || data.length === 0) {
+            if (!data || data.new_notices.length === 0) {
                 return true;
             }
+
+            //if comfing from the server may have new count
+            if (data.unread_count) {
+                $("#unread_notices").text(data.unread_count);
+            }
+
             
-            $.each(data, function(index, notice) {
+            
+            $.each(data.new_notices, function(index, notice) {
                 notices.displayNotice(notice.level, window.JSON.stringify({ "notices": [notice.text] }));
             });
 
