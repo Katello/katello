@@ -35,7 +35,7 @@ describe Provider do
   end
 
   before(:each) do
-    disable_org_orchestretion
+    disable_org_orchestration
     disable_product_orchestration
     @organization = Organization.new(:name =>"org10020", :cp_key => 'org10020')
     @organization.save!

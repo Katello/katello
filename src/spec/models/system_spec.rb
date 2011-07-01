@@ -25,7 +25,7 @@ describe System do
   let(:available_pools) { {} }
 
   before(:each) do
-    disable_org_orchestretion
+    disable_org_orchestration
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
     Organization.stub!(:first).and_return(@organization)
