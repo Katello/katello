@@ -1,6 +1,6 @@
 class AddRoleDescription < ActiveRecord::Migration
   def self.up
-    add_column :roles, :description, :text, :limit => 2048
+    add_column :roles, :description, :string, :limit => 250
   end
 
   def self.down
