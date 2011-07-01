@@ -183,26 +183,29 @@ class ChangesetsController < ApplicationController
   end
 
   def promote
-    errors "The changeset must be moved to the review stage before promotion" and return if @changeset.state != Changeset::REVIEW
+    if @changeset.state != Changeset::REVIEW
+      errors _("The changeset must be moved to the review stage before promotion")
+      render text=>"", :status => 500
+    end
+
 
     begin
       @changeset.promote
       @environment.create_changeset
       # remove user edit tracking for this changeset
       ChangesetUser.destroy_all(:changeset_id => @changeset.id) 
-
-      notice _("Promoted changeset to #{@environment.name} environment")
+      notice _("Promoted '#{@changeset.name}' to #{@environment.name} environment"), :synchronous_request=>false
     rescue Exception => e
-        errors  "Failed to promote: #{e.to_s}"
+        errors  "Failed to promote: #{e.to_s}", :synchronous_request=>false
         logger.error $!, $!.backtrace.join("\n\t")
     end
 
 
     if @environment.successor
-      redirect_to(:controller=>"promotions", :action => "show",
+      render :text=>url_for(:controller=>"promotions", :action => "show",
             :env_id => @environment.successor.name, :org_id =>  @environment.organization.cp_key)
     else
-       redirect_to(:controller=>"promotions", :action => "show",
+       render :text=>url_for(:controller=>"promotions", :action => "show",
                   :env_id => @environment.name, :org_id =>  @environment.organization.cp_key)
     end
   end
