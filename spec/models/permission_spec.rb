@@ -13,25 +13,26 @@
 require 'spec_helper'
 
 describe Permission do
-  before(:each) do
-    user_admin = User.create!(:username => 'admin', :password=>"password")
-    user_bob = User.create!(:username => 'bob', :password=>"password")
+  before(:all) do
+    @super_admin = Role.create!(:name => 'super_admin')
+    @repo_admin = Role.create!(:name => 'repo_admin')
 
-    role_superadmin = Role.create!(:name => 'super_admin')
-    role_repoadmin = Role.create!(:name => 'repo_admin')
+    user_admin = User.create!(
+      :username => 'admin',
+      :password => "password",
+      :roles => [ @super_admin ])
+    user_bob = User.create!(
+      :username => 'bob',
+      :password => "password",
+      :roles => [ @repo_admin ])
 
-    user_admin.roles << role_superadmin
-    user_admin.save
-    user_bob.roles << role_repoadmin
-    user_bob.save
-
-    Role.allow 'super_admin', [:create], :organization
-    Role.allow 'super_admin', [:new], :organization
-    Role.allow 'super_admin', [:test], :test1
-    Role.allow 'super_admin', [:test], :test2
-    Role.allow 'super_admin', [:test], :test3
-    Role.allow 'repo_admin', :create_repo, :repogroup, :repogroup_internal
-    Role.allow 'repo_admin', :delete_repo, :repo, [:repogroup_internal, :repo_rhel6]
+    @super_admin.allow [:create], :organization
+    @super_admin.allow [:new], :organization
+    @super_admin.allow [:test], :test1
+    @super_admin.allow [:test], :test2
+    @super_admin.allow [:test], :test3
+    @repo_admin.allow :create_repo, :repogroup, :repogroup_internal
+    @repo_admin.allow :delete_repo, :repo, [:repogroup_internal, :repo_rhel6]
   end
 
   it "should list tags properly" do
@@ -42,77 +43,26 @@ describe Permission do
     Verb.verbs_for("repogroup").collect{|t| t.verb}.sort.should ==  ["create_repo"]
   end
 
-  #0 tags success
-  it "should allow superadmin to organization/create in rails" do
-    r = Role.find_by_name('super_admin')
-    r.allowed_to?('create', 'organization').should be_true
+  context "super_admin" do
+    it { @super_admin.allowed_to?('create', 'organization').should be_true }
+    it { @super_admin.allowed_to?('new', 'organization').should be_true }
+    it { @super_admin.allowed_to?('destroy', 'organization').should be_false }
+    it { @super_admin.allowed_to?('create', 'xxx').should be_false }
   end
 
-  it "should allow superadmin to organization/new in rails" do
-    r = Role.find_by_name('super_admin')
-    r.allowed_to?('new', 'organization').should be_true
-  end
-  
-  #0 tags deny
-  it "should not allow superadmin to organization/destroy in rails" do
-    r = Role.find_by_name('super_admin')
-    r.allowed_to?('destroy', 'organization').should be_false
-  end
-
-  it "should deny repoadmin to organization/create in rails" do
-    r = Role.find_by_name('repo_admin')
-    r.allowed_to?('create', 'organization').should be_false
-  end
-
-  it "should deny superadmin to xxx/create in rails" do
-    r = Role.find_by_name('super_admin')
-    r.allowed_to?('create', 'xxx').should be_false
-  end
-
-  #1 tag success
-  it "allow repoadmin to create_repo in repogroup with tags repogroup:internal" do
-    r = Role.find_by_name('repo_admin')
-    r.allowed_to?("create_repo", "repogroup", :repogroup_internal).should be_true
-  end
-
-  #1 tag deny
-  it "deny repoadmin to create_repo in repogroup" do
-    r = Role.find_by_name('repo_admin')
-    r.allowed_to?("create_repo", "repogroup", 'repogroup_external').should be_false
-  end
-
-  it "deny repoadmin to create_repo" do
-    r = Role.find_by_name('repo_admin')
-    r.allowed_to?("create_repo", "repo-bad").should be_false
-  end
-
-  #2 tags allow
-  it "allow repoadmin to delete_repo in repo with tags repogroup:internal repo:rhel6" do
-    r = Role.find_by_name('repo_admin')
-    r.allowed_to?("delete_repo", "repo", [:repogroup_internal, :repo_rhel6]).should be_true
-  end
-
-  it "allow repoadmin to delete_repo in repo with tag repogroup:internal" do
-    r = Role.find_by_name('repo_admin')
-    r.allowed_to?("delete_repo", "repo", [:repogroup_internal]).should be_true
-  end
-
-  #2 tags deny
-  it "allow repoadmin to delete_repo in repo with tags repogroup:internal" do
-    r = Role.find_by_name('repo_admin')
-    r.allowed_to?("delete_repo", "repo", [:repogroup_internal]).should be_true
-  end
-
-  it "deny repoadmin to delete_repo in repo with tags bad_repo" do
-    r = Role.find_by_name('repo_admin')
-    r.allowed_to?("delete_repo", "repo", [:bad_repo]).should be_false
-  end
-
-  it "disallow create_repo to repo_admin" do
-    r = Role.find_by_name('repo_admin')
-    r.allowed_to?("create_repo", "repogroup", :repogroup_internal).should be_true
-    r.disallow("create_repo", "repogroup", :repogroup_internal)
-    r.allowed_to?("create_repo", "repogroup", :repogroup_internal).should be_false
+  context "repo_admin" do
+    it { @repo_admin.allowed_to?('create', 'organization').should be_false }
+    it { @repo_admin.allowed_to?("create_repo", "repogroup", :repogroup_internal).should be_true }
+    it { @repo_admin.allowed_to?("create_repo", "repogroup", 'repogroup_external').should be_false }
+    it { @repo_admin.allowed_to?("create_repo", "repo-bad").should be_false }
+    it { @repo_admin.allowed_to?("delete_repo", "repo", [:repogroup_internal, :repo_rhel6]).should be_true }
+    it { @repo_admin.allowed_to?("delete_repo", "repo", [:repogroup_internal]).should be_true }
+    it { @repo_admin.allowed_to?("create_repo", "repogroup", :repogroup_internal).should be_true }
+    it { @repo_admin.allowed_to?("delete_repo", "repo", [:repogroup_internal]).should be_true }
+    it {
+      @repo_admin.disallow("create_repo", "repogroup", :repogroup_internal)
+      @repo_admin.allowed_to?("create_repo", "repogroup", :repogroup_internal).should be_false
+    }
   end
 
 end
