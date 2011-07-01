@@ -428,7 +428,7 @@ var changeset_obj = function(data_struct) {
         id:id,
         products: products,
         is_new : function() {return is_new},
-        set_timestamp:function(ts) { timestamp = ts},
+        set_timestamp:function(ts) { timestamp = ts; },
         timestamp: function(){return timestamp},
         productCount: function(){
             var count = 0;
