@@ -132,7 +132,11 @@ class ChangesetsController < ApplicationController
     end
 
     render :text => "The changeset is currently under review, no modifications can occur during this phase.",
-           :status => :bad_request if @changeset.state == Changeset::PROMOTED
+           :status => :bad_request if @changeset.state == Changeset::REVIEW
+    render :text => "This changeset is already promoted, no content modifications can be made.",
+               :status => :bad_request if @changeset.state == Changeset::PROMOTED
+
+
 
     if params.has_key? :data
       params[:data].each do |item|
