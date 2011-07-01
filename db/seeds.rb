@@ -1,5 +1,6 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
+require 'util/password'
 
 AppConfig.use_cp = false if ENV['NO_CP']
 AppConfig.use_pulp = false if ENV['NO_PULP']
@@ -26,7 +27,8 @@ User.current = user_admin = User.find_or_create_by_username(
 user_anonymous = User.find_or_create_by_username(
   :roles => [ anonymous_role ],
   :username => 'anonymous',
-  :password => 'admin')
+  :password => Password.generate_random_string(16),
+  :disabled => true)
 
 # candlepin_role for RHSM
 candlepin_role = Role.find_or_create_by_name(
