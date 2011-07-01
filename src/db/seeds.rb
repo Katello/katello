@@ -1,8 +1,9 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 
-# create superadmin role
+# create basic roles
 superadmin_role = Role.find_or_create_by_name(:name => 'superadmin_role', :superadmin => true)
+anonymous_role = Role.find_or_create_by_name(:name => 'anonymous_role')
 
 # create the super admin if none exist - it must be created before any statement in the seed.rb script
 User.current = user_admin = User.find_or_create_by_username(
@@ -11,7 +12,10 @@ User.current = user_admin = User.find_or_create_by_username(
   :password => 'admin')
 
 # "nobody" user
-user_anonymous = User.find_or_create_by_username(:username => 'anonymous', :password => 'admin')
+user_anonymous = User.find_or_create_by_username(
+  :roles => [ anonymous_role ],
+  :username => 'anonymous',
+  :password => 'admin')
 
 # candlepin_role for RHSM
 candlepin_role = Role.find_or_create_by_name(:name => 'candlepin_role')
@@ -52,17 +56,18 @@ end
 
 Permission.delete_all
 
-# ActiveRecord protection - allow admin all actions for all models
+# ANONYMOUS ROLE - configure limited permissions
+anonymous_role.allow [:create, :update], :notices
+anonymous_role.allow [:create, :update], :user_notices
+
+# CANDLEPIN ROLE - for RHSM
+[:systems].each { |t| Role.allow 'candlepin_role', [:create, :update, :delete], "#{t}" }
+
+# ADMIN - already allowed to all actions
+#Allow for all models
 ActiveRecord::Base.connection.tables.each do |t|
   user_admin.allow [:create, :update, :delete, :read], "#{t}"
 end
-
-# configure limited permissions for the anonymous user
-user_anonymous.allow [:create, :update], :notices
-user_anonymous.allow [:create, :update], :user_notices
-
-# TODO protection of all /api controllers (currently all roles authorized by default)
-#user_admin.allow { :"api/xxx" => [:read] }
 
 #These have associated models, but have extra actions
 user_admin.allow [:promote], "changesets"
@@ -87,5 +92,5 @@ user_admin.allow [:export, :re_register, :create, :read, :update, :delete], "con
 
 user_admin.allow [:package], "jammit"
 
-# candlepin_role permissions for RHSM
-[:systems].each { |t| Role.allow 'candlepin_role', [:create, :update, :delete], "#{t}" }
+# TODO protection of all /api controllers (currently all roles authorized by default)
+#user_admin.allow { :"api/xxx" => [:read] }
