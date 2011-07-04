@@ -97,9 +97,9 @@ class Api::ProvidersController < Api::ApiController
     render(:text => _("Couldn't find provider '#{params[:id]}'"), :status => 404) and return if @provider.nil?
   end
 
-  def find_organization
-    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id]})
-    render(:text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404) and return if @organization.nil?
-  end
+#  def find_organization
+#    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id]})
+#    render(:text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404) and return if @organization.nil?
+#  end
 
 end

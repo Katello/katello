@@ -1,14 +1,39 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
+require 'util/password'
+
+AppConfig.use_cp = false if ENV['NO_CP']
+AppConfig.use_pulp = false if ENV['NO_PULP']
+
+# create basic roles
+superadmin_role = Role.find_or_create_by_name(
+  :name => 'Administrator', 
+  :description => 'Super administrator with all access.',
+  :superadmin => true)
+anonymous_role = Role.find_or_create_by_name(
+  :name => 'Anonymous',
+  :description => 'Used when user is not logged in. No permissions except reading notifications. Not to be used by regular users.')
+reader_role = Role.find_or_create_by_name(
+  :name => 'Read Everything',
+  :description => 'Permissions to read everything.')
 
 # create the super admin if none exist - it must be created before any statement in the seed.rb script
-User.current = user_admin = User.find_or_create_by_username(:username => 'admin', :password => 'password123')
+User.current = user_admin = User.find_or_create_by_username(
+  :roles => [ superadmin_role ],
+  :username => 'admin',
+  :password => 'admin')
 
-# "nobody" user
-user_anonymous = User.find_or_create_by_username(:username => 'anonymous', :password => 'password123')
+# "nobody" user (do not change his name 'anonymous')
+user_anonymous = User.find_or_create_by_username(
+  :roles => [ anonymous_role ],
+  :username => 'anonymous',
+  :password => Password.generate_random_string(16),
+  :disabled => true)
 
 # candlepin_role for RHSM
-candlepin_role = Role.find_or_create_by_name(:name => 'candlepin_role')
+candlepin_role = Role.find_or_create_by_name(
+  :name => 'Candlepin',
+  :description => 'Special role for RHSM. Not to be used by regular users.')
 throw "Unable to create candlepin_role: #{candlepin_role.errors}" if candlepin_role and candlepin_role.errors.size > 0
 
 # create the default org = "admin" if none exist
@@ -46,44 +71,71 @@ end
 
 Permission.delete_all
 
-# ActiveRecord protection - allow admin_role all actions for all models
+# ANONYMOUS ROLE - configure limited permissions
+anonymous_role.allow [:create, :update], :notices
+anonymous_role.allow [:create, :update], :user_notices
+
+# CANDLEPIN ROLE - for RHSM
+[:systems].each { |t| candlepin_role.allow [:create, :update, :delete], "#{t}" }
+
+# ADMIN - already allowed to all actions
+##Allow for all models
+#ActiveRecord::Base.connection.tables.each do |t|
+  #superadmin_role.allow [:create, :update, :delete, :read], "#{t}"
+#end
+#
+##These have associated models, but have extra actions
+#superadmin_role.allow [:promote], "changesets"
+#
+##These do not have associated models
+#superadmin_role.allow [:read], "dashboard"
+#superadmin_role.allow [:read], "promotions"
+#superadmin_role.allow [:read, :delete, :sync], "sync_management"
+#superadmin_role.allow [:read], "packages"
+#superadmin_role.allow [:read], "errata"
+#superadmin_role.allow [:create, :delete, :read], "search"
+#superadmin_role.allow [:read], "operations"
+#superadmin_role.allow [:create, :read, :update, :delete], "repositories"
+#superadmin_role.allow [:read, :apply], "sync_schedules"
+#
+##These are candlepin proxy actions
+#superadmin_role.allow [:create, :read, :update, :delete, :import], "owners"
+#superadmin_role.allow [:create, :read, :update, :delete], "entitlements"
+#superadmin_role.allow [:create, :read, :update, :delete], "pools"
+#superadmin_role.allow [:create, :read, :update, :delete], "certificates"
+#superadmin_role.allow [:export, :re_register, :create, :read, :update, :delete], "consumers"
+#
+#superadmin_role.allow [:package], "jammit"
+
+# READER ROLE - read everything only
+#Allow for all models
 ActiveRecord::Base.connection.tables.each do |t|
-  Role.allow 'admin_role', [:create, :update, :delete, :read], "#{t}"
+  reader_role.allow [:read], "#{t}"
 end
 
-
-# configure limited permissions for the anonymous user
-Role.allow 'anonymous_role', [:create, :update], :notices
-Role.allow 'anonymous_role', [:create, :update], :user_notices
-
-
-# TODO protection of all /api controllers (currently all roles authorized by default)
-#Role.allow 'admin_role', { :"api/xxx" => [:read] }
-
-#These have associated models, but have extra actions
-Role.allow 'admin_role', [:promote], "changesets"
+#Need write/special access to some actions/models
+reader_role.allow [:create, :update], :notices
+reader_role.allow [:create, :update], :user_notices
+reader_role.allow [:package], "jammit"
 
 #These do not have associated models
-Role.allow 'admin_role', [:read], "dashboard"
-Role.allow 'admin_role', [:read], "promotions"
-Role.allow 'admin_role', [:read, :delete, :sync], "sync_management"
-Role.allow 'admin_role', [:read], "packages"
-Role.allow 'admin_role', [:read], "errata"
-Role.allow 'admin_role', [:create, :delete, :read], "search"
-Role.allow 'admin_role', [:read], "operations"
-Role.allow 'admin_role', [:create, :delete, :read], "repositories"
-Role.allow 'admin_role', [:read, :apply], "sync_schedules"
+reader_role.allow [:read], "dashboard"
+reader_role.allow [:read], "promotions"
+reader_role.allow [:read], "sync_management"
+reader_role.allow [:read], "packages"
+reader_role.allow [:read], "errata"
+reader_role.allow [:read], "search"
+reader_role.allow [:read], "operations"
+reader_role.allow [:read], "repositories"
+reader_role.allow [:read], "sync_schedules"
 
 #These are candlepin proxy actions
-Role.allow 'admin_role', [:create, :read, :update, :delete, :import], "owners"
-Role.allow 'admin_role', [:create, :read, :update, :delete], "entitlements"
-Role.allow 'admin_role', [:create, :read, :update, :delete], "pools"
-Role.allow 'admin_role', [:create, :read, :update, :delete], "certificates"
-Role.allow 'admin_role', [:export, :re_register, :create, :read, :update, :delete], "consumers"
+reader_role.allow [:read], "owners"
+reader_role.allow [:read], "entitlements"
+reader_role.allow [:read], "pools"
+reader_role.allow [:read], "certificates"
+reader_role.allow [:read], "consumers"
 
+# TODO protection of all /api controllers (currently all roles authorized by default)
+#superadmin_role.allow { :"api/xxx" => [:read] }
 
-Role.allow 'admin_role', [:package], "jammit"
-
-
-# candlepin_role permissions for RHSM
-[:systems].each { |t| Role.allow 'candlepin_role', [:create, :update, :delete], "#{t}" }

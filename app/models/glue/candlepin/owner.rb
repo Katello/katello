@@ -35,27 +35,6 @@ module Glue::Candlepin::Owner
       raise e
     end
 
-    def set_owner_user
-      Rails.logger.info "Creating a user for owner in candlepin: #{name}"
-      uname = get_user_name
-      Candlepin::Owner.create_user(cp_key, uname, uname)
-    rescue => e
-      Rails.logger.error "Failed to create user for candlepin owner #{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
-    def set_kp_user
-      Rails.logger.info "Creating katello user for owner user: #{name}"
-      uname = get_user_name
-      cp_role = Role.candlepin_role
-      User.create!(:username => uname,
-                   :password => uname,
-                   :roles => cp_role.nil? ? [] : [ Role.candlepin_role ])
-    rescue => e
-      Rails.logger.error "Failed to create katello user #{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
     def del_owner
       Rails.logger.info "Deleteing owner in candlepin: #{name}"
       Candlepin::Owner.destroy(cp_key)
@@ -68,19 +47,11 @@ module Glue::Candlepin::Owner
       case self.orchestration_for
         when :create
           queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 3, :action => [self, :set_owner])
-          # TODO: the following two steps are very temporary. currently candlepin (in some cases) disambiguates owner based on credentials of the super admin
-          #queue.create(:name => "candlepin user for owner: #{self.name}", :priority => 4, :action => [self, :set_owner_user])
-          #queue.create(:name => "kaplana user for owner: #{self.name}", :priority => 5, :action => [self, :set_kp_user])
       end
     end
 
     def destroy_owner_orchestration
       queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 3, :action => [self, :del_owner])
-    end
-
-    private
-    def get_user_name
-      self.name.downcase.gsub(/\W/,"_") + "_user"
     end
   end
 

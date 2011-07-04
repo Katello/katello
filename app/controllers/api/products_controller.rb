@@ -34,11 +34,11 @@ class Api::ProductsController < Api::ApiController
     render(:text => _("Couldn't find product with id '#{params[:id]}'"), :status => 404) and return if @product.nil?
   end
 
-  def find_organization
-    @organization = Organization.first(:conditions => {:name => params[:organization_id]})
-    render :text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404 and return if @organization.nil?
-    @organization
-  end
+#  def find_organization
+#    @organization = Organization.first(:conditions => {:name => params[:organization_id]})
+#    render :text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404 and return if @organization.nil?
+#    @organization
+#  end
 
   def find_environment
     (@environment = @organization.locker) and return if params[:environment_id].nil?
