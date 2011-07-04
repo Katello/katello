@@ -22,7 +22,9 @@ class RolesController < ApplicationController
 
   def index
     begin
-      @roles = Role.search_for(params[:search]).where("roles.name != 'admin'").limit(current_user.page_size)
+      # retrieve only non-self roles... permissions on a self-role will be handled 
+      # as part of the user
+      @roles = Role.search_for(params[:search]).non_self.limit(current_user.page_size)
       retain_search_history
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -52,7 +54,14 @@ class RolesController < ApplicationController
   def edit
     setup_resource_types
     @role = Role.find(params[:id])
-    render :partial=>"edit", :locals=>{:role=>@role}
+
+    # render the appropriate partial depending on whether or not the role is a self role
+    @user = @role.self_role_for_user
+    if @user.nil?
+      render :partial=>"edit", :locals=>{:role=>@role}
+    else
+      render :partial=>"self_role_edit", :locals=>{:role=>@role}
+    end
   end
 
   def create
@@ -145,7 +154,7 @@ class RolesController < ApplicationController
 
 
   def setup_resource_types
-    @resource_type_names = ResourceType.select("name").collect {|item| item.name}.uniq
+    @resource_type_names = ResourceType.select("name").order("name asc").collect {|item| item.name}.uniq
     @resource_type_names.delete("_rails")
   end
   

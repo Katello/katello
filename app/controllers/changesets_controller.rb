@@ -128,9 +128,9 @@ class ChangesetsController < ApplicationController
       @environment.create_changeset
 
       notice "promoted changeset to #{@environment.name} environment"
-    rescue Exception => e
-        errors  "Failed to promote: #{e.to_s}"
-        logger.error $!, $!.backtrace.join("\n\t")
+#    rescue Exception => e
+#        errors  "Failed to promote: #{e.to_s}"
+#        logger.error $!, $!.backtrace.join("\n\t")
     end
 
 

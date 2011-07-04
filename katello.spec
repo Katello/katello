@@ -22,32 +22,36 @@ Requires:       candlepin-tomcat6
 Requires:       rubygems
 Requires:       rubygem(rails) >= 3.0.5
 Requires:       rubygem(multimap)
-Requires:       rubygem(haml)
+Requires:       rubygem(haml) >= 3.0.16
 Requires:       rubygem(haml-rails)
 Requires:       rubygem(json)
 Requires:       rubygem(rest-client)
 Requires:       rubygem(jammit)
 Requires:       rubygem(rails_warden)
 Requires:       rubygem(net-ldap)
-Requires:       rubygem(compass)
-Requires:       rubygem(compass-960-plugin)
+Requires:       rubygem(compass) >= 0.10.5
+Requires:       rubygem(compass-960-plugin) >= 0.10.0
 Requires:       rubygem(capistrano)
 Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
 Requires:       rubygem(gettext_i18n_rails)
 Requires:       rubygem(simple-navigation) >= 3.1.0
+Requires:       rubygem(sqlite3) 
+Requires:       rubygem(pg)
+Requires:       rubygem(scoped_search) >= 2.3.1
+
 Requires(pre):  shadow-utils
 Requires(preun): chkconfig
 Requires(preun): initscripts
 Requires(post): chkconfig
 Requires(postun): initscripts 
-Requires: rubygem(sqlite3) 
-Requires:       rubygem(pg)
-Requires:       rubygem(scoped_search)
+
 BuildRequires: 	coreutils findutils sed
 BuildRequires: 	rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
+BuildRequires:  rubygem(haml)
+
 BuildArch: noarch
 
 %description
@@ -57,6 +61,14 @@ Provides a package for managing application lifecycle for Linux systems
 %setup -q
 
 %build
+#check the ruby syntax of all .rb files
+echo "Checking Ruby syntax"
+find -type f -name \*.rb | xargs -t -n1 ruby -c >/dev/null
+
+#check the syntax of all .haml files
+echo "Checking HAML syntax"
+find -type f -name \*.haml | xargs -t -n1 haml -c >/dev/null
+
 #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
 echo Generating gettext files...
 ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'

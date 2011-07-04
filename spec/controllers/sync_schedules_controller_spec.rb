@@ -18,7 +18,7 @@ describe SyncSchedulesController do
                                   :sync_date => DateTime.now, :interval => 'daily',
                                     :organization => @org)
     end
-    @p = new_test_product_with_locker(@org)
+    @p = new_test_product(@org, @org.locker)
     controller.stub!(:current_organization).and_return(@org)
   end
 

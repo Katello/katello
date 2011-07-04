@@ -19,6 +19,7 @@ class Organization < ActiveRecord::Base
   has_many :providers
   has_many :environments, :class_name => "KPEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
   has_one :locker, :class_name =>"KPEnvironment", :conditions => {:locker => true}, :dependent => :destroy
+  has_and_belongs_to_many :users
   attr_accessor :parent_id,:pools
 
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'organization.name'
@@ -34,6 +35,11 @@ class Organization < ActiveRecord::Base
   validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
   validates :description, :katello_description_format => true
 
+  # relationship user-org is created for current user automatically
+  after_create do |org|
+    org.users << User.current if User.current
+  end
+
   def systems
     System.where(:environment_id => environments)
   end
@@ -47,7 +53,7 @@ class Organization < ActiveRecord::Base
   end
 
   def create_locker
-    self.locker = KPEnvironment.new(:name => "locker", :locker => true, :organization => self)
+    self.locker = KPEnvironment.new(:name => "Locker", :locker => true, :organization => self)
   end
 
   # returns list of virtual permission tags for the current user

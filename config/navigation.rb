@@ -38,7 +38,7 @@ SimpleNavigation::Configuration.run do |navigation|
         sync_sub.item :schedule, _("Sync Schedule"), :controller => 'sync_schedules'
       end
       #TODO: tie in Content Locker page
-      content_sub.item :promotions, _("Promotions"), promotions_path(current_organization().name, 'locker'), :highlights_on =>/\/organizations\/.*\/environments\/.*\/promotions/ ,:class => 'content' do |package_sub|
+      content_sub.item :promotions, _("Promotions"), promotions_path(current_organization().name, current_organization().locker.name), :highlights_on =>/\/organizations\/.*\/environments\/.*\/promotions/ ,:class => 'content' do |package_sub|
           if !@package.nil?
               package_sub.item :details, _("Details"), package_path(@package.id), :class=>"navigation_element"
               package_sub.item :details, _("Dependencies"), dependencies_package_path(@package.id), :class=>"navigation_element"
@@ -82,11 +82,15 @@ SimpleNavigation::Configuration.run do |navigation|
     end #end organization 
 
     top_level.item :operations, _("Administration"), {:controller => 'operations'}, :class=>'operations' do |operations_sub|
-      operations_sub.item :users, _("Users"), users_path
-      operations_sub.item :users, _("Roles"), roles_path
+      operations_sub.item :users, _("Users"), users_path do |user_sub|
+        if !@user.nil?
+          user_sub.item :general, _("General"), edit_user_path(@user.id), :class => "navigation_element", :controller => "users"
+          user_sub.item :roles_and_permissions, _("Roles & Permissions"), edit_role_path(@user.own_role_id), :class => "navigation_element", :controller => "roles"
+        end
+      end
+      operations_sub.item :roles, _("Roles"), roles_path
       operations_sub.item :proxies, _("Proxies"), '#', :class => 'disabled', :if => Proc.new { false }
     end #end operations
-
 
   end #end top_level
 
