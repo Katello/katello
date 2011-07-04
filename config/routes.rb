@@ -266,7 +266,9 @@ Src::Application.routes.draw do
 
     # support for rhsm
     resources :consumers, :controller => 'systems'
+    match '/owners/:organization_id/environments' => 'environments#index', :via => :get
     match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
+    match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
     match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
     match '/consumers/:id/certificates' => 'proxies#get', :via => :get
     match '/consumers/:id/certificates/serials' => 'proxies#get', :via => :get
