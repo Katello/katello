@@ -24,7 +24,7 @@ describe Api::SystemsController do
   before (:each) do
     login_user
     set_default_locale
-    disable_org_orchestretion
+    disable_org_orchestration
 
     Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Candlepin::Consumer.stub!(:update).and_return(true)
