@@ -43,6 +43,7 @@ describe System do
     specify { System.new(:name => 'name', :environment => @organization.environments.first, :cp_type => cp_type).should_not be_valid }
     specify { System.new(:name => 'name', :environment => @organization.environments.first, :facts => facts).should_not be_valid }
     specify { System.new(:cp_type => cp_type, :environment => @organization.environments.first, :facts => facts).should_not be_valid }
+    specify { System.new(:name => system_name, :environment => @organization.locker, :cp_type => cp_type, :facts => facts).should_not be_valid }
   end
 
   it "registers system in candlepin on create" do

@@ -33,7 +33,7 @@ describe Api::SystemsController do
   end
 
   describe "create a system" do
-    it "requires either environment_id or organization_id to be specified" do
+    it "requires either environment_id, owner, or organization_id to be specified" do
       post :create
       response.code.should == "400"
     end
@@ -44,10 +44,15 @@ describe Api::SystemsController do
         @environment_1.save!
       end
 
-       it "requires only organization_id" do
-         System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :facts => facts, :name => 'test')).once.and_return({})
-         post :create, :organization_id => @organization.cp_key, :name => 'test', :cp_type => 'system', :facts => facts
-       end
+      it "requires either organization_id" do
+        System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :facts => facts, :name => 'test')).once.and_return({})
+        post :create, :organization_id => @organization.cp_key, :name => 'test', :cp_type => 'system', :facts => facts
+      end
+
+      it "or requires owner (key)" do
+        System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :facts => facts, :name => 'test')).once.and_return({})
+        post :create, :owner => @organization.cp_key, :name => 'test', :cp_type => 'system', :facts => facts
+      end
     end
 
     context "in organization with multiple environments" do
@@ -81,13 +86,18 @@ describe Api::SystemsController do
       @system_2 = System.create!(:name => 'test', :environment => @environment_2, :cp_type => 'system', :facts => facts)
     end
 
-    it "requires either organization_id or environment_id" do
+    it "requires either organization_id, owner, or environment_id" do
       get :index
       response.code.should == "400"
     end
 
     it "should show all systems in the organization" do
       get :index, :organization_id => @organization.cp_key
+      response.body.should == [@system_1, @system_2].to_json
+    end
+
+    it "should show all systems for the owner" do
+      get :index, :owner => @organization.cp_key
       response.body.should == [@system_1, @system_2].to_json
     end
 
