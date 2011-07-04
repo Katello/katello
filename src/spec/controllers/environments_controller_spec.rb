@@ -21,7 +21,7 @@ describe EnvironmentsController do
     NEW_ENV_NAME = "another_environment_name"
     
     ENVIRONMENT = {:id => 2, :name => ENV_NAME, :description => nil, :prior => nil, :path => []}
-    LOCKER = {:id => 1, :name => "locker", :description => nil, :prior => nil, :path => []}
+    LOCKER = {:id => 1, :name => "Locker", :description => nil, :prior => nil, :path => []}
     UPDATED_ENVIRONMENT = {:id => 3, :name => NEW_ENV_NAME, :description => nil, :prior => nil, :path => []}
     EMPTY_ENVIRONMENT = {:name => "", :description => "", :prior => nil}
     
@@ -98,13 +98,6 @@ describe EnvironmentsController do
         post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
         env = assigns(:environment)
         response.should be_success
-      end
-
-      it "does not allow same name" do
-        pending "this test shouldn't be here - validation of uniqueness constrain should be tested at the model level"
-        #post :create, :organization_id => @org.cp_key, :name => 'production'
-        #post :create, :organization_id => @org.cp_key, :name => 'production'
-        #response.should_not be_success
       end
 
     end

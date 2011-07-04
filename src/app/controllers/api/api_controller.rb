@@ -98,6 +98,12 @@ class Api::ApiController < ActionController::Base
     end
   end
 
+  def find_organization
+    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id].tr(' ', '_')})
+    render :text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404 and return if @organization.nil?
+    @organization
+  end
+
   private
 
   def require_user

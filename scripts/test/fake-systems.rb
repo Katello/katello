@@ -31,9 +31,10 @@ end
 json_type ="application/json"
 sys ="system-#{rand(100)}" 
 
-url="http://localhost:3000/api/consumers"
+url="https://localhost:3000/api/consumers"
 user = "acme_corporation_user"
 password = "acme_corporation_user"
+org = "ACME_Corporation"
 
 ip = (0..2).collect{rand(255).to_s}.join(".") 
 
@@ -109,8 +110,8 @@ facts = {
    facts["network.hostname"]= "killing-time#{i}.appliedlogic." + ["org","edu","com","in","ca"].choice
    sys_name = sprintf("%02d-#{sys}", i)
    command = []
-   command << "curl -u #{user}:#{password} -H \"Accept: #{json_type}\" -H \"Content-Type: #{json_type}\" "
-   command << "-d '" << {:name=>sys_name, :cp_type => "system", :facts => facts}.to_json()<< "' "
+   command << "curl -k -u #{user}:#{password} -H \"Accept: #{json_type}\" -H \"Content-Type: #{json_type}\" "
+   command << "-d '" << {:name=>sys_name, :owner => org, :cp_type => "system", :facts => facts}.to_json()<< "' "
     command << "-X POST '#{url}' > /dev/null"
   system(command.join " ")
 end

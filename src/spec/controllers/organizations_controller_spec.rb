@@ -34,6 +34,8 @@ describe OrganizationsController do
   describe "create a root org" do        
     describe 'with valid parameters' do
       before (:each) do
+        # for these tests we need full user
+        login_user :mock => false
 
         @organization = new_test_org #controller.current_organization
         controller.stub!(:current_organization).and_return(@organization)
@@ -45,6 +47,14 @@ describe OrganizationsController do
         response.should be_success
         assigns[:organization].name.should == OrgControllerTest::ORGANIZATION[:name]
 
+      end
+
+      it 'should create organization and account for spaces' do
+        post 'create', {:name => "multi word organization", :description => "spaced out organization"}
+        response.should_not redirect_to(:action => 'new')
+        response.should be_success
+        assigns[:organization].name.should == "multi word organization"
+        assigns[:organization].cp_key.should == "multi_word_organization"
       end
 
       it 'should generate a success notice' do

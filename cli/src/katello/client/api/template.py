@@ -23,10 +23,12 @@ class TemplateAPI(KatelloAPI):
         tpls = self.server.GET(path)[1]
         return tpls
         
+        
     def template(self, tplId):
         path = "/api/templates/%s" % str(tplId)
         tpl = self.server.GET(path)[1]
         return tpl
+        
         
     def template_by_name(self, envId, tplName):
         path = "/api/templates/"
@@ -37,15 +39,66 @@ class TemplateAPI(KatelloAPI):
         else:
             return None
         
-    def import_tpl(self, envId, name, description, tplFile):
+        
+    def import_tpl(self, envId, description, tplFile):
         tplData = {
             "template_file": tplFile, 
             "template": {
-                "name": name,
                 "description": description
             },
             "environment_id": envId
         }
         
-        path = "/api/templates/"
+        path = "/api/templates/import"
         return self.server.POST(path, tplData, multipart=True)[1]
+        
+        
+    def create(self, envId, name, description, parentId):
+        tplData = {
+            "name": name,
+            "description": description
+         }
+        tplData = self.update_dict(tplData, "parent_id", parentId)
+        tplData = {
+            "template": tplData,
+            "environment_id": envId
+        }
+        
+        path = "/api/templates/"
+        return self.server.POST(path, tplData)[1]
+        
+        
+    def update(self, tplId, newName, description, parentId):
+
+        tplData = {}
+        tplData = self.update_dict(tplData, "name", newName)
+        tplData = self.update_dict(tplData, "description", description)
+        tplData = self.update_dict(tplData, "parent_id", parentId)
+
+        tplData = {
+            "template": tplData
+        }
+
+        path = "/api/templates/%s" % str(tplId)
+        return self.server.PUT(path, tplData)[1]
+
+
+    def update_content(self, tplId, actionName, params):
+        action = {
+            'do': actionName
+        }
+        action.update(params)
+    
+        path = "/api/templates/%s/update_content" % str(tplId)
+        return self.server.PUT(path, action)[1]
+
+
+    def promote(self, id):
+        path = "/api/templates/%s/promote" % str(id)
+        return self.server.POST(path)[1]
+
+
+    def delete(self, id):
+        path = "/api/templates/%s" % str(id)
+        return self.server.DELETE(path)[1]
+        

@@ -11,13 +11,8 @@
       .grid_6.la.editable.edit_rolename#role_name{'name' => 'role[name]', :url=>role_path(@role.id)} #{@role[:name]}
       .grid_7
         &nbsp;
-    #permissions.grid_8
-      - role.permissions.each do |perm|
-        = render "permission", :perm=>perm, :data_new=>false, :role=>role
-      / Chrome bug fix, need the %nbsp; below or add permission does not work correctly in chrome
-      &nbsp;
-      #add_permission{:data_id=>role.id, :data_url=>roles_show_permission_path(), :class=>"button"}
-        = _("Add Permission")
+    = render :partial => 'permissions', :locals => {:role => role}
+
 .grid_8
   &nbsp;
 

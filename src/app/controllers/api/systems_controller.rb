@@ -53,10 +53,11 @@ class Api::SystemsController < Api::ApiController
   end
 
   def find_organization
-    return unless params.has_key?(:organization_id)
+    return unless (params.has_key?(:organization_id) or params.has_key?(:owner))
 
-    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id]})
-    render :text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404 and return if @organization.nil?
+    id = params[:organization_id] or params[:owner]
+    @organization = Organization.first(:conditions => {:cp_key => id})
+    render :text => _("Couldn't find organization '#{id}'"), :status => 404 and return if @organization.nil?
     @organization
   end
 

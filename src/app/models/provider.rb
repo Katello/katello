@@ -24,12 +24,11 @@ class Provider < ActiveRecord::Base
   validates :name, :presence => true, :katello_name_format => true
   validates :description, :katello_description_format => true
   validates_uniqueness_of :name, :scope => :organization_id
-  validates_presence_of :repository_url, :if => :rh_repo?
   validates_inclusion_of :provider_type,
     :in => TYPES,
     :allow_blank => false,
     :message => "Please select provider type from one of the following: #{TYPES.join(', ')}."
-  validates_format_of :repository_url, :with => URI::regexp(%w(https)), :if => :rh_repo?
+  validates :repository_url, :katello_url_format => {:protocol => ["https"]}, :allow_nil => false, :if => :rh_repo?
 
   scoped_search :on => :name, :complete_value => true, :rename => :'provider.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'provider.description'

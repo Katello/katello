@@ -11,7 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'ldap'
-require 'util/threadsession.rb'
+require 'util/threadsession'
+require 'util/password'
 
 class User < ActiveRecord::Base
   has_and_belongs_to_many :roles
@@ -21,9 +22,10 @@ class User < ActiveRecord::Base
   has_many :notices, :through => :user_notices
   has_many :search_favorites, :dependent => :destroy
   has_many :search_histories, :dependent => :destroy
+  has_and_belongs_to_many :organizations
+
 
   validates :username, :uniqueness => true, :presence => true, :username => true
-  validates :password, :presence => true, :length=>{:within=>6..100}
   validate :own_role_included_in_roles
 
   # check if the role does not already exist for new username
@@ -37,13 +39,34 @@ class User < ActiveRecord::Base
   scoped_search :on => :username, :complete_value => true, :rename => :name
   scoped_search :in => :roles, :on => :name, :complete_value => true, :rename => :role
 
+  # validate the password length before hashing
+  validates_each :password do |model, attr, value|
+    if model.password_changed?
+      model.errors.add(attr, "at least 5 characters") if value.length < 5
+    end
+  end
+
+  # hash the password before creating or updateing the record
+  before_save do |u|
+    u.password = Password::update(u.password) if u.password.length != 192
+  end
+
   # create own role for new user
   after_create do |u|
     if u.own_role.nil?
-      r = Role.create!(:name => u.username.downcase + "_role")
+      # create the own_role where the name will be a string consisting of username and 20 random chars
+      r = Role.create!(:name => "#{u.username}_#{Password.generate_random_string(20)}")
       u.roles << r unless u.roles.include? r
       u.own_role = r
       u.save!
+    end
+  end
+
+  # destroy own role for user
+  before_destroy do |u|
+    u.own_role.destroy
+    unless u.own_role.destroyed?
+      Rails.logger.error error.to_s
     end
   end
 
@@ -56,8 +79,20 @@ class User < ActiveRecord::Base
     find_by_username('anonymous')
   end
 
+  # has the current user at least one superadmin role?
+  def superadmin?
+    @superadmin |= roles.select { |r| r.superadmin }.length > 0
+  end
+
   def self.authenticate!(username, password)
-    User.where({:username => username, :password => password}).first
+    u = User.where({:username => username}).first
+    # check if user exists
+    return nil unless u
+    # check if not disabled
+    return nil if u.disabled
+    # check if hash is valid
+    return nil unless Password.check(password, u.password)
+    u
   end
 
   def self.authenticate_using_ldap!(username, password)
@@ -102,7 +137,7 @@ class User < ActiveRecord::Base
   end
 
   # Create permission for the user's own role - for more info see Role.allow
-  def allow(verb, resource_type, tags)
+  def allow(verb, resource_type, tags = nil)
     raise ArgumentError, "user has no own role" if own_role.nil? or not own_role.is_a? Role
     own_role.allow(verb, resource_type, tags)
   end

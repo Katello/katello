@@ -17,7 +17,6 @@ module Glue::Provider
   def self.included(base)
     base.send :include, InstanceMethods
     base.class_eval do
-      before_save :save_products_orchestration
       before_destroy :destroy_products_orchestration
     end
   end
@@ -64,23 +63,6 @@ module Glue::Provider
         Rails.logger.error "Failed to create custom product #{name} for provider #{self.name}: #{e}, #{e.backtrace.join("\n")}"
         raise e
       end
-    end
-
-    def update_products
-      Rails.logger.info "Updating products for provider: #{name}"
-      self.products.each do |p|
-        p.provider = self
-        p.update_attributes!({
-            :productContent => [Glue::Candlepin::ProductContent.new(:content => {:id => p.name})] # FIX ME: don't think this is correct
-        })
-        #update name only for custom products
-        if p.name == old.name
-          p.update_attributes!({:name => name})
-        end
-      end
-    rescue => e
-      Rails.logger.error "Failed to update products for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
     end
 
     def url_to_host_and_path(url = "")
@@ -159,13 +141,6 @@ module Glue::Provider
         queue_import_product_from_cp p
       end
       process queue
-    end
-
-    def save_products_orchestration
-      case self.orchestration_for
-        when :update
-          queue.create(:name => "update products for provider: #{self.name}", :priority => 3, :action => [self, :update_products])
-      end
     end
 
     def destroy_products_orchestration

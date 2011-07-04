@@ -18,10 +18,10 @@ include OrchestrationHelper
 describe Product do  
 
   before(:each) do
-    disable_org_orchestretion
+    disable_org_orchestration
 
     @organization = Organization.create!(:name => ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
-    @provider     = Provider.create!({:organization => @organization, :name => 'provider', :repository_url => "https://url", :provider_type => Provider::REDHAT})
+    @provider     = Provider.create!({:organization => @organization, :name => 'provider', :repository_url => "https://something.url", :provider_type => Provider::REDHAT})
 
     ProductTestData::SIMPLE_PRODUCT.merge!({:provider => @provider, :environments => [@organization.locker]})
     ProductTestData::SIMPLE_PRODUCT_WITH_INVALID_NAME.merge!({:provider => @provider, :environments => [@organization.locker]})

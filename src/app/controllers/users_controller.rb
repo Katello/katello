@@ -67,9 +67,10 @@ class UsersController < ApplicationController
   end
   
   def update
-
+    params[:user] = {"role_ids"=>[]} unless params.has_key? :user
     params[:user].delete :username
-    @user = User.where(:username => params[:id])[0]
+
+    @user = User.where(:id => params[:id])[0]
 
     #Add in the own role if updating roles, cause the user shouldn't see his own role
     if params[:user][:role_ids]
@@ -80,7 +81,7 @@ class UsersController < ApplicationController
       notice _("User updated successfully.")
       attr = params[:user].first.last if params[:user].first
       attr ||= ""
-      render :text => escape_html(attr) and return
+      render :text => attr and return
     end
     errors "", {:list_items => @user.errors.to_a}
     render :text => @user.errors, :status=>:ok
