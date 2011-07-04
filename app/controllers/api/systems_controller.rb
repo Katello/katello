@@ -55,7 +55,7 @@ class Api::SystemsController < Api::ApiController
   def find_organization
     return unless (params.has_key?(:organization_id) or params.has_key?(:owner))
 
-    id = params[:organization_id] or params[:owner]
+    id = params[:organization_id] || params[:owner]
     @organization = Organization.first(:conditions => {:cp_key => id})
     render :text => _("Couldn't find organization '#{id}'"), :status => 404 and return if @organization.nil?
     @organization
@@ -63,6 +63,7 @@ class Api::SystemsController < Api::ApiController
 
   def find_only_environment
     if @organization && !params.has_key?(:environment_id)
+      render :text => _("Organization #{@organization.name} has 'locker' environment only. Please create an environment for system registration."), :status => 400 and return if @organization.environments.empty?
       render :text => _("Organization #{@organization.name} has more than one environment. Please specify target environment for system registration."), :status => 400 and return if @organization.environments.size > 1
       @environment = @organization.environments.first and return
     end
@@ -77,7 +78,7 @@ class Api::SystemsController < Api::ApiController
   end
 
   def verify_presence_of_organization_or_environment
-    return if params.has_key?(:organization_id) or params.has_key?(:environment_id)
+    return if params.has_key?(:organization_id) or params.has_key?(:owner) or params.has_key?(:environment_id)
     render :text => _("Either organization id or environment id needs to be specified"), :status => 400 and return
   end
 
