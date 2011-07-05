@@ -119,7 +119,7 @@ test "org info" org info --name=$TEST_ORG
 TEST_ENV="env_$RAND"
 TEST_ENV_2="env_2_$RAND"
 TEST_ENV_3="env_3_$RAND"
-test "environment create" environment create --org="$FIRST_ORG" --name="$TEST_ENV" --prior="locker"
+test "environment create" environment create --org="$FIRST_ORG" --name="$TEST_ENV" --prior="Locker"
 test "environment create with prior" environment create --org="$FIRST_ORG" --name="$TEST_ENV_2" --prior="$TEST_ENV"
 test "environment update" environment update --org="$FIRST_ORG" --name="$TEST_ENV_2" --new_name="$TEST_ENV_3"
 test "environment list" environment list --org="$FIRST_ORG"
