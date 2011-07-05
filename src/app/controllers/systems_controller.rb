@@ -21,7 +21,7 @@ class SystemsController < ApplicationController
   
   def index
     begin
-      @systems = System.search_for(params[:search]).where(:organization_id => current_organization.id).limit(current_user.page_size)
+      @systems = System.search_for(params[:search]).where(:environment_id => current_organization.environments).limit(current_user.page_size)
       retain_search_history
       sort_systems if params[:order]
     rescue Exception => error

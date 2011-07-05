@@ -158,9 +158,7 @@ sleep 1 #give the provider some time to get synced
 #testing systems
 SYSTEM_NAME="_system_$RAND"
 SYSTEM_NAME2="_system_$RAND"
-CONSUMER_FIRST="$(echo $FIRST_ORG|perl -e 'print lc <>;')_user"
-test "system register first org as admin" system register --name="admin$SYSTEM_NAME" --org="$FIRST_ORG"
-test "system register test org as admin" system register --name="admin$SYSTEM_NAME2" --org="$TEST_ORG"
+test "system register as admin" system register --name="admin$SYSTEM_NAME" --org="$FIRST_ORG" --environment="$TEST_ENV"
 # TODO - create regular user, create org with this user, syst register with this user
 test "system list" system list --org="$FIRST_ORG"
 

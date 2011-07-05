@@ -17,7 +17,6 @@ class Organization < ActiveRecord::Base
   include Authorization
 
   has_many :providers
-  has_many :systems, :dependent => :destroy, :inverse_of => :organization
   has_many :environments, :class_name => "KPEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
   has_one :locker, :class_name =>"KPEnvironment", :conditions => {:locker => true}, :dependent => :destroy
   has_and_belongs_to_many :users
@@ -39,6 +38,10 @@ class Organization < ActiveRecord::Base
   # relationship user-org is created for current user automatically
   after_create do |org|
     org.users << User.current if User.current
+  end
+
+  def systems
+    System.where(:environment_id => environments)
   end
 
   def promotion_paths
