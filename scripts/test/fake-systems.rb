@@ -32,8 +32,8 @@ json_type ="application/json"
 sys ="system-#{rand(100)}" 
 
 url="https://localhost:3000/api/consumers"
-user = "acme_corporation_user"
-password = "acme_corporation_user"
+user = "admin"
+password = "admin"
 org = "ACME_Corporation"
 
 ip = (0..2).collect{rand(255).to_s}.join(".") 
