@@ -98,7 +98,7 @@ var promotion_page = (function($){
             if (adding) {
                 button.html(i18n.remove).addClass("remove_" + type).removeClass('add_'+type);
                 if( type !== 'product'){
-                    if( changeset.productCount() === 0 ){
+                    if( changeset.products[product_id] === undefined ){
                         add_product_breadcrumbs(changeset.id, product_id, product_name);
                     }
                 }
