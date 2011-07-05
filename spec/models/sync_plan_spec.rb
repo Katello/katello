@@ -5,7 +5,7 @@ describe SyncPlan do
 
   describe "SyncPlan should" do
     before(:each) do
-      disable_org_orchestretion
+      disable_org_orchestration
       @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
       @plan = SyncPlan.create!({:name => 'Norman Rockwell', :organization_id => @organization, :sync_date => DateTime.now, :interval => 'daily'})
     end

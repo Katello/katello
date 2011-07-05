@@ -12,13 +12,11 @@
 
 class Api::EnvironmentsController < Api::ApiController
   respond_to :json
-  before_filter :find_organization, :only => [:index, :show, :create, :update, :destroy, :repositories]
+  before_filter :find_organization, :only => [:index, :create]
   before_filter :find_environment, :only => [:show, :update, :destroy, :repositories]
-
 
   def index
     query_params[:organization_id] = @organization.id
-    
     render :json => (KPEnvironment.where query_params).to_json
   end
 
@@ -54,13 +52,6 @@ class Api::EnvironmentsController < Api::ApiController
   def repositories
     render :json => @environment.products.collect { |p| p.repos(@environment) }.flatten
   end
-  
-  
-#  def find_organization
-#    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id]})
-#    render :text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404 and return if @organization.nil?
-#    @organization
-#  end
 
   def find_environment
     @environment = KPEnvironment.find(params[:id])
