@@ -27,6 +27,7 @@ class ChangesetsController < ApplicationController
 
   #changeset history index
   def index
+    @environment = current_organization.locker.successor || current_organization.locker
     setup_environment_selector(current_organization)
     @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size)
     retain_search_history
