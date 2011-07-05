@@ -49,6 +49,14 @@ describe OrganizationsController do
 
       end
 
+      it 'should create organization and account for spaces' do
+        post 'create', {:name => "multi word organization", :description => "spaced out organization"}
+        response.should_not redirect_to(:action => 'new')
+        response.should be_success
+        assigns[:organization].name.should == "multi word organization"
+        assigns[:organization].cp_key.should == "multi_word_organization"
+      end
+
       it 'should generate a success notice' do
         controller.should_receive(:notice)
         post 'create', OrgControllerTest::ORGANIZATION

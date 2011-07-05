@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class KatelloUrlFormatValidator < ActiveModel::EachValidator
+  
   def validate_each(record, attribute, value)
     
     # build protocol regex

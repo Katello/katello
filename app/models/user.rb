@@ -54,8 +54,8 @@ class User < ActiveRecord::Base
   # create own role for new user
   after_create do |u|
     if u.own_role.nil?
-      # create the own_role where the name will be a string consisting of 32 random digits
-      r = Role.create!(:name => rand(10**32).to_s)
+      # create the own_role where the name will be a string consisting of username and 20 random chars
+      r = Role.create!(:name => "#{u.username}_#{Password.generate_random_string(20)}")
       u.roles << r unless u.roles.include? r
       u.own_role = r
       u.save!
@@ -86,8 +86,12 @@ class User < ActiveRecord::Base
 
   def self.authenticate!(username, password)
     u = User.where({:username => username}).first
+    # check if user exists
+    return nil unless u
+    # check if not disabled
+    return nil if u.disabled
     # check if hash is valid
-    return nil unless u and Password.check(password, u.password)
+    return nil unless Password.check(password, u.password)
     u
   end
 
