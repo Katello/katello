@@ -74,6 +74,7 @@ var env_select =   {
         $('#path-selected').find('ul').html(content);
         env_select.active_div = $(this);
         env_select.highlight_selected();
+        return false;
     },
     env_selected: function() {
         env_select.close();
@@ -84,6 +85,7 @@ var env_select =   {
         if (env_select.click_callback) {
           env_select.click_callback(id, $(this));
         }
+        return false;
     },
     disable_active: function() {
         //This is used when the user is highlighting entries, to clear
@@ -96,6 +98,7 @@ var env_select =   {
     highlight_selected: function () {
         $(".path_entry").removeClass("path_entry_selected");
         env_select.active_div.addClass("path_entry_selected");
+        return false;
     }
 
 };
