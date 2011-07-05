@@ -2,6 +2,9 @@
 @import "base";
 @import "grid";
 
+$tree-container: #F2F2F2;
+$tree-border: #c0c1be;
+
 #main {
   ul {
    margin: 0;
@@ -106,15 +109,15 @@ fieldset {
   margin:0 auto;
   min-height:500px;
   .tree_breadcrumb {
-
-    font-weight: bold;
-    font-size: 115%;
-    color: #FFF;
-    background-color: $kselected;
+    font-weight: 600;
+    font-size: 110%;
+    color: #000;
+    background-color: $tree-container;
     word-wrap: break-word;
-    outline: 2px solid $kselected;
-    padding: 5px;
-    margin-bottom: 2px;
+    border: 1px solid $tree-border;
+    border-bottom: none;
+    //outline: 2px solid $treecontainer;
+    padding: 10px 5px;
   }
   .locked_breadcrumb {
     background-color: #FEE7C6;
@@ -497,12 +500,13 @@ fieldset {
     background-color: #FFF;
 }
 .slider { 
-    width: 437px;
+    
     h5 {
       border-bottom: solid 2px #F2F2F2;
       font-size: 120%;
-      width: 95%;
+      width: 90%;
       margin-top: 10px;
+      margin-left: 10px;
     }
 }
 
@@ -724,30 +728,39 @@ $repo_color: #4A9FB1;
     overflow-y: auto;
   }
   .breadcrumb_search {
+    font-size: 100%;
+    //padding: 5px;
+    margin: 0 0 0 0;
     display: block;
-    width: 450px;
-    font-weight: bold;
+    width: 448px;
+    font-weight: 200;
     color: #FFF;
-    background-color: $kselected;
+    background-color: $tree-container;
     word-wrap: break-word;
-    margin: -2px 0 0 -2px;
-    border: 2px solid $kselected;
+    border: 1px solid $tree-border;
+    border-bottom: none;
     #search_form {
         display: none;
-        margin-right: 106px;
+        //margin-right: 106px;
     }
     .search {
         position: relative;
         clear: both;
         display: inline-block;
         margin: 5px auto;
+        
+        input[type="search"] {
+          float: right; /* webkit adds an extra padding and makes the widget narrower */
+          width: 450px;
+          border: 3px solid #436fa8;
+        }
 
     }
     .tree_breadcrumb {
         display: inline-block;
         outline: 0 none;
         width: 90%;
-        padding-bottom: 3px;
+        border: none;
     }
   }
   .locked_breadcrumb_search {
