@@ -28,7 +28,7 @@ class Provider < ActiveRecord::Base
     :in => TYPES,
     :allow_blank => false,
     :message => "Please select provider type from one of the following: #{TYPES.join(', ')}."
-  validates :repository_url, :katello_url_format => {:protocol => ["https"]}, :allow_nil => false, :if => :rh_repo?
+  validates :repository_url, :katello_url_format => {:protocol => ["https"], :port_numbers => false}, :allow_nil => false, :if => :rh_repo?
 
   scoped_search :on => :name, :complete_value => true, :rename => :'provider.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'provider.description'

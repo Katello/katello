@@ -19,7 +19,7 @@ describe KPEnvironment do
   before(:each) do
 
     disable_product_orchestration
-    disable_org_orchestretion
+    disable_org_orchestration
     
     @env_name =  'test_environment'
     
@@ -176,6 +176,7 @@ describe KPEnvironment do
       @env1.should be_valid
       @env2.should be_valid
       @env3.should be_valid
+      @organization.locker.should be_valid
     end
   end
 end
