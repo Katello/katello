@@ -15,9 +15,9 @@ class ChangesetsController < ApplicationController
   include BreadcrumbHelper
   
   before_filter :find_changeset, :except => [:index, :list, :items, :create, :new, :auto_complete_search]
-  before_filter :find_environment, :except => [:index, :list, :items]
-  before_filter :setup_options, :only => [:index, :items]
-  
+  before_filter :find_environment, :except => [:index, :list, :items, :auto_complete_search]
+  before_filter :setup_options, :only => [:index, :items, :auto_complete_search]
+
   rescue_from Exception, :with => :handle_exceptions
   after_filter :update_editors, :only => [:update]
 
@@ -27,6 +27,7 @@ class ChangesetsController < ApplicationController
 
   #changeset history index
   def index
+    @environment = current_organization.locker.successor || current_organization.locker
     setup_environment_selector(current_organization)
     @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size)
     retain_search_history
@@ -39,6 +40,7 @@ class ChangesetsController < ApplicationController
     start = params[:offset]
     @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size).offset(start)
     render_panel_items @changesets, @panel_options
+    retain_search_history
   end
 
   #similar to index, but only renders the actual list of the 2 pane
@@ -204,10 +206,12 @@ class ChangesetsController < ApplicationController
 
     if @environment.successor
       render :text=>url_for(:controller=>"promotions", :action => "show",
-            :env_id => @environment.successor.name, :org_id =>  @environment.organization.cp_key)
+            :env_id => @environment.name, :org_id =>  @environment.organization.cp_key)
     else
+       go_to = @environment.prior
+       go_to ||= @environment
        render :text=>url_for(:controller=>"promotions", :action => "show",
-                  :env_id => @environment.name, :org_id =>  @environment.organization.cp_key)
+                  :env_id => go_to, :org_id =>  @environment.organization.cp_key)
     end
   end
 
@@ -228,7 +232,7 @@ class ChangesetsController < ApplicationController
 
   def update_editors
     usernames = @changeset.users.collect { |c| User.where(:id => c.user_id ).order("updated_at desc")[0].username }
-    usernames.delete(current_user.username)  
+    usernames.delete(current_user.username)
     response.headers['X-ChangesetUsers'] = usernames.to_json
   end
 

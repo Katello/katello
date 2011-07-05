@@ -63,7 +63,7 @@ describe ChangesetsController do
     end
 
     it "should return a portion of changesets for an environment" do
-      get :items
+      get :items, :env_id=>@env.id
       response.should be_success
     end
 
