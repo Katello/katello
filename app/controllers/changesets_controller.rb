@@ -15,9 +15,9 @@ class ChangesetsController < ApplicationController
   include BreadcrumbHelper
   
   before_filter :find_changeset, :except => [:index, :list, :items, :create, :new, :auto_complete_search]
-  before_filter :find_environment, :except => [:index, :list, :items]
-  before_filter :setup_options, :only => [:index, :items]
-  
+  before_filter :find_environment, :except => [:index, :list, :items, :auto_complete_search]
+  before_filter :setup_options, :only => [:index, :items, :auto_complete_search]
+
   rescue_from Exception, :with => :handle_exceptions
   after_filter :update_editors, :only => [:update]
 
@@ -39,6 +39,7 @@ class ChangesetsController < ApplicationController
     start = params[:offset]
     @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size).offset(start)
     render_panel_items @changesets, @panel_options
+    retain_search_history
   end
 
   #similar to index, but only renders the actual list of the 2 pane
