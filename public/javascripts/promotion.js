@@ -27,6 +27,7 @@ var promotion_page = (function($){
         },
         stop_timer = function() {
           clearInterval(interval_id);
+          interval_id = undefined;
         },
         update_dep_size = function() {
             if ($('#depend_size').length) {
@@ -39,6 +40,9 @@ var promotion_page = (function($){
                     }
                 })
             }
+        },
+        are_updates_complete = function() { //if there are no pending (and complete) updates, return true
+            return changeset_queue.length === 0 && interval_id !== undefined;
         },
         //Finds the add/remove buttons in the left pane
         find_button = function(id, type) {
@@ -76,6 +80,23 @@ var promotion_page = (function($){
                     throw_error);
             }
     
+        },
+        wait = function(break_cb, finished_cb) {
+            $("#wait_dialog").dialog({
+                closeOnEscape: false,
+                modal: true,
+                //Remove the close button
+                open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); }
+            });
+            if (!break_cb()) {
+                setTimeout(function() {
+                    wait(break_cb, finished_cb);
+                }, 250);
+            }
+            else {
+                $("#wait_dialog").dialog("close");
+                finished_cb();
+            }
         },
         throw_error = function() {
             $("#error_dialog").dialog({
@@ -384,12 +405,14 @@ var promotion_page = (function($){
         fetch_changeset:        fetch_changeset,
         set_current_changeset:  set_current_changeset,
         set_current_product:    set_current_product,
+        are_updates_complete:         are_updates_complete,
         show_dependencies:      show_dependencies,
         env_change:             env_change,
         checkUsersInResponse:   checkUsersInResponse,
         start_timer:            start_timer,
         reset_page:             reset_page,
-        throw_error:            throw_error
+        throw_error:            throw_error,
+        wait:                   wait
     };
 }(jQuery));
 
@@ -690,13 +713,23 @@ var registerEvents = function(){
         button.addClass("disabled");
         var cs = promotion_page.get_changeset();
         if(cs.is_new()) {
-            cs.review(function() {
-                $("#changeset_action").html(i18n.promote).attr("data-confirm", i18n.promote_confirm);
-                $("#review_cancel").show();
-                button.removeClass("disabled");
-                promotion_page.reset_page();
-                promotion_page.get_changeset_tree().rerender_content();
-            });
+            var review_func = function() {
+                cs.review(function() {
+                    $("#changeset_action").html(i18n.promote).attr("data-confirm", i18n.promote_confirm);
+                    $("#review_cancel").show();
+                    button.removeClass("disabled");
+                    promotion_page.reset_page();
+                    promotion_page.get_changeset_tree().rerender_content();
+                });                
+            };
+            if (!promotion_page.are_updates_complete()) {
+                promotion_page.wait(promotion_page.are_updates_complete, review_func);
+            }
+            else {
+                review_func();
+            }
+
+
         }
         else {
             cs.promote(function() {
