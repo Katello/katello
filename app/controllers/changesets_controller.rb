@@ -204,10 +204,12 @@ class ChangesetsController < ApplicationController
 
     if @environment.successor
       render :text=>url_for(:controller=>"promotions", :action => "show",
-            :env_id => @environment.successor.name, :org_id =>  @environment.organization.cp_key)
+            :env_id => @environment.name, :org_id =>  @environment.organization.cp_key)
     else
+       go_to = @environment.prior
+       go_to ||= @environment
        render :text=>url_for(:controller=>"promotions", :action => "show",
-                  :env_id => @environment.name, :org_id =>  @environment.organization.cp_key)
+                  :env_id => go_to, :org_id =>  @environment.organization.cp_key)
     end
   end
 
@@ -228,7 +230,7 @@ class ChangesetsController < ApplicationController
 
   def update_editors
     usernames = @changeset.users.collect { |c| User.where(:id => c.user_id ).order("updated_at desc")[0].username }
-    usernames.delete(current_user.username)  
+    usernames.delete(current_user.username)
     response.headers['X-ChangesetUsers'] = usernames.to_json
   end
 
