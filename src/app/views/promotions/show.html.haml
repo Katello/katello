@@ -40,6 +40,11 @@
 #error_dialog{:style=>"display: none"}
   = _("An error has occured when communicating with the server, please refresh the page to retrieve the current changeset.")
 
+#wait_dialog{:style=>"display: none"}
+  = _("Processing changeset modifications, please wait.")
+  = image_tag ("spinner.gif")
+
+
 
 //Div for dep. content 
 #dialog_content{:style => "word-wrap: break-word;", :title=>"#{_('Package Dependencies')}"}
