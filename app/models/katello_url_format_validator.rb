@@ -12,23 +12,39 @@
 
 class KatelloUrlFormatValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    p = options[:protocol]
     
+    # build protocol regex
+    # default: allow "http" only
+    p = options[:protocol]
     if p.nil?
-      pr = "(http)"
+      protocol = "(http)"
     elsif p.size == 1
-      pr = "(#{p.first})"
+      protocol = "(#{p.first})"
     else
-      pr = "("
+      protocol = "("
       for i in p do
-        pr += i
-        pr += "|" unless i == p.last
+        protocol += i
+        protocol += "|" unless i == p.last
       end
-      pr += ")"
+      protocol += ")"
+    end
+    
+    # allow port numbers?
+    #
+    # true: require port numbers
+    # false: disallow port numbers
+    # (default) nil: port numbers allowed, but not required
+    o = options[:port_numbers]
+    if o.nil?
+      port_number = "(:[0-9]{1,5})?"
+    elsif o
+      port_number = ":[0-9]{1,5}"
+    else
+      port_number = ""
     end
     
     if value
-      record.errors[attribute] << N_("is invalid") unless value =~ /^#{pr}:\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/ix
+      record.errors[attribute] << N_("is invalid") unless value =~ /^#{protocol}:\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}#{port_number}(\/.*)?$/ix
     else
       record.errors[attribute] << N_("can't be blank")
     end
