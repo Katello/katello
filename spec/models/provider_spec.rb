@@ -210,17 +210,12 @@ describe Provider do
       end
       
       it "'https://ltl.url/'" do
-        @provider.repository_url = "https://tiny.url/"
+        @provider.repository_url = "https://ltl.url/"
         @provider.should be_valid 
       end
       
       it "'https://reallyreallyreallyreallyreallyextremelylongurl.com/with/lots/of/sub/directories/'" do
         @provider.repository_url = "https://reallyreallyreallyreallyreallyextremelylongurl.com/with/lots/of/sub/directories/over/kill/"
-        @provider.should be_valid
-      end
-      
-      it "'https://dr.pepper.yum:123/nutrition/facts/'" do
-        @provider.repository_url = "https://dr.pepper.yum:123/nutrition/facts/"
         @provider.should be_valid
       end
       
@@ -265,6 +260,11 @@ describe Provider do
       
       it "'http://lzap.fedorapeople.org/fakerepos/fewupdates/'" do
         @provider.repository_url = "http://lzap.fedorapeople.org/fakerepos/fewupdates/"
+        @provider.should_not be_valid
+      end
+      
+      it "'https://dr.pepper.yum:123/nutrition/facts/'" do
+        @provider.repository_url = "https://dr.pepper.yum:123/nutrition/facts/"
         @provider.should_not be_valid
       end
         
