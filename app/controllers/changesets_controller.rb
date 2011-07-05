@@ -101,7 +101,7 @@ class ChangesetsController < ApplicationController
     notice _("Changeset '#{@changeset["name"]}' was created.")
     bc = {}
     add_crumb_node!(bc, changeset_bc_id(@changeset), products_changeset_path(@changeset), @changeset.name, ['changesets'],
-                    {:client_render => true})
+                    {:client_render => true}, {:is_new=>true})
     render :json => {
       'breadcrumb' => bc,
       'id' => @changeset.id,
