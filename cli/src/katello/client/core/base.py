@@ -28,6 +28,11 @@ from katello.client.core.utils import system_exit, parse_tokens, Printer
 from katello.client.logutil import getLogger
 from katello.client.server import ServerRequestError
 
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 _cfg = Config()
 _log = getLogger(__name__)
 
@@ -338,7 +343,12 @@ class Action(object):
             sys.exit(1)
 
         except ServerRequestError, re:
-            self.error(re.args[1])
+            try:
+                msg = ", ".join(re.args[1]["errors"])
+            except:
+                msg = re.args[1]
+                
+            self.error(msg)
             return re.args[0]
 
         except SocketError, se:
