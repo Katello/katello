@@ -252,7 +252,7 @@ var promotion_page = (function($){
          *    //TODO make more efficient by identify exactly which page we are on and only reseting those buttons
          */
         reset_page = function() {
-
+            console.log("reset");
             if (current_changeset) {
                 if (current_product) {
                     var product = current_changeset.products[current_product];
@@ -271,7 +271,7 @@ var promotion_page = (function($){
                     }
                 } else {
                     var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
-                    buttons.removeClass('disabled');
+                    buttons.html(i18n.add).removeClass("remove_product").addClass("add_product").removeClass('disabled');
                     $.each(current_changeset.products, function(index, product) {
                         $.each(buttons, function(button_index, button){
                             if( $(button).attr('id') === ('add_remove_product_' + product.id) ){ 
@@ -739,7 +739,7 @@ var promotionsRenderer = (function(){
     var render = function(hash, render_cb){
             if( hash === 'changesets'){
                 var post_wait_function = function() {
-                    current_changeset = undefined;
+                    promotion_page.set_changeset(undefined);
                     $("#delete_changeset").addClass("disabled");
                     render_cb(templateLibrary.changesetsList(changeset_breadcrumb));
                 };

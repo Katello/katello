@@ -136,12 +136,6 @@ class PromotionsController < ApplicationController
     @path ||= @environment.full_path if @environment
     @path = [current_organization.locker] + @path if !@path.first.locker?
 
-    if params[:changeset_id]
-      @changeset = Changeset.find(params[:changeset_id])
-    elsif @environment
-      @changeset = @environment.working_changesets.first
-    end
-
     @product = Product.find(params[:product_id]) if params[:product_id]
   end
 
