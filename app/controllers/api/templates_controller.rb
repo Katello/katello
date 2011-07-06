@@ -124,13 +124,13 @@ class Api::TemplatesController < Api::ApiController
 
   def find_environment
     @environment = KPEnvironment.find(params[:environment_id])
-    render :text => _("Couldn't find environment '#{params[:environment_id]}'"), :status => 404 and return if @environment.nil?
+    raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
     @environment
   end
 
   def find_template
     @template = SystemTemplate.find(params[:id])
-    render :text => _("Couldn't find template '#{params[:id]}'"), :status => 404 and return if @template.nil?
+    raise HttpErrors::NotFound, _("Couldn't find template '#{params[:id]}'") if @template.nil?
     @template
   end
 

@@ -50,7 +50,7 @@ class Api::OrganizationsController < Api::ApiController
   def list_owners
     # we only need key and displayName
     @user = User.find_by_username(params[:username])
-    render :text => _("Couldn't find user '#{params[:username]}'"), :status => 404 and return if @user.nil?
+    raise HttpErrors::NotFound, _("Couldn't find user '#{params[:username]}'") if @user.nil?
     if @user.superadmin?
       orgs = Organization.all
     else
@@ -62,7 +62,7 @@ class Api::OrganizationsController < Api::ApiController
 
   def find_organization
     @organization = Organization.first(:conditions => {:cp_key => params[:id].tr(' ', '_')})
-    render :text => _("Couldn't find organization '#{params[:id]}'"), :status => 404 and return if @organization.nil?
+    raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:id]}'") if @organization.nil?
     @organization
   end
 
