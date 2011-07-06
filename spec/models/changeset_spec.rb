@@ -14,6 +14,8 @@ describe Changeset do
       @organization.environments << @environment
       @organization.save!
       @environment.save!
+      @changeset = Changeset.new(:environment=>@environment)
+      @changeset.save!
     end   
 
     it "changeset should not be null" do

@@ -68,8 +68,6 @@ class KPEnvironment < ActiveRecord::Base
 
   
 
-  after_create :create_changeset
-
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
 
   validates :name, :presence => true, :katello_name_format => true
@@ -127,10 +125,6 @@ class KPEnvironment < ActiveRecord::Base
       prior_products = self.prior.products
     end
     return prior_products - self.products
-  end
-
-  def create_changeset
-    Changeset.create!(:environment=>self)
   end
 
 
