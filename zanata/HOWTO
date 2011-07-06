@@ -9,3 +9,23 @@ due to the internal host names in configuration files (zanata.xml), the zanata.x
 also copy the sample config to your $HOME/.config dir. you will need to be a Katello Zanata maintainer and have a API key. 
 
 you will need to import the ca cert for java. use the included shell script, import_cert.sh to pull this into the java keystore
+
+to update the latest strings on the katello server run the following rake task:
+
+rake gettext:find
+
+the above command will update the pot and po files with latest string keys. commit this and then you can push to zanata for translation. 
+
+once you have all the config files in place and have updated the po/pot files, you can push the pot files to zanata with following command: 
+
+mvn zanata:publican-push (use only for new projects in zanata) 
+
+If there are already some translated PO files use this one instead:
+
+mvn zanata:publican-push -Dzanata.srcDir=.
+
+Once the translation are completed you can pull them with:
+
+mvn zanata:publican-pull
+
+If you have any questions, contact Shannon Hughes, shughes@redhat.com
