@@ -108,8 +108,9 @@ if [ "$KATELLO" == "/var/lib/katello" ] || [ "$KATELLO" == "/var/lib/katello/" ]
   sudo chown -R katello:katello $KATELLO
 else
   RAILS_ENV=$MODE rake setup --trace
+  echo "Importing subscripts...please wait"
+  rails runner $KATELLO/../scripts/test/import-subs.rb
 fi
-
 
 if [ $LOCAL_CP == 0 ]; then
   echo "
