@@ -4,7 +4,7 @@ katello po files are translated on the translate.engineering.redhat.com using th
 
 SETUP: 
 
-due to the internal host names in configuration files (zanata.xml), the zanata.xml and pom.xml files are containted in our internal git repo. place the zanata.xml and pom.xml in the katello locale directory. these are ignored by external katello git
+due to the internal host names in configuration files (zanata.xml), the zanata.xml and pom.xml files are containted in our internal git repo. place the zanata.xml and pom.xml in the katello locale directory. these are ignored by external katello git using gitignore file
 
 also copy the sample config to your $HOME/.config dir. you will need to be a Katello Zanata maintainer and have a API key. 
 
@@ -27,5 +27,7 @@ mvn zanata:publican-push -Dzanata.srcDir=.
 Once the translation are completed you can pull them with:
 
 mvn zanata:publican-pull
+
+You will need to run rake gettext:pack after new po files are added back to Katello git repo. 
 
 If you have any questions, contact Shannon Hughes, shughes@redhat.com
