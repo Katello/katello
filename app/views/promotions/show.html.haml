@@ -111,7 +111,7 @@
       %h2 #{@environment.name + _(" Content")}
       .tree_breadcrumb.clickable.clear
       .sliding_container
-        #list.sliding_list{"data-page_size"=>current_user.page_size}
+        #list.list.sliding_list{"data-page_size"=>current_user.page_size}
           .slider_one.has_content.slider
             = render(:partial=>"detail")
           .slider_two.no_content.slider
