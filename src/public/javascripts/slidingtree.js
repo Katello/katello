@@ -139,12 +139,12 @@ var sliding_tree = function(tree_id, options) {
         for(var i = 0; i < trail.length; i++) {
             breadcrumb.append(create_crumb(trail[i]))
         }
-        breadcrumb.append(settings.breadcrumb[id].name);
+        breadcrumb.append('<div class="currentCrumb">' + settings.breadcrumb[id].name + '</div>');
     };
     var create_crumb = function(id) {
         return jQuery('<div/>', {
             id:id,
-            "class": 'slide_link slide_left fl',
+            "class": 'slide_link slide_left fl crumb',
             text: settings.breadcrumb[id].name +  "\u2002\u00BB\u2002"
         });
 
