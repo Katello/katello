@@ -5,13 +5,8 @@
     #{_("No products")}
   -for product in products
     %li.clear
-      - if @changeset
-        - if @changeset_product_ids.include?(product.cp_id)
-          %a.content_add_remove.remove_product.st_button.fr{ "data-id" => product.id, "data-product_id" => product.id, "data-type"=>"product", "data-display_name"=>product.name, :id => "add_remove_product_#{product.id}" }
-            = "&mdash; #{_('Remove')}"
-        - else
-          %a.content_add_remove.add_product.st_button.fr{ "data-id" => product.id, "data-product_id" => product.id, "data-type"=>"product", "data-display_name"=>product.name, :id => "add_remove_product_#{product.id}" }
-            = "+ #{_('Add')}"
+      %a.content_add_remove.remove_product.st_button.fr{ "data-id" => product.id, "data-product_id" => product.id, "data-type"=>"product", "data-display_name"=>product.name, :id => "add_remove_product_#{product.id}" }
+    
       .slide_link{:id=>product_bc_id(product)}
         - if product.provider.provider_type == Provider::REDHAT
           %span.rh-product-sprite
