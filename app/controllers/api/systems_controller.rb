@@ -57,14 +57,14 @@ class Api::SystemsController < Api::ApiController
 
     id = params[:organization_id] || params[:owner]
     @organization = Organization.first(:conditions => {:cp_key => id})
-    render :text => _("Couldn't find organization '#{id}'"), :status => 404 and return if @organization.nil?
+    raise HttpErrors::NotFound, _("Couldn't find organization '#{id}'") if @organization.nil?
     @organization
   end
 
   def find_only_environment
     if @organization && !params.has_key?(:environment_id)
-      render :text => _("Organization #{@organization.name} has 'locker' environment only. Please create an environment for system registration."), :status => 400 and return if @organization.environments.empty?
-      render :text => _("Organization #{@organization.name} has more than one environment. Please specify target environment for system registration."), :status => 400 and return if @organization.environments.size > 1
+      raise HttpErrors::BadRequest, _("Organization #{@organization.name} has 'locker' environment only. Please create an environment for system registration.") if @organization.environments.empty?
+      raise HttpErrors::BadRequest, _("Organization #{@organization.name} has more than one environment. Please specify target environment for system registration.") if @organization.environments.size > 1
       @environment = @organization.environments.first and return
     end
   end
@@ -73,18 +73,18 @@ class Api::SystemsController < Api::ApiController
     return unless params.has_key?(:environment_id)
 
     @environment = KPEnvironment.find(params[:environment_id])
-    render :text => _("Couldn't find environment '#{params[:environment_id]}'"), :status => 404 and return if @environment.nil?
+    raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
     @environment
   end
 
   def verify_presence_of_organization_or_environment
     return if params.has_key?(:organization_id) or params.has_key?(:owner) or params.has_key?(:environment_id)
-    render :text => _("Either organization id or environment id needs to be specified"), :status => 400 and return
+    raise HttpErrors::BadRequest, _("Either organization id or environment id needs to be specified")
   end
 
   def find_system
     @system = System.first(:conditions => {:uuid => params[:id]})
-    render :text => _("Couldn't find system '#{params[:id]}'"), :status => 404 and return if @system.nil?
+    raise HttpErrors::NotFound, _("Couldn't find system '#{params[:id]}'") if @system.nil?
     @system
   end
 

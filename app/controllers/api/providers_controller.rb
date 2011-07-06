@@ -43,7 +43,7 @@ class Api::ProvidersController < Api::ApiController
     if @provider.destroyed?
       render :text => _("Deleted provider '#{params[:id]}'"), :status => 200
     else
-      render :text => _("Error while deleting provider '#{params[:id]}'"), :status => 500
+      raise _("Error while deleting provider '#{params[:id]}'")
     end
   end
 
@@ -63,7 +63,7 @@ class Api::ProvidersController < Api::ApiController
     @provider.import_manifest File.expand_path(temp_file.path)
     render :text => "Manifest imported", :status => 200
   rescue => e
-    render :text => _("Manifest import for provider '#{params[:id]}' failed"), :status => 500
+    raise _("Manifest import for provider '#{params[:id]}' failed")
   end
 
   def import_products
@@ -75,14 +75,12 @@ class Api::ProvidersController < Api::ApiController
       to_create.save!
     end
     render :json => results.to_json
-  rescue => e
-    render :json => { :error => e.backtrace.join("\n").to_s }, :status => 500
   end
 
   def product_create
     product_params = params[:product]
     prod = @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url])
-    render_to_json(prod)
+    render :json => prod
   end
 
   def sync
@@ -94,12 +92,7 @@ class Api::ProvidersController < Api::ApiController
 
   def find_provider
     @provider = Provider.find(params[:id])
-    render(:text => _("Couldn't find provider '#{params[:id]}'"), :status => 404) and return if @provider.nil?
+    raise HttpErrors::NotFound, _("Couldn't find provider '#{params[:id]}'") if @provider.nil?
   end
-
-#  def find_organization
-#    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id]})
-#    render(:text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404) and return if @organization.nil?
-#  end
 
 end
