@@ -144,7 +144,7 @@ var sliding_tree = function(tree_id, options) {
     var create_crumb = function(id) {
         return jQuery('<div/>', {
             id:id,
-            "class": 'slide_link slide_left',
+            "class": 'slide_link slide_left fl',
             text: settings.breadcrumb[id].name +  "\u2002\u00BB\u2002"
         });
 
