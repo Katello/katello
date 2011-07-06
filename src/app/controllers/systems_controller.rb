@@ -23,7 +23,7 @@ class SystemsController < ApplicationController
     begin
       @systems = System.search_for(params[:search]).where(:environment_id => current_organization.environments).limit(current_user.page_size)
       retain_search_history
-      sort_systems if params[:order]
+      sort_columns(COLUMNS,@systems) if params[:order]
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
       @systems = System.search_for ''
@@ -109,19 +109,10 @@ class SystemsController < ApplicationController
   end    
 
   private
+  include SortColumnList
   
   def find_system
     @system = System.find(params[:id])
   end
 
-  def sort_systems
-    field = params[:order].split(" ").first
-    if (COLUMNS.keys.include?(field))
-      # sort based on column name and push any nils to end of array
-      @systems.sort! { |a,b| (a.send(COLUMNS[field]) and b.send(COLUMNS[field])) ? 
-                       (a.send(COLUMNS[field]) <=> b.send(COLUMNS[field])) : (a ? -1 : 1) }
-      @systems.reverse! if params[:order].split(" ").last.downcase == "desc"
-    end
-  end
- 
 end
