@@ -33,6 +33,24 @@ $(document).ready(function() {
     $('#provider_submit').val("Uploading...").attr("disabled", true);
   });
 
+  $(".provider_delete").live('click', function() {
+   var button = $(this);
+
+   var answer = confirm(button.attr('data-confirm-text'));
+   if (answer) {
+     $.ajax({
+       type: "DELETE",
+       url: button.attr('data-url'),
+       cache: false,
+       success: function() {
+           panel.closeSubPanel($('#subpanel'));
+           panel.closePanel($('#panel'));
+           list.remove(button.attr("data-id").replace(/ /g, '_'));
+       }
+     });
+   }
+  });
+
   $('.product_create').live('click', function(event) {
     var button = $(this);
     button.addClass("disabled");
