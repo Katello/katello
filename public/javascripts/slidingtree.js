@@ -10,8 +10,10 @@
  *                      passed as a parameter, should return the html to display
  */
 
-var sliding_tree = function(id, options) {
-
+var sliding_tree = function(tree_id, options) {
+    var container = $('#' + tree_id),
+        list = container.find(".sliding_container .sliding_list"),
+        breadcrumb = container.find(".tree_breadcrumb");
 
     var prerender = function(id) {
         settings.current_tab = id;
@@ -69,9 +71,10 @@ var sliding_tree = function(id, options) {
         }
     };
     var postrender = function(id) {
-        var crumb = settings.breadcrumb[id];
-        var newPanel = list.children('.no_content');
-        var oldPanel = list.children('.has_content');
+        var crumb = settings.breadcrumb[id],
+            newPanel = list.children('.no_content'),
+            oldPanel = list.children('.has_content');
+        
         if (crumb.scrollable) {
             list.addClass("ajaxScroll");
             list.attr("data-scroll_url", crumb.url);
@@ -85,21 +88,31 @@ var sliding_tree = function(id, options) {
             var leaving = settings.direction == "right"? "left" : "right";
             //The old pane, we need to hide it away, remove the contents, and reset the classes
 
-            oldPanel.hide("slide", {"direction":leaving}, 500,
-                            function() {
-                               oldPanel.html("");
-                               oldPanel.removeClass("has_content");
-                               oldPanel.addClass("no_content");
-                               //oldPanel.css({"position": "relative"})
-                           });
-            //the new pane, move it into view
+            var width = 448;
+            if( leaving === 'left' ){
+                list.css({'left': 0});
+                oldPanel.after(newPanel);
+                list.animate({"left": -width}, 500,
+                    function() {
+                       oldPanel.html("");
+                       oldPanel.removeClass("has_content");
+                       oldPanel.addClass("no_content");
+                       newPanel.addClass("has_content");
+                       newPanel.removeClass("no_content");
+                   });
+            } else {
+                   list.css({'left': -width});
+                   oldPanel.before(newPanel);
+                   list.animate({"left": 0}, 500,
+                    function() {
+                       oldPanel.html("");
+                       oldPanel.removeClass("has_content");
+                       oldPanel.addClass("no_content");
+                       newPanel.addClass("has_content");
+                       newPanel.removeClass("no_content");
+                   });
+            }
 
-            newPanel.effect("slide", {"direction":settings.direction}, 500, 
-                                function() {
-                                   newPanel.removeClass("no_content");
-                                   newPanel.addClass("has_content");
-                                   //newPanel.css({"position": "relative"})                              
-                                });
 
             settings.direction = undefined;
         }
@@ -146,7 +159,7 @@ var sliding_tree = function(id, options) {
 
     var settings = {
           breadcrumb : {},
-          bbq_tag : id,
+          bbq_tag : tree_id,
           default_tab : "",
           current_tab: undefined,
           direction  : undefined,
@@ -157,11 +170,7 @@ var sliding_tree = function(id, options) {
     };
 
     //Page items
-    var container = $('#' + id);
-    var list = container.children(".sliding_list");
-    var breadcrumb = container.find(".tree_breadcrumb");
 
-    
     if ( options ) {
         $.extend( settings, options );
     }
