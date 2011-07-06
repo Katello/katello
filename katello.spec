@@ -39,6 +39,7 @@ Requires:       rubygem(simple-navigation) >= 3.1.0
 Requires:       rubygem(sqlite3) 
 Requires:       rubygem(pg)
 Requires:       rubygem(scoped_search) >= 2.3.1
+Require:        rubygem(delayed_job)
 
 Requires(pre):  shadow-utils
 Requires(preun): chkconfig
