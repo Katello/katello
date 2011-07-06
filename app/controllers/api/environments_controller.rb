@@ -33,7 +33,7 @@ class Api::EnvironmentsController < Api::ApiController
   
   def update
     if @environment.locker?
-      render :text => _("Can't update locker environment"), :status => 404
+      raise HttpErrors::BadRequest, _("Can't update locker environment")
     else
       @environment.update_attributes!(params[:environment])
       render :json => @environment
@@ -41,12 +41,8 @@ class Api::EnvironmentsController < Api::ApiController
   end
 
   def destroy
-    #if @environment.locker?
-    #  render :text => _("Can't delete locker environment"), :status => 404
-    #else
-      @environment.destroy
-      render :text => _("Deleted environment '#{params[:id]}'"), :status => 200
-    #end
+    @environment.destroy
+    render :text => _("Deleted environment '#{params[:id]}'"), :status => 200
   end
 
   def repositories
@@ -55,7 +51,7 @@ class Api::EnvironmentsController < Api::ApiController
 
   def find_environment
     @environment = KPEnvironment.find(params[:id])
-    render :text => _("Couldn't find environment '#{params[:id]}'"), :status => 404 and return if @environment.nil?
+    raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:id]}'") if @environment.nil?
     @environment
   end
   

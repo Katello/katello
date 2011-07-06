@@ -19,7 +19,7 @@ class Api::RepositoriesController < Api::ApiController
   
   def create
     content = @product.add_new_content(params[:name], params[:url], 'yum')
-    render_to_json(content)
+    render :json => content
   end
 
   def index
@@ -34,22 +34,22 @@ class Api::RepositoriesController < Api::ApiController
   # proxy repository discovery call to pulp, so we don't have to create an async task to keep track of async task on pulp side
   def discovery
     r = ::Pulp::Proxy.post('/services/discovery/repo/', @_request.body)
-    render :text => r, :content_type => :json
+    render :json => r
   end
 
   def discovery_status
     r = ::Pulp::Proxy.get("/services/discovery/repo/#{params[:id]}/")
-    render :text => r, :content_type => :json
+    render :json => r
   end
   
   def find_repository
     @repository = Pulp::Repository.find params[:id]
-    render :text => _("Couldn't find repository '#{params[:id]}'"), :status => 404 and return if @repository.nil?
+    raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:id]}'") if @repository.nil?
     @repository
   end
   
   def find_product
     @product = Product.find_by_cp_id params[:product_id]
-    render(:text => _("Couldn't find product with id '#{params[:product_id]}'"), :status => 404) and return if @product.nil?
+    raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:product_id]}'") if @product.nil?
   end
 end

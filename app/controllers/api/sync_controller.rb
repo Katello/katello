@@ -43,23 +43,21 @@ class Api::SyncController < Api::ApiController
     render :text => "cancelled synchronization of #{@sync_of}: #{@obj.id}", :status => 200
   end
 
-
-
   def find_provider
     @provider = Provider.find(params[:provider_id])
-    render(:text => N_("Couldn't find provider '#{params[:provider_id]}'"), :status => 404) and return if @provider.nil?
+    raise HttpErrors::BadRequest, N_("Couldn't find provider '#{params[:provider_id]}'") if @provider.nil?
     @provider
   end
 
   def find_product
     @product = Product.find_by_cp_id(params[:product_id])
-    render(:text => _("Couldn't find product with id '#{params[:product_id]}'"), :status => 404) and return if @product.nil?
+    raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:product_id]}'") if @product.nil?
     @product
   end
 
   def find_repository
     @repository = Glue::Pulp::Repo.find(params[:repository_id])
-    render :text => _("Couldn't find repository '#{params[:repository_id]}'"), :status => 404 and return if @repository.nil?
+    raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:repository_id]}'") if @repository.nil?
     @repository
   end
 
@@ -74,7 +72,7 @@ class Api::SyncController < Api::ApiController
       @obj = find_repository
       @sync_of = 'repository'
     else
-      render(:text => N_("Couldn't find subject of synchronization"), :status => 404) and return if @obj.nil?
+      raise HttpErrors::NotFound, N_("Couldn't find subject of synchronization") if @obj.nil?
     end
     @obj
   end
