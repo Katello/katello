@@ -726,6 +726,13 @@ var registerEvents = function(){
         });
     });
 
+    //Ask the user if they really want to leave the page if updates aren't finished
+    window.onbeforeunload = function(){
+        if(!promotion_page.are_updates_complete()){
+            return i18n.leave_page;
+        }
+    };
+
 };
 
 var promotionsRenderer = (function(){
