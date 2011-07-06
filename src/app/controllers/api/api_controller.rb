@@ -19,10 +19,14 @@ class Api::ApiController < ActionController::Base
   before_filter :set_locale
   before_filter :require_user
 
+  rescue_from Exception, :with => proc { |e| render_exception(500, e) } # catch-all
+
   rescue_from RestClient::ExceptionWithResponse, :with => :exception_with_response
-  rescue_from Errors::NotFound, :with => :model_not_found
-  rescue_from Exception, :with => :catch_all
   rescue_from ActiveRecord::RecordInvalid, :with => :invalid_record
+  rescue_from Errors::NotFound, :with => proc { |e| render_exception(404, e) }
+
+  rescue_from HttpErrors::NotFound, :with => proc { |e| render_exception(404, e) }
+  rescue_from HttpErrors::BadRequest, :with => proc { |e| render_exception(400, e) }
 
   # support for session (thread-local) variables must be the last filter in this class
   include Katello::ThreadSession::Controller
@@ -67,35 +71,12 @@ class Api::ApiController < ActionController::Base
     render :text => pp_exception(exception) , :status => exception.http_code
   end
 
-  def model_not_found(exception)
-    logger.error "could not find a resource: " << pp_exception(exception)
-    render :text => pp_exception(exception) , :status => 404
-  end
-
-  def validation_failure(exception)
-    logger.error "validation failed: " << pp_exception(exception)
-    render :text => pp_exception(exception) , :status => 400
-  end
-
   def invalid_record(exception)
     logger.error exception.class
     exception.record.errors.each_pair do |c,e|
       logger.error "#{c}: #{e}"
     end
-    render :text => pp_exception(exception), :status => 500
-  end
-
-  def catch_all(exception)
-    logger.error pp_exception(exception)
-    render :text => pp_exception(exception), :status => 500
-  end
-
-  def render_to_json(object)
-    if object
-      render :json => object.to_json and return
-    else
-      render :json => { :error => "Operation failed"}, :status => 500
-    end
+    render :text => pp_exception(exception), :status => 400
   end
 
   def find_organization
@@ -114,7 +95,17 @@ class Api::ApiController < ActionController::Base
     head :status => 500 and return false
   end
 
+  protected
+  def render_exception(status_code, exception)
+    logger.error pp_exception(exception)
+    respond_to do |format|
+      format.json { render :json => {:errors => [ exception.message ]}, :status => status_code }
+      format.all  { render :text => exception.message, :status => status_code }
+    end
+  end
+
   def pp_exception(exception)
     "#{exception.class}: #{exception.message}\n" << exception.backtrace.join("\n")
   end
+
 end
