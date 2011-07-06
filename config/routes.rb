@@ -132,7 +132,7 @@ Src::Application.routes.draw do
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
 
-  resources :changesets, :only => [:update, :index, :show, :create, :edit, :show, :auto_complete_search] do
+  resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :show, :destroy, :auto_complete_search] do
     get 'auto_complete_search', :on => :collection
 
     member do
@@ -140,6 +140,8 @@ Src::Application.routes.draw do
       get :dependency_size
       get :dependency_list
       post :promote
+      get :products
+      get :object
     end
     collection do
       get :list

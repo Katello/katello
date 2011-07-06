@@ -68,8 +68,6 @@ class KPEnvironment < ActiveRecord::Base
   has_many :working_changesets, :conditions => ["state = '#{Changeset::NEW}' OR state = '#{Changeset::REVIEW}'"], :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
-  after_create :create_changeset
-
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
 
   validates :name, :presence => true, :katello_name_format => true
@@ -113,7 +111,7 @@ class KPEnvironment < ActiveRecord::Base
   #  and then give me that entire path
   def full_path
     p = self
-    until p.prior.locker
+    until p.prior.nil? or p.prior.locker
       p = p.prior
     end
     p.path
@@ -127,10 +125,6 @@ class KPEnvironment < ActiveRecord::Base
       prior_products = self.prior.products
     end
     return prior_products - self.products
-  end
-
-  def create_changeset
-    Changeset.create!(:environment=>self)
   end
 
 

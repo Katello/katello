@@ -25,6 +25,7 @@ class ApplicationController < ActionController::Base
   before_filter :authorize
   after_filter :flash_to_headers
 
+
   # support for session (thread-local) variables must be the last filter in this class
   include Katello::ThreadSession::Controller
 
@@ -105,7 +106,8 @@ class ApplicationController < ActionController::Base
       # retrieved by the client on it's next polling interval.
       #
       # create & store notice... and mark as 'not viewed'
-      Notice.create!(:text => notice_string, :details => details, :level => level, :global => global, :user_notices => [UserNotice.new(:user => current_user)])
+      Notice.create!(:text => notice_string, :details => details, :level => level, :global => global, :user_notices => [UserNotice.new(:user => current_user, :viewed=>false)])
+      
     end
   end
 
@@ -131,6 +133,7 @@ class ApplicationController < ActionController::Base
     options[:level] = :error
     notice summary, options
   end
+
 
   def flash_to_headers
     return if @_response.nil? or @_response.response_code == 302
@@ -270,7 +273,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  private
   def build_notice notice, list_items
     items = { "notices" => [] }
 
@@ -289,7 +291,6 @@ class ApplicationController < ActionController::Base
     return items
   end
 
-  private
   def handle_notice_type notice, items
     if notice.kind_of? ActiveRecord::RecordInvalid
       items["validation_errors"] = notice.record.errors.full_messages.to_a
@@ -325,6 +326,31 @@ class ApplicationController < ActionController::Base
     else
       render :partial=>"common/list_items", :locals=>options
     end
+  end
+
+  #produce a simple datastructure of a changeset for the browser
+  def simplify_changeset cs
+
+    to_ret = {:id=>cs.id.to_s, :timestamp =>cs.updated_at.to_i.to_s, :products=>{}, :is_new => cs.state == Changeset::NEW}
+
+    cs.involved_products.each{|product|
+      to_ret[:products][product.id] = {:id=> product.id, :name=>product.name, :provider=>product.provider.provider_type, 'package'=>[], 'errata'=>[], 'repo'=>[]}
+    }
+
+    cs.products.each {|product|
+      to_ret[:products][product.id][:all] =  true;
+    }
+
+    ['repo', 'errata', 'package'].each{ |type|
+      cs.send(type.pluralize).each{|item|
+        p item
+        pid = item.product_id
+        cs_product = to_ret[:products][pid]
+        cs_product[type] << {:id=>item.send("#{type}_id"), :name=>item.display_name}
+      }
+    }
+
+    to_ret
   end
 
 
