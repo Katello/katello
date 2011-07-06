@@ -71,13 +71,14 @@
             .search_button.fr.clickable
               #{_('Search')}
             .tree_breadcrumb
-          #cslist.list.sliding_list{"data-page_size"=>current_user.page_size}
-            #changeset_loading.slider
-              .text
-                = _("Loading Changeset")
-                = image_tag ("spinner.gif")
-            .slider_one.has_content.slider.will_have_content
-            .slider_two.no_content.slider
+          .sliding_container
+            #cslist.list.sliding_list{"data-page_size"=>current_user.page_size}
+              #changeset_loading.slider
+                .text
+                  = _("Loading Changeset")
+                  = image_tag ("spinner.gif")
+              .slider_one.has_content.slider.will_have_content
+              .slider_two.no_content.slider
           #changeset_users
           #changeset_status
           #delete_changeset.button{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
@@ -109,7 +110,8 @@
           #{_('+ New Changeset')}
       %h2 #{@environment.name + _(" Content")}
       .tree_breadcrumb.clickable.clear
-      #list.sliding_list{"data-page_size"=>current_user.page_size}
-        .slider_one.has_content.slider
-          = render(:partial=>"detail")
-        .slider_two.no_content.slider
+      .sliding_container
+        #list.sliding_list{"data-page_size"=>current_user.page_size}
+          .slider_one.has_content.slider
+            = render(:partial=>"detail")
+          .slider_two.no_content.slider
