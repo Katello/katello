@@ -194,7 +194,6 @@ class ChangesetsController < ApplicationController
 
     begin
       @changeset.promote
-      @environment.create_changeset
       # remove user edit tracking for this changeset
       ChangesetUser.destroy_all(:changeset_id => @changeset.id) 
       notice _("Promoted '#{@changeset.name}' to #{@environment.name} environment"), :synchronous_request=>false
