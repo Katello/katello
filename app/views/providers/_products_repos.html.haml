@@ -37,3 +37,6 @@
               .button.subpanel_element{"data-url"=>new_provider_product_repository_path(@provider.id, product.id)}
                 #{_("Add Repository")}
 
+  %a.remove_item.provider_delete{"data-id"=> @provider.id, "data-url"=>provider_path(@provider.id), "data-confirm-text"=>_('Are you sure?')}
+    = _("Remove Provider")
+
