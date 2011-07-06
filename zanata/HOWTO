@@ -1,0 +1,11 @@
+OVERVIEW: 
+
+katello po files are translated on the translate.engineering.redhat.com using the push/pull Zanata server. Maven is used to push po files to the server. Translators translate the strings and then Maven is used to pull down the translated strings and integrated back into the katello application.
+
+SETUP: 
+
+due to the internal host names in configuration files (zanata.xml), the zanata.xml and pom.xml files are containted in our internal git repo. place the zanata.xml and pom.xml in the katello locale directory. these are ignored by external katello git
+
+also copy the sample config to your $HOME/.config dir. you will need to be a Katello Zanata maintainer and have a API key. 
+
+
