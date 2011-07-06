@@ -56,8 +56,7 @@ var promotion_page = (function($){
                 while(changeset_queue.length > 0) {
                     data.push(changeset_queue.shift());
                 }
-                
-                //var changeset_id = current_changeset.id;
+
                 current_changeset.update(data,
                     function(data) {
                         if (changeset_queue.length !== 0 && data.changeset) {
@@ -172,22 +171,6 @@ var promotion_page = (function($){
         env_change = function(env_id, element) {
             var url = element.attr("data-url");
             window.location = url;
-        },
-        set_current_changeset = function(hash_id) {
-
-            var id = hash_id.split("_");
-            if (id[0] === "changesets") {
-                current_changeset = undefined;
-
-                $("#delete_changeset").addClass("disabled");
-            }
-            else if (current_changeset === undefined) {
-             //do nothing
-            }
-            else if (id[0] === "changeset" && id[1] !==  current_changeset.id) {
-               current_changeset = undefined;
-            }
-            reset_page();
         },
         fetch_changeset = function(changeset_id, callback) {
     
@@ -403,7 +386,6 @@ var promotion_page = (function($){
         modify_changeset:       modify_changeset,
         sort_changeset:         sort_changeset,
         fetch_changeset:        fetch_changeset,
-        set_current_changeset:  set_current_changeset,
         set_current_product:    set_current_product,
         are_updates_complete:         are_updates_complete,
         show_dependencies:      show_dependencies,
@@ -592,14 +574,8 @@ $(document).ready(function() {
   	promotion_page.set_changeset_tree( sliding_tree("changeset_tree", {breadcrumb:changeset_breadcrumb,
                                       default_tab:"changesets",
                                       bbq_tag:"changeset",
-                                      //render_cb: promotion_page.set_current_changeset,
                                       render_cb: promotionsRenderer.render,
-                                      //use this do do anything before the next changeset or pane is rendered
-                                      prerender_cb: function(hash_id) {
-                                          promotion_page.set_current_changeset(hash_id);
-                                      },
                                       tab_change_cb: function(hash_id) {
-                                          //promotion_page.set_current_changeset(hash_id);
                                           promotion_page.sort_changeset();
                                       }}));
 
@@ -755,27 +731,49 @@ var registerEvents = function(){
 var promotionsRenderer = (function(){
     var render = function(hash, render_cb){
             if( hash === 'changesets'){
-                render_cb(templateLibrary.changesetsList(changeset_breadcrumb));
-            }
-            else {
-                var changeset_id = hash.split("_")[1];
-                var product_id = hash.split("_")[2]; 
-
-                if (promotion_page.get_changeset() === undefined) {
-                    promotion_page.fetch_changeset(changeset_id, function() {
-                        render_cb(getContent(hash));
+                var post_wait_function = function() {
+                    current_changeset = undefined;
+                    $("#delete_changeset").addClass("disabled");
+                    render_cb(templateLibrary.changesetsList(changeset_breadcrumb));
+                };
+                //any pending updates, if so wait!
+                if (!promotion_page.are_updates_complete()) {
+                    promotion_page.wait(promotion_page.are_updates_complete, function() {
+                        post_wait_function();
                     });
                 }
                 else {
-                    render_cb(getContent(hash));
+                    post_wait_function();
                 }
             }
+            else {
+                var split = hash.split("_");
+                var page = split[0];
+                var changeset_id = split[1];
+                var product_id = split[2];
+                var cs = promotion_page.get_changeset();
+
+                //if we've come to a page with a different changset than what we have, clear the current changeset
+                if (page === "changeset" && cs !== undefined && changeset_id !==  cs.id) {
+                   promotion_page.set_changeset(undefined);
+                }
+                
+                if (promotion_page.get_changeset() === undefined) {
+                    promotion_page.fetch_changeset(changeset_id, function() {
+                        render_cb(getContent(page, changeset_id, product_id));
+                    });
+                }
+                else {
+                    render_cb(getContent(page, changeset_id, product_id));
+                }
+            }
+            promotion_page.reset_page();
         },
-        getContent =  function(hash) {
-            var changeset_id = hash.split("_")[1];
-                product_id = hash.split("_")[2],
-                key = hash.split("_")[0],
-                changeset = promotion_page.get_changeset(),
+        getContent =  function(key, changeset_id, product_id) {
+             //changeset_id = hash.split("_")[1];
+             //   product_id = hash.split("_")[2],
+             //   key = hash.split("_")[0],
+            var    changeset = promotion_page.get_changeset(),
                 inReviewPhase = !changeset.is_new();
             
             if (key === 'package-cs'){
@@ -790,7 +788,7 @@ var promotionsRenderer = (function(){
             else if (key === 'product-cs'){
                 return templateLibrary.productDetailList(changeset.products[product_id], promotion_page.subtypes, changeset_id);
             }
-            else if (hash.split("_")[0] === 'changeset'){
+            else if (key === 'changeset'){
                 return templateLibrary.productList(changeset, changeset.id, !inReviewPhase);
             }
         };
