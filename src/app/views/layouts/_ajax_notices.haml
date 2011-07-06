@@ -2,8 +2,6 @@
 
 - if current_user
 
-  %script(type="text/javascript")
+  :javascript
     notices.setup_notices(#{notification_polling_time});
-    notices.addNotices(
-    != current_user.notices.to_json
-    );
+    notices.addNotices($.parseJSON( "#{escape_javascript(get_new_notices.to_json)}"   ));

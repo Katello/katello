@@ -22,9 +22,9 @@ class PromotionsController < ApplicationController
     setup_environment_selector(current_organization)
     @products = @environment.products.reject{|p| p.repos(@environment).empty?}.sort{|a,b| a.name <=> b.name}
 
+    @changesets = @next_environment.working_changesets if @next_environment
     @changeset_product_ids = @changeset.products.collect { |p| p.cp_id } if @changeset
     @changeset_product_ids ||= []
-
   end
 
   def detail
@@ -133,7 +133,7 @@ class PromotionsController < ApplicationController
     @next_environment ||= @environment.successor
 
     @path = @next_environment.full_path if @next_environment
-    @path ||= [current_organization.locker]
+    @path ||= @environment.full_path if @environment
     @path = [current_organization.locker] + @path if !@path.first.locker?
 
     if params[:changeset_id]
@@ -144,6 +144,5 @@ class PromotionsController < ApplicationController
 
     @product = Product.find(params[:product_id]) if params[:product_id]
   end
-
 
 end

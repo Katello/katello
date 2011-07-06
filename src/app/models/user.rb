@@ -157,6 +157,13 @@ class User < ActiveRecord::Base
     help.save
   end
 
+  #Remove up to 5 un-viewed notices
+  def pop_notices
+    to_ret = user_notices.where(:viewed=>false).limit(5)
+    to_ret.each{|item| item.update_attributes!(:viewed=>false)}
+    to_ret.collect{|notice| {:text=>notice.notice.text, :level=>notice.notice.level}}
+  end
+
   def enable_helptip(key)
     return if !self.helptips_enabled? #don't update helptips if user has it disabled
     help =  HelpTip.where(:key => key, :user_id => self.id).first

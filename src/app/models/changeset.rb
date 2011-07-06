@@ -12,7 +12,7 @@
 
 class Changeset < ActiveRecord::Base
   include Authorization
-  before_create :generate_name
+  before_validation(:generate_name, :on=>:create)
 
   NEW = 'new'
   REVIEW = 'review'
@@ -24,21 +24,26 @@ class Changeset < ActiveRecord::Base
     :allow_blank => false,
     :message => "A changeset must have one of the following states: #{STATES.join(', ')}."
 
-
-  has_and_belongs_to_many :products
+  validates :name, :presence => true, :allow_blank => false
+  validates_uniqueness_of :name, :scope => :environment_id, :message => N_("Must be unique within an environment")
+  has_and_belongs_to_many :products, :uniq => true
   has_many :packages, :class_name=>"ChangesetPackage", :inverse_of=>:changeset
+  has_many :users, :class_name=>"ChangesetUser", :inverse_of=>:changeset
   has_many :errata, :class_name=>"ChangesetErratum", :inverse_of=>:changeset
   has_many :repos, :class_name=>"ChangesetRepo", :inverse_of => :changeset
   belongs_to :environment, :class_name=>"KPEnvironment"
+  validates :environment, :presence=>true
   before_save :uniquify_artifacts
 
-
+  scoped_search :on => :name, :complete_value => true, :rename => :'changeset.name'
+  scoped_search :on => :created_at, :complete_value => true, :rename => :'changeset.create_date'
+  scoped_search :on => :promotion_date, :complete_value => true, :rename => :'changeset.promotion_date'
+  scoped_search :in => :products, :on => :name, :complete_value => true, :rename => :'custom_product.name'
+  scoped_search :in => :products, :on => :description, :complete_value => true, :rename => :'custom_product.description'
 
   def generate_name
-    #self.name = I18n.l(DateTime.now, :format=>:long) if name.blank?
-    self.name = "XXX" if name.blank?
+    self.name = I18n.l(DateTime.now, :format=>:long) if name.blank?
   end
-
 
   def key_for item
     "changeset_#{id}_#{item}"
@@ -52,6 +57,15 @@ class Changeset < ActiveRecord::Base
     errata.collect{|erratum| erratum.errata_id}
   end
 
+  #get a list of all the products involved in teh changeset
+  #  but not necessarily 'in' the changeset
+  def involved_products
+    to_ret = self.products.clone #get a copy
+    to_ret =  to_ret + self.packages.collect{|pkg| pkg.product}
+    to_ret =  to_ret + self.errata.collect{|pkg| pkg.product}
+    to_ret =  to_ret + self.repos.collect{|pkg| pkg.product}
+    to_ret.uniq
+  end
 
   def dependencies
     from_env = self.environment
@@ -99,8 +113,10 @@ class Changeset < ActiveRecord::Base
   end
 
   def promote
-    from_env = self.environment
-    to_env   = self.environment.successor
+    raise _("Cannot promote a changeset when it is not in the reivew phase") if self.state != Changeset::REVIEW
+
+    from_env = self.environment.prior
+    to_env   = self.environment
 
     promote_products from_env, to_env
     promote_repos    from_env, to_env
@@ -166,7 +182,6 @@ class Changeset < ActiveRecord::Base
       repo.add_packages(pkgs)
     end
   end
-
 
   def promote_errata from_env, to_env
     #repo->list of errata_ids

@@ -1,17 +1,9 @@
 = include_javascripts :edit
 = include_editable_i18n
-
-.grid_16
-  &nbsp;
-
 .grid_16
   = environment_selector(:locker_clickable=>false)
-
-
-
 .grid_16
   = two_panel(@changesets, @panel_options)
-
 
 //Put this at the end since we're going to be calling changeset'
 = include_javascripts :changeset

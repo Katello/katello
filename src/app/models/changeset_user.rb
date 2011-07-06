@@ -10,15 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class ChangesetPackage < ActiveRecord::Base
+class ChangesetUser < ActiveRecord::Base
   include Authorization
 
+  belongs_to :changeset, :inverse_of => :users
+  belongs_to :user
 
-  belongs_to :changeset, :inverse_of=>:packages
-  belongs_to :product
-
-  # returns list of virtual permission tags for the current user
-  def self.list_tags
-    select('id,display_name').all.collect { |m| VirtualTag.new(m.id, m.display_name) }
-  end
 end
