@@ -252,7 +252,6 @@ var promotion_page = (function($){
          *    //TODO make more efficient by identify exactly which page we are on and only reseting those buttons
          */
         reset_page = function() {
-            console.log("reset");
             if (current_changeset) {
                 if (current_product) {
                     var product = current_changeset.products[current_product];
@@ -674,7 +673,7 @@ var registerEvents = function(){
                 cache: false,
                 success: function(data){
                     delete changeset_breadcrumb['changeset_' + id];
-                    promotion_page.set_current_changeset('changesets');
+                    promotion_page.set_changeset('changesets');
                     promotion_page.get_changeset_tree().render_content('changesets');
                 }
             });
