@@ -6,7 +6,8 @@ use Data::Dumper;
 my $SWARM = "http://localhost";
 my %SUITES = (katello => 'http://katello-ci.usersys.redhat.com:3000/javascripts/test/',
               sync => 'http://katello-ci.usersys.redhat.com:3000/javascripts/test/sync.html',
-              notices => 'http://katello-ci.usersys.redhat.com:3000/javascripts/test/notices.html'
+              notices => 'http://katello-ci.usersys.redhat.com:3000/javascripts/test/notices.html',
+              promotion => 'http://katello-ci.usersys.redhat.com:3000/javascripts/test/promotion.html'
              );
 my $jobname = 'katello-js-' . $ARGV[0];
 
