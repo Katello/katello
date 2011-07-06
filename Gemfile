@@ -12,7 +12,7 @@ gem 'rails_warden'
 gem 'net-ldap'
 gem 'oauth'
 
-#gem 'delayed_job'
+gem 'delayed_job'
 
 # Stuff for view/display/frontend
 gem 'haml', '>= 3.0.16'
