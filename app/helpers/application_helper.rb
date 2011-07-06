@@ -135,4 +135,8 @@ module ApplicationHelper
     proc.call(:environment=> env, :next_environment=>next_env, :organization=>org)
   end
 
+  def get_new_notices
+    {:new_notices=>current_user.pop_notices}
+  end
+
 end
