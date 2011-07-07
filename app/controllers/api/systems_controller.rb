@@ -21,7 +21,7 @@ class Api::SystemsController < Api::ApiController
 
   def create
 #    system = System.async.create!(params.merge({:environment => @environment})).to_json
-    system = System.async.create!(params.merge({:environment => @environment}))
+    system = System.async(:organization_id => @environment.organization.id).create!(params.merge({:environment => @environment}))
     render :json => system
   end
 
