@@ -119,12 +119,22 @@ fieldset {
     border-bottom: none;
     //outline: 2px solid $treecontainer;
     padding: 10px 5px;
+    overflow: auto;
     
-    .currentCrumb{
-      color: #000;
+    .currentCrumb{ color: #000; }
+    .crumb { color: #356e76; }
+    
+    .home_img {
+      width: 16px;
+      height: 16px;
+      margin: 0 2px;
+      background: url(/images/icons/breadcrumb-icons.png) -15px -15px no-repeat;
+      text-indent: -4000em;
+      position: relative;
     }
-    .crumb {
-      color: #356e76;
+    .home_img_inactive {
+      @extend .home_img;
+      background-position: -15px 1px;
     }
   }
   .locked_breadcrumb {
@@ -804,13 +814,20 @@ $repo_color: #4A9FB1;
           background: #FFF;
           height: 30px;
         }
-
+        button {
+            background: url(/images/icons/breadcrumb-icons.png) 0px -16px no-repeat;
+        }
+    }
+    .search_button {
+        margin-top: 12px;
+        background: url(/images/icons/breadcrumb-icons.png) 0px -16px no-repeat;
     }
     .tree_breadcrumb {
         display: inline-block;
         outline: 0 none;
         width: 90%;
         border: none;
+        padding: 10px 5px 6px 5px;
     }
   }
   .locked_breadcrumb_search {
