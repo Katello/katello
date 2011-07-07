@@ -260,6 +260,8 @@ Src::Application.routes.draw do
     resources :errata, :only => [:show]
     resources :distributions, :only => [:show]
 
+    resources :tasks, :only => [:index, :show]
+
     # some paths conflicts with rhsm
     scope 'katello' do
 
