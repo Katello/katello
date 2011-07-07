@@ -25,9 +25,16 @@ module AsyncOrchestration
 
   def self.included(base)
     base.send :include, InstanceMethods
+    base.send :extend, ClassMethods
   end
 
   module InstanceMethods
+    def async(options = {})
+      AsyncOrchestrationProxy.new(self, options)
+    end
+  end
+
+  module ClassMethods
     def async(options = {})
       AsyncOrchestrationProxy.new(self, options)
     end
