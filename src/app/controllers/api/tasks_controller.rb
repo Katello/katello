@@ -12,9 +12,10 @@
 
 class Api::TasksController < Api::ApiController
   respond_to :json
+  before_filter :find_organization, :only => [:index]
 
   def index
-    render :json => Delayed::Job.all.to_json(:except => :handler)
+    render :json => Delayed::Job.where(:organization_id => @organization).to_json(:except => :handler)
   end
 
   def show
