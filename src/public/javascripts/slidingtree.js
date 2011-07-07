@@ -141,25 +141,64 @@ var sliding_tree = function(tree_id, options) {
     };
     var render_content = function(id){
         var bbq = {};
+        console.log(id);
         bbq[settings.bbq_tag] = id;
+                console.log(bbq);
         $.bbq.pushState(bbq);        
     };
     var reset_breadcrumb = function(id) {
-        //Clear the breadcrumb
-        var trail = settings.breadcrumb[id].trail;
+        var trail = settings.breadcrumb[id].trail,
+            crumbs = trail;
+        
         breadcrumb.html("");
-        for(var i = 0; i < trail.length; i++) {
-            breadcrumb.append(create_crumb(trail[i]))
+        
+        if( settings.base_icon ){
+            if( trail.length > 0) {
+                breadcrumb.append(create_crumb(trail[0], undefined, settings.base_icon));
+            } else {
+                breadcrumb.append(create_crumb(id, true, settings.base_icon))
+            }
+            crumbs = trail.slice(1, trail.length);
         }
-        breadcrumb.append('<div class="currentCrumb">' + settings.breadcrumb[id].name + '</div>');
+
+        if( trail.length > 0){
+            for(var i = 0; i < crumbs.length; i++) {
+                breadcrumb.append(create_crumb(crumbs[i]))
+            }
+            breadcrumb.append('<div class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div>');
+        }
     };
-    var create_crumb = function(id) {
-        return jQuery('<div/>', {
+    var create_crumb = function(id, currentCrumb, icon) {
+        var html,
+            options =  {
             id:id,
             "class": 'slide_link slide_left fl crumb',
-            text: settings.breadcrumb[id].name +  "\u2002\u00BB\u2002"
-        });
+            text: ""
+        };
 
+        if( currentCrumb === undefined ){
+            options['text'] += "\u2002\u00BB\u2002";
+        }
+        if( !icon ){
+            options['text'] = settings.breadcrumb[id].name + ' ' + options['text'];
+        }
+        
+        html = jQuery('<div/>', options);
+        if( icon ){
+            if( currentCrumb ){
+                html.prepend(jQuery('<div/>', {
+                   'class': icon + ' fl',
+                   'text': id 
+                }));
+            } else {
+                html.prepend(jQuery('<div/>', {
+                   'class': icon + '_inactive fl',
+                   'text': id 
+                }));
+            }
+        }
+        
+        return html;
     };
     var hash_change = function() {
         var newContent = $.bbq.getState(settings.bbq_tag) || settings.default_tab;
@@ -175,6 +214,7 @@ var sliding_tree = function(tree_id, options) {
           default_tab : "",
           current_tab: undefined,
           direction  : undefined,
+          base_icon: false,
           tab_change_cb: function() {},
           prerender_cb: function() {},
           render_cb: function() {},
