@@ -568,11 +568,13 @@ $(document).ready(function() {
   	var contentTree = sliding_tree("content_tree", {breadcrumb:content_breadcrumb,
                                       default_tab:"content",
                                       bbq_tag:"content",
+                                      base_icon: 'home_img',
                                       tab_change_cb: promotion_page.set_current_product});
 
   	promotion_page.set_changeset_tree( sliding_tree("changeset_tree", {breadcrumb:changeset_breadcrumb,
                                       default_tab:"changesets",
                                       bbq_tag:"changeset",
+                                      base_icon: 'home_img',
                                       render_cb: promotionsRenderer.render,
                                       tab_change_cb: function(hash_id) {
                                           promotion_page.sort_changeset();
@@ -622,10 +624,10 @@ $(document).ready(function() {
             $("#search_form #search").css("margin-left", 0);
             $("#search_form").css("opacity", "0").show();
             $("#search_form").animate({"width":"440px", "opacity":"1"}, { duration: 200, queue: false });
-            $(this).animate({backgroundPosition:"-32px 0"}, { duration: 200, queue: false });
+            $(this).css({backgroundPosition: "-32px -16px"});
         },function() {
             $("#search_form").fadeOut('fast', function(){bcs.animate({ "height": bcs_height }, 'fast');});
-            $(this).animate({backgroundPosition:"0 0"}, { duration: 200, queue: false });
+            $(this).css({backgroundPosition: "0 -16px"});
             $('#search').val("").change();
             $("#cslist .has_content li").fadeIn('fast');
         }
@@ -909,11 +911,11 @@ var templateLibrary = (function(){
                     '<span class="product-icon sort_attr" >' + name + '</span>' +
                     '</div></li>';
         };
-    
+        
     return {
         changesetsList: changesetsList,
         productList: productList,
         listItems : listItems,
-        productDetailList: productDetailList
+        productDetailList: productDetailList,
     };
 })();
