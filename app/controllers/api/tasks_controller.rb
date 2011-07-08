@@ -19,6 +19,6 @@ class Api::TasksController < Api::ApiController
   end
 
   def show
-    render :json => Delayed::Job.find(params[:id]).to_json(:except => :handler)
+    render :json => Delayed::Job.find_by_uuid(params[:id]).to_json(:except => :handler)
   end
 end
