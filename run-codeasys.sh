@@ -10,7 +10,7 @@ which flay >/dev/null || gem install flay
 which haml >/dev/null || gem install haml
 
 #check python syntax and stop on errors only
-PYTHONPATH=cli/src/ pylint katello -f html -d C0103,C0111,C0301 >reports/pylint-cli.html
+PYTHONPATH=cli/src/ pylint katello -f html -d C0103,C0111,C0301,E1101,E1103 >reports/pylint-cli.html
 [ $(($? & 3)) -ne 0 ] && echo Pylint errors! && exit 1
 
 #check ruby syntax of all .rb files
