@@ -52,45 +52,4 @@ $(document).ready(function() {
             $(input).val(value);
         }
     });
-    
-    $('.edit_textfield').each(function() {
-        $(this).editable('edit', {
-            type        :  'text',
-            width       :  270,                  
-            method      :  'PUT',
-            name        :  $(this).attr('name'),
-            cancel      :  i18n.cancel,
-            submit      :  i18n.save,
-            indicator   :  i18n.saving,
-            tooltip     :  i18n.clickToEdit,
-            placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
-            onerror     :  function(settings, original, xhr) {
-            original.reset();
-            $("#notification").replaceWith(xhr.responseText);
-            }
-        });
-    });
-
-    $('.edit_textarea').each(function() {
-        $(this).editable('edit', {
-            type        :  'textarea',
-            method      :  'PUT',
-            name        :  $(this).attr('name'),
-            cancel      :  i18n.cancel,
-            submit      :  i18n.save,
-            indicator   :  i18n.saving,
-            tooltip     :  i18n.clickToEdit,
-            placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
-            rows        :  8,
-            cols        :  60,
-            onerror     :  function(settings, original, xhr) {
-            original.reset();
-            $("#notification").replaceWith(xhr.responseText);
-            }
-        });
-    });
-
-
 });

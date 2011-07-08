@@ -74,6 +74,7 @@ SimpleNavigation::Configuration.run do |navigation|
       end
       #TODO: tie in Groups Page (if applicable)
       systems_sub.item :groups, _("Groups"), '#', :class => 'disabled'
+      systems_sub.item :activation_keys, _("Activation Keys"), activation_keys_path
     end #end systems
     
     top_level.item :organizations, _("Organizations"), {:controller => 'organizations'}, :class=>'organizations' do |orgs_sub|
