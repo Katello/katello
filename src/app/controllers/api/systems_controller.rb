@@ -20,8 +20,7 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates]
 
   def create
-#    system = System.async.create!(params.merge({:environment => @environment})).to_json
-    system = System.async(:organization_id => @environment.organization.id).create!(params.merge({:environment => @environment}))
+    system = System.async.create!(params.merge({:environment => @environment})).to_json
     render :json => system
   end
 
