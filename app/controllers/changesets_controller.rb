@@ -210,7 +210,6 @@ class ChangesetsController < ApplicationController
     end
 
 
-
     render :text=>url_for(:controller=>"promotions", :action => "show",
           :env_id => @environment.name, :org_id =>  @environment.organization.cp_key)
 
