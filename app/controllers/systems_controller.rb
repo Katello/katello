@@ -21,6 +21,7 @@ class SystemsController < ApplicationController
   
   def index
     begin
+      setup_environment_selector(current_organization)
       @systems = System.search_for(params[:search]).where(:environment_id => current_organization.environments).limit(current_user.page_size)
       retain_search_history
       sort_columns(COLUMNS,@systems) if params[:order]
