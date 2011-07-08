@@ -1,5 +1,12 @@
 Src::Application.routes.draw do
 
+  resources :activation_keys do
+    collection do
+      get :auto_complete_search
+      get :items
+    end
+  end
+
   get "sync_plans/auto_complete_search"
   resources :sync_plans, :only => [:index, :create, :new, :edit, :update, :show, :destroy] do
     collection do
