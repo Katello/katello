@@ -37,11 +37,18 @@ class SystemAPI(KatelloAPI):
             "distribution.name": "Fedora"
             }
           })[1]
-          
+    def unregister(self, id):
+        path = "/api/systems/" + str(id)
+        return self.server.DELETE(path)[1]
+
     def systems_by_org(self, orgId):
         path = "/api/organizations/%s/systems" % orgId
         return self.server.GET(path)[1]
         
+    def systems_by_org_and_name(self, orgId, name):
+        path = "/api/organizations/%s/systems" % orgId
+        return self.server.GET(path, {'name': name})[1]
+
     def systems_by_env(self, orgId, envName):
         environment = get_environment(orgId, envName)
         if environment is None:

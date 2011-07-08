@@ -104,6 +104,32 @@ class Register(SystemAction):
           print _("Could not create system [ %s ]") % system['name']
         return os.EX_OK
 
+class Unregister(SystemAction):
+
+    description = _('unregister a system')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                       help=_("organization name (required)"))
+        self.parser.add_option('--name', dest='name',
+                               help=_("system name (required)"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+    def run(self):
+        name = self.get_option('name')
+        org = self.get_option('org')
+        systems = self.api.systems_by_org_and_name(org, name)
+        if systems == None or len(systems) != 1:
+            print _("Could not find system named [ %s ] within organization [ %s ]") % (name, org)
+            return os.EX_DATAERR
+        else:
+            result = self.api.unregister(systems[0]['uuid'])
+            print _("Successfully unregistered system [ %s ]") % name
+            return os.EX_OK
+
 class System(Command):
 
     description = _('system specific actions in the katello server')

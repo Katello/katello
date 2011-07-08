@@ -119,24 +119,39 @@ fieldset {
     border-bottom: none;
     //outline: 2px solid $treecontainer;
     padding: 10px 5px;
+    overflow: auto;
+    height: 20px;
     
-    .currentCrumb{
-      color: #000;
+    .currentCrumb{ color: #000; }
+    .crumb { color: #356e76; }
+    
+    .home_img {
+      width: 16px;
+      height: 16px;
+      margin: 0 2px;
+      background: url(/images/icons/breadcrumb-icons.png) -15px -15px no-repeat;
+      text-indent: -4000em;
+      position: relative;
     }
-    .crumb {
-      color: #356e76;
+    .home_img_inactive {
+      @extend .home_img;
+      background-position: -15px 1px;
+    }
+    .locked_icon {
+      width: 16px;
+      height: 16px;
+      margin: 2px;
+      background: url(/images/icons/locked.png) 0 0 no-repeat;
+      text-indent: -4000em;
+      position: relative;
     }
   }
   .locked_breadcrumb {
     background-color: #FEE7C6;
     color: #000;
-    outline: 2px solid gray;
   }
   .locked {
     outline: 2px solid gray;
-  }
-  .locked_icon {
-    margin: 2px;
   }
 }
 /* right side of 2 pane below the sliding pane */
@@ -804,13 +819,20 @@ $repo_color: #4A9FB1;
           background: #FFF;
           height: 30px;
         }
-
+        button {
+            background: url(/images/icons/breadcrumb-icons.png) 0px -16px no-repeat;
+        }
+    }
+    .search_button {
+        margin-top: 12px;
+        background: url(/images/icons/breadcrumb-icons.png) 0px -16px no-repeat;
     }
     .tree_breadcrumb {
         display: inline-block;
         outline: 0 none;
         width: 90%;
         border: none;
+        padding: 10px 5px 6px 5px;
     }
   }
   .locked_breadcrumb_search {
@@ -834,7 +856,6 @@ $repo_color: #4A9FB1;
   display: block; 
   padding: 12px;
   border: 1px solid #DDD;
-  width: 80%;
   margin: 10px auto 5px auto;
   @extend .clearfix;
 }
@@ -977,12 +998,12 @@ $repo_color: #4A9FB1;
 #unread_notices {
             @include text-shadow(0,1px,1px, #000);
             @include border-radius(3em);
-            background-color: darken($kprimary,10%);
+            background-color: darken($kprimary,24%);
             margin: 0.3em;
             padding: 0.2em 0.7em;
             width: auto;
             color: #FFF;
-            @include box-shadow(0, 1px, 1px, #000);
+            /* @include box-shadow(0, 1px, 1px, #000); */
 }
 
 .product-icon {
