@@ -1,14 +1,16 @@
 %h1.grid_8 #{_("New Changeset")}
 .grid_8#new_changeset123
-  = form_tag changesets_path, :method => "post", :id => "new_changeset" do |f|
-    %input{ :type => "hidden", :name => "env_id", :value => @environment.id }
-    %input{ :type => "hidden", :name => "next_env_id", :value => @next_environment.id }
-    %fieldset
-      .grid_2.ra
-        %label #{_("Name")}:
-      .grid_5.la
-        = text_field_tag :name, params[:name], :tabindex => 1
-    .grid_5.ra
-      .button#save_changeset_button{:tabindex => 2}
-        #{("Save Changeset")}
-        /= button_to _("Save"), {:action => "create", :controller => "changesets"}, :method => :post, :id => :changeset_save, :tabindex => 3
+  -if @next_environment
+    = form_tag changesets_path, :method => "post", :id => "new_changeset" do |f|
+      %input{ :type => "hidden", :name => "env_id", :value => @environment.id }
+      %input{ :type => "hidden", :name => "next_env_id", :value => @next_environment.id }
+      %fieldset
+        .grid_2.ra
+          %label #{_("Name")}:
+        .grid_5.la
+          = text_field_tag :name, params[:name], :tabindex => 1
+      .grid_5.ra
+        .button#save_changeset_button{:tabindex => 2}
+          #{_("Save Changeset")}
+  -else
+    #{_("Cannot create a new changeset without a next environment to promote in to. <br> Create a next environment on the organization screen.")}

@@ -6,7 +6,7 @@ html {
 }
 
 body {
-  background:  #FFF url(/images/outer-background.png) repeat-x top;
+  background:  #FFF url(/images/outer-background.png) repeat-x 0 -7px;
 }
 
 a {
@@ -467,7 +467,7 @@ ul.block {
     font-size: 12px;
     padding: 5px 0 0 0;
     overflow: hidden;
-    @include text-shadow(0, 1px, 0, #000);
+    /* @include text-shadow(0, 1px, 0, #000); */
     height: 40px;
     header {
       display: block;
@@ -481,28 +481,34 @@ ul.block {
           &.hello {
             margin-left: 30px;
           }
-          a {
-            color: #fff;
-          }
+        }
+      }
+      a {
+        color: #fff;
+        &:hover, &:focus {
+          text-decoration: none;
         }
       }
       h1 {
+        display: inline-block;
         font-size: 14px;
+        letter-spacing: 0.3em;        
         color: #FFF;
-        margin: 7px 0 0 8px;
-        float: left;
+        margin: 9px 0 0 6px;
+      }
+      .pipe {
+        display: inline-block;
+        height: 24px;
+        width: 1px;
+        background-color: #fff;
+        background-color: rgba(255,255,255,0.7);
+        vertical-align: middle;
       }
       img {
         margin: 6px;
-        float: left;
-        &:first-child {
-          margin-top: 2px !important;
-          margin-left: 0 !important;
-        }
-        &:last-child {
-          margin: 0;
-        }
-      }    
+        display: inline-block;
+        vertical-align: middle;
+      }
       #loading {
         display: none; 
         position: relative;
@@ -562,8 +568,8 @@ ul.block {
 
 #subheader {
   position: relative;
-  min-height: 62px;
-  height: 62px;
+  min-height: 55px;
+  height: 55px;
   #s {
     font-size: 80%;
     text-align: right;
