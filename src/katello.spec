@@ -41,6 +41,7 @@ Requires:       rubygem(pg)
 Requires:       rubygem(scoped_search) >= 2.3.1
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(daemons) >= 1.1.4
+Requires:       rubygem(uuidtools)
 
 Requires(pre):  shadow-utils
 Requires(preun): chkconfig
