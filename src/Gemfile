@@ -13,6 +13,7 @@ gem 'net-ldap'
 gem 'oauth'
 
 gem 'delayed_job'
+gem 'uuidtools'
 
 # Stuff for view/display/frontend
 gem 'haml', '>= 3.0.16'
