@@ -37,6 +37,7 @@ Src::Application.routes.draw do
     end
     collection do
       get :items
+      get :environments 
     end
   end
   resources :operations do
