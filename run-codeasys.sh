@@ -3,6 +3,26 @@
 # prepare dirs
 mkdir -p reports/xref/{rails,cli,js} 2>/dev/null
 
+# install missing dependencies
+which roodi >/dev/null || gem install roodi
+which flog >/dev/null || gem install flog
+which flay >/dev/null || gem install flay
+which haml >/dev/null || gem install haml
+
+#check python syntax and stop on errors only
+PYTHONPATH=cli/src/ pylint katello -f html -d C0103,C0111,C0301 >reports/pylint-cli.html
+[ $(($? & 3)) -ne 0 ] && echo Pylint errors! && exit 1
+
+#check ruby syntax of all .rb files
+echo "Checking Ruby syntax"
+find -type f -name \*.rb | xargs -t -n1 ruby -c >/dev/null
+[ $? -ne 0 ] && echo Syntax errors! && exit 1
+
+#check the syntax of all .haml files
+echo "Checking HAML syntax"
+find -type f -name \*.haml | xargs -t -n1 haml -c >/dev/null
+[ $? -ne 0 ] && echo Syntax errors! && exit 1
+
 # generate routes in HTML
 pushd src
 bundle install --path=vendor
@@ -10,9 +30,6 @@ TEXT=1 bundle exec rake pretty_routes --trace
 bundle exec rake pretty_routes --trace
 mv routes.{html,txt} ../reports
 popd
-
-# install gems
-which roodi flog flay >/dev/null || gem install roodi flog flay
 
 # ruby checkstyle
 echo Running roodi
