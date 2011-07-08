@@ -141,9 +141,7 @@ var sliding_tree = function(tree_id, options) {
     };
     var render_content = function(id){
         var bbq = {};
-        console.log(id);
         bbq[settings.bbq_tag] = id;
-                console.log(bbq);
         $.bbq.pushState(bbq);        
     };
     var reset_breadcrumb = function(id) {
@@ -165,7 +163,7 @@ var sliding_tree = function(tree_id, options) {
             for(var i = 0; i < crumbs.length; i++) {
                 breadcrumb.append(create_crumb(crumbs[i]))
             }
-            breadcrumb.append('<div class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div>');
+            breadcrumb.append('<div id="' + id + '" class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div>');
         }
     };
     var create_crumb = function(id, currentCrumb, icon) {
@@ -203,8 +201,8 @@ var sliding_tree = function(tree_id, options) {
     var hash_change = function() {
         var newContent = $.bbq.getState(settings.bbq_tag) || settings.default_tab;
         if (settings.current_tab != newContent) {
-            prerender(newContent);
             reset_breadcrumb(newContent);
+            prerender(newContent);
         }
     };
 
