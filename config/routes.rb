@@ -234,6 +234,7 @@ Src::Application.routes.draw do
         end
       end
       resources :systems, :only => [:create, :index]
+      resources :tasks, :only => [:index]
       member do
         get :providers
       end
@@ -259,6 +260,8 @@ Src::Application.routes.draw do
     resources :errata, :only => [:show]
     resources :distributions, :only => [:show]
     resources :users
+
+    resources :tasks, :only => [:show]
 
     # some paths conflicts with rhsm
     scope 'katello' do
