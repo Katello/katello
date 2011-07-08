@@ -234,17 +234,6 @@ class Action(object):
         self.optErrors.append(errorMsg)
 
 
-    def getconsumerid(self):
-        """
-        Get the consumer ID from the identity certificate.
-        @return: The consumer id.  Returns (None) when not registered.
-        @rtype: str
-        """
-        bundle = ConsumerBundle()
-        return bundle.getid()
-
-
-
     def setup_parser(self):
         """
         Add custom options to the parser
