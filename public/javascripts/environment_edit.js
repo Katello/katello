@@ -30,34 +30,12 @@ $(document).ready(function() {
        }
     });
 
-
-
-
-    $('.edit_env_description').each(function() {
-        $(this).editable($(this).attr('data-url'), {
-            type        :  'textarea',
-            width       :  270,
-            rows        :  3,
-            method      :  'PUT',
-            name        :  $(this).attr('name'),
-            cancel      :  i18n.cancel,
-            submit      :  i18n.save,
-            indicator   :  i18n.saving,
-            tooltip     :  i18n.clickToEdit,
-            placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
-            onerror     :  function(settings, original, xhr) {
-                             original.reset();
-                             $("#notification").replaceWith(xhr.responseText);
-            }
-        });
-    });
-
     $('.edit_env_name').each(function() {
         var button = $(this);
 
         $(this).editable(button.attr('data-url'), {
             type        :  'text',
+            width       :  270,                  
             method      :  'PUT',
             name        :  $(this).attr('name'),
             cancel      :  i18n.cancel,
@@ -66,9 +44,9 @@ $(document).ready(function() {
             tooltip     :  i18n.clickToEdit,
             placeholder :  i18n.clickToEdit,
             submitdata  :  {authenticity_token: AUTH_TOKEN},
-            rows        :  8,
-            cols        :  60,
-            onsuccess   :  function() {panel.panelAjax('', button.attr("data-forward") ,$('#panel')); },
+            onsuccess   :  function() {
+              panel.panelAjax('', button.attr("data-forward") ,$('#panel')); 
+            },
             onerror     :  function(settings, original, xhr) {
               original.reset();
               $("#notification").replaceWith(xhr.responseText);
@@ -90,10 +68,12 @@ $(document).ready(function() {
             placeholder :  i18n.clickToEdit,
             style       :  "inherit",
             data        :  document.environment_edit.elements['prior_envs'].value,
-            onsuccess   :  function() {panel.panelAjax('', button.attr("data-forward") ,$('#panel')); },
+            onsuccess   :  function() {
+                panel.panelAjax('', button.attr("data-forward") ,$('#panel')); 
+            },
             onerror     :  function(settings, original, xhr) {
-            original.reset();
-            $("#notification").replaceWith(xhr.responseText);
+                original.reset();
+                $("#notification").replaceWith(xhr.responseText);
             }
         });
     });
