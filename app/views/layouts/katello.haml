@@ -8,8 +8,13 @@
       = "-"
       = content_for?(:title) ? yield(:title) : default_title
 
-    = include_stylesheets  :common 
+    = include_stylesheets  :common
+    = include_stylesheets  controller.section_id
     = include_javascripts  :common
+    = render :partial => '/layouts/ajax_notices'
+    = render :partial => '/layouts/notification'
+    = yield :javascripts
+    
     = csrf_meta_tag
     = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery?
 
@@ -21,8 +26,6 @@
   - else
     - section_id = "generic"
   %body{:id => controller.section_id}
-    = render :partial => '/layouts/ajax_notices'
-    = render :partial => '/layouts/notification'
     %div#head
       %header.container_16
         = render :partial => '/layouts/header'
