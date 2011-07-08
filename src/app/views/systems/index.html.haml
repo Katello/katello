@@ -5,5 +5,7 @@
 
 = include_javascripts :form
 = include_javascripts :treetable
+.grid_16
+  = environment_selector(:url_proc => lambda {|a| systems_path(:env_id =>a[:environment].id )})
 .grid_16#main
   = two_panel(@systems, @panel_options)
