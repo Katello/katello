@@ -149,7 +149,6 @@ Src::Application.routes.draw do
     end
   end
 
-
   resources :environments
 
   resource :user
@@ -259,6 +258,7 @@ Src::Application.routes.draw do
     resources :packages, :only => [:show]
     resources :errata, :only => [:show]
     resources :distributions, :only => [:show]
+    resources :users
 
     # some paths conflicts with rhsm
     scope 'katello' do
