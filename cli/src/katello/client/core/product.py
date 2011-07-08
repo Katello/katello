@@ -118,7 +118,9 @@ class Sync(ProductAction):
         orgName     = self.get_option('org')
         name        = self.get_option('name')
         
-        prod = self.get_product(orgName, prodName)
+        # PYLINT ERROR - prodName not found!
+        #prod = self.get_product(orgName, prodName)
+        prod = self.get_product(orgName, "")
         prov = self.get_provider(orgName, provName)
         if (prod == None) or (prov == None):
             return os.EX_OK
