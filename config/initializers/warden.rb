@@ -42,12 +42,13 @@ Warden::Strategies.add(:database) do
   end
 
   def authenticate!
-    Rails.logger.debug("Warden is authenticating #{params[:username]} against database")
     if params[:auth_username] && params[:auth_password]
       # API simple auth
+      Rails.logger.debug("Warden is authenticating #{params[:auth_username]} against database")
       u = User.authenticate!(params[:auth_username], params[:auth_password])
     elsif params[:username] && params[:password]
       # UI form
+      Rails.logger.debug("Warden is authenticating #{params[:username]} against database")
       u = User.authenticate!(params[:username], params[:password])
     end
     u ? success!(u) : fail!("Username or password is not correct - could not log in")
@@ -66,9 +67,11 @@ Warden::Strategies.add(:ldap) do
     Rails.logger.debug("Warden is authenticating #{params[:username]} against ldap")
     if params[:auth_username] && params[:auth_password]
       # API simple auth
+      Rails.logger.debug("Warden is authenticating #{params[:auth_username]} against database")
       u = User.authenticate_using_ldap!(params[:auth_username], params[:auth_password])
     elsif params[:username] && params[:password]
       # UI form
+      Rails.logger.debug("Warden is authenticating #{params[:username]} against database")
       u = User.authenticate_using_ldap!(params[:username], params[:password])
     end
     u ? success!(u) : fail!("Could not log in")
