@@ -19,7 +19,7 @@ module AsyncOrchestration
     end
 
     def method_missing(method, *args)
-      Delayed::Job.enqueue({:uuid => UUIDTools::UUID.random_create, :payload_object => AsyncOperation.new(User.current.username, @target, method.to_sym, args)}.merge(@options))
+      Delayed::Job.enqueue({:uuid => UUIDTools::UUID.random_create.to_s, :payload_object => AsyncOperation.new(User.current.username, @target, method.to_sym, args)}.merge(@options))
     end
   end
 
