@@ -49,8 +49,6 @@ class Api::ApiController < ActionController::Base
     @query_params = params.clone
     @query_params.delete('controller')
     @query_params.delete('action')
-    @query_params.delete('username')
-    @query_params.delete('password')
     
     @query_params.each_pair do |k,v|
       
@@ -88,8 +86,10 @@ class Api::ApiController < ActionController::Base
   private
 
   def require_user
-    params[:username], params[:password] = user_name_and_password(request) unless request.authorization.blank?
+    params[:auth_username], params[:auth_password] = user_name_and_password(request) unless request.authorization.blank?
     authenticate! :scope => :api
+    params.delete('auth_username')
+    params.delete('auth_password')
   rescue => e
     logger.error "failed to authenticate API request: " << pp_exception(e)
     head :status => 500 and return false
