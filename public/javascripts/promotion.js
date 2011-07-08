@@ -308,7 +308,7 @@ var promotion_page = (function($){
                     $("#changeset_tree .tree_breadcrumb").addClass("locked_breadcrumb");
                     $(".breadcrumb_search").addClass("locked_breadcrumb_search");
                     if( $('#locked_icon').length === 0 ){
-                        $("#changeset_tree .tree_breadcrumb").prepend('<img id="locked_icon" class="locked_icon fl" src="/images/icons/locked.png">');
+                        $("#changeset_tree .tree_breadcrumb #changeset_" + current_changeset.id).prepend('<div id="locked_icon" class="locked_icon fl" >');
                     }
                     $("#cslist").addClass("locked");
                     $(".content_add_remove").hide();
