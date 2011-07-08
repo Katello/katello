@@ -1,5 +1,7 @@
-= include_javascripts :provider_edit
-%input#provider_id{:name => @provider.id, :type => "hidden", :value => @provider.id, "data-ajax_url"=>url_for(:action=> 'update')}
+= include_javascripts :edit_helpers
+
+%input#panel_element_id{:name => @provider.id, :type => "hidden", :value => @provider.id, "data-ajax_url"=>url_for(:action=> 'update')}
+
 .grid_8
   %h2 #{_("Edit Provider")}
 #providers
@@ -12,12 +14,12 @@
       %fieldset
         .grid_2.ra
           %label #{_("Name")}:
-        .grid_5.la.editable.edit_providername#provider_name{'name' => 'provider[name]', :url => provider_path(@provider.id)} #{@provider[:name]}
+        .grid_5.la.editable.edit_panel_element#provider_name{'name' => 'provider[name]', 'data-url' => provider_path(@provider.id)} #{@provider[:name]}
 
       %fieldset
         .grid_2.ra
           %label #{_("Description")}:
-        .grid_5.la.editable.edit_textarea{:style => "word-wrap: break-word;", 'name' => 'provider[description]', :url => provider_path(@provider.id)}<> #{@provider[:description]}
+        .grid_5.la.editable.edit_textarea{:style => "word-wrap: break-word;", 'name' => 'provider[description]', 'data-url' => provider_path(@provider.id)}<> #{@provider[:description]}
 
       %fieldset
         .grid_2.ra
@@ -28,7 +30,7 @@
         %fieldset
           .grid_2.ra
             %label #{_("Repository Url")}:
-          .grid_5.la.editable.edit_textfield{'name' => 'provider[repository_url]', :url => provider_path(@provider.id)} #{@provider[:repository_url]}
+          .grid_5.la.editable.edit_textfield{'name' => 'provider[repository_url]', 'data-url' => provider_path(@provider.id)} #{@provider[:repository_url]}
 
   = link_to _("Remove Provider"), {:action => "destroy", :controller => "providers"}, :method => :delete, :confirm => _('Are you sure?'), :class => "remove_item", :remote=>true
 

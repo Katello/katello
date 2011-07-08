@@ -17,6 +17,24 @@
  */
 $(document).ready(function() {
 
+    $('.ajaxfileupload').each(function() {
+        $(this).editable($(this).attr('url'), {
+            type        :  'ajaxupload',
+            method      :  'PUT',
+            name        :  $(this).attr('name'),
+            cancel      :  i18n.cancel,
+            submit      :  i18n.upload,
+            indicator   :  i18n.uploading,
+            tooltip     :  i18n.clickToEdit,
+            placeholder :  i18n.clickToEdit,
+            submitdata  :  {authenticity_token: AUTH_TOKEN},
+            onerror     :  function(settings, original, xhr) {
+            original.reset();
+                $("#notification").replaceWith(xhr.responseText);
+            }
+        });
+    });
+
     $('.edit_panel_element').each(function() {
         $(this).editable($(this).attr('data-url'), {
             type        :  'text',
@@ -34,8 +52,27 @@ $(document).ready(function() {
                 list.refresh(id.attr('value'), id.attr('data-ajax_url'));
             },
             onerror     :  function(settings, original, xhr) {
-            original.reset();
-            $("#notification").replaceWith(xhr.responseText);
+                original.reset();
+                $("#notification").replaceWith(xhr.responseText);
+            }
+        });
+    });
+
+    $('.edit_password').each(function() {
+        $(this).editable($(this).attr('data-url'), {
+            type        :  'password',
+            width       :  270,
+            method      :  'PUT',
+            name        :  $(this).attr('name'),
+            cancel      :  i18n.cancel,
+            submit      :  i18n.save,
+            indicator   :  i18n.saving,
+            tooltip     :  i18n.clickToEdit,
+            placeholder :  i18n.clickToEdit,
+            submitdata  :  {authenticity_token: AUTH_TOKEN},
+            onerror     :  function(settings, original, xhr) {
+                original.reset();
+                $("#notification").replaceWith(xhr.responseText);
             }
         });
     });
@@ -53,8 +90,8 @@ $(document).ready(function() {
             placeholder :  i18n.clickToEdit,
             submitdata  :  {authenticity_token: AUTH_TOKEN},
             onerror     :  function(settings, original, xhr) {
-            original.reset();
-            $("#notification").replaceWith(xhr.responseText);
+                original.reset();
+                $("#notification").replaceWith(xhr.responseText);
             }
         });
     });
@@ -73,8 +110,8 @@ $(document).ready(function() {
             rows        :  8,
             cols        :  36,
             onerror     :  function(settings, original, xhr) {
-            original.reset();
-            $("#notification").replaceWith(xhr.responseText);
+                original.reset();
+                $("#notification").replaceWith(xhr.responseText);
             }
         });
     });
