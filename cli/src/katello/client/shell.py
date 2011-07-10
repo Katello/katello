@@ -136,8 +136,7 @@ class KatelloShell(Cmd):
 
         if command[1] == '!':
             # repeat the last command
-            line = readline.get_history_item(
-                       readline.get_current_history_length())
+            line = readline.get_history_item(readline.get_current_history_length())
             if line:
                 history_match = True
             else:
@@ -229,37 +228,37 @@ class KatelloShell(Cmd):
         return [a for a in actions if a.startswith(text)]
 
     def completenames(self, text, *ignored):
-      commands = self.admin_cli.command_names() + ["help", "quit", "exit"]
-      return [a for a in commands if a.startswith(text)]
+        commands = self.admin_cli.command_names() + ["help", "quit", "exit"]
+        return [a for a in commands if a.startswith(text)]
 
 
     def complete(self, text, state):
-      """Return the next possible completion for 'text'.
-      
-      If a command has not been entered, then complete against command list.
-      Otherwise try to call complete_<command> to get list of completions.
-      """
-      if state == 0:
-        import readline
-        origline = readline.get_line_buffer()
-        line = origline.lstrip()
-        stripped = len(origline) - len(line)
-        begidx = readline.get_begidx() - stripped
-        endidx = readline.get_endidx() - stripped
+        """Return the next possible completion for 'text'.
         
-        wordCnt = len(line[:begidx].split())
-        
-        if wordCnt <= 0:
-          self.completion_matches = self.completenames(text, line, begidx, endidx)
-        elif wordCnt == 1:
-          self.completion_matches = self.completecommands(text, line, begidx, endidx)
-        else:
-          self.completion_matches = self.completeparams(text, line, begidx, endidx)
-        
-      try:
-        return self.completion_matches[state]
-      except IndexError:
-        return None
+        If a command has not been entered, then complete against command list.
+        Otherwise try to call complete_<command> to get list of completions.
+        """
+        if state == 0:
+            import readline
+            origline = readline.get_line_buffer()
+            line = origline.lstrip()
+            stripped = len(origline) - len(line)
+            begidx = readline.get_begidx() - stripped
+            endidx = readline.get_endidx() - stripped
+            
+            wordCnt = len(line[:begidx].split())
+            
+            if wordCnt <= 0:
+                self.completion_matches = self.completenames(text, line, begidx, endidx)
+            elif wordCnt == 1:
+                self.completion_matches = self.completecommands(text, line, begidx, endidx)
+            else:
+                self.completion_matches = self.completeparams(text, line, begidx, endidx)
+          
+        try:
+            return self.completion_matches[state]
+        except IndexError:
+            return None
 
 
     def remove_last_history_item(self):

@@ -104,11 +104,11 @@ class OptionParser(_OptionParser):
 
 
     def get_options(self):
-      return self._long_opt.keys() + self._short_opt.keys()
+        return self._long_opt.keys() + self._short_opt.keys()
 
     def get_long_options(self):
-      return self._long_opt.keys()
+        return self._long_opt.keys()
       
     def get_short_options(self):
-      return self._long_opt.keys()
+        return self._long_opt.keys()
 

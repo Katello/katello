@@ -175,7 +175,7 @@ class Create(TemplateAction):
                                help=_("environment name eg: foo.example.com (locker by default)"))
         self.parser.add_option("--description", dest="description",
                                help=_("template description"))
-
+    
     
     def check_options(self):
         self.require_option('name')
@@ -193,9 +193,9 @@ class Create(TemplateAction):
         env = get_environment(orgName, envName)
         if env != None:
             if parentName != None:
-              parentId = self.get_parent_id(orgName, env['name'] ,parentName)
+                parentId = self.get_parent_id(orgName, env['name'] ,parentName)
             else:
-              parentId = None
+                parentId = None
               
             template = self.api.create(env["id"], name, desc, parentId)
             if is_valid_record(template):
@@ -241,9 +241,9 @@ class Update(TemplateAction):
         template = get_template(orgName, envName, tplName)     
         if template != None:
             if parentName != None:
-              parentId = self.get_parent_id(orgName, envName, parentName)
+                parentId = self.get_parent_id(orgName, envName, parentName)
             else:
-              parentId = None
+                parentId = None
             self.api.update(template["id"], newName, desc, parentId)
             print _("Successfully updated template [ %s ]") % template['name']
           

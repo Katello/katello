@@ -24,141 +24,141 @@ from pprint import pprint
 
 
 class Printer:
-  """
-  Class for unified printing of the CLI output.
-  """
-  header_width = 45
+    """
+    Class for unified printing of the CLI output.
+    """
+    header_width = 45
 
-  def __init__(self, grep):
-      self._grep = grep
-      self._columns = []
+    def __init__(self, grep):
+        self._grep = grep
+        self._columns = []
 
-  def printHeader(self, *heading):
-      """
-      Print a fancy header to stdout.
-      @type heading: string or list of strings
-      @param heading: headers to be displayed
-      """
-      padding = 0
-      print '+' + '-'*self.header_width + '+'
-      for line in heading:
-          if len(line) < self.header_width:
-              padding = ((self.header_width - len(line)) / 2) - 1
-          print ' ' * padding, line
+    def printHeader(self, *heading):
+        """
+        Print a fancy header to stdout.
+        @type heading: string or list of strings
+        @param heading: headers to be displayed
+        """
+        padding = 0
+        print '+' + '-'*self.header_width + '+'
+        for line in heading:
+            if len(line) < self.header_width:
+                padding = ((self.header_width - len(line)) / 2) - 1
+            print ' ' * padding, line
 
-      if self._grep:
-        print
+        if self._grep:
+            print
+            for col in self._columns:
+                if col['show_in_grep']:
+                    print col['name'] + "\t",
+            print
+        print '+' + '-'*self.header_width + '+'
+
+
+    def _attrToName(self, attr_name):
+        """
+        Convert attribute name to display name.
+        oraganization_id -> Organization Id
+        @type attr_name: string
+        @param attr_name: attribute name
+        """
+        result = ''
+        for part in attr_name.split("_"):
+            result += part[0].upper() + part[1:] + ' '
+        return result
+
+
+    def addColumn(self, attr_name, name = None, multiline = False, show_in_grep = True):
+        """
+        Add column to display
+        @type attr_name: string
+        @param attr_name: key to data hash
+        @type name: string
+        @param name: display name of the column. It is automatically transformed from display name
+        if not set.
+        @type multiline: bool
+        @param multiline: flag to mark multiline values
+        @type show_in_grep: bool
+        @param show_in_grep: flag to set whether the column should be displayed also in grep mode or not
+        """
+        col = {}
+        col['attr_name']    = attr_name
+        col['multiline']    = multiline
+        col['show_in_grep'] = show_in_grep
+        if name == None:
+            col['name'] = self._attrToName(attr_name)
+        else:
+            col['name'] = name
+
+        self._columns.append(col)
+
+
+    def _printItem(self, item, indent=""):
+        """
+        Print item of a list on number of lines
+        @type item: hash
+        @param item: data to print
+        @type indent: string
+        @param indent: text that is prepended to every printed line in multiline mode
+        """
         for col in self._columns:
-          if col['show_in_grep']:
-            print col['name'] + "\t",
+            #skip missing attributes
+            if not item.has_key(col['attr_name']):
+                continue
+
+            value = item[col['attr_name']]
+            if not col['multiline']:
+                print indent+"%-15s \t%-25s" % (col['name'], value)
+            else:
+                print col['name']
+                print indent_text(value, indent+"    ")
+
+
+    def _printItemGrep(self, item):
+        """
+        Print item of a list on single line in grep mode
+        @type item: hash
+        @param item: data to print
+        """
+        for col in self._columns:
+            #skip missing attributes
+            if not item.has_key(col['attr_name']):
+                print " \t",
+                continue
+
+            value = item[col['attr_name']]
+            if not col['show_in_grep']:
+                continue
+            if col['multiline']:
+                value = text_to_line(value)
+            print "%s\t" % value,
+
+
+    def printItem(self, item, indent=""):
+        """
+        Print one data item
+        @type item: hash
+        @param item: data to print
+        @type indent: string
+        @param indent: text that is prepended to every printed line in multiline mode
+        """
+        if self._grep:
+            self._printItemGrep(item)
+        else:
+            self._printItem(item, indent)
         print
-      print '+' + '-'*self.header_width + '+'
 
 
-  def _attrToName(self, attr_name):
-      """
-      Convert attribute name to display name.
-      oraganization_id -> Organization Id
-      @type attr_name: string
-      @param attr_name: attribute name
-      """
-      result = ''
-      for part in attr_name.split("_"):
-          result += part[0].upper() + part[1:] + ' '
-      return result
-
-
-  def addColumn(self, attr_name, name = None, multiline = False, show_in_grep = True):
-      """
-      Add column to display
-      @type attr_name: string
-      @param attr_name: key to data hash
-      @type name: string
-      @param name: display name of the column. It is automatically transformed from display name
-      if not set.
-      @type multiline: bool
-      @param multiline: flag to mark multiline values
-      @type show_in_grep: bool
-      @param show_in_grep: flag to set whether the column should be displayed also in grep mode or not
-      """
-      col = {}
-      col['attr_name']    = attr_name
-      col['multiline']    = multiline
-      col['show_in_grep'] = show_in_grep
-      if name == None:
-          col['name'] = self._attrToName(attr_name)
-      else:
-          col['name'] = name
-
-      self._columns.append(col)
-
-
-  def _printItem(self, item, indent=""):
-      """
-      Print item of a list on number of lines
-      @type item: hash
-      @param item: data to print
-      @type indent: string
-      @param indent: text that is prepended to every printed line in multiline mode
-      """
-      for col in self._columns:
-          #skip missing attributes
-          if not item.has_key(col['attr_name']):
-              continue
-
-          value = item[col['attr_name']]
-          if not col['multiline']:
-              print indent+"%-15s \t%-25s" % (col['name'], value)
-          else:
-              print col['name']
-              print indent_text(value, indent+"    ")
-
-
-  def _printItemGrep(self, item):
-      """
-      Print item of a list on single line in grep mode
-      @type item: hash
-      @param item: data to print
-      """
-      for col in self._columns:
-          #skip missing attributes
-          if not item.has_key(col['attr_name']):
-              print " \t",
-              continue
-
-          value = item[col['attr_name']]
-          if not col['show_in_grep']:
-              continue
-          if col['multiline']:
-              value = text_to_line(value)
-          print "%s\t" % value,
-
-
-  def printItem(self, item, indent=""):
-      """
-      Print one data item
-      @type item: hash
-      @param item: data to print
-      @type indent: string
-      @param indent: text that is prepended to every printed line in multiline mode
-      """
-      if self._grep:
-          self._printItemGrep(item)
-      else:
-          self._printItem(item, indent)
-      print
-
-
-  def printItems(self, items, indent=""):
-      """
-      Print collection of data items
-      @type items: list of hashes
-      @param items: list of data items to print
-      @type indent: string
-      @param indent: text that is prepended to every printed line in multiline mode
-      """
-      for item in items:
-          self.printItem(item, indent)
+    def printItems(self, items, indent=""):
+        """
+        Print collection of data items
+        @type items: list of hashes
+        @param items: list of data items to print
+        @type indent: string
+        @param indent: text that is prepended to every printed line in multiline mode
+        """
+        for item in items:
+            self.printItem(item, indent)
 
 
 # server output validity ------------------------------------------------------
@@ -176,30 +176,30 @@ def is_valid_record(rec):
         return (rec['created'] != None)
         
     else:
-         return False
+        return False
 
 
 # indent block of text --------------------------------------------------------
 def indent_text(text, indent="\t"):
-  if text == None:
-    text = str(None)
+    if text == None:
+        text = str(None)
 
-  if isinstance(text, (list)):
-    glue = "\n"+indent
-    return indent+glue.join(text)
-  else:
-    return indent_text(text.split("\n"), indent)
+    if isinstance(text, (list)):
+        glue = "\n"+indent
+        return indent+glue.join(text)
+    else:
+        return indent_text(text.split("\n"), indent)
 
 
 # converts block of text to one line ------------------------------------------
 def text_to_line(text, glue=" "):
-  if text == None:
-    text = str(None)
+    if text == None:
+        text = str(None)
 
-  if isinstance(text, (list)):
-    return glue.join(text)
-  else:
-    return glue.join(text.split("\n"))
+    if isinstance(text, (list)):
+        return glue.join(text)
+    else:
+        return glue.join(text.split("\n"))
 
 
 # system exit -----------------------------------------------------------------

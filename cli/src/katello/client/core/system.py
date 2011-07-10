@@ -81,7 +81,7 @@ class Register(SystemAction):
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
-                               help=_("system name (required)"))
+                       help=_("system name (required)"))
         self.parser.add_option('--org', dest='org',
                        help=_("organization name (required)"))
         self.parser.add_option('--environment', dest='environment', 
@@ -99,9 +99,9 @@ class Register(SystemAction):
         system = self.api.register(name, org, environment, 'system')
 
         if is_valid_record(system):
-          print _("Successfully created system [ %s ]") % system['name']
+            print _("Successfully created system [ %s ]") % system['name']
         else:
-          print _("Could not create system [ %s ]") % system['name']
+            print _("Could not create system [ %s ]") % system['name']
         return os.EX_OK
 
 class Unregister(SystemAction):

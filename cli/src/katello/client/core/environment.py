@@ -175,9 +175,9 @@ class Update(EnvironmentAction):
         env = get_environment(orgName, envName)
         if env != None:
             if priorName != None:
-              priorId = self.get_prior_id(orgName, priorName)
+                priorId = self.get_prior_id(orgName, priorName)
             else:
-              priorId = None
+                priorId = None
             env = self.api.update(orgName, env["id"], newName, description, priorId)
             print _("Successfully updated environment [ %s ]") % env['name']
 

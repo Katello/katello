@@ -68,7 +68,7 @@ class List(ProviderAction):
 
         self.printer.printHeader(_("Provider List"))
         for prov in provs:
-          self.printer.printItem(prov)
+            self.printer.printItem(prov)
         return os.EX_OK
 
 
@@ -111,10 +111,10 @@ class Update(ProviderAction):
 
     @property
     def description(self):
-      if self._create:
-        return _('create a provider')
-      else:
-        return _('update a provider')
+        if self._create:
+            return _('create a provider')
+        else:
+            return _('update a provider')
 
     
     def __init__(self, create = False):
