@@ -6,7 +6,7 @@ html {
 }
 
 body {
-  background:  #FFF url(/images/outer-background.png) repeat-x 0 -7px;
+  background:  $body_background_img;
 }
 
 a {
@@ -30,7 +30,7 @@ input,textarea {
   @include inset-box-shadow(0,1px,1px,rgba(0, 0, 0, 0.2));
   border: 1px solid darken($strokecl,20%);
   background-color: #f0f0f0;
-  background: #f0f0f0 url(/images/input-bg.png) repeat-x 0 0;
+  background: $input_background_img;
   padding: 4px;
   margin: 0;
   &:focus {
@@ -222,10 +222,10 @@ table {
             padding-right: 20px;
           }
           &.desc {
-            background: url(/images/order-desc.png) no-repeat center right;
+            background: $order_desc_img;
           }
           &.asc {
-            background: url(/images/order-asc.png) no-repeat center right;
+            background: $order_asc_img;
           }
         }
       }
@@ -263,13 +263,13 @@ table {
         }
       }
       .min {
-        background: url(/images/arrow-min.png) no-repeat top center;
+        background: $arrow_min_img;
         float:left;
         padding-top:5px;
         width:50%;
       }
       .max {
-        background: url(/images/arrow-max.png) no-repeat top center;
+        background: $arrow_max_img;
         float:right;
         padding-top:5px;
         width:50%;
@@ -282,12 +282,12 @@ table {
 }
 
 .action {
-  background: url(/images/icons/action-icons.png) no-repeat 0 0;
+  background: $search_icon_white;
   &:hover {
-    background: url(/images/icons/action-icons.png) no-repeat 0 0;
+    background: $search_icon_white;
   }
   &:active {
-    background: url(/images/icons/action-icons.png) no-repeat 0 0;
+    background: $search_icon_white;
   }
 }
 
@@ -449,7 +449,7 @@ img.icon {
     position: absolute;
     width: 16px; height: 16px;
     top: 0; right: 0;
-    background: url(/images/icons/close.png) no-repeat 0 0;
+    background: $close_icon;
     cursor: pointer;
   }
 }
@@ -650,7 +650,7 @@ nav {
   &.subnav { /* subnavigation */
     position: relative;
     display: block;
-    background: transparent url(/images/subnav-shadow.png) repeat-x 0 bottom;
+    background: $subnav_shadow_img;
     font-family: $headlinefont;
     font-size: 115%;
     padding-bottom: 9px;
@@ -744,7 +744,7 @@ nav {
 }
 
 #maincontent {
-  background: transparent url(/images/center-background.png) no-repeat center top;
+  background: $center_background_img;
   overflow: hidden;
   min-height: 200px;
   .inner {
@@ -857,7 +857,7 @@ legend {
   }
 }
 .search_button {
-    background: url(/images/icons/action-icons.png) no-repeat 0 0;
+    background: $search_icon_white;
     position: relative;
     width: 16px; height: 16px;
     text-indent: -4000em;
@@ -876,7 +876,7 @@ footer {
   margin: 20px 0 0;
   padding: 20px 10px 10px 10px;
   display: block;
-  background: transparent url(/images/footer-shade.png) repeat-x 0 0;
+  background: $footer_shade_img;
   ul {
     display: block;
     padding: 10px 10px 0 0;
@@ -908,11 +908,11 @@ footer {
   height:32px;
   border:none;
   text-indent:-999px;
-  background:url(/images//ui.totop.png) no-repeat left top;
+  background: $ui_totop_img;
 }
 
 #toTopHover {
-  background:url(/images//ui.totop.png) no-repeat left -32px;
+  background: $ui_totop_hover_img;
   width:32px;
   height:32px;
   display:block;
@@ -959,15 +959,15 @@ footer {
     display: inline-block;
     width: 10px;
     height: 10px;
-    background: url(/images/icons/status.png) no-repeat 0 0;
+    background: $status_icon_green;
     &.good {
-      background-position: 0 0;
+      background: $status_icon_green;
     }
     &.ok {
-      background-position: 0 -10px;
+      background: $status_icon_yellow;
     }
     &.bad {
-      background-position: 0 -20px;
+      background: $status_icon_red;
     }
   }
 }
@@ -989,7 +989,7 @@ a.iconbutton {
     height: 54px;
     left: 0; top: 50%;
     margin-top: -27px;
-    background: url(/images/icons/launchinstance.png) no-repeat 0 0;
+    background: $launchinstance_icon;
   }
 }
 
@@ -1011,7 +1011,7 @@ a.iconbutton {
   left: 50%;
   width: 1020px;
   margin-left: -510px;
-  background: url(/images/960.png) repeat-y top center;
+  background: $ninesixty_img;
 }
 
 .outlined {
