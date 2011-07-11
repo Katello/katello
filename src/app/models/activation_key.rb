@@ -11,6 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ActivationKey < ActiveRecord::Base
+  include Authorization
+
+  belongs_to :organization, :inverse_of => :activation_key
+  has_one :environment, :class_name => "KPEnvironment", :inverse_of => :activation_key
 
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'key.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'key.description'

@@ -57,6 +57,7 @@ class KPEnvironment < ActiveRecord::Base
   set_table_name "environments"
 
   belongs_to :organization, :inverse_of => :environments
+  belongs_to :activation_key, :inverse_of => :environments
   has_and_belongs_to_many :priors, {:class_name => "KPEnvironment", :foreign_key => :environment_id,
     :join_table => "environment_priors", :association_foreign_key => "prior_id", :uniq => true}
   has_and_belongs_to_many :successors, {:class_name => "KPEnvironment", :foreign_key => "prior_id",
