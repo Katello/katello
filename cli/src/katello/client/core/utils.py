@@ -28,11 +28,11 @@ class Printer:
     Class for unified printing of the CLI output.
     """
 
-    def __init__(self, grep):
+    def __init__(self, grep, delimiter=""):
         self._grep = grep
         self._columns = []
         self._heading = ""
-        self._div = ""
+        self._delim = delimiter
         
 
     def setHeader(self, heading):
@@ -59,7 +59,7 @@ class Printer:
 
         if self._grep:
             print
-            print self._div,
+            print self._delim,
             for col in self._columns:
                 if col['show_in_grep']:
                   
@@ -69,7 +69,7 @@ class Printer:
                         width = 0
                     
                     print col['name'].ljust(width),
-                    print self._div,
+                    print self._delim,
             print
         self._printDivLine(header_width)
 
@@ -125,6 +125,7 @@ class Printer:
         @type indent: string
         @param indent: text that is prepended to every printed line in multiline mode
         """
+        print
         for col in self._columns:
             #skip missing attributes
             if not item.has_key(col['attr_name']):
@@ -144,7 +145,7 @@ class Printer:
         @type item: hash
         @param item: data to print
         """
-        print self._div,
+        print self._delim,
         for col in self._columns:
             #get defined width
             if widths.has_key(col['attr_name']):
@@ -154,7 +155,8 @@ class Printer:
           
             #skip missing attributes
             if not item.has_key(col['attr_name']):
-                print " " * (width+1),
+                print " " * width,
+                print self._delim,
                 continue
 
             value = item[col['attr_name']]
@@ -163,7 +165,7 @@ class Printer:
             if col['multiline']:
                 value = text_to_line(value)
             print str(value).ljust(width),
-            print self._div,
+            print self._delim,
 
 
     def _calculateWidths(self, items):
@@ -226,10 +228,10 @@ def is_valid_record(rec):
     """
     if rec.has_key('created_at'):
         return (rec['created_at'] != None)
-
+        
     elif rec.has_key('created'):
         return (rec['created'] != None)
-
+        
     else:
         return False
 
@@ -289,14 +291,14 @@ def parse_tokens(tokenstring):
     """
     tokens = []
     pattern = '--?\w+|=?"[^"]*"|=?\'[^\']*\'|=?[^\s]+'
-
+    
     for tok in (re.findall(pattern, tokenstring)):
-
+        
         if tok[0] == '=':
             tok = tok[1:]
         if tok[0] == '"' or tok[0] == "'":
             tok = tok[1:-1]
-
+        
         tokens.append(tok)
     return tokens
 
@@ -328,7 +330,7 @@ def format_date(date):
 
 
 class Spinner(threading.Thread):
-
+    
     def __init__(self, msg=""):
         self._msg = msg
         threading.Thread.__init__(self)
@@ -358,10 +360,10 @@ class Spinner(threading.Thread):
         self._resetCaret()
         sys.stdout.write('   ')
         self._resetCaret()
-
+        
     def run(self):
         self._stop = False
-
+        
         self._putMessage()
         while True:
             for char in '/-\|':
@@ -370,7 +372,7 @@ class Spinner(threading.Thread):
                     self._eraseSpinner()
                     self._eraseMessage()
                     return
-                time.sleep( 0.1 )
+                time.sleep( 0.1 )      
                 self._resetCaret()
 
     def stop(self):
@@ -389,7 +391,7 @@ def run_spinner_in_bg(function, arguments=(), message=""):
     @return return value of the function
     """
     result = None
-
+  
     t = Spinner(message)
     t.start()
     try:
@@ -398,3 +400,14 @@ def run_spinner_in_bg(function, arguments=(), message=""):
         t.stop()
         t.join()
     return result
+
+
+
+
+
+
+
+
+
+
+
