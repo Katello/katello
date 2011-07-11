@@ -7,7 +7,7 @@
 # options common to all subcommands (+ 3rd level opts for simplicity)
 _katello_common_opts="-g -v --help
 --id --repo --org --name --prior --product --repo_id --description --environment
---url --type --file"
+--url --type --file --username --password --disabled"
 
 # complete functions for subcommands ($1 - current opt, $2 - previous opt)
 _katello_distribution()
@@ -36,6 +36,13 @@ _katello_org()
   local opts="create info list update delete
   ${_katello_common_opts}"
   COMPREPLY=($(compgen -W "${opts}" -- ${1}))  
+}
+
+_katello_user()
+{
+  local opts="create info list update delete
+  ${_katello_common_opts}"
+  COMPREPLY=($(compgen -W "${opts}" -- ${1}))
 }
 
 _katello_package()
@@ -102,6 +109,7 @@ _katello()
       environment|\
       errata|\
       org|\
+      user|\
       package|\
       ping|\
       product|\
