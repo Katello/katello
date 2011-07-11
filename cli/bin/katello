@@ -22,6 +22,7 @@ from katello.client.core.utils import system_exit
 from katello.client.core import (
   environment,
   organization,
+  user,
   provider,
   ping,
   product,
@@ -50,6 +51,14 @@ def setup_admin(admin):
     org_cmd.add_action('update', organization.Update())
     org_cmd.add_action('delete', organization.Delete())
     admin.add_command('org', org_cmd)
+
+    user_cmd = user.User()
+    user_cmd.add_action('create', user.Create())
+    user_cmd.add_action('info', user.Info())
+    user_cmd.add_action('list', user.List())
+    user_cmd.add_action('update', user.Update())
+    user_cmd.add_action('delete', user.Delete())
+    admin.add_command('user', user_cmd)
 
     admin.add_command("ping", ping.Status())
 
@@ -85,6 +94,7 @@ def setup_admin(admin):
     system_cmd = system.System()
     system_cmd.add_action('list', system.List())
     system_cmd.add_action('register', system.Register())
+    system_cmd.add_action('unregister', system.Unregister())
     admin.add_command('system', system_cmd)
 
     template_cmd = template.Template()

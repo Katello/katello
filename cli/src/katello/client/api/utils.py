@@ -28,13 +28,13 @@ from pprint import pprint
 
 def get_environment(orgName, envName=None):
     environment_api = EnvironmentAPI()
-  
+
     if envName == None:
         env = environment_api.locker_by_org(orgName)
         envName = "locker"
     else:
         env = environment_api.environment_by_name(orgName, envName)
-        
+
     if env == None:
         print _("Could not find environment [ %s ] within organization [ %s ]") % (envName, orgName)
     return env
@@ -42,57 +42,54 @@ def get_environment(orgName, envName=None):
 
 def get_product(orgName, prodName):
     product_api = ProductAPI()
-  
+
     prov = product_api.product_by_name(orgName, prodName)
     if prov == None:
         print _("Could not find product [ %s ] within organization [ %s ]") % (prodName, orgName)
     return prov
-    
-    
+
+
 def get_repo(orgName, prodName, repoName, envName=None):
     repo_api = RepoAPI()
-  
+
     env  = get_environment(orgName, envName)
     prod = get_product(orgName, prodName)
-    
+
     if env == None:
         print _("Could not find environment [ %s ]") % envName
         return None
-        
+
     if prod == None:
         print _("Could not find product [ %s ]") % prodName
         return None
-        
+
     repos = repo_api.repos_by_org_env_product(orgName, env["id"], prod["cp_id"])
     for repo in repos:
         if repo["name"] == repoName:
             return repo
-    
+
     print _("Could not find repository [ %s ] within organization [ %s ], product [ %s ] and environemnt [ %s ]") % (repoName, orgName, prodName, env["name"])
     return None
 
 
 def get_provider(orgName, provName):
     provider_api = ProviderAPI()
-  
+
     prov = provider_api.provider_by_name(orgName, provName)
     if prov == None:
         print _("Could not find provider [ %s ] within organization [ %s ]") % (provName, orgName)
     return prov
-    
-    
+
+
 def get_template(orgName, envName, tplName):
     template_api = TemplateAPI()
-    
+
     env = get_environment(orgName, envName)
     if env == None:
         print _("Could not find environment [ %s ]") % envName
         return None
-        
+
     tpl = template_api.template_by_name(env["id"], tplName)
     if tpl == None:
         print _("Could not find template [ %s ] within environment [ %s ]") % (tplName, env["name"])
     return tpl
-
-    
-    

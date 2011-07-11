@@ -7,7 +7,7 @@ Rails.configuration.middleware.use RailsWarden::Manager do |config|
   # all UI requests are handled in the default scope
   config.scope_defaults(
     :user,
-    :strategies   => AppConfig.warden.to_sym,
+    :strategies   => [:sso, AppConfig.warden.to_sym],
     :store        => true,
     :action       => 'unauthenticated_ui'
   )
@@ -15,7 +15,7 @@ Rails.configuration.middleware.use RailsWarden::Manager do |config|
   # API requests are handled in the :api scope
   config.scope_defaults(
     :api,
-    :strategies   => [:certificate, AppConfig.warden.to_sym],
+    :strategies   => [:sso, :certificate, AppConfig.warden.to_sym],
     :store        => false,
     :action       => 'unauthenticated_api'
   )
@@ -38,12 +38,19 @@ Warden::Strategies.add(:database) do
 
   # relevant only when username and password params are set
   def valid?
-    params[:username] && params[:password]
+    (params[:username] && params[:password]) or (params[:auth_username] && params[:auth_password])
   end
 
   def authenticate!
-    Rails.logger.debug("Warden is authenticating #{params[:username]} against database")
-    u = User.authenticate!(params[:username], params[:password])
+    if params[:auth_username] && params[:auth_password]
+      # API simple auth
+      Rails.logger.debug("Warden is authenticating #{params[:auth_username]} against database")
+      u = User.authenticate!(params[:auth_username], params[:auth_password])
+    elsif params[:username] && params[:password]
+      # UI form
+      Rails.logger.debug("Warden is authenticating #{params[:username]} against database")
+      u = User.authenticate!(params[:username], params[:password])
+    end
     u ? success!(u) : fail!("Username or password is not correct - could not log in")
   end
 end
@@ -53,12 +60,20 @@ Warden::Strategies.add(:ldap) do
 
   # relevant only when username and password params are set
   def valid?
-    params[:username] && params[:password]
+    (params[:username] && params[:password]) or (params[:auth_username] && params[:auth_password])
   end
   
   def authenticate!
     Rails.logger.debug("Warden is authenticating #{params[:username]} against ldap")
-    u = User.authenticate_using_ldap!(params[:username], params[:password])
+    if params[:auth_username] && params[:auth_password]
+      # API simple auth
+      Rails.logger.debug("Warden is authenticating #{params[:auth_username]} against database")
+      u = User.authenticate_using_ldap!(params[:auth_username], params[:auth_password])
+    elsif params[:username] && params[:password]
+      # UI form
+      Rails.logger.debug("Warden is authenticating #{params[:username]} against database")
+      u = User.authenticate_using_ldap!(params[:username], params[:password])
+    end
     u ? success!(u) : fail!("Could not log in")
   end
 end
@@ -85,3 +100,18 @@ Warden::Strategies.add(:certificate) do
     subject_string.sub(/\/CN=/i, '')
   end
 end
+
+Warden::Strategies.add(:sso) do
+  def valid?
+    true
+  end
+
+  def authenticate!
+    return fail('No X-Forwarded-User header, skipping sso authentication') if request.env['HTTP_X_FORWARDED_USER'].blank?
+
+    user_id = request.env['HTTP_X_FORWARDED_USER'].split("@").first
+    u = User.where(:username => user_id).first
+    u ? success!(u) : fail!("Username is not correct - could not log in")
+  end
+end
+

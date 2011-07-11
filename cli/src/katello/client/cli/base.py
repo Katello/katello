@@ -44,7 +44,7 @@ class KatelloCLI(object):
 
         self._certfile = None
         self._keyfile  = None
-        
+
     @property
     def usage(self):
         """
@@ -69,7 +69,7 @@ class KatelloCLI(object):
         command.cli = self
         command.name = name
         self._commands[name] = command
-        
+
     def remove_command(self, name):
         del self._commands[name]
 
@@ -78,9 +78,10 @@ class KatelloCLI(object):
         Add options to the command line parser.
         @note: this method may be overridden to define new options
         """
-        self.parser = OptionParser()   
+
+        self.parser = OptionParser()
         self.parser.disable_interspersed_args()
-        self.parser.set_usage(self.usage)            
+        self.parser.set_usage(self.usage)
         credentials = OptionGroup(self.parser, _('Katello User Account Credentials'))
         credentials.add_option('-u', '--username', dest='username',
                                default=None, help=_('account username'))
@@ -115,7 +116,7 @@ class KatelloCLI(object):
         port = self.opts.port
         scheme = self.opts.scheme
         path = self.opts.path
-            
+
         #print >> sys.stderr, 'server information: %s, %s, %s, %s' % \
         #        (host, port, scheme, path)
         self._server = server.KatelloServer(host, int(port), scheme, path)
@@ -128,23 +129,26 @@ class KatelloCLI(object):
 
         self._username = self._username or self.opts.username
         self._password = self._password or self.opts.password
-        
+
         self._certfile = self._certfile or self.opts.certfile
         self._keyfile = self._keyfile or self.opts.keyfile
-        
+
         if None not in (self._username, self._password):
             self._server.set_basic_auth_credentials(self._username,
                                                     self._password)
         elif None not in (self.opts.certfile, self.opts.keyfile):
             self._server.set_ssl_credentials(self.opts.certfile,
                                              self.opts.keyfile)
-                                             
+        else:
+            self._server.set_kerberos_auth()
+
+
     def command_names(self):
         return self._commands.keys()
-        
+
     def get_command(self, name):
-        return self._commands.get(name, None)    
-        
+        return self._commands.get(name, None)
+
     def main(self, args=sys.argv[1:]):
         """
         Run this command.
@@ -153,21 +157,21 @@ class KatelloCLI(object):
         """
         if type(args) == str:
             args = parse_tokens(args)
-                    
+
         try:
             self.setup_parser()
             self.opts, args = self.parser.parse_args(args)
 
             if not args:
                 self.parser.error(_('No command given; please see --help'))
-                
+
             command = self._commands.get(args[0], None)
             if command is None:
                 self.parser.error(_('Invalid command; please see --help'))
-                
+
             self.setup_server()
             self.setup_credentials()
             return command.main(args[1:])
-            
+
         except OptionParserExitError, opee:
             return opee.args[0]

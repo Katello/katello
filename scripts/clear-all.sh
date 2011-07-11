@@ -110,7 +110,6 @@ else
   RAILS_ENV=$MODE rake setup --trace
 fi
 
-
 if [ $LOCAL_CP == 0 ]; then
   echo "
 ==================================

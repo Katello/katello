@@ -135,7 +135,7 @@ Src::Application.routes.draw do
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
 
-  resources :changesets, :only => [:update, :index, :show, :create, :edit, :show, :auto_complete_search] do
+  resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :show, :destroy, :auto_complete_search] do
     get 'auto_complete_search', :on => :collection
 
     member do
@@ -143,13 +143,14 @@ Src::Application.routes.draw do
       get :dependency_size
       get :dependency_list
       post :promote
+      get :products
+      get :object
     end
     collection do
       get :list
       get :items
     end
   end
-
 
   resources :environments
 
@@ -195,10 +196,13 @@ Src::Application.routes.draw do
   match '/login' => 'user_sessions#new'
   match '/logout' => 'user_sessions#destroy'
   match '/user_session/logout' => 'user_sessions#destroy'
+  match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
+
 
   namespace :api do
+    match '/' => 'root#resource_list'
 
-    resources :systems, :only => [:show, :destroy, :create]
+    resources :systems, :only => [:show, :destroy]
     resources :providers do
       resources :sync, :only => [:index, :show, :create] do
         delete :index, :on => :collection, :action => :cancel
@@ -232,7 +236,8 @@ Src::Application.routes.draw do
           get :repositories
         end
       end
-      resources :systems, :only => [:index]
+      resources :systems, :only => [:create, :index]
+      resources :tasks, :only => [:index]
       member do
         get :providers
       end
@@ -251,9 +256,15 @@ Src::Application.routes.draw do
     match '/repositories/discovery' => 'repositories#discovery', :via => :post
     match '/repositories/discovery/:id' => 'repositories#discovery_status', :via => :get
 
+    resources :environments, :only => [:show, :update, :destroy] do
+      resources :systems, :only => [:create, :index]
+    end
     resources :packages, :only => [:show]
     resources :errata, :only => [:show]
     resources :distributions, :only => [:show]
+    resources :users
+
+    resources :tasks, :only => [:show]
 
     # some paths conflicts with rhsm
     scope 'katello' do
@@ -265,6 +276,9 @@ Src::Application.routes.draw do
 
     # support for rhsm
     resources :consumers, :controller => 'systems'
+    match '/owners/:organization_id/environments' => 'environments#index', :via => :get
+    match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
+    match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
     match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
     match '/consumers/:id/certificates' => 'proxies#get', :via => :get
     match '/consumers/:id/certificates/serials' => 'proxies#get', :via => :get

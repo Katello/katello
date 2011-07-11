@@ -28,6 +28,11 @@ from katello.client.core.utils import system_exit, parse_tokens, Printer
 from katello.client.logutil import getLogger
 from katello.client.server import ServerRequestError
 
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 _cfg = Config()
 _log = getLogger(__name__)
 
@@ -163,6 +168,9 @@ class Action(object):
         self.parser.add_option('-v', dest='verbose',
                         action="store_true",
                         help=_("verbose, more structured output"))
+        self.parser.add_option('-d', dest='delimiter',
+                        default="",
+                        help=_("grep friendly output column delimiter"))
         self.setup_parser()
         
     @property
@@ -229,17 +237,6 @@ class Action(object):
         self.optErrors.append(errorMsg)
 
 
-    def getconsumerid(self):
-        """
-        Get the consumer ID from the identity certificate.
-        @return: The consumer id.  Returns (None) when not registered.
-        @rtype: str
-        """
-        bundle = ConsumerBundle()
-        return bundle.getid()
-
-
-
     def setup_parser(self):
         """
         Add custom options to the parser
@@ -303,7 +300,7 @@ class Action(object):
         """
         self.opts, self.args = self.parser.parse_args(args)
 
-        self.printer = Printer(self.grep_output())
+        self.printer = Printer(self.grep_output(), self.get_option('delimiter'))
 
         self.optErrors = []
         self.check_options()
@@ -338,7 +335,12 @@ class Action(object):
             sys.exit(1)
 
         except ServerRequestError, re:
-            self.error(re.args[1])
+            try:
+                msg = ", ".join(re.args[1]["errors"])
+            except:
+                msg = re.args[1]
+                
+            self.error(msg)
             return re.args[0]
 
         except SocketError, se:

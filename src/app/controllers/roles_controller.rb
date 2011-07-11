@@ -154,7 +154,7 @@ class RolesController < ApplicationController
 
 
   def setup_resource_types
-    @resource_type_names = ResourceType.select("name").collect {|item| item.name}.uniq
+    @resource_type_names = ResourceType.select("name").order("name asc").collect {|item| item.name}.uniq
     @resource_type_names.delete("_rails")
   end
   

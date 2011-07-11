@@ -1,8 +1,3 @@
-#!/usr/bin/ruby
-
-# library for calling the katello api, handles authentication and other things
-require "rubygems"
-require "json"
 
 def random rng, length = 8
   o =  rng.map{|i| i.to_a}.flatten;  
@@ -28,13 +23,13 @@ def rand_uuid
   "#{rand_hex 8}-#{rand_hex 4}-4#{rand_hex 3}-#{random([('0'..'9'),('a'..'b')], 1)}#{rand_hex 3}-#{rand_hex 12}"
 end
 
-json_type ="application/json"
-sys ="system-#{rand(100)}" 
+User.current = User.first
 
-url="https://localhost:3000/api/consumers"
-user = "acme_corporation_user"
-password = "acme_corporation_user"
-org = "ACME_Corporation"
+suffix = rand 100
+sys ="system-#{suffix}" 
+o = Organization.first
+e = KPEnvironment.create! :name=> "Scooby-#{suffix}", :prior=>o.locker.id, :organization=>o
+
 
 ip = (0..2).collect{rand(255).to_s}.join(".") 
 
@@ -98,8 +93,6 @@ facts = {
 
 
 
-
-
 10.times do |i|
    ip = (0..2).collect{rand(255).to_s}.join(".")
    facts["net.interface.eth1.hwaddr"] = rand_mac
@@ -108,10 +101,7 @@ facts = {
    facts["net.interface.eth1.broadcast"] = "#{ip}.255"
    facts["net.interface.eth1.ipaddr"] = "#{ip}.8"
    facts["network.hostname"]= "killing-time#{i}.appliedlogic." + ["org","edu","com","in","ca"].choice
+   
    sys_name = sprintf("%02d-#{sys}", i)
-   command = []
-   command << "curl -k -u #{user}:#{password} -H \"Accept: #{json_type}\" -H \"Content-Type: #{json_type}\" "
-   command << "-d '" << {:name=>sys_name, :owner => org, :cp_type => "system", :facts => facts}.to_json()<< "' "
-    command << "-X POST '#{url}' > /dev/null"
-  system(command.join " ")
+   System.create! :name=>sys_name,:environment=>e, :cp_type=>"system", :facts =>facts
 end

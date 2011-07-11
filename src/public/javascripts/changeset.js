@@ -17,6 +17,13 @@ $(document).ready(function() {
     //Set the callback on the environment selector
     env_select.click_callback = changeset_page.environment_select;
 
+    //bind to the #search_form to make it useful
+    $('#search_form').submit(function(){
+        changeset_page.environment_search($('#path-controller .active').attr('data-env_id'));
+        return false;
+    });
+
+    $('.queries').hide();
 
 });
 
@@ -24,9 +31,13 @@ $(document).ready(function() {
 var changeset_page = {
     environment_select:  function(env_id) {
         panel.closePanel($('#panel'));
-        list.complete_refresh('/changesets/list?env_id=' + env_id);
+        list.complete_refresh('/changesets/items?env_id=' + env_id);
     },
     signal_rename: function(changeset_id) {
         list.refresh(changeset_id, $('#changeset').attr("data-ajax_url"));
+    },
+    environment_search:  function(env_id) {
+        panel.closePanel($('#panel'));
+        list.complete_refresh('/changesets/items?env_id=' + env_id + '&search=' + $('#search').val());
     }
 };

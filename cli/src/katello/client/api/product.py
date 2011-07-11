@@ -53,7 +53,7 @@ class ProductAPI(KatelloAPI):
             "description": description,
             "url": url
         }
-      
+
         path = "/api/providers/%s/product_create" % str(provId)
         result = self.server.POST(path, {"product": product})[1]
         return result
@@ -63,8 +63,3 @@ class ProductAPI(KatelloAPI):
         #path = "/api/repositories/%s/sync" % id
         #data = self.server.POST(path)[1]
         #return data
-        
-        
-        
-        
-        

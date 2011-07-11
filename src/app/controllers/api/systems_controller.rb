@@ -13,14 +13,14 @@
 class Api::SystemsController < Api::ApiController
   respond_to :json
 
-  before_filter :find_organization, :only => [:index]
+  before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index]
+  before_filter :find_organization, :only => [:create, :index]
+  before_filter :find_only_environment, :only => [:create]
+  before_filter :find_environment, :only => [:create, :index]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates]
 
   def create
-    org_name = params[:owner] || params[:org_name]
-    org = Organization.find_by_name(org_name)
-    raise _("Couldn't find organization '#{params[:org_name]}'") if org.nil?
-    system = System.create!(params.merge({:organization => org})).to_json
+    system = System.create!(params.merge({:environment => @environment})).to_json
     render :json => system
   end
 
@@ -39,6 +39,7 @@ class Api::SystemsController < Api::ApiController
   end
 
   def index
+    (render :json => @environment.systems.to_json and return) unless @environment.nil?
     render :json => @organization.systems.to_json
   end
 
@@ -51,15 +52,39 @@ class Api::SystemsController < Api::ApiController
     render :text => _("Deleted system '#{params[:id]}'"), :status => 204
   end
 
-#  def find_organization
-#    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id]})
-#    render :text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404 and return if @organization.nil?
-#    @organization
-#  end
+  def find_organization
+    return unless (params.has_key?(:organization_id) or params.has_key?(:owner))
+
+    id = params[:organization_id] || params[:owner]
+    @organization = Organization.first(:conditions => {:cp_key => id})
+    raise HttpErrors::NotFound, _("Couldn't find organization '#{id}'") if @organization.nil?
+    @organization
+  end
+
+  def find_only_environment
+    if @organization && !params.has_key?(:environment_id)
+      raise HttpErrors::BadRequest, _("Organization #{@organization.name} has 'locker' environment only. Please create an environment for system registration.") if @organization.environments.empty?
+      raise HttpErrors::BadRequest, _("Organization #{@organization.name} has more than one environment. Please specify target environment for system registration.") if @organization.environments.size > 1
+      @environment = @organization.environments.first and return
+    end
+  end
+
+  def find_environment
+    return unless params.has_key?(:environment_id)
+
+    @environment = KPEnvironment.find(params[:environment_id])
+    raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
+    @environment
+  end
+
+  def verify_presence_of_organization_or_environment
+    return if params.has_key?(:organization_id) or params.has_key?(:owner) or params.has_key?(:environment_id)
+    raise HttpErrors::BadRequest, _("Either organization id or environment id needs to be specified")
+  end
 
   def find_system
     @system = System.first(:conditions => {:uuid => params[:id]})
-    render :text => _("Couldn't find system '#{params[:id]}'"), :status => 404 and return if @system.nil?
+    raise HttpErrors::NotFound, _("Couldn't find system '#{params[:id]}'") if @system.nil?
     @system
   end
 

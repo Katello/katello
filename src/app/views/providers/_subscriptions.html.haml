@@ -11,7 +11,7 @@
 
   .grid_7
     = help_tip(_("Listed below are the products available from the selected provider, as well as the " + |
-               "related subscription information.  If you have a subscription manifest you may upload it below. " + | 
+               "related subscription information.  If you have a subscription manifest you may upload it below. " + |
                "This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."), 'subscriptions-help') |
 
   .grid_8#subscription
@@ -21,6 +21,7 @@
         %th #{_("Name")}
         %th #{_("Consumed Subscriptions")}
         %th #{_("Quantity Available")}
+      %tbody
       - @subscriptions.each do |sub|
         %tr{:class => cycle(nil, 'alt')}
           %td

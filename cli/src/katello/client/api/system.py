@@ -14,24 +14,45 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from katello.client.api.utils import get_environment
 
 class SystemAPI(KatelloAPI):
     """
     Connection class to access environment calls
     """
-    def register(self, name, org, cp_type):
-        path = "/api/systems"
+    def register(self, name, org, envName, cp_type):
+        if envName is not None:
+            environment = get_environment(org, envName)
+            if environment is None:
+                return None
+
+            path = "/api/environments/%s/systems" % environment["id"]
+        else:
+            path = "/api/organizations/%s/systems" % org
+
         return self.server.POST(path, {
           "name": name,
-          "org_name": org,
           "cp_type": cp_type,
           "facts": {
             "distribution.name": "Fedora"
             }
           })[1]
+    def unregister(self, id):
+        path = "/api/systems/" + str(id)
+        return self.server.DELETE(path)[1]
 
     def systems_by_org(self, orgId):
         path = "/api/organizations/%s/systems" % orgId
         return self.server.GET(path)[1]
 
+    def systems_by_org_and_name(self, orgId, name):
+        path = "/api/organizations/%s/systems" % orgId
+        return self.server.GET(path, {'name': name})[1]
 
+    def systems_by_env(self, orgId, envName):
+        environment = get_environment(orgId, envName)
+        if environment is None:
+            return None
+
+        path = "/api/environments/%s/systems" % environment["id"]
+        return self.server.GET(path)[1]

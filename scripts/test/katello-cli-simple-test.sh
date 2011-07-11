@@ -11,7 +11,8 @@ export PYTHONPATH=$script_dir/../../cli/src
 RAND=$(date | md5sum | cut -c1-6)
 USER='admin'
 PASSWORD='admin'
-CMD="$script_dir/../../cli/bin/katello -u $USER -p $PASSWORD"
+CMD_NOUSER="$script_dir/../../cli/bin/katello"
+CMD="$CMD_NOUSER -u $USER -p $PASSWORD"
 
 test_cnt=0
 failed_cnt=0
@@ -97,7 +98,8 @@ function valid_id() {
         return 0
     fi
   
-    id=`echo $1 | egrep '\+-+\+'`
+    #id=`echo $1 | egrep '\+-+\+'`
+    id=`echo $1 | egrep '\-{5,}'`
     if [ -z "$id" ]; then
         return 0
     else
@@ -105,6 +107,13 @@ function valid_id() {
     fi
 }
 
+
+#testing user
+TEST_USER="user_$RAND"
+test "user create" user create --username=$TEST_USER --password=password
+test "user update" user update --username=$TEST_USER --password=password
+test "user list" user list
+test "user info" user info --username=$TEST_USER
 
 #testing organization
 FIRST_ORG=ACME_Corporation
@@ -119,7 +128,7 @@ test "org info" org info --name=$TEST_ORG
 TEST_ENV="env_$RAND"
 TEST_ENV_2="env_2_$RAND"
 TEST_ENV_3="env_3_$RAND"
-test "environment create" environment create --org="$FIRST_ORG" --name="$TEST_ENV" --prior="locker"
+test "environment create" environment create --org="$FIRST_ORG" --name="$TEST_ENV" --prior="Locker"
 test "environment create with prior" environment create --org="$FIRST_ORG" --name="$TEST_ENV_2" --prior="$TEST_ENV"
 test "environment update" environment update --org="$FIRST_ORG" --name="$TEST_ENV_2" --new_name="$TEST_ENV_3"
 test "environment list" environment list --org="$FIRST_ORG"
@@ -156,12 +165,10 @@ test "provider sync" provider sync --name="$YUM_PROVIDER" --org="$FIRST_ORG"
 sleep 1 #give the provider some time to get synced
 
 #testing systems
-SYSTEM_NAME="_system_$RAND"
-SYSTEM_NAME2="_system_$RAND"
-CONSUMER_FIRST="$(echo $FIRST_ORG|perl -e 'print lc <>;')_user"
-test "system register first org as admin" system register --name="admin$SYSTEM_NAME" --org="$FIRST_ORG"
-test "system register test org as admin" system register --name="admin$SYSTEM_NAME2" --org="$TEST_ORG"
-# TODO - create regular user, create org with this user, syst register with this user
+SYSTEM_NAME_ADMIN="admin_system_$RAND"
+SYSTEM_NAME_USER="user_system_$RAND"
+test "system register as admin" system register --name="$SYSTEM_NAME_ADMIN" --org="$FIRST_ORG" --environment="$TEST_ENV"
+test "system register as $TEST_USER" -u $TEST_USER -p password system register --name="$SYSTEM_NAME_USER" --org="$FIRST_ORG" --environment="$TEST_ENV"
 test "system list" system list --org="$FIRST_ORG"
 
 #testing distributions
@@ -215,6 +222,7 @@ test "provider delete" provider delete --name="$YUM_PROVIDER" --org="$FIRST_ORG"
 test "environment delete" environment delete --name="$TEST_ENV" --org="$FIRST_ORG"
 test "environment delete" environment delete --name="$TEST_ENV_3" --org="$FIRST_ORG"
 test "org delete" org delete --name="$TEST_ORG"
+test "user delete" user delete --username=$TEST_USER
 
 
 
