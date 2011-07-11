@@ -51,13 +51,20 @@ class List(TemplateAction):
     description = _('list all templates')
      
     def setup_parser(self):
-        pass
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required if specifying environment)"))
+        self.parser.add_option('--environment', dest='env',
+                               help=_("environment name eg: foo.example.com (Locker by default)"))
 
     def check_options(self):
-        pass
+        if self.has_option('env') and not self.has_option('org'):
+                self.add_option_error('An organization is required when searching by environment.')
 
     def run(self):
-        templates = self.api.templates()
+        envName = self.get_option('env')
+        orgName = self.get_option('org')
+        
+        templates = self.api.templates(envName, orgName)
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')

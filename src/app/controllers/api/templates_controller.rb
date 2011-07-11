@@ -18,7 +18,20 @@ class Api::TemplatesController < Api::ApiController
   before_filter :find_template, :only => [:show, :update, :update_content, :destroy, :promote, :export]
 
   def index
-    templates = SystemTemplate.where query_params
+    debugger
+    templates = []
+    unless params[:organization_id].nil?
+      @organization = find_organization()
+      unless params[:env_name].nil?
+        envs = @organization.environments.where(:name => params[:env_name])
+      else
+        envs = @organization.environments + @organization.locker
+      end
+      envs.each {|e| templates += SystemTemplate.where(:environment_id => e.id) }
+    else
+      templates = SystemTemplate.all
+    end
+    
     render :json => templates.to_json
   end
 

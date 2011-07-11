@@ -304,7 +304,7 @@ class Action(object):
     def process_options(self, args):
         """
         This method setups up the parser, parses the arguments, checks options
-        and pritns argument errors.
+        and prints argument errors.
         """
         self.opts, self.args = self.parser.parse_args(args)
 
