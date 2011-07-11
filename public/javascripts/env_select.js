@@ -82,6 +82,9 @@ var env_select =   {
 
         $('a[data-env_id]').removeClass('active');
         $('a[data-env_id="'+ id + '"]').addClass('active');
+
+        $(this).parentsUntil(".path_entry").trigger("click");
+
         if (env_select.click_callback) {
           env_select.click_callback(id, $(this));
         }
