@@ -15,11 +15,17 @@ module AsyncOrchestration
   class AsyncOrchestrationProxy < ActiveSupport::BasicObject
     def initialize(target, options)
       @target = target
+
+      raise ArgumentError, "Please pass in organization to which the sync job belongs to" unless options.has_key?(:organization)
+      @organization = options.delete(:organization)
+
       @options = options
     end
 
     def method_missing(method, *args)
-      Delayed::Job.enqueue({:uuid => UUIDTools::UUID.random_create.to_s, :payload_object => AsyncOperation.new(User.current.username, @target, method.to_sym, args)}.merge(@options))
+      t = ::TaskStatus.create!(:uuid => UUIDTools::UUID.random_create.to_s, :organization => @organization, :state => TaskStatus::Status::PENDING)
+      Delayed::Job.enqueue({:payload_object => AsyncOperation.new(t.id, User.current.username, @target, method.to_sym, args)}.merge(@options))
+      t
     end
   end
 
