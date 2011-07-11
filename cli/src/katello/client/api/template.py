@@ -19,12 +19,9 @@ from pprint import pprint
 class TemplateAPI(KatelloAPI): 
 
     def templates(self, envName, orgName):
-        #import pdb; pdb.set_trace()
         params = {}
-        if envName:
-            params["env_name"] = envName
-        if orgName:
-            params["organization_id"] = orgName
+        params["env_name"] = envName
+        params["organization_id"] = orgName
             
         path = "/api/templates/"
         tpls = self.server.GET(path, params)[1]
@@ -64,7 +61,7 @@ class TemplateAPI(KatelloAPI):
         tplData = {
             "name": name,
             "description": description
-         }
+        }
         tplData = self.update_dict(tplData, "parent_id", parentId)
         tplData = {
             "template": tplData,

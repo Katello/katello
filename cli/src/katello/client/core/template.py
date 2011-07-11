@@ -57,8 +57,8 @@ class List(TemplateAction):
                                help=_("environment name eg: foo.example.com (Locker by default)"))
 
     def check_options(self):
-        if self.has_option('env') and not self.has_option('org'):
-                self.add_option_error('An organization is required when searching by environment.')
+        self.require_option('org')
+        self.require_option('env')
 
     def run(self):
         envName = self.get_option('env')
