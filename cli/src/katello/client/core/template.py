@@ -81,7 +81,7 @@ class Info(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (locker by default)"))
+                               help=_("environment name eg: foo.example.com (Locker by default)"))
 
     def check_options(self):
         self.require_option('name')
@@ -126,7 +126,7 @@ class Import(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (locker by default)"))
+                               help=_("environment name eg: foo.example.com (Locker by default)"))
         self.parser.add_option("--file", dest="file",
                                help=_("path to the template file (required)"))
         self.parser.add_option("--description", dest="description",
@@ -172,7 +172,7 @@ class Create(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (locker by default)"))
+                               help=_("environment name eg: foo.example.com (Locker by default)"))
         self.parser.add_option("--description", dest="description",
                                help=_("template description"))
 
@@ -219,7 +219,7 @@ class Update(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (locker by default)"))
+                               help=_("environment name eg: foo.example.com (Locker by default)"))
         self.parser.add_option('--new_name', dest='new_name',
                                help=_("new template name"))
         self.parser.add_option("--description", dest="description",
@@ -273,7 +273,7 @@ class UpdateContent(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (locker by default)"))
+                               help=_("environment name eg: foo.example.com (Locker by default)"))
 
         #add all actions
         actionParams = Set()
@@ -332,7 +332,7 @@ class Delete(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (locker by default)"))
+                               help=_("environment name eg: foo.example.com (Locker by default)"))
 
     def check_options(self):
         self.require_option('name')
@@ -362,7 +362,7 @@ class Promote(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (locker by default)"))
+                               help=_("environment name eg: foo.example.com (Locker by default)"))
 
     def check_options(self):
         self.require_option('name')
