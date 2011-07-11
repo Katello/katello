@@ -104,7 +104,7 @@ class Server(object):
         @raise RuntimeError: if either of the files cannot be found or read
         """
         raise NotImplementedError('base server class method called')
-        
+
     def set_kerberos_auth(self):
         """
         Set kerberos authentication
@@ -252,15 +252,15 @@ class KatelloServer(Server):
         url = self._build_url(path, queries)
 
         content_type, body = self._prepare_body(body, multipart)
-        
+
         self.headers['content-type']   = content_type
         self.headers['content-length'] = str(len(body) if body else 0)
 
         self._log.debug('sending %s request to %s' % (method, url))
-        
+
         connection.request(method, url, body=body, headers=self.headers)
         return self._process_response(connection.getresponse())
-        
+
 
 
     def _prepare_body(self, body, multipart):
@@ -274,14 +274,14 @@ class KatelloServer(Server):
         @return: tuple of the content type and the encoded body
         """
         content_type = 'application/json'
-        
+
         if multipart:
-            content_type, body = self._encode_multipart_formdata(body)    
+            content_type, body = self._encode_multipart_formdata(body)
         elif not isinstance(body, (type(None), Bytes, file)):
             body = json.dumps(body)
-            
+
         return (content_type, body)
-        
+
 
     def _process_response(self, response):
         """
@@ -318,7 +318,7 @@ class KatelloServer(Server):
         @rtype: [(string, string)]
         @return: list of tuples of the field name and field value
         """
-        
+
         if isinstance(data, (dict)):
             #flatten dictionaries
             result = []
@@ -327,10 +327,10 @@ class KatelloServer(Server):
                     name = str(subKey)
                 else:
                     name = str(key)+'['+str(subKey)+']'
-                result.extend(self._flatten_to_multipart(name, value))    
+                result.extend(self._flatten_to_multipart(name, value))
             return result
-                
-        elif isinstance(data, (list, tuple)):        
+
+        elif isinstance(data, (list, tuple)):
             #flatten lists and tuples
             result = []
             for value in data:
@@ -338,13 +338,13 @@ class KatelloServer(Server):
                     name = str(key)
                 else:
                     name = str(key)+'[]'
-                result.extend(self._flatten_to_multipart(name, value))  
+                result.extend(self._flatten_to_multipart(name, value))
             return result
-                
+
         else:
             #flatten other datatypes
             return [(key, data)]
-      
+
 
 
     def _encode_multipart_formdata(self, data):
@@ -356,22 +356,22 @@ class KatelloServer(Server):
         @return: tuple of the content type and encoded data
         """
         fields = self._flatten_to_multipart(None, data)
-        
+
         BOUNDARY = '----------BOUNDARY_$'
         CRLF = '\r\n'
         L = []
-        
+
         for (key, value) in fields:
             if isinstance(value, (file)):
                 filename = value.name
                 content  = value.read()
-                
+
                 L.append('--' + BOUNDARY)
                 L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename))
                 L.append('Content-Type: %s' % self._get_content_type(filename))
                 L.append('')
-                L.append(content)  
-              
+                L.append(content)
+
             else:
                 value = str(value)
                 L.append('--' + BOUNDARY)
@@ -380,7 +380,7 @@ class KatelloServer(Server):
                 L.append(value)
         L.append('--' + BOUNDARY + '--')
         L.append('')
-        
+
         body = CRLF.join(L)
         content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
         return content_type, body
@@ -394,7 +394,7 @@ class KatelloServer(Server):
         @rtype: string
         @return: http content type
         """
-        return mimetypes.guess_type(filename)[0] or 'application/octet-stream' 
+        return mimetypes.guess_type(filename)[0] or 'application/octet-stream'
 
 
     # credentials setters -----------------------------------------------------
@@ -413,7 +413,7 @@ class KatelloServer(Server):
                                % keyfile)
         self.__certfile = certfile
         self.__keyfile = keyfile
-        
+
     def set_kerberos_auth(self):
         _ignore, ctx = kerberos.authGSSClientInit("HTTP@" + self.host, gssflags=kerberos.GSS_C_DELEG_FLAG|kerberos.GSS_C_MUTUAL_FLAG|kerberos.GSS_C_SEQUENCE_FLAG)
         _ignore = kerberos.authGSSClientStep(ctx, '')
@@ -423,7 +423,7 @@ class KatelloServer(Server):
             self.headers['Authorization'] = 'Negotiate %s' % self.__tgt
         else:
             raise RuntimeError(_("Couldn't authenticate via kerberos"))
-       
+
     def has_credentials_set(self):
         return 'Authorization' in self.headers or \
                 None not in (self.__certfile, self.__keyfile)
@@ -444,15 +444,3 @@ class KatelloServer(Server):
 
     def PUT(self, path, body, multipart=False):
         return self._request('PUT', path, body=body, multipart=multipart)
-        
-        
-        
-        
-      
-        
-        
-        
-        
-        
-        
-

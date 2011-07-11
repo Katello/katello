@@ -25,11 +25,11 @@ class SystemAPI(KatelloAPI):
             environment = get_environment(org, envName)
             if environment is None:
                 return None
-            
+
             path = "/api/environments/%s/systems" % environment["id"]
         else:
             path = "/api/organizations/%s/systems" % org
-                    
+
         return self.server.POST(path, {
           "name": name,
           "cp_type": cp_type,
@@ -44,7 +44,7 @@ class SystemAPI(KatelloAPI):
     def systems_by_org(self, orgId):
         path = "/api/organizations/%s/systems" % orgId
         return self.server.GET(path)[1]
-        
+
     def systems_by_org_and_name(self, orgId, name):
         path = "/api/organizations/%s/systems" % orgId
         return self.server.GET(path, {'name': name})[1]
@@ -53,7 +53,6 @@ class SystemAPI(KatelloAPI):
         environment = get_environment(orgId, envName)
         if environment is None:
             return None
-        
+
         path = "/api/environments/%s/systems" % environment["id"]
         return self.server.GET(path)[1]
-

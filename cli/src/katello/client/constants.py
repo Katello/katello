@@ -37,5 +37,3 @@ SELECTION_QUERY="""
   'c'   \t : clear selections
   'q'   \t : abort the repo creation
 """
-
-

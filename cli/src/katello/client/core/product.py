@@ -53,7 +53,7 @@ class List(ProductAction):
 
     def check_options(self):
         self.require_option('org')
-        
+
 
     def run(self):
         org_name = self.get_option('org')
@@ -69,7 +69,7 @@ class List(ProductAction):
             self.printer.addColumn('name')
             self.printer.addColumn('provider_id')
 
-            self.printer.printHeader(_("Product List For Provider %s") % (prov_name))
+            self.printer.setHeader(_("Product List For Provider %s") % (prov_name))
             prods = self.api.products_by_provider(prov["id"])
 
         elif org_name:
@@ -80,15 +80,13 @@ class List(ProductAction):
             self.printer.addColumn('cp_id')
             self.printer.addColumn('name')
             self.printer.addColumn('provider_id')
-            
-            self.printer.printHeader(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
+            self.printer.setHeader(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
             prods = self.api.products_by_env(org_name, env["id"])
-            
+
         else:
             self.printer.addColumn('id', "Cp Id")
             self.printer.addColumn('name')
-          
-            self.printer.printHeader(_("Product List"))
+            self.printer.setHeader(_("Product List"))
             prods = self.api.products()
 
         self.printer.printItems(prods)
@@ -117,12 +115,14 @@ class Sync(ProductAction):
         provName    = self.get_option('prov')
         orgName     = self.get_option('org')
         name        = self.get_option('name')
-        
-        prod = self.get_product(orgName, prodName)
+
+        # PYLINT ERROR - prodName not found!
+        #prod = self.get_product(orgName, prodName)
+        prod = self.get_product(orgName, "")
         prov = self.get_provider(orgName, provName)
         if (prod == None) or (prov == None):
             return os.EX_OK
-        
+
         msg = self.api.sync(prov["id"], prod["cp_id"])
 
         print msg
@@ -157,12 +157,12 @@ class Create(ProductAction):
         name        = self.get_option('name')
         description = self.get_option('description')
         url         = self.get_option('url')
-        
+
         prov = get_provider(orgName, provName)
         if prov != None:
             self.api.create(prov["id"], name, description, url)
             print _("Successfully created product [ %s ]") % name
-            
+
         return os.EX_OK
 
 # product command ------------------------------------------------------------

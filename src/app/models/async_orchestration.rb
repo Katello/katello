@@ -19,15 +19,22 @@ module AsyncOrchestration
     end
 
     def method_missing(method, *args)
-      Delayed::Job.enqueue({:payload_object => AsyncOperation.new(User.current.username, @target, method.to_sym, args)}.merge(@options))
+      Delayed::Job.enqueue({:uuid => UUIDTools::UUID.random_create.to_s, :payload_object => AsyncOperation.new(User.current.username, @target, method.to_sym, args)}.merge(@options))
     end
   end
 
   def self.included(base)
     base.send :include, InstanceMethods
+    base.send :extend, ClassMethods
   end
 
   module InstanceMethods
+    def async(options = {})
+      AsyncOrchestrationProxy.new(self, options)
+    end
+  end
+
+  module ClassMethods
     def async(options = {})
       AsyncOrchestrationProxy.new(self, options)
     end
