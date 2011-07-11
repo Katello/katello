@@ -25,7 +25,7 @@ class ActivationKeysController < ApplicationController
 
   def index
     begin
-      @activation_keys = ActivationKey.search_for(params[:search]).limit(current_user.page_size)
+      @activation_keys = ActivationKey.search_for(params[:search]).where(:organization_id => current_organization).limit(current_user.page_size)
       retain_search_history
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -36,7 +36,7 @@ class ActivationKeysController < ApplicationController
 
   def items
     start = params[:offset]
-    @activation_keys = ActivationKey.search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @activation_keys = ActivationKey.search_for(params[:search]).where(:organization_id => current_organization).limit(current_user.page_size).offset(start)
     render_panel_items @activation_keys, @panel_options
   end
 
