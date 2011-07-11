@@ -118,8 +118,11 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def promote
-    @template.promote
-    render :text => _("Template promoted"), :status => 200
+    #async_job = @template.async(:organization => @template.environment.organization).promote
+    async_job = System.
+        async(:organization => @template.environment.organization).
+        create!(:name => 'blah', :environment => @template.environment.organization.environments.first, :cp_type => 'system', :facts =>  {"distribution.name" => "Fedora"})
+    render :json => async_job, :status => 202
   end
 
   def find_environment
