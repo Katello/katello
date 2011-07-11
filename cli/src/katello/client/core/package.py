@@ -35,7 +35,7 @@ class PackageAction(Action):
     def __init__(self):
         super(PackageAction, self).__init__()
         self.api = PackageAPI()
-        
+
 
 # package actions ------------------------------------------------------------
 class Info(PackageAction):
@@ -101,18 +101,18 @@ class List(PackageAction):
         orgName  = self.get_option('org')
         envName  = self.get_option('env')
         prodName = self.get_option('product')
-        
+
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('filename')
- 
+
 
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
             if repo == None:
                 return os.EX_OK
             repoId = repo["id"]
-                
+
 
         self.printer.printHeader(_("Package List For Repo %s") % repoId)
 
@@ -129,4 +129,3 @@ class List(PackageAction):
 class Package(Command):
 
     description = _('package specific actions in the katello server')
-

@@ -171,10 +171,10 @@ def is_valid_record(rec):
     """
     if rec.has_key('created_at'):
         return (rec['created_at'] != None)
-        
+
     elif rec.has_key('created'):
         return (rec['created'] != None)
-        
+
     else:
         return False
 
@@ -234,14 +234,14 @@ def parse_tokens(tokenstring):
     """
     tokens = []
     pattern = '--?\w+|=?"[^"]*"|=?\'[^\']*\'|=?[^\s]+'
-    
+
     for tok in (re.findall(pattern, tokenstring)):
-        
+
         if tok[0] == '=':
             tok = tok[1:]
         if tok[0] == '"' or tok[0] == "'":
             tok = tok[1:-1]
-        
+
         tokens.append(tok)
     return tokens
 
@@ -273,7 +273,7 @@ def format_date(date):
 
 
 class Spinner(threading.Thread):
-    
+
     def __init__(self, msg=""):
         self._msg = msg
         threading.Thread.__init__(self)
@@ -303,10 +303,10 @@ class Spinner(threading.Thread):
         self._resetCaret()
         sys.stdout.write('   ')
         self._resetCaret()
-        
+
     def run(self):
         self._stop = False
-        
+
         self._putMessage()
         while True:
             for char in '/-\|':
@@ -315,7 +315,7 @@ class Spinner(threading.Thread):
                     self._eraseSpinner()
                     self._eraseMessage()
                     return
-                time.sleep( 0.1 )      
+                time.sleep( 0.1 )
                 self._resetCaret()
 
     def stop(self):
@@ -334,7 +334,7 @@ def run_spinner_in_bg(function, arguments=(), message=""):
     @return return value of the function
     """
     result = None
-  
+
     t = Spinner(message)
     t.start()
     try:
@@ -343,14 +343,3 @@ def run_spinner_in_bg(function, arguments=(), message=""):
         t.stop()
         t.join()
     return result
-
-
-
-
-
-
-
-
-
-
-

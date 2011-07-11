@@ -34,14 +34,14 @@ class EnvironmentAction(Action):
     def __init__(self):
         super(EnvironmentAction, self).__init__()
         self.api = EnvironmentAPI()
-        
-        
+
+
     def get_prior_id(self, orgName, priorName):
         prior = get_environment(orgName, priorName)
         if prior != None:
             return prior["id"]
         return None
-        
+
 # environment actions ------------------------------------------------------------
 
 class List(EnvironmentAction):
@@ -90,7 +90,7 @@ class Info(EnvironmentAction):
         envName = self.get_option('name')
 
         env = get_environment(orgName, envName)
-        if env != None:          
+        if env != None:
             self.printer.addColumn('id')
             self.printer.addColumn('name')
             self.printer.addColumn('description', multiline=True)
@@ -131,7 +131,7 @@ class Create(EnvironmentAction):
         env         = self.get_option('env')
 
         priorId = self.get_prior_id(orgName, priorName)
-                
+
         env = self.api.create(orgName, name, description, priorId)
         if is_valid_record(env):
             print _("Successfully created environment [ %s ]") % env['name']
@@ -171,7 +171,7 @@ class Update(EnvironmentAction):
         description = self.get_option('description')
         orgName     = self.get_option('org')
         priorName   = self.get_option('prior')
-        
+
         env = get_environment(orgName, envName)
         if env != None:
             if priorName != None:
@@ -193,7 +193,7 @@ class Delete(EnvironmentAction):
                                help=_("environment name eg: foo.example.com (required)"))
         self.parser.add_option('--org', dest='org',
                                help=_("organization name eg: foo.example.com (required)"))
-                               
+
     def check_options(self):
         self.require_option('name')
         self.require_option('org')

@@ -135,7 +135,7 @@ class Create(RepoAction):
                 repoName = "%s%s" % (name, parsedUrl.path.replace("/", "_"))
                 repo = self.api.create(prod["cp_id"], repoName, repourl)
                 print _("Successfully created repository [ %s ]") % repoName
-                
+
         return os.EX_OK
 
     def __add_selection(self, urls):
@@ -220,7 +220,7 @@ class Info(RepoAction):
             repo = get_repo(orgName, prodName, repoName, envName)
             if repo == None:
                 return os.EX_OK
-                
+
         repo['url'] = repo['source']['url']
         repo['last_sync'] = self.format_sync_time(repo['last_sync'])
 
@@ -283,18 +283,18 @@ class List(RepoAction):
             env  = get_environment(orgName, envName)
             prod = get_product(orgName, prodName)
             if env != None and prod != None:
-                
+
                 self.printer.printHeader(_("Repo List for Product %s in Org %s Environment %s") % (prodName, orgName, env["name"]))
                 repos = self.api.repos_by_org_env_product(orgName, env["id"], prod["cp_id"])
                 self.printer.printItems(repos)
-                
+
         else:
             env  = get_environment(orgName, envName)
             if env != None:
                 self.printer.printHeader(_("Repo List For Org %s Environment %s") % (orgName, env["name"]))
                 repos = self.api.repos_by_org_env(orgName,  env["id"])
                 self.printer.printItems(repos)
-        
+
         return os.EX_OK
 
 # command --------------------------------------------------------------------

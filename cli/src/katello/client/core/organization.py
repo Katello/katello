@@ -65,7 +65,7 @@ class Create(OrganizationAction):
                                help=_("organization name eg: foo.example.com (required)"))
         self.parser.add_option("--description", dest="description",
                                help=_("consumer description eg: foo's organization"))
-                               
+
     def check_options(self):
         self.require_option('name')
 

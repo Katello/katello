@@ -66,11 +66,11 @@ class List(DistributionAction):
         orgName  = self.get_option('org')
         envName  = self.get_option('env')
         prodName = self.get_option('product')
-        
+
         self.printer.addColumn('id')
         self.printer.addColumn('description')
         self.printer.addColumn('files', multiline=True, show_in_grep=False)
- 
+
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
             if repo == None:

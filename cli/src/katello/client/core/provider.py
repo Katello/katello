@@ -39,7 +39,7 @@ class ProviderAction(Action):
     def __init__(self):
         super(ProviderAction, self).__init__()
         self.api = ProviderAPI()
-        
+
 
 # provider actions =============================================================
 class List(ProviderAction):
@@ -56,7 +56,7 @@ class List(ProviderAction):
 
     def run(self):
         orgName = self.get_option('org')
-      
+
         provs = self.api.providers_by_org(orgName)
 
         self.printer.addColumn('id')
@@ -91,7 +91,7 @@ class Info(ProviderAction):
     def run(self):
         provName = self.get_option('name')
         orgName  = self.get_option('org')
- 
+
         prov = get_provider(orgName, provName)
         if prov != None:
             self.printer.addColumn('id')
@@ -116,13 +116,13 @@ class Update(ProviderAction):
         else:
             return _('update a provider')
 
-    
+
     def __init__(self, create = False):
         self._create = create
         super(Update, self).__init__()
 
 
-    
+
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
                                help=_("provider name (required)"))
@@ -132,7 +132,7 @@ class Update(ProviderAction):
                                help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-                                  
+
         if self._create:
             self.parser.add_option("--type", dest="type",
                                   help=_("""provider type, one of:
@@ -144,9 +144,9 @@ class Update(ProviderAction):
             self.parser.add_option('--new_name', dest='new_name',
                                   help=_("provider name"))
 
-    
+
     def check_options(self):
-      
+
         self.require_option('name')
         self.require_option('org')
         if self._create:
@@ -161,7 +161,7 @@ class Update(ProviderAction):
             if not (url.startswith('http://') or url.startswith('https://')):
                 self.add_option_error(_('Option --url has to start with http:// or https://'))
 
-    
+
     def create(self, name, orgName, description, provType, url):
         prov = self.api.create(name, orgName, description, provType, url)
         if is_valid_record(prov):
@@ -169,15 +169,15 @@ class Update(ProviderAction):
         else:
             print _("Could not create provider [ %s ]") % prov['name']
 
-    
+
     def update(self, name, orgName, newName, description, url):
-      
+
         prov = get_provider(orgName, name)
         if prov != None:
             prov = self.api.update(prov["id"], newName, description, url)
             print _("Successfully updated provider [ %s ]") % prov['name']
-        
-    
+
+
     def run(self):
         provId      = self.get_option('id')
         name        = self.get_option('name')
@@ -199,14 +199,14 @@ class Update(ProviderAction):
 class Delete(ProviderAction):
 
     description = _('delete a provider')
-    
+
     def setup_parser(self):
         # always provide --name option for create, even on registered clients
         self.parser.add_option('--name', dest='name',
                                help=_("provider name (required)"))
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-    
+
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
@@ -219,7 +219,7 @@ class Delete(ProviderAction):
         if prov != None:
             msg = self.api.delete(prov["id"])
             print msg
-          
+
         return os.EX_OK
 
 
@@ -228,18 +228,18 @@ class Sync(ProviderAction):
 
     description = _('synchronize a provider')
 
-    
+
     def setup_parser(self):
         # always provide --id option for create, even on registered clients
         self.parser.add_option('--name', dest='name',
                                help=_("provider name (required)"))
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-    
+
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
-    
+
     def run(self):
         provName = self.get_option('name')
         orgName  = self.get_option('org')
@@ -252,15 +252,15 @@ class Sync(ProviderAction):
         return os.EX_OK
 
 
-  
-  
+
+
 
 # ==============================================================================
 class ImportManifest(ProviderAction):
 
     description = _('import a manifest file')
 
-    
+
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
                                help=_("provider name (required)"))
@@ -269,29 +269,29 @@ class ImportManifest(ProviderAction):
         self.parser.add_option("--file", dest="file",
                                help=_("path to the manifest file (required)"))
 
-    
+
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
         self.require_option('file')
 
-    
+
     def run(self):
         provName = self.get_option('name')
         orgName  = self.get_option('org')
         manifestPath = self.get_option('file')
-    
+
         try:
             f = open(get_abs_path(manifestPath))
         except:
             print _("File %s does not exist" % manifestPath)
             return os.EX_IOERR
-        
+
         prov = get_provider(orgName, provName)
         if prov != None:
             response = run_spinner_in_bg(self.api.import_manifest, (prov["id"], f), message=_("Importing manifest, please wait... "))
             print response
-        
+
         f.close()
         return os.EX_OK
 
@@ -300,13 +300,3 @@ class ImportManifest(ProviderAction):
 class Provider(Command):
 
     description = _('provider specific actions in the katello server')
-
-
-
-
-
-
-
-
-
-

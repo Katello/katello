@@ -37,8 +37,8 @@ class OptionParserExitError(Exception):
     Takes error code as it's only argument.
     """
     pass
-  
-  
+
+
 class OptionParser(_OptionParser):
 
     # These are a bunch of strings that are marked for translation in optparse,
@@ -69,7 +69,7 @@ class OptionParser(_OptionParser):
     _("show program's version number and exit")
 
     displayed_help = False
-    
+
     def print_help(self):
         self.displayed_help = True
         sys.stdout.write(self.format_help())
@@ -83,21 +83,21 @@ class OptionParser(_OptionParser):
         if msg:
             sys.stderr.write(msg)
         raise OptionParserExitError(status)
-        
-        
+
+
     def error(self, errorMsg):
         """
         Print usage, one or more error messages and call exit.
         """
         if isinstance(errorMsg, list):
             self.print_usage(sys.stderr)
-            
+
             i=0
             while (i<len(errorMsg)):
                 errorMsg[i] = str(i+1) +") "+ errorMsg[i] +"\n"
                 i+=1
             msgs = ''.join(errorMsg)
-            
+
             self.exit(2, "%s: errors:\n%s" % (self.get_prog_name(), msgs))
         else:
             _OptionParser.error(self, errorMsg)
@@ -108,7 +108,6 @@ class OptionParser(_OptionParser):
 
     def get_long_options(self):
         return self._long_opt.keys()
-      
+
     def get_short_options(self):
         return self._long_opt.keys()
-

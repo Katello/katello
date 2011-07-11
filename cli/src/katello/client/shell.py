@@ -87,10 +87,10 @@ class KatelloShell(Cmd):
             setattr(self, "do_" + cmd, self.admin_cli.main)
 
     def do_quit(self, args):
-            sys.exit(0)
+        sys.exit(0)
 
     def do_exit(self, args):
-            sys.exit(0)
+        sys.exit(0)
 
     # handle commands that exit the shell
     def precmd(self, line):
@@ -107,7 +107,7 @@ class KatelloShell(Cmd):
 
         line  = line.strip()
         parts = parse_tokens(line)
-      
+
 
         if len(parts):
             command = parts[0]
@@ -203,12 +203,12 @@ class KatelloShell(Cmd):
             if not cmd:
                 print("Invalid Command %s") % args[0]
                 return
-                
+
             if len(args) > 1:
                 cmd.main(args[1]+" --help")
             else:
                 cmd.main("--help")
-            
+
         else:
             self.admin_cli.main("--help")
 
@@ -234,7 +234,7 @@ class KatelloShell(Cmd):
 
     def complete(self, text, state):
         """Return the next possible completion for 'text'.
-        
+
         If a command has not been entered, then complete against command list.
         Otherwise try to call complete_<command> to get list of completions.
         """
@@ -245,16 +245,16 @@ class KatelloShell(Cmd):
             stripped = len(origline) - len(line)
             begidx = readline.get_begidx() - stripped
             endidx = readline.get_endidx() - stripped
-            
+
             wordCnt = len(line[:begidx].split())
-            
+
             if wordCnt <= 0:
                 self.completion_matches = self.completenames(text, line, begidx, endidx)
             elif wordCnt == 1:
                 self.completion_matches = self.completecommands(text, line, begidx, endidx)
             else:
                 self.completion_matches = self.completeparams(text, line, begidx, endidx)
-          
+
         try:
             return self.completion_matches[state]
         except IndexError:
@@ -266,4 +266,3 @@ class KatelloShell(Cmd):
 
         if last >= 0:
             readline.remove_history_item(last)
-

@@ -66,17 +66,17 @@ class List(ErrataAction):
         orgName  = self.get_option('org')
         envName  = self.get_option('env')
         prodName = self.get_option('product')
-        
+
         self.printer.addColumn('id')
         self.printer.addColumn('title')
         self.printer.addColumn('type')
- 
+
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
             if repo == None:
                 return os.EX_OK
             repoId = repo["id"]
-        
+
         errata = self.api.errata_by_repo(repoId)
 
         self.printer.printHeader(_("Errata List"))
