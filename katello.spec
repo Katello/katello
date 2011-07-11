@@ -41,6 +41,7 @@ Requires:       rubygem(pg)
 Requires:       rubygem(scoped_search) >= 2.3.1
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(daemons) >= 1.1.4
+Requires:       rubygem(uuidtools)
 
 Requires(pre):  shadow-utils
 Requires(preun): chkconfig
@@ -52,7 +53,6 @@ BuildRequires: 	coreutils findutils sed
 BuildRequires: 	rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
-BuildRequires:  rubygem(haml)
 
 BuildArch: noarch
 
@@ -63,14 +63,6 @@ Provides a package for managing application lifecycle for Linux systems
 %setup -q
 
 %build
-#check the ruby syntax of all .rb files
-echo "Checking Ruby syntax"
-find -type f -name \*.rb | xargs -t -n1 ruby -c >/dev/null
-
-#check the syntax of all .haml files
-echo "Checking HAML syntax"
-find -type f -name \*.haml | xargs -t -n1 haml -c >/dev/null
-
 #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
 echo Generating gettext files...
 ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
