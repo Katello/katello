@@ -1,9 +1,5 @@
 @import "katello";
 
-$tree-container: #F2F2F2;
-$tree-border: #c0c1be;
-
-
 .sliding_container {
   overflow: hidden;
   position: relative;
@@ -95,9 +91,9 @@ $tree-border: #c0c1be;
     width: 448px;
     font-weight: 200;
     color: #FFF;
-    background-color: $tree-container;
+    background-color: $tree-container_color;
     word-wrap: break-word;
-    border: 1px solid $tree-border;
+    border: 1px solid $tree-border_color;
     border-bottom: none;
     #search_form {
         display: none;
@@ -136,11 +132,11 @@ $tree-border: #c0c1be;
     @extend breadcrumb_search;
     background-color: #FEE7C6;
     color: #000;
-    border: 1px solid $tree-border;
+    border: 1px solid $tree-border_color;
     border-bottom: none;
   }
   #changeset_users { 
-    background-color: $lightkprimary;
+    background-color: $lightkprimary_color;
     margin-bottom: 5px;
     display: block;
   }
