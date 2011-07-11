@@ -33,8 +33,10 @@ class SystemsController < ApplicationController
 
   def environments
     begin
+      @environment = KPEnvironment.find params[:env_id] if !params[:env_id].blank?
+      @path = @environment.full_path if @environment
       setup_environment_selector(current_organization)
-      @systems = System.search_for(params[:search]).where(:environment_id => current_organization.environments).limit(current_user.page_size)
+      @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size)
       retain_search_history
       sort_columns(COLUMNS,@systems) if params[:order]
       render :index, :locals=>{:envsys => 'true'}
