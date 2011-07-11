@@ -49,7 +49,7 @@ class List(UserAction):
         self.printer.addColumn('username')
         self.printer.addColumn('disabled')
 
-        self.printer.printHeader(_("User List"))
+        self.printer.setHeader(_("User List"))
         self.printer.printItems(users)
         return os.EX_OK
 
@@ -105,10 +105,10 @@ class Info(UserAction):
             return os.EX_DATAERR
 
         self.printer.addColumn('id')
-        self.printer.addColumn('name')
+        self.printer.addColumn('username')
         self.printer.addColumn('disabled')
 
-        self.printer.printHeader(_("User Information"))
+        self.printer.setHeader(_("User Information"))
         self.printer.printItem(users[0])
         return os.EX_OK
 

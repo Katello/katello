@@ -98,7 +98,8 @@ function valid_id() {
         return 0
     fi
   
-    id=`echo $1 | egrep '\+-+\+'`
+    #id=`echo $1 | egrep '\+-+\+'`
+    id=`echo $1 | egrep '\-{5,}'`
     if [ -z "$id" ]; then
         return 0
     else

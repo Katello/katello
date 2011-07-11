@@ -66,9 +66,8 @@ class List(ProviderAction):
         #self.printer.addColumn('organization_id', 'Org Id')
         self.printer.addColumn('description', multiline=True)
 
-        self.printer.printHeader(_("Provider List"))
-        for prov in provs:
-            self.printer.printItem(prov)
+        self.printer.setHeader(_("Provider List"))
+        self.printer.printItems(provs)
         return os.EX_OK
 
 
@@ -101,7 +100,7 @@ class Info(ProviderAction):
             self.printer.addColumn('organization_id', 'Org Id')
             self.printer.addColumn('description', multiline=True)
 
-            self.printer.printHeader(_("Provider Information"))
+            self.printer.setHeader(_("Provider Information"))
             self.printer.printItem(prov)
         return os.EX_OK
 

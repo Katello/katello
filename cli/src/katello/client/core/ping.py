@@ -50,26 +50,32 @@ class Status(PingAction):
     def run(self):
         status = self.api.ping()
 
+        self.printer.addColumn('status')
         self.printer.addColumn('service')
         self.printer.addColumn('result')
         self.printer.addColumn('duration')
         self.printer.addColumn('message')
 
-        self.printer.printHeader(_("Katello Staus"))
-        if not self.has_option('grep'):
-            print constants.STATUS_INFO % (status["result"])
-            print
+        self.printer.setHeader(_("Katello Status"))
 
         details = status["status"]
-
+        pprint(status)
+        
+        statusList = []
+        
+        detail = {}
+        detail['status']  = status["result"]
+        statusList.append(detail)
+        
         for key in details.keys():
             detail = details[key]
             detail['service'] = key
 
             if detail.has_key("duration_ms"):
                 detail["duration"] = detail["duration_ms"] + "ms"
-            self.printer.printItem(detail, " "*4)
-
+            statusList.append(detail)
+           
+        self.printer.printItems(statusList)
         return os.EX_OK
 
 # ping command ------------------------------------------------------------

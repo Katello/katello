@@ -27,32 +27,56 @@ class Printer:
     """
     Class for unified printing of the CLI output.
     """
-    header_width = 45
 
     def __init__(self, grep):
         self._grep = grep
         self._columns = []
+        self._heading = ""
+        self._div = ""
+        
 
-    def printHeader(self, *heading):
+    def setHeader(self, heading):
+        self._heading = heading
+
+    def _printDivLine(self, width):
+        #print '+' + '-'*(width-2) + '+'
+        print '-'*width
+        
+    def _printHeader(self, heading, widths={}):
         """
         Print a fancy header to stdout.
         @type heading: string or list of strings
         @param heading: headers to be displayed
         """
         padding = 0
-        print '+' + '-'*self.header_width + '+'
-        for line in heading:
-            if len(line) < self.header_width:
-                padding = ((self.header_width - len(line)) / 2) - 1
+        header_width = self._getTermWidth()
+
+        self._printDivLine(header_width)
+        for line in heading.split("\n"):
+            if len(line) < header_width:
+                padding = ((header_width - len(line)) / 2) - 1
             print ' ' * padding, line
 
         if self._grep:
             print
+            print self._div,
             for col in self._columns:
                 if col['show_in_grep']:
-                    print col['name'] + "\t",
+                  
+                    if widths.has_key(col['attr_name']):
+                        width = widths[col['attr_name']]
+                    else:
+                        width = 0
+                    
+                    print col['name'].ljust(width),
+                    print self._div,
             print
-        print '+' + '-'*self.header_width + '+'
+        self._printDivLine(header_width)
+
+
+    def _getTermWidth(self):
+        rows, columns = os.popen('stty size', 'r').read().split()
+        return int(columns)
 
 
     def _attrToName(self, attr_name):
@@ -65,7 +89,7 @@ class Printer:
         result = ''
         for part in attr_name.split("_"):
             result += part[0].upper() + part[1:] + ' '
-        return result
+        return result.strip()
 
 
     def addColumn(self, attr_name, name = None, multiline = False, show_in_grep = True):
@@ -95,7 +119,7 @@ class Printer:
 
     def _printItem(self, item, indent=""):
         """
-        Print item of a list on number of lines
+        Print item from a list on number of lines
         @type item: hash
         @param item: data to print
         @type indent: string
@@ -110,20 +134,27 @@ class Printer:
             if not col['multiline']:
                 print indent+"%-15s \t%-25s" % (col['name'], value)
             else:
-                print col['name']
+                print indent+col['name']
                 print indent_text(value, indent+"    ")
 
 
-    def _printItemGrep(self, item):
+    def _printItemGrep(self, item, widths={}):
         """
         Print item of a list on single line in grep mode
         @type item: hash
         @param item: data to print
         """
+        print self._div,
         for col in self._columns:
+            #get defined width
+            if widths.has_key(col['attr_name']):
+                width = widths[col['attr_name']]
+            else:
+                width = 0
+          
             #skip missing attributes
             if not item.has_key(col['attr_name']):
-                print " \t",
+                print " " * (width+1),
                 continue
 
             value = item[col['attr_name']]
@@ -131,8 +162,23 @@ class Printer:
                 continue
             if col['multiline']:
                 value = text_to_line(value)
-            print "%s\t" % value,
+            print str(value).ljust(width),
+            print self._div,
 
+
+    def _calculateWidths(self, items):
+        widths = {}
+        #return widths
+        for col in self._columns:
+            key = col['attr_name']
+            widths[key] = len(str(col['name']))+1
+            for item in items:
+                if ( item.has_key(key) ) and ( widths[key] < len(str(item[key])) ):
+                    widths[key] = len(str(item[key]))+1
+
+        return widths
+        
+        
 
     def printItem(self, item, indent=""):
         """
@@ -142,11 +188,9 @@ class Printer:
         @type indent: string
         @param indent: text that is prepended to every printed line in multiline mode
         """
-        if self._grep:
-            self._printItemGrep(item)
-        else:
-            self._printItem(item, indent)
-        print
+        items = []
+        items.append(item)
+        self.printItems(items, indent)
 
 
     def printItems(self, items, indent=""):
@@ -157,8 +201,19 @@ class Printer:
         @type indent: string
         @param indent: text that is prepended to every printed line in multiline mode
         """
-        for item in items:
-            self.printItem(item, indent)
+        if self._grep:
+            widths = self._calculateWidths(items)
+            self._printHeader(self._heading, widths)
+            for item in items:
+                self._printItemGrep(item, widths)
+                print
+        else:
+            self._printHeader(self._heading)
+            for item in items:
+                self._printItem(item, indent)
+                print
+            
+        
 
 
 # server output validity ------------------------------------------------------

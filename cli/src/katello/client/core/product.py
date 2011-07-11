@@ -69,7 +69,7 @@ class List(ProductAction):
             self.printer.addColumn('name')
             self.printer.addColumn('provider_id')
 
-            self.printer.printHeader(_("Product List For Provider %s") % (prov_name))
+            self.printer.setHeader(_("Product List For Provider %s") % (prov_name))
             prods = self.api.products_by_provider(prov["id"])
 
         elif org_name:
@@ -80,15 +80,13 @@ class List(ProductAction):
             self.printer.addColumn('cp_id')
             self.printer.addColumn('name')
             self.printer.addColumn('provider_id')
-
-            self.printer.printHeader(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
+            self.printer.setHeader(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
             prods = self.api.products_by_env(org_name, env["id"])
 
         else:
             self.printer.addColumn('id', "Cp Id")
             self.printer.addColumn('name')
-
-            self.printer.printHeader(_("Product List"))
+            self.printer.setHeader(_("Product List"))
             prods = self.api.products()
 
         self.printer.printItems(prods)

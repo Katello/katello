@@ -68,7 +68,7 @@ class Info(PackageAction):
         self.printer.addColumn('provides', multiline=True, show_in_grep=False)
         self.printer.addColumn('requires', multiline=True, show_in_grep=False)
 
-        self.printer.printHeader(_("Package Information"))
+        self.printer.setHeader(_("Package Information"))
         self.printer.printItem(pack)
         return os.EX_OK
 
@@ -114,7 +114,7 @@ class List(PackageAction):
             repoId = repo["id"]
 
 
-        self.printer.printHeader(_("Package List For Repo %s") % repoId)
+        self.printer.setHeader(_("Package List For Repo %s") % repoId)
 
         packages = self.api.packages_by_repo(repoId)
 

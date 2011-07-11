@@ -65,7 +65,7 @@ class List(TemplateAction):
         self.printer.addColumn('environment_id')
         self.printer.addColumn('parent_id')
 
-        self.printer.printHeader(_("Template List"))
+        self.printer.setHeader(_("Template List"))
         self.printer.printItems(templates)
         return os.EX_OK
 
@@ -112,7 +112,7 @@ class Info(TemplateAction):
         self.printer.addColumn('packages', multiline=True, show_in_grep=False)
         self.printer.addColumn('parameters', multiline=True, show_in_grep=False)
 
-        self.printer.printHeader(_("Template Info"))
+        self.printer.setHeader(_("Template Info"))
         self.printer.printItem(template)
         return os.EX_OK
 

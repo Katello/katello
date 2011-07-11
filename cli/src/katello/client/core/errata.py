@@ -79,7 +79,7 @@ class List(ErrataAction):
 
         errata = self.api.errata_by_repo(repoId)
 
-        self.printer.printHeader(_("Errata List"))
+        self.printer.setHeader(_("Errata List"))
         self.printer.printItems(errata)
         return os.EX_OK
 
@@ -115,7 +115,7 @@ class Info(ErrataAction):
         self.printer.addColumn('reboot_suggested')
         self.printer.addColumn('affected_packages', multiline=True)
 
-        self.printer.printHeader(_("Errata Information"))
+        self.printer.setHeader(_("Errata Information"))
         self.printer.printItem(pack)
         return os.EX_OK
 

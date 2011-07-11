@@ -66,7 +66,7 @@ class List(EnvironmentAction):
         self.printer.addColumn('organization_id', 'Org Id')
         self.printer.addColumn('prior', 'Prior Id')
 
-        self.printer.printHeader(_("Environment List"))
+        self.printer.setHeader(_("Environment List"))
         self.printer.printItems(envs)
         return os.EX_OK
 
@@ -97,7 +97,7 @@ class Info(EnvironmentAction):
             self.printer.addColumn('organization_id', 'Org Id')
             self.printer.addColumn('prior', 'Prior Id')
 
-            self.printer.printHeader(_("Environment Info"))
+            self.printer.setHeader(_("Environment Info"))
             self.printer.printItem(env)
         return os.EX_OK
 

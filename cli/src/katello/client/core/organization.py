@@ -49,7 +49,7 @@ class List(OrganizationAction):
         self.printer.addColumn('name')
         self.printer.addColumn('description', multiline=True)
 
-        self.printer.printHeader(_("Organization List"))
+        self.printer.setHeader(_("Organization List"))
         self.printer.printItems(orgs)
         return os.EX_OK
 
@@ -103,7 +103,7 @@ class Info(OrganizationAction):
         self.printer.addColumn('name')
         self.printer.addColumn('description', multiline=True)
 
-        self.printer.printHeader(_("Organization Information"))
+        self.printer.setHeader(_("Organization Information"))
         self.printer.printItem(org)
         return os.EX_OK
 
