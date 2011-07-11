@@ -518,6 +518,16 @@ ul.block {
         width: 16px;
         padding: 8px 0 0 0;
       }
+      #unread_notices {
+        @include text-shadow(0,1px,1px, #000);
+        @include border-radius(3em);
+        background-color: darken($kprimary_color,24%);
+        margin: 0.3em;
+        padding: 0.2em 0.7em;
+        width: auto;
+        color: #FFF;
+            /* @include box-shadow(0, 1px, 1px, #000); */
+      }
     }
     
     /* HEADER BUTTONS */
@@ -1662,93 +1672,7 @@ fieldset {
 
 #changeset_status {
     text-align: center;
-}
-
-.breadcrumb { 
-    list-style: none; 
-    overflow: hidden; 
-    font: 14px;
-    position: relative;
-      li { 
-      float: left; 
-      margin-left: 0;
-        a {
-        color: #000;
-        text-decoration: none; 
-        padding: 8px 0 8px 55px;
-        background: $breadcrumbbg_color;                   /* fallback color */
-        position: relative; 
-        display: block;
-        float: left;
-        &:after {
-          content: " "; 
-          display: block; 
-          width: 0; 
-          height: 0;
-          border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
-          border-bottom: 50px solid transparent;
-          border-left: 30px solid $breadcrumbbg_color;
-          position: absolute;
-          top: 50%;
-          margin-top: -50px; 
-          left: 100%;
-          z-index: 2; 
-        }
-        &:before { 
-          content: " "; 
-          display: block; 
-          width: 0; 
-          height: 0;
-          border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
-          border-bottom: 50px solid transparent;
-          border-left: 30px solid white;
-          position: absolute;
-          top: 50%;
-          margin-top: -50px; 
-          margin-left: 1px;
-          left: 100%;
-          z-index: 1; 
-        }
-     }
-   }
-}       
-.breadcrumb li:first-child a {
-    padding-left: 20px;
-    @include border-left-radius(5px);
-}
-.breadcrumb li:nth-child(2) a { 
-  background: $breadcrumbbg_color;
-  &:after { border-left-color: $breadcrumbbg_color; }
-}
-.breadcrumb li:last-child a {
-    padding-right: 30px;
-    @include border-right-radius(5px);
-    &:hover {
-      color: #FFF;
-      background: $listhover_color !important;
-    }
-    &:after { 
-      border: 0;
-      &:hover {
-        border-left-color: $listhover_color !important;
-      }
-    }
-}
-.breadcrumb li a:hover { 
-  background: $listhover_color !important; color: #FFF; @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
-  &:after {
-    border-left-color: $listhover_color !important;
-  }
-}
-.breadcrumb li a.active { 
-  background: $kselected_color; color: white;
-  &:hover:after {
-    border-left-color: $listhover_color !important;
-  }
-  &:after {
-    border-left-color: $kselected_color !important;
-  }
-}
+}     
 /* end content locker custom css */
 
 /* begin helptip */
@@ -1792,30 +1716,6 @@ fieldset {
     height: 18px;
 }
 /* end helptip */
-
-/* begin product icons */
-.sprite {
-  background: $base_product_icon;
-  height: 16px;
-  width: 16px;
-  position: absolute;
-  margin-top: 2px;
-}
-.custom-product-sprite {
-  background: $custom_product_icon;
-  @extend .sprite;
-}
-
-.rh-product-sprite {
-  background: $rh_product_icon;
-  @extend .sprite;
-}
-
-.product-icon {
-  padding-left: 18px;
-  vertical-align:middle;
-}
-/* end product icons */
 
 /* begin simple pass meter css */
 .simplePassMeter {
@@ -1892,100 +1792,154 @@ fieldset {
 
 .ui-multiselect input.search { height: 14px; padding: 1px; opacity: 0.5; margin: 4px; width: 100px; }
 
-.ui-resizable-e {
-    background: $grabber_icon;
-}  
-
-#unread_notices {
-            @include text-shadow(0,1px,1px, #000);
-            @include border-radius(3em);
-            background-color: darken($kprimary_color,24%);
-            margin: 0.3em;
-            padding: 0.2em 0.7em;
-            width: auto;
-            color: #FFF;
-            /* @include box-shadow(0, 1px, 1px, #000); */
-}
-
-.product-icon {
-  vertical-align:middle;
-}
-
-.promoted {
- font-size: 11px;           
- font-style: italic;     
- line-height: 30px;      
- text-align: center;     
- width: 71px;   
- @include opacity(.7);
-}
-
-.product_arch {
-  font-size: 11px;
-  display: inline;
-}
-
+.ui-resizable-e { background: $grabber_icon; }  
 
 .sp {
-    width: 90px;
-    padding-top: 8px;
+  width: 90px;
+  padding-top: 8px;
 }
 
 /*Environment selector stuff*/
-
 #path-widget {
- margin: 0 auto;
- width: 50%;
-}
+  margin: 0 auto;
+  width: 50%;
 
-#path-controller {
-    border-style: solid;
-    border-width: 1px;
-    border-color: #d3d3d3;
-    
-    padding: 6px;
+  #path-controller {
+      border-style: solid;
+      border-width: 1px;
+      border-color: #d3d3d3;
+      padding: 6px;  
 
-}
-.path_selector {
-    display: inline;
-    float: right;
+      .path_selector {
+          display: inline;
+          float: right;
+          vertical-align:middle;
+          margin-top: 8px;
+      }
+  }
+  .path_selected {
+     display: inline;
+     padding-bottom: 6px;
+     margin-bottom: 6px;
+  }
+  .path_entry_selected {
+        background-color: $lightgrey_color;
+  }
+  .path_entry {
+      padding-left: 6px;
+      padding-right: 33px;
+      padding-top: 6px;
+      padding-bottom: 6px;
+      
+      &:hover {
+        background-color: $lightgrey_color;
+        color: #FFF;
+      }
+  }
+  .path_entries {
+      @include box-shadow(4px,4px,2px,rgba(0, 0, 0, 0));
 
-    vertical-align:middle;
-    margin-top: 8px;
-}
-
-.path_selected {
-   display: inline;
-   padding-bottom: 6px;
-   margin-bottom: 6px;
-
-}
-.path_entry_selected {
-      background-color: $lightgrey_color;
-
-
-}
-.path_entry {
-    padding-left: 6px;
-    padding-right: 33px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-    &:hover {
-      background-color: $lightgrey_color;
-      color: #FFF;
-    }
-
-}
-.path_entries {
-    @include box-shadow(4px,4px,2px,rgba(0, 0, 0, 0));
- 
-    border-style: solid;
-    border-width: 1px;
-    border-color: #d3d3d3;
-
-    display: none;
-
-    z-index: 200;
-    position: absolute;
-    background-color: #FFF;
+      border-style: solid;
+      border-width: 1px;
+      border-color: #d3d3d3;
+  
+      display: none;
+  
+      z-index: 200;
+      position: absolute;
+      background-color: #FFF;
+  }
+  .breadcrumb { 
+      list-style: none; 
+      overflow: hidden; 
+      font: 14px;
+      position: relative;
+      
+      li { 
+          float: left; 
+          margin-left: 0;
+          
+          &:first-child {
+              a {
+                padding-left: 20px;
+                @include border-left-radius(5px);
+              }
+          }
+          &:nth-child(2) {
+            a {
+              background: $breadcrumbbg_color;
+              &:after { border-left-color: $breadcrumbbg_color; }
+            }
+          }
+          &:last-child {
+            a {
+              padding-right: 30px;
+              @include border-right-radius(5px);
+              
+              &:hover {
+                color: #FFF;
+                background: $listhover_color !important;
+              }
+              &:after { 
+                border: 0;
+                &:hover { border-left-color: $listhover_color !important; }
+              }
+            }
+          }
+          
+          a {
+            color: #000;
+            text-decoration: none; 
+            padding: 8px 0 8px 55px;
+            background: $breadcrumbbg_color;                   /* fallback color */
+            position: relative; 
+            display: block;
+            float: left;
+          
+            &:hover { 
+              background: $listhover_color !important; 
+              color: #FFF; 
+              @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
+              
+              &:after { border-left-color: $listhover_color !important; }
+            }
+            &.active {
+              background: $kselected_color; 
+              color: white;
+              
+              &:hover:after { border-left-color: $listhover_color !important; }
+              &:after { border-left-color: $kselected_color !important; }
+            }
+            &:after {
+              content: " "; 
+              display: block; 
+              width: 0; 
+              height: 0;
+              border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
+              border-bottom: 50px solid transparent;
+              border-left: 30px solid $breadcrumbbg_color;
+              position: absolute;
+              top: 50%;
+              margin-top: -50px; 
+              left: 100%;
+              z-index: 2; 
+            }
+            &:before { 
+              content: " "; 
+              display: block; 
+              width: 0; 
+              height: 0;
+              border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
+              border-bottom: 50px solid transparent;
+              border-left: 30px solid white;
+              position: absolute;
+              top: 50%;
+              margin-top: -50px; 
+              margin-left: 1px;
+              left: 100%;
+              z-index: 1; 
+            }
+         }
+     }
+  }  
 }
