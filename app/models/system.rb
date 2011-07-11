@@ -10,14 +10,23 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+class NonLockerEnvironmentValidator < ActiveModel::EachValidator
+  def validate_each(record, attribute, value)
+    return unless value
+    record.errors[attribute] << N_("Cannot register a system with 'locker' environment ") if record.environment != nil && record.environment.locker?
+  end
+end
+
 class System < ActiveRecord::Base
   include Glue::Candlepin::Consumer
   include Glue::Pulp::Consumer
   include Glue
   include Authorization
+  include AsyncOrchestration
 
-  belongs_to :organization, :inverse_of => :systems
-  validates :organization, :presence => true
+  belongs_to :environment, :class_name => "KPEnvironment", :inverse_of => :systems
+
+  validates :environment, :presence => true, :non_locker_environment => true
   validates :name, :presence => true, :no_trailing_space => true
   validates :description, :katello_description_format => true
   before_create  :fill_defaults
@@ -26,6 +35,11 @@ class System < ActiveRecord::Base
   scoped_search :on => :description, :complete_value => true
   scoped_search :on => :location, :complete_value => true
   scoped_search :on => :uuid, :complete_value => true
+
+
+  def organization
+    environment.organization
+  end
 
   def consumed_pool_ids
     self.pools.collect {|t| t['id']}

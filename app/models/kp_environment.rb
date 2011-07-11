@@ -19,7 +19,7 @@ end
 class PriorValidator < ActiveModel::Validator
   def validate(record)
     #need to ensure that prior
-    #environment already doesnot have a successor
+    #environment already does not have a successor
     #this is because in v1.0 we want
     # prior to have only one child (unless its the locker)
     has_no_prior = record.organization.environments.reject{|env| env == record || env.prior != record.prior || env.prior == env.organization.locker}.empty?
@@ -62,14 +62,11 @@ class KPEnvironment < ActiveRecord::Base
   has_and_belongs_to_many :successors, {:class_name => "KPEnvironment", :foreign_key => "prior_id",
     :join_table => "environment_priors", :association_foreign_key => :environment_id, :readonly => true}
   has_and_belongs_to_many :products, { :uniq=>true }
-  has_many :system_templates, :class_name => "SystemTemplate"
+  has_many :system_templates, :class_name => "SystemTemplate", :foreign_key => :environment_id
 
+  has_many :systems, :inverse_of => :environment, :foreign_key => :environment_id
   has_many :working_changesets, :conditions => ["state = '#{Changeset::NEW}' OR state = '#{Changeset::REVIEW}'"], :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
-
-
-
-  after_create :create_changeset
 
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
 
@@ -114,7 +111,7 @@ class KPEnvironment < ActiveRecord::Base
   #  and then give me that entire path
   def full_path
     p = self
-    until p.prior.locker
+    until p.prior.nil? or p.prior.locker
       p = p.prior
     end
     p.path
@@ -128,10 +125,6 @@ class KPEnvironment < ActiveRecord::Base
       prior_products = self.prior.products
     end
     return prior_products - self.products
-  end
-
-  def create_changeset
-    Changeset.create!(:environment=>self)
   end
 
 

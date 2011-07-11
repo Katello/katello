@@ -12,7 +12,7 @@
 
 class LockerPresenceValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    record.errors[attribute] << "must contain 'locker'" if value.select {|e| e.locker}.empty?
+    record.errors[attribute] << "must contain 'Locker'" if value.select {|e| e.locker}.empty?
   end
 end
 
@@ -23,7 +23,7 @@ class Product < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
 
-  has_and_belongs_to_many :environments, {:class_name => "KPEnvironment", :uniq => true}
+  has_and_belongs_to_many :environments, { :class_name => "KPEnvironment", :uniq => true }
   has_and_belongs_to_many :changesets
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products

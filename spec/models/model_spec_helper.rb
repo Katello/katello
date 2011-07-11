@@ -26,7 +26,7 @@ module OrchestrationHelper
     Pulp::Repository.stub!(:create).and_return([])
   end
 
-  def disable_org_orchestretion
+  def disable_org_orchestration
     Candlepin::Owner.stub!(:create).and_return({})
     Candlepin::Owner.stub!(:create_user).and_return(true)
     Candlepin::Owner.stub!(:destroy)

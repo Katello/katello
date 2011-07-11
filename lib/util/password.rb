@@ -34,13 +34,16 @@ module Password
     end
   end
 
+  # Generates random string like for length = 10 => "iCi5MxiTDn"
+  def self.generate_random_string(length)
+    length.to_i.times.collect { (i = Kernel.rand(62); i += ((i < 10) ? 48 : ((i < 36) ? 55 : 61 ))).chr }.join
+  end
+
   protected
 
   # Generates a psuedo-random 64 character string
   def Password.salt
-    s = ''
-    64.times { s << (i = Kernel.rand(62); i += ((i < 10) ? 48 : ((i < 36) ? 55 : 61 ))).chr }
-    s
+    self.generate_random_string(64)
   end
 
   # Generates a 128 character hash

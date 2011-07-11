@@ -16,8 +16,8 @@ class Api::ProxiesController < Api::ApiController
   before_filter :proxy_request_path, :proxy_request_body
 
   rescue_from RestClient::Exception do |e|
-    Rails.logger.error e.to_s
-    render :text => e.http_body, :status => e.http_code, :content_type => :json
+    Rails.logger.error pp_exception(e)
+    render :json => {:errors => [e.http_body]}, :status => e.http_code
   end
 
   def get

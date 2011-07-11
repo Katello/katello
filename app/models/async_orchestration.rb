@@ -1,17 +1,15 @@
 #
-# Copyright © 2011 Red Hat, Inc.
+# Copyright 2011 Red Hat, Inc.
 #
-# This software is licensed to you under the GNU General Public License,
-# version 2 (GPLv2). There is NO WARRANTY for this software, express or
-# implied, including the implied warranties of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. You should have received a copy of GPLv2
-# along with this software; if not, see
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 #
-# Red Hat trademarks are not licensed under GPLv2. No permission is
-# granted to use or replicate Red Hat trademarks that are incorporated
-# in this software or its documentation.
-
 # based on delayed_job's DelayProxy
 module AsyncOrchestration
   class AsyncOrchestrationProxy < ActiveSupport::BasicObject
@@ -21,15 +19,22 @@ module AsyncOrchestration
     end
 
     def method_missing(method, *args)
-      Delayed::Job.enqueue({:payload_object => AsyncOperation.new(User.current.username, @target, method.to_sym, args)}.merge(@options))
+      Delayed::Job.enqueue({:uuid => UUIDTools::UUID.random_create.to_s, :payload_object => AsyncOperation.new(User.current.username, @target, method.to_sym, args)}.merge(@options))
     end
   end
 
   def self.included(base)
     base.send :include, InstanceMethods
+    base.send :extend, ClassMethods
   end
 
   module InstanceMethods
+    def async(options = {})
+      AsyncOrchestrationProxy.new(self, options)
+    end
+  end
+
+  module ClassMethods
     def async(options = {})
       AsyncOrchestrationProxy.new(self, options)
     end
