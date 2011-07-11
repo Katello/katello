@@ -16,6 +16,7 @@ class Organization < ActiveRecord::Base
   include Glue if AppConfig.use_cp
   include Authorization
 
+  has_many :activation_keys, :dependent => :destroy, :inverse_of => :organization
   has_many :providers
   has_many :environments, :class_name => "KPEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
   has_one :locker, :class_name =>"KPEnvironment", :conditions => {:locker => true}, :dependent => :destroy

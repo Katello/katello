@@ -3,6 +3,7 @@ class CreateActivationKeys < ActiveRecord::Migration
     create_table :activation_keys do |t|
       t.string :name
       t.string :description
+      t.references :organization, :null => false
 
       t.timestamps
     end
