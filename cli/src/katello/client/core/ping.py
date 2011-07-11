@@ -59,7 +59,6 @@ class Status(PingAction):
         self.printer.setHeader(_("Katello Status"))
 
         details = status["status"]
-        pprint(status)
         
         statusList = []
         
