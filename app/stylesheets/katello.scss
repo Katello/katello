@@ -2,9 +2,9 @@
 @import "grid";
 @import "text";
 @import "mixins";
+@import "compass/css3/gradient";
 @import "colors";
 @import "sprites";
-@import "compass/css3/gradient";
 
 html {}
 
@@ -13,14 +13,14 @@ body {
 }
 
 a {
-  color: $linkfg;
+  color: $linkfg_color;
   text-decoration: none;
   &:hover, &:focus {
-    color: lighten($linkfg, 10%);
+    color: lighten($linkfg_color, 10%);
     text-decoration: underline;
   }
   &:active {
-    color: darken($linkfg, 20%);
+    color: darken($linkfg_color, 20%);
   }
 }
 
@@ -31,7 +31,7 @@ strong {
 /* TEXT ENTRIES */
 input,textarea {
   @include inset-box-shadow(0,1px,1px,rgba(0, 0, 0, 0.2));
-  border: 1px solid darken($strokecl,20%);
+  border: 1px solid darken($stroke_color,20%);
   background-color: #f0f0f0;
   background: $input_background_img;
   padding: 4px;
@@ -88,7 +88,7 @@ input[type='submit'],button,.button {
   background: -moz-linear-gradient(top, #f9f9f9, #f0f0f0, #e5e5e5, #e9e9e9);
   background: -webkit-gradient(linear, left top, left bottom, from(#f9f9f9), color-stop(0.9, #e5e5e5), to(#e9e9e9));
   @include no-box-shadow;
-  border: 1px solid darken($strokecl, 20%);
+  border: 1px solid darken($stroke_color, 20%);
   color: #221e1f;
   cursor: pointer;
   margin: 4px;
@@ -198,19 +198,19 @@ div,section,fieldset {
 
 table {
   border-collapse: collapse;
-  border: 1px solid $strokecl !important;
+  border: 1px solid $stroke_color !important;
   margin: 10px 0 40px; width: 100%;
   font-size: 95%;
   thead {
-    background-color: lighten($strokecl,25%);
+    background-color: lighten($stroke_color,25%);
     th {
       font-size: 95%;
       padding: 2px 6px;
       font-family: $headlinefont;
       font-weight: bold;
-      color: lighten($headercl,20%);
+      color: lighten($header_color,20%);
       text-transform: uppercase;
-      border-right: 1px dotted darken($strokecl,20%);
+      border-right: 1px dotted darken($stroke_color,20%);
         &:last-child {
            border-right: 0 none;
         }
@@ -246,7 +246,7 @@ table {
       th {
         border: none;
         span {
-          color: lighten($headercl,30%);
+          color: lighten($header_color,30%);
         }
       }
     }
@@ -262,7 +262,7 @@ table {
         .percentBlockInner {
         }
         .gradGreen {
-          background-color: $goodcl;
+          background-color: $good_color;
         }
       }
       .min {
@@ -295,16 +295,16 @@ table {
 }
 
 .actionsidebar {
-  border-right: 1px solid darken($footerbg, 10%);
+  border-right: 1px solid darken($footerbg_color, 10%);
   width: 159px !important;
   img {
     margin: 7px 0px 0px 0px;
   }
   dt {
-    background-color: $footerbg;
-    border-bottom: 1px solid darken($footerbg, 10%);
-    border-top: 1px solid darken($footerbg, 10%);
-    color: $headercl;
+    background-color: $footerbg_color;
+    border-bottom: 1px solid darken($footerbg_color, 10%);
+    border-top: 1px solid darken($footerbg_color, 10%);
+    color: $header_color;
     font-family: $headlinefont;
     font-size: 110%;
     font-weight: bold;
@@ -322,7 +322,7 @@ table {
       &.selected {
         background: url("/images/actionsidebar-bullet.png") no-repeat left center;
         font-weight: bold;
-        color: $kselected;
+        color: $kselected_color;
       }
     }
     h5 {
@@ -351,7 +351,7 @@ table {
     padding: 0;
     &:hover {
       @include no-box-shadow;
-      color: $kselected;
+      color: $kselected_color;
       &[disabled] {
         color: #000;
       }
@@ -440,12 +440,12 @@ img.icon {
     }
   }
   .success {
-    background-color: lighten($goodcl,40%);
-    border: 1px solid $goodcl;
+    background-color: lighten($good_color,40%);
+    border: 1px solid $good_color;
   }
   .error {
-    background-color: lighten($badcl,40%);
-    border: 1px solid $badcl;
+    background-color: lighten($bad_color,40%);
+    border: 1px solid $bad_color;
   }
   .close {
     display: block;
@@ -526,8 +526,8 @@ ul.block {
       font-weight: bold;
       font-size: 10px;
       display: inline-block;
-      background: -moz-linear-gradient(top, lighten($kprimary, 20%), $kprimary );
-      background: -webkit-gradient(linear, left top, left bottom, from(lighten($kprimary, 20%)),  to($kprimary));
+      background: -moz-linear-gradient(top, lighten($kprimary_color, 20%), $kprimary_color );
+      background: -webkit-gradient(linear, left top, left bottom, from(lighten($kprimary_color, 20%)),  to($kprimary_color));
       @include no-box-shadow;
       border: 0 none;
       color: #FFF;
@@ -539,15 +539,15 @@ ul.block {
         margin: 0;
       }
       &:hover {
-        background: -moz-linear-gradient(top, lighten($kprimary, 30%), lighten($kprimary, 20%));
-        background: -webkit-gradient(linear, left top, left bottom, from(lighten($kprimary, 30%)), to(lighten($kprimary, 20%)));
+        background: -moz-linear-gradient(top, lighten($kprimary_color, 30%), lighten($kprimary_color, 20%));
+        background: -webkit-gradient(linear, left top, left bottom, from(lighten($kprimary_color, 30%)), to(lighten($kprimary_color, 20%)));
         @include box-shadow(0, 1px, 2px, rgba(0,0,0,0.5));
         text-decoration: none;
         color: #fff;
       }
       &:active {
-        background: -moz-linear-gradient(top, lighten($kprimary, 30%), lighten($kprimary, 20%));
-        background: -webkit-gradient(linear, left top, left bottom, from(lighten($kprimary, 30%)), to(lighten($kprimary, 20%)));
+        background: -moz-linear-gradient(top, lighten($kprimary_color, 30%), lighten($kprimary_color, 20%));
+        background: -webkit-gradient(linear, left top, left bottom, from(lighten($kprimary_color, 30%)), to(lighten($kprimary_color, 20%)));
         @include no-box-shadow;
         text-decoration: none;
         @include text-shadow(0, 2px, 2px, #000);
@@ -598,7 +598,7 @@ ul.block {
         }
       }
       input[type="search"] {
-        border-color: $headerbg;
+        border-color: $headerbg_color;
         width: 80%;
       }
     }
@@ -625,15 +625,15 @@ nav {
         padding: 0;
         color: #888;
         background-color: #ddd;
-        background: -moz-linear-gradient(top, #fff, #ddd 2px, #ddd 70%, lighten($strokecl, 10%));
-        background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(lighten($strokecl,10%)), color-stop(.01, #ddd), color-stop(.7,#ddd));
-        border: 1px solid $strokecl;
+        background: -moz-linear-gradient(top, #fff, #ddd 2px, #ddd 70%, lighten($stroke_color, 10%));
+        background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(lighten($stroke_color,10%)), color-stop(.01, #ddd), color-stop(.7,#ddd));
+        border: 1px solid $stroke_color;
         &.selected {
           background: #fff;
           padding-bottom: 1px;
           border-bottom: none;
           &>a {
-            color: $tabon;
+            color: $tabon_color;
             @include no-text-shadow();
           }
         }
@@ -641,10 +641,10 @@ nav {
           display: block;
           padding: 9px 18px;
           text-decoration: none;
-          color: $taboff;
+          color: $taboff_color;
           @include text-shadow(0,1px,0,#fff);
           &:hover {
-            color: lighten($kselected,10%);
+            color: lighten($kselected_color,10%);
           }
         }
       }
@@ -671,15 +671,15 @@ nav {
           display: block;
           margin: 0;
           padding: 8px 16px 6px;
-          color: $taboff;
+          color: $taboff_color;
           &.selected {
-            color: $tabon;
+            color: $tabon_color;
             font-weight: bold;
-            border-bottom: 3px solid $kselected;
+            border-bottom: 3px solid $kselected_color;
             padding-bottom: 3px;
           }
           &:hover {
-                color: lighten($kselected,10%);
+                color: lighten($kselected_color,10%);
           }
         }
       }
@@ -697,7 +697,7 @@ nav {
     &>ul {
       display: inline-block;
       height: 3.5em;
-      background-color: lighten($kselected, 65%);
+      background-color: lighten($kselected_color, 65%);
       @include border-radius(5px);
       li {
         display: block;
@@ -712,7 +712,7 @@ nav {
           display: block;
           padding: 6px 12px; margin-right: 10px;
           &.selected {
-            background-color: $kselected;
+            background-color: $kselected_color;
             @include border-radius(5px);
             color: #FFF;
           }
@@ -729,8 +729,8 @@ nav {
   overflow: hidden;
   background-color: #FFF;
   h2 {
-    background-color: $formheadbg;
-    color: $formheadfg;
+    background-color: $formheadbg_color;
+    color: $formheadfg_color;
     text-transform: uppercase;
     font-size: 120%;
     padding: 10px;
@@ -767,7 +767,7 @@ nav {
 label {
   text-align: right;
   font-weight: bold;
-  color: $labelfg;
+  color: $labelfg_color;
   &.header {
     text-align: left;
     font-weight: normal;
@@ -780,7 +780,7 @@ label {
     font-family: $headlinefont;
     font-size: 110%;
     font-weight: bold;
-    color: $formheadfg;
+    color: $formheadfg_color;
   }
 }
 
@@ -789,7 +789,7 @@ legend {
   font-family: $headlinefont;
   font-weight: bold;
   text-transform: uppercase;
-  color: $headercl;
+  color: $header_color;
 }
 
 /* When you need to seperate items within a fieldset */
@@ -818,11 +818,11 @@ legend {
       display: inline-block;
       border: 0; margin: 0; padding: 0;
       input {
-        background-color: lighten($errorcl, 45%);
-        color: $errorcl;
+        background-color: lighten($error_color, 45%);
+        color: $error_color;
       }
       label {
-        color: $errorcl;
+        color: $error_color;
       }
     }
   }
@@ -1004,7 +1004,7 @@ a.iconbutton {
 }
 
 /* when modalbox miss dropshadow set some border */
-.no-boxshadow .modalbox { border: 2px solid $strokecl; }
+.no-boxshadow .modalbox { border: 2px solid $stroke_color; }
 
 /* DEBUG GRID */
 #grid {
@@ -1018,7 +1018,7 @@ a.iconbutton {
 }
 
 .outlined {
-  outline: 2px solid $kselected;
+  outline: 2px solid $kselected_color;
 }
 
 .remove_item {
@@ -1060,8 +1060,6 @@ a.iconbutton {
     }
 }
 
-$tree-container: #F2F2F2;
-$tree-border: #c0c1be;
 
 #main {
   ul {
@@ -1097,7 +1095,7 @@ $tree-border: #c0c1be;
   background-position: top center;
 }
 .alt {
-    background-color: lighten($lightgrey, 35%) !important;
+    background-color: lighten($lightgrey_color, 35%) !important;
 }
 
 .clickable {
@@ -1170,9 +1168,9 @@ fieldset {
     font-weight: 600;
     font-size: 110%;
     color: #000;
-    background-color: $tree-container;
+    background-color: $tree-container_color;
     word-wrap: break-word;
-    border: 1px solid $tree-border;
+    border: 1px solid $tree-border_color;
     border-bottom: none;
     //outline: 2px solid $treecontainer;
     padding: 10px 5px;
@@ -1245,14 +1243,14 @@ fieldset {
             &.active{
                 .arrow-right {
                     border-bottom: 19px solid transparent;
-                    border-left: 17px solid $kselected;
+                    border-left: 17px solid $kselected_color;
                     border-top: 18px solid transparent;
                     right: -17px;
                 }
             }
             &:hover {
               .arrow-right {
-                border-left: 17px solid $listhover;
+                border-left: 17px solid $listhover_color;
               }
             }
         }
@@ -1285,19 +1283,19 @@ fieldset {
       }
     }
     .block_head {
-      background-color: lighten($strokecl,8%);
+      background-color: lighten($stroke_color,8%);
       display: block;
       height: 1.3em;
-      color: $lightgrey;
+      color: $lightgrey_color;
       .column_1, .column_2, .column_3 {
         text-align: left;
         padding-left: 1%;
         font-size: 85%;
         font-family: $headlinefont;
-        color: lighten($headercl,20%);
+        color: lighten($header_color,20%);
         text-transform: uppercase;
         white-space:nowrap;
-        border-right: 1px dotted darken($strokecl,20%);
+        border-right: 1px dotted darken($stroke_color,20%);
           &:last-child {
             border-right: 0 none;
           }
@@ -1354,11 +1352,11 @@ fieldset {
   height: 30px;
   font-size: 90%;
   &.active {
-    background-color: $kselected;
+    background-color: $kselected_color;
     color: #FFF;
     .arrow-right {
       border-bottom: 21px solid transparent;
-      border-left: 21px solid $kselected;
+      border-left: 21px solid $kselected_color;
       border-top: 21px solid transparent;
       height: 0;
       margin: 0;
@@ -1373,14 +1371,14 @@ fieldset {
     }
   }
   &.add {
-    background-color: $listhover;
+    background-color: $listhover_color;
     color: #FFF;
   }
   &:hover {
-      background-color: $listhover;
+      background-color: $listhover_color;
       color: #FFF;
       .arrow-right {
-        border-left: 21px solid $listhover;
+        border-left: 21px solid $listhover_color;
       }
   }
 }
@@ -1407,12 +1405,12 @@ fieldset {
     width: 416px;
     height: 17px;
     &.active {
-      background-color: $listhover;
+      background-color: $listhover_color;
       color: #FFF;
       .arrow-right {
         border-top: 15px solid transparent;
         border-bottom: 15px solid transparent;
-        border-right: 15px solid $listhover;
+        border-right: 15px solid $listhover_color;
         border-left: none;
         height: 0;
         margin: 0;
@@ -1523,7 +1521,7 @@ fieldset {
     padding: 4px;
     height: 2.7em;
     &:hover {
-      background-color: $listhover;
+      background-color: $listhover_color;
       color: #FFF;
       
       .st_button {
@@ -1651,10 +1649,6 @@ fieldset {
   }
 }
 
-$product_color: #070;
-$package_color: #666;
-$errata_color: #700;
-$repo_color: #4A9FB1;
 .changeset_remove_product { color: $product_color; @include changeset_remove;}
 .changeset_remove_package { color: $package_color; @include changeset_remove;}
 .changeset_remove_errata { color: $errata_color; @include changeset_remove;}
@@ -1682,7 +1676,7 @@ $repo_color: #4A9FB1;
         color: #000;
         text-decoration: none; 
         padding: 8px 0 8px 55px;
-        background: $breadcrumbbg;                   /* fallback color */
+        background: $breadcrumbbg_color;                   /* fallback color */
         position: relative; 
         display: block;
         float: left;
@@ -1693,7 +1687,7 @@ $repo_color: #4A9FB1;
           height: 0;
           border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
           border-bottom: 50px solid transparent;
-          border-left: 30px solid $breadcrumbbg;
+          border-left: 30px solid $breadcrumbbg_color;
           position: absolute;
           top: 50%;
           margin-top: -50px; 
@@ -1723,36 +1717,36 @@ $repo_color: #4A9FB1;
     @include border-left-radius(5px);
 }
 .breadcrumb li:nth-child(2) a { 
-  background: $breadcrumbbg;
-  &:after { border-left-color: $breadcrumbbg; }
+  background: $breadcrumbbg_color;
+  &:after { border-left-color: $breadcrumbbg_color; }
 }
 .breadcrumb li:last-child a {
     padding-right: 30px;
     @include border-right-radius(5px);
     &:hover {
       color: #FFF;
-      background: $listhover !important;
+      background: $listhover_color !important;
     }
     &:after { 
       border: 0;
       &:hover {
-        border-left-color: $listhover !important;
+        border-left-color: $listhover_color !important;
       }
     }
 }
 .breadcrumb li a:hover { 
-  background: $listhover !important; color: #FFF; @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
+  background: $listhover_color !important; color: #FFF; @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
   &:after {
-    border-left-color: $listhover !important;
+    border-left-color: $listhover_color !important;
   }
 }
 .breadcrumb li a.active { 
-  background: $kselected; color: white;
+  background: $kselected_color; color: white;
   &:hover:after {
-    border-left-color: $listhover !important;
+    border-left-color: $listhover_color !important;
   }
   &:after {
-    border-left-color: $kselected !important;
+    border-left-color: $kselected_color !important;
   }
 }
 /* end content locker custom css */
@@ -1905,7 +1899,7 @@ $repo_color: #4A9FB1;
 #unread_notices {
             @include text-shadow(0,1px,1px, #000);
             @include border-radius(3em);
-            background-color: darken($kprimary,24%);
+            background-color: darken($kprimary_color,24%);
             margin: 0.3em;
             padding: 0.2em 0.7em;
             width: auto;
@@ -1967,7 +1961,7 @@ $repo_color: #4A9FB1;
 
 }
 .path_entry_selected {
-      background-color: $lightgrey;
+      background-color: $lightgrey_color;
 
 
 }
@@ -1977,7 +1971,7 @@ $repo_color: #4A9FB1;
     padding-top: 6px;
     padding-bottom: 6px;
     &:hover {
-      background-color: $lightgrey;
+      background-color: $lightgrey_color;
       color: #FFF;
     }
 
