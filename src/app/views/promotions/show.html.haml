@@ -1,6 +1,7 @@
 = javascript :bbq, :panel, :edit, :promotion
 = include_editable_i18n
 
+
 = javascript do
   :javascript
     var content_breadcrumb = $.parseJSON('#{escape_javascript(generate_content_breadcrumb())}');
@@ -33,6 +34,9 @@
       "repo_plural": '#{_("Repositories")}',
       "changeset_empty": '#{_("Changeset is empty.")}',
       "summary": '#{_("Summary:")}',
+      "loading_deps": '#{_("Loading dependencies.")}',
+      "dep_of": '#{_("Dependency of ")}',
+      "deps": "#{_("Dependencies")}",
       "full_product": '#{_("Full Products")}',
       "partial_product": '#{_("Partial Products")}',
       "edit_details": '#{_("Edit Details")}',

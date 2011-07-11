@@ -48,6 +48,11 @@ module BreadcrumbHelper
         add_crumb_node!(bc, repos_cs_bc_id(cs, product), "",  _("Repositories"),
                         ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true})
 
+        #repos
+        add_crumb_node!(bc, deps_cs_bc_id(cs, product), "",  _("Dependencies"),
+                        ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true})
+
+
       }
     } if @changesets
     bc.to_json
@@ -71,6 +76,10 @@ module BreadcrumbHelper
 
   def repos_cs_bc_id cs, product
     "repo-cs_#{cs.id}_#{product.id}" if cs
+  end
+
+  def deps_cs_bc_id cs, product
+    "deps-cs_#{cs.id}_#{product.id}" if cs
   end
 
 
