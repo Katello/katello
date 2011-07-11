@@ -14,23 +14,15 @@ require 'rest_client'
 
 class Api::TemplatesController < Api::ApiController
 
+  before_filter :find_organization, :only => [:index]
   before_filter :find_environment, :only => [:create, :import]
   before_filter :find_template, :only => [:show, :update, :update_content, :destroy, :promote, :export]
 
   def index
-    debugger
+    render :text => _("Environment name not provided"), :status => :bad_request and return if params[:env_name].nil?
     templates = []
-    unless params[:organization_id].nil?
-      @organization = find_organization()
-      unless params[:env_name].nil?
-        envs = @organization.environments.where(:name => params[:env_name])
-      else
-        envs = @organization.environments + @organization.locker
-      end
-      envs.each {|e| templates += SystemTemplate.where(:environment_id => e.id) }
-    else
-      templates = SystemTemplate.all
-    end
+    envs = @organization.environments.where(:name => params[:env_name])
+    envs.each {|e| templates += SystemTemplate.where(:environment_id => e.id) }
     
     render :json => templates.to_json
   end
