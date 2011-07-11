@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
-"POT-Creation-Date: 2011-06-01 15:16-0600\n"
+"POT-Creation-Date: 2011-07-06 11:01-0400\n"
 "PO-Revision-Date: 2011-01-10 17:59-0700\n"
 "Last-Translator: Jason E. Rist <jrist@redhat.com>\n"
 "Language-Team: Japanese\n"
@@ -16,15 +16,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+#: app/views/promotions/show.html.haml:55
+#, fuzzy
+msgid " Content"
+msgstr "コンテンツロッカー"
+
 #: app/views/layouts/_footer.haml:7
 msgid " Red Hat, Inc."
 msgstr " Red Hat, Inc."
 
-#: app/controllers/users_controller.rb:52
+#: app/controllers/users_controller.rb:61
 msgid " created successfully."
 msgstr "正常に作成されました。"
 
-#: app/models/kp_environment.rb:38
+#: app/models/kp_environment.rb:40
 msgid " environment cannot be set to an environment already on its path"
 msgstr "環境は、そのパス上に既に環境に設定することはできません"
 
@@ -36,25 +41,27 @@ msgstr "%{relative_time} 前"
 msgid "+ New "
 msgstr ""
 
-#: app/views/products/index.haml:4
-msgid "Actions"
-msgstr "アクション"
-
-#: app/views/promotions/_packages.html.haml:14
-#: app/views/promotions/_products.html.haml:11
-#: app/views/promotions/_errata.html.haml:13
+#: app/views/promotions/_products.html.haml:14
+#: app/views/promotions/_repos.html.haml:15
+#: app/views/promotions/_packages.html.haml:15
+#: app/views/promotions/_errata.html.haml:14
 msgid "Add"
 msgstr "追加"
 
-#: app/views/roles/_edit.html.haml:20
+#: app/views/organizations/_edit.html.haml:36
+#, fuzzy
+msgid "Add New Environment"
+msgstr "環境"
+
+#: app/views/roles/_permissions.html.haml:6
 msgid "Add Permission"
 msgstr "アクセス許可を追加する"
 
-#: app/views/providers/_products_repos.html.haml:23
+#: app/views/providers/_products_repos.html.haml:22
 msgid "Add Product"
 msgstr "追加製品"
 
-#: app/views/providers/_products_repos.html.haml:85
+#: app/views/providers/_products_repos.html.haml:38
 msgid "Add Repository"
 msgstr "リポジトリーの追加"
 
@@ -74,12 +81,18 @@ msgstr "すべて"
 msgid "All Errata"
 msgstr "すべてのエラータ"
 
-#: app/views/sync_schedules/index.html.haml:12
-msgid "Apply Selected Plans to Selected Products"
+#: app/views/promotions/show.html.haml:14
+msgid ""
+"An error has occured when communicating with the server, please refresh the "
+"page to retrieve the current changeset."
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:41
+#: app/views/sync_schedules/index.html.haml:17
+msgid "Apply Selected Plan to Selected Products"
+msgstr ""
+
 #: app/views/systems/_packages.html.haml:8
+#: app/views/systems/_edit.html.haml:42
 msgid "Arch"
 msgstr ""
 
@@ -87,13 +100,15 @@ msgstr ""
 msgid "Architecture"
 msgstr ""
 
-#: app/views/providers/_edit.html.haml:33
-#: app/views/sync_plans/_edit.html.haml:28
 #: app/views/organizations/_edit.html.haml:38
+#: app/views/products/_edit.html.haml:32
 #: app/views/environments/_edit.html.haml:29
-#: app/views/roles/_edit.html.haml:24 app/views/notices/show.html.haml:37
+#: app/views/roles/_self_role_edit.html.haml:20
+#: app/views/roles/_edit.html.haml:19 app/views/notices/show.html.haml:42
+#: app/views/sync_plans/_edit.html.haml:28
+#: app/views/repositories/_edit.html.haml:23
 #: app/views/common/_common_i18n.html.haml:3
-#: app/views/users/_edit.html.haml:50
+#: app/views/providers/_edit.html.haml:33 app/views/users/_edit.html.haml:41
 msgid "Are you sure?"
 msgstr ""
 
@@ -101,8 +116,8 @@ msgstr ""
 msgid "Associated Bugs"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:59
-msgid "Available Content"
+#: app/controllers/organizations_controller.rb:105
+msgid "At least one organization must exist."
 msgstr ""
 
 #: app/views/common/403.html.haml:7
@@ -121,22 +136,23 @@ msgstr ""
 msgid "Build Host"
 msgstr ""
 
-#: app/controllers/api/environments_controller.rb:38
+#: app/controllers/api/environments_controller.rb:36
 #, fuzzy
 msgid "Can't update locker environment"
 msgstr "環境を作成する"
 
-#: app/views/providers/_edit_repository.html.haml:24
-#: app/views/providers/_products_repos.html.haml:59
-#: app/views/providers/_products_repos.html.haml:103
-#: app/views/providers/_edit_product.html.haml:34
-#: app/views/roles/_permission.html.haml:42
 #: app/views/sync_management/index.html.haml:3
+#: app/views/roles/_permission.html.haml:42
 #: app/views/common/_edit_i18n.html.haml:3
 msgid "Cancel"
 msgstr ""
 
-#: app/views/users/_edit.html.haml:23
+#: app/models/system.rb:16
+#, fuzzy
+msgid "Cannot register a system with 'locker' environment "
+msgstr "環境を作成する"
+
+#: app/views/users/_edit.html.haml:25
 msgid "Change Password"
 msgstr ""
 
@@ -148,31 +164,31 @@ msgstr ""
 msgid "Changeset History"
 msgstr ""
 
-#: app/views/changesets/_changeset.html.haml:21
+#: app/views/changesets/_changeset.html.haml:30
 msgid "Changeset Summary"
 msgstr ""
 
-#: app/controllers/changesets_controller.rb:27
-msgid "Changeset storage errors"
-msgstr ""
-
-#: app/controllers/changesets_controller.rb:37
+#: app/controllers/changesets_controller.rb:36
 msgid "Changesets"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:54
+#: app/views/systems/_edit.html.haml:55
 msgid "Checked In"
 msgstr ""
 
-#: app/views/users/_edit.html.haml:20
+#: app/views/users/_edit.html.haml:22
 msgid "Clear"
 msgstr ""
 
-#: app/views/users/_edit.html.haml:17
+#: app/views/users/_edit.html.haml:19
 msgid "Clear Disabled Helptips"
 msgstr ""
 
-#: app/controllers/users_controller.rb:103
+#: app/views/common/_search.html.haml:17
+msgid "Clear the Search"
+msgstr ""
+
+#: app/controllers/users_controller.rb:113
 msgid "Cleared"
 msgstr ""
 
@@ -180,12 +196,16 @@ msgstr ""
 msgid "Click New to create a new"
 msgstr ""
 
-#: app/views/providers/_edit_product.html.haml:21
+#: app/controllers/organizations_controller.rb:53
+msgid "Click on 'Add Environment' to create the first environment"
+msgstr ""
+
+#: app/views/products/_edit.html.haml:23
 #: app/views/common/_edit_i18n.html.haml:3
 msgid "Click to edit"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:51 app/views/common/_panel.html.haml:17
+#: app/views/promotions/show.html.haml:47 app/views/common/_panel.html.haml:17
 #: app/views/common/_panel.html.haml:26
 msgid "Close"
 msgstr "閉じる"
@@ -194,7 +214,7 @@ msgstr "閉じる"
 msgid "Collapse"
 msgstr ""
 
-#: app/views/users/_edit.html.haml:30 app/views/users/_new.html.haml:19
+#: app/views/users/_new.html.haml:19 app/views/users/_edit.html.haml:32
 msgid "Confirm"
 msgstr ""
 
@@ -215,7 +235,13 @@ msgstr "コンテンツ管理"
 msgid "Copyright &copy; "
 msgstr ""
 
-#: app/views/environments/_new.html.haml:24 config/navigation.rb:24
+#: app/controllers/api/sync_controller.rb:77
+msgid "Couldn't find subject of synchronization"
+msgstr ""
+
+#: app/views/products/_new.html.haml:35
+#: app/views/environments/_new.html.haml:24
+#: app/views/repositories/_new.html.haml:20 config/navigation.rb:24
 msgid "Create"
 msgstr "作成"
 
@@ -223,12 +249,22 @@ msgstr "作成"
 msgid "Create Environment"
 msgstr "環境を作成する"
 
-#: app/views/notices/show.html.haml:19
+#: app/views/products/_new.html.haml:1
 #, fuzzy
-msgid "Created"
+msgid "Create Product"
 msgstr "作成"
 
-#: app/views/promotions/show.html.haml:40
+#: app/views/repositories/_new.html.haml:4
+#, fuzzy
+msgid "Create Repository"
+msgstr "リポジトリーの追加"
+
+#: app/views/notices/show.html.haml:24
+#, fuzzy
+msgid "Created (UTC)"
+msgstr "作成"
+
+#: app/views/promotions/show.html.haml:39
 #, fuzzy
 msgid "Current Changeset"
 msgstr "コンテンツ管理"
@@ -242,28 +278,27 @@ msgstr "サブスクリプション"
 msgid "Dashboard"
 msgstr "ダッシュボード"
 
-#: app/views/notices/show.html.haml:37
+#: app/views/notices/show.html.haml:42
 #, fuzzy
 msgid "Delete All"
 msgstr "検索"
 
-#: app/views/packages/_dependencies.html.haml:12
-#: app/views/changesets/_changeset.html.haml:45 config/navigation.rb:44
+#: app/views/changesets/_changeset.html.haml:59
+#: app/views/packages/_dependencies.html.haml:12 config/navigation.rb:44
 msgid "Dependencies"
 msgstr ""
 
-#: app/views/providers/_edit.html.haml:19
-#: app/views/providers/_form.html.haml:12
-#: app/views/providers/_products_repos.html.haml:34
-#: app/views/providers/_edit_product.html.haml:12
-#: app/views/sync_plans/_edit.html.haml:13
-#: app/views/sync_plans/_form.html.haml:10
-#: app/views/organizations/_edit.html.haml:12
 #: app/views/organizations/_new.html.haml:12
-#: app/views/environments/_edit.html.haml:18
+#: app/views/organizations/_edit.html.haml:12
+#: app/views/errata/_show.html.haml:45 app/views/products/_new.html.haml:12
+#: app/views/products/_edit.html.haml:15
 #: app/views/environments/_new.html.haml:14
-#: app/views/systems/_edit.html.haml:29 app/views/packages/_show.html.haml:19
-#: app/views/notices/show.html.haml:23 app/views/errata/_show.html.haml:45
+#: app/views/environments/_edit.html.haml:18
+#: app/views/notices/show.html.haml:28 app/views/sync_plans/_form.html.haml:10
+#: app/views/sync_plans/_edit.html.haml:13
+#: app/views/packages/_show.html.haml:19
+#: app/views/providers/_form.html.haml:12
+#: app/views/providers/_edit.html.haml:19 app/views/systems/_edit.html.haml:30
 msgid "Description"
 msgstr "概要"
 
@@ -272,7 +307,7 @@ msgstr "概要"
 msgid "Details"
 msgstr ""
 
-#: app/controllers/users_controller.rb:102
+#: app/controllers/users_controller.rb:112
 msgid "Disabled help tips have been re-enabled."
 msgstr ""
 
@@ -280,7 +315,7 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
-#: app/views/providers/_edit_product.html.haml:3
+#: app/views/products/_edit.html.haml:6
 msgid "Edit Product"
 msgstr ""
 
@@ -289,7 +324,7 @@ msgstr ""
 msgid "Edit Provider"
 msgstr "コンテンツプロバイダー"
 
-#: app/views/providers/_edit_repository.html.haml:3
+#: app/views/repositories/_edit.html.haml:6
 msgid "Edit Repository"
 msgstr ""
 
@@ -297,12 +332,17 @@ msgstr ""
 msgid "Edit Sync Plan"
 msgstr ""
 
+#: app/views/roles/_self_role_edit.html.haml:4
 #: app/views/users/_edit.html.haml:2
 #, fuzzy
 msgid "Edit User"
 msgstr "編集する"
 
-#: app/views/users/_edit.html.haml:12
+#: app/controllers/api/systems_controller.rb:82
+msgid "Either organization id or environment id needs to be specified"
+msgstr ""
+
+#: app/views/users/_edit.html.haml:14
 msgid "Enable inline help"
 msgstr ""
 
@@ -321,9 +361,9 @@ msgid "Environment cannot be in its own promotion path"
 msgstr ""
 
 #: app/helpers/promotions_helper.rb:49
-#: app/views/promotions/_detail.html.haml:18
+#: app/views/changesets/_changeset.html.haml:39
 #: app/views/changesets/_edit.html.haml:33
-#: app/views/changesets/_changeset.html.haml:30
+#: app/views/promotions/_detail.html.haml:18
 msgid "Errata"
 msgstr ""
 
@@ -343,6 +383,10 @@ msgstr ""
 msgid "Expand"
 msgstr ""
 
+#: app/views/sync_management/_products.html.haml:77
+msgid "Expand/Contract All"
+msgstr ""
+
 #: app/views/systems/_facts.html.haml:10
 msgid "Fact"
 msgstr ""
@@ -351,7 +395,7 @@ msgstr ""
 msgid "Facts"
 msgstr ""
 
-#: app/views/providers/_products_repos.html.haml:52
+#: app/views/products/_new.html.haml:30
 msgid "File"
 msgstr ""
 
@@ -359,15 +403,11 @@ msgstr ""
 msgid "Filelist"
 msgstr ""
 
-#: app/views/products/index.haml:8
-msgid "Filter"
-msgstr ""
-
 #: app/views/sync_management/_products.html.haml:8
 msgid "Finish Time"
 msgstr ""
 
-#: config/navigation.rb:63
+#: config/navigation.rb:63 config/navigation.rb:87
 msgid "General"
 msgstr ""
 
@@ -384,12 +424,16 @@ msgstr "グループ"
 msgid "Groups"
 msgstr "グループ"
 
-#: app/views/systems/_edit.html.haml:13
+#: app/views/systems/_edit.html.haml:14
 msgid "ID"
 msgstr ""
 
-#: app/views/sync_plans/_edit.html.haml:17
+#: app/views/systems/_list_system.html.haml:19
+msgid "IP: "
+msgstr ""
+
 #: app/views/sync_plans/_form.html.haml:15
+#: app/views/sync_plans/_edit.html.haml:17
 msgid "Interval"
 msgstr ""
 
@@ -401,11 +445,15 @@ msgstr ""
 msgid "Katello"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:62
+#: app/views/systems/_list_system.html.haml:16
+msgid "Kernel: "
+msgstr ""
+
+#: app/views/systems/_edit.html.haml:65
 msgid "Last Booted"
 msgstr ""
 
-#: app/views/notices/show.html.haml:21
+#: app/views/notices/show.html.haml:26
 msgid "Level"
 msgstr ""
 
@@ -425,16 +473,12 @@ msgid ""
 "the Red Hat Customer Portal or by contacting your support representative."
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:45
+#: app/views/systems/_edit.html.haml:46
 #, fuzzy
 msgid "Location"
 msgstr "通知"
 
-#: app/controllers/environments_controller.rb:39
 #: app/controllers/environments_controller.rb:73
-#: app/views/environments/_new.html.haml:21
-#: app/views/common/_env_select.html.haml:14
-#: app/views/common/_env_select.html.haml:29
 #, fuzzy
 msgid "Locker"
 msgstr "コンテンツロッカー"
@@ -444,44 +488,38 @@ msgstr "コンテンツロッカー"
 msgid "Log In"
 msgstr "ログイン"
 
-#: app/controllers/user_sessions_controller.rb:41
+#: app/controllers/user_sessions_controller.rb:66
 msgid "Login Successful"
 msgstr "ログイン成功"
 
-#: app/views/layouts/_footer.haml:5 app/views/layouts/_header.haml:23
+#: app/views/layouts/_header.haml:23 app/views/layouts/_footer.haml:5
 #: app/views/accounts/show.html.haml:6
 msgid "Logout"
 msgstr "ログアウト"
 
-#: app/controllers/user_sessions_controller.rb:50
+#: app/controllers/user_sessions_controller.rb:47
 msgid "Logout Successful"
 msgstr "ログアウト成功"
-
-#: app/views/providers/schedule.html.haml:2
-#, fuzzy
-msgid "Manage Providers"
-msgstr "コンテンツプロバイダー"
 
 #: config/navigation.rb:10
 msgid "Monitors"
 msgstr "モニター"
 
-#: app/views/providers/_edit.html.haml:14
-#: app/views/providers/_edit_repository.html.haml:7
-#: app/views/providers/_form.html.haml:6
-#: app/views/providers/_products_repos.html.haml:29
-#: app/views/providers/_products_repos.html.haml:91
-#: app/views/providers/_edit_product.html.haml:7
-#: app/views/providers/_subscriptions.html.haml:21
-#: app/views/sync_plans/_edit.html.haml:9
-#: app/views/sync_plans/_form.html.haml:5
 #: app/views/organizations/_new.html.haml:7
-#: app/views/environments/_edit.html.haml:13
+#: app/views/changesets/_edit.html.haml:14 app/views/products/_new.html.haml:7
+#: app/views/products/_edit.html.haml:10
 #: app/views/environments/_new.html.haml:8
-#: app/views/systems/_edit.html.haml:25
-#: app/views/systems/_packages.html.haml:7 app/views/roles/_edit.html.haml:10
-#: app/views/roles/_new.html.haml:8 app/views/packages/_show.html.haml:11
-#: app/views/changesets/_edit.html.haml:14
+#: app/views/environments/_edit.html.haml:13 app/views/roles/_new.html.haml:6
+#: app/views/roles/_edit.html.haml:10 app/views/sync_plans/_form.html.haml:5
+#: app/views/sync_plans/_edit.html.haml:9
+#: app/views/repositories/_new.html.haml:10
+#: app/views/repositories/_edit.html.haml:10
+#: app/views/packages/_show.html.haml:11
+#: app/views/providers/_subscriptions.html.haml:21
+#: app/views/providers/_form.html.haml:6
+#: app/views/providers/_edit.html.haml:14
+#: app/views/systems/_packages.html.haml:7
+#: app/views/systems/_edit.html.haml:26
 msgid "Name"
 msgstr "名"
 
@@ -490,24 +528,20 @@ msgstr "名"
 msgid "Name:"
 msgstr "名"
 
+#: app/helpers/systems_helper.rb:22
+msgid "Never checked in."
+msgstr ""
+
 #: app/views/organizations/_new.html.haml:2
 msgid "New Organization"
 msgstr "新しい組織"
-
-#: app/views/providers/_products_repos.html.haml:25
-msgid "New Product"
-msgstr ""
 
 #: app/views/providers/_new.html.haml:4
 #, fuzzy
 msgid "New Provider"
 msgstr "コンテンツプロバイダー"
 
-#: app/views/providers/_products_repos.html.haml:87
-msgid "New Repository"
-msgstr ""
-
-#: app/views/roles/_new.html.haml:3
+#: app/views/roles/_new.html.haml:1
 msgid "New Role"
 msgstr "新たな役割"
 
@@ -534,15 +568,19 @@ msgstr ""
 msgid "No packages available for promotion"
 msgstr ""
 
-#: app/views/promotions/_products.html.haml:3
+#: app/views/promotions/_products.html.haml:5
 msgid "No products"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:63
+#: app/views/promotions/_repos.html.haml:3
+msgid "No repos available for promotion"
+msgstr ""
+
+#: app/models/product.rb:70 app/views/systems/_edit.html.haml:66
 msgid "None"
 msgstr "なし"
 
-#: app/controllers/providers_controller.rb:109
+#: app/controllers/providers_controller.rb:56
 msgid "None Imported"
 msgstr ""
 
@@ -554,11 +592,11 @@ msgstr ""
 msgid "Notifications"
 msgstr "通知"
 
-#: app/views/systems/_edit.html.haml:33
+#: app/views/systems/_edit.html.haml:34
 msgid "OS"
 msgstr ""
 
-#: app/views/providers/_products_repos.html.haml:18
+#: app/views/providers/_products_repos.html.haml:17
 msgid ""
 "On Products & Repositories you can add your own Products and Repositories to "
 "your Provider.  This allows you to synchronize content from any remote "
@@ -567,7 +605,7 @@ msgid ""
 "Custom Providers."
 msgstr ""
 
-#: app/models/provider.rb:46
+#: app/models/provider.rb:45
 msgid "Only one Red Hat provider permitted for an Organization"
 msgstr ""
 
@@ -575,12 +613,12 @@ msgstr ""
 msgid "Open Source Systems Management"
 msgstr ""
 
-#: app/controllers/organizations_controller.rb:36
+#: app/controllers/organizations_controller.rb:122
 #, fuzzy
 msgid "Organization"
 msgstr "組織"
 
-#: app/controllers/organizations_controller.rb:34 config/navigation.rb:79
+#: app/controllers/organizations_controller.rb:120 config/navigation.rb:79
 msgid "Organizations"
 msgstr "組織"
 
@@ -591,7 +629,7 @@ msgid ""
 "organization and then click on the desired environment."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:13
+#: app/views/promotions/show.html.haml:18
 msgid "Package Dependencies"
 msgstr ""
 
@@ -603,12 +641,11 @@ msgstr ""
 msgid "Package Size"
 msgstr ""
 
-#: app/helpers/promotions_helper.rb:45
-#: app/views/promotions/_detail.html.haml:14
+#: app/helpers/promotions_helper.rb:45 app/views/errata/_packages.html.haml:10
+#: app/views/changesets/_changeset.html.haml:45
+#: app/views/changesets/_changeset.html.haml:61
 #: app/views/changesets/_edit.html.haml:39
-#: app/views/changesets/_changeset.html.haml:36
-#: app/views/changesets/_changeset.html.haml:47
-#: app/views/errata/_packages.html.haml:10 config/navigation.rb:50
+#: app/views/promotions/_detail.html.haml:14 config/navigation.rb:50
 #: config/navigation.rb:71
 msgid "Packages"
 msgstr ""
@@ -625,7 +662,7 @@ msgstr ""
 msgid "Permission"
 msgstr ""
 
-#: app/controllers/roles_controller.rb:116
+#: app/controllers/roles_controller.rb:136
 msgid "Permission created."
 msgstr ""
 
@@ -633,13 +670,18 @@ msgstr ""
 msgid "Permission denied"
 msgstr ""
 
-#: app/controllers/roles_controller.rb:106
+#: app/controllers/roles_controller.rb:126
 msgid "Permission updated."
 msgstr ""
 
-#: app/controllers/sync_plans_controller.rb:21
-#: app/controllers/sync_schedules_controller.rb:29
-#: app/controllers/sync_schedules_controller.rb:35
+#: app/views/roles/_self_role_edit.html.haml:17
+#, fuzzy
+msgid "Permissions"
+msgstr "アクセス許可を追加する"
+
+#: app/controllers/sync_plans_controller.rb:31
+#: app/controllers/sync_schedules_controller.rb:21
+#: app/controllers/sync_schedules_controller.rb:27
 msgid "Plan"
 msgstr ""
 
@@ -661,23 +703,21 @@ msgstr "環境"
 msgid "Product"
 msgstr ""
 
-#: app/controllers/providers_controller.rb:71
-msgid "Product created."
-msgstr ""
+#: app/views/repositories/_new.html.haml:2
+#: app/views/repositories/_edit.html.haml:4
+#, fuzzy
+msgid "Product: "
+msgstr "追加製品"
 
-#: app/controllers/providers_controller.rb:84
-msgid "Product removed."
-msgstr ""
-
-#: app/helpers/promotions_helper.rb:35 app/views/products/index.haml:15
-#: app/views/promotions/_detail.html.haml:5
-#: app/views/sync_management/_products.html.haml:2
+#: app/helpers/promotions_helper.rb:35
+#: app/views/changesets/_changeset.html.haml:34
 #: app/views/changesets/_edit.html.haml:27
-#: app/views/changesets/_changeset.html.haml:25
+#: app/views/sync_management/_products.html.haml:2
+#: app/views/promotions/_detail.html.haml:5
 msgid "Products"
 msgstr ""
 
-#: config/navigation.rb:31
+#: app/views/providers/_products_repos.html.haml:5 config/navigation.rb:31
 msgid "Products & Repositories"
 msgstr ""
 
@@ -685,11 +725,12 @@ msgstr ""
 msgid "Progress"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:46
+#: app/views/changesets/_changeset.html.haml:67
 msgid "Promote to"
 msgstr ""
 
-#: app/views/promotions/_packages.html.haml:8
+#: app/views/promotions/_repos.html.haml:12
+#: app/views/promotions/_packages.html.haml:9
 msgid "Promoted"
 msgstr ""
 
@@ -701,7 +742,7 @@ msgstr ""
 msgid "Promotions"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:36
+#: app/views/promotions/show.html.haml:35
 msgid ""
 "Promotions allow you to promote content from one environment to the next "
 "along a promotion path. Clicking \"Add\" next to one or more products will "
@@ -711,16 +752,21 @@ msgid ""
 "environment."
 msgstr ""
 
-#: app/controllers/providers_controller.rb:141
+#: app/controllers/providers_controller.rb:182
 #, fuzzy
 msgid "Provider"
 msgstr "コンテンツプロバイダー"
 
-#: app/controllers/providers_controller.rb:139 config/navigation.rb:23
+#: app/views/products/_edit.html.haml:4
+#, fuzzy
+msgid "Provider: "
+msgstr "コンテンツプロバイダー"
+
+#: app/controllers/providers_controller.rb:180 config/navigation.rb:23
 msgid "Providers"
 msgstr "コンテンツプロバイダー"
 
-#: app/views/providers/index.html.haml:13
+#: app/views/providers/index.html.haml:14
 msgid ""
 "Providers provide many types of content such as packages, errata, kickstart "
 "trees, and installation disc images.  A provider may be delivering all of "
@@ -733,7 +779,7 @@ msgstr ""
 msgid "Provides"
 msgstr "コンテンツプロバイダー"
 
-#: config/navigation.rb:87
+#: config/navigation.rb:92
 msgid "Proxies"
 msgstr "プロキシ"
 
@@ -745,20 +791,19 @@ msgstr ""
 msgid "Queued."
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:58 config/navigation.rb:61
+#: app/views/systems/_edit.html.haml:60 config/navigation.rb:61
 #, fuzzy
 msgid "Registered"
 msgstr "登録"
 
-#: app/views/systems/_edit.html.haml:37
+#: app/views/systems/_edit.html.haml:38
 msgid "Release"
 msgstr ""
 
-#: app/views/providers/_edit_repository.html.haml:22
-#: app/views/providers/_edit_product.html.haml:32
-#: app/views/promotions/_packages.html.haml:11
-#: app/views/promotions/_products.html.haml:8
-#: app/views/promotions/_errata.html.haml:10
+#: app/views/promotions/_products.html.haml:11
+#: app/views/promotions/_repos.html.haml:9
+#: app/views/promotions/_packages.html.haml:12
+#: app/views/promotions/_errata.html.haml:11
 msgid "Remove"
 msgstr ""
 
@@ -772,12 +817,22 @@ msgstr "新しい環境"
 msgid "Remove Organization"
 msgstr "新しい組織"
 
+#: app/views/products/_edit.html.haml:33
+#, fuzzy
+msgid "Remove Product"
+msgstr "コンテンツプロバイダー"
+
 #: app/views/providers/_edit.html.haml:33
 #, fuzzy
 msgid "Remove Provider"
 msgstr "コンテンツプロバイダー"
 
-#: app/views/roles/_edit.html.haml:24
+#: app/views/repositories/_edit.html.haml:24
+#, fuzzy
+msgid "Remove Repository"
+msgstr "リポジトリーの追加"
+
+#: app/views/roles/_edit.html.haml:19
 msgid "Remove Role"
 msgstr "役割を削除する"
 
@@ -785,69 +840,74 @@ msgstr "役割を削除する"
 msgid "Remove Sync Plan"
 msgstr ""
 
-#: app/views/users/_edit.html.haml:50
+#: app/views/roles/_self_role_edit.html.haml:20
+#: app/views/users/_edit.html.haml:41
 msgid "Remove User"
-msgstr ""
-
-#: app/controllers/providers_controller.rb:57
-msgid "Repo removed."
 msgstr ""
 
 #: config/navigation.rb:12
 msgid "Reports"
 msgstr "レポート"
 
-#: app/views/providers/_edit.html.haml:30
-#: app/views/providers/_form.html.haml:24
-msgid "Repository Url"
-msgstr ""
+#: app/helpers/promotions_helper.rb:53
+#, fuzzy
+msgid "Repos"
+msgstr "レポート"
 
-#: app/controllers/providers_controller.rb:49
-msgid "Repository created."
+#: app/views/changesets/_changeset.html.haml:50
+#: app/views/promotions/_detail.html.haml:22
+#, fuzzy
+msgid "Repositories"
+msgstr "リポジトリーの追加"
+
+#: app/views/providers/_form.html.haml:24
+#: app/views/providers/_edit.html.haml:30
+msgid "Repository Url"
 msgstr ""
 
 #: app/views/packages/_dependencies.html.haml:19
 msgid "Requires"
 msgstr ""
 
-#: app/controllers/roles_controller.rb:33 app/views/roles/_edit.html.haml:5
+#: app/models/role.rb:157
+msgid "Resource type cannot be null"
+msgstr ""
+
+#: app/controllers/roles_controller.rb:44 app/views/roles/_edit.html.haml:5
 msgid "Role"
 msgstr "役割"
 
-#: app/controllers/roles_controller.rb:51
+#: app/controllers/roles_controller.rb:70
 msgid "Role created."
 msgstr "役割を作成"
 
-#: app/controllers/roles_controller.rb:65
+#: app/controllers/roles_controller.rb:84
 msgid "Role updated."
 msgstr "役割は、更新された"
 
-#: app/controllers/roles_controller.rb:31 app/views/users/_edit.html.haml:42
-#: config/navigation.rb:86
+#: app/controllers/roles_controller.rb:42
+#: app/views/roles/_self_role_edit.html.haml:10 config/navigation.rb:91
 msgid "Roles"
 msgstr "ロール"
+
+#: config/navigation.rb:88
+#, fuzzy
+msgid "Roles & Permissions"
+msgstr "アクセス許可を追加する"
 
 #: app/controllers/sync_management_controller.rb:26
 msgid "Running."
 msgstr ""
 
-#: app/views/providers/_form.html.haml:29
-#: app/views/sync_plans/_form.html.haml:32
 #: app/views/organizations/_new.html.haml:16
 #: app/views/roles/_permission.html.haml:39
-#: app/views/common/_edit_i18n.html.haml:3 app/views/users/_edit.html.haml:35
+#: app/views/sync_plans/_form.html.haml:32
+#: app/views/common/_edit_i18n.html.haml:3
+#: app/views/providers/_form.html.haml:29 app/views/users/_edit.html.haml:37
 msgid "Save"
 msgstr ""
 
-#: app/views/providers/_products_repos.html.haml:57
-msgid "Save Product"
-msgstr ""
-
-#: app/views/providers/_products_repos.html.haml:101
-msgid "Save Repository"
-msgstr ""
-
-#: app/views/users/_edit.html.haml:48
+#: app/views/roles/_self_role_edit.html.haml:15
 msgid "Save Roles"
 msgstr "保存の役割"
 
@@ -860,12 +920,12 @@ msgstr "サブスクリプション"
 msgid "Save User"
 msgstr ""
 
-#: app/views/common/_edit_i18n.html.haml:3
-msgid "Saving..."
+#: app/views/common/_search.html.haml:15
+msgid "Save as Favorite"
 msgstr ""
 
-#: app/views/providers/schedule.html.haml:4
-msgid "Schedule"
+#: app/views/common/_edit_i18n.html.haml:3
+msgid "Saving..."
 msgstr ""
 
 #: app/views/roles/_permission.html.haml:20
@@ -873,7 +933,8 @@ msgstr ""
 msgid "Scope"
 msgstr "範囲"
 
-#: app/views/notices/show.html.haml:8 app/views/common/_panel.html.haml:44
+#: app/views/notices/show.html.haml:11 app/views/common/_panel.html.haml:46
+#: app/views/common/_panel.html.haml:50
 msgid "Search"
 msgstr "検索"
 
@@ -887,11 +948,11 @@ msgstr "検索"
 msgid "Select None"
 msgstr "検索"
 
-#: app/controllers/sync_schedules_controller.rb:33
+#: app/controllers/sync_schedules_controller.rb:25
 msgid "Select Plans to apply to selected Products"
 msgstr ""
 
-#: app/controllers/sync_schedules_controller.rb:27
+#: app/controllers/sync_schedules_controller.rb:19
 msgid "Select Products to schedule"
 msgstr ""
 
@@ -912,9 +973,13 @@ msgstr ""
 msgid "Specify Local Manifest"
 msgstr ""
 
-#: app/views/sync_plans/_edit.html.haml:21
 #: app/views/sync_plans/_form.html.haml:20
+#: app/views/sync_plans/_edit.html.haml:21
 msgid "Start Date"
+msgstr ""
+
+#: app/models/sync_plan.rb:37
+msgid "Start Date and Time can't be blank"
 msgstr ""
 
 #: app/views/sync_management/_products.html.haml:7
@@ -925,7 +990,7 @@ msgstr ""
 msgid "Strong"
 msgstr ""
 
-#: app/controllers/providers_controller.rb:96
+#: app/controllers/providers_controller.rb:42
 msgid "Subscription uploaded successfully"
 msgstr ""
 
@@ -934,19 +999,15 @@ msgstr ""
 msgid "Subscriptions"
 msgstr "サブスクリプション"
 
-#: app/views/products/index.haml:21
-msgid "Sync"
-msgstr ""
-
 #: config/navigation.rb:35
 msgid "Sync Management"
 msgstr "同期管理"
 
-#: app/controllers/sync_plans_controller.rb:19 config/navigation.rb:37
+#: app/controllers/sync_plans_controller.rb:29 config/navigation.rb:37
 msgid "Sync Plans"
 msgstr ""
 
-#: app/controllers/sync_schedules_controller.rb:57
+#: app/controllers/sync_schedules_controller.rb:56
 msgid "Sync Plans applied successfully."
 msgstr ""
 
@@ -963,53 +1024,61 @@ msgstr ""
 msgid "Sync complete."
 msgstr ""
 
-#: app/views/products/index.haml:11
-msgid "Synced"
-msgstr ""
-
-#: app/views/sync_management/_products.html.haml:75
+#: app/views/sync_management/_products.html.haml:78
 msgid "Synchronize Now"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:3 app/views/systems/_packages.html.haml:1
-#: app/views/systems/_facts.html.haml:1
+#: app/views/systems/_packages.html.haml:1
 #: app/views/systems/_subscriptions.html.haml:1
+#: app/views/systems/_facts.html.haml:1 app/views/systems/_edit.html.haml:3
 #, fuzzy
 msgid "System"
 msgstr "システム"
 
-#: app/views/systems/_edit.html.haml:50
+#: app/views/systems/_edit.html.haml:51
 #, fuzzy
 msgid "System Events"
 msgstr "システム"
 
-#: app/views/systems/_edit.html.haml:9
+#: app/views/systems/_edit.html.haml:10
 #, fuzzy
 msgid "System Info"
 msgstr "システム"
 
-#: app/views/systems/_edit.html.haml:21
+#: app/views/systems/_edit.html.haml:22
 msgid "System Properties"
 msgstr ""
 
-#: app/controllers/systems_controller.rb:43
+#: app/controllers/systems_controller.rb:62
 #, fuzzy
 msgid "System subscriptions updated."
 msgstr "サブスクリプション"
 
-#: app/controllers/systems_controller.rb:64
+#: app/controllers/systems_controller.rb:82
 msgid "System updated."
 msgstr ""
 
-#: app/controllers/systems_controller.rb:26 config/navigation.rb:59
+#: app/controllers/systems_controller.rb:41 config/navigation.rb:59
 msgid "Systems"
 msgstr "システム"
+
+#: app/models/system_template.rb:17
+msgid "Template can have parent templates only from the same environment"
+msgstr ""
+
+#: app/controllers/api/templates_controller.rb:112
+msgid "Template imported"
+msgstr ""
+
+#: app/controllers/api/templates_controller.rb:122
+msgid "Template promoted"
+msgstr ""
 
 #: app/views/users/index.html.haml:3
 msgid "The passwords do not match"
 msgstr ""
 
-#: app/controllers/providers_controller.rb:99
+#: app/controllers/providers_controller.rb:45
 msgid "There was a format error with your Subscription Manifest"
 msgstr ""
 
@@ -1021,37 +1090,32 @@ msgstr ""
 "これは、モニタ、レポート、およびワークフローの分岐を含むダッシュボードエリア"
 "される。"
 
-#: app/views/sync_plans/_edit.html.haml:25
 #: app/views/sync_plans/_form.html.haml:25
+#: app/views/sync_plans/_edit.html.haml:25
 msgid "Time"
 msgstr ""
 
-#: app/views/providers/_edit.html.haml:24
-#: app/views/providers/_edit_repository.html.haml:17
-#: app/views/providers/_form.html.haml:18
+#: app/views/errata/_show.html.haml:12
 #: app/views/roles/_permission.html.haml:13
 #: app/views/roles/_closed_permission.html.haml:3
-#: app/views/errata/_show.html.haml:12
+#: app/views/repositories/_edit.html.haml:20
+#: app/views/providers/_form.html.haml:18
+#: app/views/providers/_edit.html.haml:24
 msgid "Type"
 msgstr "タイプ"
 
-#: app/views/providers/_products_repos.html.haml:44
+#: app/views/products/_new.html.haml:22
 msgid "Types"
 msgstr "タイプ"
 
-#: app/views/providers/_edit_repository.html.haml:12
-#: app/views/providers/_products_repos.html.haml:39
-#: app/views/providers/_products_repos.html.haml:96
-#: app/views/providers/_edit_product.html.haml:19
+#: app/views/products/_new.html.haml:17 app/views/products/_edit.html.haml:21
+#: app/views/repositories/_new.html.haml:15
+#: app/views/repositories/_edit.html.haml:15
 msgid "URL"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:17
+#: app/views/systems/_edit.html.haml:18
 msgid "UUID"
-msgstr ""
-
-#: app/views/products/index.haml:13
-msgid "Unsynced"
 msgstr ""
 
 #: app/views/errata/_show.html.haml:25
@@ -1063,8 +1127,8 @@ msgstr "更新"
 msgid "Updates Bundle"
 msgstr "アップデートバンドル"
 
-#: app/views/providers/_subscriptions.html.haml:38
 #: app/views/common/_edit_i18n.html.haml:3
+#: app/views/providers/_subscriptions.html.haml:38
 msgid "Upload"
 msgstr ""
 
@@ -1077,34 +1141,38 @@ msgstr "サブスクリプション"
 msgid "Uploading"
 msgstr ""
 
-#: app/controllers/users_controller.rb:35
+#: app/controllers/users_controller.rb:42
 #, fuzzy
 msgid "User"
 msgstr "ユーザー"
 
-#: app/views/notices/show.html.haml:11
+#: app/views/notices/show.html.haml:15
 #, fuzzy
 msgid "User Notifications"
 msgstr "通知"
 
-#: app/views/notices/show.html.haml:15
+#: app/views/notices/show.html.haml:19
 msgid ""
 "User notifications lists all notifications generated by a user as well as "
 "global notifications that are sent to all users."
 msgstr ""
 
-#: app/controllers/users_controller.rb:72
+#: app/controllers/users_controller.rb:81
 msgid "User updated successfully."
 msgstr ""
 
-#: app/views/users/_edit.html.haml:7 app/views/users/_new.html.haml:7
+#: app/views/users/_new.html.haml:7 app/views/users/_edit.html.haml:9
 #, fuzzy
 msgid "Username"
 msgstr "ユーザー"
 
-#: app/controllers/users_controller.rb:33 config/navigation.rb:85
+#: app/controllers/users_controller.rb:40 config/navigation.rb:85
 msgid "Users"
 msgstr "ユーザー"
+
+#: app/views/common/_common_i18n.html.haml:3
+msgid "Validation Failed:"
+msgstr ""
 
 #: app/views/systems/_facts.html.haml:11
 msgid "Value"
@@ -1123,7 +1191,7 @@ msgstr ""
 msgid "Weak"
 msgstr ""
 
-#: app/controllers/application_controller.rb:205
+#: app/controllers/application_controller.rb:213
 msgid "Welcome Back!"
 msgstr "先頭へようこそ！"
 
@@ -1135,29 +1203,37 @@ msgstr "ワークフロー"
 msgid "You are not authorised to perform this action."
 msgstr "あなたはこのアクションを実行する権限がありません。"
 
-#: app/controllers/application_controller.rb:162
-#: app/controllers/application_controller.rb:195
+#: app/controllers/failed_authentication_controller.rb:26
+msgid ""
+"You do not have valid credentials to access this system. Please contact your "
+"administrator."
+msgstr ""
+
+#: app/controllers/application_controller.rb:170
+#: app/controllers/application_controller.rb:203
 msgid "You must be logged in to access that page."
 msgstr "あなたはそのページにアクセスするには、ログインする必要があります。"
 
-#: app/controllers/application_controller.rb:176
+#: app/controllers/application_controller.rb:184
 msgid ""
 "You must have at least one organization in your database to access that "
 "page. Might need to run 'rake db:seed'"
 msgstr ""
 
-#: app/controllers/failed_authentication_controller.rb:18
+#: app/controllers/user_sessions_controller.rb:32
+#, fuzzy
 msgid ""
-"You've entered an incorrect username or password combination, please try "
-"again."
+"You've entered an incorrect username, password combination or account "
+"disabled, please try again."
 msgstr ""
 "あなたは不正なユーザ名またはパスワードの組み合わせを入力した、もう一度試して"
 "ください。"
 
-#: app/views/providers/_products_repos.html.haml:47
+#: app/views/products/_new.html.haml:25
 msgid "Yum"
 msgstr ""
 
+#: app/models/katello_url_format_validator.rb:50
 #: app/models/katello_name_format_validator.rb:20
 msgid "can't be blank"
 msgstr ""
@@ -1170,15 +1246,32 @@ msgstr ""
 msgid "cannot contain characters other than alpha numerals,'_', '-'."
 msgstr ""
 
-#: app/controllers/changesets_controller.rb:40
+#: app/controllers/changesets_controller.rb:39
 msgid "changeset"
 msgstr ""
 
-#: app/models/kp_environment.rb:27
+#: app/models/kp_environment.rb:26
 msgid "environment cannot be a prior to a different environment"
 msgstr ""
 
-#: app/models/kp_environment.rb:69
+#: app/models/kp_environment.rb:29
+#, fuzzy
+msgid "environment required"
+msgstr "環境"
+
+#: app/controllers/api/sync_controller.rb:29
+msgid "get sync status"
+msgstr ""
+
+#: app/models/katello_url_format_validator.rb:48
+msgid "is invalid"
+msgstr ""
+
+#: app/controllers/api/sync_controller.rb:23
+msgid "list of syncs"
+msgstr ""
+
+#: app/models/kp_environment.rb:73
 msgid "must be unique within one organization"
 msgstr ""
 
@@ -1186,46 +1279,57 @@ msgstr ""
 msgid "must not contain leading or trailing white spaces."
 msgstr ""
 
-#: app/controllers/organizations_controller.rb:37
+#: app/controllers/organizations_controller.rb:123
 #, fuzzy
 msgid "organization"
 msgstr "組織"
 
-#: app/controllers/sync_plans_controller.rb:22
-#: app/controllers/sync_schedules_controller.rb:36
+#: app/controllers/sync_plans_controller.rb:32
+#: app/controllers/sync_schedules_controller.rb:28
 msgid "plan"
 msgstr ""
 
-#: app/controllers/sync_schedules_controller.rb:30
+#: app/controllers/sync_schedules_controller.rb:22
 msgid "product"
 msgstr ""
 
-#: app/controllers/sync_management_controller.rb:150
+#: app/controllers/sync_management_controller.rb:155
 msgid "product was synced successfully"
 msgstr ""
 
-#: app/controllers/sync_management_controller.rb:147
+#: app/controllers/sync_management_controller.rb:151
 msgid "product was synced successfully with errors. See log for details"
 msgstr ""
 
-#: app/controllers/providers_controller.rb:142
+#: app/controllers/providers_controller.rb:183
 #, fuzzy
 msgid "provider"
 msgstr "コンテンツプロバイダー"
 
-#: app/controllers/roles_controller.rb:34
+#: app/controllers/roles_controller.rb:45
 msgid "role"
 msgstr ""
 
-#: app/controllers/sync_management_controller.rb:155
+#: app/controllers/sync_management_controller.rb:160
 msgid "sync did not complete successfully"
 msgstr ""
 
-#: app/controllers/systems_controller.rb:29
+#: app/controllers/systems_controller.rb:46
 #, fuzzy
 msgid "system"
 msgstr "システム"
 
-#: app/controllers/users_controller.rb:36
+#: app/controllers/users_controller.rb:43
 msgid "user"
 msgstr ""
+
+#: app/helpers/sync_schedules_helper.rb:7
+msgid "weekly"
+msgstr ""
+
+#~ msgid "Actions"
+#~ msgstr "アクション"
+
+#, fuzzy
+#~ msgid "Manage Providers"
+#~ msgstr "コンテンツプロバイダー"

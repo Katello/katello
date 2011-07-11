@@ -21,7 +21,6 @@ class ProvidersController < ApplicationController
     'contents'
   end
 
-
   def products_repos
     @providers = current_organization.providers
     @provider = Provider.find(params[:id])
@@ -76,7 +75,7 @@ class ProvidersController < ApplicationController
 
   def index
     begin
-      @providers = Provider.search_for(params[:search]).order('provider_type desc').limit(current_user.page_size)
+      @providers = Provider.search_for(params[:search]).where(:organization_id => current_organization).order('provider_type desc').limit(current_user.page_size)
       retain_search_history
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -87,10 +86,9 @@ class ProvidersController < ApplicationController
 
   def items
     start = params[:offset]
-    @providers = Provider.search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @providers = Provider.search_for(params[:search]).where(:organization_id => current_organization).order('provider_type desc').limit(current_user.page_size).offset(start)
     render_panel_items @providers, @panel_options
   end
-  
 
   def show
     provider = Provider.find(params[:id])

@@ -15,6 +15,7 @@ class ChangesetErratum < ActiveRecord::Base
 
 
   belongs_to :changeset, :inverse_of=>:errata
+  belongs_to :product
 
   # returns list of virtual permission tags for the current user
   def self.list_tags

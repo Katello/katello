@@ -4,6 +4,7 @@ class ChangesetRepos < ActiveRecord::Migration
        t.integer :changeset_id
        t.string :repo_id
        t.string :display_name
+       t.references :product, :null=>false
     end
   end
 

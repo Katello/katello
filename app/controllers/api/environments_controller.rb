@@ -12,13 +12,11 @@
 
 class Api::EnvironmentsController < Api::ApiController
   respond_to :json
-  before_filter :find_organization, :only => [:index, :show, :create, :update, :destroy, :repositories]
+  before_filter :find_organization, :only => [:index, :create]
   before_filter :find_environment, :only => [:show, :update, :destroy, :repositories]
-
 
   def index
     query_params[:organization_id] = @organization.id
-    
     render :json => (KPEnvironment.where query_params).to_json
   end
 
@@ -35,7 +33,7 @@ class Api::EnvironmentsController < Api::ApiController
   
   def update
     if @environment.locker?
-      render :text => _("Can't update locker environment"), :status => 404
+      raise HttpErrors::BadRequest, _("Can't update locker environment")
     else
       @environment.update_attributes!(params[:environment])
       render :json => @environment
@@ -43,28 +41,17 @@ class Api::EnvironmentsController < Api::ApiController
   end
 
   def destroy
-    #if @environment.locker?
-    #  render :text => _("Can't delete locker environment"), :status => 404
-    #else
-      @environment.destroy
-      render :text => _("Deleted environment '#{params[:id]}'"), :status => 200
-    #end
+    @environment.destroy
+    render :text => _("Deleted environment '#{params[:id]}'"), :status => 200
   end
 
   def repositories
     render :json => @environment.products.collect { |p| p.repos(@environment) }.flatten
   end
-  
-  
-#  def find_organization
-#    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id]})
-#    render :text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404 and return if @organization.nil?
-#    @organization
-#  end
 
   def find_environment
     @environment = KPEnvironment.find(params[:id])
-    render :text => _("Couldn't find environment '#{params[:id]}'"), :status => 404 and return if @environment.nil?
+    raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:id]}'") if @environment.nil?
     @environment
   end
   

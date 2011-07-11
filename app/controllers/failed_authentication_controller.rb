@@ -16,7 +16,17 @@ class FailedAuthenticationController < ActionController::Base
   # This method is called when warden stack cannot authenticate UI request
   def unauthenticated_ui
     Rails.logger.warn "Request is unauthenticated_ui for #{request.remote_ip}"
-    redirect_to invalid_user_session_url
+
+    if request.env['HTTP_X_FORWARDED_USER'].blank?
+      redirect_to invalid_user_session_url
+    else
+      # Generate a flash... In this case, we are not using the ApplicationController::errors.
+      # The reason being, this controller purposely does not inherit from ApplicationController;
+      # otherwise, these actions would report an error that user must be logged in to perform them. 
+      flash[:error] = {"notices" => [_("You do not have valid credentials to access this system. Please contact your administrator.")]}.to_json
+      redirect_to show_user_session_url
+    end
+    
     return false
   end
 

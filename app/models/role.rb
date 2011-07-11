@@ -22,7 +22,7 @@ class Role < ActiveRecord::Base
   # scope to facilitate retrieving roles that are 'non-self' roles... group() so that unique roles are returned
   scope :non_self, group('roles.id').joins("left outer join users on users.own_role_id = roles.id").where('users.own_role_id'=>nil)
 
-  validates :name, :uniqueness => true, :presence => true, :username => true
+  validates :name, :uniqueness => true, :presence => true
   #validates_associated :permissions
   accepts_nested_attributes_for :permissions, :allow_destroy => true
 
@@ -188,7 +188,8 @@ class Role < ActiveRecord::Base
 
   ACTION_TO_VERB = {
     :certificates => {:serials => 'read'},
-    :changesets => {:list=>'read', :edit=>'read', :show=>'read', :dependency_size=>'read', :dependency_list=>'read', :show_content=>'read'},
+    :changesets => {:list=>'read', :edit=>'read', :object=>'read', :show=>'read', :packages=>'read', :repos=>'read',
+                    :errata=>'read', :dependency_size=>'read', :dependency_list=>'read', :show_content=>'read'},
     :consumers => {:export_status => 'read'},
     :notices => {:get_new => 'read', :details => 'read', :note_count => 'read',
                  :destroy_all => 'delete'},

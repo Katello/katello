@@ -15,6 +15,7 @@ require 'spec_helper'
 describe PromotionsController do
   include LoginHelperMethods
   include LocaleHelperMethods
+  include OrchestrationHelper
   include OrganizationHelperMethods
   include ProductHelperMethods
 
@@ -34,7 +35,6 @@ describe PromotionsController do
     it "should be successful with locker and no next environment" do
       get 'show', :org_id=>@org.cp_key, :env_id=>@env.name
       response.should be_success
-      assigns(:changeset).should == @env.working_changesets.first
       assigns(:environment).should  == @env
       assigns(:next_environment).should == nil
     end
@@ -44,7 +44,6 @@ describe PromotionsController do
       @env2.save!
       get 'show', :org_id=>@org.cp_key, :env_id=>@env.name
       response.should be_success
-      assigns(:changeset).should == @env.working_changesets.first
       assigns(:next_environment).should == @env2
       assigns(:environment).should  == @env
     end
@@ -56,13 +55,45 @@ describe PromotionsController do
       response.should be_success
       assigns(:environment).should == @env2
       assigns(:next_environment).should == nil
-      assigns(:changeset).should == @env2.working_changesets.first
     end
 
   end
 
 
+  describe "Requesting items of a product" do
 
+    before (:each) do
+      @org = new_test_org
+      controller.stub(:current_organization).and_return(@org)
+      @env = @org.locker
+      @product = new_test_product(@org, @env)
+      @product.stub(:packages).and_return([])
+      Product.stub(:find).and_return(@product)
+      
+    end
+
+    it "should be succesful when requesting packages" do
+      get 'packages', :org_id=>@org.cp_key, :env_id=>@env.name, :product_id => @product.id
+      response.should be_success
+      assigns(:environment).should == @env
+      assigns(:packages).size.should == 1
+    end
+
+    it "should be succesful when requesting errata" do
+      get 'errata', :org_id=>@org.cp_key, :env_id=>@env.name, :product_id => @product.id
+      response.should be_success
+      assigns(:environment).should == @env
+      assigns(:errata).size.should == 1
+    end
+
+    it "should be succesful when requesting repos" do
+      get 'repos', :org_id=>@org.cp_key, :env_id=>@env.name, :product_id => @product.id
+      response.should be_success
+      assigns(:environment).should == @env
+      assigns(:repos).size.should == 1
+    end
+
+  end
 
 
 end
