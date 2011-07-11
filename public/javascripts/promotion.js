@@ -266,20 +266,6 @@ var promotion_page = (function($){
                     }
             });
         },
-        show_dependencies = function() {
-            var dialog = $('#dialog_content');
-            $.ajax({
-                type: "GET",
-                url: $(this).attr("data-url"),
-                cache: false,
-                success: function(data) {
-                    dialog.html(data);
-                    $('#deptabs').tabs();
-                }
-            });
-            dialog.html("<img src='/images/spinner.gif'>");
-            dialog.dialog({height:600, width:400});
-        },
         env_change = function(env_id, element) {
             var url = element.attr("data-url");
             window.location = url;
@@ -298,6 +284,7 @@ var promotion_page = (function($){
                         $("#delete_changeset").removeClass("disabled");
                         callback();
                     }});
+
     
         },
         set_current_product = function(hash_id) {
@@ -495,7 +482,45 @@ var promotion_page = (function($){
             trail: ['changesets', changesetBC, productBC],
             url: ''
         };
-    };
+    },
+    add_dependencies= function() {
+
+       if (current_changeset === undefined) {
+           console.log("returning false");
+           return false;
+       }
+       $.each(current_changeset.products, function(product_id, product) {
+           var hash = "deps-cs_" + current_changeset.id + "_" + product_id;
+           
+           if (changeset_breadcrumb[hash] === undefined) {
+            var productBC = 'product-cs_' + current_changeset.id + '_' + product_id;
+            var changesetBC = "changeset_" + current_changeset.id;
+            changeset_breadcrumb[hash] = {
+                cache: null,
+                client_render: true,
+                name: "Dependencies",
+                trail: ['changesets', changesetBC, productBC],
+                url: ''
+            };
+           }
+       });
+
+        //changeset_breadcrumb
+    },
+    remove_dependencies = function() {
+        if (current_changeset === undefined) {
+
+            return false;
+        }
+
+        $.each(changeset_breadcrumb, function(key, value) {
+           if (key.indexOf("deps-cs_") === 0) {
+                delete changeset_breadcrumb[key];
+           }
+        });
+        
+        
+    }
         
     return {
         subtypes:               subtypes,
@@ -507,8 +532,7 @@ var promotion_page = (function($){
         sort_changeset:         sort_changeset,
         fetch_changeset:        fetch_changeset,
         set_current_product:    set_current_product,
-        are_updates_complete:         are_updates_complete,
-        show_dependencies:      show_dependencies,
+        are_updates_complete:   are_updates_complete,
         env_change:             env_change,
         checkUsersInResponse:   checkUsersInResponse,
         start_timer:            start_timer,
@@ -517,7 +541,9 @@ var promotion_page = (function($){
         wait:                   wait,
         calc_conflict:          calculate_conflict,
         hide_conflict:          hide_conflict,
-        show_conflict_details:  show_conflict_details
+        show_conflict_details:  show_conflict_details,
+        add_dependencies:       add_dependencies,
+        remove_dependencies:    remove_dependencies
     };
 }(jQuery));
 
@@ -553,7 +579,26 @@ var changeset_obj = function(data_struct) {
                 }
             }
           });
+    },
+    dep_solve = function() {
+
+        $.ajax({
+            type: "GET",
+            url: "/changesets/" + id + "/dependencies",
+            cache: false,
+            success: function(data) {
+                $.each(data, function(key, value) {
+                   products[key].deps = value;
+                });
+                promotion_page.get_changeset_tree().rerender_content();
+            }
+        });
     };
+
+    if (!is_new) {
+        dep_solve();
+    }
+
 
     return {
         id:id,
@@ -620,6 +665,8 @@ var changeset_obj = function(data_struct) {
         review: function(on_success, on_error) {
             change_state("review", on_success, on_error);
             changeset_breadcrumb['changeset_' + id].is_new = false;
+            promotion_page.add_dependencies();
+            dep_solve();
         },
         cancel_review: function(on_success, on_error) {
             change_state("new", on_success, on_error);
@@ -674,7 +721,70 @@ $.expr[':'].contains = function(a, i, m) {
       .indexOf(m[3].toUpperCase()) >= 0;
 };
 
+
+//doc ready
+$(document).ready(function() {
+
+    $('.left').resizable('destroy');
+
+    //promotion_page.update_dep_size();
+    promotion_page.start_timer();
+
+    $(".content_add_remove").live('click', function() {
+	
+	   if( !$(this).hasClass('disabled') ){
+
+
+          var environment_id = $(this).attr('data-environment_id');
+          var id = $(this).attr('data-id');
+          var display = $(this).attr('data-display_name');
+          var type = $(this).attr('data-type');
+          var prod_id = $(this).attr('data-product_id');
+          promotion_page.modify_changeset(id, display, type, prod_id);
+       }
+    });
+    
+    $('#changeset_users').hide();
+
+    //initiate the left tree
+  	var contentTree = sliding_tree("content_tree", {breadcrumb:content_breadcrumb,
+                                      default_tab:"content",
+                                      bbq_tag:"content",
+                                      tab_change_cb: promotion_page.set_current_product});
+
+  	promotion_page.set_changeset_tree( sliding_tree("changeset_tree", {breadcrumb:changeset_breadcrumb,
+                                      default_tab:"changesets",
+                                      bbq_tag:"changeset",
+                                      render_cb: promotionsRenderer.render,
+                                      tab_change_cb: function(hash_id) {
+                                          promotion_page.sort_changeset();
+                                      }}));
+
+    //need to reset page during the extended scroll
+    panel.extended_cb = promotion_page.reset_page;
+
+    //set function for env selection callback
+    env_select.click_callback = promotion_page.env_change;
+
+    registerEvents();
+
+    $(document).ajaxComplete(function(event, xhr, options){
+        var userHeader = xhr.getResponseHeader('X-ChangesetUsers');
+        if(userHeader != null) {
+          var userj = $.parseJSON(userHeader); 
+          promotion_page.checkUsersInResponse(userj);
+        }
+    });
+});
+
 var registerEvents = function(){
+
+    //bind to the #search_form to make it useful
+    $('#search_form').submit(function(){
+        $('#search').change();
+        return false;
+    });
+
 
     $('#save_changeset_button').live('click', function(){
         var button = $(this);
@@ -727,7 +837,7 @@ var registerEvents = function(){
         }
         button.addClass("disabled");
         var cs = promotion_page.get_changeset();
-        if(cs.is_new()) {
+        if(cs.is_new()) { //move to review
             var review_func = function() {
                 cs.review(function() {
                     button.removeClass("disabled");
@@ -747,6 +857,7 @@ var registerEvents = function(){
                 button.removeClass("disabled");
                 promotion_page.reset_page();
                 promotion_page.get_changeset_tree().rerender_content();
+                promotion_page.remove_dependencies();
             });
         }
     });
@@ -756,7 +867,9 @@ var registerEvents = function(){
             return;
         }
         var cs = promotion_page.get_changeset();
-             cs.promote(function() {});
+        cs.promote(function() {});
+
+
     });
 
 
@@ -920,6 +1033,7 @@ var promotionsRenderer = (function(){
                 
                 if (promotion_page.get_changeset() === undefined) {
                     promotion_page.fetch_changeset(changeset_id, function() {
+
                         render_cb(getContent(page, changeset_id, product_id));
                     });
                 }
@@ -945,8 +1059,17 @@ var promotionsRenderer = (function(){
             else if (key === 'repo-cs'){
                 return templateLibrary.listItems(changeset.getProducts(), "repo", product_id, !inReviewPhase);
             }
+            else if (key === 'deps-cs'){
+                return templateLibrary.dependencyItems(changeset.products, product_id);
+            }
             else if (key === 'product-cs'){
-                return templateLibrary.productDetailList(changeset.getProducts()[product_id], promotion_page.subtypes, changeset_id);
+
+                //var types = promotion_page.subtypes;
+                var types = promotion_page.subtypes.slice(0); //copy the array
+                if (!promotion_page.get_changeset().is_new()) {
+                    types.push("deps");
+                } 
+                return templateLibrary.productDetailList(changeset.products[product_id], types, changeset_id);
             }
             else if (key === 'changeset'){
                 return templateLibrary.productList(changeset, changeset.id, !inReviewPhase);
@@ -992,10 +1115,39 @@ var templateLibrary = (function(){
         productDetailList = function(product, subtypes, changeset_id) {
             var html = '<ul>';
              jQuery.each(subtypes, function(index, type) {
-                html += '<li><div class="slide_link" id="' + type +'-cs_' + changeset_id + '_' + product.id + '">';
-                html += '<span class="sort_attr">' + i18n[type] + ' (' + product[type].length
-                        + ')</span></li>';
+                html += '<li><div ';
+                 if (product[type]) {
+                    html += 'class="slide_link"';
+                 }
+
+                 html += 'id=' + type +'-cs_' + changeset_id + '_' + product.id + '>';
+
+                html += '<span class="sort_attr">' + i18n[type];
+                if (product[type]) {
+                    html += ' (' + product[type].length  + ')';
+                }
+                else {
+                    html += "<img class='fr' src='/images/spinner.gif'>";
+                }
+
+                html += '</span></li>';
              });
+            html += '</ul>';
+            return html;
+        },
+        dependencyItems = function(products, product_id) {
+            if (!products[product_id].deps) {
+                return i18n.loading_deps + "&nbsp;" + "<img  src='/images/spinner.gif'>";
+            }
+
+            var html = '<ul>';
+            jQuery.each(products[product_id].deps, function(index, item) {
+                html += '<li><div class="no_slide"><span class="sort_attr">'  + item.name + ' ' + '</span>';
+               // html += '<div class="dependency_of">' + i18n.dep_of + "&nbsp;" + item.dep_of + "</div>";
+                html += '</div></li>';
+                
+
+            });
             html += '</ul>';
             return html;
         },
@@ -1020,7 +1172,7 @@ var templateLibrary = (function(){
                             anchor += i18n.remove + "</a>";
                         
             }
-            return '<li>' + anchor + '<div class="no_slide"><span class="sort_attr">'  + name + '</div></span></li>';
+            return '<li>' + anchor + '<div class="no_slide"><span class="sort_attr">'  + name + '</span></div></li>';
 
         },
         productList = function(changeset, changeset_id, showButton){
@@ -1119,7 +1271,8 @@ var templateLibrary = (function(){
         listItems : listItems,
         productDetailList: productDetailList,
         conflictFullProducts: conflictFullProducts,
-        conflictProduct: conflictProduct
+        conflictProduct: conflictProduct,
+        dependencyItems: dependencyItems
     };
 })();
 

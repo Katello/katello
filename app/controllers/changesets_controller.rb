@@ -81,13 +81,19 @@ class ChangesetsController < ApplicationController
   end
 
 
-  def dependency_size
-    render :text=>@changeset.dependencies.size
-  end
+  def dependencies
+    product_map = @changeset.dependencies
+    to_ret = {}
 
-  def dependency_list
-    @packages = @changeset.dependencies
-    render :partial=>"dependency_list"
+    #temporarily transform product_map from id=>name  to id=>{:name, :dep_of} with a fake dep_of
+    product_map.keys.each{|pid|
+      to_ret[pid] = []
+      product_map[pid].each{|pkg|
+        to_ret[pid] << {:name=>pkg.nvrea, :dep_of=>"Foo-1.2.3"}
+      }
+
+    }
+    render :json=>to_ret
   end
 
   def object

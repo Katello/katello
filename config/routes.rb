@@ -143,8 +143,7 @@ Src::Application.routes.draw do
   resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :show, :destroy, :auto_complete_search] do
     member do
       put :name
-      get :dependency_size
-      get :dependency_list
+      get :dependencies
       post :promote
       get :products
       get :object
