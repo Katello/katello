@@ -22,7 +22,8 @@ find -type f -name \*.rb | xargs -t -n1 ruby -c >/dev/null
 
 #check the syntax of all .haml files
 echo "Checking HAML syntax"
-find -type f -name \*.haml | xargs -t -n1 haml -c >/dev/null
+#find -type f -name \*.haml | xargs -t -n1 haml -c >/dev/null
+ruby scripts/test/check_haml.rb
 [ $? -ne 0 ] && echo Syntax errors! && exit 1
 
 # generate routes in HTML
