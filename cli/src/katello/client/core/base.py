@@ -160,7 +160,7 @@ class Action(object):
         self.args = None
         self.optErrors = []
         self.printer = None
-        
+
         self.parser = OptionParser()
         self.parser.add_option('-g', dest='grep',
                         action="store_true",
@@ -172,7 +172,7 @@ class Action(object):
                         default="",
                         help=_("grep friendly output column delimiter"))
         self.setup_parser()
-        
+
     @property
     def usage(self):
         """
@@ -288,11 +288,11 @@ class Action(object):
             return False
         else:
             return (_cfg.interface.grep_friendly.lower() == 'true')
-        
-      
+
+
 #    def _pre_setup_parser(self):
-      
-      
+
+
     def process_options(self, args):
         """
         This method setups up the parser, parses the arguments, checks options
@@ -339,7 +339,7 @@ class Action(object):
                 msg = ", ".join(re.args[1]["errors"])
             except:
                 msg = re.args[1]
-                
+
             self.error(msg)
             return re.args[0]
 

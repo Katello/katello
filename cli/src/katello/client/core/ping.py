@@ -59,13 +59,13 @@ class Status(PingAction):
         self.printer.setHeader(_("Katello Status"))
 
         details = status["status"]
-        
+
         statusList = []
-        
+
         detail = {}
         detail['status']  = status["result"]
         statusList.append(detail)
-        
+
         for key in details.keys():
             detail = details[key]
             detail['service'] = key
@@ -73,7 +73,7 @@ class Status(PingAction):
             if detail.has_key("duration_ms"):
                 detail["duration"] = detail["duration_ms"] + "ms"
             statusList.append(detail)
-           
+
         self.printer.printItems(statusList)
         return os.EX_OK
 

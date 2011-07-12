@@ -63,7 +63,7 @@ class Info(PackageAction):
         self.printer.addColumn('release')
         self.printer.addColumn('version')
         self.printer.addColumn('vendor')
-        self.printer.addColumn('download_url')
+        self.printer.addColumn('download_url', show_in_grep=False)
         self.printer.addColumn('description', multiline=True, show_in_grep=False)
         self.printer.addColumn('provides', multiline=True, show_in_grep=False)
         self.printer.addColumn('requires', multiline=True, show_in_grep=False)
@@ -110,7 +110,7 @@ class List(PackageAction):
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
             if repo == None:
-                return os.EX_OK
+                return os.EX_NOTFOUND
             repoId = repo["id"]
 
 
