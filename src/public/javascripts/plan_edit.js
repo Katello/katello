@@ -152,7 +152,7 @@ $(document).ready(function() {
             tooltip     :  i18n.clickToEdit,
             placeholder :  i18n.clickToEdit,
             submitdata  :  {authenticity_token: AUTH_TOKEN},
-            data        :  "{'hourly':'Hourly','daily':'Daily', 'weekly':'Weekly'}",
+            data        :  "{'none': 'None','hourly':'Hourly','daily':'Daily', 'weekly':'Weekly'}",
             onsuccess   :  function(result, status, xhr) {
                 var id = $('#plan_id');
                 list.refresh(id.attr('value'), id.attr('data-ajax_url'));
