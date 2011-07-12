@@ -128,6 +128,7 @@ reader_role.allow [:read], "search"
 reader_role.allow [:read], "operations"
 reader_role.allow [:read], "repositories"
 reader_role.allow [:read], "sync_schedules"
+reader_role.allow [:read], "subscriptions"
 
 #These are candlepin proxy actions
 reader_role.allow [:read], "owners"

@@ -219,7 +219,7 @@ class Info(RepoAction):
         else:
             repo = get_repo(orgName, prodName, repoName, envName)
             if repo == None:
-                return os.EX_OK
+                return os.EX_DATAERR
 
         repo['url'] = repo['source']['url']
         repo['last_sync'] = self.format_sync_time(repo['last_sync'])
@@ -234,6 +234,7 @@ class Info(RepoAction):
         self.printer.setHeader(_("Information About Repo %s") % repoId)
 
         self.printer.printItem(repo)
+        return os.EX_OK
 
 
 class Sync(RepoAction):

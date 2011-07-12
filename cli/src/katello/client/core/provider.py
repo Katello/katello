@@ -102,7 +102,9 @@ class Info(ProviderAction):
 
             self.printer.setHeader(_("Provider Information"))
             self.printer.printItem(prov)
-        return os.EX_OK
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
 
 
 # ==============================================================================
@@ -165,8 +167,10 @@ class Update(ProviderAction):
         prov = self.api.create(name, orgName, description, provType, url)
         if is_valid_record(prov):
             print _("Successfully created provider [ %s ]") % prov['name']
+            return True
         else:
             print _("Could not create provider [ %s ]") % prov['name']
+            return False
 
 
     def update(self, name, orgName, newName, description, url):
@@ -175,6 +179,9 @@ class Update(ProviderAction):
         if prov != None:
             prov = self.api.update(prov["id"], newName, description, url)
             print _("Successfully updated provider [ %s ]") % prov['name']
+            return True
+        else:
+            return False
 
 
     def run(self):
@@ -187,9 +194,11 @@ class Update(ProviderAction):
 
         if self._create:
             provType = PROVIDER_TYPES[self.get_option('type')]
-            self.create(name, orgName, description, provType, url)
+            if not self.create(name, orgName, description, provType, url):
+                return os.EX_DATAERR
         else:
-            self.update(name, orgName, newName, description, url)
+            if not self.update(name, orgName, newName, description, url):
+                return os.EX_DATAERR
 
         return os.EX_OK
 
@@ -218,8 +227,9 @@ class Delete(ProviderAction):
         if prov != None:
             msg = self.api.delete(prov["id"])
             print msg
-
-        return os.EX_OK
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
 
 
 # ==============================================================================
@@ -247,8 +257,9 @@ class Sync(ProviderAction):
         if prov != None:
             msg = self.api.sync(prov["id"])
             print msg
-
-        return os.EX_OK
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
 
 
 
@@ -289,10 +300,12 @@ class ImportManifest(ProviderAction):
         prov = get_provider(orgName, provName)
         if prov != None:
             response = run_spinner_in_bg(self.api.import_manifest, (prov["id"], f), message=_("Importing manifest, please wait... "))
+            f.close()
             print response
-
-        f.close()
-        return os.EX_OK
+            return os.EX_OK
+        else:
+            f.close()
+            return os.EX_DATAERR
 
 # provider command =============================================================
 

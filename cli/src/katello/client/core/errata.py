@@ -74,7 +74,7 @@ class List(ErrataAction):
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
             if repo == None:
-                return os.EX_OK
+                return os.EX_DATAERR
             repoId = repo["id"]
 
         errata = self.api.errata_by_repo(repoId)

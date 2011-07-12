@@ -41,8 +41,8 @@ $(document).ready(function() {
       'ratings':ratings});
 
 
-
-    $('#helptips_enabled').bind('change', checkboxChanged);
+    //from user.js
+    $('#helptips_enabled').bind('change', user_page.checkboxChanged);
 
     $(".multiselect").multiselect({"dividerLocation":0.5, "sortable":false});
 });
