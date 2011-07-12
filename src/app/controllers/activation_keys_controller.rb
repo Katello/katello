@@ -44,6 +44,12 @@ class ActivationKeysController < ApplicationController
     render :partial=>"common/list_update", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name']}
   end
 
+  
+  def subscriptions
+    # TODO
+    render :nothing => true
+  end
+
   def new
     activation_key = ActivationKey.new
     render :partial => "new", :locals => {:activation_key => activation_key}
