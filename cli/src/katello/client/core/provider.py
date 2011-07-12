@@ -104,7 +104,7 @@ class Info(ProviderAction):
             self.printer.printItem(prov)
             return os.EX_OK
         else:
-            return os.EX_NOTFOUND
+            return os.EX_DATAERR
 
 
 # ==============================================================================
@@ -198,7 +198,7 @@ class Update(ProviderAction):
                 return os.EX_DATAERR
         else:
             if not self.update(name, orgName, newName, description, url):
-                return os.EX_NOTFOUND
+                return os.EX_DATAERR
 
         return os.EX_OK
 
@@ -229,7 +229,7 @@ class Delete(ProviderAction):
             print msg
             return os.EX_OK
         else:
-            return os.EX_NOTFOUND
+            return os.EX_DATAERR
 
 
 # ==============================================================================
@@ -259,7 +259,7 @@ class Sync(ProviderAction):
             print msg
             return os.EX_OK
         else:
-            return os.EX_NOTFOUND
+            return os.EX_DATAERR
 
 
 
@@ -305,7 +305,7 @@ class ImportManifest(ProviderAction):
             return os.EX_OK
         else:
             f.close()
-            return os.EX_NOTFOUND
+            return os.EX_DATAERR
 
 # provider command =============================================================
 
