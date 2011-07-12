@@ -21,6 +21,8 @@ from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
 from katello.client.api.provider import ProviderAPI
 from katello.client.api.template import TemplateAPI
+from katello.client.api.changeset import ChangesetAPI
+from pprint import pprint
 
 
 def get_environment(orgName, envName=None):
@@ -28,7 +30,7 @@ def get_environment(orgName, envName=None):
 
     if envName == None:
         env = environment_api.locker_by_org(orgName)
-        envName = "locker"
+        envName = env['name']
     else:
         env = environment_api.environment_by_name(orgName, envName)
 
@@ -83,10 +85,25 @@ def get_template(orgName, envName, tplName):
 
     env = get_environment(orgName, envName)
     if env == None:
-        print _("Could not find environment [ %s ]") % envName
         return None
 
     tpl = template_api.template_by_name(env["id"], tplName)
     if tpl == None:
         print _("Could not find template [ %s ] within environment [ %s ]") % (tplName, env["name"])
     return tpl
+
+
+def get_changeset(orgName, envName, csName):
+    changeset_api = ChangesetAPI()
+
+    env = get_environment(orgName, envName)
+    if env == None:
+        return None
+
+    cset = changeset_api.changeset_by_name(orgName, env["id"], csName)
+    if cset == None:
+        print _("Could not find changeset [ %s ] within environment [ %s ]") % (csName, env["name"])
+    return cset
+    
+    
+    

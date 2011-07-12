@@ -32,7 +32,8 @@ from katello.client.core import (
   errata,
   system,
   shell_command,
-  template
+  template,
+  changeset
 )
 
 def setup_admin(admin):
@@ -121,6 +122,9 @@ def setup_admin(admin):
     prov_cmd.add_action('import_manifest', provider.ImportManifest())
     admin.add_command('provider', prov_cmd)
 
+    cset_cmd = changeset.Changeset()
+    cset_cmd.add_action('list', changeset.List())
+    admin.add_command('changeset', cset_cmd)
 
 if __name__ == "__main__":
     admin = AdminCLI()
