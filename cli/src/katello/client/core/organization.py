@@ -76,9 +76,11 @@ class Create(OrganizationAction):
         org = self.api.create(name, description)
         if is_valid_record(org):
             print _("Successfully created org [ %s ]") % org['name']
+            return os.EX_OK
         else:
             print _("Could not create org [ %s ]") % org['name']
-        return os.EX_OK
+            return os.EX_DATAERR
+
 
 # ------------------------------------------------------------------------------
 
