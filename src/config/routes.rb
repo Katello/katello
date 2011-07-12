@@ -1,8 +1,8 @@
 Src::Application.routes.draw do
 
-  get "sync_plans/auto_complete_search"
-  resources :sync_plans, :only => [:index, :create, :new, :edit, :update, :show, :destroy] do
+  resources :sync_plans, :only => [:index, :create, :new, :edit, :update, :show, :destroy, :auto_complete_search] do
     collection do
+      get :auto_complete_search
       get :items
     end
   end
@@ -31,7 +31,6 @@ Src::Application.routes.draw do
   resources :content do
   end
   resources :systems do
-    get 'auto_complete_search' , :on => :collection
     member do
       get :packages
       get :subscriptions
@@ -39,6 +38,7 @@ Src::Application.routes.draw do
       get :facts
     end
     collection do
+      get :auto_complete_search
       get :items
       get :environments 
     end
@@ -90,8 +90,8 @@ Src::Application.routes.draw do
   resources :entitlements
   resources :pools
   resources :users do
-    get 'auto_complete_search' , :on => :collection
     collection do
+      get :auto_complete_search
       get :items
       post :enable_helptip
       post :disable_helptip
@@ -129,22 +129,19 @@ Src::Application.routes.draw do
   match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
 
   resources :organizations do
-    get 'auto_complete_search' , :on => :collection
-
     resources :environments
     resources :providers do
       get 'auto_complete_search', :on => :collection
     end
     resources :providers
     collection do
+      get :auto_complete_search
       get :items
     end
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
 
   resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :show, :destroy, :auto_complete_search] do
-    get 'auto_complete_search', :on => :collection
-
     member do
       put :name
       get :dependency_size
@@ -154,6 +151,7 @@ Src::Application.routes.draw do
       get :object
     end
     collection do
+      get :auto_complete_search
       get :list
       get :items
     end
@@ -165,13 +163,13 @@ Src::Application.routes.draw do
 
   match '/roles/show_permission' => 'roles#show_permission', :via=>:get
   resources :roles do
-    get 'auto_complete_search' , :on => :collection
     post "create_permission" => "roles#create_permission"
 
     resources :permission, :only => {} do
       put "update_permission" => "roles#update_permission", :as => "update"
     end
     collection do
+      get :auto_complete_search
       get :items
     end
   end
