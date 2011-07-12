@@ -5,5 +5,10 @@
 
 = include_javascripts :form
 = include_javascripts :treetable
+%nav.subsubnav
+  = render_navigation(:expand_all => true, :level => 3)
+-if defined? envsys
+  .grid_16
+    = environment_selector(:locker_clickable=>false, :url_proc => lambda {|a| environments_systems_path(:env_id =>a[:environment].id )})
 .grid_16#main
   = two_panel(@systems, @panel_options)
