@@ -231,7 +231,9 @@ Src::Application.routes.draw do
     resources :organizations do
       resources :products, :only => [:index]
       resources :environments do
-        resources :changesets, :only => [:index, :show, :create, :destroy]
+        resources :changesets, :only => [:index, :show, :create, :destroy] do
+          put :update, :on => :member, :action => :update_content
+        end
         resources :products, :only => [:index], :constraints => { :id => /[0-9\.]*/ }
         member do
           get :repositories
