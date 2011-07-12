@@ -266,12 +266,9 @@ table {
 
 .action {
   background: $search_icon_white;
-  &:hover {
-    background: $search_icon_white;
-  }
-  &:active {
-    background: $search_icon_white;
-  }
+  
+  &:hover { background: $search_icon_white; }
+  &:active {background: $search_icon_white; }
 }
 
 .actions {
@@ -750,6 +747,10 @@ footer {
   border:none;
   text-indent:-999px;
   background: $ui_totop_img;
+  
+  &:active, &:focus {
+    outline:none;
+  }
 }
 
 #toTopHover {
@@ -763,76 +764,7 @@ footer {
   -moz-opacity: 0;
   filter:alpha(opacity=0);
 }
-
-#toTop:active, #toTop:focus {
-  outline:none;
-}
 /* end footer */
-
-/* RIGHT SIDEBAR */
-.sidebarcontainer {
-  /* height: 300px; overflow: scroll; */
-  display: block;
-  li {
-    display: block;
-    margin: 0;
-  }
-  h5 {
-    text-transform: none;
-    margin-top: 3em;
-  }
-}
-
-/* PAGE SPECIFIC */
-/* Sytems::Facts */
-#facts {
-    table {
-      td {
-        padding-left: 18px;
-      }
-    }
-}
-
-
-/* GRINDS */
-.status {
-  span {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    background: $status_icon_green;
-    &.good {
-      background: $status_icon_green;
-    }
-    &.ok {
-      background: $status_icon_yellow;
-    }
-    &.bad {
-      background: $status_icon_red;
-    }
-  }
-}
-
-a.iconbutton {
-  padding: 4px 4px 4px 24px;
-  position: relative;
-  overflow: hidden;
-  @include border-radius(2px);
-  &:active  {
-    padding: 4px 4px 4px 24px;
-  }
-  &:focus {
-    padding: 3px 3px 3px 23px;
-  }
-  img {
-    position: absolute;
-    width: 18px;
-    height: 54px;
-    left: 0; top: 50%;
-    margin-top: -27px;
-    background: $launchinstance_icon;
-  }
-}
 
 /* IE and other horror browser workarounds */
 
@@ -862,11 +794,6 @@ a.iconbutton {
     top: 9px;
 }
 
-/*provides same styling as .remove_item without the bound action*/
-.remove_item_custom {
-    @extend .remove_item;
-}
-
 .notifications {
     tr.success {
         @include linear-gradient(color-stops(white, white, "#F2FFE5"));
@@ -894,7 +821,6 @@ a.iconbutton {
     }
 }
 
-
 #main {
   ul {
    margin: 0;
@@ -908,22 +834,6 @@ a.iconbutton {
   }
 }
 
-.heading {
-    display:block;
-    h1,h2,h3,h4,h5 {
-        display: inline-block;
-        float: left;
-    }
-    .helptip-close {
-        float: left;
-    }
-    .helptip-open {
-        clear: both;
-    }
-}
-
-
-
 .spinner {
   margin-top: 30%;
   height: 16px;
@@ -933,24 +843,6 @@ a.iconbutton {
   z-index: 1000;
   padding-left: 47%;
 }
-
-/* details icon for in showing ability to click into details */
-.details {
-  cursor: pointer;
-  cursor: hand;
-  @include border-radius(5px);
-  &:hover {
-    background: #F2F2F2;
-  }
-}
-
-.details-icon {
-  background: $info_icon;
-  &:hover {
-    background: $info_hover_icon;
-  }
-}
-/* end details icon for in place editing*/
 
 /* editable icon for in place editing */
 .editable {
@@ -1465,95 +1357,95 @@ fieldset {
   }
 }
 .breadcrumb { 
-    list-style: none; 
-    overflow: hidden; 
-    font: 14px;
-    position: relative;
-    
-    li { 
-        float: left; 
-        margin-left: 0;
-        
-        &:first-child {
-            a {
-              padding-left: 20px;
-              @include border-left-radius(5px);
-            }
-        }
-        &:nth-child(2) {
+  list-style: none; 
+  overflow: hidden; 
+  font: 14px;
+  position: relative;
+  
+  li { 
+      float: left; 
+      margin-left: 0;
+      
+      &:first-child {
           a {
-            background: $breadcrumbbg_color;
-            &:after { border-left-color: $breadcrumbbg_color; }
+            padding-left: 20px;
+            @include border-left-radius(5px);
           }
-        }
-        &:last-child {
-          a {
-            padding-right: 30px;
-            @include border-right-radius(5px);
-            
-            &:hover {
-              color: #FFF;
-              background: $listhover_color !important;
-            }
-            &:after { 
-              border: 0;
-              &:hover { border-left-color: $listhover_color !important; }
-            }
-          }
-        }
-        
+      }
+      &:nth-child(2) {
         a {
-          color: #000;
-          text-decoration: none; 
-          padding: 8px 0 8px 55px;
-          background: $breadcrumbbg_color;                   /* fallback color */
-          position: relative; 
-          display: block;
-          float: left;
-        
-          &:hover { 
-            background: $listhover_color !important; 
-            color: #FFF; 
-            @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
-            
-            &:after { border-left-color: $listhover_color !important; }
+          background: $breadcrumbbg_color;
+          &:after { border-left-color: $breadcrumbbg_color; }
+        }
+      }
+      &:last-child {
+        a {
+          padding-right: 30px;
+          @include border-right-radius(5px);
+          
+          &:hover {
+            color: #FFF;
+            background: $listhover_color !important;
           }
-          &.active {
-            background: $kselected_color; 
-            color: white;
-            
-            &:hover:after { border-left-color: $listhover_color !important; }
-            &:after { border-left-color: $kselected_color !important; }
+          &:after { 
+            border: 0;
+            &:hover { border-left-color: $listhover_color !important; }
           }
-          &:after {
-            content: " "; 
-            display: block; 
-            width: 0; 
-            height: 0;
-            border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
-            border-bottom: 50px solid transparent;
-            border-left: 30px solid $breadcrumbbg_color;
-            position: absolute;
-            top: 50%;
-            margin-top: -50px; 
-            left: 100%;
-            z-index: 2; 
-          }
-          &:before { 
-            content: " "; 
-            display: block; 
-            width: 0; 
-            height: 0;
-            border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
-            border-bottom: 50px solid transparent;
-            border-left: 30px solid white;
-            position: absolute;
-            top: 50%;
-            margin-top: -50px; 
-            margin-left: 1px;
-            left: 100%;
-            z-index: 1; 
-          }
-       }
-   }
+        }
+      }
+      
+      a {
+        color: #000;
+        text-decoration: none; 
+        padding: 8px 0 8px 55px;
+        background: $breadcrumbbg_color;                   /* fallback color */
+        position: relative; 
+        display: block;
+        float: left;
+      
+        &:hover { 
+          background: $listhover_color !important; 
+          color: #FFF; 
+          @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
+          
+          &:after { border-left-color: $listhover_color !important; }
+        }
+        &.active {
+          background: $kselected_color; 
+          color: white;
+          
+          &:hover:after { border-left-color: $listhover_color !important; }
+          &:after { border-left-color: $kselected_color !important; }
+        }
+        &:after {
+          content: " "; 
+          display: block; 
+          width: 0; 
+          height: 0;
+          border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
+          border-bottom: 50px solid transparent;
+          border-left: 30px solid $breadcrumbbg_color;
+          position: absolute;
+          top: 50%;
+          margin-top: -50px; 
+          left: 100%;
+          z-index: 2; 
+        }
+        &:before { 
+          content: " "; 
+          display: block; 
+          width: 0; 
+          height: 0;
+          border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
+          border-bottom: 50px solid transparent;
+          border-left: 30px solid white;
+          position: absolute;
+          top: 50%;
+          margin-top: -50px; 
+          margin-left: 1px;
+          left: 100%;
+          z-index: 1; 
+        }
+     }
+  }
 }  
