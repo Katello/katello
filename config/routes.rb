@@ -12,7 +12,7 @@ Src::Application.routes.draw do
 
   get "sync_management/index"
   post "sync_management/sync"
-  get  "sync_management/status"
+  get  "sync_management/sync_status"
   get  "sync_management/product_status"
   resources :sync_management, :only => [:destroy]
 
@@ -40,6 +40,7 @@ Src::Application.routes.draw do
     end
     collection do
       get :items
+      get :environments 
     end
   end
   resources :operations do
@@ -92,8 +93,14 @@ Src::Application.routes.draw do
     get 'auto_complete_search' , :on => :collection
     collection do
       get :items
+      post :enable_helptip
+      post :disable_helptip
     end
+    member do
+      post :clear_helptips
+    end    
   end
+  
   resources :nodes, :constraints => {:id => /[^\/]+/}, :only => [:index, :show]
   resources :puppetclasses, :only => [:index]
   resources :providers do
@@ -154,12 +161,7 @@ Src::Application.routes.draw do
 
   resources :environments
 
-  resource :user
-  match '/users/:id/edit' => 'users#update', :via => :put
-  match 'users/:id/delete' => 'users#delete', :via=> :post
-  match '/users/:id/clear_helptips' => 'users#clear_helptips', :via => :post
-  match '/users/enable_helptip' => 'users#enable_helptip', :via=>:post
-  match '/users/disable_helptip' => 'users#disable_helptip', :via=>:post
+
 
   match '/roles/show_permission' => 'roles#show_permission', :via=>:get
   resources :roles do

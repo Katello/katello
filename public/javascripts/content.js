@@ -116,7 +116,7 @@ var content = (function(){
             progressBar.appendTo(updateField);
             cancelButton.appendTo(updateField);
             updateField.fadeIn('fast');
-            var pu = $.PeriodicalUpdater('/sync_management/status/', {
+            var pu = $.PeriodicalUpdater('/sync_management/sync_status/', {
               data: {repo_id:repo, sync_id:sync},
               method: 'get',
               type: 'json',
