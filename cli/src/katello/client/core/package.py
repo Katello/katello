@@ -63,7 +63,7 @@ class Info(PackageAction):
         self.printer.addColumn('release')
         self.printer.addColumn('version')
         self.printer.addColumn('vendor')
-        self.printer.addColumn('download_url')
+        self.printer.addColumn('download_url', show_in_grep=False)
         self.printer.addColumn('description', multiline=True, show_in_grep=False)
         self.printer.addColumn('provides', multiline=True, show_in_grep=False)
         self.printer.addColumn('requires', multiline=True, show_in_grep=False)
