@@ -16,20 +16,20 @@
 from katello.client.api.base import KatelloAPI
 from pprint import pprint
 
-class TemplateAPI(KatelloAPI): 
+class TemplateAPI(KatelloAPI):
 
     def templates(self, envId):
         path = "/api/templates/"
         tpls = self.server.GET(path, {"environment_id": envId})[1]
         return tpls
-        
-        
+
+
     def template(self, tplId):
         path = "/api/templates/%s" % str(tplId)
         tpl = self.server.GET(path)[1]
         return tpl
-        
-        
+
+
     def template_by_name(self, envId, tplName):
         path = "/api/templates/"
         tpls = self.server.GET(path, {"name": tplName, "environment_id": envId})[1]
@@ -38,21 +38,21 @@ class TemplateAPI(KatelloAPI):
             return self.template(tpls[0]["id"])
         else:
             return None
-        
-        
+
+
     def import_tpl(self, envId, description, tplFile):
         tplData = {
-            "template_file": tplFile, 
+            "template_file": tplFile,
             "template": {
                 "description": description
             },
             "environment_id": envId
         }
-        
+
         path = "/api/templates/import"
         return self.server.POST(path, tplData, multipart=True)[1]
-        
-        
+
+
     def create(self, envId, name, description, parentId):
         tplData = {
             "name": name,
@@ -63,11 +63,11 @@ class TemplateAPI(KatelloAPI):
             "template": tplData,
             "environment_id": envId
         }
-        
+
         path = "/api/templates/"
         return self.server.POST(path, tplData)[1]
-        
-        
+
+
     def update(self, tplId, newName, description, parentId):
 
         tplData = {}
@@ -88,7 +88,7 @@ class TemplateAPI(KatelloAPI):
             'do': actionName
         }
         action.update(params)
-    
+
         path = "/api/templates/%s/update_content" % str(tplId)
         return self.server.PUT(path, action)[1]
 
@@ -96,9 +96,11 @@ class TemplateAPI(KatelloAPI):
     def promote(self, id):
         path = "/api/templates/%s/promote" % str(id)
         return self.server.POST(path)[1]
-
+        
+    def promotion_status(self, task_id):
+        path = "/api/tasks/%s" % str(task_id)
+        return self.server.GET(path)[1]
 
     def delete(self, id):
         path = "/api/templates/%s" % str(id)
         return self.server.DELETE(path)[1]
-        

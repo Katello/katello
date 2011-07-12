@@ -193,9 +193,13 @@ describe Api::TemplatesController do
 
 
   describe "promote" do
-    it "should call SystemTemplate#promote" do
-      @tpl.should_receive(:promote).once
+    before(:each) do
+      @async_proxy = mock(AsyncOrchestration::AsyncOrchestrationProxy)
+    end
 
+    it "should call SystemTemplate#promote" do
+      @tpl.should_receive(:async).once.with(hash_including(:organization => @organization)).and_return(@async_proxy)
+      @async_proxy.should_receive(:promote).once.with(no_args())
       post :promote, :id => TEMPLATE_ID
     end
   end

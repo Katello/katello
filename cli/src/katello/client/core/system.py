@@ -44,7 +44,7 @@ class List(SystemAction):
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--environment', dest='environment', 
+        self.parser.add_option('--environment', dest='environment',
                        help=_("environment name eg: development"))
 
     def check_options(self):
@@ -62,17 +62,16 @@ class List(SystemAction):
             systems = self.api.systems_by_org(org_name)
         else:
             systems = self.api.systems_by_env(org_name, env_name)
-            
+
         if systems is None:
             return 1
-            
+
         if env_name is None:
-            self.printer.printHeader(_("Systems List For Org %s") % org_name)            
+            self.printer.setHeader(_("Systems List For Org %s") % org_name)
         else:
-            self.printer.printHeader(_("Systems List For Environment %s in Org %s") % (env_name, org_name))            
+            self.printer.setHeader(_("Systems List For Environment %s in Org %s") % (env_name, org_name))
 
         self.printer.printItems(systems)
-
         return os.EX_OK
 
 class Register(SystemAction):
@@ -81,10 +80,10 @@ class Register(SystemAction):
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
-                               help=_("system name (required)"))
+                       help=_("system name (required)"))
         self.parser.add_option('--org', dest='org',
                        help=_("organization name (required)"))
-        self.parser.add_option('--environment', dest='environment', 
+        self.parser.add_option('--environment', dest='environment',
                        help=_("environment name eg: development"))
 
     def check_options(self):
@@ -95,13 +94,13 @@ class Register(SystemAction):
         name = self.get_option('name')
         org = self.get_option('org')
         environment = self.get_option('environment')
-        
+
         system = self.api.register(name, org, environment, 'system')
 
         if is_valid_record(system):
-          print _("Successfully created system [ %s ]") % system['name']
+            print _("Successfully created system [ %s ]") % system['name']
         else:
-          print _("Could not create system [ %s ]") % system['name']
+            print _("Could not create system [ %s ]") % system['name']
         return os.EX_OK
 
 class Unregister(SystemAction):
@@ -133,4 +132,3 @@ class Unregister(SystemAction):
 class System(Command):
 
     description = _('system specific actions in the katello server')
-

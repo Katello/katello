@@ -29,7 +29,7 @@ class EnvironmentAPI(KatelloAPI):
         path = "/api/organizations/%s/environments/%s" % (orgId, envId)
         env = self.server.GET(path)[1]
         return env
-        
+
 
     def environment_by_name(self, orgId, envName):
         path = "/api/organizations/%s/environments/" % (orgId)
@@ -53,7 +53,7 @@ class EnvironmentAPI(KatelloAPI):
         envdata = {"name": name}
         envdata = self.update_dict(envdata, "description", description)
         envdata = self.update_dict(envdata, "prior", priorId)
-        
+
         path = "/api/organizations/%s/environments/" % orgId
         return self.server.POST(path, {"environment": envdata})[1]
 
@@ -67,10 +67,8 @@ class EnvironmentAPI(KatelloAPI):
 
         path = "/api/organizations/%s/environments/%s" % (orgId, envId)
         return self.server.PUT(path, {"environment": envdata})[1]
-        
-        
+
+
     def delete(self, orgId, envId):
         path = "/api/organizations/%s/environments/%s" % (orgId, envId)
         return self.server.DELETE(path)[1]
-        
-        

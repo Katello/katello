@@ -66,9 +66,17 @@ $(document).ready(function(){
 				<br/>
 				<strong>Q.)</strong> How do I get started?<br/>
 				<strong>A.)</strong>  <a href="https://fedorahosted.org/katello/wiki/Install">Click here.  Do it now!</a><br/>
-                <br/>
+            <br/>
 				<strong>Q.)</strong> How is Katello licensed?<br/>
 				<strong>A.)</strong>  Katello source code is licensed with GPLv2+, you can view a copy of the license <a href="license.html">here</a>.<br/>
+				<br/>
+				<strong>Q.)</strong> Why does Katello have its own Rubygem repo?<br/>
+				<strong>A.)</strong> The reason was to keep the gems listed in Gemfile.lock in sync with the gems we had packaged.  Generally when you do a bundle install the Gemfile.lock file will be updated with all of the newest gems from the repo.  So if rubygems.org releases an updated gem 'foo' with version  1.2, the Gemfile.lock will be updated automatically to use foo-1.2, regardless of whether we have packaged it or not.  Basically bundle install will update the Gemfile.lock with the NEWEST versions in the remote gem repo, updating our product dependencies without intention to do so.
+				<br/><br/>
+				So if you were to commit your updated gemfile.lock, the next time the katello rpm was built & installed, rails would refuse to start because we haven't built foo-1.2 as an rpm.
+				<br/><br/>
+				Turns out that this helped a ton with debugging and testing as well.
+				<br/>		
 			</p>                  
 		  </div>    
 		</div>     

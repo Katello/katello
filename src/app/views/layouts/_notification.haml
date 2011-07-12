@@ -1,24 +1,29 @@
 - if flash[:error]
-  %input{ :type => "hidden", :id=> "flash_message", :value => flash[:error] }
   :javascript
-    notices.displayNotice("error", $("#flash_message").val());
+    $(document).ready(function(){
+      notices.displayNotice("error", '#{ flash[:error] }');
+    });
 
 - if flash[:warning]
-  %input{ :type => "hidden", :id=> "flash_message", :value => flash[:warning] }
   :javascript
-    notices.displayNotice("warning", $("#flash_message").val());
+    $(document).ready(function(){
+      notices.displayNotice("warning", '#{ flash[:warning] }');
+    });
 
 - if flash[:success]
-  %input{ :type => "hidden", :id=> "flash_message", :value => flash[:success] }
   :javascript
-    notices.displayNotice("success", $("#flash_message").val());
+    $(document).ready(function(){
+      notices.displayNotice("success", '#{ flash[:success] }');
+    });
 
 - if flash[:message]
-  %input{ :type => "hidden", :id=> "flash_message", :value => flash[:message] }
   :javascript
-    notices.displayNotice("", $("#flash_message").val());
+    $(document).ready(function(){
+      notices.displayNotice("", '#{ flash[:message] }');
+    });
 
 - if flash[:notice]
-  %input{ :type => "hidden", :id=> "flash_message", :value => flash[:notice] }
   :javascript
-    notices.displayNotice("", $("#flash_message").val());
+    $(document).ready(function(){
+      notices.displayNotice("", '#{ flash[:notice] }');
+    });

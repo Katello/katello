@@ -91,7 +91,7 @@ class Create(RepoAction):
         if not len(repourls):
             system_exit(os.EX_OK, "No repositories discovered @ url location [%s]" % url)
 
-        self.printer.printHeader(_("Repository Urls discovered @ [%s]" % url))
+        self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
         if not assumeyes:
             proceed = ''
             num_selects = [str(i+1) for i in range(len(repourls))]
@@ -135,7 +135,7 @@ class Create(RepoAction):
                 repoName = "%s%s" % (name, parsedUrl.path.replace("/", "_"))
                 repo = self.api.create(prod["cp_id"], repoName, repourl)
                 print _("Successfully created repository [ %s ]") % repoName
-                
+
         return os.EX_OK
 
     def __add_selection(self, urls):
@@ -180,7 +180,7 @@ class Status(RepoAction):
         self.printer.addColumn('package_count')
         self.printer.addColumn('last_sync')
 
-        self.printer.printHeader(_("Repository Status"))
+        self.printer.setHeader(_("Repository Status"))
         self.printer.printItem(repo)
         return os.EX_OK
 
@@ -219,8 +219,8 @@ class Info(RepoAction):
         else:
             repo = get_repo(orgName, prodName, repoName, envName)
             if repo == None:
-                return os.EX_OK
-                
+                return os.EX_DATAERR
+
         repo['url'] = repo['source']['url']
         repo['last_sync'] = self.format_sync_time(repo['last_sync'])
 
@@ -231,9 +231,10 @@ class Info(RepoAction):
         self.printer.addColumn('url', show_in_grep=False)
         self.printer.addColumn('last_sync', show_in_grep=False)
 
-        self.printer.printHeader(_("Information About Repo %s") % repoId)
+        self.printer.setHeader(_("Information About Repo %s") % repoId)
 
         self.printer.printItem(repo)
+        return os.EX_OK
 
 
 class Sync(RepoAction):
@@ -283,18 +284,17 @@ class List(RepoAction):
             env  = get_environment(orgName, envName)
             prod = get_product(orgName, prodName)
             if env != None and prod != None:
-                
-                self.printer.printHeader(_("Repo List for Product %s in Org %s Environment %s") % (prodName, orgName, env["name"]))
+                self.printer.setHeader(_("Repo List for Product %s in Org %s Environment %s") % (prodName, orgName, env["name"]))
                 repos = self.api.repos_by_org_env_product(orgName, env["id"], prod["cp_id"])
                 self.printer.printItems(repos)
-                
+
         else:
             env  = get_environment(orgName, envName)
             if env != None:
-                self.printer.printHeader(_("Repo List For Org %s Environment %s") % (orgName, env["name"]))
+                self.printer.setHeader(_("Repo List For Org %s Environment %s") % (orgName, env["name"]))
                 repos = self.api.repos_by_org_env(orgName,  env["id"])
                 self.printer.printItems(repos)
-        
+
         return os.EX_OK
 
 # command --------------------------------------------------------------------

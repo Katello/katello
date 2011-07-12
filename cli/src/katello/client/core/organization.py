@@ -49,7 +49,7 @@ class List(OrganizationAction):
         self.printer.addColumn('name')
         self.printer.addColumn('description', multiline=True)
 
-        self.printer.printHeader(_("Organization List"))
+        self.printer.setHeader(_("Organization List"))
         self.printer.printItems(orgs)
         return os.EX_OK
 
@@ -65,7 +65,7 @@ class Create(OrganizationAction):
                                help=_("organization name eg: foo.example.com (required)"))
         self.parser.add_option("--description", dest="description",
                                help=_("consumer description eg: foo's organization"))
-                               
+
     def check_options(self):
         self.require_option('name')
 
@@ -75,10 +75,12 @@ class Create(OrganizationAction):
 
         org = self.api.create(name, description)
         if is_valid_record(org):
-          print _("Successfully created org [ %s ]") % org['name']
+            print _("Successfully created org [ %s ]") % org['name']
+            return os.EX_OK
         else:
-          print _("Could not create org [ %s ]") % org['name']
-        return os.EX_OK
+            print _("Could not create org [ %s ]") % org['name']
+            return os.EX_DATAERR
+
 
 # ------------------------------------------------------------------------------
 
@@ -103,7 +105,7 @@ class Info(OrganizationAction):
         self.printer.addColumn('name')
         self.printer.addColumn('description', multiline=True)
 
-        self.printer.printHeader(_("Organization Information"))
+        self.printer.setHeader(_("Organization Information"))
         self.printer.printItem(org)
         return os.EX_OK
 

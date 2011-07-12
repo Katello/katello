@@ -66,20 +66,20 @@ class List(ErrataAction):
         orgName  = self.get_option('org')
         envName  = self.get_option('env')
         prodName = self.get_option('product')
-        
+
         self.printer.addColumn('id')
         self.printer.addColumn('title')
         self.printer.addColumn('type')
- 
+
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
             if repo == None:
-                return os.EX_OK
+                return os.EX_DATAERR
             repoId = repo["id"]
-        
+
         errata = self.api.errata_by_repo(repoId)
 
-        self.printer.printHeader(_("Errata List"))
+        self.printer.setHeader(_("Errata List"))
         self.printer.printItems(errata)
         return os.EX_OK
 
@@ -115,7 +115,7 @@ class Info(ErrataAction):
         self.printer.addColumn('reboot_suggested')
         self.printer.addColumn('affected_packages', multiline=True)
 
-        self.printer.printHeader(_("Errata Information"))
+        self.printer.setHeader(_("Errata Information"))
         self.printer.printItem(pack)
         return os.EX_OK
 
