@@ -120,9 +120,71 @@ class Info(ChangesetAction):
         return os.EX_OK
         
         
+# ==============================================================================
+class UpdateContent(ChangesetAction):
+    
+    content_types = [
+      'product',
+      'package',
+      'erratum',
+      'repo'
+    ]
+    
+    description = _('updates content of a changeset')
+
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("changeset name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--environment', dest='env',
+                               help=_("environment name (Locker by default)"))
+                   
+        for ct in self.content_types:
+            self.parser.add_option('--add_'+ct, dest='add_'+ct,
+                                action='append',
+                                help=_(ct+" to add to the changeset"))
+            self.parser.add_option('--remove_'+ct, dest='remove_'+ct,
+                                action='append',
+                                help=_(ct+" to remove from the changeset"))
+
+
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+
+
+    def run(self):
+        csName  = self.get_option('name')
+        orgName = self.get_option('org')
+        envName = self.get_option('env')
+
+        cset = get_changeset(orgName, envName, csName)
+        if cset == None:
+            return os.EX_DATAERR
+        
+        patch = {}
+        patch['packages'] = self.build_patch('+', self.get_option('add_package')) + self.build_patch('-', self.get_option('remove_package'))
+        patch['errata']   = self.build_patch('+', self.get_option('add_erratum')) + self.build_patch('-', self.get_option('remove_erratum'))
+        patch['repos']    = self.build_patch('+', self.get_option('add_repo'))    + self.build_patch('-', self.get_option('remove_repo'))
+        patch['products'] = self.build_patch('+', self.get_option('add_product')) + self.build_patch('-', self.get_option('remove_product'))
+
+        msg = self.api.update_content(orgName, cset["environment_id"], cset["id"], patch)
+        print _("Successfully updated changeset [ %s ]") % csName
+        return os.EX_OK
         
         
+    def build_patch(self, action, items):
+        result = []
         
+        if items == None:
+            return result
+        
+        for i in items:
+            result.append(action+i)
+        return result
+    
         
 # changeset command ============================================================
 class Changeset(Command):

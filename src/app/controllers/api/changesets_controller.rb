@@ -20,9 +20,11 @@ class Api::ChangesetsController < Api::ApiController
     render :json => @environment.working_changesets.where(params.slice(:name))
   end
 
+
   def show
     render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos])
   end
+
 
   def create
     @changeset = Changeset.new(params[:changeset])
@@ -32,10 +34,12 @@ class Api::ChangesetsController < Api::ApiController
     render :json => @changeset
   end
 
+
   def destroy
     @changeset.destroy
     render :text => _("Deleted changeset '#{params[:id]}'"), :status => 200
   end
+
 
   def update_content
 
@@ -67,6 +71,7 @@ class Api::ChangesetsController < Api::ApiController
     render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos])
   end
 
+
   def update_items items, &block
     return if items.nil?
 
@@ -75,16 +80,20 @@ class Api::ChangesetsController < Api::ApiController
       name   = item[1,item.length]
 
       if (action != "+") && (action != "-")
-        #TODO: raise error
+        raise Errors::PatchSyntaxException.new("Patch syntax error.")
       end
 
       yield action, name
     end
   end
 
+
   def find_product_by_name product_name
-    @changeset.environment.products.find_by_name(product_name)
+    prod = @changeset.environment.products.find_by_name(product_name)
+    raise Errors::ChangesetContentException.new("Product not found within this environment.") if prod.nil?
+    prod
   end
+
 
   def create_changeset_package package_name
     @changeset.products.each do |product|
@@ -97,8 +106,9 @@ class Api::ChangesetsController < Api::ApiController
         end
       end
     end
-    nil
+    raise Errors::ChangesetContentException.new("Package not found within this environment.")
   end
+
 
   def create_changeset_erratum erratum_id
     @changeset.products.each do |product|
@@ -111,8 +121,9 @@ class Api::ChangesetsController < Api::ApiController
         end
       end
     end
-    nil
+    raise Errors::ChangesetContentException.new("Erratum not found within this environment.")
   end
+
 
   def create_changeset_repo repo_name
     @changeset.products.each do |product|
@@ -123,14 +134,16 @@ class Api::ChangesetsController < Api::ApiController
         return ChangesetRepo.new(:repo_id => repo.id, :display_name => repo_name, :product_id => product.id, :changeset => @changeset)
       end
     end
-    nil
+    raise Errors::ChangesetContentException.new("Repository not found within this environment.")
   end
+
 
   def find_changeset
     @changeset = Changeset.find(params[:id])
     raise HttpErrors::NotFound, _("Couldn't find changeset '#{params[:id]}'") if @changeset.nil?
     @changeset
   end
+
 
   def find_environment
     @environment = KPEnvironment.find(params[:environment_id])
