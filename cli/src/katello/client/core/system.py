@@ -74,6 +74,43 @@ class List(SystemAction):
         self.printer.printItems(systems)
         return os.EX_OK
 
+class Info(SystemAction):
+
+    description = _('display a system within an organization')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                       help=_("system name (required)"))
+        self.parser.add_option('--environment', dest='environment',
+                       help=_("environment name"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+    def run(self):
+        org_name = self.get_option('org')
+        env_name = self.get_option('environment')
+        sys_name = self.get_option('name')
+
+        if env_name is None:
+            self.printer.printHeader(_("System Information For Org %s") % org_name)
+            systems = self.api.systems_by_org(org_name, {'name': sys_name})
+        else:
+            self.printer.printHeader(_("System Information For Environment %s in Org %s") % (env_name, org_name))
+            systems = self.api.systems_by_env(org_name, env_name,
+                    {'name': sys_name})
+
+        self.printer.addColumn('name')
+        self.printer.addColumn('uuid')
+        self.printer.addColumn('facts')
+
+        self.printer.printItem(systems[0])
+
+        return os.EX_OK
+
 class Register(SystemAction):
 
     description = _('register a system')
@@ -120,7 +157,7 @@ class Unregister(SystemAction):
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
-        systems = self.api.systems_by_org_and_name(org, name)
+        systems = self.api.systems_by_org(org, {'name': name})
         if systems == None or len(systems) != 1:
             print _("Could not find system named [ %s ] within organization [ %s ]") % (name, org)
             return os.EX_DATAERR
