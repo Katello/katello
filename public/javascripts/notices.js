@@ -26,8 +26,8 @@ var notices = (function() {
         displayNotice: function(level, notices) {
             var notices = $.parseJSON(notices),
                 options = {
-                type: level, 
-                slideSpeed: 200
+                    type: level, 
+                    slideSpeed: 200
                 },
                 generate_list = function(notices){
                     var notices_list = '<ul>',
