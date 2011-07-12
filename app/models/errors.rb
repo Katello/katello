@@ -19,4 +19,8 @@ module Errors
   class OrchestrationException < StandardError; end
 
   class TemplateContentException < StandardError; end
+
+  class ChangesetContentException < StandardError; end
+
+  class PatchSyntaxException < StandardError; end
 end
