@@ -49,8 +49,6 @@ class Api::ApiController < ActionController::Base
     @query_params = params.clone
     @query_params.delete('controller')
     @query_params.delete('action')
-    @query_params.delete('username')
-    @query_params.delete('password')
     
     @query_params.each_pair do |k,v|
       
@@ -81,15 +79,17 @@ class Api::ApiController < ActionController::Base
 
   def find_organization
     @organization = Organization.first(:conditions => {:cp_key => params[:organization_id].tr(' ', '_')})
-    render :text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404 and return if @organization.nil?
+    raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
     @organization
   end
 
   private
 
   def require_user
-    params[:username], params[:password] = user_name_and_password(request) unless request.authorization.blank?
+    params[:auth_username], params[:auth_password] = user_name_and_password(request) unless request.authorization.blank?
     authenticate! :scope => :api
+    params.delete('auth_username')
+    params.delete('auth_password')
   rescue => e
     logger.error "failed to authenticate API request: " << pp_exception(e)
     head :status => 500 and return false
