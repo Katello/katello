@@ -40,7 +40,7 @@ Src::Application.routes.draw do
     collection do
       get :auto_complete_search
       get :items
-      get :environments 
+      get :environments
     end
   end
   resources :operations do
@@ -98,9 +98,9 @@ Src::Application.routes.draw do
     end
     member do
       post :clear_helptips
-    end    
+    end
   end
-  
+
   resources :nodes, :constraints => {:id => /[^\/]+/}, :only => [:index, :show]
   resources :puppetclasses, :only => [:index]
   resources :providers do
@@ -231,6 +231,7 @@ Src::Application.routes.draw do
     resources :organizations do
       resources :products, :only => [:index]
       resources :environments do
+        resources :changesets, :only => [:index, :show, :create, :destroy]
         resources :products, :only => [:index], :constraints => { :id => /[0-9\.]*/ }
         member do
           get :repositories
