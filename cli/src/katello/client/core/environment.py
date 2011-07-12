@@ -99,7 +99,9 @@ class Info(EnvironmentAction):
 
             self.printer.setHeader(_("Environment Info"))
             self.printer.printItem(env)
-        return os.EX_OK
+            return os.EX_OK
+        else:
+            return os.EX_NOTFOUND
 
 
 class Create(EnvironmentAction):
@@ -135,10 +137,10 @@ class Create(EnvironmentAction):
         env = self.api.create(orgName, name, description, priorId)
         if is_valid_record(env):
             print _("Successfully created environment [ %s ]") % env['name']
+            return os.EX_OK
         else:
             print _("Could not create environment [ %s ]") % env['name']
-
-        return os.EX_OK
+            return os.EX_DATAERR
 
 
 class Update(EnvironmentAction):
@@ -180,8 +182,9 @@ class Update(EnvironmentAction):
                 priorId = None
             env = self.api.update(orgName, env["id"], newName, description, priorId)
             print _("Successfully updated environment [ %s ]") % env['name']
-
-        return os.EX_OK
+            return os.EX_OK
+        else:
+            return os.EX_NOTFOUND
 
 
 class Delete(EnvironmentAction):
@@ -207,7 +210,9 @@ class Delete(EnvironmentAction):
         if env != None:
             self.api.delete(orgName, env["id"])
             print _("Successfully deleted environment [ %s ]") % envName
-        return os.EX_OK
+            return os.EX_OK
+        else:
+            return os.EX_NOTFOUND
 
 
 # environment command ------------------------------------------------------------

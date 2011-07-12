@@ -67,9 +67,9 @@ class List(SystemAction):
             return 1
 
         if env_name is None:
-            self.printer.setHeader(_("Systems List For Org %s") % org_name)            
+            self.printer.setHeader(_("Systems List For Org %s") % org_name)
         else:
-            self.printer.setHeader(_("Systems List For Environment %s in Org %s") % (env_name, org_name))            
+            self.printer.setHeader(_("Systems List For Environment %s in Org %s") % (env_name, org_name))
 
         self.printer.printItems(systems)
         return os.EX_OK

@@ -110,7 +110,7 @@ class List(PackageAction):
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
             if repo == None:
-                return os.EX_OK
+                return os.EX_NOTFOUND
             repoId = repo["id"]
 
 
