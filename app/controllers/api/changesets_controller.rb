@@ -12,29 +12,41 @@
 
 class Api::ChangesetsController < Api::ApiController
 
+  before_filter :find_environment, :only => [:index, :create]
   before_filter :find_changeset, :only => [:show, :destroy]
   respond_to :json
 
   def index
-    render :json => "index"
+    render :json => @environment.working_changesets
   end
 
   def show
-    render :json => "show changeset"
+    render :json => @changeset
   end
 
   def create
-    render :json => "create changeset"
+    @changeset = Changeset.new(params[:changeset])
+    @changeset.environment = @environment
+    @changeset.save!
+
+    render :json => @changeset
   end
 
   def destroy
-    render :json => "destroy changeset"
+    @changeset.destroy
+    render :text => _("Deleted changeset '#{params[:id]}'"), :status => 200
   end
 
   def find_changeset
-    @changeset = nil #Organization.first(:conditions => {:cp_key => params[:id].tr(' ', '_')})
-    #raise HttpErrors::NotFound, _("Couldn't find changeset '#{params[:id]}'") if @changeset.nil?
+    @changeset = Changeset.find(params[:id])
+    raise HttpErrors::NotFound, _("Couldn't find changeset '#{params[:id]}'") if @changeset.nil?
     @changeset
+  end
+
+  def find_environment
+    @environment = KPEnvironment.find(params[:environment_id])
+    raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
+    @environment
   end
 
 end
