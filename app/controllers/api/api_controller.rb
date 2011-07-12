@@ -80,7 +80,6 @@ class Api::ApiController < ActionController::Base
   end
 
   def find_organization
-    render :text => _("Organization name not provided"), :status => :bad_request and return if params[:organization_id].nil?
     @organization = Organization.first(:conditions => {:cp_key => params[:organization_id].tr(' ', '_')})
     render :text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404 and return if @organization.nil?
     @organization
