@@ -270,6 +270,7 @@ Src::Application.routes.draw do
       resources :systems, :only => [:create, :index]
     end
     resources :packages, :only => [:show]
+    resources :changesets, :only => [:show]
     resources :errata, :only => [:show]
     resources :distributions, :only => [:show]
     resources :users

@@ -17,7 +17,7 @@ class Api::ChangesetsController < Api::ApiController
   respond_to :json
 
   def index
-    render :json => @environment.working_changesets
+    render :json => @environment.working_changesets.where(params.slice(:name))
   end
 
   def show
