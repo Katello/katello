@@ -134,7 +134,6 @@ class PromotionsController < ApplicationController
 
     @path = @next_environment.full_path if @next_environment
     @path ||= @environment.full_path if @environment
-    @path = [current_organization.locker] + @path if !@path.first.locker?
 
     @product = Product.find(params[:product_id]) if params[:product_id]
   end

@@ -107,7 +107,7 @@ class UsersController < ApplicationController
 
   def clear_helptips
 
-    @user = User.where(:username => params[:id])[0]
+    @user = User.find params[:id]
     @user.clear_helptips
     notice _("Disabled help tips have been re-enabled.")
     render :text => _("Cleared")

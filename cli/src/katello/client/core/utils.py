@@ -18,6 +18,7 @@ import re
 import sys
 import time
 import threading
+import time
 from pprint import pprint
 
 # output formatting -----------------------------------------------------------
@@ -33,7 +34,7 @@ class Printer:
         self._columns = []
         self._heading = ""
         self._delim = delimiter
-        
+
 
     def setHeader(self, heading):
         self._heading = heading
@@ -41,7 +42,7 @@ class Printer:
     def _printDivLine(self, width):
         #print '+' + '-'*(width-2) + '+'
         print '-'*width
-        
+
     def _printHeader(self, heading, widths={}):
         """
         Print a fancy header to stdout.
@@ -62,12 +63,12 @@ class Printer:
             print self._delim,
             for col in self._columns:
                 if col['show_in_grep']:
-                  
+
                     if widths.has_key(col['attr_name']):
                         width = widths[col['attr_name']]
                     else:
                         width = 0
-                    
+
                     print col['name'].ljust(width),
                     print self._delim,
             print
@@ -133,9 +134,9 @@ class Printer:
 
             value = item[col['attr_name']]
             if not col['multiline']:
-                print indent+"%-15s \t%-25s" % (col['name'], value)
+                print indent+"%-15s \t%-25s" % (col['name']+":", value)
             else:
-                print indent+col['name']
+                print indent+col['name']+":"
                 print indent_text(value, indent+"    ")
 
 
@@ -152,7 +153,7 @@ class Printer:
                 width = widths[col['attr_name']]
             else:
                 width = 0
-          
+
             #skip missing attributes
             if not item.has_key(col['attr_name']):
                 print " " * width,
@@ -179,8 +180,8 @@ class Printer:
                     widths[key] = len(str(item[key]))+1
 
         return widths
-        
-        
+
+
 
     def printItem(self, item, indent=""):
         """
@@ -214,8 +215,8 @@ class Printer:
             for item in items:
                 self._printItem(item, indent)
                 print
-            
-        
+
+
 
 
 # server output validity ------------------------------------------------------
@@ -228,10 +229,10 @@ def is_valid_record(rec):
     """
     if rec.has_key('created_at'):
         return (rec['created_at'] != None)
-        
+
     elif rec.has_key('created'):
         return (rec['created'] != None)
-        
+
     else:
         return False
 
@@ -291,14 +292,14 @@ def parse_tokens(tokenstring):
     """
     tokens = []
     pattern = '--?\w+|=?"[^"]*"|=?\'[^\']*\'|=?[^\s]+'
-    
+
     for tok in (re.findall(pattern, tokenstring)):
-        
+
         if tok[0] == '=':
             tok = tok[1:]
         if tok[0] == '"' or tok[0] == "'":
             tok = tok[1:-1]
-        
+
         tokens.append(tok)
     return tokens
 
@@ -316,21 +317,17 @@ def get_abs_path(path):
 
 def format_date(date):
     """
-    Run spinner while a function is running.
-    @type function: function
-    @param function: function to run
-    @type arguments: list
-    @param arguments: arguments for the function
-    @type message: string
-    @param message: message to be temporarily displayed while the spinner is running.
-    @return return value of the function
+    Format standard rails timestamp to more human readable format
+    @type date: string
+    @param date: arguments for the function
+    @return string, formatted date
     """
-    #TODO: implement
-    return date
+    t = time.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
+    return time.strftime("%Y/%m/%d %H:%M:%S", t)
 
 
 class Spinner(threading.Thread):
-    
+
     def __init__(self, msg=""):
         self._msg = msg
         threading.Thread.__init__(self)
@@ -360,10 +357,10 @@ class Spinner(threading.Thread):
         self._resetCaret()
         sys.stdout.write('   ')
         self._resetCaret()
-        
+
     def run(self):
         self._stop = False
-        
+
         self._putMessage()
         while True:
             for char in '/-\|':
@@ -372,7 +369,7 @@ class Spinner(threading.Thread):
                     self._eraseSpinner()
                     self._eraseMessage()
                     return
-                time.sleep( 0.1 )      
+                time.sleep( 0.1 )
                 self._resetCaret()
 
     def stop(self):
@@ -391,7 +388,7 @@ def run_spinner_in_bg(function, arguments=(), message=""):
     @return return value of the function
     """
     result = None
-  
+
     t = Spinner(message)
     t.start()
     try:
@@ -400,14 +397,3 @@ def run_spinner_in_bg(function, arguments=(), message=""):
         t.stop()
         t.join()
     return result
-
-
-
-
-
-
-
-
-
-
-
