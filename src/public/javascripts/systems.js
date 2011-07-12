@@ -31,4 +31,16 @@ $(document).ready(function() {
                notices.checkNotices();
          }});
   });
+  // check if we are viewing systems by environment 
+  if (window.env_select !== undefined) 
+    env_select.click_callback = systems_page.env_change;
 });
+
+var systems_page = (function() {
+  return {
+    env_change : function(env_id, element) {
+      var url = element.attr("data-url");
+      window.location = url;
+    }
+  }
+})();

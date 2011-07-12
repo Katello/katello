@@ -219,7 +219,7 @@ class Info(RepoAction):
         else:
             repo = get_repo(orgName, prodName, repoName, envName)
             if repo == None:
-                return os.EX_NOTFOUND
+                return os.EX_DATAERR
 
         repo['url'] = repo['source']['url']
         repo['last_sync'] = self.format_sync_time(repo['last_sync'])
