@@ -16,7 +16,7 @@ common:
   warden: database
   use_cp: true
   use_pulp: true
-  use_ssl: false
+  use_ssl: true
   rest_client_timeout: 30
 
 #setup how often you want 
@@ -25,7 +25,7 @@ common:
 #default value = 45 seconds
 #
   notification:
-    polling_seconds: 45
+    polling_seconds: 120
 
 # Setup your UI search configuration.
 # max_history (default=5): specifies the number of search history elements 

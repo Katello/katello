@@ -22,6 +22,7 @@ class System < ActiveRecord::Base
   include Glue::Pulp::Consumer
   include Glue
   include Authorization
+  include AsyncOrchestration
 
   belongs_to :environment, :class_name => "KPEnvironment", :inverse_of => :systems
 

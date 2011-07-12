@@ -114,7 +114,7 @@ class KPEnvironment < ActiveRecord::Base
     until p.prior.nil? or p.prior.locker
       p = p.prior
     end
-    p.path
+    p.prior.nil? ? p.path : [p.prior] + p.path
   end
 
   def available_products
