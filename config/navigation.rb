@@ -70,6 +70,10 @@ SimpleNavigation::Configuration.run do |navigation|
                                                 
           system_sub.item :packages, _("Packages"), packages_system_path(@system.id), :class => "navigation_element",
                                   :controller => "systems"
+        else
+          #render tri-nav when not 2pane request
+          system_sub.item :all, _("All"), systems_path()
+          system_sub.item :env, _("Environments"), environments_systems_path()
         end
       end
       #TODO: tie in Groups Page (if applicable)
@@ -79,7 +83,7 @@ SimpleNavigation::Configuration.run do |navigation|
     
     top_level.item :organizations, _("Organizations"), {:controller => 'organizations'}, :class=>'organizations' do |orgs_sub|
        orgs_sub.item :index, _("List"), organizations_path
-
+       orgs_sub.item :subscriptions, _("Subscriptions"), subscriptions_path
     end #end organization 
 
     top_level.item :operations, _("Administration"), {:controller => 'operations'}, :class=>'operations' do |operations_sub|

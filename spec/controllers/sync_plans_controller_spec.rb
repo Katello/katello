@@ -99,6 +99,13 @@ describe SyncPlansController do
       response.should be_success
     end
 
+    it "should update interval to none successfully" do
+      SyncPlan.first.should_not be_nil
+      controller.should_receive(:notice)
+      put :update, :id => @plan.id, :plan => {:interval => 'none'}
+      response.should be_success
+    end
+
     it "should update a sync plan description successfully" do
       SyncPlan.first.should_not be_nil
       controller.should_receive(:notice)
