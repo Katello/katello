@@ -17,7 +17,6 @@ class SyncManagementController < ApplicationController
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::NumberHelper
 
-  before_filter :require_user
   respond_to :html, :json
 
   @@status_values = { Glue::Pulp::Repo::SYNC_STATE_WAITING => _("Queued."),
@@ -56,7 +55,7 @@ class SyncManagementController < ApplicationController
     end
   end
  
-  def status
+  def sync_status
     sync_status = Glue::Pulp::Repo.new(:id => params[:repo_id]).sync_status
     progress = format_sync_progress(sync_status)
     progress[:repo_id] = params['repo_id']
