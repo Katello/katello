@@ -5,6 +5,9 @@ Src::Application.routes.draw do
       get :auto_complete_search
       get :items
     end
+    member do
+      get :subscriptions
+    end
   end
 
   resources :sync_plans, :only => [:index, :create, :new, :edit, :update, :show, :destroy, :auto_complete_search] do
