@@ -51,26 +51,9 @@ describe Api::TemplatesController do
 
   describe "index" do
     
-    before(:each) do
-      Organization.stub(:first).and_return(@organization)
-    end
-    
-    it 'should not work if org and env are not passed' do
-      SystemTemplate.should_receive(:where).exactly(0).times
-      get 'index'
-      response.should_not be_success
-    end
-    
-    it 'should not work if only org is passed' do
-      SystemTemplate.should_receive(:where).exactly(0).times
-      get 'index', :organization_id => 'organization'
-      response.should_not be_success
-    end
-    
-    it 'should get a list of templates in the specified org and env' do
-      @organization.environments.stub(:where).with(:name => 'environment').and_return([@environment])
-      SystemTemplate.should_receive(:where).with(:environment_id => @environment.id).and_return([@tpl])
-      get 'index', :organization_id => 'organization', :env_name => 'environment'
+    it 'should get a list of templates from specified environment ID' do
+      SystemTemplate.should_receive(:where).with("environment_id" => @environment.id).and_return([@tpl])
+      get 'index', :environment_id => @environment.id
       response.should be_success
     end
     
@@ -78,9 +61,8 @@ describe Api::TemplatesController do
       @environment2 = KPEnvironment.new(:name => 'environment2')
       @environment2.id = 3
       
-      @organization.environments.stub(:where).with(:name => 'environment2').and_return([@environment2])
-      SystemTemplate.should_receive(:where).with(:environment_id => @environment2.id).and_return([])
-      get 'index', :organization_id => 'organization', :env_name => 'environment2'
+      SystemTemplate.should_receive(:where).with("environment_id" => @environment2.id).and_return([])
+      get 'index', :environment_id => @environment2.id
       response.should be_success
     end
   end
