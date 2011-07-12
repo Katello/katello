@@ -64,8 +64,14 @@ class List(TemplateAction):
         envName = self.get_option('env')
         orgName = self.get_option('org')
         
-        templates = self.api.templates(envName, orgName)
+        environment = get_environment(orgName, envName)
+        
+        if not environment: return os.EX_OK
+        templates = self.api.templates(environment["id"])
 
+        if not templates:
+            print _("No templates found in environment [ %s ]") % envName
+            return os.EX_OK
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('description', multiline=True)

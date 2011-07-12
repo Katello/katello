@@ -18,13 +18,9 @@ from pprint import pprint
 
 class TemplateAPI(KatelloAPI): 
 
-    def templates(self, envName, orgName):
-        params = {}
-        params["env_name"] = envName
-        params["organization_id"] = orgName
-            
+    def templates(self, envId):
         path = "/api/templates/"
-        tpls = self.server.GET(path, params)[1]
+        tpls = self.server.GET(path, {"environment_id": envId})[1]
         return tpls
         
         
