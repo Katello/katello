@@ -63,7 +63,7 @@ class Api::SystemsController < Api::ApiController
 
   def find_only_environment
     if @organization && !params.has_key?(:environment_id)
-      raise HttpErrors::BadRequest, _("Organization #{@organization.name} has 'locker' environment only. Please create an environment for system registration.") if @organization.environments.empty?
+      raise HttpErrors::BadRequest, _("Organization #{@organization.name} has 'Locker' environment only. Please create an environment for system registration.") if @organization.environments.empty?
       raise HttpErrors::BadRequest, _("Organization #{@organization.name} has more than one environment. Please specify target environment for system registration.") if @organization.environments.size > 1
       @environment = @organization.environments.first and return
     end
