@@ -41,7 +41,6 @@ class Changeset < ActiveRecord::Base
   scoped_search :in => :products, :on => :name, :complete_value => true, :rename => :'custom_product.name'
   scoped_search :in => :products, :on => :description, :complete_value => true, :rename => :'custom_product.description'
 
-
   def key_for item
     "changeset_#{id}_#{item}"
   end
