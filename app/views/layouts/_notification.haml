@@ -1,7 +1,7 @@
 - if flash[:error]
   :javascript
     $(document).ready(function(){
-      notices.displayNotice("error", '#{ flash[:error] }');
+      notices.displayNotice("error", '#{ escape_javascript(flash[:error]) }');
     });
 
 - if flash[:warning]
