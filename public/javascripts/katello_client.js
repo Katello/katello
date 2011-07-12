@@ -125,52 +125,6 @@ var search = {
     }
 }
 
-var user = {
-
-    create: function(username, password, on_success, on_error) {
-      $.ajax({
-        type: "POST",
-        url: "/users/",
-        data: { "user":{"username":username, "password":password}},
-        cache: false,
-        success: on_success,
-        error: on_error
-      });
-    },
-
-   update_user: function(username, options, on_success, on_error) {
-      $.ajax({
-        type: "PUT",
-        url: "/users/" + username,
-        data: options,
-        cache: false,
-        success: on_success,
-        error: on_error
-      });
-   },
-    update_password: function(username, password, on_success, on_error) {
-      $.ajax({
-        type: "PUT",
-        url: "/users/" + username,
-        data: { "user":{"password":password}},
-        cache: false,
-        success: on_success,
-        error: on_error
-      });
-    },
-    clear_helptips: function(username, on_success, on_error) {
-      $.ajax({
-        type: "POST",
-        url: "/users/" + username + "/clear_helptips",
-        data: {},
-        cache: false,
-        success: on_success,
-        error: on_error
-      });
-    }
-
-};
-
 
 var environment = {
     create: function(data, url, on_success, on_error) {
