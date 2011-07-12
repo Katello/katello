@@ -12,7 +12,7 @@ Src::Application.routes.draw do
 
   get "sync_management/index"
   post "sync_management/sync"
-  get  "sync_management/status"
+  get  "sync_management/sync_status"
   get  "sync_management/product_status"
   resources :sync_management, :only => [:destroy]
 
