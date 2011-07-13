@@ -44,7 +44,8 @@ class RepoAction(Action):
         if sync_time is None:
             return 'never'
         else:
-            return str(format_date(sync_time))
+            return str(format_date(sync_time[0:19], '%Y-%m-%dT%H:%M:%S'))
+            #'2011-07-11T15:03:52+02:00
 
 # actions --------------------------------------------------------------------
 

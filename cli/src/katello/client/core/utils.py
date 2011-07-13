@@ -315,15 +315,16 @@ def get_abs_path(path):
     return path
 
 
-def format_date(date):
+def format_date(date, from_format="%Y-%m-%dT%H:%M:%SZ", to_format="%Y/%m/%d %H:%M:%S"):
     """
     Format standard rails timestamp to more human readable format
     @type date: string
     @param date: arguments for the function
     @return string, formatted date
     """
-    t = time.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
-    return time.strftime("%Y/%m/%d %H:%M:%S", t)
+    #t = time.strptime(date, from_format)
+    t = time.localtime()
+    return time.strftime(to_format, t)
 
 
 class Spinner(threading.Thread):
