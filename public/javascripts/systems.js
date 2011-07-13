@@ -32,8 +32,10 @@ $(document).ready(function() {
          }});
   });
   // check if we are viewing systems by environment 
-  if (window.env_select !== undefined) 
+  if (window.env_select !== undefined) {
     env_select.click_callback = systems_page.env_change;
+  }
+
 });
 
 var systems_page = (function() {
