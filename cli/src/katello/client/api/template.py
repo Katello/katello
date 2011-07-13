@@ -96,7 +96,7 @@ class TemplateAPI(KatelloAPI):
     def promote(self, id):
         path = "/api/templates/%s/promote" % str(id)
         return self.server.POST(path)[1]
-        
+
     def promotion_status(self, task_id):
         path = "/api/tasks/%s" % str(task_id)
         return self.server.GET(path)[1]

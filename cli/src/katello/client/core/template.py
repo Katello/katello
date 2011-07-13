@@ -68,9 +68,9 @@ class List(TemplateAction):
     def run(self):
         envName = self.get_option('env')
         orgName = self.get_option('org')
-        
+
         environment = get_environment(orgName, envName)
-        
+
         if not environment: return os.EX_OK
         templates = self.api.templates(environment["id"])
 
@@ -392,28 +392,28 @@ class Promote(TemplateAction):
         envName = self.get_option('env')
 
         template = get_template(orgName, envName, tplName)
-        if template != None:            
+        if template != None:
             try:
                 task = self.api.promote(template["id"])
             except Exception,e:
                 system_exit(os.EX_DATAERR, _("Error: %s" % e))
-                
+
         result = run_spinner_in_bg(self.wait_for_promotion, [task])
-        
-        if result['state'] == 'completed':    
+
+        if result['state'] == 'completed':
             print _("Template [ %s ] promoted" % tplName)
             return os.EX_OK
         else:
             print _("Template [ %s ] promotion failed: %s" % (tplName, json.loads(result["result"])['errors'][0]))
             return 1
-            
-    
+
+
     def wait_for_promotion(self, promotionTask):
         task = promotionTask
         while task['state'] not in ('failed', 'completed'):
             time.sleep(0.25)
             task = self.api.promotion_status(task['uuid'])
-            
+
         return task
 
 # provider command =============================================================
