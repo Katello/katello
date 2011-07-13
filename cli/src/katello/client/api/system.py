@@ -42,7 +42,7 @@ class SystemAPI(KatelloAPI):
         return self.server.DELETE(path)[1]
 
     def system(self, id):
-        path = "/api/systems/%s" % orgId
+        path = "/api/systems/%s" % id
         return self.server.GET(path)[1]
 
     def systems_by_org(self, orgId, query = {}):

@@ -23,6 +23,7 @@ from katello.client.api.system import SystemAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record
+from katello.client.core.utils import Printer
 
 _cfg = Config()
 
@@ -94,20 +95,33 @@ class Info(SystemAction):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
+        # info is always grep friendly
+        printer = Printer(False)
 
         if env_name is None:
-            self.printer.printHeader(_("System Information For Org %s") % org_name)
+            printer.printHeader(_("System Information For Org %s") % org_name)
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
-            self.printer.printHeader(_("System Information For Environment %s in Org %s") % (env_name, org_name))
+            printer.printHeader(_("System Information For Environment %s in Org %s") % (env_name, org_name))
             systems = self.api.systems_by_env(org_name, env_name,
                     {'name': sys_name})
 
-        self.printer.addColumn('name')
-        self.printer.addColumn('uuid')
-        self.printer.addColumn('facts')
+        # get system details
+        system = self.api.system(systems[0]['uuid'])
 
-        self.printer.printItem(systems[0])
+        printer.addColumn('name')
+        printer.addColumn('uuid')
+        printer.addColumn('location')
+
+        # add facts to the system result object
+        facts_hash = system['facts']
+        facts_tuples_sorted = [ ('fact ' + k, facts_hash[k]) for k in
+                sorted(facts_hash.keys())]
+        for (k, v) in facts_tuples_sorted:
+            printer.addColumn(k)
+            system[k] = v
+
+        printer.printItem(system)
 
         return os.EX_OK
 
