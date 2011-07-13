@@ -119,6 +119,40 @@ class Info(ChangesetAction):
         self.printer.printItem(cset)
         return os.EX_OK
         
+
+# ==============================================================================
+class Create(ChangesetAction):
+
+    description = _('create a new changeset for an environment')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--environment', dest='env',
+                               help=_("environment name (Locker by default)"))
+        self.parser.add_option('--name', dest='name',
+                               help=_("changeset name (required)"))
+                               
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+    def run(self):
+        orgName = self.get_option('org')
+        envName = self.get_option('env')
+        csName = self.get_option('name')
+        
+        env = get_environment(orgName, envName)
+        if env != None:
+
+            cset = self.api.create(orgName, env["id"], csName)
+            if is_valid_record(cset):
+                print _("Successfully created changeset [ %s ] for environment [ %s ]") % (cset['name'], env["name"])
+            else:
+                print _("Could not create changeset [ %s ] for environment [ %s ]") % (cset['name'], env["name"])
+
+        return os.EX_OK
+        
         
 # ==============================================================================
 class UpdateContent(ChangesetAction):

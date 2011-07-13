@@ -123,6 +123,7 @@ def setup_admin(admin):
     admin.add_command('provider', prov_cmd)
 
     cset_cmd = changeset.Changeset()
+    cset_cmd.add_action('create', changeset.Create())
     cset_cmd.add_action('list', changeset.List())
     cset_cmd.add_action('info', changeset.Info())
     cset_cmd.add_action('update', changeset.UpdateContent())

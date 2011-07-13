@@ -36,6 +36,15 @@ class ChangesetAPI(KatelloAPI):
         else:
             return None
             
+    def create(self, orgName, envId, name):
+        data = {
+            "changeset": {
+                "name": name,
+            }
+        }
+        path = "/api/organizations/%s/environments/%s/changesets/" % (orgName, envId)
+        return self.server.POST(path, data)[1]
+            
     def update_content(self, orgName, envId, csId, patch):
         data = {
             'patch': patch
