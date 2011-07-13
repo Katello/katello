@@ -19,6 +19,7 @@ class Api::TasksController < Api::ApiController
   end
 
   def show
-    render :json => TaskStatus.find_by_uuid(params[:id]).to_json(:except => :id)
+    task = TaskStatus.find_by_uuid(params[:id]).refresh
+    render :json => task.to_json(:except => :id)
   end
 end
