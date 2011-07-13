@@ -1,3 +1,5 @@
+= include_javascripts :system_packages
+
 = content_for :title do
   #{_("System")}
 
@@ -5,6 +7,10 @@
   = render_navigation(:expand_all => true, :level => 3)
 
 = content_for :content do
+  %form#filter_form.clear
+    %input{ :name => "f", :type => "search", :placeholder => "Filter...", :id=>"filter"}
+    %button.filter_button #{_("Filter")}
+    %br.clear
   %table.packages
     %thead
       %th #{_("Name")}
@@ -16,7 +22,4 @@
             #{p.nvrea}
           %td{:class=>"arch"}
             #{p.arch}
-
-
-
 
