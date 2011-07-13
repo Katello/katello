@@ -20,6 +20,7 @@ import time
 import threading
 import time
 from pprint import pprint
+from katello.client.api.task_status import TaskStatusAPI
 
 # output formatting -----------------------------------------------------------
 
@@ -397,3 +398,18 @@ def run_spinner_in_bg(function, arguments=(), message=""):
         t.stop()
         t.join()
     return result
+    
+def wait_for_async_task(taskStatus):
+    task = taskStatus
+    status_api = TaskStatusAPI()
+    
+    if type(task).__name__== 'list':
+        while len(filter(lambda t: t['state'] not in ('finished', 'error', 'timed out', 'canceled'), task)) > 0:
+            time.sleep(1)
+            task = [status_api.status(t['uuid']) for t in task]
+    else:
+        while task['state'] not in ('finished', 'error', 'timed out', 'canceled'):
+            time.sleep(1)
+            task = status_api.status(task['uuid'])
+        
+    return task

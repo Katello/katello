@@ -24,8 +24,13 @@ from gettext import gettext as _
 from katello.client.api.provider import ProviderAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg
+from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, wait_for_async_task
 from katello.client.api.utils import get_provider
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 _cfg = Config()
 
@@ -254,16 +259,19 @@ class Sync(ProviderAction):
         orgName  = self.get_option('org')
 
         prov = get_provider(orgName, provName)
-        if prov != None:
-            msg = self.api.sync(prov["id"])
-            print msg
-            return os.EX_OK
-        else:
+        if prov == None:
             return os.EX_DATAERR
+            
+        async_task = self.api.sync(prov["id"])
+        result = run_spinner_in_bg(wait_for_async_task, [async_task])
+        
+        if len(filter(lambda t: t['state'] == 'error', result)) > 0:
+            errors = map(lambda t: json.loads(t["result"])['errors'][0], filter(lambda t: t['state'] == 'error', result))
+            print _("Provider [ %s ] failed to sync: %s" % (provName, errors))
+            return 1
 
-
-
-
+        print _("Provider [ %s ] synced" % provName)
+        return os.EX_OK
 
 # ==============================================================================
 class ImportManifest(ProviderAction):

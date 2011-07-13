@@ -28,7 +28,12 @@ from katello.client.api.environment import EnvironmentAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_product, get_repo
-from katello.client.core.utils import system_exit, run_spinner_in_bg
+from katello.client.core.utils import system_exit, run_spinner_in_bg, wait_for_async_task
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 _cfg = Config()
 
@@ -250,10 +255,16 @@ class Sync(RepoAction):
 
     def run(self):
         id = self.get_option('id')
-        msg = self.api.sync(id)
-
-        print msg
-        return os.EX_OK
+        async_task = self.api.sync(id)
+        
+        result = run_spinner_in_bg(wait_for_async_task, [async_task])
+        
+        if result['state'] == 'finished':    
+            print _("Repo [ %s ] synced" % id)
+            return os.EX_OK
+        else:
+            print _("Repo [ %s ] failed to sync: %s" % (id, json.loads(result["result"])['errors'][0]))
+            return 1
 
 
 class List(RepoAction):
