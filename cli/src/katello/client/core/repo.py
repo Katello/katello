@@ -19,12 +19,10 @@ import os
 import time
 import urlparse
 from gettext import gettext as _
-from pprint import pprint
 
 from katello.client import constants
-from katello.client.core.utils import is_valid_record, format_date
+from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
-from katello.client.api.environment import EnvironmentAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_product, get_repo
