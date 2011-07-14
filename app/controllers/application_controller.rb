@@ -353,6 +353,14 @@ class ApplicationController < ActionController::Base
     to_ret
   end
 
+  # for use with:   around_filter :catch_exceptions
+  def catch_exceptions
+    yield
+  rescue Exception => error
+    errors error
+    render :text => error, :status => :bad_request
+  end
+
 
 end
 

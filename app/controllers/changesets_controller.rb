@@ -18,8 +18,9 @@ class ChangesetsController < ApplicationController
   before_filter :find_environment, :except => [:index, :list, :items, :auto_complete_search]
   before_filter :setup_options, :only => [:index, :items, :auto_complete_search]
 
-  rescue_from Exception, :with => :handle_exceptions
   after_filter :update_editors, :only => [:update]
+
+  around_filter :catch_exceptions
 
   ####
   # Changeset history methods
@@ -247,13 +248,5 @@ class ChangesetsController < ApplicationController
                  :accessor => :id,
                  :ajax_scroll => items_changesets_path()}
   end
-  
-  def handle_exceptions(error)
-    Rails.logger.info  error.to_s
-    Rails.logger.info error.backtrace.join("\n")
-    errors error
-    render :text => error.to_s, :status => :bad_request
 
-  end
-  
 end
