@@ -4,6 +4,8 @@ Src::Application.routes.draw do
     collection do
       get :auto_complete_search
       get :items
+      get :subscriptions
+      post :update_subscriptions
     end
     member do
       get :subscriptions
