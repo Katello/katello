@@ -202,7 +202,11 @@ Src::Application.routes.draw do
   namespace :api do
     match '/' => 'root#resource_list'
 
-    resources :systems, :only => [:show, :destroy, :create, :index]
+    resources :systems, :only => [:show, :destroy, :create, :index] do
+      member do
+        get :packages
+      end
+    end
 
     resources :providers do
       resources :sync, :only => [:index, :show, :create] do
