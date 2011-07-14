@@ -148,7 +148,7 @@ class Update(OrganizationAction):
         name        = self.get_option('name')
         description = self.get_option('description')
 
-        org = self.api.update(name, description)
+        self.api.update(name, description)
         print _("Successfully updated org [ %s ]") % name
         return os.EX_OK
 
