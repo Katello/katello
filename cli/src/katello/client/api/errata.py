@@ -24,7 +24,7 @@ class ErrataAPI(KatelloAPI):
         pack = self.server.GET(path)[1]
         return pack
 
-    def errata(self, id):
-        path = "/api/errata/%s/" % id
+    def errata(self, errata_id):
+        path = "/api/errata/%s/" % errata_id
         pack = self.server.GET(path)[1]
         return pack
