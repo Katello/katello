@@ -155,7 +155,6 @@ class Create(RepoAction):
                 print "(-)  [%s] %-5s" % (index+1, url)
 
     def wait_for_discovery(self, discoveryTask):
-        task = discoveryTask
         while discoveryTask['state'] not in ('finished', 'error', 'timed out', 'canceled'):
             time.sleep(0.25)
             discoveryTask = self.api.repo_discovery_status(discoveryTask['id'])
