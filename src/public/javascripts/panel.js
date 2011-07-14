@@ -125,7 +125,7 @@ $(document).ready(function() {
             url: $(this).attr('href'),
             dataType: 'html',
             success: function(data) {
-            $(".panel-content").html(data);
+                $(".panel-content").html(data);
             }
         });
         return false;
@@ -189,6 +189,7 @@ var list = (function(){
 var panel = (function(){
     return {
         extended_cb : function() {}, //callback for post extended scroll
+        expand_cb: function() {}, //callback after a pane is loaded
         select_item :    function(activeBlockId) {
             thisPanel = $("#panel");
             subpanel = $('#subpanel');
@@ -236,6 +237,8 @@ var panel = (function(){
                 success: function (data, status, xhr) {
                     spinner.hide();
                     panelContent.html(data).fadeIn(function(){$(".panel-content :input:visible:enabled:first").focus();});
+                    panel.expand_cb(name);
+
                 },
                 error: function (xhr, status, error) {
                     spinner.hide();
