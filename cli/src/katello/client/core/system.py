@@ -16,7 +16,6 @@
 #
 
 import os
-import urlparse
 from gettext import gettext as _
 
 from katello.client.api.system import SystemAPI
