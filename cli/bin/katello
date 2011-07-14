@@ -95,6 +95,7 @@ def setup_admin(admin):
     system_cmd.add_action('list', system.List())
     system_cmd.add_action('register', system.Register())
     system_cmd.add_action('unregister', system.Unregister())
+    system_cmd.add_action('info', system.Info())
     admin.add_command('system', system_cmd)
 
     template_cmd = template.Template()

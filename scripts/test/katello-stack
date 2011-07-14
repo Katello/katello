@@ -85,6 +85,11 @@ case "$1" in
       service $SERVICE $1
     done
     ;;
+  repair)
+    service mongod stop
+    rm /var/lib/mongodb/mongod.lock
+    sudo -u mongodb mongod -f /etc/mongodb.conf --repair
+    ;;
   restart)
     for SERVICE in ${SERVICES_STOP[*]}; do
       service $SERVICE stop

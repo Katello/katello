@@ -15,17 +15,8 @@
 
 from katello.client.api.base import KatelloAPI
 
-class DistributionAPI(KatelloAPI):
-    """
-    Connection class to access distributions
-    """
-
-    def distributions_by_repo(self, repoId):
-        path = "/api/repositories/%s/distributions" % repoId
-        dist_list = self.server.GET(path)[1]
-        return dist_list
-
-    def distribution(self, distribuition_id):
-        path = "/api/distributions/%s/" % distribution_id
-        data = self.server.GET(path)[1]
-        return data
+class TaskStatusAPI(KatelloAPI):
+    def status(self, taskUuid):
+        path = "/api/tasks/%s" % str(taskUuid)
+        return self.server.GET(path)[1]
+        

@@ -80,7 +80,7 @@ class KatelloShell(Cmd):
                                     self.history_file)
                 except IOError:
                     logging.error('Could not read history file')
-        except Exception, e:
+        except Exception:
             pass
 
         for cmd in admin_cli.command_names():
@@ -239,7 +239,6 @@ class KatelloShell(Cmd):
         Otherwise try to call complete_<command> to get list of completions.
         """
         if state == 0:
-            import readline
             origline = readline.get_line_buffer()
             line = origline.lstrip()
             stripped = len(origline) - len(line)

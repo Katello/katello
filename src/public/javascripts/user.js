@@ -14,13 +14,120 @@
 
 $(document).ready(function() {
    
-    $('#password_field').live('keyup.katello', verifyPassword);
-    $('#confirm_field').live('keyup.katello',verifyPassword);
-    $('#save_user').live('click',createNewUser);
-    $('#clear_helptips').live('click',clear_helptips);
-    $('#save_password').live('click',changePassword);
+    $('#password_field').live('keyup.katello', user_page.verifyPassword);
+    $('#confirm_field').live('keyup.katello',user_page.verifyPassword);
+    $('#save_user').live('click',user_page.createNewUser);
+    $('#clear_helptips').live('click',user_page.clearHelptips);
+    $('#save_password').live('click',user_page.changePassword);
+    $('#update_roles').live('submit', user_page.updateRoles);
+});
 
-    $('#update_roles').live('submit', function(e) {
+
+
+var user_page = function() {
+    var clearHelptips = function() {
+        var chkbox = $(this);
+        var url = chkbox.attr("data-url");
+        chkbox.addClass("disabled");
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {},
+            cache: false,
+            success: function(data) {
+                chkbox.button('destroy');
+                chkbox.text(data);
+            },
+            error: function(data) {
+                chkbox.removeClass("disabled");
+                chkbox.button('option',  'label', data);
+            }
+        });
+    },
+    checkboxChanged = function() {
+        var checkbox = $(this);
+        var name = $(this).attr("name");
+        var options = {};
+        options[name] = checkbox.attr("checked");
+        var url = checkbox.attr("data-url");
+        $.ajax({
+            type: "PUT",
+            url: url,
+            data: options,
+            cache: false
+        });        
+        return false;
+    },
+    verifyPassword = function() {
+        var match_button = $('.verify_password');
+        var a = $('#password_field').val();
+        var b = $('#confirm_field').val();
+
+        if(a!= b){
+            $("#password_conflict").text(i18n.password_match);
+            $(match_button).addClass("disabled");
+            $('#save_password').die('click');
+            $('#save_user').die('click');
+            return false;
+        }
+        else {
+            $("#password_conflict").text("");
+            $(match_button).removeClass("disabled");
+
+            //reset the edit user button
+            $('#save_password').die('click');
+            $('#save_password').live('click',changePassword);
+            //reset the new user button
+            $('#save_user').die('click');
+            $('#save_user').live('click',createNewUser);
+            return true;
+        }
+
+    },
+    createNewUser = function() {
+        var button = $(this);
+        if (button.hasClass("disabled")) {
+            return false;
+        }
+
+        if (verifyPassword()) {
+            button.addClass('disabled');
+            var username = $('#username_field').val();
+            var password = $('#password_field').val();
+            $.ajax({
+                type: "POST",
+                url: "/users/",
+                data: { "user":{"username":username, "password":password}},
+                cache: false,
+                success: function(data) {
+                    button.removeClass('disabled');
+                    list.add(data);
+                    panel.closePanel($('#panel'));
+                  },
+                error: function(){button.removeClass('disabled');}
+            });
+
+        }
+    },
+    changePassword = function() {
+        var button = $(this);
+        var url = button.attr("data-url");
+        var password = $('#password_field').val();
+        button.addClass("disabled");
+        $.ajax({
+            type: "PUT",
+            url: url,
+            data: { "user":{"password":password}},
+            cache: false,
+            success: function() {
+                button.removeClass("disabled");
+            },
+            error: function(e) {
+                button.removeClass('disabled');
+            }
+        });
+    },
+    updateRoles = function(e) {
         e.preventDefault();
         var button = $(this).find('input[type|="submit"]');
         button.attr("disabled","disabled");
@@ -32,95 +139,14 @@ $(document).ready(function() {
                 button.removeAttr('disabled');
             }
         });
-    });
-});
+    };
 
-function clear_helptips() {
-	var obj = $(this);
-	user.clear_helptips(obj.attr("username"),
-	    function(data) {
-		obj.button('destroy');
-		//obj.button('option', 'label', data);
-		obj.text(data);
-	    },
-	    function(data) {
-		obj.button('option',  'label', data);
-	    })
-
-}
-
-
-function checkboxChanged() {
-	var checkbox = $(this);
-	var name = $(this).attr("name");
-	var obj = {};
-	obj[name] = checkbox.attr("checked");
-	user.update_user($(this).attr("data_username"), obj, function(){},function(){});
-	
-}
-
-
-
-//match_button must be defined which is the id of the button to disable
-//if a password match fails
-function verifyPassword() {
-    var match_button = $('.verify_password');
-    var a = $('#password_field').val();
-    var b = $('#confirm_field').val();
-    
-    if(a!= b){
-        $("#password_conflict").text(i18n.password_match);
-        $(match_button).addClass("disabled");
-        $('#save_password').die('click');
-        $('#save_user').die('click');
-        return false;
+    return {
+        createNewUser: createNewUser,
+        verifyPassword: verifyPassword,
+        changePassword: changePassword,
+        checkboxChanged: checkboxChanged,
+        clearHelptips: clearHelptips,
+        updateRoles: updateRoles
     }
-    else {
-        $("#password_conflict").text("");
-        $(match_button).removeClass("disabled");
-
-        //reset the edit user button
-        $('#save_password').die('click');
-        $('#save_password').live('click',changePassword);
-        //reset the new user button 
-        $('#save_user').die('click');
-        $('#save_user').live('click',createNewUser);
-        return true;
-    }
-}
-
-//Create user functions
-function createNewUser(){
-    if (verifyPassword()) {
-        user.create($('#username_field').val(), $('#password_field').val(),
-              successCreate, errorCreate);
-    }
-}
-
-function successCreate(data) {
-    list.add(data);
-    panel.closePanel($('#panel'));
-}
-
-function errorCreate(request) {
- //alert(request.responseText);
-}
-
-
-
-//Change password functions
-function changePassword() {
-    user.update_password($(this).attr("data_username")  ,$('#password_field').val(),
-        changePasswordSuccess, changePasswordFail);
-}
-
-function changePasswordFail(request) {
-  //alert(request.responseText);
-}
-
-function changePasswordSuccess() {
-  //alert("Success");
-}
-
-
-
+}();

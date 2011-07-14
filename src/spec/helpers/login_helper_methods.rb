@@ -30,6 +30,7 @@ module LoginHelperMethods
   def setup_current_organization
     @mock_org = mock(Organization)
     @mock_org.stub!(:name).and_return("admin_one")
+    @mock_org.stub!(:cp_key).and_return("admin_one")
     controller.stub!(:current_organization).and_return(@mock_org)
   end
 
