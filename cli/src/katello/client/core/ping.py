@@ -16,14 +16,11 @@
 #
 
 import os
-import urlparse
 from gettext import gettext as _
-from pprint import pprint
 
 from katello.client.api.ping import PingAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client import constants
 
 _cfg = Config()
 
