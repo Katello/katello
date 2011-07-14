@@ -26,10 +26,3 @@ class AdminCLI(KatelloCLI):
         credentials if present.
         """
         super(AdminCLI, self).setup_credentials()
-        #if self._server.has_credentials_set():
-        #    return
-        #login = Login()
-        #certfile = login.crtpath()
-        #keyfile = login.keypath()
-        #if os.access(certfile, os.R_OK) and os.access(keyfile, os.R_OK):
-        #    self._server.set_ssl_credentials(certfile, keyfile)
