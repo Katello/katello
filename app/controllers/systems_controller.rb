@@ -34,7 +34,7 @@ class SystemsController < ApplicationController
   def environments
     begin
       @environment = KPEnvironment.find params[:env_id] if !params[:env_id].blank?
-      @environment = current_organization.promotion_paths.first.first
+      @environment ||= current_organization.promotion_paths.first.first
       
       setup_environment_selector(current_organization)
       @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size)
