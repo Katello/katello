@@ -88,7 +88,7 @@ module Glue::Pulp::Repos
     def sync
       self.repos(locker).collect do |r|
         r.sync
-      end
+      end.flatten
     end
 
     def synced?
