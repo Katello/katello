@@ -12,12 +12,13 @@
 #
 require 'active_support/core_ext/module/delegation'
 
-AsyncOperation = Struct.new(:username, :object, :method_name, :args) do
-  delegate :method, :to => :object
+AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args) do
+  #delegate :method, :to => :object
 
-  def initialize(username, object, method_name, args)
+  def initialize(status_id, username, object, method_name, args)
     raise NoMethodError, "undefined method `#{method_name}' for #{object.inspect}" unless object.respond_to?(method_name, true)
 
+    self.status_id    = status_id
     self.username     = username
     self.object       = object
     self.args         = args
@@ -30,7 +31,7 @@ AsyncOperation = Struct.new(:username, :object, :method_name, :args) do
 
   def perform
     User.current = User.find_by_username(username)
-    object.send(method_name, *args) if object
+    @result = object.send(method_name, *args) if object
   end
 
   def method_missing(symbol, *args)
@@ -39,5 +40,39 @@ AsyncOperation = Struct.new(:username, :object, :method_name, :args) do
 
   def respond_to?(symbol, include_private=false)
     super || object.respond_to?(symbol, include_private)
+  end
+
+  # limit to one failure
+  def max_attempts
+    1
+  end
+
+  #callbacks
+  def before
+    s = TaskStatus.find(status_id)
+    s.update_attributes!(:state => TaskStatus::Status::RUNNING, :started_at => current_time)
+  end
+
+  def error(job, exception)
+    s = TaskStatus.find(status_id)
+    s.update_attributes!(
+        :state => TaskStatus::Status::FAILED,
+        :failed_at => current_time,
+        :result => {:errors => [exception.message, exception.backtrace.join("/n")]}.to_json)
+  end
+
+  def success
+    s = TaskStatus.find(status_id)
+    s.update_attributes!(
+        :state => TaskStatus::Status::COMPLETED,
+        :finished_at => current_time,
+        :result => @result)
+  end
+
+  private
+  def current_time
+    (ActiveRecord::Base.default_timezone == :utc) ? Time.now.utc : Time.zone.now
+    rescue NoMethodError
+      Time.now
   end
 end

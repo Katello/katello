@@ -22,11 +22,17 @@ $(document).ready(function() {
        var answer = confirm(button.attr('data-confirm-text'));
        if (answer) {
             button.addClass('disabled');
-            environment.destroy(button.attr('data-url'), function(){
+            var url = button.attr('data-url');
+            $.ajax({
+                type: "DELETE",
+                url: url,
+                cache: false,
+                success: function(){
                    panel.panelAjax('', button.attr('data-forward'), $('#panel'));
                    panel.closeSubPanel($('#subpanel'));
-                }, function() {button.removeClass('disabled')});
-
+                },
+                error: function() {button.removeClass('disabled')}
+            });            
        }
     });
 
