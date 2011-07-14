@@ -916,6 +916,6 @@ var templateLibrary = (function(){
         changesetsList: changesetsList,
         productList: productList,
         listItems : listItems,
-        productDetailList: productDetailList,
+        productDetailList: productDetailList
     };
 })();
