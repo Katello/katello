@@ -74,7 +74,7 @@ class List(DistributionAction):
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
             if repo == None:
-                return os.EX_NOTFOUND
+                return os.EX_DATAERR
             repoId = repo["id"]
 
 

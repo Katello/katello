@@ -18,6 +18,7 @@ import re
 import sys
 import time
 import threading
+import time
 from pprint import pprint
 
 # output formatting -----------------------------------------------------------
@@ -133,9 +134,9 @@ class Printer:
 
             value = item[col['attr_name']]
             if not col['multiline']:
-                print indent+"%-15s \t%-25s" % (col['name'], value)
+                print indent+"%-15s \t%-25s" % (col['name']+":", value)
             else:
-                print indent+col['name']
+                print indent+col['name']+":"
                 print indent_text(value, indent+"    ")
 
 
@@ -316,17 +317,13 @@ def get_abs_path(path):
 
 def format_date(date):
     """
-    Run spinner while a function is running.
-    @type function: function
-    @param function: function to run
-    @type arguments: list
-    @param arguments: arguments for the function
-    @type message: string
-    @param message: message to be temporarily displayed while the spinner is running.
-    @return return value of the function
+    Format standard rails timestamp to more human readable format
+    @type date: string
+    @param date: arguments for the function
+    @return string, formatted date
     """
-    #TODO: implement
-    return date
+    t = time.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
+    return time.strftime("%Y/%m/%d %H:%M:%S", t)
 
 
 class Spinner(threading.Thread):

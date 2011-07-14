@@ -25,8 +25,13 @@ from sets import Set
 from katello.client.api.template import TemplateAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg
+from katello.client.core.utils import system_exit, is_valid_record, get_abs_path, run_spinner_in_bg
 from katello.client.api.utils import get_environment, get_template
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 _cfg = Config()
 
@@ -374,12 +379,29 @@ class Promote(TemplateAction):
         envName = self.get_option('env')
 
         template = get_template(orgName, envName, tplName)
-        if template != None:
-            response = run_spinner_in_bg(self.api.promote, (template["id"],), message=_("Promoting template, please wait... "))
+        if template != None:            
+            try:
+                task = self.api.promote(template["id"])
+            except Exception,e:
+                system_exit(os.EX_DATAERR, _("Error: %s" % e))
+                
+        result = run_spinner_in_bg(self.wait_for_promotion, [task])
+        
+        if result['state'] == 'completed':    
             print _("Template [ %s ] promoted" % tplName)
-
-        return os.EX_OK
-
+            return os.EX_OK
+        else:
+            print _("Template [ %s ] promotion failed: %s" % (tplName, json.loads(result["result"])['errors'][0]))
+            return 1
+            
+    
+    def wait_for_promotion(self, promotionTask):
+        task = promotionTask
+        while task['state'] not in ('failed', 'completed'):
+            time.sleep(0.25)
+            task = self.api.promotion_status(task['uuid'])
+            
+        return task
 
 # provider command =============================================================
 

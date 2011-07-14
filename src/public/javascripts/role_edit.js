@@ -17,7 +17,7 @@
  */
 
 $(document).ready(function() {
-    reset_buttons(); //This is in role.js
+    roles_page.reset_buttons(); //This is in role.js
 
     $('.edit_rolename').each(function() {
         $(this).editable($(this).attr('url'), {
