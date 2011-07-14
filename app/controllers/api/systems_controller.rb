@@ -39,8 +39,10 @@ class Api::SystemsController < Api::ApiController
   end
 
   def index
-    (render :json => @environment.systems.to_json and return) unless @environment.nil?
-    render :json => @organization.systems.to_json
+    # expected parameters
+    expected_params = params.slice('name')
+    (render :json => @environment.systems.where(expected_params).to_json and return) unless @environment.nil?
+    render :json => @organization.systems.where(expected_params).to_json
   end
 
   def show
