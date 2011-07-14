@@ -115,10 +115,11 @@ class ActivationKeysController < ApplicationController
   protected
 
   def find_activation_key
-    @activation_key = ActivationKey.find(params[:id])
-    if @activation_key.nil?
-      errors _("Couldn't find activation key '#{params[:id]}'")
-      redirect_to(:controller => :activation_keys, :action => :index) and return 
+    begin
+      @activation_key = ActivationKey.find(params[:id])
+    rescue Exception => error
+      errors error.to_s
+      render :text => error, :status => :bad_request
     end
   end
 
