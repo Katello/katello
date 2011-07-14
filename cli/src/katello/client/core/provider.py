@@ -16,9 +16,6 @@
 #
 
 import os
-import urlparse
-import time
-from pprint import pprint
 from gettext import gettext as _
 
 from katello.client.api.provider import ProviderAPI
