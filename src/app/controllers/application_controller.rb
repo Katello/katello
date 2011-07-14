@@ -317,7 +317,6 @@ class ApplicationController < ActionController::Base
           @path = path and return if env.id == @environment.id
         }
       }
-
     elsif next_env
       @paths.each{|path|
         path.each{|env|
