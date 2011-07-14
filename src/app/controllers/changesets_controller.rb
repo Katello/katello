@@ -224,7 +224,9 @@ class ChangesetsController < ApplicationController
     elsif params[:env_id]
       @environment = KPEnvironment.find(params[:env_id])
     else
-      raise _("Couldn't find environment.")
+      text = _("Couldn't find environment.")
+      errors text
+      render :text=>text, :status=>:bad_request and return
     end
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor
@@ -237,7 +239,13 @@ class ChangesetsController < ApplicationController
   end
 
   def find_changeset
-    @changeset = Changeset.find(params[:id])
+    begin
+      @changeset = Changeset.find(params[:id])
+    rescue
+      text = _("Couldn't find changeset with id: #{ params[:id]}")
+      errors text
+      render :text=>text, :status=>:bad_request
+    end
   end
 
   def setup_options
