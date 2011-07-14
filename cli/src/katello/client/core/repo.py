@@ -174,8 +174,8 @@ class Status(RepoAction):
         self.require_option('id')
 
     def run(self):
-        id = self.get_option('id')
-        repo = self.api.repo(id)
+        repo_id = self.get_option('id')
+        repo = self.api.repo(repo_id)
 
         repo['last_sync'] = self.format_sync_time(repo['last_sync'])
 
@@ -252,16 +252,16 @@ class Sync(RepoAction):
         self.require_option('id')
 
     def run(self):
-        id = self.get_option('id')
-        async_task = self.api.sync(id)
+        repo_id = self.get_option('id')
+        async_task = self.api.sync(repo_id)
         
         result = run_spinner_in_bg(wait_for_async_task, [async_task])
         
         if result['state'] == 'finished':    
-            print _("Repo [ %s ] synced" % id)
+            print _("Repo [ %s ] synced" % repo_id)
             return os.EX_OK
         else:
-            print _("Repo [ %s ] failed to sync: %s" % (id, json.loads(result["result"])['errors'][0]))
+            print _("Repo [ %s ] failed to sync: %s" % (repo_id, json.loads(result["result"])['errors'][0]))
             return 1
 
 
