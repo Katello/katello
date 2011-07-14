@@ -202,7 +202,8 @@ Src::Application.routes.draw do
   namespace :api do
     match '/' => 'root#resource_list'
 
-    resources :systems, :only => [:show, :destroy]
+    resources :systems, :only => [:show, :destroy, :create, :index]
+
     resources :providers do
       resources :sync, :only => [:index, :show, :create] do
         delete :index, :on => :collection, :action => :cancel
@@ -236,7 +237,6 @@ Src::Application.routes.draw do
           get :repositories
         end
       end
-      resources :systems, :only => [:create, :index]
       resources :tasks, :only => [:index]
       member do
         get :providers
