@@ -219,6 +219,37 @@ class UpdateContent(ChangesetAction):
             result.append(action+i)
         return result
     
+    
+# ==============================================================================
+class Delete(ChangesetAction):
+    
+    description = _('updates content of a changeset')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("changeset name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--environment', dest='env',
+                               help=_("environment name (Locker by default)"))
+
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+
+    def run(self):
+        csName  = self.get_option('name')
+        orgName = self.get_option('org')
+        envName = self.get_option('env')
+
+        cset = get_changeset(orgName, envName, csName)
+        if cset == None:
+            return os.EX_DATAERR
+  
+        msg = self.api.delete(orgName, cset["environment_id"], cset["id"])
+        print msg
+        return os.EX_OK
+        
         
 # changeset command ============================================================
 class Changeset(Command):
