@@ -18,11 +18,9 @@ import kerberos
 import httplib
 import locale
 import os
-import sys
 import urllib
 import mimetypes
 from gettext import gettext as _
-from pprint import pprint
 
 try:
     import json
