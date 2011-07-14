@@ -306,11 +306,27 @@ class ApplicationController < ActionController::Base
   end
 
   def setup_environment_selector org
+    next_env = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
+
     @paths = []
     @paths = org.promotion_paths.collect{|tmp_path| [org.locker] + tmp_path}
     @paths = [[org.locker]] if @paths.empty?
-    @path = @paths.first if @path.nil?
-    @environment = @path.first if @environment.nil?
+    if @environment and !@environment.locker?
+      @paths.each{|path|
+        path.each{|env|
+          @path = path and return if env.id == @environment.id
+        }
+      }
+    elsif next_env
+      @paths.each{|path|
+        path.each{|env|
+          @path = path and return if env.id == next_env.id
+        }
+      }
+    else
+      @path = @paths.first
+      @environment = @path.first
+    end
   end
 
   def pp_exception(exception)
