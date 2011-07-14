@@ -19,7 +19,6 @@ import sys
 import time
 import threading
 import time
-from pprint import pprint
 from katello.client.api.task_status import TaskStatusAPI
 
 # output formatting -----------------------------------------------------------
