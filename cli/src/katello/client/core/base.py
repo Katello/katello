@@ -21,17 +21,11 @@ from katello.client.i18n_optparse import OptionParser
 from katello.client.i18n_optparse import OptionParser, OptionParserExitError
 from M2Crypto import SSL
 from socket import error as SocketError
-from pprint import pprint
 
 from katello.client.config import Config
 from katello.client.core.utils import system_exit, parse_tokens, Printer
 from katello.client.logutil import getLogger
 from katello.client.server import ServerRequestError
-
-try:
-    import json
-except ImportError:
-    import simplejson as json
 
 _cfg = Config()
 _log = getLogger(__name__)
