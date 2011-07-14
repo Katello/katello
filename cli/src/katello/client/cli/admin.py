@@ -19,10 +19,4 @@ from katello.client.cli.base import KatelloCLI
 
 
 class AdminCLI(KatelloCLI):
-
-    def setup_credentials(self):
-        """
-        Use the super-class credentials, then fall back to auth login
-        credentials if present.
-        """
-        super(AdminCLI, self).setup_credentials()
+    pass
