@@ -16,9 +16,7 @@
 #
 
 import os
-import urlparse
 import time
-from pprint import pprint
 from gettext import gettext as _
 from sets import Set
 
