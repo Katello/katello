@@ -50,22 +50,22 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
   #callbacks
   def before
     s = TaskStatus.find(status_id)
-    s.update_attributes!(:state => TaskStatus::Status::RUNNING, :started_at => current_time)
+    s.update_attributes!(:state => TaskStatus::Status::RUNNING, :start_time => current_time)
   end
 
   def error(job, exception)
     s = TaskStatus.find(status_id)
     s.update_attributes!(
-        :state => TaskStatus::Status::FAILED,
-        :failed_at => current_time,
+        :state => TaskStatus::Status::ERROR,
+        :finish_time => current_time,
         :result => {:errors => [exception.message, exception.backtrace.join("/n")]}.to_json)
   end
 
   def success
     s = TaskStatus.find(status_id)
     s.update_attributes!(
-        :state => TaskStatus::Status::COMPLETED,
-        :finished_at => current_time,
+        :state => TaskStatus::Status::FINISHED,
+        :finish_time => current_time,
         :result => @result)
   end
 
