@@ -80,7 +80,7 @@ class KatelloShell(Cmd):
                                     self.history_file)
                 except IOError:
                     logging.error('Could not read history file')
-        except Exception, e:
+        except Exception:
             pass
 
         for cmd in admin_cli.command_names():
