@@ -5,9 +5,9 @@ class TaskStatus < ActiveRecord::Migration
       t.string :uuid, :null => false
       t.string :state
       t.text :result
-      t.datetime :started_at
-      t.datetime :failed_at
-      t.datetime :finished_at
+      t.datetime :start_time
+      t.datetime :finish_time
+      t.string :remote_system
       t.timestamps
     end
     add_index :task_statuses, :uuid
