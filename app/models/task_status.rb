@@ -10,15 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Api::TasksController < Api::ApiController
-  respond_to :json
-  before_filter :find_organization, :only => [:index]
-
-  def index
-    render :json => TaskStatus.where(:organization_id => @organization).to_json(:except => :id)
+class TaskStatus < ActiveRecord::Base
+  class Status
+    PENDING = :pending
+    RUNNING = :running
+    FAILED = :failed
+    COMPLETED = :completed
   end
 
-  def show
-    render :json => TaskStatus.find_by_uuid(params[:id]).to_json(:except => :id)
-  end
+  include Authorization
+  belongs_to :organization
 end

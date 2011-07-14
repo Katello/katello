@@ -43,6 +43,9 @@ class Api::ApiController < ActionController::Base
     user(:api)
   end
 
+  # remove unwanted parameters 'action' and 'controller' from params list and return it
+  # and convert true/false strings to boolean types
+  # note: you can use expected_params = params.slice('name') instead
   def query_params
     return @query_params if @query_params
 
