@@ -265,7 +265,7 @@ class Sync(ProviderAction):
         if len(filter(lambda t: t['state'] == 'error', result)) > 0:
             errors = map(lambda t: json.loads(t["result"])['errors'][0], filter(lambda t: t['state'] == 'error', result))
             print _("Provider [ %s ] failed to sync: %s" % (provName, errors))
-            return 1
+            return os.EX_DATAERR
 
         print _("Provider [ %s ] synchronized" % provName)
         return os.EX_OK

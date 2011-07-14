@@ -110,7 +110,7 @@ class Info(TemplateAction):
 
         template = get_template(orgName, envName, tplName)
         if template == None:
-            return os.EX_OK
+            return os.EX_DATAERR
 
         template["errata"]   = "\n".join([e["erratum_id"] for e in template["errata"]])
         template["products"] = "\n".join([p["name"] for p in template["products"]])
@@ -170,9 +170,11 @@ class Import(TemplateAction):
         if env != None:
             response = run_spinner_in_bg(self.api.import_tpl, (env["id"], desc, f), message=_("Importing template, please wait... "))
             print response
-
-        f.close()
-        return os.EX_OK
+            f.close()
+            return os.EX_OK
+        else:
+            f.close()
+            return os.EX_DATAERR
 
 # ==============================================================================
 class Create(TemplateAction):
@@ -216,10 +218,12 @@ class Create(TemplateAction):
             template = self.api.create(env["id"], name, desc, parentId)
             if is_valid_record(template):
                 print _("Successfully created template [ %s ]") % template['name']
+                return os.EX_OK
             else:
                 print _("Could not create template [ %s ]") % template['name']
-
-        return os.EX_OK
+                return os.EX_DATAERR                
+        else:
+            return os.EX_DATAERR
 
 
 # ==============================================================================
@@ -262,8 +266,9 @@ class Update(TemplateAction):
                 parentId = None
             self.api.update(template["id"], newName, desc, parentId)
             print _("Successfully updated template [ %s ]") % template['name']
-
-        return os.EX_OK
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
 
 
 # ==============================================================================
@@ -333,8 +338,9 @@ class UpdateContent(TemplateAction):
 
             msg = self.api.update_content(template["id"], self.selectedAction, updateParams)
             print msg
-
-        return os.EX_OK
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
 
 
 # ==============================================================================
@@ -363,8 +369,9 @@ class Delete(TemplateAction):
         if template != None:
             msg = self.api.delete(template["id"])
             print msg
-
-        return os.EX_OK
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
 
 
 # ==============================================================================
@@ -403,9 +410,9 @@ class Promote(TemplateAction):
             return os.EX_OK
         else:
             print _("Template [ %s ] promotion failed: %s" % (tplName, json.loads(result["result"])['errors'][0]))
-            return 1
-
-
+            return os.EX_DATAERR
+            
+    
     def wait_for_promotion(self, promotionTask):
         task = promotionTask
         while task['state'] not in ('failed', 'completed'):

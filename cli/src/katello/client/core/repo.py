@@ -262,7 +262,7 @@ class Sync(RepoAction):
             return os.EX_OK
         else:
             print _("Repo [ %s ] failed to sync: %s" % (repo_id, json.loads(result["result"])['errors'][0]))
-            return 1
+            return os.EX_DATAERR
 
 
 class List(RepoAction):
