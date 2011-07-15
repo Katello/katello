@@ -45,6 +45,7 @@ $(document).ready(function() {
             });
         }
     });
+    $(".multiselect").multiselect({"dividerLocation":0.5, "sortable":false})
 });
 
 var activation_key = (function() {
