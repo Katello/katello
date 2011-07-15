@@ -13,7 +13,7 @@
 module Glue::Pulp
 
   class Sync
-    attr_accessor :sync_id, :state
+    attr_accessor :id, :state, :start_time, :finish_time, :result, :exception, :traceback
 
     def initialize(attrs = {})
       attrs.each_pair {|k, v| instance_variable_set("@#{k}", v) unless v.nil? }

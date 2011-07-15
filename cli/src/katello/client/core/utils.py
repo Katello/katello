@@ -19,7 +19,7 @@ import sys
 import time
 import threading
 import time
-from pprint import pprint
+from katello.client.api.task_status import TaskStatusAPI
 
 # output formatting -----------------------------------------------------------
 
@@ -76,7 +76,7 @@ class Printer:
 
 
     def _getTermWidth(self):
-        rows, columns = os.popen('stty size', 'r').read().split()
+        columns = (os.popen('stty size', 'r').read().split())[1]
         return int(columns)
 
 
@@ -315,15 +315,16 @@ def get_abs_path(path):
     return path
 
 
-def format_date(date):
+def format_date(date, from_format="%Y-%m-%dT%H:%M:%SZ", to_format="%Y/%m/%d %H:%M:%S"):
     """
     Format standard rails timestamp to more human readable format
     @type date: string
     @param date: arguments for the function
     @return string, formatted date
     """
-    t = time.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
-    return time.strftime("%Y/%m/%d %H:%M:%S", t)
+    #t = time.strptime(date, from_format)
+    t = time.localtime()
+    return time.strftime(to_format, t)
 
 
 class Spinner(threading.Thread):
@@ -397,3 +398,18 @@ def run_spinner_in_bg(function, arguments=(), message=""):
         t.stop()
         t.join()
     return result
+    
+def wait_for_async_task(taskStatus):
+    task = taskStatus
+    status_api = TaskStatusAPI()
+    
+    if type(task).__name__== 'list':
+        while len(filter(lambda t: t['state'] not in ('finished', 'error', 'timed out', 'canceled'), task)) > 0:
+            time.sleep(1)
+            task = [status_api.status(t['uuid']) for t in task]
+    else:
+        while task['state'] not in ('finished', 'error', 'timed out', 'canceled'):
+            time.sleep(1)
+            task = status_api.status(task['uuid'])
+        
+    return task

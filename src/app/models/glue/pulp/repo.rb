@@ -181,6 +181,18 @@ class Glue::Pulp::Repo
     cloned
   end
 
+  def organization
+    Organization.find(groupid[2]["org:".size..-1].to_i)
+  end
+
+  def environment
+    KPEnvironment.find(groupid[1]["env:".size..-1].to_i)
+  end
+
+  def product
+    Product.find(groupid[0]["product:".size..-1].to_i)
+  end
+
   def self.find(id)
     Glue::Pulp::Repo.new(Pulp::Repository.find(id))
   end

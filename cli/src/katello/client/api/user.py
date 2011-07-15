@@ -14,7 +14,6 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
-from pprint import pprint
 
 class UserAPI(KatelloAPI):
     """
@@ -27,15 +26,15 @@ class UserAPI(KatelloAPI):
         path = "/api/users/"
         return self.server.POST(path, userdata)[1]
 
-    def delete(self, id):
-        path = "/api/users/%s" % str(id)
+    def delete(self, user_id):
+        path = "/api/users/%s" % str(user_id)
         return self.server.DELETE(path)[1]
 
-    def update(self, id, pw, disabled):
+    def update(self, user_id, pw, disabled):
         userdata = {}
         userdata = self.update_dict(userdata, "password", pw)
         userdata = self.update_dict(userdata, "disabled", disabled)
-        path = "/api/users/%s" % str(id)
+        path = "/api/users/%s" % str(user_id)
         return self.server.PUT(path, {"user": userdata})[1]
 
     def users(self, query={}):
@@ -43,7 +42,7 @@ class UserAPI(KatelloAPI):
         orgs = self.server.GET(path, query)[1]
         return orgs
 
-    def user(self, id):
-        path = "/api/users/%s" % str(id)
+    def user(self, user_id):
+        path = "/api/users/%s" % str(user_id)
         org = self.server.GET(path)[1]
         return org

@@ -18,11 +18,9 @@ import kerberos
 import httplib
 import locale
 import os
-import sys
 import urllib
 import mimetypes
 from gettext import gettext as _
-from pprint import pprint
 
 try:
     import json
@@ -219,8 +217,8 @@ class KatelloServer(Server):
             return httplib.HTTPSConnection(self.host, self.port)
         ssl_context = SSL.Context('sslv3')
         ssl_context.load_cert(self.__certfile, self.__keyfile)
-        #print >> sys.stderr, 'making connection with: %s, %s' % (self.__certfile,
-        #                                                         self.__keyfile)
+        self._log.debug('making connection with: %s, %s' % 
+            (self.__certfile, self.__keyfile))
         return httpslib.HTTPSConnection(self.host,
                                         self.port,
                                         ssl_context=ssl_context)

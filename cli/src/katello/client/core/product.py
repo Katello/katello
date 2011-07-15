@@ -16,14 +16,12 @@
 #
 
 import os
-import urlparse
 from gettext import gettext as _
 
 from katello.client.api.product import ProductAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_provider
-from pprint import pprint
 
 _cfg = Config()
 
