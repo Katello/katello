@@ -623,12 +623,13 @@ $(document).ready(function() {
             bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
             $("#search_form #search").css("margin-left", 0);
             $("#search_form").css("opacity", "0").show();
-            $("#search_form").animate({"width":"440px", "opacity":"1"}, { duration: 200, queue: false });
+            $("#search_form").animate({"opacity":"1"}, { duration: 200, queue: false });
+            $("#search").animate({"width":"394px", "opacity":"1"}, { duration: 200, queue: false });
             $(this).css({backgroundPosition: "-32px -16px"});
         },function() {
-            $("#search_form").fadeOut('fast', function(){bcs.animate({ "height": bcs_height }, 'fast');});
+            $("#search_form").fadeOut("fast", function(){bcs.animate({ "height": bcs_height }, "fast");});
             $(this).css({backgroundPosition: "0 -16px"});
-            $('#search').val("").change();
+            $("#search").val("").change();
             $("#cslist .has_content li").fadeIn('fast');
         }
     );
@@ -916,6 +917,6 @@ var templateLibrary = (function(){
         changesetsList: changesetsList,
         productList: productList,
         listItems : listItems,
-        productDetailList: productDetailList,
+        productDetailList: productDetailList
     };
 })();
