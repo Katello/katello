@@ -14,7 +14,7 @@ class ActivationKeysController < ApplicationController
   include AutoCompleteSearch
 
   before_filter :require_user
-  before_filter :find_activation_key, :only => [:show, :edit, :update, :destroy]
+  before_filter :find_activation_key, :only => [:show, :edit, :update, :destroy, :subscriptions]
   before_filter :panel_options, :only => [:index, :items]
 
   respond_to :html, :js
@@ -44,10 +44,23 @@ class ActivationKeysController < ApplicationController
     render :partial=>"common/list_update", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name']}
   end
 
-  
   def subscriptions
-    # TODO
-    render :nothing => true
+    consumed = []
+    all_subs = Candlepin::Owner.pools current_organization.cp_key
+    subscriptions = reformat_subscriptions(all_subs)
+    subscriptions.sort! {|a,b| a.sub <=> b.sub}
+    render :partial=>"subscriptions", :locals=>{:akey=>@activation_key, :all_subs => subscriptions, :consumed => consumed}
+  end
+
+  def update_subscriptions
+    params[:system] = {"consumed_pool_ids"=>[]} unless params.has_key? :system
+    if @system.update_attributes(params[:system])
+      notice _("System subscriptions updated.")
+      render :nothing =>true
+    else
+      errors "Unable to update subscriptions."
+      render :nothing =>true
+    end
   end
 
   def new
@@ -130,5 +143,20 @@ class ActivationKeysController < ApplicationController
       :create => _('Key'), 
       :name => _('key'),
       :ajax_scroll => items_activation_keys_path()}
+  end
+
+  private
+
+  require 'ostruct'
+
+  def reformat_subscriptions(all_subs)
+    subscriptions = []
+    all_subs.each do |s|
+      cp = OpenStruct.new
+      cp.sub = s["subscriptionId"]
+      cp.name = s["productName"]
+      subscriptions << cp if !subscriptions.include? cp 
+    end
+    subscriptions
   end
 end
