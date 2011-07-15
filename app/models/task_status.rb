@@ -25,16 +25,15 @@ class TaskStatus < ActiveRecord::Base
   include Authorization
   belongs_to :organization
 
-  def self.for_pulp(organization, sync)
-    TaskStatus.create!(
-        :uuid => sync.id,
-        :state => sync.state,
-        :start_time => sync.start_time,
-        :finish_time => sync.finish_time,
-        :result => sync.result.nil? ? {:errors => [sync.exception, sync.traceback]}.to_json : sync.result,
-        :remote_system => 'pulp',
-        :organization => organization
-    )
+  def self.using_pulp_task(sync)
+    TaskStatus.new(
+        :uuid => sync[:id],
+        :state => sync[:state],
+        :start_time => sync[:start_time],
+        :finish_time => sync[:finish_time],
+        :result => sync[:result].nil? ? {:errors => [sync[:exception], sync[:traceback]]}.to_json : sync[:result],
+        :remote_system => 'pulp'
+    ) { |t| yield t if block_given? }
   end
 
   def refresh
