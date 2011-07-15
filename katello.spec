@@ -118,6 +118,9 @@ rm -rf %{buildroot}%{homedir}/LICENSE
 rm -rf %{buildroot}%{homedir}/doc
 rm -rf %{buildroot}%{homedir}/extras
 rm -rf %{buildroot}%{homedir}/%{name}.spec
+rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
+rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
+rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 
 #remove development tasks
 rm %{buildroot}%{homedir}/lib/tasks/rcov.rake
