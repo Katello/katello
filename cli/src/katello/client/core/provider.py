@@ -267,7 +267,7 @@ class Sync(ProviderAction):
             print _("Provider [ %s ] failed to sync: %s" % (provName, errors))
             return 1
 
-        print _("Provider [ %s ] synced" % provName)
+        print _("Provider [ %s ] synchronized" % provName)
         return os.EX_OK
 
 # ==============================================================================
