@@ -14,7 +14,6 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
-from pprint import pprint
 
 class ChangesetAPI(KatelloAPI):
 
