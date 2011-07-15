@@ -888,7 +888,8 @@ var templateLibrary = (function(){
                 products = changeset.products;
             
             if( changeset.productCount() === 0 ){
-                html += i18n['no_products'];
+                html += '<div class="empty_list">' + i18n['no_products'] + '</div>';
+                //html += i18n['no_products'];
             } else {
                 for( key in products ){
                     if( products.hasOwnProperty(key) ){
