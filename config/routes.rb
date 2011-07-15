@@ -231,12 +231,7 @@ Src::Application.routes.draw do
     resources :organizations do
       resources :products, :only => [:index]
       resources :environments do
-        resources :products, :only => [:index], :constraints => { :id => /[0-9\.]*/ } do
-          get :repositories, :on => :member
-          resources :sync, :only => [:index, :show, :create] do
-            delete :index, :on => :collection, :action => :cancel
-          end
-        end
+        resources :products, :only => [:index], :constraints => { :id => /[0-9\.]*/ }
         member do
           get :repositories
         end
@@ -246,6 +241,14 @@ Src::Application.routes.draw do
         get :providers
       end
     end
+
+    resources :products, :only => [] do
+      get :repositories, :on => :member
+      resources :sync, :only => [:index, :show, :create] do
+        delete :index, :on => :collection, :action => :cancel
+      end
+    end
+
     resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
@@ -269,14 +272,6 @@ Src::Application.routes.draw do
     resources :users
 
     resources :tasks, :only => [:show]
-
-    # some paths conflicts with rhsm
-    scope 'katello' do
-
-      # routes for non-ActiveRecord-based resources
-      match '/products/:id/repositories' => 'products#repo_create', :via => :post, :constraints => { :id => /[0-9\.]*/ }
-
-    end
 
     # support for rhsm
     resources :consumers, :controller => 'systems'
