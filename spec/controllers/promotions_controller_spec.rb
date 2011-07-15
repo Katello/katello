@@ -46,6 +46,7 @@ describe PromotionsController do
       response.should be_success
       assigns(:next_environment).should == @env2
       assigns(:environment).should  == @env
+      assigns(:path).should_not be_nil
     end
 
     it "should be successful on the next environment with no changeset" do

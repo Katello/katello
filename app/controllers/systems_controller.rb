@@ -13,8 +13,8 @@
 class SystemsController < ApplicationController
   include AutoCompleteSearch
   include SystemsHelper
-  before_filter :find_system, :except =>[:index, :auto_complete_search, :items]
-  before_filter :setup_options, :only => [:index, :items]
+  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments]
+  before_filter :setup_options, :only => [:index, :items, :environments]
 
   # two pane columns and mapping for sortable fields
   COLUMNS = {'name' => 'name', 'lastCheckin' => 'lastCheckin', 'created' => 'created_at' }
@@ -24,6 +24,23 @@ class SystemsController < ApplicationController
       @systems = System.search_for(params[:search]).where(:environment_id => current_organization.environments).limit(current_user.page_size)
       retain_search_history
       sort_columns(COLUMNS,@systems) if params[:order]
+    rescue Exception => error
+      errors error.to_s, {:level => :message, :persist => false}
+      @systems = System.search_for ''
+      render :index, :status=>:bad_request
+    end
+  end
+
+  def environments
+    begin
+      @environment = KPEnvironment.find params[:env_id] if !params[:env_id].blank?
+      @environment ||= current_organization.promotion_paths.first.first
+      
+      setup_environment_selector(current_organization)
+      @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size)
+      retain_search_history
+      sort_columns(COLUMNS,@systems) if params[:order]
+      render :index, :locals=>{:envsys => 'true'}
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
       @systems = System.search_for ''

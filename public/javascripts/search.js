@@ -32,7 +32,15 @@ var favorite = (function() {
             var url = $(this).attr('data-url');
 
             // send a request to the server to save/create this favorite
-            search.create_favorite(newFavorite, url, favorite.success, favorite.error);
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {"favorite": newFavorite},
+                cache: false,
+                success: favorite.success,
+                error: favorite.error
+            });
+
         },
         destroy : function (data) {
             var id  = $(this).attr('data-id');

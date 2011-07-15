@@ -21,11 +21,11 @@ class PriorValidator < ActiveModel::Validator
     #need to ensure that prior
     #environment already does not have a successor
     #this is because in v1.0 we want
-    # prior to have only one child (unless its the locker)
+    # prior to have only one child (unless its the Locker)
     has_no_prior = record.organization.environments.reject{|env| env == record || env.prior != record.prior || env.prior == env.organization.locker}.empty?
     record.errors[:prior] << _("environment cannot be a prior to a different environment") unless has_no_prior
 
-    # only locker can have prior=nil
+    # only Locker can have prior=nil
     record.errors[:prior] << _("environment required") unless !record.prior.nil? || record.locker?
   end
 end
@@ -114,12 +114,12 @@ class KPEnvironment < ActiveRecord::Base
     until p.prior.nil? or p.prior.locker
       p = p.prior
     end
-    p.path
+    p.prior.nil? ? p.path : [p.prior] + p.path
   end
 
   def available_products
     if self.prior.locker
-      # if there is no prior, then the prior is the locker, which has all products
+      # if there is no prior, then the prior is the Locker, which has all products
       prior_products = self.organization.locker.products
     else
       prior_products = self.prior.products

@@ -132,9 +132,6 @@ class PromotionsController < ApplicationController
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor
 
-    @path = @next_environment.full_path if @next_environment
-    @path ||= @environment.full_path if @environment
-    @path = [current_organization.locker] + @path if !@path.first.locker?
 
     @product = Product.find(params[:product_id]) if params[:product_id]
   end

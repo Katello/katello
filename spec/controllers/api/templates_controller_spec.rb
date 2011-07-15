@@ -19,10 +19,10 @@ describe Api::TemplatesController do
   TEMPLATE_NAME = "template"
 
   before(:each) do
-    @organization = Organization.new
+    @organization = Organization.new(:name => 'organization', :cp_key => 'organization')
     @organization.id = 1
 
-    @environment = KPEnvironment.new
+    @environment = KPEnvironment.new(:name => 'environment')
     @environment.id = 1
     @locker = KPEnvironment.new
     @locker.id = 2
@@ -50,9 +50,20 @@ describe Api::TemplatesController do
   end
 
   describe "index" do
-    it 'should call where with query params' do
-      SystemTemplate.should_receive(:where).once
-      get 'index'
+    
+    it 'should get a list of templates from specified environment ID' do
+      SystemTemplate.should_receive(:where).with("environment_id" => @environment.id).and_return([@tpl])
+      get 'index', :environment_id => @environment.id
+      response.should be_success
+    end
+    
+    it 'should not fail if no templates are found, but return an empty list' do
+      @environment2 = KPEnvironment.new(:name => 'environment2')
+      @environment2.id = 3
+      
+      SystemTemplate.should_receive(:where).with("environment_id" => @environment2.id).and_return([])
+      get 'index', :environment_id => @environment2.id
+      response.should be_success
     end
   end
 
@@ -164,9 +175,13 @@ describe Api::TemplatesController do
 
 
   describe "promote" do
-    it "should call SystemTemplate#promote" do
-      @tpl.should_receive(:promote).once
+    before(:each) do
+      @async_proxy = mock(AsyncOrchestration::AsyncOrchestrationProxy)
+    end
 
+    it "should call SystemTemplate#promote" do
+      @tpl.should_receive(:async).once.with(hash_including(:organization => @organization)).and_return(@async_proxy)
+      @async_proxy.should_receive(:promote).once.with(no_args())
       post :promote, :id => TEMPLATE_ID
     end
   end

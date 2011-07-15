@@ -13,12 +13,12 @@
       .grid_2.ra
         = label :helptips_enable, _("Enable inline help")
       .grid_5.la
-        = check_box("user", "helptips_enabled", :id=>"helptips_enabled", :data_username=>@user.username, :checked=>@user.helptips_enabled ? "checked": "")
+        = check_box("user", "helptips_enabled", :id=>"helptips_enabled", 'data-url'=>user_path(@user.id), :checked=>@user.helptips_enabled ? "checked": "")
     %fieldset
       .grid_2.ra
         = label :user, :username, _("Clear Disabled Helptips")
       .grid_5.la
-        #clear_helptips{:username=>@user.username, :class=>"button"}
+        #clear_helptips{:class=>"button", "data-url"=>clear_helptips_user_path(@user.id)}
           = _("Clear")
     %fieldset 
       .grid_2.ra
@@ -33,7 +33,7 @@
       .grid_5.la
         = text_field :user, :username, :id=>"confirm_field", :value=>"", :type=>"password"     
     .grid_6.la.prefix_2
-      #save_password.verify_password.button{:data_username=>@user.username}
+      #save_password.verify_password.button{'data-url'=>user_path(@user.id)}
         #{_("Save")}
     .grid_6.la.prefix_2
       #password_conflict

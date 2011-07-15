@@ -57,6 +57,25 @@ module ApplicationHelper
     render :partial => "common/helptip_button", :locals=>{:key=>key}
   end  
 
+  # Headpin inclusion
+  def stats_line(stats, options ={})
+    render :partial => "common/stats_line",
+      :locals => {:stats => stats}
+  end
+
+  # Headpin inclusion
+  def to_value_list(stats)
+    list = ""
+    prepend = ""
+    stats.each do |stat|
+      list += prepend
+      prepend = ","
+      list += stat.value.to_s
+    end
+    list
+  end
+
+
   def two_panel(collection, options)
     options[:accessor] ||= "id"
     enable_create = options[:enable_create]
@@ -123,7 +142,7 @@ module ApplicationHelper
       if !selected_env.locker?
         classes << "active"
       else
-        #we only want to higlight the locker along the path that is actually selected
+        #we only want to higlight the Locker along the path that is actually selected
         classes << "active" if curr_path[1] == selected_path[1]
       end
     end
