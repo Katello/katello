@@ -15,10 +15,11 @@ class Api::TasksController < Api::ApiController
   before_filter :find_organization, :only => [:index]
 
   def index
-    render :json => Delayed::Job.where(:organization_id => @organization).to_json(:except => :handler)
+    render :json => TaskStatus.where(:organization_id => @organization).to_json(:except => :id)
   end
 
   def show
-    render :json => Delayed::Job.find_by_uuid(params[:id]).to_json(:except => :handler)
+    task = TaskStatus.find_by_uuid(params[:id]).refresh
+    render :json => task.to_json(:except => :id)
   end
 end

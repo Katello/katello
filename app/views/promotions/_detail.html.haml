@@ -2,21 +2,21 @@
   %ul
     %li
       .slide_link{:id=>"products"}
-        %span #{_("Products")}
+        #{_("Products")}
     %li
       .slide_link{:id=>"all_errata"}
-        %span #{_("All Errata")} 
+        #{_("All Errata")} 
       
 - else
   %ul 
     %li
       .slide_link{:id=>packages_bc_id(product)}
-        %span #{_("Packages")}
+        #{_("Packages")}
       
     %li
       .slide_link{:id=>errata_bc_id(product)}
-        %span #{_("Errata")}
+        #{_("Errata")}
 
     %li
       .slide_link{:id=>repo_bc_id(product)}
-        %span #{_("Repositories")}
+        #{_("Repositories")}

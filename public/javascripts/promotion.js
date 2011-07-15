@@ -583,6 +583,16 @@ $(document).ready(function() {
     //need to reset page during the extended scroll
     panel.extended_cb = promotion_page.reset_page;
 
+    //when loading the new panel item, if its new, we need to add a form submit handler
+    panel.expand_cb = function(id) {
+        if (id === 'new') {
+          $('#new_changeset').submit(function(e) {
+              e.preventDefault();
+              $('#save_changeset_button').trigger('click');
+          });
+        }
+    };
+
     $('#depend_list').live('click', promotion_page.show_dependencies);
 
     //set function for env selection callback
@@ -646,7 +656,13 @@ $(document).ready(function() {
 });
 
 var registerEvents = function(){
+
     $('#save_changeset_button').live('click', function(){
+        var button = $(this);
+        if(button.hasClass("disabled")){return false;}
+        button.addClass("disabled");
+
+
         $.ajax({
           type: "POST",
           url: "/changesets/",
@@ -657,7 +673,8 @@ var registerEvents = function(){
               promotion_page.set_changeset(changeset_obj(data.changeset));
               promotion_page.get_changeset_tree().render_content('changeset_' + data.id);
               panel.closePanel($('#panel'));
-          }
+          },
+          error: function(){ button.removeClass("disabled");}
         });
     });
     
@@ -872,7 +889,8 @@ var templateLibrary = (function(){
                 products = changeset.products;
             
             if( changeset.productCount() === 0 ){
-                html += i18n['no_products'];
+                html += '<div class="empty_list">' + i18n['no_products'] + '</div>';
+                //html += i18n['no_products'];
             } else {
                 for( key in products ){
                     if( products.hasOwnProperty(key) ){
