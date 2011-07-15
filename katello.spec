@@ -29,8 +29,13 @@ Requires:       rubygem(rest-client)
 Requires:       rubygem(jammit)
 Requires:       rubygem(rails_warden)
 Requires:       rubygem(net-ldap)
-Requires:       rubygem(compass) >= 0.10.5
+Requires:       rubygem(compass) >= 0.11.5
 Requires:       rubygem(compass-960-plugin) >= 0.10.0
+Requires:	rubygem(sass) => 3.1
+Requires:	rubygem(sass) < 4
+Requires:	rubygem(chunky_png) => 1.2
+Requires:	rubygem(chunky_png) < 2
+Requires:	rubygem(fssm) >= 0.2.7
 Requires:       rubygem(capistrano)
 Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
