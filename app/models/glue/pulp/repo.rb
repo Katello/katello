@@ -102,7 +102,7 @@ class Glue::Pulp::Repo
   end
 
   def sync
-    Glue::Pulp::Sync.new(Pulp::Repository.sync(id))
+    [Pulp::Repository.sync(id)]
   end
 
   def sync_status
