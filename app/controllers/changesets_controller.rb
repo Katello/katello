@@ -18,8 +18,9 @@ class ChangesetsController < ApplicationController
   before_filter :find_environment, :except => [:index, :list, :items, :auto_complete_search]
   before_filter :setup_options, :only => [:index, :items, :auto_complete_search]
 
-  rescue_from Exception, :with => :handle_exceptions
   after_filter :update_editors, :only => [:update]
+
+  around_filter :catch_exceptions
 
   ####
   # Changeset history methods
@@ -223,7 +224,9 @@ class ChangesetsController < ApplicationController
     elsif params[:env_id]
       @environment = KPEnvironment.find(params[:env_id])
     else
-      raise _("Couldn't find environment.")
+      text = _("Couldn't find environment.")
+      errors text
+      render :text=>text, :status=>:bad_request and return
     end
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor
@@ -236,7 +239,13 @@ class ChangesetsController < ApplicationController
   end
 
   def find_changeset
-    @changeset = Changeset.find(params[:id])
+    begin
+      @changeset = Changeset.find(params[:id])
+    rescue
+      text = _("Couldn't find changeset with id: #{ params[:id]}")
+      errors text
+      render :text=>text, :status=>:bad_request
+    end
   end
 
   def setup_options
@@ -247,13 +256,5 @@ class ChangesetsController < ApplicationController
                  :accessor => :id,
                  :ajax_scroll => items_changesets_path()}
   end
-  
-  def handle_exceptions(error)
-    Rails.logger.info  error.to_s
-    Rails.logger.info error.backtrace.join("\n")
-    errors error
-    render :text => error.to_s, :status => :bad_request
 
-  end
-  
 end
