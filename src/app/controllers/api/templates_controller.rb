@@ -18,7 +18,7 @@ class Api::TemplatesController < Api::ApiController
   before_filter :find_template, :only => [:show, :update, :update_content, :destroy, :promote, :export]
 
   def index
-    templates = SystemTemplate.where query_params
+    templates = SystemTemplate.where(query_params)
     render :json => templates.to_json
   end
 
@@ -118,8 +118,8 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def promote
-    @template.promote
-    render :text => _("Template promoted"), :status => 200
+    async_job = @template.async(:organization => @template.environment.organization).promote
+    render :json => async_job, :status => 202
   end
 
   def find_environment

@@ -144,9 +144,9 @@ case "$1" in
     initdb)
         # stop if it is running
         condstop
-        pushd $KATELLO_HOME
+        pushd $KATELLO_HOME >/dev/null
         su $KATELLO_USER -s /bin/bash -c "RAILS_ENV=$KATELLO_ENV rake setup --trace"
-        popd
+        popd >/dev/null
         ;;
     *)
         echo "Usage: {start|stop|restart|condrestart|status|initdb}"

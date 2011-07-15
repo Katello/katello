@@ -14,7 +14,7 @@ describe Changeset do
       @organization.environments << @environment
       @organization.save!
       @environment.save!
-      @changeset = Changeset.new(:environment=>@environment)
+      @changeset = Changeset.new(:environment=>@environment, :name=>"foo-changeset")
       @changeset.save!
     end   
 

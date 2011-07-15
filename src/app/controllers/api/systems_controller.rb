@@ -17,7 +17,7 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_organization, :only => [:create, :index]
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index]
-  before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates]
+  before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :packages]
 
   def create
     system = System.create!(params.merge({:environment => @environment})).to_json
@@ -39,8 +39,10 @@ class Api::SystemsController < Api::ApiController
   end
 
   def index
-    (render :json => @environment.systems.to_json and return) unless @environment.nil?
-    render :json => @organization.systems.to_json
+    # expected parameters
+    expected_params = params.slice('name')
+    (render :json => @environment.systems.where(expected_params).to_json and return) unless @environment.nil?
+    render :json => @organization.systems.where(expected_params).to_json
   end
 
   def show
@@ -50,6 +52,11 @@ class Api::SystemsController < Api::ApiController
   def destroy
      @system.destroy
     render :text => _("Deleted system '#{params[:id]}'"), :status => 204
+  end
+
+  def packages
+    packages = @system.packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    render :partial=>"packages", :locals=>{:system=>@system, :packages => packages}
   end
 
   def find_organization
@@ -63,7 +70,7 @@ class Api::SystemsController < Api::ApiController
 
   def find_only_environment
     if @organization && !params.has_key?(:environment_id)
-      raise HttpErrors::BadRequest, _("Organization #{@organization.name} has 'locker' environment only. Please create an environment for system registration.") if @organization.environments.empty?
+      raise HttpErrors::BadRequest, _("Organization #{@organization.name} has 'Locker' environment only. Please create an environment for system registration.") if @organization.environments.empty?
       raise HttpErrors::BadRequest, _("Organization #{@organization.name} has more than one environment. Please specify target environment for system registration.") if @organization.environments.size > 1
       @environment = @organization.environments.first and return
     end

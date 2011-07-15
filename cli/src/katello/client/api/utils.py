@@ -16,14 +16,11 @@
 #
 
 from gettext import gettext as _
-from katello.client.api.package import PackageAPI
 from katello.client.api.environment import EnvironmentAPI
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
 from katello.client.api.provider import ProviderAPI
 from katello.client.api.template import TemplateAPI
-from katello.client.core.utils import Spinner
-from pprint import pprint
 
 
 def get_environment(orgName, envName=None):

@@ -19,16 +19,19 @@ import os
 import time
 import urlparse
 from gettext import gettext as _
-from pprint import pprint
 
 from katello.client import constants
-from katello.client.core.utils import is_valid_record, format_date
+from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
-from katello.client.api.environment import EnvironmentAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_product, get_repo
-from katello.client.core.utils import system_exit, run_spinner_in_bg
+from katello.client.core.utils import system_exit, run_spinner_in_bg, wait_for_async_task
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 _cfg = Config()
 
@@ -44,7 +47,8 @@ class RepoAction(Action):
         if sync_time is None:
             return 'never'
         else:
-            return str(format_date(sync_time))
+            return str(format_date(sync_time[0:19], '%Y-%m-%dT%H:%M:%S'))
+            #'2011-07-11T15:03:52+02:00
 
 # actions --------------------------------------------------------------------
 
@@ -151,7 +155,6 @@ class Create(RepoAction):
                 print "(-)  [%s] %-5s" % (index+1, url)
 
     def wait_for_discovery(self, discoveryTask):
-        task = discoveryTask
         while discoveryTask['state'] not in ('finished', 'error', 'timed out', 'canceled'):
             time.sleep(0.25)
             discoveryTask = self.api.repo_discovery_status(discoveryTask['id'])
@@ -171,8 +174,8 @@ class Status(RepoAction):
         self.require_option('id')
 
     def run(self):
-        id = self.get_option('id')
-        repo = self.api.repo(id)
+        repo_id = self.get_option('id')
+        repo = self.api.repo(repo_id)
 
         repo['last_sync'] = self.format_sync_time(repo['last_sync'])
 
@@ -219,7 +222,7 @@ class Info(RepoAction):
         else:
             repo = get_repo(orgName, prodName, repoName, envName)
             if repo == None:
-                return os.EX_NOTFOUND
+                return os.EX_DATAERR
 
         repo['url'] = repo['source']['url']
         repo['last_sync'] = self.format_sync_time(repo['last_sync'])
@@ -249,11 +252,17 @@ class Sync(RepoAction):
         self.require_option('id')
 
     def run(self):
-        id = self.get_option('id')
-        msg = self.api.sync(id)
-
-        print msg
-        return os.EX_OK
+        repo_id = self.get_option('id')
+        async_task = self.api.sync(repo_id)
+        
+        result = run_spinner_in_bg(wait_for_async_task, [async_task])
+        
+        if result['state'] == 'finished':    
+            print _("Repo [ %s ] synced" % repo_id)
+            return os.EX_OK
+        else:
+            print _("Repo [ %s ] failed to sync: %s" % (repo_id, json.loads(result["result"])['errors'][0]))
+            return 1
 
 
 class List(RepoAction):

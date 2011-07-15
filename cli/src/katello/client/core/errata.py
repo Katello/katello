@@ -16,9 +16,7 @@
 #
 
 import os
-import urlparse
 from gettext import gettext as _
-from pprint import pprint
 
 from katello.client.api.errata import ErrataAPI
 from katello.client.config import Config
@@ -74,7 +72,7 @@ class List(ErrataAction):
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
             if repo == None:
-                return os.EX_NOTFOUND
+                return os.EX_DATAERR
             repoId = repo["id"]
 
         errata = self.api.errata_by_repo(repoId)

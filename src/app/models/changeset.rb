@@ -12,7 +12,7 @@
 
 class Changeset < ActiveRecord::Base
   include Authorization
-  before_validation(:generate_name, :on=>:create)
+
 
   NEW = 'new'
   REVIEW = 'review'
@@ -41,9 +41,6 @@ class Changeset < ActiveRecord::Base
   scoped_search :in => :products, :on => :name, :complete_value => true, :rename => :'custom_product.name'
   scoped_search :in => :products, :on => :description, :complete_value => true, :rename => :'custom_product.description'
 
-  def generate_name
-    self.name = I18n.l(DateTime.now, :format=>:long) if name.blank?
-  end
 
   def key_for item
     "changeset_#{id}_#{item}"

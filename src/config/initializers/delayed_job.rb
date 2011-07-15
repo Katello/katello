@@ -8,6 +8,3 @@ if caller.last =~ /.*\/script\/delayed_job:\d+$/
 end
 
 Delayed::Worker.destroy_failed_jobs = false
-silence_warnings do
-  Delayed::Worker.const_set("MAX_ATTEMPTS", 1)
-end

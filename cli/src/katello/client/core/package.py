@@ -16,14 +16,11 @@
 #
 
 import os
-import urlparse
 from gettext import gettext as _
-from pprint import pprint
 
 from katello.client.api.package import PackageAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import indent_text
 from katello.client.api.utils import get_repo
 
 _cfg = Config()
@@ -110,7 +107,7 @@ class List(PackageAction):
         if not repoId:
             repo = get_repo(orgName, prodName, repoName, envName)
             if repo == None:
-                return os.EX_NOTFOUND
+                return os.EX_DATAERR
             repoId = repo["id"]
 
 

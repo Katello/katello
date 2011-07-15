@@ -16,14 +16,12 @@
 #
 
 import os
-import urlparse
 from gettext import gettext as _
 
 from katello.client.api.product import ProductAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_provider
-from pprint import pprint
 
 _cfg = Config()
 
@@ -63,7 +61,7 @@ class List(ProductAction):
         if org_name and prov_name:
             prov = get_provider(org_name, prov_name)
             if prov == None:
-                return os.EX_NOTFOUND
+                return os.EX_DATAERR
             self.printer.addColumn('id')
             self.printer.addColumn('cp_id')
             self.printer.addColumn('name')
@@ -75,7 +73,7 @@ class List(ProductAction):
         elif org_name:
             env = get_environment(org_name, env_name)
             if env == None:
-                return os.EX_NOTFOUND
+                return os.EX_DATAERR
             self.printer.addColumn('id')
             self.printer.addColumn('cp_id')
             self.printer.addColumn('name')
@@ -121,7 +119,7 @@ class Sync(ProductAction):
         prod = self.get_product(orgName, "")
         prov = self.get_provider(orgName, provName)
         if (prod == None) or (prov == None):
-            return os.EX_NOTFOUND
+            return os.EX_DATAERR
 
         msg = self.api.sync(prov["id"], prod["cp_id"])
 
@@ -164,7 +162,7 @@ class Create(ProductAction):
             print _("Successfully created product [ %s ]") % name
             return os.EX_OK
         else:
-            return os.EX_NOTFOUND
+            return os.EX_DATAERR
 
 # product command ------------------------------------------------------------
 

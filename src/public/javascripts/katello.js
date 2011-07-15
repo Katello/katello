@@ -152,3 +152,26 @@ var common = (function() {
         }
     };
 })();
+
+
+var client_common = {
+    create: function(data, url, on_success, on_error) {
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: data,
+        cache: false,
+        success: on_success,
+        error: on_error
+      });
+    },
+    destroy: function(url, on_success, on_error) {
+      $.ajax({
+        type: "DELETE",
+        url: url,
+        cache: false,
+        success: on_success,
+        error: on_error
+      });
+    }
+};

@@ -16,7 +16,6 @@
 #
 
 import os
-import urlparse
 from gettext import gettext as _
 
 from katello.client.api.environment import EnvironmentAPI
@@ -101,7 +100,7 @@ class Info(EnvironmentAction):
             self.printer.printItem(env)
             return os.EX_OK
         else:
-            return os.EX_NOTFOUND
+            return os.EX_DATAERR
 
 
 class Create(EnvironmentAction):
@@ -184,7 +183,7 @@ class Update(EnvironmentAction):
             print _("Successfully updated environment [ %s ]") % env['name']
             return os.EX_OK
         else:
-            return os.EX_NOTFOUND
+            return os.EX_DATAERR
 
 
 class Delete(EnvironmentAction):
@@ -212,7 +211,7 @@ class Delete(EnvironmentAction):
             print _("Successfully deleted environment [ %s ]") % envName
             return os.EX_OK
         else:
-            return os.EX_NOTFOUND
+            return os.EX_DATAERR
 
 
 # environment command ------------------------------------------------------------

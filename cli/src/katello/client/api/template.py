@@ -14,13 +14,12 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
-from pprint import pprint
 
 class TemplateAPI(KatelloAPI):
 
-    def templates(self):
+    def templates(self, envId):
         path = "/api/templates/"
-        tpls = self.server.GET(path)[1]
+        tpls = self.server.GET(path, {"environment_id": envId})[1]
         return tpls
 
 
@@ -57,7 +56,7 @@ class TemplateAPI(KatelloAPI):
         tplData = {
             "name": name,
             "description": description
-         }
+        }
         tplData = self.update_dict(tplData, "parent_id", parentId)
         tplData = {
             "template": tplData,
@@ -93,11 +92,14 @@ class TemplateAPI(KatelloAPI):
         return self.server.PUT(path, action)[1]
 
 
-    def promote(self, id):
-        path = "/api/templates/%s/promote" % str(id)
+    def promote(self, template_id):
+        path = "/api/templates/%s/promote" % str(template_id)
         return self.server.POST(path)[1]
 
+    def promotion_status(self, task_id):
+        path = "/api/tasks/%s" % str(task_id)
+        return self.server.GET(path)[1]
 
-    def delete(self, id):
-        path = "/api/templates/%s" % str(id)
+    def delete(self, template_id):
+        path = "/api/templates/%s" % str(template_id)
         return self.server.DELETE(path)[1]

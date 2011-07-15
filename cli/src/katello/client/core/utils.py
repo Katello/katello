@@ -18,7 +18,8 @@ import re
 import sys
 import time
 import threading
-from pprint import pprint
+import time
+from katello.client.api.task_status import TaskStatusAPI
 
 # output formatting -----------------------------------------------------------
 
@@ -75,7 +76,7 @@ class Printer:
 
 
     def _getTermWidth(self):
-        rows, columns = os.popen('stty size', 'r').read().split()
+        columns = (os.popen('stty size', 'r').read().split())[1]
         return int(columns)
 
 
@@ -133,9 +134,9 @@ class Printer:
 
             value = item[col['attr_name']]
             if not col['multiline']:
-                print indent+"%-15s \t%-25s" % (col['name'], value)
+                print indent+"%-15s \t%-25s" % (col['name']+":", value)
             else:
-                print indent+col['name']
+                print indent+col['name']+":"
                 print indent_text(value, indent+"    ")
 
 
@@ -314,19 +315,16 @@ def get_abs_path(path):
     return path
 
 
-def format_date(date):
+def format_date(date, from_format="%Y-%m-%dT%H:%M:%SZ", to_format="%Y/%m/%d %H:%M:%S"):
     """
-    Run spinner while a function is running.
-    @type function: function
-    @param function: function to run
-    @type arguments: list
-    @param arguments: arguments for the function
-    @type message: string
-    @param message: message to be temporarily displayed while the spinner is running.
-    @return return value of the function
+    Format standard rails timestamp to more human readable format
+    @type date: string
+    @param date: arguments for the function
+    @return string, formatted date
     """
-    #TODO: implement
-    return date
+    #t = time.strptime(date, from_format)
+    t = time.localtime()
+    return time.strftime(to_format, t)
 
 
 class Spinner(threading.Thread):
@@ -400,3 +398,18 @@ def run_spinner_in_bg(function, arguments=(), message=""):
         t.stop()
         t.join()
     return result
+    
+def wait_for_async_task(taskStatus):
+    task = taskStatus
+    status_api = TaskStatusAPI()
+    
+    if type(task).__name__== 'list':
+        while len(filter(lambda t: t['state'] not in ('finished', 'error', 'timed out', 'canceled'), task)) > 0:
+            time.sleep(1)
+            task = [status_api.status(t['uuid']) for t in task]
+    else:
+        while task['state'] not in ('finished', 'error', 'timed out', 'canceled'):
+            time.sleep(1)
+            task = status_api.status(task['uuid'])
+        
+    return task
