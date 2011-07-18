@@ -1,9 +1,6 @@
-- content_for :javascripts do
-  = include_javascripts :bbq
-  = include_javascripts :panel #has to be before promotion to disable resize
-  = include_javascripts :promotion
+= javascript :bbq, :panel, :promotion
 
-
+= javascript do
   :javascript
     var content_breadcrumb = $.parseJSON('#{escape_javascript(generate_content_breadcrumb())}');
     var changeset_breadcrumb = $.parseJSON('#{escape_javascript(generate_cs_breadcrumb())}');
@@ -36,7 +33,6 @@
       "partial_product": '#{_("Partial Products")}',
       "leave_page": '#{_('Some changeset modifications have not finished processing, are you sure you want to leave the page?  By leaving you may lose some modifications.')}'
     });
-
 
 #error_dialog{:style=>"display: none"}
   = _("An error has occured when communicating with the server, please refresh the page to retrieve the current changeset.")
