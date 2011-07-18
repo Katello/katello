@@ -18,7 +18,7 @@ class Notice < ActiveRecord::Base
 
   TYPES = [:message, :warning, :success, :error]
 
-  validates_inclusion_of :level, :in => TYPES
+  validates_inclusion_of :level, :in => TYPES + TYPES.collect{|type| type.to_s}
   validates_presence_of :text
   validates_length_of :user_notices, :minimum => 1
 

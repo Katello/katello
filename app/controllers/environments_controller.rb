@@ -113,10 +113,5 @@ class EnvironmentsController < ApplicationController
     envs
   end
 
-  def catch_exceptions
-    yield
-  rescue Exception => error
-    errors error
-    render :text => error, :status => :bad_request
-  end
+
 end

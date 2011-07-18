@@ -26,12 +26,16 @@ $(document).ready(function() {
         var form = $(this).closest("form");
         var url = form.attr('action');
         var dataToSend = form.serialize();
-        environment.create(dataToSend, url, function() {
-
-            panel.panelAjax('', button.attr("data-url") ,$('#panel'));
-            panel.closeSubPanel($('#subpanel'));
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: dataToSend,
+            cache: false,
+            success: function() {
+                panel.panelAjax('', button.attr("data-url") ,$('#panel'));
+                panel.closeSubPanel($('#subpanel'));
            },
-           function() {button.removeClass("disabled")
+            error: function() {button.removeClass("disabled")}
         });
    });
 
