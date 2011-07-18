@@ -1,8 +1,8 @@
 Src::Application.routes.draw do
 
-  get "sync_plans/auto_complete_search"
-  resources :sync_plans, :only => [:index, :create, :new, :edit, :update, :show, :destroy] do
+  resources :sync_plans, :only => [:index, :create, :new, :edit, :update, :show, :destroy, :auto_complete_search] do
     collection do
+      get :auto_complete_search
       get :items
     end
   end
@@ -23,12 +23,14 @@ Src::Application.routes.draw do
   match 'notices' => 'notices#show', :via => :get
   match 'notices' => 'notices#destroy_all', :via => :delete
 
+  resources :subscriptions do
+  end
+
   resources :dashboard do
   end
   resources :content do
   end
   resources :systems do
-    get 'auto_complete_search' , :on => :collection
     member do
       get :packages
       get :subscriptions
@@ -36,8 +38,9 @@ Src::Application.routes.draw do
       get :facts
     end
     collection do
+      get :auto_complete_search
       get :items
-      get :environments 
+      get :environments
     end
   end
   resources :operations do
@@ -87,17 +90,17 @@ Src::Application.routes.draw do
   resources :entitlements
   resources :pools
   resources :users do
-    get 'auto_complete_search' , :on => :collection
     collection do
+      get :auto_complete_search
       get :items
       post :enable_helptip
       post :disable_helptip
     end
     member do
       post :clear_helptips
-    end    
+    end
   end
-  
+
   resources :nodes, :constraints => {:id => /[^\/]+/}, :only => [:index, :show]
   resources :puppetclasses, :only => [:index]
   resources :providers do
@@ -126,22 +129,19 @@ Src::Application.routes.draw do
   match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
 
   resources :organizations do
-    get 'auto_complete_search' , :on => :collection
-
     resources :environments
     resources :providers do
       get 'auto_complete_search', :on => :collection
     end
     resources :providers
     collection do
+      get :auto_complete_search
       get :items
     end
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
 
   resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :show, :destroy, :auto_complete_search] do
-    get 'auto_complete_search', :on => :collection
-
     member do
       put :name
       get :dependency_size
@@ -151,6 +151,7 @@ Src::Application.routes.draw do
       get :object
     end
     collection do
+      get :auto_complete_search
       get :list
       get :items
     end
@@ -162,13 +163,13 @@ Src::Application.routes.draw do
 
   match '/roles/show_permission' => 'roles#show_permission', :via=>:get
   resources :roles do
-    get 'auto_complete_search' , :on => :collection
     post "create_permission" => "roles#create_permission"
 
     resources :permission, :only => {} do
       put "update_permission" => "roles#update_permission", :as => "update"
     end
     collection do
+      get :auto_complete_search
       get :items
     end
   end
@@ -201,7 +202,12 @@ Src::Application.routes.draw do
   namespace :api do
     match '/' => 'root#resource_list'
 
-    resources :systems, :only => [:show, :destroy]
+    resources :systems, :only => [:show, :destroy, :create, :index] do
+      member do
+        get :packages
+      end
+    end
+
     resources :providers do
       resources :sync, :only => [:index, :show, :create] do
         delete :index, :on => :collection, :action => :cancel
@@ -225,22 +231,27 @@ Src::Application.routes.draw do
     resources :organizations do
       resources :products, :only => [:index]
       resources :environments do
-        resources :products, :only => [:index], :constraints => { :id => /[0-9\.]*/ } do
-          get :repositories, :on => :member
-          resources :sync, :only => [:index, :show, :create] do
-            delete :index, :on => :collection, :action => :cancel
-          end
+        resources :changesets, :only => [:index, :show, :create, :destroy] do
+          put :update, :on => :member, :action => :update_content
         end
+        resources :products, :only => [:index], :constraints => { :id => /[0-9\.]*/ }
         member do
           get :repositories
         end
       end
-      resources :systems, :only => [:create, :index]
       resources :tasks, :only => [:index]
       member do
         get :providers
       end
     end
+
+    resources :products, :only => [] do
+      get :repositories, :on => :member
+      resources :sync, :only => [:index, :show, :create] do
+        delete :index, :on => :collection, :action => :cancel
+      end
+    end
+
     resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
@@ -259,19 +270,12 @@ Src::Application.routes.draw do
       resources :systems, :only => [:create, :index]
     end
     resources :packages, :only => [:show]
+    resources :changesets, :only => [:show]
     resources :errata, :only => [:show]
     resources :distributions, :only => [:show]
     resources :users
 
     resources :tasks, :only => [:show]
-
-    # some paths conflicts with rhsm
-    scope 'katello' do
-
-      # routes for non-ActiveRecord-based resources
-      match '/products/:id/repositories' => 'products#repo_create', :via => :post, :constraints => { :id => /[0-9\.]*/ }
-
-    end
 
     # support for rhsm
     resources :consumers, :controller => 'systems'

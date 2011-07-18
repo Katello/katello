@@ -155,10 +155,18 @@ class Role < ActiveRecord::Base
 
   def allowed_to_tags?(verb, resource_type, tags)
     raise _("Resource type cannot be null") if resource_type.nil?
+    Rails.logger.debug "Checking if role #{name} is allowed to #{verb.inspect} in #{resource_type.inspect} scoped #{tags.inspect}"
+    return true unless Permission.joins(:resource_type).
+      where(:role_id => id, :all_verbs=> true, :resource_types => { :name => resource_type }).count == 0
+
+    verb = action_to_verb(verb, resource_type)
+
+     return true unless Permission.joins(:verbs,:resource_type).
+       where(:role_id => id, :verbs => { :verb => verb }, :all_tags=> true,
+             :resource_types => { :name => resource_type }).count == 0
+
     tags = [] if tags.nil?
     tags = [tags] unless tags.is_a? Array
-    verb = action_to_verb(verb, resource_type)
-    Rails.logger.debug "Checking if role #{name} is allowed to #{verb.inspect} in #{resource_type.inspect} scoped #{tags.inspect}"
     query_hash = {:role_id => id,
       :resource_types => { :name => resource_type },
       :verbs => { :verb => verb }}
@@ -171,7 +179,6 @@ class Role < ActiveRecord::Base
       item_count = tags.length
       to_count = "tags.name"
     end
-
     Permission.joins(:verbs, :resource_type).joins(
         "left outer join permissions_tags on permissions.id = permissions_tags.permission_id").joins(
         "left outer join tags on tags.id = permissions_tags.tag_id").where(query_hash).count(to_count, :distinct => true) == item_count

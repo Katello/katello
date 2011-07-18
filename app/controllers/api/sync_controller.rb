@@ -32,8 +32,14 @@ class Api::SyncController < Api::ApiController
   def create
     # POST /repositories/<id>/sync/
     # start syncing
-    @obj.sync
-    render :text => "synchronizing  #{@sync_of}: #{@obj.id}", :status => 200
+    async_jobs = @obj.sync
+    to_return = async_jobs.collect do |pulp_task|
+      ts = TaskStatus.using_pulp_task(pulp_task) {|t| t.organization = @obj.organization}
+      ts.save!
+      ts
+    end
+
+    render :json => to_return, :status => 202
   end
 
   def cancel
