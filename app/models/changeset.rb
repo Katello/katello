@@ -174,10 +174,9 @@ class Changeset < ActiveRecord::Base
     raise Errors::ChangesetContentException.new("Repository not found within this environment.")
   end
 
-  #TODO: implement remove_XX methods
   def remove_product product_name
     prod = self.environment.products.find_by_name(product_name)
-    prod.destroy
+    self.products.delete(prod)
   end
 
   def remove_package package_name
