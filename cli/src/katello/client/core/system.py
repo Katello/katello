@@ -16,13 +16,13 @@
 #
 
 import os
-import urlparse
 from gettext import gettext as _
 
 from katello.client.api.system import SystemAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record
+from katello.client.core.utils import Printer
 
 _cfg = Config()
 
@@ -64,7 +64,7 @@ class List(SystemAction):
             systems = self.api.systems_by_env(org_name, env_name)
 
         if systems is None:
-            return 1
+            return os.EX_DATAERR
 
         if env_name is None:
             self.printer.setHeader(_("Systems List For Org %s") % org_name)
@@ -72,6 +72,56 @@ class List(SystemAction):
             self.printer.setHeader(_("Systems List For Environment %s in Org %s") % (env_name, org_name))
 
         self.printer.printItems(systems)
+        return os.EX_OK
+
+class Info(SystemAction):
+
+    description = _('display a system within an organization')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                       help=_("system name (required)"))
+        self.parser.add_option('--environment', dest='environment',
+                       help=_("environment name"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+    def run(self):
+        org_name = self.get_option('org')
+        env_name = self.get_option('environment')
+        sys_name = self.get_option('name')
+        # info is always grep friendly
+        printer = Printer(False)
+
+        if env_name is None:
+            printer.printHeader(_("System Information For Org %s") % org_name)
+            systems = self.api.systems_by_org(org_name, {'name': sys_name})
+        else:
+            printer.printHeader(_("System Information For Environment %s in Org %s") % (env_name, org_name))
+            systems = self.api.systems_by_env(org_name, env_name,
+                    {'name': sys_name})
+
+        # get system details
+        system = self.api.system(systems[0]['uuid'])
+
+        printer.addColumn('name')
+        printer.addColumn('uuid')
+        printer.addColumn('location')
+
+        # add facts to the system result object
+        facts_hash = system['facts']
+        facts_tuples_sorted = [ ('fact ' + k, facts_hash[k]) for k in
+                sorted(facts_hash.keys())]
+        for (k, v) in facts_tuples_sorted:
+            printer.addColumn(k)
+            system[k] = v
+
+        printer.printItem(system)
+
         return os.EX_OK
 
 class Register(SystemAction):
@@ -120,7 +170,7 @@ class Unregister(SystemAction):
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
-        systems = self.api.systems_by_org_and_name(org, name)
+        systems = self.api.systems_by_org(org, {'name': name})
         if systems == None or len(systems) != 1:
             print _("Could not find system named [ %s ] within organization [ %s ]") % (name, org)
             return os.EX_DATAERR

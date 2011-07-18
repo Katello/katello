@@ -83,11 +83,6 @@ class Api::ProvidersController < Api::ApiController
     render :json => prod
   end
 
-  def sync
-    @provider.sync
-    render :text => "syncing provider: #{@provider.id}", :status => 200
-  end
-
   private
 
   def find_provider

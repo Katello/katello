@@ -13,23 +13,8 @@
 # granted to use or replicate Red Hat trademarks that are incorporated
 # in this software or its documentation.
 
-import os
-
 from katello.client.cli.base import KatelloCLI
 
 
 class AdminCLI(KatelloCLI):
-
-    def setup_credentials(self):
-        """
-        Use the super-class credentials, then fall back to auth login
-        credentials if present.
-        """
-        super(AdminCLI, self).setup_credentials()
-        #if self._server.has_credentials_set():
-        #    return
-        #login = Login()
-        #certfile = login.crtpath()
-        #keyfile = login.keypath()
-        #if os.access(certfile, os.R_OK) and os.access(keyfile, os.R_OK):
-        #    self._server.set_ssl_credentials(certfile, keyfile)
+    pass

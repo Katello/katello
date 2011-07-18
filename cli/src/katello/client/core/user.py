@@ -16,8 +16,6 @@
 #
 
 import os
-import urlparse
-from pprint import pprint
 from gettext import gettext as _
 
 from katello.client.api.user import UserAPI

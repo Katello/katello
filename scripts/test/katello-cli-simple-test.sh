@@ -197,7 +197,7 @@ TEMPLATE_NAME="template_$RAND"
 TEMPLATE_NAME_2="template_2_$RAND"
 test "template create" template create --name="$TEMPLATE_NAME" --description="template description" --org="$FIRST_ORG"
 test "template create with parent" template create --name="$TEMPLATE_NAME_2" --description="template 2 description" --parent="$TEMPLATE_NAME" --org="$FIRST_ORG"
-test "template list" template list
+test "template list" template list --org="$FIRST_ORG" --environment="Locker"
 test "template update" template update --name="$TEMPLATE_NAME_2" --new_name="changed_$TEMPLATE_NAME_2" --description="changed description" --org="$FIRST_ORG"
 test "template update_content add product" template update_content --name="$TEMPLATE_NAME" --org="$FIRST_ORG"    --add_product    --product="$FEWUPS_PRODUCT"
 test "template update_content add package" template update_content --name="$TEMPLATE_NAME" --org="$FIRST_ORG"    --add_package    --package="warnerbros"
@@ -209,6 +209,20 @@ test "template update_content add parameter" template update_content --name="$TE
 test "template update_content remove parameter" template update_content --name="$TEMPLATE_NAME" --org="$FIRST_ORG" --remove_parameter --parameter "attr"
 
 
+#testing changesets
+CS_NAME="changeset_$RAND"
+test "changeset create" changeset create --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME"
+test "changeset add product" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --add_product="$FEWUPS_PRODUCT"
+test "changeset add package" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --add_package="warnerbros"
+test "changeset add erratum" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --add_erratum="RHEA-2010:9999"
+test "changeset add repo" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --add_repo="$REPO_NAME"
+test "changeset remove product" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --remove_product="$FEWUPS_PRODUCT"
+test "changeset remove package" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --remove_package="warnerbros"
+test "changeset remove erratum" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --remove_erratum="RHEA-2010:9999"
+test "changeset remove repo" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --remove_repo="$REPO_NAME"
+test "changeset list" changeset list --org="$FIRST_ORG" --environment="Locker"
+test "changeset info" changeset info --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" 
+
 
 #testing ping
 test "ping" ping
@@ -216,13 +230,14 @@ test "ping" ping
 #clear
 #test "repo delete" repo delete       # <-- not implemented yet
 #test "product delete" product delete # <-- not implemented yet
+test "changeset delete" changeset delete --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME"
 test "template delete" template delete --name="changed_$TEMPLATE_NAME_2" --org="$FIRST_ORG"
 test "template delete" template delete --name="$TEMPLATE_NAME" --org="$FIRST_ORG"
 test "provider delete" provider delete --name="$YUM_PROVIDER" --org="$FIRST_ORG"
 test "environment delete" environment delete --name="$TEST_ENV" --org="$FIRST_ORG"
 test "environment delete" environment delete --name="$TEST_ENV_3" --org="$FIRST_ORG"
 test "org delete" org delete --name="$TEST_ORG"
-test "user delete" user delete --username=$TEST_USER
+test "user delete" user delete --username="$TEST_USER"
 
 
 
