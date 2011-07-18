@@ -9,17 +9,17 @@
       = render_navigation(:expand_all => true, :level => 3)
 
   .grid_8
-    = form_for @activation_key, :url => {:action => "update",  :controller => "activation_keys"}, :method => "put", :remote => true do |f|
+    = form_for @activation_key, activation_key_path(@activation_key), :method => "put", :remote => true do |f|
 
       %fieldset.clearfix
         .grid_2.ra
           %label #{_("Name")}:
-        .grid_5.la.editable.edit_panel_element{'name' => 'activation_key[name]', 'data-url' => activation_key_path(@activation_key.id)} #{@activation_key[:name]}
+        .grid_5.la.editable.edit_panel_element#activation_key_name{'name' => 'activation_key[name]', 'data-url' => activation_key_path(@activation_key.id)} #{@activation_key[:name]}
 
       %fieldset.clearfix
         .grid_2.ra
           %label #{_("Description")}:
-        .grid_5.la.editable.edit_textarea{:style => "word-wrap: break-word;", 'name' => 'activation_key[description]', 'data-url' => activation_key_path(@activation_key.id)}<> #{@activation_key[:description]}
+        .grid_5.la.editable.edit_textarea#activation_key_description{:style => "word-wrap: break-word;", 'name' => 'activation_key[description]', 'data-url' => activation_key_path(@activation_key.id)}<> #{@activation_key[:description]}
 
 %a.remove_item.remove_key{"data-id"=>@activation_key.id ,"data-url"=>activation_key_path(@activation_key.id), "data-confirm-text"=>_('Are you sure?')}
   = _("Remove Activation Key")
