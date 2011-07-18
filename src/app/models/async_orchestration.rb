@@ -23,7 +23,7 @@ module AsyncOrchestration
     end
 
     def method_missing(method, *args)
-      t = ::KatelloTaskStatus.create!(:uuid => UUIDTools::UUID.random_create.to_s, :organization => @organization, :state => TaskStatus::Status::WAITING)
+      t = ::TaskStatus.create!(:uuid => UUIDTools::UUID.random_create.to_s, :organization => @organization, :state => TaskStatus::Status::WAITING)
       Delayed::Job.enqueue({:payload_object => AsyncOperation.new(t.id, User.current.username, @target, method.to_sym, args)}.merge(@options))
       t
     end
