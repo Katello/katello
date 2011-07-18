@@ -285,4 +285,18 @@ module Pulp
     end
   end
 
+  class Task < PulpResource
+    class << self
+      def find uuid
+        response = get(path  + uuid + "/", self.default_headers)
+        body = response.body
+        JSON.parse(body).with_indifferent_access
+      end
+
+      def path uuid=nil
+        "/pulp/api/tasks/"
+      end
+    end
+  end
+
 end

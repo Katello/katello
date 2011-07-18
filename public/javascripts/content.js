@@ -47,7 +47,6 @@ $(document).ready(function() {
        })
    })
    .bind("ajax:error", function(evt, xhr, status, error){
-     alert("something when wrong");
    });
   
   $('.products').find('ul').slideToggle();
@@ -167,7 +166,6 @@ var content = (function(){
                 fadeUpdate("#prod_sync_finish_" + data.product_id, data.finish_time);
                 fadeUpdate("#prod_sync_start_" + data.product_id, data.start_time);
                 fadeUpdate("#prod_size_" + data.product_id, data.size);
-                alert("got a update product error");
               }
             });
         },

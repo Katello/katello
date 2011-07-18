@@ -31,10 +31,10 @@ module Glue::Provider
 
     def sync
       Rails.logger.info "Syncing provider #{name}"
-      self.products.each do |p|
+      self.products.collect do |p|
         Rails.logger.info "Syncing product #{p.name}"
         p.sync
-      end
+      end.flatten
     end
 
     def cancel_sync
