@@ -14,15 +14,15 @@ require 'spec_helper'
 
 describe Permission do
   before(:all) do
-    @some_role = Role.create!(:name => 'some_role')
-    @repo_admin = Role.create!(:name => 'repo_admin')
-    @super_admin = Role.create!(:name => 'super_admin', :superadmin => true)
+    @some_role = Role.find_or_create_by_name(:name => 'some_role')
+    @repo_admin = Role.find_or_create_by_name(:name => 'repo_admin')
+    @super_admin = Role.find_or_create_by_name(:name => 'super_admin', :superadmin => true)
 
-    user_admin = User.create!(
+    user_admin = User.find_or_create_by_username(
       :username => 'admin',
       :password => "password",
       :roles => [ @some_role ])
-    user_bob = User.create!(
+    user_bob = User.find_or_create_by_username(
       :username => 'bob',
       :password => "password",
       :roles => [ @repo_admin ])
@@ -70,6 +70,32 @@ describe Permission do
       @repo_admin.disallow("create_repo", "repogroup", :repogroup_internal)
       @repo_admin.allowed_to?("create_repo", "repogroup", :repogroup_internal).should be_false
     }
+  end
+  context "all_tags" do
+    before do
+      @verb_name = "magic_verb"
+      @verb = Verb.find_or_create_by_verb(@verb_name)
+      @res_type_name = "TestResourceType"
+      @res_type = ResourceType.find_or_create_by_name(@res_type_name)
+      @magic_perm = Permission.create!(:role => @some_role, :verbs => [@verb],
+                                       :all_tags=> true,
+                                    :resource_type=> @res_type)
+    end
+    specify{@some_role.allowed_to?(@verb_name, @res_type_name,:foo_tag).should be_true}
+    specify{@some_role.allowed_to?(@verb_name, @res_type_name + "foo",:foo_tag).should be_false}
+    specify{@some_role.allowed_to?(@verb_name + "_foo", @res_type_name,:foo_tag).should be_false}
+  end
+
+  context "all_verbs" do
+    before do
+      @res_type_name = "TestResourceType"
+      @res_type = ResourceType.find_or_create_by_name(@res_type_name)
+      @magic_perm = Permission.create!(:role => @some_role, :all_verbs => true,
+                                    :resource_type=> @res_type)
+    end
+    specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, "").should be_true}
+    specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, :magic_tag).should be_true}
+    specify {@some_role.allowed_to?("do_magic_verb", @res_type_name + "Foo", :magic_tag).should be_false}
   end
 
 end

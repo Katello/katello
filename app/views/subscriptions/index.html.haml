@@ -1,0 +1,51 @@
+= include_javascripts :treetable
+= include_javascripts :subscription
+
+.grid_16
+  %h3= _('Current Subscriptions')
+  .tree
+    - if @subscriptions.nil? || @subscriptions.empty?
+      %p= _('No Subscriptions Available')
+    - else
+      %table#subscriptionTable
+        - group = nil
+        %thead
+          %th= _('Product')
+          %th= _('Quantity')
+          %th= _('Trend')
+          %th= _('Contract')
+          %th= _('Support Level')
+          %th= _('Arch')
+          %th= _('Begins')
+          %th= _('Expires')
+        %tbody
+          - @subscriptions.each do |sub|
+            - new_group = sub.product.id
+            - if (new_group != group)
+              - group = sub.product.id
+              %tr{:id => group}
+                %td= sub.productName
+                %td
+                %td
+                %td
+                %td
+                %td
+                %td
+                %td
+            %tr{:class => "child-of-#{group}", :id => sub.id}
+              %td= sub.productName
+              %td
+                = sub.consumed
+                = "/"
+                = sub.quantity
+              %td
+                =stats_line(sub.consumed_stats)
+              %td=sub.contractNumber or ""
+              %td=sub.product.arch
+              %td=sub.product.support_level or ""
+              %td=l sub.startDate
+              %td=l sub.endDate
+      .actions
+        .grid_3
+          %a{ :href => "#", :id=>"toggle_all", :class=>"fl" }
+            #{_("Expand/Contract All")}

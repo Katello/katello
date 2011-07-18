@@ -102,7 +102,7 @@ class Glue::Pulp::Repo
   end
 
   def sync
-    Glue::Pulp::Sync.new(Pulp::Repository.sync(id))
+    [Pulp::Repository.sync(id)]
   end
 
   def sync_status
@@ -179,6 +179,18 @@ class Glue::Pulp::Repo
     cloned.groupid = Glue::Pulp::Repos.groupid(product, to_environment)
     Pulp::Repository.clone_repo(self, cloned)
     cloned
+  end
+
+  def organization
+    Organization.find(groupid[2]["org:".size..-1].to_i)
+  end
+
+  def environment
+    KPEnvironment.find(groupid[1]["env:".size..-1].to_i)
+  end
+
+  def product
+    Product.find(groupid[0]["product:".size..-1].to_i)
   end
 
   def self.find(id)
