@@ -19,9 +19,9 @@ class ProductAPI(KatelloAPI):
     """
     Connection class to access environment calls
     """
-    def products_by_org(self, orgName):
+    def products_by_org(self, orgName, prodName=None):
         path = "/api/organizations/%s/products" % orgName
-        products = self.server.GET(path)[1]
+        products = self.server.GET(path, {"name": prodName} if prodName != None else None)[1]
         return products
 
     def products_by_env(self, orgName, envName):
@@ -29,9 +29,9 @@ class ProductAPI(KatelloAPI):
         products = self.server.GET(path)[1]
         return products
 
-    def products_by_provider(self, provId):
+    def products_by_provider(self, provId, prodName=None):
         path = "/api/providers/%s/products/" % str(provId)
-        products = self.server.GET(path)[1]
+        products = self.server.GET(path, {"name": prodName} if prodName != None else None)[1]
         return products
 
     def products(self):
@@ -58,8 +58,6 @@ class ProductAPI(KatelloAPI):
         result = self.server.POST(path, {"product": product})[1]
         return result
 
-    def sync(self, provId, prodName):
-        pass
-        #path = "/api/repositories/%s/sync" % id
-        #data = self.server.POST(path)[1]
-        #return data
+    def sync(self, prodId):
+        path = "/api/products/%s/sync" % prodId
+        return self.server.POST(path)[1]

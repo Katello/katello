@@ -16,9 +16,7 @@
 #
 
 import os
-import urlparse
 from gettext import gettext as _
-from pprint import pprint
 
 from katello.client.api.errata import ErrataAPI
 from katello.client.config import Config

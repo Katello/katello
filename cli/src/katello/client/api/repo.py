@@ -28,21 +28,21 @@ class RepoAPI(KatelloAPI):
 
     def repos_by_org_env(self, orgName, envId):
         path = "/api/organizations/%s/environments/%s/repositories" % (orgName, envId)
-        list = self.server.GET(path)[1]
-        return list
+        result_list = self.server.GET(path)[1]
+        return result_list
 
     def repos_by_org_env_product(self, orgName, envId, productId):
         path = "/api/organizations/%s/environments/%s/products/%s/repositories" % (orgName, envId, productId)
-        list = self.server.GET(path)[1]
-        return list
+        result_list = self.server.GET(path)[1]
+        return result_list
 
-    def repo(self, id):
-        path = "/api/repositories/%s/" % id
+    def repo(self, repo_id):
+        path = "/api/repositories/%s/" % repo_id
         data = self.server.GET(path)[1]
         return data
 
-    def sync(self, id):
-        path = "/api/repositories/%s/sync" % id
+    def sync(self, repo_id):
+        path = "/api/repositories/%s/sync" % repo_id
         data = self.server.POST(path)[1]
         return data
 

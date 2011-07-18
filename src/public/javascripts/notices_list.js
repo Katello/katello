@@ -11,16 +11,6 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-function retrieve_details(notice_id) {
-  // invoke the request to the server as defined in kalpana_client.js
-  notice.details(notice_id,
-      function(data, status, xhr) {
-        $('#dialog_content').html(data).dialog('open');
-      },
-      function(data, status, xhr) {
-        alert("failure");
-      });
-}
 
 $(document).ready(function() {
   $('#dialog_content').dialog({
@@ -35,7 +25,17 @@ $(document).ready(function() {
 
   $('.details').bind('click', function(){
     var notice_id = $(this).attr('id');
-    retrieve_details(notice_id);
+    $.ajax({
+        type: "GET",
+        url: "/notices/" + notice_id + "/details",
+        cache: false,
+        success: function(data, status, xhr) {
+            $('#dialog_content').html(data).dialog('open');
+        },
+        error: function(data, status, xhr) {
+           alert("failure");
+        }
+    });
   });
 
   $('.search').fancyQueries();

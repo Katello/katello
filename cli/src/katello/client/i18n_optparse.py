@@ -26,7 +26,6 @@ http://bugs.python.org/issue4319
 
 import sys
 import gettext
-import os
 _ = gettext.gettext
 
 from optparse import OptionParser as _OptionParser

@@ -94,7 +94,7 @@ describe ChangesetsController do
   end
   
   describe 'creating a changeset' do
-    
+
     describe 'with only an environment id' do
       it 'should create a changeset correctly and send a notification' do
         controller.should_receive(:notice)
@@ -115,7 +115,7 @@ describe ChangesetsController do
     
     it 'should cause an error notification if name is left blank' do
       controller.should_receive(:errors)
-      post 'create', {:changesets => { :name => ''}}
+      post 'create', {:env_id => @env.id, :changesets => { :name => ''}}
       response.should_not be_success
     end
 

@@ -16,12 +16,11 @@
 #
 
 import os
-import urlparse
 from gettext import gettext as _
 
 from katello.client.config import Config
 from katello.client.shell import KatelloShell
-from katello.client.core.base import Action, Command
+from katello.client.core.base import Action
 
 _cfg = Config()
 
