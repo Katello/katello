@@ -34,6 +34,7 @@ end
 class SystemTemplate < ActiveRecord::Base
   #include Authorization
   include LazyAccessor
+  include AsyncOrchestration
 
   #has_many :products
   belongs_to :environment, :class_name => "KPEnvironment", :inverse_of => :system_templates
@@ -149,10 +150,9 @@ class SystemTemplate < ActiveRecord::Base
   def remove_product product_name
     product = self.environment.products.find_by_name(product_name)
     self.products.delete(product)
-    if not self.valid?
-      self.products << product
-      raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{product_name}.")
-    end
+    save!
+  rescue ActiveRecord::RecordInvalid
+    raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{product_name}.")
   end
 
 
@@ -168,13 +168,11 @@ class SystemTemplate < ActiveRecord::Base
 
 
   def promote
-    #return if there id nowhere to promote
-    return if self.environment.successor.nil?
-    from_env = self.environment
+    raise Errors::TemplateContentException.new("Cannot promote the template #{name}. #{self.environment.name} is the last environment in the promotion chain.") if self.environment.successor.nil?
     to_env   = self.environment.successor
 
     #collect all parent templates into one changeset
-    @changeset = Changeset.create!(:environment => from_env)
+    @changeset = Changeset.create!(:name => "template_promotion_#{Time.now}", :environment => to_env, :state => Changeset::REVIEW)
     for tpl in self.get_inheritance_chain
 
       @changeset.products << tpl.products
