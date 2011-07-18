@@ -132,6 +132,12 @@ class ActivationKeysController < ApplicationController
       @activation_key = ActivationKey.find(params[:id])
     rescue Exception => error
       errors error.to_s
+
+      # flash_to_headers is an after_filter executed on the application controller;
+      # however, a render from within a before_filter will halt the filter chain.
+      # as a result, we are explicitly executing it here.
+      flash_to_headers
+
       render :text => error, :status => :bad_request
     end
   end
