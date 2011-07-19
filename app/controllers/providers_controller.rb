@@ -96,7 +96,7 @@ class ProvidersController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :locals => {:provider => @provider}
+    render :partial => "edit", :layout => "tupane_layout", :locals => {:provider => @provider}
   end
 
   def new

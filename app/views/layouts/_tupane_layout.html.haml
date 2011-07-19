@@ -1,10 +1,15 @@
-%h2
-  = yield :title
-= yield :remove_item    
-%a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}
-  
-= yield :navigation
-  
-= yield :content
+.grid_8
+  %h2
+    = yield :title
+  = yield :remove_item    
+  %a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}
+
+%nav.subnav.clear
+  = yield :navigation
+
+#panel_main
+  = yield :content
 
 = yield :footer
+
+= yield
