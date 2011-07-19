@@ -146,9 +146,11 @@ class ProvidersController < ApplicationController
       end
 
       updated_provider.repository_url = params[:provider][:repository_url] unless params[:provider][:repository_url].nil?
+      Rails.logger.debug("xxx" + updated_provider.repository_url + "xxx")
       updated_provider.provider_type = params[:provider][:provider_type] unless params[:provider][:provider_type].nil?
 
       updated_provider.save!
+      Rails.logger.debug("xxx" + updated_provider.repository_url + "xxx")
       notice _("Provider '#{updated_provider.name}' was updated.")
 
       respond_to do |format|
