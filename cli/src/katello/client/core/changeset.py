@@ -77,7 +77,7 @@ class List(ChangesetAction):
 # ==============================================================================
 class Info(ChangesetAction):
 
-    description = _('list new changesets of an environment')
+    description = _('detailed information about a changeset')
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
@@ -223,7 +223,7 @@ class UpdateContent(ChangesetAction):
 # ==============================================================================
 class Delete(ChangesetAction):
     
-    description = _('updates content of a changeset')
+    description = _('deletes a changeset')
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
