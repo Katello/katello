@@ -108,7 +108,6 @@ class ProvidersController < ApplicationController
     begin
       @provider = Provider.create! params[:provider].merge({:organization => current_organization})
       notice _("Provider '#{@provider['name']}' was created.")
-      #render :nothing => true
       render :partial=>"common/list_item", :locals=>{:item=>@provider, :accessor=>"id", :columns=>['name', 'provider_type']}
 
     rescue Exception => error
