@@ -250,10 +250,9 @@ var panel = (function(){
         /* must pass a jQuery object */
         panelResize : function(paneljQ, isSubpanel){
             var new_top = Math.floor($('.left').position(top).top);
+            
             new_top = isSubpanel ? (new_top + subpanelSpacing) : new_top;
-            paneljQ.parent().animate({
-                top:new_top
-            }, 250);
+            paneljQ.parent().animate({top: new_top}, 250);
 
             //if there is a lot in the list, make the panel a bit larger
             if ($('#content').height() > 642){
@@ -263,7 +262,7 @@ var panel = (function(){
                 }
                 paneljQ.height(extraHeight);
             } else {
-                var height = 490;
+                var height = $(window).height() - $('#subheader').height() - $('#head').height() - 200;
                 if (isSubpanel) {
                     height -= subpanelSpacing;
                 }
