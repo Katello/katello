@@ -74,7 +74,7 @@ class ActivationKeysController < ApplicationController
 
   def create
     begin
-      @activation_key = ActivationKey.create!(:name => params[:name], :description => params[:description], :organization_id => current_organization)
+      @activation_key = ActivationKey.create!(:name => params[:activation_key_name], :description => params[:activation_key_description], :organization_id => current_organization)
       notice _("Activation key '#{@activation_key['name']}' was created.")
       render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name']}
 
