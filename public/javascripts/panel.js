@@ -32,6 +32,10 @@ $(document).ready(function() {
         //if it's bigger than 100%, make it 100%.
         fontsize = (fontsize > 100) ? 100 : fontsize;
         $('#systems .block').css({"font-size": parseInt(fontsize, 10) + "%"});
+        var element = $('.scroll-pane');
+        if (element.length){
+            element.data('jsp').reinitialise();
+        }
     });
     $('.left').resize();
 
@@ -47,8 +51,8 @@ $(document).ready(function() {
 
     $('#panel-frame').css({"top" : original_top});
     $('#subpanel-frame').css({"top" : subpanel_top});
-    panel.panelResize(thisPanel, false);
-    panel.panelResize(subpanel, true);
+    panel.panelResize($('#panel_main'), false);
+    panel.panelResize($('#subpanel_main'), true);
 
     $('.block').live('click', function(e)
     {
@@ -85,14 +89,13 @@ $(document).ready(function() {
     });
     
     $(window).resize(function(){
-        panel.panelResize(thisPanel, false);
-        panel.panelResize(subpanel, true);
+        panel.panelResize($('#panel_main'), false);
+        panel.panelResize($('#subpanel_main'), true);
     });
 
     $('#content').resize(function(){
-        panel.panelResize(thisPanel, false);
-        panel.panelResize(subpanel, true);
-
+        panel.panelResize($('#panel_main'), false);
+        panel.panelResize($('#subpanel_main'), true);
     });
 
     $('.subpanel_element').live('click', function(){
@@ -238,7 +241,8 @@ var panel = (function(){
                     spinner.hide();
                     panelContent.html(data).fadeIn(function(){$(".panel-content :input:visible:enabled:first").focus();});
                     panel.expand_cb(name);
-
+                    $('.scroll-pane').jScrollPane();
+                    panel.panelResize($('#panel_main'));
                 },
                 error: function (xhr, status, error) {
                     spinner.hide();
@@ -262,11 +266,14 @@ var panel = (function(){
                 }
                 paneljQ.height(extraHeight);
             } else {
-                var height = $(window).height() - $('#subheader').height() - $('#head').height() - 200;
+                var height = $(window).height() - $('#subheader').height() - $('#head').height() - 300;
                 if (isSubpanel) {
                     height -= subpanelSpacing;
                 }
-                paneljQ.height(height);
+                paneljQ.css({maxHeight: height});
+            }
+            if( paneljQ.length ){
+                paneljQ.data('jsp').reinitialise();
             }
             return paneljQ;
         },

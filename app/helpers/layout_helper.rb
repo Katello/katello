@@ -1,6 +1,6 @@
 module LayoutHelper
   def stylesheet(*args)
-    args.map { |arg| content_for(:stylesheets) { include_javascripts(arg) } }
+    args.map { |arg| content_for(:stylesheets) { include_stylesheets(arg) } }
   end
 
   def javascript(*args, &block)
