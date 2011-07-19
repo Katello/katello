@@ -20,6 +20,7 @@ failed_cnt=0
 # Text color variables
 txtred=$(tput setaf 1)    # Red
 txtgrn=$(tput setaf 2)    # Green
+txtyel=$(tput setaf 3)    # Yellow
 txtrst=$(tput sgr0)       # Text reset
 
 PRINT_ALL=0
@@ -44,6 +45,10 @@ for param in $*; do
 done
 
 
+function skip_test() {
+    printf "%-40s" "$1"
+    printf "[ ${txtyel}SKIPPED${txtrst} ]\n"
+}
 
 function test() {
     if [ $PRINT_ALL -eq 1 ]; then
@@ -171,7 +176,7 @@ sleep 1 #give the provider some time to get synced
 SYSTEM_NAME_ADMIN="admin_system_$RAND"
 SYSTEM_NAME_USER="user_system_$RAND"
 test "system register as admin" system register --name="$SYSTEM_NAME_ADMIN" --org="$FIRST_ORG" --environment="$TEST_ENV"
-test "system register as $TEST_USER" -u $TEST_USER -p password system register --name="$SYSTEM_NAME_USER" --org="$FIRST_ORG" --environment="$TEST_ENV"
+skip_test "system register as $TEST_USER" -u $TEST_USER -p password system register --name="$SYSTEM_NAME_USER" --org="$FIRST_ORG" --environment="$TEST_ENV"
 test "system list" system list --org="$FIRST_ORG"
 
 #testing distributions
