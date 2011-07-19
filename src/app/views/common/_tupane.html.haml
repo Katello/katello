@@ -1,0 +1,19 @@
+#panel-frame
+  #panel.panel.closed
+    .head
+      = yield :close
+    .data
+      .spinner
+        = image_tag ("spinner.gif")
+      .panel-content
+      %br.clear
+
+#subpanel-frame
+  #subpanel.panel.subpanel.closed
+    .head
+      %a.close{:href => "#", "data-close"=>"subpanel"} #{_("Close")}
+    .data
+      .spinner
+        = image_tag ("spinner.gif")
+      .panel-content
+      %br.clear

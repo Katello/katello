@@ -1,0 +1,10 @@
+%h2
+  = yield :title
+= yield :remove_item    
+%a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}
+  
+= yield :navigation
+  
+= yield :content
+
+= yield :footer
