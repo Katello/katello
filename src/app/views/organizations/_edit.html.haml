@@ -11,9 +11,9 @@
   = form_for @organization, :url => {:action => "update",  :controller => "organizations"}, :method => "put", :remote => true do |f|
   
     %fieldset.clearfix
-      .grid_2.ra
+      .grid_2.la
         %label #{_("Description")}:
-      .grid_5.la.editable.edit_textfield{:style => "word-wrap: break-word;", 'name' => 'organization[description]', 'data-url'=>edit_organization_path(@organization.cp_key)}<> #{@organization[:description]}
+      .grid_4.la.editable.edit_textfield{:style => "word-wrap: break-word;", 'name' => 'organization[description]', 'data-url'=>edit_organization_path(@organization.cp_key)}<> #{@organization[:description]}
   
     .grid_7
       %h5 #{_("Environment Promotion Paths")}:
