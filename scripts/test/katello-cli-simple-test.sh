@@ -108,6 +108,9 @@ function valid_id() {
 }
 
 
+#testing ping
+test "ping" ping
+
 #testing user
 TEST_USER="user_$RAND"
 test "user create" user create --username=$TEST_USER --password=password
@@ -223,9 +226,6 @@ test "changeset remove repo" changeset update  --org="$FIRST_ORG" --environment=
 test "changeset list" changeset list --org="$FIRST_ORG" --environment="Locker"
 test "changeset info" changeset info --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" 
 
-
-#testing ping
-test "ping" ping
 
 #clear
 #test "repo delete" repo delete       # <-- not implemented yet
