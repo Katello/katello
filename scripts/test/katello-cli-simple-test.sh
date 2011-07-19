@@ -96,6 +96,8 @@ function summarize() {
     else
         printf "%s tests, %s failed\n" "$test_cnt" "$failed_cnt"
     fi
+
+    exit $failed_cnt
 }
 
 function valid_id() {
