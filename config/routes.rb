@@ -243,6 +243,7 @@ Src::Application.routes.draw do
       member do
         get :providers
       end
+      resources :systems, :only => [:index]
     end
 
     resources :products, :only => [] do
