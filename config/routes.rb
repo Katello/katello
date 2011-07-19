@@ -88,7 +88,6 @@ Src::Application.routes.draw do
   match '/consumers/:id' => 'consumers#re_register', :via => :post
 
   resources :entitlements
-  resources :pools
   resources :users do
     collection do
       get :auto_complete_search
