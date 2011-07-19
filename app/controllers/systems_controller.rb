@@ -90,7 +90,7 @@ class SystemsController < ApplicationController
   end
   
   def edit
-     render :partial=>"edit", :locals=>{:system=>@system}
+     render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system}
   end  
 
   def update

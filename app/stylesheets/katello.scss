@@ -1041,7 +1041,7 @@ fieldset {
 .panel {
   background-color:#F5FAFA;
   width:490px;
-  height:490px;
+  //height:490px;
   margin-top:0;
   position:relative;
   left:0;
@@ -1102,13 +1102,17 @@ fieldset {
     position: absolute;
     top: 9px;
   }
-  h2 { padding-lefT: 5px; }
+  h2 { padding-left: 5px; }
   #panel_main {
-    max-height: 200px;
     overflow-y: auto;
     overflow-x: hidden;
-    width: 95%;
-    margin: 0 1% 0 4%;
+    width: auto;
+    margin: 0 1% -3% 4%;
+    min-height: 300px;
+  }
+  .grid_8 {
+    margin-left: 0px;
+    margin-right: 0px;
   }
 }
 #subpanel-frame {
@@ -1462,4 +1466,68 @@ fieldset {
         }
      }
   }
-}  
+}
+
+.jspContainer {
+  .jspHorizontalBar, .jspVerticalBar, .jspTrack { 
+    background: transparent !important; 
+  }
+ 
+  .jspDrag {
+      background: $kselected_color !important;
+  
+      -moz-border-radius: 10px;
+      -webkit-border-radius: 10px;
+      border-radius: 10px;
+  }
+  
+  .jspTrack { 
+    .jspActive, .jspHover, .jspDrag:hover {
+       background: #8B8B9F; 
+     }
+   }
+  
+  .jspArrow
+  {
+    background: url(../image/ui-icons_222222_256x240.png) no-repeat;
+    
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    
+    &:hover { background-image: url('../image/ui-icons_cd0a0a_256x240.png'); }
+  }
+  
+  .jspVerticalBar {
+    &, .jspDrag, .jspTrack{
+      width: 10px;
+    }
+    .jspActive {
+      background-image: url('../image/ui-icons_cd0a0a_256x240.png');
+    }
+    .jspDisabled, .jspDisabled:hover {
+      background-color: transparent;
+      background-image: url('../image/ui-icons_888888_256x240.png');
+    }
+    .jspArrow { height: 15px; }
+  }
+  
+  .jspHorizontalBar {
+    height: auto;
+    
+    .jspDisabled, .jspDisabled:hover {
+      background-color: transparent;
+      background-image: url('../image/ui-icons_888888_256x240.png');
+    }
+    .jspArrow { width: 15px; }
+    .jspDrag {
+      height: 10px;
+    }
+    .jspCorner { display: none; }
+  }  
+
+  .jspArrowUp { background-position: 0 0; }
+  .jspArrowDown { background-position: -64px 0 !important; }
+  .jspArrowLeft { background-position: -96px 0 !important; }
+  .jspArrowRight{ background-position: -32px 0 !important; }
+}
