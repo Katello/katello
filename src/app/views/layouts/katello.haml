@@ -10,10 +10,12 @@
 
     = include_stylesheets  :common
     = include_stylesheets  controller.section_id
+    = yield :stylesheets
+    
     = include_javascripts  :common
     = render :partial => '/layouts/ajax_notices'
     = render :partial => '/layouts/notification'
-    = yield :head
+    = yield :javascripts
     
     = csrf_meta_tag
     = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery?
