@@ -29,7 +29,7 @@ class Provider < ActiveRecord::Base
     :allow_blank => false,
     :message => "Please select provider type from one of the following: #{TYPES.join(', ')}."
   validates :repository_url, :katello_url_format => {:protocol => ["https"], :port_numbers => false}, :allow_nil => false, :if => :rh_repo?
-  before_validation :sanitize_repository_url
+  #before_validation :sanitize_repository_url
 
   scoped_search :on => :name, :complete_value => true, :rename => :'provider.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'provider.description'
@@ -74,7 +74,7 @@ class Provider < ActiveRecord::Base
   protected
 
    def sanitize_repository_url
-     self.repository_url.strip!
+     self.repository_url.strip! unless self.nil?
    end
 
 end
