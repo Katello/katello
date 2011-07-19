@@ -271,6 +271,17 @@ describe Provider do
     end
     
   end
+
+  context "URL with Trailing Space" do
+    it "should be trimmed (ruby strip)" do
+      @provider = Provider.new
+      @provider.name = "some name"
+      @provider.repository_url = "https://thisurlhasatrailingspacethatshould.com/be/trimmed/   "
+      @provider.provider_type = Provider::REDHAT
+      @provider.save!
+      @provider.repository_url.should eq("https://thisurlhasatrailingspacethatshould.com/be/trimmed/")
+    end
+  end
   
   context "Custom provider URL validation" do
     before(:each) do
