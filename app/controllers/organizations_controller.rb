@@ -64,7 +64,7 @@ class OrganizationsController < ApplicationController
 
   def edit
     @env_choices =  @organization.environments.collect {|p| [ p.name, p.name ]}
-    render :partial=>"edit"
+    render :partial=>"edit", :layout => "layouts/tupane_layout"
   end
 
   def update
