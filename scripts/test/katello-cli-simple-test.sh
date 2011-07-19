@@ -44,7 +44,6 @@ for param in $*; do
     esac
 done
 
-
 function skip_test() {
     printf "%-40s" "$1"
     printf "[ ${txtyel}SKIPPED${txtrst} ]\n"
@@ -113,7 +112,6 @@ function valid_id() {
         return 1
     fi
 }
-
 
 #testing ping
 test "ping" ping
@@ -201,7 +199,6 @@ if valid_id $ERRATA_ID; then
     test "errata info" errata info --id="$ERRATA_ID"
 fi
 
-
 #testing templates
 TEMPLATE_NAME="template_$RAND"
 TEMPLATE_NAME_2="template_2_$RAND"
@@ -246,12 +243,5 @@ test "environment delete" environment delete --name="$TEST_ENV_3" --org="$FIRST_
 test "org delete" org delete --name="$TEST_ORG"
 test "user delete" user delete --username="$TEST_USER"
 
-
-
-
 summarize
-
-
-
-
 
