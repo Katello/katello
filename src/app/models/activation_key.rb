@@ -19,7 +19,8 @@ class ActivationKey < ActiveRecord::Base
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'key.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'key.description'
 
-  validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
+  validates :name, :presence => true, :katello_name_format => true
+  validates_uniqueness_of :name, :scope => :organization_id, :presence => true, :katello_name_format => true
   validates :description, :katello_description_format => true
 
 end
