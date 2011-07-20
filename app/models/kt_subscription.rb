@@ -13,7 +13,7 @@
 class KTSubscription < ActiveRecord::Base
   include Authorization
   set_table_name "subscriptions"
-  has_many :key_subscriptions
+  has_many :key_subscriptions, :foreign_key => "subscription_id"
   has_many :activation_keys, :through => :key_subscriptions
 
 end
