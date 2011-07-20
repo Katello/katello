@@ -64,8 +64,7 @@ start() {
         echo_success
     else
         cd ${KATELLO_HOME} #rails expects you to run from the root of the app
-        #daemon --user ${KATELLO_USER} /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} -d > /dev/null
-        daemon --user ${KATELLO_USER} bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} -d > /dev/null
+        daemon --user ${KATELLO_USER} bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} -d >/var/log/katello/startup.log 2>&1
         RETVAL=$?
         if [ $RETVAL = 0 ]; then
             echo_success
@@ -144,9 +143,9 @@ case "$1" in
     initdb)
         # stop if it is running
         condstop
-        pushd $KATELLO_HOME
+        pushd $KATELLO_HOME >/dev/null
         su $KATELLO_USER -s /bin/bash -c "RAILS_ENV=$KATELLO_ENV rake setup --trace"
-        popd
+        popd >/dev/null
         ;;
     *)
         echo "Usage: {start|stop|restart|condrestart|status|initdb}"

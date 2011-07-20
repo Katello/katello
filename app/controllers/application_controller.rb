@@ -185,6 +185,7 @@ class ApplicationController < ActionController::Base
     unless session && current_organization
       logout
       errors _("You must have at least one organization in your database to access that page. Might need to run 'rake db:seed'"), {:persist => false}
+      execute_after_filters
       redirect_to new_user_session_url and return false
     end
   end
@@ -207,6 +208,7 @@ class ApplicationController < ActionController::Base
 
       #save original uri and redirect to login page
       session[:original_uri] = request.fullpath
+      execute_after_filters
       redirect_to new_user_session_url and return false
     end
   end
@@ -214,6 +216,7 @@ class ApplicationController < ActionController::Base
   def require_no_user
     if current_user
       notice _("Welcome Back!") + ", " + current_user.username
+      execute_after_filters
       redirect_to dashboard_index_url
       return false
     end
@@ -306,11 +309,27 @@ class ApplicationController < ActionController::Base
   end
 
   def setup_environment_selector org
+    next_env = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
+
     @paths = []
     @paths = org.promotion_paths.collect{|tmp_path| [org.locker] + tmp_path}
     @paths = [[org.locker]] if @paths.empty?
-    @path = @paths.first if @path.nil?
-    @environment = @path.first if @environment.nil?
+    if @environment and !@environment.locker?
+      @paths.each{|path|
+        path.each{|env|
+          @path = path and return if env.id == @environment.id
+        }
+      }
+    elsif next_env
+      @paths.each{|path|
+        path.each{|env|
+          @path = path and return if env.id == next_env.id
+        }
+      }
+    else
+      @path = @paths.first
+      @environment = @path.first
+    end
   end
 
   def pp_exception(exception)
@@ -353,6 +372,17 @@ class ApplicationController < ActionController::Base
     to_ret
   end
 
+  # for use with:   around_filter :catch_exceptions
+  def catch_exceptions
+    yield
+  rescue Exception => error
+    errors error
+    render :text => error, :status => :bad_request
+  end
+
+  def execute_after_filters
+    flash_to_headers
+  end
 
 end
 

@@ -260,7 +260,7 @@ var promotion_page = (function($){
                     } else {
                         jQuery.each(subtypes, function(index, type){
                             var buttons = $('#list').find("a[class~=content_add_remove][data-type=" + type + "]");
-                            buttons.html(i18n.add).removeClass('remove_' + type).addClass("add_" + type).removeClass("disabled");
+                            buttons.html(i18n.add).removeClass('remove_' + type).addClass("add_" + type).show(); //reset all to 'add'
                             if (product) {
                                 jQuery.each(product[type], function(index, item) {
                                     $("a[class~=content_add_remove][data-type=" + type+ "][data-id=" + item.id +"]").html(i18n.remove).removeClass('add_' + type).addClass("remove_" + type);
@@ -320,7 +320,7 @@ var promotion_page = (function($){
                 $(".breadcrumb_search").removeClass("locked_breadcrumb_search");
                 $("#cslist").removeClass("locked");
                 $('#locked_icon').remove();
-                $(".content_add_remove").show();
+               // $(".content_add_remove").show();
                 cancel_btn.hide();
                 action_btn.hide();
             }
@@ -328,10 +328,10 @@ var promotion_page = (function($){
             draw_status();
     }, 
     disable_all = function(types){
-        var types = types || subtypes;
-        jQuery.each(types, function(index, type){
+        var all_types = types || subtypes;
+        jQuery.each(all_types, function(index, type){
             var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
-            buttons.addClass('disabled').html(i18n.add);
+            buttons.html(i18n.add).hide();
         });        
     },
     checkUsersInResponse = function(users) {
@@ -345,7 +345,7 @@ var promotion_page = (function($){
     },
     add_product_breadcrumbs = function(changeset_id, product_id, product_name){
         var productBC = 'product-cs_' + changeset_id + '_' + product_id;
-        var changesetBC = "changeset_" + changeset_id
+        var changesetBC = "changeset_" + changeset_id;
         changeset_breadcrumb[productBC] = {
             cache: null,
             client_render: true,
@@ -437,7 +437,7 @@ var changeset_obj = function(data_struct) {
         productCount: function(){
             var count = 0;
             
-            for( item in products ){
+            for( var item in products ){
                 if( products.hasOwnProperty(item) ){
                     count += 1;
                 }
@@ -583,6 +583,16 @@ $(document).ready(function() {
     //need to reset page during the extended scroll
     panel.extended_cb = promotion_page.reset_page;
 
+    //when loading the new panel item, if its new, we need to add a form submit handler
+    panel.expand_cb = function(id) {
+        if (id === 'new') {
+          $('#new_changeset').submit(function(e) {
+              e.preventDefault();
+              $('#save_changeset_button').trigger('click');
+          });
+        }
+    };
+
     $('#depend_list').live('click', promotion_page.show_dependencies);
 
     //set function for env selection callback
@@ -634,7 +644,8 @@ $(document).ready(function() {
     );
         
     
-     var container = $('#container');
+     var container = $('#container')
+
      var original_top = Math.floor($('.left').position(top).top);
      if(container.length > 0){
          var bodyY = parseInt(container.offset().top, 10) - 20;
@@ -645,7 +656,13 @@ $(document).ready(function() {
 });
 
 var registerEvents = function(){
+
     $('#save_changeset_button').live('click', function(){
+        var button = $(this);
+        if(button.hasClass("disabled")){return false;}
+        button.addClass("disabled");
+
+
         $.ajax({
           type: "POST",
           url: "/changesets/",
@@ -656,7 +673,8 @@ var registerEvents = function(){
               promotion_page.set_changeset(changeset_obj(data.changeset));
               promotion_page.get_changeset_tree().render_content('changeset_' + data.id);
               panel.closePanel($('#panel'));
-          }
+          },
+          error: function(){ button.removeClass("disabled");}
         });
     });
     

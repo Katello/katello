@@ -40,7 +40,7 @@ Src::Application.routes.draw do
     collection do
       get :auto_complete_search
       get :items
-      get :environments 
+      get :environments
     end
   end
   resources :operations do
@@ -98,9 +98,9 @@ Src::Application.routes.draw do
     end
     member do
       post :clear_helptips
-    end    
+    end
   end
-  
+
   resources :nodes, :constraints => {:id => /[^\/]+/}, :only => [:index, :show]
   resources :puppetclasses, :only => [:index]
   resources :providers do
@@ -202,7 +202,12 @@ Src::Application.routes.draw do
   namespace :api do
     match '/' => 'root#resource_list'
 
-    resources :systems, :only => [:show, :destroy]
+    resources :systems, :only => [:show, :destroy, :create, :index] do
+      member do
+        get :packages
+      end
+    end
+
     resources :providers do
       resources :sync, :only => [:index, :show, :create] do
         delete :index, :on => :collection, :action => :cancel
@@ -226,22 +231,28 @@ Src::Application.routes.draw do
     resources :organizations do
       resources :products, :only => [:index]
       resources :environments do
-        resources :products, :only => [:index], :constraints => { :id => /[0-9\.]*/ } do
-          get :repositories, :on => :member
-          resources :sync, :only => [:index, :show, :create] do
-            delete :index, :on => :collection, :action => :cancel
-          end
+        resources :changesets, :only => [:index, :show, :create, :destroy] do
+          put :update, :on => :member, :action => :update_content
         end
+        resources :products, :only => [:index], :constraints => { :id => /[0-9\.]*/ }
         member do
           get :repositories
         end
       end
-      resources :systems, :only => [:create, :index]
       resources :tasks, :only => [:index]
       member do
         get :providers
       end
+      resources :systems, :only => [:index]
     end
+
+    resources :products, :only => [] do
+      get :repositories, :on => :member
+      resources :sync, :only => [:index, :show, :create] do
+        delete :index, :on => :collection, :action => :cancel
+      end
+    end
+
     resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
@@ -260,6 +271,7 @@ Src::Application.routes.draw do
       resources :systems, :only => [:create, :index]
     end
     resources :packages, :only => [:show]
+    resources :changesets, :only => [:show]
     resources :errata, :only => [:show]
     resources :distributions, :only => [:show]
     resources :users
