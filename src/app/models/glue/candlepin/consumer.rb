@@ -19,8 +19,8 @@ module Glue::Candlepin::Consumer
     base.send :include, InstanceMethods
 
     base.class_eval do
-      before_save :save_consumer_orchestration
-      before_destroy :destroy_consumer_orchestration
+      before_save :save_candlepin_orchestration
+      before_destroy :destroy_candlepin_orchestration
 
       lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :initializer => lambda { consumer_json = Candlepin::Consumer.get(uuid); convert_from_cp_fields(consumer_json) }
       lazy_accessor :entitlements, :initializer => lambda { Candlepin::Consumer.entitlements(uuid) }
@@ -56,7 +56,7 @@ module Glue::Candlepin::Consumer
       end
     end
 
-    def set_consumer
+    def set_candlepin_consumer
       Rails.logger.info "Creating a consumer in candlepin: #{name}"
       consumer_json = Candlepin::Consumer.create(self.organization.cp_key, self.name, self.cp_type, self.facts)
 
@@ -69,7 +69,7 @@ module Glue::Candlepin::Consumer
       raise e
     end
 
-    def update_consumer
+    def update_candlepin_consumer
       return true if @facts.nil?
 
       Rails.logger.info "Updating consumer in candlepin: #{name}"
@@ -79,7 +79,7 @@ module Glue::Candlepin::Consumer
       raise e
     end
 
-    def del_consumer
+    def del_candlepin_consumer
       Rails.logger.info "Deleteing consumer in candlepin: #{name}"
       Candlepin::Consumer.destroy(self.uuid)
     rescue => e
@@ -127,17 +127,17 @@ module Glue::Candlepin::Consumer
       cp_json.reject {|k,v| attributes_from_column_definition.keys.member?(k.to_s) }
     end
 
-    def save_consumer_orchestration
+    def save_candlepin_orchestration
       case orchestration_for
         when :create
-          queue.create(:name => "create candlepin consumer: #{self.name}", :priority => 3, :action => [self, :set_consumer])
+          queue.create(:name => "create candlepin consumer: #{self.name}", :priority => 3, :action => [self, :set_candlepin_consumer])
         when :update
-          queue.create(:name => "update candlepin consumer: #{self.name}", :priority => 3, :action => [self, :update_consumer])
+          queue.create(:name => "update candlepin consumer: #{self.name}", :priority => 3, :action => [self, :update_candlepin_consumer])
       end
     end
 
-    def destroy_consumer_orchestration
-      queue.create(:name => "delete candlepin consumer: #{self.name}", :priority => 3, :action => [self, :del_consumer])
+    def destroy_candlepin_orchestration
+      queue.create(:name => "delete candlepin consumer: #{self.name}", :priority => 3, :action => [self, :del_candlepin_consumer])
     end
 
     def hostname
