@@ -9,7 +9,9 @@
     var changeset_breadcrumb = $.parseJSON('#{escape_javascript(generate_cs_breadcrumb())}');
     localize({
       "add": '+ #{_('Add')}',
-      "remove": '&mdash; #{_('Remove')}',
+      "added": '#{_('Added:')}',
+      "removed": '#{_('Removed:')}',
+      "remove": '#{_('Remove')}',
       "loading": "#{_('Loading Changeset')}",
       "no_products":"#{_('No products exist in the changeset for this product')}",
       "no_errata": "#{_('No errata exist in this changeset.')}",
@@ -121,3 +123,13 @@
           .slider_one.has_content.slider
             = render(:partial=>"detail")
           .slider_two.no_content.slider
+
+
+#conflict-dialog{:style=>"display: none"}
+  %div
+    = _("Your update has applied successfully, but during that time another user has also made an update.")
+    %a#conflict-details #{_("More details")}
+    %input#conflict_close.button.fr{:type => "button", :value=>"#{('Close')}"}
+  .clear
+  #conflict-accordion{:style=>"display: none"}
+
