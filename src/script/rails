@@ -63,14 +63,18 @@ module Src
         raise _("Incorrect version , Expected #{required_version}, got #{actual_version}") if  actual_version != required_version
       rescue Exception => e
         #print to console and the logs, extra newlines make it stand out
-           puts Rails.logger.error _("\nError verifying candlepin: #{e.message}\n\n")
+        2.times do
+          78.times { print '*' }; puts '*'
+        end
+        puts Rails.logger.error _("\nError verifying candlepin: #{e.message}\n\n")
+        puts "To suppress this message, edit subsystems.yml config file."
+        2.times do
+          78.times { print '*' }; puts '*'
+        end
       end
     end
   end
 end
-
-
-
 
 APP_PATH = File.expand_path('../../config/application',  __FILE__)
 require File.expand_path('../../config/boot',  __FILE__)
