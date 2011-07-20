@@ -111,9 +111,14 @@ class OrganizationsController < ApplicationController
   protected
 
   def find_organization
-    @organization = Organization.first(:conditions => {:cp_key => params[:id]})
-    errors _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
-    redirect_to(:controller => :organizations, :action => :index) and return if @organization.nil?
+    begin
+      @organization = Organization.first(:conditions => {:cp_key => params[:id]})
+      raise if @organization.nil?
+    rescue Exception => error
+      errors _("Couldn't find organization with ID=#{params[:id]}")
+      execute_after_filters
+      render :text => error, :status => :bad_request
+    end
   end
 
   def setup_options

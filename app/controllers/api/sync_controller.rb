@@ -33,10 +33,10 @@ class Api::SyncController < Api::ApiController
     # POST /repositories/<id>/sync/
     # start syncing
     async_jobs = @obj.sync
-    to_return = if async_jobs.respond_to?(:each)
-      async_jobs.collect {|pulp_task| TaskStatus.for_pulp(@obj.organization, pulp_task)}
-    else
-      TaskStatus.for_pulp(@obj.organization, async_jobs)
+    to_return = async_jobs.collect do |pulp_task|
+      ts = TaskStatus.using_pulp_task(pulp_task) {|t| t.organization = @obj.organization}
+      ts.save!
+      ts
     end
 
     render :json => to_return, :status => 202

@@ -12,7 +12,7 @@
 
 class ProvidersController < ApplicationController
   include AutoCompleteSearch
-  before_filter :find_provider, :only => [:subscriptions, :edit, :update, :destroy]
+  before_filter :find_provider, :only => [:products_repos, :subscriptions, :edit, :update, :destroy]
   before_filter :require_user
   before_filter :panel_options, :only => [:index, :items]
   respond_to :html, :js
@@ -22,8 +22,6 @@ class ProvidersController < ApplicationController
   end
 
   def products_repos
-    @providers = current_organization.providers
-    @provider = Provider.find(params[:id])
     @products = @provider.products
     render :partial => "products_repos", :layout => "tupane_layout", :locals => {:provider => @provider, :providers => @providers, :products => @products}
   end
@@ -108,7 +106,6 @@ class ProvidersController < ApplicationController
     begin
       @provider = Provider.create! params[:provider].merge({:organization => current_organization})
       notice _("Provider '#{@provider['name']}' was created.")
-      #render :nothing => true
       render :partial=>"common/list_item", :locals=>{:item=>@provider, :accessor=>"id", :columns=>['name', 'provider_type']}
 
     rescue Exception => error
@@ -169,9 +166,13 @@ class ProvidersController < ApplicationController
   protected
 
   def find_provider
-    @provider = Provider.find(params[:id])
-    errors _("Couldn't find provider '#{params[:id]}'") if @provider.nil?
-    redirect_to(:controller => :providers, :action => :index, :organization_id => current_organization.cp_key) and return if @provider.nil?
+    begin
+      @provider = Provider.find(params[:id])
+    rescue Exception => error
+      errors error.to_s
+      execute_after_filters
+      render :text => error, :status => :bad_request
+    end
   end
 
   def panel_options

@@ -97,7 +97,17 @@ describe SystemTemplate do
       @changeset = Changeset.create(:environment => @tpl1.environment)
       @changeset.stub(:promote)
 
-      Changeset.should_receive(:create!).and_return(@changeset)
+      Changeset.stub!(:create!).and_return(@changeset)
+    end
+
+    it "should create changeset in the correct environment" do
+      Changeset.should_receive(:create!).once.with(hash_including(:environment => @environment, :state => Changeset::REVIEW)).and_return(@changeset)
+      @tpl1.promote
+    end
+
+    it "should raise an error if template's environment is the last in the chain of promotion" do
+      tpl = SystemTemplate.create!(:name => "template_2", :environment => @environment)
+      lambda { tpl.promote }.should raise_error
     end
 
     it "should promote also the parents content" do
@@ -127,7 +137,6 @@ describe SystemTemplate do
       @changeset.should_receive(:promote).once
 
       @tpl1.promote
-
       @changeset.products.should include @prod1
     end
 

@@ -41,7 +41,6 @@ class Changeset < ActiveRecord::Base
   scoped_search :in => :products, :on => :name, :complete_value => true, :rename => :'custom_product.name'
   scoped_search :in => :products, :on => :description, :complete_value => true, :rename => :'custom_product.description'
 
-
   def key_for item
     "changeset_#{id}_#{item}"
   end
@@ -124,6 +123,105 @@ class Changeset < ActiveRecord::Base
     self.state = Changeset::PROMOTED
     self.save!
   end
+
+  def add_product product_name
+    prod = self.environment.products.find_by_name(product_name)
+    raise Errors::ChangesetContentException.new("Product not found within this environment.") if prod.nil?
+    self.products << prod
+    prod
+  end
+
+   def add_package package_name
+    self.products.each do |product|
+      product.repos(self.environment).each do |repo|
+        #search for package in all repos in a product
+        idx = repo.packages.index do |p| p.name == package_name end
+        if idx != nil
+          pack = repo.packages[idx]
+          self.packages << ChangesetPackage.new(:package_id => pack.id, :display_name => package_name, :product_id => product.id, :changeset => @changeset)
+          return
+        end
+      end
+    end
+    raise Errors::ChangesetContentException.new("Package not found within this environment.")
+   end
+
+  def add_erratum erratum_id
+    self.products.each do |product|
+      product.repos(self.environment).each do |repo|
+        #search for erratum in all repos in a product
+        idx = repo.errata.index do |e| e.id == erratum_id end
+        if idx != nil
+          erratum = repo.errata[idx]
+          self.errata << ChangesetErratum.new(:errata_id => erratum.id, :display_name => erratum_id, :product_id => product.id, :changeset => @changeset)
+          return
+        end
+      end
+    end
+    raise Errors::ChangesetContentException.new("Erratum not found within this environment.")
+  end
+
+  def add_repo repo_name
+    self.products.each do |product|
+      repos = product.repos(self.environment)
+      idx = repos.index do |r| r.name == repo_name end
+      if idx != nil
+        repo = repos[idx]
+        self.repos << ChangesetRepo.new(:repo_id => repo.id, :display_name => repo_name, :product_id => product.id, :changeset => @changeset)
+        return
+      end
+    end
+    raise Errors::ChangesetContentException.new("Repository not found within this environment.")
+  end
+
+  def remove_product product_name
+    prod = self.environment.products.find_by_name(product_name)
+    self.products.delete(prod)
+  end
+
+  def remove_package package_name
+    self.products.each do |product|
+      product.repos(self.environment).each do |repo|
+        #search for package in all repos in a product
+        idx = repo.packages.index do |p| p.name == package_name end
+        if idx != nil
+          pack = repo.packages[idx]
+          ChangesetPackage.destroy_all(:package_id => pack.id, :changeset_id => self.id)
+          return
+        end
+      end
+    end
+  end
+
+  def remove_erratum erratum_id
+    self.products.each do |product|
+      product.repos(self.environment).each do |repo|
+        #search for erratum in all repos in a product
+        idx = repo.errata.index do |e| e.id == erratum_id end
+        if idx != nil
+          erratum = repo.errata[idx]
+          ChangesetErratum.destroy_all(:errata_id => erratum.id, :changeset_id => self.id)
+          return
+        end
+      end
+    end
+  end
+
+  def remove_repo repo_name
+    self.products.each do |product|
+      repos = product.repos(self.environment)
+      idx = repos.index do |r| r.name == repo_name end
+      if idx != nil
+        repo = repos[idx]
+        ChangesetRepo.destroy_all(:repo_id => repo.id, :changeset_id => self.id)
+        return
+      end
+    end
+  end
+
+  #TODO: add validation
+
+
 
   private
 
