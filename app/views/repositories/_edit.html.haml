@@ -1,24 +1,27 @@
-= include_javascripts :provider_edit
+= javascript :provider_edit
 
-%h2
+= content_for :title do
   = _("Product: ") + @product.name
-%h3
-  = _("Edit Repository")
 
-%fieldset
-  .grid_2.ra
-    %label #{_("Name")}:
-  .grid_5.la.editable.edit_providername#repo_name{'name' => 'repo[name]', :url => provider_path(@provider.id)} #{@repository[:name]}
+= content_for :remove_item do
+  %a.remove_item.repo_delete{"data-url"=>provider_product_repository_path(@provider.id, @product.id, @repository[:name]), "data-forward"=>products_repos_provider_path(@provider.id), "data-confirm-text"=>_('Are you sure?')}
+    = _("Remove Repository")
 
-%fieldset
-  .grid_2.ra
-    %label #{_("URL")}:
-  .grid_5.la.editable.edit_textfield{'name' => 'repo[feed]', :url => provider_path(@provider.id)} #{@repository[:source][:url]}
-
-%fieldset
-  .grid_2.ra
-    %label #{_("Type")}:
-  .grid_5.la #{@provider[:provider_type]}
-
-%a.remove_item.repo_delete{"data-url"=>provider_product_repository_path(@provider.id, @product.id, @repository[:name]), "data-forward"=>products_repos_provider_path(@provider.id), "data-confirm-text"=>_('Are you sure?')}
-  = _("Remove Repository")
+= content_for :subcontent do
+  %h3
+    = _("Edit Repository")
+  
+  %fieldset
+    .grid_2.ra
+      %label #{_("Name")}:
+    .grid_5.la.editable.edit_providername#repo_name{'name' => 'repo[name]', :url => provider_path(@provider.id)} #{@repository[:name]}
+  
+  %fieldset
+    .grid_2.ra
+      %label #{_("URL")}:
+    .grid_5.la.editable.edit_textfield{'name' => 'repo[feed]', :url => provider_path(@provider.id)} #{@repository[:source][:url]}
+  
+  %fieldset
+    .grid_2.ra
+      %label #{_("Type")}:
+    .grid_5.la #{@provider[:provider_type]}
