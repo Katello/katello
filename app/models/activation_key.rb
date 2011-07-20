@@ -16,6 +16,9 @@ class ActivationKey < ActiveRecord::Base
   belongs_to :organization
   has_one :environment, :class_name => "KPEnvironment", :inverse_of => :activation_key
 
+  has_many :key_subscriptions
+  has_many :subscriptions, :through => :key_subscriptions
+
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'key.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'key.description'
 
