@@ -87,6 +87,13 @@ class Glue::Pulp::Repo
     @repo_distributions
   end
 
+  #is the repo cloned in the specified environment
+  def is_cloned_in? env
+    clone_id = Glue::Pulp::Repos.clone_repo_id(self.id, env.name)
+    return true if self.clone_ids.include?(clone_id)
+    return false
+  end
+
   def has_package? id
     self.packages.each {|pkg|
       return true if pkg.id == id
@@ -178,7 +185,6 @@ class Glue::Pulp::Repo
     cloned.feed = feed
     cloned.groupid = Glue::Pulp::Repos.groupid(product, to_environment)
     Pulp::Repository.clone_repo(self, cloned)
-    cloned
   end
 
   def organization

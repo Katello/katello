@@ -114,8 +114,8 @@ class Changeset < ActiveRecord::Base
     from_env = self.environment.prior
     to_env   = self.environment
 
-    promote_products from_env, to_env
-    promote_repos    from_env, to_env
+    wait_for_tasks promote_products(from_env, to_env)
+    wait_for_tasks promote_repos(from_env, to_env)
     promote_packages from_env, to_env
     promote_errata   from_env, to_env
 
@@ -124,16 +124,40 @@ class Changeset < ActiveRecord::Base
     self.save!
   end
 
+  def wait_for_tasks async_tasks
+    async_tasks = async_tasks.collect do |t|
+      ts = TaskStatus.using_pulp_task(t)
+      ts.organization = self.environment.organization
+      ts
+    end
+
+    any_running = true
+    while any_running
+      any_running = false
+      for t in async_tasks
+        t.refresh
+        if ((t.state == TaskStatus::Status::WAITING) or (t.state == TaskStatus::Status::RUNNING))
+          any_running = true
+          break
+        end
+      end
+    end
+
+    async_tasks
+  end
+
   def add_product product_name
-    prod = self.environment.products.find_by_name(product_name)
-    raise Errors::ChangesetContentException.new("Product not found within this environment.") if prod.nil?
+    from_env = self.environment.prior
+
+    prod = from_env.products.find_by_name(product_name)
+    raise Errors::ChangesetContentException.new("Product not found within environment you want to promote from.") if prod.nil?
     self.products << prod
     prod
   end
 
    def add_package package_name
     self.products.each do |product|
-      product.repos(self.environment).each do |repo|
+      product.repos(self.environment.prior).each do |repo|
         #search for package in all repos in a product
         idx = repo.packages.index do |p| p.name == package_name end
         if idx != nil
@@ -148,7 +172,7 @@ class Changeset < ActiveRecord::Base
 
   def add_erratum erratum_id
     self.products.each do |product|
-      product.repos(self.environment).each do |repo|
+      product.repos(self.environment.prior).each do |repo|
         #search for erratum in all repos in a product
         idx = repo.errata.index do |e| e.id == erratum_id end
         if idx != nil
@@ -163,7 +187,7 @@ class Changeset < ActiveRecord::Base
 
   def add_repo repo_name
     self.products.each do |product|
-      repos = product.repos(self.environment)
+      repos = product.repos(self.environment.prior)
       idx = repos.index do |r| r.name == repo_name end
       if idx != nil
         repo = repos[idx]
@@ -226,49 +250,49 @@ class Changeset < ActiveRecord::Base
   private
 
   def promote_products from_env, to_env
-    #promote all products stacked for promotion
-    self.products.each do |product|
+    #promote all products stacked for promotion + (products required by packages,errata & repos - products in target env)
+    required_products = []
+    required_products << self.packages.collect do |p| Product.find(p.product_id) end
+    required_products << self.errata.collect do |e|   Product.find(e.product_id) end
+    required_products << self.repos.collect do |r|    Product.find(r.product_id) end
+    required_products = required_products.flatten(1)
+    products_to_promote = (self.products + (required_products - to_env.products)).uniq
+
+    async_tasks = products_to_promote.collect do |product|
       product.promote from_env, to_env
     end
+    async_tasks.flatten(1)
   end
 
   def promote_repos from_env, to_env
+    async_tasks = []
 
-    #promote only repos that haven't already been promoted with products
-    for_not_promoted_products from_env do |product|
+    for r in self.repos
+      product = r.product
+      repo    = Glue::Pulp::Repo.find(r.repo_id)
 
-      #get repos that should be promoted and belong to this product
-      #{all repos stacked for promotion} AND {repos in this product and env}
-      repo_ids_to_promote = self.repos.map(&:repo_id) & product.repos(from_env).map(&:id)
-
-      repo_ids_to_promote.each do |repo_id|
-        #check if product with the repo has been promoted (= repo cloned)
-        #if yes then sync the promoted repo
-        repo = Glue::Pulp::Repo.find(repo_id)
-        if product.is_cloned_in?(repo, to_env)
-          repo.sync
-        end
+      if repo.is_cloned_in?(to_env)
+        async_tasks << repo.sync
+      else
+        async_tasks << repo.promote(to_env, product)
       end
     end
-
+    async_tasks
   end
 
   def promote_packages from_env, to_env
     #repo->list of pkg_ids
     pkgs_promote = {}
 
-    #promote only packages that haven't already been promoted with products
-    for_not_promoted_repos from_env do |repo, clones|
+    for pkg in self.packages
+      product = pkg.product
 
-      self.packages.each do |pkg|
-        #if this repo has the package and the clone doesn't, then we should promote it
-        if repo.has_package? pkg.package_id
-          clones.each do |clone|
-            if !clone.has_package? pkg.package_id
-              pkgs_promote[clone] ||= []
-              pkgs_promote[clone] << pkg.package_id
-            end
-          end
+      product.repos(from_env).each do |repo|
+        clone = Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(repo.id, to_env.name))
+
+        if (repo.has_package? pkg.package_id) and (!clone.has_package? pkg.package_id)
+          pkgs_promote[clone] ||= []
+          pkgs_promote[clone] << pkg.package_id
         end
       end
     end
@@ -282,18 +306,16 @@ class Changeset < ActiveRecord::Base
     #repo->list of errata_ids
     errata_promote = {}
 
-    #promote only errata that haven't already been promoted with products
-    for_not_promoted_repos from_env do |repo, clones|
 
-      self.errata.each do |err|
-        #if this repo has the package and the clone doesn't, then we should promote it
-        if repo.has_erratum? err.errata_id
-          clones.each do |clone|
-            if !clone.has_erratum? err.errata_id
-              errata_promote[clone] ||= []
-              errata_promote[clone] << err.errata_id
-            end
-          end
+    for err in self.errata
+      product = err.product
+
+      product.repos(from_env).each do |repo|
+        clone = Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(repo.id, to_env.name))
+
+        if (repo.has_erratum? err.errata_id) and (!clone.has_erratum? err.errata_id)
+          errata_promote[clone] ||= []
+          errata_promote[clone] << err.errata_id
         end
       end
     end
@@ -303,29 +325,6 @@ class Changeset < ActiveRecord::Base
     end
   end
 
-  def for_not_promoted_products from_env, &block
-    #executes block for every product not stacked for promotion
-
-    from_env.products.each do |product|
-      next if self.products.include?(product)
-      yield product
-    end
-  end
-
-  def for_not_promoted_repos from_env, &block
-    #executes block for all repos from products not stacked for promotion
-
-    for_not_promoted_products from_env do |product|
-      product.repos(from_env).each do |repo|
-        #get clones of the repo
-        clones = repo.clone_ids.collect do |id|
-          Glue::Pulp::Repo.find(id)
-        end
-
-        yield repo, clones
-      end
-    end
-  end
 
   def uniquify_artifacts
     self.products.uniq! unless self.products.nil?
