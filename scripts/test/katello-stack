@@ -51,6 +51,7 @@ update_system()
 
 update_disabled()
 {
+  yum --enablerepo=fedora-pulp --enablerepo=fedora-candlepin makecache
   yum --enablerepo=fedora-pulp --enablerepo=fedora-candlepin \
     update pulp candlepin-tomcat6
   post_update
@@ -59,7 +60,10 @@ update_disabled()
 initdb()
 {
   # clean pulp
-  echo 'db.dropDatabase();' | mongo pulp_database
+  #echo 'db.dropDatabase();' | mongo pulp_database
+  service mongod stop
+  rm -rf /var/lib/mongodb/pulp_database
+  service mongod start
   pulp-migrate
 
   # clean candlepin from snapshot
@@ -108,6 +112,9 @@ case "$1" in
     update_system
     ;;
   update-disabled)
+    for SERVICE in ${SERVICES_START[*]}; do
+      service $SERVICE start
+    done
     update_disabled
     ;;
   initdb)

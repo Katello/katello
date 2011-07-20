@@ -22,8 +22,8 @@ describe Api::EnvironmentsController do
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
   end
-  
-  describe "create an environment" do        
+
+  describe "create an environment" do
     before (:each) do
       KPEnvironment.should_receive(:new).once.and_return(@environment)
       @org.should_receive(:save!).once
@@ -33,22 +33,22 @@ describe Api::EnvironmentsController do
       post 'create', :organization_id => "1", :environment => {:name => "production", :description =>"a"}
     end
   end
-  
+
   describe "get a listing of environments" do
     it 'should call kalpana environment find api' do
       KPEnvironment.should_receive(:where).once
       get 'index', :organization_id => "1"
     end
   end
-  
+
   describe "show a environment" do
     it 'should call KPEnvironment.first' do
       KPEnvironment.should_receive(:find).once().and_return(@environment)
       get 'show', :id => 1, :organization_id => "1"
-    end 
+    end
   end
-  
-  describe "delete a environment" do    
+
+  describe "delete a environment" do
     before (:each) do
       KPEnvironment.should_receive(:find).once().and_return(@environment)
     end
@@ -56,9 +56,9 @@ describe Api::EnvironmentsController do
     it 'should call katello environment find api' do
         @environment.should_receive(:destroy).once
         delete 'destroy', :id => 1 , :organization_id => "1"
-    end       
+    end
   end
-  
+
   describe "update an environment" do
     it 'should call KPEnvironment update_attributes' do
       KPEnvironment.should_receive(:find).once().and_return(@environment)
@@ -66,5 +66,5 @@ describe Api::EnvironmentsController do
       put 'update', :id => 'to_update', :organization_id => "1"
     end
   end
-  
+
 end

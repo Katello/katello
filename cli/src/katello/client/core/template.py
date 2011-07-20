@@ -23,7 +23,7 @@ from sets import Set
 from katello.client.api.template import TemplateAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import system_exit, is_valid_record, get_abs_path, run_spinner_in_bg
+from katello.client.core.utils import system_exit, is_valid_record, get_abs_path, run_spinner_in_bg, wait_for_async_task
 from katello.client.api.utils import get_environment, get_template
 
 try:
@@ -57,11 +57,10 @@ class List(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required if specifying environment)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (Locker by default)"))
+                               help=_("environment name eg: dev (Locker by default)"))
 
     def check_options(self):
         self.require_option('org')
-        self.require_option('env')
 
     def run(self):
         envName = self.get_option('env')
@@ -97,7 +96,7 @@ class Info(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (Locker by default)"))
+                               help=_("environment name eg: dev (Locker by default)"))
 
     def check_options(self):
         self.require_option('name')
@@ -110,7 +109,7 @@ class Info(TemplateAction):
 
         template = get_template(orgName, envName, tplName)
         if template == None:
-            return os.EX_OK
+            return os.EX_DATAERR
 
         template["errata"]   = "\n".join([e["erratum_id"] for e in template["errata"]])
         template["products"] = "\n".join([p["name"] for p in template["products"]])
@@ -142,7 +141,7 @@ class Import(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (Locker by default)"))
+                               help=_("environment name eg: dev (Locker by default)"))
         self.parser.add_option("--file", dest="file",
                                help=_("path to the template file (required)"))
         self.parser.add_option("--description", dest="description",
@@ -159,7 +158,7 @@ class Import(TemplateAction):
         orgName = self.get_option('org')
         envName = self.get_option('env')
         tplPath = self.get_option('file')
-
+        
         try:
             f = open(get_abs_path(tplPath))
         except:
@@ -170,9 +169,11 @@ class Import(TemplateAction):
         if env != None:
             response = run_spinner_in_bg(self.api.import_tpl, (env["id"], desc, f), message=_("Importing template, please wait... "))
             print response
-
-        f.close()
-        return os.EX_OK
+            f.close()
+            return os.EX_OK
+        else:
+            f.close()
+            return os.EX_DATAERR
 
 # ==============================================================================
 class Create(TemplateAction):
@@ -188,7 +189,7 @@ class Create(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (Locker by default)"))
+                               help=_("target environment name eg: dev (Locker by default)"))
         self.parser.add_option("--description", dest="description",
                                help=_("template description"))
 
@@ -205,7 +206,6 @@ class Create(TemplateAction):
         envName = self.get_option('env')
         parentName = self.get_option('parent')
 
-
         env = get_environment(orgName, envName)
         if env != None:
             if parentName != None:
@@ -216,10 +216,12 @@ class Create(TemplateAction):
             template = self.api.create(env["id"], name, desc, parentId)
             if is_valid_record(template):
                 print _("Successfully created template [ %s ]") % template['name']
+                return os.EX_OK
             else:
                 print _("Could not create template [ %s ]") % template['name']
-
-        return os.EX_OK
+                return os.EX_DATAERR                
+        else:
+            return os.EX_DATAERR
 
 
 # ==============================================================================
@@ -235,7 +237,7 @@ class Update(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (Locker by default)"))
+                               help=_("environment name eg: dev (required)"))
         self.parser.add_option('--new_name', dest='new_name',
                                help=_("new template name"))
         self.parser.add_option("--description", dest="description",
@@ -244,6 +246,7 @@ class Update(TemplateAction):
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
+        self.require_option('env')
 
     def run(self):
         tplName = self.get_option('name')
@@ -262,8 +265,9 @@ class Update(TemplateAction):
                 parentId = None
             self.api.update(template["id"], newName, desc, parentId)
             print _("Successfully updated template [ %s ]") % template['name']
-
-        return os.EX_OK
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
 
 
 # ==============================================================================
@@ -289,7 +293,7 @@ class UpdateContent(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (Locker by default)"))
+                               help=_("environment name eg: dev (Locker by default)"))
 
         #add all actions
         actionParams = Set()
@@ -333,8 +337,9 @@ class UpdateContent(TemplateAction):
 
             msg = self.api.update_content(template["id"], self.selectedAction, updateParams)
             print msg
-
-        return os.EX_OK
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
 
 
 # ==============================================================================
@@ -363,8 +368,9 @@ class Delete(TemplateAction):
         if template != None:
             msg = self.api.delete(template["id"])
             print msg
-
-        return os.EX_OK
+            return os.EX_OK
+        else:
+            return os.EX_DATAERR
 
 
 # ==============================================================================
@@ -378,7 +384,7 @@ class Promote(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: foo.example.com (Locker by default)"))
+                               help=_("environment name eg: dev (Locker by default)"))
 
     def check_options(self):
         self.require_option('name')
@@ -396,23 +402,15 @@ class Promote(TemplateAction):
             except Exception,e:
                 system_exit(os.EX_DATAERR, _("Error: %s" % e))
 
-        result = run_spinner_in_bg(self.wait_for_promotion, [task])
+        result = run_spinner_in_bg(wait_for_async_task, [task])
 
-        if result['state'] == 'completed':
+        if result['state'] == 'finished':    
             print _("Template [ %s ] promoted" % tplName)
             return os.EX_OK
         else:
             print _("Template [ %s ] promotion failed: %s" % (tplName, json.loads(result["result"])['errors'][0]))
-            return 1
+            return os.EX_DATAERR
 
-
-    def wait_for_promotion(self, promotionTask):
-        task = promotionTask
-        while task['state'] not in ('failed', 'completed'):
-            time.sleep(0.25)
-            task = self.api.promotion_status(task['uuid'])
-
-        return task
 
 # provider command =============================================================
 

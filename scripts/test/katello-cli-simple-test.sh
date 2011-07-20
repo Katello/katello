@@ -20,6 +20,7 @@ failed_cnt=0
 # Text color variables
 txtred=$(tput setaf 1)    # Red
 txtgrn=$(tput setaf 2)    # Green
+txtyel=$(tput setaf 3)    # Yellow
 txtrst=$(tput sgr0)       # Text reset
 
 PRINT_ALL=0
@@ -43,7 +44,10 @@ for param in $*; do
     esac
 done
 
-
+function skip_test() {
+    printf "%-40s" "$1"
+    printf "[ ${txtyel}SKIPPED${txtrst} ]\n"
+}
 
 function test() {
     if [ $PRINT_ALL -eq 1 ]; then
@@ -91,6 +95,8 @@ function summarize() {
     else
         printf "%s tests, %s failed\n" "$test_cnt" "$failed_cnt"
     fi
+
+    exit $failed_cnt
 }
 
 function valid_id() {
@@ -107,6 +113,8 @@ function valid_id() {
     fi
 }
 
+#testing ping
+test "ping" ping
 
 #testing user
 TEST_USER="user_$RAND"
@@ -168,7 +176,9 @@ sleep 1 #give the provider some time to get synced
 SYSTEM_NAME_ADMIN="admin_system_$RAND"
 SYSTEM_NAME_USER="user_system_$RAND"
 test "system register as admin" system register --name="$SYSTEM_NAME_ADMIN" --org="$FIRST_ORG" --environment="$TEST_ENV"
-test "system register as $TEST_USER" -u $TEST_USER -p password system register --name="$SYSTEM_NAME_USER" --org="$FIRST_ORG" --environment="$TEST_ENV"
+skip_test "system register as $TEST_USER" -u $TEST_USER -p password system register --name="$SYSTEM_NAME_USER" --org="$FIRST_ORG" --environment="$TEST_ENV"
+test "system info" system info --name="$SYSTEM_NAME_ADMIN" --org="$FIRST_ORG"
+skip_test "system unregister" system unregister --name="$SYSTEM_NAME_ADMIN" --org="$FIRST_ORG"
 test "system list" system list --org="$FIRST_ORG"
 
 #testing distributions
@@ -191,7 +201,6 @@ if valid_id $ERRATA_ID; then
     test "errata info" errata info --id="$ERRATA_ID"
 fi
 
-
 #testing templates
 TEMPLATE_NAME="template_$RAND"
 TEMPLATE_NAME_2="template_2_$RAND"
@@ -209,27 +218,32 @@ test "template update_content add parameter" template update_content --name="$TE
 test "template update_content remove parameter" template update_content --name="$TEMPLATE_NAME" --org="$FIRST_ORG" --remove_parameter --parameter "attr"
 
 
+#testing changesets
+CS_NAME="changeset_$RAND"
+test "changeset create" changeset create --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME"
+test "changeset add product" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --add_product="$FEWUPS_PRODUCT"
+test "changeset add package" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --add_package="warnerbros"
+test "changeset add erratum" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --add_erratum="RHEA-2010:9999"
+test "changeset add repo" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --add_repo="$REPO_NAME"
+test "changeset remove product" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --remove_product="$FEWUPS_PRODUCT"
+test "changeset remove package" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --remove_package="warnerbros"
+test "changeset remove erratum" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --remove_erratum="RHEA-2010:9999"
+test "changeset remove repo" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --remove_repo="$REPO_NAME"
+test "changeset list" changeset list --org="$FIRST_ORG" --environment="Locker"
+test "changeset info" changeset info --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" 
 
-#testing ping
-test "ping" ping
 
 #clear
 #test "repo delete" repo delete       # <-- not implemented yet
 #test "product delete" product delete # <-- not implemented yet
+test "changeset delete" changeset delete --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME"
 test "template delete" template delete --name="changed_$TEMPLATE_NAME_2" --org="$FIRST_ORG"
 test "template delete" template delete --name="$TEMPLATE_NAME" --org="$FIRST_ORG"
 test "provider delete" provider delete --name="$YUM_PROVIDER" --org="$FIRST_ORG"
 test "environment delete" environment delete --name="$TEST_ENV" --org="$FIRST_ORG"
 test "environment delete" environment delete --name="$TEST_ENV_3" --org="$FIRST_ORG"
 test "org delete" org delete --name="$TEST_ORG"
-test "user delete" user delete --username=$TEST_USER
-
-
-
+test "user delete" user delete --username="$TEST_USER"
 
 summarize
-
-
-
-
 
