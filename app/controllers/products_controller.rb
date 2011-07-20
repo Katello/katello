@@ -25,7 +25,7 @@ class ProductsController < ApplicationController
   end
 
   def edit
-    render :partial => "edit"
+    render :partial => "edit", :layout => "tupane_layout"
   end
 
   def create
