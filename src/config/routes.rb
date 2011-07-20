@@ -274,27 +274,34 @@ Src::Application.routes.draw do
 
     end
 
-    # support for rhsm
+    # support for rhsm --------------------------------------------------------
     resources :consumers, :controller => 'systems'
     match '/owners/:organization_id/environments' => 'environments#index', :via => :get
     match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
     match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
     match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
-    match '/consumers/:id/certificates' => 'proxies#get', :via => :get
-    match '/consumers/:id/certificates/serials' => 'proxies#get', :via => :get
-    match '/consumers/:id/entitlements' => 'proxies#get', :via => :get
-    match '/consumers/:id/entitlements' => 'proxies#post', :via => :post
-    match '/consumers/:id/entitlements' => 'proxies#delete', :via => :delete
-    match '/consumers/:consumer_id/certificates/:id' => 'proxies#delete', :via => :delete
-    match '/pools' => 'proxies#get', :via => :get
-    match '/products' => 'proxies#get', :via => :get
-    match '/products/:id' => 'proxies#get', :via => :get
-    match '/entitlements/:id' => 'proxies#get', :via => :get
-    match '/subscriptions' => 'proxies#post', :via => :post
+    
+    # proxies -------------------
+      # candlepin proxy ---------
+    match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get
+    match '/consumers/:id/certificates/serials' => 'candlepin_proxies#get', :via => :get
+    match '/consumers/:id/entitlements' => 'candlepin_proxies#get', :via => :get
+    match '/consumers/:id/entitlements' => 'candlepin_proxies#post', :via => :post
+    match '/consumers/:id/entitlements' => 'candlepin_proxies#delete', :via => :delete
+    match '/consumers/:consumer_id/certificates/:id' => 'candlepin_proxies#delete', :via => :delete
+    match '/pools' => 'candlepin_proxies#get', :via => :get
+    match '/products' => 'candlepin_proxies#get', :via => :get
+    match '/products/:id' => 'candlepin_proxies#get', :via => :get
+    match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get
+    match '/subscriptions' => 'candlepin_proxies#post', :via => :post
     match '/users/:username/owners' => 'organizations#list_owners', :via => :get
+    
+      # pulp proxy --------------
+    match '/consumers/:id/profile/' => 'pulp_proxies#put', :via => :put #TODO should be changed to '/consumers/:id/packages' ASAP
 
     # development / debugging support
     get 'status/memory'
 
+  # end '/api' namespace
   end
 end
