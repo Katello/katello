@@ -64,8 +64,7 @@ start() {
         echo_success
     else
         cd ${KATELLO_HOME} #rails expects you to run from the root of the app
-        #daemon --user ${KATELLO_USER} /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} -d > /dev/null
-        daemon --user ${KATELLO_USER} bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} -d > /dev/null
+        daemon --user ${KATELLO_USER} bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} -d >/var/log/katello/startup.log 2>&1
         RETVAL=$?
         if [ $RETVAL = 0 ]; then
             echo_success
