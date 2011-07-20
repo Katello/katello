@@ -185,6 +185,7 @@ class ApplicationController < ActionController::Base
     unless session && current_organization
       logout
       errors _("You must have at least one organization in your database to access that page. Might need to run 'rake db:seed'"), {:persist => false}
+      execute_after_filters
       redirect_to new_user_session_url and return false
     end
   end
@@ -207,6 +208,7 @@ class ApplicationController < ActionController::Base
 
       #save original uri and redirect to login page
       session[:original_uri] = request.fullpath
+      execute_after_filters
       redirect_to new_user_session_url and return false
     end
   end
@@ -214,6 +216,7 @@ class ApplicationController < ActionController::Base
   def require_no_user
     if current_user
       notice _("Welcome Back!") + ", " + current_user.username
+      execute_after_filters
       redirect_to dashboard_index_url
       return false
     end
@@ -377,6 +380,9 @@ class ApplicationController < ActionController::Base
     render :text => error, :status => :bad_request
   end
 
+  def execute_after_filters
+    flash_to_headers
+  end
 
 end
 

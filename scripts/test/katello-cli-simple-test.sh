@@ -20,6 +20,7 @@ failed_cnt=0
 # Text color variables
 txtred=$(tput setaf 1)    # Red
 txtgrn=$(tput setaf 2)    # Green
+txtyel=$(tput setaf 3)    # Yellow
 txtrst=$(tput sgr0)       # Text reset
 
 PRINT_ALL=0
@@ -43,7 +44,10 @@ for param in $*; do
     esac
 done
 
-
+function skip_test() {
+    printf "%-40s" "$1"
+    printf "[ ${txtyel}SKIPPED${txtrst} ]\n"
+}
 
 function test() {
     if [ $PRINT_ALL -eq 1 ]; then
@@ -91,6 +95,8 @@ function summarize() {
     else
         printf "%s tests, %s failed\n" "$test_cnt" "$failed_cnt"
     fi
+
+    exit $failed_cnt
 }
 
 function valid_id() {
@@ -107,6 +113,8 @@ function valid_id() {
     fi
 }
 
+#testing ping
+test "ping" ping
 
 #testing user
 TEST_USER="user_$RAND"
@@ -168,7 +176,9 @@ sleep 1 #give the provider some time to get synced
 SYSTEM_NAME_ADMIN="admin_system_$RAND"
 SYSTEM_NAME_USER="user_system_$RAND"
 test "system register as admin" system register --name="$SYSTEM_NAME_ADMIN" --org="$FIRST_ORG" --environment="$TEST_ENV"
-test "system register as $TEST_USER" -u $TEST_USER -p password system register --name="$SYSTEM_NAME_USER" --org="$FIRST_ORG" --environment="$TEST_ENV"
+skip_test "system register as $TEST_USER" -u $TEST_USER -p password system register --name="$SYSTEM_NAME_USER" --org="$FIRST_ORG" --environment="$TEST_ENV"
+test "system info" system info --name="$SYSTEM_NAME_ADMIN" --org="$FIRST_ORG"
+skip_test "system unregister" system unregister --name="$SYSTEM_NAME_ADMIN" --org="$FIRST_ORG"
 test "system list" system list --org="$FIRST_ORG"
 
 #testing distributions
@@ -190,7 +200,6 @@ ERRATA_ID=`$CMD errata list --repo_id="$REPO_ID" | tail -n 1 | awk '{print $1}'`
 if valid_id $ERRATA_ID; then
     test "errata info" errata info --id="$ERRATA_ID"
 fi
-
 
 #testing templates
 TEMPLATE_NAME="template_$RAND"
@@ -224,9 +233,6 @@ test "changeset list" changeset list --org="$FIRST_ORG" --environment="Locker"
 test "changeset info" changeset info --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" 
 
 
-#testing ping
-test "ping" ping
-
 #clear
 #test "repo delete" repo delete       # <-- not implemented yet
 #test "product delete" product delete # <-- not implemented yet
@@ -239,12 +245,5 @@ test "environment delete" environment delete --name="$TEST_ENV_3" --org="$FIRST_
 test "org delete" org delete --name="$TEST_ORG"
 test "user delete" user delete --username="$TEST_USER"
 
-
-
-
 summarize
-
-
-
-
 

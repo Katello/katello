@@ -15,17 +15,32 @@
 
 import os
 import sys
+from traceback import format_exc
 from gettext import gettext as _
+from kerberos import GSSError
 from optparse import OptionGroup, SUPPRESS_HELP
 from katello.client.i18n_optparse import OptionParser, OptionParserExitError
 from katello.client.core.utils import parse_tokens
 
 from katello.client.config import Config
+from katello.client.logutil import getLogger
 from katello.client import server
 
 
 _cfg = Config()
+_log = getLogger(__name__)
 
+class KatelloError(Exception):
+    """
+    User-friendly exception wrapper (used for stderr output).
+    """
+
+    def __init__(self, message, exception):
+        self.message = message
+        self.exception = exception
+
+    def __str__(self):
+        return repr(self.message) + ": " + repr(self.exception)
 
 class KatelloCLI(object):
     """
@@ -127,21 +142,31 @@ class KatelloCLI(object):
         Setup up request credentials with the active server.
         """
 
-        self._username = self._username or self.opts.username
-        self._password = self._password or self.opts.password
+        try:
+            self._username = self._username or self.opts.username
+            self._password = self._password or self.opts.password
 
-        self._certfile = self._certfile or self.opts.certfile
-        self._keyfile = self._keyfile or self.opts.keyfile
+            self._certfile = self._certfile or self.opts.certfile
+            self._keyfile = self._keyfile or self.opts.keyfile
 
-        if None not in (self._username, self._password):
-            self._server.set_basic_auth_credentials(self._username,
-                                                    self._password)
-        elif None not in (self.opts.certfile, self.opts.keyfile):
-            self._server.set_ssl_credentials(self.opts.certfile,
-                                             self.opts.keyfile)
-        else:
-            self._server.set_kerberos_auth()
+            if None not in (self._username, self._password):
+                self._server.set_basic_auth_credentials(self._username,
+                                                        self._password)
+            elif None not in (self.opts.certfile, self.opts.keyfile):
+                self._server.set_ssl_credentials(self.opts.certfile,
+                                                 self.opts.keyfile)
+            else:
+                self._server.set_kerberos_auth()
+        except GSSError, e:
+            raise KatelloError("Missing credentials and unable to authenticate using Kerberos", e)
+        except Exception, e:
+            raise KatelloError("Invalid credentials or unable to authenticate", e)
 
+    def error(self, exception, errorMsg = None):
+        msg = errorMsg if errorMsg else str(exception)
+        print >> sys.stderr, "error: %s (more in the log file)" % msg
+        _log.error(str(exception))
+        _log.error(format_exc(exception))
 
     def command_names(self):
         return self._commands.keys()
@@ -175,3 +200,13 @@ class KatelloCLI(object):
 
         except OptionParserExitError, opee:
             return opee.args[0]
+
+        except KatelloError, ex:
+            self.error(ex, ex.message)
+            return 1
+
+        except Exception, ex:
+            # for all the errors see ~/.katello/client.log or /var/log/katello/client.log
+            self.error(ex)
+            return 1
+
