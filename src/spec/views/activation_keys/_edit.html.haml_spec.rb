@@ -14,13 +14,20 @@ require 'spec_helper'
 
 describe "activation_keys/_edit.html.haml" do
   before(:each) do
+    @organization = assign(:organization, stub_model(Organization,
+      :name => "Test Org"))
+
     @key_name = "New Key"
     @key_description = "This is a new activation key"
+
     @activation_key = assign(:activation_key, stub_model(ActivationKey,
       :name => @key_name,
-      :description => @key_description
+      :description => @key_description,
+      :organization => @organization
     ))
 
+    view.stub(:help_tip_button)
+    view.stub(:help_tip)
     view.stub(:render_navigation)
   end
 

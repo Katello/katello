@@ -19,7 +19,7 @@ describe ActivationKeysController do
   include OrganizationHelperMethods
 
   module AKeyControllerTest
-    AKEY = {:name => "test key", :description => "this is the test key"}
+    AKEY = {:activation_key_name => "test key", :activation_key_description => "this is the test key"}
     AKEY_INVALID = {}
     AKEY_NAME_INVALID = {:name => ""}
     AKEY_DESCRIPTION = {:description => "this is the key's description"}
@@ -134,8 +134,8 @@ describe ActivationKeysController do
     describe "with valid params" do
       it "assigns a newly created activation_key" do
         post :create, AKeyControllerTest::AKEY
-        assigns[:activation_key].name.should eq(AKeyControllerTest::AKEY[:name]) 
-        assigns[:activation_key].description.should eq(AKeyControllerTest::AKEY[:description])
+        assigns[:activation_key].name.should eq(AKeyControllerTest::AKEY[:activation_key_name]) 
+        assigns[:activation_key].description.should eq(AKeyControllerTest::AKEY[:activation_key_description])
       end
 
       it "renders list item partial for 2 pane" do
