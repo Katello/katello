@@ -1,35 +1,36 @@
-%h2 #{_("Create Product")}
-.clear
-  &nbsp;
-= form_tag provider_products_path(@provider.id), :method => "post" do |f|
-  %fieldset.clearfix
-    .grid_2.ra
-      = label :product, :name, _("Name")
-    .grid_5.la
-      = text_field :product, :name, :id=>"product_name_field"
-  %fieldset.clearfix
-    .grid_2.ra
-      = label :product, :description, _("Description")
-    .grid_5.la
-      = text_field :product, :description, :id=>"product_description_field"            
-  %fieldset.clearfix
-    .grid_2.ra
-      = label :product, :feed, _("URL")
-    .grid_5.la
-      = text_field :product, :feed, :id=>"product_url_field"
-  %fieldset.clearfix
-    .grid_2.ra
-      = label :product, :types, _("Types")
-    %br.clear
-    .grid_2.ra
-      = label :product, :types, _("Yum")
-    .grid_5.la
-      = check_box_tag :yum_type
-    %br.clear
-    .grid_2.ra
-      = label :product, :types, _("File")
-    .grid_5.la
-      = check_box_tag :file_type
-  .grid_6.ra
-    .button.dialogbutton.product_create#save_product_button{:style=>"float:right;", 'data-url'=>products_repos_provider_path(@provider.id)}
-      #{_("Create")}
+= content_for :title do
+  #{_("Create Product")}
+
+= content_for :subcontent do
+  = form_tag provider_products_path(@provider.id), :method => "post" do |f|
+    %fieldset.clearfix
+      .grid_2.ra
+        = label :product, :name, _("Name")
+      .grid_5.la
+        = text_field :product, :name, :id=>"product_name_field"
+    %fieldset.clearfix
+      .grid_2.ra
+        = label :product, :description, _("Description")
+      .grid_5.la
+        = text_field :product, :description, :id=>"product_description_field"            
+    %fieldset.clearfix
+      .grid_2.ra
+        = label :product, :feed, _("URL")
+      .grid_5.la
+        = text_field :product, :feed, :id=>"product_url_field"
+    %fieldset.clearfix
+      .grid_2.ra
+        = label :product, :types, _("Types")
+      %br.clear
+      .grid_2.ra
+        = label :product, :types, _("Yum")
+      .grid_5.la
+        = check_box_tag :yum_type
+      %br.clear
+      .grid_2.ra
+        = label :product, :types, _("File")
+      .grid_5.la
+        = check_box_tag :file_type
+    .grid_3.la
+      .button.dialogbutton.product_create#save_product_button{:style=>"float:right;", 'data-url'=>products_repos_provider_path(@provider.id)}
+        #{_("Create")}
