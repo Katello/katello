@@ -58,20 +58,32 @@ class RepositoriesController < ApplicationController
   protected
 
   def find_provider
-    @provider = Provider.find(params[:provider_id])
-    errors _("Couldn't find provider '#{params[:provider_id]}'") if @provider.nil?
-    redirect_to(:controller => :providers, :action => :index, :organization_id => current_organization.cp_key) and return if @provider.nil?
+    begin
+      @provider = Provider.find(params[:provider_id])
+    rescue Exception => error
+      errors error.to_s
+      execute_after_filters
+      render :text => error, :status => :bad_request
+    end
   end
 
   def find_product
-    @product = Product.find(params[:product_id])
-    errors _("Couldn't find product '#{params[:product_id]}'") if @product.nil?
-    redirect_to(:controller => :providers, :action => :index, :organization_id => current_organization.cp_key) and return if @product.nil?
+    begin
+      @product = Product.find(params[:product_id])
+    rescue Exception => error
+      errors error.to_s
+      execute_after_filters
+      render :text => error, :status => :bad_request
+    end
   end
 
   def find_repository
-    @repository = Pulp::Repository.find @product.repo_id(params[:id])
-    errors _("Couldn't find repository '#{params[:id]}'") if @repository.nil?
-    redirect_to(:controller => :providers, :action => :index, :organization_id => current_organization.cp_key) and return if @repository.nil?
+    begin
+      @repository = Pulp::Repository.find @product.repo_id(params[:id])
+    rescue Exception => error
+      errors _("Couldn't find repository with ID=#{params[:id]}")
+      execute_after_filters
+      render :text => error, :status => :bad_request
+    end
   end
 end
