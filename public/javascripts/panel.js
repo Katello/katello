@@ -129,6 +129,8 @@ $(document).ready(function() {
             dataType: 'html',
             success: function(data) {
                 $(".panel-content").html(data);
+                $('.scroll-pane').jScrollPane();
+                panel.panelResize($('#panel_main'));
             }
         });
         return false;
@@ -233,6 +235,7 @@ var panel = (function(){
             var panelContent = thisPanel.find(".panel-content");
             spinner.show();
             panelContent.hide();
+            
             $.ajax({
                 cache: true,
                 url: ajax_url,
@@ -267,11 +270,12 @@ var panel = (function(){
                 }
                 paneljQ.height(extraHeight);
             } else {
-                var height = $(window).height() - $('#subheader').height() - $('#head').height() - 300;
+                var height = $(window).height() - $('#subheader').height() - $('#head').height() - 275;
                 if (isSubpanel) {
                     height -= subpanelSpacing;
                 }
-                paneljQ.css({maxHeight: height});
+                //paneljQ.css({maxHeight: height});
+                paneljQ.height(height);
             }
             if( paneljQ.length ){
                 paneljQ.data('jsp').reinitialise();
@@ -384,7 +388,9 @@ var panel = (function(){
         },
         hash_change: function() {
             var refresh = $.bbq.getState("panel");
-            if(refresh) panel.select_item(refresh);
+            if(refresh){ 
+                panel.select_item(refresh);
+            }
             return false;
         }
     };
