@@ -13,7 +13,7 @@
 class ActivationKey < ActiveRecord::Base
   include Authorization
 
-  belongs_to :organization, :inverse_of => :activation_key
+  belongs_to :organization
   has_one :environment, :class_name => "KPEnvironment", :inverse_of => :activation_key
 
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'key.name'
