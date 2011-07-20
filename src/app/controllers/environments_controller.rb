@@ -27,7 +27,7 @@ class EnvironmentsController < ApplicationController
   def new
     @environment = KPEnvironment.new(:organization => @organization)
     setup_new_edit_screen
-    render :partial=>"new"
+    render :partial=>"new", :layout => "tupane_layout"
   end
 
   # GET /environments/1/edit
