@@ -1,10 +1,17 @@
-%h2 #{_("System")}
-%nav.subnav
+:javascript
+  $('td').click(function(){
+    $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
+  });
+
+= content_for :title do 
+  #{_("System")}
+
+= content_for :navigation do
   = render_navigation(:expand_all => true, :level => 3)
-  .grid_8#facts
-    :javascript
-      $("#factsTable").treeTable({initialState: "collapsed", clickableNodeNames: true});
-    %table#factsTable
+  
+= content_for :content do
+  #facts
+    %table#factsTable.scroll-panel
       %thead
         %th= _("Group")
         %th= _("Fact")
@@ -23,3 +30,6 @@
             %td
             %td= fact
             %td= value
+    :javascript
+      $("#factsTable").treeTable({initialState: "collapsed", clickableNodeNames: true});
+      $('.scroll-pane').jScrollPane().data('jsp').reinitialise();

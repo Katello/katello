@@ -70,7 +70,7 @@ class SystemsController < ApplicationController
     consumed = @system.consumed_pool_ids
     all_pools = all.collect {|pool| OpenStruct.new(:poolId => pool["id"], :poolName => pool["productName"])}
     all_pools.sort! {|a,b| a.poolName <=> b.poolName}
-    render :partial=>"subscriptions", :locals=>{:system=>@system, :all_subs => all_pools, :consumed => consumed}
+    render :partial=>"subscriptions", :layout => "tupane_layout", :locals=>{:system=>@system, :all_subs => all_pools, :consumed => consumed}
   end
 
   def update_subscriptions
@@ -86,7 +86,7 @@ class SystemsController < ApplicationController
   
   def packages
     packages = @system.packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    render :partial=>"packages", :locals=>{:system=>@system, :packages => packages}
+    render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages}
   end
   
   def edit
@@ -122,7 +122,7 @@ class SystemsController < ApplicationController
   end
   
   def facts
-    render :partial => 'facts'
+    render :partial => 'facts', :layout => "tupane_layout"
   end    
 
   private
