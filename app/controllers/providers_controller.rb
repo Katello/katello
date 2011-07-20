@@ -25,7 +25,7 @@ class ProvidersController < ApplicationController
     @providers = current_organization.providers
     @provider = Provider.find(params[:id])
     @products = @provider.products
-    render :partial => "products_repos", :locals => {:provider => @provider, :providers => @providers, :products => @products}
+    render :partial => "products_repos", :layout => "tupane_layout", :locals => {:provider => @provider, :providers => @providers, :products => @products}
   end
 
   def subscriptions
@@ -70,7 +70,7 @@ class ProvidersController < ApplicationController
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
     end
-    render :partial => "subscriptions", :locals => {:provider => @provider}
+    render :partial => "subscriptions", :layout => "tupane_layout", :locals => {:provider => @provider}
   end
 
   def index
@@ -101,7 +101,7 @@ class ProvidersController < ApplicationController
 
   def new
     @provider = Provider.new
-    render :partial => "new", :locals => {:provider => @provider}
+    render :partial => "new", :layout => "tupane_layout", :locals => {:provider => @provider}
   end
 
   def create

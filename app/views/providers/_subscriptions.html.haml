@@ -1,39 +1,40 @@
-.grid_8
-  = help_tip_button('subscriptions-help')
-  &nbsp;
-  %br.clear
-  %br.clear
+= content_for :title do
+  #{_("Edit Provider")}
 
-#subscriptions
+= content_for :navigation do
+  = render_navigation(:expand_all => true, :level => 3)
+
+= content_for :content do
   .grid_8
-    %nav.subnav
-      = render_navigation(:expand_all => true, :level => 3)
+    = help_tip_button('subscriptions-help')
+    &nbsp;
 
-  .grid_7
-    = help_tip(_("Listed below are the products available from the selected provider, as well as the " + |
-               "related subscription information.  If you have a subscription manifest you may upload it below. " + |
-               "This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."), 'subscriptions-help') |
-
-  .grid_8#subscription
-    %h4 #{_("Current Subscriptions")}
-    %table
-      %thead
-        %th #{_("Name")}
-        %th #{_("Consumed Subscriptions")}
-        %th #{_("Quantity Available")}
-      %tbody
-      - @subscriptions.each do |sub|
-        %tr{:class => cycle(nil, 'alt')}
-          %td
-            = sub["productName"]
-          %td
-            = sub["consumed"]
-          %td
-            = sub["quantity"]
-    %h4 #{_("Upload Subscription Manifest")}
-    = form_for @provider, :html => {:multipart => true, :method => :post, :id => :upload_manifest}, :remote => true, :url => subscriptions_provider_path do |f|
-      %fieldset
-        = f.label :upload, _("Specify Local Manifest")
-        = f.file_field :contents
-        .actions
-          = f.submit _("Upload")
+  #subscriptions
+    .grid_7
+      = help_tip(_("Listed below are the products available from the selected provider, as well as the " + |
+                 "related subscription information.  If you have a subscription manifest you may upload it below. " + |
+                 "This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."), 'subscriptions-help') |
+  
+    .grid_8#subscription
+      %h4 #{_("Current Subscriptions")}
+      %table
+        %thead
+          %th #{_("Name")}
+          %th #{_("Consumed Subscriptions")}
+          %th #{_("Quantity Available")}
+        %tbody
+        - @subscriptions.each do |sub|
+          %tr{:class => cycle(nil, 'alt')}
+            %td
+              = sub["productName"]
+            %td
+              = sub["consumed"]
+            %td
+              = sub["quantity"]
+      %h4 #{_("Upload Subscription Manifest")}
+      = form_for @provider, :html => {:multipart => true, :method => :post, :id => :upload_manifest}, :remote => true, :url => subscriptions_provider_path do |f|
+        %fieldset
+          = f.label :upload, _("Specify Local Manifest")
+          = f.file_field :contents
+          .actions
+            = f.submit _("Upload")
