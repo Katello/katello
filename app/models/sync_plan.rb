@@ -25,7 +25,8 @@ class SyncPlan < ActiveRecord::Base
   belongs_to :organization
   has_many :products
 
-  validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
+  validates :name, :presence => true, :katello_name_format => true
+  validates_uniqueness_of :name, :scope => :organization_id
   validate :validate_sync_date
   validates_inclusion_of :interval,
     :in => TYPES,
