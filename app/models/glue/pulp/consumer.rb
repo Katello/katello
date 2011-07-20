@@ -17,6 +17,7 @@ module Glue::Pulp::Consumer
     base.send :include, InstanceMethods
     base.send :include, LazyAccessor
     base.class_eval do
+      before_save :save_pulp_orchestration
       before_destroy :destroy_pulp_orchestration
       lazy_accessor :pulp_facts, :initializer => lambda { Pulp::Consumer.find(uuid)}
       lazy_accessor :packages, :initializer => lambda { Pulp::Consumer.installed_packages(uuid).
@@ -37,6 +38,27 @@ module Glue::Pulp::Consumer
       queue.create(:name => "delete pulp consumer: #{self.name}", :priority => 3, :action => [self, :del_pulp_consumer])
     end
 
+    def set_pulp_consumer
+      Rails.logger.info "Creating a consumer in pulp: #{name}"
+      consumer_json = Pulp::Consumer.create(self.organization.cp_key, self.facts["dmi.system.uuid"], self.description)
+
+      #self.uuid = consumer_json[:uuid]
+      # convert_from_cp_fields(consumer_json).each do |k,v|
+        # instance_variable_set("@#{k}", v) if respond_to?("#{k}=")
+      # end
+    rescue => e
+      Rails.logger.error "Failed to create pulp consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+    
+    def save_pulp_orchestration
+      case orchestration_for
+        when :create
+          queue.create(:name => "create candlepin consumer: #{self.name}", :priority => 3, :action => [self, :set_pulp_consumer])
+        # when :update
+          # queue.create(:name => "update candlepin consumer: #{self.name}", :priority => 3, :action => [self, :update_pulp_consumer])
+      end
+    end
 
   end
 end
