@@ -1,12 +1,20 @@
 = include_javascripts :edit_helpers
 
+= help_tip_button('activation_keys_edit-help')
+
 %input#panel_element_id{:name => @activation_key.id, :type => "hidden", :value => @activation_key.id, "data-ajax_url"=>activation_key_path(@activation_key.id)}
 
-.grid_8
-  %h2 #{_("Edit Activation Key")}
+%h2 #{_("Edit Activation Key")}
+#activation_key
   .grid_8
     %nav.subnav
       = render_navigation(:expand_all => true, :level => 3)
+
+  .grid_8
+    = help_tip(_("Edit Activation Key enables you to modify the selected activation key.  This key may " + |
+               "be used during system registration.  For example, <BR/><BR/>" + |
+               "subscription-manager register --org #{@activation_key.organization.name} " + |
+               "--activationkey #{@activation_key.name}"), 'activation_keys_edit-help') |
 
   .grid_8
     = form_for @activation_key, activation_key_path(@activation_key), :method => "put", :remote => true do |f|
