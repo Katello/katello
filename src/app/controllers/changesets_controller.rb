@@ -245,7 +245,7 @@ class ChangesetsController < ApplicationController
     rescue Exception => error
       errors error.to_s
       execute_after_filters
-      render :text=>text, :status=>:bad_request
+      render :text=>error.to_s, :status=>:bad_request
     end
   end
 
