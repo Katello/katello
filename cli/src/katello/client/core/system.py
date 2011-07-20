@@ -64,7 +64,7 @@ class List(SystemAction):
             systems = self.api.systems_by_env(org_name, env_name)
 
         if systems is None:
-            return 1
+            return os.EX_DATAERR
 
         if env_name is None:
             self.printer.setHeader(_("Systems List For Org %s") % org_name)
@@ -98,10 +98,10 @@ class Info(SystemAction):
         printer = Printer(False)
 
         if env_name is None:
-            printer.printHeader(_("System Information For Org %s") % org_name)
+            printer.setHeader(_("System Information For Org %s") % org_name)
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
-            printer.printHeader(_("System Information For Environment %s in Org %s") % (env_name, org_name))
+            printer.setHeader(_("System Information For Environment %s in Org %s") % (env_name, org_name))
             systems = self.api.systems_by_env(org_name, env_name,
                     {'name': sys_name})
 

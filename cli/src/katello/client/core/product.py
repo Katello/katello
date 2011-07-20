@@ -22,6 +22,12 @@ from katello.client.api.product import ProductAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_provider
+from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 _cfg = Config()
 
@@ -106,24 +112,35 @@ class Sync(ProductAction):
 
     def check_options(self):
         self.require_option('org')
-        self.require_option('prov', '--provider')
         self.require_option('name')
 
     def run(self):
-        provName    = self.get_option('prov')
         orgName     = self.get_option('org')
+        provName    = self.get_option('prov')
         name        = self.get_option('name')
 
-        # PYLINT ERROR - prodName not found!
-        #prod = self.get_product(orgName, prodName)
-        prod = self.get_product(orgName, "")
-        prov = self.get_provider(orgName, provName)
-        if (prod == None) or (prov == None):
+        if provName != None:
+            prov = self.get_provider(orgName, provName)
+            
+            if (prov == None):
+                return os.EX_DATAERR
+                
+            prod = self.api.products_by_provider(prov['id'], name)
+        else:
+            prod = self.api.products_by_org(orgName, name)
+            
+        if (len(prod) == 0):
             return os.EX_DATAERR
 
-        msg = self.api.sync(prov["id"], prod["cp_id"])
+        async_task = self.api.sync(prod[0]["cp_id"])
+        result = run_spinner_in_bg(wait_for_async_task, [async_task])
 
-        print msg
+        if len([t for t in result if t['state'] == 'error']) > 0:
+            errors = [json.loads(t["result"])['errors'][0] for t in result if t['state'] == 'error']
+            print _("Product [ %s ] failed to sync: %s" % (name, errors))
+            return 1
+
+        print _("Product [ %s ] synchronized" % name)
         return os.EX_OK
 
 

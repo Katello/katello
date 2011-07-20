@@ -217,11 +217,13 @@ class Action(object):
         @param flaf: flag for option, if None then --option_name is used
         """
         flag = flag or '--' + opt
-        if (not self.has_option(opt)) or (self.get_option(opt) == ""):
+        if (not self.option_specified(opt)):
             self.add_option_error(_('Option %s is required; please see --help') % flag)
         return
-
-
+        
+    def option_specified(self, opt):
+        return self.has_option(opt) and self.get_option(opt) != ""
+        
     def add_option_error(self, errorMsg):
         """
         Add option error to the error stack
@@ -290,7 +292,7 @@ class Action(object):
     def process_options(self, args):
         """
         This method setups up the parser, parses the arguments, checks options
-        and pritns argument errors.
+        and prints argument errors.
         """
         self.opts, self.args = self.parser.parse_args(args)
 

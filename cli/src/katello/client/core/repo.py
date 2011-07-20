@@ -257,12 +257,12 @@ class Sync(RepoAction):
         
         result = run_spinner_in_bg(wait_for_async_task, [async_task])
         
-        if result['state'] == 'finished':    
+        if result[0]['state'] == 'finished':    
             print _("Repo [ %s ] synced" % repo_id)
             return os.EX_OK
         else:
             print _("Repo [ %s ] failed to sync: %s" % (repo_id, json.loads(result["result"])['errors'][0]))
-            return 1
+            return os.EX_DATAERR
 
 
 class List(RepoAction):

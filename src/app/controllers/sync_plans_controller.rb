@@ -132,9 +132,13 @@ class SyncPlansController < ApplicationController
   protected
   # pre filter for grabbing plan object
   def get_plan
-    @plan = SyncPlan.find(params[:id])
-    errors N_("Couldn't find sync plan '#{params[:id]}'") if @plan.nil?
-    redirect_to(:controller => :sync_plans, :action => :index, :organization_id => current_organization.cp_key) and return if @plan.nil?
+    begin
+      @plan = SyncPlan.find(params[:id])
+    rescue Exception => error
+      errors error.to_s
+      execute_after_filters
+      render :text => error, :status => :bad_request
+    end
   end
       
 end

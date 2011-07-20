@@ -17,9 +17,9 @@ from katello.client.api.base import KatelloAPI
 
 class TemplateAPI(KatelloAPI):
 
-    def templates(self):
+    def templates(self, envId):
         path = "/api/templates/"
-        tpls = self.server.GET(path)[1]
+        tpls = self.server.GET(path, {"environment_id": envId})[1]
         return tpls
 
 
@@ -56,7 +56,7 @@ class TemplateAPI(KatelloAPI):
         tplData = {
             "name": name,
             "description": description
-         }
+        }
         tplData = self.update_dict(tplData, "parent_id", parentId)
         tplData = {
             "template": tplData,
@@ -95,7 +95,7 @@ class TemplateAPI(KatelloAPI):
     def promote(self, template_id):
         path = "/api/templates/%s/promote" % str(template_id)
         return self.server.POST(path)[1]
-        
+
     def promotion_status(self, task_id):
         path = "/api/tasks/%s" % str(task_id)
         return self.server.GET(path)[1]

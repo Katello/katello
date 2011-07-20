@@ -13,7 +13,7 @@
 class NonLockerEnvironmentValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     return unless value
-    record.errors[attribute] << N_("Cannot register a system with 'locker' environment ") if record.environment != nil && record.environment.locker?
+    record.errors[attribute] << N_("Cannot register a system with 'Locker' environment ") if record.environment != nil && record.environment.locker?
   end
 end
 

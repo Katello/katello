@@ -14,15 +14,15 @@ require 'spec_helper'
 
 describe Permission do
   before(:all) do
-    @some_role = Role.create!(:name => 'some_role')
-    @repo_admin = Role.create!(:name => 'repo_admin')
-    @super_admin = Role.create!(:name => 'super_admin', :superadmin => true)
+    @some_role = Role.find_or_create_by_name(:name => 'some_role')
+    @repo_admin = Role.find_or_create_by_name(:name => 'repo_admin')
+    @super_admin = Role.find_or_create_by_name(:name => 'super_admin', :superadmin => true)
 
-    user_admin = User.create!(
+    user_admin = User.find_or_create_by_username(
       :username => 'admin',
       :password => "password",
       :roles => [ @some_role ])
-    user_bob = User.create!(
+    user_bob = User.find_or_create_by_username(
       :username => 'bob',
       :password => "password",
       :roles => [ @repo_admin ])

@@ -76,7 +76,7 @@ class Printer:
 
 
     def _getTermWidth(self):
-        columns = (os.popen('stty size', 'r').read().split())[1]
+        rows, columns = os.popen('stty size', 'r').read().split()
         return int(columns)
 
 
