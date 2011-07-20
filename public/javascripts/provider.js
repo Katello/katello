@@ -116,7 +116,6 @@ $(document).ready(function() {
       }, function() {button.removeClass('disabled')});
     }
   });
-
 });
 
 var provider = (function() {
@@ -132,7 +131,7 @@ var provider = (function() {
             $('input[id^=provider_save]').removeAttr("disabled");
         },
         toggleFields : function() {
-          	val = $('#provider_provider_type option:selected').val()
+          	var val = $('#provider_provider_type option:selected').val();
           	var fields = "#repository_url_field"; 
           	if (val == "Custom") {
           		$(fields).attr("disabled", true);			

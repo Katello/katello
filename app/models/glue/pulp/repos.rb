@@ -88,7 +88,7 @@ module Glue::Pulp::Repos
     def sync
       self.repos(locker).collect do |r|
         r.sync
-      end
+      end.flatten
     end
 
     def synced?
@@ -221,11 +221,11 @@ module Glue::Pulp::Repos
       end
 
       self.productContent.select {|pc| added_content.include?(pc.content.label)}.each do |pc|
-        if !(self.environments.map(&:name).any? {|name| pc.content.name.include?(name)}) || pc.content.name.include?('locker')
+        if !(self.environments.map(&:name).any? {|name| pc.content.name.include?(name)}) || pc.content.name.include?('Locker')
         Rails.logger.debug "creating repository #{repo_id(pc.content.name)}"
           self.add_repo(pc.content.name, repository_url(pc.content.contentUrl))
         else
-          raise "new content was added to environment other than locker. use promotion instead."
+          raise "new content was added to environment other than Locker. use promotion instead."
         end
       end
 

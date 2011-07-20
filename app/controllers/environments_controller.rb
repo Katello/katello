@@ -96,10 +96,14 @@ class EnvironmentsController < ApplicationController
   end
 
   def find_environment
-    env_id = (params[:id].blank? ? nil : params[:id]) || params[:env_id]
-    @environment = KPEnvironment.find env_id
-    notice _("Couldn't find environment '#{env_id}'") if @environment.nil?
-    redirect_to :action => :index and return if @environment.nil?
+    begin
+      env_id = (params[:id].blank? ? nil : params[:id]) || params[:env_id]
+      @environment = KPEnvironment.find env_id
+    rescue Exception => error
+      errors _("Couldn't find environment with ID=#{env_id}")
+      execute_after_filters
+      render :text => error, :status => :bad_request
+    end
   end
 
   def setup_new_edit_screen
@@ -113,10 +117,5 @@ class EnvironmentsController < ApplicationController
     envs
   end
 
-  def catch_exceptions
-    yield
-  rescue Exception => error
-    errors error
-    render :text => error, :status => :bad_request
-  end
+
 end
