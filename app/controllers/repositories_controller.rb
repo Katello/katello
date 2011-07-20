@@ -22,7 +22,7 @@ class RepositoriesController < ApplicationController
   end
 
   def new
-    render :partial => "new"
+    render :partial => "new", :layout => "tupane_layout"
   end
 
   def edit

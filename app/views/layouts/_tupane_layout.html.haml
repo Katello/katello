@@ -9,8 +9,13 @@
 %nav.subnav.clear
   = yield :navigation
 
-#panel_main.scroll-pane
-  = yield :content
+- if content_for?(:content)
+  #panel_main.scroll-pane
+    = yield :content
+
+- if content_for?(:subcontent)
+  #subpanel_main.scroll-pane
+    = yield :subcontent
 
 = yield :footer
 
