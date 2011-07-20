@@ -1,20 +1,21 @@
+= javascript :role_edit
 
-= include_javascripts :role_edit
+= content_for :title do
+  #{_("Role")}
 
-.grid_8
-  %h2 #{_("Role")}
-#role
-  .grid_8#role
-    = form_for role, :url => role_path(role) do |f|
-      .grid_1.ra.fieldset
-        = label :role, :name, _("Name")
-      .grid_6.la.editable.edit_rolename#role_name{'name' => 'role[name]', :url=>role_path(@role.id)} #{@role[:name]}
-      .grid_7
-        &nbsp;
-    = render :partial => 'permissions', :locals => {:role => role}
+= content_for :remove_item do
+  = link_to _("Remove Role"), {:action => "destroy", :controller => "roles"}, :method => :delete, :confirm => _('Are you sure?'), :class => "remove_item", :remote=>true
 
-.grid_8
-  &nbsp;
-
-= link_to _("Remove Role"), {:action => "destroy", :controller => "roles"}, :method => :delete, :confirm => _('Are you sure?'), :class => "remove_item", :remote=>true
-
+= content_for :content do
+  #role
+    .grid_8#role
+      = form_for role, :url => role_path(role) do |f|
+        .grid_1.ra.fieldset
+          = label :role, :name, _("Name")
+        .grid_6.la.editable.edit_rolename#role_name{'name' => 'role[name]', :url=>role_path(@role.id)} #{@role[:name]}
+        .grid_7
+          &nbsp;
+      = render :partial => 'permissions', :locals => {:role => role}
+  
+  .grid_8
+    &nbsp;
