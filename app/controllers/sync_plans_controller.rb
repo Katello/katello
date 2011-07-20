@@ -46,7 +46,7 @@ class SyncPlansController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :locals => {:plan => @plan}
+    render :partial => "edit", :layout => "tupane_layout", :locals => {:plan => @plan}
   end
 
   def update
@@ -106,7 +106,7 @@ class SyncPlansController < ApplicationController
 
   def new
     @plan = SyncPlan.new
-    render :partial => "new", :locals => {:plan => @plan}
+    render :partial => "new", :layout => "tupane_layout", :locals => {:plan => @plan}
   end
 
   def create

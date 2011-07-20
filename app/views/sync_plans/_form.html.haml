@@ -3,30 +3,29 @@
 
 %fieldset
   %label.fl.ra.sp #{_("Name")}:
-  .grid_6.la
+  .grid_5.la
     = form.text_field :name
 
 %fieldset
   %label.fl.ra.sp #{_("Description")}:
-  .grid_6.la
+  .grid_5.la
     = form.text_field :description
 
 %fieldset
   %label.fl.ra.sp #{_("Interval")}:
-  .grid_6.la
+  .grid_5.la
     = select_tag('sync_plan[interval]', options_for_select(SyncPlan::TYPES, @plan.interval))
 
 %fieldset
   %label.fl.ra.sp #{_("Start Date")}:
-  .grid_6.la
+  .grid_5.la
     = form.text_field :plan_date, :id => 'datepicker'
 
 %fieldset
   %label.fl.ra.sp #{_("Time")}:
-  .grid_6.la
+  .grid_5.la
     = form.text_field :plan_time, :id => 'timepicker'
 
 
-.grid_6.la.prefix_5
-
+.grid_3.la.prefix_2
   = button_to _("Save"), {:action => "create", :controller => "sync_plans"}, :method => :post, :id => :plan_save
