@@ -238,8 +238,9 @@ var panel = (function(){
                 url: ajax_url,
                 dataType: 'html',
                 success: function (data, status, xhr) {
+                    var pc = panelContent.html(data);
                     spinner.hide();
-                    panelContent.html(data).fadeIn(function(){$(".panel-content :input:visible:enabled:first").focus();});
+                    pc.fadeIn(function(){$(".panel-content :input:visible:enabled:first").focus();});
                     panel.expand_cb(name);
                     $('.scroll-pane').jScrollPane();
                     panel.panelResize($('#panel_main'));
