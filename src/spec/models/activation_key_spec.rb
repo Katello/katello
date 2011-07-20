@@ -36,5 +36,12 @@ describe ActivationKey do
     b = ActivationKey.update(a.id, {:name => new_name})
     b.name.should == new_name
   end
+  
+  it "should map 2way subscriptions to keys" do 
+    s = KTSubscription.create!(:subscription => 'abc123')
+    @akey.subscriptions = [s]
+    @akey.subscriptions.first.subscription.should == 'abc123'
+    s.activation_keys.first.name.should == aname
+  end
 
 end
