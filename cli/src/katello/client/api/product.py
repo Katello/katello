@@ -31,7 +31,7 @@ class ProductAPI(KatelloAPI):
 
     def products_by_provider(self, provId, prodName=None):
         path = "/api/providers/%s/products/" % str(provId)
-        products = self.server.GET(path, {"name": prodName} if prodName != None else None)[1]
+        products = self.server.GET(path, {"name": prodName} if prodName != None else {})[1]
         return products
 
     def products(self):
