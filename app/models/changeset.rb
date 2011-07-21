@@ -40,6 +40,7 @@ class Changeset < ActiveRecord::Base
   has_many :errata, :class_name=>"ChangesetErratum", :inverse_of=>:changeset
   has_many :repos, :class_name=>"ChangesetRepo", :inverse_of => :changeset
   belongs_to :environment, :class_name=>"KPEnvironment"
+  belongs_to :task_status
   before_save :uniquify_artifacts
 
   scoped_search :on => :name, :complete_value => true, :rename => :'changeset.name'
