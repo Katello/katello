@@ -35,15 +35,10 @@ class Api::ChangesetsController < Api::ApiController
   end
 
   def promote
-
-    obj = ChangesetRepo.new(:repo_id => "1311254375730-repo_fake_a2_fakerepos_fewupdates-ACME_Corporation", :display_name => "repo_X", :product_id => 2, :changeset => @changeset)
-    @changeset.repos << obj
-    obj.save!
-
-#    @changeset.state = Changeset::REVIEW
-#    @changeset.save!
-#    async_job = @changeset.async(:organization => @changeset.environment.organization).promote
-#    render :json => async_job, :status => 202
+    @changeset.state = Changeset::REVIEW
+    @changeset.save!
+    async_job = @changeset.async(:organization => @changeset.environment.organization).promote
+    render :json => async_job, :status => 202
   end
 
   def destroy
