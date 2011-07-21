@@ -17,12 +17,6 @@ class Glue::Pulp::Repo
     params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
   end
 
-  SYNC_STATE_FINISHED = "finished"
-  SYNC_STATE_ERROR = "error"
-  SYNC_STATE_RUNNING = "running"
-  SYNC_STATE_NOT_SYNCED = "notsynced"
-  SYNC_STATE_WAITING = "waiting"
-
   TYPE_YUM = "yum"
   TYPE_LOCAL = "local"
 
@@ -118,7 +112,7 @@ class Glue::Pulp::Repo
 
   def sync_state
     status = self._get_most_recent_sync_status()
-    return Repo::SYNC_STATE_NOT_SYNCED if status.nil?
+    return ::PulpSyncStatus::Status::NOT_SYNCED if status.nil?
     status.state
   end
 
@@ -164,8 +158,8 @@ class Glue::Pulp::Repo
 
   def _get_most_recent_sync_status()
     history = Pulp::Repository.sync_history(@id)
-    return Glue::Pulp::SyncStatus.new(:state => Glue::Pulp::Repo::SYNC_STATE_NOT_SYNCED) if (history.nil? or history.empty?)
-    Glue::Pulp::SyncStatus.new(history[0])
+    return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED) if (history.nil? or history.empty?)
+    ::PulpSyncStatus.new(history[0])
   end
 
   def synced?
