@@ -36,6 +36,7 @@ class Api::ChangesetsController < Api::ApiController
 
   def promote
     @changeset.state = Changeset::REVIEW
+    @changeset.save!
     async_job = @changeset.async(:organization => @changeset.environment.organization).promote
     render :json => async_job, :status => 202
   end
