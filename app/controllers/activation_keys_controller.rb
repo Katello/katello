@@ -46,8 +46,7 @@ class ActivationKeysController < ApplicationController
 
   def subscriptions
     consumed = []
-    all_subs = Candlepin::Owner.pools current_organization.cp_key
-    subscriptions = reformat_subscriptions(all_subs)
+    subscriptions = reformat_subscriptions(Candlepin::Owner.pools current_organization.cp_key)
     subscriptions.sort! {|a,b| a.sub <=> b.sub}
     render :partial=>"subscriptions", :locals=>{:akey=>@activation_key, :all_subs => subscriptions, :consumed => consumed}
   end
