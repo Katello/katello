@@ -5,10 +5,10 @@ Src::Application.routes.draw do
       get :auto_complete_search
       get :items
       get :subscriptions
-      post :update_subscriptions
     end
     member do
       get :subscriptions
+      post :update_subscriptions
     end
   end
 
