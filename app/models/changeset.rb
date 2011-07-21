@@ -10,6 +10,12 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+class NotInLockerValidator < ActiveModel::Validator
+  def validate(record)
+    record.errors[:environment] << _("Locker environment can have no changeset!") if record.environment.locker?
+  end
+end
+
 class Changeset < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
@@ -26,13 +32,14 @@ class Changeset < ActiveRecord::Base
 
   validates :name, :presence => true, :allow_blank => false
   validates_uniqueness_of :name, :scope => :environment_id, :message => N_("Must be unique within an environment")
+  validates :environment, :presence=>true
+  validates_with NotInLockerValidator
   has_and_belongs_to_many :products, :uniq => true
   has_many :packages, :class_name=>"ChangesetPackage", :inverse_of=>:changeset
   has_many :users, :class_name=>"ChangesetUser", :inverse_of=>:changeset
   has_many :errata, :class_name=>"ChangesetErratum", :inverse_of=>:changeset
   has_many :repos, :class_name=>"ChangesetRepo", :inverse_of => :changeset
   belongs_to :environment, :class_name=>"KPEnvironment"
-  validates :environment, :presence=>true
   before_save :uniquify_artifacts
 
   scoped_search :on => :name, :complete_value => true, :rename => :'changeset.name'
