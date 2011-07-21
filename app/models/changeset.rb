@@ -12,7 +12,7 @@
 
 class Changeset < ActiveRecord::Base
   include Authorization
-
+  include AsyncOrchestration
 
   NEW = 'new'
   REVIEW = 'review'
