@@ -21,7 +21,8 @@ from gettext import gettext as _
 from katello.client.api.provider import ProviderAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, wait_for_async_task
+from katello.client.core.utils import is_valid_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg
+from katello.client.core.utils import ProgressBar
 from katello.client.api.utils import get_provider
 
 try:
@@ -260,7 +261,7 @@ class Sync(ProviderAction):
             return os.EX_DATAERR
             
         async_task = self.api.sync(prov["id"])
-        result = run_spinner_in_bg(wait_for_async_task, [async_task])
+        result = run_async_task_with_status(async_task, ProgressBar())
         
         if len(filter(lambda t: t['state'] == 'error', result)) > 0:
             errors = map(lambda t: json.loads(t["result"])['errors'][0], filter(lambda t: t['state'] == 'error', result))

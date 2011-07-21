@@ -13,11 +13,11 @@
 class Api::ChangesetsController < Api::ApiController
 
   before_filter :find_environment, :only => [:index, :create]
-  before_filter :find_changeset, :only => [:show, :destroy, :update_content]
+  before_filter :find_changeset, :only => [:show, :destroy, :update_content, :promote]
   respond_to :json
 
   def index
-    render :json => @environment.working_changesets.where(params.slice(:name))
+    render :json => Changeset.where(params.slice(:name, :environment_id))
   end
 
 
@@ -34,6 +34,12 @@ class Api::ChangesetsController < Api::ApiController
     render :json => @changeset
   end
 
+  def promote
+    @changeset.state = Changeset::REVIEW
+    @changeset.save!
+    async_job = @changeset.async(:organization => @changeset.environment.organization).promote
+    render :json => async_job, :status => 202
+  end
 
   def destroy
     @changeset.destroy

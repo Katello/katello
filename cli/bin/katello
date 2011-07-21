@@ -118,7 +118,7 @@ def setup_admin(admin):
     prov_cmd.add_action('list', provider.List())
     prov_cmd.add_action('update', provider.Update())
     prov_cmd.add_action('delete', provider.Delete())
-    prov_cmd.add_action('sync', provider.Sync())
+    prov_cmd.add_action('synchronize', provider.Sync())
     prov_cmd.add_action('import_manifest', provider.ImportManifest())
     admin.add_command('provider', prov_cmd)
 
@@ -128,6 +128,7 @@ def setup_admin(admin):
     cset_cmd.add_action('info', changeset.Info())
     cset_cmd.add_action('update', changeset.UpdateContent())
     cset_cmd.add_action('delete', changeset.Delete())
+    cset_cmd.add_action('promote', changeset.Promote())
     admin.add_command('changeset', cset_cmd)
 
 if __name__ == "__main__":
