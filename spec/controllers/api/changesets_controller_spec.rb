@@ -46,7 +46,7 @@ describe Api::ChangesetsController do
 
   describe "index" do
     it 'should call working_changesets on an environment' do
-      @environment.should_receive(:working_changesets).once
+      Changeset.should_receive(:where).once
       get :index, :organization_id => "1", :environment_id => 1
     end
   end
