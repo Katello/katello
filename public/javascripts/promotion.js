@@ -443,7 +443,7 @@ var promotion_page = (function($){
         var all_types = types || subtypes;
         jQuery.each(all_types, function(index, type){
             var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
-            buttons.html(i18n.add).hide();
+            buttons.hide().html(i18n.add);
         });        
     },
     checkUsersInResponse = function(users) {
@@ -507,8 +507,8 @@ var promotion_page = (function($){
         throw_error:            throw_error,
         wait:                   wait,
         calc_conflict:          calculate_conflict,
-        hide_conflict:  hide_conflict,
-        show_conflict_details: show_conflict_details
+        hide_conflict:          hide_conflict,
+        show_conflict_details:  show_conflict_details
     };
 }(jQuery));
 
@@ -660,8 +660,7 @@ $.expr[':'].contains = function(a, i, m) {
 $(document).ready(function() {
 
     $('.left').resizable('destroy');
-
-    //promotion_page.update_dep_size();
+    
     promotion_page.start_timer();
 
     $(".content_add_remove").live('click', function() {
@@ -760,7 +759,7 @@ $(document).ready(function() {
     );
         
     
-     var container = $('#container')
+     var container = $('#container');
 
      var original_top = Math.floor($('.left').position(top).top);
      if(container.length > 0){
