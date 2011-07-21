@@ -19,11 +19,11 @@ class SyncManagementController < ApplicationController
 
   respond_to :html, :json
 
-  @@status_values = { Glue::Pulp::Repo::SYNC_STATE_WAITING => _("Queued."),
-                     Glue::Pulp::Repo::SYNC_STATE_FINISHED => _("Sync complete."),
-                     Glue::Pulp::Repo::SYNC_STATE_ERROR => _("Error syncing!"),
-                     Glue::Pulp::Repo::SYNC_STATE_RUNNING => _("Running."),
-                     Glue::Pulp::Repo::SYNC_STATE_NOT_SYNCED => _("Not synced.")}
+  @@status_values = { PulpSyncStatus::Status::WAITING => _("Queued."),
+                     PulpSyncStatus::Status::FINISHED => _("Sync complete."),
+                     PulpSyncStatus::Status::ERROR => _("Error syncing!"),
+                     PulpSyncStatus::Status::RUNNING => _("Running."),
+                     PulpSyncStatus::Status::NOT_SYNCED => _("Not synced.")}
 
   def section_id
     'contents'
@@ -69,8 +69,8 @@ class SyncManagementController < ApplicationController
     product = Product.first(:conditions => {:id => params['product_id']})
     repo_stat = Glue::Pulp::Repo.new(:id => params[:repo_id]).sync_status
     status = product.sync_status 
-    send_notification(product, repo_stat) if status.state == Glue::Pulp::Repo::SYNC_STATE_FINISHED
-    report_error(product) if status.state == Glue::Pulp::Repo::SYNC_STATE_ERROR
+    send_notification(product, repo_stat) if status.state == PulpSyncStatus::Status::FINISHED
+    report_error(product) if status.state == PulpSyncStatus::Status::ERROR
 
     progress = format_sync_progress(status)
     progress[:product_id] = params['product_id']
@@ -93,12 +93,12 @@ private
 
   def format_sync_progress(sync_status)
     progress = {:progress => calc_progress(sync_status)}
-    progress[:sync_id] = sync_status.sync_id
+    progress[:sync_id] = sync_status.uuid
     progress[:state] = format_state(sync_status.state)
     progress[:start_time] = format_date(sync_status.start_time)
     progress[:finish_time] = format_date(sync_status.finish_time)
-    progress[:packages] = sync_status.total_count
-    progress[:size] = number_to_human_size(sync_status.total_size)
+    progress[:packages] = sync_status.progress.total_count
+    progress[:size] = number_to_human_size(sync_status.progress.total_size)
     progress
   end
 
@@ -135,13 +135,13 @@ private
 
   # calculate the % complete of ongoing sync from pulp
   def calc_progress(val)
-    completed = val.total_size - val.size_left
+    completed = val.progress.total_size - val.progress.size_left
     progress = if val.state =~ /error/i then -1
-               elsif val.total_size == 0 then 0
-               else completed.to_f / val.total_size.to_f * 100
+               elsif val.progress.total_size == 0 then 0
+               else completed.to_f / val.progress.total_size.to_f * 100
                end
-    retval = {:count => val.total_count,
-              :left => val.items_left,
+    retval = {:count => val.progress.total_count,
+              :left => val.progress.items_left,
               :progress => progress
              }
   end
