@@ -4,7 +4,7 @@
 %h5.grid_8 #{_("Subscriptions")}  
 = form_tag  update_subscriptions_activation_keys_path, :method => "post", :id => "update_subscriptions" do |f|
   .grid_7
-    = select_tag "activation_key[consumed_pool_ids]", options_from_collection_for_select(all_subs, 'sub', 'name', consumed), :multiple => true, :class => 'multiselect', :style=>"width:400px; height:200px"
+    = select_tag "activation_key[consumed_sub_ids]", options_from_collection_for_select(all_subs, 'sub', 'name', consumed), :multiple => true, :class => 'multiselect', :style=>"width:400px; height:200px"
   .grid_2
     = button_to _("Save Subscriptions"), {:action => "update_subscriptions", :controller => "activation_keys"}, :method => :post, :id => :subcription_save
 
