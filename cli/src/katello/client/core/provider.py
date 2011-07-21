@@ -21,7 +21,7 @@ from gettext import gettext as _
 from katello.client.api.provider import ProviderAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path, run_async_task_with_status
+from katello.client.core.utils import is_valid_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg
 from katello.client.core.utils import ProgressBar
 from katello.client.api.utils import get_provider
 
