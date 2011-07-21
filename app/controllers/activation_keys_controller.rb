@@ -14,7 +14,7 @@ class ActivationKeysController < ApplicationController
   include AutoCompleteSearch
 
   before_filter :require_user
-  before_filter :find_activation_key, :only => [:show, :edit, :update, :destroy, :subscriptions]
+  before_filter :find_activation_key, :only => [:show, :edit, :update, :destroy, :subscriptions, :update_subscriptions]
   before_filter :panel_options, :only => [:index, :items]
 
   respond_to :html, :js
@@ -46,15 +46,18 @@ class ActivationKeysController < ApplicationController
 
   def subscriptions
     consumed = []
+    debugger
     subscriptions = reformat_subscriptions(Candlepin::Owner.pools current_organization.cp_key)
     subscriptions.sort! {|a,b| a.sub <=> b.sub}
     render :partial=>"subscriptions", :locals=>{:akey=>@activation_key, :all_subs => subscriptions, :consumed => consumed}
   end
 
   def update_subscriptions
-    params[:system] = {"consumed_pool_ids"=>[]} unless params.has_key? :system
-    if @system.update_attributes(params[:system])
-      notice _("System subscriptions updated.")
+    subs = params[:activation_key][:consumed_sub_ids]
+    debugger
+    if subs and @activation_key
+      @activation_key.subscriptions = subs.collect { |s| KTSubscription.create!(:subscription => s) } 
+      notice _("Activation Key subscriptions updated.")
       render :nothing =>true
     else
       errors "Unable to update subscriptions."
