@@ -111,6 +111,11 @@ class Command(object):
 
         self.parser.parse_args(args)
 
+    def extract_action(self, args):
+        action = self._actions.get(args[0], None)
+        if action is None:
+            self.parser.error(_('invalid action: please see --help'))
+        return action
 
     def main(self, args):
         """
@@ -128,9 +133,7 @@ class Command(object):
         try:
             self.process_options(args)
 
-            action = self._actions.get(args[0], None)
-            if action is None:
-                self.parser.error(_('invalid action: please see --help'))
+            action = self.extract_action(args)
             return action.main(args[1:])
 
         except OptionParserExitError, opee:
