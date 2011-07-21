@@ -28,6 +28,11 @@ from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, format_date, wait_for_async_task
 from katello.client.api.utils import get_environment, get_changeset
 
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 _cfg = Config()
 
 
