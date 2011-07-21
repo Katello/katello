@@ -68,6 +68,7 @@ class List(ChangesetAction):
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('updated_at')
+        self.printer.addColumn('state')
 
         self.printer.setHeader(_("Changeset List"))
         self.printer.printItems(changesets)
@@ -110,6 +111,7 @@ class Info(ChangesetAction):
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('updated_at')
+        self.printer.addColumn('state')
         self.printer.addColumn('errata', multiline=True, show_in_grep=False)
         self.printer.addColumn('products', multiline=True, show_in_grep=False)
         self.printer.addColumn('packages', multiline=True, show_in_grep=False)
