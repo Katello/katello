@@ -48,6 +48,10 @@ class ChangesetAPI(KatelloAPI):
         path = "/api/organizations/%s/environments/%s/changesets/%s" % (orgName, envId, csId)
         return self.server.DELETE(path)[1]
 
+    def promote(self, orgName, envId, csId):
+        path = "/api/organizations/%s/environments/%s/changesets/%s/promote" % (orgName, envId, csId)
+        return self.server.POST(path)[1]
+
     def update_content(self, orgName, envId, csId, patch):
         data = {
             'patch': patch

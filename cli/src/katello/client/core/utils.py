@@ -375,7 +375,16 @@ class Spinner(threading.Thread):
 
     def stop(self):
         self._stop = True
+        
+class ProgressBar():
 
+    def updateProgress(self, progress):
+        sys.stdout.write("\rProgress: [{0:50s}] {1:.1f}%".format('#' * int(progress * 50), progress * 100))
+        sys.stdout.flush()
+        
+    def done(self):
+        sys.stdout.write("\r{0:60s}\r".format(' '*70))
+        
 
 def run_spinner_in_bg(function, arguments=(), message=""):
     """
@@ -413,3 +422,27 @@ def wait_for_async_task(taskStatus):
             task = status_api.status(task['uuid'])
         
     return task
+    
+def run_async_task_with_status(taskStatus, progressBar):
+    task = taskStatus
+    status_api = TaskStatusAPI()
+    
+    if type(task).__name__== 'list':
+        while len(filter(lambda t: t['state'] not in ('finished', 'error', 'timed out', 'canceled'), task)) > 0:
+            time.sleep(1)
+            task = [status_api.status(t['uuid']) for t in task]
+            overalProgress = sum([progress(t['progress']['size_left'], t['progress']['size_total']) for t in task]) / len(task)
+            progressBar.updateProgress(overalProgress)
+    else:
+        while task['state'] not in ('finished', 'error', 'timed out', 'canceled'):
+            time.sleep(1)
+            task = status_api.status(task['uuid'])
+            progressBar.updateProgress(progress(task['progress']['size_left'], task['progress']['size_total']))
+
+    progressBar.done()
+    return task
+
+def progress(left, total):
+    sizeLeft = float(left)
+    sizeTotal = float(total)
+    return 0.0 if total == 0 else (sizeTotal - sizeLeft) / sizeTotal 

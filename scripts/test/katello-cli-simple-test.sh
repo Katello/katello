@@ -137,7 +137,7 @@ TEST_ENV="env_$RAND"
 TEST_ENV_2="env_2_$RAND"
 TEST_ENV_3="env_3_$RAND"
 test "environment create" environment create --org="$FIRST_ORG" --name="$TEST_ENV" --prior="Locker"
-test "environment create with prior" environment create --org="$FIRST_ORG" --name="$TEST_ENV_2" --prior="$TEST_ENV"
+test "environment create" environment create --org="$FIRST_ORG" --name="$TEST_ENV_2" --prior="$TEST_ENV"
 test "environment update" environment update --org="$FIRST_ORG" --name="$TEST_ENV_2" --new_name="$TEST_ENV_3"
 test "environment list" environment list --org="$FIRST_ORG"
 test "environment info" environment info --org="$FIRST_ORG" --name="$TEST_ENV"
@@ -166,13 +166,13 @@ test "repo list by org only" repo list --org="$FIRST_ORG"
 test "repo list by org and product" repo list --org="$FIRST_ORG" --product="$FEWUPS_PRODUCT"
 REPO_NAME=`$CMD repo list --org="$FIRST_ORG" | grep $REPO | awk '{print $2}'`
 REPO_ID=`$CMD repo list --org="$FIRST_ORG" | grep $REPO | awk '{print $1}'`
-test "repo status" repo status --id="$REPO_ID" -v
+test "repo status" repo status --id="$REPO_ID"
+test "repo synchronize" repo synchronize --id="$REPO_ID"
 
 #testing provider sync
 test "provider sync" provider sync --name="$YUM_PROVIDER" --org="$FIRST_ORG"
-sleep 1 #give the provider some time to get synced
 
-#testing systems
+# #testing systems
 SYSTEM_NAME_ADMIN="admin_system_$RAND"
 SYSTEM_NAME_USER="user_system_$RAND"
 test "system register as admin" system register --name="$SYSTEM_NAME_ADMIN" --org="$FIRST_ORG" --environment="$TEST_ENV"
@@ -220,23 +220,24 @@ test "template update_content remove parameter" template update_content --name="
 
 #testing changesets
 CS_NAME="changeset_$RAND"
-test "changeset create" changeset create --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME"
-test "changeset add product" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --add_product="$FEWUPS_PRODUCT"
-test "changeset add package" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --add_package="warnerbros"
-test "changeset add erratum" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --add_erratum="RHEA-2010:9999"
-test "changeset add repo" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --add_repo="$REPO_NAME"
-test "changeset remove product" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --remove_product="$FEWUPS_PRODUCT"
-test "changeset remove package" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --remove_package="warnerbros"
-test "changeset remove erratum" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --remove_erratum="RHEA-2010:9999"
-test "changeset remove repo" changeset update  --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" --remove_repo="$REPO_NAME"
-test "changeset list" changeset list --org="$FIRST_ORG" --environment="Locker"
-test "changeset info" changeset info --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME" 
+test "changeset create" changeset create --org="$FIRST_ORG" --environment="$TEST_ENV" --name="$CS_NAME"
+test "changeset add product" changeset update  --org="$FIRST_ORG" --environment="$TEST_ENV" --name="$CS_NAME" --add_product="$FEWUPS_PRODUCT"
+test "changeset add package" changeset update  --org="$FIRST_ORG" --environment="$TEST_ENV" --name="$CS_NAME" --add_package="warnerbros"
+test "changeset add erratum" changeset update  --org="$FIRST_ORG" --environment="$TEST_ENV" --name="$CS_NAME" --add_erratum="RHEA-2010:9999"
+test "changeset add repo" changeset update  --org="$FIRST_ORG" --environment="$TEST_ENV" --name="$CS_NAME" --add_repo="$REPO_NAME"
+test "changeset promote" changeset promote --org="$FIRST_ORG" --environment="$TEST_ENV" --name="$CS_NAME"
+test "changeset remove product" changeset update  --org="$FIRST_ORG" --environment="$TEST_ENV" --name="$CS_NAME" --remove_product="$FEWUPS_PRODUCT"
+test "changeset remove package" changeset update  --org="$FIRST_ORG" --environment="$TEST_ENV" --name="$CS_NAME" --remove_package="warnerbros"
+test "changeset remove erratum" changeset update  --org="$FIRST_ORG" --environment="$TEST_ENV" --name="$CS_NAME" --remove_erratum="RHEA-2010:9999"
+test "changeset remove repo" changeset update  --org="$FIRST_ORG" --environment="$TEST_ENV" --name="$CS_NAME" --remove_repo="$REPO_NAME"
+test "changeset list" changeset list --org="$FIRST_ORG" --environment="$TEST_ENV"
+test "changeset info" changeset info --org="$FIRST_ORG" --environment="$TEST_ENV" --name="$CS_NAME" 
 
 
 #clear
 #test "repo delete" repo delete       # <-- not implemented yet
 #test "product delete" product delete # <-- not implemented yet
-test "changeset delete" changeset delete --org="$FIRST_ORG" --environment="Locker" --name="$CS_NAME"
+test "changeset delete" changeset delete --org="$FIRST_ORG" --environment="$TEST_ENV" --name="$CS_NAME"
 test "template delete" template delete --name="changed_$TEMPLATE_NAME_2" --org="$FIRST_ORG"
 test "template delete" template delete --name="$TEMPLATE_NAME" --org="$FIRST_ORG"
 test "provider delete" provider delete --name="$YUM_PROVIDER" --org="$FIRST_ORG"
