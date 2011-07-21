@@ -104,7 +104,7 @@ describe RolesController do
   
   describe "viewing roles" do
     before (:each) do
-      150.times{|a| Role.create!(:name=>"bar#{a}")}
+      150.times{|a| Role.create!(:name=>"bar%05d" % [a])}
     end
 
     it "should show the role 2 pane list" do
