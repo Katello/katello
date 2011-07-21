@@ -233,6 +233,7 @@ Src::Application.routes.draw do
       resources :environments do
         resources :changesets, :only => [:index, :show, :create, :destroy] do
           put :update, :on => :member, :action => :update_content
+          post :promote, :on => :member, :action => :promote
         end
         resources :products, :only => [:index], :constraints => { :id => /[0-9\.]*/ }
         member do
