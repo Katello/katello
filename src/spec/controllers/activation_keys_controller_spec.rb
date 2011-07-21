@@ -214,6 +214,12 @@ describe ActivationKeysController do
         put :update, :id => 9999, :activation_key => AKeyControllerTest::AKEY_DESCRIPTION
         response.should_not be_success
       end
+
+      it "should be unsuccessful subscription update" do
+        controller.should_receive(:errors)
+        put :update_subscriptions, { :id => 999, :activation_key => { :consumed_sub_ids => ["abc123"] }}
+        response.should_not be_success
+      end
     end
   end
 
