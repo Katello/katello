@@ -156,7 +156,7 @@ class Changeset < ActiveRecord::Base
   end
 
    def add_package package_name
-    self.products.each do |product|
+    self.environment.prior.products.each do |product|
       product.repos(self.environment.prior).each do |repo|
         #search for package in all repos in a product
         idx = repo.packages.index do |p| p.name == package_name end
@@ -171,7 +171,7 @@ class Changeset < ActiveRecord::Base
    end
 
   def add_erratum erratum_id
-    self.products.each do |product|
+    self.environment.prior.products.each do |product|
       product.repos(self.environment.prior).each do |repo|
         #search for erratum in all repos in a product
         idx = repo.errata.index do |e| e.id == erratum_id end
@@ -186,7 +186,7 @@ class Changeset < ActiveRecord::Base
   end
 
   def add_repo repo_name
-    self.products.each do |product|
+    self.environment.prior.products.each do |product|
       repos = product.repos(self.environment.prior)
       idx = repos.index do |r| r.name == repo_name end
       if idx != nil
@@ -204,7 +204,7 @@ class Changeset < ActiveRecord::Base
   end
 
   def remove_package package_name
-    self.products.each do |product|
+    self.environment.prior.products.each do |product|
       product.repos(self.environment).each do |repo|
         #search for package in all repos in a product
         idx = repo.packages.index do |p| p.name == package_name end
@@ -218,7 +218,7 @@ class Changeset < ActiveRecord::Base
   end
 
   def remove_erratum erratum_id
-    self.products.each do |product|
+    self.environment.prior.products.each do |product|
       product.repos(self.environment).each do |repo|
         #search for erratum in all repos in a product
         idx = repo.errata.index do |e| e.id == erratum_id end
@@ -232,7 +232,7 @@ class Changeset < ActiveRecord::Base
   end
 
   def remove_repo repo_name
-    self.products.each do |product|
+    self.environment.prior.products.each do |product|
       repos = product.repos(self.environment)
       idx = repos.index do |r| r.name == repo_name end
       if idx != nil
