@@ -83,6 +83,9 @@ describe Changeset do
         @repo.stub(:errata).and_return([@err])
 
         @prod.stub(:repos).and_return([@repo])
+
+        @environment.prior.stub(:products).and_return([@prod])
+        @environment.prior.products.stub(:find_by_name).and_return(@prod)
       end
 
       it "should add product" do
@@ -91,19 +94,16 @@ describe Changeset do
       end
 
       it "should add package" do
-        @changeset.stub(:products).and_return([@prod])
         @changeset.add_package("pack")
         @changeset.packages.length.should == 1
       end
 
       it "should add erratum" do
-        @changeset.stub(:products).and_return([@prod])
         @changeset.add_erratum("err")
         @changeset.errata.length.should == 1
       end
 
       it "should add repo" do
-        @changeset.stub(:products).and_return([@prod])
         @changeset.add_repo("repo")
         @changeset.repos.length.should == 1
       end
@@ -131,7 +131,8 @@ describe Changeset do
 
         @prod.stub(:repos).and_return([@repo])
 
-        @changeset.add_product("prod")
+        @environment.prior.stub(:products).and_return([@prod])
+        @environment.prior.products.stub(:find_by_name).and_return(@prod)
       end
 
       it "should remove product" do
@@ -140,19 +141,16 @@ describe Changeset do
       end
 
       it "should remove package" do
-        @changeset.stub(:products).and_return([@prod])
         ChangesetPackage.should_receive(:destroy_all).with(:package_id => 1, :changeset_id => @changeset.id).and_return(true)
         @changeset.remove_package("pack")
       end
 
       it "should remove erratum" do
-        @changeset.stub(:products).and_return([@prod])
         ChangesetErratum.should_receive(:destroy_all).with(:errata_id => 'err', :changeset_id => @changeset.id).and_return(true)
         @changeset.remove_erratum("err")
       end
 
       it "should remove repo" do
-        @changeset.stub(:products).and_return([@prod])
         ChangesetRepo.should_receive(:destroy_all).with(:repo_id => 1, :changeset_id => @changeset.id).and_return(true)
         @changeset.remove_repo("repo")
       end
