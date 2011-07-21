@@ -45,6 +45,21 @@ $(document).ready(function() {
             });
         }
     });
+
+    $('#update_subscriptions').live('submit', function(e) {
+       e.preventDefault();
+       var button = $(this).find('input[type|="submit"]');
+       button.attr("disabled","disabled");
+       $(this).ajaxSubmit({
+         success: function(data) {
+               button.removeAttr('disabled');
+               notices.checkNotices();
+         }, error: function(e) {
+               button.removeAttr('disabled');
+               notices.checkNotices();
+         }});
+    });
+
 });
 
 var activation_key = (function() {
