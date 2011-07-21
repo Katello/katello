@@ -25,7 +25,7 @@ from sets import Set
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, format_date
+from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, format_date, wait_for_async_task
 from katello.client.api.utils import get_environment, get_changeset
 
 _cfg = Config()
@@ -279,9 +279,19 @@ class Promote(ChangesetAction):
         if cset == None:
             return os.EX_DATAERR
   
-        msg = self.api.promote(orgName, cset["environment_id"], cset["id"])
-        print msg
-        return os.EX_OK
+        try:
+            task = self.api.promote(orgName, cset["environment_id"], cset["id"])
+        except Exception,e:
+            system_exit(os.EX_DATAERR, _("Error: %s" % e))
+        
+        result = run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the changeset, please wait... "))
+
+        if result['state'] == 'finished':    
+            print _("Changeset [ %s ] promoted" % csName)
+            return os.EX_OK
+        else:
+            print _("Changeset [ %s ] promotion failed: %s" % (csName, json.loads(result["result"])['errors'][0]))
+            return os.EX_DATAERR
 
 
 # changeset command ============================================================
