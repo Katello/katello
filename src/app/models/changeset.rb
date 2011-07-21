@@ -246,10 +246,9 @@ class Changeset < ActiveRecord::Base
   #TODO: add validation
 
 
-
   private
 
-  def promote_products from_env, to_env
+  def products_to_promote from_env, to_env
     #promote all products stacked for promotion + (products required by packages,errata & repos - products in target env)
     required_products = []
     required_products << self.packages.collect do |p| Product.find(p.product_id) end
@@ -257,12 +256,16 @@ class Changeset < ActiveRecord::Base
     required_products << self.repos.collect do |r|    Product.find(r.product_id) end
     required_products = required_products.flatten(1)
     products_to_promote = (self.products + (required_products - to_env.products)).uniq
+    products_to_promote
+  end
 
-    async_tasks = products_to_promote.collect do |product|
+  def promote_products from_env, to_env
+    async_tasks = products_to_promote(from_env, to_env).collect do |product|
       product.promote from_env, to_env
     end
     async_tasks.flatten(1)
   end
+
 
   def promote_repos from_env, to_env
     async_tasks = []
@@ -270,6 +273,8 @@ class Changeset < ActiveRecord::Base
     for r in self.repos
       product = r.product
       repo    = Glue::Pulp::Repo.find(r.repo_id)
+
+      next if products_to_promote(from_env, to_env).include? product
 
       if repo.is_cloned_in?(to_env)
         async_tasks << repo.sync
@@ -280,12 +285,15 @@ class Changeset < ActiveRecord::Base
     async_tasks
   end
 
+
   def promote_packages from_env, to_env
     #repo->list of pkg_ids
     pkgs_promote = {}
 
     for pkg in self.packages
       product = pkg.product
+
+      next if products_to_promote(from_env, to_env).include? product
 
       product.repos(from_env).each do |repo|
         clone = Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(repo.id, to_env.name))
@@ -302,13 +310,15 @@ class Changeset < ActiveRecord::Base
     end
   end
 
+
   def promote_errata from_env, to_env
     #repo->list of errata_ids
     errata_promote = {}
 
-
     for err in self.errata
       product = err.product
+
+      next if products_to_promote(from_env, to_env).include? product
 
       product.repos(from_env).each do |repo|
         clone = Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(repo.id, to_env.name))
