@@ -252,7 +252,38 @@ class Delete(ChangesetAction):
         print msg
         return os.EX_OK
         
-        
+
+# ==============================================================================
+class Promote(ChangesetAction):
+    
+    description = _('promotes a changeset to the next environment')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("changeset name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--environment', dest='env',
+                               help=_("environment name (Locker by default)"))
+
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+
+    def run(self):
+        csName  = self.get_option('name')
+        orgName = self.get_option('org')
+        envName = self.get_option('env')
+
+        cset = get_changeset(orgName, envName, csName)
+        if cset == None:
+            return os.EX_DATAERR
+  
+        msg = self.api.promote(orgName, cset["environment_id"], cset["id"])
+        print msg
+        return os.EX_OK
+
+
 # changeset command ============================================================
 class Changeset(Command):
     description = _('changeset specific actions in the katello server')

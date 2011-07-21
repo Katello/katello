@@ -128,6 +128,7 @@ def setup_admin(admin):
     cset_cmd.add_action('info', changeset.Info())
     cset_cmd.add_action('update', changeset.UpdateContent())
     cset_cmd.add_action('delete', changeset.Delete())
+    cset_cmd.add_action('promote', changeset.Promote())
     admin.add_command('changeset', cset_cmd)
 
 if __name__ == "__main__":
