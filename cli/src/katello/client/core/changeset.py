@@ -17,15 +17,12 @@
 
 import os
 import urlparse
-import time
-from pprint import pprint
 from gettext import gettext as _
-from sets import Set
 
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, format_date, wait_for_async_task
+from katello.client.core.utils import system_exit, is_valid_record, get_abs_path, run_spinner_in_bg, format_date, wait_for_async_task
 from katello.client.api.utils import get_environment, get_changeset
 
 try:
@@ -286,7 +283,7 @@ class Promote(ChangesetAction):
   
         try:
             task = self.api.promote(orgName, cset["environment_id"], cset["id"])
-        except Exception,e:
+        except Exception, e:
             system_exit(os.EX_DATAERR, _("Error: %s" % e))
         
         result = run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the changeset, please wait... "))
