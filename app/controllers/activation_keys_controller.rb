@@ -45,22 +45,20 @@ class ActivationKeysController < ApplicationController
   end
 
   def subscriptions
-    consumed = []
-    debugger
+    consumed = @activation_key.subscriptions.collect { |s| s.subscription }
     subscriptions = reformat_subscriptions(Candlepin::Owner.pools current_organization.cp_key)
     subscriptions.sort! {|a,b| a.sub <=> b.sub}
     render :partial=>"subscriptions", :locals=>{:akey=>@activation_key, :all_subs => subscriptions, :consumed => consumed}
   end
 
   def update_subscriptions
-    subs = params[:activation_key][:consumed_sub_ids]
-    debugger
-    if subs and @activation_key
+    subs = (params.has_key? :activation_key) ? params[:activation_key][:consumed_sub_ids] : []
+    if !subs.nil? and @activation_key
       @activation_key.subscriptions = subs.collect { |s| KTSubscription.create!(:subscription => s) } 
       notice _("Activation Key subscriptions updated.")
       render :nothing =>true
     else
-      errors "Unable to update subscriptions."
+      errors _("Unable to update subscriptions.")
       render :nothing =>true
     end
   end
