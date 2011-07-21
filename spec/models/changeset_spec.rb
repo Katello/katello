@@ -44,7 +44,7 @@ describe Changeset do
       @changeset.users.should be_empty
     end
 
-    describe "fail adding content not contained in it's environment" do
+    describe "fail adding content not contained in the prior environment" do
 
       it "should fail on add product" do
         lambda {@changeset.add_product("prod")}.should raise_error
@@ -63,7 +63,7 @@ describe Changeset do
       end
     end
 
-    describe "adding content from it's environment" do
+    describe "adding content from the prior environment" do
 
       before(:each) do
         @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM, :organization => @organization)
@@ -81,8 +81,11 @@ describe Changeset do
         @repo = mock('Repo', {:id => 1, :name => 'repo'})
         @repo.stub(:packages).and_return([@pack])
         @repo.stub(:errata).and_return([@err])
+        @repo.stub(:has_package?).with(1).and_return(true)
+        @repo.stub(:has_erratum?).with('err').and_return(true)
 
         @prod.stub(:repos).and_return([@repo])
+        Product.stub(:find).and_return(@prod)
 
         @environment.prior.stub(:products).and_return([@prod])
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
