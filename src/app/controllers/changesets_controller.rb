@@ -204,15 +204,10 @@ class ChangesetsController < ApplicationController
     end
 
 
-    if @environment.successor
-      render :text=>url_for(:controller=>"promotions", :action => "show",
-            :env_id => @environment.name, :org_id =>  @environment.organization.cp_key)
-    else
-       go_to = @environment.prior
-       go_to ||= @environment
-       render :text=>url_for(:controller=>"promotions", :action => "show",
-                  :env_id => go_to, :org_id =>  @environment.organization.cp_key)
-    end
+
+    render :text=>url_for(:controller=>"promotions", :action => "show",
+          :env_id => @environment.name, :org_id =>  @environment.organization.cp_key)
+
   end
 
 
