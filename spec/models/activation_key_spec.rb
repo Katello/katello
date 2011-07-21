@@ -44,7 +44,7 @@ describe ActivationKey do
     s.activation_keys.first.name.should == aname
   end
 
-  it "should map 2way subscriptions to keys" do 
+  it "should assign multiple subscriptions to keys" do 
     s = KTSubscription.create!(:subscription => 'abc123')
     s2 = KTSubscription.create!(:subscription => 'def123')
     @akey.subscriptions = [s,s2]
