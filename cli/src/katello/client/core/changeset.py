@@ -241,17 +241,6 @@ class UpdateContent(ChangesetAction):
         return os.EX_OK
         
         
-    def build_patch(self, action):
-        result = []
-        
-        if items == None:
-            return result
-        
-        for i in items:
-            result.append(action+i)
-        return result
-    
-    
 # ==============================================================================
 class Delete(ChangesetAction):
     
