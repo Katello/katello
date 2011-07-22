@@ -44,7 +44,7 @@ describe Changeset do
       @changeset.users.should be_empty
     end
 
-    describe "fail adding content not contained in it's environment" do
+    describe "fail adding content not contained in the prior environment" do
 
       it "should fail on add product" do
         lambda {@changeset.add_product("prod")}.should raise_error
@@ -63,7 +63,7 @@ describe Changeset do
       end
     end
 
-    describe "adding content from it's environment" do
+    describe "adding content from the prior environment" do
 
       before(:each) do
         @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM, :organization => @organization)
@@ -81,8 +81,14 @@ describe Changeset do
         @repo = mock('Repo', {:id => 1, :name => 'repo'})
         @repo.stub(:packages).and_return([@pack])
         @repo.stub(:errata).and_return([@err])
+        @repo.stub(:has_package?).with(1).and_return(true)
+        @repo.stub(:has_erratum?).with('err').and_return(true)
 
         @prod.stub(:repos).and_return([@repo])
+        Product.stub(:find).and_return(@prod)
+
+        @environment.prior.stub(:products).and_return([@prod])
+        @environment.prior.products.stub(:find_by_name).and_return(@prod)
       end
 
       it "should add product" do
@@ -91,20 +97,17 @@ describe Changeset do
       end
 
       it "should add package" do
-        @changeset.stub(:products).and_return([@prod])
-        @changeset.add_package("pack")
+        @changeset.add_package("pack", "prod")
         @changeset.packages.length.should == 1
       end
 
       it "should add erratum" do
-        @changeset.stub(:products).and_return([@prod])
-        @changeset.add_erratum("err")
+        @changeset.add_erratum("err", "prod")
         @changeset.errata.length.should == 1
       end
 
       it "should add repo" do
-        @changeset.stub(:products).and_return([@prod])
-        @changeset.add_repo("repo")
+        @changeset.add_repo("repo", "prod")
         @changeset.repos.length.should == 1
       end
 
@@ -131,7 +134,8 @@ describe Changeset do
 
         @prod.stub(:repos).and_return([@repo])
 
-        @changeset.add_product("prod")
+        @environment.prior.stub(:products).and_return([@prod])
+        @environment.prior.products.stub(:find_by_name).and_return(@prod)
       end
 
       it "should remove product" do
@@ -140,21 +144,18 @@ describe Changeset do
       end
 
       it "should remove package" do
-        @changeset.stub(:products).and_return([@prod])
-        ChangesetPackage.should_receive(:destroy_all).with(:package_id => 1, :changeset_id => @changeset.id).and_return(true)
-        @changeset.remove_package("pack")
+        ChangesetPackage.should_receive(:destroy_all).with(:package_id => 1, :changeset_id => @changeset.id, :product_id => 1).and_return(true)
+        @changeset.remove_package("pack", "prod")
       end
 
       it "should remove erratum" do
-        @changeset.stub(:products).and_return([@prod])
-        ChangesetErratum.should_receive(:destroy_all).with(:errata_id => 'err', :changeset_id => @changeset.id).and_return(true)
-        @changeset.remove_erratum("err")
+        ChangesetErratum.should_receive(:destroy_all).with(:errata_id => 'err', :changeset_id => @changeset.id, :product_id => 1).and_return(true)
+        @changeset.remove_erratum("err", "prod")
       end
 
       it "should remove repo" do
-        @changeset.stub(:products).and_return([@prod])
-        ChangesetRepo.should_receive(:destroy_all).with(:repo_id => 1, :changeset_id => @changeset.id).and_return(true)
-        @changeset.remove_repo("repo")
+        ChangesetRepo.should_receive(:destroy_all).with(:repo_id => 1, :changeset_id => @changeset.id, :product_id => 1).and_return(true)
+        @changeset.remove_repo("repo", "prod")
       end
 
     end

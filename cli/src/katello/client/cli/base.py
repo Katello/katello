@@ -174,6 +174,12 @@ class KatelloCLI(object):
     def get_command(self, name):
         return self._commands.get(name, None)
 
+    def extract_command(self, args):
+        command = self._commands.get(args[0], None)
+        if command is None:
+            self.parser.error(_('Invalid command; please see --help'))
+        return command
+
     def main(self, args=sys.argv[1:]):
         """
         Run this command.
@@ -190,13 +196,17 @@ class KatelloCLI(object):
             if not args:
                 self.parser.error(_('No command given; please see --help'))
 
-            command = self._commands.get(args[0], None)
-            if command is None:
-                self.parser.error(_('Invalid command; please see --help'))
+            command = self.extract_command(args)
+
+            # process command and action options before setup_credentials
+            # to catch errors before accessing Kerberos
+            command_args = args[1:]
+            command.process_options(command_args)
+            command.extract_action(command_args)
 
             self.setup_server()
             self.setup_credentials()
-            return command.main(args[1:])
+            return command.main(command_args)
 
         except OptionParserExitError, opee:
             return opee.args[0]

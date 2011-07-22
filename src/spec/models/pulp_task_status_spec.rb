@@ -13,7 +13,7 @@
 require 'spec_helper'
 include OrchestrationHelper
 
-describe TaskStatus do
+describe PulpTaskStatus do
 
   context "proxy TaskStatus for pulp task" do
     let(:pulp_task_without_error) do
@@ -48,18 +48,17 @@ describe TaskStatus do
     end
 
     context "TaskStatus should have correct attributes for a completed task" do
-      before { @t = TaskStatus.using_pulp_task(pulp_task_without_error) }
+      before { @t = PulpTaskStatus.using_pulp_task(pulp_task_without_error) }
 
       specify { @t.uuid.should == pulp_task_without_error[:id] }
       specify { @t.state.should == pulp_task_without_error[:state] }
       specify { @t.start_time.should == pulp_task_without_error[:start_time] }
       specify { @t.finish_time.should == pulp_task_without_error[:finish_time] }
       specify { @t.result.should == pulp_task_without_error[:result] }
-      specify { @t.remote_system.should == 'pulp' }
     end
 
     context "TaskStatus should have correct attributes for a failed task" do
-      before { @t = TaskStatus.using_pulp_task(pulp_task_with_error) }
+      before { @t = PulpTaskStatus.using_pulp_task(pulp_task_with_error) }
       specify { @t.result.should == {:errors => [pulp_task_with_error[:exception], pulp_task_with_error[:traceback]]}.to_json }
     end
 
@@ -68,7 +67,7 @@ describe TaskStatus do
         disable_org_orchestration
 
         @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-        @t = TaskStatus.using_pulp_task(pulp_task_without_error) {|t| t.organization = @organization }
+        @t = PulpTaskStatus.using_pulp_task(pulp_task_without_error) {|t| t.organization = @organization }
         @t.save!
 
         Pulp::Task.stub(:find).and_return(updated_pulp_task)
