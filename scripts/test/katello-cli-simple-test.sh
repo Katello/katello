@@ -70,7 +70,8 @@ echo $required_tests
 
 function skip_test() {
     printf "%-40s" "$1"
-    printf "[ ${txtyel}SKIPPED${txtrst} ]\n"
+    shift
+    printf "[ ${txtyel}SKIPPED${txtrst} ]\t Notes: $1\n"
 }
 
 function test() {
