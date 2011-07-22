@@ -45,6 +45,7 @@ Src::Application.routes.draw do
   resources :systems do
     member do
       get :packages
+      get :more_packages
       get :subscriptions
       post :update_subscriptions
       get :facts
