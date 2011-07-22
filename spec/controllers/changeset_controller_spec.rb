@@ -22,11 +22,8 @@ describe ChangesetsController do
     ENV_NAME = "environment_name"
     ENVIRONMENT = {:name => ENV_NAME, :description => nil}
     NEXT_ENVIRONMENT = {:name => "next_env_name", :description => nil}
-    CHANGESET = {:id=>1, :promotion_date=>Time.now, :name=>"oldname",
-                 :packages=>[ChangesetPackage.new({:display_name=>"foo-1.2.3", :package_id=>"123", :product_id => 1})],
-                 :errata=>[ChangesetErratum.new({:display_name=>"RHSA-2011-23-2", :id=>"123", :product_id => 1})]} #should really use an actual product
+    CHANGESET = {:id=>1, :promotion_date=>Time.now, :name=>"oldname"}
 
-    
   end
 
   before(:each) do
@@ -44,9 +41,8 @@ describe ChangesetsController do
     @next_env = KPEnvironment.new(CSControllerTest::NEXT_ENVIRONMENT)
     @next_env.prior = @env;
     @next_env.save!
-    
-    CSControllerTest::CHANGESET["environment_id"] = @env.id
 
+    CSControllerTest::CHANGESET["environment_id"] = @env.id
   end
 
 
@@ -90,9 +86,9 @@ describe ChangesetsController do
       get :dependency_size, :id=>@changeset.id
       response.should be_success
     end
-    
+
   end
-  
+
   describe 'creating a changeset' do
 
     describe 'with only an environment id' do
@@ -103,7 +99,7 @@ describe ChangesetsController do
         Changeset.exists?(:name=>'Changeset 7055').should be_true
       end
     end
-    
+
     describe 'with a next environment id' do
       it 'should create a changeset correctly and send a notification' do
         controller.should_receive(:notice)
@@ -112,7 +108,7 @@ describe ChangesetsController do
         Changeset.exists?(:name=>'Changeset 7055').should be_true
       end
     end
-    
+
     it 'should cause an error notification if name is left blank' do
       controller.should_receive(:errors)
       post 'create', {:env_id => @env.id, :changesets => { :name => ''}}
@@ -124,21 +120,21 @@ describe ChangesetsController do
       post 'create', {:changesets => { :name => 'Test/Changeset 4.5'}}
       response.should_not be_success
     end
-    
+
   end
 
   describe 'deleting a changeset' do
     before (:each) do
       @changeset = Changeset.create(CSControllerTest::CHANGESET)
     end
-    
+
     it 'should successfully delete a changeset' do
       controller.should_receive(:notice)
       delete 'destroy', :id=>@changeset.id
       response.should be_success
       Changeset.exists?(:id=>@changeset.id).should be_false
     end
-        
+
     it 'should raise an exception if no such changeset exists' do
       controller.should_receive(:errors)
       delete 'destroy', :id=>20

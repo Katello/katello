@@ -60,7 +60,7 @@ module Glue::Pulp::Repos
       env_repos = []
       total_repos.collect {|repo|
          repo_obj = Glue::Pulp::Repo.new(repo)
-         env_repos << repo_obj if repo_obj.groupid.include?(Glue::Pulp::Repos.product_groupid(self))
+         env_repos << repo_obj if (repo_obj.groupid.include?(Glue::Pulp::Repos.product_groupid(self)) and repo_obj.groupid.include?(Glue::Pulp::Repos.env_groupid(env)))
       }
       @repos[env.id] = env_repos
       return env_repos
@@ -69,20 +69,13 @@ module Glue::Pulp::Repos
     def promote from_env, to_env
       @orchestration_for = :promote
 
-      queue_promote_repos repos(from_env), to_env
+      async_tasks = promote_repos repos(from_env), to_env
       if !to_env.products.include? self
         self.environments << to_env
       end
 
       save!
-    end
-
-    #is the repo cloned in the specified environment
-    def is_cloned_in? repo, env
-      self.repos(env).each{ |curr_repo|
-        return true if repo.clone_ids.include?(curr_repo.id)
-      }
-      return false
+      async_tasks
     end
 
     def sync
@@ -99,19 +92,19 @@ module Glue::Pulp::Repos
     def sync_status
       states = Array.new
       # Get the most recent status from all the repos in this product
-      not_synced = Glue::Pulp::SyncStatus.new(:state => Glue::Pulp::Repo::SYNC_STATE_NOT_SYNCED)
+      not_synced = ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED)
       top_status = not_synced
       for r in repos(self.locker)
         curr_status = r._get_most_recent_sync_status()
         repo_sync_state = curr_status.state
-        if repo_sync_state == Glue::Pulp::Repo::SYNC_STATE_ERROR
+        if repo_sync_state == ::PulpSyncStatus::Status::ERROR
           top_status = curr_status
-        elsif repo_sync_state == Glue::Pulp::Repo::SYNC_STATE_RUNNING and
-                 top_status != Glue::Pulp::Repo::SYNC_STATE_ERROR
+        elsif repo_sync_state == ::PulpSyncStatus::Status::RUNNING and
+                 top_status != ::PulpSyncStatus::Status::ERROR
           top_status = curr_status
-        elsif repo_sync_state == Glue::Pulp::Repo::SYNC_STATE_FINISHED and
-                top_status  != Glue::Pulp::Repo::SYNC_STATE_RUNNING and
-                top_status  != Glue::Pulp::Repo::SYNC_STATE_ERROR
+        elsif repo_sync_state == ::PulpSyncStatus::Status::FINISHED and
+                top_status  != ::PulpSyncStatus::Status::RUNNING and
+                top_status  != ::PulpSyncStatus::Status::ERROR
           top_status = curr_status
         end
       end
@@ -143,7 +136,7 @@ module Glue::Pulp::Repos
     end
 
     def sync_size
-      size = self.repos(locker).inject(0) { |sum,v| sum + v.sync_status.total_size }
+      size = self.repos(locker).inject(0) { |sum,v| sum + v.sync_status.progress.total_size }
     end
 
     def cancel_sync
@@ -277,20 +270,23 @@ module Glue::Pulp::Repos
 
     protected
     def promote_repos repos, to_env
+      async_tasks = []
       repos.each do |repo|
-        if self.is_cloned_in?(repo, to_env)
+        if repo.is_cloned_in?(to_env)
           #repo is already cloned, so lets just re-sync it from its parent
-          repo.sync
+          async_tasks << repo.sync
         else
-          new_repo = repo.promote(to_env, self)
+          async_tasks << repo.promote(to_env, self)
+
+          new_repo_id = Glue::Pulp::Repos.clone_repo_id(repo.id, to_env.name)
 
           pulp_uri = URI.parse(AppConfig.pulp.url)
           new_productContent = Glue::Candlepin::ProductContent.new({:content => {
-              :name => new_repo.name,
-              :contentUrl => "#{pulp_uri.scheme}://#{pulp_uri.host}/pulp/repos/#{new_repo.id}/",
-              :id => new_repo.id,
+              :name => repo.name,
+              :contentUrl => "#{pulp_uri.scheme}://#{pulp_uri.host}/pulp/repos/#{new_repo_id}/",
+              :id => new_repo_id,
               :type => "yum",
-              :label => new_repo.id,
+              :label => new_repo_id,
               :vendor => "Custom"
             }
           })
@@ -299,11 +295,8 @@ module Glue::Pulp::Repos
           productContent << new_productContent
         end
       end
+      async_tasks.flatten(1)
     end
 
-    private
-    def queue_promote_repos repos, to_env
-      queue.create(:name => "promote repositories for product: #{self.name}", :priority => 2, :action => [self, :promote_repos, repos, to_env])
-    end
   end
 end

@@ -104,23 +104,24 @@ describe RolesController do
   
   describe "viewing roles" do
     before (:each) do
-      150.times{|a| Role.create!(:name=>"bar#{a}")}
+      150.times{|a| Role.create!(:name=>"bar%05d" % [a])}
     end
 
     it "should show the role 2 pane list" do
       get :index
       response.should be_success
       response.should render_template("index")
-      assigns[:roles].should include Role.find(8)
-      assigns[:roles].should_not include Role.find(30)
+      assigns[:roles].should include Role.find_by_name("bar%05d" % 8)
+      assigns[:roles].length.should == 25
+      assigns[:roles].should_not include Role.find_by_name("bar%05d" % 30)
     end
 
     it "should return a portion of roles" do
       get :items, :offset=>25
       response.should be_success
       response.should render_template("list_items")
-      assigns[:roles].should include Role.find(30)
-      assigns[:roles].should_not include Role.find(8)
+      assigns[:roles].should include Role.find_by_name("bar%05d" % 30)
+      assigns[:roles].should_not include Role.find_by_name("bar%05d" % 8)
     end
     
   end
