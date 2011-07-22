@@ -34,7 +34,7 @@ class Api::SyncController < Api::ApiController
     # start syncing
     async_jobs = @obj.sync
     to_return = async_jobs.collect do |pulp_task|
-      ts = TaskStatus.using_pulp_task(pulp_task) {|t| t.organization = @obj.organization}
+      ts = PulpSyncStatus.using_pulp_task(pulp_task) {|t| t.organization = @obj.organization}
       ts.save!
       ts
     end

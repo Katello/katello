@@ -13,11 +13,11 @@
 class Api::ChangesetsController < Api::ApiController
 
   before_filter :find_environment, :only => [:index, :create]
-  before_filter :find_changeset, :only => [:show, :destroy, :update_content]
+  before_filter :find_changeset, :only => [:show, :destroy, :update_content, :promote]
   respond_to :json
 
   def index
-    render :json => @environment.working_changesets.where(params.slice(:name))
+    render :json => Changeset.where(params.slice(:name, :environment_id))
   end
 
 
@@ -34,6 +34,12 @@ class Api::ChangesetsController < Api::ApiController
     render :json => @changeset
   end
 
+  def promote
+    @changeset.state = Changeset::REVIEW
+    @changeset.save!
+    async_job = @changeset.async(:organization => @changeset.environment.organization).promote
+    render :json => async_job, :status => 202
+  end
 
   def destroy
     @changeset.destroy
@@ -43,46 +49,29 @@ class Api::ChangesetsController < Api::ApiController
 
   def update_content
 
-    update_items params[:patch][:products] do |action, name|
-      @changeset.add_product name    if action == "+"
-      @changeset.remove_product name if action == "-"
-    end
+    each_patch_item '+products' do |name| @changeset.add_product name end
+    each_patch_item '-products' do |name| @changeset.remove_product name end
 
-    update_items params[:patch][:packages] do |action, name|
-      @changeset.add_package name    if action == "+"
-      @changeset.remove_package name if action == "-"
-    end
+    each_patch_item '+packages' do |rec| @changeset.add_package rec[:name], rec[:product] end
+    each_patch_item '-packages' do |rec| @changeset.remove_package rec[:name], rec[:product] end
 
-    update_items params[:patch][:errata] do |action, id|
-      @changeset.add_erratum id    if action == "+"
-      @changeset.remove_erratum id if action == "-"
-    end
+    each_patch_item '+errata' do |rec| @changeset.add_erratum rec[:name], rec[:product] end
+    each_patch_item '-errata' do |rec| @changeset.remove_erratum rec[:name], rec[:product] end
 
-    update_items params[:patch][:repos] do |action, name|
-      @changeset.add_repo name    if action == "+"
-      @changeset.remove_repo name if action == "-"
-    end
+    each_patch_item '+repos' do |rec| @changeset.add_repo rec[:name], rec[:product] end
+    each_patch_item '-repos' do |rec| @changeset.remove_repo rec[:name], rec[:product] end
 
     @changeset.save!
     render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos])
   end
 
+  def each_patch_item name, &block
+    return if params[:patch].nil? or params[:patch][name].nil?
 
-  def update_items items, &block
-    return if items.nil?
-
-    for item in items do
-      action = item[0,1]
-      name   = item[1,item.length]
-
-      if (action != "+") && (action != "-")
-        raise Errors::PatchSyntaxException.new("Patch syntax error.")
-      end
-
-      yield action, name
+    params[:patch][name].each do |rec|
+      yield rec
     end
   end
-
 
   def find_changeset
     @changeset = Changeset.find(params[:id])
