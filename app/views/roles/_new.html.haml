@@ -1,13 +1,16 @@
-%h3 #{_("New Role")}
-#new_role
-  .grid_8#new_role
-    %fieldset
-      .grid_1.ra
-        = label :role, :name, _("Name")
-      .grid_6.la
-        = text_field :role, :name, :id=>"role_name_field", :tabindex => 1
+= content_for :title do
+  #{_("New Role")}
 
-    .grid_7.ra
-      .button#save_role_button{:tabindex => 2}
-        #{("Save Role")}
+= content_for :content do
+  #new_role
+    .grid_8#new_role
+      %fieldset
+        .grid_1.ra
+          = label :role, :name, _("Name")
+        .grid_5.la
+          = text_field :role, :name, :id=>"role_name_field", :tabindex => 1
+  
+      .grid_3.la.push_1
+        .button#save_role_button{:tabindex => 2}
+          #{("Save Role")}
   

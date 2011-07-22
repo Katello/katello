@@ -1,6 +1,7 @@
-:javascript
-.grid_16
-  %h2 #{_("New Sync Plan")}
+= content_for :title do
+  #{_("New Sync Plan")}
+  
+= content_for :content do
   #plan
     = form_for @plan, :html => {:method => :post, :id => 'new_sync_plan'}, :url => sync_plans_path do |f|
       = render :partial => 'form', :locals => { :form =>f }

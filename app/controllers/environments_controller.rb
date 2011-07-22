@@ -27,7 +27,7 @@ class EnvironmentsController < ApplicationController
   def new
     @environment = KPEnvironment.new(:organization => @organization)
     setup_new_edit_screen
-    render :partial=>"new"
+    render :partial=>"new", :layout => "tupane_layout"
   end
 
   # GET /environments/1/edit
@@ -40,7 +40,7 @@ class EnvironmentsController < ApplicationController
     @env_labels_json = ActiveSupport::JSON.encode(env_labels)
 
     @selected = @environment.prior.nil? ? env_labels[""] : env_labels[@environment.prior.id]
-    render :partial=>"edit"
+    render :partial=>"edit", :layout => "tupane_layout"
   end
 
 

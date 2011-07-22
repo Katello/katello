@@ -12,9 +12,9 @@
 
 class Api::ProductsController < Api::ApiController
   respond_to :json
-  before_filter :find_organization, :only => [:index, :repositories]
-  before_filter :find_environment, :only => [:index, :repositories]
+  before_filter :find_organization, :only => [:index]
   before_filter :find_product, :only => [:repositories]
+  before_filter :find_environment, :only => [:index, :repositories]
 
   def index
     query_params.delete(:organization_id)
@@ -34,14 +34,11 @@ class Api::ProductsController < Api::ApiController
     raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:id]}'") if @product.nil?
   end
 
-#  def find_organization
-#    @organization = Organization.first(:conditions => {:name => params[:organization_id]})
-#    render :text => _("Couldn't find organization '#{params[:organization_id]}'"), :status => 404 and return if @organization.nil?
-#    @organization
-#  end
-
   def find_environment
-    (@environment = @organization.locker) and return if params[:environment_id].nil?
+    if params[:environment_id].nil?
+      return @environment = @organization.locker unless @organization.nil?
+      return @environment = @product.organization.locker
+    end
     @environment = KPEnvironment.find(params[:environment_id])
   end
 end

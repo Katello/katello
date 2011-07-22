@@ -1,39 +1,39 @@
-= include_javascripts :edit_helpers
+= javascript :edit_helpers
 
-.grid_7
-  %h2
-    = @organization.name
+= content_for :title do
+  = @organization.name 
 
-.clear
-= form_for @organization, :url => {:action => "update",  :controller => "organizations"}, :method => "put", :remote => true do |f|
+= content_for :remove_item do   
+  %a.remove_item.remove_org{"data-id"=>@organization.name ,"data-url"=>organization_path(@organization.cp_key), "data-confirm-text"=>_('Are you sure?')}
+    = _("Remove Organization")
 
-  %fieldset.clearfix
-    .grid_2.ra
-      %label #{_("Description")}:
-    .grid_5.la.editable.edit_textfield{:style => "word-wrap: break-word;", 'name' => 'organization[description]', 'data-url'=>edit_organization_path(@organization.cp_key)}<> #{@organization[:description]}
-
-  .grid_7
-    %h5 #{_("Environment Promotion Paths")}:
-  - unless @organization.environments.empty?
-    %ul#promotion_paths
-    - @organization.promotion_paths.each do |path|
-      .clear
-        &nbsp;
-      .grid_7
-        %ul.breadcrumb
-          %li
-            =link_to "Locker", "#"
-          - for env in path
-            %li
-              %a.subpanel_element{"data-url"=>edit_organization_environment_path(@organization.cp_key, env.id)} #{env.name}
-  - else
+= content_for :content do
+  = form_for @organization, :url => {:action => "update",  :controller => "organizations"}, :method => "put", :remote => true do |f|
+  
+    %fieldset.clearfix
+      .grid_2.la
+        %label #{_("Description")}:
+      .grid_4.la.editable.edit_textfield{:style => "word-wrap: break-word;", 'name' => 'organization[description]', 'data-url'=>edit_organization_path(@organization.cp_key)}<> #{@organization[:description]}
+  
     .grid_7
-      #{_("No environments are available in this organization. Please add some environments to be able register systems to this organization.")}:
-  .clear
-    &nbsp;
-
-  .button.subpanel_element{"data-url"=>new_organization_environment_path(@organization.cp_key)}
-    = _("Add New Environment")
-
-%a.remove_item.remove_org{"data-id"=>@organization.name ,"data-url"=>organization_path(@organization.cp_key), "data-confirm-text"=>_('Are you sure?')}
-  = _("Remove Organization")
+      %h5 #{_("Environment Promotion Paths")}:
+    - unless @organization.environments.empty?
+      %ul#promotion_paths
+      - @organization.promotion_paths.each do |path|
+        .clear
+          &nbsp;
+        .grid_7
+          %ul.breadcrumb
+            %li
+              =link_to "Locker", "#"
+            - for env in path
+              %li
+                %a.subpanel_element{"data-url"=>edit_organization_environment_path(@organization.cp_key, env.id)} #{env.name}
+    - else
+      .grid_7
+        #{_("No environments are available in this organization. Please add some environments to be able register systems to this organization.")}:
+    .clear
+      &nbsp;
+  
+    .button.subpanel_element{"data-url"=>new_organization_environment_path(@organization.cp_key)}
+      = _("Add New Environment")

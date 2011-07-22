@@ -1,43 +1,38 @@
 //Edit/view page as seen on the 2 pane changeset history list
+= javascript :changeset_edit
 
-= include_javascripts :changeset_edit
 
-.grid_8
-  &nbsp;
-
-%h4.grid_7
+= content_for :title do
   = _("Details")
 
+= content_for :content do  
+  #changeset.fieldset{'data-ajax_url'=>changeset_path(@changeset.id)}
+    .grid_2.ra
+      = _("Name") 
+    .grid_5.la.editable.edit_textfield{:name=>"name", "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.name}
   
-#changeset.fieldset{'data-ajax_url'=>changeset_path(@changeset.id)}
-  .grid_2.ra
-    = _("Name") 
-  .grid_5.la.editable.edit_textfield{:name=>"name", "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.name}
-
-.fieldset
-  .grid_2.ra
-    = _("Promotion Date")
-  .grid_5.la
-    = I18n.l(@changeset.promotion_date, :format=>:long)
-
-
-
-
-%h4.grid_7
-  = _("Products")
-.prefix_1.grid_6
-  - for prod in @changeset.products
-    = prod.name
-
-%h4.grid_7
-  = _("Errata")
-.prefix_1.grid_6
-  - for erratum in @changeset.errata
-    = erratum.display_name
+  .fieldset
+    .grid_2.ra
+      = _("Promotion Date")
+    .grid_5.la
+      = I18n.l(@changeset.promotion_date, :format=>:long)
   
-%h4.grid_7
-  = _("Packages")
-.prefix_1.grid_6
-  - for pkg in @changeset.packages
-    = pkg.display_name
+  
+  %h4.grid_7
+    = _("Products")
+  .prefix_1.grid_6
+    - for prod in @changeset.products
+      = prod.name
+  
+  %h4.grid_7
+    = _("Errata")
+  .prefix_1.grid_6
+    - for erratum in @changeset.errata
+      = erratum.display_name
+    
+  %h4.grid_7
+    = _("Packages")
+  .prefix_1.grid_6
+    - for pkg in @changeset.packages
+      = pkg.display_name
 

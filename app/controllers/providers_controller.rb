@@ -23,7 +23,7 @@ class ProvidersController < ApplicationController
 
   def products_repos
     @products = @provider.products
-    render :partial => "products_repos", :locals => {:provider => @provider, :providers => @providers, :products => @products}
+    render :partial => "products_repos", :layout => "tupane_layout", :locals => {:provider => @provider, :providers => @providers, :products => @products}
   end
 
   def subscriptions
@@ -68,7 +68,7 @@ class ProvidersController < ApplicationController
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
     end
-    render :partial => "subscriptions", :locals => {:provider => @provider}
+    render :partial => "subscriptions", :layout => "tupane_layout", :locals => {:provider => @provider}
   end
 
   def index
@@ -94,12 +94,12 @@ class ProvidersController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :locals => {:provider => @provider}
+    render :partial => "edit", :layout => "tupane_layout", :locals => {:provider => @provider}
   end
 
   def new
     @provider = Provider.new
-    render :partial => "new", :locals => {:provider => @provider}
+    render :partial => "new", :layout => "tupane_layout", :locals => {:provider => @provider}
   end
 
   def create

@@ -10,6 +10,8 @@
 
     = include_stylesheets  :common
     = include_stylesheets  controller.section_id
+    = yield :stylesheets
+    
     = include_javascripts  :common
     = render :partial => '/layouts/ajax_notices'
     = render :partial => '/layouts/notification'
