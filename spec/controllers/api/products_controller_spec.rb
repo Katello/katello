@@ -112,11 +112,6 @@ describe Api::ProductsController do
 
   context "show repositories for a product in an environment" do
 
-    it "should find organization" do
-      Organization.should_receive(:first).once.with({:conditions => {:cp_key => organization_id}}).and_return(@organization)
-      get 'repositories', :organization_id => organization_id, :environment_id => environment_id, :id => product_id
-    end
-
     it "should find environment" do
       KPEnvironment.should_receive(:find).once.with(environment_id).and_return([@environment])
       get 'repositories', :organization_id => organization_id, :environment_id => environment_id, :id => product_id

@@ -1,5 +1,6 @@
 = include_javascripts :panel, :fancyqueries, :bbq
 = include_stylesheets :fancyqueries
+
 #container
   .right
     - if enable_create
@@ -11,25 +12,7 @@
     #{_('Select Result')}:
     %br
     #select-result
-  #panel-frame
-    #panel.panel.closed
-      .head
-        %a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}
-      .data
-        .spinner
-          = image_tag ("spinner.gif")
-        .panel-content
-        %br.clear
-  #subpanel-frame
-    #subpanel.panel.subpanel.closed
-      .head
-        %a.close{:href => "#", "data-close"=>"subpanel"} #{_("Close")}
-      .data
-        .spinner
-          = image_tag ("spinner.gif")
-        .panel-content
-        %br.clear
-
+  = render :partial=>"common/tupane"
 
   .left
     #list-title

@@ -1,42 +1,42 @@
-= include_javascripts :products_repos
+= javascript :products_repos
 
-= help_tip_button('product_repos-help')
+= content_for :title do
+  #{_("Products & Repositories")}
 
-%h2 #{_("Products & Repositories")}
-
-#products_repos
-  .grid_8
-    %nav.subnav
-      = render_navigation(:expand_all => true, :level => 3)
-
-  .grid_8
-    = help_tip(_("On Products & Repositories you can add your own Products and Repositories to your Provider.  " + |
-               "This allows you to synchronize content from any remote repository to this server.  Simply " + |
-               "add a Product and then setup one or more repositories to add to this Provider.  This feature is only " + |
-               "available for Custom Providers."), 'product_repos-help') |
-
-  .grid_8#products
-    %input{ :type => "hidden", :id=> "provider_id", :name => "provider_id", :value => @provider.id }
-
-    .button.subpanel_element{"data-url"=>new_provider_product_path(@provider.id)}
-      = _("Add Product")
-      
-    -@products.each do |product|
-      %ul
-        %li
-          .grid_1.ra
-            %a.clickable{ :href => "#", :onclick => ""}
-              %img{:src => "/images/icons/expander-collapsed.png", :alt => "Expand"}
-          .grid_6.la.editable.subpanel_element{"data-url"=>edit_provider_product_path(@provider.id, product.id)} #{product.name}
-
-          %ul{:style => "display:none;"}
-            -product.repos(product.organization.locker).each do |repo|
-              %li{:class=>'repo'}
-                .grid_6.prefix_1.la.editable.subpanel_element{"data-url"=>edit_provider_product_repository_path(@provider.id, product.id, repo.name)} #{repo.name}
-            .prefix_1
-              .button.subpanel_element{"data-url"=>new_provider_product_repository_path(@provider.id, product.id)}
-                #{_("Add Repository")}
-
+= content_for :remove_item do
   %a.remove_item.provider_delete{"data-id"=> @provider.id, "data-url"=>provider_path(@provider.id), "data-confirm-text"=>_('Are you sure?')}
     = _("Remove Provider")
 
+= content_for :navigation do
+  = render_navigation(:expand_all => true, :level => 3)
+  
+= content_for :content do
+  #products_repos
+    .grid_8
+      = help_tip_button('product_repos-help')
+      = help_tip(_("On Products & Repositories you can add your own Products and Repositories to your Provider.  " + |
+                 "This allows you to synchronize content from any remote repository to this server.  Simply " + |
+                 "add a Product and then setup one or more repositories to add to this Provider.  This feature is only " + |
+                 "available for Custom Providers."), 'product_repos-help') |
+  
+    .grid_8#products
+      %input{ :type => "hidden", :id=> "provider_id", :name => "provider_id", :value => @provider.id }
+  
+      .button.subpanel_element{"data-url"=>new_provider_product_path(@provider.id)}
+        = _("Add Product")
+        
+      -@products.each do |product|
+        %ul
+          %li
+            .grid_1.ra
+              %a.clickable{ :href => "#", :onclick => ""}
+                %img{:src => "/images/icons/expander-collapsed.png", :alt => "Expand"}
+            .grid_6.la.editable.subpanel_element{"data-url"=>edit_provider_product_path(@provider.id, product.id)} #{product.name}
+  
+            %ul{:style => "display:none;"}
+              -product.repos(product.organization.locker).each do |repo|
+                %li{:class=>'repo'}
+                  .grid_6.prefix_1.la.editable.subpanel_element{"data-url"=>edit_provider_product_repository_path(@provider.id, product.id, repo.name)} #{repo.name}
+              .prefix_1
+                .button.subpanel_element{"data-url"=>new_provider_product_repository_path(@provider.id, product.id)}
+                  #{_("Add Repository")}

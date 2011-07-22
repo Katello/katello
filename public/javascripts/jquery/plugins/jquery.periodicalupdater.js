@@ -18,7 +18,7 @@
 (function($) {
     var pu_log = function(msg) {
       try {
-        console.log(msg);
+        //console.log(msg); //No logging for now
       } catch(err) {}
     }
 

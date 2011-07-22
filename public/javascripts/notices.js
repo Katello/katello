@@ -24,10 +24,11 @@ var notices = (function() {
           notices.start();
         },
         displayNotice: function(level, notices) {
-            var notices = $.parseJSON(notices),
+            var notices= $.parseJSON(notices),
                 options = {
-                type: level, 
-                slideSpeed: 200
+                    type: level, 
+                    slideSpeed: 200,
+                    alwaysClosable: true
                 },
                 generate_list = function(notices){
                     var notices_list = '<ul>',
@@ -46,7 +47,7 @@ var notices = (function() {
                 options["fadeSpeed"] = 1000;
             } else {
                 options["sticky"] = false;
-                options["fadeSpeed"] = 5000;
+                options["fadeSpeed"] = 800;
             }
 
             if( notices['validation_errors'] !== undefined ){
@@ -65,7 +66,7 @@ var notices = (function() {
                 return true;
             }
 
-            //if comfing from the server may have new count
+            //if coming from the server may have new count
             if (data.unread_count) {
                 $("#unread_notices").text(data.unread_count);
             }

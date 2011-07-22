@@ -48,11 +48,118 @@ var promotion_page = (function($){
         find_button = function(id, type) {
             return $("a[class~=content_add_remove][data-id=" + common.escapeId(id) + "][data-type=" + type + "]");
         },
+        conflict = function(){
+            //conflict object that stores conflict information
+            var product_add = [],
+                product_remove =[],
+                products = {};
+
+            var add_emtpy_product = function(name){
+                products[name] = {name:name};
+                $.each(subtypes, function(index, type){
+                    products[name][type + "_" + "add"] = [];
+                    products[name][type + "_" + "remove"] = [];
+                });
+            };
+
+            return {
+                products_added: product_add,
+                products_removed: product_remove,
+                products: products,
+                size : function() {
+                    var total = 0;
+                        total += product_add.length + product_remove.length;
+                        $.each(products, function(key, prod) {
+                            $.each(subtypes, function(index, type) {
+                                total += prod[type + "_add"].length + prod[type + "_remove"].length;
+                            });
+                        });
+                    return total;
+                },
+                add_item : function(type, name, added, product_name) {
+                    var action = added ? "add" : "remove";
+                    if (type === 'product') {
+                        var prod_array = added ? product_add : product_remove;
+                        prod_array.push(name);
+                    }
+                    else {
+                        if (products[product_name] === undefined) {
+                            add_emtpy_product(product_name);
+                        }
+                        products[product_name][type + "_" + action].push(name);
+                    }
+                }
+            }
+        },
+        calculate_conflict = function(old_changeset, new_changeset) {
+            var myconflict = conflict();
+            var old_products = {}; //save products as hash so we dont have to loop to look them up
+            var new_products = {};
+            var all_products = {};
+
+            $.each(new_changeset.getProducts(), function(index, item) {
+                new_products[item.id] = item;
+                all_products[item.id] = item;
+            });
+            $.each(old_changeset.getProducts(), function(index, item) {
+                old_products[item.id] = item;
+                all_products[item.id] = item;
+            });
+
+            $.each(all_products, function(id, product){
+                var old_p = old_products[id] || {};
+                var new_p = new_products[id] || {};
+
+                if (new_p && new_p.all && (!old_p || !old_p.all)) { //product added
+                    myconflict.add_item('product', product.name, true);
+                }
+                else if(old_p && old_p.all && (!new_p || !new_p.all)) { //product removed
+                    myconflict.add_item('product', product.name, false);
+                }
+
+                $.each(subtypes, function(index, type) {
+
+                    var new_items = new_p[type] || [];
+                    var old_items = old_p[type] || [];
+                    var all_types = new_items.concat(old_items);
+
+                    $.each(all_types, function(index, item){
+                        var new_has = new_changeset.has_item(type, item.id, product.id);
+                        var old_has = old_changeset.has_item(type, item.id, product.id);
+
+                        if (new_has && !old_has) {
+                            myconflict.add_item(type, item.name, true, product.name);
+                        }
+                        else if (!new_has && old_has) {
+                            myconflict.add_item(type, item.name, false, product.name);
+                        }
+                    });
+                });
+            });
+            return myconflict;
+
+        },
+        show_conflict = function(conflict) {
+            $("#conflict-dialog").dialog({modal: true, width: 400});
+            $("#conflict-accordion").html(promotionsRenderer.renderConflict(conflict));
+        },
+        show_conflict_details = function() {
+            var accord = $("#conflict-accordion");
+            accord.show();
+            accord.accordion({fillSpace:true, beforeClose: hide_conflict});
+        },
+        hide_conflict = function() {
+            $("#conflict-dialog").dialog('close');
+            var accord = $("#conflict-accordion");
+            accord.accordion("destroy");
+            accord.html('');
+            accord.hide();
+        },
         push_changeset = function() {
     
             if(changeset_queue.length > 0 &&  current_changeset) {
                 stop_timer();
-                data = [];
+                var data = [];
                 while(changeset_queue.length > 0) {
                     data.push(changeset_queue.shift());
                 }
@@ -64,21 +171,26 @@ var promotion_page = (function($){
                         }
                         else {
                             if(data.changeset) {
+                                var old_changeset = current_changeset;
                                 current_changeset = changeset_obj(data.changeset);
                                 reset_page();
                                 changeset_tree.rerender_content();
+                                var diff = calculate_conflict(old_changeset, current_changeset);
+                                if (diff.size() > 0) {
+                                    show_conflict(diff);
+                                }
+                                else {
+                                    //console.log("Got newer changeset, but no differences");
+                                }
                             }
                             else {
                                 current_changeset.set_timestamp(data.timestamp);
                             }
                         }
-    
-                        //update_dep_size();
                         start_timer();
                     },
                     throw_error);
             }
-    
         },
         wait = function(break_cb, finished_cb) {
             $("#wait_dialog").dialog({
@@ -118,7 +230,7 @@ var promotion_page = (function($){
             if (adding) {
                 button.html(i18n.remove).addClass("remove_" + type).removeClass('add_'+type);
                 if( type !== 'product'){
-                    if( changeset.products[product_id] === undefined ){
+                    if( changeset.getProducts()[product_id] === undefined ){
                         add_product_breadcrumbs(changeset.id, product_id, product_name);
                     }
                 }
@@ -129,9 +241,9 @@ var promotion_page = (function($){
                 button.html(i18n.add).addClass("add_" + type).removeClass('remove_' + type);
                 changeset.remove_item(type, id, product_id);
                 if( type !== 'product' ){
-                    var product = changeset.products[product_id];
+                    var product = changeset.getProducts()[product_id];
                     if( !product.errata.length && !product.package.length && !product.repo.length ){
-                        delete changeset.products[product_id];
+                        delete changeset.getProducts()[product_id];
                         changeset_tree.render_content('changeset_' + changeset.id);
                     } else {
                         changeset_tree.rerender_content();
@@ -208,7 +320,7 @@ var promotion_page = (function($){
                 var counts = [];
 
                 var prod_count = 0;
-                $.each(current_changeset.products, function(key, product){
+                $.each(current_changeset.getProducts(), function(key, product){
                     if (product.all) {
                         prod_count+=1;
                     }
@@ -218,7 +330,7 @@ var promotion_page = (function($){
 
                 $.each(subtypes, function(index,type) {
                     var amount = 0;
-                    $.each(current_changeset.products, function(key, product){
+                    $.each(current_changeset.getProducts(), function(key, product){
                         amount += product[type].length;
                     });
                     counts.push([type, amount]);
@@ -254,7 +366,7 @@ var promotion_page = (function($){
         reset_page = function() {
             if (current_changeset) {
                 if (current_product) {
-                    var product = current_changeset.products[current_product];
+                    var product = current_changeset.getProducts()[current_product];
                     if( product !== undefined && product.all !== undefined ){
                         disable_all(subtypes);
                     } else {
@@ -271,7 +383,7 @@ var promotion_page = (function($){
                 } else {
                     var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
                     buttons.html(i18n.add).removeClass("remove_product").addClass("add_product").removeClass('disabled');
-                    $.each(current_changeset.products, function(index, product) {
+                    $.each(current_changeset.getProducts(), function(index, product) {
                         $.each(buttons, function(button_index, button){
                             if( $(button).attr('id') === ('add_remove_product_' + product.id) ){ 
                                 if( product.all === true){
@@ -331,7 +443,7 @@ var promotion_page = (function($){
         var all_types = types || subtypes;
         jQuery.each(all_types, function(index, type){
             var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
-            buttons.html(i18n.add).hide();
+            buttons.hide().html(i18n.add);
         });        
     },
     checkUsersInResponse = function(users) {
@@ -393,7 +505,10 @@ var promotion_page = (function($){
         start_timer:            start_timer,
         reset_page:             reset_page,
         throw_error:            throw_error,
-        wait:                   wait
+        wait:                   wait,
+        calc_conflict:          calculate_conflict,
+        hide_conflict:          hide_conflict,
+        show_conflict_details:  show_conflict_details
     };
 }(jQuery));
 
@@ -430,7 +545,8 @@ var changeset_obj = function(data_struct) {
 
     return {
         id:id,
-        products: products,
+        apples: products,
+        getProducts: function(){return products},
         is_new : function() {return is_new},
         set_timestamp:function(ts) { timestamp = ts; },
         timestamp: function(){return timestamp},
@@ -453,7 +569,7 @@ var changeset_obj = function(data_struct) {
             }
             if( products.hasOwnProperty(product_id) ){
                 jQuery.each(products[product_id][type], function(index, item) {
-                    if(item.id == id){
+                    if(item.id === id){
                         found = true;
                         return false;
                     }
@@ -544,8 +660,7 @@ $.expr[':'].contains = function(a, i, m) {
 $(document).ready(function() {
 
     $('.left').resizable('destroy');
-
-    //promotion_page.update_dep_size();
+    
     promotion_page.start_timer();
 
     $(".content_add_remove").live('click', function() {
@@ -633,18 +748,19 @@ $(document).ready(function() {
             bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
             $("#search_form #search").css("margin-left", 0);
             $("#search_form").css("opacity", "0").show();
-            $("#search_form").animate({"width":"440px", "opacity":"1"}, { duration: 200, queue: false });
+            $("#search_form").animate({"opacity":"1"}, { duration: 200, queue: false });
+            $("#search").animate({"width":"394px", "opacity":"1"}, { duration: 200, queue: false });
             $(this).css({backgroundPosition: "-32px -16px"});
         },function() {
-            $("#search_form").fadeOut('fast', function(){bcs.animate({ "height": bcs_height }, 'fast');});
+            $("#search_form").fadeOut("fast", function(){bcs.animate({ "height": bcs_height }, "fast");});
             $(this).css({backgroundPosition: "0 -16px"});
-            $('#search').val("").change();
+            $("#search").val("").change();
             $("#cslist .has_content li").fadeIn('fast');
         }
     );
         
     
-     var container = $('#container')
+     var container = $('#container');
 
      var original_top = Math.floor($('.left').position(top).top);
      if(container.length > 0){
@@ -752,6 +868,8 @@ var registerEvents = function(){
         }
     };
 
+    $('#conflict_close').click(promotion_page.hide_conflict);
+    $('#conflict-details').click(promotion_page.show_conflict_details);
 };
 
 var promotionsRenderer = (function(){
@@ -803,24 +921,32 @@ var promotionsRenderer = (function(){
                 inReviewPhase = !changeset.is_new();
             
             if (key === 'package-cs'){
-                return templateLibrary.listItems(changeset.products, "package", product_id, !inReviewPhase);
+                return templateLibrary.listItems(changeset.getProducts(), "package", product_id, !inReviewPhase);
             }
             else if (key === 'errata-cs'){
-                return templateLibrary.listItems(changeset.products, "errata", product_id, !inReviewPhase);
+                return templateLibrary.listItems(changeset.getProducts(), "errata", product_id, !inReviewPhase);
             }
             else if (key === 'repo-cs'){
-                return templateLibrary.listItems(changeset.products, "repo", product_id, !inReviewPhase);
+                return templateLibrary.listItems(changeset.getProducts(), "repo", product_id, !inReviewPhase);
             }
             else if (key === 'product-cs'){
-                return templateLibrary.productDetailList(changeset.products[product_id], promotion_page.subtypes, changeset_id);
+                return templateLibrary.productDetailList(changeset.getProducts()[product_id], promotion_page.subtypes, changeset_id);
             }
             else if (key === 'changeset'){
                 return templateLibrary.productList(changeset, changeset.id, !inReviewPhase);
             }
+        },
+        renderConflict = function(conflict) {
+            var html = templateLibrary.conflictFullProducts(conflict.products_added, conflict.products_removed);
+            $.each(conflict.products, function(key, product){
+                html += templateLibrary.conflictProduct(key, product);
+            });
+            return html;
         };
 
     return {
-        render: render
+        render: render,
+        renderConflict: renderConflict
     };
 })();
 
@@ -886,10 +1012,11 @@ var templateLibrary = (function(){
                 all_list = '',
                 partial_list = '',
                 product, provider,
-                products = changeset.products;
+                products = changeset.getProducts();
             
             if( changeset.productCount() === 0 ){
-                html += i18n['no_products'];
+                html += '<div class="empty_list">' + i18n['no_products'] + '</div>';
+                //html += i18n['no_products'];
             } else {
                 for( key in products ){
                     if( products.hasOwnProperty(key) ){
@@ -928,12 +1055,54 @@ var templateLibrary = (function(){
                     '<span class="' + provider + '-product-sprite"></span>' +
                     '<span class="product-icon sort_attr" >' + name + '</span>' +
                     '</div></li>';
+        },
+        conflictFullProducts = function(added, removed) {
+            if (added.length == 0 && removed.length == 0) {
+                return "";
+            }
+            var html = "<h3>"+ i18n.full_product +"</h3>";
+            html +="<div>";
+            html += conflictAccordianListItem(true, added);
+            html += conflictAccordianListItem(false, removed);
+            html += "</div>";
+            return html;
+        },    
+        conflictProduct = function(product_name, conflict_product) {
+            var html = '<h3><a href="#">'+ product_name+ '</a></h3>';
+            html +="<div>";
+            $.each(promotion_page.subtypes, function(index, type){
+                var added = conflict_product[type + "_add"];
+                var removed = conflict_product[type + "_remove"];
+
+                if (added.length > 0 || removed.length > 0) {
+                    html += '<div>' + i18n[type] + ':</div>';
+                    html += conflictAccordianListItem(true, added);
+                    html += conflictAccordianListItem(false, removed);
+                }
+            });
+            html += "</div>";
+            return html;
+        },
+        conflictAccordianListItem = function(added, items) {
+            if (items.length === 0) {
+                return "";
+            }
+
+            var html = '<div class="conflict_item_type"><div>' + (added ? i18n.added : i18n.removed) + '</div>';
+            html += '<ul>';
+            $.each(items, function(index, item) {
+                html += "<li class='conflict_item'>" + item +  "</li>"
+            });
+            html += '</ul></div>';
+            return html;
         };
         
     return {
         changesetsList: changesetsList,
         productList: productList,
         listItems : listItems,
-        productDetailList: productDetailList
+        productDetailList: productDetailList,
+        conflictFullProducts: conflictFullProducts,
+        conflictProduct: conflictProduct
     };
 })();

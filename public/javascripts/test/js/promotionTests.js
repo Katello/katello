@@ -46,7 +46,7 @@ test('id', function(){
    strictEqual(this.changeset.id, "6", 'true')
 });
 test('products', function(){
-   strictEqual(this.changeset.products, changeset_data_struct.products, 'true')
+   strictEqual(this.changeset.getProducts(), changeset_data_struct.products, 'true')
 });
 test('timestamp', function(){
    strictEqual(this.changeset.timestamp(), changeset_data_struct.timestamp, 'true')
@@ -74,3 +74,80 @@ test('Should not have package eventReceivers-2.20.15-1.fc12.noarch', function(){
 test('Should add package eventReceivers-2.20.15-1.fc12.noarch', function(){
     equals(this.changeset.has_item('package', "479900a7-a077-46bc-bfc9-5baafbb30e82", "1"), false, 'true'); 
 });
+
+
+module('Changeset Conflict',{
+    setup: function(){
+        var new_changeset_struct = $.extend(true, {},  changeset_data_struct);
+        this.changeset_a = changeset_obj(new_changeset_struct);
+        this.changeset_b = changeset_obj(changeset_data_struct);
+
+    }
+});
+
+
+test('Should properly detect a changset conflict', function() {
+
+    var newChangeset = this.changeset_a;
+    var oldChangeset = this.changeset_b;
+
+    //delete a package and a full product
+    newChangeset.getProducts()["1"].package.pop();
+    delete newChangeset.getProducts()["2"];
+
+    var conflict = promotion_page.calc_conflict(oldChangeset, newChangeset);
+
+    equals(conflict.products_added.length, 0, 'no products added');
+    equals(conflict.products_removed.length, 1, 'one product removed');
+
+    var conflict_prod = conflict.products[newChangeset.getProducts()["1"].name];
+    equals( conflict_prod.package_add.length, 0, "zero packages added");
+    equals( conflict_prod.package_remove.length, 1, "one package removed");
+
+});
+
+test('Should properly detect if an entire package has been removed', function() {
+
+    var newChangeset = this.changeset_a;
+    var oldChangeset = this.changeset_b;
+
+    //delete a package and a full product
+    delete newChangeset.getProducts()["1"];
+
+    var conflict = promotion_page.calc_conflict(oldChangeset, newChangeset);
+
+    equals(conflict.products_added.length, 0, 'no products added');
+    equals(conflict.products_removed.length, 0, 'one product removed');
+
+    var conflict_prod = conflict.products[oldChangeset.getProducts()["1"].name];
+    equals( conflict_prod.package_add.length, 0, "zero packages added");
+    equals( conflict_prod.package_remove.length, 8, "eight packages removed");
+
+});
+
+test('Should properly detect a changset conflict (in reverse)', function() {
+
+    var newChangeset = this.changeset_a;
+    var oldChangeset = this.changeset_b;
+
+    //delete a package and a full product
+    oldChangeset.getProducts()["1"].package.pop();
+    delete oldChangeset.getProducts()["2"];
+
+    var conflict = promotion_page.calc_conflict(oldChangeset, newChangeset);
+
+    equals(conflict.products_added.length, 1, 'no products added');
+    equals(conflict.products_removed.length, 0, 'one product removed');
+
+    var conflict_prod = conflict.products[newChangeset.getProducts()["1"].name];
+    equals( conflict_prod.package_add.length, 1, "zero packages added");
+    equals( conflict_prod.package_remove.length, 0, "one package removed");
+
+});
+
+
+
+
+
+
+

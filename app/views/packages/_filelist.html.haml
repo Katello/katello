@@ -1,15 +1,13 @@
-%h2
+= content_for :title do
   = @package.nvrea
 
-%nav.subnav
+= content_for :navigation do
   = render_navigation(:expand_all => true, :level => 3)
 
-%h2 
-  = _("Filelist")
-
-
-.clear
-
-file 1
-%br
-file 2
+= content_for :content do
+  -#%h2 
+    -#= _("Filelist")
+  
+  file 1
+  %br
+  file 2
