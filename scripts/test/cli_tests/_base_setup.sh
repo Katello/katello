@@ -51,8 +51,8 @@ test "repo create" repo create --product="$FEWUPS_PRODUCT" --org="$FIRST_ORG" --
 test "repo list by org and env" repo list --org="$FIRST_ORG" --environment="$TEST_ENV"
 test "repo list by org only" repo list --org="$FIRST_ORG"
 test "repo list by org and product" repo list --org="$FIRST_ORG" --product="$FEWUPS_PRODUCT"
-REPO_NAME=`$CMD repo list --org="$FIRST_ORG" | grep $REPO | awk '{print $2}'`
-REPO_ID=`$CMD repo list --org="$FIRST_ORG" | grep $REPO | awk '{print $1}'`
+REPO_NAME=`$CMD repo list --org="$FIRST_ORG" | grep $REPO | grep -i name | awk '{print $2}'`
+REPO_ID=`$CMD repo list --org="$FIRST_ORG" | grep $REPO | grep -i id | awk '{print $2}'`
 test "repo status" repo status --id="$REPO_ID"
 test "repo synchronize" repo synchronize --id="$REPO_ID"
 

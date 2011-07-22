@@ -272,7 +272,7 @@ class List(RepoAction):
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
-            help=_("organization name eg: foo.example.com (required)"))
+            help=_("organization name eg: ACME_Corporation (required)"))
         self.parser.add_option('--environment', dest='env',
             help=_("environment name eg: production (default: locker)"))
         self.parser.add_option('--product', dest='product',
@@ -290,20 +290,25 @@ class List(RepoAction):
         self.printer.addColumn('name')
         self.printer.addColumn('package_count')
 
-        if prodName:
+        if prodName and envName:
             env  = get_environment(orgName, envName)
             prod = get_product(orgName, prodName)
             if env != None and prod != None:
-                self.printer.setHeader(_("Repo List for Product %s in Org %s Environment %s") % (prodName, orgName, env["name"]))
-                repos = self.api.repos_by_org_env_product(orgName, env["id"], prod["cp_id"])
+                self.printer.setHeader(_("Repo List For Org %s Environment %s Product %s") % (orgName, env["name"], prodName))
+                repos = self.api.repos_by_env_product(env["id"], prod["cp_id"])
                 self.printer.printItems(repos)
-
+        elif prodName:
+            prod = get_product(orgName, prodName)
+            if prod != None:
+                self.printer.setHeader(_("Repo List for Product %s in Org %s ") % (prodName, orgName))
+                repos = self.api.repos_by_product(prod["cp_id"])
+                self.printer.printItems(repos)
         else:
             env  = get_environment(orgName, envName)
             if env != None:
                 self.printer.setHeader(_("Repo List For Org %s Environment %s") % (orgName, env["name"]))
                 repos = self.api.repos_by_org_env(orgName,  env["id"])
-                self.printer.printItems(repos)
+                self.printer.printItems(repos)            
 
         return os.EX_OK
 

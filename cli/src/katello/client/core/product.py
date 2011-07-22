@@ -86,8 +86,7 @@ class List(ProductAction):
             self.printer.addColumn('name')
             self.printer.addColumn('provider_id')
             self.printer.setHeader(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
-            prods = self.api.products_by_env(org_name, env["id"])
-
+            prods = self.api.products_by_org(org_name)
         else:
             self.printer.addColumn('id', "Cp Id")
             self.printer.addColumn('name')

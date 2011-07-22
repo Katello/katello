@@ -1,68 +1,70 @@
-= include_javascripts :edit_helpers
+= javascript :edit_helpers
 
-%h2 #{_("System")}
-%nav.subnav
+= content_for :title do 
+  #{_("System")}
+
+= content_for :navigation do
   = render_navigation(:expand_all => true, :level => 3)  
 
-#system
-  %input#panel_element_id{:name => @system.id, :type => "hidden", :value => @system.id, "data-ajax_url"=>url_for(:action=> 'update')}
-
-  .grid_8
-    %h5 #{_("System Info")}
-  .grid_8#system_info
-    %fieldset
-      .grid_2.ra.fieldset
-        = label :id, :id, _("ID")
-      .grid_5.la #{system.id}
-    %fieldset
-      .grid_2.ra.fieldset
-        = label :uuid, :uuid, _("UUID")
-      .grid_5.la #{system.uuid}
-  .clear
-  .grid_8
-    %h5 #{_("System Properties")}      
-  .grid_8#system_properties
-    %fieldset  
-      .grid_2.ra.fieldset
-        = label :system, :name, _("Name")
-      .grid_5.la.editable.edit_panel_element#system_name{'name' => 'system[name]', 'data-url'=>system_path(system.id)} #{system[:name]}
-    %fieldset
-      .grid_2.ra.fieldset
-        = label :system, :description, _("Description")
-      .grid_5.la.editable.edit_textarea#system_description{'name' => 'system[description]', 'data-url'=>system_path(system.id)} #{system[:description]}
-    %fieldset
-      .grid_2.ra.fieldset
-        = label :os, :os, _("OS")
-      .grid_5.la #{system.distro}
-    %fieldset
-      .grid_2.ra.fieldset
-        = label :release, :release, _("Release")
-      .grid_5.la #{system.kernel}
-    %fieldset
-      .grid_2.ra.fieldset
-        = label :arch, :arch, _("Arch")
-      .grid_5.la #{system.arch}
-    %fieldset
-      .grid_2.ra.fieldset
-        = label :location, :location, _("Location")
-      .grid_5.la.editable.edit_textfield#system_location{'name' => 'system[location]', 'data-url'=>system_path(system.id)} #{system[:location]}
-    
-  .clear
-  .grid_8
-    %h5 #{_("System Events")}
-  .grid_8#system_events
-    %fieldset
-      .grid_2.ra.fieldset
-        = label :checked_in, :checked_in, _("Checked In")
-      .grid_5.la
-        = get_checkin(system)
-    %fieldset
-      .grid_2.ra.fieldset
-        = label :registered_date, :registered_date, _("Registered")
-      .grid_5.la 
-        = convert_time(system.created)
-    %fieldset
-      .grid_2.ra.fieldset
-        = label :last_booted, :last_booted, _("Last Booted")
-      .grid_5.la #{_("None")}
+= content_for :content do
+  #system
+    %input#panel_element_id{:name => @system.id, :type => "hidden", :value => @system.id, "data-ajax_url"=>url_for(:action=> 'update')}
+    .grid_8
+      %h5 #{_("System Info")}
+    .grid_8#system_info
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :id, :id, _("ID")
+        .grid_5.la #{system.id}
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :uuid, :uuid, _("UUID")
+        .grid_5.la #{system.uuid}
+    .clear
+    .grid_8
+      %h5 #{_("System Properties")}      
+    .grid_8#system_properties
+      %fieldset  
+        .grid_2.ra.fieldset
+          = label :system, :name, _("Name")
+        .grid_5.la.editable.edit_panel_element#system_name{'name' => 'system[name]', 'data-url'=>system_path(system.id)} #{system[:name]}
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :system, :description, _("Description")
+        .grid_5.la.editable.edit_textarea#system_description{'name' => 'system[description]', 'data-url'=>system_path(system.id)} #{system[:description]}
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :os, :os, _("OS")
+        .grid_5.la #{system.distro}
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :release, :release, _("Release")
+        .grid_5.la #{system.kernel}
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :arch, :arch, _("Arch")
+        .grid_5.la #{system.arch}
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :location, :location, _("Location")
+        .grid_5.la.editable.edit_textfield#system_location{'name' => 'system[location]', 'data-url'=>system_path(system.id)} #{system[:location]}
+      
+    .clear
+    .grid_8
+      %h5 #{_("System Events")}
+    .grid_8#system_events
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :checked_in, :checked_in, _("Checked In")
+        .grid_5.la
+          = get_checkin(system)
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :registered_date, :registered_date, _("Registered")
+        .grid_5.la 
+          = convert_time(system.created)
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :last_booted, :last_booted, _("Last Booted")
+        .grid_5.la #{_("None")}
     

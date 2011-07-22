@@ -46,12 +46,12 @@ class UsersController < ApplicationController
   
   def edit 
     @user = User.where(:id => params[:id])[0]
-    render :partial=>"edit", :locals=>{:user=>@user}
+    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:user=>@user}
   end
   
   def new
     @user = User.new
-    render :partial=>"new", :locals=>{:user=>@user}
+    render :partial=>"new", :layout => "tupane_layout", :locals=>{:user=>@user}
   end
 
   def create

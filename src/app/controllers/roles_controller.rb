@@ -48,7 +48,7 @@ class RolesController < ApplicationController
   
   def new
     @role = Role.new
-    render :partial=>"new", :locals=>{:role=>@role}
+    render :partial=>"new", :layout => "tupane_layout", :locals=>{:role=>@role}
   end
 
   def edit
@@ -58,9 +58,9 @@ class RolesController < ApplicationController
     # render the appropriate partial depending on whether or not the role is a self role
     @user = @role.self_role_for_user
     if @user.nil?
-      render :partial=>"edit", :locals=>{:role=>@role}
+      render :partial=>"edit", :layout => "tupane_layout", :locals=>{:role=>@role}
     else
-      render :partial=>"self_role_edit", :locals=>{:role=>@role}
+      render :partial=>"self_role_edit", :layout => "tupane_layout", :locals=>{:role=>@role}
     end
   end
 

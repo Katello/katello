@@ -308,6 +308,11 @@ class Action(object):
                 self.parser.error(self.optErrors[0])
             else:
                 self.parser.error(self.optErrors)
+   
+    # this method exists so that an action can run like a command
+    # it supports having single name actions (e.g. katello shell)
+    def extract_action(self, args):
+    	pass
 
     def error(self, errorMsg):
         _log.error("error: %s" % str(errorMsg))
