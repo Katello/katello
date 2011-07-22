@@ -12,38 +12,22 @@
 */
 
 $(document).ready(function() {
+
     $('#new_activation_key').live('submit', function(e) {
         e.preventDefault();
-        var button = $(this).find('input[type|="submit"]');
-        button.attr("disabled","disabled");
-        $(this).ajaxSubmit({
-            success: function(data) {
-                list.add(data);
-                panel.closePanel($('#panel'));
-                panel.select_item(list.last_child().attr("id"));
-            },
-            error: function(e) {
-                button.removeAttr('disabled');
-            }
-        });
+        activation_key.create_key($(this));
     });
 
     $(".remove_key").live('click', function() {
-        var button = $(this);
+        activation_key.delete_key($(this));
+    });
 
-        var answer = confirm(button.attr('data-confirm-text'));
-        if (answer) {
-            $.ajax({
-                type: "DELETE",
-                url: button.attr('data-url'),
-                cache: false,
-                success: function() {
-                    panel.closeSubPanel($('#subpanel'));
-                    panel.closePanel($('#panel'));
-                    list.remove(button.attr("data-id").replace(/ /g, '_'));
-                }
-            });
-        }
+    $(".select_env").live('click', function() {
+        activation_key.select_environment($(this));
+    });
+
+    $(".edit_env").live('click', function() {
+        activation_key.edit_environment($(this));
     });
 
     $('#update_subscriptions').live('submit', function(e) {
@@ -64,6 +48,20 @@ $(document).ready(function() {
 
 var activation_key = (function() {
     return {
+        create_key : function(data) {
+            var button = data.find('input[type|="submit"]');
+            button.attr("disabled","disabled");
+            data.ajaxSubmit({
+                success: function(data) {
+                    list.add(data);
+                    panel.closePanel($('#panel'));
+                    panel.select_item(list.last_child().attr("id"));
+                },
+                error: function(e) {
+                    button.removeAttr('disabled');
+                }
+            });                       
+        },
         //custom successCreate - calls notices update and list/panel updates from panel.js
         successCreate : function(data) {
             //panel.js functions
@@ -83,6 +81,43 @@ var activation_key = (function() {
           	else {
           		$(fields).removeAttr("disabled");
           	}
+        },
+
+        delete_key : function(data) {
+            var answer = confirm(data.attr('data-confirm-text'));
+            if (answer) {
+                $.ajax({
+                    type: "DELETE",
+                    url: data.attr('data-url'),
+                    cache: false,
+                    success: function() {
+                        panel.closeSubPanel($('#subpanel'));
+                        panel.closePanel($('#panel'));
+                        list.remove(data.attr("data-id").replace(/ /g, '_'));
+                    }
+                });
+            }
+        },
+        edit_environment : function(data) {
+            $.ajax({
+                type: "PUT",
+                url: data.attr("data-url"),
+                data: { "activation_key":{ "environment_id": data.attr("data-env_id") } },
+                cache: false,
+                success: function(response) {
+                    activation_key.select_environment(data);
+                },
+                error: function (data) {
+                }
+            });
+        },
+        select_environment : function(data) {
+            // clear any previous selected environments
+            data.closest("#promotion_paths").find(".selected").removeClass("selected");
+            // highlight the selected environment
+            data.addClass("selected");
+            // save the id of the env selected
+            data.closest("#promotion_paths").find("#activation_key_default_environment").attr('value', data.attr('data-env_id'));
         }
     }
 })();

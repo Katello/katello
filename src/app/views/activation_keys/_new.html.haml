@@ -12,6 +12,21 @@
         %label #{_("Description")}:
       .grid_5.la
         = text_area_tag :activation_key_description, params[:description], :size => "32x4", :tabindex => 2
+
+    %fieldset#promotion_paths
+      = hidden_field_tag :activation_key_default_environment
+      %label #{_("Default Environment")}:
+      - unless current_organization.environments.empty?
+        %ul
+        - current_organization.promotion_paths.each do |path|
+          .grid_8
+            %ul.breadcrumb
+              %li
+                =link_to "Locker", "#"
+              - for env in path
+                %li
+                  %a.select_env{"data-env_id" => env.id} #{env.name}
+
     .grid_6.ra
       = button_to _("Save"), {:action => "create", :controller => "activation_keys"}, :method => :post, :id => :activation_key_save, :tabindex => 3
 

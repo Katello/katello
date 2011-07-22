@@ -19,7 +19,6 @@ describe ActivationKeysController do
   include OrganizationHelperMethods
 
   module AKeyControllerTest
-    AKEY = {:activation_key_name => "test key", :activation_key_description => "this is the test key"}
     AKEY_INVALID = {}
     AKEY_NAME_INVALID = {:name => ""}
     AKEY_DESCRIPTION = {:description => "this is the key's description"}
@@ -30,7 +29,10 @@ describe ActivationKeysController do
     login_user
 
     @organization = new_test_org
-    @a_key = ActivationKey.create!(:name=>"another test key", :organization_id=>@organization)
+    @environment = KPEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
+    @a_key = ActivationKey.create!(:name => "another test key", :organization_id => @organization, :environment => @environment)
+
+    @akey_params = {:activation_key_name => "test key", :activation_key_description => "this is the test key", :activation_key_default_environment => @environment.id}
   end
 
   describe "GET index" do
@@ -133,23 +135,23 @@ describe ActivationKeysController do
   describe "POST create" do
     describe "with valid params" do
       it "assigns a newly created activation_key" do
-        post :create, AKeyControllerTest::AKEY
-        assigns[:activation_key].name.should eq(AKeyControllerTest::AKEY[:activation_key_name]) 
-        assigns[:activation_key].description.should eq(AKeyControllerTest::AKEY[:activation_key_description])
+        post :create, @akey_params
+        assigns[:activation_key].name.should eq(@akey_params[:activation_key_name]) 
+        assigns[:activation_key].description.should eq(@akey_params[:activation_key_description])
       end
 
       it "renders list item partial for 2 pane" do
-        post :create, AKeyControllerTest::AKEY
+        post :create, @akey_params
         response.should render_template(:partial => "common/_list_item")
       end
 
       it "should generate a success notice" do
         controller.should_receive(:notice)
-        post :create, AKeyControllerTest::AKEY
+        post :create, @akey_params
       end
 
       it "should be successful" do
-        post :create, AKeyControllerTest::AKEY
+        post :create, @akey_params
         response.should be_success
       end
     end
