@@ -61,7 +61,7 @@ def setup_admin(admin):
     user_cmd.add_action('delete', user.Delete())
     admin.add_command('user', user_cmd)
 
-    admin.add_command("ping", ping.Status())
+    admin.add_command('ping', ping.Status())
 
     prod_cmd = product.Product()
     prod_cmd.add_action('create', product.Create())
@@ -110,7 +110,7 @@ def setup_admin(admin):
     template_cmd.add_action('promote', template.Promote())
     admin.add_command('template', template_cmd)
 
-    admin.add_command("shell", shell_command.ShellAction(admin))
+    admin.add_command('shell', shell_command.ShellAction(admin))
 
     prov_cmd = provider.Provider()
     prov_cmd.add_action('create', provider.Update(create=True))
