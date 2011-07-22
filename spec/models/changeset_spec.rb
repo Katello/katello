@@ -97,17 +97,17 @@ describe Changeset do
       end
 
       it "should add package" do
-        @changeset.add_package("pack")
+        @changeset.add_package("pack", "prod")
         @changeset.packages.length.should == 1
       end
 
       it "should add erratum" do
-        @changeset.add_erratum("err")
+        @changeset.add_erratum("err", "prod")
         @changeset.errata.length.should == 1
       end
 
       it "should add repo" do
-        @changeset.add_repo("repo")
+        @changeset.add_repo("repo", "prod")
         @changeset.repos.length.should == 1
       end
 
@@ -144,18 +144,18 @@ describe Changeset do
       end
 
       it "should remove package" do
-        ChangesetPackage.should_receive(:destroy_all).with(:package_id => 1, :changeset_id => @changeset.id).and_return(true)
-        @changeset.remove_package("pack")
+        ChangesetPackage.should_receive(:destroy_all).with(:package_id => 1, :changeset_id => @changeset.id, :product_id => 1).and_return(true)
+        @changeset.remove_package("pack", "prod")
       end
 
       it "should remove erratum" do
-        ChangesetErratum.should_receive(:destroy_all).with(:errata_id => 'err', :changeset_id => @changeset.id).and_return(true)
-        @changeset.remove_erratum("err")
+        ChangesetErratum.should_receive(:destroy_all).with(:errata_id => 'err', :changeset_id => @changeset.id, :product_id => 1).and_return(true)
+        @changeset.remove_erratum("err", "prod")
       end
 
       it "should remove repo" do
-        ChangesetRepo.should_receive(:destroy_all).with(:repo_id => 1, :changeset_id => @changeset.id).and_return(true)
-        @changeset.remove_repo("repo")
+        ChangesetRepo.should_receive(:destroy_all).with(:repo_id => 1, :changeset_id => @changeset.id, :product_id => 1).and_return(true)
+        @changeset.remove_repo("repo", "prod")
       end
 
     end
