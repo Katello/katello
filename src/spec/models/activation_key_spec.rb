@@ -22,22 +22,55 @@ describe ActivationKey do
     disable_org_orchestration
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment = KPEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
-    @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization, :environment => @environment)
+    @environment_1 = KPEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
+    @environment_2 = KPEnvironment.create!(:name => 'test', :prior => @environment_1.id, :organization => @organization)
+    @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization, :environment => @environment_1)
   end
 
-  it "be able to create" do
+  describe "should be invalid without" do
+    it "name" do
+      @akey = ActivationKey.new
+      @akey.should_not be_valid
+      @akey.errors[:name].should_not be_empty
+    end
+
+    it "default environment" do
+      @akey = ActivationKey.new
+      @akey.name = 'invalid key'
+      @akey.should_not be_valid
+      @akey.errors[:environment].should_not be_empty
+    end
+  end
+
+  it "should be able to create" do
     @akey.should_not be_nil
   end
 
-  it "be able to update" do 
-    a = ActivationKey.find_by_name(aname)
-    a.should_not be_nil
-    new_name = a.name + "N"
-    b = ActivationKey.update(a.id, {:name => new_name})
-    b.name.should == new_name
-  end
+  describe "should be able to update" do
+    it "name" do 
+      a = ActivationKey.find_by_name(aname)
+      a.should_not be_nil
+      new_name = a.name + "N"
+      b = ActivationKey.update(a.id, {:name => new_name})
+      b.name.should == new_name
+    end
+
+    it "description" do 
+      a = ActivationKey.find_by_name(aname)
+      a.should_not be_nil
+      new_description = a.description + "N"
+      b = ActivationKey.update(a.id, {:description => new_description})
+      b.description.should == new_description
+    end
   
+    it "environment" do 
+      a = ActivationKey.find_by_name(aname)
+      a.should_not be_nil
+      b = ActivationKey.update(a.id, {:environment => @environment_2})
+      b.environment.should == @environment_2
+    end
+  end
+
   it "should map 2way subscription to keys" do 
     s = KTSubscription.create!(:subscription => 'abc123')
     @akey.subscriptions = [s]
@@ -51,5 +84,4 @@ describe ActivationKey do
     @akey.subscriptions = [s,s2]
     @akey.subscriptions.last.subscription.should == 'def123'
   end
-
 end

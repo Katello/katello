@@ -21,7 +21,8 @@ describe ActivationKeysController do
   module AKeyControllerTest
     AKEY_INVALID = {}
     AKEY_NAME_INVALID = {:name => ""}
-    AKEY_DESCRIPTION = {:description => "this is the key's description"}
+    AKEY_NAME = {:name => "test key updated"}
+    AKEY_DESCRIPTION = {:description => "this is the key's description updated"}
   end
 
   before(:each) do
@@ -29,10 +30,11 @@ describe ActivationKeysController do
     login_user
 
     @organization = new_test_org
-    @environment = KPEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
-    @a_key = ActivationKey.create!(:name => "another test key", :organization_id => @organization, :environment => @environment)
+    @environment_1 = KPEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
+    @environment_2 = KPEnvironment.create!(:name => 'prod', :prior => @environment_1.id, :organization => @organization)
+    @a_key = ActivationKey.create!(:name => "another test key", :organization_id => @organization, :environment => @environment_1)
 
-    @akey_params = {:activation_key_name => "test key", :activation_key_description => "this is the test key", :activation_key_default_environment => @environment.id}
+    @akey_params = {:activation_key_name => "test key", :activation_key_description => "this is the test key", :activation_key_default_environment => @environment_1.id}
   end
 
   describe "GET index" do
@@ -138,6 +140,7 @@ describe ActivationKeysController do
         post :create, @akey_params
         assigns[:activation_key].name.should eq(@akey_params[:activation_key_name]) 
         assigns[:activation_key].description.should eq(@akey_params[:activation_key_description])
+        assigns[:activation_key].environment_id.should eq(@akey_params[:activation_key_default_environment])
       end
 
       it "renders list item partial for 2 pane" do
@@ -172,9 +175,19 @@ describe ActivationKeysController do
   describe "PUT update" do
     describe "with valid activation key id" do
       describe "with valid params" do
-        it "should update requested field" do
+        it "should update requested field - name" do
+          put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_NAME
+          assigns[:activation_key].name.should eq(AKeyControllerTest::AKEY_NAME[:name])
+        end
+
+        it "should update requested field - description" do
           put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_DESCRIPTION
           assigns[:activation_key].description.should eq(AKeyControllerTest::AKEY_DESCRIPTION[:description])
+        end
+
+        it "should update requested field - default environment" do
+          put :update, :id => @a_key.id, :activation_key => {:environment_id => @environment_2.id}
+          assigns[:activation_key].environment_id.should eq(@environment_2.id)
         end
 
         it "should generate a success notice" do
