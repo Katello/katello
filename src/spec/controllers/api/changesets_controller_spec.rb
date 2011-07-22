@@ -75,42 +75,42 @@ describe Api::ChangesetsController do
 
     it 'should call add_product' do
       @changeset.should_receive(:add_product).with('prod').once
-      put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {:products => ['+prod']}
+      put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {'+products' => ['prod']}
     end
 
     it 'should call remove_product' do
       @changeset.should_receive(:remove_product).with('prod').once
-      put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {:products => ['-prod']}
+      put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {'-products' => ['prod']}
     end
 
     it 'should call add_package' do
-      @changeset.should_receive(:add_package).with('pack').once
-      put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {:packages => ['+pack']}
+      @changeset.should_receive(:add_package).with('pack', 'prod').once
+      put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {'+packages' => [{:name => 'pack', :product => 'prod'}]}
     end
 
     it 'should call remove_package' do
-      @changeset.should_receive(:remove_package).with('pack').once
-      put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {:packages => ['-pack']}
+      @changeset.should_receive(:remove_package).with('pack', 'prod').once
+      put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {'-packages' => [{:name => 'pack', :product => 'prod'}]}
     end
 
     it 'should call add_erratum' do
-      @changeset.should_receive(:add_erratum).with('err').once
-      put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {:errata => ['+err']}
+      @changeset.should_receive(:add_erratum).with('err', 'prod').once
+      put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {'+errata' => [{:name => 'err', :product => 'prod'}]}
     end
 
     it 'should call remove_erratum' do
-      @changeset.should_receive(:remove_erratum).with('err').once
-      put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {:errata => ['-err']}
+      @changeset.should_receive(:remove_erratum).with('err', 'prod').once
+      put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {'-errata' => [{:name => 'err', :product => 'prod'}]}
     end
 
     it 'should call add_repo' do
-      @changeset.should_receive(:add_repo).with('repo').once
-      put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {:repos => ['+repo']}
+      @changeset.should_receive(:add_repo).with('repo', 'prod').once
+      put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {'+repos' => [{:name => 'repo', :product => 'prod'}]}
     end
 
     it 'should call remove_repo' do
-      @changeset.should_receive(:remove_repo).with('repo').once
-      put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {:repos => ['-repo']}
+      @changeset.should_receive(:remove_repo).with('repo', 'prod').once
+      put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {'-repos' => [{:name => 'repo', :product => 'prod'}]}
     end
 
   end
