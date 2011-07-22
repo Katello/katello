@@ -101,7 +101,6 @@ $(document).ready(function() {
         panel.openSubPanel($(this).attr('data-url'));
     });
 
-  //  var floatingPanels = $('#panel-frame');
     var container = $('#container');
     if(container.length > 0){
         var bodyY = parseInt(container.offset().top, 10) - 20;
@@ -344,9 +343,9 @@ var panel = (function(){
                     return; //If we have fewer items than the pagesize, don't try to fetch anything else
                 }
 
-                var url = list.attr("data-scroll_url")
+                var url = list.attr("data-scroll_url");
                 var search = $.deparam($.param.querystring()).search;
-                var params = {"offset":offset}
+                var params = {"offset":offset};
                 if (search)
                     params.search = search;
                 

@@ -86,6 +86,21 @@ class SystemsController < ApplicationController
     end
   end
   
+  
+  def random rng, length = 8
+    o =  rng.map{|i| i.to_a}.flatten;  
+    (0..length-1).map{ o[rand(o.length)]  }.join
+  end
+
+  def rand_alpha length = 8
+    random [('a'..'m'),('A'..'M')], length
+  end
+  def rand_alpha_2ndhalf length = 8
+    random [('n'..'z'),('n'..'Z')], length
+  end
+  def rand_num length = 6
+    random [(0..9)], length
+  end
   def packages
     packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
     render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages}
