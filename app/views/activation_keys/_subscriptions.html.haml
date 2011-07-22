@@ -8,4 +8,7 @@
   .grid_2
     = button_to _("Save Subscriptions"), {:action => "update_subscriptions", :controller => "activation_keys"}, :method => :post, :id => :subcription_save
 
+%a.remove_item.remove_key{"data-id"=>@activation_key.id ,"data-url"=>activation_key_path(@activation_key.id), "data-confirm-text"=>_('Are you sure?')}
+  = _("Remove Activation Key")
+
 = include_javascripts :activation_key_subscriptions
