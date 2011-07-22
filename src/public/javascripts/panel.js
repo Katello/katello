@@ -275,8 +275,12 @@ var panel = (function(){
                 paneljQ.height(extraHeight);
             } else {
                 var height = $(window).height() - $('#subheader').height() - $('#head').height() - 275;
+                var leftPanel = $('.left');
                 if (isSubpanel) {
                     height -= subpanelSpacing;
+                }
+                if( leftPanel.height() < height ){
+                    height = leftPanel.height() - 100;
                 }
                 paneljQ.height(height);
             }
