@@ -21,7 +21,7 @@ gem 'haml', '>= 3.0.16'
 gem 'haml-rails'
 gem 'compass', '>= 0.10.5'
 gem 'compass-960-plugin', '>= 0.10.0'
-gem 'simple-navigation', '3.1.0'
+gem 'simple-navigation', '3.3.4'
 gem 'scoped_search', '>= 2.3.1'
 # Stuff for i18n
 gem 'gettext_i18n_rails'
