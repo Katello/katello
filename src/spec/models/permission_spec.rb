@@ -11,7 +11,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
-
 describe Permission do
   before(:all) do
     @some_role = Role.find_or_create_by_name(:name => 'some_role')
@@ -96,6 +95,31 @@ describe Permission do
     specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, "").should be_true}
     specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, :magic_tag).should be_true}
     specify {@some_role.allowed_to?("do_magic_verb", @res_type_name + "Foo", :magic_tag).should be_false}
+  end
+
+  context "all_resources" do
+    before do
+      @magic_perm = Permission.create!(:role => @some_role, :all_verbs => true,
+                                    :resource_type=> nil)
+    end
+    specify "all resources" do
+      Permission.last.all_types.should be_true
+    end
+  end
+
+  context "org_id_create" do
+    include OrchestrationHelper
+    before do
+      disable_org_orchestration
+      @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
+      @res_type_name = "TestResourceType"
+      @res_type = ResourceType.find_or_create_by_name(@res_type_name)
+      @magic_perm = Permission.create!(:role => @some_role, :all_verbs => true,
+                                   :resource_type=> @res_type, :organization => @organization)
+    end
+    specify "should have the org embedded in the permission" do
+      @magic_perm.organization.should_not be_nil
+    end
   end
 
 end
