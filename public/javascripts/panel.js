@@ -32,6 +32,10 @@ $(document).ready(function() {
         //if it's bigger than 100%, make it 100%.
         fontsize = (fontsize > 100) ? 100 : fontsize;
         $('#systems .block').css({"font-size": parseInt(fontsize, 10) + "%"});
+        var element = $('.scroll-pane');
+        if (element.length){
+            element.data('jsp').reinitialise();
+        }
     });
     $('.left').resize();
 
@@ -47,8 +51,8 @@ $(document).ready(function() {
 
     $('#panel-frame').css({"top" : original_top});
     $('#subpanel-frame').css({"top" : subpanel_top});
-    panel.panelResize(thisPanel, false);
-    panel.panelResize(subpanel, true);
+    panel.panelResize($('#panel_main'), false);
+    panel.panelResize($('#subpanel_main'), true);
 
     $('.block').live('click', function(e)
     {
@@ -85,14 +89,13 @@ $(document).ready(function() {
     });
     
     $(window).resize(function(){
-        panel.panelResize(thisPanel, false);
-        panel.panelResize(subpanel, true);
+        panel.panelResize($('#panel_main'), false);
+        panel.panelResize($('#subpanel_main'), true);
     });
 
     $('#content').resize(function(){
-        panel.panelResize(thisPanel, false);
-        panel.panelResize(subpanel, true);
-
+        panel.panelResize($('#panel_main'), false);
+        panel.panelResize($('#subpanel_main'), true);
     });
 
     $('.subpanel_element').live('click', function(){
@@ -126,6 +129,8 @@ $(document).ready(function() {
             dataType: 'html',
             success: function(data) {
                 $(".panel-content").html(data);
+                $('.scroll-pane').jScrollPane();
+                panel.panelResize($('#panel_main'));
             }
         });
         return false;
@@ -225,20 +230,27 @@ var panel = (function(){
                 panel.closePanel(thisPanel);
             }
         },
-        panelAjax : function(name, ajax_url, thisPanel) {
+        panelAjax : function(name, ajax_url, thisPanel, isSubpanel) {
             var spinner = thisPanel.find('.spinner');
             var panelContent = thisPanel.find(".panel-content");
             spinner.show();
             panelContent.hide();
+            
             $.ajax({
                 cache: true,
                 url: ajax_url,
                 dataType: 'html',
                 success: function (data, status, xhr) {
+                    var pc = panelContent.html(data);
                     spinner.hide();
-                    panelContent.html(data).fadeIn(function(){$(".panel-content :input:visible:enabled:first").focus();});
+                    pc.fadeIn(function(){$(".panel-content :input:visible:enabled:first").focus();});
                     panel.expand_cb(name);
-
+                    $('.scroll-pane').jScrollPane();
+                    if( isSubpanel ){
+                        panel.panelResize($('#subpanel_main'), isSubpanel);
+                    } else {
+                        panel.panelResize($('#panel_main'), isSubpanel);
+                    }
                 },
                 error: function (xhr, status, error) {
                     spinner.hide();
@@ -250,10 +262,9 @@ var panel = (function(){
         /* must pass a jQuery object */
         panelResize : function(paneljQ, isSubpanel){
             var new_top = Math.floor($('.left').position(top).top);
+            
             new_top = isSubpanel ? (new_top + subpanelSpacing) : new_top;
-            paneljQ.parent().animate({
-                top:new_top
-            }, 250);
+            paneljQ.parent().animate({top: new_top}, 250);
 
             //if there is a lot in the list, make the panel a bit larger
             if ($('#content').height() > 642){
@@ -263,11 +274,18 @@ var panel = (function(){
                 }
                 paneljQ.height(extraHeight);
             } else {
-                var height = 490;
+                var height = $(window).height() - $('#subheader').height() - $('#head').height() - 275;
+                var leftPanel = $('.left');
                 if (isSubpanel) {
                     height -= subpanelSpacing;
                 }
+                if( leftPanel.height() < height ){
+                    height = leftPanel.height() - 100;
+                }
                 paneljQ.height(height);
+            }
+            if( paneljQ.length ){
+                paneljQ.data('jsp').reinitialise();
             }
             return paneljQ;
         },
@@ -308,7 +326,7 @@ var panel = (function(){
                 $(this).css({"z-index":"204"});
                 $(this).parent().css({"z-index":"2"});
             }).removeClass('closed').addClass('opened');
-            panel.panelAjax('', url, $('#subpanel-frame'));
+            panel.panelAjax('', url, $('#subpanel-frame'), true);
 
 
         },
@@ -377,7 +395,9 @@ var panel = (function(){
         },
         hash_change: function() {
             var refresh = $.bbq.getState("panel");
-            if(refresh) panel.select_item(refresh);
+            if(refresh){ 
+                panel.select_item(refresh);
+            }
             return false;
         }
     };

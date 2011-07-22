@@ -1,9 +1,6 @@
-- content_for :javascripts do
-  = include_javascripts :bbq
-  = include_javascripts :panel #has to be before promotion to disable resize
-  = include_javascripts :promotion
+= javascript :bbq, :panel, :promotion
 
-
+= javascript do
   :javascript
     var content_breadcrumb = $.parseJSON('#{escape_javascript(generate_content_breadcrumb())}');
     var changeset_breadcrumb = $.parseJSON('#{escape_javascript(generate_cs_breadcrumb())}');
@@ -39,7 +36,6 @@
       "leave_page": '#{_('Some changeset modifications have not finished processing, are you sure you want to leave the page?  By leaving you may lose some modifications.')}'
     });
 
-
 #error_dialog{:style=>"display: none"}
   = _("An error has occured when communicating with the server, please refresh the page to retrieve the current changeset.")
 
@@ -63,66 +59,56 @@
   = environment_selector(:url_proc=>lambda {|args|  promotions_path(args[:organization].name, args[:environment].name, :next_env_id=>(args[:next_environment].id if args[:next_environment] and args[:environment].locker?) )})
 
 .grid_16
-  #container
-
-    .right_tree
-      #changeset_tree
-        - if @next_environment
-          %h2 #{@next_environment.name + _(" Changesets")}
-          .breadcrumb_search.fl.clear.clickable
-
-            %form#search_form.search.clear
-              %input{ :name => "s", :type => "search", :placeholder => "Filter...", :id=>"search"}
-              %button.action #{_("Search")}
-              %br.clear
-
-            .search_button.fr.clickable
-              #{_('Search')}
-            .tree_breadcrumb
-          .sliding_container
-            #cslist.list.sliding_list{"data-page_size"=>current_user.page_size}
-              #changeset_loading.slider
-                .text
-                  = _("Loading Changeset")
-                  = image_tag ("spinner.gif")
-              .slider_one.has_content.slider.will_have_content
-              .slider_two.no_content.slider
-          #changeset_users
-          #changeset_status
-          #delete_changeset.button{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
-            = _("Remove Changeset")
-          #changeset_action.button.fr
-          #review_cancel.button.fr{:style=>"display: none;"}
-            = _('Cancel Review')
-        - else
-          %h2 #{_("Changesets")}
-          = _("An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment.")
-
-    #panel-frame
-      #panel.panel.closed
-        .head
-          %a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}
-        .data
-          #spinner{:style=>"display: none"}
-            = image_tag ("spinner.gif")
-          .panel-content
-          %br.clear
-
-    #content_tree.left
+  .right_tree
+    #changeset_tree
       - if @next_environment
-        %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}&next_env_id=#{@next_environment.id}"}
-          #{_('+ New Changeset')}
-          .arrow-right
+        %h2 #{@next_environment.name + _(" Changesets")}
+        .breadcrumb_search.fl.clear.clickable
+
+          %form#search_form.search.clear
+            %input{ :name => "s", :type => "search", :placeholder => "Filter...", :id=>"search"}
+            %button.action #{_("Search")}
+            %br.clear
+
+          .search_button.fr.clickable
+            #{_('Search')}
+          .tree_breadcrumb
+        .sliding_container
+          #cslist.list.sliding_list{"data-page_size"=>current_user.page_size}
+            #changeset_loading.slider
+              .text
+                = _("Loading Changeset")
+                = image_tag ("spinner.gif")
+            .slider_one.has_content.slider.will_have_content
+            .slider_two.no_content.slider
+        #changeset_users
+        #changeset_status
+        #delete_changeset.button{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
+          = _("Remove Changeset")
+        #changeset_action.button.fr
+        #review_cancel.button.fr{:style=>"display: none;"}
+          = _('Cancel Review')
       - else
-        %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}"}
-          #{_('+ New Changeset')}
-      %h2 #{@environment.name + _(" Content")}
-      .tree_breadcrumb.clickable.clear
-      .sliding_container
-        #list.list.sliding_list{"data-page_size"=>current_user.page_size}
-          .slider_one.has_content.slider
-            = render(:partial=>"detail")
-          .slider_two.no_content.slider
+        %h2 #{_("Changesets")}
+        = _("An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment.")
+
+  = render :partial=>"common/tupane"
+
+  #content_tree.left
+    - if @next_environment
+      %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}&next_env_id=#{@next_environment.id}"}
+        #{_('+ New Changeset')}
+        .arrow-right
+    - else
+      %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}"}
+        #{_('+ New Changeset')}
+    %h2 #{@environment.name + _(" Content")}
+    .tree_breadcrumb.clickable.clear
+    .sliding_container
+      #list.list.sliding_list{"data-page_size"=>current_user.page_size}
+        .slider_one.has_content.slider
+          = render(:partial=>"detail")
+        .slider_two.no_content.slider
 
 
 #conflict-dialog{:style=>"display: none"}
@@ -132,4 +118,3 @@
     %input#conflict_close.button.fr{:type => "button", :value=>"#{('Close')}"}
   .clear
   #conflict-accordion{:style=>"display: none"}
-

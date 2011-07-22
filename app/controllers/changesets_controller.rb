@@ -53,7 +53,7 @@ class ChangesetsController < ApplicationController
   end
 
   def edit
-    render :partial=>"edit"
+    render :partial=>"edit", :layout => "tupane_layout"
   end
 
   #list item
@@ -96,7 +96,7 @@ class ChangesetsController < ApplicationController
 
 
   def new
-    render :partial=>"new"
+    render :partial=>"new", :layout => "tupane_layout"
   end
 
   def create
@@ -240,7 +240,7 @@ class ChangesetsController < ApplicationController
     rescue Exception => error
       errors error.to_s
       execute_after_filters
-      render :text => error.to_s, :status=>:bad_request
+      render :text=>error.to_s, :status=>:bad_request
     end
   end
 

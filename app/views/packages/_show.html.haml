@@ -1,98 +1,90 @@
-%h2
+= content_for :title do
   = @package.nvrea
 
-%nav.subnav
+= content_for :navigation do
   = render_navigation(:expand_all => true, :level => 3)
   
+= content_for :content do
+  .clear 
+  %fieldset
+    .grid_2.ra
+      %label #{_("Name")}:
+    .grid_4.la
+      = @package.nvrea
+      
+  %fieldset
+    .grid_2.ra
+      %label #{_("Description")}:
+    .grid_5.la
+      = @package.description 
   
-.clear 
-%fieldset
-  .grid_2.ra
-    %label #{_("Name")}:
-  .grid_4.la
-    = @package.nvrea
+  %fieldset
+    .grid_2.ra
+      %label #{_("Architecture")}:
+    .grid_4.la
+      = @package.arch
+      
+  /%fieldset
+  /  .grid_2.ra
+  /    %label #{_("Available From")}:
+  /  .grid_4.la
+  /    .li
+  /      Red Hat Enterprise Linux 5
+  /    .li 
+  /      Red Hat Super Special Product
+      
+  %fieldset
+    .grid_2.ra
+      %label #{_("Signature")}:
+    .grid_4.la
+      - @package.checksum.each_pair do |type, sum|
+        = type + ":" 
+        = "&nbsp".html_safe + sum.slice(0,15)
+      
+  %fieldset
+    .grid_2.ra
+      %label #{_("Package Size")}:
+    .grid_4.la
+      = number_to_human_size(@package.size)
+      
+  /%fieldset
+  /  .grid_2.ra
+  /    %label #{_("Payload Size")}:
+  /  .grid_4.la
+  /    = "Unknown"
+      
+  %fieldset
+    .grid_2.ra
+      %label #{_("Build Host")}:
+    .grid_4.la
+      = @package.buildhost
+      
+  %fieldset
+    .grid_2.ra
+      %label #{_("Build Date")}:
+    .grid_4.la
+      = "Unknown" 
+  
+  %fieldset
+    .grid_2.ra
+      %label #{_("License")}:
+    .grid_4.la
+      = @package.license
+      
+  %fieldset
+    .grid_2.ra
+      %label #{_("Package Group")}:
+    .grid_4.la
+      = @package.group
+      
+  %fieldset
+    .grid_2.ra
+      %label #{_("Download")}:
+    .grid_4.la
+      = content_tag(:a, @package.filename, :href => @package.download_url)
     
-
-
-%fieldset
-  .grid_2.ra
-    %label #{_("Description")}:
-  .grid_5.la
-    = @package.description 
-
-%fieldset
-  .grid_2.ra
-    %label #{_("Architecture")}:
-  .grid_4.la
-    = @package.arch
-    
-
-/%fieldset
-/  .grid_2.ra
-/    %label #{_("Available From")}:
-/  .grid_4.la
-/    .li
-/      Red Hat Enterprise Linux 5
-/    .li 
-/      Red Hat Super Special Product
-    
-
-%fieldset
-  .grid_2.ra
-    %label #{_("Signature")}:
-  .grid_4.la
-    - @package.checksum.each_pair do |type, sum|
-      = type + ":" 
-      = "&nbsp".html_safe + sum.slice(0,15)
-    
-    
-%fieldset
-  .grid_2.ra
-    %label #{_("Package Size")}:
-  .grid_4.la
-    = number_to_human_size(@package.size)
-    
-/%fieldset
-/  .grid_2.ra
-/    %label #{_("Payload Size")}:
-/  .grid_4.la
-/    = "Unknown"
-    
-
-%fieldset
-  .grid_2.ra
-    %label #{_("Build Host")}:
-  .grid_4.la
-    = @package.buildhost
-    
-%fieldset
-  .grid_2.ra
-    %label #{_("Build Date")}:
-  .grid_4.la
-    = "Unknown" 
-
-    
-%fieldset
-  .grid_2.ra
-    %label #{_("License")}:
-  .grid_4.la
-    = @package.license
-    
-%fieldset
-  .grid_2.ra
-    %label #{_("Package Group")}:
-  .grid_4.la
-    = @package.group
-    
-%fieldset
-  .grid_2.ra
-    %label #{_("Download")}:
-  .grid_4.la
-    = content_tag(:a, @package.filename, :href => @package.download_url)
-
-
-%fieldset
-  .grid_2.ra
-    %label #{_("Source Package")}:
-  .grid_4.la
-    = "Not Available"
+  %fieldset
+    .grid_2.ra
+      %label #{_("Source Package")}:
+    .grid_4.la
+      = "Not Available"
