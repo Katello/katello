@@ -23,6 +23,7 @@ describe "activation_keys/_new.html.haml" do
   end
 
   it "renders new activation_key form" do
+    view.stub_chain(:current_organization, :environments).and_return([])
     render
     assert_select "form" do
       assert_select "input#activation_key_name", {:count => 1}
@@ -31,6 +32,7 @@ describe "activation_keys/_new.html.haml" do
   end
 
   it "renders a button to save the new key" do
+    view.stub_chain(:current_organization, :environments).and_return([])
     render
     assert_select "input[type=submit]#activation_key_save", {:count => 1}
   end
