@@ -37,10 +37,8 @@ $(document).ready(function() {
        $(this).ajaxSubmit({
          success: function(data) {
                button.removeAttr('disabled');
-               notices.checkNotices();
          }, error: function(e) {
                button.removeAttr('disabled');
-               notices.checkNotices();
          }});
     });
 
