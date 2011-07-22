@@ -64,7 +64,7 @@ var packages = (function(){
                     params.search = search;
                 }
 
-                list.append($('<div/>', {
+                list.parent().append($('<div/>', {
                     'id': "list-spinner"
                 }));
                 $('#list-spinner').html( "<img src='/images/spinner.gif' class='ajax_scroll'>");
