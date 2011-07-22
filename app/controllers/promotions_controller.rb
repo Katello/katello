@@ -127,7 +127,7 @@ class PromotionsController < ApplicationController
   private
 
   def find_environment
-    @organization = Organization.first(:conditions => {:cp_key => params[:org_id]})
+    @organization = current_organization
     @environment = KPEnvironment.first(:conditions => {:name=>params[:env_id], :organization_id=>@organization.id})
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor

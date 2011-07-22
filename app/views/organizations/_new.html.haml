@@ -1,17 +1,18 @@
-
-%h1.grid_8 #{_("New Organization")}
-.grid_8#new_organization123
-  = form_tag organizations_path, :method => "post", :id => "new_organization" do |f|
-    %fieldset
-      .grid_2.ra
-        %label #{_("Name")}:
-      .grid_5.la
-        = text_field_tag :name, params[:name], :tabindex => 1
-    %fieldset
-      .grid_2.ra
-        %label #{_("Description")}:
-      .grid_5.la
-        = text_area_tag :description, params[:description], :tabindex => 2
-    .grid_6.ra
-      = button_to _("Save"), {:action => "create", :controller => "organizations"}, :method => :post, :id => :organization_save, :tabindex => 3
-
+= content_for :title do
+  #{_("New Organization")}
+  
+= content_for :content do
+  .grid_8#new_organization123
+    = form_tag organizations_path, :method => "post", :id => "new_organization" do |f|
+      %fieldset
+        .grid_2.ra
+          %label #{_("Name")}:
+        .grid_5.la
+          = text_field_tag :name, params[:name], :tabindex => 1
+      %fieldset
+        .grid_2.ra
+          %label #{_("Description")}:
+        .grid_5.la
+          = text_area_tag :description, params[:description], :tabindex => 2
+      .grid_5.push_2.la
+        = button_to _("Save"), {:action => "create", :controller => "organizations"}, :method => :post, :id => :organization_save, :tabindex => 3

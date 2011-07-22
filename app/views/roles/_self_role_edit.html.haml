@@ -1,20 +1,22 @@
+= javascript :user_edit, :role_edit
 
-= include_javascripts :user_edit, :role_edit
+= content_for :title do
+  #{_("Edit User")}
 
-%h3 #{_("Edit User")}
+= content_for :remove_item do
+  = link_to _("Remove User"), { :controller => "users", :action => "destroy", :id => @user.id }, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
 
-.grid_8#role
-  %nav.subnav
-    = render_navigation(:expand_all => true, :level => 3)
+= content_for :navigation do
+  = render_navigation(:expand_all => true, :level => 3)
 
-  %h5.grid_8 #{_("Roles")}  
-  = form_tag user_path(@user), :method => "put", :id => "update_roles" do |f|
-    .grid_7
-      = select_tag "user[role_ids]", options_from_collection_for_select(Role.non_self_roles, :id, :name, @user.defined_role_ids), :multiple => true, :class => 'multiselect', :style=>"width:400px; height:200px"
-    .grid_2
-      = button_to _("Save Roles"), {:action => "update", :controller => "users"}, :method => :put, :id => :save_roles
-
-  %h5.grid_8 #{_("Permissions")}  
-  = render :partial => 'permissions', :locals => {:role => role}
-
-= link_to _("Remove User"), { :controller => "users", :action => "destroy", :id => @user.id }, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
+= content_for :content do
+  .grid_8#role
+    %h5.grid_8 #{_("Roles")}  
+    = form_tag user_path(@user), :method => "put", :id => "update_roles" do |f|
+      .grid_7
+        = select_tag "user[role_ids]", options_from_collection_for_select(Role.non_self_roles, :id, :name, @user.defined_role_ids), :multiple => true, :class => 'multiselect', :style=>"width:400px; height:200px"
+      .grid_2
+        = button_to _("Save Roles"), {:action => "update", :controller => "users"}, :method => :put, :id => :save_roles
+  
+    %h5.grid_8 #{_("Permissions")}  
+    = render :partial => 'permissions', :locals => {:role => role}

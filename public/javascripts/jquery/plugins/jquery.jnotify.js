@@ -37,6 +37,7 @@
 			, showClose: true                           // determines if the "Close" link should be shown if notification is also sticky
 			, fadeSpeed: 1000                           // the speed to fade messages out (in milliseconds)
 			, slideSpeed: 250                           // the speed used to slide messages out (in milliseconds)
+            , alwaysClosable: false                     // makes notifications always closable, even if they're not sticky. off by default
 			
 			// define the class statements
 			, classContainer: "jnotify-container"       // className to use for the outer most container--this is where all the notifications appear
@@ -94,7 +95,7 @@
 		if( queuedId ) queue.unshift(queuedNote);
 		// mark that we're playing (so it doesn't automatically start playing)
 		paused = playing = true;
-  }
+  };
 
 	$.jnotify.resume = function(){
 		// mark that we're no longer pause
@@ -102,7 +103,7 @@
 
 		// resume playing
 		$.jnotify.play(true, 0);
-  }
+  };
 
 	
 	function jNotify(message, options){
@@ -133,7 +134,7 @@
 		function create(message){
 			var html = '<div class="' + options.classNotification + (options.type.length ? (" " + options.classNotification + "-" + options.type) : "") + '">'
 			         + '<div class="' + options.classBackground + '"></div>'
-			         + (options.sticky && options.showClose ? ('<a class="' + options.classClose + '">' + options.closeLabel + '</a>') : '')
+			         + ((options.sticky && options.showClose) || options.alwaysClosable ? ('<a class="' + options.classClose + '">' + options.closeLabel + '</a>') : '')
 			         + '<div class="' + options.classMessage + '">'
 			         + '<div>' + message + '</div>'
 			         + '</div></div>';
@@ -190,7 +191,7 @@
 				// if the last notification, fade out the container
 				if( count <= 0 ) $parent.fadeOut(options.fadeSpeed);
 			}
-		}
+		};
 		
 		// create the note
 		var $note = create(message);
@@ -204,6 +205,6 @@
 		}
 
 		return this;
-	};
+	}
 
 })(jQuery);

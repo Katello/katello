@@ -10,12 +10,27 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
+class ChangesetErratumValidator < ActiveModel::Validator
+  def validate(record)
+    from_env = record.changeset.environment.prior
+    product = Product.find(record.product_id)
+
+    product.repos(from_env).each do |repo|
+      #search for the erratum in all repos in its product
+      return if repo.has_erratum? record.errata_id
+    end
+
+    record.errors[:base] <<  _("Product of erratum '#{record.errata_id}' has doesn't belong the environment the changeset should be promoted from!")
+  end
+end
+
 class ChangesetErratum < ActiveRecord::Base
   include Authorization
 
-
   belongs_to :changeset, :inverse_of=>:errata
   belongs_to :product
+  validates_with ChangesetErratumValidator
 
   # returns list of virtual permission tags for the current user
   def self.list_tags

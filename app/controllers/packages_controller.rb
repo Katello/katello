@@ -18,19 +18,19 @@ class PackagesController < ApplicationController
   before_filter :lookup_package
 	
 	def show
-		render :partial=>"show"
+		render :partial=>"show", :layout => "tupane_layout"
 	end
 	
 	def filelist
-        render :partial=>"filelist"	    
+        render :partial=>"filelist", :layout => "tupane_layout"
 	end
 	
 	def changelog
-        render :partial=>"changelog"	
+        render :partial=>"changelog", :layout => "tupane_layout"
 	end 
 	
   def dependencies
-      render :partial=>"dependencies"    
+      render :partial=>"dependencies", :layout => "tupane_layout"
   end 	
   
   private

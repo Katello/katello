@@ -23,10 +23,8 @@ class Tag < ActiveRecord::Base
   def self.tags_for(resource_type_name)
 
     # step 1 - try to load tags from our model classes
-    resource_type_name = resource_type_name.gsub('ar_', '')
-    table_to_class = Katello::ModelUtils.table_to_model_hash
-    if table_to_class.key?(resource_type_name)
-      model_klass = table_to_class[resource_type_name]
+    model_klass = Katello::ModelUtils.table_to_class resource_type_name
+    if model_klass
       return model_klass.list_tags if model_klass.respond_to? :list_tags
     end
 
