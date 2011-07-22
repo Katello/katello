@@ -12,6 +12,7 @@
 
 class Permission < ActiveRecord::Base
   belongs_to :resource_type
+  belongs_to :organization
   belongs_to :role, :inverse_of => :permissions
   has_and_belongs_to_many :verbs
   has_and_belongs_to_many :tags
@@ -49,6 +50,9 @@ class Permission < ActiveRecord::Base
     "Role #{role.name}'s allowed to #{v} in #{resource_type.name} scoped #{t}"
   end
 
+  def all_types
+    resource_type.nil?
+  end
   private
   def cleanup_tags_verbs
     self.tags.clear if self.all_tags?
