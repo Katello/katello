@@ -23,7 +23,7 @@ txtgrn=$(tput setaf 2)    # Green
 txtyel=$(tput setaf 3)    # Yellow
 txtrst=$(tput sgr0)       # Text reset
 
-all_tests=`ls ./cli_tests/ | grep -v _.* | sed -s 's/.sh//g'`
+all_tests=`ls $script_dir/cli_tests/ | grep -v _.* | sed -s 's/.sh//g'`
 required_tests=""
 
 PRINT_ALL=0
@@ -66,6 +66,7 @@ done
 if [ $TEST_ALL -eq 1 ]; then
     required_tests=$all_tests
 fi
+echo $required_tests
 
 function skip_test() {
     printf "%-40s" "$1"
