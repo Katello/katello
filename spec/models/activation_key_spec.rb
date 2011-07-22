@@ -22,7 +22,8 @@ describe ActivationKey do
     disable_org_orchestration
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization_id => @organization.id)
+    @environment = KPEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
+    @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization, :environment => @environment)
   end
 
   it "be able to create" do

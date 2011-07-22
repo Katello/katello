@@ -32,6 +32,7 @@ describe "activation_keys/_edit.html.haml" do
   end
 
   it "renders the activation key name using inline edit" do
+    view.stub_chain(:current_organization, :environments).and_return([])
     render
     assert_select "form" do
       assert_select ".editable#activation_key_name", {:count => 1}
@@ -39,6 +40,7 @@ describe "activation_keys/_edit.html.haml" do
   end
 
   it "renders the activation key description using inline edit" do
+    view.stub_chain(:current_organization, :environments).and_return([])
     render
     assert_select "form" do
       assert_select ".editable#activation_key_description", {:count => 1}
@@ -46,11 +48,13 @@ describe "activation_keys/_edit.html.haml" do
   end
 
   it "renders sub-navigation links" do
+    view.stub_chain(:current_organization, :environments).and_return([])
     view.should_receive(:render_navigation).with(:expand_all => true, :level => 3).once
     render
   end
 
   it "renders link to destroy activation key" do
+    view.stub_chain(:current_organization, :environments).and_return([])
     render
     assert_select "a.remove_item[data-url=#{activation_key_path(@activation_key)}]", {:count => 1}
   end

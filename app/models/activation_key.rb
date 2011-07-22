@@ -14,7 +14,7 @@ class ActivationKey < ActiveRecord::Base
   include Authorization
 
   belongs_to :organization
-  has_one :environment, :class_name => "KPEnvironment", :inverse_of => :activation_key
+  belongs_to :environment, :class_name => "KPEnvironment"
 
   has_many :key_subscriptions
   has_many :subscriptions, :class_name => "KTSubscription", :through => :key_subscriptions
@@ -25,5 +25,5 @@ class ActivationKey < ActiveRecord::Base
   validates :name, :presence => true, :katello_name_format => true
   validates_uniqueness_of :name, :scope => :organization_id
   validates :description, :katello_description_format => true
-
+  validates :environment, :presence => true
 end
