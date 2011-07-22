@@ -134,7 +134,7 @@ class Changeset < ActiveRecord::Base
 
   def wait_for_tasks async_tasks
     async_tasks = async_tasks.collect do |t|
-      ts = TaskStatus.using_pulp_task(t)
+      ts = PulpTaskStatus.using_pulp_task(t)
       ts.organization = self.environment.organization
       ts
     end
