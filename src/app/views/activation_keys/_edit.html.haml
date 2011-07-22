@@ -30,7 +30,7 @@
         .grid_5.la.editable.edit_textarea#activation_key_description{:style => "word-wrap: break-word;", 'name' => 'activation_key[description]', 'data-url' => activation_key_path(@activation_key.id)}<> #{@activation_key[:description]}
 
       %fieldset#promotion_paths
-        %label #{_("Default Environment")}:
+        %label #{_("Select an Environment")}:
         = hidden_field_tag :activation_key_default_environment, @activation_key.environment_id
         - unless current_organization.environments.empty?
           %ul
