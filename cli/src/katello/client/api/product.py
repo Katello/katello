@@ -21,7 +21,7 @@ class ProductAPI(KatelloAPI):
     """
     def products_by_org(self, orgName, prodName=None):
         path = "/api/organizations/%s/products" % orgName
-        products = self.server.GET(path, {"name": prodName} if prodName != None else None)[1]
+        products = self.server.GET(path, {"name": prodName} if prodName != None else {})[1]
         return products
 
     def products_by_env(self, orgName, envName):
