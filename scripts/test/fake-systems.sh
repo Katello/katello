@@ -2,5 +2,5 @@
 TEST=$PWD
 pushd .
 cd ../../src
-rails runner $TEST/fake-systems.rb
+bundle exec rails runner $TEST/fake-systems.rb
 popd
