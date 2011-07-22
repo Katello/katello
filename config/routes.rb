@@ -228,15 +228,14 @@ Src::Application.routes.draw do
 
     #match '/organizations/:organization_id/locker/repos' => 'environments#repos', :via => :get
     resources :organizations do
-      resources :products, :only => [:index]
+      resources :products, :only => [:index] do
+        get :repositories, :on => :member
+      end
       resources :environments do
+        get :repositories, :on => :member
         resources :changesets, :only => [:index, :show, :create, :destroy] do
           put :update, :on => :member, :action => :update_content
           post :promote, :on => :member, :action => :promote
-        end
-        resources :products, :only => [:index], :constraints => { :id => /[0-9\.]*/ }
-        member do
-          get :repositories
         end
       end
       resources :tasks, :only => [:index]
@@ -269,7 +268,11 @@ Src::Application.routes.draw do
 
     resources :environments, :only => [:show, :update, :destroy] do
       resources :systems, :only => [:create, :index]
+      resources :products, :only => [:index] do
+        get :repositories, :on => :member
+      end
     end
+
     resources :packages, :only => [:show]
     resources :changesets, :only => [:show]
     resources :errata, :only => [:show]
