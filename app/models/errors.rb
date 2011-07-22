@@ -21,6 +21,4 @@ module Errors
   class TemplateContentException < StandardError; end
 
   class ChangesetContentException < StandardError; end
-
-  class PatchSyntaxException < StandardError; end
 end
