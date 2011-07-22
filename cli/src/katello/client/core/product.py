@@ -22,7 +22,8 @@ from katello.client.api.product import ProductAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_provider
-from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task
+from katello.client.core.utils import run_async_task_with_status
+from katello.client.core.utils import ProgressBar
 
 try:
     import json
@@ -85,8 +86,7 @@ class List(ProductAction):
             self.printer.addColumn('name')
             self.printer.addColumn('provider_id')
             self.printer.setHeader(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
-            prods = self.api.products_by_env(org_name, env["id"])
-
+            prods = self.api.products_by_org(org_name)
         else:
             self.printer.addColumn('id', "Cp Id")
             self.printer.addColumn('name')
@@ -133,7 +133,7 @@ class Sync(ProductAction):
             return os.EX_DATAERR
 
         async_task = self.api.sync(prod[0]["cp_id"])
-        result = run_spinner_in_bg(wait_for_async_task, [async_task])
+        result = run_async_task_with_status(async_task, ProgressBar())
 
         if len([t for t in result if t['state'] == 'error']) > 0:
             errors = [json.loads(t["result"])['errors'][0] for t in result if t['state'] == 'error']

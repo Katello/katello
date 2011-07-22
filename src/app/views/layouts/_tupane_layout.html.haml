@@ -1,0 +1,22 @@
+= yield :javascripts
+
+.grid_8
+  %h2
+    = yield :title
+  = yield :remove_item    
+  %a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}
+
+%nav.subnav.clear
+  = yield :navigation
+
+- if content_for?(:content)
+  #panel_main.scroll-pane
+    = yield :content
+
+- if content_for?(:subcontent)
+  #subpanel_main.scroll-pane
+    = yield :subcontent
+
+= yield :footer
+
+= yield

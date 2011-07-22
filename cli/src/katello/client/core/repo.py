@@ -26,7 +26,8 @@ from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_product, get_repo
-from katello.client.core.utils import system_exit, run_spinner_in_bg, wait_for_async_task
+from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg
+from katello.client.core.utils import ProgressBar
 
 try:
     import json
@@ -255,7 +256,7 @@ class Sync(RepoAction):
         repo_id = self.get_option('id')
         async_task = self.api.sync(repo_id)
         
-        result = run_spinner_in_bg(wait_for_async_task, [async_task])
+        result = run_async_task_with_status(async_task, ProgressBar())
         
         if result[0]['state'] == 'finished':    
             print _("Repo [ %s ] synced" % repo_id)
@@ -271,7 +272,7 @@ class List(RepoAction):
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
-            help=_("organization name eg: foo.example.com (required)"))
+            help=_("organization name eg: ACME_Corporation (required)"))
         self.parser.add_option('--environment', dest='env',
             help=_("environment name eg: production (default: locker)"))
         self.parser.add_option('--product', dest='product',
@@ -289,20 +290,25 @@ class List(RepoAction):
         self.printer.addColumn('name')
         self.printer.addColumn('package_count')
 
-        if prodName:
+        if prodName and envName:
             env  = get_environment(orgName, envName)
             prod = get_product(orgName, prodName)
             if env != None and prod != None:
-                self.printer.setHeader(_("Repo List for Product %s in Org %s Environment %s") % (prodName, orgName, env["name"]))
-                repos = self.api.repos_by_org_env_product(orgName, env["id"], prod["cp_id"])
+                self.printer.setHeader(_("Repo List For Org %s Environment %s Product %s") % (orgName, env["name"], prodName))
+                repos = self.api.repos_by_env_product(env["id"], prod["cp_id"])
                 self.printer.printItems(repos)
-
+        elif prodName:
+            prod = get_product(orgName, prodName)
+            if prod != None:
+                self.printer.setHeader(_("Repo List for Product %s in Org %s ") % (prodName, orgName))
+                repos = self.api.repos_by_product(prod["cp_id"])
+                self.printer.printItems(repos)
         else:
             env  = get_environment(orgName, envName)
             if env != None:
                 self.printer.setHeader(_("Repo List For Org %s Environment %s") % (orgName, env["name"]))
                 repos = self.api.repos_by_org_env(orgName,  env["id"])
-                self.printer.printItems(repos)
+                self.printer.printItems(repos)            
 
         return os.EX_OK
 

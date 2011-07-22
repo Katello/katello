@@ -1,18 +1,21 @@
-%h2 #{_("System")}
-%nav.subnav
+= content_for :title do
+  #{_("System")}
+
+= content_for :navigation do
   = render_navigation(:expand_all => true, :level => 3)
 
-%table.packages
-  %thead
-    %th #{_("Name")}
-    %th #{_("Arch")}
-  %tbody
-    -packages.each do |p|
-      %tr
-        %td{:class=>'package'}
-          #{p.nvrea}
-        %td{:class=>"arch"}
-          #{p.arch}
+= content_for :content do
+  %table.packages
+    %thead
+      %th #{_("Name")}
+      %th #{_("Arch")}
+    %tbody
+      -packages.each do |p|
+        %tr
+          %td{:class=>'package'}
+            #{p.nvrea}
+          %td{:class=>"arch"}
+            #{p.arch}
 
 
 

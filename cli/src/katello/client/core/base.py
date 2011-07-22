@@ -111,6 +111,11 @@ class Command(object):
 
         self.parser.parse_args(args)
 
+    def extract_action(self, args):
+        action = self._actions.get(args[0], None)
+        if action is None:
+            self.parser.error(_('invalid action: please see --help'))
+        return action
 
     def main(self, args):
         """
@@ -128,9 +133,7 @@ class Command(object):
         try:
             self.process_options(args)
 
-            action = self._actions.get(args[0], None)
-            if action is None:
-                self.parser.error(_('invalid action: please see --help'))
+            action = self.extract_action(args)
             return action.main(args[1:])
 
         except OptionParserExitError, opee:
@@ -305,6 +308,11 @@ class Action(object):
                 self.parser.error(self.optErrors[0])
             else:
                 self.parser.error(self.optErrors)
+   
+    # this method exists so that an action can run like a command
+    # it supports having single name actions (e.g. katello shell)
+    def extract_action(self, args):
+    	pass
 
     def error(self, errorMsg):
         _log.error("error: %s" % str(errorMsg))

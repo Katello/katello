@@ -13,23 +13,18 @@
 module Katello
   module ModelUtils
 
-    @@table_to_model_hash = nil
+    # hardcoded model names (uses kp_ prefix)
+    @@table_to_model_hash = { 
+      "kp_environment" => KPEnvironment
+    }
 
-    # hash in the form of "table_name" => ModelClass
-    def self.table_to_model_hash
-      return @@table_to_model_hash if @@table_to_model_hash
-
-      # explicitly load all available model classes
-      Dir.foreach("#{Rails.root}/app/models") { |f| require f if f =~ /.*\.[rR][bB]/ }
-
-      # create the hash
-      table_to_model_hash = Hash[ActiveRecord::Base.send(:descendants).collect{|c| [c.table_name, c]}]
-
-      # in production mode we cache this
-      @@table_to_model_hash = table_to_model_hash if Rails.env.production?
-
-      # return generated hash
-      table_to_model_hash
+    # convert Rails Model name to Class or nil when no such table name exists
+    def self.table_to_class name
+      return @@table_to_model_hash[name] if @@table_to_model_hash.key? name
+      name.classify.constantize
+    rescue NameError => e
+      # constantize throws NameError
+      return nil
     end
   end
 end

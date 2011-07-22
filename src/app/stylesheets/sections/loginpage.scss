@@ -1,0 +1,34 @@
+@import "katello";
+
+#loginpage {
+  .modalbox {
+    margin: 130px auto;
+    @include box-shadow(0,1px,5px,rgba(0, 0, 0, 0.6));
+    width: 550px;
+    overflow: hidden;
+    background-color: #FFF;
+    h2 {
+      background-color: $formheadbg_color;
+      color: $formheadfg_color;
+      text-transform: uppercase;
+      font-size: 120%;
+      padding: 10px;
+    }
+    .katello_form {
+      margin: 40px;
+      overflow: hidden;
+    }
+    .errorExplanation {
+      h2 {
+        text-transform: none;
+      }
+    }
+  }
+  
+  #content {
+    background: none;
+  }
+  #maincontent {
+    background: 0 none;
+  }
+}
