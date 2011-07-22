@@ -18,6 +18,8 @@
 import os
 import urlparse
 from gettext import gettext as _
+from optparse import OptionValueError
+from pprint import pprint
 
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
@@ -161,31 +163,52 @@ class Create(ChangesetAction):
 # ==============================================================================
 class UpdateContent(ChangesetAction):
     
-    content_types = [
-      'product',
-      'package',
-      'erratum',
-      'repo'
-    ]
-    
     description = _('updates content of a changeset')
 
+    def __init__(self):
+        self.current_product = None
+        self.items = {}
+        super(UpdateContent, self).__init__()
+
+
+    def store_from_product(self, option, opt_str, value, parser):
+        self.current_product = value
+        parser.values.from_product = True
+
+
+    def store_item(self, option, opt_str, value, parser):
+        if parser.values.from_product == None:
+            raise OptionValueError(_("%s must be preceded by %s") % (option, "--from_product") )
+
+        self.items[option.dest].append({"name": value, "product": self.current_product})
+        
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
-                               help=_("changeset name (required)"))
+                                help=_("changeset name (required)"))
         self.parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name (Locker by default)"))
-                   
-        for ct in self.content_types:
+                                help=_("environment name (Locker by default)"))
+        self.parser.add_option('--add_product', dest='add_product',
+                                action="append",
+                                help=_("product to add to the changeset"))
+        self.parser.add_option('--remove_product', dest='remove_product',
+                                action="append",
+                                help=_("product to remove from the changeset"))                                
+        self.parser.add_option('--from_product', dest='from_product',
+                                action="callback", callback=self.store_from_product, type="string",
+                                help=_("environment name (Locker by default)"))
+
+        for ct in ['package', 'erratum', 'repo']:
             self.parser.add_option('--add_'+ct, dest='add_'+ct,
-                                action='append',
+                                action="callback", callback=self.store_item, type="string",
                                 help=_(ct+" to add to the changeset"))
             self.parser.add_option('--remove_'+ct, dest='remove_'+ct,
-                                action='append',
+                                action="callback", callback=self.store_item, type="string",
                                 help=_(ct+" to remove from the changeset"))
+            self.items['add_'+ct]    = []
+            self.items['remove_'+ct] = []
 
 
     def check_options(self):
@@ -198,22 +221,27 @@ class UpdateContent(ChangesetAction):
         orgName = self.get_option('org')
         envName = self.get_option('env')
 
+        return
         cset = get_changeset(orgName, envName, csName)
         if cset == None:
-            return os.EX_DATAERR
+           return os.EX_DATAERR
         
         patch = {}
-        patch['packages'] = self.build_patch('+', self.get_option('add_package')) + self.build_patch('-', self.get_option('remove_package'))
-        patch['errata']   = self.build_patch('+', self.get_option('add_erratum')) + self.build_patch('-', self.get_option('remove_erratum'))
-        patch['repos']    = self.build_patch('+', self.get_option('add_repo'))    + self.build_patch('-', self.get_option('remove_repo'))
-        patch['products'] = self.build_patch('+', self.get_option('add_product')) + self.build_patch('-', self.get_option('remove_product'))
+        patch['+packages'] = self.items["add_package"]
+        patch['-packages'] = self.items["remove_package"]
+        patch['+errata'] = self.items["add_erratum"]
+        patch['-errata'] = self.items["remove_erratum"]
+        patch['+repos'] = self.items["add_repo"]
+        patch['-repos'] = self.items["remove_repo"]
+        patch['+products'] = self.get_option('add_product') or []
+        patch['-products'] = self.get_option('remove_product') or []
 
         msg = self.api.update_content(orgName, cset["environment_id"], cset["id"], patch)
         print _("Successfully updated changeset [ %s ]") % csName
         return os.EX_OK
         
         
-    def build_patch(self, action, items):
+    def build_patch(self, action):
         result = []
         
         if items == None:
