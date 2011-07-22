@@ -130,7 +130,7 @@ module Glue::Candlepin::Consumer
     def save_candlepin_orchestration
       case orchestration_for
         when :create
-          queue.create(:name => "create candlepin consumer: #{self.name}", :priority => 3, :action => [self, :set_candlepin_consumer])
+          queue.create(:name => "create candlepin consumer: #{self.name}", :priority => 2, :action => [self, :set_candlepin_consumer])
         when :update
           queue.create(:name => "update candlepin consumer: #{self.name}", :priority => 3, :action => [self, :update_candlepin_consumer])
       end
