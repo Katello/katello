@@ -15,7 +15,7 @@
 
     %fieldset#promotion_paths
       = hidden_field_tag :activation_key_default_environment
-      %label #{_("Default Environment")}:
+      %label #{_("Select an Environment")}:
       - unless current_organization.environments.empty?
         %ul
         - current_organization.promotion_paths.each do |path|
