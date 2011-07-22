@@ -33,16 +33,18 @@ class PingAction(Action):
         self.api = PingAPI()
 
 
+
 # ping actions ------------------------------------------------------------
 
 class Status(PingAction):
 
     description = _('get the status of the katello server')
-    name = "ping"
 
     def setup_parser(self):
         return 0
 
+    def check_options(self):
+        return 0
 
     def run(self):
         status = self.api.ping()
