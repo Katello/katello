@@ -211,6 +211,12 @@ describe ActivationKeysController do
           response.should be_success
         end
 
+        it "should successfully update multiple subscriptions" do
+          controller.should_receive(:notice)
+          put :update_subscriptions, { :id => @a_key.id, :activation_key => { :consumed_sub_ids => ["abc123", "def789"] }}
+          response.should be_success
+        end
+
       end
 
       describe "with invalid params" do
