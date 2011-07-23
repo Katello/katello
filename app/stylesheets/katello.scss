@@ -1396,6 +1396,13 @@ fieldset {
   font: 14px;
   position: relative;
   
+  .selected {
+    background: $listhover_color !important; color: #FFF; @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
+    &:after {
+      border-left-color: $listhover_color !important;
+    }
+  }
+
   li { 
       float: left; 
       margin-left: 0;

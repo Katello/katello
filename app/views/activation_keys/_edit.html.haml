@@ -1,47 +1,51 @@
-= include_javascripts :edit_helpers, :activation_key_edit
+= javascript :edit_helpers, :activation_key_edit
 
-= help_tip_button('activation_keys_edit-help')
+= content_for :title do
+  #{_("Edit Activation Key")}
 
-%input#panel_element_id{:name => @activation_key.id, :type => "hidden", :value => @activation_key.id, "data-ajax_url"=>activation_key_path(@activation_key.id)}
+= content_for :remove_item do
+  %a.remove_item.remove_key{"data-id"=>@activation_key.id ,"data-url"=>activation_key_path(@activation_key.id), "data-confirm-text"=>_('Are you sure?')}
+    = _("Remove Activation Key")
 
-%h2 #{_("Edit Activation Key")}
-#activation_key
-  .grid_8
-    %nav.subnav
-      = render_navigation(:expand_all => true, :level => 3)
+= content_for :navigation do
+  = render_navigation(:expand_all => true, :level => 3)
 
-  .grid_8
-    = help_tip(_("Edit Activation Key enables you to modify the selected activation key.  This key may " + |
-               "be used during system registration.  For example, <BR/><BR/>" + |
-               "subscription-manager register --org #{@activation_key.organization.name} " + |
-               "--activationkey #{@activation_key.name}"), 'activation_keys_edit-help') |
+= content_for :content do
+  = help_tip_button('activation_keys_edit-help')
 
-  .grid_8
-    = form_for @activation_key, activation_key_path(@activation_key), :method => "put", :remote => true do |f|
+  %input#panel_element_id{:name => @activation_key.id, :type => "hidden", :value => @activation_key.id, "data-ajax_url"=>activation_key_path(@activation_key.id)}
 
-      %fieldset.clearfix
-        .grid_2.ra
-          %label #{_("Name")}:
-        .grid_5.la.editable.edit_panel_element#activation_key_name{'name' => 'activation_key[name]', 'data-url' => activation_key_path(@activation_key.id)} #{@activation_key[:name]}
+  #activation_key
+    .grid_8
+      = help_tip(_("Edit Activation Key enables you to modify the selected activation key.  This key may " + |
+                 "be used during system registration.  For example, <BR/><BR/>" + |
+                 "subscription-manager register --org #{@activation_key.organization.name} " + |
+                 "--activationkey #{@activation_key.name}"), 'activation_keys_edit-help') |
 
-      %fieldset.clearfix
-        .grid_2.ra
-          %label #{_("Description")}:
-        .grid_5.la.editable.edit_textarea#activation_key_description{:style => "word-wrap: break-word;", 'name' => 'activation_key[description]', 'data-url' => activation_key_path(@activation_key.id)}<> #{@activation_key[:description]}
+    .grid_8
+      = form_for @activation_key, activation_key_path(@activation_key), :method => "put", :remote => true do |f|
+  
+        %fieldset.clearfix
+          .grid_2.ra
+            %label #{_("Name")}:
+          .grid_5.la.editable.edit_panel_element#activation_key_name{'name' => 'activation_key[name]', 'data-url' => activation_key_path(@activation_key.id)} #{@activation_key[:name]}
 
-      %fieldset#promotion_paths
-        %label #{_("Select an Environment")}:
-        = hidden_field_tag :activation_key_default_environment, @activation_key.environment_id
-        - unless current_organization.environments.empty?
-          %ul
-          - current_organization.promotion_paths.each do |path|
-            .grid_7.prefix_1
-              %ul.breadcrumb
-                %li
-                  =link_to "Locker", "#"
-                - for env in path
+        %fieldset.clearfix
+          .grid_2.ra
+            %label #{_("Description")}:
+          .grid_5.la.editable.edit_textarea#activation_key_description{:style => "word-wrap: break-word;", 'name' => 'activation_key[description]', 'data-url' => activation_key_path(@activation_key.id)}<> #{@activation_key[:description]}
+
+        %fieldset#promotion_paths
+          %label #{_("Select an Environment")}:
+          = hidden_field_tag :activation_key_default_environment, @activation_key.environment_id
+          - unless current_organization.environments.empty?
+            %ul
+            - current_organization.promotion_paths.each do |path|
+              .grid_7.prefix_1
+                %ul.breadcrumb
                   %li
-                    %a.edit_env{"data-env_id" => env.id, 'data-url' => activation_key_path(@activation_key.id)} #{env.name}
+                    =link_to "Locker", "#"
+                  - for env in path
+                    %li
+                      %a.edit_env{"data-env_id" => env.id, 'data-url' => activation_key_path(@activation_key.id)} #{env.name}
 
-%a.remove_item.remove_key{"data-id"=>@activation_key.id ,"data-url"=>activation_key_path(@activation_key.id), "data-confirm-text"=>_('Are you sure?')}
-  = _("Remove Activation Key")
