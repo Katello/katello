@@ -20,21 +20,28 @@ describe "activation_keys/_new.html.haml" do
       :name => @key_name,
       :description => @key_description
     ).as_new_record)
-  end
 
-  it "renders new activation_key form" do
     view.stub_chain(:current_organization, :environments).and_return([])
     render
-    assert_select "form" do
-      assert_select "input#activation_key_name", {:count => 1}
-      assert_select "textarea#activation_key_description", {:count => 1}
+  end
+
+  it "content_for :title is included" do
+    view.content_for(:title).should_not be_nil
+  end
+
+  describe "content_for :content" do
+    it "is included" do
+      view.content_for(:content).should_not be_nil
     end
-  end
 
-  it "renders a button to save the new key" do
-    view.stub_chain(:current_organization, :environments).and_return([])
-    render
-    assert_select "input[type=submit]#activation_key_save", {:count => 1}
+    pending "should include key details" do
+      view.content_for(:content).should have_selector("input#activation_key_name", :count => 1)
+      view.content_for(:content).should have_selector("textarea#activation_key_description", :count => 1)
+    end
+
+    pending "should include button to save the new key" do
+      view.content_for(:content).should have_selector("input[type=submit]#activation_key_save", :count => 1)
+    end
   end
 
 end

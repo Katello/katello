@@ -29,33 +29,53 @@ describe "activation_keys/_edit.html.haml" do
     view.stub(:help_tip_button)
     view.stub(:help_tip)
     view.stub(:render_navigation)
+
+    view.stub_chain(:current_organization, :environments).and_return([])
   end
 
-  it "renders the activation key name using inline edit" do
-    view.stub_chain(:current_organization, :environments).and_return([])
+  it "content_for :title is included" do
     render
-    assert_select "form" do
-      assert_select ".editable#activation_key_name", {:count => 1}
+    view.content_for(:title).should_not be_nil
+  end
+
+  describe "content_for :remove_item" do
+    it "is included" do
+      render
+      view.content_for(:remove_item).should_not be_nil
+    end
+
+    pending "renders link to destroy activation key" do
+      render
+      view.content_for(:remove_item).should have_selector("a.remove_item", :count => 1)
     end
   end
 
-  it "renders the activation key description using inline edit" do
-    view.stub_chain(:current_organization, :environments).and_return([])
-    render
-    assert_select "form" do
-      assert_select ".editable#activation_key_description", {:count => 1}
+  describe "content_for :navigation" do
+    it "is included" do
+      render
+      view.content_for(:navigation).should_not be_nil
+    end
+
+    it "renders sub-navigation links" do
+      view.should_receive(:render_navigation).with(:expand_all => true, :level => 3).once
+      render
     end
   end
 
-  it "renders sub-navigation links" do
-    view.stub_chain(:current_organization, :environments).and_return([])
-    view.should_receive(:render_navigation).with(:expand_all => true, :level => 3).once
-    render
-  end
+  describe "content_for :content" do
+    it "is included" do
+      render
+      view.content_for(:content).should_not be_nil
+    end
 
-  it "renders link to destroy activation key" do
-    view.stub_chain(:current_organization, :environments).and_return([])
-    render
-    assert_select "a.remove_item[data-url=#{activation_key_path(@activation_key)}]", {:count => 1}
+    pending "renders the activation key name using inline edit" do
+      render
+      view.content_for(:content).should have_selector(".editable#activation_key_name", :count => 1)
+    end
+
+    pending "renders the activation key description using inline edit" do
+      render
+      view.content_for(:content).should have_selector(".editable#activation_key_description", :count => 1)
+    end
   end
 end
