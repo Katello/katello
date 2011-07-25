@@ -90,6 +90,7 @@ def setup_admin(admin):
     errata_cmd = errata.Errata()
     errata_cmd.add_action('list', errata.List())
     errata_cmd.add_action('info', errata.Info())
+    errata_cmd.add_action('system', errata.SystemErrata())
     admin.add_command('errata', errata_cmd)
 
     system_cmd = system.System()

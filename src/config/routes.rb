@@ -204,6 +204,7 @@ Src::Application.routes.draw do
     resources :systems, :only => [:show, :destroy, :create, :index] do
       member do
         get :packages
+        get :errata
       end
     end
 
