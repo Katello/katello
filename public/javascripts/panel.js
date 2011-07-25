@@ -276,11 +276,11 @@ var panel = (function(){
             } else {
                 var height = $(window).height() - $('#subheader').height() - $('#head').height() - 275;
                 var leftPanel = $('.left');
-                if (isSubpanel) {
-                    height -= subpanelSpacing;
-                }
                 if( leftPanel.height() < height ){
                     height = leftPanel.height() - 100;
+                }
+                if (isSubpanel) {
+                    height -= subpanelSpacing;
                 }
                 paneljQ.height(height);
             }
