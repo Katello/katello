@@ -29,7 +29,7 @@ Requires:       rubygem(rest-client)
 Requires:       rubygem(jammit)
 Requires:       rubygem(rails_warden)
 Requires:       rubygem(net-ldap)
-Requires:       rubygem(compass) >= 0.10.5
+Requires:       rubygem(compass) >= 0.11.5
 Requires:       rubygem(compass-960-plugin) >= 0.10.0
 Requires:       rubygem(capistrano)
 Requires:       rubygem(oauth)
