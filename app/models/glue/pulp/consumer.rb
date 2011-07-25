@@ -24,6 +24,10 @@ module Glue::Pulp::Consumer
     end
   end
   module InstanceMethods
+    def errata
+      (::Pulp::Consumer.errata self.uuid).with_indifferent_access
+    end
+
     def del_pulp_consumer
       Rails.logger.info "Deleting consumer in pulp: #{name}"
       Pulp::Consumer.destroy(self.uuid)
@@ -32,11 +36,8 @@ module Glue::Pulp::Consumer
       raise e
     end
 
-
     def destroy_pulp_orchestration
       queue.create(:name => "delete pulp consumer: #{self.name}", :priority => 3, :action => [self, :del_pulp_consumer])
     end
-
-
   end
 end
