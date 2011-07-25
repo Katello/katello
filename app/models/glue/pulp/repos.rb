@@ -147,7 +147,7 @@ module Glue::Pulp::Repos
 
     def repo_id content_id, env_name = nil
       return content_id if content_id.include?(self.organization.name) && content_id.include?(self.cp_id.to_s)
-      [self.cp_id.to_s, content_id.to_s, env_name, self.organization.name].compact.join("-").gsub(/\W/,"_")
+      [self.cp_id.to_s, content_id.to_s, env_name, self.organization.name].compact.join("-").gsub(/[^-\w]/,"_")
     end
 
     def repository_url content_url
