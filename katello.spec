@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:       katello		
-Version:	0.1.50
+Version:	0.1.51
 Release:	1%{?dist}
 Summary:	A package for managing application lifecycle for Linux systems
 	
@@ -177,6 +177,16 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jul 25 2011 Shannon Hughes <shughes@redhat.com> 0.1.51-1
+- upgrade to compas-960-plugin 0.10.4 (shughes@redhat.com)
+- upgrade to compas 0.11.5 (shughes@redhat.com)
+- upgrade to haml 3.1.2 (shughes@redhat.com)
+- spec - fixing katello.org url (lzap+git@redhat.com)
+- Upgrades jQuery to 1.6.2. Changes Qunit tests to reflect jQuery version
+  change and placement of files from Refactor. (ehelms@redhat.com)
+- Fixes height issue with subpanel when left panel is at its minimum height.
+  Fixes issue with subpanel close button closing both main and subpanel.
+  (ehelms@redhat.com)
 * Fri Jul 22 2011 Shannon Hughes <shughes@redhat.com> 0.1.50-1
 - Simple-navigation 3.3.4 fixes.  Also fake-systems needed bundle exec before
   rails runner. (jrist@redhat.com)
