@@ -12,7 +12,7 @@ Summary:	A package for managing application lifecycle for Linux systems
 	
 Group:          Internet/Applications
 License:        GPLv2
-URL:            http://redhat.com
+URL:            http://www.katello.org
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
