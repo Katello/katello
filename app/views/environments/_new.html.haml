@@ -4,7 +4,7 @@
 = content_for :subcontent do
   .clear
     &nbsp;
-  = form_tag organization_environments_path(@organization.name), :method => "post" do |f|
+  = form_tag organization_environments_path(@organization.cp_key), :method => "post" do |f|
     %fieldset.clearfix
       %b
         %label.grid_2 #{_("Name")}:
