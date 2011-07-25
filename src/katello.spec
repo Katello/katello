@@ -22,7 +22,7 @@ Requires:       candlepin-tomcat6
 Requires:       rubygems
 Requires:       rubygem(rails) >= 3.0.5
 Requires:       rubygem(multimap)
-Requires:       rubygem(haml) >= 3.0.16
+Requires:       rubygem(haml) >= 3.1.2
 Requires:       rubygem(haml-rails)
 Requires:       rubygem(json)
 Requires:       rubygem(rest-client)
