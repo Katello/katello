@@ -36,11 +36,16 @@ class SearchController < ApplicationController
     begin
       # save in the user's search favorites
       unless params[:favorite].nil? or params[:favorite].blank?
+        search_string = String.new(params[:favorite])
         path = retrieve_path
-        favorites = current_user.search_favorites.where(:path => path, :params => params[:favorite])
-        if favorites.nil? or favorites.empty?
-          # user doesn't have this favorite stored, so save it
-          favorite = current_user.search_favorites.create!(:path => path, :params => params[:favorite])
+
+        # is the search string valid?  if not, don't save it...
+        if is_valid? path, search_string
+          favorites = current_user.search_favorites.where(:path => path, :params => params[:favorite])
+          if favorites.nil? or favorites.empty?
+            # user doesn't have this favorite stored, so save it
+            favorite = current_user.search_favorites.create!(:path => path, :params => params[:favorite])
+          end
         end
       end
     rescue Exception => error
@@ -72,6 +77,19 @@ class SearchController < ApplicationController
     path = request.env['HTTP_REFERER'].split(host).last
     # remove request parameters from the path
     path = path.split("?").first
+  end
+
+  def is_valid? path, query
+    begin
+      path_details = Rails.application.routes.recognize_path(path)
+      eval(path_details[:controller].singularize.camelize).complete_for(query)
+    rescue ScopedSearch::QueryNotSupported => error
+      Rails.logger.error error.to_s
+      errors error.to_s
+      errors _("Unable to save as favorite. '#{params[:favorite]}' is an invalid search.")
+      return false
+    end
+    return true
   end
 
 end
