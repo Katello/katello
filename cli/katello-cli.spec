@@ -35,14 +35,20 @@ for Linux systems
 
 %install
 rm -rf $RPM_BUILD_ROOT
-#install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}
-install -Dpm 0644 bin/%{base_name} $RPM_BUILD_ROOT%{_bindir}
-install -Dpm 0644 etc/client.conf $RPM_BUILD_ROOT%{_sysconfdir}/%{base_name}
-install -Dpm 0644 src/%{base_name}/*.py $RPM_BUILD_ROOT%{python_sitelib}/
-install -Dpm 0644 src/%{base_name}/client/*.py $RPM_BUILD_ROOT%{python_sitelib}/client/
-install -Dpm 0644 src/%{base_name}/client/api/*.py $RPM_BUILD_ROOT%{python_sitelib}/client/api/
-install -Dpm 0644 src/%{base_name}/client/cli/*.py $RPM_BUILD_ROOT%{python_sitelib}/client/cli/
-install -Dpm 0644 src/%{base_name}/client/core/*.py $RPM_BUILD_ROOT%{python_sitelib}/client/core/
+install -d $RPM_BUILD_ROOT%{_bindir}/
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/%{base_name}/
+install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}
+install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client
+install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/api
+install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/cli
+install -d $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/core
+install -pm 0644 bin/%{base_name} $RPM_BUILD_ROOT%{_bindir}/%{base_name}
+install -pm 0644 etc/client.conf $RPM_BUILD_ROOT%{_sysconfdir}/%{base_name}/client.conf
+install -pm 0644 src/%{base_name}/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/
+install -pm 0644 src/%{base_name}/client/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/
+install -pm 0644 src/%{base_name}/client/api/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/api/
+install -pm 0644 src/%{base_name}/client/cli/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/cli/
+install -pm 0644 src/%{base_name}/client/core/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/core/
 
 
 %clean
@@ -53,7 +59,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %{python_sitelib}/%{base_name}/
 %attr(755,root,root) %{_bindir}/%{base_name}
-%config(noreplace) %attr(644,root,root) %{_sysconfdir}/etc/%{base_name}
+%config %attr(644,root,root) %{_sysconfdir}/%{base_name}/client.conf
 #%{_mandir}/man8/%{base_name}.8*
 
 
