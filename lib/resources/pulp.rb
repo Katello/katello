@@ -275,13 +275,14 @@ module Pulp
         self.delete(consumer_path(consumer_id), self.default_headers).code.to_i
       end
 
-      def consumer_path id = nil
-        url = "/pulp/api/consumers/#{id}"
-        url = url + "/" if id
-        url
+      def errata consumer_id
+        response = get(consumer_path(consumer_id) + "/listerrata/", self.default_headers)
+        JSON.parse(response.body)
       end
 
-
+      def consumer_path id = nil
+        id.nil? ? "/pulp/api/consumers/" : "/pulp/api/consumers/#{id}/"
+      end
     end
   end
 
