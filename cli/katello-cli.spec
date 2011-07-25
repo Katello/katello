@@ -58,5 +58,5 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Jul 25 2011 Lukas Zapletal <lzap+rpm[@]redhat.com> - 0.1.1-1
+* Mon Jul 25 2011 Lukas Zapletal 0.1.1-1
 - initial version
