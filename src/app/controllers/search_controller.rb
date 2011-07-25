@@ -85,7 +85,6 @@ class SearchController < ApplicationController
       eval(path_details[:controller].singularize.camelize).complete_for(query)
     rescue ScopedSearch::QueryNotSupported => error
       Rails.logger.error error.to_s
-      errors error.to_s
       errors _("Unable to save as favorite. '#{params[:favorite]}' is an invalid search.")
       return false
     end
