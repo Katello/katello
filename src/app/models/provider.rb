@@ -39,12 +39,17 @@ class Provider < ActiveRecord::Base
   scoped_search :in => :products, :on => :description, :complete_value => true, :rename => :'custom_product.description'
 
   validate :only_one_rhn_provider
+  validate :organization_exists
 
   def only_one_rhn_provider
     # validate only when new record is added (skip explicit valid? calls)
     if new_record? and provider_type == REDHAT and count_providers(REDHAT) != 0
       errors.add(:base, _("Only one Red Hat provider permitted for an Organization"))
     end
+  end
+
+  def organization_exists
+    errors.add(:organization, _("id: #{organization_id} doesn't exist ")) if organization.nil?
   end
 
   def count_providers type
