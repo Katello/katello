@@ -91,7 +91,11 @@ class OrganizationsController < ApplicationController
   end
 
   def destroy
-    if Organization.count > 1
+    if current_organization == @organization
+      errors [_("Could not delete organization '#{params[:id]}'."),  _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
+
+      render :text => "The current organization cannot be deleted. Please switch to a different organization before deleting.", :status=>:bad_request and return
+    elsif Organization.count > 1
       @id = @organization.id
       begin
         @organization.destroy

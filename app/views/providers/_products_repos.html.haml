@@ -31,7 +31,8 @@
             .grid_1.ra
               %a.clickable{ :href => "#", :onclick => ""}
                 %img{:src => "/images/icons/expander-collapsed.png", :alt => "Expand"}
-            .grid_6.la.editable.subpanel_element{"data-url"=>edit_provider_product_path(@provider.id, product.id)} #{product.name}
+            .grid_6.la.editable.subpanel_element{"data-url"=>edit_provider_product_path(@provider.id, product.id)} 
+              #{product.name}
   
             %ul{:style => "display:none;"}
               -product.repos(product.organization.locker).each do |repo|

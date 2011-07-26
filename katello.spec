@@ -6,13 +6,13 @@
 %global confdir extras/fedora
 
 Name:       katello		
-Version:	0.1.49
+Version:	0.1.53
 Release:	1%{?dist}
 Summary:	A package for managing application lifecycle for Linux systems
 	
 Group:          Internet/Applications
 License:        GPLv2
-URL:            http://redhat.com
+URL:            http://www.katello.org
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -22,20 +22,20 @@ Requires:       candlepin-tomcat6
 Requires:       rubygems
 Requires:       rubygem(rails) >= 3.0.5
 Requires:       rubygem(multimap)
-Requires:       rubygem(haml) >= 3.0.16
+Requires:       rubygem(haml) >= 3.1.2
 Requires:       rubygem(haml-rails)
 Requires:       rubygem(json)
 Requires:       rubygem(rest-client)
 Requires:       rubygem(jammit)
 Requires:       rubygem(rails_warden)
 Requires:       rubygem(net-ldap)
-Requires:       rubygem(compass) >= 0.10.5
-Requires:       rubygem(compass-960-plugin) >= 0.10.0
+Requires:       rubygem(compass) >= 0.11.5
+Requires:       rubygem(compass-960-plugin) >= 0.10.4
 Requires:       rubygem(capistrano)
 Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
 Requires:       rubygem(gettext_i18n_rails)
-Requires:       rubygem(simple-navigation) >= 3.1.0
+Requires:       rubygem(simple-navigation) >= 3.3.4
 Requires:       rubygem(sqlite3) 
 Requires:       rubygem(pg)
 Requires:       rubygem(scoped_search) >= 2.3.1
@@ -90,7 +90,7 @@ install -m 644 config/environments/development.rb %{buildroot}%{_sysconfdir}/%{n
 
 #copy init scripts and sysconfigs
 install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
-install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initrddir}/%{name}
+install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
 install -Dp -m0644 %{confdir}/%{name}.completion.sh %{buildroot}%{_sysconfdir}/bash_completion.d/%{name}
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 
@@ -177,6 +177,187 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Jul 26 2011 Shannon Hughes <shughes@redhat.com> 0.1.53-1
+- modifying initd directory using fedora recommendation,
+  https://fedoraproject.org/wiki/Packaging/RPMMacros (shughes@redhat.com)
+
+* Tue Jul 26 2011 Mike McCune <mmccune@redhat.com> 0.1.52-1
+- periodic rebuild to get past tito bug
+
+* Mon Jul 25 2011 Shannon Hughes <shughes@redhat.com> 0.1.51-1
+- upgrade to compas-960-plugin 0.10.4 (shughes@redhat.com)
+- upgrade to compas 0.11.5 (shughes@redhat.com)
+- upgrade to haml 3.1.2 (shughes@redhat.com)
+- spec - fixing katello.org url (lzap+git@redhat.com)
+- Upgrades jQuery to 1.6.2. Changes Qunit tests to reflect jQuery version
+  change and placement of files from Refactor. (ehelms@redhat.com)
+- Fixes height issue with subpanel when left panel is at its minimum height.
+  Fixes issue with subpanel close button closing both main and subpanel.
+  (ehelms@redhat.com)
+* Fri Jul 22 2011 Shannon Hughes <shughes@redhat.com> 0.1.50-1
+- Simple-navigation 3.3.4 fixes.  Also fake-systems needed bundle exec before
+  rails runner. (jrist@redhat.com)
+- adding new simple-navigation deps to lock (shughes@redhat.com)
+- bumping simple navigation to 3.3.4 (shughes@redhat.com)
+- adding new simple-navigation 3.3.4 (shughes@redhat.com)
+- Merge branch 'master' into refactor (eric.d.helms@gmail.com)
+- fixed a failing Api::ProductsController spec (dmitri@redhat.com)
+- fixed several failing tests in katello-cli-simple-test suite
+  (dmitri@redhat.com)
+- CSS Refactor - Modifies tupane height to be shorter if the left pane is
+  shorter so as not to overrun the footer. (ehelms@redhat.com)
+- Improved the roles unit test a bit to look by name instead of id. To better
+  indicate the ordering (paji@redhat.com)
+- Merge branch 'master' into refactor (ehelms@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (ehelms@redhat.com)
+- changesets - update cli and controller now taking packs/errata/repos from
+  precisely given products (tstrachota@redhat.com)
+- Merge branch 'master' into refactor (ehelms@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (ehelms@redhat.com)
+- fix for the deprecated TaskStatus in changesets (tstrachota@redhat.com)
+- Adding organization to permission (paji@redhat.com)
+- CSS Refactpr - Reverts katello.spec back to that of master.
+  (ehelms@redhat.com)
+- Merge branch 'master' into refactor (ehelms@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (ehelms@redhat.com)
+- adding task_status to changeset (jsherril@redhat.com)
+- adding qunit tests for changeset conflict calculation (jsherril@redhat.com)
+- async jobs now allow for tracking of progress of pulp sync processes
+  (dmitri@redhat.com)
+- removed unused Pool and PoolsController (dmitri@redhat.com)
+- changesets - fix for spec tests #2 (tstrachota@redhat.com)
+- changesets - fixed spec tests (tstrachota@redhat.com)
+- changesets - fixed controller (tstrachota@redhat.com)
+- changesets - model validations (tstrachota@redhat.com)
+- changesets - fixed model methods for adding and removing items
+  (tstrachota@redhat.com)
+- changesets - fix for async promotions not being executed because of wrong
+  changeset state (tstrachota@redhat.com)
+- changesets - async promotions controller (tstrachota@redhat.com)
+- changesets model - skipping items already promoted with product promotions
+  (tstrachota@redhat.com)
+- changesets api - promotions controller (tstrachota@redhat.com)
+- changesets - model changed to be ready for asynchronous promotions
+  (tstrachota@redhat.com)
+- Merge branch 'master' into refactor (ehelms@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (ehelms@redhat.com)
+- 720991 - Segmentation Fault during Roles - Add Permission
+  (lzap+git@redhat.com)
+- renaming password.rb to password_spec.rb (lzap+git@redhat.com)
+- Fixed a broken unit test (paji@redhat.com)
+- fixing broken promote (jsherril@redhat.com)
+- fixing broken unit test (jsherril@redhat.com)
+- adding conflict diffing for changesets in the UI, so the user is notified
+  what changed (jsherril@redhat.com)
+- disable logging for periodic updater (jsherril@redhat.com)
+- 719426 - Fixed an issue with an unecessary group by clause causing postgres
+  to go bonkers on roles index page (paji@redhat.com)
+- CSS Refactor - Changes to edit panels that need new tupane subpanel layout.
+  (ehelms@redhat.com)
+- Merge branch 'master' into refactor (ehelms@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (ehelms@redhat.com)
+- CSS Refactor - Changes the tupane subpanel to conform with the new tupane
+  layout and changes environment, product and repo creation to fit new layout.
+  (ehelms@redhat.com)
+- CSS Refactor - Changes tupane sizing to work with window resize and sets a
+  min height. (ehelms@redhat.com)
+- update 32x32 icon. add physical/virtual system icons. (jimmac@gmail.com)
+- CSS Refactor - Changes to changeset history page to use tupane layout.
+  (ehelms@redhat.com)
+- CSS Refactor - Changes promotions page partials that use tupane to use new
+  layout. (ehelms@redhat.com)
+- CSS Refactor - Changes sync plans page to new tupane layout.
+  (ehelms@redhat.com)
+- CSS Refactor - Converts providers page to use tupane layout.
+  (ehelms@redhat.com)
+- CSS Refactor - Modifies users and roles pages to use new tupane layout.
+  (ehelms@redhat.com)
+- CSS Refactor - Converts organization tupane partials to use new layout.
+  (ehelms@redhat.com)
+- CSS Refactor - Changes to the size of the spinner in the tupane.
+  (ehelms@redhat.com)
+- CSS Refactor - Changes to the systems tupane pages to respect new scroll bar
+  and tupane layout formatting. (ehelms@redhat.com)
+- General UI - fixes in before_filters (bbuckingham@redhat.com)
+- increasing required candlepin version to 0.4.5 (lzap+git@redhat.com)
+- making the incorrect warning message more bold (lzap+git@redhat.com)
+- rails startup now logs to /var/log/katello/startup.log (lzap+git@redhat.com)
+- 720834 - Provider URL now being stripped at the model level via a
+  before_validation. (For real this time.) (jrist@redhat.com)
+- CSS Refactor - Further enhancements to tupane layout.  Moves scrollbar CSS in
+  SASS format and appends to the end of katello.sass. (ehelms@redhat.com)
+- Sync Plans - update model validation to have name unique within org
+  (bbuckingham@redhat.com)
+- CSS Refactor - Changes to tupane layout to add navigation and main content
+  sections. (ehelms@redhat.com)
+- Revert "720834 - Provider URL now being stripped at the model level via a
+  before_validation." (jrist@redhat.com)
+- 720834 - Provider URL now being stripped at the model level via a
+  before_validation. (jrist@redhat.com)
+- CSS Refactor - Adds a shell layout for content being rendered into the tupane
+  panel.  Partials being rendered to go into the tupane panel can now specify
+  the tupane_layout and be constructed to put the proper pieces into the proper
+  places.  See organizations/_edit.html.haml for an example.
+  (ehelms@redhat.com)
+- CSS Refactor - Adjusts the tupane panel to size itself based on the window
+  height for larger resolutions. (ehelms@redhat.com)
+- CSS Refactor - Minor change to placement of javascript and stylesheets
+  included from views. (ehelms@redhat.com)
+- fixing missing route for organization system list (lzap+git@redhat.com)
+- Backing out 720834 fix temporarily. (jrist@redhat.com)
+- 720834 - Provider URL now being stripped at the model level via a
+  before_validation. (jrist@redhat.com)
+- Removed redundant definition. (ehelms@redhat.com)
+- added a couple of tests to validate changeset creation during template
+  promotion (dmitri@redhat.com)
+- CSS Refactor - Re-organizes javascript files. (ehelms@redhat.com)
+- Merge branch 'refactor' of ssh://git.fedorahosted.org/git/katello into
+  refactor (ehelms@redhat.com)
+- CSS Refactor - Adds new helper for layout functions in views. Specifically
+  adds in function for including javascript in the HTML head. See
+  promotions/show.html.haml or _env_select.html.haml for examples.
+  (ehelms@redhat.com)
+- 722431 - Improved jQuery jNotify to include an "Always Closable" flag.  Also
+  moved the notifications to the middle top of the screen, rather than floated
+  right. (jrist@redhat.com)
+- fixed template promotions when performed through api (dmitri@redhat.com)
+- 721327 - more correcting gem versions to match (mmccune@redhat.com)
+- 721327 - cleaning up mail version numbers to match what is in Fedora
+  (mmccune@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (ehelms@redhat.com)
+- replacing internal urls in the default config (lzap+git@redhat.com)
+- changesets - model spec tests (tstrachota@redhat.com)
+- changesets - fixed remove_product deleting the product from db
+  (tstrachota@redhat.com)
+- changesets api - controller spec tests (tstrachota@redhat.com)
+- changesets api - moved logic for adding content from controller to model
+  (tstrachota@redhat.com)
+- changesets cli - partial updates of content (tstrachota@redhat.com)
+- changesets cli - listing (tstrachota@redhat.com)
+- changesets api - controller for partial updates of a content
+  (tstrachota@redhat.com)
+- changesets api - create, read, destroy actions in controller
+  (tstrachota@redhat.com)
+- changesets api - controller stub (tstrachota@redhat.com)
+- Merge branch 'refactor' of ssh://git.fedorahosted.org/git/katello into
+  refactor (jrist@redhat.com)
+- A few minor fixes for changeset filter and "home" icon. (jrist@redhat.com)
+- added product synchronization (async) (dmitri@redhat.com)
+- Merge branch 'tasks' (dmitri@redhat.com)
+- 720412 - changing promotions helptip to say that a changeset needs to be
+  created, as well as hiding add buttons if a piece of content cannot be added
+  instead of disabling it (jsherril@redhat.com)
+- added specs for TaskStatus model and controller (dmitri@redhat.com)
+- removed Glue::Pulp::Sync (dmitri@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (ehelms@redhat.com)
+
 * Thu Jun 23 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.49-1
 - fixing db/schema.rb symlink in the spec
 - adding environment support to initdb script

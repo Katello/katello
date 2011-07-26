@@ -1,19 +1,22 @@
+= include_javascripts :scroll_pane
+= include_stylesheets :scroll_pane
 = yield :javascripts
 
-.grid_8
+.head.grid_8
   %h2
     = yield :title
   = yield :remove_item    
-  %a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}
 
 %nav.subnav.clear
   = yield :navigation
 
 - if content_for?(:content)
+  %a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}
   #panel_main.scroll-pane
     = yield :content
 
 - if content_for?(:subcontent)
+  %a.close{:href => "#", "data-close"=>"subpanel"} #{_("Close")}
   #subpanel_main.scroll-pane
     = yield :subcontent
 
