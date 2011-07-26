@@ -142,7 +142,6 @@
       border-bottom: none;
       #search_form {
           display: none;
-          height: 1em;
           margin-right: 4px;
       }
       .search {
@@ -151,9 +150,10 @@
           display: inline-block;
           margin: 5px auto;
           input[type="search"] {
-            float: right; /* webkit adds an extra padding and makes the widget narrower */
+            //float: right; /* webkit adds an extra padding and makes the widget narrower */
             border: 3px solid #436fa8;
             background: #FFF;
+            padding-right: 0px;
           }
           button {
             background: $search_icon_black;
