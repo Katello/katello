@@ -19,6 +19,8 @@ class ActivationKey < ActiveRecord::Base
   has_many :key_subscriptions
   has_many :subscriptions, :class_name => "KTSubscription", :through => :key_subscriptions
 
+  has_one :system_template
+
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'key.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'key.description'
   scoped_search :in => :environment, :on => :name, :complete_value => true, :rename => :'environment.name'
@@ -27,4 +29,9 @@ class ActivationKey < ActiveRecord::Base
   validates_uniqueness_of :name, :scope => :organization_id
   validates :description, :katello_description_format => true
   validates :environment, :presence => true
+  validate :environment_exists
+
+  def environment_exists
+    errors.add(:environment, _("id: #{environment_id} doesn't exist ")) if environment.nil?
+  end
 end
