@@ -312,7 +312,7 @@ Src::Application.routes.draw do
     match '/users/:username/owners' => 'organizations#list_owners', :via => :get
     
       # pulp proxy --------------
-    match '/consumers/:id/profile/' => 'pulp_proxies#put', :via => :put #TODO should be changed to '/consumers/:id/packages' ASAP
+    match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
 
     # development / debugging support
     get 'status/memory'
