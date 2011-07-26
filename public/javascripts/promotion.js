@@ -402,9 +402,13 @@ var promotion_page = (function($){
             //Reset the review/promote/cancel button
             var action_btn =  $("#changeset_action");
             var cancel_btn = $("#review_cancel");
+            var status = $('#changeset_status');
 
+            
             if (current_changeset) {
-               action_btn.show();
+                status.show();
+                action_btn.show();
+                $("#changeset_actions > div").removeClass("disabled");
                 if (current_changeset.is_new()) {
                     cancel_btn.hide();
                     action_btn.html(i18n.review);
@@ -413,6 +417,8 @@ var promotion_page = (function($){
                     $("#cslist").removeClass("locked");
                     $('#locked_icon').remove();
                     $(".content_add_remove").show();
+                    $('#review_changeset').html(i18n.review);
+                    $('#promote_changeset').addClass("disabled");
                 }
                 else { //in review stage
                     cancel_btn.show();
@@ -424,17 +430,23 @@ var promotion_page = (function($){
                     }
                     $("#cslist").addClass("locked");
                     $(".content_add_remove").hide();
+                    $('#review_changeset').html(i18n.cancel_review);
+                    $('#promote_changeset').removeClass("disabled");
                 }
             }
             else {
-
+                $(status.hide());
                 $("#changeset_tree .tree_breadcrumb").removeClass("locked_breadcrumb");
                 $(".breadcrumb_search").removeClass("locked_breadcrumb_search");
                 $("#cslist").removeClass("locked");
                 $('#locked_icon').remove();
-               // $(".content_add_remove").show();
+
                 cancel_btn.hide();
                 action_btn.hide();
+                changesetEdit.close();
+
+                $("#changeset_actions > div").addClass("disabled");
+                
             }
 
             draw_status();
@@ -516,8 +528,10 @@ var promotion_page = (function($){
 var changeset_obj = function(data_struct) {
     var id = data_struct["id"],
         timestamp = data_struct["timestamp"],
-        products = data_struct.products;
-        is_new = data_struct.is_new;
+        products = data_struct.products,
+        is_new = data_struct.is_new,
+        name = data_struct.name;
+
 
     var change_state = function(state, on_success, on_error) {
           $.ajax({
@@ -545,7 +559,11 @@ var changeset_obj = function(data_struct) {
 
     return {
         id:id,
-        apples: products,
+        getName: function(){return name},
+        setName: function(newName){
+            name = newName;
+            changeset_breadcrumb["changeset_" + id].name = newName;
+        },
         getProducts: function(){return products},
         is_new : function() {return is_new},
         set_timestamp:function(ts) { timestamp = ts; },
@@ -681,10 +699,10 @@ var registerEvents = function(){
     
     $("#delete_changeset").click(function() {
         var button = $(this);
-        var id = promotion_page.get_changeset().id;
         if (button.hasClass('disabled')){
             return false;
         }
+        var id = promotion_page.get_changeset().id;
         var answer = confirm(button.attr('data-confirm-text'));
         if (answer) {
             button.addClass('disabled');
@@ -701,7 +719,8 @@ var registerEvents = function(){
        }
     });
 
-    $("#changeset_action").live('click', function() {
+
+    $("#review_changeset").live('click', function() {
        var button = $(this);
         if (button.hasClass('disabled')){
             return false;
@@ -711,8 +730,6 @@ var registerEvents = function(){
         if(cs.is_new()) {
             var review_func = function() {
                 cs.review(function() {
-                    $("#changeset_action").html(i18n.promote).attr("data-confirm", i18n.promote_confirm);
-                    $("#review_cancel").show();
                     button.removeClass("disabled");
                     promotion_page.reset_page();
                     promotion_page.get_changeset_tree().rerender_content();
@@ -724,27 +741,25 @@ var registerEvents = function(){
             else {
                 review_func();
             }
-
-
         }
         else {
-            cs.promote(function() {
-                
+            cs.cancel_review(function() {
+                button.removeClass("disabled");
+                promotion_page.reset_page();
+                promotion_page.get_changeset_tree().rerender_content();
             });
         }
     });
 
-    $("#review_cancel").live('click', function() {
-        $("#review_cancel").addClass("disabled");
+    $("#promote_changeset").live('click', function() {
+        if ($(this).hasClass("disabled")) {
+            return;
+        }
         var cs = promotion_page.get_changeset();
-        cs.cancel_review(function() {
-            $("#changeset_action").html(i18n.review);
-            $("#review_cancel").hide();
-            $("#review_cancel").removeClass("disabled");
-            promotion_page.reset_page();
-            promotion_page.get_changeset_tree().rerender_content();
-        });
+             cs.promote(function() {});
     });
+
+
 
     //Ask the user if they really want to leave the page if updates aren't finished
     window.onbeforeunload = function(){
@@ -755,7 +770,92 @@ var registerEvents = function(){
 
     $('#conflict_close').click(promotion_page.hide_conflict);
     $('#conflict-details').click(promotion_page.show_conflict_details);
+
+    $('#edit_changeset').click(function() {
+        if ($(this).hasClass('disabled')){
+            return false;
+        }
+        changesetEdit.toggle();
+    });
+
+
 };
+
+var changesetEdit = (function(){
+
+    var opened = false;
+
+    var toggle = function(delay){
+        var edit_window = $('#changeset_edit');
+        var name_box = $('.edit_name_text');
+        var edit_button = $('#edit_changeset');
+        var changeset = promotion_page.get_changeset();
+        var animate_time = 500;
+        if (delay != undefined){
+            animate_time = delay;
+        }
+
+        opened = !opened;
+
+        var after_function = undefined;
+        if (opened) {
+            name_box.html(changeset.getName());
+            edit_button.html(i18n.close_details);
+            edit_button.addClass("highlighted");
+            after_function = setup_edit;
+
+        }
+        else {
+            edit_button.html(i18n.edit_details);
+            edit_button.removeClass("highlighted");
+        }
+
+        edit_window.slideToggle(animate_time, after_function);
+    },
+    setup_edit = function() {
+        
+        var changeset = promotion_page.get_changeset();
+        var url = "/changesets/" + changeset.id;
+        var name_box = $('.edit_name_text');
+        
+        name_box.each(function() {
+                $(this).editable( url, {
+                    type        :  'text',
+                    width       :  270,
+                    method      :  'PUT',
+                    name        :  $(this).attr('name'),
+                    cancel      :  i18n.cancel,
+                    submit      :  i18n.save,
+                    indicator   :  i18n.saving,
+                    tooltip     :  i18n.clickToEdit,
+                    placeholder :  i18n.clickToEdit,
+                    
+                    submitdata  :  {authenticity_token: AUTH_TOKEN},
+                    onsuccess   :  function(data) {
+                          var parsed = $.parseJSON(data);
+                          changeset.setName(parsed.name);
+                          $('.edit_name_text').html(parsed.name);
+                          changeset.set_timestamp(parsed.timestamp);
+                          promotion_page.get_changeset_tree().rerender_breadcrumb();
+                    },
+                    onerror     :  function(settings, original, xhr) {
+                                     original.reset();
+                    }
+                });
+            });
+    },
+    close = function() {
+        if (opened) {
+            toggle(0);
+        }
+    };
+
+    return {
+        toggle: function() {toggle();},
+        close: close
+    };
+})();
+
 
 var promotionsRenderer = (function(){
     var render = function(hash, render_cb){
