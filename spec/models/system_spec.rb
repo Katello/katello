@@ -23,6 +23,16 @@ describe System do
   let(:entitlements) { {} }
   let(:pools) { {} }
   let(:available_pools) { {} }
+  let(:description) { 'description' }
+  let(:package_profile) {
+    [{"epoch" => 0, "name" => "im-chooser", "arch" => "x86_64", "version" => "1.4.0", "vendor" => "Fedora Project", "release" => "1.fc14"},
+     {"epoch" => 0, "name" => "maven-enforcer-api", "arch" => "noarch", "version" => "1.0", "vendor" => "Fedora Project", "release" => "0.1.b2.fc14"},
+     {"epoch" => 0, "name" => "ppp", "arch" => "x86_64", "version" => "2.4.5", "vendor" => "Fedora Project", "release" => "12.fc14"},
+     {"epoch" => 0, "name" => "pulseaudio-module-bluetooth", "arch" => "x86_64", "version" => "0.9.21", "vendor" => "Fedora Project", "release" => "7.fc14"},
+     {"epoch" => 0, "name" => "dbus-cxx-glibmm", "arch" => "x86_64", "version" => "0.7.0", "vendor" => "Fedora Project", "release" => "2.fc14.1"},
+     {"epoch" => 0, "name" => "twolame-libs", "arch" => "x86_64", "version" => "0.3.12", "vendor" => "RPM Fusion", "release" => "4.fc11"},
+     {"epoch" => 0, "name" => "gtk-vnc", "arch" => "x86_64", "version" => "0.4.2", "vendor" => "Fedora Project", "release" => "4.fc14"}]
+  }
 
   before(:each) do
     disable_org_orchestration
@@ -32,10 +42,12 @@ describe System do
 
     Organization.stub!(:first).and_return(@organization)
 
-    @system = System.new(:name => system_name, :environment => @environment, :cp_type => cp_type, :facts => facts)
+    @system = System.new(:name => system_name, :environment => @environment, :cp_type => cp_type, :facts => facts, :description => description, :uuid => uuid)
 
     Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Candlepin::Consumer.stub!(:update).and_return(true)
+    
+    Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
   end
 
   context "system in invalid state should not be valid" do
@@ -46,8 +58,10 @@ describe System do
     specify { System.new(:name => system_name, :environment => @organization.locker, :cp_type => cp_type, :facts => facts).should_not be_valid }
   end
 
-  it "registers system in candlepin on create" do
+  it "registers system in candlepin and pulp on create" do
+    #debugger
     Candlepin::Consumer.should_receive(:create).once.with(@organization.name, system_name, cp_type, facts).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}})
     @system.save!
   end
 
@@ -56,7 +70,7 @@ describe System do
       @system.save!
     }
 
-    it "should delete consumer in candlepin" do
+    it "should delete consumer in candlepin and pulp" do
       Candlepin::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
       Pulp::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
       @system.destroy
@@ -177,6 +191,13 @@ s  end
     context "shouldn't access candlepin if new record" do
       before(:each) { Candlepin::Consumer.should_not_receive(:get) }
       specify { @system.href.should be_nil }
+    end
+  end
+  
+  context "pulp attributes" do
+    it "should update package-profile" do
+      Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
+      @system.upload_package_profile(package_profile)
     end
   end
 
