@@ -400,29 +400,27 @@ var promotion_page = (function($){
             }
     
             //Reset the review/promote/cancel button
-            var action_btn =  $("#changeset_action");
+
             var cancel_btn = $("#review_cancel");
             var status = $('#changeset_status');
 
             
             if (current_changeset) {
                 status.show();
-                action_btn.show();
                 $("#changeset_actions > div").removeClass("disabled");
                 if (current_changeset.is_new()) {
                     cancel_btn.hide();
-                    action_btn.html(i18n.review);
+                    
                     $("#changeset_tree .tree_breadcrumb").removeClass("locked_breadcrumb");
                     $(".breadcrumb_search").removeClass("locked_breadcrumb_search");
                     $("#cslist").removeClass("locked");
                     $('#locked_icon').remove();
                     $(".content_add_remove").show();
-                    $('#review_changeset').html(i18n.review);
+                    $('#review_changeset > span').html(i18n.review);
                     $('#promote_changeset').addClass("disabled");
                 }
                 else { //in review stage
                     cancel_btn.show();
-                    action_btn.html(i18n.promote);
                     $("#changeset_tree .tree_breadcrumb").addClass("locked_breadcrumb");
                     $(".breadcrumb_search").addClass("locked_breadcrumb_search");
                     if( $('#locked_icon').length === 0 ){
@@ -430,7 +428,7 @@ var promotion_page = (function($){
                     }
                     $("#cslist").addClass("locked");
                     $(".content_add_remove").hide();
-                    $('#review_changeset').html(i18n.cancel_review);
+                    $('#review_changeset > span').html(i18n.cancel_review);
                     $('#promote_changeset').removeClass("disabled");
                 }
             }
@@ -442,7 +440,6 @@ var promotion_page = (function($){
                 $('#locked_icon').remove();
 
                 cancel_btn.hide();
-                action_btn.hide();
                 changesetEdit.close();
 
                 $("#changeset_actions > div").addClass("disabled");
@@ -788,7 +785,7 @@ var changesetEdit = (function(){
     var toggle = function(delay){
         var edit_window = $('#changeset_edit');
         var name_box = $('.edit_name_text');
-        var edit_button = $('#edit_changeset');
+        var edit_button = $('#edit_changeset > span');
         var changeset = promotion_page.get_changeset();
         var animate_time = 500;
         if (delay != undefined){
@@ -801,13 +798,13 @@ var changesetEdit = (function(){
         if (opened) {
             name_box.html(changeset.getName());
             edit_button.html(i18n.close_details);
-            edit_button.addClass("highlighted");
+            edit_button.parent().addClass("highlighted");
             after_function = setup_edit;
 
         }
         else {
             edit_button.html(i18n.edit_details);
-            edit_button.removeClass("highlighted");
+            edit_button.parent().removeClass("highlighted");
         }
 
         edit_window.slideToggle(animate_time, after_function);
