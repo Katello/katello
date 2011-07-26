@@ -2,10 +2,10 @@
 
 = content_for :title do
   = @organization.name 
-
-= content_for :remove_item do   
-  %a.remove_item.remove_org{"data-id"=>@organization.name ,"data-url"=>organization_path(@organization.cp_key), "data-confirm-text"=>_('Are you sure?')}
-    = _("Remove Organization")
+- unless current_organization == @organization
+  = content_for :remove_item do
+    %a.remove_item.remove_org{"data-id"=>@organization.name ,"data-url"=>organization_path(@organization.cp_key), "data-confirm-text"=>_('Are you sure?')}
+      = _("Remove Organization")
 
 = content_for :content do
   = form_for @organization, :url => {:action => "update",  :controller => "organizations"}, :method => "put", :remote => true do |f|
