@@ -20,7 +20,10 @@ describe Api::ActivationKeysController do
     login_user_api
     @request.env["HTTP_ACCEPT"] = "application/json"
 
-    @organization = Organization.new
+    @organization = Organization.new do |o|
+      o.id = 1234
+    end
+
     @environment = KPEnvironment.new(:organization => @organization)
     @activation_key = ActivationKey.new(:name => 'activation key')
   end
@@ -59,7 +62,7 @@ describe Api::ActivationKeysController do
   context "show all activation keys" do
     before(:each) do
       Organization.stub!(:first).and_return(@organization)
-      @organization.stub!(:activation_keys).and_return([@activation_key])
+      ActivationKey.stub!(:where).and_return([@activation_key])
     end
 
     it "should retrieve organization" do
@@ -68,7 +71,7 @@ describe Api::ActivationKeysController do
     end
 
     it "should retrieve all keys in organization" do
-      @organization.should_receive(:activation_keys).once.and_return([@activation_key])
+      ActivationKey.should_receive(:where).once.with(hash_including(:organization_id => 1234)).and_return([@activation_key])
       get :index, :organization_id => '1234'
     end
 
@@ -94,8 +97,8 @@ describe Api::ActivationKeysController do
     end
 
     it "should create an activation key" do
-      ActivationKey.should_receive(:create!).once.with(hash_including(:organization => @organization, :name => 'blah')).and_return(@activation_key)
-      post :create, :environment_id => 123, :name => 'blah'
+      ActivationKey.should_receive(:create!).once.with(hash_including(:name => 'blah')).and_return(@activation_key)
+      post :create, :environment_id => 123, :activation_key => {:name => 'blah'}
     end
 
     it "should return created key" do
@@ -114,11 +117,11 @@ describe Api::ActivationKeysController do
 
     it "should update activation key" do
       @activation_key.should_receive(:update_attributes!).once.with(hash_including(:name => 'blah')).and_return(@activation_key)
-      put :update, :id => 123, :name => 'blah'
+      put :update, :id => 123, :activation_key => {:name => 'blah'}
     end
 
     it "should return updated key" do
-      put :update, :id => 123, :name => 'blah'
+      put :update, :id => 123, :activation_key => {:name => 'blah'}
       response.body.should == @activation_key.to_json
     end
   end
