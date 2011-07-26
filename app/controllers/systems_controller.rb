@@ -102,7 +102,23 @@ class SystemsController < ApplicationController
     random [(0..9)], length
   end
   def packages
-    packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    #packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    packages = []
+    25.times do
+      arch = ["x86_64","i686", "noarch"].choice
+      packages << OpenStruct.new(:nvrea=>"#{rand_alpha}-0.1.49-1.git.146.c#{rand_num}.fc15.#{arch}", :arch =>arch)
+    end
+    packages = packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages}
+  end
+
+  def more_packages
+    packages = []
+    25.times do
+      arch = ["x86_64","i686", "noarch"].choice
+      packages << OpenStruct.new(:nvrea=>"#{rand_alpha_2ndhalf}-0.1.49-1.git.146.c#{rand_num}.fc15.#{arch}", :arch =>arch)
+    end
+    packages = packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
     render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages}
   end
   
