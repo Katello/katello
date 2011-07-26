@@ -97,6 +97,8 @@
         var onreset  = settings.onreset  || function() { };
         var onsuccess = settings.onsuccess || function() { };
         var onerror  = settings.onerror  || reset;
+        var oneditcomplete   = settings.oneditcomplete   || function() { };
+        var onresetcomplete  = settings.onresetcomplete  || function() { };
           
         /* show tooltip */
         if (settings.tooltip) {
@@ -376,6 +378,10 @@
                     
                     return false;
                 });
+                
+                if(oneditcomplete){
+                    oneditcomplete.apply(form, [settings, self])
+                }
             });
             
             /* privileged methods */
@@ -392,6 +398,9 @@
                         /* show tooltip again */
                         if (settings.tooltip) {
                             $(self).attr('title', settings.tooltip);                
+                        }
+                        if(onresetcomplete){
+                            onresetcomplete.apply(form, [settings, self])
                         }
                     }                    
                 }
