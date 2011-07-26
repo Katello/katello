@@ -52,7 +52,7 @@ if Provider.count == 0
   })
 
   Provider.create!({
-      :name => 'red hat',
+      :name => 'redhat',
       :organization => first_org,
       :repository_url => 'https://somehost.example.com/content/',
       :provider_type => Provider::REDHAT
