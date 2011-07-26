@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:       katello		
-Version:	0.1.52
+Version:	0.1.53
 Release:	1%{?dist}
 Summary:	A package for managing application lifecycle for Linux systems
 	
@@ -177,6 +177,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Jul 26 2011 Shannon Hughes <shughes@redhat.com> 0.1.53-1
+- modifying initd directory using fedora recommendation,
+  https://fedoraproject.org/wiki/Packaging/RPMMacros (shughes@redhat.com)
+
 * Tue Jul 26 2011 Mike McCune <mmccune@redhat.com> 0.1.52-1
 - periodic rebuild to get past tito bug
 
