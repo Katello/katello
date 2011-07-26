@@ -60,27 +60,6 @@ var activation_key = (function() {
                 }
             });                       
         },
-        //custom successCreate - calls notices update and list/panel updates from panel.js
-        successCreate : function(data) {
-            //panel.js functions
-            list.add(data);
-            panel.closePanel($('#panel'));
-        },
-        failCreate : function(data) {
-            // enable the form submit so that the user can resolve the error and retry
-            $('input[id^=provider_save]').removeAttr("disabled");
-        },
-        toggleFields : function() {
-          	val = $('#provider_provider_type option:selected').val()
-          	var fields = "#repository_url_field"; 
-          	if (val == "Custom") {
-          		$(fields).attr("disabled", true);			
-          	}
-          	else {
-          		$(fields).removeAttr("disabled");
-          	}
-        },
-
         delete_key : function(data) {
             var answer = confirm(data.attr('data-confirm-text'));
             if (answer) {
