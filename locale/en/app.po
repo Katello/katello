@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
-"POT-Creation-Date: 2011-07-13 14:12-0400\n"
+"POT-Creation-Date: 2011-07-26 08:43-0400\n"
 "PO-Revision-Date: 2011-01-06 19:28-0700\n"
 "Last-Translator: Jason E. Rist <jrist@redhat.com>\n"
 "Language-Team: English\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app/views/promotions/show.html.haml:69
+#: app/views/promotions/show.html.haml:65
 msgid " Changesets"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:117
+#: app/views/promotions/show.html.haml:106
 msgid " Content"
 msgstr ""
 
@@ -40,20 +40,20 @@ msgstr ""
 msgid "%{relative_time} ago"
 msgstr "%{relative_time} ago"
 
-#: app/views/common/_panel.html.haml:39
+#: app/views/common/_panel.html.haml:22
 msgid "+ New "
 msgstr ""
 
-#: app/views/promotions/show.html.haml:112
-#: app/views/promotions/show.html.haml:116
+#: app/views/promotions/show.html.haml:100
+#: app/views/promotions/show.html.haml:104
 msgid "+ New Changeset"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "Add"
 msgstr ""
 
-#: app/views/organizations/_edit.html.haml:36
+#: app/views/organizations/_edit.html.haml:39
 msgid "Add New Environment"
 msgstr ""
 
@@ -61,22 +61,26 @@ msgstr ""
 msgid "Add Permission"
 msgstr ""
 
-#: app/views/providers/_products_repos.html.haml:22
+#: app/views/providers/_products_repos.html.haml:26
 msgid "Add Product"
 msgstr ""
 
-#: app/views/providers/_products_repos.html.haml:38
+#: app/views/providers/_products_repos.html.haml:43
 msgid "Add Repository"
 msgstr ""
 
-#: app/views/operations/index.html.haml:2 config/navigation.rb:88
+#: app/views/promotions/show.html.haml:5
+msgid "Added:"
+msgstr ""
+
+#: app/views/operations/index.html.haml:2 config/navigation.rb:79
 msgid "Administration"
 msgstr ""
 
 #: app/views/roles/_permission.html.haml:23
 #: app/views/roles/_permission.html.haml:33
 #: app/views/roles/_closed_permission.html.haml:11
-#: app/views/roles/_closed_permission.html.haml:18 config/navigation.rb:75
+#: app/views/roles/_closed_permission.html.haml:18 config/navigation.rb:66
 msgid "All"
 msgstr ""
 
@@ -85,44 +89,43 @@ msgstr ""
 msgid "All Errata"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:97
+#: app/views/promotions/show.html.haml:93
 msgid ""
 "An environment does not exist to promote content to.  If you would like to "
 "manage changesets and content, please create a new environment."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:42
+#: app/views/promotions/show.html.haml:40
 msgid ""
 "An error has occured when communicating with the server, please refresh the "
 "page to retrieve the current changeset."
 msgstr ""
 
-#: app/views/sync_schedules/index.html.haml:17
+#: app/views/sync_schedules/index.html.haml:15
 msgid "Apply Selected Plan to Selected Products"
 msgstr ""
 
-#: app/views/systems/_packages.html.haml:8
-#: app/views/systems/_edit.html.haml:42
 #: app/views/subscriptions/index.html.haml:18
+#: app/views/systems/_packages.html.haml:11
+#: app/views/systems/_edit.html.haml:45
 msgid "Arch"
 msgstr ""
 
-#: app/views/packages/_show.html.haml:25
+#: app/views/packages/_show.html.haml:23
 msgid "Architecture"
 msgstr ""
 
-#: app/views/roles/_self_role_edit.html.haml:20
-#: app/views/roles/_edit.html.haml:19
-#: app/views/repositories/_edit.html.haml:23
-#: app/views/organizations/_edit.html.haml:38
-#: app/views/sync_plans/_edit.html.haml:28
-#: app/views/environments/_edit.html.haml:29
-#: app/views/notices/show.html.haml:41
+#: app/views/organizations/_edit.html.haml:8
+#: app/views/products/_edit.html.haml:7
+#: app/views/environments/_edit.html.haml:8
+#: app/views/roles/_self_role_edit.html.haml:7
+#: app/views/roles/_edit.html.haml:7 app/views/notices/show.html.haml:41
+#: app/views/promotions/show.html.haml:86
+#: app/views/sync_plans/_edit.html.haml:7
+#: app/views/repositories/_edit.html.haml:7
 #: app/views/common/_common_i18n.html.haml:3
-#: app/views/products/_edit.html.haml:32
-#: app/views/promotions/show.html.haml:90
-#: app/views/providers/_products_repos.html.haml:40
-#: app/views/providers/_edit.html.haml:33 app/views/users/_edit.html.haml:41
+#: app/views/providers/_products_repos.html.haml:7
+#: app/views/providers/_edit.html.haml:8 app/views/users/_edit.html.haml:7
 msgid "Are you sure?"
 msgstr ""
 
@@ -130,7 +133,7 @@ msgstr ""
 msgid "Associated Bugs"
 msgstr ""
 
-#: app/controllers/organizations_controller.rb:105
+#: app/controllers/organizations_controller.rb:109
 msgid "At least one organization must exist."
 msgstr ""
 
@@ -138,7 +141,7 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: config/navigation.rb:27
+#: config/navigation.rb:24
 msgid "Basics"
 msgstr ""
 
@@ -146,77 +149,72 @@ msgstr ""
 msgid "Begins"
 msgstr ""
 
-#: app/views/packages/_show.html.haml:70
+#: app/views/packages/_show.html.haml:64
 msgid "Build Date"
 msgstr ""
 
-#: app/views/packages/_show.html.haml:64
+#: app/views/packages/_show.html.haml:58
 msgid "Build Host"
 msgstr ""
 
 #: app/controllers/api/environments_controller.rb:36
-msgid "Can't update locker environment"
+msgid "Can't update Locker environment"
 msgstr ""
 
+#: app/views/sync_management/index.html.haml:3
 #: app/views/roles/_permission.html.haml:42
 #: app/views/common/_edit_i18n.html.haml:3
-#: app/views/sync_management/index.html.haml:3
 msgid "Cancel"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:94
+#: app/views/promotions/show.html.haml:90
 msgid "Cancel Review"
 msgstr ""
 
-#: app/views/changesets/_new.html.haml:16
+#: app/views/changesets/_new.html.haml:20
 msgid ""
 "Cannot create a new changeset without a next environment to promote in to. "
 "<br> Create a next environment on the organization screen."
 msgstr ""
 
-#: app/models/changeset.rb:116
+#: app/models/changeset.rb:120
 msgid "Cannot promote a changeset when it is not in the reivew phase"
 msgstr ""
 
 #: app/models/system.rb:16
-msgid "Cannot register a system with 'locker' environment "
+msgid "Cannot register a system with 'Locker' environment "
 msgstr ""
 
-#: app/views/users/_edit.html.haml:25
+#: app/views/users/_edit.html.haml:33
 msgid "Change Password"
 msgstr ""
 
-#: app/views/packages/_changelog.html.haml:9 config/navigation.rb:45
+#: config/navigation.rb:42
 msgid "Changelog"
 msgstr ""
 
-#: config/navigation.rb:53
+#: config/navigation.rb:50
 msgid "Changeset History"
 msgstr ""
 
-#: app/views/changesets/_changeset.html.haml:30
-msgid "Changeset Summary"
-msgstr ""
-
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "Changeset is empty."
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:28
-#: app/controllers/changesets_controller.rb:243
-#: app/views/promotions/show.html.haml:96
+#: app/controllers/changesets_controller.rb:248
+#: app/helpers/breadcrumb_helper.rb:28 app/views/promotions/show.html.haml:92
 msgid "Changesets"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:55
+#: app/views/systems/_edit.html.haml:58
 msgid "Checked In"
 msgstr ""
 
-#: app/views/users/_edit.html.haml:22
+#: app/views/users/_edit.html.haml:30
 msgid "Clear"
 msgstr ""
 
-#: app/views/users/_edit.html.haml:19
+#: app/views/users/_edit.html.haml:27
 msgid "Clear Disabled Helptips"
 msgstr ""
 
@@ -228,7 +226,7 @@ msgstr ""
 msgid "Cleared"
 msgstr ""
 
-#: app/views/common/_panel.html.haml:7
+#: app/views/common/_panel.html.haml:8
 msgid "Click New to create a new"
 msgstr ""
 
@@ -236,25 +234,25 @@ msgstr ""
 msgid "Click on 'Add Environment' to create the first environment"
 msgstr ""
 
+#: app/views/products/_edit.html.haml:29
 #: app/views/common/_edit_i18n.html.haml:3
-#: app/views/products/_edit.html.haml:23
 msgid "Click to edit"
 msgstr ""
 
-#: app/views/common/_panel.html.haml:17 app/views/common/_panel.html.haml:26
-#: app/views/promotions/show.html.haml:102
+#: app/views/layouts/_tupane_layout.html.haml:14
+#: app/views/layouts/_tupane_layout.html.haml:19
 msgid "Close"
 msgstr ""
 
-#: app/views/common/_env_select.html.haml:9
+#: app/views/common/_env_select.html.haml:8
 msgid "Collapse"
 msgstr ""
 
-#: app/views/users/_new.html.haml:19 app/views/users/_edit.html.haml:32
+#: app/views/users/_new.html.haml:23 app/views/users/_edit.html.haml:40
 msgid "Confirm"
 msgstr ""
 
-#: app/views/providers/_subscriptions.html.haml:22
+#: app/views/providers/_subscriptions.html.haml:23
 msgid "Consumed Subscriptions"
 msgstr ""
 
@@ -262,7 +260,7 @@ msgstr ""
 msgid "Content"
 msgstr ""
 
-#: config/navigation.rb:22
+#: config/navigation.rb:19
 msgid "Content Management"
 msgstr ""
 
@@ -274,17 +272,17 @@ msgstr ""
 msgid "Copyright &copy; "
 msgstr ""
 
-#: app/controllers/changesets_controller.rb:226
+#: app/controllers/changesets_controller.rb:222
 msgid "Couldn't find environment."
 msgstr ""
 
-#: app/controllers/api/sync_controller.rb:75
+#: app/controllers/api/sync_controller.rb:81
 msgid "Couldn't find subject of synchronization"
 msgstr ""
 
-#: app/views/repositories/_new.html.haml:20
-#: app/views/environments/_new.html.haml:24
-#: app/views/products/_new.html.haml:35 config/navigation.rb:24
+#: app/views/products/_new.html.haml:36
+#: app/views/environments/_new.html.haml:26
+#: app/views/repositories/_new.html.haml:22 config/navigation.rb:21
 msgid "Create"
 msgstr ""
 
@@ -292,20 +290,20 @@ msgstr ""
 msgid "Create Environment"
 msgstr ""
 
-#: app/views/products/_new.html.haml:1
+#: app/views/products/_new.html.haml:2
 msgid "Create Product"
 msgstr ""
 
-#: app/views/repositories/_new.html.haml:4
+#: app/views/repositories/_new.html.haml:6
 msgid "Create Repository"
 msgstr ""
 
-#: app/views/notices/show.html.haml:23
+#: app/views/notices/show.html.haml:22
 msgid "Created (UTC)"
 msgstr ""
 
-#: app/views/providers/_subscriptions.html.haml:18
 #: app/views/subscriptions/index.html.haml:5
+#: app/views/providers/_subscriptions.html.haml:19
 msgid "Current Subscriptions"
 msgstr ""
 
@@ -317,28 +315,26 @@ msgstr ""
 msgid "Delete All"
 msgstr ""
 
-#: app/views/packages/_dependencies.html.haml:12
-#: app/views/changesets/_changeset.html.haml:59 config/navigation.rb:44
+#: config/navigation.rb:41
 msgid "Dependencies"
 msgstr ""
 
-#: app/views/packages/_show.html.haml:19
-#: app/views/organizations/_new.html.haml:12
-#: app/views/organizations/_edit.html.haml:12
-#: app/views/sync_plans/_form.html.haml:10
-#: app/views/sync_plans/_edit.html.haml:13
-#: app/views/systems/_edit.html.haml:30
-#: app/views/environments/_new.html.haml:14
-#: app/views/environments/_edit.html.haml:18
-#: app/views/notices/show.html.haml:27 app/views/products/_new.html.haml:12
-#: app/views/products/_edit.html.haml:15
+#: app/views/organizations/_new.html.haml:14
+#: app/views/organizations/_edit.html.haml:15
+#: app/views/errata/_show.html.haml:45 app/views/products/_new.html.haml:13
+#: app/views/products/_edit.html.haml:21
+#: app/views/environments/_new.html.haml:16
+#: app/views/environments/_edit.html.haml:22
+#: app/views/notices/show.html.haml:26 app/views/sync_plans/_form.html.haml:10
+#: app/views/sync_plans/_edit.html.haml:18
+#: app/views/packages/_show.html.haml:17
 #: app/views/providers/_form.html.haml:12
-#: app/views/providers/_edit.html.haml:19 app/views/errata/_show.html.haml:45
+#: app/views/providers/_edit.html.haml:25 app/views/systems/_edit.html.haml:33
 msgid "Description"
 msgstr ""
 
-#: app/views/changesets/_edit.html.haml:9 config/navigation.rb:43
-#: config/navigation.rb:49
+#: app/views/changesets/_edit.html.haml:6 config/navigation.rb:40
+#: config/navigation.rb:46
 msgid "Details"
 msgstr ""
 
@@ -346,44 +342,45 @@ msgstr ""
 msgid "Disabled help tips have been re-enabled."
 msgstr ""
 
-#: app/views/packages/_show.html.haml:89
+#: app/views/packages/_show.html.haml:82
 msgid "Download"
 msgstr ""
 
-#: app/views/products/_edit.html.haml:6
+#: app/views/products/_edit.html.haml:12
 msgid "Edit Product"
 msgstr ""
 
-#: app/views/providers/_edit.html.haml:4
+#: app/views/providers/_subscriptions.html.haml:2
+#: app/views/providers/_edit.html.haml:5
 msgid "Edit Provider"
 msgstr ""
 
-#: app/views/repositories/_edit.html.haml:6
+#: app/views/repositories/_edit.html.haml:12
 msgid "Edit Repository"
 msgstr ""
 
-#: app/views/sync_plans/_edit.html.haml:5
+#: app/views/sync_plans/_edit.html.haml:4
 msgid "Edit Sync Plan"
 msgstr ""
 
 #: app/views/roles/_self_role_edit.html.haml:4
-#: app/views/users/_edit.html.haml:2
+#: app/views/users/_edit.html.haml:4
 msgid "Edit User"
 msgstr ""
 
-#: app/controllers/api/systems_controller.rb:84
+#: app/controllers/api/systems_controller.rb:89
 msgid "Either organization id or environment id needs to be specified"
 msgstr ""
 
-#: app/views/users/_edit.html.haml:14
+#: app/views/users/_edit.html.haml:22
 msgid "Enable inline help"
 msgstr ""
 
-#: app/views/environments/_edit.html.haml:6
+#: app/views/environments/_edit.html.haml:5
 msgid "Environment"
 msgstr ""
 
-#: app/views/organizations/_edit.html.haml:16
+#: app/views/organizations/_edit.html.haml:19
 msgid "Environment Promotion Paths"
 msgstr ""
 
@@ -391,19 +388,18 @@ msgstr ""
 msgid "Environment cannot be in its own promotion path"
 msgstr ""
 
-#: config/navigation.rb:76
+#: config/navigation.rb:67
 msgid "Environments"
 msgstr ""
 
-#: app/helpers/promotions_helper.rb:50 app/helpers/breadcrumb_helper.rb:44
-#: app/views/changesets/_changeset.html.haml:39
-#: app/views/changesets/_edit.html.haml:33
+#: app/helpers/breadcrumb_helper.rb:44 app/helpers/promotions_helper.rb:50
+#: app/views/changesets/_edit.html.haml:28
 #: app/views/promotions/_detail.html.haml:18
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "Errata"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "Erratum"
 msgstr ""
 
@@ -419,7 +415,7 @@ msgstr ""
 msgid "Est Size (Packages)"
 msgstr ""
 
-#: app/views/common/_env_select.html.haml:7
+#: app/views/common/_env_select.html.haml:6
 msgid "Expand"
 msgstr ""
 
@@ -432,19 +428,19 @@ msgstr ""
 msgid "Expires"
 msgstr ""
 
-#: app/views/systems/_facts.html.haml:10
+#: app/views/systems/_facts.html.haml:17
 msgid "Fact"
 msgstr ""
 
-#: config/navigation.rb:68
+#: config/navigation.rb:62
 msgid "Facts"
 msgstr ""
 
-#: app/views/products/_new.html.haml:30
+#: app/views/products/_new.html.haml:31
 msgid "File"
 msgstr ""
 
-#: app/views/packages/_filelist.html.haml:8 config/navigation.rb:46
+#: config/navigation.rb:43
 msgid "Filelist"
 msgstr ""
 
@@ -452,11 +448,11 @@ msgstr ""
 msgid "Finish Time"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "Full Products"
 msgstr ""
 
-#: config/navigation.rb:63 config/navigation.rb:91
+#: config/navigation.rb:60 config/navigation.rb:82
 msgid "General"
 msgstr ""
 
@@ -464,15 +460,11 @@ msgstr ""
 msgid "Good"
 msgstr ""
 
-#: app/views/systems/_facts.html.haml:9
+#: app/views/systems/_facts.html.haml:16
 msgid "Group"
 msgstr ""
 
-#: config/navigation.rb:80
-msgid "Groups"
-msgstr ""
-
-#: app/views/systems/_edit.html.haml:14
+#: app/views/systems/_edit.html.haml:17
 msgid "ID"
 msgstr ""
 
@@ -481,11 +473,11 @@ msgid "IP: "
 msgstr ""
 
 #: app/views/sync_plans/_form.html.haml:15
-#: app/views/sync_plans/_edit.html.haml:17
+#: app/views/sync_plans/_edit.html.haml:22
 msgid "Interval"
 msgstr ""
 
-#: app/controllers/changesets_controller.rb:125
+#: app/controllers/changesets_controller.rb:126
 msgid "Invalid state"
 msgstr ""
 
@@ -501,23 +493,23 @@ msgstr ""
 msgid "Kernel: "
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:65
+#: app/views/systems/_edit.html.haml:68
 msgid "Last Booted"
 msgstr ""
 
-#: app/views/notices/show.html.haml:25
+#: app/views/notices/show.html.haml:24
 msgid "Level"
 msgstr ""
 
-#: app/views/packages/_show.html.haml:77
+#: app/views/packages/_show.html.haml:70
 msgid "License"
 msgstr ""
 
-#: config/navigation.rb:84
+#: config/navigation.rb:75
 msgid "List"
 msgstr ""
 
-#: app/views/providers/_subscriptions.html.haml:16
+#: app/views/providers/_subscriptions.html.haml:14
 msgid ""
 "Listed below are the products available from the selected provider, as well "
 "as the related subscription information.  If you have a subscription "
@@ -525,17 +517,21 @@ msgid ""
 "the Red Hat Customer Portal or by contacting your support representative."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
-#: app/views/promotions/show.html.haml:84
+#: app/views/promotions/show.html.haml:5
+#: app/views/promotions/show.html.haml:80
 msgid "Loading Changeset"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:46
+#: app/views/systems/_edit.html.haml:49
 msgid "Location"
 msgstr ""
 
 #: app/controllers/environments_controller.rb:73
 msgid "Locker"
+msgstr ""
+
+#: app/models/changeset.rb:15
+msgid "Locker environment can have no changeset!"
 msgstr ""
 
 #: app/views/user_sessions/new.html.haml:5
@@ -547,8 +543,8 @@ msgstr ""
 msgid "Login Successful"
 msgstr ""
 
-#: app/views/accounts/show.html.haml:6 app/views/layouts/_footer.haml:5
-#: app/views/layouts/_header.haml:23
+#: app/views/layouts/_header.haml:23 app/views/layouts/_footer.haml:5
+#: app/views/accounts/show.html.haml:6
 msgid "Logout"
 msgstr ""
 
@@ -556,30 +552,30 @@ msgstr ""
 msgid "Logout Successful"
 msgstr ""
 
-#: config/navigation.rb:10
-msgid "Monitors"
+#: app/views/promotions/show.html.haml:117
+msgid "More details"
 msgstr ""
 
-#: app/models/changeset.rb:28
+#: app/models/changeset.rb:34
 msgid "Must be unique within an environment"
 msgstr ""
 
-#: app/views/roles/_new.html.haml:6 app/views/roles/_edit.html.haml:10
-#: app/views/repositories/_new.html.haml:10
-#: app/views/repositories/_edit.html.haml:10
+#: app/views/organizations/_new.html.haml:9
+#: app/views/changesets/_new.html.haml:12
+#: app/views/changesets/_edit.html.haml:11 app/views/products/_new.html.haml:8
+#: app/views/products/_edit.html.haml:16
+#: app/views/environments/_new.html.haml:10
+#: app/views/environments/_edit.html.haml:17 app/views/roles/_new.html.haml:9
+#: app/views/roles/_edit.html.haml:14 app/views/sync_plans/_form.html.haml:5
+#: app/views/sync_plans/_edit.html.haml:14
+#: app/views/repositories/_new.html.haml:12
+#: app/views/repositories/_edit.html.haml:16
 #: app/views/packages/_show.html.haml:11
-#: app/views/organizations/_new.html.haml:7
-#: app/views/sync_plans/_form.html.haml:5
-#: app/views/sync_plans/_edit.html.haml:9
-#: app/views/systems/_packages.html.haml:7
-#: app/views/systems/_edit.html.haml:26 app/views/changesets/_new.html.haml:9
-#: app/views/changesets/_edit.html.haml:14
-#: app/views/environments/_new.html.haml:8
-#: app/views/environments/_edit.html.haml:13
-#: app/views/products/_new.html.haml:7 app/views/products/_edit.html.haml:10
+#: app/views/providers/_subscriptions.html.haml:22
 #: app/views/providers/_form.html.haml:6
-#: app/views/providers/_subscriptions.html.haml:21
-#: app/views/providers/_edit.html.haml:14
+#: app/views/providers/_edit.html.haml:20
+#: app/views/systems/_packages.html.haml:10
+#: app/views/systems/_edit.html.haml:29
 msgid "Name"
 msgstr ""
 
@@ -591,7 +587,7 @@ msgstr ""
 msgid "Never checked in."
 msgstr ""
 
-#: app/views/changesets/_new.html.haml:1
+#: app/views/changesets/_new.html.haml:2
 msgid "New Changeset"
 msgstr ""
 
@@ -603,15 +599,15 @@ msgstr ""
 msgid "New Provider"
 msgstr ""
 
-#: app/views/roles/_new.html.haml:1
+#: app/views/roles/_new.html.haml:2
 msgid "New Role"
 msgstr ""
 
-#: app/views/sync_plans/_new.html.haml:4
+#: app/views/sync_plans/_new.html.haml:2
 msgid "New Sync Plan"
 msgstr ""
 
-#: app/views/users/_new.html.haml:2
+#: app/views/users/_new.html.haml:4
 msgid "New User"
 msgstr ""
 
@@ -619,7 +615,7 @@ msgstr ""
 msgid "No Subscriptions Available"
 msgstr ""
 
-#: app/views/organizations/_edit.html.haml:31
+#: app/views/organizations/_edit.html.haml:35
 msgid ""
 "No environments are available in this organization. Please add some "
 "environments to be able register systems to this organization."
@@ -629,7 +625,7 @@ msgstr ""
 msgid "No errata available."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "No errata exist in this changeset."
 msgstr ""
 
@@ -637,7 +633,7 @@ msgstr ""
 msgid "No packages available for promotion"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "No packages exist in this changeset."
 msgstr ""
 
@@ -645,7 +641,7 @@ msgstr ""
 msgid "No products"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "No products exist in the changeset for this product"
 msgstr ""
 
@@ -653,15 +649,15 @@ msgstr ""
 msgid "No repos available for promotion"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "No repositories exist in this changeset."
 msgstr ""
 
-#: app/models/product.rb:70 app/views/systems/_edit.html.haml:66
+#: app/models/product.rb:70 app/views/systems/_edit.html.haml:69
 msgid "None"
 msgstr ""
 
-#: app/controllers/providers_controller.rb:55
+#: app/controllers/providers_controller.rb:53
 msgid "None Imported"
 msgstr ""
 
@@ -669,11 +665,7 @@ msgstr ""
 msgid "Not synced."
 msgstr ""
 
-#: config/navigation.rb:14
-msgid "Notifications"
-msgstr ""
-
-#: app/views/systems/_edit.html.haml:34
+#: app/views/systems/_edit.html.haml:37
 msgid "OS"
 msgstr ""
 
@@ -686,7 +678,7 @@ msgid ""
 "Custom Providers."
 msgstr ""
 
-#: app/models/provider.rb:45
+#: app/models/provider.rb:46
 msgid "Only one Red Hat provider permitted for an Organization"
 msgstr ""
 
@@ -694,53 +686,51 @@ msgstr ""
 msgid "Open Source Systems Management"
 msgstr ""
 
-#: app/controllers/organizations_controller.rb:122
+#: app/controllers/organizations_controller.rb:131
 msgid "Organization"
 msgstr ""
 
-#: app/controllers/organizations_controller.rb:120 config/navigation.rb:83
+#: app/controllers/organizations_controller.rb:129 config/navigation.rb:74
 msgid "Organizations"
 msgstr ""
 
-#: app/views/organizations/index.html.haml:13
+#: app/views/organizations/index.html.haml:8
 msgid ""
 "Organizations allow content and systems to be separated by logical "
 "divisions.  To edit the environments within an organization, click on that "
 "organization and then click on the desired environment."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "Package"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:51
+#: app/views/promotions/show.html.haml:49
 msgid "Package Dependencies"
 msgstr ""
 
-#: app/views/packages/_show.html.haml:83
+#: app/views/packages/_show.html.haml:76
 msgid "Package Group"
 msgstr ""
 
-#: app/views/packages/_show.html.haml:51
+#: app/views/packages/_show.html.haml:46
 msgid "Package Size"
 msgstr ""
 
-#: app/helpers/promotions_helper.rb:46 app/helpers/breadcrumb_helper.rb:40
-#: app/views/changesets/_changeset.html.haml:45
-#: app/views/changesets/_changeset.html.haml:61
-#: app/views/changesets/_edit.html.haml:39
+#: app/helpers/breadcrumb_helper.rb:40 app/helpers/promotions_helper.rb:46
+#: app/views/errata/_packages.html.haml:10
+#: app/views/changesets/_edit.html.haml:34
 #: app/views/promotions/_detail.html.haml:14
-#: app/views/promotions/show.html.haml:8
-#: app/views/errata/_packages.html.haml:10 config/navigation.rb:50
-#: config/navigation.rb:71
+#: app/views/promotions/show.html.haml:5 config/navigation.rb:47
+#: config/navigation.rb:63
 msgid "Packages"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "Partial Products"
 msgstr ""
 
-#: app/views/users/_new.html.haml:12
+#: app/views/users/_new.html.haml:16
 msgid "Password"
 msgstr ""
 
@@ -764,13 +754,13 @@ msgstr ""
 msgid "Permission updated."
 msgstr ""
 
-#: app/views/roles/_self_role_edit.html.haml:17
+#: app/views/roles/_self_role_edit.html.haml:21
 msgid "Permissions"
 msgstr ""
 
+#: app/controllers/sync_plans_controller.rb:43
 #: app/controllers/sync_schedules_controller.rb:33
 #: app/controllers/sync_schedules_controller.rb:39
-#: app/controllers/sync_plans_controller.rb:43
 msgid "Plan"
 msgstr ""
 
@@ -778,21 +768,21 @@ msgstr ""
 msgid "Please request the required privileges from an administrator."
 msgstr ""
 
-#: app/views/environments/_new.html.haml:19
+#: app/views/environments/_new.html.haml:21
 msgid "Prior Environment"
 msgstr ""
 
-#: app/views/environments/_edit.html.haml:24
+#: app/views/environments/_edit.html.haml:28
 msgid "Prior Environments"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:45
+#: app/views/promotions/show.html.haml:43
 msgid "Processing changeset modifications, please wait."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
 #: app/views/sync_management/_products.html.haml:6
 #: app/views/subscriptions/index.html.haml:13
+#: app/views/promotions/show.html.haml:5
 msgid "Product"
 msgstr ""
 
@@ -801,16 +791,14 @@ msgstr ""
 msgid "Product: "
 msgstr ""
 
-#: app/helpers/promotions_helper.rb:36
-#: app/views/changesets/_changeset.html.haml:34
-#: app/views/changesets/_edit.html.haml:27
-#: app/views/promotions/_detail.html.haml:5
-#: app/views/promotions/show.html.haml:8
+#: app/helpers/promotions_helper.rb:36 app/views/changesets/_edit.html.haml:22
 #: app/views/sync_management/_products.html.haml:2
+#: app/views/promotions/_detail.html.haml:5
+#: app/views/promotions/show.html.haml:5
 msgid "Products"
 msgstr ""
 
-#: app/views/providers/_products_repos.html.haml:5 config/navigation.rb:31
+#: app/views/providers/_products_repos.html.haml:4 config/navigation.rb:28
 msgid "Products & Repositories"
 msgstr ""
 
@@ -818,38 +806,34 @@ msgstr ""
 msgid "Progress"
 msgstr ""
 
-#: app/views/changesets/_changeset.html.haml:67
-msgid "Promote to"
-msgstr ""
-
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "Promote to "
 msgstr ""
 
-#: app/views/promotions/_packages.html.haml:8
 #: app/views/promotions/_repos.html.haml:8
+#: app/views/promotions/_packages.html.haml:8
 msgid "Promoted"
 msgstr ""
 
-#: app/views/changesets/_edit.html.haml:19
+#: app/views/changesets/_edit.html.haml:16
 msgid "Promotion Date"
 msgstr ""
 
-#: config/navigation.rb:41
+#: config/navigation.rb:38
 msgid "Promotions"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:59
+#: app/views/promotions/show.html.haml:53
 msgid ""
 "Promotions allow you to promote content from one environment to the next "
-"along a promotion path. Clicking \"Add\" next to one or more products will "
-"add them to the change set. If products already exist in the next "
-"environment, you may promote other types of content. Once you have created a "
-"change set, click the \"Promote\" button to commit it to the next "
-"environment."
+"along a promotion path. Once you have created a changeset, clicking \"Add\" "
+"next to  one or more products will add them to the change set. If products "
+"already exist in the next environment, you may promote other types of "
+"content. Once you have created a change set, click the \"Promote\" button to "
+"commit it to the next environment."
 msgstr ""
 
-#: app/controllers/providers_controller.rb:180
+#: app/controllers/providers_controller.rb:181
 msgid "Provider"
 msgstr ""
 
@@ -857,11 +841,11 @@ msgstr ""
 msgid "Provider: "
 msgstr ""
 
-#: app/controllers/providers_controller.rb:178 config/navigation.rb:23
+#: app/controllers/providers_controller.rb:179 config/navigation.rb:20
 msgid "Providers"
 msgstr ""
 
-#: app/views/providers/index.html.haml:13
+#: app/views/providers/index.html.haml:9
 msgid ""
 "Providers provide many types of content such as packages, errata, kickstart "
 "trees, and installation disc images.  A provider may be delivering all of "
@@ -869,19 +853,15 @@ msgid ""
 "few yum repos."
 msgstr ""
 
-#: app/views/packages/_dependencies.html.haml:27
+#: app/views/packages/_dependencies.html.haml:21
 msgid "Provides"
-msgstr ""
-
-#: config/navigation.rb:96
-msgid "Proxies"
 msgstr ""
 
 #: app/views/subscriptions/index.html.haml:14
 msgid "Quantity"
 msgstr ""
 
-#: app/views/providers/_subscriptions.html.haml:23
+#: app/views/providers/_subscriptions.html.haml:24
 msgid "Quantity Available"
 msgstr ""
 
@@ -889,58 +869,58 @@ msgstr ""
 msgid "Queued."
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:60 config/navigation.rb:61
+#: app/views/systems/_edit.html.haml:63 config/navigation.rb:58
 msgid "Registered"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:38
+#: app/views/systems/_edit.html.haml:41
 msgid "Release"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "Remove"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:91
+#: app/views/promotions/show.html.haml:87
 msgid "Remove Changeset"
 msgstr ""
 
-#: app/views/environments/_edit.html.haml:30
+#: app/views/environments/_edit.html.haml:9
 msgid "Remove Environment"
 msgstr ""
 
-#: app/views/organizations/_edit.html.haml:39
+#: app/views/organizations/_edit.html.haml:8
 msgid "Remove Organization"
 msgstr ""
 
-#: app/views/products/_edit.html.haml:33
+#: app/views/products/_edit.html.haml:8
 msgid "Remove Product"
 msgstr ""
 
-#: app/views/providers/_products_repos.html.haml:41
-#: app/views/providers/_edit.html.haml:33
+#: app/views/providers/_products_repos.html.haml:8
+#: app/views/providers/_edit.html.haml:8
 msgid "Remove Provider"
 msgstr ""
 
-#: app/views/repositories/_edit.html.haml:24
+#: app/views/repositories/_edit.html.haml:8
 msgid "Remove Repository"
 msgstr ""
 
-#: app/views/roles/_edit.html.haml:19
+#: app/views/roles/_edit.html.haml:7
 msgid "Remove Role"
 msgstr ""
 
-#: app/views/sync_plans/_edit.html.haml:28
+#: app/views/sync_plans/_edit.html.haml:7
 msgid "Remove Sync Plan"
 msgstr ""
 
-#: app/views/roles/_self_role_edit.html.haml:20
-#: app/views/users/_edit.html.haml:41
+#: app/views/roles/_self_role_edit.html.haml:7
+#: app/views/users/_edit.html.haml:7
 msgid "Remove User"
 msgstr ""
 
-#: config/navigation.rb:12
-msgid "Reports"
+#: app/views/promotions/show.html.haml:5
+msgid "Removed:"
 msgstr ""
 
 #: app/helpers/promotions_helper.rb:54
@@ -948,22 +928,21 @@ msgid "Repos"
 msgstr ""
 
 #: app/helpers/breadcrumb_helper.rb:48
-#: app/views/changesets/_changeset.html.haml:50
 #: app/views/promotions/_detail.html.haml:22
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "Repositories"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "Repository"
 msgstr ""
 
 #: app/views/providers/_form.html.haml:24
-#: app/views/providers/_edit.html.haml:30
+#: app/views/providers/_edit.html.haml:36
 msgid "Repository Url"
 msgstr ""
 
-#: app/views/packages/_dependencies.html.haml:19
+#: app/views/packages/_dependencies.html.haml:13
 msgid "Requires"
 msgstr ""
 
@@ -971,11 +950,11 @@ msgstr ""
 msgid "Resource type cannot be null"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "Review for Promotion"
 msgstr ""
 
-#: app/controllers/roles_controller.rb:44 app/views/roles/_edit.html.haml:5
+#: app/controllers/roles_controller.rb:44 app/views/roles/_edit.html.haml:4
 msgid "Role"
 msgstr ""
 
@@ -988,11 +967,11 @@ msgid "Role updated."
 msgstr ""
 
 #: app/controllers/roles_controller.rb:42
-#: app/views/roles/_self_role_edit.html.haml:10 config/navigation.rb:95
+#: app/views/roles/_self_role_edit.html.haml:14 config/navigation.rb:86
 msgid "Roles"
 msgstr ""
 
-#: config/navigation.rb:92
+#: config/navigation.rb:83
 msgid "Roles & Permissions"
 msgstr ""
 
@@ -1000,27 +979,27 @@ msgstr ""
 msgid "Running."
 msgstr ""
 
+#: app/views/organizations/_new.html.haml:18
 #: app/views/roles/_permission.html.haml:39
-#: app/views/organizations/_new.html.haml:16
-#: app/views/sync_plans/_form.html.haml:32
+#: app/views/sync_plans/_form.html.haml:31
 #: app/views/common/_edit_i18n.html.haml:3
-#: app/views/providers/_form.html.haml:29 app/views/users/_edit.html.haml:37
+#: app/views/providers/_form.html.haml:29 app/views/users/_edit.html.haml:45
 msgid "Save"
 msgstr ""
 
-#: app/views/changesets/_new.html.haml:14
+#: app/views/changesets/_new.html.haml:17
 msgid "Save Changeset"
 msgstr ""
 
-#: app/views/roles/_self_role_edit.html.haml:15
+#: app/views/roles/_self_role_edit.html.haml:19
 msgid "Save Roles"
 msgstr ""
 
-#: app/views/systems/_subscriptions.html.haml:9
+#: app/views/systems/_subscriptions.html.haml:15
 msgid "Save Subscriptions"
 msgstr ""
 
-#: app/views/users/_new.html.haml:28
+#: app/views/users/_new.html.haml:32
 msgid "Save User"
 msgstr ""
 
@@ -1037,9 +1016,9 @@ msgstr ""
 msgid "Scope"
 msgstr ""
 
-#: app/views/notices/show.html.haml:10 app/views/common/_panel.html.haml:46
-#: app/views/common/_panel.html.haml:50 app/views/promotions/show.html.haml:74
-#: app/views/promotions/show.html.haml:78
+#: app/views/notices/show.html.haml:10 app/views/promotions/show.html.haml:70
+#: app/views/promotions/show.html.haml:74 app/views/common/_panel.html.haml:29
+#: app/views/common/_panel.html.haml:33
 msgid "Search"
 msgstr ""
 
@@ -1059,34 +1038,34 @@ msgstr ""
 msgid "Select Products to schedule"
 msgstr ""
 
-#: app/views/common/_panel.html.haml:11
+#: app/views/common/_panel.html.haml:12
 msgid "Select Result"
 msgstr ""
 
-#: app/views/packages/_show.html.haml:42
+#: app/views/packages/_show.html.haml:38
 msgid "Signature"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid ""
 "Some changeset modifications have not finished processing, are you sure you "
 "want to leave the page?  By leaving you may lose some modifications."
 msgstr ""
 
-#: app/views/packages/_show.html.haml:96
+#: app/views/packages/_show.html.haml:88
 msgid "Source Package"
 msgstr ""
 
-#: app/views/providers/_subscriptions.html.haml:36
+#: app/views/providers/_subscriptions.html.haml:37
 msgid "Specify Local Manifest"
 msgstr ""
 
 #: app/views/sync_plans/_form.html.haml:20
-#: app/views/sync_plans/_edit.html.haml:21
+#: app/views/sync_plans/_edit.html.haml:26
 msgid "Start Date"
 msgstr ""
 
-#: app/models/sync_plan.rb:37
+#: app/models/sync_plan.rb:38
 msgid "Start Date and Time can't be blank"
 msgstr ""
 
@@ -1098,16 +1077,16 @@ msgstr ""
 msgid "Strong"
 msgstr ""
 
-#: app/controllers/providers_controller.rb:41
+#: app/controllers/providers_controller.rb:39
 msgid "Subscription uploaded successfully"
 msgstr ""
 
-#: app/views/systems/_subscriptions.html.haml:4 config/navigation.rb:29
-#: config/navigation.rb:65 config/navigation.rb:85
+#: app/views/systems/_subscriptions.html.haml:10 config/navigation.rb:26
+#: config/navigation.rb:61 config/navigation.rb:76
 msgid "Subscriptions"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "Summary:"
 msgstr ""
 
@@ -1115,11 +1094,11 @@ msgstr ""
 msgid "Support Level"
 msgstr ""
 
-#: config/navigation.rb:35
+#: config/navigation.rb:32
 msgid "Sync Management"
 msgstr ""
 
-#: app/controllers/sync_plans_controller.rb:41 config/navigation.rb:37
+#: app/controllers/sync_plans_controller.rb:41 config/navigation.rb:34
 msgid "Sync Plans"
 msgstr ""
 
@@ -1127,11 +1106,11 @@ msgstr ""
 msgid "Sync Plans applied successfully."
 msgstr ""
 
-#: config/navigation.rb:38
+#: config/navigation.rb:35
 msgid "Sync Schedule"
 msgstr ""
 
-#: config/navigation.rb:36
+#: config/navigation.rb:33
 msgid "Sync Status"
 msgstr ""
 
@@ -1144,33 +1123,33 @@ msgstr ""
 msgid "Synchronize Now"
 msgstr ""
 
-#: app/views/systems/_packages.html.haml:1
-#: app/views/systems/_subscriptions.html.haml:1
-#: app/views/systems/_edit.html.haml:3 app/views/systems/_facts.html.haml:1
+#: app/views/systems/_packages.html.haml:2
+#: app/views/systems/_subscriptions.html.haml:4
+#: app/views/systems/_facts.html.haml:7 app/views/systems/_edit.html.haml:4
 msgid "System"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:51
+#: app/views/systems/_edit.html.haml:54
 msgid "System Events"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:10
+#: app/views/systems/_edit.html.haml:13
 msgid "System Info"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:22
+#: app/views/systems/_edit.html.haml:25
 msgid "System Properties"
 msgstr ""
 
-#: app/controllers/systems_controller.rb:78
+#: app/controllers/systems_controller.rb:79
 msgid "System subscriptions updated."
 msgstr ""
 
-#: app/controllers/systems_controller.rb:98
+#: app/controllers/systems_controller.rb:99
 msgid "System updated."
 msgstr ""
 
-#: app/controllers/systems_controller.rb:57 config/navigation.rb:59
+#: app/controllers/systems_controller.rb:58 config/navigation.rb:56
 msgid "Systems"
 msgstr ""
 
@@ -1182,15 +1161,21 @@ msgstr ""
 msgid "Template imported"
 msgstr ""
 
-#: app/controllers/changesets_controller.rb:190
+#: app/controllers/changesets_controller.rb:191
 msgid "The changeset must be moved to the review stage before promotion"
+msgstr ""
+
+#: app/controllers/organizations_controller.rb:95
+msgid ""
+"The current organization cannot be deleted. Please switch to a different "
+"organization before deleting."
 msgstr ""
 
 #: app/views/users/index.html.haml:3
 msgid "The passwords do not match"
 msgstr ""
 
-#: app/controllers/providers_controller.rb:44
+#: app/controllers/providers_controller.rb:42
 msgid "There was a format error with your Subscription Manifest"
 msgstr ""
 
@@ -1201,7 +1186,7 @@ msgid ""
 msgstr ""
 
 #: app/views/sync_plans/_form.html.haml:25
-#: app/views/sync_plans/_edit.html.haml:25
+#: app/views/sync_plans/_edit.html.haml:30
 msgid "Time"
 msgstr ""
 
@@ -1209,25 +1194,26 @@ msgstr ""
 msgid "Trend"
 msgstr ""
 
+#: app/views/errata/_show.html.haml:12
 #: app/views/roles/_permission.html.haml:13
 #: app/views/roles/_closed_permission.html.haml:3
-#: app/views/repositories/_edit.html.haml:20
+#: app/views/repositories/_edit.html.haml:26
 #: app/views/providers/_form.html.haml:18
-#: app/views/providers/_edit.html.haml:24 app/views/errata/_show.html.haml:12
+#: app/views/providers/_edit.html.haml:30
 msgid "Type"
 msgstr ""
 
-#: app/views/products/_new.html.haml:22
+#: app/views/products/_new.html.haml:23
 msgid "Types"
 msgstr ""
 
-#: app/views/repositories/_new.html.haml:15
-#: app/views/repositories/_edit.html.haml:15
-#: app/views/products/_new.html.haml:17 app/views/products/_edit.html.haml:21
+#: app/views/products/_new.html.haml:18 app/views/products/_edit.html.haml:27
+#: app/views/repositories/_new.html.haml:17
+#: app/views/repositories/_edit.html.haml:21
 msgid "URL"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:18
+#: app/views/systems/_edit.html.haml:21
 msgid "UUID"
 msgstr ""
 
@@ -1235,16 +1221,12 @@ msgstr ""
 msgid "Updated"
 msgstr ""
 
-#: config/navigation.rb:54
-msgid "Updates Bundle"
-msgstr ""
-
 #: app/views/common/_edit_i18n.html.haml:3
-#: app/views/providers/_subscriptions.html.haml:39
+#: app/views/providers/_subscriptions.html.haml:40
 msgid "Upload"
 msgstr ""
 
-#: app/views/providers/_subscriptions.html.haml:33
+#: app/views/providers/_subscriptions.html.haml:35
 msgid "Upload Subscription Manifest"
 msgstr ""
 
@@ -1256,11 +1238,11 @@ msgstr ""
 msgid "User"
 msgstr ""
 
-#: app/views/notices/show.html.haml:14
+#: app/views/notices/show.html.haml:15
 msgid "User Notifications"
 msgstr ""
 
-#: app/views/notices/show.html.haml:18
+#: app/views/notices/show.html.haml:13
 msgid ""
 "User notifications lists all notifications generated by a user as well as "
 "global notifications that are sent to all users."
@@ -1270,11 +1252,11 @@ msgstr ""
 msgid "User updated successfully."
 msgstr ""
 
-#: app/views/users/_new.html.haml:7 app/views/users/_edit.html.haml:9
+#: app/views/users/_new.html.haml:11 app/views/users/_edit.html.haml:17
 msgid "Username"
 msgstr ""
 
-#: app/controllers/users_controller.rb:40 config/navigation.rb:89
+#: app/controllers/users_controller.rb:40 config/navigation.rb:80
 msgid "Users"
 msgstr ""
 
@@ -1282,7 +1264,7 @@ msgstr ""
 msgid "Validation Failed:"
 msgstr ""
 
-#: app/views/systems/_facts.html.haml:11
+#: app/views/systems/_facts.html.haml:18
 msgid "Value"
 msgstr ""
 
@@ -1299,12 +1281,8 @@ msgstr ""
 msgid "Weak"
 msgstr ""
 
-#: app/controllers/application_controller.rb:216
+#: app/controllers/application_controller.rb:218
 msgid "Welcome Back!"
-msgstr ""
-
-#: config/navigation.rb:16
-msgid "Workflow"
 msgstr ""
 
 #: app/views/common/403.html.haml:3
@@ -1318,7 +1296,7 @@ msgid ""
 msgstr ""
 
 #: app/controllers/application_controller.rb:173
-#: app/controllers/application_controller.rb:206
+#: app/controllers/application_controller.rb:207
 msgid "You must be logged in to access that page."
 msgstr ""
 
@@ -1334,12 +1312,18 @@ msgid ""
 "disabled, please try again."
 msgstr ""
 
-#: app/views/products/_new.html.haml:25
+#: app/views/promotions/show.html.haml:116
+msgid ""
+"Your update has applied successfully, but during that time another user has "
+"also made an update."
+msgstr ""
+
+#: app/views/products/_new.html.haml:26
 msgid "Yum"
 msgstr ""
 
-#: app/models/katello_name_format_validator.rb:20
 #: app/models/katello_url_format_validator.rb:50
+#: app/models/katello_name_format_validator.rb:20
 msgid "can't be blank"
 msgstr ""
 
@@ -1351,11 +1335,11 @@ msgstr ""
 msgid "cannot contain characters other than alpha numerals,'_', '-'."
 msgstr ""
 
-#: app/controllers/changesets_controller.rb:246
+#: app/controllers/changesets_controller.rb:251
 msgid "changeset"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "currently editing this changeset"
 msgstr ""
 
@@ -1387,12 +1371,12 @@ msgstr ""
 msgid "must not contain leading or trailing white spaces."
 msgstr ""
 
-#: app/controllers/organizations_controller.rb:123
+#: app/controllers/organizations_controller.rb:132
 msgid "organization"
 msgstr ""
 
-#: app/controllers/sync_schedules_controller.rb:40
 #: app/controllers/sync_plans_controller.rb:44
+#: app/controllers/sync_schedules_controller.rb:40
 msgid "plan"
 msgstr ""
 
@@ -1408,11 +1392,11 @@ msgstr ""
 msgid "product was synced successfully with errors. See log for details"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:5
 msgid "promote_confirm"
 msgstr ""
 
-#: app/controllers/providers_controller.rb:181
+#: app/controllers/providers_controller.rb:182
 msgid "provider"
 msgstr ""
 
@@ -1424,7 +1408,7 @@ msgstr ""
 msgid "sync did not complete successfully"
 msgstr ""
 
-#: app/controllers/systems_controller.rb:62
+#: app/controllers/systems_controller.rb:63
 msgid "system"
 msgstr ""
 
