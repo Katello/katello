@@ -119,7 +119,7 @@ class SystemsController < ApplicationController
       packages << OpenStruct.new(:nvrea=>"#{rand_alpha_2ndhalf}-0.1.49-1.git.146.c#{rand_num}.fc15.#{arch}", :arch =>arch)
     end
     packages = packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages}
+    render :partial=>"more_packages", :locals=>{:system=>@system, :packages => packages}
   end
   
   def edit
