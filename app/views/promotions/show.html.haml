@@ -96,13 +96,24 @@
         #changeset_status
         #changeset_actions.clickable
           #delete_changeset.cs_action{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
-            = _("Delete")
+            %span#delete_changeset_icon.sprite
+              SPRITE
+            %span.text
+              = _("Delete")
           #edit_changeset.cs_action
-            = _('Edit')
+            %span#edit_changeset_icon.sprite
+              SPRITE
+            %span.text
+              = _('Edit Details')
           #review_changeset.cs_action
-            = _('Review')
+            %span#review_changeset_icon.sprite
+              SPRITE
+            %span.text
+              = _('Review')
           #promote_changeset.cs_action
-            = _('Promote')
+            %span#promote_changeset_icon.sprite
+            %span.text
+              = _('Promote')
         #changeset_users
       - else
         %h2 #{_("Changesets")}
