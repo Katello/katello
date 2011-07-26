@@ -254,6 +254,7 @@ Src::Application.routes.draw do
         get :providers
       end
       resources :systems, :only => [:index]
+      resources :activation_keys, :only => [:index]
     end
 
     resources :products, :only => [] do
@@ -282,8 +283,10 @@ Src::Application.routes.draw do
       resources :products, :only => [:index] do
         get :repositories, :on => :member
       end
+      resources :activation_keys, :only => [:index, :create]
     end
 
+    resources :activation_keys, :only => [:show, :update, :destroy]
     resources :packages, :only => [:show]
     resources :changesets, :only => [:show]
     resources :errata, :only => [:show]

@@ -27,16 +27,24 @@ describe ActivationKey do
     @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization, :environment => @environment_1)
   end
 
-  describe "should be invalid without" do
-    it "name" do
-      @akey = ActivationKey.new
+  context "in invalid state" do
+    before {@akey = ActivationKey.new}
+
+    it "should be invalid without name" do
       @akey.should_not be_valid
       @akey.errors[:name].should_not be_empty
     end
 
-    it "default environment" do
-      @akey = ActivationKey.new
+    it "should be invalid without default environment" do
       @akey.name = 'invalid key'
+      @akey.should_not be_valid
+      @akey.errors[:environment].should_not be_empty
+    end
+
+    it "should be invalid if non-existent environment is specified" do
+      @akey.name = 'invalid key'
+      @akey.environment_id = 123456
+
       @akey.should_not be_valid
       @akey.errors[:environment].should_not be_empty
     end

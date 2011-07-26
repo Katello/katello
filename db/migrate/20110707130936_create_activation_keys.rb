@@ -5,7 +5,7 @@ class CreateActivationKeys < ActiveRecord::Migration
       t.string :description
       t.references :organization, :null => false
       t.references :environment, :null => false
-
+      t.references :system_template
       t.timestamps
     end
   end
