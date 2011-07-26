@@ -130,7 +130,7 @@ $(document).ready(function() {
             success: function(data) {
                 $(".panel-content").html(data);
                 $('.scroll-pane').jScrollPane();
-                panel.panelResize($('#panel_main'));
+                panel.panelResize($('#panel_main'), false);
             }
         });
         return false;
@@ -211,7 +211,7 @@ var panel = (function(){
                 }).removeClass('closed').addClass('opened').attr('data-id', activeBlockId);
                 activeBlock.addClass('active');
                 previousBlockId = activeBlockId;
-                panel.panelAjax(activeBlockId, ajax_url, thisPanel);
+                panel.panelAjax(activeBlockId, ajax_url, thisPanel, false);
             } else if (thisPanel.hasClass('opened') && thisPanel.attr("data-id") !== activeBlockId){
                 panel.closeSubPanel(subpanel); //close the subpanel if it is open
                 // Keep the thisPanel open if they click another block
@@ -221,7 +221,7 @@ var panel = (function(){
                 activeBlock.addClass('active');
                 previousBlockId = activeBlockId;
                 thisPanel.removeClass('closed');
-                panel.panelAjax(activeBlockId, ajax_url, thisPanel);
+                panel.panelAjax(activeBlockId, ajax_url, thisPanel, false);
             } else {
                 // Close the Panel
                 // Remove previous classes besides opened
@@ -262,6 +262,8 @@ var panel = (function(){
         /* must pass a jQuery object */
         panelResize : function(paneljQ, isSubpanel){
             var new_top = Math.floor($('.left').position(top).top);
+            var headerSpacing = $('.head').height() + $('.subnav').height();
+            var height = $(window).height() - $('#subheader').height() - $('#head').height() - $('.subnav').height() - headerSpacing - 100;            
             
             new_top = isSubpanel ? (new_top + subpanelSpacing) : new_top;
             paneljQ.parent().animate({top: new_top}, 250);
@@ -274,14 +276,17 @@ var panel = (function(){
                 }
                 paneljQ.height(extraHeight);
             } else {
-                var height = $(window).height() - $('#subheader').height() - $('#head').height() - 275;
                 var leftPanel = $('.left');
-                if( leftPanel.height() < height ){
-                    height = leftPanel.height() - 100;
+                
+                if( leftPanel.height() <= height + headerSpacing + 80){
+                    height = leftPanel.height() - headerSpacing - 75;
+                } else {
+                    height -= 50;
                 }
                 if (isSubpanel) {
-                    height -= subpanelSpacing;
+                    //height -= subpanelSpacing;
                 }
+                
                 paneljQ.height(height);
             }
             if( paneljQ.length ){

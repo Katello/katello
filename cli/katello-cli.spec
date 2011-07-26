@@ -5,7 +5,7 @@ Summary:       Client package for managing application lifecycle for Linux syste
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.2
+Version:       0.1.3
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -64,6 +64,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 26 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.3-1
+- redhat provider - changing rhn to redhat in the cli
+- spec - fixing files section of katello-cli
+- spec - adding katello-cli package initial version
+
 * Mon Jul 25 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.2-1
 - spec - fixing files section of katello-cli
 

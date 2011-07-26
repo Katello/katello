@@ -32,7 +32,7 @@ except ImportError:
 
 _cfg = Config()
 
-PROVIDER_TYPES = { 'rhn':   'Red Hat',
+PROVIDER_TYPES = { 'redhat':   'Red Hat',
                    'yum':   'Custom'}
 
 
@@ -140,9 +140,9 @@ class Update(ProviderAction):
         if self._create:
             self.parser.add_option("--type", dest="type",
                                   help=_("""provider type, one of:
-                                  \"rhn\"   for Red Hat,
+                                  \"redhat\"   for Red Hat,
                                   \"yum\"   for Generic Yum Collection (default)"""),
-                                  choices=['rhn', 'yum'])
+                                  choices=['redhat', 'yum'])
                                   #default='yum'
         else:
             self.parser.add_option('--new_name', dest='new_name',
@@ -156,7 +156,7 @@ class Update(ProviderAction):
         if self._create:
             self.require_option('type')
 
-        if self.get_option('type') == 'rhn':
+        if self.get_option('type') == 'redhat':
             self.require_option('url')
 
         if self.has_option('url'):

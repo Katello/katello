@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:       katello		
-Version:	0.1.51
+Version:	0.1.52
 Release:	1%{?dist}
 Summary:	A package for managing application lifecycle for Linux systems
 	
@@ -177,6 +177,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Jul 26 2011 Mike McCune <mmccune@redhat.com> 0.1.52-1
+- periodic rebuild to get past tito bug
+
 * Mon Jul 25 2011 Shannon Hughes <shughes@redhat.com> 0.1.51-1
 - upgrade to compas-960-plugin 0.10.4 (shughes@redhat.com)
 - upgrade to compas 0.11.5 (shughes@redhat.com)
