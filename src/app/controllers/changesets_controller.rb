@@ -119,7 +119,7 @@ class ChangesetsController < ApplicationController
     if params[:name]
       @changeset.name = params[:name]
       @changeset.save!
-      render :text=>params[:name] and return
+      render :json=>{:name=> params[:name], :timestamp => @changeset.updated_at.to_i.to_s} and return
     end
 
     if params[:state]
