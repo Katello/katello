@@ -1068,6 +1068,7 @@ $(document).ready(function() {
     $('#search').live('change, keyup', function(){
         if ($.trim($(this).val()).length >= 2) {
             $("#cslist .has_content li:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
+            $("#cslist .has_content li:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
         } else {
             $("#cslist .has_content li").fadeIn('fast');
         }
