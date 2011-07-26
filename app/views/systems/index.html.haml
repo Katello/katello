@@ -9,5 +9,5 @@
 -if defined? envsys
   .grid_16
     = environment_selector(:locker_clickable=>false, :url_proc => lambda {|a| environments_systems_path(:env_id =>a[:environment].id )})
-.grid_16#main
+.grid_16.tall#main
   = two_panel(@systems, @panel_options)
