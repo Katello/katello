@@ -16,6 +16,7 @@
 #
 
 from gettext import gettext as _
+from katello.client.api.organization import OrganizationAPI
 from katello.client.api.environment import EnvironmentAPI
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
@@ -24,6 +25,14 @@ from katello.client.api.template import TemplateAPI
 from katello.client.api.changeset import ChangesetAPI
 from pprint import pprint
 
+def get_organization(orgName):
+    organization_api = OrganizationAPI()
+    
+    org = organization_api.organization(orgName)
+    if org == None:
+        print _("Could not find organization [ %s ]") % orgName
+
+    return org
 
 def get_environment(orgName, envName=None):
     environment_api = EnvironmentAPI()
