@@ -185,14 +185,14 @@ fieldset {
             &.active{
                 .arrow-right {
                     border-bottom: 19px solid transparent;
-                    border-left: 17px solid $kselected;
+                    border-left: 17px solid $kselected_color;
                     border-top: 18px solid transparent;
                     right: -17px;
                 }
             }
             &:hover {
               .arrow-right {
-                border-left: 17px solid $listhover;
+                border-left: 17px solid $listhover_color;
               }
             }
         }
@@ -225,7 +225,7 @@ fieldset {
       }
     }
     .block_head {
-      background-color: lighten($strokecl,8%);
+      background-color: lighten($strokecl_color,8%);
       display: block;
       height: 1.3em;
       color: $lightgrey_color;
@@ -234,10 +234,10 @@ fieldset {
         padding-left: 1%;
         font-size: 85%;
         font-family: $headlinefont;
-        color: lighten($headercl,20%);
+        color: lighten($headercl_color,20%);
         text-transform: uppercase;
         white-space:nowrap;
-        border-right: 1px dotted darken($strokecl,20%);
+        border-right: 1px dotted darken($strokecl_color,20%);
           &:last-child {
             border-right: 0 none;
           }
@@ -294,11 +294,11 @@ fieldset {
   height: 30px;
   font-size: 90%;
   &.active {
-    background-color: $kselected;
+    background-color: $kselected_color;
     color: #FFF;
     .arrow-right {
       border-bottom: 21px solid transparent;
-      border-left: 21px solid $kselected;
+      border-left: 21px solid $kselected_color;
       border-top: 21px solid transparent;
       height: 0;
       margin: 0;
@@ -313,14 +313,14 @@ fieldset {
     }
   }
   &.add {
-    background-color: $listhover;
+    background-color: $listhover_color;
     color: #FFF;
   }
   &:hover {
-      background-color: $listhover;
+      background-color: $listhover_color;
       color: #FFF;
       .arrow-right {
-        border-left: 21px solid $listhover;
+        border-left: 21px solid $listhover_color;
       }
   }
 }
@@ -367,12 +367,12 @@ fieldset {
     width: 416px;
     height: 17px;
     &.active {
-      background-color: $listhover;
+      background-color: $listhover_color;
       color: #FFF;
       .arrow-right {
         border-top: 15px solid transparent;
         border-bottom: 15px solid transparent;
-        border-right: 15px solid $listhover;
+        border-right: 15px solid $listhover_color;
         border-left: none;
         height: 0;
         margin: 0;
@@ -483,7 +483,7 @@ fieldset {
     padding: 4px;
     height: 2.7em;
     &:hover {
-      background-color: $listhover;
+      background-color: $listhover_color;
       color: #FFF;
       
       .st_button {
@@ -607,7 +607,7 @@ fieldset {
     background-color: #F2F2F2;
     border-color: darken(#F2F2F2, 30%);
     @include border-radius (5px);
-    background: $close_icon;
+    background: $close_icon_color;
   }
 }
 
@@ -642,7 +642,7 @@ $repo_color: #4A9FB1;
         color: #000;
         text-decoration: none; 
         padding: 8px 0 8px 55px;
-        background: $breadcrumbbg;                   /* fallback color */
+        background: $breadcrumbbg_color;                   /* fallback color */
         position: relative; 
         display: block;
         float: left;
@@ -653,7 +653,7 @@ $repo_color: #4A9FB1;
           height: 0;
           border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
           border-bottom: 50px solid transparent;
-          border-left: 30px solid $breadcrumbbg;
+          border-left: 30px solid $breadcrumbbg_color;
           position: absolute;
           top: 50%;
           margin-top: -50px; 
@@ -683,36 +683,36 @@ $repo_color: #4A9FB1;
     @include border-left-radius(5px);
 }
 .breadcrumb li:nth-child(2) a { 
-  background: $breadcrumbbg;
-  &:after { border-left-color: $breadcrumbbg; }
+  background: $breadcrumbbg_color;
+  &:after { border-left-color: $breadcrumbbg_color; }
 }
 .breadcrumb li:last-child a {
     padding-right: 30px;
     @include border-right-radius(5px);
     &:hover {
       color: #FFF;
-      background: $listhover !important;
+      background: $listhover_color !important;
     }
     &:after { 
       border: 0;
       &:hover {
-        border-left-color: $listhover !important;
+        border-left-color: $listhover_color !important;
       }
     }
 }
 .breadcrumb li a:hover { 
-  background: $listhover !important; color: #FFF; @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
+  background: $listhover_color !important; color: #FFF; @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
   &:after {
-    border-left-color: $listhover !important;
+    border-left-color: $listhover_color !important;
   }
 }
 .breadcrumb li a.active { 
-  background: $kselected; color: white;
+  background: $kselected_color; color: white;
   &:hover:after {
-    border-left-color: $listhover !important;
+    border-left-color: $listhover_color !important;
   }
   &:after {
-    border-left-color: $kselected !important;
+    border-left-color: $kselected_color !important;
   }
 }
 /* end content locker custom css */
@@ -865,7 +865,7 @@ $repo_color: #4A9FB1;
 #unread_notices {
             @include text-shadow(0,1px,1px, #000);
             @include border-radius(3em);
-            background-color: darken($kprimary,24%);
+            background-color: darken($kprimary_color,24%);
             margin: 0.3em;
             padding: 0.2em 0.7em;
             width: auto;
