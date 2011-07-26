@@ -16,6 +16,27 @@
  * inline editing via jeditable.
  */
 $(document).ready(function() {
+    var scrollReinit = function(){
+            var element = $('.scroll-pane');
+            if (element.length){
+                element.data('jsp').reinitialise();
+            }
+        },
+        common_settings = {
+            method          :  'PUT',
+            cancel          :  i18n.cancel,
+            submit          :  i18n.save,
+            indicator       :  i18n.saving,
+            tooltip         :  i18n.clickToEdit,
+            placeholder     :  i18n.clickToEdit,
+            submitdata      :  {authenticity_token: AUTH_TOKEN},
+            oneditcomplete  :  scrollReinit,
+            onresetcomplete :  scrollReinit,
+            onerror         :  function(settings, original, xhr) {
+                original.reset();
+                $("#notification").replaceWith(xhr.responseText);
+            }
+        };
 
     $('.ajaxfileupload').each(function() {
         $(this).editable($(this).attr('url'), {
@@ -36,83 +57,43 @@ $(document).ready(function() {
     });
 
     $('.edit_panel_element').each(function() {
-        $(this).editable($(this).attr('data-url'), {
+        var settings = {
             type        :  'text',
             width       :  270,
-            method      :  'PUT',
             name        :  $(this).attr('name'),
-            cancel      :  i18n.cancel,
-            submit      :  i18n.save,
-            indicator   :  i18n.saving,
-            tooltip     :  i18n.clickToEdit,
-            placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
             onsuccess   :  function(result, status, xhr) {
                 var id = $('#panel_element_id');
                 list.refresh(id.attr('value'), id.attr('data-ajax_url'));
-            },
-            onerror     :  function(settings, original, xhr) {
-                original.reset();
-                $("#notification").replaceWith(xhr.responseText);
             }
-        });
+        };
+        $(this).editable($(this).attr('data-url'), $.extend(settings, common_settings));
     });
 
     $('.edit_password').each(function() {
-        $(this).editable($(this).attr('data-url'), {
+        var settings = {
             type        :  'password',
             width       :  270,
-            method      :  'PUT',
             name        :  $(this).attr('name'),
-            cancel      :  i18n.cancel,
-            submit      :  i18n.save,
-            indicator   :  i18n.saving,
-            tooltip     :  i18n.clickToEdit,
-            placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
-            onerror     :  function(settings, original, xhr) {
-                original.reset();
-                $("#notification").replaceWith(xhr.responseText);
-            }
-        });
+        };
+        $(this).editable($(this).attr('data-url'), $.extend(settings, common_settings));
     });
 
     $('.edit_textfield').each(function() {
-        $(this).editable($(this).attr('data-url'), {
+        var settings = {
             type        :  'text',
             width       :  270,                  
-            method      :  'PUT',
             name        :  $(this).attr('name'),
-            cancel      :  i18n.cancel,
-            submit      :  i18n.save,
-            indicator   :  i18n.saving,
-            tooltip     :  i18n.clickToEdit,
-            placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
-            onerror     :  function(settings, original, xhr) {
-                original.reset();
-                $("#notification").replaceWith(xhr.responseText);
-            }
-        });
+        };
+        $(this).editable($(this).attr('data-url'), $.extend(settings, common_settings));
     });
 
     $('.edit_textarea').each(function() {
-        $(this).editable($(this).attr('data-url'), {
-            type        :  'textarea',
-            method      :  'PUT',
-            name        :  $(this).attr('name'),
-            cancel      :  i18n.cancel,
-            submit      :  i18n.save,
-            indicator   :  i18n.saving,
-            tooltip     :  i18n.clickToEdit,
-            placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
-            rows        :  8,
-            cols        :  36,
-            onerror     :  function(settings, original, xhr) {
-                original.reset();
-                $("#notification").replaceWith(xhr.responseText);
-            }
-        });
+        var settings = { 
+                type            :  'textarea',
+                name            :  $(this).attr('name'),
+                rows            :  8,
+                cols            :  36
+        }; 
+        $(this).editable($(this).attr('data-url'), $.extend(settings, common_settings)); 
     });
 });
