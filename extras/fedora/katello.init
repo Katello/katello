@@ -20,6 +20,7 @@ KATELLO_USER=${KATELLO_USER:-katello}
 KATELLO_HOME=${KATELLO_HOME:-/usr/lib/katello}
 KATELLO_ENV=${KATELLO_ENV:-production}
 KATELLO_PID=${KATELLO_PID:-${KATELLO_HOME}/tmp/pids/server.pid}
+export KATELLO_LOGGING=${KATELLO_LOGGING:-info}
 
 check_privilege() {
     runuser -s /bin/sh ${KATELLO_USER} -c "echo x > /dev/null" 2> /dev/null || RETVAL=4
