@@ -53,6 +53,9 @@ BuildRequires: 	coreutils findutils sed
 BuildRequires: 	rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
+BuildRequires:  rubygem(jammit)
+BuildRequires:  rubygem(compass) >= 0.11.5
+BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 
 BuildArch: noarch
 
@@ -63,6 +66,14 @@ Provides a package for managing application lifecycle for Linux systems
 %setup -q
 
 %build
+#compile SASS files
+echo Compiling SASS files...
+compass compile
+
+#generate Rails JS/CSS/... assets
+echo Generating Rails assets...
+jammit
+
 #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
 echo Generating gettext files...
 ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
@@ -72,10 +83,11 @@ rm -rf %{buildroot}
 #prepare dir structure
 install -d -m0755 %{buildroot}%{homedir}
 install -d -m0755 %{buildroot}%{datadir}
-install -d -m0755 %{buildroot}%{datadir}/public-assets
-install -d -m0755 %{buildroot}%{datadir}/public-compiled-stylesheets
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
 install -d -m0750 %{buildroot}%{_localstatedir}/log/%{name}
+
+# clean the application directory before installing
+[ -d tmp ] && rm -rf tmp
 
 #copy the application to the target directory
 mkdir .bundle
@@ -106,8 +118,6 @@ ln -svf %{datadir}/schema.rb %{buildroot}%{homedir}/db/schema.rb
 #create symlinks for data
 ln -sv %{_localstatedir}/log/%{name} %{buildroot}%{homedir}/log
 ln -sv %{_tmppath} %{buildroot}%{homedir}/tmp
-ln -sv %{datadir}/public-assets %{buildroot}%{homedir}/public/assets
-ln -sv %{datadir}/public-compiled-stylesheets %{buildroot}%{homedir}/public/stylesheets/compiled
 
 #re-configure database to the /var/lib/katello directory
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{_sysconfdir}/%{name}/database.yml
@@ -151,10 +161,10 @@ fi
 %doc README LICENSE doc/
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/database.yml
-%config(noreplace) %{_sysconfdir}/%{name}/prod_env.rb
-%config(noreplace) %{_sysconfdir}/%{name}/dev_env.rb
-%config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
-%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
+%config %{_sysconfdir}/%{name}/prod_env.rb
+%config %{_sysconfdir}/%{name}/dev_env.rb
+%config %{_sysconfdir}/logrotate.d/%{name}
+%config %{_sysconfdir}/sysconfig/%{name}
 %{_initddir}/%{name}
 %{_sysconfdir}/bash_completion.d/%{name}
 %{homedir}
