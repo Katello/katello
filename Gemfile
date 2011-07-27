@@ -57,6 +57,9 @@ group :test, :development do
   gem 'autotest-rails', '>= 4.1.0'
   gem 'rcov', '>= 0.9.9'
 
+  gem 'webrat', '>=0.7.3'
+  gem 'nokogiri', '>= 1.5.0'
+
   #needed  for documentation
   gem 'yard', '>= 0.5.3'
   
