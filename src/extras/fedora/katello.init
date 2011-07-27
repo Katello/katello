@@ -57,6 +57,8 @@ status_q() {
 start() {
     check_privilege
 
+    [ ! -f /var/lib/katello/initdb_done ] && echo "Please run initdb first" && echo_failure && return 1
+
     echo -n $"Starting $prog: "
     if status_q; then
         echo -n $"$prog is already running. "
@@ -146,6 +148,7 @@ case "$1" in
         pushd $KATELLO_HOME >/dev/null
         su $KATELLO_USER -s /bin/bash -c "RAILS_ENV=$KATELLO_ENV rake setup --trace"
         popd >/dev/null
+        touch /var/lib/katello/initdb_done
         ;;
     *)
         echo "Usage: {start|stop|restart|condrestart|status|initdb}"
