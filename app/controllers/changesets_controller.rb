@@ -122,6 +122,12 @@ class ChangesetsController < ApplicationController
       render :json=>{:name=> params[:name], :timestamp => @changeset.updated_at.to_i.to_s} and return
     end
 
+    if params[:description]
+      @changeset.description = params[:description]
+      @changeset.save!
+      render :json=>{:description=> params[:description], :timestamp => @changeset.updated_at.to_i.to_s} and return
+    end
+
     if params[:state]
       raise _('Invalid state') if !["review", "new"].index(params[:state])
       if send_changeset
