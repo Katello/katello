@@ -29,7 +29,7 @@ class Api::PulpProxiesController < Api::ProxiesController
   
   # need to unify POST and PUT from rhsm -> katello -> pulp
   def put
-    render :text => ::Pulp::Proxy.post(@request_path + '/', params[:_json]), :content_type => :json
+    render :text => ::Pulp::Proxy.put(@request_path + '/', params[:_json]), :content_type => :json
   end
   
 end
