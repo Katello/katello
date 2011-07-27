@@ -46,4 +46,7 @@ Src::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+
+  # Do not update compass SASS files in production (we precompile them)
+  Sass::Plugin.options[:never_update] = true
 end
