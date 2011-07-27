@@ -44,7 +44,7 @@ describe "activation_keys/_edit.html.haml" do
       view.content_for(:remove_item).should_not be_nil
     end
 
-    pending "renders link to destroy activation key" do
+    it "renders link to destroy activation key" do
       render
       view.content_for(:remove_item).should have_selector("a.remove_item", :count => 1)
     end
@@ -68,12 +68,12 @@ describe "activation_keys/_edit.html.haml" do
       view.content_for(:content).should_not be_nil
     end
 
-    pending "renders the activation key name using inline edit" do
+    it "renders the activation key name using inline edit" do
       render
       view.content_for(:content).should have_selector(".editable#activation_key_name", :count => 1)
     end
 
-    pending "renders the activation key description using inline edit" do
+    it "renders the activation key description using inline edit" do
       render
       view.content_for(:content).should have_selector(".editable#activation_key_description", :count => 1)
     end

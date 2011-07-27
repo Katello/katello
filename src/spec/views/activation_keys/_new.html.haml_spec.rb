@@ -34,12 +34,12 @@ describe "activation_keys/_new.html.haml" do
       view.content_for(:content).should_not be_nil
     end
 
-    pending "should include key details" do
+    it "should include key details" do
       view.content_for(:content).should have_selector("input#activation_key_name", :count => 1)
       view.content_for(:content).should have_selector("textarea#activation_key_description", :count => 1)
     end
 
-    pending "should include button to save the new key" do
+    it "should include button to save the new key" do
       view.content_for(:content).should have_selector("input[type=submit]#activation_key_save", :count => 1)
     end
   end
