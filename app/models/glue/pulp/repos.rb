@@ -78,6 +78,18 @@ module Glue::Pulp::Repos
       async_tasks
     end
 
+    #is the repo cloned in the specified environment
+    def is_cloned_in? repo, env
+      return get_cloned(repo, env) != nil
+    end
+
+    def get_cloned repo, env
+      self.repos(env).each{ |curr_repo|
+        return curr_repo if repo.clone_ids.include?(curr_repo.id)
+      }
+      nil
+    end
+
     def sync
       self.repos(locker).collect do |r|
         r.sync

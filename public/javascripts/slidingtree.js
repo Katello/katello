@@ -234,6 +234,9 @@ var sliding_tree = function(tree_id, options) {
         render_content: render_content,
         rerender_content: function() {
                 render($.bbq.getState(settings.bbq_tag), list.children('.has_content'));
-            }
+            },
+        rerender_breadcrumb: function() {
+            reset_breadcrumb($.bbq.getState(settings.bbq_tag));
+        }
     };
 };

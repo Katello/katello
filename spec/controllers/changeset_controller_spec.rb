@@ -82,11 +82,6 @@ describe ChangesetsController do
       Changeset.find(@changeset.id).name.should == "newname"
     end
 
-    it "should allow viewing the dependency size" do
-      get :dependency_size, :id=>@changeset.id
-      response.should be_success
-    end
-
   end
 
   describe 'creating a changeset' do
@@ -143,9 +138,9 @@ describe ChangesetsController do
     end
   end
 
-  describe 'deleting a changeset' do
+  describe 'updating a changeset' do
     before (:each) do
-      @changeset = Changeset.create(CSControllerTest::CHANGESET)
+      @changeset = Changeset.create!(CSControllerTest::CHANGESET)
     end
 
     it 'should successfully update a changeset' do
@@ -161,4 +156,21 @@ describe ChangesetsController do
       @changeset.users.length.should == 0
     end
   end
+
+
+  describe 'getting the dependencies of a changeset' do
+    before (:each) do
+      @changeset = Changeset.create!(CSControllerTest::CHANGESET)
+
+    end
+
+    it 'should call dependencies on the changeset' do
+      @changeset.should_receive(:dependencies).and_return({})
+      Changeset.stub(:find).and_return(@changeset)
+      get 'dependencies', {:id=>@changeset.id}
+      response.should be_success
+    end
+
+  end
+
 end

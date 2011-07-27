@@ -72,42 +72,65 @@ class Changeset < ActiveRecord::Base
   end
 
   def dependencies
-    from_env = self.environment
-    to_env   = self.environment.successor
+    from_env = self.environment.prior
+    to_env   = self.environment
 
-    repoids = []
 
-    #get source repos to depsolve for
+    product_hash = {}
+
+
     from_env.products.each{|prod|
-      repoids += prod.repos(from_env).collect{|repo| repo.id}
-    }
+      cs_pkgs = ChangesetPackage.where({:changeset_id=>self.id, :product_id=>prod.id})
+      cs_errata = ChangesetErratum.where({:changeset_id=>self.id, :product_id=>prod.id})
 
-    #TODO  look up NEVRA from pulp instead of relying on display_name
-    #   will this be too expensive?  should display_name be "formalized"
-    changelog_pkgs = self.packages.collect{|pkg| pkg.display_name}
+      #all the pkgIds to add to this product, use a hash so we can add errata pkgs
+      direct_pkgs = cs_pkgs.collect{|pkg| {:name=>pkg.display_name, :id=>pkg.package_id}}
+      #TODO get errata packages
+      
+
+      
+      # mapping of repo in from_env to its repo in to_env
+      repo_map = {} # {from_env => to_env}
+      
+      prod.repos(from_env).each{|repo|
+        cloned = prod.get_cloned repo, to_env
+        repo_map[repo] = cloned if cloned
+      }
+
+      #get all the pkgs names
+      pkg_names = []
+    
+      direct_pkgs.each{|pkg|
+        repo_map.keys.each{ |from_repo|
+          pkg_names << pkg[:name] if from_repo.has_package?(pkg[:id])
+        }
+      }
+
+      next if pkg_names.empty?
 
 
-    #pulp can't handle an empty package list
-    return [] if changelog_pkgs.empty?
-
-    all_pkgs = Pulp::Package.dep_solve(changelog_pkgs, repoids).collect do |package|
-         Glue::Pulp::Package.new(package)
-    end
-
-    #remove pkgs that are in the target environment's repos
-    repo_pkg_ids = []
-    to_env.products do |prod|
-      prod.repos to_env do |repo|
-        repo_pkg_ids += repo.packages.collect{|pkg| pkg.id}
+      all_pkgs = Pulp::Package.dep_solve(pkg_names, repo_map.keys.collect{|repo| repo.id}).collect do |package|
+           Glue::Pulp::Package.new(package)
       end
-    end
 
-    uniq_pkgs = []
-    all_pkgs.each {|pkg|
-      uniq_pkgs << pkg if repo_pkg_ids.index(pkg.id).nil?
+      product_hash[prod.id] = []
+
+      #if the from_repo does have the dependency
+      # and the to_repo doesn't already have it (and its not already in the list), add it
+      repo_map.keys.each{|from_repo|
+        all_pkgs.each{|pkg|
+          if from_repo.has_package?(pkg.id) and !repo_map[from_repo].has_package?(pkg.id) and
+              !product_hash[prod.id].index(pkg)
+            product_hash[prod.id] << pkg
+          end
+        }
+
+      #now we have a list of package hashes (with id and name) for the product (product_hash[prod.id])
+
+      }
     }
-
-    uniq_pkgs
+    product_hash
+    
 
   end
 
