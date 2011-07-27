@@ -16,6 +16,8 @@ describe SystemsController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include SystemHelperMethods
+  
+  let(:uuid) { '1234' }
 
   before (:each) do
     login_user
@@ -27,6 +29,11 @@ describe SystemsController do
 
     controller.stub!(:errors)
     controller.stub!(:notice)
+    
+    Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Candlepin::Consumer.stub!(:update).and_return(true)
+    
+    Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
   end
   
   describe "viewing systems" do
