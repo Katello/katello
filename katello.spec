@@ -97,8 +97,7 @@ cp -R .bundle * %{buildroot}%{homedir}
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 644 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
 install -m 644 config/database.yml %{buildroot}%{_sysconfdir}/%{name}/database.yml
-install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/prod_env.rb
-install -m 644 config/environments/development.rb %{buildroot}%{_sysconfdir}/%{name}/dev_env.rb
+install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/environment.rb
 
 #copy init scripts and sysconfigs
 install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
@@ -109,8 +108,7 @@ install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logro
 #overwrite config files with symlinks to /etc/katello
 ln -svf %{_sysconfdir}/%{name}/katello.yml %{buildroot}%{homedir}/config/katello.yml
 ln -svf %{_sysconfdir}/%{name}/database.yml %{buildroot}%{homedir}/config/database.yml
-ln -svf %{_sysconfdir}/%{name}/prod_env.rb %{buildroot}%{homedir}/config/environments/production.rb
-ln -svf %{_sysconfdir}/%{name}/dev_env.rb %{buildroot}%{homedir}/config/environments/development.rb
+ln -svf %{_sysconfdir}/%{name}/environment.rb %{buildroot}%{homedir}/config/environments/production.rb
 
 #create symlinks for some db/ files
 ln -svf %{datadir}/schema.rb %{buildroot}%{homedir}/db/schema.rb
@@ -161,8 +159,7 @@ fi
 %doc README LICENSE doc/
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/database.yml
-%config %{_sysconfdir}/%{name}/prod_env.rb
-%config %{_sysconfdir}/%{name}/dev_env.rb
+%config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config %{_sysconfdir}/sysconfig/%{name}
 %{_initddir}/%{name}
