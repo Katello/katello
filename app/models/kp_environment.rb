@@ -143,4 +143,18 @@ class KPEnvironment < ActiveRecord::Base
   def self.list_tags
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
+
+  def self.list_verbs
+    {
+      :read_contents => N_("Access Environment Contents"),
+      :read_systems => N_("Access Systems in Environment"),
+      :create_systems =>N_("Register Systems in Environment"),
+      :update_systems => N_("Manage Systems in Environment"),
+      :delete_systems => N_("Remove Systems in Environment"),
+      :read_changesets => N_("Access Changesets in Environment"),
+      :manage_changesets => N_("Manage Changesets in Environment"),
+      :promote_changesets => N_("Promote Changesets in Environment")
+    }.with_indifferent_access
+  end
+
 end

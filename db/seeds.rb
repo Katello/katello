@@ -70,13 +70,12 @@ end
 # clean all permission and create new default set
 
 Permission.delete_all
-
 # ANONYMOUS ROLE - configure limited permissions
-anonymous_role.allow [:create, :update], :notices
-anonymous_role.allow [:create, :update], :user_notices
+#anonymous_role.allow [:create, :update], :notices
+#anonymous_role.allow [:create, :update], :user_notices
 
 # CANDLEPIN ROLE - for RHSM
-[:systems].each { |t| candlepin_role.allow [:create, :update, :delete], "#{t}" }
+#[:systems].each { |t| candlepin_role.allow [:create, :update, :delete], "#{t}" }
 
 # ADMIN - already allowed to all actions
 ##Allow for all models
@@ -109,33 +108,33 @@ anonymous_role.allow [:create, :update], :user_notices
 
 # READER ROLE - read everything only
 #Allow for all models
-ActiveRecord::Base.connection.tables.each do |t|
-  reader_role.allow [:read], "#{t}"
-end
-
-#Need write/special access to some actions/models
-reader_role.allow [:create, :update], :notices
-reader_role.allow [:create, :update], :user_notices
-reader_role.allow [:package], "jammit"
-
-#These do not have associated models
-reader_role.allow [:read], "dashboard"
-reader_role.allow [:read], "promotions"
-reader_role.allow [:read], "sync_management"
-reader_role.allow [:read], "packages"
-reader_role.allow [:read], "errata"
-reader_role.allow [:read], "search"
-reader_role.allow [:read], "operations"
-reader_role.allow [:read], "repositories"
-reader_role.allow [:read], "sync_schedules"
-reader_role.allow [:read], "subscriptions"
-
-#These are candlepin proxy actions
-reader_role.allow [:read], "owners"
-reader_role.allow [:read], "entitlements"
-reader_role.allow [:read], "pools"
-reader_role.allow [:read], "certificates"
-reader_role.allow [:read], "consumers"
+#ActiveRecord::Base.connection.tables.each do |t|
+#  reader_role.allow [:read], "#{t}"
+#end
+#
+##Need write/special access to some actions/models
+#reader_role.allow [:create, :update], :notices
+#reader_role.allow [:create, :update], :user_notices
+#reader_role.allow [:package], "jammit"
+#
+##These do not have associated models
+#reader_role.allow [:read], "dashboard"
+#reader_role.allow [:read], "promotions"
+#reader_role.allow [:read], "sync_management"
+#reader_role.allow [:read], "packages"
+#reader_role.allow [:read], "errata"
+#reader_role.allow [:read], "search"
+#reader_role.allow [:read], "operations"
+#reader_role.allow [:read], "repositories"
+#reader_role.allow [:read], "sync_schedules"
+#reader_role.allow [:read], "subscriptions"
+#
+##These are candlepin proxy actions
+#reader_role.allow [:read], "owners"
+#reader_role.allow [:read], "entitlements"
+#reader_role.allow [:read], "pools"
+#reader_role.allow [:read], "certificates"
+#reader_role.allow [:read], "consumers"
 
 # TODO protection of all /api controllers (currently all roles authorized by default)
 #superadmin_role.allow { :"api/xxx" => [:read] }

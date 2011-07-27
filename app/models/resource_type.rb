@@ -12,5 +12,19 @@
 
 class ResourceType < ActiveRecord::Base
   belongs_to :permission
+
+  def display_name
+    ResourceType::TYPES[name][:name]
+  end
+
+  TYPES = {
+      :organizations => {:model => Organization, :name => N_("Organizations"), :global=>false},
+      :environments => {:model => KPEnvironment, :name => N_("Environments"), :global=>false},
+      :providers => { :model => Provider, :name => N_("Providers"), :global=>false},
+      :sync_plans => { :model => SyncPlan, :name => N_("Sync Plans"), :global=>false},
+      :users => { :model => User, :name => N_("Users"), :global=>true},
+      :roles => { :model => Role, :name => N_("Roles"), :global=>true}
+  }.with_indifferent_access
+
 end
 
