@@ -77,7 +77,7 @@ function skip_test() {
 function test() {
     if [ $PRINT_ALL -eq 1 ]; then
         shift
-        echo katello $*
+        echo $DISP_CMD $*
     else
         printf "%-40s" "$1"
         shift        
@@ -143,11 +143,13 @@ function valid_id() {
 }
 
 
-
 . $script_dir/cli_tests/_base_setup.sh
 for t in $required_tests; do  
     . $script_dir/cli_tests/$t.sh
 done
+
+. $script_dir/cli_tests/rhsm.sh
+
 . $script_dir/cli_tests/_base_cleanup.sh
 
 summarize
