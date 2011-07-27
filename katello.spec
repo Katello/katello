@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:       katello		
-Version:	0.1.53
+Version:	0.1.54
 Release:	1%{?dist}
 Summary:	A package for managing application lifecycle for Linux systems
 	
@@ -184,6 +184,28 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Jul 27 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.54-1
+- spec - logging level can be now specified in the sysconfig
+- bug 726030 - Webrick wont start with the -d (daemon) option
+- spec - service start forces you to run initdb first
+- adding a warning message in the sysconfig comment setting
+- Merge branch 'pack-profile'
+- production.rb now symlinked to /etc/katello/environment.rb
+- 725793 - Permission denied stylesheets/fancyqueries.css
+- 725901 - Permission errors in RPM
+- 720421 - Promotions Page: Adds fade in of items that meet search criteria
+  that have previously been hidden due to previously not meeting a given search
+  criteria.
+- ignore zanta cache files
+- Merge branch 'master' into pack-profile
+- added pulp-consumer creation in system registration, uploading pulp-consumer
+  package-profile via api, tests
+- Merge branch 'master' into pack-profile
+- increased priority of candlepin consumer creation to go before pulp
+- Merge branch 'master' into pack-profile
+- renaming/adding some candlepin and pulp consumer methods.
+- proxy controller changes
+
 * Tue Jul 26 2011 Shannon Hughes <shughes@redhat.com> 0.1.53-1
 - modifying initd directory using fedora recommendation,
   https://fedoraproject.org/wiki/Packaging/RPMMacros (shughes@redhat.com)
