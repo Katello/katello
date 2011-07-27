@@ -161,7 +161,7 @@ fi
 %config(noreplace) %{_sysconfdir}/%{name}/database.yml
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
-%config %{_sysconfdir}/sysconfig/%{name}
+%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %{_initddir}/%{name}
 %{_sysconfdir}/bash_completion.d/%{name}
 %{homedir}
