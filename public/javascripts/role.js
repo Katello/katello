@@ -74,6 +74,10 @@ var roles_page = function() {
             success: function(data) {
                 button.removeClass("disabled");
                 $(data).insertBefore("#add_permission");
+                var element = $('.scroll-pane');
+                if (element.length){
+                    element.data('jsp').reinitialise();
+                }
             },
             error: function(data) {button.removeClass("disabled");},
             dataType: "html"
