@@ -101,13 +101,12 @@ fi
 
 cd $KATELLO
 
+RAILS_ENV=$MODE rake setup --trace
 
-if [ "$KATELLO" == "/var/lib/katello" ] || [ "$KATELLO" == "/var/lib/katello/" ]; then
-  sudo rake setup
+if [ "$KATELLO" == "/usr/lib/katello" ] || [ "$KATELLO" == "/usr/lib/katello/" ]; then
   echo "Resetting permissions in $KATELLO"
   sudo chown -R katello:katello $KATELLO
-else
-  RAILS_ENV=$MODE rake setup --trace
+  sudo chown -R katello:katello /var/lib/katello/
 fi
 
 if [ $LOCAL_CP == 0 ]; then
