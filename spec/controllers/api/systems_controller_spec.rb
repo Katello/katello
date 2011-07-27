@@ -20,6 +20,15 @@ describe Api::SystemsController do
 
   let(:facts) { {"distribution.name" => "Fedora"} }
   let(:uuid) { '1234' }
+  let(:package_profile) {
+    [{"epoch" => 0, "name" => "im-chooser", "arch" => "x86_64", "version" => "1.4.0", "vendor" => "Fedora Project", "release" => "1.fc14"},
+     {"epoch" => 0, "name" => "maven-enforcer-api", "arch" => "noarch", "version" => "1.0", "vendor" => "Fedora Project", "release" => "0.1.b2.fc14"},
+     {"epoch" => 0, "name" => "ppp", "arch" => "x86_64", "version" => "2.4.5", "vendor" => "Fedora Project", "release" => "12.fc14"},
+     {"epoch" => 0, "name" => "pulseaudio-module-bluetooth", "arch" => "x86_64", "version" => "0.9.21", "vendor" => "Fedora Project", "release" => "7.fc14"},
+     {"epoch" => 0, "name" => "dbus-cxx-glibmm", "arch" => "x86_64", "version" => "0.7.0", "vendor" => "Fedora Project", "release" => "2.fc14.1"},
+     {"epoch" => 0, "name" => "twolame-libs", "arch" => "x86_64", "version" => "0.3.12", "vendor" => "RPM Fusion", "release" => "4.fc11"},
+     {"epoch" => 0, "name" => "gtk-vnc", "arch" => "x86_64", "version" => "0.4.2", "vendor" => "Fedora Project", "release" => "4.fc14"}]
+  }
 
   before (:each) do
     login_user
@@ -28,6 +37,8 @@ describe Api::SystemsController do
 
     Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Candlepin::Consumer.stub!(:update).and_return(true)
+    
+    Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
   end
@@ -106,6 +117,17 @@ describe Api::SystemsController do
       response.body.should == [@system_1].to_json
     end
 
+  end
+  
+  describe "upate package profile" do
+    it "successfully" do
+      @sys = System.new(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
+      
+      Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
+      System.stub!(:first).and_return(@sys)
+      put :upload_package_profile, :id => uuid, :_json => package_profile
+      response.body.should == @sys.to_json
+    end
   end
 
 end
