@@ -81,13 +81,19 @@ class ChangesetsController < ApplicationController
   end
 
 
-  def dependency_size
-    render :text=>@changeset.dependencies.size
-  end
+  def dependencies
+    product_map = @changeset.dependencies
+    to_ret = {}
 
-  def dependency_list
-    @packages = @changeset.dependencies
-    render :partial=>"dependency_list"
+    #temporarily transform product_map from id=>name  to id=>{:name, :dep_of} with a fake dep_of
+    product_map.keys.each{|pid|
+      to_ret[pid] = []
+      product_map[pid].each{|pkg|
+        to_ret[pid] << {:name=>pkg.nvrea, :dep_of=>"Foo-1.2.3"}
+      }
+
+    }
+    render :json=>to_ret
   end
 
   def object
@@ -119,7 +125,13 @@ class ChangesetsController < ApplicationController
     if params[:name]
       @changeset.name = params[:name]
       @changeset.save!
-      render :text=>params[:name] and return
+      render :json=>{:name=> params[:name], :timestamp => @changeset.updated_at.to_i.to_s} and return
+    end
+
+    if params[:description]
+      @changeset.description = params[:description]
+      @changeset.save!
+      render :json=>{:description=> params[:description], :timestamp => @changeset.updated_at.to_i.to_s} and return
     end
 
     if params[:state]
@@ -202,7 +214,6 @@ class ChangesetsController < ApplicationController
         errors  "Failed to promote: #{e.to_s}", :synchronous_request=>false
         logger.error $!, $!.backtrace.join("\n\t")
     end
-
 
 
     render :text=>url_for(:controller=>"promotions", :action => "show",
