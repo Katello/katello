@@ -489,7 +489,7 @@ var promotion_page = (function($){
            console.log("returning false");
            return false;
        }
-       $.each(current_changeset.products, function(product_id, product) {
+       $.each(current_changeset.getProducts(), function(product_id, product) {
            var hash = "deps-cs_" + current_changeset.id + "_" + product_id;
            
            if (changeset_breadcrumb[hash] === undefined) {
@@ -520,7 +520,7 @@ var promotion_page = (function($){
         });
         
         
-    }
+    };
         
     return {
         subtypes:               subtypes,
@@ -723,67 +723,7 @@ $.expr[':'].contains = function(a, i, m) {
 
 
 //doc ready
-$(document).ready(function() {
-
-    $('.left').resizable('destroy');
-
-    //promotion_page.update_dep_size();
-    promotion_page.start_timer();
-
-    $(".content_add_remove").live('click', function() {
-	
-	   if( !$(this).hasClass('disabled') ){
-
-
-          var environment_id = $(this).attr('data-environment_id');
-          var id = $(this).attr('data-id');
-          var display = $(this).attr('data-display_name');
-          var type = $(this).attr('data-type');
-          var prod_id = $(this).attr('data-product_id');
-          promotion_page.modify_changeset(id, display, type, prod_id);
-       }
-    });
-    
-    $('#changeset_users').hide();
-
-    //initiate the left tree
-  	var contentTree = sliding_tree("content_tree", {breadcrumb:content_breadcrumb,
-                                      default_tab:"content",
-                                      bbq_tag:"content",
-                                      tab_change_cb: promotion_page.set_current_product});
-
-  	promotion_page.set_changeset_tree( sliding_tree("changeset_tree", {breadcrumb:changeset_breadcrumb,
-                                      default_tab:"changesets",
-                                      bbq_tag:"changeset",
-                                      render_cb: promotionsRenderer.render,
-                                      tab_change_cb: function(hash_id) {
-                                          promotion_page.sort_changeset();
-                                      }}));
-
-    //need to reset page during the extended scroll
-    panel.extended_cb = promotion_page.reset_page;
-
-    //set function for env selection callback
-    env_select.click_callback = promotion_page.env_change;
-
-    registerEvents();
-
-    $(document).ajaxComplete(function(event, xhr, options){
-        var userHeader = xhr.getResponseHeader('X-ChangesetUsers');
-        if(userHeader != null) {
-          var userj = $.parseJSON(userHeader); 
-          promotion_page.checkUsersInResponse(userj);
-        }
-    });
-});
-
 var registerEvents = function(){
-
-    //bind to the #search_form to make it useful
-    $('#search_form').submit(function(){
-        $('#search').change();
-        return false;
-    });
 
 
     $('#save_changeset_button').live('click', function(){
@@ -884,7 +824,7 @@ var registerEvents = function(){
     $('#conflict_close').click(promotion_page.hide_conflict);
     $('#conflict-details').click(promotion_page.show_conflict_details);
 
-    $('#edit_changeset').click(function() {
+    $('#edit_changeset').live('click', function() {
         if ($(this).hasClass('disabled')){
             return false;
         }
@@ -1060,7 +1000,7 @@ var promotionsRenderer = (function(){
                 return templateLibrary.listItems(changeset.getProducts(), "repo", product_id, !inReviewPhase);
             }
             else if (key === 'deps-cs'){
-                return templateLibrary.dependencyItems(changeset.products, product_id);
+                return templateLibrary.dependencyItems(changeset.getProducts(), product_id);
             }
             else if (key === 'product-cs'){
 
@@ -1069,7 +1009,7 @@ var promotionsRenderer = (function(){
                 if (!promotion_page.get_changeset().is_new()) {
                     types.push("deps");
                 } 
-                return templateLibrary.productDetailList(changeset.products[product_id], types, changeset_id);
+                return templateLibrary.productDetailList(changeset.getProducts()[product_id], types, changeset_id);
             }
             else if (key === 'changeset'){
                 return templateLibrary.productList(changeset, changeset.id, !inReviewPhase);
@@ -1328,7 +1268,6 @@ $(document).ready(function() {
         }
     };
 
-    $('#depend_list').live('click', promotion_page.show_dependencies);
 
     //set function for env selection callback
     env_select.click_callback = promotion_page.env_change;
