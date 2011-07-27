@@ -71,6 +71,16 @@ class Provider < ActiveRecord::Base
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
+  def self.list_verbs
+    {
+       :create => N_("Create Provider"),
+       :read => N_("Access Provider"),
+       :update => N_("Manage Provider and Products"),
+       :delete => N_("Delete Provider"),
+       :sync => N_("Sync Products")
+    }.with_indifferent_access
+  end
+
   protected
 
    def sanitize_repository_url

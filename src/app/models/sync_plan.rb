@@ -66,4 +66,11 @@ class SyncPlan < ActiveRecord::Base
   def self.list_tags
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
+
+  def self.list_verbs
+    {
+      :read_all => N_("Access all Sync Plans"),
+      :manage_all => N_("Manage all Sync Plans")
+    }.with_indifferent_access
+  end
 end

@@ -19,11 +19,16 @@ class Verb < ActiveRecord::Base
   end
 
   # used for user-friendly presentation of this record
-  def display_name
-    verb
+  def display_name resource_type_name
+    Verb.verbs_for(resource_type_name)[verb]
   end
 
+
   def self.verbs_for(resource_type_name)
-    Verb.select('DISTINCT(verbs.verb)').joins(:permission => :resource_type).where(:resource_types => { :name => resource_type_name })
+    res_type = ResourceType::TYPES[resource_type_name]
+    return res_type[:model].list_verbs if res_type && res_type[:model]
+    {}
   end
+
+
 end
