@@ -104,6 +104,17 @@ describe ChangesetsController do
       end
     end
 
+    describe 'with a description' do
+      it 'should create a changeset correctly and send a notification' do
+        controller.should_receive(:notice)
+        post 'create', {:name => "Changeset 7056", :description=> "FOO", :env_id=>@env.id}
+        response.should be_success
+        Changeset.exists?(:description=>'FOO').should be_true
+      end
+    end
+
+
+
     it 'should cause an error notification if name is left blank' do
       controller.should_receive(:errors)
       post 'create', {:env_id => @env.id, :changesets => { :name => ''}}
@@ -115,6 +126,8 @@ describe ChangesetsController do
       post 'create', {:changesets => { :name => 'Test/Changeset 4.5'}}
       response.should_not be_success
     end
+
+    
 
   end
 
