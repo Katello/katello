@@ -91,6 +91,8 @@ $(document).ready(function() {
     $(window).resize(function(){
         panel.panelResize($('#panel_main'), false);
         panel.panelResize($('#subpanel_main'), true);
+        panel.handleScrollResize($('#panel-frame'), container, original_top, bodyY, 0);
+        panel.handleScrollResize($('#subpanel-frame'), container, subpanel_top, bodyY, 1);
     });
 
     $('#content').resize(function(){
@@ -380,21 +382,34 @@ var panel = (function(){
                 });
             }
         },
-        handleScroll : function(jQPanel, container, top, bodyY, spacing) {
-            var scrollY = common.scrollTop();
-            var isfixed = jQPanel.css('position') === 'fixed';
+        handleScroll : function(jQPanel, container, top, bodyY, spacing, offset) {
+            var scrollY = common.scrollTop(),
+                scrollX = common.scrollLeft(),
+                isfixed = jQPanel.css('position') === 'fixed';
+            
+            offset = offset ? offset : 10;
+            offset += $('#maincontent').offset().left;
+            
             if(jQPanel.length > 0){
-                if ( scrollY > bodyY && !isfixed ) {
-                    jQPanel.stop().css({
-                        position: 'fixed',
-                        top: 40 + subpanelSpacing*spacing
-                    });
-                } else if ( scrollY < bodyY && isfixed ) {
-                    //alert("1. Top:" + top);
+                if ( scrollY < bodyY    ) {
                     jQPanel.css({
                         position: 'absolute',
-                        top: top
+                        top: top,
+                        left: ''
                     });
+                } else {
+                    jQPanel.stop().css({
+                        position: 'fixed',
+                        top: 40 + subpanelSpacing*spacing,
+                        left: -scrollX + offset
+                    });
+                }
+            }
+        },
+        handleScrollResize : function(jQPanel, container, top, bodyY, spacing, offset) {
+            if(jQPanel.length > 0){
+                if( jQPanel.css('position') === 'fixed'){
+                    jQPanel.css('left', '');
                 }
             }
         },

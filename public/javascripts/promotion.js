@@ -1325,8 +1325,12 @@ $(document).ready(function() {
      var original_top = Math.floor($('.left').position(top).top);
      if(container.length > 0){
          var bodyY = parseInt(container.offset().top, 10) - 20;
+         var offset = $('#content_tree').width() + 50;
          $(window).scroll(function () {
-             panel.handleScroll($('#changeset_tree'), container, original_top, bodyY, 0);
+             panel.handleScroll($('#changeset_tree'), container, original_top, bodyY, 0, offset);
+         });
+         $(window).resize(function(){
+            panel.handleScrollResize($('#changeset_tree'), container, original_top, bodyY, 0, offset);
          });
     }
 });
