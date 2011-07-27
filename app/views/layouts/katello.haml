@@ -28,18 +28,18 @@
   - else
     - section_id = "generic"
   %body{:id => controller.section_id}
-    %div#head
-      %header.container_16
+    %div#head.container_16
+      %header
         = render :partial => '/layouts/header'
     - if not current_user
       #maincontent.container_16
         #formwindow
           = yield
     - else
-      #subheader
-        %nav.container_16.tab_nav
+      #subheader.container_16
+        %nav.tab_nav
           = render_navigation(:expand_all => true, :level => 1)
-      #maincontent
+      #maincontent.container_16
         %nav.subnav.container_16
           = render_navigation(:expand_all => true, :level => 2)      
         .inner.container_16
