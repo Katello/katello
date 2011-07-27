@@ -527,7 +527,8 @@ var changeset_obj = function(data_struct) {
         timestamp = data_struct["timestamp"],
         products = data_struct.products,
         is_new = data_struct.is_new,
-        name = data_struct.name;
+        name = data_struct.name,
+        description = data_struct.description;
 
 
     var change_state = function(state, on_success, on_error) {
@@ -561,6 +562,8 @@ var changeset_obj = function(data_struct) {
             name = newName;
             changeset_breadcrumb["changeset_" + id].name = newName;
         },
+        getDescription: function(){return description},
+        setDescription: function(newDesc){description = newDesc;},
         getProducts: function(){return products},
         is_new : function() {return is_new},
         set_timestamp:function(ts) { timestamp = ts; },
@@ -786,6 +789,7 @@ var changesetEdit = (function(){
         var edit_window = $('#changeset_edit');
         var name_box = $('.edit_name_text');
         var edit_button = $('#edit_changeset > span');
+        var description = $('.edit_description');
         var changeset = promotion_page.get_changeset();
         var animate_time = 500;
         if (delay != undefined){
@@ -798,6 +802,7 @@ var changesetEdit = (function(){
         if (opened) {
             name_box.html(changeset.getName());
             edit_button.html(i18n.close_details);
+            description.html(changeset.getDescription());
             edit_button.parent().addClass("highlighted");
             after_function = setup_edit;
 
@@ -814,6 +819,7 @@ var changesetEdit = (function(){
         var changeset = promotion_page.get_changeset();
         var url = "/changesets/" + changeset.id;
         var name_box = $('.edit_name_text');
+        var description = $('.edit_description');
         
         name_box.each(function() {
                 $(this).editable( url, {
@@ -840,6 +846,34 @@ var changesetEdit = (function(){
                     }
                 });
             });
+
+           description.each(function() {
+                $(this).editable(url , {
+                    type        :  'textarea',
+                    method      :  'PUT',
+                    name        :  $(this).attr('name'),
+                    cancel      :  i18n.cancel,
+                    submit      :  i18n.save,
+                    indicator   :  i18n.saving,
+                    tooltip     :  i18n.clickToEdit,
+                    placeholder :  i18n.clickToEdit,
+                    submitdata  :  {authenticity_token: AUTH_TOKEN},
+                    rows        :  5,
+                    cols        :  30,
+                    onsuccess   :  function(data) {
+                          var parsed = $.parseJSON(data);
+                          $('.edit_description').html(parsed.description);
+                          changeset.setDescription(data.description);
+                          changeset.set_timestamp(parsed.timestamp);
+                    },
+                    onerror     :  function(settings, original, xhr) {
+                        original.reset();
+                    }
+                });
+            });
+
+
+
     },
     close = function() {
         if (opened) {
