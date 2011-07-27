@@ -112,7 +112,8 @@ class RolesController < ApplicationController
   end
 
   def verbs_and_scopes
-    verbs = Verb.verbs_for(params[:resource_type]).collect {|v| v.verb}
+    verbs = Verb.verbs_for(params[:resource_type]).collect {|name, display_name| VirtualTag.new(name, display_name)}
+    verbs.sort! {|a,b| a.display_name <=> b.display_name}
     scopes = Tag.tags_for(params[:resource_type]).collect { |t| VirtualTag.new(t.name, t.display_name) }
 
     render :json=> {:verbs => verbs, :scopes => scopes}
@@ -154,8 +155,10 @@ class RolesController < ApplicationController
 
 
   def setup_resource_types
-    @resource_type_names = ResourceType.select("name").order("name asc").collect {|item| item.name}.uniq
-    @resource_type_names.delete("_rails")
+    @resource_types = {}
+    ResourceType::TYPES.each do |res, details|
+      @resource_types[res] = details[:name]
+    end
   end
   
 end

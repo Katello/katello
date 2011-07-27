@@ -185,6 +185,16 @@ class Role < ActiveRecord::Base
     # TODO - for now we just compare count - this is dangerous - we need to compare the content
   end
 
+  def self.list_verbs
+    {
+    :create => N_("Create Roles"),
+    :read => N_("Access Roles"),
+    :update => N_("Update Roles"),
+    :delete => N_("Delete Roles"),
+    }.with_indifferent_access
+  end
+
+
   DEFAULT_VERBS = {
     :edit => 'update', :update=> 'update',
     :new => 'create', :create => 'create', :create_favorite => 'create',

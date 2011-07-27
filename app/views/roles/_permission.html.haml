@@ -12,7 +12,7 @@
         .grid_1.ra.fielditem
           = f.label :type, _("Type")
         .grid_6.la.fielditem
-          = res.select :name, @resource_type_names.collect {|name| [name.capitalize(), name]}, {}, :data_type => "types"
+          = res.select :name, @resource_types.collect {|name, display| [display, name]}, {}, :data_type => "types"
       
       
 
@@ -23,7 +23,7 @@
         = f.label :all, _("All")
       .grid_6.prefix_1.fielditem
         = f.radio_button("all_tags", "false", :style=>"vertical-align: top;",:data_type => "tags")
-        = f.select :tag_names, get_scopes(f).collect {|t| [t.name, t.name]}, {}, {:multiple=>true, :data_type => "tags"}
+        = f.select :tag_names, get_scopes(f).collect {|t| [t.display_name, t.name]}, {}, {:multiple=>true, :data_type => "tags"}
       
       
       .grid_1.ra.fielditem
@@ -33,7 +33,7 @@
         = f.label :all, _("All")
       .grid_6.prefix_1.fielditem
         = f.radio_button("all_verbs", "false", :style=>"vertical-align: top;", :data_type =>"verbs")
-        = f.select :verb_values, get_verbs(f).collect {|t| [t.verb, t.verb]}, {}, {:multiple=>true, :data_type => "verbs"}
+        = f.select :verb_values, get_verbs(f).collect {|name, display| [display, name]}, {}, {:multiple=>true, :data_type => "verbs"}
       .grid_5.ra
         #save_permission{:class=>[perm.new_record? ? "new_permission_save" : "", "button"]}
           = _("Save")

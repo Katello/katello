@@ -195,6 +195,16 @@ class User < ActiveRecord::Base
     { 'pulp-user' => self.username }
   end
 
+
+  def self.list_verbs
+    {
+    :create => N_("Create Users"),
+    :read => N_("Access Users"),
+    :update => N_("Update Users"),
+    :delete => N_("Delete Users")
+    }.with_indifferent_access
+  end
+
   protected
 
   def own_role_included_in_roles
@@ -202,5 +212,7 @@ class User < ActiveRecord::Base
       errors.add(:own_role, 'own role must be included in roles') unless roles.include? own_role
     end
   end
+
+
 
 end

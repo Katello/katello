@@ -171,9 +171,9 @@ var roles_page = function() {
                     $('option',verb_box).remove();
                     $('option',scope_box).remove();
                     //add new options
-                    $.each(json.verbs, function(index, name) {
-                        var optionName = name;
-                        var optionValue = name;
+                    $.each(json.verbs, function(index, verb) {
+                        var optionName = verb.display_name;
+                        var optionValue = verb.name;
                         $('<option/>').attr('value',optionValue).text(optionName).appendTo(verb_box);
                     });
                     $.each(json.scopes, function(index, scope) {
