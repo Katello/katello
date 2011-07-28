@@ -12,6 +12,15 @@
 
 require 'util/threadsession'
 
+class ApiError < StandardError
+  attr_reader :original
+
+  def initialize(msg, original=$!)
+    super(msg)
+    @original = original
+  end
+end
+
 class Api::ApiController < ActionController::Base
   include ActionController::HttpAuthentication::Basic
 
@@ -20,6 +29,7 @@ class Api::ApiController < ActionController::Base
   before_filter :require_user
 
   rescue_from Exception, :with => proc { |e| render_exception(500, e) } # catch-all
+  rescue_from ApiError, :with => proc { |e| render_api_exception(500, e) }
 
   rescue_from RestClient::ExceptionWithResponse, :with => :exception_with_response
   rescue_from ActiveRecord::RecordInvalid, :with => :invalid_record
@@ -99,6 +109,24 @@ class Api::ApiController < ActionController::Base
   end
 
   protected
+  def render_api_exception(status_code, ex)
+    logger.error "*** ERROR: #{ex.message} ***"
+    logger.error "REQUEST URL: #{request.fullpath}"
+    logger.error pp_exception(ex.original.nil? ? ex : ex.original)
+    orig_message = (ex.original.nil? && '') || ex.original.message
+    respond_to do |format|
+      format.json do
+        render :json => {
+          :errors => [ ex.message, orig_message ]
+        }, :status => status_code
+      end
+      format.all do
+        render :text => "#{ex.message} (#{orig_message})",
+          :status => status_code
+      end
+    end
+  end
+
   def render_exception(status_code, exception)
     logger.error pp_exception(exception)
     respond_to do |format|
