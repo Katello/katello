@@ -46,7 +46,7 @@ describe Api::SystemsController do
   describe "create a system" do
     it "requires either environment_id, owner, or organization_id to be specified" do
       post :create
-      response.code.should == "400"
+      response.code.should == "500"
     end
 
     context "in organization with one environment" do
@@ -81,7 +81,7 @@ describe Api::SystemsController do
 
       it "fails if no environment_id was specified" do
         post :create, :organization_id => @organization.cp_key
-        response.code.should == "400"
+        response.code.should == "500"
       end
     end
   end
@@ -99,7 +99,7 @@ describe Api::SystemsController do
 
     it "requires either organization_id, owner, or environment_id" do
       get :index
-      response.code.should == "400"
+      response.code.should == "500"
     end
 
     it "should show all systems in the organization" do
