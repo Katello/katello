@@ -43,7 +43,7 @@ class Api::ProvidersController < Api::ApiController
     if @provider.destroyed?
       render :text => _("Deleted provider '#{params[:id]}'"), :status => 200
     else
-      raise ApiError, _("Error while deleting provider '#{params[:id]}'")
+      raise _("Error while deleting provider '#{params[:id]}'")
     end
   end
 
@@ -63,7 +63,7 @@ class Api::ProvidersController < Api::ApiController
     @provider.import_manifest File.expand_path(temp_file.path)
     render :text => "Manifest imported", :status => 200
     rescue => e
-      raise ApiError, _("Manifest import for provider '#{params[:id]}' failed")
+      raise _("Manifest import for provider '#{params[:id]}' failed")
   end
 
   def import_products
