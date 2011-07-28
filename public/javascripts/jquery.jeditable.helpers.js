@@ -16,13 +16,7 @@
  * inline editing via jeditable.
  */
 $(document).ready(function() {
-    var scrollReinit = function(){
-            var element = $('.scroll-pane');
-            if (element.length){
-                element.data('jsp').reinitialise();
-            }
-        },
-        common_settings = {
+    var common_settings = {
             method          :  'PUT',
             cancel          :  i18n.cancel,
             submit          :  i18n.save,
@@ -30,8 +24,6 @@ $(document).ready(function() {
             tooltip         :  i18n.clickToEdit,
             placeholder     :  i18n.clickToEdit,
             submitdata      :  {authenticity_token: AUTH_TOKEN},
-            oneditcomplete  :  scrollReinit,
-            onresetcomplete :  scrollReinit,
             onerror         :  function(settings, original, xhr) {
                 original.reset();
                 $("#notification").replaceWith(xhr.responseText);
