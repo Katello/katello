@@ -1411,6 +1411,16 @@ fieldset {
             padding-left: 20px;
             @include border-left-radius(5px);
           }
+
+          .nohover {
+            &:hover {
+              background: $breadcrumbbg_color !important;
+              color: #000;
+              text-shadow: none;
+
+              &:after { border-left-color: $breadcrumbbg_color !important; }
+            }
+          }
       }
       &:nth-child(2) {
         a {
