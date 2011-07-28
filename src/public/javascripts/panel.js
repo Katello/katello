@@ -32,10 +32,6 @@ $(document).ready(function() {
         //if it's bigger than 100%, make it 100%.
         fontsize = (fontsize > 100) ? 100 : fontsize;
         $('#systems .block').css({"font-size": parseInt(fontsize, 10) + "%"});
-        var element = $('.scroll-pane');
-        if (element.length){
-            element.data('jsp').reinitialise();
-        }
     });
     $('.left').resize();
 
@@ -130,7 +126,6 @@ $(document).ready(function() {
             dataType: 'html',
             success: function(data) {
                 $(".panel-content").html(data);
-                $('.scroll-pane').jScrollPane();
                 panel.panelResize($('#panel_main'), false);
             }
         });
@@ -247,7 +242,6 @@ var panel = (function(){
                     spinner.hide();
                     pc.fadeIn(function(){$(".panel-content :input:visible:enabled:first").focus();});
                     //panel.expand_cb(name);
-                    $('.scroll-pane').jScrollPane();
                     if( isSubpanel ){
                         panel.panelResize($('#subpanel_main'), isSubpanel);
                     } else {
@@ -284,9 +278,6 @@ var panel = (function(){
                     height = leftPanel.height() - headerSpacing - 75;
                 } else {
                     height += 110;
-                }
-                if (isSubpanel) {
-                    //height -= subpanelSpacing;
                 }
                 
                 paneljQ.height(height);
