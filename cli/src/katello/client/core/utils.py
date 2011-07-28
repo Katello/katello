@@ -74,11 +74,17 @@ class Printer:
             print
         self._printDivLine(header_width)
 
-
+    # returns terminal width (tested only with Linux)
     def _getTermWidth(self):
-        rows, columns = os.popen('stty size', 'r').read().split()
-        return int(columns)
-
+        try:
+            import fcntl, termios, struct
+            h, w, hp, wp = struct.unpack('HHHH',
+                fcntl.ioctl(0, termios.TIOCGWINSZ,
+                struct.pack('HHHH', 0, 0, 0, 0)))
+            w = int(w)
+            return 80 if w == 0 else w
+        except:
+            return 80
 
     def _attrToName(self, attr_name):
         """
@@ -293,6 +299,7 @@ def parse_tokens(tokenstring):
     tokens = []
     pattern = '--?\w+|=?"[^"]*"|=?\'[^\']*\'|=?[^\s]+'
 
+    print tokenstring
     for tok in (re.findall(pattern, tokenstring)):
 
         if tok[0] == '=':
