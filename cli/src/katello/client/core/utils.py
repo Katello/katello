@@ -296,19 +296,23 @@ def parse_tokens(tokenstring):
     @param tokenstring: string with command line tokens
     @return List of tokens
     """
+    from katello.client.cli.base import KatelloError
+
     tokens = []
-    pattern = '--?\w+|=?"[^"]*"|=?\'[^\']*\'|=?[^\s]+'
+    try:
+        pattern = '--?\w+|=?"[^"]*"|=?\'[^\']*\'|=?[^\s]+'
 
-    print tokenstring
-    for tok in (re.findall(pattern, tokenstring)):
+        for tok in (re.findall(pattern, tokenstring)):
 
-        if tok[0] == '=':
-            tok = tok[1:]
-        if tok[0] == '"' or tok[0] == "'":
-            tok = tok[1:-1]
+            if tok[0] == '=':
+                tok = tok[1:]
+            if tok[0] == '"' or tok[0] == "'":
+                tok = tok[1:-1]
 
-        tokens.append(tok)
-    return tokens
+            tokens.append(tok)
+        return tokens
+    except Exception, e:
+        raise KatelloError("Unable to parse options", e)
 
 
 def get_abs_path(path):
