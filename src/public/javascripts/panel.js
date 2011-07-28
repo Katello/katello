@@ -54,8 +54,7 @@ $(document).ready(function() {
     panel.panelResize($('#panel_main'), false);
     panel.panelResize($('#subpanel_main'), true);
 
-    $('.block').live('click', function(e)
-    {
+    $('.block').live('click', function(e) {
         activeBlock = $(this);
         ajax_url = activeBlock.attr("data-ajax_url");
         activeBlockId = activeBlock.attr('id');
@@ -237,6 +236,7 @@ var panel = (function(){
             var panelContent = thisPanel.find(".panel-content");
             spinner.show();
             panelContent.hide();
+            panel.expand_cb(name);
             
             $.ajax({
                 cache: true,
@@ -246,7 +246,7 @@ var panel = (function(){
                     var pc = panelContent.html(data);
                     spinner.hide();
                     pc.fadeIn(function(){$(".panel-content :input:visible:enabled:first").focus();});
-                    panel.expand_cb(name);
+                    //panel.expand_cb(name);
                     $('.scroll-pane').jScrollPane();
                     if( isSubpanel ){
                         panel.panelResize($('#subpanel_main'), isSubpanel);
@@ -283,7 +283,7 @@ var panel = (function(){
                 if( leftPanel.height() <= height + headerSpacing + 80){
                     height = leftPanel.height() - headerSpacing - 75;
                 } else {
-                    height -= 50;
+                    height += 110;
                 }
                 if (isSubpanel) {
                     //height -= subpanelSpacing;
@@ -309,6 +309,7 @@ var panel = (function(){
             content.html('');
             $.bbq.removeState("panel");
             panel.updateResult();
+            panel.expand_cb(name);
             return false;
         },
         closeSubPanel : function(jPanel){
@@ -322,6 +323,7 @@ var panel = (function(){
                 }).removeClass('opened').addClass('closed');
                 panel.updateResult();
             }
+            panel.expand_cb(name);
             return false;
         },
         updateResult : function(){

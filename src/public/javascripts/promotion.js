@@ -1333,4 +1333,9 @@ $(document).ready(function() {
             panel.handleScrollResize($('#changeset_tree'), container, original_top, bodyY, 0, offset);
          });
     }
+    
+    panel.expand_cb = function(){
+       $('.block').parent().parent().removeClass('activeItem');
+       $('.active').parent().parent().addClass('activeItem'); 
+    };
 });
