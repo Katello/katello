@@ -1,9 +1,9 @@
 #!/bin/bash
 script_dir_link=$(dirname "$(readlink "$0")")
 if [[ $script_dir_link == "." ]]; then
-  script_dir=$(dirname "$0")
+    script_dir=$(dirname "$0")
 else
-  script_dir=$script_dir_link
+    script_dir=$script_dir_link
 fi
 export PYTHONPATH=$script_dir/../../cli/src
 
@@ -132,7 +132,7 @@ function valid_id() {
     if [ -z "$1" ]; then
         return 0
     fi
-  
+
     #id=`echo $1 | egrep '\+-+\+'`
     id=`echo $1 | egrep '\-{5,}'`
     if [ -z "$id" ]; then
