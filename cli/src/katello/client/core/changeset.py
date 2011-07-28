@@ -221,7 +221,6 @@ class UpdateContent(ChangesetAction):
         orgName = self.get_option('org')
         envName = self.get_option('env')
 
-        return
         cset = get_changeset(orgName, envName, csName)
         if cset == None:
            return os.EX_DATAERR
@@ -236,6 +235,7 @@ class UpdateContent(ChangesetAction):
         patch['+products'] = self.get_option('add_product') or []
         patch['-products'] = self.get_option('remove_product') or []
 
+        print patch
         msg = self.api.update_content(orgName, cset["environment_id"], cset["id"], patch)
         print _("Successfully updated changeset [ %s ]") % csName
         return os.EX_OK
