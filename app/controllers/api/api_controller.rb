@@ -20,13 +20,14 @@ class Api::ApiController < ActionController::Base
   before_filter :require_user
 
   rescue_from Exception, :with => proc { |e| render_exception(500, e) } # catch-all
+  rescue_from HttpErrors::WrappedError, :with => proc { |e| render_wrapped_exception(500, e) }
 
   rescue_from RestClient::ExceptionWithResponse, :with => :exception_with_response
   rescue_from ActiveRecord::RecordInvalid, :with => :invalid_record
   rescue_from Errors::NotFound, :with => proc { |e| render_exception(404, e) }
 
-  rescue_from HttpErrors::NotFound, :with => proc { |e| render_exception(404, e) }
-  rescue_from HttpErrors::BadRequest, :with => proc { |e| render_exception(400, e) }
+  rescue_from HttpErrors::NotFound, :with => proc { |e| render_wrapped_exception(404, e) }
+  rescue_from HttpErrors::BadRequest, :with => proc { |e| render_wrapped_exception(400, e) }
 
   # support for session (thread-local) variables must be the last filter in this class
   include Katello::ThreadSession::Controller
@@ -99,6 +100,24 @@ class Api::ApiController < ActionController::Base
   end
 
   protected
+  def render_wrapped_exception(status_code, ex)
+    logger.error "*** ERROR: #{ex.message} (#{status_code}) ***"
+    logger.error "REQUEST URL: #{request.fullpath}"
+    logger.error pp_exception(ex.original.nil? ? ex : ex.original)
+    orig_message = (ex.original.nil? && '') || ex.original.message
+    respond_to do |format|
+      format.json do
+        render :json => {
+          :errors => [ ex.message, orig_message ]
+        }, :status => status_code
+      end
+      format.all do
+        render :text => "#{ex.message} (#{orig_message})",
+          :status => status_code
+      end
+    end
+  end
+
   def render_exception(status_code, exception)
     logger.error pp_exception(exception)
     respond_to do |format|
