@@ -44,6 +44,10 @@ class SystemAPI(KatelloAPI):
     def system(self, system_id):
         path = "/api/systems/%s" % system_id
         return self.server.GET(path)[1]
+    
+    def packages(self, system_id):
+        path="/api/systems/%s/packages" % system_id
+        return self.server.GET(path)[1]
 
     def systems_by_org(self, orgId, query = {}):
         path = "/api/organizations/%s/systems" % orgId
