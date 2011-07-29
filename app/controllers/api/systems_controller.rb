@@ -60,7 +60,6 @@ class Api::SystemsController < Api::ApiController
   end
   
   def upload_package_profile
-    debugger
     raise HttpError::BadRequest, _("No package profile received for #{@system.name}") unless params.has_key?(:_json)
     @system.upload_package_profile(params[:_json])
     render :json => @system.to_json
@@ -69,7 +68,7 @@ class Api::SystemsController < Api::ApiController
   def find_organization
     return unless (params.has_key?(:organization_id) or params.has_key?(:owner))
 
-    id = params[:organization_id].tr(' ', '_') || params[:owner]
+    id = (params[:organization_id] || params[:owner]).tr(' ', '_')
     @organization = Organization.first(:conditions => {:cp_key => id})
     raise HttpErrors::NotFound, _("Couldn't find organization '#{id}'") if @organization.nil?
     @organization
