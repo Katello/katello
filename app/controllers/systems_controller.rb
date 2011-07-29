@@ -85,7 +85,7 @@ class SystemsController < ApplicationController
   end
   
   def packages
-    packages = @system.packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
     render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages}
   end
   

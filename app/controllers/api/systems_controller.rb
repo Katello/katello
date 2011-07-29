@@ -55,19 +55,21 @@ class Api::SystemsController < Api::ApiController
   end
 
   def packages
-    packages = @system.packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    render :partial=>"packages", :locals=>{:system=>@system, :packages => packages}
+    packages = @system.packages.sort {|a,b| a["name"].downcase <=> b["name"].downcase}
+    render :json => packages.to_json
   end
   
   def upload_package_profile
+    debugger
+    raise HttpError::BadRequest, _("No package profile received for #{@system.name}") unless params.has_key?(:_json)
     @system.upload_package_profile(params[:_json])
-    render :json => @system.to_json # not sure if this is correct
+    render :json => @system.to_json
   end
 
   def find_organization
     return unless (params.has_key?(:organization_id) or params.has_key?(:owner))
 
-    id = params[:organization_id] || params[:owner]
+    id = params[:organization_id].tr(' ', '_') || params[:owner]
     @organization = Organization.first(:conditions => {:cp_key => id})
     raise HttpErrors::NotFound, _("Couldn't find organization '#{id}'") if @organization.nil?
     @organization
