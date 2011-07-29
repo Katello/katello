@@ -47,6 +47,14 @@ class Api::ActivationKeysController < Api::ApiController
    render :text => _("Deleted activation key '#{params[:id]}'"), :status => 204
   end
 
+  def find_organization
+    return unless params.has_key?(:organization_id)
+
+    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id].tr(' ', '_')})
+    raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
+    @organization
+  end
+
   def find_environment
     return unless params.has_key?(:environment_id)
 
