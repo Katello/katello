@@ -5,15 +5,15 @@
 = content_for :title do
   = _("Details")
 
-= content_for :content do  
+= content_for :content do
   #changeset.fieldset{'data-ajax_url'=>changeset_path(@changeset.id)}
     .grid_2.ra
-      %label #{_("Name")}
+      %label #{_("Name:")}
     .grid_5.la.editable.edit_textfield{:name=>"name", "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.name}
 
   #changeset.fieldset{'data-ajax_url'=>changeset_path(@changeset.id)}
     .grid_2.ra
-      %label #{_("Description")}
+      %label #{_("Description:")}
     .grid_5.la.editable.edit_description{:name=>"description", "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.description}
 
 
@@ -21,27 +21,32 @@
 
   .fieldset
     .grid_2.ra
-      %label #{_("Promotion Date")}
+      %label #{_("Promotion Date:")}
     .grid_5.la
       = I18n.l(@changeset.promotion_date, :format=>:long)
-  
-  
 
-  %h4.grid_7
-    = _("Products")
-  .prefix_1.grid_6
-    - for prod in @changeset.products
-      = prod.name
-  
-  %h4.grid_7
-    = _("Errata")
-  .prefix_1.grid_6
-    - for erratum in @changeset.errata
-      = erratum.display_name
-    
-  %h4.grid_7
-    = _("Packages")
-  .prefix_1.grid_6
-    - for pkg in @changeset.packages
-      = pkg.display_name
+  .grid_8
+    %h2 #{_("Contents:")}
+    -if @changeset.involved_products.empty?
+      .grid_4.prefix_1
+        #{_("This changeset contains no content.")}
+    -else
+      #accordion.grid_7{:style=>"min-height: 200px"}
+        - if !@changeset.products.empty?
+          %h2
+            %a{:href=>'#'} #{_("Full Products")}
+          #full_products
+            %ul
+              -for prod in @changeset.products
+                %li #{prod.name}
+        - for prod in @changeset.partial_products
+          %h2
+            %a{:href=>'#'} #{_(prod.name)}
+          = render :partial=>"content_type", :locals=>{:items=>@changeset.packages.where(:product_id=>prod.id).collect{|i| i.display_name},
+                                                        :type_string=>_("Packages")}
+          = render :partial=>"content_type", :locals=>{:items=>@changeset.errata.where(:product_id=>prod.id).collect{|i| i.display_name},
+                                                        :type_string=>_("Errata")}
+          = render :partial=>"content_type", :locals=>{:items=>@changeset.repos.where(:product_id=>prod.id).collect{|i| i.display_name},
+                                                        :type_string=>_("Repositories")}
+
 
