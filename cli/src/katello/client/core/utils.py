@@ -74,11 +74,17 @@ class Printer:
             print
         self._printDivLine(header_width)
 
-
+    # returns terminal width (tested only with Linux)
     def _getTermWidth(self):
-        rows, columns = os.popen('stty size', 'r').read().split()
-        return int(columns)
-
+        try:
+            import fcntl, termios, struct
+            h, w, hp, wp = struct.unpack('HHHH',
+                fcntl.ioctl(0, termios.TIOCGWINSZ,
+                struct.pack('HHHH', 0, 0, 0, 0)))
+            w = int(w)
+            return 80 if w == 0 else w
+        except:
+            return 80
 
     def _attrToName(self, attr_name):
         """
@@ -290,18 +296,23 @@ def parse_tokens(tokenstring):
     @param tokenstring: string with command line tokens
     @return List of tokens
     """
+    from katello.client.cli.base import KatelloError
+
     tokens = []
-    pattern = '--?\w+|=?"[^"]*"|=?\'[^\']*\'|=?[^\s]+'
+    try:
+        pattern = '--?\w+|=?"[^"]*"|=?\'[^\']*\'|=?[^\s]+'
 
-    for tok in (re.findall(pattern, tokenstring)):
+        for tok in (re.findall(pattern, tokenstring)):
 
-        if tok[0] == '=':
-            tok = tok[1:]
-        if tok[0] == '"' or tok[0] == "'":
-            tok = tok[1:-1]
+            if tok[0] == '=':
+                tok = tok[1:]
+            if tok[0] == '"' or tok[0] == "'":
+                tok = tok[1:-1]
 
-        tokens.append(tok)
-    return tokens
+            tokens.append(tok)
+        return tokens
+    except Exception, e:
+        raise KatelloError("Unable to parse options", e)
 
 
 def get_abs_path(path):
