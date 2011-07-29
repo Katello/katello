@@ -262,11 +262,10 @@ module Pulp
     class << self
       
       def create key, uuid, description = "", key_value_pairs = {}
-        #debugger
         url = consumer_path() + "?owner=#{key}"
         attrs = {:id => uuid, :description => description, :key_value_pairs => key_value_pairs}
-        response = self.post(url, attrs.to_json, self.default_headers).body
-        JSON.parse(response).with_indifferent_access
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
       end
       
       def upload_package_profile uuid, package_profile
