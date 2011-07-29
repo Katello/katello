@@ -148,8 +148,6 @@ for t in $required_tests; do
     . $script_dir/cli_tests/$t.sh
 done
 
-. $script_dir/cli_tests/rhsm.sh
-
 . $script_dir/cli_tests/_base_cleanup.sh
 
 summarize
