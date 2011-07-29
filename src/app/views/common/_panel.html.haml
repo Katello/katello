@@ -14,15 +14,15 @@
     #select-result
   = render :partial=>"common/tupane"
 
-  .left
+  %div.left{:class => left_panel_width ? left_panel_width : 'column_panel_' + columns.length.to_s }
     #list-title
-      %h2.fl #{title}
-      - if enable_create
-        %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => url_for(:action=> 'new')}
-          #{_('+ New ')} #{create}
-          .arrow-right
-      %br
-      %br
+      %header
+        %h2.fl #{title}
+        - if enable_create
+          %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => url_for(:action=> 'new')}
+            #{_('+ New ')} #{create}
+            .arrow-right
+            
       - if url.nil?
         %form#search_form.search{"data-url" => search_index_path()}
           = auto_complete_field_tag_jquery(:search, params[:search], {:type => "text", :placeholder => "Filter..."},{ :delay => 100, :min_length => -1 })
