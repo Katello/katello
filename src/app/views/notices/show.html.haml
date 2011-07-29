@@ -1,6 +1,6 @@
-= include_javascripts :notices_list
-= include_javascripts :fancyqueries
-= include_stylesheets :fancyqueries
+= stylesheet :fancyqueries
+= javascript :notices_list, :fancyqueries
+
 
 .grid_16#main
 
@@ -38,4 +38,3 @@
             %td.details-icon= "#{notice.text}".html_safe
 
   = button_to _("Delete All"), {:action => "destroy_all", :controller => "notices"}, :method => :delete, :confirm => _('Are you sure?')
-

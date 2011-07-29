@@ -20,6 +20,7 @@ from katello.client.cli.admin import AdminCLI
 from katello.client.shell import KatelloShell
 from katello.client.core.utils import system_exit
 from katello.client.core import (
+  activation_key,
   environment,
   organization,
   user,
@@ -37,6 +38,14 @@ from katello.client.core import (
 )
 
 def setup_admin(admin):
+    akey_cmd = activation_key.ActivationKey()
+    akey_cmd.add_action('create', activation_key.Create())
+    akey_cmd.add_action('info', activation_key.Info())
+    akey_cmd.add_action('list', activation_key.List())
+    akey_cmd.add_action('update', activation_key.Update())
+    akey_cmd.add_action('delete', activation_key.Delete())
+    admin.add_command('activation_key', akey_cmd)
+    
     env_cmd = environment.Environment()
     env_cmd.add_action('create', environment.Create())
     env_cmd.add_action('info', environment.Info())

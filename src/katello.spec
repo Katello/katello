@@ -6,13 +6,13 @@
 %global confdir extras/fedora
 
 Name:       katello		
-Version:	0.1.50
+Version:	0.1.54
 Release:	1%{?dist}
 Summary:	A package for managing application lifecycle for Linux systems
 	
 Group:          Internet/Applications
 License:        GPLv2
-URL:            http://redhat.com
+URL:            http://www.katello.org
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -22,15 +22,15 @@ Requires:       candlepin-tomcat6
 Requires:       rubygems
 Requires:       rubygem(rails) >= 3.0.5
 Requires:       rubygem(multimap)
-Requires:       rubygem(haml) >= 3.0.16
+Requires:       rubygem(haml) >= 3.1.2
 Requires:       rubygem(haml-rails)
 Requires:       rubygem(json)
 Requires:       rubygem(rest-client)
 Requires:       rubygem(jammit)
 Requires:       rubygem(rails_warden)
 Requires:       rubygem(net-ldap)
-Requires:       rubygem(compass) >= 0.10.5
-Requires:       rubygem(compass-960-plugin) >= 0.10.0
+Requires:       rubygem(compass) >= 0.11.5
+Requires:       rubygem(compass-960-plugin) >= 0.10.4
 Requires:       rubygem(capistrano)
 Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
@@ -53,6 +53,9 @@ BuildRequires: 	coreutils findutils sed
 BuildRequires: 	rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
+BuildRequires:  rubygem(jammit)
+BuildRequires:  rubygem(compass) >= 0.11.5
+BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 
 BuildArch: noarch
 
@@ -63,6 +66,14 @@ Provides a package for managing application lifecycle for Linux systems
 %setup -q
 
 %build
+#compile SASS files
+echo Compiling SASS files...
+compass compile
+
+#generate Rails JS/CSS/... assets
+echo Generating Rails assets...
+jammit
+
 #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
 echo Generating gettext files...
 ruby -e 'require "rubygems"; require "gettext/tools"; GetText.create_mofiles(:po_root => "locale", :mo_root => "locale")'
@@ -72,10 +83,11 @@ rm -rf %{buildroot}
 #prepare dir structure
 install -d -m0755 %{buildroot}%{homedir}
 install -d -m0755 %{buildroot}%{datadir}
-install -d -m0755 %{buildroot}%{datadir}/public-assets
-install -d -m0755 %{buildroot}%{datadir}/public-compiled-stylesheets
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
 install -d -m0750 %{buildroot}%{_localstatedir}/log/%{name}
+
+# clean the application directory before installing
+[ -d tmp ] && rm -rf tmp
 
 #copy the application to the target directory
 mkdir .bundle
@@ -85,20 +97,18 @@ cp -R .bundle * %{buildroot}%{homedir}
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 644 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
 install -m 644 config/database.yml %{buildroot}%{_sysconfdir}/%{name}/database.yml
-install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/prod_env.rb
-install -m 644 config/environments/development.rb %{buildroot}%{_sysconfdir}/%{name}/dev_env.rb
+install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/environment.rb
 
 #copy init scripts and sysconfigs
 install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
-install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initrddir}/%{name}
+install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
 install -Dp -m0644 %{confdir}/%{name}.completion.sh %{buildroot}%{_sysconfdir}/bash_completion.d/%{name}
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 
 #overwrite config files with symlinks to /etc/katello
 ln -svf %{_sysconfdir}/%{name}/katello.yml %{buildroot}%{homedir}/config/katello.yml
 ln -svf %{_sysconfdir}/%{name}/database.yml %{buildroot}%{homedir}/config/database.yml
-ln -svf %{_sysconfdir}/%{name}/prod_env.rb %{buildroot}%{homedir}/config/environments/production.rb
-ln -svf %{_sysconfdir}/%{name}/dev_env.rb %{buildroot}%{homedir}/config/environments/development.rb
+ln -svf %{_sysconfdir}/%{name}/environment.rb %{buildroot}%{homedir}/config/environments/production.rb
 
 #create symlinks for some db/ files
 ln -svf %{datadir}/schema.rb %{buildroot}%{homedir}/db/schema.rb
@@ -106,8 +116,6 @@ ln -svf %{datadir}/schema.rb %{buildroot}%{homedir}/db/schema.rb
 #create symlinks for data
 ln -sv %{_localstatedir}/log/%{name} %{buildroot}%{homedir}/log
 ln -sv %{_tmppath} %{buildroot}%{homedir}/tmp
-ln -sv %{datadir}/public-assets %{buildroot}%{homedir}/public/assets
-ln -sv %{datadir}/public-compiled-stylesheets %{buildroot}%{homedir}/public/stylesheets/compiled
 
 #re-configure database to the /var/lib/katello directory
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{_sysconfdir}/%{name}/database.yml
@@ -151,9 +159,8 @@ fi
 %doc README LICENSE doc/
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/database.yml
-%config(noreplace) %{_sysconfdir}/%{name}/prod_env.rb
-%config(noreplace) %{_sysconfdir}/%{name}/dev_env.rb
-%config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
+%config %{_sysconfdir}/%{name}/environment.rb
+%config %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %{_initddir}/%{name}
 %{_sysconfdir}/bash_completion.d/%{name}
@@ -177,6 +184,45 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Jul 27 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.54-1
+- spec - logging level can be now specified in the sysconfig
+- bug 726030 - Webrick wont start with the -d (daemon) option
+- spec - service start forces you to run initdb first
+- adding a warning message in the sysconfig comment setting
+- Merge branch 'pack-profile'
+- production.rb now symlinked to /etc/katello/environment.rb
+- 725793 - Permission denied stylesheets/fancyqueries.css
+- 725901 - Permission errors in RPM
+- 720421 - Promotions Page: Adds fade in of items that meet search criteria
+  that have previously been hidden due to previously not meeting a given search
+  criteria.
+- ignore zanta cache files
+- Merge branch 'master' into pack-profile
+- added pulp-consumer creation in system registration, uploading pulp-consumer
+  package-profile via api, tests
+- Merge branch 'master' into pack-profile
+- increased priority of candlepin consumer creation to go before pulp
+- Merge branch 'master' into pack-profile
+- renaming/adding some candlepin and pulp consumer methods.
+- proxy controller changes
+
+* Tue Jul 26 2011 Shannon Hughes <shughes@redhat.com> 0.1.53-1
+- modifying initd directory using fedora recommendation,
+  https://fedoraproject.org/wiki/Packaging/RPMMacros (shughes@redhat.com)
+
+* Tue Jul 26 2011 Mike McCune <mmccune@redhat.com> 0.1.52-1
+- periodic rebuild to get past tito bug
+
+* Mon Jul 25 2011 Shannon Hughes <shughes@redhat.com> 0.1.51-1
+- upgrade to compas-960-plugin 0.10.4 (shughes@redhat.com)
+- upgrade to compas 0.11.5 (shughes@redhat.com)
+- upgrade to haml 3.1.2 (shughes@redhat.com)
+- spec - fixing katello.org url (lzap+git@redhat.com)
+- Upgrades jQuery to 1.6.2. Changes Qunit tests to reflect jQuery version
+  change and placement of files from Refactor. (ehelms@redhat.com)
+- Fixes height issue with subpanel when left panel is at its minimum height.
+  Fixes issue with subpanel close button closing both main and subpanel.
+  (ehelms@redhat.com)
 * Fri Jul 22 2011 Shannon Hughes <shughes@redhat.com> 0.1.50-1
 - Simple-navigation 3.3.4 fixes.  Also fake-systems needed bundle exec before
   rails runner. (jrist@redhat.com)

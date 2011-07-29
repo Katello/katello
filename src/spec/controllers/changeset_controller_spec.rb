@@ -82,11 +82,6 @@ describe ChangesetsController do
       Changeset.find(@changeset.id).name.should == "newname"
     end
 
-    it "should allow viewing the dependency size" do
-      get :dependency_size, :id=>@changeset.id
-      response.should be_success
-    end
-
   end
 
   describe 'creating a changeset' do
@@ -109,6 +104,17 @@ describe ChangesetsController do
       end
     end
 
+    describe 'with a description' do
+      it 'should create a changeset correctly and send a notification' do
+        controller.should_receive(:notice)
+        post 'create', {:name => "Changeset 7056", :description=> "FOO", :env_id=>@env.id}
+        response.should be_success
+        Changeset.exists?(:description=>'FOO').should be_true
+      end
+    end
+
+
+
     it 'should cause an error notification if name is left blank' do
       controller.should_receive(:errors)
       post 'create', {:env_id => @env.id, :changesets => { :name => ''}}
@@ -120,6 +126,8 @@ describe ChangesetsController do
       post 'create', {:changesets => { :name => 'Test/Changeset 4.5'}}
       response.should_not be_success
     end
+
+    
 
   end
 
@@ -143,9 +151,9 @@ describe ChangesetsController do
     end
   end
 
-  describe 'deleting a changeset' do
+  describe 'updating a changeset' do
     before (:each) do
-      @changeset = Changeset.create(CSControllerTest::CHANGESET)
+      @changeset = Changeset.create!(CSControllerTest::CHANGESET)
     end
 
     it 'should successfully update a changeset' do
@@ -161,4 +169,21 @@ describe ChangesetsController do
       @changeset.users.length.should == 0
     end
   end
+
+
+  describe 'getting the dependencies of a changeset' do
+    before (:each) do
+      @changeset = Changeset.create!(CSControllerTest::CHANGESET)
+
+    end
+
+    it 'should call dependencies on the changeset' do
+      @changeset.should_receive(:dependencies).and_return({})
+      Changeset.stub(:find).and_return(@changeset)
+      get 'dependencies', {:id=>@changeset.id}
+      response.should be_success
+    end
+
+  end
+
 end

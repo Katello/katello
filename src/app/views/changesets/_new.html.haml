@@ -8,12 +8,17 @@
         %input{ :type => "hidden", :name => "env_id", :value => @environment.id }
         %input{ :type => "hidden", :name => "next_env_id", :value => @next_environment.id }
         %fieldset
-          .grid_1.ra
+          .grid_2.ra
             %label #{_("Name")}:
           .grid_4.la
             = text_field_tag :name, params[:name], :tabindex => 1
-        .grid_3.ra
-          .button#save_changeset_button{:tabindex => 2}
+        %filedset
+          .grid_2.ra
+            %label #{_("Description")}:
+          .grid_4.la
+            = text_area_tag :description, nil, :tabindex => 2
+        .grid_5.ra
+          .button#save_changeset_button{:tabindex => 3}
             #{_("Save Changeset")}
     -else
       #{_("Cannot create a new changeset without a next environment to promote in to. <br> Create a next environment on the organization screen.")}

@@ -159,7 +159,7 @@ class Glue::Pulp::Repo
   def _get_most_recent_sync_status()
     history = Pulp::Repository.sync_history(@id)
     return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED) if (history.nil? or history.empty?)
-    ::PulpSyncStatus.new(history[0])
+    ::PulpSyncStatus.using_pulp_task(history[0])
   end
 
   def synced?

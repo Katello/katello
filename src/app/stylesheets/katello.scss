@@ -15,6 +15,7 @@ strong { font-weight: bold; }
 .nomargin { margin: none; }
 .placeholder { margin-bottom: 2em; }
 .disabled { opacity: 0.4; cursor: default; }
+
 .outlined { outline: 2px solid $kselected_color; }
 .alt { background-color: lighten($lightgrey_color, 35%) !important; }
 .clickable { cursor: pointer; cursor: hand; }
@@ -514,6 +515,7 @@ nav {
     
     &>ul {
       display: block;
+      min-height: 35px;
     
       li {
         display: inline-block;
@@ -791,27 +793,27 @@ footer {
 
 .notifications {
     tr.success {
-        @include linear-gradient(color-stops(white, white, "#F2FFE5"));
+        @include linear-gradient(color-stops(white, white, rgb(242,255,229)));
         &:hover {
-            @include linear-gradient(color-stops(white, "#F2FFE5"));
+            @include linear-gradient(color-stops(white, rgb(242,255,229)));
         }
     }
     tr.error {
-        @include linear-gradient(color-stops(white, white, "#FFE5E5"));
+        @include linear-gradient(color-stops(white, white, rgb(255,229,229)));
         &:hover {
-            @include linear-gradient(color-stops(white, "#FFE5E5"));
+            @include linear-gradient(color-stops(white, rgb(255,229,229)));
         }
     }
     tr.message {
-        @include linear-gradient(color-stops(white, white, "#EFEFEF"));
+        @include linear-gradient(color-stops(white, white, rgb(239,239,239)));
         &:hover {
-            @include linear-gradient(color-stops(white, "#EFEFEF"));
+            @include linear-gradient(color-stops(white, rgb(239,239,239)));
         }
     }
     tr.warning {
-        @include linear-gradient(color-stops(white, white, "#FFFFE5"));
+        @include linear-gradient(color-stops(white, white, rgb(255,255,229)));
         &:hover {
-            @include linear-gradient(color-stops(white, "#FFFFE5"));
+            @include linear-gradient(color-stops(white, rgb(255,255,229)));
         }
     }
 }
@@ -1066,6 +1068,8 @@ fieldset {
     margin-right: 10px;
     
     &>ul {
+      min-height: 0px;
+      
       li {
           background: none;
           &.selected {
@@ -1091,11 +1095,6 @@ fieldset {
       margin-top: 150px;
       height: 250px;
     }
-  }
-  .head {
-    padding:10px;
-    position: absolute;
-    right: 0;
   }
   .close {
     position: absolute;
@@ -1396,6 +1395,13 @@ fieldset {
   font: 14px;
   position: relative;
   
+  .selected {
+    background: $listhover_color !important; color: #FFF; @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
+    &:after {
+      border-left-color: $listhover_color !important;
+    }
+  }
+
   li { 
       float: left; 
       margin-left: 0;
@@ -1404,6 +1410,16 @@ fieldset {
           a {
             padding-left: 20px;
             @include border-left-radius(5px);
+          }
+
+          .nohover {
+            &:hover {
+              background: $breadcrumbbg_color !important;
+              color: #000;
+              text-shadow: none;
+
+              &:after { border-left-color: $breadcrumbbg_color !important; }
+            }
           }
       }
       &:nth-child(2) {
@@ -1546,4 +1562,10 @@ fieldset {
   .jspArrowDown { background-position: -64px 0 !important; }
   .jspArrowLeft { background-position: -96px 0 !important; }
   .jspArrowRight{ background-position: -32px 0 !important; }
+}
+
+.sprite {
+    height: 16px;
+    width: 16px;
+    text-indent: -4000em;
 }

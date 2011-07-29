@@ -86,7 +86,7 @@ class ApplicationController < ActionController::Base
         notice_dialog["notices"].push( _("#{self.class.helpers.link_to('Click here', notices_path)} for more details."))
       end
 
-      flash[level] = notice_dialog.to_json
+      flash.now[level] = notice_dialog.to_json
 
       if persist
         # create & store notice... but mark as 'viewed'
@@ -350,7 +350,7 @@ class ApplicationController < ActionController::Base
   #produce a simple datastructure of a changeset for the browser
   def simplify_changeset cs
 
-    to_ret = {:id=>cs.id.to_s, :timestamp =>cs.updated_at.to_i.to_s, :products=>{}, :is_new => cs.state == Changeset::NEW}
+    to_ret = {:id=>cs.id.to_s, :name=>cs.name, :description=>cs.description, :timestamp =>cs.updated_at.to_i.to_s, :products=>{}, :is_new => cs.state == Changeset::NEW}
 
     cs.involved_products.each{|product|
       to_ret[:products][product.id] = {:id=> product.id, :name=>product.name, :provider=>product.provider.provider_type, 'package'=>[], 'errata'=>[], 'repo'=>[]}
