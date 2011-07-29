@@ -17,10 +17,10 @@ gem 'daemons', '>= 1.1.4'
 gem 'uuidtools'
 
 # Stuff for view/display/frontend
-gem 'haml', '>= 3.0.16'
+gem 'haml', '>= 3.1.2'
 gem 'haml-rails'
-gem 'compass', '>= 0.10.5'
-gem 'compass-960-plugin', '>= 0.10.0'
+gem 'compass', '>= 0.11.5'
+gem 'compass-960-plugin', '>= 0.10.4'
 gem 'simple-navigation', '3.3.4'
 gem 'scoped_search', '>= 2.3.1'
 # Stuff for i18n
@@ -57,6 +57,9 @@ group :test, :development do
   gem 'autotest-rails', '>= 4.1.0'
   gem 'rcov', '>= 0.9.9'
 
+  gem 'webrat', '>=0.7.3'
+  gem 'nokogiri', '>= 1.5.0'
+
   #needed  for documentation
   gem 'yard', '>= 0.5.3'
   
@@ -64,7 +67,6 @@ group :test, :development do
   gem 'ci_reporter','>= 1.6.3'
   gem 'gettext', '>= 1.9.3', :require => false
   gem 'ruby_parser'
-  gem 'jasmine'
   
   #needed for unit tests
 end

@@ -1,0 +1,95 @@
+#
+# Copyright 2011 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+require 'spec_helper'
+include OrchestrationHelper
+
+describe ActivationKey do
+
+  let(:aname) { 'myactkey' }
+  let(:adesc) { 'my activation key description' }
+
+  before(:each) do
+    disable_org_orchestration
+
+    @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+    @environment_1 = KPEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
+    @environment_2 = KPEnvironment.create!(:name => 'test', :prior => @environment_1.id, :organization => @organization)
+    @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization, :environment => @environment_1)
+  end
+
+  context "in invalid state" do
+    before {@akey = ActivationKey.new}
+
+    it "should be invalid without name" do
+      @akey.should_not be_valid
+      @akey.errors[:name].should_not be_empty
+    end
+
+    it "should be invalid without default environment" do
+      @akey.name = 'invalid key'
+      @akey.should_not be_valid
+      @akey.errors[:environment].should_not be_empty
+    end
+
+    it "should be invalid if non-existent environment is specified" do
+      @akey.name = 'invalid key'
+      @akey.environment_id = 123456
+
+      @akey.should_not be_valid
+      @akey.errors[:environment].should_not be_empty
+    end
+  end
+
+  it "should be able to create" do
+    @akey.should_not be_nil
+  end
+
+  describe "should be able to update" do
+    it "name" do 
+      a = ActivationKey.find_by_name(aname)
+      a.should_not be_nil
+      new_name = a.name + "N"
+      b = ActivationKey.update(a.id, {:name => new_name})
+      b.name.should == new_name
+    end
+
+    it "description" do 
+      a = ActivationKey.find_by_name(aname)
+      a.should_not be_nil
+      new_description = a.description + "N"
+      b = ActivationKey.update(a.id, {:description => new_description})
+      b.description.should == new_description
+    end
+  
+    it "environment" do 
+      a = ActivationKey.find_by_name(aname)
+      a.should_not be_nil
+      b = ActivationKey.update(a.id, {:environment => @environment_2})
+      b.environment.should == @environment_2
+    end
+  end
+
+  it "should map 2way subscription to keys" do 
+    s = KTSubscription.create!(:subscription => 'abc123')
+    @akey.subscriptions = [s]
+    @akey.subscriptions.first.subscription.should == 'abc123'
+    s.activation_keys.first.name.should == aname
+  end
+
+  it "should assign multiple subscriptions to keys" do 
+    s = KTSubscription.create!(:subscription => 'abc123')
+    s2 = KTSubscription.create!(:subscription => 'def123')
+    @akey.subscriptions = [s,s2]
+    @akey.subscriptions.last.subscription.should == 'def123'
+  end
+end

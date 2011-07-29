@@ -19,7 +19,7 @@ Src::Application.configure do
   # just comment this out and Rails will serve the files
 
   # See everything in the log (default is :info)
-  # config.log_level = :debug
+  config.log_level = (ENV['KATELLO_LOGGING'] || "info").dup
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
@@ -46,4 +46,7 @@ Src::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+
+  # Do not update compass SASS files in production (we precompile them)
+  Sass::Plugin.options[:never_update] = true
 end

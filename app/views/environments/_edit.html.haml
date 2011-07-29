@@ -1,4 +1,4 @@
-= javascript :edit, :environment_edit
+= javascript :edit, :edit_helpers, :environment_edit
 = include_editable_i18n 
 
 = content_for :title do
@@ -20,7 +20,7 @@
     %fieldset.clearfix
       .grid_2.ra
         %label #{_("Description")}:
-      .grid_5.la.editable.edit_env_description{:style => "word-wrap: break-word;", "data-url"=>organization_environment_path(@organization.cp_key, @environment.id), 'name' => 'kp_environment[description]'}<> #{@environment.description}
+      .grid_5.la.editable.edit_textarea{:style => "word-wrap: break-word;", "data-url"=>organization_environment_path(@organization.cp_key, @environment.id), 'name' => 'kp_environment[description]'}<> #{@environment.description}
   
     %fieldset.clearfix
       %input{ :type => "hidden", :name => "prior_envs", :value => @env_labels_json }

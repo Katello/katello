@@ -78,6 +78,18 @@ module Glue::Pulp::Repos
       async_tasks
     end
 
+    #is the repo cloned in the specified environment
+    def is_cloned_in? repo, env
+      return get_cloned(repo, env) != nil
+    end
+
+    def get_cloned repo, env
+      self.repos(env).each{ |curr_repo|
+        return curr_repo if repo.clone_ids.include?(curr_repo.id)
+      }
+      nil
+    end
+
     def sync
       self.repos(locker).collect do |r|
         r.sync
@@ -147,7 +159,7 @@ module Glue::Pulp::Repos
 
     def repo_id content_id, env_name = nil
       return content_id if content_id.include?(self.organization.name) && content_id.include?(self.cp_id.to_s)
-      [self.cp_id.to_s, content_id.to_s, env_name, self.organization.name].compact.join("-").gsub(":","_")
+      [self.cp_id.to_s, content_id.to_s, env_name, self.organization.name].compact.join("-").gsub(/[^-\w]/,"_")
     end
 
     def repository_url content_url

@@ -3,7 +3,7 @@ javascript_compressor: yui
 
 javascripts:
   common:
-    - public/javascripts/jquery/jquery-1.5.2.js
+    - public/javascripts/jquery/jquery-1.6.2.js
     - public/javascripts/jquery-ui-1.8.11.custom/js/jquery-ui-1.8.11.custom.min.js
     - public/javascripts/jquery/plugins/jquery.hoverIntent.js
     - public/javascripts/jquery/plugins/jquery.ui.totop.js
@@ -14,6 +14,12 @@ javascripts:
     - public/javascripts/jquery/plugins/jquery.sparkline.min.js
   html5:
     - public/javascripts/html5.js
+  activation_key:
+    - public/javascripts/activation_key.js
+  activation_key_edit:
+    - public/javascripts/activation_key_edit.js
+  activation_key_subscriptions:
+    - public/javascripts/activation_key_subscriptions.js
   content:
     - public/javascripts/content.js
     - public/javascripts/jquery/plugins/jquery.periodicalupdater.js
@@ -39,16 +45,12 @@ javascripts:
     - public/javascripts/headpin.sparkline.js
   system:
     - public/javascripts/systems.js
-  system_edit:
-    - public/javascripts/system_edit.js
   system_subscriptions:
     - public/javascripts/system_subscriptions.js
   organization:
     - public/javascripts/organization.js
   environment_edit:
     - public/javascripts/environment_edit.js
-  organization_edit:
-    - public/javascripts/organization_edit.js
   one_panel:
     - public/javascripts/one_panel.js
   panel:
@@ -62,8 +64,6 @@ javascripts:
     - public/javascripts/provider.js
   provider_create:
     - public/javascripts/provider_create.js
-  provider_edit:
-    - public/javascripts/provider_edit.js
   notices:
     - public/javascripts/notices.js
     - public/javascripts/jquery/plugins/jquery.periodicalupdater.js
@@ -81,12 +81,13 @@ javascripts:
     - public/javascripts/role_edit.js
   sync_schedule:
     - public/javascripts/sync_schedule.js
-
   edit:
     - public/javascripts/jquery/plugins/jquery.jeditable.js
     - public/javascripts/jquery/plugins/jquery.jeditable.ajaxupload.js
     - public/javascripts/jquery/plugins/jquery.ajaxfileupload.js
-    - public/javascripts/jeditable_helpers.js
+    - public/javascripts/jquery.jeditable.custominputs.js
+  edit_helpers:
+    - public/javascripts/jquery.jeditable.helpers.js
   form:
     - public/javascripts/jquery/plugins/jquery.form.js
   treetable:

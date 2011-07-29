@@ -9,5 +9,5 @@
       - else
         %a{:class => "fr content_add_remove remove_package st_button", "data-display_name"=> pack.nvrea, "data-id" => pack.id, "data-type" => "package", "data-product_id"=>@product.id, :id => "add_remove_package_#{pack.id}"}
       .no_slide
-        %span.item.block{:id => pack.id, "data-ajax_url" => "/packages/#{pack.id}"}
-          = pack.nvrea          
+        %span.block{:id => pack.id, "data-ajax_url" => "/packages/#{pack.id}"}
+          = pack.nvrea

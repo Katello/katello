@@ -1,0 +1,34 @@
+= content_for :title do
+  #{_("New Activation Key")}
+
+= content_for :content do
+  .grid_8#new_key
+    = form_tag activation_keys_path, :method => "post", :id => "new_activation_key" do
+      %fieldset
+        .grid_2.ra
+          %label #{_("Name")}:
+        .grid_5.la
+          = text_field_tag :activation_key_name, params[:name], :size => "25", :tabindex => 1
+      %fieldset
+        .grid_2.ra
+          %label #{_("Description")}:
+        .grid_5.la
+          = text_area_tag :activation_key_description, params[:description], :size => "32x4", :tabindex => 2
+
+      %fieldset#promotion_paths
+        = hidden_field_tag :activation_key_default_environment
+        %label #{_("Select an Environment")}:
+        - unless current_organization.environments.empty?
+          %ul
+          - current_organization.promotion_paths.each do |path|
+            .grid_8
+              %ul.breadcrumb
+                %li
+                  =link_to _('Locker'), "#", :class => :nohover
+                - for env in path
+                  %li
+                    %a.select_env{"data-env_id" => env.id} #{env.name}
+  
+      .grid_6.ra
+        = button_to _("Save"), {:action => "create", :controller => "activation_keys"}, :method => :post, :id => :activation_key_save, :tabindex => 3
+

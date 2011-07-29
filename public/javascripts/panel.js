@@ -32,10 +32,6 @@ $(document).ready(function() {
         //if it's bigger than 100%, make it 100%.
         fontsize = (fontsize > 100) ? 100 : fontsize;
         $('#systems .block').css({"font-size": parseInt(fontsize, 10) + "%"});
-        var element = $('.scroll-pane');
-        if (element.length){
-            element.data('jsp').reinitialise();
-        }
     });
     $('.left').resize();
 
@@ -54,8 +50,7 @@ $(document).ready(function() {
     panel.panelResize($('#panel_main'), false);
     panel.panelResize($('#subpanel_main'), true);
 
-    $('.block').live('click', function(e)
-    {
+    $('.block').live('click', function(e) {
         activeBlock = $(this);
         ajax_url = activeBlock.attr("data-ajax_url");
         activeBlockId = activeBlock.attr('id');
@@ -91,6 +86,8 @@ $(document).ready(function() {
     $(window).resize(function(){
         panel.panelResize($('#panel_main'), false);
         panel.panelResize($('#subpanel_main'), true);
+        panel.handleScrollResize($('#panel-frame'), container, original_top, bodyY, 0);
+        panel.handleScrollResize($('#subpanel-frame'), container, subpanel_top, bodyY, 1);
     });
 
     $('#content').resize(function(){
@@ -129,8 +126,7 @@ $(document).ready(function() {
             dataType: 'html',
             success: function(data) {
                 $(".panel-content").html(data);
-                $('.scroll-pane').jScrollPane();
-                panel.panelResize($('#panel_main'));
+                panel.panelResize($('#panel_main'), false);
             }
         });
         return false;
@@ -211,7 +207,7 @@ var panel = (function(){
                 }).removeClass('closed').addClass('opened').attr('data-id', activeBlockId);
                 activeBlock.addClass('active');
                 previousBlockId = activeBlockId;
-                panel.panelAjax(activeBlockId, ajax_url, thisPanel);
+                panel.panelAjax(activeBlockId, ajax_url, thisPanel, false);
             } else if (thisPanel.hasClass('opened') && thisPanel.attr("data-id") !== activeBlockId){
                 panel.closeSubPanel(subpanel); //close the subpanel if it is open
                 // Keep the thisPanel open if they click another block
@@ -221,7 +217,7 @@ var panel = (function(){
                 activeBlock.addClass('active');
                 previousBlockId = activeBlockId;
                 thisPanel.removeClass('closed');
-                panel.panelAjax(activeBlockId, ajax_url, thisPanel);
+                panel.panelAjax(activeBlockId, ajax_url, thisPanel, false);
             } else {
                 // Close the Panel
                 // Remove previous classes besides opened
@@ -235,6 +231,7 @@ var panel = (function(){
             var panelContent = thisPanel.find(".panel-content");
             spinner.show();
             panelContent.hide();
+            panel.expand_cb(name);
             
             $.ajax({
                 cache: true,
@@ -244,8 +241,7 @@ var panel = (function(){
                     var pc = panelContent.html(data);
                     spinner.hide();
                     pc.fadeIn(function(){$(".panel-content :input:visible:enabled:first").focus();});
-                    panel.expand_cb(name);
-                    $('.scroll-pane').jScrollPane();
+                    //panel.expand_cb(name);
                     if( isSubpanel ){
                         panel.panelResize($('#subpanel_main'), isSubpanel);
                     } else {
@@ -262,6 +258,8 @@ var panel = (function(){
         /* must pass a jQuery object */
         panelResize : function(paneljQ, isSubpanel){
             var new_top = Math.floor($('.left').position(top).top);
+            var headerSpacing = $('.head').height() + $('.subnav').height();
+            var height = $(window).height() - $('#subheader').height() - $('#head').height() - $('.subnav').height() - headerSpacing - 100;            
             
             new_top = isSubpanel ? (new_top + subpanelSpacing) : new_top;
             paneljQ.parent().animate({top: new_top}, 250);
@@ -274,14 +272,14 @@ var panel = (function(){
                 }
                 paneljQ.height(extraHeight);
             } else {
-                var height = $(window).height() - $('#subheader').height() - $('#head').height() - 275;
                 var leftPanel = $('.left');
-                if (isSubpanel) {
-                    height -= subpanelSpacing;
+                
+                if( leftPanel.height() <= height + headerSpacing + 80){
+                    height = leftPanel.height() - headerSpacing - 75;
+                } else {
+                    height += 110;
                 }
-                if( leftPanel.height() < height ){
-                    height = leftPanel.height() - 100;
-                }
+                
                 paneljQ.height(height);
             }
             if( paneljQ.length ){
@@ -302,6 +300,7 @@ var panel = (function(){
             content.html('');
             $.bbq.removeState("panel");
             panel.updateResult();
+            panel.expand_cb(name);
             return false;
         },
         closeSubPanel : function(jPanel){
@@ -315,6 +314,7 @@ var panel = (function(){
                 }).removeClass('opened').addClass('closed');
                 panel.updateResult();
             }
+            panel.expand_cb(name);
             return false;
         },
         updateResult : function(){
@@ -375,21 +375,34 @@ var panel = (function(){
                 });
             }
         },
-        handleScroll : function(jQPanel, container, top, bodyY, spacing) {
-            var scrollY = common.scrollTop();
-            var isfixed = jQPanel.css('position') === 'fixed';
+        handleScroll : function(jQPanel, container, top, bodyY, spacing, offset) {
+            var scrollY = common.scrollTop(),
+                scrollX = common.scrollLeft(),
+                isfixed = jQPanel.css('position') === 'fixed';
+            
+            offset = offset ? offset : 10;
+            offset += $('#maincontent').offset().left;
+            
             if(jQPanel.length > 0){
-                if ( scrollY > bodyY && !isfixed ) {
-                    jQPanel.stop().css({
-                        position: 'fixed',
-                        top: 40 + subpanelSpacing*spacing
-                    });
-                } else if ( scrollY < bodyY && isfixed ) {
-                    //alert("1. Top:" + top);
+                if ( scrollY < bodyY    ) {
                     jQPanel.css({
                         position: 'absolute',
-                        top: top
+                        top: top,
+                        left: ''
                     });
+                } else {
+                    jQPanel.stop().css({
+                        position: 'fixed',
+                        top: 40 + subpanelSpacing*spacing,
+                        left: -scrollX + offset
+                    });
+                }
+            }
+        },
+        handleScrollResize : function(jQPanel, container, top, bodyY, spacing, offset) {
+            if(jQPanel.length > 0){
+                if( jQPanel.css('position') === 'fixed'){
+                    jQPanel.css('left', '');
                 }
             }
         },

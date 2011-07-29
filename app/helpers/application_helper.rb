@@ -136,7 +136,12 @@ module ApplicationHelper
 
   def env_select_class curr_env, selected_env, curr_path, selected_path, locker_clickable
     classes = []
-    classes << "path_link" if locker_clickable or !curr_env.locker?
+    if locker_clickable or !curr_env.locker?
+      classes << "path_link"
+    else
+      # if locker isn't clickable, disable the hover effect
+      classes << "nohover"
+    end
 
     if curr_env.id == selected_env.id
       if !selected_env.locker?
