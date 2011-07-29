@@ -1,10 +1,12 @@
-= include_javascripts :content
-:javascript
-  localize({
-    "cancel": '#{_('Cancel')}',
-    "error": '#{_('Error')}',
-    "complete": '#{_('Sync complete.')}',
-  });
+= javascript :content
+
+= javascript do
+  :javascript
+    localize({
+      "cancel": '#{_('Cancel')}',
+      "error": '#{_('Error')}',
+      "complete": '#{_('Sync complete.')}',
+    });
 
 #main.grid_16
   %nav.subsubnav
