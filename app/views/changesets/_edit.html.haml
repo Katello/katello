@@ -8,16 +8,25 @@
 = content_for :content do  
   #changeset.fieldset{'data-ajax_url'=>changeset_path(@changeset.id)}
     .grid_2.ra
-      = _("Name") 
+      %label #{_("Name")}
     .grid_5.la.editable.edit_textfield{:name=>"name", "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.name}
-  
+
+  #changeset.fieldset{'data-ajax_url'=>changeset_path(@changeset.id)}
+    .grid_2.ra
+      %label #{_("Description")}
+    .grid_5.la.editable.edit_description{:name=>"description", "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.description}
+
+
+
+
   .fieldset
     .grid_2.ra
-      = _("Promotion Date")
+      %label #{_("Promotion Date")}
     .grid_5.la
       = I18n.l(@changeset.promotion_date, :format=>:long)
   
   
+
   %h4.grid_7
     = _("Products")
   .prefix_1.grid_6

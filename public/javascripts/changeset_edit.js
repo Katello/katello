@@ -35,5 +35,29 @@ $(document).ready(function() {
             }
         });
     });
+
+
+    $('.edit_description').each(function() {
+        $(this).editable($(this).attr('data-url'), {
+            type        :  'textarea',
+            method      :  'PUT',
+            name        :  $(this).attr('name'),
+            cancel      :  i18n.cancel,
+            submit      :  i18n.save,
+            indicator   :  i18n.saving,
+            tooltip     :  i18n.clickToEdit,
+            placeholder :  i18n.clickToEdit,
+            submitdata  :  {authenticity_token: AUTH_TOKEN},
+            rows        :  10,
+            cols        :  30,
+            onsuccess   :  function(data) {
+                  var parsed = $.parseJSON(data);
+                  $(this).html(parsed.description);
+            },
+            onerror     :  function(settings, original, xhr) {
+                original.reset();
+            }
+        });
+    });
 });
 
