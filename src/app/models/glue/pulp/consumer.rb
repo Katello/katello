@@ -19,9 +19,10 @@ module Glue::Pulp::Consumer
     base.class_eval do
       before_save :save_pulp_orchestration
       before_destroy :destroy_pulp_orchestration
-      lazy_accessor :pulp_facts, :initializer => lambda { Pulp::Consumer.find(uuid)}
-      lazy_accessor :packages, :initializer => lambda { Pulp::Consumer.installed_packages(uuid).
-                                                              collect{|pack| Glue::Pulp::SimplePackage.new(pack)}}
+      lazy_accessor :pulp_facts, :initializer => lambda { Pulp::Consumer.find(uuid) }
+      lazy_accessor :packages, :initializer => lambda { Pulp::Consumer.installed_packages(uuid) }
+      lazy_accessor :simple_packages, :initializer => lambda { Pulp::Consumer.installed_packages(uuid).
+                                                              collect{|pack| Glue::Pulp::SimplePackage.new(pack)} }
     end
   end
   module InstanceMethods
