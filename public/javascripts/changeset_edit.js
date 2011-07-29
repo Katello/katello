@@ -14,6 +14,24 @@
 
 $(document).ready(function() {
 
+
+    $('#accordion').accordion({fillSpace:true, autoHeight:true});
+
+    $(".clickable").click(function(){
+
+        $(this).parents(".content_group").children(".cs_content").slideToggle();
+    
+        var arrow = $(this).parent().find('a').find('img');
+        if(arrow.attr("src").indexOf("collapsed") === -1){
+          arrow.attr("src", "/images/icons/expander-collapsed.png");
+        } else {
+          arrow.attr("src", "/images/icons/expander-expanded.png");
+        }
+    });
+
+
+
+
     $('.edit_textfield').each(function() {
         $(this).editable($(this).attr('data-url'), {
             type        :  'text',
