@@ -65,11 +65,18 @@ class Changeset < ActiveRecord::Base
   #  but not necessarily 'in' the changeset
   def involved_products
     to_ret = self.products.clone #get a copy
+    to_ret = to_ret + self.partial_products
+    to_ret.uniq
+  end
+
+  def partial_products
+    to_ret = []
     to_ret =  to_ret + self.packages.collect{|pkg| pkg.product}
     to_ret =  to_ret + self.errata.collect{|pkg| pkg.product}
     to_ret =  to_ret + self.repos.collect{|pkg| pkg.product}
     to_ret.uniq
   end
+
 
   def dependencies
     from_env = self.environment.prior
