@@ -1,4 +1,4 @@
-= javascript :plan_edit
+= javascript :edit_helpers, :plan_edit
 
 = content_for :title do
   #{_("Edit Sync Plan")}
@@ -12,20 +12,20 @@
     %fieldset
       .grid_2.ra
         %label.fl.ra.sp #{_("Name")}:
-      .grid_5.la.editable.edit_planname#plan_name{'name' => 'plan[name]', :url => url_for(:action => 'update')} #{@plan[:name]}
+      .grid_5.la.editable.edit_planname#plan_name{'name' => 'plan[name]', 'data-url' => url_for(:action => 'update')} #{@plan[:name]}
     %fieldset
       .grid_2.ra
         %label.fl.ra.sp #{_("Description")}:
-      .grid_5.la.editable.edit_textarea{:style => "word-wrap: break-word;", 'name' => 'plan[description]', :url => url_for(:action => 'update')}<> #{@plan[:description]}
+      .grid_5.la.editable.edit_textarea{:style => "word-wrap: break-word;", 'name' => 'plan[description]', 'data-url' => url_for(:action => 'update')}<> #{@plan[:description]}
     %fieldset
       .grid_2.ra
         %label.fl.ra.sp #{_("Interval")}:
-      .grid_5.la.editable.edit_planinterval#plan_interval{'name' => 'plan[interval]', :url => url_for(:action => 'update')} #{@plan[:interval]}
+      .grid_5.la.editable.edit_planinterval#plan_interval{'name' => 'plan[interval]', 'data-url' => url_for(:action => 'update')} #{@plan[:interval]}
     %fieldset
       .grid_2.ra
         %label.fl.ra.sp #{_("Start Date")}:
-      .grid_5.la.editable.edit_datepicker#plan_date{'name' => 'plan[date]', :url => url_for(:action => 'update')} #{@plan.plan_date}
+      .grid_5.la.editable.edit_datepicker#plan_date{'name' => 'plan[date]', 'data-url' => url_for(:action => 'update')} #{@plan.plan_date}
     %fieldset
       .grid_2.ra
         %label.fl.ra.sp #{_("Time")}:
-      .grid_5.la.editable.edit_timepicker#plan_time{'name' => 'plan[time]', :url => url_for(:action => 'update')} #{@plan.plan_time}
+      .grid_5.la.editable.edit_timepicker#plan_time{'name' => 'plan[time]', 'data-url' => url_for(:action => 'update')} #{@plan.plan_time}

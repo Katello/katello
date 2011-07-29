@@ -1,5 +1,17 @@
 Src::Application.routes.draw do
 
+  resources :activation_keys do
+    collection do
+      get :auto_complete_search
+      get :items
+      get :subscriptions
+    end
+    member do
+      get :subscriptions
+      post :update_subscriptions
+    end
+  end
+
   resources :sync_plans, :only => [:index, :create, :new, :edit, :update, :show, :destroy, :auto_complete_search] do
     collection do
       get :auto_complete_search
@@ -143,8 +155,7 @@ Src::Application.routes.draw do
   resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :show, :destroy, :auto_complete_search] do
     member do
       put :name
-      get :dependency_size
-      get :dependency_list
+      get :dependencies
       post :promote
       get :products
       get :object
@@ -244,6 +255,7 @@ Src::Application.routes.draw do
         get :providers
       end
       resources :systems, :only => [:index]
+      resources :activation_keys, :only => [:index]
     end
 
     resources :products, :only => [] do
@@ -272,8 +284,10 @@ Src::Application.routes.draw do
       resources :products, :only => [:index] do
         get :repositories, :on => :member
       end
+      resources :activation_keys, :only => [:index, :create]
     end
 
+    resources :activation_keys, :only => [:show, :update, :destroy]
     resources :packages, :only => [:show]
     resources :changesets, :only => [:show]
     resources :errata, :only => [:show]
@@ -282,27 +296,42 @@ Src::Application.routes.draw do
 
     resources :tasks, :only => [:show]
 
-    # support for rhsm
+    # some paths conflicts with rhsm
+    scope 'katello' do
+
+      # routes for non-ActiveRecord-based resources
+      match '/products/:id/repositories' => 'products#repo_create', :via => :post, :constraints => { :id => /[0-9\.]*/ }
+
+    end
+
+    # support for rhsm --------------------------------------------------------
     resources :consumers, :controller => 'systems'
     match '/owners/:organization_id/environments' => 'environments#index', :via => :get
     match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
     match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
     match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
-    match '/consumers/:id/certificates' => 'proxies#get', :via => :get
-    match '/consumers/:id/certificates/serials' => 'proxies#get', :via => :get
-    match '/consumers/:id/entitlements' => 'proxies#get', :via => :get
-    match '/consumers/:id/entitlements' => 'proxies#post', :via => :post
-    match '/consumers/:id/entitlements' => 'proxies#delete', :via => :delete
-    match '/consumers/:consumer_id/certificates/:id' => 'proxies#delete', :via => :delete
-    match '/pools' => 'proxies#get', :via => :get
-    match '/products' => 'proxies#get', :via => :get
-    match '/products/:id' => 'proxies#get', :via => :get
-    match '/entitlements/:id' => 'proxies#get', :via => :get
-    match '/subscriptions' => 'proxies#post', :via => :post
+    
+    # proxies -------------------
+      # candlepin proxy ---------
+    match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get
+    match '/consumers/:id/certificates/serials' => 'candlepin_proxies#get', :via => :get
+    match '/consumers/:id/entitlements' => 'candlepin_proxies#get', :via => :get
+    match '/consumers/:id/entitlements' => 'candlepin_proxies#post', :via => :post
+    match '/consumers/:id/entitlements' => 'candlepin_proxies#delete', :via => :delete
+    match '/consumers/:consumer_id/certificates/:id' => 'candlepin_proxies#delete', :via => :delete
+    match '/pools' => 'candlepin_proxies#get', :via => :get
+    match '/products' => 'candlepin_proxies#get', :via => :get
+    match '/products/:id' => 'candlepin_proxies#get', :via => :get
+    match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get
+    match '/subscriptions' => 'candlepin_proxies#post', :via => :post
     match '/users/:username/owners' => 'organizations#list_owners', :via => :get
+    
+      # pulp proxy --------------
+    match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
 
     # development / debugging support
     get 'status/memory'
 
+  # end '/api' namespace
   end
 end

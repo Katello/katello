@@ -13,7 +13,7 @@
 class PulpTaskStatus < TaskStatus
 
   def self.using_pulp_task(sync)
-    PulpTaskStatus.new(
+    self.new(
         :uuid => sync[:id],
         :state => sync[:state],
         :start_time => sync[:start_time],

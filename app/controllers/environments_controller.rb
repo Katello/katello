@@ -72,7 +72,7 @@ class EnvironmentsController < ApplicationController
     if priorUpdated
       result = @environment.prior.nil? ? _("Locker") : @environment.prior.name
     else
-      result = params[:kp_environment].values.first;
+      result = params[:kp_environment].values.first
     end
 
     notice _("Environment '#{@environment.name}' was updated.")
