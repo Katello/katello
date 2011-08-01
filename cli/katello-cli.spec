@@ -1,11 +1,11 @@
 %define base_name katello
 
 Name:          %{base_name}-cli
-Summary:       Client package for managing application lifecycle for Linux systems
+Summary:       Client package for managing application life-cycle for Linux systems
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.3
+Version:       0.1.4
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -22,7 +22,7 @@ BuildArch:     noarch
 
 
 %description
-Provides a client package for managing application lifecycle
+Provides a client package for managing application life-cycle
 for Linux systems
 
 
@@ -59,11 +59,19 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %{python_sitelib}/%{base_name}/
 %attr(755,root,root) %{_bindir}/%{base_name}
-%config %attr(644,root,root) %{_sysconfdir}/%{base_name}/client.conf
+%config(noreplace) %attr(644,root,root) %{_sysconfdir}/%{base_name}/client.conf
 #%{_mandir}/man8/%{base_name}.8*
 
 
 %changelog
+* Mon Aug 01 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.4-1
+- spec - rpmlint cleanup
+- Added api support for activation keys
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+- Turn on package updating
+- Bug 725719 - Simple CLI tests are failing with -s parameter
+- Bug 726416 - Katello-cli is failing on some terminals
+
 * Tue Jul 26 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.3-1
 - redhat provider - changing rhn to redhat in the cli
 - spec - fixing files section of katello-cli
