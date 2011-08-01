@@ -107,6 +107,13 @@ class KPEnvironment < ActiveRecord::Base
     ret
   end
 
+  #is the environment currently being promoted to
+  def promoting_to?
+    Changeset.joins(:task_status).where('changesets.environment_id' => self.id,
+        'task_statuses.state' => [TaskStatus::Status::WAITING,  TaskStatus::Status::RUNNING]).exists?
+  end
+
+
   #Unlike path which only gives the path from this environment going forward
   #  Get the full path, that is go to the HEAD of the path this environment is on
   #  and then give me that entire path
