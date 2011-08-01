@@ -145,7 +145,7 @@
 			// create the note
 			var $note = $(html);
 			
-			if( options.sticky ){
+			if( options.alwaysClosable || options.sticky ){
 				// add click handler to remove the sticky notification
 				$note.find("a." + options.classClose).bind("click.jnotify", function (){
 					self.remove();

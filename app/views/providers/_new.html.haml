@@ -5,6 +5,5 @@
 
 = content_for :content do
   #provider
-    .grid_8
-      = form_for @provider, :html => {:method => :post}, :url => providers_path do |f|
-        = render :partial => 'form', :locals => { :form =>f }
+    = form_for @provider, :html => {:method => :post}, :url => providers_path do |f|
+      = render :partial => 'form', :locals => { :form =>f }
