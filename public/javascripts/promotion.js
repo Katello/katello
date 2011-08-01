@@ -278,6 +278,7 @@ var promotion_page = (function($){
                                 changesetStatusActions.setLocked(id);
                             } else if( changeset.status ){
                                 changesetStatusActions.initProgressBar(id, changeset.status);
+                                changesetStatusActions.checkProgressTask(id.split("_")[1]);
                             }
                         }
                     }
@@ -1233,6 +1234,7 @@ var templateLibrary = (function(){
 var changesetStatusActions = (function($){
     var initProgressBar = function(id, status){
             var changeset = $('#' + id);
+            changeset.css('margin-left', '0');
             changeset.prepend('<span class="changeset_status"><span class="progressbar"></span><label></label></span>');
             changeset.find('.changeset_status label').text(status + '%');
             changeset.find('.progressbar').progressbar({value: status});
@@ -1240,18 +1242,20 @@ var changesetStatusActions = (function($){
             changeset.attr('title', i18n.changesetProgress);
             $('#cslist .slider .slide_link:not(:has(.progressbar))').css('margin-left', '52px');
         },
-        setProgress = function(id, status){
+        setProgress = function(id, progress){
             var changeset = $('#' + id);  
-            changeset.find(".progressbar").progressbar({value: status});
-            changeset.find('.changeset_status label').text(status + '%');
+            changeset.find(".progressbar").progressbar({value: progress});
+            changeset.find('.changeset_status label').text(progress + '%');
         },
         finish = function(id){
             var changeset = $('#' + id);
-            changeset.find(".changeset_status").remove();
-            changeset.removeClass('being_promoted');
-            if( !$('.changeset_status').length ){
-                $('#cslist .slider .slide_link').css('margin-left', '0');
-            }
+            changeset.find(".changeset_status").html('promoted');
+            changeset.parent().fadeOut(3000, function(){
+                changeset.parent().remove();
+                if( !$('.changeset_status').length ){
+                    $('#cslist .slider .slide_link').animate({'margin-left' : '0'}, 200);
+                }
+            });
         },
         setLocked = function(id){
             var changeset = $('#' + id);
@@ -1266,14 +1270,31 @@ var changesetStatusActions = (function($){
                 console.log('no more locked icons');
                 $('#cslist .slider .slide_link').css('margin-left', '0');
             }
+        },
+        checkProgressTask = function(id){
+            var timeout = 1000;
+            $.PeriodicalUpdater('/changesets/' + id + '/promotion_progress/', {
+                method: 'GET',
+                type: 'JSON',
+                global: false,
+                minTimeout: timeout,
+                maxTimeout: timeout
+            }, function(data){
+                if( data.progress === 100 ){
+                    finish(data.id);
+                } else {
+                    setProgress(data.id, data.progress);
+                }
+            });
         };
         
     return {
-        initProgressBar : initProgressBar,
-        setProgress     : setProgress,
-        finishProgess   : finish,
-        setLocked       : setLocked,
-        removeLocked    : removeLocked
+        initProgressBar     : initProgressBar,
+        setProgress         : setProgress,
+        finishProgess       : finish,
+        checkProgressTask   : checkProgressTask,
+        setLocked           : setLocked,
+        removeLocked        : removeLocked
     }
 })(jQuery);
 
