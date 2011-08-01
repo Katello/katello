@@ -202,7 +202,7 @@ class ChangesetsController < ApplicationController
   def promote
     if @changeset.state != Changeset::REVIEW
       errors _("The changeset must be moved to the review stage before promotion")
-      render text=>"", :status => 500
+      render :text=>"", :status => 500
     end
 
 
