@@ -82,7 +82,7 @@ class ChangesetsController < ApplicationController
 
 
   def dependencies
-    product_map = @changeset.dependencies
+    product_map = @changeset.calc_dependencies
     to_ret = {}
 
     #temporarily transform product_map from id=>name  to id=>{:name, :dep_of} with a fake dep_of

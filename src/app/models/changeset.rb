@@ -39,6 +39,7 @@ class Changeset < ActiveRecord::Base
   has_many :users, :class_name=>"ChangesetUser", :inverse_of=>:changeset
   has_many :errata, :class_name=>"ChangesetErratum", :inverse_of=>:changeset
   has_many :repos, :class_name=>"ChangesetRepo", :inverse_of => :changeset
+  has_many :dependencies, :class_name=>"ChangesetDependency", :inverse_of =>:changeset
   belongs_to :environment, :class_name=>"KPEnvironment"
   belongs_to :task_status
   before_save :uniquify_artifacts
@@ -71,7 +72,7 @@ class Changeset < ActiveRecord::Base
     to_ret.uniq
   end
 
-  def dependencies
+  def calc_dependencies to_save = false
     from_env = self.environment.prior
     to_env   = self.environment
 
@@ -129,6 +130,17 @@ class Changeset < ActiveRecord::Base
 
       }
     }
+
+    if to_save
+      product_hash.each{|prod_id, pkg_array|
+        pkg_array.each{|pkg|
+          self.dependencies << ChangesetDependency.new(:package_id => pkg.id, :display_name => pkg.nvrea,
+                                                       :product_id => prod_id, :changeset => self)
+        }
+      }
+      self.save()
+    end
+
     product_hash
     
 
@@ -141,6 +153,8 @@ class Changeset < ActiveRecord::Base
 
   def promote
     raise _("Cannot promote a changeset when it is not in the reivew phase") if self.state != Changeset::REVIEW
+
+    self.calc_dependencies(true)
 
     from_env = self.environment.prior
     to_env   = self.environment
