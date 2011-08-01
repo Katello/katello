@@ -55,8 +55,7 @@ class Api::SystemsController < Api::ApiController
   end
 
   def packages
-    packages = @system.packages.sort {|a,b| a["name"].downcase <=> b["name"].downcase}
-    render :json => packages.to_json
+    render :json => @system.packages.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
   end
   
   def upload_package_profile
