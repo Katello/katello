@@ -85,7 +85,6 @@ describe ChangesetsController do
     it "should be able to check the progress of a changeset being promoted" do
       get :promotion_progress, :id=>@changeset.id
       response.should be_success
-      debugger
       response.should contain('changeset_' + @changeset.id.to_s)
     end
 
