@@ -274,7 +274,7 @@ var promotion_page = (function($){
                     if( changeset_breadcrumb.hasOwnProperty(id) ){
                         if( id.split("_")[0] === "changeset" ){
                             changeset = changeset_breadcrumb[id];
-                            if( !changeset.is_new ){
+                            if( !changeset.is_new && !changeset.progress ){
                                 changesetStatusActions.setLocked(id);
                             } else if( changeset.progress ){
                                 changesetStatusActions.initProgressBar(id, changeset.progress);
@@ -1280,7 +1280,7 @@ var changesetStatusActions = (function($){
                 minTimeout: timeout,
                 maxTimeout: timeout
             }, function(data){
-                if( data.progress === 100 ){
+                if( data.progress === "100" ){
                     finish(data.id);
                 } else {
                     setProgress(data.id, data.progress);
