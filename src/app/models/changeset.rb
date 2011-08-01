@@ -273,17 +273,28 @@ class Changeset < ActiveRecord::Base
 
   private
 
+  def update_progress! percent
+    self.task_status.progress = percent
+    self.task_status.save!
+  end
+
+
   def promote_content
     self.calc_dependencies(true)
+
+    update_progress! '10'
 
     from_env = self.environment.prior
     to_env   = self.environment
 
     wait_for_tasks promote_products(from_env, to_env)
+    update_progress! '50'
     wait_for_tasks promote_repos(from_env, to_env)
+    update_progress! '80'
     promote_packages from_env, to_env
+    update_progress! '90'
     promote_errata   from_env, to_env
-
+    update_progress! '100'
     self.promotion_date = Time.now
     self.state = Changeset::PROMOTED
     self.save!
