@@ -266,6 +266,24 @@ var promotion_page = (function($){
                     }
             });
         },
+        init_changeset_list = function(){
+            var changeset;
+            sort_changeset();
+            if( !current_changeset ){
+                for( id in changeset_breadcrumb ){
+                    if( changeset_breadcrumb.hasOwnProperty(id) ){
+                        if( id.split("_")[0] === "changeset" ){
+                            changeset = changeset_breadcrumb[id];
+                            if( !changeset.is_new ){
+                                changesetStatusActions.setLocked(id);
+                            } else if( changeset.status ){
+                                changesetStatusActions.initProgressBar(id, changeset.status);
+                            }
+                        }
+                    }
+                }
+            }
+        },
         env_change = function(env_id, element) {
             var url = element.attr("data-url");
             window.location = url;
@@ -543,7 +561,8 @@ var promotion_page = (function($){
         hide_conflict:          hide_conflict,
         show_conflict_details:  show_conflict_details,
         add_dependencies:       add_dependencies,
-        remove_dependencies:    remove_dependencies
+        remove_dependencies:    remove_dependencies,
+        init_changeset_list:    init_changeset_list
     };
 }(jQuery));
 
@@ -1030,9 +1049,6 @@ var promotionsRenderer = (function(){
 var templateLibrary = (function(){
     var changesetsListItem = function(id, name){
             var html ='<li>' + '<div class="slide_link" id="' + id + '">'
-            if (!changeset_breadcrumb[id].is_new) {
-                html += '<img  class="fl locked_icon" src="/images/icons/locked.png">';
-            }
 
             html += '<span class="sort_attr">'+ name + '</span></div></li>';
             return html;
@@ -1216,7 +1232,7 @@ var templateLibrary = (function(){
 
 var changesetStatusActions = (function($){
     var initProgressBar = function(id, status){
-            var changeset = $('#changeset_' + id);
+            var changeset = $('#' + id);
             changeset.prepend('<span class="changeset_status"><span class="progressbar"></span><label></label></span>');
             changeset.find('.changeset_status label').text(status + '%');
             changeset.find('.progressbar').progressbar({value: status});
@@ -1225,12 +1241,12 @@ var changesetStatusActions = (function($){
             $('#cslist .slider .slide_link:not(:has(.progressbar))').css('margin-left', '52px');
         },
         setProgress = function(id, status){
-            var changeset = $('#changeset_' + id);  
+            var changeset = $('#' + id);  
             changeset.find(".progressbar").progressbar({value: status});
             changeset.find('.changeset_status label').text(status + '%');
         },
         finish = function(id){
-            var changeset = $('#changeset_' + id);
+            var changeset = $('#' + id);
             changeset.find(".changeset_status").remove();
             changeset.removeClass('being_promoted');
             if( !$('.changeset_status').length ){
@@ -1238,19 +1254,18 @@ var changesetStatusActions = (function($){
             }
         },
         setLocked = function(id){
-            var changeset = $('#changeset_' + id);
+            var changeset = $('#' + id);
             changeset.prepend('<img class="fl locked_icon" src="/images/icons/locked.png">');
             $('#cslist .slider .slide_link:not(:has(.locked_icon))').css('margin-left', '20px');
         },
         removeLocked = function(id){
-            var changeset = $('#changeset_' + id);
+            var changeset = $('#' + id);
             changeset.find('img').remove();
             changeset.css('margin-left', '20px');
             if( !$('#cslist .locked_icon').length ){
                 console.log('no more locked icons');
                 $('#cslist .slider .slide_link').css('margin-left', '0');
             }
-
         };
         
     return {
@@ -1298,7 +1313,7 @@ $(document).ready(function() {
                                       base_icon: 'home_img',
                                       render_cb: promotionsRenderer.render,
                                       tab_change_cb: function(hash_id) {
-                                          promotion_page.sort_changeset();
+                                          promotion_page.init_changeset_list();
                                       }}));
 
     //need to reset page during the extended scroll
