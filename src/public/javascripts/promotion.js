@@ -724,8 +724,6 @@ $.expr[':'].contains = function(a, i, m) {
 
 //doc ready
 var registerEvents = function(){
-
-
     $('#save_changeset_button').live('click', function(){
         var button = $(this);
         if(button.hasClass("disabled")){return false;}
@@ -1033,7 +1031,7 @@ var templateLibrary = (function(){
     var changesetsListItem = function(id, name){
             var html ='<li>' + '<div class="slide_link" id="' + id + '">'
             if (!changeset_breadcrumb[id].is_new) {
-                html += '<img  class="fl locked_icon" src="/images/icons/locked.png">'
+                html += '<img  class="fl locked_icon" src="/images/icons/locked.png">';
             }
 
             html += '<span class="sort_attr">'+ name + '</span></div></li>';
@@ -1215,6 +1213,54 @@ var templateLibrary = (function(){
         dependencyItems: dependencyItems
     };
 })();
+
+var changesetStatusActions = (function($){
+    var initProgressBar = function(id, status){
+            var changeset = $('#changeset_' + id);
+            changeset.prepend('<span class="changeset_status"><span class="progressbar"></span><label></label></span>');
+            changeset.find('.changeset_status label').text(status + '%');
+            changeset.find('.progressbar').progressbar({value: status});
+            changeset.addClass('being_promoted');
+            changeset.attr('title', i18n.changesetProgress);
+            $('#cslist .slider .slide_link:not(:has(.progressbar))').css('margin-left', '52px');
+        },
+        setProgress = function(id, status){
+            var changeset = $('#changeset_' + id);  
+            changeset.find(".progressbar").progressbar({value: status});
+            changeset.find('.changeset_status label').text(status + '%');
+        },
+        finish = function(id){
+            var changeset = $('#changeset_' + id);
+            changeset.find(".changeset_status").remove();
+            changeset.removeClass('being_promoted');
+            if( !$('.changeset_status').length ){
+                $('#cslist .slider .slide_link').css('margin-left', '0');
+            }
+        },
+        setLocked = function(id){
+            var changeset = $('#changeset_' + id);
+            changeset.prepend('<img class="fl locked_icon" src="/images/icons/locked.png">');
+            $('#cslist .slider .slide_link:not(:has(.locked_icon))').css('margin-left', '20px');
+        },
+        removeLocked = function(id){
+            var changeset = $('#changeset_' + id);
+            changeset.find('img').remove();
+            changeset.css('margin-left', '20px');
+            if( !$('#cslist .locked_icon').length ){
+                console.log('no more locked icons');
+                $('#cslist .slider .slide_link').css('margin-left', '0');
+            }
+
+        };
+        
+    return {
+        initProgressBar : initProgressBar,
+        setProgress     : setProgress,
+        finishProgess   : finish,
+        setLocked       : setLocked,
+        removeLocked    : removeLocked
+    }
+})(jQuery);
 
 //doc ready
 $(document).ready(function() {
