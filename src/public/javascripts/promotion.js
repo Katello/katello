@@ -1272,16 +1272,17 @@ var changesetStatusActions = (function($){
             }
         },
         checkProgressTask = function(id){
-            var timeout = 1000;
-            $.PeriodicalUpdater('/changesets/' + id + '/promotion_progress/', {
+            var timeout = 8000;
+            var updater = $.PeriodicalUpdater('/changesets/' + id + '/promotion_progress/', {
                 method: 'GET',
                 type: 'JSON',
                 global: false,
                 minTimeout: timeout,
                 maxTimeout: timeout
             }, function(data){
-                if( data.progress === "100" ){
+                if( data.progress === 100 ){
                     finish(data.id);
+                    updater.stop();
                 } else {
                     setProgress(data.id, data.progress);
                 }
