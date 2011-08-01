@@ -133,7 +133,7 @@ $(document).ready(function() {
     });
 
     $('.left').resizable({maxWidth: 550,
-                                    minWidth: 300,
+                                    minWidth: 350,
                                     grid: 25,
                                     handles: 'e',
                                     autoHide: true
