@@ -276,8 +276,8 @@ var promotion_page = (function($){
                             changeset = changeset_breadcrumb[id];
                             if( !changeset.is_new ){
                                 changesetStatusActions.setLocked(id);
-                            } else if( changeset.status ){
-                                changesetStatusActions.initProgressBar(id, changeset.status);
+                            } else if( changeset.progress ){
+                                changesetStatusActions.initProgressBar(id, changeset.progress);
                                 changesetStatusActions.checkProgressTask(id.split("_")[1]);
                             }
                         }
