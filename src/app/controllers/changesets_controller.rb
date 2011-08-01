@@ -219,9 +219,15 @@ class ChangesetsController < ApplicationController
 
     render :text=>url_for(:controller=>"promotions", :action => "show",
           :env_id => @environment.name, :org_id =>  @environment.organization.cp_key)
-
   end
 
+  def promotion_progress
+    progress = rand(101)
+    progress = 100
+    to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'progress' => progress}
+    render :json=>to_ret
+  end
+  
 
   private
 
