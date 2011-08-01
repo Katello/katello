@@ -222,8 +222,7 @@ class ChangesetsController < ApplicationController
   end
 
   def promotion_progress
-    progress = rand(101)
-    progress = 100
+    progress = @changeset.task_status.progress
     to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'progress' => progress}
     render :json=>to_ret
   end
