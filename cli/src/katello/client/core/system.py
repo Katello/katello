@@ -1,4 +1,3 @@
-#!/usr/bin/python
 #
 # Katello Repos actions
 # Copyright (c) 2010 Red Hat, Inc.

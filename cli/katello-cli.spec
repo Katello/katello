@@ -1,7 +1,7 @@
 %define base_name katello
 
 Name:          %{base_name}-cli
-Summary:       Client package for managing application lifecycle for Linux systems
+Summary:       Client package for managing application life-cycle for Linux systems
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
@@ -22,7 +22,7 @@ BuildArch:     noarch
 
 
 %description
-Provides a client package for managing application lifecycle
+Provides a client package for managing application life-cycle
 for Linux systems
 
 
@@ -59,7 +59,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %{python_sitelib}/%{base_name}/
 %attr(755,root,root) %{_bindir}/%{base_name}
-%config %attr(644,root,root) %{_sysconfdir}/%{base_name}/client.conf
+%config(noreplace) %attr(644,root,root) %{_sysconfdir}/%{base_name}/client.conf
 #%{_mandir}/man8/%{base_name}.8*
 
 

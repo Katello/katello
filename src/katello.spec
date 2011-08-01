@@ -1,16 +1,16 @@
 %define ruby_sitelib %(ruby -rrbconfig -e "puts Config::CONFIG['sitelibdir']")
 %define gemdir %(ruby -rubygems -e 'puts Gem::dir' 2>/dev/null)
 
-%global homedir %{_prefix}/lib/%{name}
+%global homedir %{_libdir}/%{name}
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir extras/fedora
 
-Name:       katello		
-Version:	0.1.54
-Release:	1%{?dist}
-Summary:	A package for managing application lifecycle for Linux systems
+Name:           katello
+Version:	      0.1.54
+Release:	      1%{?dist}
+Summary:	      A package for managing application life-cycle for Linux systems
 	
-Group:          Internet/Applications
+Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
 Source0:        %{name}-%{version}.tar.gz
@@ -60,7 +60,7 @@ BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildArch: noarch
 
 %description
-Provides a package for managing application lifecycle for Linux systems
+Provides a package for managing application life-cycle for Linux systems
 
 %prep
 %setup -q
@@ -84,7 +84,7 @@ rm -rf %{buildroot}
 install -d -m0755 %{buildroot}%{homedir}
 install -d -m0755 %{buildroot}%{datadir}
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
-install -d -m0750 %{buildroot}%{_localstatedir}/log/%{name}
+install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 
 # clean the application directory before installing
 [ -d tmp ] && rm -rf tmp
