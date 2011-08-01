@@ -279,7 +279,7 @@ module Pulp
       end
 
       def installed_packages consumer_id
-        response = get(consumer_path(consumer_id) + "/package_profile/", self.default_headers)
+        response = get(consumer_path(consumer_id) + "package_profile/", self.default_headers)
         JSON.parse(response.body)
       end
 

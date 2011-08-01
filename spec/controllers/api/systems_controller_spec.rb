@@ -29,6 +29,7 @@ describe Api::SystemsController do
      {"epoch" => 0, "name" => "twolame-libs", "arch" => "x86_64", "version" => "0.3.12", "vendor" => "RPM Fusion", "release" => "4.fc11"},
      {"epoch" => 0, "name" => "gtk-vnc", "arch" => "x86_64", "version" => "0.4.2", "vendor" => "Fedora Project", "release" => "4.fc14"}]
   }
+  let(:sorted) { package_profile.sort {|a,b| a["name"].downcase <=> b["name"].downcase} }
 
   before (:each) do
     login_user
@@ -57,12 +58,12 @@ describe Api::SystemsController do
 
       it "requires either organization_id" do
         System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :facts => facts, :name => 'test')).once.and_return({})
-        post :create, :organization_id => @organization.cp_key, :name => 'test', :cp_type => 'system', :facts => facts
+        post :create, :organization_id => @organization.name, :name => 'test', :cp_type => 'system', :facts => facts
       end
 
       it "or requires owner (key)" do
         System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :facts => facts, :name => 'test')).once.and_return({})
-        post :create, :owner => @organization.cp_key, :name => 'test', :cp_type => 'system', :facts => facts
+        post :create, :owner => @organization.name, :name => 'test', :cp_type => 'system', :facts => facts
       end
     end
 
@@ -119,7 +120,7 @@ describe Api::SystemsController do
 
   end
   
-  describe "upate package profile" do
+  describe "upload package profile" do
     it "successfully" do
       @sys = System.new(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
       
@@ -127,6 +128,18 @@ describe Api::SystemsController do
       System.stub!(:first).and_return(@sys)
       put :upload_package_profile, :id => uuid, :_json => package_profile
       response.body.should == @sys.to_json
+    end
+  end
+  
+  describe "view packages in a specific system" do
+    it "successfully" do
+      @sys = System.new(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
+
+      @sys.should_receive(:packages).once.and_return(package_profile)
+      System.stub!(:first).and_return(@sys)
+      get :packages, :id => uuid
+      response.body.should == sorted.to_json
+      response.should be_success
     end
   end
 
