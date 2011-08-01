@@ -1,4 +1,3 @@
-#!/usr/bin/python
 #
 # Katello User actions
 # Copyright (c) 2010 Red Hat, Inc.
