@@ -44,10 +44,10 @@ var notices = (function() {
             
             if ((level === "error") || (level === "warning")) {
                 options["sticky"] = true;
-                options["fadeSpeed"] = 1000;
+                options["fadeSpeed"] = 600;
             } else {
                 options["sticky"] = false;
-                options["fadeSpeed"] = 800;
+                options["fadeSpeed"] = 600;
             }
 
             if( notices['validation_errors'] !== undefined ){
