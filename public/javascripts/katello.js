@@ -131,6 +131,23 @@ var common = (function() {
                 }
             }
           });
+        },
+        customAlert : function(message) {
+          var html = "<div style='margin:20px;'><span class='status_exclamation_icon'/><div style='margin-left: 24px; display:table;height:1%;'>" + message + "</div></div>";
+          $(html).dialog({
+            closeOnEscape: false,
+            open: function (event, ui) { $('.ui-dialog-titlebar-close').hide(); },
+            modal: true,
+            resizable: false,
+            width: 300,
+            title: "Alert",
+            buttons: {
+                "Ok": function () {
+                    $(this).dialog("close");
+                    return false;
+                }
+            }
+          });
         }
     };
 })();
@@ -201,21 +218,5 @@ $(window).ready(function(){
         }
     });
 
-    window.alert = function(message) {
-      var html = "<div style='margin:20px;'><span class='status_exclamation_icon'/><div style='margin-left: 24px; display:table;height:1%;'>" + message + "</div></div>";
-      $(html).dialog({
-        closeOnEscape: false,
-        open: function (event, ui) { $('.ui-dialog-titlebar-close').hide(); },
-        modal: true,
-        resizable: false,
-        width: 300,
-        title: "Alert",
-        buttons: {
-            "Ok": function () {
-                $(this).dialog("close");
-                return false;
-            }
-        }
-      });
-    }
+    window.alert = function(message){common.customAlert(message);};
 });
