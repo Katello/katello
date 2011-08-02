@@ -66,7 +66,7 @@ class KPEnvironment < ActiveRecord::Base
   has_many :system_templates, :class_name => "SystemTemplate", :foreign_key => :environment_id
 
   has_many :systems, :inverse_of => :environment, :foreign_key => :environment_id
-  has_many :working_changesets, :conditions => ["state = '#{Changeset::NEW}' OR state = '#{Changeset::REVIEW}'"], :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
+  has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"], :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
