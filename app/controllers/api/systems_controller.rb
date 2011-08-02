@@ -17,7 +17,7 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_organization, :only => [:create, :index]
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index]
-  before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :packages, :upload_package_profile]
+  before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :upload_package_profile]
 
   def create
     system = System.create!(params.merge({:environment => @environment})).to_json
