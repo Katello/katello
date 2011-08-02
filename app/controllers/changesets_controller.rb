@@ -210,7 +210,7 @@ class ChangesetsController < ApplicationController
       @changeset.promote
       # remove user edit tracking for this changeset
       ChangesetUser.destroy_all(:changeset_id => @changeset.id) 
-      notice _("Promoted '#{@changeset.name}' to #{@environment.name} environment"), :synchronous_request=>false
+      notice _("Started promotion of '#{@changeset.name}' to #{@environment.name} environment")
     rescue Exception => e
         errors  "Failed to promote: #{e.to_s}", :synchronous_request=>false
         logger.error $!, $!.backtrace.join("\n\t")
