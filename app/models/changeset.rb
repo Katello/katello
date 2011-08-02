@@ -160,8 +160,6 @@ class Changeset < ActiveRecord::Base
 
     if async
       task = self.async(:organization=>self.environment.organization).promote_content
-      task.progress = '0'
-      task.save!
       self.task_status = task
       self.state = Changeset::PROMOTING
       self.save!
@@ -280,6 +278,7 @@ class Changeset < ActiveRecord::Base
 
 
   def promote_content
+    update_progress! '0'
     self.calc_dependencies(true)
 
     update_progress! '10'
