@@ -47,7 +47,8 @@ class Permission < ActiveRecord::Base
   def to_text
     v = verbs.collect { |v| v.verb }.join(',')
     t = tags.collect { |t| t.name }.join(',')
-    "Role #{role.name}'s allowed to #{v} in #{resource_type.name} scoped #{t}"
+    name = resource_type.name unless resource_type.nil?
+    "Role #{role.name}'s allowed to #{v} in #{name} scoped #{t}"
   end
 
   def all_types
