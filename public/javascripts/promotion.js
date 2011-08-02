@@ -276,7 +276,7 @@ var promotion_page = (function($){
                             changeset = changeset_breadcrumb[id];
                             if( !changeset.is_new && !changeset.progress ){
                                 changesetStatusActions.setLocked(id);
-                            } else if( changeset.progress ){
+                            } else if( changeset.progress !== null || changeset.progress !== undefined ){
                                 changesetStatusActions.initProgressBar(id, changeset.progress);
                                 changesetStatusActions.checkProgressTask(id.split("_")[1]);
                             }
@@ -701,7 +701,9 @@ var changeset_obj = function(data_struct) {
                 if (on_success) {
                     on_success();
                 }
-                window.location = data;
+                changeset_breadcrumb['changeset_' + id].is_new = true;
+                changeset_breadcrumb['changeset_' + id].progress = 0;
+                promotion_page.get_changeset_tree().render_content('changesets');
 
             }});
         },
@@ -1239,8 +1241,8 @@ var changesetStatusActions = (function($){
             changeset.find('.changeset_status label').text(status + '%');
             changeset.find('.progressbar').progressbar({value: status});
             changeset.addClass('being_promoted');
-            changeset.attr('title', i18n.changesetProgress);
-            $('#cslist .slider .slide_link:not(:has(.progressbar))').css('margin-left', '52px');
+            changeset.attr('title', i18n.changeset_progress);
+            $('#cslist .slider .slide_link:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '52px');
         },
         setProgress = function(id, progress){
             var changeset = $('#' + id);  
@@ -1259,6 +1261,7 @@ var changesetStatusActions = (function($){
         },
         setLocked = function(id){
             var changeset = $('#' + id);
+            changeset.css('margin-left', '0');
             changeset.prepend('<img class="fl locked_icon" src="/images/icons/locked.png">');
             $('#cslist .slider .slide_link:not(:has(.locked_icon))').css('margin-left', '20px');
         },
