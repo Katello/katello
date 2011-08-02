@@ -705,7 +705,13 @@ var changeset_obj = function(data_struct) {
                 changeset_breadcrumb['changeset_' + id].progress = 0;
                 promotion_page.get_changeset_tree().render_content('changesets');
 
-            }});
+            },
+            error: function() {
+                if(on_error) {
+                    on_error();
+                }
+            }
+            });
         },
         update: function(items, on_success, on_error) {
           var data = [];
@@ -826,8 +832,10 @@ var registerEvents = function(){
         if ($(this).hasClass("disabled")) {
             return;
         }
+        $(this).addClass("disabled");
         var cs = promotion_page.get_changeset();
-        cs.promote(function() {});
+        var after = function() {$(this).removeClass("disabled");};
+        cs.promote(after, after);
 
 
     });
