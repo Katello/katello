@@ -167,9 +167,11 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :environments
-
-
+  resources :environments do
+    member do
+      get :system_templates
+    end
+  end
 
   match '/roles/show_permission' => 'roles#show_permission', :via=>:get
   resources :roles do

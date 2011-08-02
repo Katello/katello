@@ -24,10 +24,12 @@ $(document).ready(function() {
 
     $(".select_env").live('click', function() {
         activation_key.select_environment($(this));
+        activation_key.get_system_templates($(this), false);
     });
 
     $(".edit_env").live('click', function() {
         activation_key.edit_environment($(this));
+        activation_key.get_system_templates($(this), true);
     });
 
     $('#update_subscriptions').live('submit', function(e) {
@@ -88,13 +90,88 @@ var activation_key = (function() {
                 }
             });
         },
+        get_system_templates : function(data, on_edit) {
+            $.ajax({
+                type: "GET",
+                url: data.attr("data-templates_url"),
+                cache: false,
+                success: function(response) {
+                    // update the appropriate content on the page
+                    if (on_edit) {
+                        // this request was for an activation key edit
+
+                        // build list of options based on the response
+                        var options = '{';
+                        // add an empty option
+                        options += '"":""';
+                        for (var i = 0; i < response.length; i++) {
+                            options += ',"' + response[i].id + '":"' + response[i].name + '"';
+                        }
+                        options += '}';
+
+                        // save the options in the hidden input field
+                        $("input[id^=system_templates]").val(options);
+                        var current_template = $(".edit_system_template").html();
+
+                        if (current_template != i18n.clickToEdit) {
+                            // the key currently has a system template assigned; therefore, reset jeditable and
+                            // inform the user that an update is needed.
+                            $(".edit_system_template").html("");
+                            activation_key.reset_jeditable_select(i18n.updatedNeededClickToEdit,
+                                    current_template + ": " + i18n.updateNeededClickToEdit);
+                        }
+                    } else {
+                        // this request was for an activation key create
+                        var options = '';
+                        // add an empty option
+                        options += '<option value=""></option>';
+                        for (var i = 0; i < response.length; i++) {
+                            options += '<option value="' + response[i].id + '">' + response[i].name + '</option>';
+                        }
+                        $("#activation_key_system_template").html(options);
+                    }
+                },
+                error: function(data) {
+                }
+            });
+        },
+        reset_jeditable_select : function(tooltip, placeholder) {
+            $('.edit_system_template').each(function() {
+                var button = $(this);
+                $(this).editable('destroy');
+            })
+            $('.edit_system_template').each(function() {
+                var button = $(this);
+                $(this).editable(button.attr('data-url'), {
+                    type        :  'select',
+                    width       :  440,
+                    method      :  'PUT',
+                    name        :  $(this).attr('name'),
+                    cancel      :  i18n.cancel,
+                    submit      :  i18n.save,
+                    indicator   :  i18n.saving,
+                    tooltip     :  tooltip,
+                    placeholder :  placeholder,
+                    style       :  "inherit",
+                    data        :  $('input[id^=system_templates]').attr("value"),
+                    onsuccess   :  function(data) {
+                        $(".edit_system_template").html(data);
+                        activation_key.reset_jeditable_select(i18n.clickToEdit, i18n.clickToEdit)
+                    },
+                    onerror     :  function(settings, original, xhr) {
+                        original.reset();
+                        $("#notification").replaceWith(xhr.responseText);
+                    }
+                });
+            })
+        },
         select_environment : function(data) {
             // clear any previous selected environments
             data.closest("#promotion_paths").find(".selected").removeClass("selected");
             // highlight the selected environment
             data.addClass("selected");
             // save the id of the env selected
-            data.closest("#promotion_paths").find("#activation_key_default_environment").attr('value', data.attr('data-env_id'));
+            data.closest("#promotion_paths").find("#activation_key_environment").attr('value', data.attr('data-env_id'));
         }
     }
 })();
