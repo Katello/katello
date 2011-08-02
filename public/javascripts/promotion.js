@@ -276,7 +276,7 @@ var promotion_page = (function($){
                             changeset = changeset_breadcrumb[id];
                             if( !changeset.is_new && !changeset.progress ){
                                 changesetStatusActions.setLocked(id);
-                            } else if( changeset.progress !== null || changeset.progress !== undefined ){
+                            } else if( changeset.progress !== null && changeset.progress !== undefined ){
                                 changesetStatusActions.initProgressBar(id, changeset.progress);
                                 changesetStatusActions.checkProgressTask(id.split("_")[1]);
                             }
@@ -1234,7 +1234,15 @@ var templateLibrary = (function(){
 })();
 
 var changesetStatusActions = (function($){
-    var initProgressBar = function(id, status){
+    var set_margins = function(){
+            if( $('.progressbar').length ) {
+                $('#cslist .slider .slide_link:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '44px');
+                $('#cslist .slider .slide_link:not(:has(.progressbar)):has(.locked_icon)').css('margin-left', '26px');
+            } else if( $('#cslist .locked_icon').length ){
+                $('#cslist .slider .slide_link:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '20px');
+            }
+        },
+        initProgressBar = function(id, status){
             var changeset = $('#' + id);
             changeset.css('margin-left', '0');
             changeset.prepend('<span class="changeset_status"><span class="progressbar"></span><label></label></span>');
@@ -1242,7 +1250,7 @@ var changesetStatusActions = (function($){
             changeset.find('.progressbar').progressbar({value: status});
             changeset.addClass('being_promoted');
             changeset.attr('title', i18n.changeset_progress);
-            $('#cslist .slider .slide_link:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '52px');
+            set_margins();
         },
         setProgress = function(id, progress){
             var changeset = $('#' + id);  
@@ -1263,7 +1271,7 @@ var changesetStatusActions = (function($){
             var changeset = $('#' + id);
             changeset.css('margin-left', '0');
             changeset.prepend('<img class="fl locked_icon" src="/images/icons/locked.png">');
-            $('#cslist .slider .slide_link:not(:has(.locked_icon))').css('margin-left', '20px');
+            set_margins();
         },
         removeLocked = function(id){
             var changeset = $('#' + id);
