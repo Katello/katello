@@ -73,25 +73,6 @@ describe Permission do
     }
   end
 
-
-  context "allowed_to_tests" do
-    before do
-      disable_org_orchestration
-      @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
-
-    end
-    describe "allow resources should work for any verb/tags in the given org " do
-      before do
-        @magic_perm = Permission.create!(:role => @some_role,
-                                    :resource_type=> nil, :organization => @organization)
-      end
-      specify {Permission.last.all_types.should be_true}
-      specify { @some_role.allowed_to?(:foo_verb, :bar_resource_type, nil, @organization).should be_true}
-      specify { @some_role.allowed_to?(:foo_verb, :bar_resource_type, nil, nil).should be_false}
-    end
-
-  end
-
   context "global org tests" do
     before do
       disable_org_orchestration
@@ -181,7 +162,7 @@ describe Permission do
       disable_org_orchestration
       @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
     end
-    describe "allow all resources  globally" do
+    describe "allow all resources orgwise" do
       before do
          @magic_perm = Permission.create!(:role => @some_role,
                                      :resource_type=> nil, :organization => @organization)
