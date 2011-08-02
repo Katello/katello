@@ -120,7 +120,7 @@ class Role < ActiveRecord::Base
     end
   end
 
-  def disallow(verb, resource_type, tags = nil)
+  def disallow(verb, resource_type, tags = nil, org = nil)
     raise ArgumentError, "verb can't be nil" if verb.nil?
     raise ArgumentError, "tag(s) can't be nil" if tags.nil?
     raise ArgumentError, "Resource Type can't be nil" if verb.nil?
@@ -132,7 +132,7 @@ class Role < ActiveRecord::Base
     # delete permissions
     Permission.transaction do
       Permission.select('DISTINCT(permissions.id)').joins(:resource_type, :verbs, :tags).where(
-        :role_id => id,
+        :role_id => id, :organization_id => (org && org.id),
         :resource_types => { :name => resource_type },
         :tags => { :name => tags },
         :verbs => { :verb => verbs }).find_each do |p|
@@ -148,46 +148,33 @@ class Role < ActiveRecord::Base
 
   private
 
-
   def allowed_to_tags?(verb, resource_type, tags, org)
-    raise _("Resource type cannot be null") if resource_type.nil?
     Rails.logger.debug "Checking if role #{name} is allowed to #{verb.inspect} in #{resource_type.inspect} scoped #{tags.inspect} in organization #{org}"
+
+    org_clause = "organization_id is null OR organization_id = :organization_id"
+    org_hash = {:organization_id => (org && org.id)}
+
     #return true if the role implies carte blanche on all resources in an organization
     return true unless Permission.
-      where("role_id = :role_id and resource_type_id is null and (organization_id is null OR organization_id = :organization_id)",
-                    {:role_id => id, :organization_id => (org && org.id)}).count == 0
+      where(:role_id => id, :resource_type_id => nil).where(org_clause, org_hash).count == 0
 
     #return true if the role implies carte blanche on all_verbs for a given resource_type in an organization
     return true unless Permission.joins(:resource_type).
-      where("role_id = :role_id and resource_types.name = :name and all_verbs = :all_verbs" +
-                      " and (organization_id is null OR organization_id = :organization_id)",
-                {:role_id => id, :all_verbs=> true, :name => resource_type,
-                 :organization_id => (org && org.id)}).count == 0
+      where(:role_id => id, :all_verbs=> true, :resource_types => { :name => resource_type }).
+              where(org_clause, org_hash).count == 0
 
     verb = action_to_verb(verb, resource_type)
     #return true if the role implies carte blanche on all_tags  for a given verb and resource_type in an organization
-    return true unless Permission.joins(:verbs,:resource_type).
-      where("role_id = :role_id and resource_types.name = :name and verbs.verb = :verb and all_tags = :all_tags" +
-                      " and (organization_id is null OR organization_id = :organization_id)",
-                {:role_id => id, :all_tags=> true, :verb => verb, :name => resource_type,
-                 :organization_id => (org && org.id)}).count == 0
-
+    return true unless Permission.joins(:verbs, :resource_type).
+       where(:role_id => id, :verbs => { :verb => verb }, :all_tags=> true,
+             :resource_types => { :name => resource_type }).where(org_clause, org_hash).count == 0
 
     tags = [] if tags.nil?
     tags = [tags] unless tags.is_a? Array
-
-    where_clause = "role_id = :role_id and resource_types.name = :resource_type_name" +
-              " and verbs.verb =:verb and (organization_id is null OR organization_id = :organization_id) "
-
-
-
     query_hash = {:role_id => id,
-                :resource_type_name => resource_type,
-                :verb =>verb,
-                :organization_id  => (org && org.id)
-              }
-    tag_hash = {}
-    tag_hash[:tags] = {:name=> tags} if !tags.empty?
+      :resource_types => { :name => resource_type },
+      :verbs => { :verb => verb }}
+    query_hash[:tags] = {:name=> tags} if !tags.empty?
 
     if tags.empty?
       item_count = 1
@@ -196,10 +183,10 @@ class Role < ActiveRecord::Base
       item_count = tags.length
       to_count = "tags.name"
     end
-
     Permission.joins(:verbs, :resource_type).joins(
         "left outer join permissions_tags on permissions.id = permissions_tags.permission_id").joins(
-        "left outer join tags on tags.id = permissions_tags.tag_id").where(where_clause, query_hash).where(tag_hash).count(to_count, :distinct => true) == item_count
+        "left outer join tags on tags.id = permissions_tags.tag_id").where(query_hash).
+              where(org_clause, org_hash).count(to_count, :distinct => true) == item_count
     # TODO - for now we just compare count - this is dangerous - we need to compare the content
   end
 
