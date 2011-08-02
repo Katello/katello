@@ -1292,6 +1292,7 @@ var changesetStatusActions = (function($){
                 maxTimeout: timeout
             }, function(data){
                 if( data.progress === 100 ){
+                    delete changeset_breadcrumb['changeset_' + id];
                     finish(data.id);
                     updater.stop();
                 } else {
