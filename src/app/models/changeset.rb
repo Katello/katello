@@ -164,7 +164,7 @@ class Changeset < ActiveRecord::Base
       self.state = Changeset::PROMOTING
       self.save!
     else
-      self.promote_content
+      promote_content
     end
 
     true
@@ -272,8 +272,10 @@ class Changeset < ActiveRecord::Base
   private
 
   def update_progress! percent
-    self.task_status.progress = percent
-    self.task_status.save!
+    if self.task_status
+      self.task_status.progress = percent
+      self.task_status.save!
+    end
   end
 
 
@@ -351,8 +353,9 @@ class Changeset < ActiveRecord::Base
 
       next if products_to_promote(from_env, to_env).include? product
 
-      if repo.is_cloned_in?(to_env)
-        async_tasks << repo.sync
+      cloned = repo.get_cloned_in(to_env)
+      if cloned
+        async_tasks << cloned.sync
       else
         async_tasks << repo.promote(to_env, product)
       end
