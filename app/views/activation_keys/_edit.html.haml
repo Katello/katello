@@ -39,13 +39,17 @@
           %label #{_("Select an Environment")}:
           = hidden_field_tag :activation_key_default_environment, @activation_key.environment_id
           - unless current_organization.environments.empty?
-            %ul
             - current_organization.promotion_paths.each do |path|
-              .grid_7.prefix_1
+              .grid_6.prefix_2
                 %ul.breadcrumb
                   %li
                     =link_to _('Locker'), "#", :class => :nohover
                   - for env in path
                     %li
-                      %a.edit_env{"data-env_id" => env.id, 'data-url' => activation_key_path(@activation_key.id)} #{env.name}
+                      %a.edit_env{"data-env_id" => env.id, 'data-url' => activation_key_path(@activation_key.id), "data-templates_url" => system_templates_environment_path(env.id)} #{env.name}
 
+        %fieldset.clearfix
+          %input#system_templates{ :type => "hidden", :value => @system_templates_json }
+          .grid_2.ra
+            %label #{_("System Template")}:
+          .grid_5.la.editable.edit_system_template{'name' => 'activation_key[system_template_id]',  "data-url"=>activation_key_path(@activation_key.id)} #{@system_template[:name] unless @system_template.nil?}

@@ -34,7 +34,7 @@ describe ActivationKeysController do
     @environment_2 = KPEnvironment.create!(:name => 'prod', :prior => @environment_1.id, :organization => @organization)
     @a_key = ActivationKey.create!(:name => "another test key", :organization_id => @organization, :environment => @environment_1)
 
-    @akey_params = {:activation_key_name => "test key", :activation_key_description => "this is the test key", :activation_key_default_environment => @environment_1.id}
+    @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key", :environment => @environment_1.id}}
   end
 
   describe "GET index" do
@@ -138,9 +138,9 @@ describe ActivationKeysController do
     describe "with valid params" do
       it "assigns a newly created activation_key" do
         post :create, @akey_params
-        assigns[:activation_key].name.should eq(@akey_params[:activation_key_name]) 
-        assigns[:activation_key].description.should eq(@akey_params[:activation_key_description])
-        assigns[:activation_key].environment_id.should eq(@akey_params[:activation_key_default_environment])
+        assigns[:activation_key].name.should eq(@akey_params[:activation_key][:name])
+        assigns[:activation_key].description.should eq(@akey_params[:activation_key][:description])
+        assigns[:activation_key].environment_id.should eq(@akey_params[:activation_key][:environment])
       end
 
       it "renders list item partial for 2 pane" do

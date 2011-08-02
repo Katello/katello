@@ -23,4 +23,28 @@ var activation_key_edit_page = {
 
 $(document).ready(function() {
     activation_key_edit_page.highlight_environment($(this));
+
+    $('.edit_system_template').each(function() {
+        var button = $(this);
+        $(this).editable(button.attr('data-url'), {
+            type        :  'select',
+            width       :  440,
+            method      :  'PUT',
+            name        :  $(this).attr('name'),
+            cancel      :  i18n.cancel,
+            submit      :  i18n.save,
+            indicator   :  i18n.saving,
+            tooltip     :  i18n.clickToEdit,
+            placeholder :  i18n.clickToEdit,
+            style       :  "inherit",
+            data        :  $('input[id^=system_templates]').attr("value"),
+            onsuccess   :  function(data) {
+                $(".edit_system_template").html(data);
+            },
+            onerror     :  function(settings, original, xhr) {
+                original.reset();
+                $("#notification").replaceWith(xhr.responseText);
+            }
+        });
+    });
 });
