@@ -1236,8 +1236,8 @@ var templateLibrary = (function(){
 var changesetStatusActions = (function($){
     var set_margins = function(){
             if( $('.progressbar').length ) {
-                $('#cslist .slider .slide_link:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '44px');
-                $('#cslist .slider .slide_link:not(:has(.progressbar)):has(.locked_icon)').css('margin-left', '26px');
+                $('#cslist .slider .slide_link:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '43px');
+                $('#cslist .slider .slide_link:not(:has(.progressbar)) .locked_icon').css({'margin-left': '9px', 'margin-right' : '22px'});
             } else if( $('#cslist .locked_icon').length ){
                 $('#cslist .slider .slide_link:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '20px');
             }
