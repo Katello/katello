@@ -12,6 +12,7 @@
 
 require 'spec_helper'
 describe Permission do
+  include OrchestrationHelper
   before(:all) do
     @some_role = Role.find_or_create_by_name(:name => 'some_role')
     @repo_admin = Role.find_or_create_by_name(:name => 'repo_admin')
@@ -31,6 +32,7 @@ describe Permission do
     @some_role.allow [:test], :test1
     @some_role.allow [:test], :test2
     @some_role.allow [:test], :test3
+    ResourceType::TYPES[:repogroup] = {:model => OpenStruct.new(:list_verbs => {"create_repo" => "Description"})}
     @repo_admin.allow :create_repo, :repogroup, :repogroup_internal
     @repo_admin.allow :delete_repo, :repo, [:repogroup_internal, :repo_rhel6]
   end
@@ -40,7 +42,7 @@ describe Permission do
   end
 
   it "should list verbs properly" do
-    Verb.verbs_for("repogroup").collect{|t| t.verb}.sort.should ==  ["create_repo"]
+    Verb.verbs_for("repogroup").keys.should ==  ["create_repo"]
   end
 
   context "super_admin" do
@@ -70,45 +72,162 @@ describe Permission do
       @repo_admin.allowed_to?("create_repo", "repogroup", :repogroup_internal).should be_false
     }
   end
-  context "all_tags" do
+
+
+  context "allowed_to_tests" do
     before do
-      @verb_name = "magic_verb"
-      @verb = Verb.find_or_create_by_verb(@verb_name)
-      @res_type_name = "TestResourceType"
-      @res_type = ResourceType.find_or_create_by_name(@res_type_name)
-      @magic_perm = Permission.create!(:role => @some_role, :verbs => [@verb],
-                                       :all_tags=> true,
-                                    :resource_type=> @res_type)
+      disable_org_orchestration
+      @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
+
     end
-    specify{@some_role.allowed_to?(@verb_name, @res_type_name,:foo_tag).should be_true}
-    specify{@some_role.allowed_to?(@verb_name, @res_type_name + "foo",:foo_tag).should be_false}
-    specify{@some_role.allowed_to?(@verb_name + "_foo", @res_type_name,:foo_tag).should be_false}
+    describe "allow resources should work for any verb/tags in the given org " do
+      before do
+        @magic_perm = Permission.create!(:role => @some_role,
+                                    :resource_type=> nil, :organization => @organization)
+      end
+      specify {Permission.last.all_types.should be_true}
+      specify { @some_role.allowed_to?(:foo_verb, :bar_resource_type, nil, @organization).should be_true}
+      specify { @some_role.allowed_to?(:foo_verb, :bar_resource_type, nil, nil).should be_false}
+    end
+
   end
 
-  context "all_verbs" do
+  context "global org tests" do
     before do
-      @res_type_name = "TestResourceType"
-      @res_type = ResourceType.find_or_create_by_name(@res_type_name)
-      @magic_perm = Permission.create!(:role => @some_role, :all_verbs => true,
-                                    :resource_type=> @res_type)
+      disable_org_orchestration
+      @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
     end
-    specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, "").should be_true}
-    specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, :magic_tag).should be_true}
-    specify {@some_role.allowed_to?("do_magic_verb", @res_type_name + "Foo", :magic_tag).should be_false}
+    describe "allow all resources  globally" do
+      before do
+         @magic_perm = Permission.create!(:role => @some_role,
+                                     :resource_type=> nil, :organization => nil)
+      end
+      specify {Permission.last.all_types.should be_true}
+      specify { @some_role.allowed_to?(:foo_verb, :bar_resource_type, nil, @organization).should be_true}
+      specify { @some_role.allowed_to?(:foo_verb, :bar_resource_type, nil, nil).should be_true}
+    end
+
+    describe "allow all verbs" do
+      before do
+        @res_type_name = "TestResourceType"
+        @res_type = ResourceType.find_or_create_by_name(@res_type_name)
+        @magic_perm = Permission.create!(:role => @some_role, :all_verbs => true,
+                                      :resource_type=> @res_type)
+      end
+      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, "").should be_true}
+      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, "", @organization).should be_true}
+      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, :magic_tag).should be_true}
+      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, :magic_tag, @organization).should be_true}
+      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name + "Foo", :magic_tag).should be_false}
+      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name + "Foo", :magic_tag, @organization).should be_false}
+    end
+
+    describe "allow all tags" do
+      before do
+        @verb_name = "magic_verb"
+        @verb = Verb.find_or_create_by_verb(@verb_name)
+        @res_type_name = "TestResourceType"
+        @res_type = ResourceType.find_or_create_by_name(@res_type_name)
+        @magic_perm = Permission.create!(:role => @some_role, :verbs => [@verb],
+                                         :all_tags=> true,
+                                      :resource_type=> @res_type)
+      end
+      specify{@some_role.allowed_to?(@verb_name, @res_type_name,:foo_tag).should be_true}
+      specify{@some_role.allowed_to?(@verb_name, @res_type_name,:foo_tag, @organization).should be_true}
+      specify{@some_role.allowed_to?(@verb_name, @res_type_name + "foo",:foo_tag).should be_false}
+      specify{@some_role.allowed_to?(@verb_name, @res_type_name + "foo",:foo_tag, @organization).should be_false}
+      specify{@some_role.allowed_to?(@verb_name + "_foo", @res_type_name,:foo_tag).should be_false}
+      specify{@some_role.allowed_to?(@verb_name + "_foo", @res_type_name,:foo_tag, @organization).should be_false}
+    end
+
+
+    describe "regular perms" do
+      before do
+        @tag_name = "magic_tag"
+        @tag = Tag.find_or_create_by_name(@tag_name)
+        @verb_name = "magic_verb"
+        @verb = Verb.find_or_create_by_verb(@verb_name)
+        @res_type_name = "TestResourceType"
+        @res_type = ResourceType.find_or_create_by_name(@res_type_name)
+        @magic_perm = Permission.create!(:role => @some_role, :verbs => [@verb],
+                                         :tags=> [@tag],
+                                      :resource_type=> @res_type)
+      end
+      specify{@some_role.allowed_to?(@verb_name, @res_type_name,[@tag_name]).should be_true}
+      specify{@some_role.allowed_to?(@verb_name, @res_type_name,[@tag_name], @organization).should be_true}
+      specify{@some_role.allowed_to?(@verb_name, @res_type_name,[@tag_name + "foo"]).should be_false}
+      specify{@some_role.allowed_to?(@verb_name, @res_type_name + "foo",[:foo_tag], @organization).should be_false}
+    end
+
+    describe "regular perms no tags" do
+      before do
+        @verb_name = "magic_verb"
+        @verb = Verb.find_or_create_by_verb(@verb_name)
+        @res_type_name = "TestResourceType"
+        @res_type = ResourceType.find_or_create_by_name(@res_type_name)
+        @magic_perm = Permission.create!(:role => @some_role, :verbs => [@verb],
+                                      :resource_type=> @res_type)
+      end
+      specify{@some_role.allowed_to?(@verb_name, @res_type_name,nil).should be_true}
+      specify{@some_role.allowed_to?(@verb_name, @res_type_name,nil, @organization).should be_true}
+      specify{@some_role.allowed_to?(@verb_name, @res_type_name,["foo"]).should be_false}
+    end
+
+
   end
 
-  context "all_resources" do
+  context "non global org tests" do
     before do
-      @magic_perm = Permission.create!(:role => @some_role, :all_verbs => true,
-                                    :resource_type=> nil)
+      disable_org_orchestration
+      @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
     end
-    specify "all resources" do
-      Permission.last.all_types.should be_true
+    describe "allow all resources  globally" do
+      before do
+         @magic_perm = Permission.create!(:role => @some_role,
+                                     :resource_type=> nil, :organization => @organization)
+      end
+      specify {Permission.last.all_types.should be_true}
+      specify { @some_role.allowed_to?(:foo_verb, :bar_resource_type, nil, @organization).should be_true}
+      specify { @some_role.allowed_to?(:foo_verb, :bar_resource_type, nil, nil).should be_false}
     end
+
+    describe "allow all verbs" do
+      before do
+        @res_type_name = "TestResourceType"
+        @res_type = ResourceType.find_or_create_by_name(@res_type_name)
+        @magic_perm = Permission.create!(:role => @some_role, :all_verbs => true,
+                                      :resource_type=> @res_type, :organization => @organization)
+      end
+      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, "").should be_false}
+      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, "", @organization).should be_true}
+      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, :magic_tag).should be_false}
+      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, :magic_tag, @organization).should be_true}
+      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name + "Foo", :magic_tag).should be_false}
+      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name + "Foo", :magic_tag, @organization).should be_false}
+    end
+
+    describe "allow all tags" do
+      before do
+        @verb_name = "magic_verb"
+        @verb = Verb.find_or_create_by_verb(@verb_name)
+        @res_type_name = "TestResourceType"
+        @res_type = ResourceType.find_or_create_by_name(@res_type_name)
+        @magic_perm = Permission.create!(:role => @some_role, :verbs => [@verb],
+                                         :all_tags=> true,
+                                      :resource_type=> @res_type, :organization => @organization)
+      end
+      specify{@some_role.allowed_to?(@verb_name, @res_type_name,:foo_tag).should be_false}
+      specify{@some_role.allowed_to?(@verb_name, @res_type_name,:foo_tag, @organization).should be_true}
+      specify{@some_role.allowed_to?(@verb_name, @res_type_name + "foo",:foo_tag).should be_false}
+      specify{@some_role.allowed_to?(@verb_name, @res_type_name + "foo",:foo_tag, @organization).should be_false}
+      specify{@some_role.allowed_to?(@verb_name + "_foo", @res_type_name,:foo_tag).should be_false}
+      specify{@some_role.allowed_to?(@verb_name + "_foo", @res_type_name,:foo_tag, @organization).should be_false}
+    end
+
   end
+
 
   context "org_id_create" do
-    include OrchestrationHelper
     before do
       disable_org_orchestration
       @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
