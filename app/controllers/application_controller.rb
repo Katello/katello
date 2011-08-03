@@ -232,18 +232,22 @@ class ApplicationController < ActionController::Base
     hal.nil? ? 'en' : hal.scan(/^[a-z]{2}/).first
   end
 
+  def rules
+    raise Errors::SecurityViolation,"Rules not defined for  #{current_user.username} for #{params[:controller]}/#{params[:action]}"
+  end
+
   # authorize the user for the requested action
   def authorize(ctrl = params[:controller], action = params[:action])
-
     user = current_user
     user = User.anonymous unless user
     logger.debug "Authorizing #{current_user.username} for #{ctrl}/#{action}"
-    allowed = user.allowed_to?(action, ctrl, nil, current_organization)
-    if allowed
-      return true
-    else
-      raise Errors::SecurityViolation, "User #{current_user.username} is not allowed to access #{params[:controller]}/#{params[:action]}"
-    end
+
+    allowed = false
+    allowed = rules[action].call if Proc === rules[action]
+    allowed = user.allowed_to? *rules[action] if Array === rules[action]
+
+    return true if allowed
+    raise Errors::SecurityViolation, "User #{current_user.username} is not allowed to access #{params[:controller]}/#{params[:action]}"
   end
 
   # render 403 page
