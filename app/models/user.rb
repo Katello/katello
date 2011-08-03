@@ -160,7 +160,7 @@ class User < ActiveRecord::Base
   #Remove up to 5 un-viewed notices
   def pop_notices
     to_ret = user_notices.where(:viewed=>false).limit(5)
-    to_ret.each{|item| item.update_attributes!(:viewed=>false)}
+    to_ret.each{|item| item.update_attributes!(:viewed=>true)}
     to_ret.collect{|notice| {:text=>notice.notice.text, :level=>notice.notice.level}}
   end
 
