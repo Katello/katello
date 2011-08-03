@@ -79,11 +79,6 @@ class User < ActiveRecord::Base
     find_by_username('anonymous')
   end
 
-  # has the current user at least one superadmin role?
-  def superadmin?
-    @superadmin |= roles.select { |r| r.superadmin }.length > 0
-  end
-
   def self.authenticate!(username, password)
     u = User.where({:username => username}).first
     # check if user exists
