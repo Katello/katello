@@ -154,7 +154,7 @@ class Changeset < ActiveRecord::Base
 
 
   def promote async=true
-    raise _('Cannot promote a changeset when it is not in the reivew phase') if self.state != Changeset::REVIEW
+    raise _('Cannot promote a changeset when it is not in the review phase') if self.state != Changeset::REVIEW
     #check for other changesets promoting
     raise _('Cannot promote a changeset while another is being promoted.') if self.environment.promoting_to?
 
@@ -238,7 +238,7 @@ class Changeset < ActiveRecord::Base
         pack = repo.packages[idx]
         ChangesetPackage.destroy_all(:package_id => pack.id, :changeset_id => self.id, :product_id => product.id)
         return
-      end
+     end
     end
   end
 
@@ -302,6 +302,7 @@ class Changeset < ActiveRecord::Base
   end
 
   def wait_for_tasks async_tasks
+
     async_tasks = async_tasks.collect do |t|
       ts = PulpTaskStatus.using_pulp_task(t)
       ts.organization = self.environment.organization
@@ -313,13 +314,12 @@ class Changeset < ActiveRecord::Base
       any_running = false
       for t in async_tasks
         t.refresh
-        if ((t.state == TaskStatus::Status::WAITING) or (t.state == TaskStatus::Status::RUNNING))
+        if ((t.state == TaskStatus::Status::WAITING.to_s) or (t.state == TaskStatus::Status::RUNNING.to_s))
           any_running = true
           break
         end
       end
     end
-
     async_tasks
   end
 
