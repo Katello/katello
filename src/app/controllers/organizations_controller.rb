@@ -16,9 +16,35 @@ class OrganizationsController < ApplicationController
   navigation :organizations
   include AutoCompleteSearch
   respond_to :html, :js
-
+  skip_before_filter :authorize
   before_filter :find_organization, :only => [:show, :edit, :update, :destroy]
+  before_filter :org_authorization
   before_filter :setup_options, :only=>[:index, :items]
+
+
+  def org_authorization(ctrl = params[:controller], action = params[:action])
+    user = current_user
+    user = User.anonymous unless user
+    logger.debug "Authorizing #{current_user.username} for #{ctrl}/#{action}"
+
+    rules = {:index => lambda{user.allowed_to?([:create, :update, :read], :organizations)},
+              :items => lambda{user.allowed_to?([:create, :update, :read], :organizations)},
+              :show => lambda {user.allowed_to?([:read, :update], :organizations, @organization.id)},
+              :new => lambda {user.allowed_to?([:create], :organizations)},
+              :create => lambda {user.allowed_to?([:create], :organizations)},
+              :edit => lambda {user.allowed_to?([:update], :organizations, @organization.id)},
+              :update => lambda {user.allowed_to?([:update], :organizations, @organization.id)},
+              :delete => lambda {user.allowed_to?([:update], :organizations, @organization.id)},
+            }.with_indifferent_access
+
+    allowed = rules[action].call if rules[action]
+    if allowed
+      return true
+    else
+      raise Errors::SecurityViolation, "User #{current_user.username} is not allowed to access #{params[:controller]}/#{params[:action]}"
+    end
+  end
+
 
   def section_id
     'orgs'
