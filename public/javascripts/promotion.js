@@ -1295,12 +1295,14 @@ var changesetStatusActions = (function($){
             var updater = $.PeriodicalUpdater('/changesets/' + id + '/promotion_progress/', {
                 method: 'GET',
                 type: 'JSON',
+                cache: false,
                 global: false,
                 minTimeout: timeout,
                 maxTimeout: timeout
             }, function(data){
                 if( data.progress === 100 ){
                     delete changeset_breadcrumb['changeset_' + id];
+                    setProgress(data.id, data.progress);
                     finish(data.id);
                     updater.stop();
                 } else {
