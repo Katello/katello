@@ -16,16 +16,27 @@ describe Permission do
   before(:all) do
     @some_role = Role.find_or_create_by_name(:name => 'some_role')
     @repo_admin = Role.find_or_create_by_name(:name => 'repo_admin')
-    @super_admin = Role.find_or_create_by_name(:name => 'super_admin', :superadmin => true)
+    @super_admin = Role.find_or_create_by_name(:name => 'super_admin')
 
-    user_admin = User.find_or_create_by_username(
+    @magic_perm = Permission.create!(:role => @super_admin, 
+                                :resource_type=> nil, :organization => nil)
+
+
+
+    @god = User.find_or_create_by_username(
+      :username => 'god',
+      :password => "password",
+      :roles => [ @super_admin ])
+
+    @admin = User.find_or_create_by_username(
       :username => 'admin',
       :password => "password",
       :roles => [ @some_role ])
-    user_bob = User.find_or_create_by_username(
+    @user_bob = User.find_or_create_by_username(
       :username => 'bob',
       :password => "password",
       :roles => [ @repo_admin ])
+
 
     @some_role.allow [:create], :organization
     @some_role.allow [:new], :organization
@@ -46,30 +57,30 @@ describe Permission do
   end
 
   context "super_admin" do
-    it { @super_admin.allowed_to?('create', 'organization').should be_true }
-    it { @super_admin.allowed_to?('anything', 'anything').should be_true }
-    it { @super_admin.allowed_to?('anything', 'anything', 'anything').should be_true }
+    it { @god.allowed_to?('create', 'organization').should be_true }
+    it { @god.allowed_to?('anything', 'anything').should be_true }
+    it { @god.allowed_to?('anything', 'anything', 'anything').should be_true }
   end
 
   context "some_role" do
-    it { @some_role.allowed_to?('create', 'organization').should be_true }
-    it { @some_role.allowed_to?('new', 'organization').should be_true }
-    it { @some_role.allowed_to?('destroy', 'organization').should be_false }
-    it { @some_role.allowed_to?('create', 'xxx').should be_false }
+    it { @admin.allowed_to?('create', 'organization').should be_true }
+    it { @admin.allowed_to?('new', 'organization').should be_true }
+    it { @admin.allowed_to?('destroy', 'organization').should be_false }
+    it { @admin.allowed_to?('create', 'xxx').should be_false }
   end
 
   context "repo_admin" do
-    it { @repo_admin.allowed_to?('create', 'organization').should be_false }
-    it { @repo_admin.allowed_to?("create_repo", "repogroup", :repogroup_internal).should be_true }
-    it { @repo_admin.allowed_to?("create_repo", "repogroup", 'repogroup_external').should be_false }
-    it { @repo_admin.allowed_to?("create_repo", "repo-bad").should be_false }
-    it { @repo_admin.allowed_to?("delete_repo", "repo", [:repogroup_internal, :repo_rhel6]).should be_true }
-    it { @repo_admin.allowed_to?("delete_repo", "repo", [:repogroup_internal]).should be_true }
-    it { @repo_admin.allowed_to?("create_repo", "repogroup", :repogroup_internal).should be_true }
-    it { @repo_admin.allowed_to?("delete_repo", "repo", [:repogroup_internal]).should be_true }
+    it { @user_bob.allowed_to?('create', 'organization').should be_false }
+    it { @user_bob.allowed_to?("create_repo", "repogroup", :repogroup_internal).should be_true }
+    it { @user_bob.allowed_to?("create_repo", "repogroup", 'repogroup_external').should be_false }
+    it { @user_bob.allowed_to?("create_repo", "repo-bad").should be_false }
+    it { @user_bob.allowed_to?("delete_repo", "repo", [:repogroup_internal, :repo_rhel6]).should be_true }
+    it { @user_bob.allowed_to?("delete_repo", "repo", [:repogroup_internal]).should be_true }
+    it { @user_bob.allowed_to?("create_repo", "repogroup", :repogroup_internal).should be_true }
+    it { @user_bob.allowed_to?("delete_repo", "repo", [:repogroup_internal]).should be_true }
     it {
       @repo_admin.disallow("create_repo", "repogroup", :repogroup_internal)
-      @repo_admin.allowed_to?("create_repo", "repogroup", :repogroup_internal).should be_false
+      @user_bob.allowed_to?("create_repo", "repogroup", :repogroup_internal).should be_false
     }
   end
 
@@ -84,23 +95,25 @@ describe Permission do
                                      :resource_type=> nil, :organization => nil)
       end
       specify {Permission.last.all_types.should be_true}
-      specify { @some_role.allowed_to?(:foo_verb, :bar_resource_type, nil, @organization).should be_true}
-      specify { @some_role.allowed_to?(:foo_verb, :bar_resource_type, nil, nil).should be_true}
+      specify { @admin.allowed_to?(:foo_verb, :bar_resource_type, nil, @organization).should be_true}
+      specify { @admin.allowed_to?(:foo_verb, :bar_resource_type, nil, nil).should be_true}
     end
 
     describe "allow all verbs" do
       before do
+        @tag_name = "magic_tag"
+        @tag = Tag.find_or_create_by_name(@tag_name)
         @res_type_name = "TestResourceType"
         @res_type = ResourceType.find_or_create_by_name(@res_type_name)
-        @magic_perm = Permission.create!(:role => @some_role, :all_verbs => true,
+        @magic_perm = Permission.create!(:role => @some_role, :all_verbs => true, :tags =>[@tag],
                                       :resource_type=> @res_type)
       end
-      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, "").should be_true}
-      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, "", @organization).should be_true}
-      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, :magic_tag).should be_true}
-      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, :magic_tag, @organization).should be_true}
-      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name + "Foo", :magic_tag).should be_false}
-      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name + "Foo", :magic_tag, @organization).should be_false}
+      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, "").should be_false}
+      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, "", @organization).should be_false}
+      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, @tag_name).should be_true}
+      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, @tag_name, @organization).should be_true}
+      specify {@admin.allowed_to?("do_magic_verb", @res_type_name + "Foo", :magic_tag).should be_false}
+      specify {@admin.allowed_to?("do_magic_verb", @res_type_name + "Foo", :magic_tag, @organization).should be_false}
     end
 
     describe "allow all tags" do
@@ -113,12 +126,12 @@ describe Permission do
                                          :all_tags=> true,
                                       :resource_type=> @res_type)
       end
-      specify{@some_role.allowed_to?(@verb_name, @res_type_name,:foo_tag).should be_true}
-      specify{@some_role.allowed_to?(@verb_name, @res_type_name,:foo_tag, @organization).should be_true}
-      specify{@some_role.allowed_to?(@verb_name, @res_type_name + "foo",:foo_tag).should be_false}
-      specify{@some_role.allowed_to?(@verb_name, @res_type_name + "foo",:foo_tag, @organization).should be_false}
-      specify{@some_role.allowed_to?(@verb_name + "_foo", @res_type_name,:foo_tag).should be_false}
-      specify{@some_role.allowed_to?(@verb_name + "_foo", @res_type_name,:foo_tag, @organization).should be_false}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name,:foo_tag).should be_true}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name,:foo_tag, @organization).should be_true}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name + "foo",:foo_tag).should be_false}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name + "foo",:foo_tag, @organization).should be_false}
+      specify{@admin.allowed_to?(@verb_name + "_foo", @res_type_name,:foo_tag).should be_false}
+      specify{@admin.allowed_to?(@verb_name + "_foo", @res_type_name,:foo_tag, @organization).should be_false}
     end
 
 
@@ -134,10 +147,10 @@ describe Permission do
                                          :tags=> [@tag],
                                       :resource_type=> @res_type)
       end
-      specify{@some_role.allowed_to?(@verb_name, @res_type_name,[@tag_name]).should be_true}
-      specify{@some_role.allowed_to?(@verb_name, @res_type_name,[@tag_name], @organization).should be_true}
-      specify{@some_role.allowed_to?(@verb_name, @res_type_name,[@tag_name + "foo"]).should be_false}
-      specify{@some_role.allowed_to?(@verb_name, @res_type_name + "foo",[:foo_tag], @organization).should be_false}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name,[@tag_name]).should be_true}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name,[@tag_name], @organization).should be_true}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name,[@tag_name + "foo"]).should be_false}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name + "foo",[:foo_tag], @organization).should be_false}
     end
 
     describe "regular perms no tags" do
@@ -149,9 +162,9 @@ describe Permission do
         @magic_perm = Permission.create!(:role => @some_role, :verbs => [@verb],
                                       :resource_type=> @res_type)
       end
-      specify{@some_role.allowed_to?(@verb_name, @res_type_name,nil).should be_true}
-      specify{@some_role.allowed_to?(@verb_name, @res_type_name,nil, @organization).should be_true}
-      specify{@some_role.allowed_to?(@verb_name, @res_type_name,["foo"]).should be_false}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name,nil).should be_true}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name,nil, @organization).should be_true}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name,["foo"]).should be_false}
     end
 
 
@@ -168,23 +181,25 @@ describe Permission do
                                      :resource_type=> nil, :organization => @organization)
       end
       specify {Permission.last.all_types.should be_true}
-      specify { @some_role.allowed_to?(:foo_verb, :bar_resource_type, nil, @organization).should be_true}
-      specify { @some_role.allowed_to?(:foo_verb, :bar_resource_type, nil, nil).should be_false}
+      specify { @admin.allowed_to?(:foo_verb, :bar_resource_type, nil, @organization).should be_true}
+      specify { @admin.allowed_to?(:foo_verb, :bar_resource_type, nil, nil).should be_false}
     end
 
     describe "allow all verbs" do
       before do
+        @tag_name = "magic_tag"
+        @tag = Tag.find_or_create_by_name(@tag_name)
         @res_type_name = "TestResourceType"
         @res_type = ResourceType.find_or_create_by_name(@res_type_name)
-        @magic_perm = Permission.create!(:role => @some_role, :all_verbs => true,
+        @magic_perm = Permission.create!(:role => @some_role, :all_verbs => true,:tags => [@tag],
                                       :resource_type=> @res_type, :organization => @organization)
       end
-      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, "").should be_false}
-      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, "", @organization).should be_true}
-      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, :magic_tag).should be_false}
-      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name, :magic_tag, @organization).should be_true}
-      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name + "Foo", :magic_tag).should be_false}
-      specify {@some_role.allowed_to?("do_magic_verb", @res_type_name + "Foo", :magic_tag, @organization).should be_false}
+      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, "").should be_false}
+      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, "", @organization).should be_false}
+      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, @tag_name).should be_false}
+      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, @tag_name, @organization).should be_true}
+      specify {@admin.allowed_to?("do_magic_verb", @res_type_name + "Foo", :magic_tag).should be_false}
+      specify {@admin.allowed_to?("do_magic_verb", @res_type_name + "Foo", :magic_tag, @organization).should be_false}
     end
 
     describe "allow all tags" do
@@ -197,12 +212,12 @@ describe Permission do
                                          :all_tags=> true,
                                       :resource_type=> @res_type, :organization => @organization)
       end
-      specify{@some_role.allowed_to?(@verb_name, @res_type_name,:foo_tag).should be_false}
-      specify{@some_role.allowed_to?(@verb_name, @res_type_name,:foo_tag, @organization).should be_true}
-      specify{@some_role.allowed_to?(@verb_name, @res_type_name + "foo",:foo_tag).should be_false}
-      specify{@some_role.allowed_to?(@verb_name, @res_type_name + "foo",:foo_tag, @organization).should be_false}
-      specify{@some_role.allowed_to?(@verb_name + "_foo", @res_type_name,:foo_tag).should be_false}
-      specify{@some_role.allowed_to?(@verb_name + "_foo", @res_type_name,:foo_tag, @organization).should be_false}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name,:foo_tag).should be_false}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name,:foo_tag, @organization).should be_true}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name + "foo",:foo_tag).should be_false}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name + "foo",:foo_tag, @organization).should be_false}
+      specify{@admin.allowed_to?(@verb_name + "_foo", @res_type_name,:foo_tag).should be_false}
+      specify{@admin.allowed_to?(@verb_name + "_foo", @res_type_name,:foo_tag, @organization).should be_false}
     end
 
   end
