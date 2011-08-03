@@ -10,13 +10,13 @@
   = render_navigation(:expand_all => true, :level => 3)
 
 = content_for :content do
-  .grid_8#role
-    %h5.grid_8 #{_("Roles")}  
+  .grid_10#role
+    %h5.grid_10 #{_("Roles")}
     = form_tag user_path(@user), :method => "put", :id => "update_roles" do |f|
-      .grid_7
+      .grid_10
         = select_tag "user[role_ids]", options_from_collection_for_select(Role.non_self_roles, :id, :name, @user.defined_role_ids), :multiple => true, :class => 'multiselect', :style=>"width:400px; height:200px"
       .grid_2
         = button_to _("Save Roles"), {:action => "update", :controller => "users"}, :method => :put, :id => :save_roles
   
-    %h5.grid_8 #{_("Permissions")}  
+    %h5.grid_10 #{_("Permissions")}
     = render :partial => 'permissions', :locals => {:role => role}
