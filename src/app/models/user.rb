@@ -109,13 +109,56 @@ class User < ActiveRecord::Base
   # * a permission Symbol (eg. :edit_project)
   #
   # This method is called by every protected controller.
-  def allowed_to?(verb, resource_type, tags = nil, organization = nil)
+  def allowed_to?(verbs, resource_type, tags = nil, org = nil)
+    Rails.logger.debug "Checking if user #{username} is allowed to #{verbs} in #{resource_type.inspect} scoped #{tags.inspect} in organization #{org}"
     return false if roles.empty?
-    not roles.detect {|role| role.allowed_to?(verb, resource_type, tags, organization)}.nil?
+
+    verbs = [] if verbs.nil?
+    verbs = [verbs] unless verbs.is_a? Array
+    org_clause = "permissions.organization_id is null"
+    org_clause = org_clause + " OR permissions.organization_id = :organization_id " if org
+    org_hash = {}
+    org_hash = {:organization_id => org.id} if org
+    org_permissions = Permission.joins(:role).joins(
+                  "INNER JOIN roles_users ON roles_users.role_id = roles.id").joins(
+                  "left outer join permissions_verbs on permissions.id = permissions_verbs.permission_id").joins(
+                  "left outer join verbs on verbs.id = permissions_verbs.verb_id").where(
+                      org_clause, org_hash).where({"roles_users.user_id" => id})
+
+    clause_all_resources_or_tags = %{permissions.resource_type_id is null OR
+          (permissions.resource_type_id = (select id from resource_types where resource_types.name = :resource_type) AND
+           (permissions.all_verbs=:true OR verbs.verb in (:verbs)) AND
+            permissions.all_tags = :true
+          )}.split.join(" ")
+    clause_params = {:true => true, :resource_type=>resource_type, :verbs=> verbs}
+    return true  unless org_permissions.where(clause_all_resources_or_tags, clause_params ).count == 0
+
+
+    tags = [] if tags.nil?
+    tags = [tags] unless tags.is_a? Array
+
+    clause = %{permissions.resource_type_id = (select id from resource_types where resource_types.name = :resource_type) AND
+    (permissions.all_verbs=:true OR verbs.verb in (:verbs))}.split.join(" ")
+
+    if tags.empty?
+      to_count = "verbs.verb"
+    else
+      to_count = "tags.name"
+    end
+    query = org_permissions.joins("left outer join permissions_tags on permissions.id = permissions_tags.permission_id").joins(
+                    "left outer join tags on tags.id = permissions_tags.tag_id").where(clause, clause_params)
+
+    query = query.where({:tags=> {:name=> tags}}) unless tags.empty?
+    count = query.count(to_count, :distinct => true)
+    if tags.empty?
+      return count > 0
+    else
+      return tags.length == count
+    end
   end
 
   # Class method that has the same functionality as allowed_to? method but operates
-  # on the current logged user. The class attributte User.current must be set!
+  # on the current logged user. The class attribute User.current must be set!
   # If the current user is not set (is nil) it treats it like the 'anonymous' user.
   def self.allowed_to?(verb, resource_type = nil, tags = nil)
     u = User.current
