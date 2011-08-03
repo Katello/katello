@@ -115,6 +115,7 @@ class User < ActiveRecord::Base
 
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a? Array
+    verbs = verbs.collect {|verb| action_to_verb(verb, resource_type)}
     org_clause = "permissions.organization_id is null"
     org_clause = org_clause + " OR permissions.organization_id = :organization_id " if org
     org_hash = {}
@@ -256,6 +257,18 @@ class User < ActiveRecord::Base
     end
   end
 
+  DEFAULT_VERBS = {
+    :destroy => 'delete', :destroy_favorite => 'delete'
+  }.with_indifferent_access
 
+  ACTION_TO_VERB = {
+    :owners => {:import_status => 'read'},
+  }.with_indifferent_access
+
+  def action_to_verb(verb, type)
+    return ACTION_TO_VERB[type][verb] if ACTION_TO_VERB[type] and ACTION_TO_VERB[type][verb]
+    return DEFAULT_VERBS[verb] if DEFAULT_VERBS[verb]
+    return verb
+  end
 
 end
