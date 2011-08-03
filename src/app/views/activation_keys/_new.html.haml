@@ -2,7 +2,7 @@
   #{_("New Activation Key")}
 
 = content_for :content do
-  .grid_8#new_key
+  .grid_10#new_key
     = form_tag activation_keys_path, :method => "post", :id => "new_activation_key" do
       %fieldset
         .grid_2.ra
@@ -21,7 +21,7 @@
         %label #{_("Select an Environment")}:
         - unless current_organization.environments.empty?
           - current_organization.promotion_paths.each do |path|
-            .grid_6.prefix_2
+            .grid_10.prefix_2
               %ul.breadcrumb
                 %li
                   =link_to _('Locker'), "#", :class => :nohover

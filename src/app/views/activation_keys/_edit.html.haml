@@ -16,13 +16,13 @@
   %input#panel_element_id{:name => @activation_key.id, :type => "hidden", :value => @activation_key.id, "data-ajax_url"=>activation_key_path(@activation_key.id)}
 
   #activation_key
-    .grid_8
+    .grid_10
       = help_tip(_("Edit Activation Key enables you to modify the selected activation key.  This key may " + |
                  "be used during system registration.  For example, <BR/><BR/>" + |
                  "subscription-manager register --org #{@activation_key.organization.name} " + |
                  "--activationkey #{@activation_key.name}"), 'activation_keys_edit-help') |
 
-    .grid_8
+    .grid_10
       = form_for @activation_key, activation_key_path(@activation_key), :method => "put", :remote => true do |f|
   
         %fieldset.clearfix
@@ -40,7 +40,7 @@
           = hidden_field_tag :activation_key_default_environment, @activation_key.environment_id
           - unless current_organization.environments.empty?
             - current_organization.promotion_paths.each do |path|
-              .grid_6.prefix_2
+              .grid_10.prefix_2
                 %ul.breadcrumb
                   %li
                     =link_to _('Locker'), "#", :class => :nohover
