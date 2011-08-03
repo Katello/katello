@@ -200,12 +200,6 @@ class ChangesetsController < ApplicationController
   end
 
   def promote
-    if @changeset.state != Changeset::REVIEW
-      errors _("The changeset must be moved to the review stage before promotion")
-      render :text=>"", :status => 500
-    end
-
-
     begin
       @changeset.promote
       # remove user edit tracking for this changeset
@@ -215,7 +209,6 @@ class ChangesetsController < ApplicationController
         errors  "Failed to promote: #{e.to_s}", :synchronous_request=>false
         logger.error $!, $!.backtrace.join("\n\t")
     end
-
 
     render :text=>url_for(:controller=>"promotions", :action => "show",
           :env_id => @environment.name, :org_id =>  @environment.organization.cp_key)
