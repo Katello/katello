@@ -144,7 +144,7 @@ class User < ActiveRecord::Base
     query = org_permissions.joins("left outer join permissions_tags on permissions.id = permissions_tags.permission_id").joins(
                     "left outer join tags on tags.id = permissions_tags.tag_id").where(clause, clause_params)
 
-    query = query.where({:tags=> {:name=> tags}}) unless tags.empty?
+    query = query.where({:tags=> {:name=> tags.collect{|tg| tg.to_s}}}) unless tags.empty?
     count = query.count(to_count, :distinct => true)
     if tags.empty?
       return count > 0
