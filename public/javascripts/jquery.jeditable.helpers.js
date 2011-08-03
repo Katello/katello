@@ -30,6 +30,26 @@ $(document).ready(function() {
             }
         };
 
+    $.editable.addInputType('number', {
+       element  :   function(settings, original){
+            var width = settings.width ? settings.width : '40',
+                input = jQuery('<input type="number" min="0"' +
+                                'max="' + settings.max + '"' + 
+                                'value="' + settings.value + 
+                                '" style="width:' + width + 'px;">');
+            $(this).append(input);
+            $(original).css('background-image', 'none');
+            return(input);    
+       },
+       content :    function(string, settings, original){
+           $(':input:first', this).val(settings.value);
+       },
+       reset   :    function(settings, original){
+           original.reset();
+           $(original).css('background-image', settings.image);
+       }
+    });
+
     $('.ajaxfileupload').each(function() {
         $(this).editable($(this).attr('url'), {
             type        :  'ajaxupload',
@@ -87,5 +107,18 @@ $(document).ready(function() {
                 cols            :  36
         }; 
         $(this).editable($(this).attr('data-url'), $.extend(settings, common_settings)); 
+    });
+    
+    $('.edit_number').each(function() {
+        var settings = {
+            type        :  'number',
+            value       :  $.trim($(this).html()),
+            height      :  10,           
+            width       :  35,       
+            name        :  $(this).attr('name'),
+            max         :  $.trim($(this).parent().find('.available').html()),
+            image       :  $(this).css('background-image')
+        };
+        $(this).editable($(this).attr('data-url'), $.extend(settings, common_settings));
     });
 });
