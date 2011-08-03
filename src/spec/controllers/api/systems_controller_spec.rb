@@ -119,7 +119,7 @@ describe Api::SystemsController do
 
   end
   
-  describe "upate package profile" do
+  describe "update package profile" do
     it "successfully" do
       @sys = System.new(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
       
@@ -127,6 +127,23 @@ describe Api::SystemsController do
       System.stub!(:first).and_return(@sys)
       put :upload_package_profile, :id => uuid, :_json => package_profile
       response.body.should == @sys.to_json
+    end
+  end
+
+  describe "list errata" do
+    before(:each) do
+      @system = System.new(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
+      System.stub!(:first).and_return(@system)
+    end
+
+    it "should find System" do
+      System.should_receive(:first).once.with(hash_including(:conditions => {:uuid => @system.uuid})).and_return(@system)
+      get :errata, :id => @system.uuid
+    end
+
+    it "should retrieve Consumer's errata from pulp" do
+      Pulp::Consumer.should_receive(:errata).once.with(uuid).and_return([])
+      get :errata, :id => @system.uuid
     end
   end
 
