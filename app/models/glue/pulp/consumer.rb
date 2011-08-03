@@ -25,6 +25,10 @@ module Glue::Pulp::Consumer
     end
   end
   module InstanceMethods
+    def errata
+      (::Pulp::Consumer.errata self.uuid).with_indifferent_access
+    end
+
     def del_pulp_consumer
       Rails.logger.info "Deleting consumer in pulp: #{self.name}"
       Pulp::Consumer.destroy(self.uuid)
