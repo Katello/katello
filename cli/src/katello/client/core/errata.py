@@ -19,6 +19,7 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.errata import ErrataAPI
+from katello.client.api.system import SystemAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_repo
@@ -99,14 +100,12 @@ class SystemErrata(ErrataAction):
         
         org_name = self.get_option('org')
         sys_name = self.get_option('name')
-        # info is always grep friendly
-        printer = Printer(False)
 
-        systems = self.systemApi.systems_by_org(org_name, {'name': sys_name})
-        if size(systems) == 0:
+        systems = systemApi.systems_by_org(org_name, {'name': sys_name})
+        if len(systems) == 0:
             return os.EX_DATAERR
 
-        systems = self.systemApi.errata(org_name, {'name': systems[0]["uuid"]})
+        errata = systemApi.errata(systems[0]["uuid"])
 
         self.printer.addColumn('id')
         self.printer.addColumn('title')
