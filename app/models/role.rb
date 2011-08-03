@@ -52,17 +52,6 @@ class Role < ActiveRecord::Base
     return value if (operator !~ /LIKE/i)
     return (value =~ /%|\*/) ? value.tr_s('%*', '%') : "%#{value}%"
   end
-  
-  # Is this role allowed to verb? or
-  # is this role allowed to verb, type and tag(s) combination?
-  #
-  # @param [String or Hash] verb string or hash with two strings [:controller] and [:action]
-  # @param [String] resource type
-  # @param [String or Array] one or more tags
-  def allowed_to?(verb, resource_type = nil, tags = nil, organization = nil)
-    return true if superadmin
-    allowed_to_tags? verb, resource_type, tags, organization
-  end
 
   # Create permission for given role - for more info see allow
   #
@@ -146,47 +135,6 @@ class Role < ActiveRecord::Base
     Role.find_by_name('candlepin_role')
   end
 
-  private
-
-  def allowed_to_tags?(verb, resource_type, tags, org)
-    Rails.logger.debug "Checking if role #{name} is allowed to #{verb.inspect} in #{resource_type.inspect} scoped #{tags.inspect} in organization #{org}"
-
-    org_clause = "organization_id is null"
-    org_clause = org_clause + " OR organization_id = :organization_id " if org
-    org_hash = {}
-    org_hash = {:organization_id => org.id} if org
-    org_permissions = Permission.where(:role_id => id).where(org_clause, org_hash)
-    #return true if the role implies carte blanche on all resources in an organization
-    return true unless org_permissions.where(:resource_type_id => nil).count == 0
-
-    #return true if the role implies carte blanche on all_verbs for a given resource_type in an organization
-    return true unless org_permissions.joins(:resource_type).
-      where(:all_verbs => true, :resource_types => { :name => resource_type }).count == 0
-
-    verb = action_to_verb(verb, resource_type)
-    #return true if the role implies carte blanche on all_tags  for a given verb and resource_type in an organization
-    return true unless org_permissions.joins(:verbs, :resource_type).
-       where(:verbs => { :verb => verb }, :all_tags => true,
-             :resource_types => { :name => resource_type }).count == 0
-
-    tags = [] if tags.nil?
-    tags = [tags] unless tags.is_a? Array
-    query_hash = { :resource_types => { :name => resource_type }, :verbs => { :verb => verb }}
-    query_hash[:tags] = {:name=> tags} if !tags.empty?
-
-    if tags.empty?
-      item_count = 1
-      to_count = "verbs.verb"
-    else
-      item_count = tags.length
-      to_count = "tags.name"
-    end
-    org_permissions.joins(:verbs, :resource_type).joins(
-        "left outer join permissions_tags on permissions.id = permissions_tags.permission_id").joins(
-        "left outer join tags on tags.id = permissions_tags.tag_id").where(query_hash).count(to_count,
-                                   :distinct => true) == item_count
-    # TODO - for now we just compare count - this is dangerous - we need to compare the content
-  end
 
   def self.list_verbs
     {
@@ -195,38 +143,6 @@ class Role < ActiveRecord::Base
     :update => N_("Update Roles"),
     :delete => N_("Delete Roles"),
     }.with_indifferent_access
-  end
-
-
-  DEFAULT_VERBS = {
-    :edit => 'update', :update=> 'update',
-    :new => 'create', :create => 'create', :create_favorite => 'create',
-    :index => 'read', :show => 'read', :auto_complete_search => 'read',
-    :destroy => 'delete', :destroy_favorite => 'delete',
-    :items => 'read'
-  }.with_indifferent_access
-
-  ACTION_TO_VERB = {
-    :certificates => {:serials => 'read'},
-    :changesets => {:list=>'read', :edit=>'read', :object=>'read', :show=>'read', :packages=>'read', :repos=>'read',
-                    :errata=>'read', :dependency_size=>'read', :dependency_list=>'read', :show_content=>'read'},
-    :consumers => {:export_status => 'read'},
-    :notices => {:get_new => 'read', :details => 'read', :note_count => 'read',
-                 :destroy_all => 'delete'},
-    :owners => {:import_status => 'read'},
-    :promotions => {:products=>'read', :packages=>'read', :trees=>'read', :errata=>'read', :detail=>'read', :repos=>'read'},
-    :providers => {:subscriptions=>'read', :products_repos=>'read'},
-    :roles => {:verbs_and_scopes => 'read', :create_permission=>'update', :update_permission=>'update', :show_permission=>'read'},
-    :sync_management => {:status => 'read',:product_status => 'read'},
-    :systems=> {:packages=>'read', :subscriptions=>'read', :facts=>'read', :update_subscriptions=>'update'},
-    :users => {:enable_helptip=>'update', :disable_helptip=>'update', :clear_helptips=>'update'},
-    
-  }.with_indifferent_access
-
-  def action_to_verb(verb, type)
-    return ACTION_TO_VERB[type][verb] if ACTION_TO_VERB[type] and ACTION_TO_VERB[type][verb]
-    return DEFAULT_VERBS[verb] if DEFAULT_VERBS[verb]
-    return verb
   end
 
 end
