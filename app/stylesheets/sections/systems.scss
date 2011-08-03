@@ -55,13 +55,14 @@
             text-transform: none;
             height: 25px;
             text-align: center;
+            font-size: 115%;
           }
           th:first-child { text-align: left; }
           .buttonColumn { width: 65px; }
         }
         
         tbody {
-          tr { height: 30px }
+          tr { height: 32px }
           tr:nth-child(even) {
             background: #f5fbfb;
             border-left: 1px solid #F5F5F5;
@@ -89,6 +90,14 @@
           .remove_subscription_img { background: $circle_x_icon_grey; overflow: hidden; margin-right: 2px; margin-top: 2px; }
           .subscribe { background: $play_icon_grey; overflow: hidden; margin-right: 2px; margin-top: 2px; }
           span { margin-top: 3px; display: block; float: left; color: #888; }
+          .editable { 
+            @include border-radius(0); 
+            background: $edit_icon; 
+            background-position: 100px 7px; 
+            width: 180px;
+            padding: 6px 0px;
+            text-align: center;
+          }
         }
       }
     }

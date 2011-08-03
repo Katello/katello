@@ -1,4 +1,4 @@
-= javascript :activation_key_subscriptions
+= javascript :activation_key_subscriptions, :edit_helpers
 
 = content_for :title do
   #{_("Edit Activation Key")}
@@ -19,41 +19,15 @@
       %table
         %thead
           %tr
-            %th #{_("Current Subscriptions")}
-            / %th #{_("Sockets")}
-            / %th #{_("Guests")}
-            %th #{_("Quantity")}
-            %th.buttonColumn
+            %th #{_("Subscriptions")}
+            %th #{_("Available")}
+            %th #{_("Current")}
         %tbody
           //- for sub in current_subscriptions
           %tr
             %td
               #{"Test"}
-            %td
+            %td.available
               50
-            %td.remove_subscription
-              %span.sprite.remove_subscription_img
-                SPRITE
-              %span
-                #{_("Remove")}
-                
-      %table
-        %thead
-          %tr
-            %th #{_("Available Subscriptions")}
-            / %th #{_("Sockets")}
-            / %th #{_("Guests")}
-            %th #{_("Quantity")}
-            %th.buttonColumn
-        %tbody
-          - for sub in available_subscriptions
-            %tr
-              %td
-                #{sub.name}
-              %td
-                #{sub.quantity}
-              %td
-                %span.sprite.subscribe
-                  #{"SPRITE"}
-                %span
-                  #{_("Subscribe")}
+            %td.editable.edit_number{"data-url" => "/activation_keys/", "name" => "test"}
+              40
