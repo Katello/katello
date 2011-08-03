@@ -17,7 +17,7 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_organization, :only => [:create, :index]
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index]
-  before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :packages, :upload_package_profile]
+  before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :upload_package_profile]
 
   def create
     system = System.create!(params.merge({:environment => @environment})).to_json
@@ -54,11 +54,6 @@ class Api::SystemsController < Api::ApiController
     render :text => _("Deleted system '#{params[:id]}'"), :status => 204
   end
 
-  def packages
-    packages = @system.packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    render :partial=>"packages", :locals=>{:system=>@system, :packages => packages}
-  end
-  
   def upload_package_profile
     @system.upload_package_profile(params[:_json])
     render :json => @system.to_json # not sure if this is correct

@@ -28,10 +28,12 @@ $(document).ready(function() {
         $('.left #new').css({"width":"10em"});
         $('.list-title').width(panelLeft);
         $('#list-title').width(panelLeft);
-        var fontsize = Math.floor((panelLeft/430)*100);
-        //if it's bigger than 100%, make it 100%.
-        fontsize = (fontsize > 100) ? 100 : fontsize;
-        $('#systems .block').css({"font-size": parseInt(fontsize, 10) + "%"});
+        if( $(this).hasClass('column_panel_3') ){
+            var fontsize = Math.floor((panelLeft/430)*100);
+            //if it's bigger than 100%, make it 100%.
+            fontsize = (fontsize > 100) ? 100 : fontsize;
+            $('#systems .block').css({"font-size": parseInt(fontsize, 10) + "%"});            
+        }
     });
     $('.left').resize();
 
