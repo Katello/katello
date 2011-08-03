@@ -1,4 +1,4 @@
-= javascript :provider_edit
+= javascript :edit_helpers
 
 = content_for :title do
   = _("Product: ") + @product.name
@@ -14,12 +14,12 @@
   %fieldset
     .grid_2.ra
       %label #{_("Name")}:
-    .grid_5.la.editable.edit_providername#repo_name{'name' => 'repo[name]', :url => provider_path(@provider.id)} #{@repository[:name]}
+    .grid_5.la.editable.edit_providername#repo_name{'name' => 'repo[name]', 'data-url' => provider_path(@provider.id)} #{@repository[:name]}
   
   %fieldset
     .grid_2.ra
       %label #{_("URL")}:
-    .grid_5.la.editable.edit_textarea{'name' => 'repo[feed]', :url => provider_path(@provider.id)} #{@repository[:source][:url]}
+    .grid_5.la.editable.edit_textarea{'name' => 'repo[feed]', 'data-url' => provider_path(@provider.id)} #{@repository[:source][:url]}
   
   %fieldset
     .grid_2.ra
