@@ -11,10 +11,49 @@
   = render_navigation(:expand_all => true, :level => 3)
 
 = content_for :content do
-  %h5.grid_10 #{_("Subscriptions")}
-  = form_tag  update_subscriptions_activation_key_path, :method => "post", :id => "update_subscriptions" do |f|
-    .grid_9
-      = select_tag "activation_key[consumed_sub_ids]", options_from_collection_for_select(all_subs, 'sub', 'name', consumed), :multiple => true, :class => 'multiselect', :style=>"width:400px; height:200px"
-    .grid_2
-      = button_to _("Save Subscriptions"), {:action => "update_subscriptions", :controller => "activation_keys"}, :method => :post, :id => :subcription_save
-
+  #subscriptions
+    .lower_content.clear
+      .labels
+        / %label.la #{_("Sockets supported by your subscription(s): ")}
+        / %label.la #{_("Guests supported by your subscription(s): ")}
+      %table
+        %thead
+          %tr
+            %th #{_("Current Subscriptions")}
+            / %th #{_("Sockets")}
+            / %th #{_("Guests")}
+            %th #{_("Quantity")}
+            %th.buttonColumn
+        %tbody
+          //- for sub in current_subscriptions
+          %tr
+            %td
+              #{"Test"}
+            %td
+              50
+            %td.remove_subscription
+              %span.sprite.remove_subscription_img
+                SPRITE
+              %span
+                #{_("Remove")}
+                
+      %table
+        %thead
+          %tr
+            %th #{_("Available Subscriptions")}
+            / %th #{_("Sockets")}
+            / %th #{_("Guests")}
+            %th #{_("Quantity")}
+            %th.buttonColumn
+        %tbody
+          - for sub in available_subscriptions
+            %tr
+              %td
+                #{sub.name}
+              %td
+                #{sub.quantity}
+              %td
+                %span.sprite.subscribe
+                  #{"SPRITE"}
+                %span
+                  #{_("Subscribe")}
