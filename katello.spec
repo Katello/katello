@@ -8,7 +8,7 @@
 %global rubygems rubygem(rails) >= 3.0.5 rubygem(multimap) rubygem(haml) >= 3.1.2 rubygem(haml-rails) rubygem(json) rubygem(rest-client) rubygem(jammit) rubygem(rails_warden) rubygem(net-ldap) rubygem(compass) >= 0.11.5 rubygem(compass-960-plugin) >= 0.10.4 rubygem(capistrano) rubygem(oauth) rubygem(i18n_data) >= 0.2.6 rubygem(gettext_i18n_rails) rubygem(simple-navigation) >= 3.3.4 rubygem(sqlite3) rubygem(pg) rubygem(scoped_search) >= 2.3.1 rubygem(delayed_job) >= 2.1.4 rubygem(daemons) >= 1.1.4 rubygem(uuidtools)
 
 Name:           katello
-Version:	      0.1.55
+Version:	      0.1.56
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -169,6 +169,28 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Aug 03 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.56-1
+- spec - introducing bundle install in %build section
+- Merge branch 'system_errata'
+- added a test for Api::SystemsController#errata call
+- listing of errata by system is functional now
+- added a script to make rake routes output prettier
+- Views - update grid in various partial to account for panel size change
+- Providers - fix error on inline edit for Products and Repos
+- removing unused systems action - list systems
+- 726760 - Notices: Fixes issue with promotion notice appearing on every page.
+  Fixes issue with synchronous notices not being marked as viewed.
+- Tupane - Fixes issue with main panel header word-wrapping on long titles.
+- 727358 - Tupane: Fixes issue with tupane subpanel header text word-wrapping.
+- 2Panel - Makes font resizing occur only on three column panels.
+- matching F15 gem versions for tzinfo and i18n
+- changing the home directory of katello to /usr/lib64/katello after recent
+  spec file changes
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+- fixed pulp-proxy-controller to be correct http action
+- Merge branch 'master' into system_errata
+- added support for listing errata by system
+
 * Mon Aug 01 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.55-1
 - spec - rpmlint cleanup
 - making changeset history show items by product
