@@ -40,8 +40,10 @@ describe Api::SystemsController do
     Candlepin::Consumer.stub!(:update).and_return(true)
     
     Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Pulp::Consumer.stub!(:update).and_return(true)
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+    @environment_1 = KPEnvironment.create!(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
   end
 
   describe "create a system" do
@@ -51,11 +53,6 @@ describe Api::SystemsController do
     end
 
     context "in organization with one environment" do
-      before(:each) do
-        @environment_1 = KPEnvironment.new(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
-        @environment_1.save!
-      end
-
       it "requires either organization_id" do
         System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :facts => facts, :name => 'test')).once.and_return({})
         post :create, :organization_id => @organization.name, :name => 'test', :cp_type => 'system', :facts => facts
@@ -69,8 +66,8 @@ describe Api::SystemsController do
 
     context "in organization with multiple environments" do
       before(:each) do
-        @environment_1 = KPEnvironment.new(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
-        @environment_1.save!
+        # @environment_1 = KPEnvironment.new(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
+        # @environment_1.save!
         @environment_2 = KPEnvironment.new(:name => 'test_2', :prior => @environment_1, :organization => @organization)
         @environment_2.save!
       end
@@ -89,8 +86,8 @@ describe Api::SystemsController do
 
   describe "list systems" do
     before(:each) do
-      @environment_1 = KPEnvironment.new(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
-      @environment_1.save!
+      # @environment_1 = KPEnvironment.new(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
+      # @environment_1.save!
       @environment_2 = KPEnvironment.new(:name => 'test_2', :prior => @environment_1, :organization => @organization)
       @environment_2.save!
 
@@ -135,10 +132,32 @@ describe Api::SystemsController do
     it "successfully" do
       @sys = System.new(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
 
-      @sys.should_receive(:packages).once.and_return(package_profile)
+      @sys.should_receive(:package_profile).once.and_return(package_profile)
       System.stub!(:first).and_return(@sys)
-      get :packages, :id => uuid
+      get :package_profile, :id => uuid
       response.body.should == sorted.to_json
+      response.should be_success
+    end
+  end
+  
+  describe "update a system" do
+    before(:each) do
+      @sys = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid, :description => "fake description")
+      Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid})
+      System.stub!(:first).and_return(@sys)
+    end
+    
+    it "should change the name" do
+      Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true)
+      post :update, :id => uuid, :name => "foo_name"
+      response.body.should == @sys.to_json
+      response.should be_success
+    end
+    
+    it "should change the description" do
+      Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, "redkin is awesome.").and_return(true)
+      post :update, :id => uuid, :description => "redkin is awesome."
+      response.body.should == @sys.to_json
       response.should be_success
     end
   end
