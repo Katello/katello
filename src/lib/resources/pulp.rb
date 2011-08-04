@@ -271,14 +271,16 @@ module Pulp
       def upload_package_profile uuid, package_profile
         attrs = {:id => uuid, :package_profile => package_profile}
         response = put(consumer_path(uuid) + "package_profile/", attrs.to_json, self.default_headers)
-        raise RuntimeError, "failure from pulp" unless response
+        raise RuntimeError, "update failed" unless response
+        return response
       end
       
       def update key, uuid, description = ""
         url = consumer_path(uuid) + "?owner=#{key}"
         attrs = {:id => uuid, :description => description}
         response = self.put(url, attrs.to_json, self.default_headers)
-        raise RuntimeError, "failure from pulp" unless response
+        raise RuntimeError, "update failed" unless response
+        return response
       end
       
       def find consumer_id
