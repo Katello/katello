@@ -113,7 +113,8 @@ class Info(SystemAction):
         printer.addColumn('name')
         printer.addColumn('uuid')
         printer.addColumn('location')
-        printer.addColumn('created_at', 'Registered')
+        printer.addColumn('created_at', 'Registered', time_format=True)
+        printer.addColumn('updated_at', 'Last updated', time_format=True)
         printer.addColumn('description', multiline=True)
 
         printer.printItem(system)
@@ -153,7 +154,7 @@ class InstalledPackages(SystemAction):
         if not systems:
             return os.EX_DATAERR
         
-        packages = self.api.packages(self.api.system(systems[0]['uuid'])['uuid']) # magic
+        packages = self.api.packages(systems[0]['uuid'])
         
         printer.addColumn('name')
         
@@ -168,6 +169,53 @@ class InstalledPackages(SystemAction):
             printer._grep = True
             printer.printItems(packages)
                             
+        return os.EX_OK
+    
+class Facts(SystemAction):
+    
+    description = _('display a the hardware facts of a system')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                       help=_("system name (required)"))
+        self.parser.add_option('--environment', dest='environment',
+                       help=_("environment name"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+    def run(self):
+        org_name = self.get_option('org')
+        env_name = self.get_option('environment')
+        sys_name = self.get_option('name')
+        # info is always grep friendly
+        printer = Printer(False)
+
+        if env_name is None:
+            printer.setHeader(_("System Facts For System %s in Org %s") % (sys_name, org_name))
+            systems = self.api.systems_by_org(org_name, {'name': sys_name})
+        else:
+            printer.setHeader(_("System Facts For System %s in Environment %s in Org %s") % (sys_name, env_name, org_name))
+            systems = self.api.systems_by_env(org_name, env_name,
+                    {'name': sys_name})
+
+        if not systems:
+            return os.EX_DATAERR
+        
+        # get system details
+        system = self.api.system(systems[0]['uuid'])
+    
+        facts_hash = system['facts']
+        facts_tuples_sorted = [(k, facts_hash[k]) for k in sorted(facts_hash.keys())]
+        for k, v in facts_tuples_sorted:
+            printer.addColumn(k)
+            system[k] = v
+
+        printer.printItem(system)
+
         return os.EX_OK
             
 class Register(SystemAction):
@@ -224,6 +272,62 @@ class Unregister(SystemAction):
             result = self.api.unregister(systems[0]['uuid'])
             print _("Successfully unregistered System [ %s ]") % name
             return os.EX_OK
+        
+class Update(SystemAction):
+    
+    description = _('update a system')
+       
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                       help=_('organization name (required)'))
+        self.parser.add_option('--name', dest='name',
+                       help=_('system name (required)'))
+        self.parser.add_option('--environment', dest='environment',
+                       help=_("environment name"))
+        
+        self.parser.add_option('--new-name', dest='new_name',
+                       help=_('a new name for the system'))
+        self.parser.add_option('--description', dest='description',
+                       help=_('a description of the system'))
+#        self.parser.add_option('--location', dest='location',
+#                       help=_("location of the system"))
+        
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+        
+    def run(self):
+        org_name = self.get_option('org')
+        env_name = self.get_option('environment')
+        sys_name = self.get_option('name')
+        new_name = self.get_option('new_name')
+        new_description = self.get_option('description')
+#        new_location = self.get_option('location')
+        
+        if env_name is None:
+            systems = self.api.systems_by_org(org_name, {'name': sys_name})
+        else:
+            systems = self.api.systems_by_env(org_name, env_name,
+                    {'name': sys_name})
+
+        if not systems:
+            return os.EX_DATAERR
+        
+        system_uuid = systems[0]['uuid']
+        updates = {}
+        if new_name: updates['name'] = new_name
+        if new_description: updates['description'] = new_description
+#        if new_location: updates['location'] = new_location
+        
+        response = self.api.update(system_uuid, updates)
+        
+        if is_valid_record(response):
+            print _("Successfully updated system [ %s ]") % systems[0]['name']
+        else:
+            print _("Could not update system [ %s ]") % systems[0]['name']
+            
+        return os.EX_OK
+            
 
 class System(Command):
 
