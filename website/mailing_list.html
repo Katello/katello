@@ -36,29 +36,11 @@
   <div id="container" class="container_16 clearfix">
       <div class="grid_11" id="content">
         <div class="inner">      
-          <h2>Frequently Asked Questions</h2>
-          <p>Short list here so far, but we'll add more as we get 'em.<br/>
-				<strong>Q.)</strong> Does Katello work on CentOS?<br/>
-				<strong>A.)</strong> Theoretically it will work on CentOS, but we're not officially supporting it yet. Please give it a try, and patches are welcome!<br/>
-				<br/>
-				<strong>Q.)</strong> What about Spacewalk?<br/>
-				<strong>A.)</strong> The Satellite product will continue to use the upstream Spacewalk project. Similarly the Katello project will be an upstream component of the CloudForms product. We first announced the Katello project and the future of Satellite at the 2011 Red Hat Summit. You can review those presentation slides here:
-				<a href="http://www.redhat.com/summit/2011/presentations/summit/whats_next/thursday/summit-2011.warner_sanders_t_1400_future_of_satellite-v7.pdf" target="_blank" title="The Future of Red Hat Network Satellite - A New Architecture Enabling Traditional Datacenters & the Cloud ">The Future of Red Hat Network Satellite: A New Architecture Enabling Traditional Datacenters & the Cloud</a><br/>
-				<br/>
-				<strong>Q.)</strong> How do I get started?<br/>
-				<strong>A.)</strong>  <a href="https://fedorahosted.org/katello/wiki/Install">Click here.  Do it now!</a><br/>
-            <br/>
-				<strong>Q.)</strong> How is Katello licensed?<br/>
-				<strong>A.)</strong>  Katello source code is licensed with GPLv2+, you can view a copy of the license <a href="license.html">here</a>.<br/>
-				<br/>
-				<strong>Q.)</strong> Why does Katello have its own Rubygem repo?<br/>
-				<strong>A.)</strong> The reason was to keep the gems listed in Gemfile.lock in sync with the gems we had packaged.  Generally when you do a bundle install the Gemfile.lock file will be updated with all of the newest gems from the repo.  So if rubygems.org releases an updated gem 'foo' with version  1.2, the Gemfile.lock will be updated automatically to use foo-1.2, regardless of whether we have packaged it or not.  Basically bundle install will update the Gemfile.lock with the NEWEST versions in the remote gem repo, updating our product dependencies without intention to do so.
-				<br/><br/>
-				So if you were to commit your updated gemfile.lock, the next time the katello rpm was built & installed, rails would refuse to start because we haven't built foo-1.2 as an rpm.
-				<br/><br/>
-				Turns out that this helped a ton with debugging and testing as well.
-				<br/>		
-			</p>                  
+          <h2>Mailing Lists - Get in touch!</h2>
+          <h3>Developer?</h3>
+          <p>Please go sign up for <a href="https://www.redhat.com/mailman/listinfo/katello-devel" title="katello mailing list">katello-devel</a> and start <a href="https://fedorahosted.org/katello/wiki/Install" title="link to katello wiki install page">contributing</a>!</p>
+          <h3>Using Katello, or want to discuss something about it?</h3>                
+          <p>Come on over to the <a href="https://fedorahosted.org/mailman/listinfo/katello" title="fedora project katello mailing list">fedora katello mailing list</a>.</p>
 		  </div>    
 		</div>     
       <div class="grid_5" id="sidebar">
