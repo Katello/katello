@@ -12,7 +12,8 @@
 
 class ProvidersController < ApplicationController
   include AutoCompleteSearch
-  before_filter :find_provider, :only => [:products_repos, :subscriptions, :edit, :update, :destroy]
+  
+  before_filter :find_provider, :only => [:products_repos, :show, :subscriptions, :update_subscriptions, :edit, :update, :destroy]
   before_filter :require_user
   before_filter :panel_options, :only => [:index, :items]
   respond_to :html, :js
@@ -21,12 +22,32 @@ class ProvidersController < ApplicationController
     'contents'
   end
 
+
+  def rules
+    pid = params[:id]
+    { :index => [[:create, :update, :read, :delete], :providers],
+      :items => [[:create, :update, :read], :providers],
+      :new => [[:create], :providers],
+      :show => [[:read,:update], :providers, pid],
+      :create => [[:create], :providers],
+      :edit => [[:read,:update], :providers, pid],
+      :update => [[:update], :providers, pid],
+      :destroy => [[:update], :providers, pid],
+      :products_repos => [[:read,:update], :providers, pid],
+      :subscriptions => [[:read,:update], :providers, pid],
+      :update_subscriptions => [[:update], :providers, pid],
+    }.with_indifferent_access
+  end
+
+
+
   def products_repos
     @products = @provider.products
     render :partial => "products_repos", :layout => "tupane_layout", :locals => {:provider => @provider, :providers => @providers, :products => @products}
   end
 
-  def subscriptions
+
+  def update_subscriptions
     if !params[:provider].blank? and params[:provider].has_key? :contents
       temp_file = nil
       begin
@@ -46,7 +67,10 @@ class ProvidersController < ApplicationController
        render :partial => "subscriptions", :locals => {:provider => @provider},:status => :bad_request and return
       end
     end
+    subscriptions
+  end
 
+  def subscriptions
     @providers = current_organization.providers
     @provider = Provider.find(params[:id])
     # We default to none imported until we can properly poll Candlepin for status of the import
