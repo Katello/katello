@@ -253,7 +253,7 @@ Src::Application.routes.draw do
       member do
         get :providers
       end
-      resources :systems, :only => [:index, :create]
+      resources :systems, :only => [:index]
       resources :activation_keys, :only => [:index]
     end
 
