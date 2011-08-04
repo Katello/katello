@@ -17,7 +17,7 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_organization, :only => [:create, :index]
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index]
-  before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :upload_package_profile, :package_profile]
+  before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :upload_package_profile, :errata, :package_profile]
 
   def create
     system = System.create!(params.merge({:environment => @environment})).to_json
@@ -66,6 +66,10 @@ class Api::SystemsController < Api::ApiController
 
   def package_profile
     render :json => @system.package_profile.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
+  end
+  
+  def errata
+    render :json => Pulp::Consumer.errata(@system.uuid)
   end
   
   def upload_package_profile
