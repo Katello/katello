@@ -39,7 +39,8 @@ BuildRequires:  %{rubygems}
 
 BuildArch: noarch
 
-%if 0%{?fedora} && 0%{?fedora} < 15
+# workaround for BZ 714167
+%if 0%{?fedora} && 0%{?fedora} < 16
 Requires:       rubygem(regin)
 BuildRequires:  rubygem(regin)
 %endif
