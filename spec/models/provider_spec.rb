@@ -219,6 +219,21 @@ describe Provider do
         @provider.should be_valid
       end
       
+      it "'http://repo.fedoraproject.org'" do
+        @provider.repository_url = "http://repo.fedoraproject.org"
+        @provider.should be_valid
+      end
+      
+      it "'http://lzap.fedorapeople.org/fakerepos/fewupdates/'" do
+        @provider.repository_url = "http://lzap.fedorapeople.org/fakerepos/fewupdates/"
+        @provider.should be_valid
+      end
+      
+      it "'https://dr.pepper.yum:123/nutrition/facts/'" do
+        @provider.repository_url = "https://dr.pepper.yum:123/nutrition/facts/"
+        @provider.should be_valid
+      end
+      
     end
     
     context "should refuse" do
@@ -230,11 +245,6 @@ describe Provider do
       
       it "'notavalidurl'" do
         @provider.repository_url = "notavalidurl"
-        @provider.should_not be_valid
-      end
-      
-      it "'http://repo.fedoraproject.org'" do
-        @provider.repository_url = "http://repo.fedoraproject.org"
         @provider.should_not be_valid
       end
       
@@ -255,16 +265,6 @@ describe Provider do
       
       it "'repo.fedorahosted.org/reposity'" do
         @provider.repository_url = "repo.fedorahosted.org/reposity"
-        @provider.should_not be_valid
-      end
-      
-      it "'http://lzap.fedorapeople.org/fakerepos/fewupdates/'" do
-        @provider.repository_url = "http://lzap.fedorapeople.org/fakerepos/fewupdates/"
-        @provider.should_not be_valid
-      end
-      
-      it "'https://dr.pepper.yum:123/nutrition/facts/'" do
-        @provider.repository_url = "https://dr.pepper.yum:123/nutrition/facts/"
         @provider.should_not be_valid
       end
         
