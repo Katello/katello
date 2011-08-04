@@ -60,6 +60,7 @@ class ActivationKeysController < ApplicationController
   end
 
   def update_subscriptions
+    debugger
     subscription = KTSubscription.where(:subscription => params[:subscription_id])[0]
     allocated = params[:activation_key][:allocated]
 
@@ -218,6 +219,7 @@ class ActivationKeysController < ApplicationController
       cp = OpenStruct.new
       cp.sub = s["subscriptionId"]
       cp.name = s["productName"]
+      cp.available = s["quantity"]
       subscriptions << cp if !subscriptions.include? cp 
     end
     subscriptions
