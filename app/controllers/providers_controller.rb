@@ -25,18 +25,13 @@ class ProvidersController < ApplicationController
 
   def rules
     pid = params[:id]
-    { :index => [[:create, :update, :read, :delete], :providers],
-      :items => [[:create, :update, :read], :providers],
-      :new => [[:create], :providers],
-      :show => [[:read,:update], :providers, pid],
-      :create => [[:create], :providers],
-      :edit => [[:read,:update], :providers, pid],
-      :update => [[:update], :providers, pid],
-      :destroy => [[:update], :providers, pid],
-      :products_repos => [[:read,:update], :providers, pid],
-      :subscriptions => [[:read,:update], :providers, pid],
-      :update_subscriptions => [[:update], :providers, pid],
-    }.with_indifferent_access
+    org_id = current_organization.id
+    
+    generic_rules(:providers, pid,  {
+      :products_repos => [[:read,:update], :providers, pid, org_id],
+      :subscriptions => [[:read,:update], :providers, pid, org_id],
+      :update_subscriptions => [[:update], :providers, pid, org_id],
+    })
   end
 
 
