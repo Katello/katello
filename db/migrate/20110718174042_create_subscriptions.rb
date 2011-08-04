@@ -8,6 +8,7 @@ class CreateSubscriptions < ActiveRecord::Migration
     create_table :key_subscriptions do |t|
       t.references :activation_key
       t.references :subscription
+      t.integer :allocated, :null => false, :default => 0
     end
   end
 
