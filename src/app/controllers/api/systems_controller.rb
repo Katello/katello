@@ -17,7 +17,7 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_organization, :only => [:create, :index]
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index]
-  before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :upload_package_profile]
+  before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :upload_package_profile, :package_profile]
 
   def create
     system = System.create!(params.merge({:environment => @environment})).to_json
@@ -30,19 +30,29 @@ class Api::SystemsController < Api::ApiController
   end
 
   def update
-    # only facts can be updated atm
-    if params.has_key?(:facts)
-      @system.facts = params[:facts]
-      @system.save!
-    end
+    # not sure if this is the best way to do this...
+    @system.description = params[:description] if params[:description]
+    @system.name = params[:name] if params[:name]
+    @system.location = params[:location] if params[:location]
+    @system.facts = params[:facts] if params.has_key?(:facts)
+    
+    @system.save!
     render :json => @system.to_json
   end
 
   def index
     # expected parameters
     expected_params = params.slice('name')
-    (render :json => @environment.systems.where(expected_params).to_json and return) unless @environment.nil?
-    render :json => @organization.systems.where(expected_params).to_json
+    error_msg = "No systems found" if expected_params.empty?
+    error_msg = "Couldn't find system '#{expected_params[:name]}'" unless expected_params.empty?
+    unless @environment.nil?
+      systems = @environment.systems.where(expected_params)
+      raise HttpErrors::NotFound, _(error_msg + " in environment '#{@environment.name}'") if systems.empty?
+    else
+      systems = @organization.systems.where(expected_params)
+      raise HttpErrors::NotFound, _(error_msg + " in organization '#{@organization.name}'") if systems.empty?
+    end
+    render :json => systems.to_json
   end
 
   def show
@@ -50,12 +60,12 @@ class Api::SystemsController < Api::ApiController
   end
 
   def destroy
-     @system.destroy
+    @system.destroy
     render :text => _("Deleted system '#{params[:id]}'"), :status => 204
   end
 
-  def packages
-    render :json => @system.packages.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
+  def package_profile
+    render :json => @system.package_profile.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
   end
   
   def upload_package_profile
