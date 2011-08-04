@@ -116,6 +116,7 @@ $(document).ready(function() {
             name            :  $(this).attr('name'),
             max             :  $.trim($(this).parent().find('.available').html()),
             image           :  $(this).css('background-image'),
+            submitdata      :  {authenticity_token: AUTH_TOKEN, "subscription_id" : element.attr('id')},
             onsuccess       :  function(result, status, xhr){
                 element.css('background-image', settings.image);
                 element.html(result);
