@@ -43,10 +43,6 @@ $(document).ready(function() {
        },
        content :    function(string, settings, original){
            $(':input:first', this).val(settings.value);
-       },
-       reset   :    function(settings, original){
-           original.reset();
-           $(original).css('background-image', settings.image);
        }
     });
 
@@ -78,7 +74,7 @@ $(document).ready(function() {
                 list.refresh(id.attr('value'), id.attr('data-ajax_url'));
             }
         };
-        $(this).editable($(this).attr('data-url'), $.extend(settings, common_settings));
+        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
     });
 
     $('.edit_password').each(function() {
@@ -87,7 +83,7 @@ $(document).ready(function() {
             width       :  270,
             name        :  $(this).attr('name'),
         };
-        $(this).editable($(this).attr('data-url'), $.extend(settings, common_settings));
+        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
     });
 
     $('.edit_textfield').each(function() {
@@ -96,7 +92,7 @@ $(document).ready(function() {
             width       :  270,                  
             name        :  $(this).attr('name'),
         };
-        $(this).editable($(this).attr('data-url'), $.extend(settings, common_settings));
+        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
     });
 
     $('.edit_textarea').each(function() {
@@ -106,19 +102,28 @@ $(document).ready(function() {
                 rows            :  8,
                 cols            :  36
         }; 
-        $(this).editable($(this).attr('data-url'), $.extend(settings, common_settings)); 
+        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings)); 
     });
     
     $('.edit_number').each(function() {
+        var element = $(this);
         var settings = {
-            type        :  'number',
-            value       :  $.trim($(this).html()),
-            height      :  10,           
-            width       :  35,       
-            name        :  $(this).attr('name'),
-            max         :  $.trim($(this).parent().find('.available').html()),
-            image       :  $(this).css('background-image')
+            method          :  'POST',
+            type            :  'number',
+            value           :  $.trim($(this).html()),
+            height          :  10,           
+            width           :  35,       
+            name            :  $(this).attr('name'),
+            max             :  $.trim($(this).parent().find('.available').html()),
+            image           :  $(this).css('background-image'),
+            onsuccess       :  function(result, status, xhr){
+                element.css('background-image', settings.image);
+                element.html(result);
+            },
+            onresetcomplete : function(settings, original){
+                element.css('background-image', settings.image);
+            }
         };
-        $(this).editable($(this).attr('data-url'), $.extend(settings, common_settings));
+        element.editable(element.attr('data-url'), $.extend(common_settings, settings));
     });
 });
