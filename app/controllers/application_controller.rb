@@ -236,6 +236,20 @@ class ApplicationController < ActionController::Base
     raise Errors::SecurityViolation,"Rules not defined for  #{current_user.username} for #{params[:controller]}/#{params[:action]}"
   end
 
+  def generic_rules resource_type, obj_id, additional_rules = {}
+    org_id = current_organization.id
+    additional_rules.update( {
+      :index => [[:create, :update, :read, :delete], resource_type, nil, org_id],
+      :items => [[:create, :update, :read, :delete], resource_type, nil, org_id],
+      :new => [[:update, :create], resource_type, nil, org_id],
+      :create =>[[:update, :create], resource_type, nil, org_id],
+      :edit => [[:read,:update, :create], resource_type, obj_id, org_id],
+      :show => [[:read,:update], resource_type, obj_id, org_id],
+      :update => [[:update, :create], resource_type, obj_id, org_id],
+      :destroy => [[:update, :create], resource_type, obj_id, org_id],
+    }).with_indifferent_access
+  end
+
   # authorize the user for the requested action
   def authorize(ctrl = params[:controller], action = params[:action])
     user = current_user

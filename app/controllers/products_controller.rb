@@ -18,16 +18,12 @@ class ProductsController < ApplicationController
 
 
   def rules
-    prov_id = params[:provider_id]
-    {
-      :new => [[:update], :providers, prov_id],
-      :create =>[[:update], :providers, prov_id],
-      :edit => [[:read,:update],  :providers, prov_id],
-      :update => [[:update], :providers, prov_id],
-      :destroy => [[:update], :providers, prov_id],
-    }.with_indifferent_access
+    generic_rules(:providers, params[:provider_id])
   end
 
+  hash["string"]
+
+  
 
   def section_id
     'contents'
