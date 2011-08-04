@@ -8,7 +8,7 @@
 %global rubygems rubygem(rails) >= 3.0.5 rubygem(multimap) rubygem(haml) >= 3.1.2 rubygem(haml-rails) rubygem(json) rubygem(rest-client) rubygem(jammit) rubygem(rails_warden) rubygem(net-ldap) rubygem(compass) >= 0.11.5 rubygem(compass-960-plugin) >= 0.10.4 rubygem(capistrano) rubygem(oauth) rubygem(i18n_data) >= 0.2.6 rubygem(gettext_i18n_rails) rubygem(simple-navigation) >= 3.3.4 rubygem(sqlite3) rubygem(pg) rubygem(scoped_search) >= 2.3.1 rubygem(delayed_job) >= 2.1.4 rubygem(daemons) >= 1.1.4 rubygem(uuidtools)
 
 Name:           katello
-Version:	      0.1.56
+Version:	      0.1.57
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -176,6 +176,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Aug 04 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.57-1
+- spec - adding regin dep as workaround for BZ 714167 (F14/15)
+
 * Wed Aug 03 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.56-1
 - spec - introducing bundle install in %build section
 - Merge branch 'system_errata'
