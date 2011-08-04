@@ -124,7 +124,7 @@ Src::Application.routes.draw do
     member do
       get :products_repos
       get :subscriptions
-      post :subscriptions
+      post :subscriptions, :action=>:update_subscriptions
       get :schedule
     end
   end
