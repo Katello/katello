@@ -21,13 +21,13 @@
           %tr
             %th #{_("Subscriptions")}
             %th #{_("Available")}
-            %th #{_("Current")}
+            %th #{_("Allocated")}
         %tbody
-          //- for sub in current_subscriptions
-          %tr
-            %td
-              #{"Test"}
-            %td.available
-              50
-            %td.editable.edit_number{"data-url" => "/activation_keys/", "name" => "test"}
-              40
+          - for sub in subscriptions
+            %tr
+              %td
+                #{sub.name}
+              %td.available
+                0
+              %td.editable.edit_number{'id' => sub.sub, "data-url" => update_subscriptions_activation_key_path(@activation_key.id), "name" => "activation_key[allocated]"}
+                #{sub.allocated}
