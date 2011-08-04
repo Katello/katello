@@ -215,6 +215,7 @@ Src::Application.routes.draw do
     resources :systems, :only => [:show, :destroy, :create, :index, :update] do
       member do
         get :packages, :action => :package_profile
+        get :errata
       end
     end
 

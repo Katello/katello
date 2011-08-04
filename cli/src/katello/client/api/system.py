@@ -65,3 +65,7 @@ class SystemAPI(KatelloAPI):
 
         path = "/api/environments/%s/systems" % environment["id"]
         return self.server.GET(path, query)[1]
+        
+    def errata(self, system_id):
+        path = "/api/systems/%s/errata" % system_id
+        return self.server.GET(path)[1]
