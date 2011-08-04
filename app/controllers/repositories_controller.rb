@@ -13,9 +13,22 @@
 class RepositoriesController < ApplicationController
   respond_to :html, :js
 
-  before_filter :find_provider, :only => [:show, :edit, :update, :destroy, :index, :new, :create]
-  before_filter :find_product, :only => [:show, :edit, :update, :destroy, :index, :new, :create]
+  before_filter :find_provider, :only => [:edit, :update, :destroy, :new, :create]
+  before_filter :find_product, :only => [:edit, :update, :destroy, :new, :create]
   before_filter :find_repository, :only => [:edit, :update, :destroy]
+
+  def rules
+    prov_id = params[:provider_id]
+    {
+      :new => [[:update], :providers, prov_id],
+      :create =>[[:update], :providers, prov_id],
+      :edit => [[:read,:update],  :providers, prov_id],
+      :update => [[:update], :providers, prov_id],
+      :destroy => [[:update], :providers, prov_id],
+    }.with_indifferent_access
+  end
+
+  
 
   def section_id
     'contents'

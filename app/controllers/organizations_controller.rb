@@ -17,14 +17,13 @@ class OrganizationsController < ApplicationController
   include AutoCompleteSearch
   respond_to :html, :js
   skip_before_filter :authorize
-  before_filter :find_organization, :only => [:show, :edit, :update, :destroy]
-  before_filter :authorize
+  before_filter :find_organization, :only => [:edit, :update, :destroy]
+  before_filter :authorize #call authorize after find_organization so we call auth based on the id instead of cp_id
   before_filter :setup_options, :only=>[:index, :items]
 
   def rules
-    {:index => [[:create, :update, :read], :organizations],
+    {:index => [[:create, :update, :read, :delete], :organizations],
       :items => [[:create, :update, :read], :organizations],
-      :show => [[:read, :update], :organizations, @organization.id],
       :new => [[:create], :organizations],
       :create => [[:create], :organizations],
       :edit => [[:read,:update], :organizations, @organization.id],
