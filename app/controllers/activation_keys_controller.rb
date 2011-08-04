@@ -45,21 +45,48 @@ class ActivationKeysController < ApplicationController
   end
 
   def subscriptions
-    consumed = @activation_key.subscriptions.collect { |s| s.subscription }
+    consumed = @activation_key.subscriptions
     subscriptions = reformat_subscriptions(Candlepin::Owner.pools current_organization.cp_key)
-    subscriptions.sort! {|a,b| a.sub <=> b.sub}
-    render :partial=>"subscriptions", :layout => "tupane_layout", :locals=>{:akey=>@activation_key, :available_subscriptions => subscriptions, :consumed => consumed}
+    subscriptions.sort! {|a,b| a.name <=> b.name}
+    for sub in subscriptions
+      sub.allocated = 0
+      for consume in consumed
+        if consume.subscription == sub.sub
+          sub.allocated = consume.allocated 
+        end
+      end
+    end
+    render :partial=>"subscriptions", :layout => "tupane_layout", :locals=>{:akey=>@activation_key, :subscriptions => subscriptions, :consumed => consumed}
   end
 
   def update_subscriptions
-    subs = (params.has_key? :activation_key) ? params[:activation_key][:consumed_sub_ids] : []
-    if !subs.nil? and @activation_key
-      @activation_key.subscriptions = subs.collect { |s| KTSubscription.create!(:subscription => s) } 
+    subscription = KTSubscription.where(:subscription => params[:subscription_id])[0]
+    allocated = params[:activation_key][:allocated]
+
+    if subscription.nil? and @activation_key and allocated != "0"
+      KTSubscription.create!(:subscription => params[:subscription_id], :key_subscriptions => [KeySubscription.create!(:allocated=> allocated, :activation_key => @activation_key)])
       notice _("Activation Key subscriptions updated.")
-      render :nothing =>true
+      render :text => escape_html(allocated)
+    elsif subscription and @activation_key
+      key_sub = KeySubscription.where(:activation_key_id => @activation_key.id, :subscription_id => subscription.id)[0]
+
+      if key_sub
+        if allocated != "0"
+          key_sub.allocated = allocated
+          key_sub.save!
+        else
+          key_sub.destroy
+        end
+      else
+        KeySubscription.create!(:activation_key_id => @activation_key.id, :subscription_id => subscription.id, :allocated => allocated)
+      end
+      render :text => escape_html(allocated)
+      notice _("Activation Key subscriptions updated.")
     else
-      errors _("Unable to update subscriptions.")
-      render :nothing =>true
+      if allocated != "0"
+        errors _("Unable to update subscriptions.")
+      end
+      render :text => escape_html(allocated)
     end
   end
 
