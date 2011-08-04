@@ -59,5 +59,13 @@ describe KatelloUrlHelper do
         kurl_valid?('htttp://foo.bar.edu').should_not be_true
       end
     end
+    describe "Invalid Urls" do
+      it "should catch missing protocols" do
+        kprotocol?('www.hugheshoney.com').should_not be_true
+        kprotocol?('http://www.hugheshoney.com').should be_true
+        kprotocol?('https://www.hugheshoney.com').should be_true
+        kprotocol?('ftp://www.hugheshoney.com').should be_true
+      end
+    end
 end
 
