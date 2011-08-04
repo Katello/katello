@@ -39,6 +39,12 @@ BuildRequires:  %{rubygems}
 
 BuildArch: noarch
 
+%if 0%{?fedora} && 0%{?fedora} < 15
+Requires:       rubygem(regin)
+BuildRequires:  rubygem(regin)
+%endif
+
+
 %description
 Provides a package for managing application life-cycle for Linux systems
 
