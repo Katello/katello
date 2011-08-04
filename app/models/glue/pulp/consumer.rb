@@ -47,13 +47,12 @@ module Glue::Pulp::Consumer
     end
     
     def update_pulp_consumer
-      debugger
-      #return true if update_fields.nil?
+      return true if @changed_attributes.empty?
 
-      Rails.logger.info "Updating consumer in pulp: #{name}"
+      Rails.logger.info "Updating consumer in pulp: #{@old.name}"
       Pulp::Consumer.update(self.organization.cp_key, self.uuid, self.description)
     rescue => e
-      Rails.logger.error "Failed to update pulp consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
+      Rails.logger.error "Failed to update pulp consumer #{@old.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
     
