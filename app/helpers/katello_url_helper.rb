@@ -24,6 +24,11 @@ module KatelloUrlHelper
     IPV4.match(url) ? true : false
   end
 
+  def kprotocol? url
+    regex = /^#{PROTOCOLS}/
+    regex.match(url) ? true : false
+  end
+
   def kurl_valid? url
     URLREG.match(url) ? true : false
   end
