@@ -157,7 +157,6 @@ Src::Application.routes.draw do
       put :name
       get :dependencies
       post :promote
-      get :products
       get :object
     end
     collection do
