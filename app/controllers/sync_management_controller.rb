@@ -32,6 +32,8 @@ class SyncManagementController < ApplicationController
 
 
   def rules
+    #TODO should verify that a repo belongs to a product
+
     if params[:product_id]
       product = Product.find(params[:product_id])
       provider_id = product.provider.id
