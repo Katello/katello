@@ -78,6 +78,9 @@ class RolesController < ApplicationController
   end
 
   def edit
+    setup_resource_types
+    @organizations = Organization.all
+
     # render the appropriate partial depending on whether or not the role is a self role
     @user = @role.self_role_for_user
     if @user.nil?
