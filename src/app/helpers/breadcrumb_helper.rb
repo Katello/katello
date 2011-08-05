@@ -144,4 +144,22 @@ module BreadcrumbHelper
       return cs.id if cs
     end
   end
+  
+  module RolesBreadcrumbs
+    def generate_roles_breadcrumb
+      bc = {}
+      add_crumb_node!(bc, "organizations", "", _("Organizations"), [],
+                      {:client_render => true})
+  
+      @organizations.each{|org|
+        add_crumb_node!(bc, organization_bc_id(org), "", org.name, ['organizations'],
+                      {:client_render => true})
+      } if @organizations
+      bc.to_json
+    end
+    
+    def organization_bc_id organization
+      "organization_#{organization.id}"
+    end
+  end
 end
