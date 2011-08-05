@@ -1,14 +1,11 @@
-= include_javascripts :edit
+= javascript :edit, :organization, :form
 = include_editable_i18n
-= include_javascripts :organization
-= include_javascripts :form
 
 .grid_16
   = help_tip_button
   = help_tip(_("Organizations allow content and systems to be separated by logical divisions.  " + |
                "To edit the environments within an organization, click on that organization and then click " + |
                "on the desired environment." )) |
-
 
 .grid_16#main
   = two_panel(@organizations, @panel_options)

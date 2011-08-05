@@ -17,7 +17,7 @@ prog=katello
 RETVAL=0
 KATELLO_PORT=${KATELLO_PORT:-3000}
 KATELLO_USER=${KATELLO_USER:-katello}
-KATELLO_HOME=${KATELLO_HOME:-/usr/lib/katello}
+KATELLO_HOME=${KATELLO_HOME:-/usr/lib64/katello}
 KATELLO_ENV=${KATELLO_ENV:-production}
 KATELLO_PID=${KATELLO_PID:-${KATELLO_HOME}/tmp/pids/server.pid}
 export KATELLO_LOGGING=${KATELLO_LOGGING:-info}
@@ -141,9 +141,15 @@ case "$1" in
         ;;
     depcheck)
         # check if required dependencies from Gemfile are installed
-        pushd $KATELLO_HOME
-        su $KATELLO_USER -s /bin/bash -c "bundle install --without 'test development' --local"
-        popd
+        TMPDIR=$(mktemp -d)
+        pushd $KATELLO_HOME >/dev/null
+          cp -R .bundle/ $TMPDIR
+          cp Gemfile* $TMPDIR
+        popd >/dev/null
+        pushd $TMPDIR >/dev/null
+          bundle install --without 'test development' --local
+        popd >/dev/null
+        rm -rf $TMPDIR
         ;;
     initdb)
         # stop if it is running

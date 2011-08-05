@@ -33,6 +33,6 @@ class PulpSyncStatus < PulpTaskStatus
   end
 
   def progress
-    PulpSyncProgress.new(attributes[:progress])
+    PulpSyncProgress.new(attributes['progress'])
   end
 end

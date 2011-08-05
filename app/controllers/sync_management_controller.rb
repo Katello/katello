@@ -129,7 +129,7 @@ private
   end
 
   def format_state(state)
-    @@status_values[state]
+    @@status_values[state.to_sym]
   end
 
   def format_date(check_date)

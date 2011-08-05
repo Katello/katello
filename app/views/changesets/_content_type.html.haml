@@ -1,0 +1,14 @@
+//requierd local vars:
+// type_string   - i18n string of of what type to show
+//  items  -  list of items for that list
+- if !items.empty?
+  %div.content_group
+    .grid_5
+      %a.clickable{ :href => "#", :onclick => ""}
+        %img{:src => "/images/icons/expander-collapsed.png", :alt => "Expand"}
+      = type_string
+    .grid_5.cs_content{:style=>"display: none;"}
+      %ul
+        - for item in items
+          %li
+            = item

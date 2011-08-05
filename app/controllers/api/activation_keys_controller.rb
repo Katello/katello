@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Api::ActivationKeysController < Api::ApiController
+  respond_to :json
 
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :find_environment, :only => [:index, :create]
@@ -18,8 +19,10 @@ class Api::ActivationKeysController < Api::ApiController
   before_filter :find_activation_key, :only => [:show, :update, :destroy]
 
   def index
-    render :json => @organization.activation_keys and return unless @organization.nil?
-    render :json => @environment.activation_keys
+    query_params[:organization_id] = @organization.id unless @organization.nil?
+    query_params[:environment_id] = @environment.id unless @environment.nil?
+
+    render :json => ActivationKey.where(query_params)
   end
 
   def show
@@ -27,18 +30,29 @@ class Api::ActivationKeysController < Api::ApiController
   end
 
   def create
-    created = ActivationKey.create!(params.merge({:organization => @environment.organization}))
+    created = ActivationKey.create!(params[:activation_key]) do |ak|
+      ak.environment = @environment
+      ak.organization = @environment.organization
+    end
     render :json => created
   end
 
   def update
-    @activation_key.update_attributes!(params)
+    @activation_key.update_attributes!(params[:activation_key])
     render :json => ActivationKey.find(@activation_key.id)
   end
 
   def destroy
     @activation_key.destroy
    render :text => _("Deleted activation key '#{params[:id]}'"), :status => 204
+  end
+
+  def find_organization
+    return unless params.has_key?(:organization_id)
+
+    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id].tr(' ', '_')})
+    raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
+    @organization
   end
 
   def find_environment

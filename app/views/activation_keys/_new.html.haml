@@ -24,7 +24,7 @@
             .grid_8
               %ul.breadcrumb
                 %li
-                  =link_to "Locker", "#"
+                  =link_to _('Locker'), "#", :class => :nohover
                 - for env in path
                   %li
                     %a.select_env{"data-env_id" => env.id} #{env.name}
