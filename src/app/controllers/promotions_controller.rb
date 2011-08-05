@@ -12,7 +12,31 @@
 
 class PromotionsController < ApplicationController
 
+  skip_before_filter :authorize #load the environment
   before_filter :find_environment
+  before_filter :authorize
+
+
+
+
+  def rules
+    env_id = @environment.id
+    prov_id = @product ? @product.provider.id : -1
+
+    product_perm = [[:read], :provider, prov_id]
+    env_perm = [[:read_contents], :environment, env_id]
+
+    prod_test = lambda{ current_user.allowed_to?(*product_perm) and current_user.allowed_to?(*env_perm)  }
+
+    {
+      :show => [[:read, :promote, :modify_changesets, :read_changesets, :promot_changesets], :environment, env_id],
+      :packages => prod_test,
+      :repos => prod_test,
+      :errata => prod_test
+    }.with_indifferent_access  
+  end
+
+
 
   def section_id
     'contents'
@@ -27,20 +51,10 @@ class PromotionsController < ApplicationController
     @changeset_product_ids ||= []
   end
 
-  def detail
-    if params[:product_id]
-      @product = Product.find(params[:product_id])
-    end
-    render :partial => "detail", :locals =>{:product=>@product}
-  end
+
 
 
   # AJAX Calls
-  def products
-    @products = @environment.products
-
-    render :partial=>"products", :locals=>{:product => @product, :products => @products, :changeset_product_ids => changeset_product_ids, :changset=>:changeset}
-  end
 
   def packages
       package_hash = {}
@@ -131,8 +145,6 @@ class PromotionsController < ApplicationController
     @environment = KPEnvironment.first(:conditions => {:name=>params[:env_id], :organization_id=>@organization.id})
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor
-
-
     @product = Product.find(params[:product_id]) if params[:product_id]
   end
 
