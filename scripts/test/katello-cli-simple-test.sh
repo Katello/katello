@@ -74,6 +74,10 @@ function skip_test() {
     printf "[ ${txtyel}SKIPPED${txtrst} ]\t Notes: $1\n"
 }
 
+function test_own_cmd() {
+  CMD="" test "$*"
+}
+
 function test() {
     if [ $PRINT_ALL -eq 1 ]; then
         shift
