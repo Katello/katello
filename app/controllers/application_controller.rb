@@ -237,7 +237,7 @@ class ApplicationController < ActionController::Base
   end
 
   def generic_rules resource_type, obj_id, additional_rules = {}
-    org_id = current_organization.id
+    org_id = current_organization
     additional_rules.update( {
       :index => [[:create, :update, :read, :delete], resource_type, nil, org_id],
       :items => [[:create, :update, :read, :delete], resource_type, nil, org_id],

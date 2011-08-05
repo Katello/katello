@@ -17,6 +17,7 @@ class Api::SyncController < Api::ApiController
   before_filter :find_object, :only => [:index, :show, :create, :cancel]
   respond_to :json
 
+
   def index
     # GET /repositories/<id>/sync/
     # list all synces

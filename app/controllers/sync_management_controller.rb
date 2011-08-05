@@ -29,6 +29,32 @@ class SyncManagementController < ApplicationController
     'contents'
   end
 
+
+
+  def rules
+    if params[:product_id]
+      product = Product.find(params[:product_id])
+      provider_id = product.provider.id
+    end
+    provider_id ||= -1
+
+    provider_ids = []
+    if params[:repo]
+      product_ids = params[:repo].values
+      provider_ids = Product.find(product_ids).collect{|prod| prod.provider.id}.uniq
+
+    end
+
+    { :index => [[:read, :sync], :providers, nil, current_organization],
+      :sync_status=>[[:read, :sync], :providers, nil, current_organization],
+      :sync => [[:sync], :providers, provider_ids, current_organization],
+      :sync_status => [[:sync, :read], :providers, provider_id, current_organization],
+      :product_status => [[:sync, :read], :providers, provider_id, current_organization],
+      :destroy => [[:sync], :providers, provider_id, current_organization]
+    }.with_indifferent_access
+  end
+
+
   def index
     # TODO: We need to switch to using an Org's ID vs the display name.  See BZ 701406
     @organization = current_organization

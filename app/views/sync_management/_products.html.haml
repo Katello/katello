@@ -22,7 +22,7 @@
             sync_status[2] = '#{p.id.to_s}';
             repo_status.push(sync_status);
         %tr
-          %td{:class=>'product'}
+          %td{:class=>'product', 'data-id'=>p.id}
             =check_box_tag "product[#{p.id}]"
             .clickable
               %a{ :href => "#", :onclick => ""}
