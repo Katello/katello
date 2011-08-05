@@ -21,9 +21,6 @@ class ProductsController < ApplicationController
     generic_rules(:providers, params[:provider_id])
   end
 
-  hash["string"]
-
-  
 
   def section_id
     'contents'
