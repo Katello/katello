@@ -13,14 +13,47 @@
 class ChangesetsController < ApplicationController
   include AutoCompleteSearch
   include BreadcrumbHelper
-  
-  before_filter :find_changeset, :except => [:index, :list, :items, :create, :new, :auto_complete_search]
-  before_filter :find_environment, :except => [:index, :list, :items, :auto_complete_search]
+
+  skip_before_filter :authorize # want to load environment if we can
+  before_filter :find_changeset, :except => [:index, :items, :list, :create, :new, :auto_complete_search]
+  before_filter :find_environment, :except => [:auto_complete_search]
+  before_filter :authorize
   before_filter :setup_options, :only => [:index, :items, :auto_complete_search]
+
 
   after_filter :update_editors, :only => [:update]
 
   around_filter :catch_exceptions
+
+
+  def rules
+      env_id = @environment.id if @environment
+      env_id ||= -1  #hack for auto_complete
+
+      read_perm = [[:read_changesets, :manage_changesets], :environment, env_id, current_organization]
+      manage_perm = [[:manage_changesets], :environment, env_id, current_organization]
+
+    {
+      :index => read_perm,
+      :items => read_perm,
+      :list => read_perm,
+      :show => read_perm,
+      :new => manage_perm,
+      :create => manage_perm,
+      :edit => read_perm,
+      :update => manage_perm,
+      :destroy =>manage_perm,
+      :products => read_perm,
+      :dependencies => read_perm,
+      :object => read_perm,
+      :auto_complete_search => read_perm,
+      :promote => [[:promote_changesets], :environment,  env_id, current_organization]
+    }.with_indifferent_access
+    
+  end
+
+
+
 
   ####
   # Changeset history methods
@@ -28,7 +61,6 @@ class ChangesetsController < ApplicationController
 
   #changeset history index
   def index
-    @environment = current_organization.locker.successor || current_organization.locker
     setup_environment_selector(current_organization)
     @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size)
     retain_search_history
@@ -36,7 +68,6 @@ class ChangesetsController < ApplicationController
 
   #extended scroll for changeset_history
   def items
-    @environment = KPEnvironment.find(params['env_id'])
     setup_environment_selector(current_organization)
     start = params[:offset]
     @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size).offset(start)
@@ -46,7 +77,6 @@ class ChangesetsController < ApplicationController
 
   #similar to index, but only renders the actual list of the 2 pane
   def list
-    @environment = KPEnvironment.find(params['env_id'])
     @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size)
     @columns = ['name'] #from index
     render :partial=>"list"
@@ -61,10 +91,6 @@ class ChangesetsController < ApplicationController
     render :partial=>"common/list_update", :locals=>{:item=>@changeset, :accessor=>"id", :columns=>['name'], :chgusers=>changeset_users}
   end
 
-  def show_content
-    render(:partial => "changesets/changeset", :content_type => 'text/html')
-  end
-
   def section_id
     'contents'
   end
@@ -74,12 +100,6 @@ class ChangesetsController < ApplicationController
   ####
   # Promotion methods
   ####
-  
-  def products
-    @products = @changeset.products
-    render :partial=>"products", :locals=>{:changeset=>@changeset}
-  end
-
 
   def dependencies
     product_map = @changeset.dependencies
@@ -231,13 +251,12 @@ class ChangesetsController < ApplicationController
     elsif params[:env_id]
       @environment = KPEnvironment.find(params[:env_id])
     else
-      text = _("Couldn't find environment.")
-      errors text
-      execute_after_filters
-      render :text=>text, :status=>:bad_request and return
+      @environment ||= current_organization.locker.successor || current_organization.locker
     end
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor
+
+
   end
 
   def update_editors
