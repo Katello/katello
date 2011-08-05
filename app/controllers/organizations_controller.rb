@@ -26,9 +26,9 @@ class OrganizationsController < ApplicationController
       :items => [[:create, :update, :read], :organizations],
       :new => [[:create], :organizations],
       :create => [[:create], :organizations],
-      :edit => [[:read,:update], :organizations, @organization.id],
-      :update => [[:update], :organizations, @organization.id],
-      :delete => [[:update], :organizations, @organization.id],
+      :edit => [[:read,:update, :create], :organizations, params[:id]],
+      :update => [[:update, :create], :organizations, params[:id]],
+      :delete => [[:update, :create], :organizations, params[:id]],
     }.with_indifferent_access
   end
 
