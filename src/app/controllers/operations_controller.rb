@@ -11,6 +11,16 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class OperationsController < ApplicationController
+
+  def rules
+    {
+      :index => lambda{user.allowed_to?(*[[:read, :update, :create, :delete], :users]) or
+          user.allowed_to?(*[[:read, :update, :create, :delete], :roles])}
+    }.with_indifferent_access
+  end
+
+
+
   def index
   end
   def section_id
