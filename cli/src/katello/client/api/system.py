@@ -20,7 +20,7 @@ class SystemAPI(KatelloAPI):
     """
     Connection class to access environment calls
     """
-    def register(self, name, org, envName, cp_type):
+    def register(self, name, org, envName, activation_keys, cp_type):
         if envName is not None:
             environment = get_environment(org, envName)
             if environment is None:
@@ -33,6 +33,7 @@ class SystemAPI(KatelloAPI):
         return self.server.POST(path, {
           "name": name,
           "cp_type": cp_type,
+          "activation_keys": activation_keys,
           "facts": {
             "distribution.name": "Fedora"
             }

@@ -20,8 +20,11 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :upload_package_profile]
 
   def create
-    system = System.create!(params.merge({:environment => @environment})).to_json
-    render :json => system
+    activation_keys = find_activation_keys
+    system = System.create!(params.merge({:environment => @environment}))
+    activation_keys.each {|ak| ak.apply_to_system(system) }
+    system.save!
+    render :json => system.to_json
   end
 
   def regenerate_identity_certificates
@@ -93,6 +96,20 @@ class Api::SystemsController < Api::ApiController
     @system = System.first(:conditions => {:uuid => params[:id]})
     raise HttpErrors::NotFound, _("Couldn't find system '#{params[:id]}'") if @system.nil?
     @system
+  end
+
+  def find_activation_keys
+    organization = @environment.organization
+    if ak_names = params.delete(:activation_keys)
+      activation_keys = ak_names.map do |ak_name|
+        activation_key = organization.activation_keys.find_by_name(ak_name)
+        raise HttpErrors::NotFound, _("Couldn't find activation key '#{ak_name}'") unless activation_key
+        activation_key
+      end
+      return activation_keys
+    else
+      return []
+    end
   end
 
 end
