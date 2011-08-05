@@ -25,12 +25,11 @@ class ProvidersController < ApplicationController
 
   def rules
     pid = params[:id]
-    org_id = current_organization.id
-    
+
     generic_rules(:providers, pid,  {
-      :products_repos => [[:read,:update], :providers, pid, org_id],
-      :subscriptions => [[:read,:update], :providers, pid, org_id],
-      :update_subscriptions => [[:update], :providers, pid, org_id],
+      :products_repos => [[:read,:update], :providers, pid, current_organization],
+      :subscriptions => [[:read,:update], :providers, pid, current_organization],
+      :update_subscriptions => [[:update], :providers, pid, current_organization],
     })
   end
 
