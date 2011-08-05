@@ -34,4 +34,9 @@ class ActivationKey < ActiveRecord::Base
   def environment_exists
     errors.add(:environment, _("id: #{environment_id} doesn't exist ")) if environment.nil?
   end
+
+  # set's up system when registering with this activation key
+  def apply_to_system(system)
+    system.environment_id = self.environment_id
+  end
 end
