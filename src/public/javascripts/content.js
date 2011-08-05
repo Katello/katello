@@ -16,6 +16,10 @@ function getProductId(field) {
     return prod_id;
 }
 
+function getProductIdFromRepo(repo_id) {
+    return $('#' + "repo_"  +repo_id).parents('.product').attr('data-id')
+}
+
 function fadeUpdate(fieldName, text) {
   var updateField = $(fieldName);
   updateField.fadeOut('fast');
@@ -115,8 +119,9 @@ var content = (function(){
             progressBar.appendTo(updateField);
             cancelButton.appendTo(updateField);
             updateField.fadeIn('fast');
+            console.log(getProductIdFromRepo(repo));
             var pu = $.PeriodicalUpdater('/sync_management/sync_status/', {
-              data: {repo_id:repo, sync_id:sync},
+              data: {repo_id:repo, sync_id:sync, product_id: getProductIdFromRepo(repo)},
               method: 'get',
               type: 'json',
               global: false
@@ -171,15 +176,15 @@ var content = (function(){
         },
         cancelSync : function(repoid, syncid, updateField, pu){
             var btn = $('#' + common.escapeId("cancel_" + repoid));
+            var prod_id = getProductId(updateField);
             btn.addClass("disabled");
             pu.stop();
             $.ajax({
               type: 'DELETE',
               url: '/sync_management/' + syncid,
-              data: { repo_id: repoid },
+              data: { repo_id: repoid, product_id: prod_id },
               dataType: 'script',
               success: function(data) {
-                var prod_id = getProductId(updateField);
                 content.updateProduct(prod_id, repoid);
                 updateField.html('Sync Cancelled.');
               },
