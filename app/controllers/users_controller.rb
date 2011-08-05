@@ -18,7 +18,20 @@ class UsersController < ApplicationController
   end
    
   before_filter :setup_options, :only => [:items, :index]
-
+  def rules
+     rules = {:index => [[:create, :update, :read, :delete], :users],
+         :items => [[:create, :update, :read], :users],
+        :new => [[:create], :users],
+         :create => [[:create], :users],
+         :edit => [[:read,:update,:create], :users, params[:id]],
+         :update => [[:update, :create], :users, params[:id]],
+         :delete => [[:update, :create], :users, params[:id]],
+     }
+     rules[:clear_helptips] = rules[:edit]
+     rules[:enable_helptip] = rules[:clear_helptips]
+     rules[:disable_helptip] = rules[:enable_helptip]
+     rules.with_indifferent_access
+  end
   
   def index
     begin

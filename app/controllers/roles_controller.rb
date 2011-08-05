@@ -15,7 +15,23 @@ class RolesController < ApplicationController
   before_filter :setup_options, :only => [:index, :items]
   
   include AutoCompleteSearch
-    
+  
+  def rules
+    rules = {:index => [[:create, :update, :read, :delete], :roles],
+        :items => [[:create, :update, :read], :roles],
+        :new => [[:create], :roles],
+        :create => [[:create], :roles],
+        :edit => [[:read,:update, :create], :roles, params[:id]],
+        :update => [[:update, :create], :roles, params[:id]],
+        :delete => [[:update, :create], :roles, params[:id]],
+      }
+    rules[:verbs_and_scopes] = rules[:update]
+    rules[:update_permission] = rules[:update]
+    rules[:create_permission] = rules[:update]
+    rules[:show_permission] = rules[:edit]
+    rules.with_indifferent_access
+  end
+
   def section_id
      'operations'
    end
