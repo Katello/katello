@@ -1,5 +1,5 @@
 $(function(){
-    $('.scroll-pane').jScrollPane();
+    $('.scroll-pane').jScrollPane({ hideFocus: true });
     $('.jspPane').resize(function(event){
         var element = $('.scroll-pane');
         if (element.length){
