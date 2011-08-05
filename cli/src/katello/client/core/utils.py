@@ -144,9 +144,11 @@ class Printer:
             value = item[col['attr_name']]
             if not col['multiline']:
                 if col['time_format']:
-                    print indent+"%-15s \t%-25s" % (col['name']+":", format_date(value))
+                    print ("{:<" + str(self._minColumnWidth() + 1) + "} {}").format(col['name'] + ":", format_date(value))
+                    # +1 to account for the : after the column name
                 else:    
-                    print indent+"%-15s \t%-25s" % (col['name']+":", value)
+                    print ("{:<" + str(self._minColumnWidth() + 1) + "} {}").format(col['name'] + ":", value)
+                    # +1 to account for the : after the column name
             else:
                 print indent+col['name']+":"
                 print indent_text(value, indent+"    ")
@@ -181,7 +183,7 @@ class Printer:
             print self._delim,
 
 
-    def _calculateWidths(self, items):
+    def _calculateGrepWidths(self, items):
         widths = {}
         #return widths
         for col in self._columns:
@@ -192,7 +194,14 @@ class Printer:
                     widths[key] = len(str(item[key]))+1
 
         return widths
+    
+    
+    def _minColumnWidth(self):
+        width = 0
+        for col in self._columns:
+            width = len(str(col['name'])) if (len(str(col['name'])) > width) else width 
 
+        return width
 
 
     def printItem(self, item, indent=""):
@@ -217,7 +226,7 @@ class Printer:
         @param indent: text that is prepended to every printed line in multiline mode
         """
         if self._grep:
-            widths = self._calculateWidths(items)
+            widths = self._calculateGrepWidths(items)
             self._printHeader(self._heading, widths)
             for item in items:
                 self._printItemGrep(item, widths)
@@ -227,9 +236,8 @@ class Printer:
             for item in items:
                 self._printItem(item, indent)
                 print
-
-
-
+                
+    
 
 # server output validity ------------------------------------------------------
 def is_valid_record(rec):
