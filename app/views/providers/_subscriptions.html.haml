@@ -5,17 +5,17 @@
   = render_navigation(:expand_all => true, :level => 3)
 
 = content_for :content do
-  .grid_8
+  .grid_9
     = help_tip_button('subscriptions-help')
     &nbsp;
 
   #subscriptions
-    .grid_7
+    .grid_9
       = help_tip(_("Listed below are the products available from the selected provider, as well as the " + |
                  "related subscription information.  If you have a subscription manifest you may upload it below. " + |
                  "This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."), 'subscriptions-help') |
   
-    .grid_8#subscription
+    .grid_9#subscription
       %h4 #{_("Current Subscriptions")}
       %table
         %thead
