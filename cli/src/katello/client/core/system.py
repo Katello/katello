@@ -1,4 +1,3 @@
-#!/usr/bin/python
 #
 # Katello Repos actions
 # Copyright (c) 2010 Red Hat, Inc.
@@ -139,6 +138,7 @@ class Register(SystemAction):
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
+        self.require_option('environment')
 
     def run(self):
         name = self.get_option('name')

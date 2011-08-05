@@ -1,4 +1,3 @@
-#!/usr/bin/python
 #
 # Katello Repos actions
 # Copyright (c) 2010 Red Hat, Inc.
@@ -19,6 +18,7 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.errata import ErrataAPI
+from katello.client.api.system import SystemAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_repo
@@ -81,6 +81,39 @@ class List(ErrataAction):
         self.printer.printItems(errata)
         return os.EX_OK
 
+class SystemErrata(ErrataAction):
+    description = _("list errata for a system")
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                       help=_("organization name (required)"))
+        self.parser.add_option('--name', dest='name',
+                                   help=_("system name (required)"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+    def run(self):
+        systemApi = SystemAPI()
+        
+        org_name = self.get_option('org')
+        sys_name = self.get_option('name')
+
+        systems = systemApi.systems_by_org(org_name, {'name': sys_name})
+        if len(systems) == 0:
+            return os.EX_DATAERR
+
+        errata = systemApi.errata(systems[0]["uuid"])
+
+        self.printer.addColumn('id')
+        self.printer.addColumn('title')
+        self.printer.addColumn('type')
+
+        self.printer.setHeader(_("Errata for system %s in organization %s") % (sys_name, org_name))
+        self.printer.printItems(errata)
+
+        return os.EX_OK
 
 class Info(ErrataAction):
 

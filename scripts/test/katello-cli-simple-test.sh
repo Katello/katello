@@ -1,9 +1,9 @@
 #!/bin/bash
 script_dir_link=$(dirname "$(readlink "$0")")
 if [[ $script_dir_link == "." ]]; then
-  script_dir=$(dirname "$0")
+    script_dir=$(dirname "$0")
 else
-  script_dir=$script_dir_link
+    script_dir=$script_dir_link
 fi
 export PYTHONPATH=$script_dir/../../cli/src
 
@@ -74,10 +74,14 @@ function skip_test() {
     printf "[ ${txtyel}SKIPPED${txtrst} ]\t Notes: $1\n"
 }
 
+function test_own_cmd() {
+  CMD="" test "$*"
+}
+
 function test() {
     if [ $PRINT_ALL -eq 1 ]; then
         shift
-        echo katello $*
+        echo $DISP_CMD $*
     else
         printf "%-40s" "$1"
         shift        
@@ -132,7 +136,7 @@ function valid_id() {
     if [ -z "$1" ]; then
         return 0
     fi
-  
+
     #id=`echo $1 | egrep '\+-+\+'`
     id=`echo $1 | egrep '\-{5,}'`
     if [ -z "$id" ]; then
@@ -143,11 +147,11 @@ function valid_id() {
 }
 
 
-
 . $script_dir/cli_tests/_base_setup.sh
 for t in $required_tests; do  
     . $script_dir/cli_tests/$t.sh
 done
+
 . $script_dir/cli_tests/_base_cleanup.sh
 
 summarize

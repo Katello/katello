@@ -873,12 +873,15 @@ fieldset {
 }
 
 /* left side of 2 pane that has clickable links */
+.column_panel_1 { width: 300px; }
+.column_panel_2 { width: 375px; }
+.column_panel_3 { width: 450px; }
 .left {
   float:left;
-  width:450px;
   min-height:500px;
   position:relative;
   z-index: 100;
+
     h2 {
         margin-bottom: 0;
     }
@@ -1112,7 +1115,7 @@ fieldset {
     overflow-y: auto;
     overflow-x: hidden;
     width: auto;
-    margin: 0 1% -3% 4%;
+    margin: 0 0 0 20px;
     min-height: 250px;
   }
   .grid_8 {
@@ -1143,7 +1146,6 @@ fieldset {
     h2 {
       font-size: 100%;
       margin-top: 9px;
-      padding-right: 170px;
     }
   }
 }
@@ -1214,6 +1216,8 @@ fieldset {
     height:74px;
     width: 449px;
     background-color: #FFF;
+    
+    header { height: 40px;}
 }
 
 /* begin helptip */
@@ -1410,6 +1414,16 @@ fieldset {
           a {
             padding-left: 20px;
             @include border-left-radius(5px);
+          }
+
+          .nohover {
+            &:hover {
+              background: $breadcrumbbg_color !important;
+              color: #000;
+              text-shadow: none;
+
+              &:after { border-left-color: $breadcrumbbg_color !important; }
+            }
           }
       }
       &:nth-child(2) {

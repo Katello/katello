@@ -1,16 +1,18 @@
 %define ruby_sitelib %(ruby -rrbconfig -e "puts Config::CONFIG['sitelibdir']")
 %define gemdir %(ruby -rubygems -e 'puts Gem::dir' 2>/dev/null)
 
-%global homedir %{_prefix}/lib/%{name}
+%global homedir %{_libdir}/%{name}
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir extras/fedora
 
-Name:       katello		
-Version:	0.1.54
-Release:	1%{?dist}
-Summary:	A package for managing application lifecycle for Linux systems
+%global rubygems rubygem(rails) >= 3.0.5 rubygem(multimap) rubygem(haml) >= 3.1.2 rubygem(haml-rails) rubygem(json) rubygem(rest-client) rubygem(jammit) rubygem(rails_warden) rubygem(net-ldap) rubygem(compass) >= 0.11.5 rubygem(compass-960-plugin) >= 0.10.4 rubygem(capistrano) rubygem(oauth) rubygem(i18n_data) >= 0.2.6 rubygem(gettext_i18n_rails) rubygem(simple-navigation) >= 3.3.4 rubygem(sqlite3) rubygem(pg) rubygem(scoped_search) >= 2.3.1 rubygem(delayed_job) >= 2.1.4 rubygem(daemons) >= 1.1.4 rubygem(uuidtools)
+
+Name:           katello
+Version:	      0.1.57
+Release:	      1%{?dist}
+Summary:	      A package for managing application life-cycle for Linux systems
 	
-Group:          Internet/Applications
+Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
 Source0:        %{name}-%{version}.tar.gz
@@ -20,28 +22,8 @@ Requires:       pulp
 Requires:       openssl
 Requires:       candlepin-tomcat6
 Requires:       rubygems
-Requires:       rubygem(rails) >= 3.0.5
-Requires:       rubygem(multimap)
-Requires:       rubygem(haml) >= 3.1.2
-Requires:       rubygem(haml-rails)
-Requires:       rubygem(json)
-Requires:       rubygem(rest-client)
-Requires:       rubygem(jammit)
-Requires:       rubygem(rails_warden)
-Requires:       rubygem(net-ldap)
-Requires:       rubygem(compass) >= 0.11.5
-Requires:       rubygem(compass-960-plugin) >= 0.10.4
-Requires:       rubygem(capistrano)
-Requires:       rubygem(oauth)
-Requires:       rubygem(i18n_data) >= 0.2.6
-Requires:       rubygem(gettext_i18n_rails)
-Requires:       rubygem(simple-navigation) >= 3.3.4
-Requires:       rubygem(sqlite3) 
-Requires:       rubygem(pg)
-Requires:       rubygem(scoped_search) >= 2.3.1
-Requires:       rubygem(delayed_job) >= 2.1.4
-Requires:       rubygem(daemons) >= 1.1.4
-Requires:       rubygem(uuidtools)
+Requires:       rubygem(bundler)
+Requires:       %{rubygems}
 
 Requires(pre):  shadow-utils
 Requires(preun): chkconfig
@@ -53,19 +35,31 @@ BuildRequires: 	coreutils findutils sed
 BuildRequires: 	rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
-BuildRequires:  rubygem(jammit)
-BuildRequires:  rubygem(compass) >= 0.11.5
-BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
+BuildRequires:  %{rubygems}
 
 BuildArch: noarch
 
+# workaround for BZ 714167
+%if 0%{?fedora} && 0%{?fedora} < 16
+Requires:       rubygem(regin)
+BuildRequires:  rubygem(regin)
+%endif
+
+
 %description
-Provides a package for managing application lifecycle for Linux systems
+Provides a package for managing application life-cycle for Linux systems
 
 %prep
 %setup -q
 
 %build
+#generate Gemfile.lock from system-wide rubygems
+echo Generating Gemfile.lock
+echo If this step fails check Gemfile and rubygems SPEC macro
+rm -f Gemfile.lock
+sed -i '/DEV_ONLY/,$d' Gemfile
+bundle install --local --without=test,development
+
 #compile SASS files
 echo Compiling SASS files...
 compass compile
@@ -84,14 +78,12 @@ rm -rf %{buildroot}
 install -d -m0755 %{buildroot}%{homedir}
 install -d -m0755 %{buildroot}%{datadir}
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
-install -d -m0750 %{buildroot}%{_localstatedir}/log/%{name}
+install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 
 # clean the application directory before installing
 [ -d tmp ] && rm -rf tmp
 
 #copy the application to the target directory
-mkdir .bundle
-mv ./extras/bundle-config .bundle/config
 cp -R .bundle * %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
@@ -184,6 +176,155 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Aug 04 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.57-1
+- spec - adding regin dep as workaround for BZ 714167 (F14/15)
+
+* Wed Aug 03 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.56-1
+- spec - introducing bundle install in %build section
+- Merge branch 'system_errata'
+- added a test for Api::SystemsController#errata call
+- listing of errata by system is functional now
+- added a script to make rake routes output prettier
+- Views - update grid in various partial to account for panel size change
+- Providers - fix error on inline edit for Products and Repos
+- removing unused systems action - list systems
+- 726760 - Notices: Fixes issue with promotion notice appearing on every page.
+  Fixes issue with synchronous notices not being marked as viewed.
+- Tupane - Fixes issue with main panel header word-wrapping on long titles.
+- 727358 - Tupane: Fixes issue with tupane subpanel header text word-wrapping.
+- 2Panel - Makes font resizing occur only on three column panels.
+- matching F15 gem versions for tzinfo and i18n
+- changing the home directory of katello to /usr/lib64/katello after recent
+  spec file changes
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+- fixed pulp-proxy-controller to be correct http action
+- Merge branch 'master' into system_errata
+- added support for listing errata by system
+
+* Mon Aug 01 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.55-1
+- spec - rpmlint cleanup
+- making changeset history show items by product
+- adding descripiton to changeset history page
+- 726768 - jnotify - close notice on x click and update to fade quicker on
+  close
+- 2panel - Adds default left panel sizing depending on number of columns for
+  left panel in 2 panel views.  Adds option to 2panel for default width to be
+  customizably set using left_panel_width option.
+- Changes sizing of provider new page to not cause horizntal scroll bar at
+  minimum width.
+- fixed reporting of progress during repo synchronization in UI
+- fixed an issue with Api::ActivationKeysController#index when list of all keys
+  for an environment was being retrieved
+- Added api support for activation keys
+- Refactor - Converts all remaining javascript inclusions to new style of
+  inclusion that places scripts in the head.
+- Adds resize event listener to scroll-pane to account for any element in a
+  tupane panel that increases the size of the panel and thus leads to needing a
+  scroll pane reinitialization.
+- Edits to enlarge tupane to take advantage of more screen real estate.
+  Changeset package selection now highlights to match the rest of the
+  promotions page highlighting.
+- General UI - disable hover on Locker when Locker not clickable
+- api error reporting - final solution
+- Revert "introducing application error exception for API"
+- Revert "ApiError - fixing unit tests"
+- ApiError - fixing unit tests
+- introducing application error exception for API
+- fixing depcheck helper script
+- Adds scroll pane support for roles page when clicking add permission button.
+- removal of jasmine and addition of webrat, nokogiri
+- Activation Keys - enabled specs that required webrat matchers
+- spec_helper - update to support using webrat
+- adding description for changeset creation
+- Tupane - Fixes for tupane fixed position scrolling to allow proper behavior
+  when window resolution is below the minimum 960px.
+- remove jasmine from deps
+- adding dev testing gems
+- added Api::ActivationController spec
+- added activation keys api controller
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+- fixing merge issues with changeset dependencies
+- initial dependency spec test
+- adding changeset dependency resolving take 2
+- Merge branch 'master' into a-keys
+- making changeset dep. solving work on product level instead of across the
+  entire environment
+- adding description to Changeset object, and allowing editing of the
+  description
+- adding icons and fixing some spacing with changeset controls
+- updated control bar for changesets, including edit
+- Fix for a-keys row height.
+- Merge branch 'master' into a-keys
+- Merge branch 'a-keys' of ssh://git.fedorahosted.org/git/katello into a-keys
+- Fixes issue where when a jeditable field was clicked on, and expanded the
+  contents of a panel beyond visible no scroll bar would previously appear.
+  This change involved a slight re-factor to jeditable helpers to trim down and
+  re-factor commonality.  Also, this change involved edits to the jeditable
+  plugin itself, thus as of this commit jquery.jeditable is no longer in sync
+  with the original repository.
+- Activation Keys - removing unused js
+- Merge branch 'master' into a-keys
+- Activation Keys - add environment to search
+- Merge branch 'a-keys' of ssh://git.fedorahosted.org/git/katello into a-keys
+- Activation Keys - update to use new tupane layout + spec impacts
+- Merge branch 'master' into a-keys
+- test for multiple subscriptions assignement to keys
+- Activation Keys - make it more obvious that user should select env :)
+- Activation Keys - adding some additional specs (e.g. for default env)
+- Activation Keys - removing empty spec
+- Activation Keys - removing checkNotices from update_subscriptions
+- Activation Keys - add Remove link to the subscriptions tab
+- Merge branch 'master' into a-keys
+- Acttivatino Keys - Adding support for default environment
+- spec test for successful subscription updates
+- spec test for invalid activation key subscription update
+- correctly name spec description
+- spec model for multiple akey subscription assigment
+- akey subscription update sync action
+- ajax call to update akey subscriptions
+- akey subscription update action
+- fix route for akey subscription updates
+- refactor akey subscription list
+- bi direction test for akeys/subscriptions
+- models for activation key subscription mapping
+- Activation Keys - fix failed specs
+- Activation Keys - adding helptip text to panel and general pane
+- Merge branch 'master' into a-keys
+- Activation Keys - ugh.. clean up validation previous commit
+- Activation Keys - update so key name is unique within an org
+- Activation Key - fix akey create
+- Activation Keys - initial specs for views
+- Activation Keys - update edit view to improve testability
+- Activation Keys - update _new partial to eliminate warning during render
+- Activation Keys - removing unused _form partial
+- multiselect support for akey subscriptions
+- Merge branch 'master' into a-keys
+- Activation Keys - update to ensure error notice is generated on before_filter
+  error
+- adding in activation key mapping to subscriptions
+- add jquery multiselect to akey subscription associations
+- views for activation key association to subscriptions
+- Navigation - remove Groups from Systems subnav
+- Activation Keys - controller specs for initial crud support
+- adding activation key routes for handling subscription paths
+- Activation Keys - fix the _edit view post adding subnav
+- Activation Keys - adding the forgotten views...
+- Activation Keys - added subnav for subscriptions
+- Merge branch 'master' into a-keys
+- initial akey model spec tests
+- Activation Keys - update index to request based on current org and fix model
+  error
+- Activation Keys - model - org and env associations
+- Merge branch 'master' into a-keys
+- Sync Plans - refactor editable to remove duplication
+- Systems - refactor editabl to remove duplication
+- Environment - refactor editable to remove duplication
+- Organization - refactor editable to remove duplication
+- Providers - refactor editable to remove duplication
+- Merge branch 'master' into a-keys
+- Merge branch 'master' into a-keys
+- Activation Keys - first commit - initial support for CRUD
+
 * Wed Jul 27 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.54-1
 - spec - logging level can be now specified in the sysconfig
 - bug 726030 - Webrick wont start with the -d (daemon) option

@@ -38,8 +38,7 @@ class EnvironmentAPI(KatelloAPI):
             return envs[0]
         else:
             return None
-
-
+            
     def locker_by_org(self, orgId):
         path = "/api/organizations/%s/environments/" % (orgId)
         envs = self.server.GET(path, {"locker": "true"})[1]

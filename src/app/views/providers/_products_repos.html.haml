@@ -12,14 +12,14 @@
   
 = content_for :content do
   #products_repos
-    .grid_8
+    .grid_9
       = help_tip_button('product_repos-help')
       = help_tip(_("On Products & Repositories you can add your own Products and Repositories to your Provider.  " + |
                  "This allows you to synchronize content from any remote repository to this server.  Simply " + |
                  "add a Product and then setup one or more repositories to add to this Provider.  This feature is only " + |
                  "available for Custom Providers."), 'product_repos-help') |
   
-    .grid_8#products
+    .grid_9#products
       %input{ :type => "hidden", :id=> "provider_id", :name => "provider_id", :value => @provider.id }
   
       .button.subpanel_element{"data-url"=>new_provider_product_path(@provider.id)}

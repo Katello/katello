@@ -28,13 +28,11 @@ $(document).ready(function() {
         $('.left #new').css({"width":"10em"});
         $('.list-title').width(panelLeft);
         $('#list-title').width(panelLeft);
-        var fontsize = Math.floor((panelLeft/430)*100);
-        //if it's bigger than 100%, make it 100%.
-        fontsize = (fontsize > 100) ? 100 : fontsize;
-        $('#systems .block').css({"font-size": parseInt(fontsize, 10) + "%"});
-        var element = $('.scroll-pane');
-        if (element.length){
-            element.data('jsp').reinitialise();
+        if( $(this).hasClass('column_panel_3') ){
+            var fontsize = Math.floor((panelLeft/430)*100);
+            //if it's bigger than 100%, make it 100%.
+            fontsize = (fontsize > 100) ? 100 : fontsize;
+            $('#systems .block').css({"font-size": parseInt(fontsize, 10) + "%"});            
         }
     });
     $('.left').resize();
@@ -54,8 +52,7 @@ $(document).ready(function() {
     panel.panelResize($('#panel_main'), false);
     panel.panelResize($('#subpanel_main'), true);
 
-    $('.block').live('click', function(e)
-    {
+    $('.block').live('click', function(e) {
         activeBlock = $(this);
         ajax_url = activeBlock.attr("data-ajax_url");
         activeBlockId = activeBlock.attr('id');
@@ -131,7 +128,6 @@ $(document).ready(function() {
             dataType: 'html',
             success: function(data) {
                 $(".panel-content").html(data);
-                $('.scroll-pane').jScrollPane();
                 panel.panelResize($('#panel_main'), false);
             }
         });
@@ -139,7 +135,7 @@ $(document).ready(function() {
     });
 
     $('.left').resizable({maxWidth: 550,
-                                    minWidth: 350,
+                                    minWidth: 300,
                                     grid: 25,
                                     handles: 'e',
                                     autoHide: true
@@ -237,6 +233,7 @@ var panel = (function(){
             var panelContent = thisPanel.find(".panel-content");
             spinner.show();
             panelContent.hide();
+            panel.expand_cb(name);
             
             $.ajax({
                 cache: true,
@@ -246,8 +243,7 @@ var panel = (function(){
                     var pc = panelContent.html(data);
                     spinner.hide();
                     pc.fadeIn(function(){$(".panel-content :input:visible:enabled:first").focus();});
-                    panel.expand_cb(name);
-                    $('.scroll-pane').jScrollPane();
+                    //panel.expand_cb(name);
                     if( isSubpanel ){
                         panel.panelResize($('#subpanel_main'), isSubpanel);
                     } else {
@@ -283,10 +279,7 @@ var panel = (function(){
                 if( leftPanel.height() <= height + headerSpacing + 80){
                     height = leftPanel.height() - headerSpacing - 75;
                 } else {
-                    height -= 50;
-                }
-                if (isSubpanel) {
-                    //height -= subpanelSpacing;
+                    height += 110;
                 }
                 
                 paneljQ.height(height);
@@ -309,6 +302,7 @@ var panel = (function(){
             content.html('');
             $.bbq.removeState("panel");
             panel.updateResult();
+            panel.expand_cb(name);
             return false;
         },
         closeSubPanel : function(jPanel){
@@ -322,6 +316,7 @@ var panel = (function(){
                 }).removeClass('opened').addClass('closed');
                 panel.updateResult();
             }
+            panel.expand_cb(name);
             return false;
         },
         updateResult : function(){
