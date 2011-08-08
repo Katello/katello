@@ -22,14 +22,19 @@ class OrganizationsController < ApplicationController
   before_filter :setup_options, :only=>[:index, :items]
 
   def rules
-    {:index => [[:create, :update, :read, :delete], :organizations],
-      :items => [[:create, :update, :read], :organizations],
-      :new => [[:create], :organizations],
-      :create => [[:create], :organizations],
-      :edit => [[:read,:update, :create], :organizations, params[:id]],
-      :update => [[:update, :create], :organizations, params[:id]],
-      :delete => [[:update, :create], :organizations, params[:id]],
-    }.with_indifferent_access
+    create_test = lambda{Organization.creatable?}
+    read_test = lambda{@organization.readable?}
+    edit_test = lambda{@organization.updatable?}
+    delete_test = lambda{@organization.deletable?}
+
+    {:index =>  [[:create, :update, :read, :delete], :organizations],
+      :items => [[:create, :update, :read, :delete], :organizations],
+      :new => create_test,
+      :create => create_test,
+      :edit => read_test,
+      :update => edit_test,
+      :destroy => delete_test,
+    }
   end
 
 

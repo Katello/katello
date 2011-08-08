@@ -83,7 +83,7 @@ class Provider < ActiveRecord::Base
 
   #permissions
   def readable?
-    User.allowed_to? [[:read], :provider, self.id,
+    User.allowed_to? *[[:read], :provider, self.id,
                               self.organization.id]
   end
 
