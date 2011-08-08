@@ -66,7 +66,7 @@ describe Changeset do
     describe "adding content from the prior environment" do
 
       before(:each) do
-        @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM, :organization => @organization)
+        @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM, :organization => @organization, :repository_url => "https://something.url/stuff")
 
         @prod = Product.new({:name => "prod"})
         @prod.provider = @provider
@@ -116,7 +116,7 @@ describe Changeset do
     describe "removing content" do
 
       before(:each) do
-        @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM, :organization => @organization)
+        @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM, :organization => @organization, :repository_url => "https://something.url/stuff")
 
         @prod = Product.new({:name => "prod"})
         @prod.provider = @provider
