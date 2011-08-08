@@ -81,6 +81,13 @@ class Provider < ActiveRecord::Base
     }.with_indifferent_access
   end
 
+  #permissions
+  def readable?
+    User.allowed_to? [[:read], :provider, self.id,
+                              self.organization.id]
+  end
+
+
   protected
 
    def sanitize_repository_url
