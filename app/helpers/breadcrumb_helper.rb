@@ -148,18 +148,40 @@ module BreadcrumbHelper
   module RolesBreadcrumbs
     def generate_roles_breadcrumb
       bc = {}
-      add_crumb_node!(bc, "organizations", "", _("Organizations"), [],
+      add_crumb_node!(bc, "roles", "", _(@role.name), [],
+                      {:client_render => true})
+      add_crumb_node!(bc, "role_organizations", "", _("Organizations"), ['roles'],
+                      {:client_render => true})
+      add_crumb_node!(bc, "role_users", "", _("Users"), ['roles'],
                       {:client_render => true})
   
       @organizations.each{|org|
-        add_crumb_node!(bc, organization_bc_id(org), "", org.name, ['organizations'],
+        add_crumb_node!(bc, organization_bc_id(org), "", org.name, ['roles', 'role_organizations'],
                       {:client_render => true})
       } if @organizations
+      
+      @role.users.each{ |user|
+        add_crumb_node!(bc, user_bc_id(user), "", user.username, ['roles', 'roles_users'],
+                      {:client_render => true})
+      }
+      
+      @role.permissions.each{ |perm|
+        add_crumb_node!(bc, permission_bc_id(perm.organization, perm), "", perm.id, ['roles', 'roles_organizations', organization_bc_id(perm.organization)],
+                      {:client_render => true}, { :organization => "organization_#{perm.organization_id}" })
+      }
       bc.to_json
     end
     
     def organization_bc_id organization
       "organization_#{organization.id}"
+    end
+    
+    def user_bc_id user
+      "user_#{user.id}"
+    end
+    
+    def permission_bc_id organization, permission
+      "permission_#{organization.id}_#{permission.id}"
     end
   end
 end

@@ -1,11 +1,12 @@
 @import "katello";
 
 #operations {
-  #role {
-    #add_permission_button { margin-right: 10px; }
-  }
-  #roles_tree {
-    width: 500px;
-    margin: 0 auto;
+  .panel-custom {
+    @extend .panel;
+    
+    border: none;
+    background-color: transparent;
+    
+    #panel_main { margin: 0; }
   }
 }
