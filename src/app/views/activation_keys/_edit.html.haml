@@ -49,7 +49,7 @@
           %label #{_("Select an Environment")}:
           - unless current_organization.environments.empty?
             - current_organization.promotion_paths.each do |path|
-              .grid_10.prefix_2
+              .grid_10
                 %ul#edit_env_setup.breadcrumb_nohover{:style => 'display: none', 'data-env_url' => edit_environment_activation_key_path(@activation_key)}
                   %li
                     = link_to _('Locker'), "#"
