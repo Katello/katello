@@ -11,6 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class RepositoriesController < ApplicationController
+
+  include KatelloUrlHelper
+
   respond_to :html, :js
 
   before_filter :find_provider, :only => [:show, :edit, :update, :destroy, :index, :new, :create]
@@ -32,6 +35,7 @@ class RepositoriesController < ApplicationController
   def create
     begin
       repo_params = params[:repo]
+      raise _('Invalid Url') if !kurl_valid?(repo_params[:feed])
       # Bundle these into one call, perhaps move to Provider
       # Also fix the hard coded yum
       @product.add_new_content(repo_params[:name], repo_params[:feed], 'yum')
