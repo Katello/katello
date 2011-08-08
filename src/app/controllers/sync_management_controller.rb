@@ -25,6 +25,12 @@ class SyncManagementController < ApplicationController
                      PulpSyncStatus::Status::RUNNING => _("Running."),
                      PulpSyncStatus::Status::NOT_SYNCED => _("Not synced.")}
 
+
+  before_filter :find_provider, :except => [:index, :sync]
+  before_filter :find_providers, :only => [:sync]
+  before_filter :authorize
+  
+
   def section_id
     'contents'
   end
@@ -32,26 +38,16 @@ class SyncManagementController < ApplicationController
 
 
   def rules
-    #TODO should verify that a repo belongs to a product
 
-    if params[:product_id]
-      product = Product.find(params[:product_id])
-      provider_id = product.provider.id
-    end
-    provider_id ||= -1
-
-    provider_ids = []
-    if params[:repo]
-      product_ids = params[:repo].values
-      provider_ids = Product.find(product_ids).collect{|prod| prod.provider.id}.uniq
-    end
-
-    { :index => [[:read, :sync], :providers, nil, current_organization],
-      :sync_status=>[[:read, :sync], :providers, nil, current_organization],
-      :sync => [[:sync], :providers, provider_ids, current_organization],
-      :sync_status => [[:sync, :read], :providers, provider_id, current_organization],
-      :product_status => [[:sync, :read], :providers, provider_id, current_organization],
-      :destroy => [[:sync], :providers, provider_id, current_organization]
+    list_test = lambda{Provider.any_readable?(current_organization)}
+    sync_read_test = lambda{@provider.readable?}
+    sync_test = lambda {@providers.all?{|prov| prov.syncable?}}
+    
+    { :index => list_test,
+      :sync_status => sync_read_test,
+      :product_status => sync_read_test,
+      :sync => sync_test,
+      :destroy => sync_test
     }
   end
 
@@ -117,6 +113,28 @@ class SyncManagementController < ApplicationController
   end
 
 private
+
+  def find_provider
+    prod = Product.find(params[:product_id])
+    verify_repo(prod, params[:repo_id])
+    @provider = prod.provider
+  end
+
+  def find_providers
+    @providers = []
+    params[:repo].each{|repo_id, prod_id|
+      prod = Product.find(prod_id)
+      verify_repo(prod, repo_id)
+      @providers << prod.provider if !@providers.member?(prod.provider)
+    }
+  end
+
+  def verify_repo product, repo_id
+    product.repos(current_organization.locker).each { |tmp_repo|
+      return true if repo_id == tmp_repo.id
+    }
+    raise _("The specified repo does not match the specified product")
+  end
 
   def format_sync_progress(sync_status)
     progress = {:progress => calc_progress(sync_status)}
