@@ -95,6 +95,7 @@ module ApplicationHelper
              :accessor=>options[:accessor],
              :url=>options[:url], 
              :left_panel_width=>options[:left_panel_width],
+             :custom_panel => options[:custom_panel],
              :ajax_scroll =>options[:ajax_scroll]}
   end
 
