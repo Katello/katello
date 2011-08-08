@@ -36,7 +36,7 @@ describe ActivationKeysController do
     @subscription = KTSubscription.create!(:subscription => "Test Subscription", 
                                           :key_subscriptions => [KeySubscription.create!(:activation_key => @a_key, :allocated=>5)])
 
-    @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key", :environment => @environment_1.id}}
+    @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key", :environment_id => @environment_1.id}}
   end
 
   describe "GET index" do
@@ -142,7 +142,7 @@ describe ActivationKeysController do
         post :create, @akey_params
         assigns[:activation_key].name.should eq(@akey_params[:activation_key][:name])
         assigns[:activation_key].description.should eq(@akey_params[:activation_key][:description])
-        assigns[:activation_key].environment_id.should eq(@akey_params[:activation_key][:environment])
+        assigns[:activation_key].environment_id.should eq(@akey_params[:activation_key][:environment_id])
       end
 
       it "renders list item partial for 2 pane" do
