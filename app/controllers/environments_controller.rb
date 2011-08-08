@@ -26,7 +26,7 @@ class EnvironmentsController < ApplicationController
   end
 
   def rules
-    manage_rule = [[:update], :organizations, @organization.id]
+    manage_rule = lambda{@organization.environments_manageable?}
     {
       :new => manage_rule,
       :edit => manage_rule,
