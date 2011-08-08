@@ -69,7 +69,7 @@ class System < ActiveRecord::Base
       current_user.allowed_to?([[:read_systems, :update_systems, :delete_systems], :environment, self.environment.id])
   end
 
-  def editable?
+  def updatable?
    current_user.allowed_to?([[:read_systems], :organizations, self.organization.id]) ||
       current_user.allowed_to?([[:read_systems], :environment, self.environment.id])
   end
