@@ -15,28 +15,75 @@
  * A small javascript file needed to load things whenever a role is opened for editing
  *
  */
+var templateLibrary = (function($){
+    var organizationsListItem = function(id, name){
+        var html ='<li>' + '<div class="slide_link" id="' + id + '">'
 
-$(document).ready(function() {
-    roles_page.reset_buttons(); //This is in role.js
+        html += '<span class="sort_attr">'+ name + '</span></div></li>';
+        return html;
+    },
+    organizationsList = function(organizations){
+        var html = '<ul>';
+        for( item in organizations){
+            if( organizations.hasOwnProperty(item) ){
+                if( item.split("_")[0] === "organization" ){
+                    html += organizationsListItem(item, organizations[item].name);
+                }
+            }
+        }
+        html += '</ul>';
+        return html;
+    };
+    
+    return {
+        organizationsList   :    organizationsList
+    }
+}(jQuery));
 
-    $('.edit_rolename').each(function() {
-        $(this).editable($(this).attr('url'), {
-            type        :  'text',
-            method      :  'PUT',
-            name        :  $(this).attr('name'),
-            cancel      :  i18n.cancel,
-            submit      :  i18n.save,
-            indicator   :  i18n.saving,
-            tooltip     :  i18n.clickToEdit,
-            placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
-            rows        :  8,
-            cols        :  60,
-            onerror     :  function(settings, original, xhr) {
-                            original.reset();
-                            $("#notification").replaceWith(xhr.responseText);
-                            }
-        });
-  });
+var rolesRenderer = (function($){
+    var render = function(hash, render_cb){
+            if( hash === 'organizations'){
+                render_cb(templateLibrary.organizationsList(roles_breadcrumb));
+            }
+        },
+        sort = function() {
+            $(".will_have_content").find("li").sortElements(function(a,b){
+                    var a_html = $(a).find(".sort_attr").html();
+                    var b_html = $(b).find(".sort_attr").html();
+                    if (a_html && b_html ) {
+                        return  a_html.toUpperCase() >
+                                b_html.toUpperCase() ? 1 : -1;
+                    }
+            });
+            console.log('sorted');
+        },
+        setMinHeight = function(){
+            var height = $('.panel').height();
+            $('.sliding_list').css({ 'min-height' : height - 150 });
+            $('.slider').css({ 'min-height' : height - 150 });
+        };
+    
+    return {
+        render          :   render,
+        sort            :   sort,
+        setMinHeight    :   setMinHeight
+    }
+}(jQuery));
 
+$(function() {
+  
+  var roles_tree = sliding_tree("roles_tree", { 
+                        breadcrumb      :  roles_breadcrumb,
+                        default_tab     :  "organizations",
+                        bbq_tag         :  "role_edit",
+                        base_icon       :  'home_img',
+                        render_cb       :  rolesRenderer.render,
+                        enable_search   :  true,
+                        tab_change_cb   :  function(hash_id) {
+                            console.log(hash_id);
+                            console.log(rolesRenderer);
+                            //rolesRenderer.sort();
+                            rolesRenderer.setMinHeight();
+                        }
+                    });
 });

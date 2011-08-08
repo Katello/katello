@@ -1,21 +1,37 @@
+= javascript do
+  :javascript
+    var roles_breadcrumb = $.parseJSON('#{escape_javascript(generate_roles_breadcrumb())}');
+
 = javascript :role_edit
 
+
 = content_for :title do
-  #{_("Role")}
+  #{@role.name}
 
 = content_for :remove_item do
   = link_to _("Remove Role"), {:action => "destroy", :controller => "roles"}, :method => :delete, :confirm => _('Are you sure?'), :class => "remove_item", :remote=>true
 
 = content_for :content do
   #role
-    .grid_10#role
-      = form_for role, :url => role_path(role) do |f|
-        .grid_1.ra.fieldset
-          = label :role, :name, _("Name")
-        .grid_6.la.editable.edit_rolename#role_name{'name' => 'role[name]', :url=>role_path(@role.id)} #{@role[:name]}
-        .grid_7
-          &nbsp;
-      = render :partial => 'permissions', :locals => {:role => role}
-  
-  .grid_10
-    &nbsp;
+    %a.fr{:href => "#", :id => "add_permission_button"}
+      #{_('+ Add Permission')}
+    #roles_tree.sliding_tree
+      .breadcrumb_search.clear.clickable
+        %form#search_form.search.clear
+          %input{ :name => "s", :type => "search", :placeholder => "Filter...", :id=>"search_filter"}
+          %button.action #{_("Search")}
+          %br.clear
+
+        .search_button.fr.clickable
+          #{_('Search')}
+        .tree_breadcrumb
+      .sliding_container
+        #roles_list.list.sliding_list{"data-page_size"=>current_user.page_size}
+          #tree_loading.slider
+            .text
+              = _("Loading Permissions")
+              = image_tag ("spinner.gif")
+          .slider_one.has_content.slider.will_have_content
+          .slider_two.no_content.slider
+          
+      #roles_status
