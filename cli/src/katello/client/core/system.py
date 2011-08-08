@@ -93,13 +93,12 @@ class Info(SystemAction):
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
         # info is always grep friendly
-        printer = Printer(False)
 
         if env_name is None:
-            printer.setHeader(_("System Information For Org %s") % org_name)
+            self.printer.setHeader(_("System Information For Org %s") % org_name)
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
-            printer.setHeader(_("System Information For Environment %s in Org %s") % (env_name, org_name))
+            self.printer.setHeader(_("System Information For Environment %s in Org %s") % (env_name, org_name))
             systems = self.api.systems_by_env(org_name, env_name,
                     {'name': sys_name})
 
@@ -110,14 +109,14 @@ class Info(SystemAction):
         system = self.api.system(systems[0]['uuid'])
     
 
-        printer.addColumn('name')
-        printer.addColumn('uuid')
-        printer.addColumn('location')
-        printer.addColumn('created_at', 'Registered', time_format=True)
-        printer.addColumn('updated_at', 'Last updated', time_format=True)
-        printer.addColumn('description', multiline=True)
+        self.printer.addColumn('name')
+        self.printer.addColumn('uuid')
+        self.printer.addColumn('location')
+        self.printer.addColumn('created_at', 'Registered', time_format=True)
+        self.printer.addColumn('updated_at', 'Last updated', time_format=True)
+        self.printer.addColumn('description', multiline=True)
 
-        printer.printItem(system)
+        self.printer.printItem(system)
 
         return os.EX_OK
     
@@ -142,13 +141,12 @@ class InstalledPackages(SystemAction):
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
         verbose = self.get_option('verbose')
-        printer = Printer(self.get_option('grep'))
 
         if env_name is None:
-            printer.setHeader(_("Package Information for System [ %s ] in Org [ %s ]") % (sys_name, org_name))
+            self.printer.setHeader(_("Package Information for System [ %s ] in Org [ %s ]") % (sys_name, org_name))
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
-            printer.setHeader(_("Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]") % (sys_name, env_name, org_name))
+            self.printer.setHeader(_("Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]") % (sys_name, env_name, org_name))
             systems = self.api.systems_by_env(org_name, env_name, {'name': sys_name})
 
         if not systems:
@@ -156,18 +154,18 @@ class InstalledPackages(SystemAction):
         
         packages = self.api.packages(systems[0]['uuid'])
         
-        printer.addColumn('name')
+        self.printer.addColumn('name')
         
         if verbose:
-            printer.addColumn('vendor')
-            printer.addColumn('version')
-            printer.addColumn('release')
-            printer.addColumn('arch')
-            printer.printItems(packages)
+            self.printer.addColumn('vendor')
+            self.printer.addColumn('version')
+            self.printer.addColumn('release')
+            self.printer.addColumn('arch')
         else:
             # print compact list of package names only
-            printer._grep = True
-            printer.printItems(packages)
+            self.printer._grep = True
+            
+        self.printer.printItems(packages)
                             
         return os.EX_OK
     
@@ -192,15 +190,13 @@ class Facts(SystemAction):
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
         # info is always grep friendly
-        printer = Printer(False)
 
         if env_name is None:
-            printer.setHeader(_("System Facts For System %s in Org %s") % (sys_name, org_name))
+            self.printer.setHeader(_("System Facts For System %s in Org %s") % (sys_name, org_name))
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
-            printer.setHeader(_("System Facts For System %s in Environment %s in Org %s") % (sys_name, env_name, org_name))
-            systems = self.api.systems_by_env(org_name, env_name,
-                    {'name': sys_name})
+            self.printer.setHeader(_("System Facts For System %s in Environment %s in Org %s") % (sys_name, env_name, org_name))
+            systems = self.api.systems_by_env(org_name, env_name, {'name': sys_name})
 
         if not systems:
             return os.EX_DATAERR
@@ -211,10 +207,10 @@ class Facts(SystemAction):
         facts_hash = system['facts']
         facts_tuples_sorted = [(k, facts_hash[k]) for k in sorted(facts_hash.keys())]
         for k, v in facts_tuples_sorted:
-            printer.addColumn(k)
+            self.printer.addColumn(k)
             system[k] = v
 
-        printer.printItem(system)
+        self.printer.printItem(system)
 
         return os.EX_OK
             
