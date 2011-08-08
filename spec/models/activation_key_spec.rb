@@ -24,7 +24,10 @@ describe ActivationKey do
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
     @environment_1 = KPEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
     @environment_2 = KPEnvironment.create!(:name => 'test', :prior => @environment_1.id, :organization => @organization)
-    @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization, :environment => @environment_1)
+    @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1)
+    @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1)
+    @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization,
+                                  :environment_id => @environment_1.id, :system_template_id => @system_template_1.id)
   end
 
   context "in invalid state" do
@@ -76,6 +79,13 @@ describe ActivationKey do
       a.should_not be_nil
       b = ActivationKey.update(a.id, {:environment => @environment_2})
       b.environment.should == @environment_2
+    end
+
+    it "system template" do
+      a = ActivationKey.find_by_name(aname)
+      a.should_not be_nil
+      b = ActivationKey.update(a.id, {:system_template_id => @system_template_2.id})
+      b.system_template_id.should == @system_template_2.id
     end
   end
 
