@@ -201,8 +201,8 @@ var panel = (function(){
             var ajax_url = activeBlock.attr("data-ajax_url");
             var previousBlockId = null;
 
-            $('.block.active').removeClass('active');
             if(!thisPanel.hasClass('opened') && thisPanel.attr("data-id") !== activeBlockId){
+                $('.block.active').removeClass('active');
                 // Open the Panel                           /4
                 thisPanel.animate({ left: (panelLeft) + "px", opacity: 1}, 200, function(){
                     $(this).css({"z-index":"200"});
@@ -211,6 +211,7 @@ var panel = (function(){
                 previousBlockId = activeBlockId;
                 panel.panelAjax(activeBlockId, ajax_url, thisPanel, false);
             } else if (thisPanel.hasClass('opened') && thisPanel.attr("data-id") !== activeBlockId){
+                $('.block.active').removeClass('active');
                 panel.closeSubPanel(subpanel); //close the subpanel if it is open
                 // Keep the thisPanel open if they click another block
                 // remove previous classes besides opened
@@ -223,9 +224,9 @@ var panel = (function(){
             } else {
                 // Close the Panel
                 // Remove previous classes besides opened
-                previousBlockId = activeBlockId;
-                panel.closeSubPanel(subpanel);
-                panel.closePanel(thisPanel);
+                //previousBlockId = activeBlockId;
+                //panel.closeSubPanel(subpanel);
+                //panel.closePanel(thisPanel);
             }
         },
         panelAjax : function(name, ajax_url, thisPanel, isSubpanel) {
@@ -408,7 +409,7 @@ var panel = (function(){
                 }
             }
         },
-        hash_change: function() {
+        hash_change: function(event) {
             var refresh = $.bbq.getState("panel");
             if(refresh){ 
                 panel.select_item(refresh);

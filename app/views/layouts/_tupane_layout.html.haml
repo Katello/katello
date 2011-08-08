@@ -1,7 +1,3 @@
-= include_javascripts :scroll_pane
-= include_stylesheets :scroll_pane
-= yield :javascripts
-
 .head
   %h2
     = yield :title
@@ -23,3 +19,7 @@
 = yield :footer
 
 = yield
+
+= include_javascripts :scroll_pane
+= include_stylesheets :scroll_pane
+= yield :javascripts
