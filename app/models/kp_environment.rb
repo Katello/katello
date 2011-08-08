@@ -145,30 +145,30 @@ class KPEnvironment < ActiveRecord::Base
   end
 
   def systems_readable?
-    User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, self.id) ||
-        User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, self.organization.id)
+    User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, self) ||
+        User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, self.organization)
   end
 
 
   #Permissions
   def changesets_promotable?
-    User.allowed_to? *[[:manage_changesets], :environment, self.id,
-                              self.organization.id]
+    User.allowed_to?([:manage_changesets], :environment, self.id,
+                              self.organization)
   end
 
   def changesets_readable?
-    User.allowed_to? *[[:manage_changesets, :read_changesets], :environment,
-                              self.id, self.organization.id]
+    User.allowed_to?([:manage_changesets, :read_changesets], :environment,
+                              self.id, self.organization)
   end
 
   def changesets_manageable?
-    User.allowed_to? *[[:manage_changesets], :environment, self.id,
-                              self.organization.id]
+    User.allowed_to?([:manage_changesets], :environment, self.id,
+                              self.organization)
   end
 
   def contents_readable?
-    User.allowed_to? *[[:read_contents], :environment, self.id,
-                              self.organization.id]
+    User.allowed_to?([:read_contents], :environment, self.id,
+                              self.organization)
   end
 
 
