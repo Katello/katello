@@ -65,23 +65,23 @@ class Organization < ActiveRecord::Base
 
   #permissions
   def self.creatable?
-    User.allowed_to? *[[:create], :organizations]
+    User.allowed_to?([:create], :organizations)
   end
 
   def updatable?
-    User.allowed_to? *[[:update, :create], :organizations, self.id]
+      User.allowed_to?([:update, :create], :organizations, self.id)
   end
 
   def deletable?
-    User.allowed_to? *[[:delete, :create], :organizations]
+    User.allowed_to?([:delete, :create], :organizations)
   end
 
   def readable?
-    User.allowed_to? *[[:read,:update, :create], :organizations, self.id]
+    User.allowed_to?([:read,:update, :create], :organizations, self.id)
   end
 
   def environments_manageable?
-    User.allowed_to? *[[:update], :organizations, self.id]
+    User.allowed_to?([:update], :organizations, self.id)
   end
   
 

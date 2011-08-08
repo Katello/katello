@@ -13,12 +13,21 @@
 class ProductsController < ApplicationController
   respond_to :html, :js
 
-  before_filter :find_provider, :only => [:new, :create, :edit, :update]
-  before_filter :find_product, :only => [:edit, :update, :destroy]
 
+  before_filter :find_product, :only => [:edit, :update, :destroy]
+  before_filter :find_provider, :only => [:new, :create, :edit, :update, :destroy]
+  before_filter :authorize
 
   def rules
-    generic_rules(:providers, params[:provider_id])
+    read_test = lambda{@provider.readable?}
+    edit_test = lambda{@provider.editable?}
+    {
+      :new => edit_test,
+      :create => edit_test,
+      :edit =>read_test,
+      :update => edit_test,
+      :destroy => edit_test,
+    }
   end
 
 
@@ -85,7 +94,8 @@ class ProductsController < ApplicationController
 
   def find_provider
     begin
-      @provider = Provider.find(params[:provider_id])
+      @provider = @product.provider if @product  #don't trust the provider_id coming in if we don't need it
+      @provider ||= Provider.find(params[:provider_id])
     rescue Exception => error
       errors error.to_s
       execute_after_filters
