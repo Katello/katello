@@ -127,7 +127,7 @@
           %h2 #{_("Changesets")}
           = _("An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment.")
   
-    = render :partial=>"common/tupane"
+    = render :partial=>"common/tupane", :locals => { :custom_panel => false }
   
     #content_tree.left.sliding_tree
       - if @next_environment

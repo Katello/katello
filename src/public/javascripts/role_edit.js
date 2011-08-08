@@ -16,34 +16,81 @@
  *
  */
 var templateLibrary = (function($){
-    var organizationsListItem = function(id, name){
-        var html ='<li>' + '<div class="slide_link" id="' + id + '">'
-
-        html += '<span class="sort_attr">'+ name + '</span></div></li>';
-        return html;
-    },
-    organizationsList = function(organizations){
-        var html = '<ul>';
-        for( item in organizations){
-            if( organizations.hasOwnProperty(item) ){
-                if( item.split("_")[0] === "organization" ){
-                    html += organizationsListItem(item, organizations[item].name);
+    var listItem = function(id, name, no_slide){
+            var html ='<li>';
+            
+            if( no_slide ){
+                html += '<div class="no_slide" id="' + id + '">'; 
+            } else {
+                html += '<div class="slide_link" id="' + id + '">';
+            }
+    
+            html += '<span class="sort_attr">'+ name + '</span></div></li>';
+            return html;
+        },
+        list = function(items, type, options){
+            var html = '<ul>',
+                options = options ? options : {};
+            for( item in items){
+                if( items.hasOwnProperty(item) ){
+                    if( item.split("_")[0] === type ){
+                        html += listItem(item, items[item].name, options.no_slide);
+                    }
                 }
             }
-        }
-        html += '</ul>';
-        return html;
-    };
+            html += '</ul>';
+            return html;
+        },
+        permissionsList = function(permissions, organization_id){
+            var html = '<ul>';
+            
+            for( item in permissions){
+                if( permissions.hasOwnProperty(item) ){
+                    if( item.split("_")[0] === "permission" && permissions[item].organization === 'organization_' + organization_id ){
+                        html += permissionsListItem(item.split('_')[2], permissions[item].name, true);
+                    }
+                }
+            }
+            html += '</ul>';
+            return html;
+        },
+        permissionsListItem = function(permission_id, name, showButton) {
+            var anchor = "";
+            if ( showButton ){
+                anchor = '<a ' + 'class="fr content_add_remove remove_permission st_button"'
+                                + 'data-type="permission" data-id="' + permission_id + '">';
+                            anchor += i18n.remove + "</a>";
+                        
+            }
+            return '<li>' + anchor + '<div class="no_slide"><span class="sort_attr">'  + name + '</span></div></li>';
+        };
     
     return {
-        organizationsList   :    organizationsList
+        list                :    list,
+        permissionsList     :    permissionsList
     }
 }(jQuery));
 
 var rolesRenderer = (function($){
     var render = function(hash, render_cb){
-            if( hash === 'organizations'){
-                render_cb(templateLibrary.organizationsList(roles_breadcrumb));
+            if( hash === 'role_organizations' ){
+                render_cb(templateLibrary.list(roles_breadcrumb, 'organization'));
+            } else if( hash === 'roles' ) {
+                render_cb(templateLibrary.list(roles_breadcrumb, 'role'));
+            } else if( hash === 'role_users' ){
+                render_cb(templateLibrary.list(roles_breadcrumb, 'user', { no_slide : true }));
+            } else {
+                var split = hash.split("_"),
+                    page = split[0],
+                    organization_id = split[1],
+                    permission_id = split[2];
+
+                render_cb(getContent(page, organization_id, permission_id));
+            }
+        },
+        getContent = function(key, organization_id, permission_id){
+            if( key === 'organization' ){
+                return templateLibrary.permissionsList(roles_breadcrumb, organization_id);
             }
         },
         sort = function() {
@@ -58,9 +105,11 @@ var rolesRenderer = (function($){
             console.log('sorted');
         },
         setMinHeight = function(){
-            var height = $('.panel').height();
-            $('.sliding_list').css({ 'min-height' : height - 150 });
-            $('.slider').css({ 'min-height' : height - 150 });
+            var height = $('.left').height();
+            $('.sliding_list').css({ 'min-height' : height - 102 });
+            $('.slider').css({ 'min-height' : height - 102 });
+            $('#panel_main').height(height);
+            $('#panel_main .jspPage').height(height);
         };
     
     return {
@@ -74,14 +123,11 @@ $(function() {
   
   var roles_tree = sliding_tree("roles_tree", { 
                         breadcrumb      :  roles_breadcrumb,
-                        default_tab     :  "organizations",
+                        default_tab     :  "roles",
                         bbq_tag         :  "role_edit",
-                        base_icon       :  'home_img',
                         render_cb       :  rolesRenderer.render,
                         enable_search   :  true,
                         tab_change_cb   :  function(hash_id) {
-                            console.log(hash_id);
-                            console.log(rolesRenderer);
                             //rolesRenderer.sort();
                             rolesRenderer.setMinHeight();
                         }
