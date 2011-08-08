@@ -83,9 +83,25 @@ class Provider < ActiveRecord::Base
 
   #permissions
   def readable?
-    User.allowed_to? *[[:read], :provider, self.id,
-                              self.organization.id]
+    User.allowed_to?([:read, :create], :provider, self.id, self.organization.id)
   end
+
+  def self.creatable? org
+    User.allowed_to?([:create], :provider, nil, org.id)
+  end
+
+  def editable?
+    User.allowed_to?([:update, :create], :provider, self.id, self.organization.id)
+  end
+
+  def deletable?
+    User.allowed_to?([:delete, :create], :provider, self.id, self.organization.id)
+  end
+
+  def syncable?
+    User.allowed_to?([:sync], :provider, self.id, self.organization.id)
+  end
+
 
 
   protected

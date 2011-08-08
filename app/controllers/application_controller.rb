@@ -22,12 +22,14 @@ class ApplicationController < ActionController::Base
   before_filter :set_locale
   before_filter :require_user,:require_org
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
-  before_filter :authorize
+
   after_filter :flash_to_headers
 
 
-  # support for session (thread-local) variables must be the last filter in this class
+  # support for session (thread-local) variables must be the last filter (except authorize)in this class
   include Katello::ThreadSession::Controller
+  before_filter :authorize
+
 
   def section_id
     'generic'
@@ -234,20 +236,6 @@ class ApplicationController < ActionController::Base
 
   def rules
     raise Errors::SecurityViolation,"Rules not defined for  #{current_user.username} for #{params[:controller]}/#{params[:action]}"
-  end
-
-  def generic_rules resource_type, obj_id, additional_rules = {}
-    org_id = current_organization
-    additional_rules.update( {
-      :index => [[:create, :update, :read, :delete], resource_type, nil, org_id],
-      :items => [[:create, :update, :read, :delete], resource_type, nil, org_id],
-      :new => [[:update, :create], resource_type, nil, org_id],
-      :create =>[[:update, :create], resource_type, nil, org_id],
-      :edit => [[:read,:update, :create], resource_type, obj_id, org_id],
-      :show => [[:read,:update], resource_type, obj_id, org_id],
-      :update => [[:update, :create], resource_type, obj_id, org_id],
-      :destroy => [[:update, :create], resource_type, obj_id, org_id],
-    })
   end
 
   # authorize the user for the requested action
