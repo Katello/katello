@@ -8,6 +8,8 @@ Src::Application.routes.draw do
     end
     member do
       get :subscriptions
+      get :edit_environment
+      post :update
       post :update_subscriptions
     end
   end

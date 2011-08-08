@@ -14,7 +14,7 @@ class ActivationKeysController < ApplicationController
   include AutoCompleteSearch
 
   before_filter :require_user
-  before_filter :find_activation_key, :only => [:show, :edit, :update, :destroy, :subscriptions, :update_subscriptions]
+  before_filter :find_activation_key, :only => [:show, :edit, :edit_environment, :update, :destroy, :subscriptions, :update_subscriptions]
   before_filter :panel_options, :only => [:index, :items]
 
   respond_to :html, :js
@@ -106,13 +106,17 @@ class ActivationKeysController < ApplicationController
     render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key}
   end
 
+  def edit_environment
+    render :partial => "edit_environment"
+  end
+
   def create
     begin
       @activation_key = ActivationKey.create!(:name => params[:activation_key][:name],
                                               :description => params[:activation_key][:description],
-                                              :environment_id => params[:activation_key][:environment],
+                                              :environment_id => params[:activation_key][:environment_id],
                                               :organization_id => current_organization,
-                                              :system_template_id => params[:activation_key][:system_template])
+                                              :system_template_id => params[:activation_key][:system_template_id])
       notice _("Activation key '#{@activation_key['name']}' was created.")
       render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name']}
 
@@ -124,7 +128,6 @@ class ActivationKeysController < ApplicationController
   end
 
   def update
-    
     result = params[:activation_key].nil? ? "" : params[:activation_key].values.first
 
     begin
@@ -138,16 +141,7 @@ class ActivationKeysController < ApplicationController
 
       @activation_key.update_attributes!(params[:activation_key])
 
-      # generate an appropriate notice based upon the update scenario
-      # if updating env and no template currently assigned, success
-      # if updating env and template currently assigned, warning
-      # all other scenarios, success
-      if !params[:activation_key][:environment_id].nil? and !@activation_key.system_template_id.nil?
-        notice _("The environment for activation key '#{@activation_key["name"]}' was updated.  If a system template is currently assigned to this key, the template may also need to be updated to one of the templates available in the new environment."),
-               {:level => :warning}
-      else
-        notice _("Activation key '#{@activation_key["name"]}' was updated.")
-      end
+      notice _("Activation key '#{@activation_key["name"]}' was updated.")
 
       unless params[:activation_key][:system_template_id].nil? or params[:activation_key][:system_template_id].blank?
         # template is being updated.. so return template name vs id...
@@ -155,10 +149,8 @@ class ActivationKeysController < ApplicationController
         result = system_template.name
       end
 
-      respond_to do |format|
-        format.html { render :text => escape_html(result) }
-        format.js
-      end
+      render :text => escape_html(result)
+
     rescue Exception => error
       errors error
 
