@@ -53,9 +53,6 @@ class List(SystemAction):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
-
         if env_name is None:
             systems = self.api.systems_by_org(org_name)
         else:
@@ -69,6 +66,9 @@ class List(SystemAction):
         else:
             self.printer.setHeader(_("Systems List For Environment %s in Org %s") % (env_name, org_name))
 
+        self.printer.addColumn('name')
+        
+        self.printer._grep = True
         self.printer.printItems(systems)
         return os.EX_OK
 
