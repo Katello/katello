@@ -155,6 +155,10 @@ var sliding_tree = function(tree_id, options) {
                     breadcrumb.append(create_crumb(id, true, settings.base_icon))
                 }
                 crumbs = trail.slice(1, trail.length);
+            } else {
+                if( trail.length === 0) {
+                    breadcrumb.append('<div id="' + id + '" class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div>');
+                }
             }
     
             if( trail.length > 0){

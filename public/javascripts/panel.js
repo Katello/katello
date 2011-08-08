@@ -261,7 +261,7 @@ var panel = (function(){
         /* must pass a jQuery object */
         panelResize : function(paneljQ, isSubpanel){
             var new_top = Math.floor($('.left').position(top).top);
-            var headerSpacing = $('.head').height() + $('.subnav').height();
+            var headerSpacing = $('#panel .head').height() + $('#panel .subnav').height() + 67;
             var height = $(window).height() - $('#subheader').height() - $('#head').height() - $('.subnav').height() - headerSpacing - 100;            
             
             new_top = isSubpanel ? (new_top + subpanelSpacing) : new_top;
@@ -278,7 +278,7 @@ var panel = (function(){
                 var leftPanel = $('.left');
                 
                 if( leftPanel.height() <= height + headerSpacing + 80){
-                    height = leftPanel.height() - headerSpacing - 75;
+                    height = leftPanel.height() - headerSpacing;
                 } else {
                     height += 110;
                 }
