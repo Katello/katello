@@ -12,19 +12,31 @@
 
 class RolesController < ApplicationController
 
+  before_filter :find_role, :except => [:index, :items, :new, :create]
+  before_filter :authorize #call authorize after find_role so we call auth based on the id instead of cp_id
+
+  before_filter :setup_resource_types, :only =>[:edit, :update, :update_permission, :show_permission, :create_permission]
   before_filter :setup_options, :only => [:index, :items]
-  
   include AutoCompleteSearch
   
   def rules
-    rules = {:index => [[:create, :update, :read, :delete], :roles],
-        :items => [[:create, :update, :read], :roles],
-        :new => [[:create], :roles],
-        :create => [[:create], :roles],
-        :edit => [[:read,:update, :create], :roles, params[:id]],
-        :update => [[:update, :create], :roles, params[:id]],
-        :delete => [[:update, :create], :roles, params[:id]],
+    create_check = lambda{Roles.creatable?}
+    read_check = lambda{@role.readable?}
+    edit_check = lambda{@role.editable?}
+    delete_check = lambda{@role.deletable?}
+
+    rules = {:index => read_check,
+        :items => read_check,
+        :create => create_check,
+        :update => edit_check,
+        :delete => delete_check
       }
+
+    rules[:new] = rules[:create]
+
+    rules[:new] = rules[:create]
+    rules[:edit] = rules[:update]
+
     rules[:verbs_and_scopes] = rules[:update]
     rules[:update_permission] = rules[:update]
     rules[:create_permission] = rules[:update]
@@ -68,9 +80,6 @@ class RolesController < ApplicationController
   end
 
   def edit
-    setup_resource_types
-    @role = Role.find(params[:id])
-
     # render the appropriate partial depending on whether or not the role is a self role
     @user = @role.self_role_for_user
     if @user.nil?
@@ -93,8 +102,6 @@ class RolesController < ApplicationController
   end
 
   def update
-    setup_resource_types
-    @role = Role.find(params[:id])
     return if @role.name == "admin"
     if @role.update_attributes(params[:role])
       notice _("Role updated.")
@@ -111,7 +118,6 @@ class RolesController < ApplicationController
   def destroy
     @id = params[:id]
     begin
-      @role = Role.find(@id)
       #remove the user
       @role.destroy
       if @role.destroyed?
@@ -136,8 +142,6 @@ class RolesController < ApplicationController
   end
 
   def update_permission
-    setup_resource_types
-    @role = Role.find(params[:role_id])
     @permission = Permission.find(params[:permission_id])
     @permission.update_attributes(params[:permission])
     notice _("Permission updated.")
@@ -145,8 +149,6 @@ class RolesController < ApplicationController
   end
 
   def create_permission
-    setup_resource_types
-    @role = Role.find(params[:role_id])
     new_params = {:role => @role}
     new_params.merge! params[:permission]
     @perm = Permission.create! new_params
@@ -155,8 +157,6 @@ class RolesController < ApplicationController
   end
 
   def show_permission
-    setup_resource_types
-    role = Role.find(params[:role_id])
     if params[:perm_id].nil?
       permission = Permission.new(:role=> role, :resource_type => ResourceType.new)
     else
@@ -168,7 +168,10 @@ class RolesController < ApplicationController
 
 
   private
-
+  def find_role
+    @role =  Role.find(params[:role_id]) if params.has_key? :role_id
+    @role =  Role.find(params[:id]) unless params.has_key? :role_id
+  end
 
   def setup_resource_types
     @resource_types = {}
