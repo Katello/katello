@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # testing systems
 SYSTEM_NAME_ADMIN="admin_system_$RAND"
 SYSTEM_NAME_ADMIN_2=$SYSTEM_NAME_ADMIN"_2"
