@@ -38,7 +38,9 @@ post_update()
 {
   pulp-migrate
   # we dont store snapshot for mongodb - its fast enough
+  cp /etc/candlepin/candlepin.conf /etc/candlepin/candlepin.conf.original
   /usr/share/candlepin/cpsetup
+  mv /etc/candlepin/candlepin.conf.original /etc/candlepin/candlepin.conf
   su - postgres -c \
     'pg_dump -c candlepin > /var/lib/pgsql/backups/candlepin_clean.sql'
 }
