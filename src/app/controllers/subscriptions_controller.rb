@@ -15,7 +15,7 @@ class SubscriptionsController < ApplicationController
 
   def rules
     {
-      :index => [[:update, :create, :read], :organizations, current_organization.id]
+      :index => lambda{current_organization.readable?}
     }
   end
 
