@@ -111,6 +111,10 @@ class User < ActiveRecord::Base
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a? Array
     verbs = verbs.collect {|verb| action_to_verb(verb, resource_type)}
+    no_tag_verbs = ResourceType::TYPES[resource_type][:model].no_tag_verbs rescue []
+    no_tag_verbs ||= []
+    no_tag_verbs.delete_if{|verb| !verbs.member? verb}
+    verbs.delete_if{|verb| no_tag_verbs.member? verb}
     org_clause = "permissions.organization_id is null"
     org_clause = org_clause + " OR permissions.organization_id = :organization_id " if org
     org_hash = {}
@@ -123,11 +127,12 @@ class User < ActiveRecord::Base
 
     clause_all_resources_or_tags = %{permissions.resource_type_id is null OR
           (permissions.resource_type_id = (select id from resource_types where resource_types.name = :resource_type) AND
-           (permissions.all_verbs=:true OR verbs.verb in (:verbs)) AND
-            permissions.all_tags = :true
-          )}.split.join(" ")
+           (verbs.verb in (:no_tag_verbs) OR
+            (permissions.all_verbs=:true OR verbs.verb in (:verbs)) AND
+                permissions.all_tags = :true))}.split.join(" ")
     clause_params = {:true => true, :resource_type=>resource_type, :verbs=> verbs}
-    return true  unless org_permissions.where(clause_all_resources_or_tags, clause_params ).count == 0
+    return true  unless org_permissions.where(clause_all_resources_or_tags,
+                                      {:no_tag_verbs => no_tag_verbs}.merge(clause_params) ).count == 0
 
 
     tags = [] if tags.nil?
@@ -243,6 +248,11 @@ class User < ActiveRecord::Base
     :delete => N_("Delete Users")
     }.with_indifferent_access
   end
+
+  def self.no_tag_verbs
+    [:create]
+  end
+
 
   protected
 
