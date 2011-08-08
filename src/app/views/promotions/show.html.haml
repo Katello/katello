@@ -68,14 +68,14 @@
 
 .grid_16
   #container
-    .right_tree
+    .right_tree.sliding_tree
       #changeset_tree
         - if @next_environment
           %h2 #{@next_environment.name + _(" Changesets")}
           .breadcrumb_search.fl.clear.clickable
   
             %form#search_form.search.clear
-              %input{ :name => "s", :type => "search", :placeholder => "Filter...", :id=>"search"}
+              %input{ :name => "s", :type => "search", :placeholder => "Filter...", :id=>"search_filter"}
               %button.action #{_("Search")}
               %br.clear
   
@@ -84,7 +84,7 @@
             .tree_breadcrumb
           .sliding_container
             #cslist.list.sliding_list{"data-page_size"=>current_user.page_size}
-              #changeset_loading.slider
+              #tree_loading.slider
                 .text
                   = _("Loading Changeset")
                   = image_tag ("spinner.gif")
@@ -129,7 +129,7 @@
   
     = render :partial=>"common/tupane"
   
-    #content_tree.left
+    #content_tree.left.sliding_tree
       - if @next_environment
         %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}&next_env_id=#{@next_environment.id}"}
           #{_('+ New Changeset')}

@@ -28,183 +28,218 @@ var sliding_tree = function(tree_id, options) {
         breadcrumb = container.find(".tree_breadcrumb");
 
     var prerender = function(id) {
-        settings.current_tab = id;
-        settings.fetching = 0;
-        reset_breadcrumb(id);
-        var crumb = settings.breadcrumb[id];
-        var newPanel = list.children('.no_content');
-        var oldPanel = list.children('.has_content');
-
-        //If we are really 'sliding' indicate what will actually have the content once we're done
-        if (settings.direction) {
-            oldPanel.removeClass("will_have_content");
-            newPanel.addClass("will_have_content");
-        }
-
-        //If we aren't sliding, we only worry about 1 panel'
-        if (!settings.direction) {
-            newPanel = oldPanel;
-        }
-
-        settings.prerender_cb(id);
-
-        render(id, newPanel);
-
-    };
-    var render = function (id, newPanel) {
-        var crumb = settings.breadcrumb[id];
-
-        if (crumb.client_render) {
-            settings.render_cb(id, function(html) {
-                    newPanel.html(html);
-                    settings.tab_change_cb(id);
-                    postrender(id);
-                });
-        }
-        else if (crumb.cache) { //If we are to use a cached copy, use it
-            newPanel.html(crumb.content);
-            settings.tab_change_cb(id);
-            postrender(id);
-        }
-        else { //Else fetch the data and place it in the new panel when we are done
-               //  we set fetching to the id, so once its done we know whether to actually
-               //  display the data, or throw it away.
-             settings.fetching = id;
-            $.get(crumb.url, function(data) {
-                if (settings.fetching == id) {
-                    newPanel.html(data);
-                    settings.fetching = 0;
-                    settings.tab_change_cb(id);
-
+            settings.current_tab = id;
+            settings.fetching = 0;
+            reset_breadcrumb(id);
+            var crumb = settings.breadcrumb[id];
+            var newPanel = list.children('.no_content');
+            var oldPanel = list.children('.has_content');
+        
+            //If we are really 'sliding' indicate what will actually have the content once we're done
+            if (settings.direction) {
+                oldPanel.removeClass("will_have_content");
+                newPanel.addClass("will_have_content");
+            }
+    
+            //If we aren't sliding, we only worry about 1 panel'
+            if (!settings.direction) {
+                newPanel = oldPanel;
+            }
+    
+            settings.prerender_cb(id);
+    
+            render(id, newPanel);
+        },
+        render = function (id, newPanel) {
+            var crumb = settings.breadcrumb[id];
+    
+            if (crumb.client_render) {
+                settings.render_cb(id, function(html) {
+                        newPanel.html(html);
+                        settings.tab_change_cb(id);
+                        postrender(id);
+                    });
+            }
+            else if (crumb.cache) { //If we are to use a cached copy, use it
+                newPanel.html(crumb.content);
+                settings.tab_change_cb(id);
+                postrender(id);
+            }
+            else { //Else fetch the data and place it in the new panel when we are done
+                   //  we set fetching to the id, so once its done we know whether to actually
+                   //  display the data, or throw it away.
+                 settings.fetching = id;
+                $.get(crumb.url, function(data) {
+                    if (settings.fetching == id) {
+                        newPanel.html(data);
+                        settings.fetching = 0;
+                        settings.tab_change_cb(id);
+    
+                    }
+                  });
+                  postrender(id);
+                  newPanel.html("<img src='/images/spinner.gif' >");
+            }
+        },
+        postrender = function(id) {
+            var crumb = settings.breadcrumb[id],
+                newPanel = list.children('.no_content'),
+                oldPanel = list.children('.has_content');
+            
+            if (crumb.scrollable) {
+                list.addClass("ajaxScroll");
+                list.attr("data-scroll_url", crumb.url);
+            }
+            else {
+                list.removeClass("ajaxScroll");
+            }
+    
+            //If we have a direction, we need to slide
+            if(settings.direction) {
+                var leaving = settings.direction == "right" ? "left" : "right";
+                //The old pane, we need to hide it away, remove the contents, and reset the classes
+    
+                var width = 448;
+                if( leaving === 'left' ){
+                    list.css({'left': 0});
+                    oldPanel.after(newPanel);
+                    list.animate({"left": -width}, 500,
+                        function() {
+                           oldPanel.html("");
+                           oldPanel.removeClass("has_content");
+                           oldPanel.addClass("no_content");
+                           newPanel.addClass("has_content");
+                           newPanel.removeClass("no_content");
+                       });
+                } else {
+                       list.css({'left': -width});
+                       oldPanel.before(newPanel);
+                       list.animate({"left": 0}, 500,
+                        function() {
+                           oldPanel.html("");
+                           oldPanel.removeClass("has_content");
+                           oldPanel.addClass("no_content");
+                           newPanel.addClass("has_content");
+                           newPanel.removeClass("no_content");
+                       });
                 }
-              });
-              postrender(id);
-              newPanel.html("<img src='/images/spinner.gif' >");
-        }
-    };
-    var postrender = function(id) {
-        var crumb = settings.breadcrumb[id],
-            newPanel = list.children('.no_content'),
-            oldPanel = list.children('.has_content');
-        
-        if (crumb.scrollable) {
-            list.addClass("ajaxScroll");
-            list.attr("data-scroll_url", crumb.url);
-        }
-        else {
-            list.removeClass("ajaxScroll");
-        }
-
-        //If we have a direction, we need to slide
-        if(settings.direction) {
-            var leaving = settings.direction == "right"? "left" : "right";
-            //The old pane, we need to hide it away, remove the contents, and reset the classes
-
-            var width = 448;
-            if( leaving === 'left' ){
-                list.css({'left': 0});
-                oldPanel.after(newPanel);
-                list.animate({"left": -width}, 500,
-                    function() {
-                       oldPanel.html("");
-                       oldPanel.removeClass("has_content");
-                       oldPanel.addClass("no_content");
-                       newPanel.addClass("has_content");
-                       newPanel.removeClass("no_content");
-                   });
-            } else {
-                   list.css({'left': -width});
-                   oldPanel.before(newPanel);
-                   list.animate({"left": 0}, 500,
-                    function() {
-                       oldPanel.html("");
-                       oldPanel.removeClass("has_content");
-                       oldPanel.addClass("no_content");
-                       newPanel.addClass("has_content");
-                       newPanel.removeClass("no_content");
-                   });
+    
+    
+                settings.direction = undefined;
             }
-
-
-            settings.direction = undefined;
-        }
-    };
-
-    var content_clicked = function() {
-        var element = $(this);
-        if(element.hasClass("slide_left")) {
-          settings.direction = "left";
-        }else {
-          settings.direction = "right";
-        }
-        render_content(element.attr('id'));
-    };
-    var render_content = function(id){
-        var bbq = {};
-        bbq[settings.bbq_tag] = id;
-        $.bbq.pushState(bbq);        
-    };
-    var reset_breadcrumb = function(id) {
-        var trail = settings.breadcrumb[id].trail,
-            crumbs = trail;
-        
-        breadcrumb.html("");
-        
-        if( settings.base_icon ){
-            if( trail.length > 0) {
-                breadcrumb.append(create_crumb(trail[0], undefined, settings.base_icon));
-            } else {
-                breadcrumb.append(create_crumb(id, true, settings.base_icon))
+        },
+        content_clicked = function() {
+            var element = $(this);
+            if(element.hasClass("slide_left")) {
+              settings.direction = "left";
+            }else {
+              settings.direction = "right";
             }
-            crumbs = trail.slice(1, trail.length);
-        }
+            render_content(element.attr('id'));
+        },
+        render_content = function(id){
+            var bbq = {};
+            bbq[settings.bbq_tag] = id;
+            $.bbq.pushState(bbq);        
+        },
+        reset_breadcrumb = function(id) {
+            var trail = settings.breadcrumb[id].trail,
+                crumbs = trail;
+            
+            breadcrumb.html("");
 
-        if( trail.length > 0){
-            for(var i = 0; i < crumbs.length; i++) {
-                breadcrumb.append(create_crumb(crumbs[i]))
+            if( settings.base_icon ){
+                if( trail.length > 0) {
+                    breadcrumb.append(create_crumb(trail[0], undefined, settings.base_icon));
+                } else {
+                    breadcrumb.append(create_crumb(id, true, settings.base_icon))
+                }
+                crumbs = trail.slice(1, trail.length);
             }
-            breadcrumb.append('<div id="' + id + '" class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div>');
-        }
-    };
-    var create_crumb = function(id, currentCrumb, icon) {
-        var html,
-            options =  {
-            id:id,
-            "class": 'slide_link slide_left fl crumb',
-            text: ""
+    
+            if( trail.length > 0){
+                for(var i = 0; i < crumbs.length; i++) {
+                    breadcrumb.append(create_crumb(crumbs[i]))
+                }
+                breadcrumb.append('<div id="' + id + '" class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div>');
+            }
+        },
+        create_crumb = function(id, currentCrumb, icon) {
+            var html,
+                options =  {
+                id:id,
+                "class": 'slide_link slide_left fl crumb',
+                text: ""
+            };
+    
+            if( currentCrumb === undefined ){
+                options['text'] += "\u2002\u00BB\u2002";
+            }
+            if( !icon ){
+                options['text'] = settings.breadcrumb[id].name + ' ' + options['text'];
+            }
+            
+            html = jQuery('<div/>', options);
+            if( icon ){
+                if( currentCrumb ){
+                    html.prepend(jQuery('<div/>', {
+                       'class': icon + ' fl',
+                       'text': id 
+                    }));
+                } else {
+                    html.prepend(jQuery('<div/>', {
+                       'class': icon + '_inactive fl',
+                       'text': id 
+                    }));
+                }
+            }
+            
+            return html;
+        },
+        hash_change = function() {
+            var newContent = $.bbq.getState(settings.bbq_tag) || settings.default_tab;
+            if (settings.current_tab != newContent) {
+                reset_breadcrumb(newContent);
+                prerender(newContent);
+            }
+        },
+        setupSearch = function(){
+            var bcs = null;
+            var bcs_height = 0;
+            
+            $('#search_form').submit(function(){
+                $('#search_filter').change();
+                return false;
+            });
+            
+            $('.search_button').toggle(
+                function() {
+                    bcs = $('.breadcrumb_search');
+                    bcs_height = bcs.height();
+                    bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
+                    $("#search_form #search_filter").css("margin-left", 0);
+                    $("#search_form").css("opacity", "0").show();
+                    $("#search_form").animate({"opacity":"1"}, { duration: 200, queue: false });
+                    $("#search_filter").animate({"width":"420px", "opacity":"1"}, { duration: 200, queue: false });
+                    $(this).css({backgroundPosition: "-32px -16px"});
+                },function() {
+                    $("#search_form").fadeOut("fast", function(){bcs.animate({ "height": bcs_height }, "fast");});
+                    $(this).css({backgroundPosition: "0 -16px"});
+                    $("#search_filter").val("").change();
+                    $("#" + tree_id + " .has_content li").fadeIn('fast');
+                }
+            );
+            
+            $('#search_filter').live('change, keyup', function(){
+                if ($.trim($(this).val()).length >= 2) {
+                    $("#" + tree_id + " .has_content li:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
+                    $("#" + tree_id + " .has_content li:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
+                } else {
+                    $("#" + tree_id + " .has_content li").fadeIn('fast');
+                }
+            });
+            $('#search_filter').val("").change();
         };
-
-        if( currentCrumb === undefined ){
-            options['text'] += "\u2002\u00BB\u2002";
-        }
-        if( !icon ){
-            options['text'] = settings.breadcrumb[id].name + ' ' + options['text'];
-        }
-        
-        html = jQuery('<div/>', options);
-        if( icon ){
-            if( currentCrumb ){
-                html.prepend(jQuery('<div/>', {
-                   'class': icon + ' fl',
-                   'text': id 
-                }));
-            } else {
-                html.prepend(jQuery('<div/>', {
-                   'class': icon + '_inactive fl',
-                   'text': id 
-                }));
-            }
-        }
-        
-        return html;
-    };
-    var hash_change = function() {
-        var newContent = $.bbq.getState(settings.bbq_tag) || settings.default_tab;
-        if (settings.current_tab != newContent) {
-            reset_breadcrumb(newContent);
-            prerender(newContent);
-        }
-    };
 
     var settings = {
           breadcrumb : {},
@@ -220,9 +255,12 @@ var sliding_tree = function(tree_id, options) {
     };
 
     //Page items
-
     if ( options ) {
         $.extend( settings, options );
+    }
+    
+    if( settings.enable_search ){
+        setupSearch();
     }
 
     $(window).bind( 'hashchange', hash_change);
