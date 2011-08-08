@@ -69,6 +69,7 @@ class RolesController < ApplicationController
                  :col => ['name'],
                  :create => _('Role'),
                  :name => _('role'),
+                 :custom_panel => true,
                  :ajax_scroll => items_roles_path()}
   end
   
