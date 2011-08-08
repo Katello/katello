@@ -12,10 +12,12 @@
 
 class ProvidersController < ApplicationController
   include AutoCompleteSearch
-  
+
+
   before_filter :find_provider, :only => [:products_repos, :show, :subscriptions, :update_subscriptions, :edit, :update, :destroy]
-  before_filter :require_user
+  before_filter :authorize #after find_provider
   before_filter :panel_options, :only => [:index, :items]
+
   respond_to :html, :js
 
   def section_id
@@ -24,13 +26,27 @@ class ProvidersController < ApplicationController
 
 
   def rules
-    pid = params[:id]
 
-    generic_rules(:providers, pid,  {
-      :products_repos => [[:read,:update], :providers, pid, current_organization],
-      :subscriptions => [[:read,:update], :providers, pid, current_organization],
-      :update_subscriptions => [[:update], :providers, pid, current_organization],
-    })
+    index_test = lambda{Provider.new(:organization=>current_organization).readable?}
+    create_test = lambda{Provider.creatable?(current_organization)}
+    read_test = lambda{@provider.readable?}
+    edit_test = lambda{@provider.editable?}
+    delete_test = lambda{@provider.deletable?}
+    {
+      :index => index_test,
+      :items => index_test,
+      :show => index_test,
+
+      :new => create_test,
+      :create => create_test,
+      :edit =>read_test,
+      :update => edit_test,
+      :destroy => delete_test,
+    
+      :update_subscriptions => edit_test,
+      :products_repos => read_test,
+      :subscriptions => read_test,
+    }
   end
 
 

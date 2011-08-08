@@ -17,11 +17,20 @@ class RepositoriesController < ApplicationController
   respond_to :html, :js
 
   before_filter :find_provider, :only => [:edit, :update, :destroy, :new, :create]
+  before_filter :authorize
   before_filter :find_product, :only => [:edit, :update, :destroy, :new, :create]
   before_filter :find_repository, :only => [:edit, :update, :destroy]
 
   def rules
-    generic_rules(:providers, params[:provider_id])
+    read_test = lambda{@provider.readable?}
+    edit_test = lambda{@provider.editable?}
+    {
+      :new => edit_test,
+      :create => edit_test,
+      :edit =>read_test,
+      :update => edit_test,
+      :destroy => edit_test,
+    }
   end
 
   
