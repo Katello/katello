@@ -60,7 +60,6 @@ class ActivationKeysController < ApplicationController
   end
 
   def update_subscriptions
-    debugger
     subscription = KTSubscription.where(:subscription => params[:subscription_id])[0]
     allocated = params[:activation_key][:allocated]
 
