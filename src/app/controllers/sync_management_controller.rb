@@ -44,7 +44,6 @@ class SyncManagementController < ApplicationController
     if params[:repo]
       product_ids = params[:repo].values
       provider_ids = Product.find(product_ids).collect{|prod| prod.provider.id}.uniq
-
     end
 
     { :index => [[:read, :sync], :providers, nil, current_organization],

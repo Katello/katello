@@ -52,6 +52,7 @@ Src::Application.routes.draw do
     collection do
       get :auto_complete_search
       get :items
+      get :env_items
       get :environments
     end
   end

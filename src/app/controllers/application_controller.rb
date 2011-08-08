@@ -247,7 +247,7 @@ class ApplicationController < ActionController::Base
       :show => [[:read,:update], resource_type, obj_id, org_id],
       :update => [[:update, :create], resource_type, obj_id, org_id],
       :destroy => [[:update, :create], resource_type, obj_id, org_id],
-    }).with_indifferent_access
+    })
   end
 
   # authorize the user for the requested action
