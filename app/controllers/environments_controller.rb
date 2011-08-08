@@ -15,13 +15,27 @@ class EnvironmentsController < ApplicationController
   require 'rubygems'
   require 'active_support/json'
 
-  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create]
+  skip_before_filter :authorize
+  before_filter :find_organization
+  before_filter :authorize
   before_filter :find_environment, :only => [:show, :edit, :update, :destroy]
   around_filter :catch_exceptions
 
   def section_id
     'orgs'
   end
+
+  def rules
+    manage_rule = [[:update], :organizations, @organization.id]
+    {
+      :new => manage_rule,
+      :edit => manage_rule,
+      :create => manage_rule,
+      :update => manage_rule,
+      :destroy => manage_rule
+    }
+  end
+
 
   # GET /environments/new
   def new
