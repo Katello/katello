@@ -69,7 +69,7 @@ class Organization < ActiveRecord::Base
   end
 
   def updatable?
-      User.allowed_to?([:update, :create], :organizations, self.id)
+      User.allowed_to?([:update, :create], :organizations, self)
   end
 
   def deletable?
@@ -77,11 +77,11 @@ class Organization < ActiveRecord::Base
   end
 
   def readable?
-    User.allowed_to?([:read,:update, :create], :organizations, self.id)
+    User.allowed_to?([:read,:update, :create], :organizations, self)
   end
 
   def environments_manageable?
-    User.allowed_to?([:update], :organizations, self.id)
+    User.allowed_to?([:update], :organizations, self)
   end
   
 

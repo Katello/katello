@@ -26,8 +26,7 @@ class ProvidersController < ApplicationController
 
 
   def rules
-
-    index_test = lambda{Provider.new(:organization=>current_organization).readable?}
+    index_test = lambda{Provider.any_readable?(current_organization)}
     create_test = lambda{Provider.creatable?(current_organization)}
     read_test = lambda{@provider.readable?}
     edit_test = lambda{@provider.editable?}
