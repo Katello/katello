@@ -14,6 +14,7 @@ class Provider < ActiveRecord::Base
   include Glue::Provider
   include Glue
   include Authorization
+  include KatelloUrlHelper
 
   REDHAT = 'Red Hat'
   CUSTOM = 'Custom'
@@ -28,7 +29,6 @@ class Provider < ActiveRecord::Base
     :in => TYPES,
     :allow_blank => false,
     :message => "Please select provider type from one of the following: #{TYPES.join(', ')}."
-  validates :repository_url, :katello_url_format => {:protocol => ["https"], :port_numbers => false}, :allow_nil => false, :if => :rh_repo?
   before_validation :sanitize_repository_url
 
   scoped_search :on => :name, :complete_value => true, :rename => :'provider.name'
@@ -39,12 +39,17 @@ class Provider < ActiveRecord::Base
   scoped_search :in => :products, :on => :description, :complete_value => true, :rename => :'custom_product.description'
 
   validate :only_one_rhn_provider
+  validate :valid_url, :if => :rh_repo?
 
   def only_one_rhn_provider
     # validate only when new record is added (skip explicit valid? calls)
     if new_record? and provider_type == REDHAT and count_providers(REDHAT) != 0
       errors.add(:base, _("Only one Red Hat provider permitted for an Organization"))
     end
+  end
+
+  def valid_url
+    errors.add(:repository_url, _("is invalid")) unless kurl_valid?(self.repository_url)
   end
 
   def count_providers type

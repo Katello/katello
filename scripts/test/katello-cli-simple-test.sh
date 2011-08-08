@@ -23,7 +23,7 @@ txtgrn=$(tput setaf 2)    # Green
 txtyel=$(tput setaf 3)    # Yellow
 txtrst=$(tput sgr0)       # Text reset
 
-all_tests=`ls $script_dir/cli_tests/ | grep -v _.* | sed -s 's/.sh//g'`
+all_tests=`ls $script_dir/cli_tests/ | grep -v '^_.*' | sed -s 's/^[0-9]*_//g' | sed -s 's/.sh//g'`
 required_tests=""
 
 PRINT_ALL=0
@@ -66,12 +66,16 @@ done
 if [ $TEST_ALL -eq 1 ]; then
     required_tests=$all_tests
 fi
-echo $required_tests
+#echo $required_tests
 
 function skip_test() {
     printf "%-40s" "$1"
     shift
     printf "[ ${txtyel}SKIPPED${txtrst} ]\t Notes: $1\n"
+}
+
+function test_own_cmd() {
+  CMD="" test "$*"
 }
 
 function test() {
@@ -145,7 +149,9 @@ function valid_id() {
 
 . $script_dir/cli_tests/_base_setup.sh
 for t in $required_tests; do  
-    . $script_dir/cli_tests/$t.sh
+    echo "Test suite $t"
+    [ -f $script_dir/cli_tests/[0-9]*$t.sh ] && . $script_dir/cli_tests/[0-9]*$t.sh
+    [ -f $script_dir/cli_tests/$t.sh ] && . $script_dir/cli_tests/*$t.sh
 done
 
 . $script_dir/cli_tests/_base_cleanup.sh

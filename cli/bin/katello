@@ -99,6 +99,7 @@ def setup_admin(admin):
     errata_cmd = errata.Errata()
     errata_cmd.add_action('list', errata.List())
     errata_cmd.add_action('info', errata.Info())
+    errata_cmd.add_action('system', errata.SystemErrata())
     admin.add_command('errata', errata_cmd)
 
     system_cmd = system.System()
@@ -106,6 +107,9 @@ def setup_admin(admin):
     system_cmd.add_action('register', system.Register())
     system_cmd.add_action('unregister', system.Unregister())
     system_cmd.add_action('info', system.Info())
+    system_cmd.add_action('packages', system.InstalledPackages())
+    system_cmd.add_action('facts', system.Facts())
+    system_cmd.add_action('update', system.Update())
     admin.add_command('system', system_cmd)
 
     template_cmd = template.Template()

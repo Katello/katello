@@ -27,12 +27,12 @@ ruby scripts/test/check_haml.rb
 [ $? -ne 0 ] && echo Syntax errors! && exit 1
 
 # generate routes in HTML
-pushd src
-bundle install --path=vendor
-TEXT=1 bundle exec rake pretty_routes --trace
-bundle exec rake pretty_routes --trace
-mv routes.{html,txt} ../reports
-popd
+#pushd src
+#bundle install --path=vendor
+#TEXT=1 bundle exec rake pretty_routes --trace
+#bundle exec rake pretty_routes --trace
+#mv routes.{html,txt} ../reports
+#popd
 
 # ruby checkstyle
 echo Running roodi
