@@ -66,8 +66,6 @@ describe Api::SystemsController do
 
     context "in organization with multiple environments" do
       before(:each) do
-        # @environment_1 = KPEnvironment.new(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
-        # @environment_1.save!
         @environment_2 = KPEnvironment.new(:name => 'test_2', :prior => @environment_1, :organization => @organization)
         @environment_2.save!
       end
@@ -86,8 +84,6 @@ describe Api::SystemsController do
 
   describe "list systems" do
     before(:each) do
-      # @environment_1 = KPEnvironment.new(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
-      # @environment_1.save!
       @environment_2 = KPEnvironment.new(:name => 'test_2', :prior => @environment_1, :organization => @organization)
       @environment_2.save!
 
