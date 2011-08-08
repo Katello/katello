@@ -62,6 +62,29 @@ class Organization < ActiveRecord::Base
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
+
+  #permissions
+  def self.creatable?
+    User.allowed_to? *[[:create], :organizations]
+  end
+
+  def updatable?
+    User.allowed_to? *[[:update, :create], :organizations, self.id]
+  end
+
+  def deletable?
+    User.allowed_to? *[[:delete, :create], :organizations]
+  end
+
+  def readable?
+    User.allowed_to? *[[:read,:update, :create], :organizations, self.id]
+  end
+
+  def environments_manageable?
+    User.allowed_to? *[[:update], :organizations, self.id]
+  end
+  
+
   def self.list_verbs
     {
       :create => N_("Create Organization"),
