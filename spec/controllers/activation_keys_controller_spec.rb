@@ -32,11 +32,14 @@ describe ActivationKeysController do
     @organization = new_test_org
     @environment_1 = KPEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
     @environment_2 = KPEnvironment.create!(:name => 'prod', :prior => @environment_1.id, :organization => @organization)
+    @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1)
+    @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1)
     @a_key = ActivationKey.create!(:name => "another test key", :organization_id => @organization, :environment => @environment_1)
     @subscription = KTSubscription.create!(:subscription => "Test Subscription", 
                                           :key_subscriptions => [KeySubscription.create!(:activation_key => @a_key, :allocated=>5)])
 
-    @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key", :environment_id => @environment_1.id}}
+    @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key", :environment_id => @environment_1.id,
+                                         :system_template_id => @system_template_1.id}}
   end
 
   describe "GET index" do
@@ -143,6 +146,7 @@ describe ActivationKeysController do
         assigns[:activation_key].name.should eq(@akey_params[:activation_key][:name])
         assigns[:activation_key].description.should eq(@akey_params[:activation_key][:description])
         assigns[:activation_key].environment_id.should eq(@akey_params[:activation_key][:environment_id])
+        assigns[:activation_key].system_template_id.should eq(@akey_params[:activation_key][:system_template_id])
       end
 
       it "renders list item partial for 2 pane" do
@@ -190,6 +194,11 @@ describe ActivationKeysController do
         it "should update requested field - default environment" do
           put :update, :id => @a_key.id, :activation_key => {:environment_id => @environment_2.id}
           assigns[:activation_key].environment_id.should eq(@environment_2.id)
+        end
+
+        it "should update requested field - system template" do
+          put :update, :id => @a_key.id, :activation_key => {:system_template_id => @system_template_2.id}
+          assigns[:activation_key].system_template_id.should eq(@system_template_2.id)
         end
 
         it "should generate a success notice" do
