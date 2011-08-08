@@ -33,7 +33,7 @@ class PromotionsController < ApplicationController
       :packages => prod_test,
       :repos => prod_test,
       :errata => prod_test
-    }.with_indifferent_access  
+    }
   end
 
 

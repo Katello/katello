@@ -27,12 +27,11 @@ class ChangesetsController < ApplicationController
 
 
   def rules
-      env_id = @environment.id if @environment
-      env_id ||= -1  #hack for auto_complete
+    env_id = @environment.id if @environment
+    env_id ||= -1  #hack for auto_complete
 
-      read_perm = [[:read_changesets, :manage_changesets], :environment, env_id, current_organization]
-      manage_perm = [[:manage_changesets], :environment, env_id, current_organization]
-
+    read_perm = [[:read_changesets, :manage_changesets], :environment, env_id, current_organization]
+    manage_perm = [[:manage_changesets], :environment, env_id, current_organization]
     {
       :index => read_perm,
       :items => read_perm,
@@ -48,8 +47,7 @@ class ChangesetsController < ApplicationController
       :object => read_perm,
       :auto_complete_search => read_perm,
       :promote => [[:promote_changesets], :environment,  env_id, current_organization]
-    }.with_indifferent_access
-    
+    }
   end
 
 
