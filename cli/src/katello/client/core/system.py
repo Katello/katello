@@ -62,9 +62,9 @@ class List(SystemAction):
             return os.EX_DATAERR
 
         if env_name is None:
-            self.printer.setHeader(_("Systems List For Org %s") % org_name)
+            self.printer.setHeader(_("Systems List For Org [ %s ]") % org_name)
         else:
-            self.printer.setHeader(_("Systems List For Environment %s in Org %s") % (env_name, org_name))
+            self.printer.setHeader(_("Systems List For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
 
         self.printer.addColumn('name')
         
@@ -95,10 +95,10 @@ class Info(SystemAction):
         # info is always grep friendly
 
         if env_name is None:
-            self.printer.setHeader(_("System Information For Org %s") % org_name)
+            self.printer.setHeader(_("System Information For Org [ %s ]") % org_name)
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
-            self.printer.setHeader(_("System Information For Environment %s in Org %s") % (env_name, org_name))
+            self.printer.setHeader(_("System Information For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
             systems = self.api.systems_by_env(org_name, env_name,
                     {'name': sys_name})
 
@@ -192,10 +192,10 @@ class Facts(SystemAction):
         # info is always grep friendly
 
         if env_name is None:
-            self.printer.setHeader(_("System Facts For System %s in Org %s") % (sys_name, org_name))
+            self.printer.setHeader(_("System Facts For System [ %s ] in Org [ %s ]") % (sys_name, org_name))
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
-            self.printer.setHeader(_("System Facts For System %s in Environment %s in Org %s") % (sys_name, env_name, org_name))
+            self.printer.setHeader(_("System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]") % (sys_name, env_name, org_name))
             systems = self.api.systems_by_env(org_name, env_name, {'name': sys_name})
 
         if not systems:
@@ -286,8 +286,8 @@ class Update(SystemAction):
                        help=_('a new name for the system'))
         self.parser.add_option('--description', dest='description',
                        help=_('a description of the system'))
-#        self.parser.add_option('--location', dest='location',
-#                       help=_("location of the system"))
+        self.parser.add_option('--location', dest='location',
+                       help=_("location of the system"))
         
     def check_options(self):
         self.require_option('org')
@@ -299,7 +299,7 @@ class Update(SystemAction):
         sys_name = self.get_option('name')
         new_name = self.get_option('new_name')
         new_description = self.get_option('description')
-#        new_location = self.get_option('location')
+        new_location = self.get_option('location')
         
         if env_name is None:
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
@@ -314,7 +314,7 @@ class Update(SystemAction):
         updates = {}
         if new_name: updates['name'] = new_name
         if new_description: updates['description'] = new_description
-#        if new_location: updates['location'] = new_location
+        if new_location: updates['location'] = new_location
         
         response = self.api.update(system_uuid, updates)
         
