@@ -257,8 +257,9 @@ class ApplicationController < ActionController::Base
     logger.debug "Authorizing #{current_user.username} for #{ctrl}/#{action}"
 
     allowed = false
-    allowed = rules[action].call if Proc === rules[action]
-    allowed = user.allowed_to? *rules[action] if Array === rules[action]
+    rule_set = rules.with_indifferent_access
+    allowed = rule_set[action].call if Proc === rule_set[action]
+    allowed = user.allowed_to? *rule_set[action] if Array === rule_set[action]
 
     return true if allowed
     raise Errors::SecurityViolation, "User #{current_user.username} is not allowed to access #{params[:controller]}/#{params[:action]}"
