@@ -22,7 +22,6 @@ describe Permission do
                                 :resource_type=> nil, :organization => nil)
 
 
-
     @god = User.find_or_create_by_username(
       :username => 'god',
       :password => "password",
@@ -43,7 +42,8 @@ describe Permission do
     @some_role.allow [:test], :test1
     @some_role.allow [:test], :test2
     @some_role.allow [:test], :test3
-    ResourceType::TYPES[:repogroup] = {:model => OpenStruct.new(:list_verbs => {"create_repo" => "Description"})}
+    ResourceType::TYPES[:repogroup] = {:model => OpenStruct.new(:no_tag_verbs => [],
+                                                                :list_verbs => {"create_repo" => "Description"})}
     @repo_admin.allow :create_repo, :repogroup, :repogroup_internal
     @repo_admin.allow :delete_repo, :repo, [:repogroup_internal, :repo_rhel6]
   end
@@ -218,6 +218,24 @@ describe Permission do
       specify{@admin.allowed_to?(@verb_name, @res_type_name + "foo",:foo_tag, @organization).should be_false}
       specify{@admin.allowed_to?(@verb_name + "_foo", @res_type_name,:foo_tag).should be_false}
       specify{@admin.allowed_to?(@verb_name + "_foo", @res_type_name,:foo_tag, @organization).should be_false}
+    end
+
+
+    describe "no_tag_verbs" do
+      before do
+        @res_type_name = :providers
+        @res_type = ResourceType.find_or_create_by_name(@res_type_name)
+        @no_tag_verbs = Provider.no_tag_verbs
+        @verb_name = @no_tag_verbs.first
+        @verb = Verb.find_or_create_by_verb(@verb_name)
+        @magic_perm = Permission.create!(:role => @some_role, :verbs => [@verb],
+                                      :resource_type=> @res_type, :organization => @organization)
+      end
+      specify{@admin.allowed_to?(@verb_name, @res_type_name,nil, @organization).should be_true}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name,:foo_tag, @organization).should be_true}
+
+      specify{@admin.allowed_to?(@verb_name, @res_type_name,nil,nil).should be_false}
+      specify{@admin.allowed_to?(@verb_name, @res_type_name,:foo_tag, nil).should be_false}
     end
 
   end

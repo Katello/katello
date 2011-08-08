@@ -97,4 +97,8 @@ class Organization < ActiveRecord::Base
       :delete_systems => N_("Delete Systems")
    }.with_indifferent_access
   end
+
+  def self.no_tag_verbs
+    [:create]
+  end
 end

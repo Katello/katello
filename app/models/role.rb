@@ -136,6 +136,25 @@ class Role < ActiveRecord::Base
   end
 
 
+  #permissions
+  def self.creatable?
+    User.allowed_to? [:create], :roles
+  end
+
+  def editable?
+   Role.creatable? || (User.allowed_to? [:update], :roles, self.id)
+  end
+
+  def deletable?
+    Role.creatable? || (User.allowed_to? [:delete],:roles)
+  end
+
+
+  def readable?
+    Role.creatable? || (User.allowed_to? [:read,:update], :roles, self.id)
+  end
+
+
   def self.list_verbs
     {
     :create => N_("Create Roles"),
@@ -143,6 +162,10 @@ class Role < ActiveRecord::Base
     :update => N_("Update Roles"),
     :delete => N_("Delete Roles"),
     }.with_indifferent_access
+  end
+
+  def self.no_tag_verbs
+    [:create]
   end
 
 end
