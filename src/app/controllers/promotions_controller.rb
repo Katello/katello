@@ -20,16 +20,9 @@ class PromotionsController < ApplicationController
 
 
   def rules
-    env_id = @environment.id
-    prov_id = @product ? @product.provider.id : -1
-
-    product_perm = [[:read], :provider, prov_id]
-    env_perm = [[:read_contents], :environment, env_id]
-
-    prod_test = lambda{ current_user.allowed_to?(*product_perm) and current_user.allowed_to?(*env_perm)  }
-
+    prod_test = lambda{ @product.provider.readable? and @environment.contents_readable? }
     {
-      :show => [[:read, :promote, :modify_changesets, :read_changesets, :promot_changesets], :environment, env_id],
+      :show => [[:read, :promote, :modify_changesets, :read_changesets, :promote_changesets], :environment,  @environment.id],
       :packages => prod_test,
       :repos => prod_test,
       :errata => prod_test

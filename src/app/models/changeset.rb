@@ -279,9 +279,6 @@ class Changeset < ActiveRecord::Base
     end
   end
 
-  #TODO: add validation
-
-
   private
 
   def products_to_promote from_env, to_env

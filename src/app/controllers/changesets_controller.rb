@@ -28,10 +28,11 @@ class ChangesetsController < ApplicationController
 
   def rules
     env_id = @environment.id if @environment
-    env_id ||= -1  #hack for auto_complete
+    env_id ||= KPEnvironment.first  #hack for auto_complete
 
-    read_perm = [[:read_changesets, :manage_changesets], :environment, env_id, current_organization]
-    manage_perm = [[:manage_changesets], :environment, env_id, current_organization]
+    read_perm = lambda{@environment.changesets_readable?}
+    manage_perm = lambda{@environment.changesets_manageable?}
+    promote_perm = lambda{@environment.changesets_promotable?}
     {
       :index => read_perm,
       :items => read_perm,
@@ -46,7 +47,7 @@ class ChangesetsController < ApplicationController
       :dependencies => read_perm,
       :object => read_perm,
       :auto_complete_search => read_perm,
-      :promote => [[:promote_changesets], :environment,  env_id, current_organization]
+      :promote => promote_perm
     }
   end
 
@@ -128,7 +129,7 @@ class ChangesetsController < ApplicationController
                                    :environment_id=>@next_environment.id)
     notice _("Changeset '#{@changeset["name"]}' was created.")
     bc = {}
-    add_crumb_node!(bc, changeset_bc_id(@changeset), products_changeset_path(@changeset), @changeset.name, ['changesets'],
+    add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
                     {:client_render => true}, {:is_new=>true})
     render :json => {
       'breadcrumb' => bc,
