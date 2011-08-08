@@ -16,7 +16,7 @@ class OperationsController < ApplicationController
     {
       :index => lambda{user.allowed_to?(*[[:read, :update, :create, :delete], :users]) or
           user.allowed_to?(*[[:read, :update, :create, :delete], :roles])}
-    }.with_indifferent_access
+    }
   end
 
 

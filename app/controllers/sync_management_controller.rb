@@ -53,7 +53,7 @@ class SyncManagementController < ApplicationController
       :sync_status => [[:sync, :read], :providers, provider_id, current_organization],
       :product_status => [[:sync, :read], :providers, provider_id, current_organization],
       :destroy => [[:sync], :providers, provider_id, current_organization]
-    }.with_indifferent_access
+    }
   end
 
 

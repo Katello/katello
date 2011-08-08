@@ -29,7 +29,7 @@ class RolesController < ApplicationController
     rules[:update_permission] = rules[:update]
     rules[:create_permission] = rules[:update]
     rules[:show_permission] = rules[:edit]
-    rules.with_indifferent_access
+    rules
   end
 
   def section_id

@@ -30,7 +30,7 @@ class UsersController < ApplicationController
      rules[:clear_helptips] = rules[:edit]
      rules[:enable_helptip] = rules[:clear_helptips]
      rules[:disable_helptip] = rules[:enable_helptip]
-     rules.with_indifferent_access
+     rules
   end
   
   def index
