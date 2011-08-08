@@ -73,4 +73,9 @@ class SyncPlan < ActiveRecord::Base
       :manage_all => N_("Manage all Sync Plans")
     }.with_indifferent_access
   end
+
+  def self.no_tag_verbs
+    SyncPlan.list_verbs.keys
+  end
+
 end

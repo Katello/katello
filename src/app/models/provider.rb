@@ -81,6 +81,10 @@ class Provider < ActiveRecord::Base
     }.with_indifferent_access
   end
 
+  def self.no_tag_verbs
+    [:create]
+  end
+
   #permissions
   def readable?
     User.allowed_to?([:read, :create, :sync], :provider, self.id, self.organization)
@@ -105,9 +109,6 @@ class Provider < ActiveRecord::Base
   def syncable?
     User.allowed_to?([:sync], :provider, self.id, self.organization)
   end
-
-
-
   protected
 
    def sanitize_repository_url
