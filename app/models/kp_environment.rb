@@ -144,6 +144,12 @@ class KPEnvironment < ActiveRecord::Base
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
+  def systems_readable?
+    current_user.allowed_to?([[:read_systems, :update_systems, :delete_systems], :environments, self.id]) ||
+        current_user.allowed_to?([[:read_systems, :update_systems, :delete_systems], :organizations, self.organization.id])
+  end
+  
+
   def self.list_verbs
     {
       :read_contents => N_("Access Environment Contents"),

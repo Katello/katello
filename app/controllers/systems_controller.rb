@@ -13,12 +13,44 @@
 class SystemsController < ApplicationController
   include AutoCompleteSearch
   include SystemsHelper
+
+
   before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments]
+
+  ENV_ACTIONS = [:environment, :env_items]
+  skip_before_filter :authorize, :only => ENV_ACTIONS
+  before_filter :find_environment, :only => ENV_ACTIONS
+  before_filter :authorize, :only => ENV_ACTIONS
+
   before_filter :setup_options, :only => [:index, :items, :environments]
 
   # two pane columns and mapping for sortable fields
   COLUMNS = {'name' => 'name', 'lastCheckin' => 'lastCheckin', 'created' => 'created_at' }
-  
+
+
+  def rules
+    edit_system = lambda{System.find(params[:id]).editable?}
+    read_system = lambda{System.find(params[:id]).readable?}
+    delete_system = lambda{ System.find(params[:id]).deletable? }
+    env_system = lambda{@environment.systems_readable?}
+
+    {
+      :index => lambda{true},
+      :items => lambda{true},
+      :environments => env_system,
+      :env_items => env_system,
+      :subscriptions => read_system,
+      :update_subscriptions => edit_system,
+      :packages => read_system,
+      :update => edit_system,
+      :edit => read_system,
+      :show => read_system,
+      :facts => read_system
+    }
+  end
+
+
+
   def index
     begin
       @systems = System.search_for(params[:search]).where(:environment_id => current_organization.environments).limit(current_user.page_size)
@@ -32,10 +64,8 @@ class SystemsController < ApplicationController
   end
 
   def environments
+    @panel_options[:ajax_scroll] = env_items_systems_path()
     begin
-      @environment = KPEnvironment.find params[:env_id] if !params[:env_id].blank?
-      @environment ||= current_organization.promotion_paths.first.first
-      
       setup_environment_selector(current_organization)
       @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size)
       retain_search_history
@@ -54,15 +84,10 @@ class SystemsController < ApplicationController
     render_panel_items @systems, @panel_options
   end
 
-  def setup_options
-    @panel_options = { :title => _('Systems'),
-                      :col => COLUMNS.keys,
-                      :custom_rows => true,
-                      :enable_create => false,
-                      :enable_sort => true,
-                      :name => _('system'),
-                      :list_partial => 'systems/list_systems',
-                      :ajax_scroll => items_systems_path()}
+  def env_items
+    start = params[:offset]
+    @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size).offset(start)
+    render_panel_items @systems, @panel_options
   end
 
   def subscriptions
@@ -127,9 +152,27 @@ class SystemsController < ApplicationController
 
   private
   include SortColumnList
-  
+
+
+  def find_environment
+    @environment = KPEnvironment.find params[:env_id] if !params[:env_id].blank?
+    @environment ||= current_organization.promotion_paths.first.first
+  end
+
   def find_system
     @system = System.find(params[:id])
   end
+
+  def setup_options
+    @panel_options = { :title => _('Systems'),
+                      :col => COLUMNS.keys,
+                      :custom_rows => true,
+                      :enable_create => false,
+                      :enable_sort => true,
+                      :name => _('system'),
+                      :list_partial => 'systems/list_systems',
+                      :ajax_scroll => items_systems_path()}
+  end
+
 
 end

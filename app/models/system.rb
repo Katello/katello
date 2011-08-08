@@ -63,6 +63,25 @@ class System < ActiveRecord::Base
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
+  
+  def readable?
+   current_user.allowed_to?([[:read_systems, :update_systems, :delete_systems], :organizations, self.organization.id]) ||
+      current_user.allowed_to?([[:read_systems, :update_systems, :delete_systems], :environment, self.environment.id])
+  end
+
+  def editable?
+   current_user.allowed_to?([[:read_systems], :organizations, self.organization.id]) ||
+      current_user.allowed_to?([[:read_systems], :environment, self.environment.id])
+  end
+
+  def deletable?
+   current_user.allowed_to?([[:delete_systems], :organizations, self.organization.id]) ||
+      current_user.allowed_to?([[:delete_systems], :environment, self.environment.id])
+  end
+
+
+
+
   private
     def fill_defaults
       self.description = "Initial Registration Params" unless self.description
