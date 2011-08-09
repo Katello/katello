@@ -15,6 +15,101 @@
  * A small javascript file needed to load things whenever a role is opened for editing
  *
  */
+var roleActions = (function($){
+    var opened = false;
+
+    var toggle = function(delay){
+        var edit_window = $('#role_edit'),
+            name_box = $('.edit_name_text'),
+            edit_button = $('#edit_role > span'),
+            description = $('.edit_description'),
+            animate_time = 500,
+            after_function = undefined,
+            nameBreadcrumb = $('.tree_breadcrumb');
+            
+        if (delay != undefined){
+            animate_time = delay;
+        }
+
+        opened = !opened;
+
+        if (opened) {
+            edit_button.html(i18n.close_role_details);
+            edit_button.parent().addClass("highlighted");
+            after_function = setup_edit;
+        }
+        else {
+            edit_button.html(i18n.edit_role_details);
+            edit_button.parent().removeClass("highlighted");
+        }
+
+        edit_window.slideToggle(animate_time, after_function);
+    },
+    setup_edit = function() {
+        var url = "/roles/" + $('#role_id').val();
+        var name_box = $('.edit_name_text');
+        var description = $('.edit_description');
+        
+        name_box.each(function() {
+            $(this).editable( url, {
+                type        :  'text',
+                width       :  270,
+                method      :  'PUT',
+                name        :  $(this).attr('name'),
+                cancel      :  i18n.cancel,
+                submit      :  i18n.save,
+                indicator   :  i18n.saving,
+                tooltip     :  i18n.clickToEdit,
+                placeholder :  i18n.clickToEdit,
+                submitdata  :  {authenticity_token: AUTH_TOKEN},
+                onsuccess   :  function(data) {
+                      var parsed = $.parseJSON(data);
+                      roles_breadcrumb.roles.name = parsed.name;
+                      $('.edit_name_text').html(parsed.name);
+                      roles_tree.rerender_breadcrumb();
+                },
+                onerror     :  function(settings, original, xhr) {
+                                 original.reset();
+                }
+            });
+        });
+
+       description.each(function() {
+           console.log(i18n.clickToEdit);
+            $(this).editable(url , {
+                type        :  'textarea',
+                method      :  'PUT',
+                name        :  $(this).attr('name'),
+                cancel      :  i18n.cancel,
+                submit      :  i18n.save,
+                indicator   :  i18n.saving,
+                tooltip     :  i18n.clickToEdit,
+                placeholder :  i18n.clickToEdit,
+                submitdata  :  {authenticity_token: AUTH_TOKEN},
+                rows        :  5,
+                cols        :  30,
+                onsuccess   :  function(data) {
+                      var parsed = $.parseJSON(data);
+                      $('.edit_description').html(parsed.description);
+                },
+                onerror     :  function(settings, original, xhr) {
+                    original.reset();
+                }
+            });
+        });
+    },
+    close = function() {
+        if (opened) {
+            toggle(0);
+        }
+    };
+
+    return {
+        toggle  :  function() {toggle();},
+        close   :  close
+    };
+})(jQuery);
+
 var templateLibrary = (function($){
     var listItem = function(id, name, no_slide){
             var html ='<li>';
@@ -118,6 +213,7 @@ var rolesRenderer = (function($){
             $('.breadcrumb_search').width(width);
             $('.slider').width(width);
             $('.sliding_list').width(width * 2);
+            $('#role_edit').width(width);
         },
         init = function(){
             setSizing();
@@ -142,18 +238,24 @@ var rolesRenderer = (function($){
 
 $(function() {
   
-  var roles_tree = sliding_tree("roles_tree", { 
-                        breadcrumb      :  roles_breadcrumb,
-                        default_tab     :  "roles",
-                        bbq_tag         :  "role_edit",
-                        render_cb       :  rolesRenderer.render,
-                        enable_search   :  true,
-                        tab_change_cb   :  function(hash_id) {
-                            //rolesRenderer.sort();
-                            rolesRenderer.setTreeHeight();
-                            rolesRenderer.setStatus(hash_id);
-                        }
-                    });
-                    
-  rolesRenderer.init();
+    var roles_tree = sliding_tree("roles_tree", { 
+                          breadcrumb      :  roles_breadcrumb,
+                          default_tab     :  "roles",
+                          bbq_tag         :  "role_edit",
+                          render_cb       :  rolesRenderer.render,
+                          enable_search   :  true,
+                          tab_change_cb   :  function(hash_id) {
+                              //rolesRenderer.sort();
+                                rolesRenderer.setTreeHeight();
+                                rolesRenderer.setStatus(hash_id);
+                          }
+                      });
+                        
+    rolesRenderer.init();
+    $('#edit_role').live('click', function() {
+        if ($(this).hasClass('disabled')){
+            return false;
+        }
+        roleActions.toggle();
+    });
 });
