@@ -5,8 +5,6 @@
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir extras/fedora
 
-%global rubygems rubygem(rails) >= 3.0.5 rubygem(multimap) rubygem(haml) >= 3.1.2 rubygem(haml-rails) rubygem(json) rubygem(rest-client) rubygem(jammit) rubygem(rails_warden) rubygem(net-ldap) rubygem(compass) >= 0.11.5 rubygem(compass-960-plugin) >= 0.10.4 rubygem(capistrano) rubygem(oauth) rubygem(i18n_data) >= 0.2.6 rubygem(gettext_i18n_rails) rubygem(simple-navigation) >= 3.3.4 rubygem(sqlite3) rubygem(pg) rubygem(scoped_search) >= 2.3.1 rubygem(delayed_job) >= 2.1.4 rubygem(daemons) >= 1.1.4 rubygem(uuidtools)
-
 Name:           katello
 Version:	      0.1.57
 Release:	      1%{?dist}
@@ -22,8 +20,28 @@ Requires:       pulp
 Requires:       openssl
 Requires:       candlepin-tomcat6
 Requires:       rubygems
-Requires:       rubygem(bundler)
-Requires:       %{rubygems}
+Requires:       rubygem(rails) >= 3.0.5
+Requires:       rubygem(multimap)
+Requires:       rubygem(haml) >= 3.1.2
+Requires:       rubygem(haml-rails)
+Requires:       rubygem(json)
+Requires:       rubygem(rest-client)
+Requires:       rubygem(jammit)
+Requires:       rubygem(rails_warden)
+Requires:       rubygem(net-ldap)
+Requires:       rubygem(compass) >= 0.11.5
+Requires:       rubygem(compass-960-plugin) >= 0.10.4
+Requires:       rubygem(capistrano)
+Requires:       rubygem(oauth)
+Requires:       rubygem(i18n_data) >= 0.2.6
+Requires:       rubygem(gettext_i18n_rails)
+Requires:       rubygem(simple-navigation) >= 3.3.4
+Requires:       rubygem(sqlite3) 
+Requires:       rubygem(pg)
+Requires:       rubygem(scoped_search) >= 2.3.1
+Requires:       rubygem(delayed_job) >= 2.1.4
+Requires:       rubygem(daemons) >= 1.1.4
+Requires:       rubygem(uuidtools)
 
 Requires(pre):  shadow-utils
 Requires(preun): chkconfig
@@ -35,7 +53,9 @@ BuildRequires: 	coreutils findutils sed
 BuildRequires: 	rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
-BuildRequires:  %{rubygems}
+BuildRequires:  rubygem(jammit)
+BuildRequires:  rubygem(compass) >= 0.11.5
+BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 
 BuildArch: noarch
 
@@ -53,13 +73,6 @@ Provides a package for managing application life-cycle for Linux systems
 %setup -q
 
 %build
-#generate Gemfile.lock from system-wide rubygems
-echo Generating Gemfile.lock
-echo If this step fails check Gemfile and rubygems SPEC macro
-rm -f Gemfile.lock
-sed -i '/DEV_ONLY/,$d' Gemfile
-bundle install --local --without=test,development
-
 #compile SASS files
 echo Compiling SASS files...
 compass compile
@@ -84,6 +97,8 @@ install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 [ -d tmp ] && rm -rf tmp
 
 #copy the application to the target directory
+mkdir .bundle
+mv ./extras/bundle-config .bundle/config
 cp -R .bundle * %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
