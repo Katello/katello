@@ -17,6 +17,12 @@ class ResourceType < ActiveRecord::Base
     ResourceType::TYPES[name][:name]
   end
 
+  def global?
+    r = ResourceType::TYPES[name]
+    return r[:global] if r && r[:global]
+    false
+  end
+
   TYPES = {
       :organizations => {:model => Organization, :name => N_("Organizations"), :global=>false},
       :environments => {:model => KPEnvironment, :name => N_("Environments"), :global=>false},
