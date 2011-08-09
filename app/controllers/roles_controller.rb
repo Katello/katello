@@ -83,7 +83,7 @@ class RolesController < ApplicationController
     if @user.nil?
       render :partial=>"edit", :layout => "tupane_layout", :locals=>{:role=>@role}
     else
-      render :partial=>"self_role_edit", :layout => "tupane_layout", :locals=>{:role=>@role}
+      render :partial=>"self_role_edit", :layout => "tupane_layout", :locals=>{:role=>@role, :editable=>@user.editable?}
     end
   end
 
