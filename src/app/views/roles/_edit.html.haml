@@ -2,9 +2,11 @@
   :javascript
     var roles_breadcrumb = $.parseJSON('#{escape_javascript(generate_roles_breadcrumb())}');
     localize({
-      "remove"      : '#{_('Remove')}',
-      "loading"     : "#{_('Loading Role')}",
-      "rolesStatus" : "#{_('Please select Organizations to view permissions for this role or Users to see current users with this role.')}"
+      "remove"        : '#{_('Remove')}',
+      "loading"       : "#{_('Loading Role')}",
+      "rolesStatus"   : "#{_('Please select Organizations to view permissions for this role or Users to see current users with this role.')}",
+      "edit_role_details"  : '#{_("Edit Role Details")}',
+      'close_role_details' : '#{_("Close Role Details")}',
     });
 
 = javascript :role_edit
@@ -38,7 +40,21 @@
             = image_tag ("spinner.gif")
         .slider_one.has_content.slider.will_have_content
         .slider_two.no_content.slider
-        
+    
+    #role_edit
+      %h2
+        &nbsp; #{_("Role Details")}
+      %input{:type => "hidden", :name => "role_id", :value => @role.id, :id => "role_id" }
+      .fieldset
+        .grid_2.ra
+          %label #{_("Name:")}
+        .grid_3.la.editable.edit_name_text{'name' => 'role[name]'} #{@role.name}
+        %br
+        %br
+        .grid_2.ra
+          %label #{_("Description:")}
+        .grid_3.la.editable.edit_description{'name' => 'role[description]'} #{@role.description}
+
     #roles_status
     #sliding_tree_actionbar.clickable
       #add_permission.cs_action
