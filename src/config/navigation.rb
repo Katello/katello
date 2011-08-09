@@ -18,9 +18,6 @@ SimpleNavigation::Configuration.run do |navigation|
 
     top_level.item :content, _("Content Management"),  organization_providers_path(current_organization()), :class=>'content' do |content_sub|
       content_sub.item :providers, _("Providers"), organization_providers_path(current_organization()), :highlights_on => /(\/organizations\/.*\/providers)|(\/providers\/.*\/(products|repos))/ do |providers_sub|
-        providers_sub.item :new, _("Create"), new_provider_path(),
-                           :if => Proc.new { @provider.nil? || (!@provider.nil? && @provider.new_record?)},
-                           :controller => 'providers'
         providers_sub.item :edit, _("Basics"), (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id), :class => 'navigation_element',
                            :if => Proc.new { !@provider.nil? && !@provider.new_record? }
         providers_sub.item :subscriptions, _("Subscriptions"),(@provider.nil? || @provider.new_record?) ? "" : subscriptions_provider_path(@provider.id), :class => 'navigation_element',

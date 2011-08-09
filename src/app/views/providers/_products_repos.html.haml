@@ -4,8 +4,9 @@
   #{_("Products & Repositories")}
 
 = content_for :remove_item do
-  %a.remove_item.provider_delete{"data-id"=> @provider.id, "data-url"=>provider_path(@provider.id), "data-confirm-text"=>_('Are you sure?')}
-    = _("Remove Provider")
+  - if @provider.deletable?
+    %a.remove_item.provider_delete{"data-id"=> @provider.id, "data-url"=>provider_path(@provider.id), "data-confirm-text"=>_('Are you sure?')}
+      = _("Remove Provider")
 
 = content_for :navigation do
   = render_navigation(:expand_all => true, :level => 3)
@@ -15,15 +16,16 @@
     .grid_9
       = help_tip_button('product_repos-help')
       = help_tip(_("On Products & Repositories you can add your own Products and Repositories to your Provider.  " + |
-                 "This allows you to synchronize content from any remote repository to this server.  Simply " + |
+                 "This allows you to synchronize content from any remote repository to this server.  Simply " + | 
                  "add a Product and then setup one or more repositories to add to this Provider.  This feature is only " + |
                  "available for Custom Providers."), 'product_repos-help') |
   
     .grid_9#products
       %input{ :type => "hidden", :id=> "provider_id", :name => "provider_id", :value => @provider.id }
-  
-      .button.subpanel_element{"data-url"=>new_provider_product_path(@provider.id)}
-        = _("Add Product")
+
+      -if editable
+        .button.subpanel_element{"data-url"=>new_provider_product_path(@provider.id)}
+          = _("Add Product")
         
       -@products.each do |product|
         %ul
@@ -39,5 +41,6 @@
                 %li{:class=>'repo'}
                   .grid_6.prefix_1.la.editable.subpanel_element{"data-url"=>edit_provider_product_repository_path(@provider.id, product.id, repo.name)} #{repo.name}
               .prefix_1
-                .button.subpanel_element{"data-url"=>new_provider_product_repository_path(@provider.id, product.id)}
-                  #{_("Add Repository")}
+                - if editable
+                  .button.subpanel_element{"data-url"=>new_provider_product_repository_path(@provider.id, product.id)}
+                    #{_("Add Repository")}
