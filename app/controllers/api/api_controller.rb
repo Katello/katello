@@ -69,7 +69,7 @@ class Api::ApiController < ActionController::Base
   end
 
   def exception_with_response(exception)
-    logger.error "exception when talking to a remote client:" << pp_exception(exception)
+    logger.error "exception when talking to a remote client: #{exception.message} " << pp_exception(exception)
     render :text => pp_exception(exception) , :status => exception.http_code
   end
 
