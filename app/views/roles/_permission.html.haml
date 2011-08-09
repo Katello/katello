@@ -12,7 +12,7 @@
         .grid_1.ra.fielditem
           = f.label :type, _("Type")
         .grid_6.la.fielditem
-          = res.select :name, @resource_types.collect {|name, display| [display, name]}, {}, :data_type => "types"
+          = res.select :name, resource_types.collect {|name, details| [details[:name], name]}, {}, :data_type => "types"
       
       
 
