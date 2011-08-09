@@ -136,6 +136,22 @@ var templateLibrary = (function($){
             html += '</ul>';
             return html;
         },
+        organizationsList = function(items, type, options){
+            var html = '<ul>',
+                options = options ? options : {};
+            
+            html += listItem(items['global'], items['global'].name, true);
+            
+            for( item in items){
+                if( items.hasOwnProperty(item) ){
+                    if( item.split("_")[0] === type ){
+                        html += listItem(item, items[item].name, options.no_slide);
+                    }
+                }
+            }
+            html += '</ul>';
+            return html;
+        },
         permissionsList = function(permissions, organization_id){
             var html = '<ul>';
             
@@ -162,14 +178,15 @@ var templateLibrary = (function($){
     
     return {
         list                :    list,
+        organizationsList   :    organizationsList,
         permissionsList     :    permissionsList
     }
 }(jQuery));
 
 var rolesRenderer = (function($){
     var render = function(hash, render_cb){
-            if( hash === 'role_organizations' ){
-                render_cb(templateLibrary.list(roles_breadcrumb, 'organization'));
+            if( hash === 'role_permissions' ){
+                render_cb(templateLibrary.organizationsList(roles_breadcrumb, 'organization'));
             } else if( hash === 'roles' ) {
                 render_cb(templateLibrary.list(roles_breadcrumb, 'role'));
             } else if( hash === 'role_users' ){
