@@ -18,19 +18,30 @@ class UsersController < ApplicationController
   end
    
   before_filter :setup_options, :only => [:items, :index]
+  before_filter :find_user, :only => [:edit, :update, :clear_helptips, :destroy]
+  before_filter :authorize
+
   def rules
-     rules = {:index => [[:create, :update, :read, :delete], :users],
-         :items => [[:create, :update, :read], :users],
-        :new => [[:create], :users],
-         :create => [[:create], :users],
-         :edit => [[:read,:update,:create], :users, params[:id]],
-         :update => [[:update, :create], :users, params[:id]],
-         :delete => [[:update, :create], :users, params[:id]],
+    index_test = lambda{User.any_readable?}
+    create_test = lambda{User.creatable?}
+
+    read_test = lambda{@user.readable?}
+    edit_test = lambda{@user.editable?}
+    delete_test = lambda{@user.deletable?}
+    user_helptip = lambda{true} #everyone can enable disable a helptip
+    
+     {
+       :index => index_test,
+       :items => index_test,
+       :new => create_test,
+       :create => create_test,
+       :edit => read_test,
+       :update => edit_test,
+       :clear_helptips => edit_test,
+       :destroy => delete_test,
+       :enable_helptip => user_helptip,
+       :disable_helptip => user_helptip,
      }
-     rules[:clear_helptips] = rules[:edit]
-     rules[:enable_helptip] = rules[:clear_helptips]
-     rules[:disable_helptip] = rules[:enable_helptip]
-     rules
   end
   
   def index
@@ -48,17 +59,9 @@ class UsersController < ApplicationController
     @users = User.search_for(params[:search]).limit(current_user.page_size).offset(start)
     render_panel_items @users, @panel_options
   end
-  
-  def setup_options
-    @panel_options = { :title => _('Users'), 
-                 :col => ['username'], 
-                 :create => _('User'),
-                 :name => _('user'),
-                 :ajax_scroll => items_users_path()}
-  end
+
   
   def edit 
-    @user = User.where(:id => params[:id])[0]
     render :partial=>"edit", :layout => "tupane_layout", :locals=>{:user=>@user}
   end
   
@@ -83,8 +86,6 @@ class UsersController < ApplicationController
     params[:user] = {"role_ids"=>[]} unless params.has_key? :user
     params[:user].delete :username
 
-    @user = User.where(:id => params[:id])[0]
-
     #Add in the own role if updating roles, cause the user shouldn't see his own role
     if params[:user][:role_ids]
       params[:user][:role_ids] << @user.own_role.id
@@ -102,7 +103,6 @@ class UsersController < ApplicationController
 
   def destroy
     @id = params[:id]
-    @user = User.where(:id => @id)[0]
     begin
       #remove the user
       @user.destroy
@@ -119,8 +119,6 @@ class UsersController < ApplicationController
   end
 
   def clear_helptips
-
-    @user = User.find params[:id]
     @user.clear_helptips
     notice _("Disabled help tips have been re-enabled.")
     render :text => _("Cleared")
@@ -136,6 +134,19 @@ class UsersController < ApplicationController
     render :text => ""
   end
 
+  private
+
+  def find_user
+    @user = User.find params[:id]
+  end
   
-  
+
+  def setup_options
+    @panel_options = { :title => _('Users'),
+                 :col => ['username'],
+                 :create => _('User'),
+                 :name => _('user'),
+                 :ajax_scroll => items_users_path()}
+  end
+
 end
