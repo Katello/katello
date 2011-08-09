@@ -20,6 +20,23 @@ class SyncPlansController < ApplicationController
     'contents'
   end
 
+
+  def rules
+    read_test = lambda{SyncPlan.readable?(current_organization)}
+    manage_test = lambda{SyncPlan.manageable?(current_organization)}
+    {
+      :index => read_test,
+      :items => read_test,
+      :show => read_test,
+      :edit => read_test,
+      :update => manage_test,
+      :destroy => manage_test,
+      :new => manage_test,
+      :create => manage_test,
+    }
+  end
+
+
   def index
     begin
       @plans = SyncPlan.search_for(params[:search]).where(:organization_id => current_organization.id).limit(current_user.page_size)
