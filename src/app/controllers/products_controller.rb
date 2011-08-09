@@ -68,11 +68,11 @@ class ProductsController < ApplicationController
     begin
       @product.destroy
       notice _("Product '#{@product[:name]}' removed.")
-      render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@product.provider_id)}
     rescue Exception => error
       Rails.logger.error error.to_s
       errors error.to_s
     end
+    render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@product.provider_id)}
   end
 
   protected
