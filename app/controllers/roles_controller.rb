@@ -20,28 +20,24 @@ class RolesController < ApplicationController
   include AutoCompleteSearch
   
   def rules
-    create_check = lambda{Roles.creatable?}
+    index_check = lambda{Role.any_readable?}
+    create_check = lambda{Role.creatable?}
     read_check = lambda{@role.readable?}
     edit_check = lambda{@role.editable?}
     delete_check = lambda{@role.deletable?}
-
-    rules = {:index => read_check,
-        :items => read_check,
-        :create => create_check,
-        :update => edit_check,
-        :delete => delete_check
+    {
+      :index => index_check,
+      :items => index_check,
+      :create => create_check,
+      :new => create_check,
+      :edit => read_check,
+      :verbs_and_scopes => read_check,
+      :show_permission => read_check,
+      :update => edit_check,
+      :create_permission => edit_check,
+      :update_permission=> edit_check,
+      :delete => delete_check,
       }
-
-    rules[:new] = rules[:create]
-
-    rules[:new] = rules[:create]
-    rules[:edit] = rules[:update]
-
-    rules[:verbs_and_scopes] = rules[:update]
-    rules[:update_permission] = rules[:update]
-    rules[:create_permission] = rules[:update]
-    rules[:show_permission] = rules[:edit]
-    rules
   end
 
   def section_id
