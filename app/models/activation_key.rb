@@ -15,6 +15,7 @@ class ActivationKey < ActiveRecord::Base
 
   belongs_to :organization
   belongs_to :environment, :class_name => "KPEnvironment"
+  belongs_to :user
 
   has_many :key_subscriptions
   has_many :subscriptions, :class_name => "KTSubscription", :through => :key_subscriptions
@@ -37,6 +38,6 @@ class ActivationKey < ActiveRecord::Base
 
   # set's up system when registering with this activation key
   def apply_to_system(system)
-    system.environment_id = self.environment_id
+    system.environment_id = self.environment_id if self.environment_id
   end
 end
