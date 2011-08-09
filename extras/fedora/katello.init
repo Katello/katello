@@ -155,7 +155,8 @@ case "$1" in
         # stop if it is running
         condstop
         pushd $KATELLO_HOME >/dev/null
-        su $KATELLO_USER -s /bin/bash -c "RAILS_ENV=$KATELLO_ENV rake setup --trace"
+        su $KATELLO_USER -s /bin/bash -c "RAILS_ENV=$KATELLO_ENV rake setup --trace" \
+          >/var/log/katello/initdb.log
         popd >/dev/null
         touch /var/lib/katello/initdb_done
         ;;
