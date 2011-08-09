@@ -64,7 +64,7 @@ class Organization < ActiveRecord::Base
     User.allowed_to?([:create], :organizations)
   end
 
-  def updatable?
+  def editable?
       User.allowed_to?([:update, :create], :organizations, self.id)
   end
 
