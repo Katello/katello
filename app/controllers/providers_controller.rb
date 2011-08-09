@@ -52,7 +52,8 @@ class ProvidersController < ApplicationController
 
   def products_repos
     @products = @provider.products
-    render :partial => "products_repos", :layout => "tupane_layout", :locals => {:provider => @provider, :providers => @providers, :products => @products}
+    render :partial => "products_repos", :layout => "tupane_layout", :locals => {:provider => @provider,
+                                         :providers => @providers, :products => @products, :editable=>@provider.editable?}
   end
 
 
@@ -127,7 +128,7 @@ class ProvidersController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:provider => @provider}
+    render :partial => "edit", :layout => "tupane_layout", :locals => {:provider => @provider, :editable=>@provider.editable?}
   end
 
   def new
@@ -214,6 +215,7 @@ class ProvidersController < ApplicationController
                  :create => _('Provider'),
                  :name => _('provider'),
                  :ajax_scroll=>items_providers_path()}
+        @panel_options[:enable_create] = false if !Provider.creatable?(current_organization)
   end
 
 

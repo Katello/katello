@@ -14,24 +14,24 @@
   %fieldset
     .grid_2.ra
       %label #{_("Name")}:
-    .grid_5.la.editable.edit_providername#product_name{'name' => 'product[name]', 'data-url' => provider_product_path(@provider.id)} #{@product.name}
+    .grid_5.la#product_name{'name' => 'product[name]', 'data-url' => provider_product_path(@provider.id), :class=>("editable edit_providername" if editable)} #{@product.name}
   
   %fieldset
     .grid_2.ra
       %label #{_("Description")}:
-    .grid_5.la.editable.edit_textarea{:style => "word-wrap: break-word;", 'name' => 'product[description]', 'data-url' => provider_product_path(@provider.id)}<> #{@product.description}
+    .grid_5.la{:style => "word-wrap: break-word;", 'name' => 'product[description]', :class=>("editable edit_textarea" if editable), 'data-url' => provider_product_path(@provider.id)}<> #{@product.description}
   
   / A product url isn't currently available; therefore, it is stubbed out and cannot be edited. Custom repo discover in pulp will be required to support this.
-  %fieldset
-    .grid_2.ra
-      %label #{_("URL")}:
-    .grid_5.la.editable
-      #{_("Click to edit")}
-  /  .grid_5.la.editable.edit_textfield{'name' => 'product[feed]', 'data-url' => provider_product_path(@provider.id)}
-  
-  / Type is not currently available
-  /%fieldset
-  /  .grid_2.ra
-  /    %label #{_("Type")}:
-  /  .grid_5.la #{@provider[:provider_type]}
- 
+-# %fieldset
+-#   .grid_2.ra
+-#     %label #{_("URL")}:
+-#   .grid_5.la.editable
+-#     #{_("Click to edit")}
+-#   .grid_5.la.editable.edit_textfield{'name' => 'product[feed]', 'data-url' => provider_product_path(@provider.id)}
+-#
+-#
+-# %fieldset
+-#   .grid_2.ra
+-#     %label #{_("Type")}:
+-#   .grid_5.la #{@provider[:provider_type]}
+-#
