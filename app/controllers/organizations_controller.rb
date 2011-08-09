@@ -24,7 +24,7 @@ class OrganizationsController < ApplicationController
   def rules
     create_test = lambda{Organization.creatable?}
     read_test = lambda{@organization.readable?}
-    edit_test = lambda{@organization.updatable?}
+    edit_test = lambda{@organization.editable?}
     delete_test = lambda{@organization.deletable?}
 
     {:index =>  [[:create, :update, :read, :delete], :organizations],
