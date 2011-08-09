@@ -21,47 +21,6 @@
 //i18n global variable
 var i18n = {};
 
-/**
- * Document Ready function
- */
-$(document).ready(function (){
-	//Add a handler so that if any input has focus
-	//   our keyboard shortcuts don't steal it
-	$(":input").focus(function() {
-		onInputField = true;
-	}).blur(function() {
-		onInputField = false;
-	});
-
-    //Add a handler for helptips
-    $(".helptip-open").live('click', helptip.handle_close);
-    $(".helptip-close").live('click', helptip.handle_open);
-});
-
-/**
- * Window Ready function
- */
-$(window).ready(function(){
-    $('.fc').parent().css({"text-align":"center"});
-    //all purpose display loading icon for ajax calls
-    $("#loading").bind("ajaxSend", function(){
-      $(this).show();
-      $('body').css('cursor', 'wait');
-    }).bind("ajaxComplete", function(){
-      $(this).hide();
-      $('body').css('cursor', 'default');
-    });
-    $().UItoTop({ easingType: 'easeOutQuart' });
-
-    //allow all buttons with class .button to be clicked via enter or space button
-    $('.button').live('keyup', function(e){
-        if(e.which == 13 || e.which == 32)
-        {
-            $(this).click();
-        }
-    });
-});
-
 function localize(data) {
 	for (var key in data) {
 		i18n[key] =  data[key];
@@ -149,6 +108,29 @@ var common = (function() {
         },
         escapeId: function(myid) {
             return myid.replace(/(:|\.)/g,'\\$1');
+        },
+        customConfirm : function (message) {
+          var html = "<div style='margin:20px;'><span class='status_confirm_icon'/><div style='margin-left: 24px; display:table;height:1%;'>" + message + "</div></div>";
+          var confirmTrue = new Boolean(true);
+          var confirmFalse = new Boolean(false);
+          $(html).dialog({
+            closeOnEscape: false,
+            open: function (event, ui) { $('.ui-dialog-titlebar-close').hide(); },
+            modal: true,
+            resizable: false,
+            width: 400,
+            title: "Confirmation",
+            buttons: {
+                "Yes": function () {
+                    $(this).dialog("close");
+                    return confirmTrue;
+                },
+                "No": function () {
+                    $(this).dialog("close");
+                    return confirmFalse;
+                }
+            }
+          });
         }
     };
 })();
@@ -175,3 +157,65 @@ var client_common = {
       });
     }
 };
+
+/**
+ * Document Ready function
+ */
+$(document).ready(function (){
+	//Add a handler so that if any input has focus
+	//   our keyboard shortcuts don't steal it
+	$(":input").focus(function() {
+		onInputField = true;
+	}).blur(function() {
+		onInputField = false;
+	});
+
+    //Add a handler for helptips
+    $(".helptip-open").live('click', helptip.handle_close);
+    $(".helptip-close").live('click', helptip.handle_open);
+
+    $.rails.confirm = function(message) { return common.customConfirm(message); };
+    //window.confirm = function(message){$.rails.confirm(message);}
+});
+
+/**
+ * Window Ready function
+ */
+$(window).ready(function(){
+    $('.fc').parent().css({"text-align":"center"});
+    //all purpose display loading icon for ajax calls
+    $("#loading").bind("ajaxSend", function(){
+      $(this).show();
+      $('body').css('cursor', 'wait');
+    }).bind("ajaxComplete", function(){
+      $(this).hide();
+      $('body').css('cursor', 'default');
+    });
+    $().UItoTop({ easingType: 'easeOutQuart' });
+
+    //allow all buttons with class .button to be clicked via enter or space button
+    $('.button').live('keyup', function(e){
+        if(e.which == 13 || e.which == 32)
+        {
+            $(this).click();
+        }
+    });
+
+    window.alert = function(message) {
+      var html = "<div style='margin:20px;'><span class='status_exclamation_icon'/><div style='margin-left: 24px; display:table;height:1%;'>" + message + "</div></div>";
+      $(html).dialog({
+        closeOnEscape: false,
+        open: function (event, ui) { $('.ui-dialog-titlebar-close').hide(); },
+        modal: true,
+        resizable: false,
+        width: 300,
+        title: "Alert",
+        buttons: {
+            "Ok": function () {
+                $(this).dialog("close");
+                return false;
+            }
+        }
+      });
+    }
+});
