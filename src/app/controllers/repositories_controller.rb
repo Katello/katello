@@ -56,7 +56,7 @@ class RepositoriesController < ApplicationController
   def destroy
     @product.delete_repo(params[:id])
     notice _("Repository '#{params[:id]}' removed.")
-    render :json => ""
+    render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@provider.id)}
   end
 
   protected

@@ -753,8 +753,7 @@ var registerEvents = function(){
             return false;
         }
         var id = promotion_page.get_changeset().id;
-        var answer = confirm(button.attr('data-confirm-text'));
-        if (answer) {
+        common.customConfirm(button.attr('data-confirm-text'), function(){
             button.addClass('disabled');
             $.ajax({
                 type: "DELETE",
@@ -766,7 +765,7 @@ var registerEvents = function(){
                     promotion_page.get_changeset_tree().render_content('changesets');
                 }
             });
-       }
+        });
     });
 
 
