@@ -23,7 +23,7 @@ from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record
 from katello.client.core.utils import Printer
 
-_cfg = Config()
+Config()
 
 # base system action --------------------------------------------------------
 

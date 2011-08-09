@@ -27,7 +27,7 @@ from katello.client.core.utils import system_exit, parse_tokens, Printer
 from katello.client.logutil import getLogger
 from katello.client.server import ServerRequestError
 
-_cfg = Config()
+Config()
 _log = getLogger(__name__)
 
 # base command class ----------------------------------------------------------
@@ -286,7 +286,7 @@ class Action(object):
         elif self.has_option('verbose'):
             return False
         else:
-            return (_cfg.interface.grep_friendly.lower() == 'true')
+            return (Config.parser.get('interface', 'grep_friendly').lower() == 'true')
 
 
 #    def _pre_setup_parser(self):

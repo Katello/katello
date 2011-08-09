@@ -27,7 +27,7 @@ from katello.client.logutil import getLogger
 from katello.client import server
 
 
-_cfg = Config()
+Config()
 _log = getLogger(__name__)
 
 class KatelloError(Exception):
@@ -109,16 +109,16 @@ class KatelloCLI(object):
         self.parser.add_option_group(credentials)
 
         server = OptionGroup(self.parser, _('Katello Server Information'))
-        host = _cfg.server.host or 'localhost.localdomain'
+        host = Config.parser.get('server', 'host') or 'localhost.localdomain'
         server.add_option('--host', dest='host', default=host,
                           help=_('katello server host name (default: %s)') % host)
-        port = _cfg.server.port or '443'
+        port = Config.parser.get('server', 'port') or '443'
         server.add_option('--port', dest='port', default=port,
                           help=SUPPRESS_HELP)
-        scheme = _cfg.server.scheme or 'https'
+        scheme = Config.parser.get('server', 'scheme') or 'https'
         server.add_option('--scheme', dest='scheme', default=scheme,
                           help=SUPPRESS_HELP)
-        path = _cfg.server.path or '/katello/api'
+        path = Config.parser.get('server', 'path') or '/katello/api'
         server.add_option('--path', dest='path', default=path,
                           help=SUPPRESS_HELP)
         self.parser.add_option_group(server)
