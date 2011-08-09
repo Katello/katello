@@ -62,7 +62,7 @@ class UsersController < ApplicationController
 
   
   def edit 
-    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:user=>@user}
+    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:user=>@user, :editable=>@user.editable?}
   end
   
   def new
@@ -147,6 +147,7 @@ class UsersController < ApplicationController
                  :create => _('User'),
                  :name => _('user'),
                  :ajax_scroll => items_users_path()}
+    @panel_options[:enable_create] = User.creatable?
   end
 
 end
