@@ -4,7 +4,7 @@
   #{_("Edit Provider")}
   
 = content_for :remove_item do
-  = link_to _("Remove Provider"), {:action => "destroy", :controller => "providers"}, :method => :delete, :confirm => _('Are you sure?'), :class => "remove_item", :remote=>true
+  = link_to _("Remove Provider"), {:action => "destroy", :controller => "providers"}, :method => :delete, :confirm => _('Are you sure you want to delete this provider?'), :class => "remove_item", :remote=>true
 
 = content_for :navigation do
   = render_navigation(:expand_all => true, :level => 3)
