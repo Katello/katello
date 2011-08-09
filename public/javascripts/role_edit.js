@@ -111,7 +111,7 @@ var roleActions = (function($){
 })(jQuery);
 
 var templateLibrary = (function($){
-    var listItem = function(id, name, no_slide){
+    var listItem = function(id, name, count, no_slide){
             var html ='<li>';
             
             if( no_slide ){
@@ -120,7 +120,11 @@ var templateLibrary = (function($){
                 html += '<div class="slide_link" id="' + id + '">';
             }
     
-            html += '<span class="sort_attr">'+ name + '</span></div></li>';
+            if( count ){
+                html += '<span class="sort_attr">'+ name + ' (' + count + ')</span></div></li>';
+            } else {
+                html += '<span class="sort_attr">'+ name + '</span></div></li>';
+            }
             return html;
         },
         list = function(items, type, options){
@@ -140,12 +144,12 @@ var templateLibrary = (function($){
             var html = '<ul>',
                 options = options ? options : {};
             
-            html += listItem(items['global'], items['global'].name, true);
+            html += listItem(items['global'], items['global'].name, false);
             
             for( item in items){
                 if( items.hasOwnProperty(item) ){
                     if( item.split("_")[0] === type ){
-                        html += listItem(item, items[item].name, options.no_slide);
+                        html += listItem(item, items[item].name, items[item].count, options.no_slide);
                     }
                 }
             }
