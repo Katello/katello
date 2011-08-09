@@ -4,8 +4,7 @@
   #{_("Edit Activation Key")}
 
 = content_for :remove_item do
-  %a.remove_item.remove_key{"data-id"=>@activation_key.id ,"data-url"=>activation_key_path(@activation_key.id), "data-confirm-text"=>_('Are you sure?')}
-    = _("Remove Activation Key")
+  = link_to _("Remove Activation Key"), { :controller => "activation_keys", :action => "destroy" }, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
 
 = content_for :navigation do
   = render_navigation(:expand_all => true, :level => 3)
