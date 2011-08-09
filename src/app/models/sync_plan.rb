@@ -64,7 +64,7 @@ class SyncPlan < ActiveRecord::Base
 
   # returns list of virtual permission tags for the current user
   def self.list_tags
-    select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
+    []
   end
 
   def self.list_verbs
@@ -76,6 +76,14 @@ class SyncPlan < ActiveRecord::Base
 
   def self.no_tag_verbs
     SyncPlan.list_verbs.keys
+  end
+
+  def self.readable? org
+    User.allowed_to?([:read_all, :manage_all], :sync_plans, nil, org)
+  end
+
+  def self.manageable? org
+    return true
   end
 
 end

@@ -12,9 +12,27 @@
 
 class SyncSchedulesController < ApplicationController
 
+  before_filter :find_products, :only => [:apply]
+  before_filter :authorize
+
   def section_id
     'contents'
   end
+
+  def rules
+    apply_test = lambda{
+      provider_list = @products.collect{|prod| prod.provider}.uniq
+      provider_list.each{|prov| return false if !prov.syncable?}
+      return true
+    }
+
+    {
+      :index => lambda{Provider.any_readable?(current_organization)},
+      :apply => apply_test
+    }
+  end
+
+
 
   def index
 
@@ -67,6 +85,14 @@ class SyncSchedulesController < ApplicationController
     end
     notice N_("Sync Plans applied successfully.")
     redirect_to(:controller => :sync_schedules, :action =>:index)
+  end
+
+  private
+
+  def find_products
+    data = JSON.parse(params[:data]).with_indifferent_access
+    product_ids =  data[:products].collect{ |i| i.to_i}
+    @products = Product.find(product_ids)
   end
 
 end
