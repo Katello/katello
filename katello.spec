@@ -5,10 +5,8 @@
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir extras/fedora
 
-%global rubygems rubygem(rails) >= 3.0.5 rubygem(multimap) rubygem(haml) >= 3.1.2 rubygem(haml-rails) rubygem(json) rubygem(rest-client) rubygem(jammit) rubygem(rails_warden) rubygem(net-ldap) rubygem(compass) >= 0.11.5 rubygem(compass-960-plugin) >= 0.10.4 rubygem(capistrano) rubygem(oauth) rubygem(i18n_data) >= 0.2.6 rubygem(gettext_i18n_rails) rubygem(simple-navigation) >= 3.3.4 rubygem(sqlite3) rubygem(pg) rubygem(scoped_search) >= 2.3.1 rubygem(delayed_job) >= 2.1.4 rubygem(daemons) >= 1.1.4 rubygem(uuidtools)
-
 Name:           katello
-Version:	      0.1.57
+Version:	      0.1.58
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -22,8 +20,28 @@ Requires:       pulp
 Requires:       openssl
 Requires:       candlepin-tomcat6
 Requires:       rubygems
-Requires:       rubygem(bundler)
-Requires:       %{rubygems}
+Requires:       rubygem(rails) >= 3.0.5
+Requires:       rubygem(multimap)
+Requires:       rubygem(haml) >= 3.1.2
+Requires:       rubygem(haml-rails)
+Requires:       rubygem(json)
+Requires:       rubygem(rest-client)
+Requires:       rubygem(jammit)
+Requires:       rubygem(rails_warden)
+Requires:       rubygem(net-ldap)
+Requires:       rubygem(compass) >= 0.11.5
+Requires:       rubygem(compass-960-plugin) >= 0.10.4
+Requires:       rubygem(capistrano)
+Requires:       rubygem(oauth)
+Requires:       rubygem(i18n_data) >= 0.2.6
+Requires:       rubygem(gettext_i18n_rails)
+Requires:       rubygem(simple-navigation) >= 3.3.4
+Requires:       rubygem(sqlite3) 
+Requires:       rubygem(pg)
+Requires:       rubygem(scoped_search) >= 2.3.1
+Requires:       rubygem(delayed_job) >= 2.1.4
+Requires:       rubygem(daemons) >= 1.1.4
+Requires:       rubygem(uuidtools)
 
 Requires(pre):  shadow-utils
 Requires(preun): chkconfig
@@ -35,16 +53,11 @@ BuildRequires: 	coreutils findutils sed
 BuildRequires: 	rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
-BuildRequires:  %{rubygems}
+BuildRequires:  rubygem(jammit)
+BuildRequires:  rubygem(compass) >= 0.11.5
+BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 
 BuildArch: noarch
-
-# workaround for BZ 714167
-%if 0%{?fedora} && 0%{?fedora} < 16
-Requires:       rubygem(regin)
-BuildRequires:  rubygem(regin)
-%endif
-
 
 %description
 Provides a package for managing application life-cycle for Linux systems
@@ -53,13 +66,9 @@ Provides a package for managing application life-cycle for Linux systems
 %setup -q
 
 %build
-#generate Gemfile.lock from system-wide rubygems
-echo Generating Gemfile.lock
-echo If this step fails check Gemfile and rubygems SPEC macro
+#configure Bundler
 rm -f Gemfile.lock
-sed -i '/DEV_ONLY/,$d' Gemfile
-bundle install --local --without=test,development
-
+sed -i '/@@@DEV_ONLY@@@/,$d' Gemfile
 #compile SASS files
 echo Compiling SASS files...
 compass compile
@@ -84,6 +93,8 @@ install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 [ -d tmp ] && rm -rf tmp
 
 #copy the application to the target directory
+mkdir .bundle
+mv ./extras/bundle-config .bundle/config
 cp -R .bundle * %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
@@ -108,6 +119,9 @@ ln -svf %{datadir}/schema.rb %{buildroot}%{homedir}/db/schema.rb
 #create symlinks for data
 ln -sv %{_localstatedir}/log/%{name} %{buildroot}%{homedir}/log
 ln -sv %{_tmppath} %{buildroot}%{homedir}/tmp
+
+#create symlink for Gemfile.lock (it's being regenerated each start)
+ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
 
 #re-configure database to the /var/lib/katello directory
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{_sysconfdir}/%{name}/database.yml
@@ -176,6 +190,44 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Aug 09 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.58-1
+- solution to bundle install issues
+- initial commit of reset-dbs script
+- fixing repo sync
+- improving REST exception messages
+- fixing more katello-cli tests
+- custom partial for tupane system show calls
+- 720442: fixing system refresh on name update
+- 726402: fix for nil object on sys env page
+- 729110: fix for product sync status visual updates
+- Upgrading check to Candlepin 0.4.10-1
+- removing commented code from api systems controller spec
+- changing to different url validation. can now be used outside of model layer.
+- spec tests for repositories controller
+- 728295: check for valid urls for yum repos
+- adding spec tests for api systems_controller (upload packages, view packages,
+  update a system)
+- added functionality to api systems controller in :index, :update, and
+  :package_profile
+- support for checking missing url protocols
+- changing pulp consumer update messages to show old name
+- improve protocol match on reg ex url validation
+- removing a debugger statement
+- fixing broken orchestration in pulp consumer
+- spec test for katello url helper
+- fix url helper to match correct length port numbers
+- url helper validator (http, https, ftp, ipv4)
+- Revert "fix routing problem for POST /organizations/:organzation_id/systems"
+- fix routing problem for POST /organizations/:organzation_id/systems (=)
+- pretty_routes now prints some message to the stdout
+- added systems packages routes and update to systems
+- fixed pulp consumer package profile upload and added consumer update to pulp
+  resource
+- adding to systems_controller spec tests and other small changes.
+- fixing find_organization in api/systems_controller.
+- added action in api systems controller to get full package list for a
+  specific system.
+
 * Thu Aug 04 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.57-1
 - spec - adding regin dep as workaround for BZ 714167 (F14/15)
 

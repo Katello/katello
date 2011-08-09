@@ -124,7 +124,9 @@ class HttpResource
 
     def raise_rest_client_exception e, a_path, http_method
       msg = "#{name}: #{e.message} (#{http_method} #{a_path})"
-      raise RestClientException,{:message => msg, :code => e.http_code}, caller
+      Rails.logger.error msg
+      # TODO: re-raise the same exception with msg as message
+      raise
     end
 
     def join_path(*args)
