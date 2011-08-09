@@ -36,9 +36,6 @@ gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 # Deploy with Capistrano
 gem 'capistrano'
 
-# @@@DEV_ONLY@@@
-# Everything bellow the line above will NOT be used for production freeze.
-# Do not change the line contents, it's searched by sed during the build phase.
 
 # Bundle the extra gems:
 # gem 'bj'
