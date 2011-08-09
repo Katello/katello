@@ -20,7 +20,7 @@ class Organization < ActiveRecord::Base
   has_many :providers
   has_many :environments, :class_name => "KPEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
   has_one :locker, :class_name =>"KPEnvironment", :conditions => {:locker => true}, :dependent => :destroy
-  has_and_belongs_to_many :users
+  
   attr_accessor :parent_id,:pools,:statistics
 
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'organization.name'
@@ -36,10 +36,6 @@ class Organization < ActiveRecord::Base
   validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
   validates :description, :katello_description_format => true
 
-  # relationship user-org is created for current user automatically
-  after_create do |org|
-    org.users << User.current if User.current
-  end
 
   def systems
     System.where(:environment_id => environments)
@@ -69,7 +65,7 @@ class Organization < ActiveRecord::Base
   end
 
   def updatable?
-      User.allowed_to?([:update, :create], :organizations, self)
+      User.allowed_to?([:update, :create], :organizations, self.id)
   end
 
   def deletable?
@@ -77,11 +73,11 @@ class Organization < ActiveRecord::Base
   end
 
   def readable?
-    User.allowed_to?([:read,:update, :create], :organizations, self)
+    User.allowed_to?([:read,:update, :create], :organizations, self.id)
   end
 
   def environments_manageable?
-    User.allowed_to?([:update], :organizations, self)
+    User.allowed_to?([:update], :organizations, self.id)
   end
   
 
