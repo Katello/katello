@@ -89,23 +89,23 @@ var helptip =  (function() {
 
 //override the jQuery UJS $.rails.allowAction
 $.rails.allowAction = function(element) {
-        var message = element.data('confirm'),
-        answer = false, callback;
-        if (!message) { return true; }
+    var message = element.data('confirm'),
+    answer = false, callback;
+    if (!message) { return true; }
 
-        if ($.rails.fire(element, 'confirm')) {
-                common.customConfirm(message, function() {
-                        callback = $.rails.fire(element,
-                                'confirm:complete', [answer]);
-                        if(callback) {
-                                var oldAllowAction = $.rails.allowAction;
-                                $.rails.allowAction = function() { return true; };
-                                element.trigger('click');
-                                $.rails.allowAction = oldAllowAction;
-                        }
-                });
-        }
-        return false;
+    if ($.rails.fire(element, 'confirm')) {
+        common.customConfirm(message, function() {
+            callback = $.rails.fire(element,
+                    'confirm:complete', [answer]);
+            if(callback) {
+                    var oldAllowAction = $.rails.allowAction;
+                    $.rails.allowAction = function() { return true; };
+                    element.trigger('click');
+                    $.rails.allowAction = oldAllowAction;
+            }
+        });
+    }
+    return false;
 };
 
 //requires jQuery
@@ -148,15 +148,16 @@ var common = (function() {
             buttons: {
                 "Yes": function () {
                     $(this).dialog("close");
+                    $(this).dialog("destroy");
                     callback();
                 },
                 "No": function () {
                     $(this).dialog("close");
+                    $(this).dialog("destroy");
                     return confirmFalse;
                 }
             }
           });
-
         },
         customAlert : function(message) {
           var html = "<div style='margin:20px;'><span class='status_exclamation_icon'/><div style='margin-left: 24px; display:table;height:1%;'>" + message + "</div></div>";
@@ -172,6 +173,7 @@ var common = (function() {
             buttons: {
                 "Ok": function () {
                     $(this).dialog("close");
+                    $(this).dialog("destroy");
                     return false;
                 }
             }
@@ -218,9 +220,6 @@ $(document).ready(function (){
     //Add a handler for helptips
     $(".helptip-open").live('click', helptip.handle_close);
     $(".helptip-close").live('click', helptip.handle_open);
-
-
-    //window.confirm = function(message){$.rails.confirm(message);}
 });
 
 /**
