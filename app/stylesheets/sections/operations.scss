@@ -11,8 +11,8 @@
   }
   #roles_tree {
     .close { right: 10px; top: 12px; }
-    .search_button { right: 40px; }
-    .remove_item { top: 12px; }
+    .search_button { right: 130px; }
+    .remove_item { top: 12px; right: 55px; }
     
     .sliding_container { overflow-y: auto; background: #FFF; }
     
@@ -33,6 +33,9 @@
     }
     #placeholder {
       width: 50%;
+      cursor: auto;
+      
+      &:hover { background: $tree-container_color; }
     }
     
     #role_edit {
