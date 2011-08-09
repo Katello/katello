@@ -52,7 +52,7 @@ class ActivationKeysController < ApplicationController
       sub.allocated = 0
       for consume in consumed
         if consume.subscription == sub.sub
-          sub.allocated = consume.allocated 
+          sub.allocated = consume.key_subscriptions[0].allocated 
         end
       end
     end
