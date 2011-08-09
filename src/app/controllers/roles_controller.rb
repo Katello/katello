@@ -37,7 +37,7 @@ class RolesController < ApplicationController
       :update => edit_check,
       :create_permission => edit_check,
       :update_permission=> edit_check,
-      :delete => delete_check,
+      :destroy => delete_check,
       }
   end
 

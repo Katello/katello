@@ -253,6 +253,28 @@ class User < ActiveRecord::Base
     [:create]
   end
 
+  def self.creatable?
+    User.allowed_to?([:create], :user, nil)
+  end
+
+  def self.any_readable?
+    User.allowed_to?([:create, :read, :update, :delete], :users, nil)
+  end
+
+  def readable?
+    User.any_readable?
+  end
+
+  def editable?
+    User.allowed_to?([:create, :update], :users, nil)
+  end
+
+  def deletable?
+        User.allowed_to?([:delete], :users, nil)
+  end
+
+
+
 
   protected
 
