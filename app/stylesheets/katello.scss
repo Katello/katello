@@ -101,6 +101,21 @@ input[type="file"] {
   /* FIXME */
 }
 
+.status_exclamation_icon {
+    background: $status_exclamation_icon;
+    height: 16px;
+    width: 16px;
+    position: absolute;
+}
+.status_confirm_icon {
+    background: $status_confirm_icon;
+    @extend .status_exclamation_icon;
+}
+.status_alert_icon {
+    background: $status_alert_icon;
+    @extend .status_exclamation_icon;
+}
+
 /* BUTTONS */
 input[type='submit'], button, .button {
   font-family: $screenfont; /* for some reason ff3.6 won't inherit from body */
