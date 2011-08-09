@@ -66,6 +66,9 @@ Provides a package for managing application life-cycle for Linux systems
 %setup -q
 
 %build
+#configure Bundler
+rm -f Gemfile.lock
+sed -i '/@@@DEV_ONLY@@@/,$d' Gemfile
 #compile SASS files
 echo Compiling SASS files...
 compass compile
@@ -116,6 +119,9 @@ ln -svf %{datadir}/schema.rb %{buildroot}%{homedir}/db/schema.rb
 #create symlinks for data
 ln -sv %{_localstatedir}/log/%{name} %{buildroot}%{homedir}/log
 ln -sv %{_tmppath} %{buildroot}%{homedir}/tmp
+
+#create symlink for Gemfile.lock (it's being regenerated each start)
+ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
 
 #re-configure database to the /var/lib/katello directory
 sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{_sysconfdir}/%{name}/database.yml
