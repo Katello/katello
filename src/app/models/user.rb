@@ -22,7 +22,6 @@ class User < ActiveRecord::Base
   has_many :notices, :through => :user_notices
   has_many :search_favorites, :dependent => :destroy
   has_many :search_histories, :dependent => :destroy
-  has_and_belongs_to_many :organizations
 
 
   validates :username, :uniqueness => true, :presence => true, :username => true
@@ -107,6 +106,7 @@ class User < ActiveRecord::Base
   def allowed_to?(verbs, resource_type, tags = nil, org = nil)
     Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
           #{resource_type.inspect} scoped #{tags.inspect} in organization #{org.inspect}"
+        
     return false if roles.empty?
 
     verbs = [] if verbs.nil?
@@ -192,6 +192,20 @@ class User < ActiveRecord::Base
     raise ArgumentError, "user has no own role" if own_role.nil? or not own_role.is_a? Role
     own_role.disallow(verb, resource_type, tags)
   end
+
+  def allowed_organizations
+    #test for all orgs
+    perms = Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
+        where("roles_users.user_id = ?", self.id).where(:organization_id => nil).count()
+    return Organization.all if perms > 0
+
+    perms = Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
+        where("roles_users.user_id = ?", self.id).where("organization_id NOT ?", nil)
+    #return the individual organizations
+    perms.collect{|perm| perm.organization}.uniq
+  end
+  
+
 
   def disable_helptip(key)
     return if !self.helptips_enabled? #don't update helptips if user has it disabled
