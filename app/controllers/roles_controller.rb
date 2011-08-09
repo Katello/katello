@@ -12,7 +12,7 @@
 
 class RolesController < ApplicationController
 
-  before_filter :find_role, :except => [:index, :items, :new, :create]
+  before_filter :find_role, :except => [:index, :items, :new, :create, :verbs_and_scopes]
   before_filter :authorize #call authorize after find_role so we call auth based on the id instead of cp_id
 
   before_filter :setup_resource_types, :only =>[:edit, :update, :update_permission, :show_permission, :create_permission]
@@ -28,10 +28,11 @@ class RolesController < ApplicationController
     {
       :index => index_check,
       :items => index_check,
+      :verbs_and_scopes => index_check,
+        
       :create => create_check,
       :new => create_check,
       :edit => read_check,
-      :verbs_and_scopes => read_check,
       :show_permission => read_check,
       :update => edit_check,
       :create_permission => edit_check,
@@ -154,11 +155,11 @@ class RolesController < ApplicationController
 
   def show_permission
     if params[:perm_id].nil?
-      permission = Permission.new(:role=> role, :resource_type => ResourceType.new)
+      permission = Permission.new(:role=> @role, :resource_type => ResourceType.new)
     else
       permission = Permission.find(params[:perm_id])
     end
-    render :partial=>"permission", :locals=>{:perm=>permission, :role=>role, :data_new=>permission.new_record?}
+    render :partial=>"permission", :locals=>{:perm=>permission, :role=>@role, :data_new=>permission.new_record?}
 
   end
 
