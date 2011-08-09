@@ -83,6 +83,8 @@ class HttpResource
       result = process_response(client.get(headers))
       resource_permissions.after_get_callback(a_path, headers, result)
       result
+    rescue RestClient::Exception => e
+      raise_rest_client_exception e, a_path, "GET"
     end
 
     def post(a_path, payload={}, headers={})
@@ -92,6 +94,8 @@ class HttpResource
       result = process_response(client.post(payload, headers))
       resource_permissions.after_post_callback(a_path, payload, headers, result)
       result
+    rescue RestClient::Exception => e
+      raise_rest_client_exception e, a_path, "POST"
     end
 
     def put(a_path, payload={}, headers={})
@@ -101,6 +105,8 @@ class HttpResource
       result = process_response(client.put(payload, headers))
       resource_permissions.after_put_callback(a_path, payload, headers, result)
       result
+    rescue RestClient::Exception => e
+      raise_rest_client_exception e, a_path, "PUT"
     end
 
     def delete(a_path=nil, headers={})
@@ -112,6 +118,13 @@ class HttpResource
       Rails.logger.info "delete result: "+result
       resource_permissions.after_delete_callback(a_path, headers, result)
       result
+    rescue RestClient::Exception => e
+      raise_rest_client_exception e, a_path, "DELETE"
+    end
+
+    def raise_rest_client_exception e, a_path, http_method
+      msg = "#{name}: #{e.message} (#{http_method} #{a_path})"
+      raise RestClientException,{:message => msg, :code => e.http_code}, caller
     end
 
     def join_path(*args)
