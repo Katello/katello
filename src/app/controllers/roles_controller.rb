@@ -15,8 +15,9 @@ class RolesController < ApplicationController
   before_filter :find_role, :except => [:index, :items, :new, :create, :verbs_and_scopes]
   before_filter :authorize #call authorize after find_role so we call auth based on the id instead of cp_id
 
-  before_filter :setup_resource_types, :only =>[:edit, :update, :update_permission, :show_permission, :create_permission]
   before_filter :setup_options, :only => [:index, :items]
+  helper_method :resource_types
+
   include AutoCompleteSearch
   
   def rules
@@ -170,11 +171,8 @@ class RolesController < ApplicationController
     @role =  Role.find(params[:id]) unless params.has_key? :role_id
   end
 
-  def setup_resource_types
-    @resource_types = {}
-    ResourceType::TYPES.each do |res, details|
-      @resource_types[res] = details[:name]
-    end
+  def resource_types
+    ResourceType::TYPES
   end
-  
+
 end
