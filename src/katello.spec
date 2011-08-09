@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.57
+Version:	      0.1.58
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -190,6 +190,44 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Aug 09 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.58-1
+- solution to bundle install issues
+- initial commit of reset-dbs script
+- fixing repo sync
+- improving REST exception messages
+- fixing more katello-cli tests
+- custom partial for tupane system show calls
+- 720442: fixing system refresh on name update
+- 726402: fix for nil object on sys env page
+- 729110: fix for product sync status visual updates
+- Upgrading check to Candlepin 0.4.10-1
+- removing commented code from api systems controller spec
+- changing to different url validation. can now be used outside of model layer.
+- spec tests for repositories controller
+- 728295: check for valid urls for yum repos
+- adding spec tests for api systems_controller (upload packages, view packages,
+  update a system)
+- added functionality to api systems controller in :index, :update, and
+  :package_profile
+- support for checking missing url protocols
+- changing pulp consumer update messages to show old name
+- improve protocol match on reg ex url validation
+- removing a debugger statement
+- fixing broken orchestration in pulp consumer
+- spec test for katello url helper
+- fix url helper to match correct length port numbers
+- url helper validator (http, https, ftp, ipv4)
+- Revert "fix routing problem for POST /organizations/:organzation_id/systems"
+- fix routing problem for POST /organizations/:organzation_id/systems (=)
+- pretty_routes now prints some message to the stdout
+- added systems packages routes and update to systems
+- fixed pulp consumer package profile upload and added consumer update to pulp
+  resource
+- adding to systems_controller spec tests and other small changes.
+- fixing find_organization in api/systems_controller.
+- added action in api systems controller to get full package list for a
+  specific system.
+
 * Thu Aug 04 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.57-1
 - spec - adding regin dep as workaround for BZ 714167 (F14/15)
 
