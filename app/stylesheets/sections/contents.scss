@@ -8,74 +8,31 @@
   .locked {
     outline: 2px solid gray;
   }
-  #changeset_actions {
-    width: 100%;
-    .cs_action {
-        float: left;
-        
-        margin-right: -1px;
-        width: 24.7%; // ~1/4 of the right panel width
-        height: 20px;
-        padding-top: 9px;
-        font-size: 90%;
-        word-wrap: break-word;
-        border-bottom: 1px solid #B5B5B5;
-        border-right: 1px solid #B5B5B5;
-        border-left: 1px solid #B5B5B5;
-       
-        background-color: $tree-container_color;
-
-        .text {
-            margin-left: 26px;
-
-        }
-        &:hover {
-            background-color: #bde4e8; //same as li under #contents
-        }
-    }
-    .highlighted {
-         background-color: #bde4e8; //same as hover
-    }
-    .disabled {
-        border-bottom: 1px solid #B5B5B5;
-        border-right: 1px solid #B5B5B5;
-        &:hover {
-            background-color: $tree-container_color; 
-        }
-    }
-    #promote_changeset {
-        width: 112px; //hack to make all 4 buttons line up properly with the main panel.
-                     // The issue is that the full panel is 448 pixes wide, and with 4 buttons, there are
-                     //  3  vertical 1 px seperators (borders), and 448-3 isn't divisible by 4.  We come up 1 px short
-    }
-
-    #edit_changeset_icon {
-        background: $edit_icon_black;
-        margin-left: 6px;
-        margin-top: -1px;
-
-    }
-    #review_changeset_icon {
-        background: $comp_icon_black; 
-        margin-left: 6px;
-        margin-top: -1px;
-    }
-    #delete_changeset_icon {
-        background: $circle_x_icon_black;
-        margin-left: 6px;
-        margin-top: -1px;
-    }
-    #promote_changeset_icon {
-        background: $play_icon_black;
-        margin-left: 6px;
-        margin-top: -1px;
-    }
-
-
+  #promote_changeset {
+      width: 112px; //hack to make all 4 buttons line up properly with the main panel.
+                   // The issue is that the full panel is 448 pixes wide, and with 4 buttons, there are
+                   //  3  vertical 1 px seperators (borders), and 448-3 isn't divisible by 4.  We come up 1 px short
   }
-
-
-  
+  #edit_changeset_icon {
+      background: $edit_icon_black;
+      margin-left: 6px;
+      margin-top: -1px;
+  }
+  #review_changeset_icon {
+      background: $comp_icon_black; 
+      margin-left: 6px;
+      margin-top: -1px;
+  }
+  #delete_changeset_icon {
+      background: $circle_x_icon_black;
+      margin-left: 6px;
+      margin-top: -1px;
+  }
+  #promote_changeset_icon {
+      background: $play_icon_black;
+      margin-left: 6px;
+      margin-top: -1px;
+  }
 
   #changeset_edit {
     position: absolute;
@@ -185,13 +142,6 @@
   .product-icon {
     padding-left: 18px;
     vertical-align:middle;
-  }
-  .sprite {
-  background: $base_product_icon;
-  height: 16px;
-  width: 16px;
-  position: absolute;
-  margin-top: 2px;
   }
   .custom-product-sprite {
     background: $custom_product_icon;

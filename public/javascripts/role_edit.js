@@ -106,8 +106,8 @@ var rolesRenderer = (function($){
         },
         setTreeHeight = function(){
             var height = $('.left').height();
-            $('.sliding_list').css({ 'height' : height - 102 });
-            $('.slider').css({ 'height' : height - 102 });
+            $('.sliding_list').css({ 'height' : height - 91 });
+            $('.slider').css({ 'height' : height - 91 });
             $('#panel_main').height(height);
             $('#panel_main .jspPage').height(height);
         },
