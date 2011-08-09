@@ -104,18 +104,39 @@ var rolesRenderer = (function($){
             });
             console.log('sorted');
         },
-        setMinHeight = function(){
+        setTreeHeight = function(){
             var height = $('.left').height();
-            $('.sliding_list').css({ 'min-height' : height - 102 });
-            $('.slider').css({ 'min-height' : height - 102 });
+            $('.sliding_list').css({ 'height' : height - 102 });
+            $('.slider').css({ 'height' : height - 102 });
             $('#panel_main').height(height);
             $('#panel_main .jspPage').height(height);
+        },
+        setSizing = function(){
+            var width = $('.panel-custom').width();
+            width -= 2;
+            $('.sliding_container').width(width);
+            $('.breadcrumb_search').width(width);
+            $('.slider').width(width);
+            $('.sliding_list').width(width * 2);
+        },
+        init = function(){
+            setSizing();
+            $('.left').resize(function(){
+                setSizing();
+            });
+        },
+        setStatus = function(hash_id){
+            if( hash_id === 'roles' ){
+                $('#roles_status').html(i18n.rolesStatus);
+            }
         };
     
     return {
+        init            :   init,
         render          :   render,
         sort            :   sort,
-        setMinHeight    :   setMinHeight
+        setTreeHeight    :   setTreeHeight,
+        setStatus       :   setStatus
     }
 }(jQuery));
 
@@ -129,7 +150,10 @@ $(function() {
                         enable_search   :  true,
                         tab_change_cb   :  function(hash_id) {
                             //rolesRenderer.sort();
-                            rolesRenderer.setMinHeight();
+                            rolesRenderer.setTreeHeight();
+                            rolesRenderer.setStatus(hash_id);
                         }
                     });
+                    
+  rolesRenderer.init();
 });

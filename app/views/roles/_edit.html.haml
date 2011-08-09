@@ -2,8 +2,9 @@
   :javascript
     var roles_breadcrumb = $.parseJSON('#{escape_javascript(generate_roles_breadcrumb())}');
     localize({
-      "remove": '#{_('Remove')}',
-      "loading": "#{_('Loading Role')}",
+      "remove"      : '#{_('Remove')}',
+      "loading"     : "#{_('Loading Role')}",
+      "rolesStatus" : "#{_('Please select Organizations to view permissions for this role or Users to see current users with this role.')}"
     });
 
 = javascript :role_edit
@@ -19,6 +20,8 @@
 #role
   #roles_tree.sliding_tree
     .breadcrumb_search.clear.clickable
+      = link_to _("Remove Role"), {:action => "destroy", :controller => "roles"}, :method => :delete, :confirm => _('Are you sure?'), :class => "remove_item", :remote=>true
+      %a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}
       %form#search_form.search.clear
         %input{ :name => "s", :type => "search", :placeholder => "Filter...", :id=>"search_filter"}
         %button.action #{_("Search")}

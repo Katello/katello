@@ -99,7 +99,7 @@ var sliding_tree = function(tree_id, options) {
                 var leaving = settings.direction == "right" ? "left" : "right";
                 //The old pane, we need to hide it away, remove the contents, and reset the classes
     
-                var width = 448;
+                var width = $('.sliding_container').width();
                 if( leaving === 'left' ){
                     list.css({'left': 0});
                     oldPanel.after(newPanel);
@@ -226,8 +226,22 @@ var sliding_tree = function(tree_id, options) {
                     $("#search_form").animate({"opacity":"1"}, { duration: 200, queue: false });
                     $("#search_filter").animate({"width":"420px", "opacity":"1"}, { duration: 200, queue: false });
                     $(this).css({backgroundPosition: "-32px -16px"});
+                    if( $('.remove_item').length ){
+                        $('.remove_item').css({ top : 52 });
+                    }
+                    if( $('.close').length ){
+                        $('.close').css({ top : 52 });
+                    }
                 },function() {
-                    $("#search_form").fadeOut("fast", function(){bcs.animate({ "height": bcs_height }, "fast");});
+                    $("#search_form").fadeOut("fast", function(){
+                        bcs.animate({ "height": bcs_height }, "fast");
+                        if( $('.remove_item').length ){
+                            $('.remove_item').css({ top : 12 });
+                        }
+                        if( $('.close').length ){
+                            $('.close').css({ top : 12 });
+                        }
+                    });
                     $(this).css({backgroundPosition: "0 -16px"});
                     $("#search_filter").val("").change();
                     $("#" + tree_id + " .has_content li").fadeIn('fast');
