@@ -123,6 +123,10 @@ class PromotionsController < ApplicationController
     render :partial=>"errata"
   end
 
+  def distributions
+    # TODO: this is a placeholder for distributions
+    render :partial=>"distributions"
+  end
 
   private
 

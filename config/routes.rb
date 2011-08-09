@@ -136,6 +136,7 @@ Src::Application.routes.draw do
   match '/organizations/:org_id/environments/:env_id/promotions/packages' => 'promotions#packages', :via=>:get, :as=>'promotion_packages'
   match '/organizations/:org_id/environments/:env_id/promotions/errata' => 'promotions#errata', :via=>:get, :as=>'promotion_errata'
   match '/organizations/:org_id/environments/:env_id/promotions/repos' => 'promotions#repos', :via=>:get, :as=>'promotion_repos'
+  match '/organizations/:org_id/environments/:env_id/promotions/distributions' => 'promotions#distributions', :via => :get, :as=> 'promotion_distributions'
   match '/organizations/:org_id/environments/:env_id/promotions/detail' => 'promotions#detail', :via=>:get, :as=>'promotion_details'
   match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
 
