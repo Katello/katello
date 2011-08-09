@@ -14,8 +14,7 @@ class OperationsController < ApplicationController
 
   def rules
     {
-      :index => lambda{user.allowed_to?(*[[:read, :update, :create, :delete], :users]) or
-          user.allowed_to?(*[[:read, :update, :create, :delete], :roles])}
+      :index => lambda{ User.any_readable? or Role.any_readable?}
     }
   end
 
