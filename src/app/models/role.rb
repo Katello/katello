@@ -138,20 +138,23 @@ class Role < ActiveRecord::Base
 
   #permissions
   def self.creatable?
-    User.allowed_to? [:create], :roles
+    User.allowed_to?([:create], :roles, nil)
   end
 
   def editable?
-   Role.creatable? || (User.allowed_to? [:update], :roles, self.id)
+   User.allowed_to?([:update, :create], :roles, nil)
   end
 
   def deletable?
-    Role.creatable? || (User.allowed_to? [:delete],:roles)
+    User.allowed_to?([:delete, :create],:roles, nil)
   end
 
+  def self.any_readable?
+    User.allowed_to?([:read,:update, :create], :roles, nil)
+  end
 
   def readable?
-    Role.creatable? || (User.allowed_to? [:read,:update], :roles, self.id)
+    Role.any_readable?
   end
 
 
