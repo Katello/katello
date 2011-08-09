@@ -155,11 +155,11 @@ module BreadcrumbHelper
       add_crumb_node!(bc, "role_users", "", _("Users"), ['roles'],
                       {:client_render => true})
       add_crumb_node!(bc, "global", "", _("Global Permissions"), ['roles', "role_permissions"],
-                      {:client_render => true})
+                      {:client_render => true}, { :count => 0 })
   
       @organizations.each{|org|
         add_crumb_node!(bc, organization_bc_id(org), "", org.name, ['roles', 'role_permissions'],
-                      {:client_render => true})
+                      {:client_render => true}, { :count => 0})
       } if @organizations
       
       @role.users.each{ |user|
@@ -168,8 +168,15 @@ module BreadcrumbHelper
       }
       
       @role.permissions.each{ |perm|
-        add_crumb_node!(bc, permission_bc_id(perm.organization, perm), "", perm.id, ['roles', 'role_permissions', organization_bc_id(perm.organization)],
-                      {:client_render => true}, { :organization => "organization_#{perm.organization_id}" })
+        if perm.resource_type.global?
+                    add_crumb_node!(bc, permission_global_bc_id(perm), "", perm.id, ['roles', 'role_permissions', 'globals'],
+                      {:client_render => true}, { :global => perm.resource_type.global? })
+          bc["global"][:count] += 1
+        else
+          add_crumb_node!(bc, permission_bc_id(perm.organization, perm), "", perm.id, ['roles', 'role_permissions', organization_bc_id(perm.organization)],
+                      {:client_render => true}, { :organization => "organization_#{perm.organization_id}", :global => perm.resource_type.global? })
+          bc[organization_bc_id(perm.organization)][:count] += 1
+        end
       }
       bc.to_json
     end
@@ -184,6 +191,10 @@ module BreadcrumbHelper
     
     def permission_bc_id organization, permission
       "permission_#{organization.id}_#{permission.id}"
+    end
+    
+    def permission_global_bc_id permission
+      "permission_global_#{permission.id}"
     end
   end
 end
