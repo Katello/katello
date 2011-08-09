@@ -107,7 +107,7 @@ class RolesController < ApplicationController
     return if @role.name == "admin"
     if @role.update_attributes(params[:role])
       notice _("Role updated.")
-      render :text=>params[:role].first[1]
+      render :json=>params[:role]
     else
       errors "", {:list_items => @role.errors.to_a}
       respond_to do |format|
