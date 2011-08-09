@@ -2,9 +2,11 @@
 
 = content_for :title do
   #{_("Edit Provider")}
-  
+
 = content_for :remove_item do
-  = link_to _("Remove Provider"), {:action => "destroy", :controller => "providers"}, :method => :delete, :confirm => _('Are you sure?'), :class => "remove_item", :remote=>true
+  - if @provider.deletable?
+    = link_to _("Remove Provider"), {:action => "destroy", :controller => "providers"}, :method => :delete, :confirm => _('Are you sure?'), :class => "remove_item", :remote=>true
+    
 
 = content_for :navigation do
   = render_navigation(:expand_all => true, :level => 3)
@@ -18,12 +20,12 @@
         %fieldset
           .grid_2.ra
             %label #{_("Name")}:
-          .grid_5.la.editable.edit_panel_element#provider_name{'name' => 'provider[name]', 'data-url' => provider_path(@provider.id)} #{@provider[:name]}
+          .grid_5.la#provider_name{'name' => 'provider[name]', 'data-url' => provider_path(@provider.id), :class=>("editable edit_panel_element" if editable)} #{@provider[:name]}
   
         %fieldset
           .grid_2.ra
             %label #{_("Description")}:
-          .grid_5.la.editable.edit_textarea{:style => "word-wrap: break-word;", 'name' => 'provider[description]', 'data-url' => provider_path(@provider.id)}<> #{@provider[:description]}
+          .grid_5.la{:style => "word-wrap: break-word;", 'name' => 'provider[description]', 'data-url' => provider_path(@provider.id), :class=>("editable edit_panel_element" if editable)}<> #{@provider.description}
   
         %fieldset
           .grid_2.ra

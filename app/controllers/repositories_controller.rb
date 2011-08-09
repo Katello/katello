@@ -44,7 +44,7 @@ class RepositoriesController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout"
+    render :partial => "edit", :layout => "tupane_layout", :locals=>{:editable=>@provider.editable?}
   end
 
   def create

@@ -105,7 +105,8 @@ class User < ActiveRecord::Base
   #
   # This method is called by every protected controller.
   def allowed_to?(verbs, resource_type, tags = nil, org = nil)
-    Rails.logger.debug "Checking if user #{username} is allowed to #{verbs} in #{resource_type.inspect} scoped #{tags.inspect} in organization #{org}"
+    Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
+          #{resource_type.inspect} scoped #{tags.inspect} in organization #{org.inspect}"
     return false if roles.empty?
 
     verbs = [] if verbs.nil?

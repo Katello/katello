@@ -4,8 +4,9 @@
   = _("Product: ") + @product.name
 
 = content_for :remove_item do
-  %a.remove_item.repo_delete{"data-url"=>provider_product_repository_path(@provider.id, @product.id, @repository[:name]), "data-forward"=>products_repos_provider_path(@provider.id), "data-confirm-text"=>_('Are you sure?')}
-    = _("Remove Repository")
+  -if editable
+    %a.remove_item.repo_delete{"data-url"=>provider_product_repository_path(@provider.id, @product.id, @repository[:name]), "data-forward"=>products_repos_provider_path(@provider.id), "data-confirm-text"=>_('Are you sure?')}
+      = _("Remove Repository")
 
 = content_for :subcontent do
   %h3
@@ -14,12 +15,12 @@
   %fieldset
     .grid_2.ra
       %label #{_("Name")}:
-    .grid_5.la.editable.edit_providername#repo_name{'name' => 'repo[name]', 'data-url' => provider_path(@provider.id)} #{@repository[:name]}
+    .grid_5.la#repo_name{'name' => 'repo[name]', 'data-url' => provider_path(@provider.id), :class=>("editable edit_providername" if editable)} #{@repository[:name]}
   
   %fieldset
     .grid_2.ra
       %label #{_("URL")}:
-    .grid_5.la.editable.edit_textarea{'name' => 'repo[feed]', 'data-url' => provider_path(@provider.id)} #{@repository[:source][:url]}
+    .grid_5.la{'name' => 'repo[feed]', 'data-url' => provider_path(@provider.id), :class=>("editable edit_textarea" if editable)} #{@repository[:source][:url]}
   
   %fieldset
     .grid_2.ra
