@@ -193,6 +193,7 @@ var panel = (function(){
     return {
         extended_cb : function() {}, //callback for post extended scroll
         expand_cb: function() {}, //callback after a pane is loaded
+        contract_cb : function() {},
         select_item :    function(activeBlockId) {
             thisPanel = $("#panel");
             subpanel = $('#subpanel');
@@ -303,7 +304,7 @@ var panel = (function(){
             content.html('');
             $.bbq.removeState("panel");
             panel.updateResult();
-            panel.expand_cb(name);
+            panel.contract_cb(name);
             return false;
         },
         closeSubPanel : function(jPanel){
@@ -317,7 +318,6 @@ var panel = (function(){
                 }).removeClass('opened').addClass('closed');
                 panel.updateResult();
             }
-            panel.expand_cb(name);
             return false;
         },
         updateResult : function(){
