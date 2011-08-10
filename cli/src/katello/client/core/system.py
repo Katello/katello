@@ -225,30 +225,20 @@ class Register(SystemAction):
                        help=_("organization name (required)"))
         self.parser.add_option('--environment', dest='environment',
                        help=_("environment name eg: development"))
-        self.parser.add_option('--activationkey', dest='activationkey', action='append',
-            help=_("activation key, more keys can be specified eg: --activationkey key1 --activationkey key2 or --activationkey=key1,key2"))
+        self.parser.add_option('--activationkey', dest='activationkey',
+            help=_("activation key, more keys are separated with comma e.g. --activationkey=key1,key2"))
 
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
-        self.require_option('environment')
-
-    # turns --activationkey=key1,key2 --activationkey=key3,key4 into
-    # ['key1','key2','key3','key4']
-    def get_activation_keys(self):
-        if self.get_option('activationkey'):
-            activation_keys = self.get_option('activationkey')
-            activation_keys = map(lambda x: x.split(","), activation_keys)
-            activation_keys = [item for sublist in activation_keys for item in sublist] # flatten array
-            return activation_keys
-        else:
-            return None
+        if not self.option_specified('activationkey'):
+          self.require_option('environment')
 
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
         environment = self.get_option('environment')
-        activation_keys = self.get_activation_keys()
+        activation_keys = self.get_option('activationkey')
 
         system = self.api.register(name, org, environment, activation_keys, 'system')
 
