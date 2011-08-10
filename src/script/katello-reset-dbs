@@ -1,0 +1,69 @@
+#!/bin/bash
+
+if [ "$(id -u)" != "0" ]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+
+SRV=/sbin/service
+
+echo -e "\n"
+echo '***********************************************************'
+echo "THIS SCRIPT WILL ERASE KATELLO / CANDLEPIN / PULP DATABASES"
+echo '***********************************************************'
+echo -e "\n"
+echo "All data from all systems will be erased completely!"
+echo -e "\n"
+echo "It is strongly recommended to back up databases:"
+echo " # mongodump --db pulp_database --out - > pulp_database.json"
+echo " # pg_dump -c candlepin > candlepin_db.sql"
+echo " # pg_dump -c katello > katello_db.sql"
+echo -e "\n"
+read -p "Are you sure you want to proceed (yes/no)? "
+[ "$REPLY" != "yes" ] && exit 1
+
+echo "Erasing all data..."
+
+function stop_if_running {
+  $SRV "$1" status >/dev/null && $SRV "$1" stop
+}
+
+function start_unless_running {
+  $SRV "$1" status >/dev/null || $SRV "$1" start
+}
+
+echo "Stopping Katello instance"
+stop_if_running katello
+
+echo "Stopping Pulp instance"
+stop_if_running pulp-server
+
+echo "Stopping Candlepin instance"
+stop_if_running tomcat6
+
+echo "Dropping Pulp database"
+# mongo sometimes hang in F14/F15 (workaround 725601)
+#echo 'db.dropDatabase();' | mongo pulp_database
+$SRV mongod status >/dev/null && $SRV mongod stop
+rm -rf /var/lib/mongodb/pulp_database
+$SRV mongod start
+
+echo "Initializing Pulp database"
+/usr/bin/pulp-migrate
+
+echo "Initializing Candlepin database"
+/usr/share/candlepin/cpsetup -s
+
+echo "Starting Pulp instance"
+$SRV pulp-server start
+
+echo "Starting Candlepin instance"
+start_unless_running
+
+echo "Initializing Katello database"
+rm -f /var/lib/katello/initdb_done
+$SRV katello initdb
+
+echo "Starting Katello instance"
+$SRV katello start
+

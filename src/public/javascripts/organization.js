@@ -54,26 +54,4 @@ $(document).ready(function() {
                 notices.checkNotices();
           }});
    });
-
-
-    $(".remove_org").live('click', function() {
-
-       var button = $(this);
-
-       var answer = confirm(button.attr('data-confirm-text'));
-       if (answer) {
-          $.ajax({
-            type: "DELETE",
-            url: button.attr('data-url'),
-            cache: false,
-            success: function() {
-                panel.closeSubPanel($('#subpanel'));
-                panel.closePanel($('#panel'));
-                list.remove(button.attr("data-id").replace(/ /g, '_'));
-            }
-          });
-       }
-    });
-
-
 });
