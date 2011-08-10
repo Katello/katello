@@ -50,10 +50,11 @@ class List(ChangesetAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name (Locker by default)"))
+                               help=_("environment name (required)"))
 
     def check_options(self):
         self.require_option('org')
+        self.require_option('env', '--environment')
 
     def run(self):
         orgName = self.get_option('org')
@@ -87,13 +88,14 @@ class Info(ChangesetAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name (Locker by default)"))
+                               help=_("environment name (required)"))
         self.parser.add_option('--name', dest='name',
                                help=_("changeset name (required)"))
                                
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
+        self.require_option('env', '--environment')
 
     def run(self):
         orgName = self.get_option('org')
@@ -134,7 +136,7 @@ class Create(ChangesetAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name"))
+                               help=_("environment name (required)"))
         self.parser.add_option('--name', dest='name',
                                help=_("changeset name (required)"))
                                
@@ -189,7 +191,7 @@ class UpdateContent(ChangesetAction):
         self.parser.add_option('--org', dest='org',
                                 help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                                help=_("environment name (Locker by default)"))
+                                help=_("environment name (required)"))
         self.parser.add_option('--add_product', dest='add_product',
                                 action="append",
                                 help=_("product to add to the changeset"))
@@ -198,7 +200,7 @@ class UpdateContent(ChangesetAction):
                                 help=_("product to remove from the changeset"))                                
         self.parser.add_option('--from_product', dest='from_product',
                                 action="callback", callback=self.store_from_product, type="string",
-                                help=_("environment name (Locker by default)"))
+                                help=_("determines product from which the packages/errata/repositories are picked"))
 
         for ct in ['package', 'erratum', 'repo']:
             self.parser.add_option('--add_'+ct, dest='add_'+ct,
@@ -214,6 +216,7 @@ class UpdateContent(ChangesetAction):
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
+        self.require_option('env', '--environment')
 
 
     def run(self):
@@ -252,11 +255,12 @@ class Delete(ChangesetAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name (Locker by default)"))
+                               help=_("environment name (required)"))
 
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
+        self.require_option('env', '--environment')
 
     def run(self):
         csName  = self.get_option('name')
@@ -283,11 +287,12 @@ class Promote(ChangesetAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name (Locker by default)"))
+                               help=_("environment name (required)"))
 
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
+        self.require_option('env', '--environment')
 
     def run(self):
         csName  = self.get_option('name')
