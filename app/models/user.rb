@@ -97,34 +97,22 @@ class User < ActiveRecord::Base
     end
   end
 
-  # Return true if the user is allowed to do the specified action for a resource type
-  # verb/action can be:
-  # * a parameter-like Hash (eg. :controller => 'projects', :action => 'edit')
-  # * a permission Symbol (eg. :edit_project)
-  #
-  # This method is called by every protected controller.
-  def allowed_to?(verbs, resource_type, tags = nil, org = nil)
-    Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
-          #{resource_type.inspect} scoped #{tags.inspect} in organization #{org.inspect}"
-        
-    return false if roles.empty?
-
+  # Returns true if for a given verbs, resource_type org combination
+  # the user has access to all the tags
+  # This is used extensively in many of the model permission scope queries.
+  def allowed_all_tags?(verbs=nil, resource_type = nil,  org = nil)
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a? Array
+    Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
+          #{resource_type.inspect} in organization #{org && org.inspect}"
+
+    org_permissions = org_permissions_query(org)
+
     verbs = verbs.collect {|verb| action_to_verb(verb, resource_type)}
     no_tag_verbs = ResourceType::TYPES[resource_type][:model].no_tag_verbs rescue []
     no_tag_verbs ||= []
     no_tag_verbs.delete_if{|verb| !verbs.member? verb}
     verbs.delete_if{|verb| no_tag_verbs.member? verb}
-    org_clause = "permissions.organization_id is null"
-    org_clause = org_clause + " OR permissions.organization_id = :organization_id " if org
-    org_hash = {}
-    org_hash = {:organization_id => org.id} if org
-    org_permissions = Permission.joins(:role).joins(
-                  "INNER JOIN roles_users ON roles_users.role_id = roles.id").joins(
-                  "left outer join permissions_verbs on permissions.id = permissions_verbs.permission_id").joins(
-                  "left outer join verbs on verbs.id = permissions_verbs.verb_id").where(
-                      org_clause, org_hash).where({"roles_users.user_id" => id})
 
     clause_all_resources_or_tags = %{permissions.resource_type_id is null OR
           (permissions.resource_type_id = (select id from resource_types where resource_types.name = :resource_type) AND
@@ -132,30 +120,76 @@ class User < ActiveRecord::Base
             (permissions.all_verbs=:true OR verbs.verb in (:verbs)) AND
                 permissions.all_tags = :true))}.split.join(" ")
     clause_params = {:true => true, :resource_type=>resource_type, :verbs=> verbs}
-    return true  unless org_permissions.where(clause_all_resources_or_tags,
-                                      {:no_tag_verbs => no_tag_verbs}.merge(clause_params) ).count == 0
+
+    org_permissions.where(clause_all_resources_or_tags,
+                                      {:no_tag_verbs => no_tag_verbs}.merge(clause_params) ).count > 0
+  end
+
+  # Class method that has the same functionality as allowed_all_tags? method but operates
+  # on the current logged user. The class attribute User.current must be set!
+  # If the current user is not set (is nil) it treats it like the 'anonymous' user.
+  def self.allowed_all_tags?(verb, resource_type = nil, org = nil)
+    u = User.current
+    u = User.anonymous if u.nil?
+    raise ArgumentError, "current user is not set" if u.nil? or not u.is_a? User
+    u.allowed_all_tags?(verb, resource_type, org)
+  end
+
+
+  # Return the sql that shows all the allowed tags for a given verb, resource_type, org
+  # combination .
+  # Note: one needs generally check for "allowed_all_tags?" before executing this
+  # Note: This returns the SQL not result of the query
+  #
+  # This method is called by every Model's list method
+  def allowed_tags_sql(verbs=nil, resource_type = nil,  org = nil)
+    allowed_tags_query(verbs, resource_type, org).select("DISTINCT(tags.name)").to_sql
+  end
+
+
+  # Class method that has the same functionality as allowed_tags_sql method but operates
+  # on the current logged user. The class attribute User.current must be set!
+  # If the current user is not set (is nil) it treats it like the 'anonymous' user.
+  def self.allowed_tags_sql(verb, resource_type = nil, org = nil)
+    u = User.current
+    u = User.anonymous if u.nil?
+    raise ArgumentError, "current user is not set" if u.nil? or not u.is_a? User
+    u.allowed_tags_sql(verb, resource_type, org)
+  end
+
+
+  # Return true if the user is allowed to do the specified action for a resource type
+  # verb/action can be:
+  # * a parameter-like Hash (eg. :controller => 'projects', :action => 'edit')
+  # * a permission Symbol (eg. :edit_project)
+  #
+  # This method is called by every protected controller.
+  def allowed_to?(verbs, resource_type, tags = nil, org = nil)
+    verbs = [] if verbs.nil?
+    verbs = [verbs] unless verbs.is_a? Array
+    Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
+          #{resource_type.inspect} scoped #{tags.inspect} in organization #{org && org.inspect}"
+
+    return true if allowed_all_tags?( verbs,resource_type, org)
 
 
     tags = [] if tags.nil?
     tags = [tags] unless tags.is_a? Array
 
-    clause = %{permissions.resource_type_id = (select id from resource_types where resource_types.name = :resource_type) AND
-    (permissions.all_verbs=:true OR verbs.verb in (:verbs))}.split.join(" ")
+    tags_query = allowed_tags_query(verbs, resource_type, org)
 
     if tags.empty?
       to_count = "verbs.verb"
     else
       to_count = "tags.name"
     end
-    query = org_permissions.joins("left outer join permissions_tags on permissions.id = permissions_tags.permission_id").joins(
-                    "left outer join tags on tags.id = permissions_tags.tag_id").where(clause, clause_params)
 
-    query = query.where({:tags=> {:name=> tags.collect{|tg| tg.to_s}}}) unless tags.empty?
-    count = query.count(to_count, :distinct => true)
+    tags_query = tags_query.where({:tags=> {:name=> tags.collect{|tg| tg.to_s}}}) unless tags.empty?
+    count = tags_query.count(to_count, :distinct => true)
     if tags.empty?
-      return count > 0
+      count > 0
     else
-      return tags.length == count
+      tags.length == count
     end
   end
 
@@ -289,8 +323,6 @@ class User < ActiveRecord::Base
   end
 
 
-
-
   protected
 
   def own_role_included_in_roles
@@ -310,7 +342,39 @@ class User < ActiveRecord::Base
   def action_to_verb(verb, type)
     return ACTION_TO_VERB[type][verb] if ACTION_TO_VERB[type] and ACTION_TO_VERB[type][verb]
     return DEFAULT_VERBS[verb] if DEFAULT_VERBS[verb]
-    return verb
+    verb
+  end
+
+  private
+
+  def allowed_tags_query(verbs=nil, resource_type = nil,  org = nil)
+    verbs = [] if verbs.nil?
+    verbs = [verbs] unless verbs.is_a? Array
+    Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
+          #{resource_type.inspect} in organization #{org && org.inspect}"
+
+    org_permissions = org_permissions_query(org)
+    verbs = verbs.collect {|verb| action_to_verb(verb, resource_type)}
+    clause_params = {:true => true, :resource_type=>resource_type, :verbs=> verbs}
+
+    clause = %{permissions.resource_type_id = (select id from resource_types where resource_types.name = :resource_type) AND
+    (permissions.all_verbs=:true OR verbs.verb in (:verbs))}.split.join(" ")
+
+    org_permissions.joins("left outer join permissions_tags on permissions.id = permissions_tags.permission_id").joins(
+                    "left outer join tags on tags.id = permissions_tags.tag_id").where(clause, clause_params)
+  end
+
+
+  def org_permissions_query(org)
+    org_clause = "permissions.organization_id is null"
+    org_clause = org_clause + " OR permissions.organization_id = :organization_id " if org
+    org_hash = {}
+    org_hash = {:organization_id => org.id} if org
+    Permission.joins(:role).joins(
+                  "INNER JOIN roles_users ON roles_users.role_id = roles.id").joins(
+                  "left outer join permissions_verbs on permissions.id = permissions_verbs.permission_id").joins(
+                  "left outer join verbs on verbs.id = permissions_verbs.verb_id").where(
+                      org_clause, org_hash).where({"roles_users.user_id" => id})
   end
 
 end

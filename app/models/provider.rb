@@ -40,6 +40,7 @@ class Provider < ActiveRecord::Base
 
   validate :only_one_rhn_provider
 
+
   def only_one_rhn_provider
     # validate only when new record is added (skip explicit valid? calls)
     if new_record? and provider_type == REDHAT and count_providers(REDHAT) != 0
@@ -66,6 +67,7 @@ class Provider < ActiveRecord::Base
     rh_repo?
   end
 
+  #permissions
   # returns list of virtual permission tags for the current user
   def self.list_tags
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
@@ -85,7 +87,9 @@ class Provider < ActiveRecord::Base
     [:create]
   end
 
-  #permissions
+  scope :readables, lambda {|org| authorized_items(org, [:read, :create, :sync])}
+  scope :syncables, lambda {|org| authorized_items(org, [:sync])}
+
   def readable?
     User.allowed_to?([:read, :create, :sync], :providers, self.id, self.organization)
   end
@@ -116,6 +120,15 @@ class Provider < ActiveRecord::Base
        self.repository_url.strip!
      end
    end
+
+
+  def self.authorized_items org, verbs, resource = :providers
+    if User.allowed_all_tags?(verbs, resource, org)
+       where(:organization_id => org)
+    else
+      where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+    end
+  end
 
 end
 
