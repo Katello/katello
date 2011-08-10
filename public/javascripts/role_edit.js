@@ -119,8 +119,8 @@ var templateLibrary = (function($){
             } else {
                 html += '<div class="slide_link" id="' + id + '">';
             }
-    
-            if( count ){
+   
+            if( count !== undefined && count !== null && count !== false ){
                 html += '<span class="sort_attr">'+ name + ' (' + count + ')</span></div></li>';
             } else {
                 html += '<span class="sort_attr">'+ name + '</span></div></li>';
@@ -133,7 +133,7 @@ var templateLibrary = (function($){
             for( item in items){
                 if( items.hasOwnProperty(item) ){
                     if( item.split("_")[0] === type ){
-                        html += listItem(item, items[item].name, options.no_slide);
+                        html += listItem(item, items[item].name, false, options.no_slide);
                     }
                 }
             }
@@ -144,7 +144,7 @@ var templateLibrary = (function($){
             var html = '<ul>',
                 options = options ? options : {};
             
-            html += listItem(items['global'], items['global'].name, false);
+            html += listItem(items['global'], items['global'].name, items['global'].count, false);
             
             for( item in items){
                 if( items.hasOwnProperty(item) ){
