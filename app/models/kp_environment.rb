@@ -145,7 +145,7 @@ class KPEnvironment < ActiveRecord::Base
   end
 
   def systems_readable?
-    User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, self) ||
+    User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, self.id, self.organization) ||
         User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, self.organization)
   end
 

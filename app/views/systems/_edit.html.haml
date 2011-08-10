@@ -27,11 +27,11 @@
       %fieldset  
         .grid_2.ra.fieldset
           = label :system, :name, _("Name")
-        .grid_5.la.editable.edit_panel_element#system_name{'name' => 'system[name]', 'data-url'=>system_path(system.id)} #{system[:name]}
+        .grid_5.la#system_name{'name' => 'system[name]', :class=>("editable edit_panel_element" if editable), 'data-url'=>system_path(system.id)} #{system[:name]}
       %fieldset
         .grid_2.ra.fieldset
           = label :system, :description, _("Description")
-        .grid_5.la.editable.edit_textarea#system_description{'name' => 'system[description]', 'data-url'=>system_path(system.id)} #{system[:description]}
+        .grid_5.la#system_description{'name' => 'system[description]', :class=>("editable edit_textarea" if editable), 'data-url'=>system_path(system.id)} #{system[:description]}
       %fieldset
         .grid_2.ra.fieldset
           = label :os, :os, _("OS")
@@ -47,7 +47,7 @@
       %fieldset
         .grid_2.ra.fieldset
           = label :location, :location, _("Location")
-        .grid_5.la.editable.edit_textfield#system_location{'name' => 'system[location]', 'data-url'=>system_path(system.id)} #{system[:location]}
+        .grid_5.la#system_location{'name' => 'system[location]', :class=>("editable edit_textfield" if editable), 'data-url'=>system_path(system.id)} #{system[:location]}
       
     .clear
     .grid_8
