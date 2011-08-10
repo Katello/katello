@@ -61,6 +61,11 @@ describe Changeset do
       it "should fail on add repo" do
         lambda {@changeset.add_repo("repo")}.should raise_error
       end
+
+      it "should fail on add repo" do
+        lambda {@changeset.add_distribution("distro-id")}.should raise_error
+      end
+
     end
 
     describe "adding content from the prior environment" do
@@ -79,6 +84,8 @@ describe Changeset do
         @err  = mock('Err', {:id => 'err', :name => 'err'})
 
         @repo = mock('Repo', {:id => 1, :name => 'repo'})
+        @distribution = mock('Distribution', {:id=> 'some-distro-id'})
+        @repo.stub(:distributions).and_return([@distribution])
         @repo.stub(:packages).and_return([@pack])
         @repo.stub(:errata).and_return([@err])
         @repo.stub(:has_package?).with(1).and_return(true)
@@ -111,6 +118,11 @@ describe Changeset do
         @changeset.repos.length.should == 1
       end
 
+      it "should add distribution" do
+        @changeset.add_distribution("some-distro-id", "prod")
+        @changeset.distributions.length.should == 1
+      end
+
     end
 
     describe "removing content" do
@@ -129,8 +141,11 @@ describe Changeset do
         @err  = mock('Err', {:id => 'err', :name => 'err'})
 
         @repo = mock('Repo', {:id => 1, :name => 'repo'})
+        @distribution = mock('Distribution', {:id=> 'some-distro-id'})
+        @repo.stub(:distributions).and_return([@distribution])
         @repo.stub(:packages).and_return([@pack])
         @repo.stub(:errata).and_return([@err])
+
 
         @prod.stub(:repos).and_return([@repo])
 
@@ -156,6 +171,12 @@ describe Changeset do
       it "should remove repo" do
         ChangesetRepo.should_receive(:destroy_all).with(:repo_id => 1, :changeset_id => @changeset.id, :product_id => 1).and_return(true)
         @changeset.remove_repo("repo", "prod")
+      end
+
+      it "should remove distribution" do
+        ChangesetDistribution.should_receive(:destroy_all).with(:distribution_id => 'some-distro-id', :changeset_id => @changeset.id, :product_id => 1).and_return(true)
+        @changeset.remove_distribution('some-distro-id', "prod")
+
       end
 
     end

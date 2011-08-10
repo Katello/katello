@@ -39,6 +39,7 @@ class Changeset < ActiveRecord::Base
   has_many :users, :class_name=>"ChangesetUser", :inverse_of=>:changeset
   has_many :errata, :class_name=>"ChangesetErratum", :inverse_of=>:changeset
   has_many :repos, :class_name=>"ChangesetRepo", :inverse_of => :changeset
+  has_many :distributions, :class_name=>"ChangesetDistribution", :inverse_of => :changeset
   belongs_to :environment, :class_name=>"KPEnvironment"
   belongs_to :task_status
   before_save :uniquify_artifacts
@@ -237,6 +238,24 @@ class Changeset < ActiveRecord::Base
     raise Errors::ChangesetContentException.new("Repository not found within this environment.")
   end
 
+  def add_distribution distribution_id, product_name
+    product = self.find_product(product_name)
+    repos = product.repos(self.environment)
+    idx = nil
+    repos.each do |repo|
+      idx = repo.distributions.index do |d| d.id == distribution_id end
+    end
+    if idx != nil
+      self.distributions << ChangesetDistribution.new(:distribution_id => distribution_id,
+                                                      :display_name => distribution_id,
+                                                      :product_id => product.id,
+                                                      :changeset => @changeset)
+      return
+    end
+    raise Errors::ChangesetContentException.new("Distribution not found within this environment.")
+  end
+
+
   def remove_product product_name
     prod = self.environment.products.find_by_name(product_name)
     raise Errors::ChangesetContentException.new("Product #{product_name} not found within this environment.") if prod.nil?
@@ -279,6 +298,19 @@ class Changeset < ActiveRecord::Base
       return
     end
   end
+
+  def remove_distribution distribution_id, product_name
+    product = self.find_product(product_name)
+    repos = product.repos(self.environment)
+    idx = nil
+    repos.each do |repo|
+      idx = repo.distributions.index do |d| d.id == distribution_id end
+    end
+    if idx != nil
+      ChangesetDistribution.destroy_all(:distribution_id => distribution_id, :changeset_id => self.id, :product_id => product.id)
+    end
+  end
+
 
   #TODO: add validation
 
