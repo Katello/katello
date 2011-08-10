@@ -40,6 +40,7 @@ class ActivationKey < ActiveRecord::Base
   def apply_to_system(system)
     system.environment_id = self.environment_id if self.environment_id
     system.system_template_id = self.system_template_id if self.system_template_id
+    system.system_activation_keys.build(:activation_key => self)
   end
 
 end
