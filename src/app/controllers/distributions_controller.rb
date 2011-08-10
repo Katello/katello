@@ -14,13 +14,13 @@ class DistributionsController < ApplicationController
 
   before_filter :lookup_distribution
 
-	def show
-		render :partial=>"show", :layout => "tupane_layout"
-	end
+  def show
+    render :partial=>"show", :layout => "tupane_layout"
+  end
 
-	def filelist
+  def filelist
     render :partial=>"filelist", :layout => "tupane_layout"
-	end
+  end
 
   private
 
