@@ -83,6 +83,8 @@ class HttpResource
       result = process_response(client.get(headers))
       resource_permissions.after_get_callback(a_path, headers, result)
       result
+    rescue RestClient::Exception => e
+      raise_rest_client_exception e, a_path, "GET"
     end
 
     def post(a_path, payload={}, headers={})
@@ -92,6 +94,8 @@ class HttpResource
       result = process_response(client.post(payload, headers))
       resource_permissions.after_post_callback(a_path, payload, headers, result)
       result
+    rescue RestClient::Exception => e
+      raise_rest_client_exception e, a_path, "POST"
     end
 
     def put(a_path, payload={}, headers={})
@@ -101,6 +105,8 @@ class HttpResource
       result = process_response(client.put(payload, headers))
       resource_permissions.after_put_callback(a_path, payload, headers, result)
       result
+    rescue RestClient::Exception => e
+      raise_rest_client_exception e, a_path, "PUT"
     end
 
     def delete(a_path=nil, headers={})
@@ -112,6 +118,18 @@ class HttpResource
       Rails.logger.info "delete result: "+result
       resource_permissions.after_delete_callback(a_path, headers, result)
       result
+    rescue RestClient::Exception => e
+      raise_rest_client_exception e, a_path, "DELETE"
+    end
+
+    # re-raise the same exception with nicer error message
+    def raise_rest_client_exception e, a_path, http_method
+      msg = "#{name}: #{e.message} #{e.http_body} (#{http_method} #{a_path})"
+      # message method in rest-client is hardcoded - we need to override it
+      singleton = Class.new(e.class) do
+        send(:define_method, :message) { msg }
+      end
+      raise singleton
     end
 
     def join_path(*args)

@@ -67,6 +67,8 @@ start() {
         echo_success
     else
         cd ${KATELLO_HOME} #rails expects you to run from the root of the app
+        # delete Gemfile.lock (it will be regenerated)
+        rm -f /var/lib/katello/Gemfile.lock
         #workaround for the bug 726030 - Webrick wont start with the -d (daemon) option
         #daemon --user ${KATELLO_USER} bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} -d >/var/log/katello/startup.log 2>&1
         daemon --user ${KATELLO_USER} nohup bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} >/var/log/katello/startup.log 2>&1 &
@@ -155,7 +157,8 @@ case "$1" in
         # stop if it is running
         condstop
         pushd $KATELLO_HOME >/dev/null
-        su $KATELLO_USER -s /bin/bash -c "RAILS_ENV=$KATELLO_ENV rake setup --trace"
+        su $KATELLO_USER -s /bin/bash -c "RAILS_ENV=$KATELLO_ENV rake setup --trace" \
+          >/var/log/katello/initdb.log
         popd >/dev/null
         touch /var/lib/katello/initdb_done
         ;;

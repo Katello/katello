@@ -106,18 +106,22 @@ module Glue::Pulp::Repos
       # Get the most recent status from all the repos in this product
       not_synced = ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED)
       top_status = not_synced
+      foo = 0
       for r in repos(self.locker)
         curr_status = r._get_most_recent_sync_status()
         repo_sync_state = curr_status.state
-        if repo_sync_state == ::PulpSyncStatus::Status::ERROR
+        if repo_sync_state == ::PulpSyncStatus::Status::ERROR.to_s
           top_status = curr_status
-        elsif repo_sync_state == ::PulpSyncStatus::Status::RUNNING and
-                 top_status != ::PulpSyncStatus::Status::ERROR
+          foo = 1
+        elsif repo_sync_state == ::PulpSyncStatus::Status::RUNNING.to_s and
+                 top_status != ::PulpSyncStatus::Status::ERROR.to_s
           top_status = curr_status
-        elsif repo_sync_state == ::PulpSyncStatus::Status::FINISHED and
-                top_status  != ::PulpSyncStatus::Status::RUNNING and
-                top_status  != ::PulpSyncStatus::Status::ERROR
+          foo = 2
+        elsif repo_sync_state == ::PulpSyncStatus::Status::FINISHED.to_s and
+                top_status  != ::PulpSyncStatus::Status::RUNNING.to_s and
+                top_status  != ::PulpSyncStatus::Status::ERROR.to_s
           top_status = curr_status
+          foo = 3
         end
       end
       top_status
