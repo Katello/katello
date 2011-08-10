@@ -198,6 +198,7 @@ Src::Application.routes.draw do
 
   resource :user_session do
     get 'invalid'
+    post 'set_org'
   end
 
   resource :account
