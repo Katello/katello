@@ -56,7 +56,6 @@ class RepoAction(Action):
 class Create(RepoAction):
 
     description = _('create a repository')
-    selected = []
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
@@ -83,6 +82,17 @@ class Create(RepoAction):
         prodName = self.get_option('prod')
         orgName  = self.get_option('org')
 
+        repourls = self.discover_repositories(url)
+        self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
+        selectedurls = self.select_repositories(repourls, assumeyes)
+
+        prod = get_product(orgName, prodName)
+        if prod != None:
+            self.create_repositories(prod, selectedurls)
+
+        return os.EX_OK
+
+    def discover_repositories(self, url):
         print(_("Discovering repository urls, this could take some time..."))
         try:
             task = self.api.repo_discovery(url, 'yum')
@@ -95,32 +105,35 @@ class Create(RepoAction):
         if not len(repourls):
             system_exit(os.EX_OK, "No repositories discovered @ url location [%s]" % url)
 
-        self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
+        return repourls
+            
+    def select_repositories(self, repourls, assumeyes):
+        selection = Selection()
         if not assumeyes:
             proceed = ''
             num_selects = [str(i+1) for i in range(len(repourls))]
             select_range_str = constants.SELECTION_QUERY % len(repourls)
             while proceed.strip().lower() not in  ['q', 'y']:
                 if not proceed.strip().lower() == 'h':
-                    self.__print_urls(repourls)
+                    self.__print_urls(repourls, selection)
                 proceed = raw_input(_("\nSelect urls for which candidate repos should be created; use `y` to confirm (h for help):"))
                 select_val = proceed.strip().lower()
                 if select_val == 'h':
                     print select_range_str
                 elif select_val == 'a':
-                    self.__add_selection(repourls)
+                    selection.add_selection(repourls)
                 elif select_val in num_selects:
-                    self.__add_selection([repourls[int(proceed.strip().lower())-1]])
+                    selection.add_selection([repourls[int(proceed.strip().lower())-1]])
                 elif select_val == 'q':
-                    self.selection = []
+                    selection = Selection()
                     system_exit(os.EX_OK, _("Operation aborted upon user request."))
                 elif set(select_val.split(":")).issubset(num_selects):
                     lower, upper = tuple(select_val.split(":"))
-                    self.__add_selection(repourls[int(lower)-1:int(upper)])
+                    selection.add_selection(repourls[int(lower)-1:int(upper)])
                 elif select_val == 'c':
-                    self.selected = []
+                    selection = Selection()
                 elif select_val == 'y':
-                    if not len(self.selected):
+                    if not len(selection):
                         proceed = ''
                         continue
                     else:
@@ -129,27 +142,22 @@ class Create(RepoAction):
                     continue
         else:
             #select all
-            self.__add_selection( repourls)
-            self.__print_urls(repourls)
-
-        prod = get_product(orgName, prodName)
-        if prod != None:
-            for repourl in self.selected:
-                parsedUrl = urlparse.urlparse(repourl)
-                repoName = "%s%s" % (name, parsedUrl.path.replace("/", "_"))
-                repo = self.api.create(prod["cp_id"], repoName, repourl)
-                print _("Successfully created repository [ %s ]") % repoName
-
-        return os.EX_OK
-
-    def __add_selection(self, urls):
-        for url in urls:
-            if url not in self.selected:
-                self.selected.append(url)
-
-    def __print_urls(self, repourls):
+            selection.add_selection(repourls)
+            self.__print_urls(repourls, selection)
+            
+        return selection
+        
+    def create_repositories(self, product, selectedurls):
+        for repourl in selectedurls:
+            parsedUrl = urlparse.urlparse(repourl)
+            repoName = "%s%s" % (product["name"], parsedUrl.path.replace("/", "_"))
+            repo = self.api.create(product["cp_id"], repoName, repourl)
+            print _("Successfully created repository [ %s ]") % repoName
+        
+        
+    def __print_urls(self, repourls, selectedurls):
         for index, url in enumerate(repourls):
-            if url in self.selected:
+            if url in selectedurls:
                 print "(+)  [%s] %-5s" % (index+1, url)
             else:
                 print "(-)  [%s] %-5s" % (index+1, url)
@@ -161,6 +169,13 @@ class Create(RepoAction):
 
         return discoveryTask
 
+        
+class Selection(list):
+    def add_selection(self, urls):
+        for url in urls:
+            if url not in self:
+                self.append(url)
+    
 
 class Status(RepoAction):
 

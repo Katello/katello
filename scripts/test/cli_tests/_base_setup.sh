@@ -20,7 +20,7 @@ test "org create" org create --name=$TEST_ORG --description="org description"
 test "environment create" environment create --org="$FIRST_ORG" --name="$TEST_ENV" --prior="Locker"
 test "environment create" environment create --org="$FIRST_ORG" --name="$TEST_ENV_3" --prior="$TEST_ENV"
 test "provider create" provider create --name="$YUM_PROVIDER" --org="$FIRST_ORG" --type=custom --url="$FEWUPS_REPO_URL" --description="prov description"
-test "product create" product create --provider="$YUM_PROVIDER" --org="$FIRST_ORG" --name="$FEWUPS_PRODUCT" --url="$FEWUPS_REPO_URL"
+test "product create" product create --provider="$YUM_PROVIDER" --org="$FIRST_ORG" --name="$FEWUPS_PRODUCT" --url="$FEWUPS_REPO_URL" --assumeyes
 test "repo create" repo create --product="$FEWUPS_PRODUCT" --org="$FIRST_ORG" --name="$FEWUPS_REPO" --url="$FEWUPS_REPO_URL" --assumeyes
 REPO_NAME=`$CMD repo list --org="$FIRST_ORG" | grep $FEWUPS_REPO | awk '{print $2}'`
 REPO_ID=`$CMD repo list --org="$FIRST_ORG" | grep $FEWUPS_REPO | awk '{print $1}'`
