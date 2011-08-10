@@ -34,12 +34,14 @@ class SystemsController < ApplicationController
   def environments
     begin
       @environment = KPEnvironment.find params[:env_id] if !params[:env_id].blank?
-      @environment ||= current_organization.promotion_paths.first.first
+      @systems = []
       
       setup_environment_selector(current_organization)
-      @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size)
-      retain_search_history
-      sort_columns(COLUMNS,@systems) if params[:order]
+      if @environment
+        @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size) 
+        retain_search_history
+        sort_columns(COLUMNS,@systems) if params[:order]
+      end
       render :index, :locals=>{:envsys => 'true'}
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -114,7 +116,7 @@ class SystemsController < ApplicationController
 
   def show
     system = System.find(params[:id])
-    render :partial=>"common/list_update", :locals=>{:item=>system, :accessor=>"id", :columns=>['name', 'ip', 'kernel']}
+    render :partial=>"systems/list_system_show", :locals=>{:item=>system, :accessor=>"id", :columns=> COLUMNS.keys, :noblock => 1}
   end
   
   def section_id
