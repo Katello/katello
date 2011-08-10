@@ -13,7 +13,7 @@
     %fieldset.clearfix
       .grid_2.la
         %label #{_("Description")}:
-      .grid_4.la.editable.edit_textfield{:style => "word-wrap: break-word;", 'name' => 'organization[description]', 'data-url'=>edit_organization_path(@organization.cp_key)}<> #{@organization[:description]}
+      .grid_4.la{:style => "word-wrap: break-word;", 'name' => 'organization[description]', :class=>("editable edit_textfield" if editable), 'data-url'=>edit_organization_path(@organization.cp_key)}<> #{@organization[:description]}
   
     .grid_7
       %h5 #{_("Environment Promotion Paths")}:
@@ -34,6 +34,7 @@
         #{_("No environments are available in this organization. Please add some environments to be able register systems to this organization.")}:
     .clear
       &nbsp;
-  
-    .button.subpanel_element{"data-url"=>new_organization_environment_path(@organization.cp_key)}
-      = _("Add New Environment")
+
+    - if editable
+      .button.subpanel_element{"data-url"=>new_organization_environment_path(@organization.cp_key)}
+        = _("Add New Environment")
