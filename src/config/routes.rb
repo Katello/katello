@@ -169,7 +169,7 @@ Src::Application.routes.draw do
       get :items
     end
   end
-  match '/roles/resource_type/:resource_type/verbs_and_scopes' => 'roles#verbs_and_scopes', :via=>:get, :as=>'verbs_and_scopes'
+  match '/roles/:organization_id/resource_type/verbs_and_scopes' => 'roles#verbs_and_scopes', :via=>:get, :as=>'verbs_and_scopes'
 
   resources :search, :only => {} do
     get 'show', :on => :collection
