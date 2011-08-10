@@ -12,7 +12,11 @@
 
 module TranslationHelper
   def relative_time_in_words(time)
-    _("%{relative_time} ago") % {:relative_time => time_ago_in_words(time)}
+    begin
+      _("%{relative_time} ago") % {:relative_time => time_ago_in_words(time)}
+    rescue NoMethodError => e
+      Rails.logger.error "Error converting to relative_time_in_words: " + e
+    end
   end
 
   def months
