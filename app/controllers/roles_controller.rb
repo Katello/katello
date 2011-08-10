@@ -19,6 +19,8 @@ class RolesController < ApplicationController
   helper_method :resource_types
 
   include AutoCompleteSearch
+  include BreadcrumbHelper
+  include BreadcrumbHelper::RolesBreadcrumbs
   
   def rules
     index_check = lambda{Role.any_readable?}
@@ -159,7 +161,10 @@ class RolesController < ApplicationController
     new_params.merge! params[:permission]
     @perm = Permission.create! new_params
     notice _("Permission created.")
-    render :partial => "permission", :locals =>{:perm => @perm, :role=>@role, :data_new=> false}
+    #render :partial => "permission", :locals =>{:perm => @perm, :role=>@role, :data_new=> false}
+    to_return = {}
+    add_permission_bc(to_return, @perm, false)
+    render :json => to_return
   end
 
   def show_permission
