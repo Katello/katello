@@ -83,7 +83,7 @@ class SyncPlan < ActiveRecord::Base
   end
 
   def self.manageable? org
-    return true
+    User.allowed_to?([:manage_all], :sync_plans, nil, org)
   end
 
 end
