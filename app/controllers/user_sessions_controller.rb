@@ -12,7 +12,7 @@
 
 class UserSessionsController < ApplicationController
   before_filter :require_no_user, :only => [:new, :create]
-  before_filter :require_user, :only => :destroy
+  before_filter :require_user, :only => [:destroy, :set_org]
   before_filter :require_org, :only => :destroy
 
   # we need to skip create, destroy and all unauthenticated* methods
@@ -46,6 +46,17 @@ class UserSessionsController < ApplicationController
     self.current_organization = nil
     notice _("Logout Successful"), {:persist => false}
     redirect_to root_url
+  end
+  
+  def set_org
+    orgs = self.allowed_organizations
+    org = Organization.find(params[:org_id])
+    if org.nil? or !orgs.include?(org)
+      errors "Invalid organization"
+      render :nothing => true and return
+    end
+    self.current_organization = org
+    redirect_to dashboard_index_url
   end
   
   private
