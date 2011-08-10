@@ -82,7 +82,7 @@ class OrganizationsController < ApplicationController
 
   def edit
     @env_choices =  @organization.environments.collect {|p| [ p.name, p.name ]}
-    render :partial=>"edit", :layout => "layouts/tupane_layout"
+    render :partial=>"edit", :layout => "layouts/tupane_layout", :locals=>{:editable=>@organization.editable?}
   end
 
   def update
@@ -149,7 +149,8 @@ class OrganizationsController < ApplicationController
                :create => _('Organization'),
                :name => _('organization'),
                :accessor => :cp_key,
-               :ajax_scroll => items_organizations_path()}
+               :ajax_scroll => items_organizations_path(),
+               :enable_create => Organization.creatable?}
   end
 
 

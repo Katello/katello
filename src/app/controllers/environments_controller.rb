@@ -27,9 +27,10 @@ class EnvironmentsController < ApplicationController
 
   def rules
     manage_rule = lambda{@organization.environments_manageable?}
+    view_rule = lambda{@organization.readable?}
     {
       :new => manage_rule,
-      :edit => manage_rule,
+      :edit => view_rule,
       :create => manage_rule,
       :update => manage_rule,
       :destroy => manage_rule
@@ -54,7 +55,7 @@ class EnvironmentsController < ApplicationController
     @env_labels_json = ActiveSupport::JSON.encode(env_labels)
 
     @selected = @environment.prior.nil? ? env_labels[""] : env_labels[@environment.prior.id]
-    render :partial=>"edit", :layout => "tupane_layout"
+    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:editable=> @organization.environments_manageable?}
   end
 
 

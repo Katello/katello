@@ -146,8 +146,8 @@ class UsersController < ApplicationController
                  :col => ['username'],
                  :create => _('User'),
                  :name => _('user'),
-                 :ajax_scroll => items_users_path()}
-    @panel_options[:enable_create] = User.creatable?
+                 :ajax_scroll => items_users_path(),
+                 :enable_create => User.creatable? }
   end
 
 end
