@@ -124,7 +124,15 @@ class PromotionsController < ApplicationController
   end
 
   def distributions
-    # TODO: this is a placeholder for distributions
+    # render the list of distributions
+    @distributions = []
+    unless @product.nil?
+      @product.repos(@environment).each do |repo|
+        unless repo.distributions.nil?
+          @distributions += repo.distributions
+        end
+      end
+    end
     render :partial=>"distributions"
   end
 
@@ -135,7 +143,6 @@ class PromotionsController < ApplicationController
     @environment = KPEnvironment.first(:conditions => {:name=>params[:env_id], :organization_id=>@organization.id})
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor
-
 
     @product = Product.find(params[:product_id]) if params[:product_id]
   end

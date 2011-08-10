@@ -1,0 +1,19 @@
+= content_for :title do
+  = _("Distribution")
+
+= content_for :navigation do
+  = render_navigation(:expand_all => true, :level => 3)
+
+= content_for :content do
+  .clear
+  %fieldset
+    .grid_2.ra
+      %label #{_("Name")}:
+    .grid_5.la
+      = @distribution.id
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Description")}:
+    .grid_5.la
+      = @distribution.description
