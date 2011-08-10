@@ -20,12 +20,12 @@ class Tag < ActiveRecord::Base
     name
   end
 
-  def self.tags_for(resource_type_name)
+  def self.tags_for(resource_type_name, organization_id)
 
     # step 1 - try to load tags from our model classes
     model_klass = Katello::ModelUtils.table_to_class resource_type_name
     if model_klass
-      return model_klass.list_tags if model_klass.respond_to? :list_tags
+      return model_klass.list_tags(organization_id) if model_klass.respond_to? :list_tags
     end
 
     # step 2 - fetch information from the database
