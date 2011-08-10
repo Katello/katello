@@ -24,7 +24,7 @@ from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_provider
-from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg
+from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, system_exit
 from katello.client.core.utils import ProgressBar
 
 try:
