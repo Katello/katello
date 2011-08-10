@@ -178,6 +178,11 @@ class ChangesetsController < ApplicationController
         when "repo"
             @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
             ChangesetRepo.destroy_all(:repo_id =>id, :changeset_id => @changeset.id) if !adding
+
+        when "distribution"
+            @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
+            ChangesetRepo.destroy_all(:repo_id =>id, :changeset_id => @changeset.id) if !adding
+
         end
       end
       @changeset.updated_at = Time.now
