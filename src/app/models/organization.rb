@@ -97,4 +97,8 @@ class Organization < ActiveRecord::Base
   def self.no_tag_verbs
     [:create]
   end
+
+  def self.tags_for org
+    select('id').all
+  end
 end
