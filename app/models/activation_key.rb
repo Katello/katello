@@ -16,11 +16,11 @@ class ActivationKey < ActiveRecord::Base
   belongs_to :organization
   belongs_to :environment, :class_name => "KPEnvironment"
   belongs_to :user
+  belongs_to :system_template
 
   has_many :key_subscriptions
   has_many :subscriptions, :class_name => "KTSubscription", :through => :key_subscriptions
 
-  has_one :system_template
 
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'key.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'key.description'
@@ -39,5 +39,7 @@ class ActivationKey < ActiveRecord::Base
   # set's up system when registering with this activation key
   def apply_to_system(system)
     system.environment_id = self.environment_id if self.environment_id
+    system.system_template_id = self.system_template_id if self.system_template_id
   end
+
 end

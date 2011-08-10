@@ -25,6 +25,7 @@ class System < ActiveRecord::Base
   include AsyncOrchestration
 
   belongs_to :environment, :class_name => "KPEnvironment", :inverse_of => :systems
+  belongs_to :system_template
 
   validates :environment, :presence => true, :non_locker_environment => true
   validates :name, :presence => true, :no_trailing_space => true
