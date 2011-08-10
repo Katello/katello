@@ -168,17 +168,26 @@ module BreadcrumbHelper
       }
       
       @role.permissions.each{ |perm|
-        if perm.resource_type.global?
-                    add_crumb_node!(bc, permission_global_bc_id(perm), "", perm.id, ['roles', 'role_permissions', 'globals'],
-                      {:client_render => true}, { :global => perm.resource_type.global? })
+        add_permission_bc(bc, perm, true)
+      }
+      
+      bc.to_json
+    end
+    
+    def add_permission_bc bc, perm, adjust_count
+      if perm.resource_type.global?
+                  add_crumb_node!(bc, permission_global_bc_id(perm), "", perm.id, ['roles', 'role_permissions', 'globals'],
+                    {:client_render => true}, { :global => perm.resource_type.global? })
+        if adjust_count
           bc["global"][:count] += 1
-        else
-          add_crumb_node!(bc, permission_bc_id(perm.organization, perm), "", perm.id, ['roles', 'role_permissions', organization_bc_id(perm.organization)],
-                      {:client_render => true}, { :organization => "organization_#{perm.organization_id}", :global => perm.resource_type.global? })
+        end
+      else
+        add_crumb_node!(bc, permission_bc_id(perm.organization, perm), "", perm.id, ['roles', 'role_permissions', organization_bc_id(perm.organization)],
+                    {:client_render => true}, { :organization => "organization_#{perm.organization_id}", :global => perm.resource_type.global? })
+        if adjust_count
           bc[organization_bc_id(perm.organization)][:count] += 1
         end
-      }
-      bc.to_json
+      end
     end
     
     def organization_bc_id organization

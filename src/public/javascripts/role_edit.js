@@ -15,6 +15,8 @@
  * A small javascript file needed to load things whenever a role is opened for editing
  *
  */
+var roles_tree = {};
+
 var roleActions = (function($){
     var opened = false,
         open_panel = undefined,
@@ -162,6 +164,25 @@ var roleActions = (function($){
                 }
             });
         },
+        savePermission = function(){
+            var org_id = current_crumb.split('_')[1],
+                form = $('#add_permission_form');
+            
+            form.find("#organization_id").val(org_id);
+            
+            $.ajax({
+               type     : "POST",
+               url      : "/roles/" + $('#role_id').val() + "/create_permission/",
+               cache    : false,
+               data     : $('#add_permission_form').serialize(),
+               dataType : 'json',
+               success  : function(data){
+                   $.extend(roles_breadcrumb, data);
+                   roles_tree.rerender_content();
+                   toggle('permission_add');
+               }
+            });
+        },
         setCurrentCrumb = function(hash_id){
             current_crumb = hash_id;
         };
@@ -170,7 +191,8 @@ var roleActions = (function($){
         toggle                  :  toggle,
         close                   :  close,
         getPermissionDetails    :  getPermissionDetails,
-        setCurrentCrumb         :  setCurrentCrumb
+        setCurrentCrumb         :  setCurrentCrumb,
+        savePermission          :  savePermission
     };
     
 })(jQuery);
@@ -209,7 +231,7 @@ var templateLibrary = (function($){
             var html = '<ul>',
                 options = options ? options : {};
             
-            html += listItem(items['global'], items['global'].name, items['global'].count, false);
+            html += listItem('global', items['global'].name, items['global'].count, false);
             
             for( item in items){
                 if( items.hasOwnProperty(item) ){
@@ -274,7 +296,7 @@ var rolesRenderer = (function($){
                 return templateLibrary.permissionsList(roles_breadcrumb, organization_id);
             }
         },
-        sort = function() {
+        sort = function(hash_id) {
             $(".will_have_content").find("li").sortElements(function(a,b){
                     var a_html = $(a).find(".sort_attr").html();
                     var b_html = $(b).find(".sort_attr").html();
@@ -283,7 +305,10 @@ var rolesRenderer = (function($){
                                 b_html.toUpperCase() ? 1 : -1;
                     }
             });
-            console.log('sorted');
+          
+            if( hash_id === "role_permissions" ){
+                $('#global').parent().prependTo($(".will_have_content ul"));  
+            }
         },
         setTreeHeight = function(){
             var height = $('.left').height();
@@ -351,7 +376,7 @@ var pageActions = (function($){
         });
         
         $('#save_permission_button').click(function(){
-            
+            roleActions.savePermission();
         });
     };
     
@@ -363,21 +388,21 @@ var pageActions = (function($){
 
 $(function() {
   
-    var roles_tree = sliding_tree("roles_tree", { 
+  roles_tree = sliding_tree("roles_tree", { 
                           breadcrumb      :  roles_breadcrumb,
                           default_tab     :  "roles",
                           bbq_tag         :  "role_edit",
                           render_cb       :  rolesRenderer.render,
                           enable_search   :  true,
                           tab_change_cb   :  function(hash_id) {
-                              //rolesRenderer.sort();
+                                rolesRenderer.sort(hash_id);
                                 rolesRenderer.setTreeHeight();
                                 rolesRenderer.setStatus(hash_id);
                                 rolesRenderer.handleButtons(hash_id);
                                 roleActions.setCurrentCrumb(hash_id);
                           }
                       });
-                        
+                 
     rolesRenderer.init();
     pageActions.registerEvents();
 
