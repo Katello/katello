@@ -41,22 +41,23 @@ class Config(object):
     
     def __init__(self):
         """
-        returns a ConfigParser with the configuration file read into the object
+        Initializes a ConfigParser and reads the configuration file into the object
+        """
+        if Config.parser:
+            return
+        
+        Config.parser = ConfigParser.RawConfigParser()
+        
+        Config.parser.readfp(open(Config.PATH, 'r'), Config.PATH)
+    
+    @staticmethod
+    def save():
+        """
+        Save the current state of the ConfigParser to file
         """
         if not Config.parser:
-            Config.parser = ConfigParser.RawConfigParser()
-            
-            # this file must exist and be populated
-            Config.parser.readfp(open(Config.PATH), Config.PATH)
-            
-            # then read in files that may or may not exist.
-            # 1. look for environment variable describing files's location
-            # 2. look for config file in /home/<user>/.katello/
-            optionals = []
-            env_var = os.environ.get(Config.ALT)
-            
-            # RawConfigParser.read() throws NoneType exception if any arguments happen to be None
-            if env_var is not None: optionals.append(env_var)
-            
-            optionals.append(os.path.expanduser(Config.USER))
-            Config.parser.read(optionals)
+            raise Exception('Config.parser has not been initialized.')
+        
+        # only writes to /etc/katello/client.conf
+        Config.parser.write(open(Config.PATH, 'w'))
+        
