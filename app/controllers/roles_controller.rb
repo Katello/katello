@@ -84,7 +84,7 @@ class RolesController < ApplicationController
     # render the appropriate partial depending on whether or not the role is a self role
     @user = @role.self_role_for_user
     if @user.nil?
-      render :partial=>"edit", :layout => "tupane_layout", :locals=>{:role=>@role}
+      render :partial=>"edit", :layout => "tupane_layout", :locals=>{:role=>@role, :resource_types => resource_types }
     else
       render :partial=>"self_role_edit", :layout => "tupane_layout", :locals=>{:role=>@role, :editable=>@user.editable?}
     end
@@ -135,11 +135,16 @@ class RolesController < ApplicationController
   end
 
   def verbs_and_scopes
-    verbs = Verb.verbs_for(params[:resource_type]).collect {|name, display_name| VirtualTag.new(name, display_name)}
-    verbs.sort! {|a,b| a.display_name <=> b.display_name}
-    scopes = Tag.tags_for(params[:resource_type]).collect { |t| VirtualTag.new(t.name, t.display_name) }
-
-    render :json=> {:verbs => verbs, :scopes => scopes}
+    details= {}
+    
+    resource_types.each do |type, value|
+      details[type] = {}
+      details[type][:verbs] = Verb.verbs_for(type).collect {|name, display_name| VirtualTag.new(name, display_name)}
+      details[type][:verbs].sort! {|a,b| a.display_name <=> b.display_name}
+      details[type][:tags] = Tag.tags_for(type, params[:organization_id]).collect { |t| VirtualTag.new(t.name, t.display_name) }
+    end
+    
+    render :json => details
   end
 
   def update_permission
