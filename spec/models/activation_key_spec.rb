@@ -102,4 +102,23 @@ describe ActivationKey do
     @akey.subscriptions = [s,s2]
     @akey.subscriptions.last.subscription.should == 'def123'
   end
+
+  describe "#apply_to_system" do
+
+    before(:each) do
+      @system = System.new
+    end
+
+    it "assignes environment to the system" do
+      @akey.apply_to_system(@system)
+      @system.environment.should == @akey.environment
+    end
+
+    it "assignes template to the system" do
+      @akey.apply_to_system(@system)
+      @system.system_template.should == @akey.system_template
+    end
+
+  end
+
 end

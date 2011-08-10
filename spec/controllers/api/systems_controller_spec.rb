@@ -80,6 +80,44 @@ describe Api::SystemsController do
         response.code.should == "400"
       end
     end
+
+    context "when activation keys are provided" do
+
+      before :each do
+        @system_template = SystemTemplate.create!(:name => "system template", :environment => @environment_1)
+        @activation_key_1 = ActivationKey.create!(:environment => @environment_1,
+                                                  :organization => @organization,
+                                                  :system_template => @system_template,
+                                                  :name => "activation_key_1")
+        @activation_key_1.user = @mock_user
+        @activation_key_2 = ActivationKey.create!(:environment => @environment_1, :organization => @organization, :name => "activation_key_2")
+        @system = mock(System)
+      end
+
+      context "and they are correct" do
+
+        it "uses user credentials of the user associated with the first activation key" do
+          User.should_receive("current=",@activation_key_1.user)
+        end
+
+        it "set the environment according the activation keys" do
+          System.should_receive(:new).and_return(@system)
+          @controller.stub(:find_activation_keys).and_return([@activation_key_1,@activation_key_2])
+          @activation_key_2.should_receive(:apply_to_system)
+          @activation_key_1.should_receive(:apply_to_system)
+          @system.should_receive(:save!)
+          post :activate, :organization_id => @organization.cp_key, :activation_keys => "#{@activation_key_1.name},#{@activation_key_2.name}"
+        end
+      end
+
+      context "and they are not in the system" do
+        it "set the environment according the activation keys" do
+          post :activate, :organization_id => @organization.cp_key, :activation_keys => "notInSystem"
+          response.code.should == "404"
+        end
+      end
+    end
+
   end
 
   describe "list systems" do

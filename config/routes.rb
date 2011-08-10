@@ -213,7 +213,13 @@ Src::Application.routes.draw do
   match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
 
 
+
   namespace :api do
+    class RegisterWithActivationKeyContraint
+      def matches?(request)
+        request.params[:activation_keys]
+      end
+    end
     match '/' => 'root#resource_list'
 
     resources :systems, :only => [:show, :destroy, :create, :index, :update] do
@@ -259,6 +265,7 @@ Src::Application.routes.draw do
         get :providers
       end
       resources :systems, :only => [:index]
+      match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :activation_keys, :only => [:index]
     end
 
@@ -309,6 +316,7 @@ Src::Application.routes.draw do
     end
 
     # support for rhsm --------------------------------------------------------
+    match '/consumers' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
     resources :consumers, :controller => 'systems'
     match '/owners/:organization_id/environments' => 'environments#index', :via => :get
     match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
