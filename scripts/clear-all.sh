@@ -73,8 +73,10 @@ if [ $LOCAL_PULP == 1 ]; then
  fi
  sudo service pulp-server init
  echo "wiping pulp repos..."
+ sudo rm /var/lib/pulp/cache/* -rf
+ sudo rm /var/lib/pulp/packages/* -rf
+ sudo rm /var/lib/pulp/published/* -rf
  sudo rm /var/lib/pulp/repos/* -rf
- sudo rm /var/lib/pulp/published/repos/* -rf
  sudo service httpd restart
 
 fi
