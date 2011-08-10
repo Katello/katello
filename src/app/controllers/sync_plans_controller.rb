@@ -59,11 +59,13 @@ class SyncPlansController < ApplicationController
                  :col => columns,
                  :create => _('Plan'),
                  :name => _('plan'),
-                 :ajax_scroll => items_sync_plans_path()}
+                 :ajax_scroll => items_sync_plans_path(),
+                 :enable_create => SyncPlan.manageable?(current_organization) }
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:plan => @plan}
+    render :partial => "edit", :layout => "tupane_layout",
+           :locals => {:plan=>@plan, :editable=>SyncPlan.manageable?(current_organization)}
   end
 
   def update
