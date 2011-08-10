@@ -58,23 +58,24 @@
     #permission_add.slide_up_container
       %h2
         &nbsp; #{_("Add Permission")}
-      %input{:type => "hidden", :name => "role_id", :value => @role.id, :id => "role_id" }
-      .grid_2
-        %label #{_("Permission For:")}
-        %select{ :id => 'resource_type', :name => 'resource_type' }
-          - resource_types.each do |key, value|
-            %option{ "value" => key } #{value['name']}
-      .grid_2.ra
-        %label #{_("Verb(s)")}
-        %select{ :id => "verbs", :name => 'verbs', :multiple => 'multiple' }
-      .grid_2.ra
-        %label #{_("On:")}
-        %select{ :id => "tags", :name => 'tags', :multiple => 'multiple' }
-      #permission_button_bar.clear
-        -#.button#previous_button.fl{:tabindex => 2}
-          -##{_("Previous")}
-        .button#save_permission_button.fr{:tabindex => 2}
-          #{_("Done")}
+      %form{ :id => "add_permission_form" }
+        %input{:type => "hidden", :name => "permission[organization_id]", :value => '', :id => "organization_id" }
+        .grid_2
+          %label #{_("Permission For:")}
+          %select{ :id => 'resource_type', :name => 'permission[resource_type_attributes[name]]' }
+            - resource_types.each do |key, value|
+              %option{ "value" => key } #{value['name']}
+        .grid_2.ra
+          %label #{_("Verb(s)")}
+          %select{ :id => "verbs", :name => 'permission[verb_values]', :multiple => 'multiple' }
+        .grid_2.ra
+          %label #{_("On:")}
+          %select{ :id => "tags", :name => 'permission[tag_names]', :multiple => 'multiple' }
+        #permission_button_bar.clear
+          -#.button#previous_button.fl{:tabindex => 2}
+            -##{_("Previous")}
+          .button#save_permission_button.fr{:tabindex => 2}
+            #{_("Done")}
 
     #roles_status
     #sliding_tree_actionbar.clickable
