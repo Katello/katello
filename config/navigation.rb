@@ -46,6 +46,10 @@ SimpleNavigation::Configuration.run do |navigation|
               package_sub.item :details, _("Details"),  erratum_path(@errata.id), :class=>"navigation_element"
               package_sub.item :details, _("Packages"),  packages_erratum_path(@errata.id), :class=>"navigation_element"
           end
+          if !@distribution.nil?
+              package_sub.item :details, _("Details"), distribution_path(@distribution.id), :class=>"navigation_element"
+              package_sub.item :details, _("Filelist"), filelist_distribution_path(@distribution.id), :class=>"navigation_element"
+          end
       end
       content_sub.item :changeset, _("Changeset History"), changesets_path()
       #content_sub.item :updates_bundle, _("Updates Bundle"), '#', :class => 'disabled', :if => Proc.new { false }

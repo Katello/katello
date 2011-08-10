@@ -1,2 +1,10 @@
 %ul.expand_list
-  #{_("No distributions available.")}
+  -if @distributions.empty?
+    #{_("No distributions available.")}
+
+  - @distributions.each do |distribution|
+    %li
+
+      %a{:class => "fr content_add_remove remove_distribution st_button","data-display_name"=> distribution.id, "data-id" => distribution.id, "data-type" => "distribution", "data-product_id" => @product.id, :id => "add_remove_distribution_#{distribution.id}"}
+      %span.block{:id => distribution.id, "data-ajax_url" => distribution_path(distribution.id)}
+        = distribution.id
