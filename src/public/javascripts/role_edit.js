@@ -18,6 +18,7 @@
 var roleActions = (function($){
     var opened = false,
         open_panel = undefined,
+        current_crumb = undefined,
         toggle_list = {
             'role_edit' : function(){
                 var name_box = $('.edit_name_text'),
@@ -42,13 +43,38 @@ var roleActions = (function($){
                 return options;
             },
             'permission_add' : function(){
-                var options = {};
+                var options = {},
+                    set_verbs_and_tags = function(type){
+                        var i, length=0,
+                            verbs_select = $('#verbs'),
+                            tags_select = $('#tags'),
+                            verbs = roles_breadcrumb[current_crumb].permission_details[type].verbs,
+                            tags = roles_breadcrumb[current_crumb].permission_details[type].tags;
+                    
+                        length = verbs.length;
+                        verbs_select.empty();
+                        for( i=0; i < length; i+= 1){
+                            verbs_select.append('<option value="' + verbs[i].name + '">' + verbs[i].display_name + "</option>");
+                        }
+                        
+                        length = tags.length;
+                        tags_select.empty();
+                        for( i=0; i < length; i+= 1){
+                            tags_select.append('<option value="' + tags[i].name + '">' + tags[i].display_name + "</option>");
+                        }        
+                    };
+                
+                set_verbs_and_tags('organizations');
+                
+                $('#resource_type').change(function(event){
+                    set_verbs_and_tags(event.currentTarget.value);
+                });
                 
                 return options;
             }
-        };
+        },
 
-    var toggle = function(id){
+        toggle = function(id){
             var animate_time = 500,
                 slide_window = $('#' + id),
                 options = {};
@@ -122,11 +148,29 @@ var roleActions = (function($){
             if (opened) {
                 toggle(id, 0);
             }
+        },
+        getPermissionDetails = function(hash_id){
+            var id = hash_id.split('_');
+            
+            $.ajax({
+                type    : "GET",
+                url     : '/roles/' + id + '/resource_type/verbs_and_scopes',
+                cache   : false,
+                dataType: 'json',
+                success : function(data){
+                    roles_breadcrumb[hash_id].permission_details = data;
+                }
+            });
+        },
+        setCurrentCrumb = function(hash_id){
+            current_crumb = hash_id;
         };
 
     return {
-        toggle  :  toggle,
-        close   :  close
+        toggle                  :  toggle,
+        close                   :  close,
+        getPermissionDetails    :  getPermissionDetails,
+        setCurrentCrumb         :  setCurrentCrumb
     };
     
 })(jQuery);
@@ -267,16 +311,55 @@ var rolesRenderer = (function($){
             if( hash_id === 'roles' ){
                 $('#roles_status').html(i18n.rolesStatus);
             }
+        },
+        handleButtons = function(hash_id){
+            var type = hash_id.split('_')[0];
+
+            if( type === 'organization' || type === 'permission' ){
+                $('#add_permission').removeClass('disabled');
+                roleActions.getPermissionDetails(hash_id);
+            } else {
+                $('#add_permission').addClass('disabled');
+            }
         };
     
     return {
         init            :   init,
         render          :   render,
         sort            :   sort,
-        setTreeHeight    :   setTreeHeight,
-        setStatus       :   setStatus
+        setTreeHeight   :   setTreeHeight,
+        setStatus       :   setStatus,
+        handleButtons   :   handleButtons
     }
+    
 }(jQuery));
+
+var pageActions = (function($){
+    var registerEvents = function(){
+        $('#edit_role').live('click', function() {
+            if ($(this).hasClass('disabled')){
+                return false;
+            }
+            roleActions.toggle('role_edit');
+        });
+        
+        $('#add_permission').live('click', function() {
+            if ($(this).hasClass('disabled')){
+                return false;
+            }
+            roleActions.toggle('permission_add');
+        });
+        
+        $('#save_permission_button').click(function(){
+            
+        });
+    };
+    
+    return {
+        registerEvents  :  registerEvents
+    };
+    
+})(jQuery);
 
 $(function() {
   
@@ -290,20 +373,12 @@ $(function() {
                               //rolesRenderer.sort();
                                 rolesRenderer.setTreeHeight();
                                 rolesRenderer.setStatus(hash_id);
+                                rolesRenderer.handleButtons(hash_id);
+                                roleActions.setCurrentCrumb(hash_id);
                           }
                       });
                         
     rolesRenderer.init();
-    $('#edit_role').live('click', function() {
-        if ($(this).hasClass('disabled')){
-            return false;
-        }
-        roleActions.toggle('role_edit');
-    });
-    $('#add_permission').live('click', function() {
-        if ($(this).hasClass('disabled')){
-            return false;
-        }
-        roleActions.toggle('permission_add');
-    });
+    pageActions.registerEvents();
+
 });
