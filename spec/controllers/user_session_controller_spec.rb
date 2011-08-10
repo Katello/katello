@@ -14,11 +14,10 @@ require 'spec_helper'
 
 describe UserSessionsController do
   
-  include LoginHelperMethods
   include LocaleHelperMethods
+  include OrganizationHelperMethods
   
     before(:each) do
-      login_user
       set_default_locale
     end
 
@@ -32,9 +31,23 @@ describe UserSessionsController do
       @user.username = "shaggy"
       @user.password = "norville"
       @user.save 
+
+      controller.stub!(:current_user).and_return(@user)
     end    
     
-    it "should have valid org to select" do 
+    it "should have valid org selected" do 
+      org = new_test_org
+      @user.own_role.allow([:read], :providers, nil, org)
+      User.current = @user
+      post :set_org, {:org_id => org.id } 
+      response.should redirect_to(dashboard_index_url)
+    end
+
+    it "should not have valid org selected" do 
+      controller.should_receive(:errors)
+      org = new_test_org
+      User.current = @user
+      post :set_org, {:org_id => org.id } 
     end
     
   end  
