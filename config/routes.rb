@@ -85,20 +85,6 @@ Src::Application.routes.draw do
       get :import_status
     end
   end
-  match '/consumers/export_status' => 'consumers#export_status', :via => :get
-
-  resources :consumers do
-    member do
-      get :export
-    end
-    resources :entitlements
-    resources :certificates do
-      collection do
-        get :serials
-      end
-    end
-  end
-  match '/consumers/:id' => 'consumers#re_register', :via => :post
 
   resources :entitlements
   resources :users do
