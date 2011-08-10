@@ -22,11 +22,25 @@ task :api => :environment do
     puts "Generating #{filename}"
     File.open(File.join(RAILS_ROOT, filename), "w") do |f|
       f.puts "Katello API"
+      f.puts "-----------"
+      f.puts "generated on #{Time.new()}"
       f.puts("")
       f.puts "%-6s %-50s %s" % ["Verb", "Path", "Controller"]
       f.puts "%-6s %-50s %s" % ["====", "====", "=========="]
       routes.each do |r|
         f.puts "%-6s %-50s %s" % [r[:verb], r[:path], r[:controller]]
+      end
+    end
+  elsif ENV['TRAC']
+    filename = 'api.trac'
+    puts "Generating #{filename}"
+    File.open(File.join(RAILS_ROOT, filename), "w") do |f|
+      f.puts "== Katello API =="
+      f.puts "generated on #{Time.new()}"
+      f.puts("")
+      f.puts "||'''Verb'''||'''Path'''||'''Controller'''||"
+      routes.each do |r|
+        f.puts "||#{r[:verb]}||#{r[:path]}||#{r[:controller]}||"
       end
     end
   else
@@ -35,6 +49,7 @@ task :api => :environment do
     File.open(File.join(RAILS_ROOT, filename), "w") do |f|
       f.puts "<html><head><title>Katello API</title></head><body>"
       f.puts "<h2>Katello API</h2>"      
+      f.puts "<h4>generated on #{Time.new()}</h4>"
       f.puts "<table border=1><tr><th>Verb</th><th>Path</th><th>Controller</th></tr>"
       routes.each do |r|
         f.puts "<tr><td>#{r[:verb]}</td><td>#{r[:path]}</td><td>#{r[:controller]}</td></tr>"
