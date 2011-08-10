@@ -47,11 +47,10 @@ class ProductAPI(KatelloAPI):
         else:
             return None
 
-    def create(self, provId, name, description, url):
+    def create(self, provId, name, description):
         product = {
             "name": name,
-            "description": description,
-            "url": url
+            "description": description
         }
 
         path = "/api/providers/%s/product_create" % str(provId)
