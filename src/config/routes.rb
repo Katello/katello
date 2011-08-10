@@ -72,6 +72,12 @@ Src::Application.routes.draw do
     end
   end
 
+  resources :distributions, :only => [:show] do
+    member do
+      get :filelist
+    end
+  end
+
   resources :products do
     member do
       get :sync
@@ -293,6 +299,7 @@ Src::Application.routes.draw do
     resources :changesets, :only => [:show]
     resources :errata, :only => [:show]
     resources :distributions, :only => [:show]
+
     resources :users
 
     resources :tasks, :only => [:show]
