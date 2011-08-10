@@ -63,7 +63,7 @@ class SyncPlan < ActiveRecord::Base
   end
 
   # returns list of virtual permission tags for the current user
-  def self.list_tags
+  def self.list_tags organization_id
     []
   end
 
