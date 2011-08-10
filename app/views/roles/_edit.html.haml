@@ -41,7 +41,7 @@
         .slider_one.has_content.slider.will_have_content
         .slider_two.no_content.slider
     
-    #role_edit
+    #role_edit.slide_up_container
       %h2
         &nbsp; #{_("Role Details")}
       %input{:type => "hidden", :name => "role_id", :value => @role.id, :id => "role_id" }
@@ -54,6 +54,12 @@
         .grid_2.ra
           %label #{_("Description:")}
         .grid_3.la.editable.edit_description{'name' => 'role[description]'} #{@role.description}
+
+    #permission_add.slide_up_container
+      %h2
+        &nbsp; #{_("Add Permission")}
+      %input{:type => "hidden", :name => "role_id", :value => @role.id, :id => "role_id" }
+
 
     #roles_status
     #sliding_tree_actionbar.clickable
