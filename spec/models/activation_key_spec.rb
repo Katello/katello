@@ -106,7 +106,9 @@ describe ActivationKey do
   describe "#apply_to_system" do
 
     before(:each) do
-      @system = System.new
+      Pulp::Consumer.stub!(:create).and_return({:uuid => "1234", :owner => {:key => "1234"}})
+      Candlepin::Consumer.stub!(:create).and_return({:uuid => "1234", :owner => {:key => "1234"}})
+      @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"})
     end
 
     it "assignes environment to the system" do
@@ -117,6 +119,12 @@ describe ActivationKey do
     it "assignes template to the system" do
       @akey.apply_to_system(@system)
       @system.system_template.should == @akey.system_template
+    end
+
+    it "creates an association between the activation key and the system" do
+      @akey.apply_to_system(@system)
+      @system.save!
+      @system.activation_keys.should include(@akey)
     end
 
   end
