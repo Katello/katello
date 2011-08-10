@@ -40,8 +40,8 @@ Src::Application.routes.draw do
 
   resources :dashboard do
   end
-  resources :content do
-  end
+
+  
   resources :systems do
     member do
       get :packages
@@ -86,7 +86,7 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :entitlements
+  
   resources :users do
     collection do
       get :auto_complete_search
@@ -99,8 +99,6 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :nodes, :constraints => {:id => /[^\/]+/}, :only => [:index, :show]
-  resources :puppetclasses, :only => [:index]
   resources :providers do
     resources :products do
       resources :repositories
@@ -187,7 +185,6 @@ Src::Application.routes.draw do
     post 'set_org'
   end
 
-  resource :account
   root :to => "user_sessions#new"
 
   match '/login' => 'user_sessions#new'
