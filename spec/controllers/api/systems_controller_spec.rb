@@ -156,6 +156,13 @@ describe Api::SystemsController do
       response.body.should == @sys.to_json
       response.should be_success
     end
+    
+    it "should change the location" do
+      Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true)
+      post :update, :id => uuid, :location => "never-neverland"
+      response.body.should == @sys.to_json
+      response.should be_success
+    end
   end
 
   describe "list errata" do

@@ -11,31 +11,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-
 $(document).ready(function() {
-
-    $(".delete_environment").click(function() {
-       var button = $(this);
-       if (button.hasClass('disabled')){
-          return false;
-       }
-       var answer = confirm(button.attr('data-confirm-text'));
-       if (answer) {
-            button.addClass('disabled');
-            var url = button.attr('data-url');
-            $.ajax({
-                type: "DELETE",
-                url: url,
-                cache: false,
-                success: function(){
-                   panel.panelAjax('', button.attr('data-forward'), $('#panel'));
-                   panel.closeSubPanel($('#subpanel'));
-                },
-                error: function() {button.removeClass('disabled')}
-            });            
-       }
-    });
-
     $('.edit_env_name').each(function() {
         var button = $(this);
 
