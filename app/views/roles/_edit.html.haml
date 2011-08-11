@@ -2,13 +2,11 @@
   :javascript
     var roles_breadcrumb = $.parseJSON('#{escape_javascript(generate_roles_breadcrumb())}');
     localize({
-      "add"                : '+ #{_('Add')}',
-      "remove"             : '#{_('Remove')}',
-      "loading"            : "#{_('Loading Role')}",
+      "remove"        : '#{_('Remove')}',
+      "loading"       : "#{_('Loading Role')}",
+      "rolesStatus"   : "#{_('Please select Organizations to view and add permissions for this role or Users to see current users with this role.')}",
       "edit_role_details"  : '#{_("Edit Role Details")}',
-      "close_role_details" : '#{_("Close Role Details")}',
-      "rolesStatus"        : "#{_('Please select Organizations to view and add permissions for this role or Users to see current users with this role.')}",
-      "usersStatus"        : "#{_('You may add or remove users from this role by clicking Add or Remove beside their name.')}",
+      'close_role_details' : '#{_("Close Role Details")}',
     });
 
 = javascript :role_edit
@@ -65,8 +63,6 @@
         .grid_2
           %label #{_("Permission For:")}
           %select{ :id => 'resource_type', :name => 'permission[resource_type_attributes[name]]' }
-            - resource_types.each do |key, value|
-              %option{ "value" => key } #{value['name']}
         .grid_2.ra
           %label #{_("Verb(s)")}
           %select{ :id => "verbs", :name => 'permission[verb_values]', :multiple => 'multiple' }
