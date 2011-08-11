@@ -183,15 +183,17 @@ var roleActions = (function($){
         getPermissionDetails = function(hash_id){
             var id = hash_id.split('_');
             
-            $.ajax({
-                type    : "GET",
-                url     : '/roles/' + id + '/resource_type/verbs_and_scopes',
-                cache   : false,
-                dataType: 'json',
-                success : function(data){
-                    roles_breadcrumb[hash_id].permission_details = data;
-                }
-            });
+            if( !roles_breadcrumb[hash_id].permission_details ){
+                $.ajax({
+                    type    : "GET",
+                    url     : '/roles/' + id + '/resource_type/verbs_and_scopes',
+                    cache   : false,
+                    dataType: 'json',
+                    success : function(data){
+                        roles_breadcrumb[hash_id].permission_details = data;
+                    }
+                });
+            }
         },
         savePermission = function(){
             var org_id = current_crumb.split('_')[1],
