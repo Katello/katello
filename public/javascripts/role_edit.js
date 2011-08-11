@@ -21,6 +21,7 @@ var roleActions = (function($){
     var opened = false,
         open_panel = undefined,
         current_crumb = undefined,
+        current_organization = undefined,
         toggle_list = {
             'role_edit' : function(){
                 var name_box = $('.edit_name_text'),
@@ -47,7 +48,7 @@ var roleActions = (function($){
             'permission_add' : function(){
                 var options = {},
                     set_types = function(){
-                        var types = roles_breadcrumb[current_crumb].permission_details,
+                        var types = roles_breadcrumb[current_organization].permission_details,
                             types_select = $('#resource_type');
                         
                         types_select.empty();
@@ -67,8 +68,8 @@ var roleActions = (function($){
                         var i, length=0,
                             verbs_select = $('#verbs'),
                             tags_select = $('#tags'),
-                            verbs = roles_breadcrumb[current_crumb].permission_details[type].verbs,
-                            tags = roles_breadcrumb[current_crumb].permission_details[type].tags;
+                            verbs = roles_breadcrumb[current_organization].permission_details[type].verbs,
+                            tags = roles_breadcrumb[current_organization].permission_details[type].tags;
                     
                         length = verbs.length;
                         verbs_select.empty();
@@ -176,6 +177,9 @@ var roleActions = (function($){
         setCurrentCrumb = function(hash_id){
             current_crumb = hash_id;
         },
+        setCurrentOrganization = function(hash_id){
+            current_organization = hash_id;
+        },
         getPermissionDetails = function(hash_id){
             var id = hash_id.split('_');
             
@@ -261,7 +265,8 @@ var roleActions = (function($){
         getPermissionDetails    :  getPermissionDetails,
         setCurrentCrumb         :  setCurrentCrumb,
         savePermission          :  savePermission,
-        handleContentAddRemove  :  handleContentAddRemove
+        handleContentAddRemove  :  handleContentAddRemove,
+        setCurrentOrganization  :  setCurrentOrganization
     };
     
 })(jQuery);
@@ -335,7 +340,37 @@ var templateLibrary = (function($){
                         
             }
             
-            return '<li>' + anchor + '<div class="no_slide"><span class="sort_attr">'  + name + '</span></div></li>';
+            return '<li>' + anchor + '<div class="slide_link" id="' + permission_id + '"><span class="sort_attr">'  + name + '</span></div></li>';
+        },
+        permissionItem = function(permission){
+            var i = 0, length = 0,
+                html = '<div class="permission_detail">';
+            
+            html += '<div class="permission_detail_container"><label class="grid_3 ra">Name: </label><span>' + permission.name + '</span></div>';
+            html += '<div class="permission_detail_container"><label class="grid_3 ra">Description: </label><span>' + permission.description + '</span></div>';
+                
+            html += '<div class="permission_detail_container"><label class="grid_3 ra">Permission For: </label><span>' + permission.type + '</span></div>';
+            
+            html += '<div class="permission_detail_container"><label class="grid_3 ra">Verb(s): </label><span>'
+            length = permission.verbs.length;
+            for( i=0; i < length; i += 1){
+                html += permission.verbs[i].verb;
+                if( i !== length-1 ){
+                    html += ',';
+                }
+            }
+            html += '</span></div><div class="permission_detail_container"><label class="grid_3 ra">On:</label><span>';
+            
+            length = permission.tags.length;
+            for( i=0; i < length; i += 1){
+                html += permission.tags[i].name;
+                if( i !== length-1 ){
+                    html += ',';
+                }
+            }
+            html += '</span></div></div>';
+
+            return html;
         },
         usersListItem = function(user_id, name, has_role, showButton) {
             var anchor = "";
@@ -369,7 +404,8 @@ var templateLibrary = (function($){
         list                :    list,
         organizationsList   :    organizationsList,
         permissionsList     :    permissionsList,
-        usersList           :    usersList
+        usersList           :    usersList,
+        permissionItem      :    permissionItem
     }
 }(jQuery));
 
@@ -386,15 +422,16 @@ var rolesRenderer = (function($){
             } else {
                 var split = hash.split("_"),
                     page = split[0],
-                    organization_id = split[1],
-                    permission_id = split[2];
+                    organization_id = split[1];
 
-                render_cb(getContent(page, organization_id, permission_id));
+                render_cb(getContent(page, hash, organization_id));
             }
         },
-        getContent = function(key, organization_id, permission_id){
+        getContent = function(key, hash, organization_id){
             if( key === 'organization' ){
                 return templateLibrary.permissionsList(roles_breadcrumb, organization_id);
+            } else if( key === 'permission' ){
+                return templateLibrary.permissionItem(roles_breadcrumb[hash]);
             }
         },
         sort = function(hash_id) {
@@ -413,8 +450,8 @@ var rolesRenderer = (function($){
         },
         setTreeHeight = function(){
             var height = $('.left').height();
-            $('.sliding_list').css({ 'height' : height - 91 });
-            $('.slider').css({ 'height' : height - 91 });
+            $('.sliding_list').css({ 'height' : height - 20 });
+            $('.slider').css({ 'height' : height - 20 });
             $('#panel_main').height(height);
             $('#panel_main .jspPage').height(height);
         },
@@ -446,8 +483,10 @@ var rolesRenderer = (function($){
             if( type === 'organization' || type === 'permission' ){
                 $('#add_permission').removeClass('disabled');
                 roleActions.getPermissionDetails(hash_id);
+                roleActions.setCurrentOrganization(hash_id);
             } else {
                 $('#add_permission').addClass('disabled');
+                roleActions.setCurrentOrganization(false);
             }
         };
     
