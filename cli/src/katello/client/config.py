@@ -15,12 +15,13 @@
 
 
 import os
-from iniparse import INIConfig as Base
+import ConfigParser
 
 
-class Config(Base):
+class Config(object):
     """
     The katello client configuration.
+    Treated at a static class.
     @cvar PATH: The absolute path to the config directory.
     @type PATH: str
     @cvar USER: The path to an alternate configuration file
@@ -35,105 +36,28 @@ class Config(Base):
     PATH = os.path.join('/etc/katello', FILE)
     USER = os.path.join('~/.katello', FILE)
     ALT = 'KATELLO_CLIENT_OVERRIDE'
-
+    
+    parser = None
+    
     def __init__(self):
         """
-        Open the configuration.
-        Merge (in) alternate configuration file when specified
-        by environment variable.
+        Initializes a ConfigParser and reads the configuration file into the object
         """
-        fp = open(self.PATH)
-        try:
-            Base.__init__(self, fp)
-            altpath = self.__altpath()
-            if altpath:
-                alt = self.__read(altpath)
-                self.__mergeIn(alt)
-        finally:
-            fp.close()
-
-    def write(self):
+        if Config.parser:
+            return
+        
+        Config.parser = ConfigParser.RawConfigParser()
+        
+        Config.parser.readfp(open(Config.PATH, 'r'), Config.PATH)
+    
+    @staticmethod
+    def save():
         """
-        Write the configuration.
+        Save the current state of the ConfigParser to file
         """
-        altpath = self.__altpath()
-        if altpath:
-            alt = self.__read(altpath)
-            self.__mergeOut(alt)
-            path = altpath
-            s = str(alt)
-        else:
-            path = self.PATH
-            s = str(self)
-        fp = open(path, 'w')
-        try:
-            fp.write(s)
-        finally:
-            fp.close()
-
-    def __mergeIn(self, other):
-        """
-        Merge (in) the specified I{other} configuration.
-        @param other: The conf to merge in.
-        @type other: Base
-        @return: self
-        @rtype: L{Config}
-        """
-        for section in other:
-            if section not in self:
-                continue
-            sA = self[section]
-            sB = other[section]
-            for key in sB:
-                value = sB[key]
-                setattr(sA, key, value)
-        return self
-
-    def __mergeOut(self, other):
-        """
-        Merge (out) to the specified I{other} configuration.
-        @param other: The conf to merge out.
-        @type other: Base
-        @return: self
-        @rtype: L{Config}
-        """
-        for section in other:
-            if section not in self:
-                continue
-            sA = self[section]
-            sB = other[section]
-            for key in sB:
-                value = sA[key]
-                setattr(sB, key, value)
-        return self
-
-    def __read(self, path):
-        """
-        Read the configuration at the specified path.
-        @param path: The fully qualified path.
-        @type path: str
-        @return: The configuration object.
-        @rtype: Base
-        """
-        fp = open(path)
-        try:
-            return Base(fp)
-        finally:
-            fp.close()
-
-
-    def __altpath(self):
-        """
-        Get the I{alternate} configuration path.
-        Resolution order: ALT, USER
-        @return: The path to the alternate configuration file.
-        @rtype: str
-        """
-        path =  os.environ.get(self.ALT)
-        if path:
-            return path
-        path = os.path.expanduser(self.USER)
-        if os.path.exists(path):
-            return path
-        else:
-            None
+        if not Config.parser:
+            raise Exception('Config.parser has not been initialized.')
+        
+        # only writes to /etc/katello/client.conf
+        Config.parser.write(open(Config.PATH, 'w'))
+        

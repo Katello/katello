@@ -16,12 +16,15 @@
 
 import os
 from gettext import gettext as _
+import time
+import urlparse
 
 from katello.client.api.product import ProductAPI
+from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_provider
-from katello.client.core.utils import run_async_task_with_status
+from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, system_exit
 from katello.client.core.utils import ProgressBar
 
 try:
@@ -29,7 +32,7 @@ try:
 except ImportError:
     import simplejson as json
 
-_cfg = Config()
+Config()
 
 # base product action --------------------------------------------------------
 
@@ -38,6 +41,7 @@ class ProductAction(Action):
     def __init__(self):
         super(ProductAction, self).__init__()
         self.api = ProductAPI()
+        self.repoapi = RepoAPI()        
 
 
 # product actions ------------------------------------------------------------
@@ -158,7 +162,7 @@ class Create(ProductAction):
         self.parser.add_option("--description", dest="description",
                                help=_("product description"))
         self.parser.add_option("--url", dest="url",
-                               help=_("product url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
+                               help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
 
     def check_options(self):
         self.require_option('org')
@@ -173,12 +177,43 @@ class Create(ProductAction):
         url         = self.get_option('url')
 
         prov = get_provider(orgName, provName)
-        if prov != None:
-            self.api.create(prov["id"], name, description, url)
-            print _("Successfully created product [ %s ]") % name
-            return os.EX_OK
-        else:
+        if prov == None:
             return os.EX_DATAERR
+            
+        repourls = None
+        if url != None:
+            repoapi = RepoAPI()
+            print(_("Discovering repository urls, this could take some time..."))
+            try:
+                task = self.repoapi.repo_discovery(url, 'yum')
+            except Exception,e:
+                system_exit(os.EX_DATAERR, _("Error: %s" % e))
+                
+            discoveryResult = run_spinner_in_bg(self.wait_for_discovery, [task])
+            repourls = discoveryResult['result'] or []
+
+            if not len(repourls):
+                system_exit(os.EX_OK, "No repositories discovered @ url location [%s]" % url)
+                
+        prod = self.api.create(prov["id"], name, description)
+        print _("Successfully created product [ %s ]") % name
+        
+        if repourls != None:
+            for repourl in repourls:
+                parsedUrl = urlparse.urlparse(repourl)
+                repoName = "%s%s" % (name, parsedUrl.path.replace("/", "_"))
+                repo = self.repoapi.create(prod["cp_id"], repoName, repourl)
+                print _("Successfully created repository [ %s ]") % repoName
+        
+        return os.EX_OK
+        
+    def wait_for_discovery(self, discoveryTask):
+        while discoveryTask['state'] not in ('finished', 'error', 'timed out', 'canceled'):
+            time.sleep(0.25)
+            discoveryTask = self.repoapi.repo_discovery_status(discoveryTask['id'])
+
+        return discoveryTask
+
 
 # product command ------------------------------------------------------------
 

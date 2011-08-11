@@ -34,7 +34,8 @@ from katello.client.core import (
   system,
   shell_command,
   template,
-  changeset
+  changeset,
+  client
 )
 
 def setup_admin(admin):
@@ -143,6 +144,12 @@ def setup_admin(admin):
     cset_cmd.add_action('delete', changeset.Delete())
     cset_cmd.add_action('promote', changeset.Promote())
     admin.add_command('changeset', cset_cmd)
+    
+    client_cmd = client.Client()
+    client_cmd.add_action('remember', client.Remember())
+    client_cmd.add_action('forget', client.Forget())
+    client_cmd.add_action('saved_options', client.SavedOptions())
+    admin.add_command('client', client_cmd)
 
 if __name__ == "__main__":
     admin = AdminCLI()

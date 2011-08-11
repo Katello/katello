@@ -27,7 +27,7 @@ from katello.client.core.utils import system_exit, parse_tokens, Printer
 from katello.client.logutil import getLogger
 from katello.client.server import ServerRequestError
 
-_cfg = Config()
+Config()
 _log = getLogger(__name__)
 
 # base command class ----------------------------------------------------------
@@ -193,12 +193,16 @@ class Action(object):
 
     def get_option(self, opt, default=None):
         """
-        Get an option from opts
+        Get an option from opts or from the config file
+        Options from opts take precedence.
         @type opt: str
         @param opt: name of option to get
         @return: value of the option or None if the option is no present
         """
-        return getattr(self.opts, opt, default)
+        attr = getattr(self.opts, opt, default)
+        if Config.parser.has_option('options', opt) and not attr:
+            attr = Config.parser.get('options', opt)
+        return attr
 
 
     def has_option(self, opt):
@@ -286,7 +290,7 @@ class Action(object):
         elif self.has_option('verbose'):
             return False
         else:
-            return (_cfg.interface.grep_friendly.lower() == 'true')
+            return (Config.parser.get('interface', 'grep_friendly').lower() == 'true')
 
 
 #    def _pre_setup_parser(self):

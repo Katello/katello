@@ -18,6 +18,7 @@ test "system facts" system facts --org="$FIRST_ORG" --name="$SYSTEM_NAME_ADMIN"
 test "system update name" system update --org="$FIRST_ORG" --name="$SYSTEM_NAME_ADMIN" --new-name="$SYSTEM_NAME_ADMIN_2"
 test "system update name" system update --org="$FIRST_ORG" --name="$SYSTEM_NAME_ADMIN_2" --new-name="$SYSTEM_NAME_ADMIN"
 test "system update description" system update --org="$FIRST_ORG" --name="$SYSTEM_NAME_ADMIN" --description="This is a description of a system. It's a great description"
+test "system update location" system update --org="$FIRST_ORG" --name="$SYSTEM_NAME_ADMIN" --location="The Grid"
 test "system unregister" system unregister --name="$SYSTEM_NAME_ADMIN" --org="$FIRST_ORG"
 
 test "activation key create" activation_key create --name="$ACTIVATION_KEY_NAME_1" --description="key description" --environment="$TEST_ENV" --org="$FIRST_ORG"

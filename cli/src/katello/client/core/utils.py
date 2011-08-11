@@ -135,6 +135,7 @@ class Printer:
         @type indent: string
         @param indent: text that is prepended to every printed line in multiline mode
         """
+        colWidth = self._minColumnWidth()
         print
         for col in self._columns:
             #skip missing attributes
@@ -143,12 +144,9 @@ class Printer:
 
             value = item[col['attr_name']]
             if not col['multiline']:
-                if col['time_format']:
-                    print ("{:<" + str(self._minColumnWidth() + 1) + "} {}").format(col['name'] + ":", format_date(value))
-                    # +1 to account for the : after the column name
-                else:    
-                    print ("{:<" + str(self._minColumnWidth() + 1) + "} {}").format(col['name'] + ":", value)
-                    # +1 to account for the : after the column name
+                output = format_date(value) if col['time_format'] else value
+                print ("{:<" + str(colWidth + 1) + "} {}").format(col['name'] + ":", output)
+                # +1 to account for the : after the column name
             else:
                 print indent+col['name']+":"
                 print indent_text(value, indent+"    ")

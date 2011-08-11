@@ -33,24 +33,6 @@ $(document).ready(function() {
     $('#provider_submit').val("Uploading...").attr("disabled", true);
   });
 
-  $(".provider_delete").live('click', function() {
-   var button = $(this);
-
-   var answer = confirm(button.attr('data-confirm-text'));
-   if (answer) {
-     $.ajax({
-       type: "DELETE",
-       url: button.attr('data-url'),
-       cache: false,
-       success: function() {
-           panel.closeSubPanel($('#subpanel'));
-           panel.closePanel($('#panel'));
-           list.remove(button.attr("data-id").replace(/ /g, '_'));
-       }
-     });
-   }
-  });
-
   $('.product_create').live('click', function(event) {
     var button = $(this);
     button.addClass("disabled");
@@ -68,22 +50,6 @@ $(document).ready(function() {
     });
   });
 
-  $(".product_delete").live('click', function() {
-    var button = $(this);
-    if (button.hasClass('disabled')){
-      return false;
-    }
-    var answer = confirm(button.attr('data-confirm-text'));
-    if (answer) {
-      button.addClass('disabled');
-      // send a request to delete the product
-      client_common.destroy(button.attr('data-url'), function(){
-          panel.panelAjax('', button.attr('data-forward'), $('#panel'));
-          panel.closeSubPanel($('#subpanel'));
-      }, function() {button.removeClass('disabled')});
-    }
-  });
-
   $('.repo_create').live('click', function(event) {
     var button = $(this);
     button.addClass("disabled");
@@ -99,22 +65,6 @@ $(document).ready(function() {
       },
       function() {button.removeClass("disabled")
     });
-  });
-
-  $(".repo_delete").live('click', function() {
-    var button = $(this);
-    if (button.hasClass('disabled')){
-      return false;
-    }
-    var answer = confirm(button.attr('data-confirm-text'));
-    if (answer) {
-      button.addClass('disabled');
-      // send a request to delete the repo
-      client_common.destroy(button.attr('data-url'), function(){
-          panel.panelAjax('', button.attr('data-forward'), $('#panel'));
-          panel.closeSubPanel($('#subpanel'));
-      }, function() {button.removeClass('disabled')});
-    }
   });
 });
 

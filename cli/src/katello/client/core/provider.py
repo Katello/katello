@@ -29,7 +29,7 @@ try:
 except ImportError:
     import simplejson as json
 
-_cfg = Config()
+Config()
 
 PROVIDER_TYPES = { 'redhat':   'Red Hat',
                    'yum':   'Custom'}
