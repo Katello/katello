@@ -74,8 +74,8 @@ class Provider < ActiveRecord::Base
 
   #permissions
   # returns list of virtual permission tags for the current user
-  def self.list_tags organization_id
-    select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
+  def self.list_tags org_id
+    select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
   def self.list_verbs  global = false
