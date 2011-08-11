@@ -163,6 +163,7 @@ Src::Application.routes.draw do
 
     resources :permission, :only => {} do
       put "update_permission" => "roles#update_permission", :as => "update"
+      delete "destroy_permission" => "roles#destroy_permission", :as => "destroy" 
     end
     collection do
       get :auto_complete_search

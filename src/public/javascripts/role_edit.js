@@ -46,6 +46,23 @@ var roleActions = (function($){
             },
             'permission_add' : function(){
                 var options = {},
+                    set_types = function(){
+                        var types = roles_breadcrumb[current_crumb].permission_details,
+                            types_select = $('#resource_type');
+                        
+                        types_select.empty();
+                        for( type in types ){
+                            if( types.hasOwnProperty(type) ){
+                                if( current_crumb.split('_')[0] === 'organization' ){
+                                    if( !types[type].global ){
+                                        types_select.append('<option value="' + type + '">' + types[type].name + '</option>');
+                                    }
+                                } else {
+                                    types_select.append('<option value="' + type + '">' + types[type].name + '</option>');
+                                }
+                            }
+                        }    
+                    },
                     set_verbs_and_tags = function(type){
                         var i, length=0,
                             verbs_select = $('#verbs'),
@@ -69,7 +86,8 @@ var roleActions = (function($){
                 opened = !opened;
                 
                 if( opened ){
-                    set_verbs_and_tags('organizations');    
+                    set_types();
+                    set_verbs_and_tags('organizations');
                 }
                                 
                 $('#resource_type').change(function(event){
@@ -191,21 +209,18 @@ var roleActions = (function($){
             });
         },
         remove_permission = function(element){
-            delete roles_breadcrumb[element.attr('data-id')];
-            roles_tree.rerender_content();
+            var id = element.attr('data-id');
             
-            /*$.ajax({
-               type     : "POST",
-               url      : "/roles/" + $('#role_id').val() + "/create_permission/",
+            $.ajax({
+               type     : "DELETE",
+               url      : "/roles/" + $('#role_id').val() + "/permission/" + id.split('_')[2] + "/destroy_permission/",
                cache    : false,
-               data     : $('#add_permission_form').serialize(),
                dataType : 'json',
                success  : function(data){
-                   $.extend(roles_breadcrumb, data);
-                   roles_tree.rerender_content();
-                   toggle('permission_add');
+                    delete roles_breadcrumb[id];
+                    roles_tree.rerender_content();
                }
-            });*/
+            });
         },
         edit_user = function(element, adding){
             var submit_data = { update_users : { adding : adding, user_id : element.attr('data-id').split('_')[1] }};
@@ -225,10 +240,6 @@ var roleActions = (function($){
                     roles_tree.rerender_content();
                }
             });
-        },
-        remove_user = function(element){
-            roles_breadcrumb[element.attr('data-id')].has_role = false;
-            roles_tree.rerender_content();
         },
         handleContentAddRemove = function(element){
             if( element.attr('data-type') === 'permission' ){
@@ -370,6 +381,8 @@ var rolesRenderer = (function($){
                 render_cb(templateLibrary.list(roles_breadcrumb, 'role'));
             } else if( hash === 'role_users' ){
                 render_cb(templateLibrary.usersList(roles_breadcrumb, { no_slide : true }));
+            } else if( hash === 'global' ) {
+                render_cb(templateLibrary.globalsList(roles_breadcrumb, { no_slide : true }));
             } else {
                 var split = hash.split("_"),
                     page = split[0],
