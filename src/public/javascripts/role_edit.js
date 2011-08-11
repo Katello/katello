@@ -77,11 +77,16 @@ var roleActions = (function($){
                             verbs_select.append('<option value="' + verbs[i].name + '">' + verbs[i].display_name + "</option>");
                         }
                         
-                        length = tags.length;
-                        tags_select.empty();
-                        for( i=0; i < length; i+= 1){
-                            tags_select.append('<option value="' + tags[i].name + '">' + tags[i].display_name + "</option>");
-                        }        
+                        if( type !== 'organizations' ){
+                            length = tags.length;
+                            tags_select.empty();
+                            for( i=0; i < length; i+= 1){
+                                tags_select.append('<option value="' + tags[i].name + '">' + tags[i].display_name + "</option>");
+                            }
+                            tags_select.parent().show();
+                        } else {
+                            tags_select.parent().hide();
+                        }
                     };
                     
                 opened = !opened;
