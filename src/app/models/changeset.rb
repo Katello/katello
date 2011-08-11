@@ -204,12 +204,15 @@ class Changeset < ActiveRecord::Base
       idx = repo.packages.index do |p| p.name == package_name end
       if idx != nil
         pack = repo.packages[idx]
-        self.packages << ChangesetPackage.new(:package_id => pack.id, :display_name => package_name, :product_id => product.id, :changeset => @changeset)
-        return
+        cs_pack = ChangesetPackage.new(:package_id => pack.id, :display_name => package_name, :product_id => product.id, :changeset => self)
+        cs_pack.save!
+        self.packages << cs_pack
+
+        return cs_pack
       end
     end
-    raise Errors::ChangesetContentException.new("Package not found within this environment.")
-   end
+    raise Errors::ChangesetContentException.new("Package not found in the source environment.")
+  end
 
   def add_erratum erratum_id, product_name
     product = self.find_product(product_name)
@@ -218,11 +221,14 @@ class Changeset < ActiveRecord::Base
       idx = repo.errata.index do |e| e.id == erratum_id end
       if idx != nil
         erratum = repo.errata[idx]
-        self.errata << ChangesetErratum.new(:errata_id => erratum.id, :display_name => erratum_id, :product_id => product.id, :changeset => @changeset)
-        return
+        cs_erratum = ChangesetErratum.new(:errata_id => erratum.id, :display_name => erratum_id, :product_id => product.id, :changeset => self)
+        cs_erratum.save!
+        self.errata << cs_erratum
+
+        return cs_erratum
       end
     end
-    raise Errors::ChangesetContentException.new("Erratum not found within this environment.")
+    raise Errors::ChangesetContentException.new("Erratum not found in the source environment.")
   end
 
   def add_repo repo_name, product_name
@@ -231,15 +237,18 @@ class Changeset < ActiveRecord::Base
     idx = repos.index do |r| r.name == repo_name end
     if idx != nil
       repo = repos[idx]
-      self.repos << ChangesetRepo.new(:repo_id => repo.id, :display_name => repo_name, :product_id => product.id, :changeset => @changeset)
-      return
+      cs_repo = ChangesetRepo.new(:repo_id => repo.id, :display_name => repo_name, :product_id => product.id, :changeset => self)
+      cs_repo.save!
+      self.repos << cs_repo
+
+      return cs_repo
     end
     raise Errors::ChangesetContentException.new("Repository not found within this environment.")
   end
 
   def remove_product product_name
     prod = self.environment.products.find_by_name(product_name)
-    raise Errors::ChangesetContentException.new("Product #{product_name} not found within this environment.") if prod.nil?
+    raise Errors::ChangesetContentException.new("Product #{product_name} not found in the source environment.") if prod.nil?
     self.products.delete(prod)
   end
 
@@ -332,10 +341,11 @@ class Changeset < ActiveRecord::Base
     for pkg in self.packages
       product = pkg.product
 
+      #skip packages that have already been promoted with the products
       next if products_to_promote(from_env, to_env).include? product
 
       product.repos(from_env).each do |repo|
-        clone = Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(repo.id, to_env.name))
+        clone = repo.get_clone to_env
 
         if (repo.has_package? pkg.package_id) and (!clone.has_package? pkg.package_id)
           pkgs_promote[clone] ||= []
@@ -357,10 +367,11 @@ class Changeset < ActiveRecord::Base
     for err in self.errata
       product = err.product
 
+      #skip errata that have already been promoted with the products
       next if products_to_promote(from_env, to_env).include? product
 
       product.repos(from_env).each do |repo|
-        clone = Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(repo.id, to_env.name))
+        clone = repo.get_clone to_env
 
         if (repo.has_erratum? err.errata_id) and (!clone.has_erratum? err.errata_id)
           errata_promote[clone] ||= []
