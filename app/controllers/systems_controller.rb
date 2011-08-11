@@ -116,7 +116,7 @@ class SystemsController < ApplicationController
 
   def show
     system = System.find(params[:id])
-    render :partial=>"common/list_update", :locals=>{:item=>system, :accessor=>"id", :columns=>['name', 'ip', 'kernel']}
+    render :partial=>"systems/list_system_show", :locals=>{:item=>system, :accessor=>"id", :columns=> COLUMNS.keys, :noblock => 1}
   end
   
   def section_id

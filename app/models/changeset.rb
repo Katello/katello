@@ -239,6 +239,7 @@ class Changeset < ActiveRecord::Base
 
   def remove_product product_name
     prod = self.environment.products.find_by_name(product_name)
+    raise Errors::ChangesetContentException.new("Product #{product_name} not found within this environment.") if prod.nil?
     self.products.delete(prod)
   end
 
