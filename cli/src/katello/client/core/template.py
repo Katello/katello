@@ -17,7 +17,6 @@
 import os
 import time
 from gettext import gettext as _
-from sets import Set
 
 from katello.client.api.template import TemplateAPI
 from katello.client.config import Config
@@ -29,6 +28,12 @@ try:
     import json
 except ImportError:
     import simplejson as json
+
+# set import (works for both Python 2.6+ and 2.5)
+try:
+    set
+except NameError:
+    from sets import Set as set
 
 Config()
 
@@ -295,7 +300,7 @@ class UpdateContent(TemplateAction):
                                help=_("environment name eg: dev (Locker by default)"))
 
         #add all actions
-        actionParams = Set()
+        actionParams = set()
         for action, params in self.actions.iteritems():
             self.parser.add_option('--'+action, dest=action, action="store_true")
             #save action parameters
