@@ -106,7 +106,16 @@ class RolesController < ApplicationController
 
   def update
     return if @role.name == "admin"
-    if @role.update_attributes(params[:role])
+    if params[:update_users]
+      if params[:update_users][:adding]
+        @role.users << User.find(params[:update_users][:user_id])
+        @role.save!
+      else
+        @role.users.delete(User.find(params[:update_users][:user_id]))
+        @role.save!
+      end
+      render :json => params[:update_users]
+    elsif @role.update_attributes(params[:role])
       notice _("Role updated.")
       render :json=>params[:role]
     else

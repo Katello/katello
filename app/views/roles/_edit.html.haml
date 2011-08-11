@@ -2,11 +2,13 @@
   :javascript
     var roles_breadcrumb = $.parseJSON('#{escape_javascript(generate_roles_breadcrumb())}');
     localize({
-      "remove"        : '#{_('Remove')}',
-      "loading"       : "#{_('Loading Role')}",
-      "rolesStatus"   : "#{_('Please select Organizations to view and add permissions for this role or Users to see current users with this role.')}",
+      "add"                : '+ #{_('Add')}',
+      "remove"             : '#{_('Remove')}',
+      "loading"            : "#{_('Loading Role')}",
       "edit_role_details"  : '#{_("Edit Role Details")}',
-      'close_role_details' : '#{_("Close Role Details")}',
+      "close_role_details" : '#{_("Close Role Details")}',
+      "rolesStatus"        : "#{_('Please select Organizations to view and add permissions for this role or Users to see current users with this role.')}",
+      "usersStatus"        : "#{_('You may add or remove users from this role by clicking Add or Remove beside their name.')}",
     });
 
 = javascript :role_edit
