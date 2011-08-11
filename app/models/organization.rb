@@ -86,7 +86,7 @@ class Organization < ActiveRecord::Base
 
     org_verbs = {
       :update => N_("Manage Organization and Environments"),
-
+      :read => N_("Access Organization"),
       :read_systems => N_("Access Systems"),
       :create_systems =>N_("Register Systems"),
       :update_systems => N_("Manage Systems"),
@@ -94,8 +94,7 @@ class Organization < ActiveRecord::Base
    }
     org_verbs.merge!({
     :create => N_("Create Organization"),
-    :read => N_("Access Organization"),
-    :delete => N_("Delete Organization"),
+    :delete => N_("Delete Organization")
     }) if global
 
     org_verbs.with_indifferent_access
