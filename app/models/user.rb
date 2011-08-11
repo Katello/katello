@@ -289,7 +289,7 @@ class User < ActiveRecord::Base
   end
 
 
-  def self.list_verbs
+  def self.list_verbs global = false
     {
     :create => N_("Create Users"),
     :read => N_("Access Users"),

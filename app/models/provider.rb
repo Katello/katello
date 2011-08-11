@@ -73,7 +73,7 @@ class Provider < ActiveRecord::Base
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
-  def self.list_verbs
+  def self.list_verbs  global = false
     {
        :create => N_("Create Provider"),
        :read => N_("Access Provider"),

@@ -158,7 +158,7 @@ class Role < ActiveRecord::Base
   end
 
 
-  def self.list_verbs
+  def self.list_verbs global = false
     {
     :create => N_("Create Roles"),
     :read => N_("Access Roles"),
