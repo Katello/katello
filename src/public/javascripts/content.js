@@ -183,7 +183,7 @@ var content = (function(){
               type: 'DELETE',
               url: '/sync_management/' + syncid,
               data: { repo_id: repoid, product_id: prod_id },
-              dataType: 'script',
+              dataType: 'json',
               success: function(data) {
                 content.updateProduct(prod_id, repoid);
                 updateField.html('Sync Cancelled.');

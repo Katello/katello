@@ -22,7 +22,7 @@ from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_repo
 
-_cfg = Config()
+Config()
 
 # base package action --------------------------------------------------------
 

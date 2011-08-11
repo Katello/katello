@@ -115,6 +115,7 @@ class OrganizationsController < ApplicationController
       render :text => "The current organization cannot be deleted. Please switch to a different organization before deleting.", :status=>:bad_request and return
     elsif Organization.count > 1
       @id = @organization.id
+      @name = @organization.name
       begin
         @organization.destroy
         notice _("Organization '#{params[:id]}' was deleted.")
@@ -122,7 +123,7 @@ class OrganizationsController < ApplicationController
         errors error.to_s
         render :text=> error.to_s, :status=>:bad_request and return
       end
-      render :partial => "common/list_remove", :locals => {:id => @id}
+      render :partial => "post_delete", :locals => {:id => @name}
     else
       errors [_("Could not delete organization '#{params[:id]}'."),  _("At least one organization must exist.")]
       

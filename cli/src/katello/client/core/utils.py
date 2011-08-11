@@ -99,7 +99,7 @@ class Printer:
         return result.strip()
 
 
-    def addColumn(self, attr_name, name = None, multiline = False, show_in_grep = True):
+    def addColumn(self, attr_name, name = None, multiline = False, show_in_grep = True, time_format=False):
         """
         Add column to display
         @type attr_name: string
@@ -111,11 +111,14 @@ class Printer:
         @param multiline: flag to mark multiline values
         @type show_in_grep: bool
         @param show_in_grep: flag to set whether the column should be displayed also in grep mode or not
+        @type time_format: bool
+        @param time_format: flag to set this column as a rails date string to be parsed
         """
         col = {}
         col['attr_name']    = attr_name
         col['multiline']    = multiline
         col['show_in_grep'] = show_in_grep
+        col['time_format']  = time_format
         if name == None:
             col['name'] = self._attrToName(attr_name)
         else:
@@ -132,6 +135,7 @@ class Printer:
         @type indent: string
         @param indent: text that is prepended to every printed line in multiline mode
         """
+        colWidth = self._minColumnWidth()
         print
         for col in self._columns:
             #skip missing attributes
@@ -140,7 +144,9 @@ class Printer:
 
             value = item[col['attr_name']]
             if not col['multiline']:
-                print indent+"%-15s \t%-25s" % (col['name']+":", value)
+                output = format_date(value) if col['time_format'] else value
+                print ("{:<" + str(colWidth + 1) + "} {}").format(col['name'] + ":", output)
+                # +1 to account for the : after the column name
             else:
                 print indent+col['name']+":"
                 print indent_text(value, indent+"    ")
@@ -175,7 +181,7 @@ class Printer:
             print self._delim,
 
 
-    def _calculateWidths(self, items):
+    def _calculateGrepWidths(self, items):
         widths = {}
         #return widths
         for col in self._columns:
@@ -186,7 +192,14 @@ class Printer:
                     widths[key] = len(str(item[key]))+1
 
         return widths
+    
+    
+    def _minColumnWidth(self):
+        width = 0
+        for col in self._columns:
+            width = len(str(col['name'])) if (len(str(col['name'])) > width) else width 
 
+        return width
 
 
     def printItem(self, item, indent=""):
@@ -211,7 +224,7 @@ class Printer:
         @param indent: text that is prepended to every printed line in multiline mode
         """
         if self._grep:
-            widths = self._calculateWidths(items)
+            widths = self._calculateGrepWidths(items)
             self._printHeader(self._heading, widths)
             for item in items:
                 self._printItemGrep(item, widths)
@@ -221,9 +234,8 @@ class Printer:
             for item in items:
                 self._printItem(item, indent)
                 print
-
-
-
+                
+    
 
 # server output validity ------------------------------------------------------
 def is_valid_record(rec):
@@ -442,13 +454,15 @@ def run_async_task_with_status(taskStatus, progressBar):
         while len(filter(lambda t: t['state'] not in ('finished', 'error', 'timed out', 'canceled'), task)) > 0:
             time.sleep(1)
             task = [status_api.status(t['uuid']) for t in task]
-            overalProgress = sum([progress(t['progress']['size_left'], t['progress']['size_total']) for t in task]) / len(task)
+            total = t['progress']['size_total'] if t['progress'].has_key('size_total') else 999999999999
+            overalProgress = sum([progress(t['progress']['size_left'], total) for t in task]) / len(task)
             progressBar.updateProgress(overalProgress)
     else:
         while task['state'] not in ('finished', 'error', 'timed out', 'canceled'):
             time.sleep(1)
             task = status_api.status(task['uuid'])
-            progressBar.updateProgress(progress(task['progress']['size_left'], task['progress']['size_total']))
+            total = task['progress']['size_total'] if task['progress'].has_key('size_total') else 999999999999
+            progressBar.updateProgress(progress(task['progress']['size_left'], total))
 
     progressBar.done()
     return task

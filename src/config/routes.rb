@@ -199,8 +199,9 @@ Src::Application.routes.draw do
   namespace :api do
     match '/' => 'root#resource_list'
 
-    resources :systems, :only => [:show, :destroy, :create, :index] do
+    resources :systems, :only => [:show, :destroy, :create, :index, :update] do
       member do
+        get :packages, :action => :package_profile
         get :errata
       end
     end

@@ -22,7 +22,7 @@ from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record
 
-_cfg = Config()
+Config()
 
 # base organization action -----------------------------------------------------
 

@@ -29,10 +29,10 @@ try:
 except ImportError:
     import simplejson as json
 
-_cfg = Config()
+Config()
 
 PROVIDER_TYPES = { 'redhat':   'Red Hat',
-                   'yum':   'Custom'}
+                   'custom':   'Custom'}
 
 
 # base provider action =========================================================
@@ -140,8 +140,8 @@ class Update(ProviderAction):
             self.parser.add_option("--type", dest="type",
                                   help=_("""provider type, one of:
                                   \"redhat\"   for Red Hat,
-                                  \"yum\"   for Generic Yum Collection (default)"""),
-                                  choices=['redhat', 'yum'])
+                                  \"custom\"   for Generic Yum Collection (default)"""),
+                                  choices=['redhat', 'custom'])
                                   #default='yum'
         else:
             self.parser.add_option('--new_name', dest='new_name',

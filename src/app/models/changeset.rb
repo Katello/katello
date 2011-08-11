@@ -93,12 +93,12 @@ class Changeset < ActiveRecord::Base
       #all the pkgIds to add to this product, use a hash so we can add errata pkgs
       direct_pkgs = cs_pkgs.collect{|pkg| {:name=>pkg.display_name, :id=>pkg.package_id}}
       #TODO get errata packages
-      
 
-      
+
+
       # mapping of repo in from_env to its repo in to_env
       repo_map = {} # {from_env => to_env}
-      
+
       prod.repos(from_env).each{|repo|
         cloned = prod.get_cloned repo, to_env
         repo_map[repo] = cloned if cloned
@@ -106,7 +106,7 @@ class Changeset < ActiveRecord::Base
 
       #get all the pkgs names
       pkg_names = []
-    
+
       direct_pkgs.each{|pkg|
         repo_map.keys.each{ |from_repo|
           pkg_names << pkg[:name] if from_repo.has_package?(pkg[:id])
@@ -137,7 +137,7 @@ class Changeset < ActiveRecord::Base
       }
     }
     product_hash
-    
+
 
   end
 
@@ -239,6 +239,7 @@ class Changeset < ActiveRecord::Base
 
   def remove_product product_name
     prod = self.environment.products.find_by_name(product_name)
+    raise Errors::ChangesetContentException.new("Product #{product_name} not found within this environment.") if prod.nil?
     self.products.delete(prod)
   end
 
@@ -283,13 +284,15 @@ class Changeset < ActiveRecord::Base
 
   def products_to_promote from_env, to_env
     #promote all products stacked for promotion + (products required by packages,errata & repos - products in target env)
-    required_products = []
-    required_products << self.packages.collect do |p| Product.find(p.product_id) end
-    required_products << self.errata.collect do |e|   Product.find(e.product_id) end
-    required_products << self.repos.collect do |r|    Product.find(r.product_id) end
-    required_products = required_products.flatten(1)
-    products_to_promote = (self.products + (required_products - to_env.products)).uniq
-    products_to_promote
+#    required_products = []
+#    required_products << self.packages.collect do |p| Product.find(p.product_id) end
+#    required_products << self.errata.collect do |e|   Product.find(e.product_id) end
+#    required_products << self.repos.collect do |r|    Product.find(r.product_id) end
+#    required_products = required_products.flatten(1)
+#    products_to_promote = (self.products + (required_products - to_env.products)).uniq
+#    products_to_promote
+
+    (self.products - to_env.products).uniq
   end
 
   def promote_products from_env, to_env

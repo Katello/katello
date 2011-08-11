@@ -66,10 +66,15 @@ class SystemsController < ApplicationController
   def environments
     @panel_options[:ajax_scroll] = env_items_systems_path()
     begin
+
+      @systems = []
+
       setup_environment_selector(current_organization)
-      @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size)
-      retain_search_history
-      sort_columns(COLUMNS,@systems) if params[:order]
+      if @environment
+        @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size) 
+        retain_search_history
+        sort_columns(COLUMNS,@systems) if params[:order]
+      end
       render :index, :locals=>{:envsys => 'true'}
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -112,7 +117,7 @@ class SystemsController < ApplicationController
   end
   
   def packages
-    packages = @system.packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
     render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages}
   end
   
@@ -141,7 +146,7 @@ class SystemsController < ApplicationController
 
   def show
     system = System.find(params[:id])
-    render :partial=>"common/list_update", :locals=>{:item=>system, :accessor=>"id", :columns=>['name', 'ip', 'kernel']}
+    render :partial=>"systems/list_system_show", :locals=>{:item=>system, :accessor=>"id", :columns=> COLUMNS.keys, :noblock => 1}
   end
   
   def section_id

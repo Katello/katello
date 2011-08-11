@@ -19,9 +19,10 @@ module Glue::Pulp::Consumer
     base.class_eval do
       before_save :save_pulp_orchestration
       before_destroy :destroy_pulp_orchestration
-      lazy_accessor :pulp_facts, :initializer => lambda { Pulp::Consumer.find(uuid)}
-      lazy_accessor :packages, :initializer => lambda { Pulp::Consumer.installed_packages(uuid).
-                                                              collect{|pack| Glue::Pulp::SimplePackage.new(pack)}}
+      lazy_accessor :pulp_facts, :initializer => lambda { Pulp::Consumer.find(uuid) }
+      lazy_accessor :package_profile, :initializer => lambda { Pulp::Consumer.installed_packages(uuid) }
+      lazy_accessor :simple_packages, :initializer => lambda { Pulp::Consumer.installed_packages(uuid).
+                                                              collect{|pack| Glue::Pulp::SimplePackage.new(pack)} }
     end
   end
   module InstanceMethods
@@ -49,6 +50,16 @@ module Glue::Pulp::Consumer
       raise e
     end
     
+    def update_pulp_consumer
+      return true if @changed_attributes.empty?
+
+      Rails.logger.info "Updating consumer in pulp: #{@old.name}"
+      Pulp::Consumer.update(self.organization.cp_key, self.uuid, self.description)
+    rescue => e
+      Rails.logger.error "Failed to update pulp consumer #{@old.name}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+    
     def upload_package_profile profile
       Rails.logger.info "Uploading package profile for consumer #{self.name}"
       Pulp::Consumer.upload_package_profile(self.uuid, profile)
@@ -61,8 +72,8 @@ module Glue::Pulp::Consumer
       case orchestration_for
         when :create
           queue.create(:name => "create pulp consumer: #{self.name}", :priority => 3, :action => [self, :set_pulp_consumer])
-        # when :update
-          # queue.create(:name => "update pulp consumer: #{self.name}", :priority => 3, :action => [self, :update_pulp_consumer])
+        when :update
+          queue.create(:name => "update pulp consumer: #{self.name}", :priority => 3, :action => [self, :update_pulp_consumer])
       end
     end
 
