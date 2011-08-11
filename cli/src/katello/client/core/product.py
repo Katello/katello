@@ -146,6 +146,10 @@ class Sync(ProductAction):
 # ------------------------------------------------------------------------------
 class Create(ProductAction):
 
+    def __init__(self):
+        super(Create, self).__init__()
+        self.createRepo = repo.Create()
+        
     description = _('create new product to a custom provider')
 
     def setup_parser(self):
@@ -165,7 +169,7 @@ class Create(ProductAction):
 
     def check_options(self):
         self.require_option('org')
-        self.require_option('prov', '--provider')
+        self.require_option('prov')
         self.require_option('name')
 
     def run(self):
@@ -175,23 +179,40 @@ class Create(ProductAction):
         description = self.get_option('description')
         url         = self.get_option('url')
         assumeyes   = self.get_option('assumeyes')
+        
+        return self.create_product_with_repos(provName, orgName, name, description, url, assumeyes)
 
-        prov = get_provider(orgName, provName)
+        
+    def create_product_with_repos(self, provName, orgName, name, description, url, assumeyes):
+        prov = self.find_provider(orgName, provName)
         if prov == None:
-            return os.EX_DATAERR
+            return os.EX_DATAERR        
         
-        createRepo = repo.Create()
-        
-        repourls = createRepo.discover_repositories(url)
+        repourls = self.discover_repos(url)
         self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
-        selectedurls = createRepo.select_repositories(repourls, assumeyes)
+        selectedurls = self.select_repos(repourls, assumeyes)
         
-        prod = self.api.create(prov["id"], name, description)
+        prod = self.create_product(prov["id"], name, description)
         print _("Successfully created product [ %s ]") % name
         
-        createRepo.create_repositories(prod["cp_id"], prod["name"], selectedurls)
+        self.create_repos(prod["cp_id"], prod["name"], selectedurls)
         
         return os.EX_OK
+
+    def find_provider(self, orgName, provName):
+        return get_provider(orgName, provName)
+        
+    def create_product(self, id, name, description):
+        return self.api.create(id, name, description)
+        
+    def discover_repos(self, url):
+        return self.createRepo.discover_repositories(url)
+        
+    def select_repos(repourls, assumeyes):
+        return self.createRepo.select_repositories(repourls, assumeyes)
+        
+    def create_repos(self, product, selectedurls):
+        return self.createRepo.create_repositories(prod["cp_id"], prod["name"], selectedurls)
         
     def wait_for_discovery(self, discoveryTask):
         while discoveryTask['state'] not in ('finished', 'error', 'timed out', 'canceled'):
