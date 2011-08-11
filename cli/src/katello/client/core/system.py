@@ -232,7 +232,16 @@ class Register(SystemAction):
         self.require_option('name')
         self.require_option('org')
         if not self.option_specified('activationkey'):
-          self.require_option('environment')
+            self.require_option('environment')
+        elif self.option_specified('environment'):
+            self.add_option_error(_('Option %s can not be specified with %s') % ("--environment", "--activationkey"))
+
+
+    def require_credentials(self):
+        if self.option_specified('activationkey'):
+          return False
+        else:
+          return super
 
     def run(self):
         name = self.get_option('name')

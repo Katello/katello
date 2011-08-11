@@ -202,10 +202,12 @@ class KatelloCLI(object):
             # to catch errors before accessing Kerberos
             command_args = args[1:]
             command.process_options(command_args)
-            command.extract_action(command_args)
-
+            action = command.extract_action(command_args)
+            if action:
+               action.process_options(command_args)
             self.setup_server()
-            self.setup_credentials()
+            if not action or action.require_credentials():
+              self.setup_credentials()
             return command.main(command_args)
 
         except OptionParserExitError, opee:

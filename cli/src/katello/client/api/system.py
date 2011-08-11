@@ -29,15 +29,16 @@ class SystemAPI(KatelloAPI):
             path = "/api/environments/%s/systems" % environment["id"]
         else:
             path = "/api/organizations/%s/systems" % org
-
-        return self.server.POST(path, {
+        sysdata = {
           "name": name,
           "cp_type": cp_type,
-          "activation_keys": activation_keys,
           "facts": {
             "distribution.name": "Fedora"
           }
-        })[1]
+        }
+        if activation_keys:
+            sysdata["activation_keys"] = activation_keys
+        return self.server.POST(path, sysdata)[1]
           
     def unregister(self, system_id):
         path = "/api/systems/" + str(system_id)

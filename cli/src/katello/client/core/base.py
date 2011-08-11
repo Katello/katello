@@ -318,6 +318,13 @@ class Action(object):
     def extract_action(self, args):
     	pass
 
+    def require_credentials(self):
+        """
+        if True, credentials are required when calling the command.
+        @note: this method should be overriden, if credentials should not be checked for action
+        """
+        return True
+
     def error(self, errorMsg):
         _log.error("error: %s" % str(errorMsg))
         print >> sys.stderr, _('error: operation failed: ') + str(errorMsg)
