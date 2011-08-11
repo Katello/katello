@@ -129,4 +129,19 @@ describe ActivationKey do
 
   end
 
+  describe "#subscribe_system" do
+
+    before(:each) do
+      @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"})
+      @subscription = KTSubscription.create!(:subscription => "44114411")
+      @akey.key_subscriptions.create!(:subscription => @subscription, :allocated => 3)
+    end
+
+    it "consumes entitlements according to assigned subscriptions" do
+      Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid,"44114411",3)
+      @akey.subscribe_system(@system)
+    end
+
+  end
+
 end

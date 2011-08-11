@@ -35,6 +35,7 @@ class Api::SystemsController < Api::ApiController
     # we apply ak in reverse order so when they conflict e.g. in environment, the first wins.
     activation_keys.reverse_each {|ak| ak.apply_to_system(system) }
     system.save!
+    activation_keys.each {|ak| ak.subscribe_system(system) }
     # does not work yet - maybe wrong access
     # activation_keys.reverse_each {|ak| ak.consume_subscriptions(system) }
     render :json => system.to_json

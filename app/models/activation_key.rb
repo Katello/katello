@@ -43,4 +43,10 @@ class ActivationKey < ActiveRecord::Base
     system.system_activation_keys.build(:activation_key => self)
   end
 
+  def subscribe_system(system)
+    self.key_subscriptions.each do |ksub|
+      system.subscribe(ksub.subscription.subscription, ksub.allocated)
+    end
+  end
+
 end
