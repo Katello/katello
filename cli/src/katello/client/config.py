@@ -27,15 +27,11 @@ class Config(object):
     @cvar USER: The path to an alternate configuration file
         within the user's home.
     @type USER: str
-    @cvar ALT: The environment variable with a path to an alternate
-        configuration file.
-    @type ALT: str
     """
 
     FILE = 'client.conf'
     PATH = os.path.join('/etc/katello', FILE)
-    USER = os.path.join('~/.katello', FILE)
-    ALT = 'KATELLO_CLIENT_OVERRIDE'
+    USER = os.path.expanduser(os.path.join('~/.katello', FILE))
     
     parser = None
     
@@ -48,7 +44,10 @@ class Config(object):
         
         Config.parser = ConfigParser.RawConfigParser()
         
+        # read global configuration first
         Config.parser.readfp(open(Config.PATH, 'r'), Config.PATH)
+        if os.path.exists(Config.USER):
+            Config.parser.readfp(open(Config.USER, 'r'), Config.USER)
     
     @staticmethod
     def save():
@@ -59,5 +58,4 @@ class Config(object):
             raise Exception('Config.parser has not been initialized.')
         
         # only writes to /etc/katello/client.conf
-        Config.parser.write(open(Config.PATH, 'w'))
-        
+        Config.parser.write(open(Config.USER, 'w'))
