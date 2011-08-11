@@ -223,6 +223,10 @@ class UpdateContent(ChangesetAction):
 
 
     def run(self):
+        #reset stored patch items (neccessary for shell mode)
+        items = self.items.copy()
+        self.reset_items()
+        
         csName  = self.get_option('name')
         orgName = self.get_option('org')
         envName = self.get_option('env')
@@ -232,20 +236,18 @@ class UpdateContent(ChangesetAction):
            return os.EX_DATAERR
         
         patch = {}
-        patch['+packages'] = self.items["add_package"]
-        patch['-packages'] = self.items["remove_package"]
-        patch['+errata'] = self.items["add_erratum"]
-        patch['-errata'] = self.items["remove_erratum"]
-        patch['+repos'] = self.items["add_repo"]
-        patch['-repos'] = self.items["remove_repo"]
+        patch['+packages'] = items["add_package"]
+        patch['-packages'] = items["remove_package"]
+        patch['+errata'] = items["add_erratum"]
+        patch['-errata'] = items["remove_erratum"]
+        patch['+repos'] = items["add_repo"]
+        patch['-repos'] = items["remove_repo"]
         patch['+products'] = self.get_option('add_product') or []
         patch['-products'] = self.get_option('remove_product') or []
 
         msg = self.api.update_content(orgName, cset["environment_id"], cset["id"], patch)
         print _("Successfully updated changeset [ %s ]") % csName
         
-        #reset stored patch items (neccessary for shell mode)
-        self.reset_items()
         return os.EX_OK
         
         
