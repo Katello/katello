@@ -98,7 +98,6 @@ describe OrganizationsController do
       before (:each) do
         @controller.stub!(:render).and_return("") #fix for not finding partial
         @organization = new_test_org
-        @organization = mock_model(Organization)
         @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:name])
         Organization.stub!(:first).and_return(@organization)
       end
