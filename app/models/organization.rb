@@ -53,8 +53,9 @@ class Organization < ActiveRecord::Base
     self.locker = KPEnvironment.new(:name => "Locker", :locker => true, :organization => self)
   end
 
-  # returns list of virtual permission tags for the current user
+
   def self.list_tags organization_id
+    #list_tags for org can ignore org_id, since its not scoped that way
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
