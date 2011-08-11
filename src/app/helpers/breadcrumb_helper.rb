@@ -162,13 +162,9 @@ module BreadcrumbHelper
                       {:client_render => true}, { :count => 0})
       } if @organizations
       
-      User.all.each{ |user|
-        add_crumb_node!(bc, user_bc_id(user), "", user.username, ['roles', 'role_users'],
-                      {:client_render => true}, { :has_role => false })
-      }
-      
       @role.users.each{ |user|
-        bc[user_bc_id(user)][:has_role] = true
+        add_crumb_node!(bc, user_bc_id(user), "", user.username, ['roles', 'role_users'],
+                      {:client_render => true})
       }
       
       @role.permissions.each{ |perm|
@@ -179,16 +175,21 @@ module BreadcrumbHelper
     end
     
     def add_permission_bc bc, perm, adjust_count
-      global = perm.resource_type && perm.resource_type.global?
-      if global
-          add_crumb_node!(bc, permission_bc_id(perm), "", perm.id, ['roles', 'role_permissions', 'globals'],
-                    {:client_render => true}, { :global => global })
+      if perm.resource_type.global?
+                  add_crumb_node!(bc, permission_global_bc_id(perm), "", perm.id, ['roles', 'role_permissions', 'globals'],
+                    { :client_render => true }, 
+                    { :global => perm.resource_type.global?, :type =>  perm.resource_type.name,
+                      :name => perm.name, :description => perm.description, 
+                      :verbs => perm.verbs, :tags => perm.tags })
         if adjust_count
           bc["global"][:count] += 1
         end
       else
-        add_crumb_node!(bc, permission_bc_id(perm, perm.organization), "", perm.id, ['roles', 'role_permissions', organization_bc_id(perm.organization)],
-                    {:client_render => true}, { :organization => "organization_#{perm.organization_id}", :global => global })
+        add_crumb_node!(bc, permission_bc_id(perm.organization, perm), "", perm.id, ['roles', 'role_permissions', organization_bc_id(perm.organization)],
+                    { :client_render => true }, 
+                    { :organization => "organization_#{perm.organization_id}", :global => perm.resource_type.global?,
+                      :name => perm.name, :description => perm.description, 
+                      :type =>  perm.resource_type.name, :verbs => perm.verbs, :tags => perm.tags })
         if adjust_count
           bc[organization_bc_id(perm.organization)][:count] += 1
         end
@@ -203,13 +204,12 @@ module BreadcrumbHelper
       "user_#{user.id}"
     end
     
-    def permission_bc_id permission, organization
-      if organization
-        "permission_#{organization.id}_#{permission.id}"
-      else
-        "permission_global_#{permission.id}"
-      end
+    def permission_bc_id organization, permission
+      "permission_#{organization.id}_#{permission.id}"
     end
     
+    def permission_global_bc_id permission
+      "permission_global_#{permission.id}"
+    end
   end
 end

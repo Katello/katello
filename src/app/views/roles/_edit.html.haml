@@ -3,6 +3,7 @@
     var roles_breadcrumb = $.parseJSON('#{escape_javascript(generate_roles_breadcrumb())}');
     localize({
       "remove"        : '#{_('Remove')}',
+      "add"           : '+ #{_('Add')}',
       "loading"       : "#{_('Loading Role')}",
       "rolesStatus"   : "#{_('Please select Organizations to view and add permissions for this role or Users to see current users with this role.')}",
       "edit_role_details"  : '#{_("Edit Role Details")}',
@@ -60,14 +61,20 @@
         &nbsp; #{_("Add Permission")}
       %form{ :id => "add_permission_form" }
         %input{:type => "hidden", :name => "permission[organization_id]", :value => '', :id => "organization_id" }
-        .grid_2
-          %label #{_("Permission For:")}
+        .permission_add_container
+          %label.ra.fl #{_("Name:")}
+          %input{ :id => 'permission_name', :name => 'permission[name]', :type => "text" }
+        .permission_add_container
+          %label.ra.fl #{_("Description:")}
+          %textarea{ :id => 'description', :name => 'permission[description]' }
+        .permission_add_container
+          %label.ra.fl #{_("Permission For:")}
           %select{ :id => 'resource_type', :name => 'permission[resource_type_attributes[name]]' }
-        .grid_2.ra
-          %label #{_("Verb(s)")}
+        .permission_add_container
+          %label.ra.fl #{_("Verb(s):")}
           %select{ :id => "verbs", :name => 'permission[verb_values]', :multiple => 'multiple' }
-        .grid_2.ra
-          %label #{_("On:")}
+        .permission_add_container
+          %label.ra.fl #{_("On:")}
           %select{ :id => "tags", :name => 'permission[tag_names]', :multiple => 'multiple' }
         #permission_button_bar.clear
           -#.button#previous_button.fl{:tabindex => 2}
