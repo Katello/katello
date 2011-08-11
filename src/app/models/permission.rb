@@ -45,15 +45,27 @@ class Permission < ActiveRecord::Base
   end
 
   def to_text
-    v = verbs.collect { |v| v.verb }.join(',')
-    t = tags.collect { |t| t.name }.join(',')
-    name = resource_type.name unless resource_type.nil?
-    "Role #{role.name}'s allowed to #{v} in #{name} scoped #{t}"
+    v = (all_verbs? && "any action") || verbs.collect { |v| v.verb }.join(',')
+    t = (all_tags? && "all scopes") || "scopes #{tags.collect { |t| t.name }.join(',')}"
+    name = (resource_type && resource_type.name) || "all resources"
+    org_id = (organization && "in organization #{organization.id}") || " across all organizations."
+    "Role #{role.name}'s allowed to perform #{v} on #{t} for #{name} #{org_id}"
   end
+
+  def to_abbrev_text
+    v = (all_verbs? && "nil") || "[#{verbs.collect { |v| v.verb }.join(',')}]"
+    t = (all_tags? && "nil") || "[#{tags.collect { |t| t.name }.join(',')}]"
+    name = (resource_type && resource_type.name) || "nil"
+    org_id = (organization && "#{organization.id}") || "nil"
+    "#{v}, #{name}, #{t}, #{org_id}"
+  end
+
 
   def all_types
     resource_type.nil?
   end
+
+
   private
   def cleanup_tags_verbs
     self.tags.clear if self.all_tags?
