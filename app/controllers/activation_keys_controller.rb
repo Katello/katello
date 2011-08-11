@@ -207,7 +207,7 @@ class ActivationKeysController < ApplicationController
     subscriptions = []
     all_subs.each do |s|
       cp = OpenStruct.new
-      cp.sub = s["subscriptionId"]
+      cp.sub = s["id"]
       cp.name = s["productName"]
       cp.available = s["quantity"]
       subscriptions << cp if !subscriptions.include? cp 
