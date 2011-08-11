@@ -88,6 +88,10 @@ class Glue::Pulp::Repo
     return false
   end
 
+  def get_clone env
+    Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(self.id, env.name))
+  end
+
   def has_package? id
     self.packages.each {|pkg|
       return true if pkg.id == id
