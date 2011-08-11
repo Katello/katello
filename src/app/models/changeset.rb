@@ -245,7 +245,7 @@ class Changeset < ActiveRecord::Base
 
   def remove_package package_name, product_name
     product = self.find_product(product_name)
-    product.repos(self.environment).each do |repo|
+    product.repos(self.environment.prior).each do |repo|
       #search for package in all repos in a product
       idx = repo.packages.index do |p| p.name == package_name end
       if idx != nil
@@ -258,7 +258,7 @@ class Changeset < ActiveRecord::Base
 
   def remove_erratum erratum_id, product_name
     product = self.find_product(product_name)
-    product.repos(self.environment).each do |repo|
+    product.repos(self.environment.prior).each do |repo|
       #search for erratum in all repos in a product
       idx = repo.errata.index do |e| e.id == erratum_id end
       if idx != nil
