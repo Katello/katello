@@ -91,7 +91,10 @@ describe Api::SystemsController do
                                                   :name => "activation_key_1")
         @activation_key_1.user = @mock_user
         @activation_key_2 = ActivationKey.create!(:environment => @environment_1, :organization => @organization, :name => "activation_key_2")
+        @activation_key_1.stub(:apply_to_system,:subscribe_system)
+        @activation_key_2.stub(:apply_to_system,:subscribe_system)
         @system = mock(System)
+        @controller.stub(:find_activation_keys).and_return([@activation_key_1,@activation_key_2])
       end
 
       context "and they are correct" do
@@ -100,12 +103,18 @@ describe Api::SystemsController do
           User.should_receive("current=",@activation_key_1.user)
         end
 
-        it "set the environment according the activation keys" do
+        it "sets the environment according the activation keys" do
           System.should_receive(:new).and_return(@system)
-          @controller.stub(:find_activation_keys).and_return([@activation_key_1,@activation_key_2])
           @activation_key_2.should_receive(:apply_to_system)
           @activation_key_1.should_receive(:apply_to_system)
           @system.should_receive(:save!)
+          post :activate, :organization_id => @organization.cp_key, :activation_keys => "#{@activation_key_1.name},#{@activation_key_2.name}"
+        end
+
+        it "consumes subscriptions according the activation keys" do
+          System.should_receive(:new).and_return(@system)
+          @activation_key_2.should_receive(:subscribe_system)
+          @activation_key_1.should_receive(:subscribe_system)
           post :activate, :organization_id => @organization.cp_key, :activation_keys => "#{@activation_key_1.name},#{@activation_key_2.name}"
         end
       end
