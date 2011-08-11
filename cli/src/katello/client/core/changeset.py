@@ -209,9 +209,12 @@ class UpdateContent(ChangesetAction):
             self.parser.add_option('--remove_'+ct, dest='remove_'+ct,
                                 action="callback", callback=self.store_item, type="string",
                                 help=_(ct+" to remove from the changeset"))
-            self.items['add_'+ct]    = []
-            self.items['remove_'+ct] = []
+        self.reset_items()
 
+    def reset_items(self):
+        for ct in ['package', 'erratum', 'repo']:
+            self.items['add_'+ct]    = []
+            self.items['remove_'+ct] = []        
 
     def check_options(self):
         self.require_option('name')
@@ -240,6 +243,9 @@ class UpdateContent(ChangesetAction):
 
         msg = self.api.update_content(orgName, cset["environment_id"], cset["id"], patch)
         print _("Successfully updated changeset [ %s ]") % csName
+        
+        #reset stored patch items (neccessary for shell mode)
+        self.reset_items()
         return os.EX_OK
         
         
