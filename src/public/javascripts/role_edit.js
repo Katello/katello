@@ -65,9 +65,13 @@ var roleActions = (function($){
                             tags_select.append('<option value="' + tags[i].name + '">' + tags[i].display_name + "</option>");
                         }        
                     };
+                    
+                opened = !opened;
                 
-                set_verbs_and_tags('organizations');
-                
+                if( opened ){
+                    set_verbs_and_tags('organizations');    
+                }
+                                
                 $('#resource_type').change(function(event){
                     set_verbs_and_tags(event.currentTarget.value);
                 });
@@ -146,9 +150,9 @@ var roleActions = (function($){
                 });
             });
         },
-        close = function(id) {
-            if (opened) {
-                toggle(id, 0);
+        close = function() {
+            if( open_panel ){
+                toggle(open_panel);
             }
         },
         setCurrentCrumb = function(hash_id){
@@ -490,6 +494,7 @@ $(function() {
                                 rolesRenderer.setStatus(hash_id);
                                 rolesRenderer.handleButtons(hash_id);
                                 roleActions.setCurrentCrumb(hash_id);
+                                roleActions.close();
                           }
                       });
                  
