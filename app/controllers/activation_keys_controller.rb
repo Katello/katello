@@ -111,11 +111,10 @@ class ActivationKeysController < ApplicationController
 
   def create
     begin
-      @activation_key = ActivationKey.create!(:name => params[:activation_key][:name],
-                                              :description => params[:activation_key][:description],
-                                              :environment_id => params[:activation_key][:environment_id],
-                                              :organization_id => current_organization,
-                                              :system_template_id => params[:activation_key][:system_template_id])
+      @activation_key = ActivationKey.create!(params[:activation_key]) do |key|
+        key.organization = current_organization
+        key.user = current_user
+      end
       notice _("Activation key '#{@activation_key['name']}' was created.")
       render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name']}
 
