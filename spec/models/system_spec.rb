@@ -89,7 +89,7 @@ describe System do
 
     it "should call Candlepin::Consumer.consume_entitlement" do
       pool_id = "foo"
-      Candlepin::Consumer.should_receive(:consume_entitlement).once.with(uuid,pool_id).and_return(true)
+      Candlepin::Consumer.should_receive(:consume_entitlement).once.with(uuid,pool_id,nil).and_return(true)
       @system.subscribe pool_id
     end
   end
