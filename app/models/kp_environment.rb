@@ -173,7 +173,7 @@ class KPEnvironment < ActiveRecord::Base
 
 
 
-  def self.list_verbs
+  def self.list_verbs global = false
     {
       :read_contents => N_("Access Environment Contents"),
       :read_systems => N_("Access Systems in Environment"),
