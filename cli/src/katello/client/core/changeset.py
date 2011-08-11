@@ -238,7 +238,6 @@ class UpdateContent(ChangesetAction):
         patch['+products'] = self.get_option('add_product') or []
         patch['-products'] = self.get_option('remove_product') or []
 
-        print patch
         msg = self.api.update_content(orgName, cset["environment_id"], cset["id"], patch)
         print _("Successfully updated changeset [ %s ]") % csName
         return os.EX_OK
