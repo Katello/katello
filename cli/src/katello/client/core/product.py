@@ -189,7 +189,7 @@ class Create(ProductAction):
         prod = self.api.create(prov["id"], name, description)
         print _("Successfully created product [ %s ]") % name
         
-        createRepo.create_repositories(prod, selectedurls)
+        createRepo.create_repositories(prod["cp_id"], prod["name"], selectedurls)
         
         return os.EX_OK
         

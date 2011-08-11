@@ -88,7 +88,7 @@ class Create(RepoAction):
 
         prod = get_product(orgName, prodName)
         if prod != None:
-            self.create_repositories(prod, selectedurls)
+            self.create_repositories(prod["cp_id"], name, selectedurls)
 
         return os.EX_OK
 
@@ -147,11 +147,11 @@ class Create(RepoAction):
             
         return selection
         
-    def create_repositories(self, product, selectedurls):
+    def create_repositories(self, productid, name, selectedurls):
         for repourl in selectedurls:
             parsedUrl = urlparse.urlparse(repourl)
-            repoName = "%s%s" % (product["name"], parsedUrl.path.replace("/", "_"))
-            repo = self.api.create(product["cp_id"], repoName, repourl)
+            repoName = "%s%s" % (name, parsedUrl.path.replace("/", "_"))
+            repo = self.api.create(productid, repoName, repourl)
             print _("Successfully created repository [ %s ]") % repoName
         
         
