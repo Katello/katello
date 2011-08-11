@@ -13,6 +13,17 @@
 class SearchController < ApplicationController
   include SearchHelper
 
+
+  def rules
+    pass = lambda{true}
+    {
+     :show => pass,
+     :create_favorite => pass,
+     :destroy_favorite => pass
+    }
+  end
+
+
   def show
     # retrieve the search history and favorites for the user... 
     # only return histories that are associated with the page the request is received on...
