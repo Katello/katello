@@ -201,6 +201,9 @@ class Printer:
 
         return width
 
+    def _getRandomNumber(self):
+        return 4 # guaranteed to be random
+
 
     def printItem(self, item, indent=""):
         """

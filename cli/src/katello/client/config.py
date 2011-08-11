@@ -21,7 +21,23 @@ import ConfigParser
 class Config(object):
     """
     The katello client configuration.
-    Treated at a static class.
+    Works as a static singleton class.
+
+    This Config class acts as a wrapper for ConfigParser so that each class
+    needing to access the config file doesn't need to keep track of the file path.
+    You can simply initialize Config with 'Config()' and you have full access to a
+    RawConfigParser with the config file read into the object for manipulation
+    by calling methods on 'Config.parser' .
+
+    For more detailed information on ConfigParser and its methods, please see
+    http://docs.python.org/library/configparser.html .
+
+    To save to the config file after making changes, call 'Config.save()' and the
+    changes will be written to file.
+
+    Config throws an Exception if 'Config.save()' is called before initializing
+    the Config object.
+
     @cvar PATH: The absolute path to the config directory.
     @type PATH: str
     @cvar USER: The path to an alternate configuration file
@@ -37,7 +53,7 @@ class Config(object):
     
     def __init__(self):
         """
-        Initializes a ConfigParser and reads the configuration file into the object
+        Initializes a RawConfigParser and reads the configuration file into the object
         """
         if Config.parser:
             return
@@ -52,10 +68,10 @@ class Config(object):
     @staticmethod
     def save():
         """
-        Save the current state of the ConfigParser to file
+        Save the current state of the RawConfigParser to file
         """
         if not Config.parser:
             raise Exception('Config.parser has not been initialized.')
         
         # only writes to /etc/katello/client.conf
-        Config.parser.write(open(Config.USER, 'w'))
+        Config.parser.write(open(Config.PATH, 'w'))

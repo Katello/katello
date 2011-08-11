@@ -63,7 +63,7 @@ class Remember(ClientAction):
             verb = "overwrote" if has_option else "remembered"
             print ("Successfully " + verb + " option [ {} ] ").format(option)
         except (Exception):
-            print ("Unsuccessfully remembered option [ {} ] ").format(option)
+            print "Unsuccessfully remembered option [ {} ]".format(option)
             return os.EX_DATAERR
         
         return os.EX_OK
