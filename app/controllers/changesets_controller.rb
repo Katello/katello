@@ -13,6 +13,7 @@
 class ChangesetsController < ApplicationController
   include AutoCompleteSearch
   include BreadcrumbHelper
+  include BreadcrumbHelper::ChangesetBreadcrumbs
 
   skip_before_filter :authorize # want to load environment if we can
   before_filter :find_changeset, :except => [:index, :items, :list, :create, :new, :auto_complete_search]
