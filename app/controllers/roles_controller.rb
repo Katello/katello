@@ -40,6 +40,7 @@ class RolesController < ApplicationController
       :update => edit_check,
       :create_permission => edit_check,
       :update_permission=> edit_check,
+      :destroy_permission => edit_check,
       :destroy => delete_check,
       }
   end
@@ -106,6 +107,7 @@ class RolesController < ApplicationController
 
   def update
     return if @role.name == "admin"
+    
     if params[:update_users]
       if params[:update_users][:adding]
         @role.users << User.find(params[:update_users][:user_id])
@@ -153,6 +155,8 @@ class RolesController < ApplicationController
       details[type][:verbs] = Verb.verbs_for(type).collect {|name, display_name| VirtualTag.new(name, display_name)}
       details[type][:verbs].sort! {|a,b| a.display_name <=> b.display_name}
       details[type][:tags] = Tag.tags_for(type, params[:organization_id]).collect { |t| VirtualTag.new(t.name, t.display_name) }
+      details[type][:global] = value["global"]
+      details[type][:name] = value["name"]
     end
     
     render :json => details
@@ -169,10 +173,9 @@ class RolesController < ApplicationController
     new_params = {:role => @role}
     new_params.merge! params[:permission]
     @perm = Permission.create! new_params
-    notice _("Permission created.")
-    #render :partial => "permission", :locals =>{:perm => @perm, :role=>@role, :data_new=> false}
     to_return = {}
     add_permission_bc(to_return, @perm, false)
+    notice _("Permission created.")
     render :json => to_return
   end
 
@@ -183,9 +186,14 @@ class RolesController < ApplicationController
       permission = Permission.find(params[:perm_id])
     end
     render :partial=>"permission", :locals=>{:perm=>permission, :role=>@role, :data_new=>permission.new_record?}
-
   end
 
+  def destroy_permission
+    permission = Permission.find(params[:permission_id])
+    permission.destroy
+    notice _("Permission removed.")
+    render :json => params[:permission_id]
+  end
 
   private
   def find_role
