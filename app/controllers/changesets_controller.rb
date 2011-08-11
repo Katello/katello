@@ -23,12 +23,10 @@ class ChangesetsController < ApplicationController
 
   after_filter :update_editors, :only => [:update]
 
-  around_filter :catch_exceptions
+  #around_filter :catch_exceptions
 
 
   def rules
-    env_id = @environment.id if @environment
-    env_id ||= KPEnvironment.first  #hack for auto_complete
 
     read_perm = lambda{@environment.changesets_readable?}
     manage_perm = lambda{@environment.changesets_manageable?}
@@ -82,7 +80,7 @@ class ChangesetsController < ApplicationController
   end
 
   def edit
-    render :partial=>"edit", :layout => "tupane_layout"
+    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:editable=>@environment.changesets_manageable?}
   end
 
   #list item

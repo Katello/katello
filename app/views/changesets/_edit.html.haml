@@ -9,12 +9,12 @@
   #changeset.fieldset{'data-ajax_url'=>changeset_path(@changeset.id)}
     .grid_2.ra
       %label #{_("Name:")}
-    .grid_5.la.editable.edit_textfield{:name=>"name", "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.name}
+    .grid_5.la{:name=>"name", :class=>("editable edit_textfield" if editable), "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.name}
 
   #changeset.fieldset{'data-ajax_url'=>changeset_path(@changeset.id)}
     .grid_2.ra
       %label #{_("Description:")}
-    .grid_5.la.editable.edit_description{:name=>"description", "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.description}
+    .grid_5.la{:name=>"description", :class=>("editable edit_description" if editable), "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.description}
 
 
 
