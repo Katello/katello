@@ -67,7 +67,7 @@ class SyncPlan < ActiveRecord::Base
     []
   end
 
-  def self.list_verbs
+  def self.list_verbs global = false
     {
       :read_all => N_("Access all Sync Plans"),
       :manage_all => N_("Manage all Sync Plans")

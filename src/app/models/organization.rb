@@ -81,17 +81,24 @@ class Organization < ActiveRecord::Base
   end
   
 
-  def self.list_verbs
-    {
-      :create => N_("Create Organization"),
-      :read => N_("Access Organization"),
+  def self.list_verbs global = false
+
+    org_verbs = {
       :update => N_("Manage Organization and Environments"),
-      :delete => N_("Delete Organization"),
+
       :read_systems => N_("Access Systems"),
       :create_systems =>N_("Register Systems"),
       :update_systems => N_("Manage Systems"),
       :delete_systems => N_("Delete Systems")
-   }.with_indifferent_access
+   }
+    org_verbs.merge!({
+    :create => N_("Create Organization"),
+    :read => N_("Access Organization"),
+    :delete => N_("Delete Organization"),
+    }) if global
+
+    org_verbs.with_indifferent_access
+
   end
 
   def self.no_tag_verbs
