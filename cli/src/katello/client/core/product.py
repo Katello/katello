@@ -80,7 +80,7 @@ class List(ProductAction):
             self.printer.setHeader(_("Product List For Provider %s") % (prov_name))
             prods = self.api.products_by_provider(prov["id"])
 
-        elif org_name:
+        elif org_name and env_name:
             env = get_environment(org_name, env_name)
             if env == None:
                 return os.EX_DATAERR
@@ -89,12 +89,13 @@ class List(ProductAction):
             self.printer.addColumn('name')
             self.printer.addColumn('provider_id')
             self.printer.setHeader(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
-            prods = self.api.products_by_org(org_name)
+            prods = self.api.products_by_env(env['id'])
+            
         else:
             self.printer.addColumn('id', "Cp Id")
             self.printer.addColumn('name')
             self.printer.setHeader(_("Product List"))
-            prods = self.api.products()
+            prods = self.api.products_by_org(org_name)
 
         self.printer.printItems(prods)
         return os.EX_OK
