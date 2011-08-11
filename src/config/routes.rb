@@ -159,11 +159,11 @@ Src::Application.routes.draw do
 
   match '/roles/show_permission' => 'roles#show_permission', :via=>:get
   resources :roles do
-    post "create_permission" => "roles#create_permission"
+    put "create_permission" => "roles#create_permission"
 
     resources :permission, :only => {} do
-      put "update_permission" => "roles#update_permission", :as => "update"
-      delete "destroy_permission" => "roles#destroy_permission", :as => "destroy" 
+      delete "destroy_permission" => "roles#destroy_permission", :as => "destroy"
+      post "update_permission" => "roles#update_permission", :as => "update"
     end
     collection do
       get :auto_complete_search
