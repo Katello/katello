@@ -36,8 +36,6 @@ class Api::SystemsController < Api::ApiController
     activation_keys.reverse_each {|ak| ak.apply_to_system(system) }
     system.save!
     activation_keys.each {|ak| ak.subscribe_system(system) }
-    # does not work yet - maybe wrong access
-    # activation_keys.reverse_each {|ak| ak.consume_subscriptions(system) }
     render :json => system.to_json
   end
 
