@@ -60,6 +60,15 @@ class Permission < ActiveRecord::Base
     "#{v}, #{name}, #{t}, #{org_id}"
   end
 
+  def display_verbs global = false
+    return {all_verbs => true}.with_indifferent_access if all_verbs
+    return {} if resource_type.nil? || verbs.nil?
+    display_verbs = {}
+    verbs.each { |verb|
+      display_verbs[verb.verb] = {:id => verb.id, :display_name => verb.display_name(resource_type.name, global)}
+    }
+    display_verbs.with_indifferent_access
+  end
 
   def all_types
     resource_type.nil?
