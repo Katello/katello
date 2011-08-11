@@ -28,7 +28,7 @@ class ChangesetErratumValidator < ActiveModel::Validator
     found_in_repo = false
     #search for the erratum in all repos in its product
     product.repos(from_env).each do |repo|
-      if repo.has_erratum? record.package_id
+      if repo.has_erratum? record.errata_id
         record.errors[:base] <<  _("Repository of the erratum '#{record.errata_id}' has not been promoted into the target environment!") if not repo.is_cloned_in? to_env
         found_in_repo = true
       end
