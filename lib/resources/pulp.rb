@@ -221,7 +221,7 @@ module Pulp
       def cancel(repo_id, sync_id)
         path = Repository.repository_path + repo_id + "/sync/" + sync_id + "/"
         response = delete(path, self.default_headers)
-        #JSON.parse(response.body).with_indifferent_access
+        JSON.parse(response.body).with_indifferent_access
       end
 
       def sync_status(repo_id, sync_id)
@@ -262,16 +262,25 @@ module Pulp
     class << self
       
       def create key, uuid, description = "", key_value_pairs = {}
-        #debugger
         url = consumer_path() + "?owner=#{key}"
         attrs = {:id => uuid, :description => description, :key_value_pairs => key_value_pairs}
-        response = self.post(url, attrs.to_json, self.default_headers).body
-        JSON.parse(response).with_indifferent_access
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
       end
       
       def upload_package_profile uuid, package_profile
-        response = post(consumer_path(uuid) + "profile/", package_profile.to_json, self.default_headers)
-        raise RuntimeError, "facepalm" unless response
+        attrs = {:id => uuid, :package_profile => package_profile}
+        response = put(consumer_path(uuid) + "package_profile/", attrs.to_json, self.default_headers)
+        raise RuntimeError, "update failed" unless response
+        return response
+      end
+      
+      def update key, uuid, description = ""
+        url = consumer_path(uuid) + "?owner=#{key}"
+        attrs = {:id => uuid, :description => description}
+        response = self.put(url, attrs.to_json, self.default_headers)
+        raise RuntimeError, "update failed" unless response
+        return response
       end
       
       def find consumer_id
@@ -280,7 +289,7 @@ module Pulp
       end
 
       def installed_packages consumer_id
-        response = get(consumer_path(consumer_id) + "/package_profile/", self.default_headers)
+        response = get(consumer_path(consumer_id) + "package_profile/", self.default_headers)
         JSON.parse(response.body)
       end
 

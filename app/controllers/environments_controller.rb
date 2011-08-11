@@ -99,7 +99,7 @@ class EnvironmentsController < ApplicationController
   def destroy
     @environment.destroy
     notice _("Environment '#{@environment.name}' was deleted.")
-    render :text=>""
+    render :partial => "common/post_delete_close_subpanel", :locals => {:path=>edit_organization_path(@organization.cp_key)}
   end
 
   protected

@@ -5,8 +5,8 @@
 
 = content_for :remove_item do
   - if @provider.deletable?
-    %a.remove_item.provider_delete{"data-id"=> @provider.id, "data-url"=>provider_path(@provider.id), "data-confirm-text"=>_('Are you sure?')}
-      = _("Remove Provider")
+    = link_to _("Remove Provider"), {:action => "destroy", :controller => "providers"}, :method => :delete, :confirm => _('Are you sure you want to delete this provider?'), :class => "remove_item", :remote=>true
+
 
 = content_for :navigation do
   = render_navigation(:expand_all => true, :level => 3)

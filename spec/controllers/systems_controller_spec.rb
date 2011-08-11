@@ -34,6 +34,7 @@ describe SystemsController do
     Candlepin::Consumer.stub!(:update).and_return(true)
     
     Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Pulp::Consumer.stub!(:update).and_return(true)
   end
   
   describe "viewing systems" do

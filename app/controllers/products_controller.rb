@@ -87,7 +87,7 @@ class ProductsController < ApplicationController
       Rails.logger.error error.to_s
       errors error.to_s
     end
-    render :json => ""
+    render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@product.provider_id)}
   end
 
   protected
