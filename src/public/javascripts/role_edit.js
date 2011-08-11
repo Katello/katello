@@ -151,6 +151,9 @@ var roleActions = (function($){
                 toggle(id, 0);
             }
         },
+        setCurrentCrumb = function(hash_id){
+            current_crumb = hash_id;
+        },
         getPermissionDetails = function(hash_id){
             var id = hash_id.split('_');
             
@@ -171,7 +174,7 @@ var roleActions = (function($){
             form.find("#organization_id").val(org_id);
             
             $.ajax({
-               type     : "POST",
+               type     : "PUT",
                url      : "/roles/" + $('#role_id').val() + "/create_permission/",
                cache    : false,
                data     : $('#add_permission_form').serialize(),
@@ -183,8 +186,58 @@ var roleActions = (function($){
                }
             });
         },
-        setCurrentCrumb = function(hash_id){
-            current_crumb = hash_id;
+        remove_permission = function(element){
+            delete roles_breadcrumb[element.attr('data-id')];
+            roles_tree.rerender_content();
+            
+            /*$.ajax({
+               type     : "POST",
+               url      : "/roles/" + $('#role_id').val() + "/create_permission/",
+               cache    : false,
+               data     : $('#add_permission_form').serialize(),
+               dataType : 'json',
+               success  : function(data){
+                   $.extend(roles_breadcrumb, data);
+                   roles_tree.rerender_content();
+                   toggle('permission_add');
+               }
+            });*/
+        },
+        edit_user = function(element, adding){
+            var submit_data = { update_users : { adding : adding, user_id : element.attr('data-id').split('_')[1] }};
+
+            $.ajax({
+               type     : "PUT",
+               url      : "/roles/" + $('#role_id').val(),
+               cache    : false,
+               data     : $.param(submit_data),
+               dataType : 'json',
+               success  : function(data){
+                    if( adding ){
+                        roles_breadcrumb[element.attr('data-id')].has_role = true;
+                    } else {
+                        roles_breadcrumb[element.attr('data-id')].has_role = false;
+                    }
+                    roles_tree.rerender_content();
+               }
+            });
+        },
+        remove_user = function(element){
+            roles_breadcrumb[element.attr('data-id')].has_role = false;
+            roles_tree.rerender_content();
+        },
+        handleContentAddRemove = function(element){
+            if( element.attr('data-type') === 'permission' ){
+                if( element.hasClass('remove_permission') ){
+                    remove_permission(element);
+                }
+            } else if( element.attr('data-type') === 'user'){
+                if( element.hasClass('add_user') ){
+                    edit_user(element, true);
+                } else if( element.hasClass('remove_user') ){
+                    edit_user(element, false);
+                }
+            }
         };
 
     return {
@@ -192,7 +245,8 @@ var roleActions = (function($){
         close                   :  close,
         getPermissionDetails    :  getPermissionDetails,
         setCurrentCrumb         :  setCurrentCrumb,
-        savePermission          :  savePermission
+        savePermission          :  savePermission,
+        handleContentAddRemove  :  handleContentAddRemove
     };
     
 })(jQuery);
@@ -249,7 +303,7 @@ var templateLibrary = (function($){
             for( item in permissions){
                 if( permissions.hasOwnProperty(item) ){
                     if( item.split("_")[0] === "permission" && permissions[item].organization === 'organization_' + organization_id ){
-                        html += permissionsListItem(item.split('_')[2], permissions[item].name, true);
+                        html += permissionsListItem(item, permissions[item].name, true);
                     }
                 }
             }
@@ -258,19 +312,49 @@ var templateLibrary = (function($){
         },
         permissionsListItem = function(permission_id, name, showButton) {
             var anchor = "";
+            
             if ( showButton ){
                 anchor = '<a ' + 'class="fr content_add_remove remove_permission st_button"'
                                 + 'data-type="permission" data-id="' + permission_id + '">';
                             anchor += i18n.remove + "</a>";
                         
             }
+            
             return '<li>' + anchor + '<div class="no_slide"><span class="sort_attr">'  + name + '</span></div></li>';
+        },
+        usersListItem = function(user_id, name, has_role, showButton) {
+            var anchor = "";
+            
+            if ( showButton ){
+                anchor = '<a ' + 'class="fr content_add_remove ';
+                anchor += has_role ? 'remove_user' : 'add_user';
+                anchor += ' st_button" data-type="user" data-id="' + user_id + '">';
+                anchor += has_role ? (i18n.remove + "</a>") : (i18n.add + "</a>");
+            }
+            
+            return '<li>' + anchor + '<div class="no_slide"><span class="sort_attr">'  + name + '</span></div></li>';
+        },
+        usersList = function(users, options){
+            var html = '<ul>',
+                user = undefined;
+            
+            for( item in users){
+                if( users.hasOwnProperty(item) ){
+                    user = item.split("_");
+                    if( user[0] === "user" ){
+                        html += usersListItem(item, users[item].name, users[item].has_role, options.no_slide);
+                    }
+                }
+            }
+            html += '</ul>';
+            return html;
         };
     
     return {
         list                :    list,
         organizationsList   :    organizationsList,
-        permissionsList     :    permissionsList
+        permissionsList     :    permissionsList,
+        usersList           :    usersList
     }
 }(jQuery));
 
@@ -281,7 +365,7 @@ var rolesRenderer = (function($){
             } else if( hash === 'roles' ) {
                 render_cb(templateLibrary.list(roles_breadcrumb, 'role'));
             } else if( hash === 'role_users' ){
-                render_cb(templateLibrary.list(roles_breadcrumb, 'user', { no_slide : true }));
+                render_cb(templateLibrary.usersList(roles_breadcrumb, { no_slide : true }));
             } else {
                 var split = hash.split("_"),
                     page = split[0],
@@ -335,6 +419,8 @@ var rolesRenderer = (function($){
         setStatus = function(hash_id){
             if( hash_id === 'roles' ){
                 $('#roles_status').html(i18n.rolesStatus);
+            } else if( hash_id === 'role_users' ){
+                $('#roles_status').html(i18n.usersStatus);
             }
         },
         handleButtons = function(hash_id){
@@ -377,6 +463,10 @@ var pageActions = (function($){
         
         $('#save_permission_button').click(function(){
             roleActions.savePermission();
+        });
+        
+        $('.content_add_remove').live('click', function(){
+            roleActions.handleContentAddRemove($(this));
         });
     };
     
