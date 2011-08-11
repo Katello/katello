@@ -53,9 +53,9 @@ class Api::ApiController < ActionController::Base
     @query_params = params.clone
     @query_params.delete('controller')
     @query_params.delete('action')
-    
+
     @query_params.each_pair do |k,v|
-      
+
       if v.is_a?(String)
         if v.downcase == 'true'
           @query_params[k] = true
@@ -69,7 +69,7 @@ class Api::ApiController < ActionController::Base
   end
 
   def exception_with_response(exception)
-    logger.error "exception when talking to a remote client:" << pp_exception(exception)
+    logger.error "exception when talking to a remote client: #{exception.message} " << pp_exception(exception)
     render :text => pp_exception(exception) , :status => exception.http_code
   end
 
@@ -82,9 +82,11 @@ class Api::ApiController < ActionController::Base
   end
 
   def find_organization
-    @organization = Organization.first(:conditions => {:cp_key => params[:organization_id].tr(' ', '_')})
-    raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
-    @organization
+    if not params[:organization_id].nil?
+      @organization = Organization.first(:conditions => {:cp_key => params[:organization_id].tr(' ', '_')})
+      raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:organization_id]}'") if @organization.nil?
+      @organization
+    end
   end
 
   private

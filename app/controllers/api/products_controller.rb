@@ -19,7 +19,7 @@ class Api::ProductsController < Api::ApiController
   def index
     query_params.delete(:organization_id)
     query_params.delete(:environment_id)
-    
+
     render :json => (@environment.products.where query_params).to_json
   end
 

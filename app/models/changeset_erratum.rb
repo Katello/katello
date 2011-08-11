@@ -14,14 +14,22 @@
 class ChangesetErratumValidator < ActiveModel::Validator
   def validate(record)
     from_env = record.changeset.environment.prior
+    to_env   = record.changeset.environment
     product = Product.find(record.product_id)
+
+    #package must be in one of the repositories in the source environment
+    #the repository must belong to a product that is in both source and target environment
+
+    if not (product.environments.include? from_env and product.environments.include? to_env)
+      record.errors[:base] <<  _("Product of the erratum '#{record.errata_id}' must belong to both source and target environment!")
+    end
 
     product.repos(from_env).each do |repo|
       #search for the erratum in all repos in its product
       return if repo.has_erratum? record.errata_id
     end
 
-    record.errors[:base] <<  _("Product of erratum '#{record.errata_id}' has doesn't belong the environment the changeset should be promoted from!")
+    record.errors[:base] <<  _("Erratum '#{record.errata_id}' doesn't belong to the specified product!")
   end
 end
 

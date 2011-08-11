@@ -5,8 +5,8 @@
 
 = content_for :remove_item do
   -if editable
-    %a.remove_item.repo_delete{"data-url"=>provider_product_repository_path(@provider.id, @product.id, @repository[:name]), "data-forward"=>products_repos_provider_path(@provider.id), "data-confirm-text"=>_('Are you sure?')}
-      = _("Remove Repository")
+    = link_to _("Remove Repository"), {:controller=>"repositories", :action=>"destroy"}, :confirm => _('Are you sure you want to remove this repository?'), :method => :delete, :class=>"remove_item", :remote=>true
+
 
 = content_for :subcontent do
   %h3

@@ -98,20 +98,21 @@ describe OrganizationsController do
       before (:each) do
         @controller.stub!(:render).and_return("") #fix for not finding partial
         @organization = new_test_org
-        mock_auth(@organization)
+        @organization = mock_model(Organization)
+        @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:name])
         Organization.stub!(:first).and_return(@organization)
       end
 
       it 'should call katello organization destroy api if there are more than 1 organizations' do
-        Organization.stub!(:count).and_return(2)   
+        Organization.stub!(:count).and_return(2)
         @organization.should_receive(:destroy)
-        delete 'destroy', :id => OrgControllerTest::ORG_ID 
-      end 
-      
+        delete 'destroy', :id => OrgControllerTest::ORG_ID
+      end
+
       it "should generate a success notice" do
         Organization.stub!(:count).and_return(2)
         controller.should_receive(:notice)
-        delete 'destroy', :id => OrgControllerTest::ORG_ID 
+        delete 'destroy', :id => OrgControllerTest::ORG_ID
       end
       
       it "should be successful" do
