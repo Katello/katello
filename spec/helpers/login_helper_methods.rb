@@ -27,11 +27,15 @@ module LoginHelperMethods
     end
   end
 
-  def setup_current_organization
-    @mock_org = mock(Organization)
-    @mock_org.stub!(:name).and_return("admin_one")
-    @mock_org.stub!(:cp_key).and_return("admin_one")
-    controller.stub!(:current_organization).and_return(@mock_org)
+  def setup_current_organization(org = nil)
+    if org.nil?
+      @mock_org = mock(Organization)
+      @mock_org.stub!(:name).and_return("admin_one")
+      @mock_org.stub!(:cp_key).and_return("admin_one")
+      org = @mock_org
+    end
+
+    controller.stub!(:current_organization).and_return(org)
   end
 
   def login_user_api user=nil
@@ -41,4 +45,10 @@ module LoginHelperMethods
     controller.stub!(:require_user).and_return({})
     controller.stub!(:current_user).and_return(@mock_user)
   end
+
+  def mock_auth(object)
+    object.stub(:updatable?).and_return(true)
+    object.stub(:updatable).and_return(true)
+  end
+
 end

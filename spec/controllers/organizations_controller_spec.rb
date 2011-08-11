@@ -96,10 +96,9 @@ describe OrganizationsController do
     
     describe "with no exceptions thrown" do
       before (:each) do
-        
         @controller.stub!(:render).and_return("") #fix for not finding partial
-        
-        @organization = mock_model(Organization)
+        @organization = new_test_org
+        mock_auth(@organization)
         Organization.stub!(:first).and_return(@organization)
       end
 
@@ -129,7 +128,7 @@ describe OrganizationsController do
     
     describe "exception is thrown in katello api" do
       before (:each) do
-        @organization = mock_model(Organization)
+        @organization = new_test_org
         @organization.stub!(:destroy).and_raise(Exception)
         Organization.stub!(:first).and_return(@organization)
       end
@@ -151,7 +150,7 @@ describe OrganizationsController do
     describe "with no exceptions thrown" do
 
       before (:each) do
-        @organization = mock_model(Organization)
+        @organization = new_test_org
         @organization.stub!(:update_attributes!).and_return(OrgControllerTest::ORGANIZATION)
         @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:name])
         Organization.stub!(:first).and_return(@organization)
@@ -175,7 +174,7 @@ describe OrganizationsController do
     
     describe "exception is thrown in katello api" do
       before(:each) do
-        @organization = mock_model(Organization)
+        @organization = new_test_org
         @organization.stub!(:update).and_raise(Exception)
         Organization.stub!(:first).and_return(@organization)
       end

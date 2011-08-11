@@ -38,7 +38,7 @@ describe EnvironmentsController do
     #Candlepin::Owner.stub!(:merge_to).and_return @org
     @env = mock(KPEnvironment, EnvControllerTest::ENVIRONMENT)
     @env.stub!(:successor).and_return("")
-    
+     
     @locker = mock(KPEnvironment, EnvControllerTest::LOCKER)
     
     @org = mock(Organization, EnvControllerTest::ORGANIZATION)
