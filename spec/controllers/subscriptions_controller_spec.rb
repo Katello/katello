@@ -5,6 +5,7 @@ describe SubscriptionsController do
 
   include LoginHelperMethods
   include LocaleHelperMethods
+  include OrganizationHelperMethods
 
 
 
@@ -13,7 +14,7 @@ describe SubscriptionsController do
     before (:each) do
       login_user
       set_default_locale
-      setup_current_organization
+      setup_current_organization(new_test_org)
       Candlepin::Owner.stub!(:pools).and_return([ProductTestData::POOLS])
       Candlepin::Owner.stub!(:statistics).and_return([])
 

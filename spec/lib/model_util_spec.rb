@@ -33,7 +33,7 @@ describe Katello::ModelUtils do
     @o1 = Organization.create!(:name => 'test_org1', :cp_key => 'test_org1')
     @o2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org2')
     Organization.stub!(:all).and_return([@o1, @o2])
-    Tag.tags_for("organization").size.should be(2)
+    Tag.tags_for("organizations", nil).size.should be(2)
   end
 
 end
