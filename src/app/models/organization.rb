@@ -53,19 +53,22 @@ class Organization < ActiveRecord::Base
     self.locker = KPEnvironment.new(:name => "Locker", :locker => true, :organization => self)
   end
 
-  # returns list of virtual permission tags for the current user
+
   def self.list_tags organization_id
+    #list_tags for org can ignore org_id, since its not scoped that way
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
 
   #permissions
+  scope :readable, lambda {authorized_items(READ_PERM_VERBS)}
+
   def self.creatable?
     User.allowed_to?([:create], :organizations)
   end
 
   def editable?
-      User.allowed_to?([:update, :create], :organizations, self.id)
+      User.allowed_to?([:update, :create], :organizations, nil, self)
   end
 
   def deletable?
@@ -73,19 +76,22 @@ class Organization < ActiveRecord::Base
   end
 
   def readable?
-    User.allowed_to?([:read,:update, :create], :organizations, self.id)
+    User.allowed_to?(READ_PERM_VERBS, :organizations,nil, self)
+  end
+
+  def self.any_readable?
+    Organization.readable.count > 0
   end
 
   def environments_manageable?
-    User.allowed_to?([:update], :organizations, self.id)
+    User.allowed_to?([:update, :create], :organizations, nil, self)
   end
-  
+
 
   def self.list_verbs global = false
-
     org_verbs = {
       :update => N_("Manage Organization and Environments"),
-
+      :read => N_("Access Organization"),
       :read_systems => N_("Access Systems"),
       :create_systems =>N_("Register Systems"),
       :update_systems => N_("Manage Systems"),
@@ -93,8 +99,7 @@ class Organization < ActiveRecord::Base
    }
     org_verbs.merge!({
     :create => N_("Create Organization"),
-    :read => N_("Access Organization"),
-    :delete => N_("Delete Organization"),
+    :delete => N_("Delete Organization")
     }) if global
 
     org_verbs.with_indifferent_access
@@ -108,4 +113,15 @@ class Organization < ActiveRecord::Base
   def self.tags_for org
     select('id').all
   end
+
+  private
+
+  def self.authorized_items verbs, resource = :organizations
+    if !User.allowed_all_tags?(verbs, resource)
+      where("organizations.id in (#{User.allowed_tags_sql(verbs, resource)})")
+    end
+  end
+
+  READ_PERM_VERBS = [:read, :create, :update, :delete]
+
 end

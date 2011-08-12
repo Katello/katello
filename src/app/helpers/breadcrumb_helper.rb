@@ -155,7 +155,7 @@ module BreadcrumbHelper
       add_crumb_node!(bc, "role_users", "", _("Users"), ['roles'],
                       {:client_render => true})
       add_crumb_node!(bc, "global", "", _("Global Permissions"), ['roles', "role_permissions"],
-                      {:client_render => true}, { :count => 0 })
+                      {:client_render => true}, { :count => 0, :permission_details => get_global_verbs_and_tags })
   
       @organizations.each{|org|
         add_crumb_node!(bc, organization_bc_id(org), "", org.name, ['roles', 'role_permissions'],
@@ -176,7 +176,7 @@ module BreadcrumbHelper
     
     def add_permission_bc bc, perm, adjust_count
       if perm.resource_type.global?
-                  add_crumb_node!(bc, permission_global_bc_id(perm), "", perm.id, ['roles', 'role_permissions', 'globals'],
+                  add_crumb_node!(bc, permission_global_bc_id(perm), "", perm.id, ['roles', 'role_permissions', 'global'],
                     { :client_render => true }, 
                     { :global => perm.resource_type.global?, :type =>  perm.resource_type.name,
                       :name => perm.name, :description => perm.description, 
@@ -196,8 +196,26 @@ module BreadcrumbHelper
       end
     end
     
+    def get_global_verbs_and_tags
+      details = {}
+      
+      resource_types.each do |type, value|
+        details[type] = {}
+        details[type][:verbs] = Verb.verbs_for(type, true).collect {|name, display_name| VirtualTag.new(name, display_name)}
+        details[type][:verbs].sort! {|a,b| a.display_name <=> b.display_name}
+        details[type][:global] = value["global"]
+        details[type][:name] = value["name"]
+      end
+    
+      return details
+    end
+    
     def organization_bc_id organization
-      "organization_#{organization.id}"
+      if organization
+        "organization_#{organization.id}"
+      else
+        "global"
+      end
     end
     
     def user_bc_id user
@@ -205,7 +223,11 @@ module BreadcrumbHelper
     end
     
     def permission_bc_id organization, permission
-      "permission_#{organization.id}_#{permission.id}"
+      if organization
+        "permission_#{organization.id}_#{permission.id}"
+      else
+        "permission_global_#{permission.id}"
+      end
     end
     
     def permission_global_bc_id permission
