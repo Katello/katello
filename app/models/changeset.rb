@@ -280,7 +280,7 @@ class Changeset < ActiveRecord::Base
 
   def remove_repo repo_name, product_name
     product = self.find_product(product_name)
-    repos = product.repos(self.environment)
+    repos = product.repos(self.environment.prior)
     idx = repos.index do |r| r.name == repo_name end
     if idx != nil
       repo = repos[idx]
@@ -330,7 +330,7 @@ class Changeset < ActiveRecord::Base
         async_tasks << repo.promote(to_env, product)
       end
     end
-    async_tasks
+    async_tasks.flatten(1)
   end
 
 
