@@ -24,6 +24,7 @@ from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import system_exit, is_valid_record, get_abs_path, run_spinner_in_bg, wait_for_async_task
 from katello.client.api.utils import get_environment, get_organization
+from katello.client.cli.base import OptionException
 
 class ActivationKeyAction(Action):
 
@@ -35,8 +36,8 @@ class ActivationKeyAction(Action):
         if templateName != None:
             template_api = TemplateAPI()
             template = template_api.template_by_name(environmentId, templateName)
-            if template == None:
-                return None
+            if template == None: 
+                raise OptionException()
             else:
                 return template['id']
         else:
@@ -159,8 +160,12 @@ class Create(ActivationKeyAction):
         environment = get_environment(orgName, envName)
         if not environment: return os.EX_DATAERR
         
-        templateId = self.get_template_id(environment['id'], templateName)
-            
+        try:
+            templateId = self.get_template_id(environment['id'], templateName)
+        except OptionException:
+            print _("Could not find template [ %s ]") % templateName
+            return os.EX_DATAERR
+
         key = self.api.create(environment['id'], keyName, keyDescription, templateId)
         if is_valid_record(key):
             print _("Successfully created activation key [ %s ]") % key['name']
@@ -214,7 +219,11 @@ class Update(ActivationKeyAction):
         if len(keys) == 0:
             return os.EX_DATAERR
                     
-        templateId = self.get_template_id(keys[0]['environment_id'], templateName)
+        try:
+            templateId = self.get_template_id(keys[0]['environment_id'], templateName)
+        except OptionException:
+            print _("Could not find template [ %s ]") % (templateName)
+            return os.EX_DATAERR
         key = self.api.update(keys[0]['id'], environment['id'] if environment != None else None, newKeyName, keyDescription, templateId)
         if key != None:
             print _("Successfully updated activation key [ %s ]") % key['name']
