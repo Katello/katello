@@ -61,12 +61,14 @@ class Organization < ActiveRecord::Base
 
 
   #permissions
+  scope :readables, lambda {authorized_items(READ_PERM_VERBS)}
+
   def self.creatable?
     User.allowed_to?([:create], :organizations)
   end
 
   def editable?
-      User.allowed_to?([:update, :create], :organizations, self.id)
+      User.allowed_to?([:update, :create], :organizations, nil, self.id)
   end
 
   def deletable?
@@ -74,13 +76,13 @@ class Organization < ActiveRecord::Base
   end
 
   def readable?
-    User.allowed_to?([:read,:update, :create], :organizations, self.id)
+    User.allowed_to?(READ_PERM_VERBS, :organizations,nil, self.id)
   end
 
   def environments_manageable?
-    User.allowed_to?([:update], :organizations, self.id)
+    User.allowed_to?([:update, :create], :organizations, nil, self.id)
   end
-  
+
 
   def self.list_verbs global = false
 
@@ -108,4 +110,15 @@ class Organization < ActiveRecord::Base
   def self.tags_for org
     select('id').all
   end
+
+  private
+
+  def self.authorized_items verbs, resource = :organizations
+    if !User.allowed_all_tags?(verbs, resource)
+      where("organizations.id in (#{User.allowed_tags_sql(verbs, resource)})")
+    end
+  end
+
+  READ_PERM_VERBS = [:read, :create, :update, :delete]
+
 end
