@@ -14,10 +14,18 @@
 class ChangesetRepoValidator < ActiveModel::Validator
   def validate(record)
     from_env = record.changeset.environment.prior
+    to_env   = record.changeset.environment
     product = Product.find(record.product_id)
 
+    #package must be in one of the repositories in the source environment
+    #the repository must belong to a product that is in both source and target environment
+
+    if not (product.environments.include? from_env and product.environments.include? to_env)
+      record.errors[:base] <<  _("Product of the repository '#{record.repo_id}' must belong to both source and target environment!")
+    end
+
     idx = product.repos(from_env).index do |r| r.id == record.repo_id end
-    record.errors[:base] <<  _("Repo '#{record.repo_id}' has doesn't belong to any product in the environment the changeset should be promoted from!") if idx == nil
+    record.errors[:base] <<  _("Repo '#{record.repo_id}' doesn't belong to the specified product!") if idx == nil
   end
 end
 
