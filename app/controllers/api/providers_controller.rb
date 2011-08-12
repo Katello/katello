@@ -52,6 +52,9 @@ class Api::ProvidersController < Api::ApiController
   end
   
   def import_manifest
+    if @provider.yum_repo?
+      raise HttpErrors::BadRequest, _("It is not allowed to import manifest for a custom provider.")
+    end
 
     begin
       temp_file = File.new(File.join("#{Rails.root}/tmp", "import_#{SecureRandom.hex(10)}.zip"), 'w+', 0600)
