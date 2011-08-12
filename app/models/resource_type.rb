@@ -23,6 +23,10 @@ class ResourceType < ActiveRecord::Base
     false
   end
 
+  def self.global_types
+    TYPES.collect{|key, value| key if value[:global]}.compact
+  end
+
   TYPES = {
       :organizations => {:model => Organization, :name => N_("Organizations"), :global=>false},
       :environments => {:model => KPEnvironment, :name => N_("Environments"), :global=>false},
