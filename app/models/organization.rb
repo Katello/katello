@@ -68,7 +68,7 @@ class Organization < ActiveRecord::Base
   end
 
   def editable?
-      User.allowed_to?([:update, :create], :organizations, nil, self.id)
+      User.allowed_to?([:update, :create], :organizations, nil, self)
   end
 
   def deletable?
@@ -76,16 +76,19 @@ class Organization < ActiveRecord::Base
   end
 
   def readable?
-    User.allowed_to?(READ_PERM_VERBS, :organizations,nil, self.id)
+    User.allowed_to?(READ_PERM_VERBS, :organizations,nil, self)
+  end
+
+  def self.any_readable?
+    Organization.readable.count > 0
   end
 
   def environments_manageable?
-    User.allowed_to?([:update, :create], :organizations, nil, self.id)
+    User.allowed_to?([:update, :create], :organizations, nil, self)
   end
 
 
   def self.list_verbs global = false
-
     org_verbs = {
       :update => N_("Manage Organization and Environments"),
       :read => N_("Access Organization"),
