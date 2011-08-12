@@ -150,10 +150,12 @@ class Create(RepoAction):
     def create_repositories(self, productid, name, selectedurls):
         for repourl in selectedurls:
             parsedUrl = urlparse.urlparse(repourl)
-            repoName = "%s%s" % (name, parsedUrl.path.replace("/", "_"))
+            repoName = self.repository_name(name, parsedUrl.path)
             repo = self.api.create(productid, repoName, repourl)
             print _("Successfully created repository [ %s ]") % repoName
-        
+            
+    def repository_name(self, name, parsedUrlPath):
+        return "%s%s" % (name, parsedUrlPath.replace("/", "_"))
         
     def __print_urls(self, repourls, selectedurls):
         for index, url in enumerate(repourls):
