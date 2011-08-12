@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.58
+Version:	      0.1.59
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -190,6 +190,17 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Aug 10 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.59-1
+- improving katello-reset-dbs script
+- Fixes for failing activation_keys and organization tests.
+- Grid_16 wrap on subnav for systems.
+- Additional work on confirm boxes.
+- Confirm override on environments, products, repositories, providers, and
+  organizations.
+- Working alert override.
+- Merged in changes from refactor of confirm.
+- Add in a new rake task to generate the API
+
 * Tue Aug 09 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.58-1
 - solution to bundle install issues
 - initial commit of reset-dbs script

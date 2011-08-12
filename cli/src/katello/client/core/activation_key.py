@@ -17,7 +17,6 @@
 import os
 import time
 from gettext import gettext as _
-from sets import Set
 
 from katello.client.api.activation_key import ActivationKeyAPI
 from katello.client.api.template import TemplateAPI

@@ -21,7 +21,7 @@ from katello.client.api.ping import PingAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 
-_cfg = Config()
+Config()
 
 # base ping action --------------------------------------------------------
 

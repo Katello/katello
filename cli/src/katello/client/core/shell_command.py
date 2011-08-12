@@ -21,7 +21,7 @@ from katello.client.config import Config
 from katello.client.shell import KatelloShell
 from katello.client.core.base import Action
 
-_cfg = Config()
+Config()
 
 # shell action ------------------------------------------------------------
 

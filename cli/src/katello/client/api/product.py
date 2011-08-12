@@ -24,8 +24,8 @@ class ProductAPI(KatelloAPI):
         products = self.server.GET(path, {"name": prodName} if prodName != None else {})[1]
         return products
 
-    def products_by_env(self, orgName, envName):
-        path = "/api/organizations/%s/environments/%s/products" % (orgName, envName)
+    def products_by_env(self, envId):
+        path = "/api/environments/%s/products" % envId
         products = self.server.GET(path)[1]
         return products
 
@@ -47,11 +47,10 @@ class ProductAPI(KatelloAPI):
         else:
             return None
 
-    def create(self, provId, name, description, url):
+    def create(self, provId, name, description):
         product = {
             "name": name,
-            "description": description,
-            "url": url
+            "description": description
         }
 
         path = "/api/providers/%s/product_create" % str(provId)

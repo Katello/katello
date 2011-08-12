@@ -27,7 +27,7 @@ from pwd import getpwuid
 from katello.client.config import Config
 from katello.client.core.utils import parse_tokens
 
-_cfg = Config()
+Config()
 
 class KatelloShell(Cmd):
 
@@ -68,7 +68,7 @@ class KatelloShell(Cmd):
             readline.set_completer_delims(newdelims)
 
 
-            if _cfg.shell.nohistory.lower() != 'true':
+            if (Config.parser.get('shell', 'nohistory').lower() != 'true'):
                 try:
                     if os.path.isfile(self.history_file):
                         readline.read_history_file(self.history_file)

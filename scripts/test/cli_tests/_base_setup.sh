@@ -19,6 +19,6 @@ test "user create" user create --username=$TEST_USER --password=password
 test "org create" org create --name=$TEST_ORG --description="org description"
 test "environment create" environment create --org="$FIRST_ORG" --name="$TEST_ENV" --prior="Locker"
 test "environment create" environment create --org="$FIRST_ORG" --name="$TEST_ENV_3" --prior="$TEST_ENV"
-test "provider create" provider create --name="$YUM_PROVIDER" --org="$FIRST_ORG" --type=yum --url="$FEWUPS_REPO_URL" --description="prov description"
+test "provider create" provider create --name="$YUM_PROVIDER" --org="$FIRST_ORG" --type=custom --url="$FEWUPS_REPO_URL" --description="prov description"
 test "product create" product create --provider="$YUM_PROVIDER" --org="$FIRST_ORG" --name="$FEWUPS_PRODUCT" --url="$FEWUPS_REPO_URL"
 test "repo create" repo create --product="$FEWUPS_PRODUCT" --org="$FIRST_ORG" --name="$FEWUPS_REPO" --url="$FEWUPS_REPO_URL" --assumeyes
