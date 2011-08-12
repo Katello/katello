@@ -22,13 +22,14 @@ class OrganizationsController < ApplicationController
   before_filter :setup_options, :only=>[:index, :items]
 
   def rules
+    index_test = lambda{Organization.any_readable?}
     create_test = lambda{Organization.creatable?}
     read_test = lambda{@organization.readable?}
     edit_test = lambda{@organization.editable?}
     delete_test = lambda{@organization.deletable?}
 
-    {:index =>  [[:create, :update, :read, :delete], :organizations],
-      :items => [[:create, :update, :read, :delete], :organizations],
+    {:index =>  index_test,
+      :items => index_test,
       :new => create_test,
       :create => create_test,
       :edit => read_test,
@@ -44,7 +45,7 @@ class OrganizationsController < ApplicationController
 
   def index
     begin
-      @organizations = Organization.search_for(params[:search]).limit(current_user.page_size)
+      @organizations = Organization.readable.search_for(params[:search]).limit(current_user.page_size)
       retain_search_history
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -55,7 +56,7 @@ class OrganizationsController < ApplicationController
 
   def items
     start = params[:offset]
-    @organizations = Organization.search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @organizations = Organization.readable.search_for(params[:search]).limit(current_user.page_size).offset(start)
     render_panel_items @organizations, @panel_options
   end
 

@@ -1,5 +1,18 @@
-= javascript :edit
+= javascript :edit, :role
 = include_editable_i18n
+
+= javascript do
+  :javascript
+    localize({
+      "remove"                : '#{_('Remove')}',
+      "add"                   : '+ #{_('Add')}',
+      "loading"               : "#{_('Loading Role')}",
+      "add_header_org"        : "#{_('Add Permission to')}",
+      "add_header_global"     : "#{_('Add Global Permission')}",
+      "rolesStatus"           : "#{_('Please select Organizations to view and add permissions for this role or Users to see current users with this role.')}",
+      "edit_role_details"     : '#{_("Edit Role Details")}',
+      'close_role_details'    : '#{_("Close Role Details")}',
+    });
 
 
 .grid_16

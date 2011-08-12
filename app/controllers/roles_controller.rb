@@ -72,7 +72,6 @@ class RolesController < ApplicationController
                  :col => ['name'],
                  :create => _('Role'),
                  :name => _('role'),
-                 :custom_panel => true,
                  :ajax_scroll => items_roles_path()}
   end
   
@@ -199,6 +198,8 @@ class RolesController < ApplicationController
   def find_role
     @role =  Role.find(params[:role_id]) if params.has_key? :role_id
     @role =  Role.find(params[:id]) unless params.has_key? :role_id
+  rescue Exception => error
+    render :text=>errors.to_s, :status=>:bad_request and return false
   end
 
   def resource_types

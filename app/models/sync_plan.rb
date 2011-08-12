@@ -64,7 +64,7 @@ class SyncPlan < ActiveRecord::Base
 
   # returns list of virtual permission tags for the current user
   def self.list_tags organization_id
-    []
+    [] #don't list tags for sync plans
   end
 
   def self.list_verbs global = false

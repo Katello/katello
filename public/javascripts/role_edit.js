@@ -77,11 +77,16 @@ var roleActions = (function($){
                             verbs_select.append('<option value="' + verbs[i].name + '">' + verbs[i].display_name + "</option>");
                         }
                         
-                        length = tags.length;
-                        tags_select.empty();
-                        for( i=0; i < length; i+= 1){
-                            tags_select.append('<option value="' + tags[i].name + '">' + tags[i].display_name + "</option>");
-                        }        
+                        if( type !== 'organizations' && current_organization !== "global" ){
+                            length = tags.length;
+                            tags_select.empty();
+                            for( i=0; i < length; i+= 1){
+                                tags_select.append('<option value="' + tags[i].name + '">' + tags[i].display_name + "</option>");
+                            }
+                            tags_select.parent().show();
+                        } else {
+                            tags_select.parent().hide();
+                        }
                     };
                     
                 opened = !opened;
@@ -94,6 +99,12 @@ var roleActions = (function($){
                 $('#resource_type').change(function(event){
                     set_verbs_and_tags(event.currentTarget.value);
                 });
+                
+                if( current_organization === "global" ){
+                    $('#permission_add_header').html(i18n.add_header_global);
+                } else {
+                    $('#permission_add_header').html(i18n.add_header_org + ' ' + roles_breadcrumb[current_organization].name);
+                }
                 
                 return options;
             }
@@ -178,19 +189,32 @@ var roleActions = (function($){
             current_crumb = hash_id;
         },
         setCurrentOrganization = function(hash_id){
-            current_organization = hash_id;
-        },
-        getPermissionDetails = function(hash_id){
-            var id = hash_id.split('_');
+            var split = hash_id.split('_');
             
-            if( !roles_breadcrumb[hash_id].permission_details ){
+            if( split[0] === 'organization' || split[0] === 'global' ){
+                current_organization = hash_id;
+                getPermissionDetails();
+            } else if( split[1] === 'global' ) {
+                current_organization = hash_id;
+                getPermissionDetails();
+            } else if( split[0] === 'permission' ) {
+                current_organization = 'organization_' + split[1];
+                getPermissionDetails();
+            } else {
+                current_organization = hash_id;
+            }
+        },
+        getPermissionDetails = function(){
+            var id = current_organization.split('_')[1];
+            
+            if( !roles_breadcrumb[current_organization].permission_details ){
                 $.ajax({
                     type    : "GET",
                     url     : '/roles/' + id + '/resource_type/verbs_and_scopes',
                     cache   : false,
                     dataType: 'json',
                     success : function(data){
-                        roles_breadcrumb[hash_id].permission_details = data;
+                        roles_breadcrumb[current_organization].permission_details = data;
                     }
                 });
             }
@@ -199,7 +223,9 @@ var roleActions = (function($){
             var org_id = current_crumb.split('_')[1],
                 form = $('#add_permission_form');
             
-            form.find("#organization_id").val(org_id);
+            if( current_organization !== "global" ){
+                form.find("#organization_id").val(org_id);
+            }
             
             $.ajax({
                type     : "PUT",
@@ -400,6 +426,20 @@ var templateLibrary = (function($){
             }
             html += '</ul>';
             return html;
+        },
+        globalsList = function(globals, options){
+            var html = '<ul>';
+            
+            for( item in globals ){
+                if( globals.hasOwnProperty(item) ){
+                    if( item.split("_")[0] === "permission" && item.split("_")[1] === 'global' ){
+                        html += permissionsListItem(item, globals[item].name, options.no_slide);
+                    }
+                }
+            }
+            
+            html += '</ul>';
+            return html;
         };
     
     return {
@@ -407,6 +447,7 @@ var templateLibrary = (function($){
         organizationsList   :    organizationsList,
         permissionsList     :    permissionsList,
         usersList           :    usersList,
+        globalsList         :    globalsList,
         permissionItem      :    permissionItem
     }
 }(jQuery));
@@ -420,7 +461,7 @@ var rolesRenderer = (function($){
             } else if( hash === 'role_users' ){
                 render_cb(templateLibrary.usersList(roles_breadcrumb, { no_slide : true }));
             } else if( hash === 'global' ) {
-                render_cb(templateLibrary.globalsList(roles_breadcrumb, { no_slide : true }));
+                render_cb(templateLibrary.globalsList(roles_breadcrumb, { no_slide : false }));
             } else {
                 var split = hash.split("_"),
                     page = split[0],
@@ -482,13 +523,12 @@ var rolesRenderer = (function($){
         handleButtons = function(hash_id){
             var type = hash_id.split('_')[0];
 
-            if( type === 'organization' || type === 'permission' ){
+            if( type === 'organization' || type === 'permission' || type === 'global' ){
                 $('#add_permission').removeClass('disabled');
-                roleActions.getPermissionDetails(hash_id);
                 roleActions.setCurrentOrganization(hash_id);
             } else {
                 $('#add_permission').addClass('disabled');
-                roleActions.setCurrentOrganization(false);
+                roleActions.setCurrentOrganization('');
             }
         };
     
@@ -526,6 +566,15 @@ var pageActions = (function($){
         $('.content_add_remove').live('click', function(){
             roleActions.handleContentAddRemove($(this));
         });
+        
+        panel.contract_cb = function(name){
+                    $.bbq.removeState("role_edit");
+                    $('#panel').removeClass('panel-custom');
+                };
+                
+        panel.switch_content_cb = function(){
+            $('#panel').removeClass('panel-custom');
+        };
     };
     
     return {
@@ -535,8 +584,10 @@ var pageActions = (function($){
 })(jQuery);
 
 $(function() {
+
+    $('#panel').addClass('panel-custom');
   
-  roles_tree = sliding_tree("roles_tree", { 
+    roles_tree = sliding_tree("roles_tree", { 
                           breadcrumb      :  roles_breadcrumb,
                           default_tab     :  "roles",
                           bbq_tag         :  "role_edit",
