@@ -46,7 +46,7 @@ class UsersController < ApplicationController
   
   def index
     begin
-      @users = User.search_for(params[:search]).limit(current_user.page_size)
+      @users = User.readable.search_for(params[:search]).limit(current_user.page_size)
       retain_search_history
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -56,7 +56,7 @@ class UsersController < ApplicationController
   
   def items
     start = params[:offset]
-    @users = User.search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @users = User.readable.search_for(params[:search]).limit(current_user.page_size).offset(start)
     render_panel_items @users, @panel_options
   end
 

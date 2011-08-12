@@ -137,6 +137,7 @@ class Role < ActiveRecord::Base
 
 
   #permissions
+  scope :readable, lambda {where("0 = 1")  unless User.allowed_all_tags?(READ_PERM_VERBS, :roles)}
   def self.creatable?
     User.allowed_to?([:create], :roles, nil)
   end
@@ -150,14 +151,14 @@ class Role < ActiveRecord::Base
   end
 
   def self.any_readable?
-    User.allowed_to?([:read,:update, :create], :roles, nil)
+    User.allowed_to?(READ_PERM_VERBS, :roles, nil)
   end
 
   def readable?
     Role.any_readable?
   end
 
-  def to_abbrev_text
+  def summary
     perms = permissions.collect{|perm| perm.to_abbrev_text}.join("\n")
     "Role: #{name}\nPermissions:\n#{perms}"
   end
@@ -174,5 +175,8 @@ class Role < ActiveRecord::Base
   def self.no_tag_verbs
     [:create]
   end
+
+  private
+  READ_PERM_VERBS = [:read,:update, :create,:delete]
 
 end
