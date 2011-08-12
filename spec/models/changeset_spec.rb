@@ -90,6 +90,7 @@ describe Changeset do
         @repo.stub(:errata).and_return([@err])
         @repo.stub(:has_package?).with(1).and_return(true)
         @repo.stub(:has_erratum?).with('err').and_return(true)
+        @repo.stub(:is_cloned_in?).and_return(true)
 
         @prod.stub(:repos).and_return([@repo])
         Product.stub(:find).and_return(@prod)
