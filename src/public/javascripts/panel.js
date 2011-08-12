@@ -191,9 +191,10 @@ var list = (function(){
 
 var panel = (function(){
     return {
-        extended_cb : function() {}, //callback for post extended scroll
-        expand_cb: function() {}, //callback after a pane is loaded
-        contract_cb : function() {},
+        extended_cb         : function() {}, //callback for post extended scroll
+        expand_cb           : function() {}, //callback after a pane is loaded
+        contract_cb         : function() {},
+        switch_content_cb   : function() {},
         select_item :    function(activeBlockId) {
             thisPanel = $("#panel");
             subpanel = $('#subpanel');
@@ -212,6 +213,7 @@ var panel = (function(){
                 previousBlockId = activeBlockId;
                 panel.panelAjax(activeBlockId, ajax_url, thisPanel, false);
             } else if (thisPanel.hasClass('opened') && thisPanel.attr("data-id") !== activeBlockId){
+                panel.switch_content_cb();
                 $('.block.active').removeClass('active');
                 panel.closeSubPanel(subpanel); //close the subpanel if it is open
                 // Keep the thisPanel open if they click another block
