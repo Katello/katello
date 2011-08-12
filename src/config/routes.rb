@@ -329,6 +329,7 @@ Src::Application.routes.draw do
     
       # pulp proxy --------------
     match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
+    match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
 
     # development / debugging support
     get 'status/memory'
