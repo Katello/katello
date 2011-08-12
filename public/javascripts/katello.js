@@ -220,6 +220,25 @@ $(document).ready(function (){
     //Add a handler for helptips
     $(".helptip-open").live('click', helptip.handle_close);
     $(".helptip-close").live('click', helptip.handle_open);
+
+    //org switcher
+    var button = $('#switcherButton');
+    var box = $('#switcherBox');
+    var form = $('#switcherForm');
+    button.removeAttr('href');
+    button.mouseup(function(switcher) {
+        box.toggle();
+        button.toggleClass('active');
+    });
+    form.mouseup(function() {
+        return false;
+    });
+    $(this).mouseup(function(switcher) {
+        if(!($(switcher.target).parent('#switcherButton').length > 0)) {
+            button.removeClass('active');
+            box.hide();
+        }
+    });
 });
 
 /**

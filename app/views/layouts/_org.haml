@@ -1,2 +1,20 @@
-%button{:class=>"linkbutton grid_4",
-            :onClick=>"location.href='#{organizations_path}/#{current_organization.name}';return false"} #{current_organization.name}
+/%button{:class=>"linkbutton grid_4",
+/            :onClick=>"location.href='#{organizations_path}/#{current_organization.name}';return false"} #{current_organization.name}
+
+/ orgbox Starts Here
+#switcherContainer
+  %a#switcherButton{:href => "#"}
+    %div #{current_organization.name}
+    .arrowIcon
+  %div{:style => "clear:both"}
+  #switcherBox
+    %form#switcherForm
+      %fieldset#orgbox
+        /%select#orgselect{:multiple => "", :size => "5"}
+        - for org in user.allowed_organizations
+          - if org.name == current_organization.name
+            = link_to current_organization.name, set_org_user_session_path(:org_id=>org.id), :method=>"POST", :class=>"selected fl clear"
+          - else
+            = link_to org.name, set_org_user_session_path(:org_id=>org.id), :method=>"POST", :class=>"fl clear"
+        /= link_to _("Switch Organization"), {:action=>"set_org", :controller=>"user_sessions"}, :method=>"POST", :class=>"button fr"
+/ orgbox Ends Here
