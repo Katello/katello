@@ -106,7 +106,9 @@ class User < ActiveRecord::Base
     Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
           #{resource_type.inspect} in organization #{org && org.inspect}"
 
-    org_permissions = org_permissions_query(org)
+    org_permissions = org_permissions_query(org, resource_type == :organizations)
+    org_permissions = org_permissions.where(:organization_id => nil) if resource_type == :organizations
+
 
     verbs = verbs.collect {|verb| action_to_verb(verb, resource_type)}
     no_tag_verbs = ResourceType::TYPES[resource_type][:model].no_tag_verbs rescue []
@@ -114,11 +116,16 @@ class User < ActiveRecord::Base
     no_tag_verbs.delete_if{|verb| !verbs.member? verb}
     verbs.delete_if{|verb| no_tag_verbs.member? verb}
 
+    all_tags_clause = ""
+    unless resource_type == :organizations
+      all_tags_clause = " AND (permissions.all_tags = :true)"
+    end
+
     clause_all_resources_or_tags = %{permissions.resource_type_id is null OR
-          (permissions.resource_type_id = (select id from resource_types where resource_types.name = :resource_type) AND
+          (permissions.resource_type_id = (select id from resource_types where
+            resource_types.name = :resource_type) AND
            (verbs.verb in (:no_tag_verbs) OR
-            (permissions.all_verbs=:true OR verbs.verb in (:verbs)) AND
-                permissions.all_tags = :true))}.split.join(" ")
+            (permissions.all_verbs=:true OR verbs.verb in (:verbs) #{all_tags_clause} )))}.split.join(" ")
     clause_params = {:true => true, :resource_type=>resource_type, :verbs=> verbs}
 
     org_permissions.where(clause_all_resources_or_tags,
@@ -143,7 +150,10 @@ class User < ActiveRecord::Base
   #
   # This method is called by every Model's list method
   def allowed_tags_sql(verbs=nil, resource_type = nil,  org = nil)
-    allowed_tags_query(verbs, resource_type, org).select("DISTINCT(tags.name)").to_sql
+    select_on = "DISTINCT(tags.name)"
+    select_on = "DISTINCT(permissions.organization_id)" if resource_type == :organizations
+
+    allowed_tags_query(verbs, resource_type, org, false).select(select_on).to_sql
   end
 
 
@@ -179,7 +189,7 @@ class User < ActiveRecord::Base
     tags_query = allowed_tags_query(verbs, resource_type, org)
 
     if tags.empty?
-      to_count = "verbs.verb"
+      to_count = "permissions.id"
     else
       to_count = "tags.name"
     end
@@ -347,34 +357,56 @@ class User < ActiveRecord::Base
 
   private
 
-  def allowed_tags_query(verbs=nil, resource_type = nil,  org = nil)
+  def allowed_tags_query(verbs=nil, resource_type = nil,  org = nil, allowed_to_check = true)
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a? Array
     Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
           #{resource_type.inspect} in organization #{org && org.inspect}"
 
-    org_permissions = org_permissions_query(org)
+    org_permissions = org_permissions_query(org, resource_type == :organizations)
+
     verbs = verbs.collect {|verb| action_to_verb(verb, resource_type)}
+    clause = ""
     clause_params = {:true => true, :resource_type=>resource_type, :verbs=> verbs}
 
-    clause = %{permissions.resource_type_id = (select id from resource_types where resource_types.name = :resource_type) AND
-    (permissions.all_verbs=:true OR verbs.verb in (:verbs))}.split.join(" ")
+    unless resource_type == :organizations
+      clause = %{permissions.resource_type_id = (select id from resource_types where resource_types.name = :resource_type) AND
+      (permissions.all_verbs=:true OR verbs.verb in (:verbs))}.split.join(" ")
 
-    org_permissions.joins("left outer join permissions_tags on permissions.id = permissions_tags.permission_id").joins(
-                    "left outer join tags on tags.id = permissions_tags.tag_id").where(clause, clause_params)
+      org_permissions =  org_permissions.joins("left outer join permissions_tags on permissions.id = permissions_tags.permission_id").joins(
+                      "left outer join tags on tags.id = permissions_tags.tag_id")
+    else
+      if allowed_to_check
+        org_clause = "permissions.organization_id is null"
+        org_clause = org_clause + " OR permissions.organization_id = :organization_id " if org
+        org_hash = {}
+        org_hash = {:organization_id => org.id} if org
+        org_permissions = org_permissions.where(org_clause, org_hash)
+      else
+        org_permissions = org_permissions.where("permissions.organization_id is not null")
+      end
+
+      clause = %{ permissions.resource_type_id is null OR
+                      (permissions.resource_type_id = (select id from resource_types where resource_types.name = :resource_type) AND
+                          (permissions.all_verbs=:true OR verbs.verb in (:verbs))
+                      )
+                  }.split.join(" ")
+    end
+    org_permissions.where(clause, clause_params)
   end
 
 
-  def org_permissions_query(org)
+  def org_permissions_query(org, exclude_orgs_clause = false)
     org_clause = "permissions.organization_id is null"
     org_clause = org_clause + " OR permissions.organization_id = :organization_id " if org
     org_hash = {}
     org_hash = {:organization_id => org.id} if org
-    Permission.joins(:role).joins(
+    query =  Permission.joins(:role).joins(
                   "INNER JOIN roles_users ON roles_users.role_id = roles.id").joins(
                   "left outer join permissions_verbs on permissions.id = permissions_verbs.permission_id").joins(
-                  "left outer join verbs on verbs.id = permissions_verbs.verb_id").where(
-                      org_clause, org_hash).where({"roles_users.user_id" => id})
+                  "left outer join verbs on verbs.id = permissions_verbs.verb_id").where({"roles_users.user_id" => id})
+    return query.where(org_clause, org_hash) unless exclude_orgs_clause
+    query
   end
 
 end
