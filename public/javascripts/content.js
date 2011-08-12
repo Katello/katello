@@ -177,7 +177,7 @@ var content = (function(){
               type: 'DELETE',
               url: '/sync_management/' + syncid,
               data: { repo_id: repoid },
-              dataType: 'script',
+              dataType: 'json',
               success: function(data) {
                 var prod_id = getProductId(updateField);
                 content.updateProduct(prod_id, repoid);
