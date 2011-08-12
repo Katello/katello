@@ -208,7 +208,7 @@ class Create(ProductAction):
     def discover_repos(self, url):
         return self.createRepo.discover_repositories(url)
         
-    def select_repos(repourls, assumeyes):
+    def select_repos(self, repourls, assumeyes):
         return self.createRepo.select_repositories(repourls, assumeyes)
         
     def create_repos(self, product, selectedurls):
