@@ -229,6 +229,7 @@ $(document).ready(function (){
     button.mouseup(function(switcher) {
         box.toggle();
         button.toggleClass('active');
+        $('.scroll-pane').jScrollPane({ hideFocus: true });
     });
     form.mouseup(function() {
         return false;

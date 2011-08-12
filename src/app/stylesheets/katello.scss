@@ -2,7 +2,7 @@
 @import "grid";
 @import "text";
 @import "mixins";
-@import "compass/css3/gradient";
+@import "compass";
 @import "colors";
 @import "sprites";
 
@@ -767,27 +767,27 @@ footer {
 
 .notifications {
     tr.success {
-        @include linear-gradient(color-stops(white, white, rgb(242,255,229)));
+        @include background-image(linear-gradient(white, white, rgb(242,255,229)));
         &:hover {
-            @include linear-gradient(color-stops(white, rgb(242,255,229)));
+            @include background-image(linear-gradient(white, rgb(242,255,229)));
         }
     }
     tr.error {
-        @include linear-gradient(color-stops(white, white, rgb(255,229,229)));
+        @include background-image(linear-gradient(white, white, rgb(255,229,229)));
         &:hover {
-            @include linear-gradient(color-stops(white, rgb(255,229,229)));
+            @include background-image(linear-gradient(white, rgb(255,229,229)));
         }
     }
     tr.message {
-        @include linear-gradient(color-stops(white, white, rgb(239,239,239)));
+        @include background-image(linear-gradient(white, white, rgb(239,239,239)));
         &:hover {
-            @include linear-gradient(color-stops(white, rgb(239,239,239)));
+            @include background-image(linear-gradient(white, rgb(239,239,239)));
         }
     }
     tr.warning {
-        @include linear-gradient(color-stops(white, white, rgb(255,255,229)));
+        @include background-image(linear-gradient(white, white, rgb(255,255,229)));
         &:hover {
-            @include linear-gradient(color-stops(white, rgb(255,255,229)));
+            @include background-image(linear-gradient(white, rgb(255,255,229)));
         }
     }
 }
@@ -1762,7 +1762,7 @@ fieldset {
   z-index: 30;
   cursor: pointer;
   div:first-child {
-    padding: 7px 12px 18px 10px;
+    padding: 7px 12px 4px 10px;
     display: block;
     float: left; }
   .arrowIcon {
@@ -1771,13 +1771,26 @@ fieldset {
     background: url(/images/loginArrow.png) no-repeat;
     background-position: 0 0;
     float: right;
-    margin: 10px 10px 0 0; } }
+    margin: 10px 10px 0 0;
+  }
+  &.active {
+    @include background-image(linear-gradient(rgb(61, 136, 151), rgb(121, 185, 199)));
+    @include border-bottom-lr-radius(0);
+    .arrowIcon {
+      background-position: 0 -11px;
+    }
+  }
+  &:hover {
+    @include background-image(linear-gradient(rgb(61, 136, 151), rgb(121, 185, 199)));
+    text-decoration: underline;
+  }
+}
 
 /* switcher Box */
 #switcherBox {
   position: absolute;
   top: 30px;
-  right: 0;
+  left: 0;
   display: none;
   z-index: 2000;
   a {
@@ -1785,20 +1798,14 @@ fieldset {
   }
 }
 
-/* If the switcher Button has been clicked */
-#switcherButton.active {
-  background-color: #85C3D1;
-  .arrowIcon {
-    background-position: 0 -11px; } }
-
 /* switcher Form */
 #switcherForm {
   width: 248px;
-  border: 1px solid #85C3D1;
-  border-radius: 3px 0 3px 3px;
-  -moz-border-radius: 3px 0 3px 3px;
+  border: 1px solid $orgbox_color;
+  border-radius: 0 3px 3px 3px;
+  -moz-border-radius: 0 3px 3px 3px;
   margin-top: -1px;
-  background: #85C3D1;
+  background-color: $orgbox_color;
   padding: 6px;
   fieldset {
     margin: 0 0 12px 0;
@@ -1806,50 +1813,29 @@ fieldset {
     border: 0;
     padding: 0;
   }
+  a {
+      @include border-radius(3px);
+      width: 90%;
+      padding: 3%;
+      &:hover {
+        color: #FFF !important;
+        background-color: $listhover_color;
+      }
+      &.selected {
+         background-color: $lightkprimary_color;
+      }
+  }
 }
 
-fieldset#orgbox {
+#orgbox {
   background: #fff;
   border-radius: 3px;
   -moz-border-radius: 3px;
   padding: 10px 13px;
   margin: 0;
-}
-
-#orgbox label {
-  margin: 9px 0 0 0;
-  display: block;
-  float: left;
-}
-
-#switcherForm {
-  #orgbox fieldset label {
-    display: block;
-    float: none;
-    margin: 0 0 6px 0;
-  }
-  input {
-    width: 92%;
-    border: 1px solid #899caa;
-    border-radius: 3px;
-    -moz-border-radius: 3px;
-    font-weight: bold;
-    padding: 8px 8px;
-    box-shadow: inset 0px 1px 3px #bbb;
-    -webkit-box-shadow: inset 0px 1px 3px #bbb;
-    -moz-box-shadow: inset 0px 1px 3px #bbb;
-  }
-  #orgselect {
-    width: 223px;
-  }
-  span {
-    text-align: center;
-    display: block;
-    padding: 7px 0 4px 0;
-    a {
-      text-shadow: 1px 1px #fff;
-    }
-  }
+  height: 100px;
+  overflow-y: auto;
+  width: 223px;
 }
 
 input:focus {

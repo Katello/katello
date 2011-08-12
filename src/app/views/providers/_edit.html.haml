@@ -4,7 +4,6 @@
   #{_("Edit Provider")}
 
 = content_for :remove_item do
-<<<<<<< HEAD
   - if @provider.deletable?
     = link_to _("Remove Provider"), {:action => "destroy", :controller => "providers"}, :method => :delete, :confirm => _('Are you sure you want to delete this provider?'), :class => "remove_item", :remote=>true
 
