@@ -118,7 +118,7 @@ class User < ActiveRecord::Base
     verbs.delete_if{|verb| no_tag_verbs.member? verb}
 
     all_tags_clause = ""
-    unless resource_type == :organizations
+    unless resource_type == :organizations || ResourceType.global_types.include?(resource_type.to_s)
       all_tags_clause = " AND (permissions.all_tags = :true)"
     end
 
@@ -313,12 +313,15 @@ class User < ActiveRecord::Base
     [:create]
   end
 
+  READ_PERM_VERBS = [:read,:update, :create,:delete]
+  scope :readable, lambda {where("0 = 1")  unless User.allowed_all_tags?(READ_PERM_VERBS, :users)}
+
   def self.creatable?
     User.allowed_to?([:create], :user, nil)
   end
 
   def self.any_readable?
-    User.allowed_to?([:create, :read, :update, :delete], :users, nil)
+    User.allowed_to?(READ_PERM_VERBS, :users, nil)
   end
 
   def readable?
@@ -330,7 +333,7 @@ class User < ActiveRecord::Base
   end
 
   def deletable?
-        User.allowed_to?([:delete], :users, nil)
+    User.allowed_to?([:delete], :users, nil)
   end
 
 
