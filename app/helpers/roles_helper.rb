@@ -41,4 +41,5 @@ module RolesHelper
     end
     Verb.verbs_for(f.object.resource_type.name) || []
   end
+
 end
