@@ -193,14 +193,19 @@ var roleActions = (function($){
             
             if( split[0] === 'organization' || split[0] === 'global' ){
                 current_organization = hash_id;
+                getPermissionDetails();
             } else if( split[1] === 'global' ) {
                 current_organization = hash_id;
-            } else {
+                getPermissionDetails();
+            } else if( split[0] === 'permission' ) {
                 current_organization = 'organization_' + split[1];
+                getPermissionDetails();
+            } else {
+                current_organization = hash_id;
             }
         },
-        getPermissionDetails = function(hash_id){
-            var id = hash_id.split('_')[1];
+        getPermissionDetails = function(){
+            var id = current_organization.split('_')[1];
             
             if( !roles_breadcrumb[current_organization].permission_details ){
                 $.ajax({
@@ -521,7 +526,6 @@ var rolesRenderer = (function($){
             if( type === 'organization' || type === 'permission' || type === 'global' ){
                 $('#add_permission').removeClass('disabled');
                 roleActions.setCurrentOrganization(hash_id);
-                roleActions.getPermissionDetails(hash_id);
             } else {
                 $('#add_permission').addClass('disabled');
                 roleActions.setCurrentOrganization('');
