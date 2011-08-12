@@ -103,6 +103,7 @@ class User < ActiveRecord::Base
   def allowed_all_tags?(verbs=nil, resource_type = nil,  org = nil)
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a? Array
+    org = Organization.find(org) if Numeric === org
     Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
           #{resource_type.inspect} in organization #{org && org.inspect}"
 
@@ -362,7 +363,7 @@ class User < ActiveRecord::Base
     verbs = [verbs] unless verbs.is_a? Array
     Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
           #{resource_type.inspect} in organization #{org && org.inspect}"
-
+    org = Organization.find(org) if Numeric === org
     org_permissions = org_permissions_query(org, resource_type == :organizations)
 
     verbs = verbs.collect {|verb| action_to_verb(verb, resource_type)}
