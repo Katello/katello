@@ -1,14 +1,6 @@
 = javascript do
   :javascript
     var roles_breadcrumb = $.parseJSON('#{escape_javascript(generate_roles_breadcrumb())}');
-    localize({
-      "remove"        : '#{_('Remove')}',
-      "add"           : '+ #{_('Add')}',
-      "loading"       : "#{_('Loading Role')}",
-      "rolesStatus"   : "#{_('Please select Organizations to view and add permissions for this role or Users to see current users with this role.')}",
-      "edit_role_details"  : '#{_("Edit Role Details")}',
-      'close_role_details' : '#{_("Close Role Details")}',
-    });
 
 = javascript :role_edit
 
@@ -57,8 +49,7 @@
         .grid_3.la.editable.edit_description{'name' => 'role[description]'} #{@role.description}
 
     #permission_add.slide_up_container
-      %h2
-        &nbsp; #{_("Add Permission")}
+      %h2#permission_add_header
       %form{ :id => "add_permission_form" }
         %input{:type => "hidden", :name => "permission[organization_id]", :value => '', :id => "organization_id" }
         .permission_add_container
