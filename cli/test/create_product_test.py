@@ -48,6 +48,7 @@ class CreateTest(unittest.TestCase):
         self.create_action.select_repos.return_value = self.DISCOVERED_REPOS
         
         self.create_action.create_repos = Mock()
+        
         self.create_action.printer = Mock()
         self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES)
         

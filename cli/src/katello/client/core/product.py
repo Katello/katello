@@ -211,8 +211,8 @@ class Create(ProductAction):
     def select_repos(self, repourls, assumeyes):
         return self.createRepo.select_repositories(repourls, assumeyes)
         
-    def create_repos(self, product, selectedurls):
-        return self.createRepo.create_repositories(prod["cp_id"], prod["name"], selectedurls)
+    def create_repos(self, product_id, product_name, selectedurls):
+        return self.createRepo.create_repositories(product_id, product_name, selectedurls)
         
     def wait_for_discovery(self, discoveryTask):
         while discoveryTask['state'] not in ('finished', 'error', 'timed out', 'canceled'):
