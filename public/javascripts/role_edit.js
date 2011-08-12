@@ -531,6 +531,10 @@ var pageActions = (function($){
         $('.content_add_remove').live('click', function(){
             roleActions.handleContentAddRemove($(this));
         });
+        
+        panel.contract_cb = function(name){
+                    $.bbq.removeState("role_edit"); 
+                };
     };
     
     return {
