@@ -70,30 +70,35 @@ describe PromotionsController do
       @product = new_test_product(@org, @env)
       @product.stub(:packages).and_return([])
       Product.stub(:find).and_return(@product)
-      
     end
 
-    it "should be succesful when requesting packages" do
+    it "should be successful when requesting packages" do
       get 'packages', :org_id=>@org.cp_key, :env_id=>@env.name, :product_id => @product.id
       response.should be_success
       assigns(:environment).should == @env
       assigns(:packages).size.should == 1
     end
 
-    it "should be succesful when requesting errata" do
+    it "should be successful when requesting errata" do
       get 'errata', :org_id=>@org.cp_key, :env_id=>@env.name, :product_id => @product.id
       response.should be_success
       assigns(:environment).should == @env
       assigns(:errata).size.should == 1
     end
 
-    it "should be succesful when requesting repos" do
+    it "should be successful when requesting repos" do
       get 'repos', :org_id=>@org.cp_key, :env_id=>@env.name, :product_id => @product.id
       response.should be_success
       assigns(:environment).should == @env
       assigns(:repos).size.should == 1
     end
 
+    it "should be successful when requesting distributions" do
+      get 'distributions', :org_id=>@org.cp_key, :env_id=>@env.name, :product_id => @product.id
+      response.should be_success
+      assigns(:environment).should == @env
+      assigns(:distributions).size.should == 1
+    end
   end
 
 
