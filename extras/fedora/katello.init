@@ -17,7 +17,8 @@ prog=katello
 RETVAL=0
 KATELLO_PORT=${KATELLO_PORT:-3000}
 KATELLO_USER=${KATELLO_USER:-katello}
-KATELLO_HOME=${KATELLO_HOME:-/usr/lib64/katello}
+KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
+KATELLO_DATA_DIR=${KATELLO_DATA_DIR:-/var/lib/katello}
 KATELLO_ENV=${KATELLO_ENV:-production}
 KATELLO_PID=${KATELLO_PID:-${KATELLO_HOME}/tmp/pids/server.pid}
 export KATELLO_LOGGING=${KATELLO_LOGGING:-info}
@@ -58,7 +59,7 @@ status_q() {
 start() {
     check_privilege
 
-    [ ! -f /var/lib/katello/initdb_done ] && echo "Please run initdb first" && echo_failure && return 1
+    [ ! -f $KATELLO_DATA_DIR/initdb_done ] && echo "Please run initdb first" && echo_failure && return 1
 
     echo -n $"Starting $prog: "
     if status_q; then
@@ -68,7 +69,7 @@ start() {
     else
         cd ${KATELLO_HOME} #rails expects you to run from the root of the app
         # delete Gemfile.lock (it will be regenerated)
-        rm -f /var/lib/katello/Gemfile.lock
+        rm -f $KATELLO_DATA_DIR/Gemfile.lock
         #workaround for the bug 726030 - Webrick wont start with the -d (daemon) option
         #daemon --user ${KATELLO_USER} bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} -d >/var/log/katello/startup.log 2>&1
         daemon --user ${KATELLO_USER} nohup bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} >/var/log/katello/startup.log 2>&1 &
@@ -158,9 +159,9 @@ case "$1" in
         condstop
         pushd $KATELLO_HOME >/dev/null
         su $KATELLO_USER -s /bin/bash -c "RAILS_ENV=$KATELLO_ENV rake setup --trace" \
-          >/var/log/katello/initdb.log
+          2>&1 | tee /var/log/katello/initdb.log
         popd >/dev/null
-        touch /var/lib/katello/initdb_done
+        touch $KATELLO_DATA_DIR/initdb_done
         ;;
     *)
         echo "Usage: {start|stop|restart|condrestart|status|initdb}"
