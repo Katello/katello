@@ -74,8 +74,8 @@ class Provider < ActiveRecord::Base
 
   #permissions
   # returns list of virtual permission tags for the current user
-  def self.list_tags organization_id
-    select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
+  def self.list_tags org_id
+    select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
   def self.list_verbs  global = false
@@ -92,15 +92,15 @@ class Provider < ActiveRecord::Base
     [:create]
   end
 
-  scope :readables, lambda {|org| authorized_items(org, [:read, :create, :sync])}
-  scope :syncables, lambda {|org| authorized_items(org, [:sync])}
+  scope :readable, lambda {|org| authorized_items(org, READ_PERM_VERBS)}
+  scope :syncable, lambda {|org| authorized_items(org, SYNC_PERM_VERBS)}
 
   def readable?
-    User.allowed_to?([:read, :create, :sync], :providers, self.id, self.organization)
+    User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization)
   end
 
   def self.any_readable? org
-    User.allowed_to?([:read, :create, :sync], :providers, nil, org)
+    User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
   end
 
   def self.creatable? org
@@ -116,7 +116,7 @@ class Provider < ActiveRecord::Base
   end
 
   def syncable?
-    User.allowed_to?([:sync], :providers, self.id, self.organization)
+    User.allowed_to?(SYNC_PERM_VERBS, :providers, self.id, self.organization)
   end
   protected
 
@@ -135,5 +135,7 @@ class Provider < ActiveRecord::Base
     end
   end
 
+  READ_PERM_VERBS = [:read, :create, :update, :sync, :delete]
+  SYNC_PERM_VERBS = [:sync]
 end
 

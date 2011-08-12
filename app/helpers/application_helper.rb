@@ -79,7 +79,6 @@ module ApplicationHelper
   def two_panel(collection, options)
     options[:accessor] ||= "id"
     options[:left_panel_width] ||= nil
-    options[:custom_panel] ||= nil
     enable_create = options[:enable_create]
     enable_create = true if enable_create.nil?
     enable_sort = options[:enable_sort] ? options[:enable_sort] : false
@@ -96,7 +95,6 @@ module ApplicationHelper
              :accessor=>options[:accessor],
              :url=>options[:url], 
              :left_panel_width=>options[:left_panel_width],
-             :custom_panel => options[:custom_panel],
              :ajax_scroll =>options[:ajax_scroll]}
   end
 

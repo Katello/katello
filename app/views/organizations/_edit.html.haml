@@ -2,7 +2,7 @@
 
 = content_for :title do
   = @organization.name 
-- unless current_organization == @organization
+- unless current_organization == @organization || !@organization.deletable?
   = content_for :remove_item do
     = link_to _("Remove Organization"), {:controller=>"organizations", :action=>"destroy"}, :confirm => _('Are you sure you want to remove this organization?'), :method => :delete, :class=>"remove_item", :remote=>true
 
