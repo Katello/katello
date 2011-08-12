@@ -92,8 +92,8 @@ class Provider < ActiveRecord::Base
     [:create]
   end
 
-  scope :readables, lambda {|org| authorized_items(org, READ_PERM_VERBS)}
-  scope :syncables, lambda {|org| authorized_items(org, SYNC_PERM_VERBS)}
+  scope :readable, lambda {|org| authorized_items(org, READ_PERM_VERBS)}
+  scope :syncable, lambda {|org| authorized_items(org, SYNC_PERM_VERBS)}
 
   def readable?
     User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization)

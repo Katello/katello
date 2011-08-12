@@ -108,7 +108,7 @@ class ProvidersController < ApplicationController
 
   def index
     begin
-      @providers = Provider.readables(current_organization).search_for(params[:search]).order('provider_type desc').limit(current_user.page_size)
+      @providers = Provider.readable(current_organization).search_for(params[:search]).order('provider_type desc').limit(current_user.page_size)
       retain_search_history
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -119,7 +119,7 @@ class ProvidersController < ApplicationController
 
   def items
     start = params[:offset]
-    @providers = Provider.readables(current_organization).search_for(params[:search]).order('provider_type desc').limit(current_user.page_size).offset(start)
+    @providers = Provider.readable(current_organization).search_for(params[:search]).order('provider_type desc').limit(current_user.page_size).offset(start)
     render_panel_items @providers, @panel_options
   end
 
