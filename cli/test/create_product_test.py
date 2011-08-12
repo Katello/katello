@@ -11,7 +11,7 @@ class RequiredCLIOptionsTests(unittest.TestCase):
     def test_missing_org_generates_error(self):
         self.assertRaises(Exception, self.create_action.process_options, ['create', '--provider=porkchop', '--name=product1'])
 
-    def test_missing_prov_generates_error(self):
+    def test_missing_product_generates_error(self):
         self.assertRaises(Exception, self.create_action.process_options, ['create', '--org=ACME', '--provider=porkchop'])
 
     def test_missing_prov_generates_error(self):
