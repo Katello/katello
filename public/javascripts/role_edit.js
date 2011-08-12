@@ -189,19 +189,27 @@ var roleActions = (function($){
             current_crumb = hash_id;
         },
         setCurrentOrganization = function(hash_id){
-            current_organization = hash_id;
+            var split = hash_id.split('_');
+            
+            if( split[0] === 'organization' || split[0] === 'global' ){
+                current_organization = hash_id;
+            } else if( split[1] === 'global' ) {
+                current_organization = hash_id;
+            } else {
+                current_organization = 'organization_' + split[1];
+            }
         },
         getPermissionDetails = function(hash_id){
-            var id = hash_id.split('_');
+            var id = hash_id.split('_')[1];
             
-            if( !roles_breadcrumb[hash_id].permission_details ){
+            if( !roles_breadcrumb[current_organization].permission_details ){
                 $.ajax({
                     type    : "GET",
                     url     : '/roles/' + id + '/resource_type/verbs_and_scopes',
                     cache   : false,
                     dataType: 'json',
                     success : function(data){
-                        roles_breadcrumb[hash_id].permission_details = data;
+                        roles_breadcrumb[current_organization].permission_details = data;
                     }
                 });
             }
@@ -210,7 +218,9 @@ var roleActions = (function($){
             var org_id = current_crumb.split('_')[1],
                 form = $('#add_permission_form');
             
-            form.find("#organization_id").val(org_id);
+            if( current_organization !== "global" ){
+                form.find("#organization_id").val(org_id);
+            }
             
             $.ajax({
                type     : "PUT",
@@ -417,7 +427,7 @@ var templateLibrary = (function($){
             
             for( item in globals ){
                 if( globals.hasOwnProperty(item) ){
-                    if( item.split("_")[0] === "permission" && globals[item].global === true ){
+                    if( item.split("_")[0] === "permission" && item.split("_")[1] === 'global' ){
                         html += permissionsListItem(item, globals[item].name, options.no_slide);
                     }
                 }
@@ -510,11 +520,11 @@ var rolesRenderer = (function($){
 
             if( type === 'organization' || type === 'permission' || type === 'global' ){
                 $('#add_permission').removeClass('disabled');
-                roleActions.getPermissionDetails(hash_id);
                 roleActions.setCurrentOrganization(hash_id);
+                roleActions.getPermissionDetails(hash_id);
             } else {
                 $('#add_permission').addClass('disabled');
-                roleActions.setCurrentOrganization(false);
+                roleActions.setCurrentOrganization('');
             }
         };
     
