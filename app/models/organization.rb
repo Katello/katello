@@ -61,7 +61,7 @@ class Organization < ActiveRecord::Base
 
 
   #permissions
-  scope :readables, lambda {authorized_items(READ_PERM_VERBS)}
+  scope :readable, lambda {authorized_items(READ_PERM_VERBS)}
 
   def self.creatable?
     User.allowed_to?([:create], :organizations)
