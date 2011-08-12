@@ -53,10 +53,10 @@ class Permission < ActiveRecord::Base
   end
 
   def to_abbrev_text
-    v = (all_verbs? && "nil") || "[#{verbs.collect { |v| v.verb }.join(',')}]"
-    t = (all_tags? && "nil") || "[#{tags.collect { |t| t.name }.join(',')}]"
-    name = (resource_type && resource_type.name) || "nil"
-    org_id = (organization && "#{organization.id}") || "nil"
+    v = (all_verbs? && "all_verbs") || "[#{verbs.collect { |v| v.verb }.join(',')}]"
+    t = (all_tags? && "all_tags") || "[#{tags.collect { |t| t.name }.join(',')}]"
+    name = (resource_type && resource_type.name) || "all_resources"
+    org_id = (organization && "#{organization.id}") || "all organizations"
     "#{v}, #{name}, #{t}, #{org_id}"
   end
 
