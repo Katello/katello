@@ -62,8 +62,9 @@ class Config(object):
         
         # read global configuration first
         Config.parser.readfp(open(Config.PATH, 'r'), Config.PATH)
-        if os.path.exists(Config.USER):
-            Config.parser.readfp(open(Config.USER, 'r'), Config.USER)
+
+        # read user config if it exists
+        Config.parser.read(Config.USER)
     
     @staticmethod
     def save():
@@ -73,5 +74,5 @@ class Config(object):
         if not Config.parser:
             raise Exception('Config.parser has not been initialized.')
         
-        # only writes to /etc/katello/client.conf
-        Config.parser.write(open(Config.PATH, 'w'))
+        # only writes to ~/.katello/client.conf
+        Config.parser.write(open(Config.USER, 'w'))
