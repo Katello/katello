@@ -182,7 +182,7 @@ class Glue::Pulp::Repo
     cloned.name = name
     cloned.feed = feed
     cloned.groupid = Glue::Pulp::Repos.groupid(product, to_environment)
-    Pulp::Repository.clone_repo(self, cloned)
+    [Pulp::Repository.clone_repo(self, cloned)]
   end
 
   def organization
