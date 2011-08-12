@@ -391,54 +391,6 @@ table {
           /* @include box-shadow(0, 1px, 1px, #000); */
     }
   }
-  
-  /* HEADER BUTTONS */
-  input[type='submit'],button,.button {
-    font-family: $screenfont;
-    font-weight: bold;
-    font-size: 10px;
-    display: inline-block;
-    background: -moz-linear-gradient(top, lighten($kprimary_color, 20%), $kprimary_color );
-    background: -webkit-gradient(linear, left top, left bottom, from(lighten($kprimary_color, 20%)),  to($kprimary_color));
-    @include no-box-shadow;
-    border: 0 none;
-    color: #FFF;
-    cursor: pointer;
-    @include border-radius(5px);
-    @include text-shadow(0, 1px, 0, #000);
-     min-height: 14px;
-    .nomargin {
-      margin: 0;
-    }
-    &:hover {
-      background: -moz-linear-gradient(top, lighten($kprimary_color, 30%), lighten($kprimary_color, 20%));
-      background: -webkit-gradient(linear, left top, left bottom, from(lighten($kprimary_color, 30%)), to(lighten($kprimary_color, 20%)));
-      @include box-shadow(0, 1px, 2px, rgba(0,0,0,0.5));
-      text-decoration: none;
-      color: #fff;
-    }
-    &:active {
-      background: -moz-linear-gradient(top, lighten($kprimary_color, 30%), lighten($kprimary_color, 20%));
-      background: -webkit-gradient(linear, left top, left bottom, from(lighten($kprimary_color, 30%)), to(lighten($kprimary_color, 20%)));
-      @include no-box-shadow;
-      text-decoration: none;
-      @include text-shadow(0, 2px, 2px, #000);
-    }
-    &:focus {
-      text-decoration: none;
-      color: #FFF;
-    }
-    &.disabled, &[disabled] {
-      cursor: default;
-      background: transparent;
-      opacity: 0.4;
-      /* @include no-box-shadow; */
-      &:hover {
-        background: transparent;
-        @include no-box-shadow;
-      }
-    }
-  }
 }
 
 #subheader {
@@ -1789,4 +1741,117 @@ fieldset {
     position: absolute;
     margin-top: 2px;
   }
+}
+
+
+/*-------switcher STARTS HERE -------*/
+
+/* switcher Container (default to float:right) */
+#switcherContainer {
+  position: absolute;
+  margin-top: 4px;
+}
+
+/* switcher Button */
+ #switcherButton {
+  display: inline-block;
+  float: right;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  position: relative;
+  z-index: 30;
+  cursor: pointer;
+  div:first-child {
+    padding: 7px 12px 18px 10px;
+    display: block;
+    float: left; }
+  .arrowIcon {
+    height: 11px;
+    width: 13px;
+    background: url(/images/loginArrow.png) no-repeat;
+    background-position: 0 0;
+    float: right;
+    margin: 10px 10px 0 0; } }
+
+/* switcher Box */
+#switcherBox {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  display: none;
+  z-index: 2000;
+  a {
+    color: #000 !important;
+  }
+}
+
+/* If the switcher Button has been clicked */
+#switcherButton.active {
+  background-color: #85C3D1;
+  .arrowIcon {
+    background-position: 0 -11px; } }
+
+/* switcher Form */
+#switcherForm {
+  width: 248px;
+  border: 1px solid #85C3D1;
+  border-radius: 3px 0 3px 3px;
+  -moz-border-radius: 3px 0 3px 3px;
+  margin-top: -1px;
+  background: #85C3D1;
+  padding: 6px;
+  fieldset {
+    margin: 0 0 12px 0;
+    display: block;
+    border: 0;
+    padding: 0;
+  }
+}
+
+fieldset#orgbox {
+  background: #fff;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  padding: 10px 13px;
+  margin: 0;
+}
+
+#orgbox label {
+  margin: 9px 0 0 0;
+  display: block;
+  float: left;
+}
+
+#switcherForm {
+  #orgbox fieldset label {
+    display: block;
+    float: none;
+    margin: 0 0 6px 0;
+  }
+  input {
+    width: 92%;
+    border: 1px solid #899caa;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    font-weight: bold;
+    padding: 8px 8px;
+    box-shadow: inset 0px 1px 3px #bbb;
+    -webkit-box-shadow: inset 0px 1px 3px #bbb;
+    -moz-box-shadow: inset 0px 1px 3px #bbb;
+  }
+  #orgselect {
+    width: 223px;
+  }
+  span {
+    text-align: center;
+    display: block;
+    padding: 7px 0 4px 0;
+    a {
+      text-shadow: 1px 1px #fff;
+    }
+  }
+}
+
+input:focus {
+  outline: none;
 }
