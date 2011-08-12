@@ -35,6 +35,15 @@ except ImportError:
 
 Config()
 
+SYNC_STATES = { 'waiting':     _("Waiting"),
+                'running':     _("Running"),
+                'error':       _("Error"),
+                'finished':    _("Finished"),
+                'cancelled':   _("Cancelled"),
+                'timed_out':   _("Timed out"),
+                'not_synced':  _("Not synced") }
+
+
 # base action ----------------------------------------------------------------
 
 class RepoAction(Action):
@@ -49,6 +58,9 @@ class RepoAction(Action):
         else:
             return str(format_date(sync_time[0:19], '%Y-%m-%dT%H:%M:%S'))
             #'2011-07-11T15:03:52+02:00
+
+    def format_sync_state(self, state):
+        return SYNC_STATES[state]
 
 # actions --------------------------------------------------------------------
 
@@ -195,10 +207,12 @@ class Status(RepoAction):
         repo = self.api.repo(repo_id)
 
         repo['last_sync'] = self.format_sync_time(repo['last_sync'])
+        repo['sync_state'] = self.format_sync_state(repo['sync_state'])
 
         self.printer.addColumn('id')
         self.printer.addColumn('package_count')
         self.printer.addColumn('last_sync')
+        self.printer.addColumn('sync_state',name=_("Progress"))
 
         self.printer.setHeader(_("Repository Status"))
         self.printer.printItem(repo)
@@ -243,6 +257,7 @@ class Info(RepoAction):
 
         repo['url'] = repo['source']['url']
         repo['last_sync'] = self.format_sync_time(repo['last_sync'])
+        repo['sync_state'] = self.format_sync_state(repo['sync_state'])
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
@@ -250,6 +265,7 @@ class Info(RepoAction):
         self.printer.addColumn('arch', show_in_grep=False)
         self.printer.addColumn('url', show_in_grep=False)
         self.printer.addColumn('last_sync', show_in_grep=False)
+        self.printer.addColumn('sync_state', name=_("Progress"), show_in_grep=False)
 
         self.printer.setHeader(_("Information About Repo %s") % repoId)
 
