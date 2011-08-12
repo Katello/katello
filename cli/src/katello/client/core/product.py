@@ -184,43 +184,20 @@ class Create(ProductAction):
 
         
     def create_product_with_repos(self, provName, orgName, name, description, url, assumeyes):
-        prov = self.find_provider(orgName, provName)
+        prov = get_provider(orgName, provName)
         if prov == None:
             return os.EX_DATAERR        
         
-        repourls = self.discover_repos(url)
+        repourls = self.createRepo.discover_repositories(url)
         self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
-        selectedurls = self.select_repos(repourls, assumeyes)
+        selectedurls = self.createRepo.select_repositories(repourls, assumeyes)
         
-        prod = self.create_product(prov["id"], name, description)
+        prod = self.api.create(prov["id"], name, description)
         print _("Successfully created product [ %s ]") % name
         
-        self.create_repos(prod["cp_id"], prod["name"], selectedurls)
+        self.createRepo.create_repositories(prod["cp_id"], prod["name"], selectedurls)
         
         return os.EX_OK
-
-    def find_provider(self, orgName, provName):
-        return get_provider(orgName, provName)
-        
-    def create_product(self, id, name, description):
-        return self.api.create(id, name, description)
-        
-    def discover_repos(self, url):
-        return self.createRepo.discover_repositories(url)
-        
-    def select_repos(self, repourls, assumeyes):
-        return self.createRepo.select_repositories(repourls, assumeyes)
-        
-    def create_repos(self, product_id, product_name, selectedurls):
-        return self.createRepo.create_repositories(product_id, product_name, selectedurls)
-        
-    def wait_for_discovery(self, discoveryTask):
-        while discoveryTask['state'] not in ('finished', 'error', 'timed out', 'canceled'):
-            time.sleep(0.25)
-            discoveryTask = self.repoapi.repo_discovery_status(discoveryTask['id'])
-
-        return discoveryTask
-
 
 # product command ------------------------------------------------------------
 
