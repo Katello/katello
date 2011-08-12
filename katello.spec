@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.60
+Version:	      0.1.61
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -190,6 +190,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Aug 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.61-1
+- rpm in /usr/share/katello - introducing KATELLO_DATA_DIR
+
 * Fri Aug 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.60-1
 - katello rpm now installs to /usr/share/katello
 - fixing cancel sync DELETE action call
