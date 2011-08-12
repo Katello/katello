@@ -5,13 +5,6 @@
 = javascript :role_edit
 
 
--#= content_for :title do
-  -#{@role.name}
-
--#= content_for :remove_item do
-  -#= link_to _("Remove Role"), {:action => "destroy", :controller => "roles"}, :method => :delete, :confirm => _('Are you sure?'), :class => "remove_item", :remote=>true
-
--#= content_for :content do
 #role
   #roles_tree.sliding_tree
     .breadcrumb_search.clear.clickable

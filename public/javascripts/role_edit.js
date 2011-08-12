@@ -554,8 +554,13 @@ var pageActions = (function($){
         });
         
         panel.contract_cb = function(name){
-                    $.bbq.removeState("role_edit"); 
+                    $.bbq.removeState("role_edit");
+                    $('#panel').removeClass('panel-custom');
                 };
+                
+        panel.switch_content_cb = function(){
+            $('#panel').removeClass('panel-custom');
+        };
     };
     
     return {
@@ -565,8 +570,10 @@ var pageActions = (function($){
 })(jQuery);
 
 $(function() {
+
+    $('#panel').addClass('panel-custom');
   
-  roles_tree = sliding_tree("roles_tree", { 
+    roles_tree = sliding_tree("roles_tree", { 
                           breadcrumb      :  roles_breadcrumb,
                           default_tab     :  "roles",
                           bbq_tag         :  "role_edit",
