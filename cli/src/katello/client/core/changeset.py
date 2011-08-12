@@ -73,7 +73,9 @@ class List(ChangesetAction):
         self.printer.addColumn('name')
         self.printer.addColumn('updated_at')
         self.printer.addColumn('state')
-
+        self.printer.addColumn('environment_id')
+        self.printer.addColumn('environment_name')
+        
         self.printer.setHeader(_("Changeset List"))
         self.printer.printItems(changesets)
         return os.EX_OK
@@ -107,6 +109,7 @@ class Info(ChangesetAction):
             return os.EX_DATAERR
 
         cset['updated_at'] = format_date(cset['updated_at'])
+        cset['environment_name'] = envName
 
         cset["errata"]   = "\n".join([e["display_name"] for e in cset["errata"]])
         cset["products"] = "\n".join([p["name"] for p in cset["products"]])
@@ -117,6 +120,8 @@ class Info(ChangesetAction):
         self.printer.addColumn('name')
         self.printer.addColumn('updated_at')
         self.printer.addColumn('state')
+        self.printer.addColumn('environment_id')
+        self.printer.addColumn('environment_name')
         self.printer.addColumn('errata', multiline=True, show_in_grep=False)
         self.printer.addColumn('products', multiline=True, show_in_grep=False)
         self.printer.addColumn('packages', multiline=True, show_in_grep=False)
