@@ -20,29 +20,6 @@
  */
 
 $(document).ready(function() {
-    var theTable = $('table.packages');
-    var filter = $('#filter');
-
-    filter.keyup(function() {
-        $.uiTableFilter(theTable, this.value);
-    });
-    filter.change(function(){filter.keyup()});
-
-    //override the submit so it doesn't try to push a form
-    $('#filter_form').submit(function () {
-        filter.keyup();
-        return false;
-    }).focus(); //Give focus to input field
-              /*
-    var panel  = $('#panel');
-    if(panel.length > 0){
-        var bodyY = parseInt(container.offset().top, 10) - 20;
-        $(this).scroll(function () {
-            panel.handleScroll($('#panel-frame'), panel, original_top, bodyY, 0);
-        });
-        $(panel).scroll(packages.scrollExpand);
-    }*/
-
     $('#more').live('click', function(){
         console.log("Awesome.");packages.morePackages()});
 });
