@@ -158,7 +158,7 @@ class Role < ActiveRecord::Base
     Role.any_readable?
   end
 
-  def to_abbrev_text
+  def summary
     perms = permissions.collect{|perm| perm.to_abbrev_text}.join("\n")
     "Role: #{name}\nPermissions:\n#{perms}"
   end
