@@ -1,12 +1,12 @@
 %define ruby_sitelib %(ruby -rrbconfig -e "puts Config::CONFIG['sitelibdir']")
 %define gemdir %(ruby -rubygems -e 'puts Gem::dir' 2>/dev/null)
 
-%global homedir %{_libdir}/%{name}
+%global homedir %{_datarootdir}/%{name}
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.59
+Version:	      0.1.61
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -190,6 +190,23 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Aug 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.61-1
+- rpm in /usr/share/katello - introducing KATELLO_DATA_DIR
+
+* Fri Aug 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.60-1
+- katello rpm now installs to /usr/share/katello
+- fixing cancel sync DELETE action call
+- fixed api for listing products
+- changesets - products required by packages/errata/repos are no longer being
+  promoted
+- changeset validations - can't add items from product that has not been
+  promoted yet
+- 727627 - Fix for not being able to go to Sync page.
+- final solution for better RestClient exception messages
+- only relevant logs are rotated now
+- Have the rake task emit wiki markup as well
+- added option to update system's location via python client
+
 * Wed Aug 10 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.59-1
 - improving katello-reset-dbs script
 - Fixes for failing activation_keys and organization tests.

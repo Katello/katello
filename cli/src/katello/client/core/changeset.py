@@ -73,7 +73,9 @@ class List(ChangesetAction):
         self.printer.addColumn('name')
         self.printer.addColumn('updated_at')
         self.printer.addColumn('state')
-
+        self.printer.addColumn('environment_id')
+        self.printer.addColumn('environment_name')
+        
         self.printer.setHeader(_("Changeset List"))
         self.printer.printItems(changesets)
         return os.EX_OK
@@ -107,6 +109,7 @@ class Info(ChangesetAction):
             return os.EX_DATAERR
 
         cset['updated_at'] = format_date(cset['updated_at'])
+        cset['environment_name'] = envName
 
         cset["errata"]   = "\n".join([e["display_name"] for e in cset["errata"]])
         cset["products"] = "\n".join([p["name"] for p in cset["products"]])
@@ -117,6 +120,8 @@ class Info(ChangesetAction):
         self.printer.addColumn('name')
         self.printer.addColumn('updated_at')
         self.printer.addColumn('state')
+        self.printer.addColumn('environment_id')
+        self.printer.addColumn('environment_name')
         self.printer.addColumn('errata', multiline=True, show_in_grep=False)
         self.printer.addColumn('products', multiline=True, show_in_grep=False)
         self.printer.addColumn('packages', multiline=True, show_in_grep=False)
@@ -209,9 +214,12 @@ class UpdateContent(ChangesetAction):
             self.parser.add_option('--remove_'+ct, dest='remove_'+ct,
                                 action="callback", callback=self.store_item, type="string",
                                 help=_(ct+" to remove from the changeset"))
-            self.items['add_'+ct]    = []
-            self.items['remove_'+ct] = []
+        self.reset_items()
 
+    def reset_items(self):
+        for ct in ['package', 'erratum', 'repo']:
+            self.items['add_'+ct]    = []
+            self.items['remove_'+ct] = []        
 
     def check_options(self):
         self.require_option('name')
@@ -220,6 +228,10 @@ class UpdateContent(ChangesetAction):
 
 
     def run(self):
+        #reset stored patch items (neccessary for shell mode)
+        items = self.items.copy()
+        self.reset_items()
+        
         csName  = self.get_option('name')
         orgName = self.get_option('org')
         envName = self.get_option('env')
@@ -229,17 +241,18 @@ class UpdateContent(ChangesetAction):
            return os.EX_DATAERR
         
         patch = {}
-        patch['+packages'] = self.items["add_package"]
-        patch['-packages'] = self.items["remove_package"]
-        patch['+errata'] = self.items["add_erratum"]
-        patch['-errata'] = self.items["remove_erratum"]
-        patch['+repos'] = self.items["add_repo"]
-        patch['-repos'] = self.items["remove_repo"]
+        patch['+packages'] = items["add_package"]
+        patch['-packages'] = items["remove_package"]
+        patch['+errata'] = items["add_erratum"]
+        patch['-errata'] = items["remove_erratum"]
+        patch['+repos'] = items["add_repo"]
+        patch['-repos'] = items["remove_repo"]
         patch['+products'] = self.get_option('add_product') or []
         patch['-products'] = self.get_option('remove_product') or []
 
         msg = self.api.update_content(orgName, cset["environment_id"], cset["id"], patch)
         print _("Successfully updated changeset [ %s ]") % csName
+        
         return os.EX_OK
         
         

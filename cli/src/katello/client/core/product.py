@@ -19,6 +19,7 @@ from gettext import gettext as _
 import time
 import urlparse
 
+from katello.client.core import repo
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
@@ -145,6 +146,10 @@ class Sync(ProductAction):
 # ------------------------------------------------------------------------------
 class Create(ProductAction):
 
+    def __init__(self):
+        super(Create, self).__init__()
+        self.createRepo = repo.Create()
+        
     description = _('create new product to a custom provider')
 
     def setup_parser(self):
@@ -158,10 +163,13 @@ class Create(ProductAction):
                                help=_("product description"))
         self.parser.add_option("--url", dest="url",
                                help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
+        self.parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
+                               help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
+                               
 
     def check_options(self):
         self.require_option('org')
-        self.require_option('prov', '--provider')
+        self.require_option('prov')
         self.require_option('name')
 
     def run(self):
@@ -170,37 +178,41 @@ class Create(ProductAction):
         name        = self.get_option('name')
         description = self.get_option('description')
         url         = self.get_option('url')
+        assumeyes   = self.get_option('assumeyes')
+        
+        return self.create_product_with_repos(provName, orgName, name, description, url, assumeyes)
 
-        prov = get_provider(orgName, provName)
+        
+    def create_product_with_repos(self, provName, orgName, name, description, url, assumeyes):
+        prov = self.find_provider(orgName, provName)
         if prov == None:
-            return os.EX_DATAERR
-            
-        repourls = None
-        if url != None:
-            repoapi = RepoAPI()
-            print(_("Discovering repository urls, this could take some time..."))
-            try:
-                task = self.repoapi.repo_discovery(url, 'yum')
-            except Exception,e:
-                system_exit(os.EX_DATAERR, _("Error: %s" % e))
-                
-            discoveryResult = run_spinner_in_bg(self.wait_for_discovery, [task])
-            repourls = discoveryResult['result'] or []
-
-            if not len(repourls):
-                system_exit(os.EX_OK, "No repositories discovered @ url location [%s]" % url)
-                
-        prod = self.api.create(prov["id"], name, description)
+            return os.EX_DATAERR        
+        
+        repourls = self.discover_repos(url)
+        self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
+        selectedurls = self.select_repos(repourls, assumeyes)
+        
+        prod = self.create_product(prov["id"], name, description)
         print _("Successfully created product [ %s ]") % name
         
-        if repourls != None:
-            for repourl in repourls:
-                parsedUrl = urlparse.urlparse(repourl)
-                repoName = "%s%s" % (name, parsedUrl.path.replace("/", "_"))
-                repo = self.repoapi.create(prod["cp_id"], repoName, repourl)
-                print _("Successfully created repository [ %s ]") % repoName
+        self.create_repos(prod["cp_id"], prod["name"], selectedurls)
         
         return os.EX_OK
+
+    def find_provider(self, orgName, provName):
+        return get_provider(orgName, provName)
+        
+    def create_product(self, id, name, description):
+        return self.api.create(id, name, description)
+        
+    def discover_repos(self, url):
+        return self.createRepo.discover_repositories(url)
+        
+    def select_repos(repourls, assumeyes):
+        return self.createRepo.select_repositories(repourls, assumeyes)
+        
+    def create_repos(self, product, selectedurls):
+        return self.createRepo.create_repositories(prod["cp_id"], prod["name"], selectedurls)
         
     def wait_for_discovery(self, discoveryTask):
         while discoveryTask['state'] not in ('finished', 'error', 'timed out', 'canceled'):
