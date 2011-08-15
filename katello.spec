@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.62
+Version:	      0.1.63
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -194,6 +194,11 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Aug 15 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.63-1
+- 714167 - undeclared dependencies (regin & multimap)
+- Revert "714167 - broken dependencies is F14"
+- 725495 - katello service should return a valid result
+
 * Mon Aug 15 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.62-1
 - 714167 - broken dependencies is F14
 - CLI - show last sync status in repo info and status
