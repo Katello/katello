@@ -47,6 +47,7 @@ Src::Application.routes.draw do
   resources :systems do
     member do
       get :packages
+      get :more_packages
       get :subscriptions
       post :update_subscriptions
       get :facts
@@ -340,6 +341,7 @@ Src::Application.routes.draw do
     
       # pulp proxy --------------
     match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
+    match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
 
     # development / debugging support
     get 'status/memory'

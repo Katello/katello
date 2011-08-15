@@ -28,7 +28,7 @@ class Api::RepositoriesController < Api::ApiController
   end
 
   def show
-    render :json => @repository
+    render :json => @repository.to_hash
   end
 
   # proxy repository discovery call to pulp, so we don't have to create an async task to keep track of async task on pulp side
@@ -43,7 +43,7 @@ class Api::RepositoriesController < Api::ApiController
   end
   
   def find_repository
-    @repository = Pulp::Repository.find params[:id]
+    @repository = Glue::Pulp::Repo.find params[:id]
     raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:id]}'") if @repository.nil?
     @repository
   end

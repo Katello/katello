@@ -41,9 +41,9 @@ class Api::ProvidersController < Api::ApiController
   def destroy
     @provider.destroy
     if @provider.destroyed?
-      render :text => _("Deleted provider '#{params[:id]}'"), :status => 200
+      render :text => _("Deleted provider [ %{p} ]") % {:p => @provider.name}, :status => 200
     else
-      raise HttpErrors::ApiError, _("Error while deleting provider '#{params[:id]}'")
+      raise HttpErrors::ApiError, _("Error while deleting provider [ %{p} ]") % {:p => @provider.name}
     end
   end
 
@@ -52,6 +52,9 @@ class Api::ProvidersController < Api::ApiController
   end
   
   def import_manifest
+    if @provider.yum_repo?
+      raise HttpErrors::BadRequest, _("It is not allowed to import manifest for a custom provider.")
+    end
 
     begin
       temp_file = File.new(File.join("#{Rails.root}/tmp", "import_#{SecureRandom.hex(10)}.zip"), 'w+', 0600)
@@ -63,7 +66,7 @@ class Api::ProvidersController < Api::ApiController
     @provider.import_manifest File.expand_path(temp_file.path)
     render :text => "Manifest imported", :status => 200
     rescue => e
-      raise HttpErrors::ApiError, _("Manifest import for provider '#{params[:id]}' failed")
+      raise HttpErrors::ApiError, _("Manifest import for provider [ %{p} ] failed") % {:p => @provider.name}
   end
 
   def import_products

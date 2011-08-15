@@ -13,14 +13,27 @@
 class ChangesetPackageValidator < ActiveModel::Validator
   def validate(record)
     from_env = record.changeset.environment.prior
+    to_env   = record.changeset.environment
     product = Product.find(record.product_id)
 
-    product.repos(from_env).each do |repo|
-      #search for the package in all repos in its product
-      return if repo.has_package? record.package_id
+    #package must be in one of the repositories in the source environment
+    #the repository must belong to a product that is in both source and target environment
+    #the repository must be cloned in the target environment
+
+    if not (product.environments.include? from_env and product.environments.include? to_env)
+      record.errors[:base] <<  _("Product of the package '#{record.package_id}' must belong to both source and target environment!")
     end
 
-    record.errors[:base] <<  _("Product of package '#{record.package_id}' has doesn't belong the environment the changeset should be promoted from!")
+    found_in_repo = false
+    #search for the package in all repos in its product
+    product.repos(from_env).each do |repo|
+      if repo.has_package? record.package_id
+        record.errors[:base] <<  _("Repository of the package '#{record.package_id}' has not been promoted into the target environment!") if not repo.is_cloned_in? to_env
+        found_in_repo = true
+      end
+    end
+
+    record.errors[:base] <<  _("Package '#{record.package_id}' doesn't belong to the specified product!") if not found_in_repo
   end
 end
 

@@ -1,3 +1,5 @@
+= javascript :system_packages
+
 = content_for :title do
   #{_("System")}
 
@@ -5,7 +7,11 @@
   = render_navigation(:expand_all => true, :level => 3)
 
 = content_for :content do
-  %table.packages
+  %form#filter_form.clear
+    %input{ :name => "f", :type => "search", :placeholder => "Filter...", :id=>"filter"}
+    %button.filter_button #{_("Filter")}
+    %br.clear
+  %table.packages.ajaxScroll{"data-scroll_url"=>url_for(more_packages_system_path), "data-page_size"=>current_user.page_size}
     %thead
       %th #{_("Name")}
       %th #{_("Arch")}
@@ -16,7 +22,4 @@
             #{p.nvrea}
           %td{:class=>"arch"}
             #{p.arch}
-
-
-
-
+  %a#more More...
