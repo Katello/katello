@@ -53,7 +53,7 @@ var roleActions = (function($){
                         types_select.empty();
                         for( type in types ){
                             if( types.hasOwnProperty(type) ){
-                                if( current_crumb.split('_')[0] === 'organization' ){
+                                if( current_organization.split('_')[0] === 'organization' ){
                                     if( !types[type].global ){
                                         types_select.append('<option value="' + type + '">' + types[type].name + '</option>');
                                     }
@@ -61,7 +61,8 @@ var roleActions = (function($){
                                     types_select.append('<option value="' + type + '">' + types[type].name + '</option>');
                                 }
                             }
-                        }    
+                        }
+                        types_select.append('<option class="hidden" value=""></option>');
                     },
                     set_verbs_and_tags = function(type){
                         var i, length=0,
@@ -89,6 +90,8 @@ var roleActions = (function($){
                     };
                 
                 if( opening ){
+                    $('#permission_add').children().show();
+                    $('#resource_type').val('organization');
                     set_types();
                     set_verbs_and_tags('organizations');
                     button.children('span').html(i18n.close_add_permission);
@@ -212,6 +215,7 @@ var roleActions = (function($){
             var id = current_organization.split('_')[1];
             
             if( !roles_breadcrumb[current_organization].permission_details ){
+                $('#add_permission').addClass('disabled');
                 $.ajax({
                     type    : "GET",
                     url     : '/roles/' + id + '/resource_type/verbs_and_scopes',
@@ -219,6 +223,7 @@ var roleActions = (function($){
                     dataType: 'json',
                     success : function(data){
                         roles_breadcrumb[current_organization].permission_details = data;
+                        $('#add_permission').removeClass('disabled');
                     }
                 });
             }
@@ -240,7 +245,7 @@ var roleActions = (function($){
                success  : function(data){
                    $.extend(roles_breadcrumb, data);
                    roles_tree.rerender_content();
-                   toggle('permission_add');
+                   form[0].reset();
                }
             });
         },
@@ -303,6 +308,25 @@ var roleActions = (function($){
                     eval(data);
                 }
             });
+        },
+        handleAllTypes = function(button){
+            if( !button.hasClass('cancelled') ){
+                $('#verb_container').hide();
+                $('#tag_container').hide();
+                $('#resource_type').hide();
+                $('#resource_type').val('');
+                button.parent().prepend('<span id="all_types_selected">' + i18n.all_types_selected + '</span>');
+                button.html(i18n.cancel);
+                button.addClass('cancelled');
+            } else {
+                $('#verb_container').show();
+                $('#resource_type').show();
+                $('#all_types_selected').remove();
+                $('#add_permission_form')[0].reset();
+                $('#resource_type').change();
+                button.html(i18n.all);
+                button.removeClass('cancelled');
+            }
         };
 
     return {
@@ -313,13 +337,14 @@ var roleActions = (function($){
         savePermission          :  savePermission,
         handleContentAddRemove  :  handleContentAddRemove,
         setCurrentOrganization  :  setCurrentOrganization,
-        removeRole              :  removeRole
+        removeRole              :  removeRole,
+        handleAllTypes          :  handleAllTypes
     };
     
 })(jQuery);
 
 var templateLibrary = (function($){
-    var listItem = function(id, name, count, no_slide){
+    var listItem = function(id, name, count, notation, no_slide){
             var html ='<li>';
             
             if( no_slide ){
@@ -328,11 +353,18 @@ var templateLibrary = (function($){
                 html += '<div class="slide_link" id="' + id + '">';
             }
    
-            if( count !== undefined && count !== null && count !== false ){
-                html += '<span class="sort_attr">'+ name + ' (' + count + ')</span></div></li>';
-            } else {
-                html += '<span class="sort_attr">'+ name + '</span></div></li>';
+            html += '<span class="sort_attr">'+ name;
+   
+            if( notation !== undefined && notation !== null && notation !== false ){
+                html += ' (' + notation + ') ';
             }
+   
+            if( count !== undefined && count !== null && count !== false ){
+                html += ' (' + count + ')';
+            }
+            
+            html += '</span></div></li>';
+            
             return html;
         },
         list = function(items, type, options){
@@ -341,7 +373,7 @@ var templateLibrary = (function($){
             for( item in items){
                 if( items.hasOwnProperty(item) ){
                     if( item.split("_")[0] === type ){
-                        html += listItem(item, items[item].name, false, options.no_slide);
+                        html += listItem(item, items[item].name, false, false, options.no_slide);
                     }
                 }
             }
@@ -350,14 +382,16 @@ var templateLibrary = (function($){
         },
         organizationsList = function(items, type, options){
             var html = '<ul>',
-                options = options ? options : {};
+                options = options ? options : {},
+                full_access = false;
             
             html += listItem('global', items['global'].name, items['global'].count, false);
             
             for( item in items){
                 if( items.hasOwnProperty(item) ){
                     if( item.split("_")[0] === type ){
-                        html += listItem(item, items[item].name, items[item].count, options.no_slide);
+                        full_access = items[item].full_access ? i18n.full_access : false;
+                        html += listItem(item, items[item].name, items[item].count, full_access, options.no_slide);
                     }
                 }
             }
@@ -603,6 +637,9 @@ var pageActions = (function($){
             $('#panel').removeClass('panel-custom');
         };
         
+        $('#all_types').live('click', function(event){
+            roleActions.handleAllTypes($(this));
+        });
     };
     
     return {
