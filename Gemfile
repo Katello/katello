@@ -27,6 +27,9 @@ gem 'scoped_search', '>= 2.3.1'
 gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 
+# BZ 714167 (broken dependencies is F14)
+gem 'rack-mount'
+
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
