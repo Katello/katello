@@ -23,7 +23,7 @@ var roleActions = (function($){
         current_crumb = undefined,
         current_organization = undefined,
         toggle_list = {
-            'role_edit' : function(){
+            'role_edit' : function(opening){
                 var name_box = $('.edit_name_text'),
                     edit_button = $('#edit_role > span'),
                     description = $('.edit_description'),    
@@ -31,9 +31,7 @@ var roleActions = (function($){
                     nameBreadcrumb = $('.tree_breadcrumb'),
                     options = {};
         
-                opened = !opened;
-        
-                if (opened) {
+                if ( opening ) {
                     edit_button.html(i18n.close_role_details);
                     edit_button.parent().addClass("highlighted");
                     options['after_function'] = setup_edit;
@@ -45,7 +43,7 @@ var roleActions = (function($){
                 
                 return options;
             },
-            'permission_add' : function(){
+            'permission_add' : function(opening){
                 var options = {},
                     button = $('#add_permission'),
                     set_types = function(){
@@ -89,49 +87,49 @@ var roleActions = (function($){
                             tags_select.parent().hide();
                         }
                     };
-                    
-                opened = !opened;
                 
-                if( opened ){
+                if( opening ){
                     set_types();
                     set_verbs_and_tags('organizations');
                     button.children('span').html(i18n.close_add_permission);
                     button.addClass("highlighted");
+                    $('#resource_type').change(function(event){
+                        set_verbs_and_tags(event.currentTarget.value);
+                    });
+                
+                    if( current_organization === "global" ){
+                        $('#permission_add_header').html(i18n.add_header_global);
+                    } else {
+                        $('#permission_add_header').html(i18n.add_header_org + ' ' + roles_breadcrumb[current_organization].name);
+                    }
                 } else {
                     button.children('span').html(i18n.add_permission);
                     button.removeClass("highlighted");
-                }
-                                
-                $('#resource_type').change(function(event){
-                    set_verbs_and_tags(event.currentTarget.value);
-                });
-                
-                if( current_organization === "global" ){
-                    $('#permission_add_header').html(i18n.add_header_global);
-                } else {
-                    $('#permission_add_header').html(i18n.add_header_org + ' ' + roles_breadcrumb[current_organization].name);
                 }
                 
                 return options;
             }
         },
 
-        toggle = function(id){
+        toggle = function(id, options){
             var animate_time = 500,
                 slide_window = $('#' + id),
-                options = {};
+                options = options || {};
             
             if( open_panel !== id && open_panel !== undefined ){
-                toggle_list[open_panel]();
+                toggle_list[open_panel](false);
                 $("#" + open_panel).slideToggle(animate_time);
                 open_panel = id;
+                options.opening = true;
             } else if( open_panel !== undefined ){
                 open_panel = undefined;
+                options.opening = false;
             } else {
                 open_panel = id;
+                options.opening = true;
             }
 
-            options = toggle_list[id]();
+            options = toggle_list[id](options.opening);
             slide_window.slideToggle(animate_time, options.after_function);
         }, 
         setup_edit = function() {
@@ -188,7 +186,7 @@ var roleActions = (function($){
         },
         close = function() {
             if( open_panel ){
-                toggle(open_panel);
+                toggle(open_panel, { opening: false });
             }
         },
         setCurrentCrumb = function(hash_id){
