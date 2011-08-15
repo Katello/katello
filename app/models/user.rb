@@ -62,6 +62,17 @@ class User < ActiveRecord::Base
     end
   end
 
+  # THIS CHECK MUST BE THE FIRST before_destroy
+  # check if this is not the last superuser
+  before_destroy do |u|
+    if u.superadmin? and User.joins(:roles).where(:roles => {:superadmin => true}).count == 1
+      u.errors.add(:base, "cannot delete last admin user")
+      false
+    else
+      true
+    end
+  end
+
   # destroy own role for user
   before_destroy do |u|
     u.own_role.destroy
