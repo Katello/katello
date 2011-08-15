@@ -28,10 +28,15 @@ describe Api::ChangesetsController do
     @organization.stub(:id).and_return(1)
     @organization.stub(:locker).and_return(@environment)
     @organization.stub(:environments).and_return([@environment])
+    @environment.stub(:organization).and_return(@organization)
 
     @changeset = mock(Changeset)
     @changeset.stub(:environment).and_return(@environment)
     @changeset.stub(:environment=)
+    @changeset.stub(:state=)
+    @changeset.stub(:save!)
+    @changeset.stub(:async).and_return(@changeset)
+    @changeset.stub(:promote)
     Changeset.stub(:find).and_return(@changeset)
 
     @request.env["HTTP_ACCEPT"] = "application/json"
@@ -46,7 +51,7 @@ describe Api::ChangesetsController do
 
   describe "index" do
     it 'should call working_changesets on an environment' do
-      Changeset.should_receive(:where).once
+      Changeset.should_receive(:select).once
       get :index, :organization_id => "1", :environment_id => 1
     end
   end
@@ -124,5 +129,12 @@ describe Api::ChangesetsController do
     end
   end
 
+  describe "promote" do
+    it "should call Changeset.promote asynchronously" do
+      @changeset.should_receive(:promote).once
+      @changeset.should_receive(:async).once
+      post :promote, :id => CSET_ID, :organization_id => "1", :environment_id => 1
+    end
+  end
 
 end
