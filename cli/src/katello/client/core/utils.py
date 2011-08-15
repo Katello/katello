@@ -281,28 +281,38 @@ def text_to_line(text, glue=" "):
         return glue.join(text.split("\n"))
 
 
+class SystemExitRequest(Exception):
+    """
+    Exception to indicate a system exit request. Introduced to 
+    The arguments are [0] the response status as an integer and
+    [1] a list of error messages.
+    """
+    pass
+
+
 # system exit -----------------------------------------------------------------
 def system_exit(code, msgs=None):
     """
-    Exit with a code and optional message(s). Saves a few lines of code.
+    Raise a system exit request exception with a return code and optional message(s). 
+    Saves a few lines of code. Exception is handled in command's main method. This
+    allows not to exit the cli but only skip out of the command when running in shell mode.
     @type code: int
     @param code: code to return
     @type msgs: str or list or tuple of str's
     @param msgs: messages to display
     """
     assert msgs is None or isinstance(msgs, (basestring, list, tuple))
+    lstMsgs = []
     if msgs:
+    
         if isinstance(msgs, basestring):
-            msgs = (msgs,)
-        if code == os.EX_OK:
-            out = sys.stdout
+            lstMsgs.append(msgs)
+        elif isinstance(msgs, tuple):
+            lstMsgs = list(msgs)
         else:
-            out = sys.stderr
-        #out = sys.stdout if code == os.EX_OK else sys.stderr
-        for msg in msgs:
-            print >> out, msg
-    sys.exit(code)
-
+            lstMsgs = msgs
+            
+    raise SystemExitRequest(code, lstMsgs)
 
 def parse_tokens(tokenstring):
     """
