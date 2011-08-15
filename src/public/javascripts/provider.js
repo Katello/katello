@@ -104,7 +104,7 @@ var subscription = (function(){
                 // the response data came back empty.  this only occurs on an error, so do not replace the
                 // content of the pane...
 
-                // disable submit to avoid duplicate clicks
+                // enable the submit, so user can try again
                 $('input[id^=provider_submit]').removeAttr("disabled");
 
             }
