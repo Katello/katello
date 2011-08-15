@@ -23,7 +23,7 @@ var roleActions = (function($){
         current_crumb = undefined,
         current_organization = undefined,
         toggle_list = {
-            'role_edit' : function(){
+            'role_edit' : function(opening){
                 var name_box = $('.edit_name_text'),
                     edit_button = $('#edit_role > span'),
                     description = $('.edit_description'),    
@@ -31,9 +31,7 @@ var roleActions = (function($){
                     nameBreadcrumb = $('.tree_breadcrumb'),
                     options = {};
         
-                opened = !opened;
-        
-                if (opened) {
+                if ( opening ) {
                     edit_button.html(i18n.close_role_details);
                     edit_button.parent().addClass("highlighted");
                     options['after_function'] = setup_edit;
@@ -45,8 +43,9 @@ var roleActions = (function($){
                 
                 return options;
             },
-            'permission_add' : function(){
+            'permission_add' : function(opening){
                 var options = {},
+                    button = $('#add_permission'),
                     set_types = function(){
                         var types = roles_breadcrumb[current_organization].permission_details,
                             types_select = $('#resource_type');
@@ -88,44 +87,49 @@ var roleActions = (function($){
                             tags_select.parent().hide();
                         }
                     };
-                    
-                opened = !opened;
                 
-                if( opened ){
+                if( opening ){
                     set_types();
                     set_verbs_and_tags('organizations');
-                }
-                                
-                $('#resource_type').change(function(event){
-                    set_verbs_and_tags(event.currentTarget.value);
-                });
+                    button.children('span').html(i18n.close_add_permission);
+                    button.addClass("highlighted");
+                    $('#resource_type').change(function(event){
+                        set_verbs_and_tags(event.currentTarget.value);
+                    });
                 
-                if( current_organization === "global" ){
-                    $('#permission_add_header').html(i18n.add_header_global);
+                    if( current_organization === "global" ){
+                        $('#permission_add_header').html(i18n.add_header_global);
+                    } else {
+                        $('#permission_add_header').html(i18n.add_header_org + ' ' + roles_breadcrumb[current_organization].name);
+                    }
                 } else {
-                    $('#permission_add_header').html(i18n.add_header_org + ' ' + roles_breadcrumb[current_organization].name);
+                    button.children('span').html(i18n.add_permission);
+                    button.removeClass("highlighted");
                 }
                 
                 return options;
             }
         },
 
-        toggle = function(id){
+        toggle = function(id, options){
             var animate_time = 500,
                 slide_window = $('#' + id),
-                options = {};
+                options = options || {};
             
             if( open_panel !== id && open_panel !== undefined ){
-                toggle_list[open_panel]();
+                toggle_list[open_panel](false);
                 $("#" + open_panel).slideToggle(animate_time);
                 open_panel = id;
+                options.opening = true;
             } else if( open_panel !== undefined ){
                 open_panel = undefined;
+                options.opening = false;
             } else {
                 open_panel = id;
+                options.opening = true;
             }
 
-            options = toggle_list[id]();
+            options = toggle_list[id](options.opening);
             slide_window.slideToggle(animate_time, options.after_function);
         }, 
         setup_edit = function() {
@@ -182,7 +186,7 @@ var roleActions = (function($){
         },
         close = function() {
             if( open_panel ){
-                toggle(open_panel);
+                toggle(open_panel, { opening: false });
             }
         },
         setCurrentCrumb = function(hash_id){
@@ -285,6 +289,20 @@ var roleActions = (function($){
                     edit_user(element, false);
                 }
             }
+        },
+        removeRole = function(button){
+            button.addClass('disabled');
+            $.ajax({
+                type: "DELETE",
+                url: button.attr('data-url'),
+                cache: false,
+                success: function(data){
+                    // Generally a bad idea - trusting implicility the data being returned from the server
+                    // This conforms with how other 'removes' on the site work - relying on a partial template
+                    // to render and return the proper actions for a delete
+                    eval(data);
+                }
+            });
         };
 
     return {
@@ -294,7 +312,8 @@ var roleActions = (function($){
         setCurrentCrumb         :  setCurrentCrumb,
         savePermission          :  savePermission,
         handleContentAddRemove  :  handleContentAddRemove,
-        setCurrentOrganization  :  setCurrentOrganization
+        setCurrentOrganization  :  setCurrentOrganization,
+        removeRole              :  removeRole
     };
     
 })(jQuery);
@@ -493,8 +512,8 @@ var rolesRenderer = (function($){
         },
         setTreeHeight = function(){
             var height = $('.left').height();
-            $('.sliding_list').css({ 'height' : height - 20 });
-            $('.slider').css({ 'height' : height - 20 });
+            $('.sliding_list').css({ 'height' : height - 60 });
+            $('.slider').css({ 'height' : height - 60 });
             $('#panel_main').height(height);
             $('#panel_main .jspPage').height(height);
         },
@@ -567,6 +586,14 @@ var pageActions = (function($){
             roleActions.handleContentAddRemove($(this));
         });
         
+        
+        $('#remove_role').click(function(){
+            var button = $(this);
+            common.customConfirm(button.attr('data-confirm-text'), function(){
+                roleActions.removeRole(button);
+            });         
+        });
+        
         panel.contract_cb = function(name){
                     $.bbq.removeState("role_edit");
                     $('#panel').removeClass('panel-custom');
@@ -575,6 +602,7 @@ var pageActions = (function($){
         panel.switch_content_cb = function(){
             $('#panel').removeClass('panel-custom');
         };
+        
     };
     
     return {

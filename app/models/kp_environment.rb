@@ -144,13 +144,12 @@ class KPEnvironment < ActiveRecord::Base
     select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
-  def systems_readable?
-    User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, self.id, self.organization) ||
-        User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, self.organization)
-  end
+
 
 
   #Permissions
+  scope :changesets_readable, lambda {|org| authorized_items(org, [:manage_changesets, :read_changesets])}
+
   def changesets_promotable?
     User.allowed_to?([:manage_changesets], :environments, self.id,
                               self.organization)
@@ -169,6 +168,19 @@ class KPEnvironment < ActiveRecord::Base
   def contents_readable?
     User.allowed_to?([:read_contents], :environments, self.id,
                               self.organization)
+  end
+
+  def systems_readable?
+    User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, self.id, self.organization) ||
+        User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, self.organization)
+  end
+
+  def self.authorized_items org, verbs, resource = :environments
+    if User.allowed_all_tags?(verbs, resource, org)
+       where(:organization_id => org)
+    else
+      where("environments.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+    end
   end
 
 

@@ -33,6 +33,8 @@ strong { font-weight: bold; }
 }
 
 a {
+  cursor: hand;
+  cursor: pointer;
   color: $linkfg_color;
   text-decoration: none;
   
@@ -569,11 +571,10 @@ nav {
       margin-left: 10px;
     }
   }
-  a {
-    cursor: pointer;
-    cursor: hand;
-  }
 }
+
+
+
 /* FORMS */
 /* generic */
 label {
@@ -1377,46 +1378,43 @@ fieldset {
     }
   }
 
+
+
   li { 
       float: left; 
       margin-left: 0;
-      
+
       &:first-child {
           a {
             padding-left: 20px;
             @include border-left-radius(5px);
           }
+         @include nohover;
 
-          .nohover {
-            &:hover {
-              background: $breadcrumbbg_color !important;
-              color: #000;
-              text-shadow: none;
-
-              &:after { border-left-color: $breadcrumbbg_color !important; }
-            }
-          }
       }
       &:nth-child(2) {
         a {
           background: $breadcrumbbg_color;
           &:after { border-left-color: $breadcrumbbg_color; }
         }
+        @include nohover;
       }
       &:last-child {
+        @include nohover;
         a {
           padding-right: 30px;
           @include border-right-radius(5px);
-          
+
           &:hover {
             color: #FFF;
             background: $listhover_color !important;
           }
-          &:after { 
+          &:after {
             border: 0;
             &:hover { border-left-color: $listhover_color !important; }
           }
         }
+
       }
       
       a {
@@ -1427,7 +1425,7 @@ fieldset {
         position: relative; 
         display: block;
         float: left;
-      
+        
         &:hover { 
           background: $listhover_color !important; 
           color: #FFF; 
