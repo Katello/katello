@@ -64,7 +64,7 @@
                 'exist in the next environment, you may promote other types of content. Once ' + |
                 'you have created a change set, click the "Promote" button to commit it to the next environment.'))   |
 .grid_16
-  = environment_selector(:url_proc=>lambda {|args|  promotions_path(args[:organization].name, args[:environment].name, :next_env_id=>(args[:next_environment].id if args[:next_environment] and args[:environment].locker?) )})
+  = environment_selector(:url_proc=>breadcrumb_url_proc,  :accessible_envs=>accessible_envs)
 
 .grid_16
   #container
