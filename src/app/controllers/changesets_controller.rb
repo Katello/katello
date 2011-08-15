@@ -59,14 +59,15 @@ class ChangesetsController < ApplicationController
 
   #changeset history index
   def index
-    setup_environment_selector(current_organization)
+    accessible_envs = KPEnvironment.changesets_readable(current_organization)
+    setup_environment_selector(current_organization, accessible_envs)
     @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size)
     retain_search_history
+    render :index, :locals=>{:accessible_envs => accessible_envs}
   end
 
   #extended scroll for changeset_history
   def items
-    setup_environment_selector(current_organization)
     start = params[:offset]
     @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size).offset(start)
     render_panel_items @changesets, @panel_options

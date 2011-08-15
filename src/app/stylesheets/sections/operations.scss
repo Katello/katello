@@ -11,8 +11,8 @@
   }
   #roles_tree {
     .close { right: 10px; top: 12px; }
-    .search_button { right: 130px; }
-    .remove_item { top: 12px; right: 55px; }
+    .search_button { right: 40px; }
+    #remove_role { a { color: #000; } }
     
     .sliding_container { background: #FFF; .slider { overflow-y: auto; } }
     
@@ -36,8 +36,12 @@
       background: $edit_icon_black;
       @include sliding-tree-actionbar-image-spacing();
     }
+    #remove_role_icon {
+      background: $circle_x_icon_black;
+      @include sliding-tree-actionbar-image-spacing();
+    }
     #placeholder {
-      width: 50%;
+      width: 25.2%;
       cursor: auto;
       
       &:hover { background: $tree-container_color; }
@@ -58,7 +62,7 @@
     
     #permission_add {
       //display: block;
-      height: 530px;
+      height: 510px;
       
       .permission_add_container { 
         float: none;

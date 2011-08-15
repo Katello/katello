@@ -134,3 +134,17 @@
   margin-left: 6px;
   margin-top: -1px;
 }
+
+@mixin nohover {
+ .nohover {
+    cursor: default;
+    &:hover {
+      background: $breadcrumbbg_color !important;
+      color: #000;
+      text-shadow: none;
+
+
+      &:after { border-left-color: $breadcrumbbg_color !important; }
+    }
+  }
+}

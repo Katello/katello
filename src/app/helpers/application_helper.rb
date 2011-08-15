@@ -136,9 +136,10 @@ module ApplicationHelper
     render :partial=>"/common/env_select", :locals => options
   end
 
-  def env_select_class curr_env, selected_env, curr_path, selected_path, locker_clickable
+  def env_select_class curr_env, selected_env, curr_path, selected_path, accessible_envs, locker_clickable
+
     classes = []
-    if locker_clickable or !curr_env.locker?
+    if (locker_clickable or !curr_env.locker?) and accessible_envs.member?(curr_env)
       classes << "path_link"
     else
       # if locker isn't clickable, disable the hover effect
