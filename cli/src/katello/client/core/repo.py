@@ -119,7 +119,7 @@ class Create(RepoAction):
 
         return repourls
             
-    def select_repositories(self, repourls, assumeyes):
+    def select_repositories(self, repourls, assumeyes, raw_input = raw_input):
         selection = Selection()
         if not assumeyes:
             proceed = ''
