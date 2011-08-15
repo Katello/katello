@@ -13,6 +13,21 @@
   border-bottom-left-radius: $radius;
 }
 
+@mixin border-trbrbl-radius($radius) {
+  -webkit-border-bottom-right-radius: $radius;
+  -webkit-border-bottom-left-radius: $radius;
+  -moz-border-radius-bottomright: $radius;
+  -moz-border-radius-bottomleft: $radius;
+  border-bottom-right-radius: $radius;
+  border-bottom-left-radius: $radius;
+  -webkit-border-top-right-radius: $radius;
+  -moz-border-radius-topright: $radius;
+  border-top-right-radius: $radius;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+}
+
 @mixin border-right-radius($radius) {
   -webkit-border-bottom-right-radius: $radius;
   -webkit-border-top-right-radius: $radius;
