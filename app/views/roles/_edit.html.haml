@@ -53,7 +53,9 @@
         .permission_add_container
           %label.ra.fl #{_("Permission For:")}
           %select{ :id => 'resource_type', :name => 'permission[resource_type_attributes[name]]' }
-        .permission_add_container
+          .button#all_types
+            #{_('+ All')}
+        .permission_add_container#verb_container
           %label.ra.fl #{_("Verb(s):")}
           %select{ :id => "verbs", :name => 'permission[verb_values]', :multiple => 'multiple' }
         .permission_add_container#tag_container

@@ -175,10 +175,12 @@ module BreadcrumbHelper
     end
     
     def add_permission_bc bc, perm, adjust_count
-      if perm.resource_type.global?
-                  add_crumb_node!(bc, permission_global_bc_id(perm), "", perm.id, ['roles', 'role_permissions', 'global'],
+      global = perm.resource_type && perm.resource_type.global?
+      type = perm.resource_type ? perm.resource_type.name : "all"
+      if global
+        add_crumb_node!(bc, permission_global_bc_id(perm), "", perm.id, ['roles', 'role_permissions', 'global'],
                     { :client_render => true }, 
-                    { :global => perm.resource_type.global?, :type =>  perm.resource_type.name,
+                    { :global => perm.resource_type.global?, :type => type,
                       :name => perm.name, :description => perm.description, 
                       :verbs => perm.verbs, :tags => perm.tags })
         if adjust_count
@@ -187,11 +189,16 @@ module BreadcrumbHelper
       else
         add_crumb_node!(bc, permission_bc_id(perm.organization, perm), "", perm.id, ['roles', 'role_permissions', organization_bc_id(perm.organization)],
                     { :client_render => true }, 
-                    { :organization => "organization_#{perm.organization_id}", :global => perm.resource_type.global?,
+                    { :organization => "organization_#{perm.organization_id}", :global => global,
                       :name => perm.name, :description => perm.description, 
-                      :type =>  perm.resource_type.name, :verbs => perm.verbs, :tags => perm.tags })
+                      :type =>  type, :verbs => perm.verbs, :tags => perm.tags })
         if adjust_count
           bc[organization_bc_id(perm.organization)][:count] += 1
+        end
+        if type == "all"
+          if !bc[organization_bc_id(perm.organization)].nil?
+            bc[organization_bc_id(perm.organization)][:full_access] = true
+          end
         end
       end
     end

@@ -169,6 +169,9 @@ class RolesController < ApplicationController
 
   def create_permission
     new_params = {:role => @role}
+    if params[:permission][:resource_type_attributes][:name] = ''
+      params[:permission].delete(:resource_type_attributes)
+    end
     new_params.merge! params[:permission]
     @perm = Permission.create! new_params
     to_return = {}
