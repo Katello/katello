@@ -285,6 +285,20 @@ var roleActions = (function($){
                     edit_user(element, false);
                 }
             }
+        },
+        removeRole = function(button){
+            button.addClass('disabled');
+            $.ajax({
+                type: "DELETE",
+                url: button.attr('data-url'),
+                cache: false,
+                success: function(data){
+                    // Generally a bad idea - trusting implicility the data being returned from the server
+                    // This conforms with how other 'removes' on the site work - relying on a partial template
+                    // to render and return the proper actions for a delete
+                    eval(data);
+                }
+            });
         };
 
     return {
@@ -294,7 +308,8 @@ var roleActions = (function($){
         setCurrentCrumb         :  setCurrentCrumb,
         savePermission          :  savePermission,
         handleContentAddRemove  :  handleContentAddRemove,
-        setCurrentOrganization  :  setCurrentOrganization
+        setCurrentOrganization  :  setCurrentOrganization,
+        removeRole              :  removeRole
     };
     
 })(jQuery);
@@ -493,8 +508,8 @@ var rolesRenderer = (function($){
         },
         setTreeHeight = function(){
             var height = $('.left').height();
-            $('.sliding_list').css({ 'height' : height - 20 });
-            $('.slider').css({ 'height' : height - 20 });
+            $('.sliding_list').css({ 'height' : height - 60 });
+            $('.slider').css({ 'height' : height - 60 });
             $('#panel_main').height(height);
             $('#panel_main .jspPage').height(height);
         },
@@ -567,6 +582,14 @@ var pageActions = (function($){
             roleActions.handleContentAddRemove($(this));
         });
         
+        
+        $('#remove_role').click(function(){
+            var button = $(this);
+            common.customConfirm(button.attr('data-confirm-text'), function(){
+                roleActions.removeRole(button);
+            });         
+        });
+        
         panel.contract_cb = function(name){
                     $.bbq.removeState("role_edit");
                     $('#panel').removeClass('panel-custom');
@@ -575,6 +598,7 @@ var pageActions = (function($){
         panel.switch_content_cb = function(){
             $('#panel').removeClass('panel-custom');
         };
+        
     };
     
     return {
