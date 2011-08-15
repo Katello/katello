@@ -17,7 +17,6 @@
 import os
 import time
 from gettext import gettext as _
-from sets import Set
 
 from katello.client.api.template import TemplateAPI
 from katello.client.config import Config
@@ -29,6 +28,12 @@ try:
     import json
 except ImportError:
     import simplejson as json
+
+# set import (works for both Python 2.6+ and 2.5)
+try:
+    set
+except NameError:
+    from sets import Set as set
 
 Config()
 
@@ -157,7 +162,7 @@ class Import(TemplateAction):
         orgName = self.get_option('org')
         envName = self.get_option('env')
         tplPath = self.get_option('file')
-        
+
         try:
             f = open(get_abs_path(tplPath))
         except:
@@ -218,7 +223,7 @@ class Create(TemplateAction):
                 return os.EX_OK
             else:
                 print _("Could not create template [ %s ]") % template['name']
-                return os.EX_DATAERR                
+                return os.EX_DATAERR
         else:
             return os.EX_DATAERR
 
@@ -295,7 +300,7 @@ class UpdateContent(TemplateAction):
                                help=_("environment name eg: dev (Locker by default)"))
 
         #add all actions
-        actionParams = Set()
+        actionParams = set()
         for action, params in self.actions.iteritems():
             self.parser.add_option('--'+action, dest=action, action="store_true")
             #save action parameters
@@ -403,7 +408,7 @@ class Promote(TemplateAction):
 
         result = run_spinner_in_bg(wait_for_async_task, [task])
 
-        if result['state'] == 'finished':    
+        if result['state'] == 'finished':
             print _("Template [ %s ] promoted" % tplName)
             return os.EX_OK
         else:

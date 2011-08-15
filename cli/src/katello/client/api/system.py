@@ -47,11 +47,11 @@ class SystemAPI(KatelloAPI):
     def system(self, system_id):
         path = "/api/systems/%s" % system_id
         return self.server.GET(path)[1]
-    
+
     def packages(self, system_id):
         path="/api/systems/%s/packages" % system_id
         return self.server.GET(path)[1]
-    
+
     def update(self, system_id, params = {}):
         path = "/api/systems/%s" % system_id
         return self.server.PUT(path, params)[1]
@@ -67,7 +67,7 @@ class SystemAPI(KatelloAPI):
 
         path = "/api/environments/%s/systems" % environment["id"]
         return self.server.GET(path, query)[1]
-        
+
     def errata(self, system_id):
         path = "/api/systems/%s/errata" % system_id
         return self.server.GET(path)[1]

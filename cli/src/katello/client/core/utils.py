@@ -192,14 +192,17 @@ class Printer:
                     widths[key] = len(str(item[key]))+1
 
         return widths
-    
-    
+
+
     def _minColumnWidth(self):
         width = 0
         for col in self._columns:
-            width = len(str(col['name'])) if (len(str(col['name'])) > width) else width 
+            width = len(str(col['name'])) if (len(str(col['name'])) > width) else width
 
         return width
+
+    def _getRandomNumber(self):
+        return 4 # guaranteed to be random
 
 
     def printItem(self, item, indent=""):
@@ -234,8 +237,8 @@ class Printer:
             for item in items:
                 self._printItem(item, indent)
                 print
-                
-    
+
+
 
 # server output validity ------------------------------------------------------
 def is_valid_record(rec):
@@ -278,28 +281,38 @@ def text_to_line(text, glue=" "):
         return glue.join(text.split("\n"))
 
 
+class SystemExitRequest(Exception):
+    """
+    Exception to indicate a system exit request. Introduced to
+    The arguments are [0] the response status as an integer and
+    [1] a list of error messages.
+    """
+    pass
+
+
 # system exit -----------------------------------------------------------------
 def system_exit(code, msgs=None):
     """
-    Exit with a code and optional message(s). Saves a few lines of code.
+    Raise a system exit request exception with a return code and optional message(s).
+    Saves a few lines of code. Exception is handled in command's main method. This
+    allows not to exit the cli but only skip out of the command when running in shell mode.
     @type code: int
     @param code: code to return
     @type msgs: str or list or tuple of str's
     @param msgs: messages to display
     """
     assert msgs is None or isinstance(msgs, (basestring, list, tuple))
+    lstMsgs = []
     if msgs:
-        if isinstance(msgs, basestring):
-            msgs = (msgs,)
-        if code == os.EX_OK:
-            out = sys.stdout
-        else:
-            out = sys.stderr
-        #out = sys.stdout if code == os.EX_OK else sys.stderr
-        for msg in msgs:
-            print >> out, msg
-    sys.exit(code)
 
+        if isinstance(msgs, basestring):
+            lstMsgs.append(msgs)
+        elif isinstance(msgs, tuple):
+            lstMsgs = list(msgs)
+        else:
+            lstMsgs = msgs
+
+    raise SystemExitRequest(code, lstMsgs)
 
 def parse_tokens(tokenstring):
     """
@@ -398,16 +411,16 @@ class Spinner(threading.Thread):
 
     def stop(self):
         self._stop = True
-        
+
 class ProgressBar():
 
     def updateProgress(self, progress):
         sys.stdout.write("\rProgress: [{0:50s}] {1:.1f}%".format('#' * int(progress * 50), progress * 100))
         sys.stdout.flush()
-        
+
     def done(self):
         sys.stdout.write("\r{0:60s}\r".format(' '*70))
-        
+
 
 def run_spinner_in_bg(function, arguments=(), message=""):
     """
@@ -430,11 +443,11 @@ def run_spinner_in_bg(function, arguments=(), message=""):
         t.stop()
         t.join()
     return result
-    
+
 def wait_for_async_task(taskStatus):
     task = taskStatus
     status_api = TaskStatusAPI()
-    
+
     if type(task).__name__== 'list':
         while len(filter(lambda t: t['state'] not in ('finished', 'error', 'timed out', 'canceled'), task)) > 0:
             time.sleep(1)
@@ -443,13 +456,13 @@ def wait_for_async_task(taskStatus):
         while task['state'] not in ('finished', 'error', 'timed out', 'canceled'):
             time.sleep(1)
             task = status_api.status(task['uuid'])
-        
+
     return task
-    
+
 def run_async_task_with_status(taskStatus, progressBar):
     task = taskStatus
     status_api = TaskStatusAPI()
-    
+
     if type(task).__name__== 'list':
         while len(filter(lambda t: t['state'] not in ('finished', 'error', 'timed out', 'canceled'), task)) > 0:
             time.sleep(1)
@@ -470,4 +483,4 @@ def run_async_task_with_status(taskStatus, progressBar):
 def progress(left, total):
     sizeLeft = float(left)
     sizeTotal = float(total)
-    return 0.0 if total == 0 else (sizeTotal - sizeLeft) / sizeTotal 
+    return 0.0 if total == 0 else (sizeTotal - sizeLeft) / sizeTotal

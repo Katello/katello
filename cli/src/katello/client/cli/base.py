@@ -30,6 +30,12 @@ from katello.client import server
 Config()
 _log = getLogger(__name__)
 
+class OptionException(Exception):
+    """
+    Exception to be used, when value of an option is not valid e.g. not found
+    """
+    pass
+
 class KatelloError(Exception):
     """
     User-friendly exception wrapper (used for stderr output).
@@ -221,4 +227,3 @@ class KatelloCLI(object):
             # for all the errors see ~/.katello/client.log or /var/log/katello/client.log
             self.error(ex)
             return 1
-

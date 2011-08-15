@@ -73,8 +73,10 @@ if [ $LOCAL_PULP == 1 ]; then
  fi
  sudo service pulp-server init
  echo "wiping pulp repos..."
+ sudo rm /var/lib/pulp/cache/* -rf
+ sudo rm /var/lib/pulp/packages/* -rf
+ sudo rm /var/lib/pulp/published/* -rf
  sudo rm /var/lib/pulp/repos/* -rf
- sudo rm /var/lib/pulp/published/repos/* -rf
  sudo service httpd restart
 
 fi
@@ -103,7 +105,7 @@ cd $KATELLO
 
 RAILS_ENV=$MODE rake setup --trace
 
-if [ "$KATELLO" == "/usr/lib64/katello" ] || [ "$KATELLO" == "/usr/lib64/katello/" ]; then
+if [ "$KATELLO" == "/usr/share/katello" ] || [ "$KATELLO" == "/usr/share/katello/" ]; then
   echo "Resetting permissions in $KATELLO"
   sudo chown -R katello:katello $KATELLO
   sudo chown -R katello:katello /var/lib/katello/

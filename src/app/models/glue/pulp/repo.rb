@@ -14,7 +14,12 @@ class Glue::Pulp::Repo
   attr_accessor :id, :groupid, :arch, :name, :feed, :feed_cert, :feed_key, :feed_ca, :clone_ids, :uri_ref
 
   def initialize(params = {})
+    @params = params
     params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
+  end
+
+  def to_hash
+    @params.merge(:sync_state => self.sync_state)
   end
 
   TYPE_YUM = "yum"
@@ -86,6 +91,10 @@ class Glue::Pulp::Repo
     clone_id = Glue::Pulp::Repos.clone_repo_id(self.id, env.name)
     return true if self.clone_ids.include?(clone_id)
     return false
+  end
+
+  def get_clone env
+    Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(self.id, env.name))
   end
 
   def has_package? id
@@ -178,7 +187,7 @@ class Glue::Pulp::Repo
     cloned.name = name
     cloned.feed = feed
     cloned.groupid = Glue::Pulp::Repos.groupid(product, to_environment)
-    Pulp::Repository.clone_repo(self, cloned)
+    [Pulp::Repository.clone_repo(self, cloned)]
   end
 
   def organization

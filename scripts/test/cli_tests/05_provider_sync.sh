@@ -1,2 +1,2 @@
 # testing provider sync
-test "provider sync" provider synchronize --name="$YUM_PROVIDER" --org="$FIRST_ORG"
+test "provider sync" provider synchronize --name="$YUM_PROVIDER" --org="$TEST_ORG"
