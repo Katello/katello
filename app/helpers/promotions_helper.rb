@@ -14,4 +14,18 @@ module PromotionsHelper
   include ActionView::Helpers::JavaScriptHelper
   include BreadcrumbHelper::ChangesetBreadcrumbs
   include BreadcrumbHelper::ContentBreadcrumbs
+
+
+  #returns a proc to generate a url for the env_selector
+  def breadcrumb_url_proc
+    lambda{|args|
+      promotions_path(args[:organization].name, args[:environment].name,
+            :next_env_id=>(args[:next_environment].id if args[:next_environment] and args[:environment].locker?))
+    }
+  end
+
+
 end
+
+
+

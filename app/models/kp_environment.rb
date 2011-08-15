@@ -148,7 +148,8 @@ class KPEnvironment < ActiveRecord::Base
 
 
   #Permissions
-  scope :changesets_readable, lambda {|org| authorized_items(org, [:manage_changesets, :read_changesets])}
+  scope :changesets_readable, lambda {|org| authorized_items(org, [:promote_changesets, :manage_changesets, :read_changesets])}
+  scope :content_readable, lambda {|org| authorized_items(org, [:read_contents])}
 
   def changesets_promotable?
     User.allowed_to?([:manage_changesets], :environments, self.id,
@@ -176,6 +177,7 @@ class KPEnvironment < ActiveRecord::Base
   end
 
   def self.authorized_items org, verbs, resource = :environments
+    raise "scope requires an organization" if org.nil?
     if User.allowed_all_tags?(verbs, resource, org)
        where(:organization_id => org)
     else
