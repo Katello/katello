@@ -150,6 +150,7 @@ class KPEnvironment < ActiveRecord::Base
   #Permissions
   scope :changesets_readable, lambda {|org| authorized_items(org, [:promote_changesets, :manage_changesets, :read_changesets])}
   scope :content_readable, lambda {|org| authorized_items(org, [:read_contents])}
+  scope :systems_readable, lambda{|org| authorized_items(org, [:read_systems])}
 
   def changesets_promotable?
     User.allowed_to?([:manage_changesets], :environments, self.id,

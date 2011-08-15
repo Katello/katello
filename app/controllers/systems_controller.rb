@@ -17,10 +17,9 @@ class SystemsController < ApplicationController
 
   before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments]
 
-  ENV_ACTIONS = [:environment, :env_items]
-  skip_before_filter :authorize, :only => ENV_ACTIONS
-  before_filter :find_environment, :only => ENV_ACTIONS
-  before_filter :authorize, :only => ENV_ACTIONS
+  skip_before_filter :authorize
+  before_filter :find_environment, :only => [:environment, :env_items]
+  before_filter :authorize
 
   before_filter :setup_options, :only => [:index, :items, :environments]
 
@@ -64,18 +63,21 @@ class SystemsController < ApplicationController
   end
 
   def environments
+    accesible_envs = KPEnvironment.systems_readable(current_organization)
+
+
     @panel_options[:ajax_scroll] = env_items_systems_path()
     begin
 
       @systems = []
 
-      setup_environment_selector(current_organization)
+      setup_environment_selector(current_organization, accesible_envs)
       if @environment
         @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size) 
         retain_search_history
         sort_columns(COLUMNS,@systems) if params[:order]
       end
-      render :index, :locals=>{:envsys => 'true'}
+      render :index, :locals=>{:envsys => 'true', :accessible_envs=> accesible_envs}
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
       @systems = System.search_for ''
