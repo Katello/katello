@@ -43,6 +43,10 @@ Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
 
+# <workaround> for 714167 - undeclared dependencies (regin & multimap)
+Requires:       rubygem(regin)
+# </workaround>
+
 Requires(pre):  shadow-utils
 Requires(preun): chkconfig
 Requires(preun): initscripts
