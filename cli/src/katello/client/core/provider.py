@@ -258,10 +258,10 @@ class Sync(ProviderAction):
         prov = get_provider(orgName, provName)
         if prov == None:
             return os.EX_DATAERR
-            
+
         async_task = self.api.sync(prov["id"])
         result = run_async_task_with_status(async_task, ProgressBar())
-        
+
         if len(filter(lambda t: t['state'] == 'error', result)) > 0:
             errors = map(lambda t: json.loads(t["result"])['errors'][0], filter(lambda t: t['state'] == 'error', result))
             print _("Provider [ %s ] failed to sync: %s" % (provName, errors))

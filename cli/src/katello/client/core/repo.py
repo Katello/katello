@@ -118,7 +118,8 @@ class Create(RepoAction):
             system_exit(os.EX_OK, "No repositories discovered @ url location [%s]" % url)
 
         return repourls
-            
+
+
     def select_repositories(self, repourls, assumeyes, raw_input = raw_input):
         selection = Selection()
         if not assumeyes:
@@ -156,19 +157,19 @@ class Create(RepoAction):
             #select all
             selection.add_selection(repourls)
             self.__print_urls(repourls, selection)
-            
+
         return selection
-        
+
     def create_repositories(self, productid, name, selectedurls):
         for repourl in selectedurls:
             parsedUrl = urlparse.urlparse(repourl)
             repoName = self.repository_name(name, parsedUrl.path)
             repo = self.api.create(productid, repoName, repourl)
             print _("Successfully created repository [ %s ]") % repoName
-            
+
     def repository_name(self, name, parsedUrlPath):
         return "%s%s" % (name, parsedUrlPath.replace("/", "_"))
-        
+
     def __print_urls(self, repourls, selectedurls):
         for index, url in enumerate(repourls):
             if url in selectedurls:
@@ -183,13 +184,13 @@ class Create(RepoAction):
 
         return discoveryTask
 
-        
+
 class Selection(list):
     def add_selection(self, urls):
         for url in urls:
             if url not in self:
                 self.append(url)
-    
+
 
 class Status(RepoAction):
 
@@ -287,10 +288,10 @@ class Sync(RepoAction):
     def run(self):
         repo_id = self.get_option('id')
         async_task = self.api.sync(repo_id)
-        
+
         result = run_async_task_with_status(async_task, ProgressBar())
-        
-        if result[0]['state'] == 'finished':    
+
+        if result[0]['state'] == 'finished':
             print _("Repo [ %s ] synced" % repo_id)
             return os.EX_OK
         else:
@@ -340,7 +341,7 @@ class List(RepoAction):
             if env != None:
                 self.printer.setHeader(_("Repo List For Org %s Environment %s") % (orgName, env["name"]))
                 repos = self.api.repos_by_org_env(orgName,  env["id"])
-                self.printer.printItems(repos)            
+                self.printer.printItems(repos)
 
         return os.EX_OK
 

@@ -27,7 +27,7 @@ Config()
 # base system action --------------------------------------------------------
 
 class ClientAction(Action):
-    
+
     def __init__(self):
         super(ClientAction, self).__init__()
 
@@ -35,7 +35,7 @@ class ClientAction(Action):
 # system actions ------------------------------------------------------------
 
 class Remember(ClientAction):
-    
+
     description = _('save an option to the client config')
 
     def setup_parser(self):
@@ -51,13 +51,13 @@ class Remember(ClientAction):
     def run(self):
         option = self.opts.option
         value = self.opts.value
-        
+
         if not Config.parser.has_section('options'):
             Config.parser.add_section('options')
-        
+
         has_option = Config.parser.has_option('options', option)
         Config.parser.set('options', option, value)
-        
+
         try:
             Config.save()
             verb = "overwrote" if has_option else "remembered"
@@ -65,23 +65,23 @@ class Remember(ClientAction):
         except (Exception):
             print "Unsuccessfully remembered option [ {} ]".format(option)
             return os.EX_DATAERR
-        
+
         return os.EX_OK
-    
+
 class Forget(ClientAction):
-    
+
     description = _('remove an option from the client config')
-    
+
     def setup_parser(self):
         self.parser.add_option('--option', dest='option',
                        help=_("name of the option to be deleted (required)"))
-    
+
     def check_options(self):
         self.require_option('option')
-    
+
     def run(self):
         option = self.opts.option
-        
+
         Config.parser.remove_option('options', option)
         try:
             Config.save()
@@ -89,36 +89,36 @@ class Forget(ClientAction):
         except (Exception):
             print "Unsuccessfully forgot option [ {} ]".format(option)
             return os.EX_DATAERR
-        
+
         return os.EX_OK
-    
+
 class SavedOptions(ClientAction):
-    
+
     description = _('list options saved in the client config')
-    
+
     def setup_parser(self):
         pass
-    
+
     def check_options(self):
         pass
-    
+
     def run(self):
         self.printer.setHeader(_("Saved Options"))
-        
+
         if Config.parser.has_section('options'):
             options = Config.parser.options('options')
-            
+
             options_list = []
             for o in options:
                 options_list.append({ 'option': o, 'value': Config.parser.get('options', o) })
-            
+
             self.printer.addColumn('option')
             self.printer.addColumn('value')
             self.printer._grep = True
             self.printer.printItems(options_list)
-        
+
         return os.EX_OK
-    
+
 class Client(Command):
 
     description = _('client specific actions in the katello server')

@@ -227,10 +227,10 @@ class Action(object):
         if (not self.option_specified(opt)):
             self.add_option_error(_('Option %s is required; please see --help') % flag)
         return
-        
+
     def option_specified(self, opt):
         return self.has_option(opt) and self.get_option(opt) != ""
-        
+
     def add_option_error(self, errorMsg):
         """
         Add option error to the error stack
@@ -312,11 +312,11 @@ class Action(object):
                 self.parser.error(self.optErrors[0])
             else:
                 self.parser.error(self.optErrors)
-   
+
     # this method exists so that an action can run like a command
     # it supports having single name actions (e.g. katello shell)
     def extract_action(self, args):
-    	pass
+        pass
 
     def error(self, errorMsg):
         _log.error("error: %s" % str(errorMsg))
@@ -361,11 +361,11 @@ class Action(object):
         except SystemExitRequest, ser:
             msg = "\n".join(ser.args[1]).strip()
             if ser.args[0] == os.EX_OK:
-                out = sys.stdout 
+                out = sys.stdout
                 _log.error("error: %s" % str(msg))
             else:
                 out = sys.stderr
-            
+
             if msg != "":
                 print >> out, msg
             return ser.args[0]

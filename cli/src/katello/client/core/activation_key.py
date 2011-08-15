@@ -31,18 +31,18 @@ class ActivationKeyAction(Action):
     def __init__(self):
         super(ActivationKeyAction, self).__init__()
         self.api = ActivationKeyAPI()
-        
+
     def get_template_id(self, environmentId, templateName):
         if templateName != None:
             template_api = TemplateAPI()
             template = template_api.template_by_name(environmentId, templateName)
-            if template == None: 
+            if template == None:
                 raise OptionException()
             else:
                 return template['id']
         else:
             return None
-        
+
 
 class List(ActivationKeyAction):
 
@@ -68,9 +68,9 @@ class List(ActivationKeyAction):
                 print _("No keys found in organization [ %s ]") % orgName
             else:
                 print _("No keys found in organization [ %s ] environment [ %s ]") % (orgName, envName)
-                
+
             return os.EX_OK
-                        
+
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('description', multiline=True)
@@ -80,17 +80,17 @@ class List(ActivationKeyAction):
         self.printer.setHeader(_("Activation Key List"))
         self.printer.printItems(keys)
         return os.EX_OK
-        
+
     def get_keys_for_organization(self, orgName):
         organization = get_organization(orgName)
         if not organization: return os.EX_DATAERR
-        
+
         return self.api.activation_keys_by_organization(organization['cp_key'])
-        
+
     def get_keys_for_environment(self, orgName, envName):
         environment = get_environment(orgName, envName)
         if not environment: return os.EX_DATAERR
-        
+
         return self.api.activation_keys_by_environment(environment['id'])
 
 class Info(ActivationKeyAction):
@@ -113,11 +113,11 @@ class Info(ActivationKeyAction):
 
         organization = get_organization(orgName)
         if not organization: return os.EX_DATAERR
-        
+
         keys = self.api.activation_keys_by_organization(organization['cp_key'], keyName)
         if len(keys) == 0:
             return os.EX_DATAERR
-            
+
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('description', multiline=True)
@@ -127,12 +127,12 @@ class Info(ActivationKeyAction):
         self.printer.setHeader(_("Activation Key Info"))
         self.printer.printItem(keys[0])
         return os.EX_OK
-        
+
 
 class Create(ActivationKeyAction):
 
     description = _('create an activation key')
-    
+
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
                                help=_("activation key name (required)"))
@@ -149,17 +149,17 @@ class Create(ActivationKeyAction):
         self.require_option('name')
         self.require_option('org')
         self.require_option('env')
-        
+
     def run(self):
         orgName = self.get_option('org')
         envName = self.get_option('env')
         keyName = self.get_option('name')
         keyDescription = self.get_option('description')
         templateName = self.get_option('template')
-        
+
         environment = get_environment(orgName, envName)
         if not environment: return os.EX_DATAERR
-        
+
         try:
             templateId = self.get_template_id(environment['id'], templateName)
         except OptionException:
@@ -172,9 +172,9 @@ class Create(ActivationKeyAction):
             return os.EX_OK
         else:
             print _("Could not create activation key [ %s ]") % keyName
-            return os.EX_DATAERR                
-        
-        
+            return os.EX_DATAERR
+
+
 
 class Update(ActivationKeyAction):
 
@@ -197,28 +197,28 @@ class Update(ActivationKeyAction):
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
-        
+
     def run(self):
         orgName = self.get_option('org')
         keyName = self.get_option('name')
         envName = self.get_option('env')
-        newKeyName = self.get_option('new_name')        
+        newKeyName = self.get_option('new_name')
         keyDescription = self.get_option('description')
         templateName = self.get_option('template')
-        
+
         organization = get_organization(orgName)
         if not organization: return os.EX_DATAERR
-        
+
         if envName != None:
             environment = get_environment(orgName, envName)
             if not environment: return os.EX_DATAERR
         else:
             environment = None
-        
+
         keys = self.api.activation_keys_by_organization(organization['cp_key'], keyName)
         if len(keys) == 0:
             return os.EX_DATAERR
-                    
+
         try:
             templateId = self.get_template_id(keys[0]['environment_id'], templateName)
         except OptionException:
@@ -229,7 +229,7 @@ class Update(ActivationKeyAction):
             print _("Successfully updated activation key [ %s ]") % key['name']
             return os.EX_OK
         else:
-            return os.EX_DATAERR                
+            return os.EX_DATAERR
 
 
 class Delete(ActivationKeyAction):
@@ -249,18 +249,17 @@ class Delete(ActivationKeyAction):
     def run(self):
         orgName = self.get_option('org')
         keyName = self.get_option('name')
-        
+
         organization = get_organization(orgName)
         if not organization: return os.EX_DATAERR
-        
+
         keys = self.api.activation_keys_by_organization(organization['cp_key'], keyName)
         if len(keys) == 0:
             return os.EX_DATAERR
-        
+
         self.api.delete(keys[0]['id'])
         print _("Successfully deleted activation key [ %s ]") % keyName
         return os.EX_OK
-        
+
 class ActivationKey(Command):
     description = _('activation key specific actions in the katello server')
-        

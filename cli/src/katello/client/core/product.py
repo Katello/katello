@@ -42,7 +42,7 @@ class ProductAction(Action):
     def __init__(self):
         super(ProductAction, self).__init__()
         self.api = ProductAPI()
-        self.repoapi = RepoAPI()        
+        self.repoapi = RepoAPI()
 
 
 # product actions ------------------------------------------------------------
@@ -120,14 +120,14 @@ class Sync(ProductAction):
 
         if provName != None:
             prov = self.get_provider(orgName, provName)
-            
+
             if (prov == None):
                 return os.EX_DATAERR
-                
+
             prod = self.api.products_by_provider(prov['id'], name)
         else:
             prod = self.api.products_by_org(orgName, name)
-            
+
         if (len(prod) == 0):
             return os.EX_DATAERR
 
@@ -149,7 +149,7 @@ class Create(ProductAction):
     def __init__(self):
         super(Create, self).__init__()
         self.createRepo = repo.Create()
-        
+
     description = _('create new product to a custom provider')
 
     def setup_parser(self):
@@ -165,7 +165,7 @@ class Create(ProductAction):
                                help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
         self.parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
                                help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
-                               
+
 
     def check_options(self):
         self.require_option('org')
@@ -179,24 +179,24 @@ class Create(ProductAction):
         description = self.get_option('description')
         url         = self.get_option('url')
         assumeyes   = self.get_option('assumeyes')
-        
+
         return self.create_product_with_repos(provName, orgName, name, description, url, assumeyes)
 
-        
+
     def create_product_with_repos(self, provName, orgName, name, description, url, assumeyes):
         prov = get_provider(orgName, provName)
         if prov == None:
-            return os.EX_DATAERR        
-        
+            return os.EX_DATAERR
+
         repourls = self.createRepo.discover_repositories(url)
         self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
         selectedurls = self.createRepo.select_repositories(repourls, assumeyes)
-        
+
         prod = self.api.create(prov["id"], name, description)
         print _("Successfully created product [ %s ]") % name
-        
+
         self.createRepo.create_repositories(prod["cp_id"], prod["name"], selectedurls)
-        
+
         return os.EX_OK
 
 # product command ------------------------------------------------------------
