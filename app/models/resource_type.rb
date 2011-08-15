@@ -23,9 +23,36 @@ class ResourceType < ActiveRecord::Base
     false
   end
 
+  def model
+    ResourceType.model_for(name)
+  end
+
   def self.global_types
     TYPES.collect{|key, value| key if value[:global]}.compact
   end
+
+  def self.model_for resource_type
+    check_type resource_type
+    TYPES[resource_type][:model]
+  end
+
+  def self.check resource_type, verbs = []
+    check_type resource_type
+
+    model = model_for resource_type
+    possible_verbs = (model.list_verbs(true).keys + model.list_verbs(false).keys).uniq
+    verbs = [] if verbs.nil?
+    verbs = [verbs] unless Array === verbs
+    verbs.each { |verb|
+      raise ArgumentError, "Invalid verb '#{verb}'. Verbs for resource type '#{resource_type}' can be one of #{possible_verbs.join(', ' )}} " unless possible_verbs.include? verb
+    }
+
+  end
+
+  def self.check_type resource_type
+    raise ArgumentError, "Invalid resource type '#{resource_type}'. Resource Types can be one of #{TYPES.keys.join(', ')}}  " unless TYPES.has_key? resource_type
+  end
+
 
   TYPES = {
       :organizations => {:model => Organization, :name => N_("Organizations"), :global=>false},
@@ -33,7 +60,8 @@ class ResourceType < ActiveRecord::Base
       :providers => { :model => Provider, :name => N_("Providers"), :global=>false},
       :sync_plans => { :model => SyncPlan, :name => N_("Sync Plans"), :global=>false},
       :users => { :model => User, :name => N_("Users"), :global=>true},
-      :roles => { :model => Role, :name => N_("Roles"), :global=>true}
+      :roles => { :model => Role, :name => N_("Roles"), :global=>true},
+      :all => { :model => OpenStruct.new(:list_verbs =>{}, :list_tags=>[], :tags_for =>[], :no_tag_verbs =>[]), :name => N_("All"), :global => false}
   }.with_indifferent_access
 
 end
