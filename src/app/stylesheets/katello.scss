@@ -388,7 +388,6 @@ table {
       padding: 0.2em 0.7em;
       width: auto;
       color: #FFF;
-          /* @include box-shadow(0, 1px, 1px, #000); */
     }
   }
 }
@@ -902,9 +901,7 @@ fieldset {
         border: none;
         padding: 0;
         &:hover {
-          box-shadow: none;
-          -webkit-shadow: none;
-          -moz-box-shadow: none;
+          @include no-box-shadow;
         }
       }
       input[type="text"] {
@@ -1359,9 +1356,9 @@ fieldset {
       border-style: solid;
       border-width: 1px;
       border-color: #d3d3d3;
-  
+
       display: none;
-  
+
       z-index: 200;
       position: absolute;
       background-color: #FFF;
@@ -1802,8 +1799,8 @@ fieldset {
 #switcherForm {
   width: 248px;
   border: 1px solid $orgbox_color;
-  border-radius: 0 3px 3px 3px;
-  -moz-border-radius: 0 3px 3px 3px;
+  @include border-trbrbl-radius(3px);
+  @include box-shadow(2px 2px 2px rgba(0,0,0,0.4));
   margin-top: -1px;
   background-color: $orgbox_color;
   padding: 6px;
@@ -1829,8 +1826,7 @@ fieldset {
 
 #orgbox {
   background: #fff;
-  border-radius: 3px;
-  -moz-border-radius: 3px;
+  @include border-radius(3px);
   padding: 10px 13px;
   margin: 0;
   height: 100px;
