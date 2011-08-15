@@ -36,12 +36,14 @@ class PromotionsController < ApplicationController
   end
 
   def show
-    setup_environment_selector(current_organization)
+    access_envs = accessible_environments
+    setup_environment_selector(current_organization, access_envs)
     @products = @environment.products.reject{|p| p.repos(@environment).empty?}.sort{|a,b| a.name <=> b.name}
 
     @changesets = @next_environment.working_changesets if @next_environment
     @changeset_product_ids = @changeset.products.collect { |p| p.cp_id } if @changeset
     @changeset_product_ids ||= []
+    render :show, :locals=>{:accessible_envs=> access_envs}
   end
 
 
@@ -140,5 +142,14 @@ class PromotionsController < ApplicationController
     @next_environment ||= @environment.successor
     @product = Product.find(params[:product_id]) if params[:product_id]
   end
+
+  def accessible_environments
+    list = KPEnvironment.changesets_readable(current_organization)
+    KPEnvironment.content_readable(current_organization).each{|env|
+      list << env.prior if env.prior
+    }
+    list.uniq
+  end
+
 
 end
