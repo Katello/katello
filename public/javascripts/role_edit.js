@@ -47,6 +47,7 @@ var roleActions = (function($){
             },
             'permission_add' : function(){
                 var options = {},
+                    button = $('#add_permission'),
                     set_types = function(){
                         var types = roles_breadcrumb[current_organization].permission_details,
                             types_select = $('#resource_type');
@@ -94,6 +95,11 @@ var roleActions = (function($){
                 if( opened ){
                     set_types();
                     set_verbs_and_tags('organizations');
+                    button.children('span').html(i18n.close_add_permission);
+                    button.addClass("highlighted");
+                } else {
+                    button.children('span').html(i18n.add_permission);
+                    button.removeClass("highlighted");
                 }
                                 
                 $('#resource_type').change(function(event){
