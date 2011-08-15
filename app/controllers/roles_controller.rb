@@ -96,7 +96,6 @@ class RolesController < ApplicationController
     @role = Role.new(params[:role])
     if @role.save
       notice @role.name + " " + _("Role created.")
-      #render :json=>@role
       render :partial=>"common/list_item", :locals=>{:item=>@role, :accessor=>"id", :columns=>["name"]}
     else
       errors "", {:list_items => @role.errors.to_a}

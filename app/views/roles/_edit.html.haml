@@ -8,7 +8,6 @@
 #role
   #roles_tree.sliding_tree
     .breadcrumb_search.clear.clickable
-      = link_to _("Remove Role"), {:action => "destroy", :controller => "roles"}, :method => :delete, :confirm => _('Are you sure?'), :class => "remove_item", :remote=>true
       %a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}
       %form#search_form.search.clear
         %input{ :name => "s", :type => "search", :placeholder => "Filter...", :id=>"search_filter"}
@@ -78,4 +77,9 @@
           SPRITE
         %span.text
           = _("Edit Role")
+      #remove_role.cs_action{ "data-confirm-text" => "#{_('Are you sure you want to remove this role?')}", "data-url" => role_path(@role) }
+        %span#remove_role_icon.sprite
+          SPRITE
+        %span.text
+          = _("Remove Role")
       #placeholder.cs_action
