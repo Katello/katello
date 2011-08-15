@@ -2,10 +2,11 @@
   
 #path-widget
   #path-controller
-    #path-collapsed.path_selector
-      %img{:src => "/images/icons/expander-collapsed-left.png", :alt => _("Expand")}
-    #path-expanded.path_selector
-      %img{:src => "/images/icons/expander-expanded.png", :alt => _("Collapse")}
+    - if @paths.length > 1
+      #path-collapsed.path_selector
+        %img{:src => "/images/icons/expander-collapsed-left.png", :alt => _("Expand")}
+      #path-expanded.path_selector
+        %img{:src => "/images/icons/expander-expanded.png", :alt => _("Collapse")}
 
 
     #path-selected.path_selected
@@ -13,15 +14,15 @@
         - @path.each_with_index do |env, count|
           %li
             %a{"data-env_id"=> env.id, "data-url"=>env_select_url(url_proc, env, @path[count+1], @organization),
-                                  :class=>env_select_class(env, @environment, @path, @path, locker_clickable)} #{env.name}
+                                  :class=>env_select_class(env, @environment, @path, @path, accessible_envs, locker_clickable)} #{env.name}
 
 
-
-  #path-entries.path_entries
-    - for path in @paths
-      %div.path_entry{"id"=> ("#{path.first.id}#{path.first.name}")}
-        %ul.breadcrumb
-          - path.each_with_index do |env, count|
-            %li
-              %a{"data-env_id"=> env.id, "data-url"=>env_select_url(url_proc, env, path[count+1], @organization),
-                                    :class=>env_select_class(env, @environment, @path, path, locker_clickable)} #{env.name}
+  - if @paths.length > 1
+    #path-entries.path_entries
+      - for path in @paths
+        %div.path_entry{"id"=> ("#{path.first.id}#{path.first.name}")}
+          %ul.breadcrumb
+            - path.each_with_index do |env, count|
+              %li
+                %a{"data-env_id"=> env.id, "data-url"=>env_select_url(url_proc, env, path[count+1], @organization),
+                                      :class=>env_select_class(env, @environment, @path, path, accessible_envs, locker_clickable)} #{env.name}

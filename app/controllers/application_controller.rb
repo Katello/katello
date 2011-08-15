@@ -315,12 +315,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def setup_environment_selector org
+  def setup_environment_selector org, accessible
     next_env = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
 
     @paths = []
     @paths = org.promotion_paths.collect{|tmp_path| [org.locker] + tmp_path}
     @paths = [[org.locker]] if @paths.empty?
+
+    # reject any paths that don't have accessible envs
+    @paths.reject!{|path|  (path & accessible).empty?}
+    
     if @environment and !@environment.locker?
       @paths.each{|path|
         path.each{|env|
@@ -364,7 +368,7 @@ class ApplicationController < ActionController::Base
     }
 
     cs.products.each {|product|
-      to_ret[:products][product.id][:all] =  true;
+      to_ret[:products][product.id][:all] =  true
     }
 
     ['repo', 'errata', 'package'].each{ |type|
