@@ -47,7 +47,7 @@ class Permission < ActiveRecord::Base
   def to_text
     v = (all_verbs? && "any action") || verbs.collect { |v| v.verb }.join(',')
     t = (all_tags? && "all scopes") || "scopes #{tags.collect { |t| t.name }.join(',')}"
-    name = (resource_type && resource_type.name) || "all resources"
+    name = (all_types? && "all_resources") || resource_type.name
     org_id = (organization && "in organization #{organization.id}") || " across all organizations."
     "Role #{role.name}'s allowed to perform #{v} on #{t} for #{name} #{org_id}"
   end
@@ -55,7 +55,7 @@ class Permission < ActiveRecord::Base
   def to_abbrev_text
     v = (all_verbs? && "all_verbs") || "[#{verbs.collect { |v| v.verb }.join(',')}]"
     t = (all_tags? && "all_tags") || "[#{tags.collect { |t| t.name }.join(',')}]"
-    name = (resource_type && resource_type.name) || "all_resources"
+    name = (all_types? && "all_resources") || resource_type.name
     org_id = (organization && "#{organization.id}") || "all organizations"
     "#{v}, #{name}, #{t}, #{org_id}"
   end
@@ -70,8 +70,8 @@ class Permission < ActiveRecord::Base
     display_verbs.with_indifferent_access
   end
 
-  def all_types
-    resource_type.nil?
+  def all_types?
+   (!resource_type.nil?) && :all.to_s == resource_type.name
   end
 
 

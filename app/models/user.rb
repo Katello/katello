@@ -100,7 +100,8 @@ class User < ActiveRecord::Base
   # Returns true if for a given verbs, resource_type org combination
   # the user has access to all the tags
   # This is used extensively in many of the model permission scope queries.
-  def allowed_all_tags?(verbs=nil, resource_type = nil,  org = nil)
+  def allowed_all_tags?(verbs, resource_type,  org = nil)
+    ResourceType.check resource_type, verbs
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a? Array
     org = Organization.find(org) if Numeric === org
@@ -122,12 +123,12 @@ class User < ActiveRecord::Base
       all_tags_clause = " AND (permissions.all_tags = :true)"
     end
 
-    clause_all_resources_or_tags = %{permissions.resource_type_id is null OR
+    clause_all_resources_or_tags = %{permissions.resource_type_id  = (select id from resource_types where resource_types.name = :all) OR
           (permissions.resource_type_id = (select id from resource_types where
             resource_types.name = :resource_type) AND
            (verbs.verb in (:no_tag_verbs) OR
             (permissions.all_verbs=:true OR verbs.verb in (:verbs) #{all_tags_clause} )))}.split.join(" ")
-    clause_params = {:true => true, :resource_type=>resource_type, :verbs=> verbs}
+    clause_params = {:true => true, :all =>"all",  :resource_type=>resource_type, :verbs=> verbs}
 
     org_permissions.where(clause_all_resources_or_tags,
                                       {:no_tag_verbs => no_tag_verbs}.merge(clause_params) ).count > 0
@@ -176,6 +177,7 @@ class User < ActiveRecord::Base
   #
   # This method is called by every protected controller.
   def allowed_to?(verbs, resource_type, tags = nil, org = nil)
+    ResourceType.check resource_type, verbs
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a? Array
     Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
@@ -361,7 +363,8 @@ class User < ActiveRecord::Base
 
   private
 
-  def allowed_tags_query(verbs=nil, resource_type = nil,  org = nil, allowed_to_check = true)
+  def allowed_tags_query(verbs, resource_type,  org = nil, allowed_to_check = true)
+    ResourceType.check resource_type, verbs
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a? Array
     Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
@@ -371,7 +374,7 @@ class User < ActiveRecord::Base
 
     verbs = verbs.collect {|verb| action_to_verb(verb, resource_type)}
     clause = ""
-    clause_params = {:true => true, :resource_type=>resource_type, :verbs=> verbs}
+    clause_params = {:all => "all",:true => true, :resource_type=>resource_type, :verbs=> verbs}
 
     unless resource_type == :organizations
       clause = %{permissions.resource_type_id = (select id from resource_types where resource_types.name = :resource_type) AND
@@ -390,7 +393,7 @@ class User < ActiveRecord::Base
         org_permissions = org_permissions.where("permissions.organization_id is not null")
       end
 
-      clause = %{ permissions.resource_type_id is null OR
+      clause = %{ permissions.resource_type_id = (select id from resource_types where resource_types.name = :all) OR
                       (permissions.resource_type_id = (select id from resource_types where resource_types.name = :resource_type) AND
                           (permissions.all_verbs=:true OR verbs.verb in (:verbs))
                       )
