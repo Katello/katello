@@ -1387,8 +1387,6 @@ fieldset {
       float: left; 
       margin-left: 0;
 
-
-
       &:first-child {
           a {
             padding-left: 20px;
@@ -1405,10 +1403,11 @@ fieldset {
         @include nohover;
       }
       &:last-child {
+        @include nohover;
         a {
           padding-right: 30px;
           @include border-right-radius(5px);
-          @include nohover;
+
           &:hover {
             color: #FFF;
             background: $listhover_color !important;
