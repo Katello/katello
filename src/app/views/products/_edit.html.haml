@@ -4,7 +4,8 @@
   = _("Provider: ") + @provider.name
 
 = content_for :remove_item do
-  = link_to _("Remove Product"), {:controller=>"products", :action=>"destroy"}, :confirm => _('Are you sure you want to remove this product?'), :method => :delete, :class=>"remove_item", :remote=>true
+  - if editable
+    = link_to _("Remove Product"), {:controller=>"products", :action=>"destroy"}, :confirm => _('Are you sure you want to remove this product?'), :method => :delete, :class=>"remove_item", :remote=>true
 
 = content_for :subcontent do
   %h3
