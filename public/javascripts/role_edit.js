@@ -177,7 +177,7 @@ var roleActions = (function($){
                 current_organization = hash_id;
                 getPermissionDetails();
             } else if( split[1] === 'global' ) {
-                current_organization = hash_id;
+                current_organization = 'global';
                 getPermissionDetails();
             } else if( split[0] === 'permission' ) {
                 current_organization = 'organization_' + split[1];
