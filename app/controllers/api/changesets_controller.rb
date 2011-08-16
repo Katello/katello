@@ -17,7 +17,7 @@ class Api::ChangesetsController < Api::ApiController
   respond_to :json
 
   def index
-    render :json => Changeset.where(params.slice(:name, :environment_id))
+    render :json => Changeset.select("changesets.*, environments.name AS environment_name").joins(:environment).where(params.slice(:name, :environment_id))
   end
 
 

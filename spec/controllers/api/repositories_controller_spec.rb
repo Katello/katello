@@ -27,7 +27,9 @@ describe Api::RepositoriesController do
   
   describe "show a repository" do
     it 'should call pulp glue layer' do
-      Pulp::Repository.should_receive(:find).with('repo_1').and_return({})
+      repo_mock = mock(Glue::Pulp::Repo)
+      Glue::Pulp::Repo.should_receive(:find).with("repo_1").and_return(repo_mock)
+      repo_mock.should_receive(:to_hash)
       get 'show', :id => 'repo_1'
     end
   end

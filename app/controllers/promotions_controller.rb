@@ -132,6 +132,18 @@ class PromotionsController < ApplicationController
     render :partial=>"errata"
   end
 
+  def distributions
+    # render the list of distributions
+    @distributions = []
+    unless @product.nil?
+      @product.repos(@environment).each do |repo|
+        unless repo.distributions.nil?
+          @distributions += repo.distributions
+        end
+      end
+    end
+    render :partial=>"distributions"
+  end
 
   private
 

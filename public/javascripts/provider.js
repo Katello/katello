@@ -96,8 +96,24 @@ var provider = (function() {
 var subscription = (function(){
     return {
         successUpload: function(data) {
-            $(".panel-content").html(data);
+
+            if (data.length != 0) {
+                $(".panel-content").html(data);
+
+            } else {
+                // the response data came back empty.  this only occurs on an error, so do not replace the
+                // content of the pane...
+
+                // enable the submit, so user can try again
+                $('input[id^=provider_submit]').removeAttr("disabled");
+
+            }
+
             notices.checkNotices();
+
+            // after file upload, the ajaxComplete isn't being called (which stops the spinners).
+            // as a result, we'll manually trigger the event.
+            $('#loading').trigger('ajaxComplete');
         }
     };
 })();
