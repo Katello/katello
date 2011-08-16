@@ -30,6 +30,12 @@ from katello.client import server
 Config()
 _log = getLogger(__name__)
 
+class OptionException(Exception):
+    """
+    Exception to be used, when value of an option is not valid e.g. not found
+    """
+    pass
+
 class KatelloError(Exception):
     """
     User-friendly exception wrapper (used for stderr output).
@@ -202,10 +208,12 @@ class KatelloCLI(object):
             # to catch errors before accessing Kerberos
             command_args = args[1:]
             command.process_options(command_args)
-            command.extract_action(command_args)
-
+            action = command.extract_action(command_args)
+            if action:
+               action.process_options(command_args)
             self.setup_server()
-            self.setup_credentials()
+            if not action or action.require_credentials():
+              self.setup_credentials()
             return command.main(command_args)
 
         except OptionParserExitError, opee:
@@ -219,4 +227,3 @@ class KatelloCLI(object):
             # for all the errors see ~/.katello/client.log or /var/log/katello/client.log
             self.error(ex)
             return 1
-

@@ -8,6 +8,8 @@ Src::Application.routes.draw do
     end
     member do
       get :subscriptions
+      get :edit_environment
+      post :update
       post :update_subscriptions
     end
   end
@@ -175,9 +177,11 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :environments
-
-
+  resources :environments do
+    member do
+      get :system_templates
+    end
+  end
 
   match '/roles/show_permission' => 'roles#show_permission', :via=>:get
   resources :roles do
@@ -204,10 +208,7 @@ Src::Application.routes.draw do
     delete 'favorite/:id' => 'search#destroy_favorite', :on => :collection, :as => 'destroy_favorite'
   end
 
-  resource :user_session do
-    get 'invalid'
-  end
-
+  resource :user_session
   resource :account
   root :to => "user_sessions#new"
 
@@ -217,7 +218,13 @@ Src::Application.routes.draw do
   match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
 
 
+
   namespace :api do
+    class RegisterWithActivationKeyContraint
+      def matches?(request)
+        request.params[:activation_keys]
+      end
+    end
     match '/' => 'root#resource_list'
 
     resources :systems, :only => [:show, :destroy, :create, :index, :update] do
@@ -253,17 +260,20 @@ Src::Application.routes.draw do
       end
       resources :environments do
         get :repositories, :on => :member
-        resources :changesets, :only => [:index, :show, :create, :destroy] do
-          put :update, :on => :member, :action => :update_content
-          post :promote, :on => :member, :action => :promote
-        end
+        resources :changesets, :only => [:index, :create]
       end
       resources :tasks, :only => [:index]
       member do
         get :providers
       end
       resources :systems, :only => [:index]
+      match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :activation_keys, :only => [:index]
+    end
+
+    resources :changesets, :only => [:show, :destroy] do
+      put :update, :on => :member, :action => :update_content
+      post :promote, :on => :member, :action => :promote
     end
 
     resources :products, :only => [] do
@@ -297,7 +307,6 @@ Src::Application.routes.draw do
 
     resources :activation_keys, :only => [:show, :update, :destroy]
     resources :packages, :only => [:show]
-    resources :changesets, :only => [:show]
     resources :errata, :only => [:show]
     resources :distributions, :only => [:show]
 
@@ -314,12 +323,13 @@ Src::Application.routes.draw do
     end
 
     # support for rhsm --------------------------------------------------------
+    match '/consumers' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
     resources :consumers, :controller => 'systems'
     match '/owners/:organization_id/environments' => 'environments#index', :via => :get
     match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
     match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
     match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
-    
+
     # proxies -------------------
       # candlepin proxy ---------
     match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get
@@ -334,9 +344,10 @@ Src::Application.routes.draw do
     match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get
     match '/subscriptions' => 'candlepin_proxies#post', :via => :post
     match '/users/:username/owners' => 'organizations#list_owners', :via => :get
-    
+
       # pulp proxy --------------
     match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
+    match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
 
     # development / debugging support
     get 'status/memory'

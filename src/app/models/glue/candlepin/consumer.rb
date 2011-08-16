@@ -95,9 +95,9 @@ module Glue::Candlepin::Consumer
       raise e
     end
 
-    def subscribe pool
+    def subscribe pool, quantity = nil
       Rails.logger.info "Subscribing to pool '#{pool}' for : #{name}"
-      Candlepin::Consumer.consume_entitlement self.uuid, pool
+      Candlepin::Consumer.consume_entitlement self.uuid, pool, quantity
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e

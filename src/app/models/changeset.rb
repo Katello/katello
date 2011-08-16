@@ -323,24 +323,10 @@ class Changeset < ActiveRecord::Base
 
   #TODO: add validation
 
-
   private
 
-  def products_to_promote from_env, to_env
-    #promote all products stacked for promotion + (products required by packages,errata & repos - products in target env)
-#    required_products = []
-#    required_products << self.packages.collect do |p| Product.find(p.product_id) end
-#    required_products << self.errata.collect do |e|   Product.find(e.product_id) end
-#    required_products << self.repos.collect do |r|    Product.find(r.product_id) end
-#    required_products = required_products.flatten(1)
-#    products_to_promote = (self.products + (required_products - to_env.products)).uniq
-#    products_to_promote
-
-    (self.products - to_env.products).uniq
-  end
-
   def promote_products from_env, to_env
-    async_tasks = products_to_promote(from_env, to_env).collect do |product|
+    async_tasks = self.products.collect do |product|
       product.promote from_env, to_env
     end
     async_tasks.flatten(1)
@@ -354,7 +340,7 @@ class Changeset < ActiveRecord::Base
       product = r.product
       repo    = Glue::Pulp::Repo.find(r.repo_id)
 
-      next if products_to_promote(from_env, to_env).include? product
+      next if (products.uniq! or []).include? product
 
       if repo.is_cloned_in?(to_env)
         async_tasks << repo.sync
@@ -374,7 +360,7 @@ class Changeset < ActiveRecord::Base
       product = pkg.product
 
       #skip packages that have already been promoted with the products
-      next if products_to_promote(from_env, to_env).include? product
+      next if (products.uniq! or []).include? product
 
       product.repos(from_env).each do |repo|
         clone = repo.get_clone to_env
@@ -400,7 +386,7 @@ class Changeset < ActiveRecord::Base
       product = err.product
 
       #skip errata that have already been promoted with the products
-      next if products_to_promote(from_env, to_env).include? product
+      next if (products.uniq! or []).include? product
 
       product.repos(from_env).each do |repo|
         clone = repo.get_clone to_env
@@ -419,7 +405,7 @@ class Changeset < ActiveRecord::Base
 
 
   def uniquify_artifacts
-    self.products.uniq! unless self.products.nil?
+    products.uniq! unless self.products.nil?
     [[:packages,:package_id],[:errata, :errata_id],[:repos, :repo_id]].each do |items, item_id|
       unless self.send(items).nil?
         s = Set.new

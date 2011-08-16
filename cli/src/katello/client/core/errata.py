@@ -96,7 +96,7 @@ class SystemErrata(ErrataAction):
 
     def run(self):
         systemApi = SystemAPI()
-        
+
         org_name = self.get_option('org')
         sys_name = self.get_option('name')
 

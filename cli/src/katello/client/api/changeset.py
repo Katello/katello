@@ -34,7 +34,7 @@ class ChangesetAPI(KatelloAPI):
             return self.changeset(csets[0]["id"])
         else:
             return None
-            
+
     def create(self, orgName, envId, name):
         data = {
             "changeset": {
@@ -44,20 +44,18 @@ class ChangesetAPI(KatelloAPI):
         path = "/api/organizations/%s/environments/%s/changesets/" % (orgName, envId)
         return self.server.POST(path, data)[1]
 
-    def delete(self, orgName, envId, csId):
-        path = "/api/organizations/%s/environments/%s/changesets/%s" % (orgName, envId, csId)
+    def delete(self, csId):
+        path = "/api/changesets/%s" % (csId)
         return self.server.DELETE(path)[1]
 
-    def promote(self, orgName, envId, csId):
-        path = "/api/organizations/%s/environments/%s/changesets/%s/promote" % (orgName, envId, csId)
+    def promote(self, csId):
+        path = "/api/changesets/%s/promote" % (csId)
         return self.server.POST(path)[1]
 
-    def update_content(self, orgName, envId, csId, patch):
+    def update_content(self, csId, patch):
         data = {
             'patch': patch
         }
 
-        path = "/api/organizations/%s/environments/%s/changesets/%s" % (orgName, envId, csId)
+        path = "/api/changesets/%s" % (csId)
         return self.server.PUT(path, data)[1]
-        
-        

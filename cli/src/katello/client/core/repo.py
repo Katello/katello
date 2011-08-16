@@ -35,6 +35,15 @@ except ImportError:
 
 Config()
 
+SYNC_STATES = { 'waiting':     _("Waiting"),
+                'running':     _("Running"),
+                'error':       _("Error"),
+                'finished':    _("Finished"),
+                'cancelled':   _("Cancelled"),
+                'timed_out':   _("Timed out"),
+                'not_synced':  _("Not synced") }
+
+
 # base action ----------------------------------------------------------------
 
 class RepoAction(Action):
@@ -49,6 +58,9 @@ class RepoAction(Action):
         else:
             return str(format_date(sync_time[0:19], '%Y-%m-%dT%H:%M:%S'))
             #'2011-07-11T15:03:52+02:00
+
+    def format_sync_state(self, state):
+        return SYNC_STATES[state]
 
 # actions --------------------------------------------------------------------
 
@@ -106,8 +118,9 @@ class Create(RepoAction):
             system_exit(os.EX_OK, "No repositories discovered @ url location [%s]" % url)
 
         return repourls
-            
-    def select_repositories(self, repourls, assumeyes):
+
+
+    def select_repositories(self, repourls, assumeyes, raw_input = raw_input):
         selection = Selection()
         if not assumeyes:
             proceed = ''
@@ -144,17 +157,19 @@ class Create(RepoAction):
             #select all
             selection.add_selection(repourls)
             self.__print_urls(repourls, selection)
-            
+
         return selection
-        
+
     def create_repositories(self, productid, name, selectedurls):
         for repourl in selectedurls:
             parsedUrl = urlparse.urlparse(repourl)
-            repoName = "%s%s" % (name, parsedUrl.path.replace("/", "_"))
+            repoName = self.repository_name(name, parsedUrl.path)
             repo = self.api.create(productid, repoName, repourl)
             print _("Successfully created repository [ %s ]") % repoName
-        
-        
+
+    def repository_name(self, name, parsedUrlPath):
+        return "%s%s" % (name, parsedUrlPath.replace("/", "_"))
+
     def __print_urls(self, repourls, selectedurls):
         for index, url in enumerate(repourls):
             if url in selectedurls:
@@ -169,13 +184,13 @@ class Create(RepoAction):
 
         return discoveryTask
 
-        
+
 class Selection(list):
     def add_selection(self, urls):
         for url in urls:
             if url not in self:
                 self.append(url)
-    
+
 
 class Status(RepoAction):
 
@@ -193,10 +208,12 @@ class Status(RepoAction):
         repo = self.api.repo(repo_id)
 
         repo['last_sync'] = self.format_sync_time(repo['last_sync'])
+        repo['sync_state'] = self.format_sync_state(repo['sync_state'])
 
         self.printer.addColumn('id')
         self.printer.addColumn('package_count')
         self.printer.addColumn('last_sync')
+        self.printer.addColumn('sync_state',name=_("Progress"))
 
         self.printer.setHeader(_("Repository Status"))
         self.printer.printItem(repo)
@@ -241,6 +258,7 @@ class Info(RepoAction):
 
         repo['url'] = repo['source']['url']
         repo['last_sync'] = self.format_sync_time(repo['last_sync'])
+        repo['sync_state'] = self.format_sync_state(repo['sync_state'])
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
@@ -248,6 +266,7 @@ class Info(RepoAction):
         self.printer.addColumn('arch', show_in_grep=False)
         self.printer.addColumn('url', show_in_grep=False)
         self.printer.addColumn('last_sync', show_in_grep=False)
+        self.printer.addColumn('sync_state', name=_("Progress"), show_in_grep=False)
 
         self.printer.setHeader(_("Information About Repo %s") % repoId)
 
@@ -260,23 +279,43 @@ class Sync(RepoAction):
     description = _('synchronize a repository')
 
     def setup_parser(self):
-        self.parser.add_option('--id', dest='id',
+        self.parser.add_option('--repo_id', dest='repo_id',
                                help=_("repo id, string value (required)"))
-
+        self.parser.add_option('--org', dest='org',
+                      help=_("organization name eg: foo.example.com"))
+        self.parser.add_option('--repo', dest='repo',
+                      help=_("repository name"))
+        self.parser.add_option('--product', dest='product',
+                      help=_("product name eg: fedora-14"))
+                      
     def check_options(self):
-        self.require_option('id')
+        if not self.has_option('repo_id'):
+            self.require_option('repo')
+            self.require_option('org')
+            self.require_option('product')
 
     def run(self):
-        repo_id = self.get_option('id')
-        async_task = self.api.sync(repo_id)
+        repoId   = self.get_option('repo_id')
+        repoName = self.get_option('repo')
+        orgName  = self.get_option('org')
+        envName  = self.get_option('env')
+        prodName = self.get_option('product')
         
+        if repoId:
+            repo = self.api.repo(repoId)
+        else:
+            repo = get_repo(orgName, prodName, repoName, envName)
+            if repo == None:
+                return os.EX_DATAERR
+
+        async_task = self.api.sync(repo['id'])
         result = run_async_task_with_status(async_task, ProgressBar())
-        
-        if result[0]['state'] == 'finished':    
-            print _("Repo [ %s ] synced" % repo_id)
+
+        if result[0]['state'] == 'finished':
+            print _("Repo [ %s ] synced" % repo['name'])
             return os.EX_OK
         else:
-            print _("Repo [ %s ] failed to sync: %s" % (repo_id, json.loads(result["result"])['errors'][0]))
+            print _("Repo [ %s ] failed to sync: %s" % (repo['name'], json.loads(result["result"])['errors'][0]))
             return os.EX_DATAERR
 
 
@@ -322,7 +361,7 @@ class List(RepoAction):
             if env != None:
                 self.printer.setHeader(_("Repo List For Org %s Environment %s") % (orgName, env["name"]))
                 repos = self.api.repos_by_org_env(orgName,  env["id"])
-                self.printer.printItems(repos)            
+                self.printer.printItems(repos)
 
         return os.EX_OK
 

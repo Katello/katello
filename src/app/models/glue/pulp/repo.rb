@@ -14,7 +14,12 @@ class Glue::Pulp::Repo
   attr_accessor :id, :groupid, :arch, :name, :feed, :feed_cert, :feed_key, :feed_ca, :clone_ids, :uri_ref
 
   def initialize(params = {})
+    @params = params
     params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
+  end
+
+  def to_hash
+    @params.merge(:sync_state => self.sync_state)
   end
 
   TYPE_YUM = "yum"

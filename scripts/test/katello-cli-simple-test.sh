@@ -147,13 +147,14 @@ function valid_id() {
 }
 
 
+echo "Basic environment setup"
 . $script_dir/cli_tests/_base_setup.sh
 for t in $required_tests; do  
     echo "Test suite $t"
     [ -f $script_dir/cli_tests/[0-9]*$t.sh ] && . $script_dir/cli_tests/[0-9]*$t.sh
     [ -f $script_dir/cli_tests/$t.sh ] && . $script_dir/cli_tests/*$t.sh
 done
-
+echo "Basic environment cleanup"
 . $script_dir/cli_tests/_base_cleanup.sh
 
 summarize
