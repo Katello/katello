@@ -279,23 +279,43 @@ class Sync(RepoAction):
     description = _('synchronize a repository')
 
     def setup_parser(self):
-        self.parser.add_option('--id', dest='id',
+        self.parser.add_option('--repo_id', dest='repo_id',
                                help=_("repo id, string value (required)"))
-
+        self.parser.add_option('--org', dest='org',
+                      help=_("organization name eg: foo.example.com"))
+        self.parser.add_option('--repo', dest='repo',
+                      help=_("repository name"))
+        self.parser.add_option('--product', dest='product',
+                      help=_("product name eg: fedora-14"))
+                      
     def check_options(self):
-        self.require_option('id')
+        if not self.has_option('repo_id'):
+            self.require_option('repo')
+            self.require_option('org')
+            self.require_option('product')
 
     def run(self):
-        repo_id = self.get_option('id')
-        async_task = self.api.sync(repo_id)
+        repoId   = self.get_option('repo_id')
+        repoName = self.get_option('repo')
+        orgName  = self.get_option('org')
+        envName  = self.get_option('env')
+        prodName = self.get_option('product')
+        
+        if repoId:
+            repo = self.api.repo(repoId)
+        else:
+            repo = get_repo(orgName, prodName, repoName, envName)
+            if repo == None:
+                return os.EX_DATAERR
 
+        async_task = self.api.sync(repo['id'])
         result = run_async_task_with_status(async_task, ProgressBar())
 
         if result[0]['state'] == 'finished':
-            print _("Repo [ %s ] synced" % repo_id)
+            print _("Repo [ %s ] synced" % repo['name'])
             return os.EX_OK
         else:
-            print _("Repo [ %s ] failed to sync: %s" % (repo_id, json.loads(result["result"])['errors'][0]))
+            print _("Repo [ %s ] failed to sync: %s" % (repo['name'], json.loads(result["result"])['errors'][0]))
             return os.EX_DATAERR
 
 

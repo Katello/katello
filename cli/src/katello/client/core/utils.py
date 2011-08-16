@@ -463,18 +463,18 @@ def run_async_task_with_status(taskStatus, progressBar):
     task = taskStatus
     status_api = TaskStatusAPI()
 
-    if type(task).__name__== 'list':
+    if type(task).__name__ == 'list':
         while len(filter(lambda t: t['state'] not in ('finished', 'error', 'timed out', 'canceled'), task)) > 0:
-            time.sleep(1)
+            time.sleep(0.1)
             task = [status_api.status(t['uuid']) for t in task]
-            total = t['progress']['size_total'] if t['progress'].has_key('size_total') else 999999999999
+            total = t['progress']['total_size'] if t['progress'].has_key('total_size') else 999999999999
             overalProgress = sum([progress(t['progress']['size_left'], total) for t in task]) / len(task)
             progressBar.updateProgress(overalProgress)
     else:
         while task['state'] not in ('finished', 'error', 'timed out', 'canceled'):
             time.sleep(1)
             task = status_api.status(task['uuid'])
-            total = task['progress']['size_total'] if task['progress'].has_key('size_total') else 999999999999
+            total = task['progress']['total_size'] if task['progress'].has_key('total_size') else 999999999999
             progressBar.updateProgress(progress(task['progress']['size_left'], total))
 
     progressBar.done()
