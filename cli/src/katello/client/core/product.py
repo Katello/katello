@@ -18,14 +18,17 @@ import os
 from gettext import gettext as _
 import time
 import urlparse
+import datetime
+from pprint import pprint
 
 from katello.client.core import repo
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
+from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.api.utils import get_environment, get_provider
-from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg
+from katello.client.api.utils import get_environment, get_provider, get_product
+from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task
 from katello.client.core.utils import ProgressBar
 
 try:
@@ -43,6 +46,7 @@ class ProductAction(Action):
         super(ProductAction, self).__init__()
         self.api = ProductAPI()
         self.repoapi = RepoAPI()
+        self.csapi = ChangesetAPI()
 
 
 # product actions ------------------------------------------------------------
@@ -142,6 +146,50 @@ class Sync(ProductAction):
         print _("Product [ %s ] synchronized" % name)
         return os.EX_OK
 
+
+# ------------------------------------------------------------------------------
+class Promote(ProductAction):
+
+    description = _('promote a product to an environment')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                               help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                               help=_("product name (required)"))
+        self.parser.add_option('--environment', dest='env',
+                               help=_("environment name (required)"))
+                               
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+        self.require_option('env', '--environment')
+
+    def run(self):
+        orgName     = self.get_option('org')
+        prodName    = self.get_option('name')
+        envName     = self.get_option('env')
+
+        env = get_environment(orgName, envName)
+        if (env == None):
+            return os.EX_DATAERR
+
+        curTime = datetime.datetime.now()
+        cset = self.csapi.create(orgName, env["id"], "product_promote_"+str(curTime))
+        try:
+            patch = {}
+            patch['+products'] = [prodName]
+            cset = self.csapi.update_content(cset["id"], patch)
+        
+            task = self.csapi.promote(cset["id"])
+            
+            result = run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the product, please wait... "))
+            print _("Product [ %s ] promoted to environment [ %s ]" % (prodName, envName))
+        
+        finally:
+            self.csapi.delete(cset["id"])
+        return os.EX_OK
+        
 
 # ------------------------------------------------------------------------------
 class Create(ProductAction):
