@@ -44,7 +44,7 @@ class ResourceType < ActiveRecord::Base
     verbs = [] if verbs.nil?
     verbs = [verbs] unless Array === verbs
     verbs.each { |verb|
-      raise ArgumentError, "Invalid verb '#{verb}'. Verbs for resource type '#{resource_type}' can be one of #{possible_verbs.join(', ' )}} " unless possible_verbs.include? verb
+      raise ArgumentError, "Invalid verb '#{verb}'. Verbs for resource type '#{resource_type}' can be one of #{possible_verbs.join(', ' )}} " unless possible_verbs.include? verb.to_s
     }
 
   end
