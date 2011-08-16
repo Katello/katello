@@ -15,7 +15,8 @@ require 'util/threadsession'
 require 'util/password'
 
 class User < ActiveRecord::Base
-  has_and_belongs_to_many :roles
+  has_many :roles_users, :class_name => "RolesUser"
+  has_many :roles, :through => :roles_users
   belongs_to :own_role, :class_name => 'Role'
   has_many :help_tips
   has_many :user_notices
@@ -59,6 +60,17 @@ class User < ActiveRecord::Base
       u.roles << r unless u.roles.include? r
       u.own_role = r
       u.save!
+    end
+  end
+
+  # THIS CHECK MUST BE THE FIRST before_destroy
+  # check if this is not the last superuser
+  before_destroy do |u|
+    if u.superadmin? and User.joins(:roles).where(:roles => {:superadmin => true}).count == 1
+      u.errors.add(:base, "cannot delete last admin user")
+      false
+    else
+      true
     end
   end
 
