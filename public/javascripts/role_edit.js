@@ -15,11 +15,10 @@
  * A small javascript file needed to load things whenever a role is opened for editing
  *
  */
-var roles_tree = {};
+var ROLES = {};
 
 var roleActions = (function($){
     var opened = false,
-        open_panel = undefined,
         current_crumb = undefined,
         current_organization = undefined,
         toggle_list = {
@@ -113,28 +112,6 @@ var roleActions = (function($){
                 return options;
             }
         },
-
-        toggle = function(id, options){
-            var animate_time = 500,
-                slide_window = $('#' + id),
-                options = options || {};
-            
-            if( open_panel !== id && open_panel !== undefined ){
-                toggle_list[open_panel](false);
-                $("#" + open_panel).slideToggle(animate_time);
-                open_panel = id;
-                options.opening = true;
-            } else if( open_panel !== undefined ){
-                open_panel = undefined;
-                options.opening = false;
-            } else {
-                open_panel = id;
-                options.opening = true;
-            }
-
-            options = toggle_list[id](options.opening);
-            slide_window.slideToggle(animate_time, options.after_function);
-        }, 
         setup_edit = function() {
             var url = "/roles/" + $('#role_id').val(),
                 name_box = $('.edit_name_text'),
@@ -156,7 +133,7 @@ var roleActions = (function($){
                           var parsed = $.parseJSON(data);
                           roles_breadcrumb.roles.name = parsed.name;
                           $('.edit_name_text').html(parsed.name);
-                          roles_tree.rerender_breadcrumb();
+                          ROLES.tree.rerender_breadcrumb();
                     },
                     onerror     :  function(settings, original, xhr) {
                                      original.reset();
@@ -186,11 +163,6 @@ var roleActions = (function($){
                     }
                 });
             });
-        },
-        close = function() {
-            if( open_panel ){
-                toggle(open_panel, { opening: false });
-            }
         },
         setCurrentCrumb = function(hash_id){
             current_crumb = hash_id;
@@ -244,7 +216,7 @@ var roleActions = (function($){
                dataType : 'json',
                success  : function(data){
                    $.extend(roles_breadcrumb, data);
-                   roles_tree.rerender_content();
+                   ROLES.tree.rerender_content();
                    form[0].reset();
                }
             });
@@ -259,7 +231,7 @@ var roleActions = (function($){
                dataType : 'json',
                success  : function(data){
                     delete roles_breadcrumb[id];
-                    roles_tree.rerender_content();
+                    ROLES.tree.rerender_content();
                }
             });
         },
@@ -278,7 +250,7 @@ var roleActions = (function($){
                     } else {
                         roles_breadcrumb[element.attr('data-id')].has_role = false;
                     }
-                    roles_tree.rerender_content();
+                    ROLES.tree.rerender_content();
                }
             });
         },
@@ -330,15 +302,14 @@ var roleActions = (function($){
         };
 
     return {
-        toggle                  :  toggle,
-        close                   :  close,
         getPermissionDetails    :  getPermissionDetails,
         setCurrentCrumb         :  setCurrentCrumb,
         savePermission          :  savePermission,
         handleContentAddRemove  :  handleContentAddRemove,
         setCurrentOrganization  :  setCurrentOrganization,
         removeRole              :  removeRole,
-        handleAllTypes          :  handleAllTypes
+        handleAllTypes          :  handleAllTypes,
+        toggle_list             :  toggle_list
     };
     
 })(jQuery);
@@ -602,14 +573,14 @@ var pageActions = (function($){
             if ($(this).hasClass('disabled')){
                 return false;
             }
-            roleActions.toggle('role_edit');
+            ROLES.action_bar.toggle('role_edit');
         });
         
         $('#add_permission').live('click', function() {
             if ($(this).hasClass('disabled')){
                 return false;
             }
-            roleActions.toggle('permission_add');
+            ROLES.action_bar.toggle('permission_add');
         });
         
         $('#save_permission_button').click(function(){
@@ -652,7 +623,9 @@ $(function() {
 
     $('#panel').addClass('panel-custom');
   
-    roles_tree = sliding_tree("roles_tree", { 
+    ROLES.action_bar = sliding_tree.ActionBar(roleActions.toggle_list);
+  
+    ROLES.tree = sliding_tree("roles_tree", {
                           breadcrumb      :  roles_breadcrumb,
                           default_tab     :  "roles",
                           bbq_tag         :  "role_edit",
@@ -664,10 +637,10 @@ $(function() {
                                 rolesRenderer.setStatus(hash_id);
                                 rolesRenderer.handleButtons(hash_id);
                                 roleActions.setCurrentCrumb(hash_id);
-                                roleActions.close();
+                                ROLES.action_bar.close();
                           }
                       });
-                 
+                        
     rolesRenderer.init();
     pageActions.registerEvents();
 
