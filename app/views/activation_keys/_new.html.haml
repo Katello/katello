@@ -33,7 +33,7 @@
         .grid_2.ra
           %label #{_("System Template")}:
         .grid_4.la
-          = select_tag 'activation_key[system_template_id]'
+          = select_tag 'activation_key[system_template_id]', options_for_select({no_template => ''})
 
       .grid_6.ra
         = button_to _("Save"), {:action => "create", :controller => "activation_keys"}, :method => :post, :id => :activation_key_save, :tabindex => 3

@@ -12,6 +12,7 @@
 
 class ActivationKeysController < ApplicationController
   include AutoCompleteSearch
+  include ActivationKeysHelper
 
   before_filter :require_user
   before_filter :find_activation_key, :only => [:show, :edit, :edit_environment, :update, :destroy, :subscriptions, :update_subscriptions]
@@ -99,7 +100,7 @@ class ActivationKeysController < ApplicationController
     # Create a hash of the system templates associated with the currently assigned default environment and
     # convert to json for use in the edit view
     templates = Hash[ *@activation_key.environment.system_templates.collect { |p| [p.id, p.name] }.flatten]
-    templates[''] = ''
+    templates[''] = no_template
     @system_templates_json = ActiveSupport::JSON.encode(templates)
     @system_template = SystemTemplate.find(@activation_key.system_template_id) unless @activation_key.system_template_id.nil?
     render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key}
