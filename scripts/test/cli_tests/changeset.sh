@@ -8,6 +8,13 @@ CS_NAME="changeset_$RAND"
 CS_NAME_2="changeset_2_$RAND"
 test "changeset create" changeset create --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME"
 test "changeset add product" changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME" --add_product="$FEWUPS_PRODUCT"
+
+jobs=`ps aux | grep -v grep | grep "rake jobs:work"`
+if [ "$jobs" == "" ]; then
+    printf "${txtred}Warning: Jobs daemon is not running, the promotion will hang!${txtrst}\n"
+    printf "${txtred}Start 'rake jobs:work' to proceed.${txtrst}\n"
+fi
+
 test "promote changeset with one product" changeset promote --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME"
 
 test "changeset create" changeset create --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2"
