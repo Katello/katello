@@ -104,6 +104,15 @@ class Permission < ActiveRecord::Base
    (!resource_type.nil?) && :all.to_s == resource_type.name
   end
 
+  def all_types= types
+    if types
+      self.all_tags=true
+      self.all_verbs=true
+      self.verbs.clear
+      self.tags.clear
+      self.resource_type = ResourceType.find_or_create_by_name(:all)
+    end
+  end
 
   private
   def cleanup_tags_verbs
