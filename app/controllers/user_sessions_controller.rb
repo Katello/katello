@@ -58,7 +58,6 @@ class UserSessionsController < ApplicationController
 
   def login_user
     authenticate! :scope => :user
-    self.current_organization = Organization.first
     if logged_in?
 
       #save the hash anchor if it exsts
