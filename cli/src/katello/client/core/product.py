@@ -234,15 +234,17 @@ class Create(ProductAction):
     def create_product_with_repos(self, provName, orgName, name, description, url, assumeyes):
         prov = get_provider(orgName, provName)
         if prov == None:
-            return os.EX_DATAERR
-
-        repourls = self.createRepo.discover_repositories(url)
-        self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
-        selectedurls = self.createRepo.select_repositories(repourls, assumeyes)
-
+            return os.EX_DATAERR        
+        
         prod = self.api.create(prov["id"], name, description)
         print _("Successfully created product [ %s ]") % name
 
+        if url == None:
+            return os.EX_OK
+            
+        repourls = self.createRepo.discover_repositories(url)
+        self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
+        selectedurls = self.createRepo.select_repositories(repourls, assumeyes)        
         self.createRepo.create_repositories(prod["cp_id"], prod["name"], selectedurls)
 
         return os.EX_OK
