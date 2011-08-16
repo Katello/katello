@@ -250,7 +250,7 @@ class UpdateContent(ChangesetAction):
         patch['+products'] = self.get_option('add_product') or []
         patch['-products'] = self.get_option('remove_product') or []
 
-        msg = self.api.update_content(orgName, cset["environment_id"], cset["id"], patch)
+        msg = self.api.update_content(cset["id"], patch)
         print _("Successfully updated changeset [ %s ]") % csName
 
         return os.EX_OK
@@ -283,7 +283,7 @@ class Delete(ChangesetAction):
         if cset == None:
             return os.EX_DATAERR
 
-        msg = self.api.delete(orgName, cset["environment_id"], cset["id"])
+        msg = self.api.delete(cset["id"])
         print msg
         return os.EX_OK
 
@@ -316,7 +316,7 @@ class Promote(ChangesetAction):
             return os.EX_DATAERR
 
         try:
-            task = self.api.promote(orgName, cset["environment_id"], cset["id"])
+            task = self.api.promote(cset["id"])
         except Exception, e:
             system_exit(os.EX_DATAERR, _("Error: %s" % e))
 
