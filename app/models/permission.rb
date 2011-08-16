@@ -19,6 +19,8 @@ class Permission < ActiveRecord::Base
 
   before_save :cleanup_tags_verbs
 
+  validates :name, :presence => true
+
   class PermissionValidator < ActiveModel::Validator
     def validate(record)
       if record.all_verbs and !record.verbs.empty?
