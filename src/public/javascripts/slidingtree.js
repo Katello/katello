@@ -260,16 +260,16 @@ var sliding_tree = function(tree_id, options) {
         };
 
     var settings = {
-          breadcrumb : {},
-          bbq_tag : tree_id,
-          default_tab : "",
-          current_tab: undefined,
-          direction  : undefined,
-          base_icon: false,
-          tab_change_cb: function() {},
-          prerender_cb: function() {},
-          render_cb: function() {},
-          fetching   : 0 //Used to control fetching, and ignore content when we've already mgirated off the page'
+          breadcrumb    : {},
+          bbq_tag       : tree_id,
+          default_tab   : "",
+          current_tab   : undefined,
+          direction     : undefined,
+          base_icon     : false,
+          tab_change_cb : function() {},
+          prerender_cb  : function() {},
+          render_cb     : function() {},
+          fetching      : 0 //Used to control fetching, and ignore content when we've already mgirated off the page'
     };
 
     //Page items
@@ -294,5 +294,41 @@ var sliding_tree = function(tree_id, options) {
         rerender_breadcrumb: function() {
             reset_breadcrumb($.bbq.getState(settings.bbq_tag));
         }
+    };
+};
+
+sliding_tree.ActionBar = function(toggle_list){
+    var open_panel = undefined,
+        
+        toggle = function(id, options){
+            var animate_time = 500,
+                slide_window = $('#' + id),
+                options = options || {};
+            
+            if( open_panel !== id && open_panel !== undefined ){
+                toggle_list[open_panel](false);
+                $("#" + open_panel).slideToggle(animate_time);
+                open_panel = id;
+                options.opening = true;
+            } else if( open_panel !== undefined ){
+                open_panel = undefined;
+                options.opening = false;
+            } else {
+                open_panel = id;
+                options.opening = true;
+            }
+
+            options = toggle_list[id](options.opening);
+            slide_window.slideToggle(animate_time, options.after_function);
+        }, 
+        close = function() {
+            if( open_panel ){
+                toggle(open_panel, { opening: false });
+            }
+        };
+        
+    return {
+        toggle  :  toggle,
+        close   :  close
     };
 };
