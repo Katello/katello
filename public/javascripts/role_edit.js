@@ -52,16 +52,19 @@ var roleActions = (function($){
                         types_select.empty();
                         for( type in types ){
                             if( types.hasOwnProperty(type) ){
-                                if( current_organization.split('_')[0] === 'organization' ){
-                                    if( !types[type].global ){
+                                if( type !== "all" ){
+                                    if( current_organization.split('_')[0] === 'organization' ){
+                                        if( !types[type].global ){
+                                            types_select.append('<option value="' + type + '">' + types[type].name + '</option>');
+                                        }
+                                    } else {
                                         types_select.append('<option value="' + type + '">' + types[type].name + '</option>');
                                     }
                                 } else {
-                                    types_select.append('<option value="' + type + '">' + types[type].name + '</option>');
+                                    types_select.append('<option class="hidden" value="all">All</option>');
                                 }
                             }
                         }
-                        types_select.append('<option class="hidden" value=""></option>');
                     },
                     set_verbs_and_tags = function(type){
                         var i, length=0,
@@ -185,7 +188,7 @@ var roleActions = (function($){
         },
         getPermissionDetails = function(){
             var id = current_organization.split('_')[1];
-            
+
             if( !roles_breadcrumb[current_organization].permission_details ){
                 $('#add_permission').addClass('disabled');
                 $.ajax({
@@ -286,7 +289,7 @@ var roleActions = (function($){
                 $('#verb_container').hide();
                 $('#tag_container').hide();
                 $('#resource_type').hide();
-                $('#resource_type').val('');
+                $('#resource_type').val('all');
                 button.parent().prepend('<span id="all_types_selected">' + i18n.all_types_selected + '</span>');
                 button.html(i18n.cancel);
                 button.addClass('cancelled');

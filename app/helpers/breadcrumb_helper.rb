@@ -162,9 +162,13 @@ module BreadcrumbHelper
                       {:client_render => true}, { :count => 0})
       } if @organizations
       
-      @role.users.each{ |user|
+      User.all.each{ |user|
         add_crumb_node!(bc, user_bc_id(user), "", user.username, ['roles', 'role_users'],
-                      {:client_render => true})
+                      {:client_render => true}, { :has_role => false })
+      }
+      
+      @role.users.each{ |user|
+        bc[user_bc_id(user)][:has_role] = true
       }
       
       @role.permissions.each{ |perm|
