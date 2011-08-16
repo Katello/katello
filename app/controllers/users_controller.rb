@@ -20,6 +20,7 @@ class UsersController < ApplicationController
   before_filter :setup_options, :only => [:items, :index]
   before_filter :find_user, :only => [:edit, :update, :clear_helptips, :destroy]
   before_filter :authorize
+  skip_before_filter :require_org
 
   def rules
     index_test = lambda{User.any_readable?}

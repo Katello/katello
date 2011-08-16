@@ -16,6 +16,7 @@ SimpleNavigation::Configuration.run do |navigation|
       #dashboard_sub.item :workflow, _("Workflow"),  '#', :class => 'disabled'
     end #end dashboard_sub
 
+
     top_level.item :content, _("Content Management"),  organization_providers_path(current_organization()), :class=>'content' do |content_sub|
       content_sub.item :providers, _("Providers"), organization_providers_path(current_organization()), :highlights_on => /(\/organizations\/.*\/providers)|(\/providers\/.*\/(products|repos))/ do |providers_sub|
         providers_sub.item :edit, _("Basics"), (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id), :class => 'navigation_element',
@@ -51,7 +52,7 @@ SimpleNavigation::Configuration.run do |navigation|
       content_sub.item :changeset, _("Changeset History"), changesets_path()
       #content_sub.item :updates_bundle, _("Updates Bundle"), '#', :class => 'disabled', :if => Proc.new { false }
 
-    end #end content
+    end if current_organization() #end content
 
     #TODO: Add correct Systems subnav items
     top_level.item :systems, _("Systems"), systems_path(), :class=>'systems' do |systems_sub|
@@ -76,12 +77,12 @@ SimpleNavigation::Configuration.run do |navigation|
                                   :controller => "activation_keys"
         end
       end
-    end #end systems
+    end if current_organization() #end systems
 
     top_level.item :organizations, _("Organizations"), organizations_path(), :class=>'organizations' do |orgs_sub|
        orgs_sub.item :index, _("List"), organizations_path()
        orgs_sub.item :subscriptions, _("Subscriptions"), subscriptions_path()
-    end #end organization
+    end if current_organization()  #end organization
 
     top_level.item :operations, _("Administration"), operations_path(), :class=>'operations' do |operations_sub|
       operations_sub.item :users, _("Users"), users_path do |user_sub|
