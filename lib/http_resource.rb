@@ -124,12 +124,14 @@ class HttpResource
 
     # re-raise the same exception with nicer error message
     def raise_rest_client_exception e, a_path, http_method
-      msg = "#{name}: #{e.message} #{e.http_body} (#{http_method} #{a_path})"
       # message method in rest-client is hardcoded - we need to override it
-      singleton = Class.new(e.class) do
-        send(:define_method, :message) { msg }
+      msg = "#{name}: #{e.message} #{e.http_body} (#{http_method} #{a_path})"
+      (class << e; self; end).instance_eval do
+        define_method(:message) do
+           msg
+        end
       end
-      raise singleton
+      raise e
     end
 
     def join_path(*args)
