@@ -15,7 +15,7 @@ require 'util/threadsession'
 require 'util/password'
 
 class User < ActiveRecord::Base
-  has_many :roles_users, :class_name => "RolesUser"
+  has_many :roles_users
   has_many :roles, :through => :roles_users
   belongs_to :own_role, :class_name => 'Role'
   has_many :help_tips

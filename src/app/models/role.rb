@@ -12,7 +12,7 @@
 
 class Role < ActiveRecord::Base
   include Authorization
-  has_many :roles_users, :class_name => "RolesUser"
+  has_many :roles_users
   has_many :users, :through => :roles_users
   has_many :permissions, :dependent => :destroy,:inverse_of =>:role, :class_name=>"Permission"
   has_one :owner, :class_name => 'User', :foreign_key => "own_role_id"
