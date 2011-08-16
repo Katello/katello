@@ -70,9 +70,11 @@ start() {
         cd ${KATELLO_HOME} #rails expects you to run from the root of the app
         # delete Gemfile.lock (it will be regenerated)
         rm -f $KATELLO_DATA_DIR/Gemfile.lock
-        #workaround for the bug 726030 - Webrick wont start with the -d (daemon) option
         #daemon --user ${KATELLO_USER} bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} -d >/var/log/katello/startup.log 2>&1
+        # <workaround> for the bug 726030 - Webrick wont start with the -d (daemon) option
         daemon --user ${KATELLO_USER} nohup bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} >/var/log/katello/startup.log 2>&1 &
+        sleep 5s
+        # </workaround>
         RETVAL=$?
         if [ $RETVAL = 0 ]; then
             echo_success
@@ -155,6 +157,11 @@ case "$1" in
         rm -rf $TMPDIR
         ;;
     initdb)
+        # check if there are not wrong permission of schema.rb
+        if [ $(stat -c %U $KATELLO_DATA_DIR/schema.rb) != "$KATELLO_USER" ]; then
+            echo "Wrong permissions of schema.rb, please fix"
+            exit 1
+        fi
         # stop if it is running
         condstop
         pushd $KATELLO_HOME >/dev/null
@@ -170,3 +177,5 @@ case "$1" in
 esac
 
 exit $RETVAL
+
+# :vim:sw=4:ts=4:et:
