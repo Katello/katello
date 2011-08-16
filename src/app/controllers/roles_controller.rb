@@ -14,7 +14,7 @@ class RolesController < ApplicationController
 
   before_filter :find_role, :except => [:index, :items, :new, :create, :verbs_and_scopes]
   before_filter :authorize #call authorize after find_role so we call auth based on the id instead of cp_id
-
+  skip_before_filter :require_org
   before_filter :setup_options, :only => [:index, :items]
   helper_method :resource_types
 
