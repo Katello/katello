@@ -169,7 +169,7 @@ var activation_key = (function() {
                     var options = '';
 
                     // create an html option list using the response
-                    options += '<option value=""></option>';
+                    options += '<option value="">' + i18n.noTemplate + '</option>';
                     for (var i = 0; i < response.length; i++) {
                         options += '<option value="' + response[i].id + '">' + response[i].name + '</option>';
                     }
@@ -187,7 +187,7 @@ var activation_key = (function() {
                         // build list of options based on the response
                         options_json = '{';
                         // add an empty option
-                        options_json += '"":""';
+                        options_json += '"":"' + i18n.noTemplate + '"';
                         for (var i = 0; i < response.length; i++) {
                             options_json += ',"' + response[i].id + '":"' + response[i].name + '"';
                         }
@@ -220,7 +220,7 @@ var activation_key = (function() {
                     submit      :  i18n.save,
                     indicator   :  i18n.saving,
                     tooltip     :  i18n.tooltip,
-                    placeholder :  i18n.placeholder,
+                    placeholder :  i18n.noTemplate,
                     style       :  "inherit",
                     data        :  $('input[id^=system_templates_temp]').attr("value"),
                     onsuccess   :  function(data) {

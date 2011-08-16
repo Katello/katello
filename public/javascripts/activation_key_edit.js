@@ -27,7 +27,7 @@ $(document).ready(function() {
             submit      :  i18n.save,
             indicator   :  i18n.saving,
             tooltip     :  i18n.clickToEdit,
-            placeholder :  i18n.clickToEdit,
+            placeholder :  i18n.noTemplate,
             style       :  "inherit",
             data        :  $('input[id^=system_templates]').attr("value"),
             onsuccess   :  function(data) {
