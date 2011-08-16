@@ -57,10 +57,10 @@
             #{_('+ All')}
         .permission_add_container#verb_container
           %label.ra.fl #{_("Verb(s):")}
-          %select{ :id => "verbs", :name => 'permission[verb_values[]]', :multiple => 'multiple' }
+          %select{ :id => "verbs", :name => 'permission[verb_values][]', :multiple => 'multiple' }
         .permission_add_container#tag_container
           %label.ra.fl #{_("On:")}
-          %select{ :id => "tags", :name => 'permission[tag_names[]]', :multiple => 'multiple' }
+          %select{ :id => "tags", :name => 'permission[tag_names][]', :multiple => 'multiple' }
         #permission_button_bar.clear
           -#.button#previous_button.fl{:tabindex => 2}
             -##{_("Previous")}
