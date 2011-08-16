@@ -319,7 +319,7 @@ class User < ActiveRecord::Base
   scope :readable, lambda {where("0 = 1")  unless User.allowed_all_tags?(READ_PERM_VERBS, :users)}
 
   def self.creatable?
-    User.allowed_to?([:create], :user, nil)
+    User.allowed_to?([:create], :users, nil)
   end
 
   def self.any_readable?
