@@ -23,18 +23,25 @@ class Permission < ActiveRecord::Base
 
   class PermissionValidator < ActiveModel::Validator
     def validate(record)
-      if record.all_verbs and !record.verbs.empty?
-        record.errors[:base] << _("Cannot specify a verb if all_verbs is selected.")
+      if record.all_verbs? && !record.verbs.empty?
+        record.errors[:base] << N_("Cannot specify a verb if all_verbs is selected.")
       end
 
-      if record.all_tags and !record.tags.empty?
-        record.errors[:base] << _("Cannot specify a tag if all_tags is selected.")
+      if record.all_tags? && !record.tags.empty?
+        record.errors[:base] << N_("Cannot specify a tag if all_tags is selected.")
       end
 
-      if record.all_types? and (!record.all_verbs or !record.all_tags)
-        record.errors[:base] << _("Cannot specify all_types without all_tags and all_verbs")
+      if record.all_types? && (!record.all_verbs? || !record.all_tags?)
+        record.errors[:base] << N_("Cannot specify all_types without all_tags and all_verbs")
       end
 
+      begin
+        ResourceType.check(record.resource_type.name, record.verb_values)
+      rescue VerbNotFound => verb_error
+        record.errors[:base] << verb_error.message
+      rescue ResourceTypeNotFound => type_error
+        record.errors[:base] << type_error.message
+      end
     end
   end
 
