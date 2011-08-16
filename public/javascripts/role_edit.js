@@ -135,6 +135,7 @@ var roleActions = (function($){
                     onsuccess   :  function(data) {
                           var parsed = $.parseJSON(data);
                           roles_breadcrumb.roles.name = parsed.name;
+                          $('#list #' + $('#role_id').val() + ' .column_1').html(parsed.name);
                           $('.edit_name_text').html(parsed.name);
                           ROLES.tree.rerender_breadcrumb();
                     },
