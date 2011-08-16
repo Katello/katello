@@ -246,10 +246,7 @@ Src::Application.routes.draw do
       end
       resources :environments do
         get :repositories, :on => :member
-        resources :changesets, :only => [:index, :show, :create, :destroy] do
-          put :update, :on => :member, :action => :update_content
-          post :promote, :on => :member, :action => :promote
-        end
+        resources :changesets, :only => [:index, :create]
       end
       resources :tasks, :only => [:index]
       member do
@@ -257,6 +254,11 @@ Src::Application.routes.draw do
       end
       resources :systems, :only => [:index]
       resources :activation_keys, :only => [:index]
+    end
+
+    resources :changesets, :only => [:show, :destroy] do
+      put :update, :on => :member, :action => :update_content
+      post :promote, :on => :member, :action => :promote
     end
 
     resources :products, :only => [] do
@@ -290,7 +292,6 @@ Src::Application.routes.draw do
 
     resources :activation_keys, :only => [:show, :update, :destroy]
     resources :packages, :only => [:show]
-    resources :changesets, :only => [:show]
     resources :errata, :only => [:show]
     resources :distributions, :only => [:show]
     resources :users
@@ -311,7 +312,7 @@ Src::Application.routes.draw do
     match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
     match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
     match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
-    
+
     # proxies -------------------
       # candlepin proxy ---------
     match '/consumers/:id/certificates' => 'candlepin_proxies#get', :via => :get
@@ -326,7 +327,7 @@ Src::Application.routes.draw do
     match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get
     match '/subscriptions' => 'candlepin_proxies#post', :via => :post
     match '/users/:username/owners' => 'organizations#list_owners', :via => :get
-    
+
       # pulp proxy --------------
     match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
     match '/consumers/:id/packages/' => 'systems#upload_package_profile', :via => :put
