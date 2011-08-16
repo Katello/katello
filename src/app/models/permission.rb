@@ -19,6 +19,27 @@ class Permission < ActiveRecord::Base
 
   before_save :cleanup_tags_verbs
 
+  class PermissionValidator < ActiveModel::Validator
+    def validate(record)
+      if record.all_verbs and !record.verbs.empty?
+        record.errors[:base] << _("Cannot specify a verb if all_verbs is selected.")
+      end
+
+      if record.all_tags and !record.tags.empty?
+        record.errors[:base] << _("Cannot specify a tag if all_tags is selected.")
+      end
+
+      if record.all_types? and (!record.all_verbs or !record.all_tags)
+        record.errors[:base] << _("Cannot specify all_types without all_tags and all_verbs")
+      end
+
+    end
+  end
+
+
+  validates_with PermissionValidator
+  validates_presence_of :resource_type
+
   def tag_names
     self.tags.collect {|tag| tag.name}
   end
@@ -80,4 +101,9 @@ class Permission < ActiveRecord::Base
     self.tags.clear if self.all_tags?
     self.verbs.clear if self.all_verbs?
   end
+
+
+
 end
+
+
