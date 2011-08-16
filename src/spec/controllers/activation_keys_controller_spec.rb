@@ -32,9 +32,14 @@ describe ActivationKeysController do
     @organization = new_test_org
     @environment_1 = KPEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
     @environment_2 = KPEnvironment.create!(:name => 'prod', :prior => @environment_1.id, :organization => @organization)
+    @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1)
+    @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1)
     @a_key = ActivationKey.create!(:name => "another test key", :organization_id => @organization, :environment => @environment_1)
+    @subscription = KTSubscription.create!(:subscription => "Test Subscription", 
+                                          :key_subscriptions => [KeySubscription.create!(:activation_key => @a_key, :allocated=>5)])
 
-    @akey_params = {:activation_key_name => "test key", :activation_key_description => "this is the test key", :activation_key_default_environment => @environment_1.id}
+    @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key", :environment_id => @environment_1.id,
+                                         :system_template_id => @system_template_1.id}}
   end
 
   describe "GET index" do
@@ -138,9 +143,10 @@ describe ActivationKeysController do
     describe "with valid params" do
       it "assigns a newly created activation_key" do
         post :create, @akey_params
-        assigns[:activation_key].name.should eq(@akey_params[:activation_key_name]) 
-        assigns[:activation_key].description.should eq(@akey_params[:activation_key_description])
-        assigns[:activation_key].environment_id.should eq(@akey_params[:activation_key_default_environment])
+        assigns[:activation_key].name.should eq(@akey_params[:activation_key][:name])
+        assigns[:activation_key].description.should eq(@akey_params[:activation_key][:description])
+        assigns[:activation_key].environment_id.should eq(@akey_params[:activation_key][:environment_id])
+        assigns[:activation_key].system_template_id.should eq(@akey_params[:activation_key][:system_template_id])
       end
 
       it "renders list item partial for 2 pane" do
@@ -190,6 +196,11 @@ describe ActivationKeysController do
           assigns[:activation_key].environment_id.should eq(@environment_2.id)
         end
 
+        it "should update requested field - system template" do
+          put :update, :id => @a_key.id, :activation_key => {:system_template_id => @system_template_2.id}
+          assigns[:activation_key].system_template_id.should eq(@system_template_2.id)
+        end
+
         it "should generate a success notice" do
           controller.should_receive(:notice)
           put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_DESCRIPTION
@@ -205,17 +216,36 @@ describe ActivationKeysController do
           response.should be_success
         end
 
-        it "should successfully update subscriptions" do
+        it "should successfully add a subscription and set its allocation" do
           controller.should_receive(:notice)
-          put :update_subscriptions, { :id => @a_key.id, :activation_key => { :consumed_sub_ids => ["abc123"] }}
+          put :update_subscriptions, { :id => @a_key.id, :subscription_id => "abc123", :activation_key => { :allocated => "5" }}
           response.should be_success
+          @a_key.subscriptions.where(:subscription => "abc123").should_not be_empty
+          sub = KTSubscription.where(:subscription => "abc123")[0]
+          KeySubscription.where(:activation_key_id => @a_key.id, :subscription_id => sub.id)[0].allocated.should == 5
         end
 
-        it "should successfully update multiple subscriptions" do
+        it "should successfully remove a subscription from the activation key when allocation is zero" do
           controller.should_receive(:notice)
-          put :update_subscriptions, { :id => @a_key.id, :activation_key => { :consumed_sub_ids => ["abc123", "def789"] }}
+          put :update_subscriptions, { :id => @a_key.id, :subscription_id => "Test Subscription", :activation_key => { :allocated => "0" }}
           response.should be_success
+          KeySubscription.where(:activation_key_id => @a_key.id, :subscription_id => @subscription.id).count.should == 0
         end
+
+        it "should successfully update a subscriptions allocated amount" do
+          controller.should_receive(:notice)
+          put :update_subscriptions, { :id => @a_key.id, :subscription_id => "Test Subscription", :activation_key => { :allocated => "10" }}
+          response.should be_success
+          KeySubscription.where(:activation_key_id => @a_key.id, :subscription_id => @subscription.id)[0].allocated.should == 10
+        end
+        
+        it "should successfully add an already created subscription to an activation key" do
+          controller.should_receive(:notice)
+          subscription = KTSubscription.create!(:subscription => 'One Time Subscription')
+          put :update_subscriptions, { :id => @a_key.id, :subscription_id => "One Time Subscription", :activation_key => { :allocated => "10" }}
+          response.should be_success
+          KeySubscription.where(:activation_key_id => @a_key.id, :subscription_id => subscription.id).should_not be_empty
+        end 
 
       end
 

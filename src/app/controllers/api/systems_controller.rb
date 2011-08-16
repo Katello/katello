@@ -13,15 +13,30 @@
 class Api::SystemsController < Api::ApiController
   respond_to :json
 
-  before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index]
-  before_filter :find_organization, :only => [:create, :index]
+  before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index, :activate]
+  before_filter :find_organization, :only => [:create, :index, :activate]
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :upload_package_profile, :errata, :package_profile]
 
+  skip_before_filter :require_user, :only => [:activate]
+
+
   def create
-    system = System.create!(params.merge({:environment => @environment})).to_json
-    render :json => system
+    system = System.create!(params.merge({:environment => @environment}))
+    render :json => system.to_json
+  end
+
+  # used for registering with activation keys
+  def activate
+    activation_keys = find_activation_keys
+    User.current = activation_keys.first.user
+    system = System.new(params)
+    # we apply ak in reverse order so when they conflict e.g. in environment, the first wins.
+    activation_keys.reverse_each {|ak| ak.apply_to_system(system) }
+    system.save!
+    activation_keys.each {|ak| ak.subscribe_system(system) }
+    render :json => system.to_json
   end
 
   def regenerate_identity_certificates
@@ -112,6 +127,23 @@ class Api::SystemsController < Api::ApiController
     @system = System.first(:conditions => {:uuid => params[:id]})
     raise HttpErrors::NotFound, _("Couldn't find system '#{params[:id]}'") if @system.nil?
     @system
+  end
+
+  def find_activation_keys
+    if ak_names = params.delete(:activation_keys)
+      ak_names = ak_names.split(",")
+      activation_keys = ak_names.map do |ak_name|
+        activation_key = @organization.activation_keys.find_by_name(ak_name)
+        raise HttpErrors::NotFound, _("Couldn't find activation key '#{ak_name}'") unless activation_key
+        activation_key
+      end
+    else
+      activation_keys = []
+    end
+    if activation_keys.empty?
+      raise HttpErrors::BadRequest, _("At least one activation key must be provided")
+    end
+    activation_keys
   end
 
 end

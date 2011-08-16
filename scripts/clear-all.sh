@@ -105,7 +105,7 @@ cd $KATELLO
 
 RAILS_ENV=$MODE rake setup --trace
 
-if [ "$KATELLO" == "/usr/lib64/katello" ] || [ "$KATELLO" == "/usr/lib64/katello/" ]; then
+if [ "$KATELLO" == "/usr/share/katello" ] || [ "$KATELLO" == "/usr/share/katello/" ]; then
   echo "Resetting permissions in $KATELLO"
   sudo chown -R katello:katello $KATELLO
   sudo chown -R katello:katello /var/lib/katello/

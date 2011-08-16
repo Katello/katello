@@ -18,13 +18,17 @@ import os
 from gettext import gettext as _
 import time
 import urlparse
+import datetime
+from pprint import pprint
 
+from katello.client.core import repo
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
+from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.api.utils import get_environment, get_provider
-from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, system_exit
+from katello.client.api.utils import get_environment, get_provider, get_product
+from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task
 from katello.client.core.utils import ProgressBar
 
 try:
@@ -41,7 +45,8 @@ class ProductAction(Action):
     def __init__(self):
         super(ProductAction, self).__init__()
         self.api = ProductAPI()
-        self.repoapi = RepoAPI()        
+        self.repoapi = RepoAPI()
+        self.csapi = ChangesetAPI()
 
 
 # product actions ------------------------------------------------------------
@@ -119,14 +124,14 @@ class Sync(ProductAction):
 
         if provName != None:
             prov = self.get_provider(orgName, provName)
-            
+
             if (prov == None):
                 return os.EX_DATAERR
-                
+
             prod = self.api.products_by_provider(prov['id'], name)
         else:
             prod = self.api.products_by_org(orgName, name)
-            
+
         if (len(prod) == 0):
             return os.EX_DATAERR
 
@@ -143,7 +148,55 @@ class Sync(ProductAction):
 
 
 # ------------------------------------------------------------------------------
+class Promote(ProductAction):
+
+    description = _('promote a product to an environment')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                               help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                               help=_("product name (required)"))
+        self.parser.add_option('--environment', dest='env',
+                               help=_("environment name (required)"))
+                               
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+        self.require_option('env', '--environment')
+
+    def run(self):
+        orgName     = self.get_option('org')
+        prodName    = self.get_option('name')
+        envName     = self.get_option('env')
+
+        env = get_environment(orgName, envName)
+        if (env == None):
+            return os.EX_DATAERR
+
+        curTime = datetime.datetime.now()
+        cset = self.csapi.create(orgName, env["id"], "product_promote_"+str(curTime))
+        try:
+            patch = {}
+            patch['+products'] = [prodName]
+            cset = self.csapi.update_content(cset["id"], patch)
+        
+            task = self.csapi.promote(cset["id"])
+            
+            result = run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the product, please wait... "))
+            print _("Product [ %s ] promoted to environment [ %s ]" % (prodName, envName))
+        
+        finally:
+            self.csapi.delete(cset["id"])
+        return os.EX_OK
+        
+
+# ------------------------------------------------------------------------------
 class Create(ProductAction):
+
+    def __init__(self):
+        super(Create, self).__init__()
+        self.createRepo = repo.Create()
 
     description = _('create new product to a custom provider')
 
@@ -158,10 +211,13 @@ class Create(ProductAction):
                                help=_("product description"))
         self.parser.add_option("--url", dest="url",
                                help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
+        self.parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
+                               help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
+
 
     def check_options(self):
         self.require_option('org')
-        self.require_option('prov', '--provider')
+        self.require_option('prov')
         self.require_option('name')
 
     def run(self):
@@ -170,45 +226,28 @@ class Create(ProductAction):
         name        = self.get_option('name')
         description = self.get_option('description')
         url         = self.get_option('url')
+        assumeyes   = self.get_option('assumeyes')
 
+        return self.create_product_with_repos(provName, orgName, name, description, url, assumeyes)
+
+
+    def create_product_with_repos(self, provName, orgName, name, description, url, assumeyes):
         prov = get_provider(orgName, provName)
         if prov == None:
-            return os.EX_DATAERR
-            
-        repourls = None
-        if url != None:
-            repoapi = RepoAPI()
-            print(_("Discovering repository urls, this could take some time..."))
-            try:
-                task = self.repoapi.repo_discovery(url, 'yum')
-            except Exception,e:
-                system_exit(os.EX_DATAERR, _("Error: %s" % e))
-                
-            discoveryResult = run_spinner_in_bg(self.wait_for_discovery, [task])
-            repourls = discoveryResult['result'] or []
-
-            if not len(repourls):
-                system_exit(os.EX_OK, "No repositories discovered @ url location [%s]" % url)
-                
+            return os.EX_DATAERR        
+        
         prod = self.api.create(prov["id"], name, description)
         print _("Successfully created product [ %s ]") % name
-        
-        if repourls != None:
-            for repourl in repourls:
-                parsedUrl = urlparse.urlparse(repourl)
-                repoName = "%s%s" % (name, parsedUrl.path.replace("/", "_"))
-                repo = self.repoapi.create(prod["cp_id"], repoName, repourl)
-                print _("Successfully created repository [ %s ]") % repoName
-        
+
+        if url == None:
+            return os.EX_OK
+            
+        repourls = self.createRepo.discover_repositories(url)
+        self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
+        selectedurls = self.createRepo.select_repositories(repourls, assumeyes)        
+        self.createRepo.create_repositories(prod["cp_id"], prod["name"], selectedurls)
+
         return os.EX_OK
-        
-    def wait_for_discovery(self, discoveryTask):
-        while discoveryTask['state'] not in ('finished', 'error', 'timed out', 'canceled'):
-            time.sleep(0.25)
-            discoveryTask = self.repoapi.repo_discovery_status(discoveryTask['id'])
-
-        return discoveryTask
-
 
 # product command ------------------------------------------------------------
 

@@ -109,12 +109,13 @@ class UsersController < ApplicationController
       if @user.destroyed?
         notice _("User '#{@user[:username]}' was deleted.")
         #render and do the removal in one swoop!
-        render :partial => "common/list_remove", :locals => {:id => @id}
-      else
-        raise
+        render :partial => "common/list_remove", :locals => {:id => @id} and return
       end
-    rescue Exception => e
-      errors e.to_s
+      errors "", {:list_items => @user.errors.to_a}
+      render :text => @user.errors, :status=>:ok
+    rescue Exception => error
+      errors error
+      render :json=>@user.errors, :status=>:bad_request
     end
   end
 

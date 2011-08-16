@@ -33,6 +33,7 @@ class Api::ActivationKeysController < Api::ApiController
     created = ActivationKey.create!(params[:activation_key]) do |ak|
       ak.environment = @environment
       ak.organization = @environment.organization
+      ak.user = current_user
     end
     render :json => created
   end

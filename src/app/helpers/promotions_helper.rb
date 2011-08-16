@@ -24,8 +24,5 @@ module PromotionsHelper
     }
   end
 
-
 end
-
-
 

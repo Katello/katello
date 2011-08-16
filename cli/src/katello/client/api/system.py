@@ -20,7 +20,7 @@ class SystemAPI(KatelloAPI):
     """
     Connection class to access environment calls
     """
-    def register(self, name, org, envName, cp_type):
+    def register(self, name, org, envName, activation_keys, cp_type):
         if envName is not None:
             environment = get_environment(org, envName)
             if environment is None:
@@ -29,14 +29,16 @@ class SystemAPI(KatelloAPI):
             path = "/api/environments/%s/systems" % environment["id"]
         else:
             path = "/api/organizations/%s/systems" % org
-
-        return self.server.POST(path, {
+        sysdata = {
           "name": name,
           "cp_type": cp_type,
           "facts": {
             "distribution.name": "Fedora"
           }
-        })[1]
+        }
+        if activation_keys:
+            sysdata["activation_keys"] = activation_keys
+        return self.server.POST(path, sysdata)[1]
           
     def unregister(self, system_id):
         path = "/api/systems/" + str(system_id)
@@ -45,11 +47,11 @@ class SystemAPI(KatelloAPI):
     def system(self, system_id):
         path = "/api/systems/%s" % system_id
         return self.server.GET(path)[1]
-    
+
     def packages(self, system_id):
         path="/api/systems/%s/packages" % system_id
         return self.server.GET(path)[1]
-    
+
     def update(self, system_id, params = {}):
         path = "/api/systems/%s" % system_id
         return self.server.PUT(path, params)[1]
@@ -65,7 +67,7 @@ class SystemAPI(KatelloAPI):
 
         path = "/api/environments/%s/systems" % environment["id"]
         return self.server.GET(path, query)[1]
-        
+
     def errata(self, system_id):
         path = "/api/systems/%s/errata" % system_id
         return self.server.GET(path)[1]

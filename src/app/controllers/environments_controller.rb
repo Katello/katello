@@ -15,10 +15,13 @@ class EnvironmentsController < ApplicationController
   require 'rubygems'
   require 'active_support/json'
 
+
   skip_before_filter :authorize
-  before_filter :find_organization
+  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create]
   before_filter :authorize
-  before_filter :find_environment, :only => [:show, :edit, :update, :destroy]
+  before_filter :find_environment, :only => [:show, :edit, :update, :destroy, :system_templates]
+
+  
   around_filter :catch_exceptions
 
   def section_id
@@ -33,7 +36,8 @@ class EnvironmentsController < ApplicationController
       :edit => view_rule,
       :create => manage_rule,
       :update => manage_rule,
-      :destroy => manage_rule
+      :destroy => manage_rule,
+      :system_templates => view_rule
     }
   end
 
@@ -100,6 +104,11 @@ class EnvironmentsController < ApplicationController
     @environment.destroy
     notice _("Environment '#{@environment.name}' was deleted.")
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>edit_organization_path(@organization.cp_key)}
+  end
+
+  # GET /environments/1/system_templates
+  def system_templates
+    render :json => @environment.system_templates
   end
 
   protected

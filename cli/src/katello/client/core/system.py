@@ -67,7 +67,7 @@ class List(SystemAction):
             self.printer.setHeader(_("Systems List For Environment [ %s ] in Org [ %s ]") % (env_name, org_name))
 
         self.printer.addColumn('name')
-        
+
         self.printer._grep = True
         self.printer.printItems(systems)
         return os.EX_OK
@@ -104,10 +104,10 @@ class Info(SystemAction):
 
         if not systems:
             return os.EX_DATAERR
-        
+
         # get system details
         system = self.api.system(systems[0]['uuid'])
-    
+
 
         self.printer.addColumn('name')
         self.printer.addColumn('uuid')
@@ -119,11 +119,11 @@ class Info(SystemAction):
         self.printer.printItem(system)
 
         return os.EX_OK
-    
+
 class InstalledPackages(SystemAction):
-    
+
     description = _('display the installed packages of a system')
-    
+
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
                        help=_("organization name eg: foo.example.com (required)"))
@@ -151,11 +151,11 @@ class InstalledPackages(SystemAction):
 
         if not systems:
             return os.EX_DATAERR
-        
+
         packages = self.api.packages(systems[0]['uuid'])
-        
+
         self.printer.addColumn('name')
-        
+
         if verbose:
             self.printer.addColumn('vendor')
             self.printer.addColumn('version')
@@ -164,13 +164,13 @@ class InstalledPackages(SystemAction):
         else:
             # print compact list of package names only
             self.printer._grep = True
-            
+
         self.printer.printItems(packages)
-                            
+
         return os.EX_OK
-    
+
 class Facts(SystemAction):
-    
+
     description = _('display a the hardware facts of a system')
 
     def setup_parser(self):
@@ -200,10 +200,10 @@ class Facts(SystemAction):
 
         if not systems:
             return os.EX_DATAERR
-        
+
         # get system details
         system = self.api.system(systems[0]['uuid'])
-    
+
         facts_hash = system['facts']
         facts_tuples_sorted = [(k, facts_hash[k]) for k in sorted(facts_hash.keys())]
         for k, v in facts_tuples_sorted:
@@ -213,7 +213,7 @@ class Facts(SystemAction):
         self.printer.printItem(system)
 
         return os.EX_OK
-            
+
 class Register(SystemAction):
 
     description = _('register a system')
@@ -225,18 +225,31 @@ class Register(SystemAction):
                        help=_("organization name (required)"))
         self.parser.add_option('--environment', dest='environment',
                        help=_("environment name eg: development"))
+        self.parser.add_option('--activationkey', dest='activationkey',
+            help=_("activation key, more keys are separated with comma e.g. --activationkey=key1,key2"))
 
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
-        self.require_option('environment')
+        if not self.option_specified('activationkey'):
+            self.require_option('environment')
+        elif self.option_specified('environment'):
+            self.add_option_error(_('Option %s can not be specified with %s') % ("--environment", "--activationkey"))
+
+
+    def require_credentials(self):
+        if self.option_specified('activationkey'):
+          return False
+        else:
+          return super
 
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
         environment = self.get_option('environment')
+        activation_keys = self.get_option('activationkey')
 
-        system = self.api.register(name, org, environment, 'system')
+        system = self.api.register(name, org, environment, activation_keys, 'system')
 
         if is_valid_record(system):
             print _("Successfully registered system [ %s ]") % system['name']
@@ -269,11 +282,11 @@ class Unregister(SystemAction):
             result = self.api.unregister(systems[0]['uuid'])
             print _("Successfully unregistered System [ %s ]") % name
             return os.EX_OK
-        
+
 class Update(SystemAction):
-    
+
     description = _('update a system')
-       
+
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
                        help=_('organization name (required)'))
@@ -281,18 +294,18 @@ class Update(SystemAction):
                        help=_('system name (required)'))
         self.parser.add_option('--environment', dest='environment',
                        help=_("environment name"))
-        
+
         self.parser.add_option('--new-name', dest='new_name',
                        help=_('a new name for the system'))
         self.parser.add_option('--description', dest='description',
                        help=_('a description of the system'))
         self.parser.add_option('--location', dest='location',
                        help=_("location of the system"))
-        
+
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
-        
+
     def run(self):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
@@ -300,7 +313,7 @@ class Update(SystemAction):
         new_name = self.get_option('new_name')
         new_description = self.get_option('description')
         new_location = self.get_option('location')
-        
+
         if env_name is None:
             systems = self.api.systems_by_org(org_name, {'name': sys_name})
         else:
@@ -309,22 +322,22 @@ class Update(SystemAction):
 
         if not systems:
             return os.EX_DATAERR
-        
+
         system_uuid = systems[0]['uuid']
         updates = {}
         if new_name: updates['name'] = new_name
         if new_description: updates['description'] = new_description
         if new_location: updates['location'] = new_location
-        
+
         response = self.api.update(system_uuid, updates)
-        
+
         if is_valid_record(response):
             print _("Successfully updated system [ %s ]") % systems[0]['name']
         else:
             print _("Could not update system [ %s ]") % systems[0]['name']
-            
+
         return os.EX_OK
-            
+
 
 class System(Command):
 

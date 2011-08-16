@@ -1,0 +1,19 @@
+= javascript :filtertable
+
+= content_for :title do
+  = _("Distribution")
+
+= content_for :navigation do
+  = render_navigation(:expand_all => true, :level => 3)
+
+= content_for :content do
+  = render :partial => "common/filter_table"
+
+  %table.filter_table
+    %thead
+      %th #{_("File")}
+    %tbody
+      -@distribution.files.each do |file|
+        %tr
+          %td{:class=>'distribution'}
+            #{file}

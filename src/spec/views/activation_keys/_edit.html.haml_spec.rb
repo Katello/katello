@@ -70,12 +70,17 @@ describe "activation_keys/_edit.html.haml" do
 
     it "renders the activation key name using inline edit" do
       render
-      view.content_for(:content).should have_selector(".editable#activation_key_name", :count => 1)
+      view.content_for(:content).should have_selector(".editable[name='activation_key[name]']", :count => 1)
     end
 
     it "renders the activation key description using inline edit" do
       render
-      view.content_for(:content).should have_selector(".editable#activation_key_description", :count => 1)
+      view.content_for(:content).should have_selector(".editable[name='activation_key[description]']", :count => 1)
+    end
+
+    it "renders the activation key system template using inline edit" do
+      render
+      view.content_for(:content).should have_selector(".editable[name='activation_key[system_template_id]']", :count => 1)
     end
   end
 end

@@ -19,4 +19,3 @@ class TaskStatusAPI(KatelloAPI):
     def status(self, taskUuid):
         path = "/api/tasks/%s" % str(taskUuid)
         return self.server.GET(path)[1]
-        

@@ -75,7 +75,7 @@ class ProvidersController < ApplicationController
         Rails.logger.error "error uploading subscriptions."
         Rails.logger.error error
         Rails.logger.error error.backtrace.join("\n")
-       render :partial => "subscriptions", :locals => {:provider => @provider},:status => :bad_request and return
+        render :nothing => true, :status => :bad_request and return
       end
     end
     subscriptions
@@ -102,6 +102,7 @@ class ProvidersController < ApplicationController
       Rails.logger.error "Error fetching subscriptions from Candlepin"
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
+      render :nothing => true, :status => :bad_request and return
     end
     render :partial => "subscriptions", :layout => "tupane_layout", :locals => {:provider => @provider}
   end
