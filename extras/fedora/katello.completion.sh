@@ -54,7 +54,7 @@ _katello_package()
 
 _katello_product()
 {
-  local opts="create list
+  local opts="create list synchronize promote
   ${_katello_common_opts}"
   COMPREPLY=($(compgen -W "${opts}" -- ${1}))  
 }
