@@ -14,7 +14,7 @@ module LoginHelperMethods
   def login_user options={}
     if options[:mock] == false
       @user = User.create( :username => "foo-user", :password => "password", :page_size=>25 )
-      @user.roles.first.update_attribute(:superadmin, true)
+      @user.roles(true).first.update_attribute(:superadmin, true)
       request.env['warden'] = mock(Warden, :user => @user, :authenticate => @user, :authenticate! => @user)
       controller.stub!(:require_org).and_return({})
       return @user

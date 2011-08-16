@@ -37,6 +37,8 @@ describe "activation_keys/_new.html.haml" do
     it "should include key details" do
       view.content_for(:content).should have_selector("input#activation_key_name", :count => 1)
       view.content_for(:content).should have_selector("textarea#activation_key_description", :count => 1)
+      view.content_for(:content).should have_selector("input#activation_key_environment_id", :count => 1)
+      view.content_for(:content).should have_selector("select#activation_key_system_template_id", :count => 1)
     end
 
     it "should include button to save the new key" do

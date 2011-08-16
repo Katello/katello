@@ -10,18 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module TranslationHelper
-  def relative_time_in_words(time)
-    _("%s ago") % time_ago_in_words(time)
-  end
+class RolesUser < ActiveRecord::Base
+  belongs_to :role
+  belongs_to :user
 
-  def months
-    t('date.month_names')
-  end
-
-  def month(i)
-    return '' unless i
-    i = i.to_time.month if i.respond_to? :to_time
-    months[i]
-  end
+  validates_uniqueness_of :user_id, :scope => :role_id, :message => "can only have one same role assigned"
 end
