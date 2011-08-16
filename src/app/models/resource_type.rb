@@ -10,6 +10,39 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+class VerbNotFound < StandardError
+  attr_reader :verb
+  attr_reader  :possible_verbs
+  attr_reader :resource_type
+
+  def initialize resource_type, verb, possible_verbs
+    @verb = verb
+    @possible_verbs = possible_verbs
+    @resource_type = resource_type
+  end
+
+  def message
+    params = {:verb => @verb, :possible_verbs => @possible_verbs.join(', '), :resource_type => @resource_type}
+    N_("Invalid verb '%{verb}'. Verbs for resource type '%{resource_type}' can be one of %{possible_verbs}") % params
+  end
+end
+
+class ResourceTypeNotFound < StandardError
+  attr_reader :resource_type
+  attr_reader  :possible_types
+
+  def initialize resource_type, possible_types
+    @resource_type = resource_type
+    @possible_types = possible_types
+  end
+
+  def message
+    params = {:possible_types => @possible_types.join(', '), :resource_type => @resource_type}
+    N_("Invalid resource type '%{resource_type}'. Resource Types can be one of '%{possible_types}'") % params
+  end
+end
+
+
 class ResourceType < ActiveRecord::Base
   belongs_to :permission
 
@@ -44,15 +77,14 @@ class ResourceType < ActiveRecord::Base
     verbs = [] if verbs.nil?
     verbs = [verbs] unless Array === verbs
     verbs.each { |verb|
-      raise ArgumentError, "Invalid verb '#{verb}'. Verbs for resource type '#{resource_type}' can be one of #{possible_verbs.join(', ' )}} " unless possible_verbs.include? verb.to_s
+      raise VerbNotFound.new(resource_type,verb, possible_verbs) unless possible_verbs.include? verb.to_s
     }
 
   end
 
   def self.check_type resource_type
-    raise ArgumentError, "Invalid resource type '#{resource_type}'. Resource Types can be one of #{TYPES.keys.join(', ')}}  " unless TYPES.has_key? resource_type
+    raise ResourceTypeNotFound.new(resource_type, TYPES.keys) unless TYPES.has_key? resource_type
   end
-
 
   TYPES = {
       :organizations => {:model => Organization, :name => N_("Organizations"), :global=>false},
