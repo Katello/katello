@@ -80,6 +80,7 @@ class Product < ActiveRecord::Base
   protected
 
   def self.authorized_items org, verbs, resource = :providers
+     raise "scope requires an organization" if org.nil?
      if User.allowed_all_tags?(verbs, resource, org)
        Product.joins(:provider).where('providers.organization_id' => org)
      else
