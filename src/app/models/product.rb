@@ -73,4 +73,21 @@ class Product < ActiveRecord::Base
   def self.list_tags
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
+
+  scope :readable, lambda {|org| authorized_items(org, READ_PERM_VERBS)}
+  scope :syncable, lambda {|org| authorized_items(org, SYNC_PERM_VERBS)}
+
+  protected
+
+  def self.authorized_items org, verbs, resource = :providers
+     if User.allowed_all_tags?(verbs, resource, org)
+       Product.joins(:provider).where('providers.organization_id' => org)
+     else
+       Product.joins(:provider).where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+     end
+  end
+
+  READ_PERM_VERBS = [:read, :create, :update, :sync, :delete]
+  SYNC_PERM_VERBS = [:sync]
+
 end
