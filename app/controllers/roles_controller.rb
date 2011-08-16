@@ -107,7 +107,7 @@ class RolesController < ApplicationController
     return if @role.name == "admin"
     
     if params[:update_users]
-      if params[:update_users][:adding]
+      if params[:update_users][:adding] == "true"
         @role.users << User.find(params[:update_users][:user_id])
         @role.save!
       else
@@ -170,6 +170,12 @@ class RolesController < ApplicationController
   def create_permission
     new_params = {:role => @role}
     type_name = params[:permission][:resource_type_attributes][:name]
+    
+    if type_name == "all"
+      new_params[:all_tags] = true
+      new_params[:all_verbs] = true
+    end
+    
     new_params[:resource_type] = ResourceType.find_or_create_by_name(:name=>type_name)
     new_params.merge! params[:permission]
     @perm = Permission.create! new_params
