@@ -526,7 +526,7 @@ nav {
     bottom: inherit;
     left: inherit;
     right: inherit;
-    margin-bottom: 2em;
+    margin-bottom: .5em;
     border: none;
     
     &>ul {
@@ -684,6 +684,18 @@ legend {
     &:hover {
         background-position: 0 -16px;
     }
+}
+#filter_form {
+    float: right;
+    position: relative;
+    padding-bottom: 5px;
+}
+.filter {
+    @extend .search;
+}
+.filter_button {
+    @extend .search_button;
+    left: -30px;
 }
 
 /*footer*/
@@ -1385,12 +1397,11 @@ fieldset {
       margin-left: 0;
 
       &:first-child {
-          a {
-            padding-left: 20px;
-            @include border-left-radius(5px);
-          }
-         @include nohover;
-
+        a {
+          padding-left: 20px;
+          @include border-left-radius(5px);
+        }
+       @include nohover;
       }
       &:nth-child(2) {
         a {
@@ -1438,6 +1449,93 @@ fieldset {
           color: white;
           
           &:hover:after { border-left-color: $listhover_color !important; }
+          &:after { border-left-color: $kselected_color !important; }
+        }
+        &:after {
+          content: " "; 
+          display: block; 
+          width: 0; 
+          height: 0;
+          border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
+          border-bottom: 50px solid transparent;
+          border-left: 30px solid $breadcrumbbg_color;
+          position: absolute;
+          top: 50%;
+          margin-top: -50px; 
+          left: 100%;
+          z-index: 2; 
+        }
+        &:before { 
+          content: " "; 
+          display: block; 
+          width: 0; 
+          height: 0;
+          border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
+          border-bottom: 50px solid transparent;
+          border-left: 30px solid white;
+          position: absolute;
+          top: 50%;
+          margin-top: -50px; 
+          margin-left: 1px;
+          left: 100%;
+          z-index: 1; 
+        }
+     }
+  }
+}
+.breadcrumb_nohover { 
+  list-style: none; 
+  overflow: hidden; 
+  font: 14px;
+  position: relative;
+  
+  .selected {
+    background: $listhover_color !important; color: #FFF; @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
+    &:after {
+      border-left-color: $listhover_color !important;
+    }
+  }
+
+  li { 
+      float: left; 
+      margin-left: 0;
+
+      &:first-child {
+          a {
+            padding-left: 20px;
+            @include border-left-radius(5px);
+          }
+      }
+      &:nth-child(2) {
+        a {
+          background: $breadcrumbbg_color;
+          &:after { border-left-color: $breadcrumbbg_color; }
+        }
+      }
+      &:last-child {
+        a {
+          padding-right: 30px;
+          @include border-right-radius(5px);
+          
+          &:after { 
+            border: 0;
+          }
+        }
+      }
+      
+      a {
+        color: #000;
+        text-decoration: none; 
+        padding: 8px 0 8px 55px;
+        background: $breadcrumbbg_color;                   /* fallback color */
+        position: relative; 
+        display: block;
+        float: left;
+      
+        &.active {
+          background: $kselected_color; 
+          color: white;
+          
           &:after { border-left-color: $kselected_color !important; }
         }
         &:after {

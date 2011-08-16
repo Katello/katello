@@ -120,6 +120,11 @@ module BreadcrumbHelper
        #product_repos
        add_crumb_node!(bc, repo_bc_id(prod), promotion_repos_path(@organization.cp_key, @environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
                        _("Repos"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
+
+     #product_distributions
+     add_crumb_node!(bc, distribution_bc_id(prod), promotion_distributions_path(@organization.cp_key, @environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
+                     _("Distributions"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
+              
      end   
      bc.to_json
     end
@@ -143,6 +148,11 @@ module BreadcrumbHelper
     def changeset_id cs
       return cs.id if cs
     end
+
+    def distribution_bc_id product
+      "distribution_#{product.id}"
+    end
+
   end
   
   module RolesBreadcrumbs

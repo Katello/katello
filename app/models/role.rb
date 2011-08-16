@@ -12,7 +12,8 @@
 
 class Role < ActiveRecord::Base
   include Authorization
-  has_and_belongs_to_many :users
+  has_many :roles_users
+  has_many :users, :through => :roles_users
   has_many :permissions, :dependent => :destroy,:inverse_of =>:role, :class_name=>"Permission"
   has_one :owner, :class_name => 'User', :foreign_key => "own_role_id"
   has_many :search_tags, :class_name => 'Tag'

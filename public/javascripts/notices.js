@@ -92,12 +92,14 @@ var notices = (function() {
             });
         },
         checkNoticesInResponse : function(xhr) {
-            var message = common.decode(xhr.getResponseHeader('X-Message'));
-            if (message === "null") {message = null;}
-            var messageType = xhr.getResponseHeader('X-Message-Type');
-            if (message) {
-                notices.displayNotice(messageType, message);
-            }                                     
+            if (xhr !== undefined) {
+                var message = common.decode(xhr.getResponseHeader('X-Message'));
+                if (message === "null") {message = null;}
+                var messageType = xhr.getResponseHeader('X-Message-Type');
+                if (message) {
+                    notices.displayNotice(messageType, message);
+                }
+            }
         },
         start: function () {
             var pu = $.PeriodicalUpdater('/notices/get_new/', {

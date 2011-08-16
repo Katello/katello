@@ -23,6 +23,8 @@ module ProductHelperMethods
 
     errata = Glue::Pulp::Errata.new(:title=>"Errata", :id=>"1235")
     repo.stub(:errata).and_return([errata])
+    distribution = Glue::Pulp::Distribution.new()
+    repo.stub(:distributions).and_return([distribution])
 
     @p.stub(:repos).and_return([repo])
     @p

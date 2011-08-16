@@ -1,4 +1,4 @@
-= javascript :activation_key_subscriptions
+= javascript :activation_key_subscriptions, :edit_helpers
 
 = content_for :title do
   #{_("Edit Activation Key")}
@@ -11,10 +11,23 @@
   = render_navigation(:expand_all => true, :level => 3)
 
 = content_for :content do
-  %h5.grid_8 #{_("Subscriptions")}  
-  = form_tag  update_subscriptions_activation_key_path, :method => "post", :id => "update_subscriptions" do |f|
-    .grid_7
-      = select_tag "activation_key[consumed_sub_ids]", options_from_collection_for_select(all_subs, 'sub', 'name', consumed), :multiple => true, :class => 'multiselect', :style=>"width:400px; height:200px"
-    .grid_2
-      = button_to _("Save Subscriptions"), {:action => "update_subscriptions", :controller => "activation_keys"}, :method => :post, :id => :subcription_save
-
+  #subscriptions
+    .lower_content.clear
+      .labels
+        / %label.la #{_("Sockets supported by your subscription(s): ")}
+        / %label.la #{_("Guests supported by your subscription(s): ")}
+      %table
+        %thead
+          %tr
+            %th #{_("Subscriptions")}
+            %th #{_("Available")}
+            %th #{_("Allocated")}
+        %tbody
+          - for sub in subscriptions
+            %tr
+              %td
+                #{sub.name}
+              %td.available
+                #{sub.available}
+              %td.editable.edit_number{'id' => sub.sub, "data-url" => update_subscriptions_activation_key_path(@activation_key.id), "name" => "activation_key[allocated]"}
+                #{sub.allocated}
