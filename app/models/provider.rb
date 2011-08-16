@@ -128,6 +128,7 @@ class Provider < ActiveRecord::Base
 
 
   def self.authorized_items org, verbs, resource = :providers
+    raise "scope requires an organization" if org.nil?
     if User.allowed_all_tags?(verbs, resource, org)
        where(:organization_id => org)
     else
