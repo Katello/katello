@@ -97,6 +97,18 @@ class Glue::Pulp::Repo
     Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(self.id, env.name))
   end
 
+  def environment_id
+    get_groupid_param 'env'
+  end
+
+  def product_id
+    get_groupid_param 'product'
+  end
+
+  def org_id
+    get_groupid_param 'org'
+  end
+
   def has_package? id
     self.packages.each {|pkg|
       return true if pkg.id == id
@@ -214,6 +226,16 @@ class Glue::Pulp::Repo
     Hash[*array_of_repos.collect { |r|
       [r.id, r]
     }.flatten]
+  end
+
+  private
+  def get_groupid_param name
+    idx = self.groupid.index do |s| s.start_with? (name+':') end
+    if idx >= 0
+      return self.groupid[idx].split(':')[1]
+    else
+      return nil
+    end
   end
 
 end
