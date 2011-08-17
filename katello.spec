@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.63
+Version:	      0.1.64
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -194,6 +194,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Aug 17 2011 Mike McCune <mmccune@redhat.com> 0.1.64-1
+ - period tagging of Katello.
 * Mon Aug 15 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.63-1
 - 714167 - undeclared dependencies (regin & multimap)
 - Revert "714167 - broken dependencies is F14"
