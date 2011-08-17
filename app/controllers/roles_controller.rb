@@ -172,6 +172,7 @@ class RolesController < ApplicationController
   def create_permission
     new_params = {:role => @role}
     type_name = params[:permission][:resource_type_attributes][:name]
+
     if type_name == "all"
       new_params[:all_tags] = true
       new_params[:all_verbs] = true
