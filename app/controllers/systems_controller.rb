@@ -18,7 +18,7 @@ class SystemsController < ApplicationController
   before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments]
 
   skip_before_filter :authorize
-  before_filter :find_environment, :only => [:environment, :env_items]
+  before_filter :find_environment, :only => [:environments, :env_items]
   before_filter :authorize
 
   before_filter :setup_options, :only => [:index, :items, :environments]
@@ -47,8 +47,6 @@ class SystemsController < ApplicationController
       :facts => read_system
     }
   end
-
-
 
   def index
     begin
