@@ -20,18 +20,17 @@ class Tag < ActiveRecord::Base
     name
   end
 
-  def self.tags_for(resource_type_name, organization_id)
-
-
-
-    # step 1 - try to load tags from our model classes
+  def self.tags_for(resource_type_name, organization_id, ids = nil)
     model_klass = ResourceType::TYPES[resource_type_name][:model]
     if model_klass
-      return model_klass.list_tags(organization_id) if model_klass.respond_to? :list_tags
+      tag_list = model_klass.list_tags(organization_id) if model_klass.respond_to? :list_tags
+      tag_list.reject!{|tag| !ids.member?(tag.id.to_i)} if !ids.nil?
+      return tag_list
+
+    else
+      raise "Unrecognized model #{model_klass}"
     end
 
-    # step 2 - fetch information from the database
-    Tag.select('DISTINCT(tags.name)').joins(:permission => :resource_type).where(:resource_types => { :name => resource_type_name })
   end
 
 end
