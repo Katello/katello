@@ -77,6 +77,10 @@ class Provider < ActiveRecord::Base
   def self.list_tags org_id
     select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
+  
+  def self.tags(ids)
+    select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
+  end
 
   def self.list_verbs  global = false
     {
