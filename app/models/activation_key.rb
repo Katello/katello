@@ -49,4 +49,28 @@ class ActivationKey < ActiveRecord::Base
     end
   end
 
+  # returns list of virtual permission tags for the current user
+  def self.list_tags organization_id
+    [] #don't list tags for sync plans
+  end
+
+  def self.list_verbs global = false
+    {
+      :read_all => N_("Access all Activation Keys"),
+      :manage_all => N_("Manage all Activation Keys")
+    }.with_indifferent_access
+  end
+
+  def self.no_tag_verbs
+    ActivationKey.list_verbs.keys
+  end
+
+  def self.readable? org
+    User.allowed_to?([:read_all, :manage_all], :activation_keys, nil, org)
+  end
+
+  def self.manageable? org
+    User.allowed_to?([:manage_all], :activation_keys, nil, org)
+  end
+
 end

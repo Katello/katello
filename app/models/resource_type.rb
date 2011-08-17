@@ -89,6 +89,7 @@ class ResourceType < ActiveRecord::Base
   TYPES = {
       :organizations => {:model => Organization, :name => N_("Organizations"), :global=>false},
       :environments => {:model => KPEnvironment, :name => N_("Environments"), :global=>false},
+      :activation_keys => { :model => ActivationKey, :name => N_("Activation Keys"), :global=>false},
       :providers => { :model => Provider, :name => N_("Providers"), :global=>false},
       :sync_plans => { :model => SyncPlan, :name => N_("Sync Plans"), :global=>false},
       :users => { :model => User, :name => N_("Users"), :global=>true},
