@@ -11,9 +11,9 @@
             - for env in path
               %li
                 - if @activation_key.environment_id == env.id
-                  %a.select_env.selected{"data-env_id" => env.id, 'data-url' => activation_key_path(@activation_key.id), "data-templates_url" => system_templates_environment_path(env.id)} #{env.name}
+                  %a.select_env.selected{"data-env_id" => env.id, 'data-url' => activation_key_path(@activation_key.id), "data-templates_url" => system_templates_organization_environment_path(env.organization.cp_key, env)} #{env.name}
                 - else
-                  %a.select_env{"data-env_id" => env.id, 'data-url' => activation_key_path(@activation_key.id), "data-templates_url" => system_templates_environment_path(env.id)} #{env.name}
+                  %a.select_env{"data-env_id" => env.id, 'data-url' => activation_key_path(@activation_key.id), "data-templates_url" => system_templates_organization_environment_path(env.organization.cp_key, env)} #{env.name}
 
   %fieldset#force_edit_system_template
     .grid_2

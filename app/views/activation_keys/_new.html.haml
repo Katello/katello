@@ -27,7 +27,7 @@
                   =link_to _('Locker'), "#", :class => :nohover
                 - for env in path
                   %li
-                    %a.select_env{"data-env_id" => env.id, "data-templates_url" => system_templates_environment_path(env.id)} #{env.name}
+                    %a.select_env{"data-env_id" => env.id, "data-templates_url" => system_templates_organization_environment_path(env.organization.cp_key, env)} #{env.name}
 
       %fieldset#system_templates
         .grid_2.ra
