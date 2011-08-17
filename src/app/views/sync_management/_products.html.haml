@@ -23,6 +23,7 @@
             repo_status.push(sync_status);
         %tr
           %td{:class=>'product', 'data-id'=>p.id}
+            / does user have sync permissions?
             - if @sproducts.include?(p)
               =check_box_tag "product[#{p.id}]"
               .clickable
@@ -36,6 +37,8 @@
                     =check_box_tag "repo[#{r.id}]", value="#{p.id}"
                     #{r.name}
             - else 
+              / user does not have sync permissions
+              =check_box_tag "product[#{p.id}]", nil, false, :disabled => true
               .clickable
                 %a{ :href => "#", :onclick => ""}
                   %img{:src => "/images/icons/expander-collapsed.png", :alt => "Expand"}
@@ -44,6 +47,7 @@
                 -for r in p.repos(p.organization.locker)
                   %li{:class=>'repo'}
                     / put the product's id in the value field so we know what product is syncing
+                    =check_box_tag "repo[#{r.id}]", value="#{p.id}", false, :disabled => true
                     #{r.name}
           %td.max_width
             %div.max_width{:id =>"#{'prod_sync_start_' + p.id.to_s}"}
