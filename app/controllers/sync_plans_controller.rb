@@ -22,8 +22,8 @@ class SyncPlansController < ApplicationController
 
 
   def rules
-    read_test = lambda{SyncPlan.readable?(current_organization)}
-    manage_test = lambda{SyncPlan.manageable?(current_organization)}
+    read_test = lambda{Provider.any_readable?(current_organization)}
+    manage_test = lambda{true} # TODO: change when we have org syncable
     {
       :index => read_test,
       :items => read_test,
