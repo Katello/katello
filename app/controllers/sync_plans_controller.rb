@@ -60,12 +60,12 @@ class SyncPlansController < ApplicationController
                  :create => _('Plan'),
                  :name => _('plan'),
                  :ajax_scroll => items_sync_plans_path(),
-                 :enable_create => SyncPlan.manageable?(current_organization) }
+                 :enable_create => true } #todo: change to org syncable
   end
 
   def edit
     render :partial => "edit", :layout => "tupane_layout",
-           :locals => {:plan=>@plan, :editable=>SyncPlan.manageable?(current_organization)}
+           :locals => {:plan=>@plan, :editable=> true } # todo: change to org syncable
   end
 
   def update
