@@ -141,9 +141,6 @@ ROLES.permissionWidget = (function($){
                         for( i=0; i < length; i+= 1){
                             tags_select.append('<option value="' + tags[i].name + '">' + tags[i].display_name + "</option>");
                         }
-                        tags_select.parent().show();
-                    } else {
-                        tags_select.parent().hide();
                     }
                 };
             
@@ -159,6 +156,7 @@ ROLES.permissionWidget = (function($){
                     if( current_stage !== 'resource_type' ){
                         flow['verbs'].actions();
                         current_stage = 'verbs';
+                        flow['tags'].container.hide();
                     }
                 });
             
