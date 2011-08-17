@@ -102,7 +102,7 @@ class RepositoryNameTest(unittest.TestCase):
     URL = 'http://localhost/a/b/'
 
     def setUp(self):
-        self.create_action = Create()
+        self.create_action = Discovery()
         self.parsedUrl = urlparse.urlparse(self.URL)
 
     def test_replaces_slashes_with_underscores(self):
