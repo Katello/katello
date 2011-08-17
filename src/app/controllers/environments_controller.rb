@@ -15,13 +15,11 @@ class EnvironmentsController < ApplicationController
   require 'rubygems'
   require 'active_support/json'
 
-
   skip_before_filter :authorize
-  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create]
+  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create, :system_templates]
   before_filter :authorize
   before_filter :find_environment, :only => [:show, :edit, :update, :destroy, :system_templates]
 
-  
   around_filter :catch_exceptions
 
   def section_id
@@ -40,7 +38,6 @@ class EnvironmentsController < ApplicationController
       :system_templates => view_rule
     }
   end
-
 
   # GET /environments/new
   def new
@@ -61,7 +58,6 @@ class EnvironmentsController < ApplicationController
     @selected = @environment.prior.nil? ? env_labels[""] : env_labels[@environment.prior.id]
     render :partial=>"edit", :layout => "tupane_layout", :locals=>{:editable=> @organization.environments_manageable?}
   end
-
 
   # POST /environments
   def create
@@ -140,6 +136,5 @@ class EnvironmentsController < ApplicationController
     envs += @organization.environments.reject {|item| !item.successor.nil?}
     envs
   end
-
 
 end

@@ -135,6 +135,7 @@ Src::Application.routes.draw do
   match '/organizations/:org_id/environments/:env_id/promotions/distributions' => 'promotions#distributions', :via => :get, :as=> 'promotion_distributions'
   match '/organizations/:org_id/environments/:env_id/promotions/detail' => 'promotions#detail', :via=>:get, :as=>'promotion_details'
   match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
+  match '/organizations/:org_id/environments/:env_id/system_templates' => 'environments#system_templates', :via => :get, :as => 'system_templates_organization_environment'
 
   resources :organizations do
     resources :environments
@@ -163,11 +164,7 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :environments do
-    member do
-      get :system_templates
-    end
-  end
+  resources :environments
 
   match '/roles/show_permission' => 'roles#show_permission', :via=>:get
   resources :roles do
