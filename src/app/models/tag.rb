@@ -24,7 +24,7 @@ class Tag < ActiveRecord::Base
     model_klass = ResourceType::TYPES[resource_type_name][:model]
         
     if model_klass
-      tags = model_klass.tags(self.id) if model_klass.respond_to? :tags
+      tags = model_klass.tags(self.name) if model_klass.respond_to? :tags
       return tags[0]
     end
   end
