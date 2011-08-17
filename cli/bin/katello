@@ -81,6 +81,7 @@ def setup_admin(admin):
 
     repo_cmd = repo.Repo()
     repo_cmd.add_action('create', repo.Create())
+    repo_cmd.add_action('discover', repo.Discovery())
     repo_cmd.add_action('info', repo.Info())
     repo_cmd.add_action('list', repo.List())
     repo_cmd.add_action('status', repo.Status())

@@ -61,19 +61,59 @@ class RepoAction(Action):
 
     def format_sync_state(self, state):
         return SYNC_STATES[state]
-
+        
 # actions --------------------------------------------------------------------
 
 
 class Create(RepoAction):
 
-    description = _('create a repository')
+    description = _('create a repository at a specified URL')
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
                                help=_("organization name eg: foo.example.com (required)"))
         self.parser.add_option('--name', dest='name',
-                               help=_("repository name (required)"))
+                               help=_("repository name to assign (required)"))
+        self.parser.add_option("--url", dest="url",
+                               help=_("url path to the repository (required)"))
+        self.parser.add_option('--product', dest='prod',
+                               help=_("product name (required)"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+        self.require_option('url')
+        self.require_option('prod', '--product')
+
+    def run(self):
+        name     = self.get_option('name')
+        url      = self.get_option('url')
+        prodName = self.get_option('prod')
+        orgName  = self.get_option('org')
+
+        prod = get_product(orgName, prodName)
+        if prod != None:
+            repo = self.api.create(prod["cp_id"], repoName, repourl)
+            print _("Successfully created repository [ %s ]") % repoName
+        else:
+            print _("No product [ %s ] found") % prodName
+            return os.EX_DATAERR
+        
+        return os.EX_OK
+
+    def repository_name(self, name, parsedUrlPath):
+        return "%s%s" % (name, parsedUrlPath.replace("/", "_"))
+
+
+class Discovery(RepoAction):
+
+    description = _('discovery repositories contained within a URL')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                               help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                               help=_("repository name prefix to add to all the discovered repositories (required)"))
         self.parser.add_option("--url", dest="url",
                                help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
         self.parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
