@@ -89,4 +89,5 @@
     .grid_3
       %a{ :href => "#", :id=>"toggle_all", :class=>"fl" }
         #{_("Expand/Contract All")}
-    = submit_tag _('Synchronize Now'), :class => 'dialogbutton fr', :id => 'sync_button'
+    - if @sproducts.length > 0
+      = submit_tag _('Synchronize Now'), :class => 'dialogbutton fr', :id => 'sync_button'
