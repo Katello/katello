@@ -75,20 +75,23 @@ class Product < ActiveRecord::Base
   end
 
   scope :readable, lambda {|org| authorized_items(org, READ_PERM_VERBS)}
-  scope :syncable, lambda {|org| authorized_items(org, SYNC_PERM_VERBS)}
+  scope :syncable, lambda {|org| sync_items(org)}
 
   protected
 
   def self.authorized_items org, verbs, resource = :providers
      raise "scope requires an organization" if org.nil?
      if User.allowed_all_tags?(verbs, resource, org)
-       Product.joins(:provider).where('providers.organization_id' => org)
+       joins(:provider).where('providers.organization_id' => org)
      else
-       Product.joins(:provider).where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+       joins(:provider).where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
      end
   end
 
+  def self.sync_items org
+    org.syncable? ? (joins(:provider).where('providers.organization_id' => org)) : where("0=1")
+  end
+
   READ_PERM_VERBS = [:read, :create, :update, :sync, :delete]
-  SYNC_PERM_VERBS = [:sync]
 
 end
