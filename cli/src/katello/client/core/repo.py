@@ -93,7 +93,7 @@ class Create(RepoAction):
 
         prod = get_product(orgName, prodName)
         if prod != None:
-            repo = self.api.create(prod["cp_id"], name, repourl)
+            repo = self.api.create(prod["cp_id"], name, url)
             print _("Successfully created repository [ %s ]") % name
         else:
             print _("No product [ %s ] found") % prodName
