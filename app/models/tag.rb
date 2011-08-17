@@ -20,13 +20,12 @@ class Tag < ActiveRecord::Base
     name
   end
 
-  def self.tags_for(resource_type_name, organization_id, ids = nil)
+  def self.tags_for(resource_type_name, organization_id) 
     model_klass = ResourceType::TYPES[resource_type_name][:model]
+    
     if model_klass
       tag_list = model_klass.list_tags(organization_id) if model_klass.respond_to? :list_tags
-      tag_list.reject!{|tag| !ids.member?(tag.id.to_i)} if !ids.nil?
       return tag_list
-
     else
       raise "Unrecognized model #{model_klass}"
     end

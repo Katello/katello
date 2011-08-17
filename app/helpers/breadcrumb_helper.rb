@@ -190,26 +190,29 @@ module BreadcrumbHelper
     
     def add_permission_bc bc, perm, adjust_count
       global = perm.resource_type.global?
-      type = perm.resource_type.name
+      type = perm.resource_type.display_name
       if global
         add_crumb_node!(bc, permission_global_bc_id(perm), "", perm.id, ['roles', 'role_permissions', 'global'],
                     { :client_render => true }, 
-                    { :global => perm.resource_type.global?, :type => type,
+                    { :global => global, :type => type,
                       :name => perm.name, :description => perm.description, 
-                      :verbs => perm.verbs, :tags => perm.tags })
+                      :verbs => perm.verbs.collect {|verb| VirtualTag.new(verb.name, verb.display_name(perm.resource_type.name, global))}, 
+                      :tags => perm.tags.collect { |t| VirtualTag.new(t.name, t.display_name)} })
         if adjust_count
           bc["global"][:count] += 1
         end
       else
         add_crumb_node!(bc, permission_bc_id(perm.organization, perm), "", perm.id, ['roles', 'role_permissions', organization_bc_id(perm.organization)],
                     { :client_render => true }, 
-                    { :organization => "organization_#{perm.organization_id}", :global => global,
+                    { :organization => "organization_#{perm.organization_id}", 
+                      :global => global, :type =>  type,
                       :name => perm.name, :description => perm.description, 
-                      :type =>  type, :verbs => perm.verbs, :tags => perm.tags })
+                      :verbs => perm.verbs.collect {|verb| VirtualTag.new(verb.name, verb.display_name(perm.resource_type.name, global))}, 
+                      :tags => perm.tags.collect { |t| VirtualTag.new(t.name, t.display_name)} })
         if adjust_count
           bc[organization_bc_id(perm.organization)][:count] += 1
         end
-        if type == "all"
+        if type == "All"
           if !bc[organization_bc_id(perm.organization)].nil?
             bc[organization_bc_id(perm.organization)][:full_access] = true
           end

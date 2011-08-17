@@ -509,9 +509,9 @@ var templateLibrary = (function($){
             html += '<div class="permission_detail_container"><label class="grid_3 ra">Verb(s): </label><span>'
             length = permission.verbs.length;
             for( i=0; i < length; i += 1){
-                html += permission.verbs[i].verb;
+                html += permission.verbs[i].display_name;
                 if( i !== length-1 ){
-                    html += ',';
+                    html += ', ';
                 }
             }
             html += '</span></div><div class="permission_detail_container"><label class="grid_3 ra">On:</label><span>';
