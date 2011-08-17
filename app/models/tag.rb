@@ -19,6 +19,15 @@ class Tag < ActiveRecord::Base
   def display_name
     name
   end
+  
+  def formatted(resource_type_name)
+    model_klass = ResourceType::TYPES[resource_type_name][:model]
+        
+    if model_klass
+      tags = model_klass.tags(self.id) if model_klass.respond_to? :tags
+      return tags[0]
+    end
+  end
 
   def self.tags_for(resource_type_name, organization_id) 
     model_klass = ResourceType::TYPES[resource_type_name][:model]

@@ -165,14 +165,14 @@ class RolesController < ApplicationController
   def update_permission
     @permission = Permission.find(params[:permission_id])
     @permission.update_attributes(params[:permission])
-    notice _("Permission updated.")
+    notice _("Permission '#{@permission.name}' updated.")
     render :partial => "permission", :locals =>{:perm => @permission, :role=>@role, :data_new=> false}
   end
 
   def create_permission
     new_params = {:role => @role}
     type_name = params[:permission][:resource_type_attributes][:name]
-    
+    debugger
     if type_name == "all"
       new_params[:all_tags] = true
       new_params[:all_verbs] = true
@@ -185,7 +185,7 @@ class RolesController < ApplicationController
       @perm = Permission.create! new_params
       to_return = { :type => @perm.resource_type.name }
       add_permission_bc(to_return, @perm, false)
-      notice _("Permission created.")
+      notice _("Permission '#{@perm.name}' created.")
       render :json => to_return
     rescue Exception => error
       errors error
@@ -205,7 +205,7 @@ class RolesController < ApplicationController
   def destroy_permission
     permission = Permission.find(params[:permission_id])
     permission.destroy
-    notice _("Permission removed.")
+    notice _("Permission '#{@permission.name}' removed.")
     render :json => params[:permission_id]
   end
 

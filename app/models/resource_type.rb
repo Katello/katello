@@ -94,7 +94,7 @@ class ResourceType < ActiveRecord::Base
       :sync_plans => { :model => SyncPlan, :name => N_("Sync Plans"), :global=>false},
       :users => { :model => User, :name => N_("Users"), :global=>true},
       :roles => { :model => Role, :name => N_("Roles"), :global=>true},
-      :all => { :model => OpenStruct.new(:list_verbs =>{}, :list_tags=>[], :tags_for =>[], :no_tag_verbs =>[]), :name => N_("All"), :global => false}
+      :all => { :model => OpenStruct.new(:list_verbs =>{}, :list_tags=>[], :tags_for =>[], :tags => [], :no_tag_verbs =>[]), :name => N_("All"), :global => false}
   }.with_indifferent_access
 
 end

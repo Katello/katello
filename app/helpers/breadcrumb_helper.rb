@@ -197,7 +197,7 @@ module BreadcrumbHelper
                     { :global => global, :type => type,
                       :name => perm.name, :description => perm.description, 
                       :verbs => perm.verbs.collect {|verb| VirtualTag.new(verb.name, verb.display_name(perm.resource_type.name, global))}, 
-                      :tags => perm.tags.collect { |t| VirtualTag.new(t.name, t.display_name)} })
+                      :tags => perm.tags.collect { |t| t.formatted(perm.resource_type.name) }})
         if adjust_count
           bc["global"][:count] += 1
         end
@@ -208,7 +208,7 @@ module BreadcrumbHelper
                       :global => global, :type =>  type,
                       :name => perm.name, :description => perm.description, 
                       :verbs => perm.verbs.collect {|verb| VirtualTag.new(verb.name, verb.display_name(perm.resource_type.name, global))}, 
-                      :tags => perm.tags.collect { |t| VirtualTag.new(t.name, t.display_name)} })
+                      :tags => perm.tags.collect { |t| t.formatted(perm.resource_type.name) }})
         if adjust_count
           bc[organization_bc_id(perm.organization)][:count] += 1
         end

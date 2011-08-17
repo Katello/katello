@@ -110,10 +110,6 @@ class Organization < ActiveRecord::Base
     [:create]
   end
 
-  def self.tags_for org
-    select('id').all
-  end
-
   private
 
   def self.authorized_items verbs, resource = :organizations
