@@ -334,13 +334,12 @@ class Sync(RepoAction):
         repoId   = self.get_option('repo_id')
         repoName = self.get_option('repo')
         orgName  = self.get_option('org')
-        envName  = self.get_option('env')
         prodName = self.get_option('product')
         
         if repoId:
             repo = self.api.repo(repoId)
         else:
-            repo = get_repo(orgName, prodName, repoName, envName)
+            repo = get_repo(orgName, prodName, repoName)
             if repo == None:
                 return os.EX_DATAERR
 
