@@ -44,27 +44,29 @@
       %h2#permission_add_header
       %form{ :id => "add_permission_form" }
         %input{:type => "hidden", :name => "permission[organization_id]", :value => '', :id => "organization_id" }
-        .permission_add_container
+        .permission_add_container#name_container
           %label.ra.fl #{_("Name:")}
           %input{ :id => 'permission_name', :name => 'permission[name]', :type => "text" }
-        .permission_add_container
+        .permission_add_container.hidden#description_container
           %label.ra.fl #{_("Description:")}
           %textarea{ :id => 'description', :name => 'permission[description]' }
-        .permission_add_container
+        .permission_add_container.hidden#resource_type_container
           %label.ra.fl #{_("Permission For:")}
           %select{ :id => 'resource_type', :name => 'permission[resource_type_attributes[name]]' }
           .button#all_types
             #{_('+ All')}
-        .permission_add_container#verb_container
+        .permission_add_container.hidden#verbs_container
           %label.ra.fl #{_("Verb(s):")}
           %select{ :id => "verbs", :name => 'permission[verb_values][]', :multiple => 'multiple' }
-        .permission_add_container#tag_container
+        .permission_add_container#tags_container
           %label.ra.fl #{_("On:")}
           %select{ :id => "tags", :name => 'permission[tag_names][]', :multiple => 'multiple' }
         #permission_button_bar.clear
-          -#.button#previous_button.fl{:tabindex => 2}
-            -##{_("Previous")}
-          .button#save_permission_button.fr{:tabindex => 2}
+          .button.fl#previous_button
+            #{_("Previous")}
+          .button.fr#next_button
+            #{_("Next")}
+          .button.fr#save_permission_button
             #{_("Done")}
 
     #roles_status

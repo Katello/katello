@@ -189,8 +189,8 @@ module BreadcrumbHelper
     end
     
     def add_permission_bc bc, perm, adjust_count
-      global = perm.resource_type && perm.resource_type.global?
-      type = perm.resource_type ? perm.resource_type.name : "all"
+      global = perm.resource_type.global?
+      type = perm.resource_type.name
       if global
         add_crumb_node!(bc, permission_global_bc_id(perm), "", perm.id, ['roles', 'role_permissions', 'global'],
                     { :client_render => true }, 

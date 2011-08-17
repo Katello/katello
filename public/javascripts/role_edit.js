@@ -18,7 +18,85 @@
 var ROLES = {};
 
 ROLES.permissionWidget = (function($){
-    var permission_add = function(opening){
+    var current_stage   = undefined,
+        next_button     = $('#next_button'),
+        previous_button = $('#previous_button'),
+        done_button     = $('#save_permission_button'),
+        
+        flow            = {
+            'name'          :   { previous  : false,
+                                  next      : 'description', 
+                                  container : $('#name_container'),
+                                  actions   : function(){
+                                        previous_button.hide();
+                                  }
+                                },
+            'description'   :   { previous  : 'name', 
+                                  next      : 'resource_type',
+                                  container : $('#description_container'),
+                                  actions   : function(){
+                                        previous_button.show();
+                                  }
+                                },
+            'resource_type' :   { previous  : 'description', 
+                                  next      : 'verbs',
+                                  container : $('#resource_type_container'),
+                                  actions   : function(){
+                                      if( done_button.is(":visible") ){
+                                          done_button.hide();
+                                          next_button.show();
+                                      }
+                                  }
+                                },
+            'verbs'         :   { previous  : 'resource_type',
+                                  next      : 'tags',
+                                  container : $('#verbs_container'),
+                                  actions   : function(){
+                                        if( $('#resource_type').val() === 'organizations' ){
+                                            next_button.hide();
+                                            done_button.show();        
+                                        } else {
+                                            done_button.hide();
+                                            next_button.show();
+                                        }
+                                  }
+                                }, 
+            'tags'          :   { previous  : 'verbs',
+                                  next      : false,
+                                  container : $('#tags_container'),
+                                  actions   : function(){
+                                        next_button.hide();
+                                        done_button.show();
+                                  }
+                                }
+        },
+    
+        init = function(){
+            previous_button.hide();
+            done_button.hide();
+            next_button.click(handleNext);
+            previous_button.click(handlePrevious);
+            done_button.click(handleDone);
+            current_stage = 'name';
+        },
+        handleNext = function(){
+            var next = flow[current_stage].next; 
+            console.log(next);
+            flow[next].container.show();
+            flow[next].actions();
+            current_stage = next;
+        },
+        handlePrevious = function(){
+            var previous = flow[current_stage].previous; 
+            
+            flow[current_stage].container.hide();
+            flow[previous].actions();
+            current_stage = previous;
+        },
+        handleDone = function(){
+            roleActions.savePermission();
+        },
+        permission_add = function(opening){
             var options                 = {},
                 current_organization    = roleActions.getCurrentOrganization(),
                 button                  = $('#add_permission'),
@@ -78,6 +156,10 @@ ROLES.permissionWidget = (function($){
                 button.addClass("highlighted");
                 $('#resource_type').change(function(event){
                     set_verbs_and_tags(event.currentTarget.value);
+                    if( current_stage !== 'resource_type' ){
+                        flow['verbs'].actions();
+                        current_stage = 'verbs';
+                    }
                 });
             
                 if( current_organization === "global" ){
@@ -94,7 +176,8 @@ ROLES.permissionWidget = (function($){
         };
         
     return {
-        permission_add  :  permission_add  
+        permission_add  :  permission_add,
+        init            :  init
     };
     
 })(jQuery);
@@ -608,10 +691,6 @@ var pageActions = (function($){
                 ROLES.actionBar.toggle('permission_add');
             });
             
-            $('#save_permission_button').click(function(){
-                roleActions.savePermission();
-            });
-            
             $('.content_add_remove').live('click', function(){
                 roleActions.handleContentAddRemove($(this));
             });
@@ -666,6 +745,8 @@ $(function() {
                                 ROLES.actionBar.close();
                           }
                       });
+  
+    ROLES.permissionWidget.init();
                         
     rolesRenderer.init();
     pageActions.registerEvents();

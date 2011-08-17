@@ -178,11 +178,17 @@ class RolesController < ApplicationController
     
     new_params[:resource_type] = ResourceType.find_or_create_by_name(:name=>type_name)
     new_params.merge! params[:permission]
-    @perm = Permission.create! new_params
-    to_return = {}
-    add_permission_bc(to_return, @perm, false)
-    notice _("Permission created.")
-    render :json => to_return
+    
+    begin
+      @perm = Permission.create! new_params
+      to_return = { :type => @perm.resource_type.name }
+      add_permission_bc(to_return, @perm, false)
+      notice _("Permission created.")
+      render :json => to_return
+    rescue Exception => error
+      errors error
+      render :json=>@role.errors, :status=>:bad_request
+    end
   end
 
   def show_permission
