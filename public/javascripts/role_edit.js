@@ -83,9 +83,9 @@ ROLES.permissionWidget = (function($){
             next_button.click(handleNext);
             previous_button.click(handlePrevious);
             done_button.click(handleDone);
-            all_types_button.click(handleAllTypes);
-            all_verbs_button.click(handleAllVerbs);
-            all_tags_button.click(handleAllTags);
+            all_types_button.click(function(){ handleAllTypes(); });
+            all_verbs_button.click(function(){ handleAllVerbs(); });
+            all_tags_button.click(function(){ handleAllTags(); });
             current_stage = 'name';
         },
         reset = function(){
@@ -95,11 +95,16 @@ ROLES.permissionWidget = (function($){
                 }
             }
             all_types_button.removeClass('selected');
+            all_types_button.html(i18n.all);
             all_verbs_button.removeClass('selected');
+            all_verbs_button.html(i18n.all);
             all_tags_button.removeClass('selected');
+            all_tags_button.html(i18n.all);
             previous_button.hide();
             next_button.show();
             done_button.hide();
+            $('#verbs').removeAttr('disabled');
+            $('#tags').removeAttr('disabled');
         },
         handleNext = function(){
             var next = flow[current_stage].next; 
@@ -203,8 +208,10 @@ ROLES.permissionWidget = (function($){
             
             return options;
         },
-        handleAllTypes = function(){
-            if( !all_types_button.hasClass('selected') ){
+        handleAllTypes = function(selected){
+            selected = selected || all_types_button.hasClass('selected');
+            
+            if( !selected ){
                 next_button.hide();
                 done_button.show();
                 flow['verbs'].container.hide();
@@ -229,8 +236,10 @@ ROLES.permissionWidget = (function($){
                 all_types_button.removeClass('selected');
             }
         },
-        handleAllVerbs = function(){
-            if( !all_verbs_button.hasClass('selected') ){
+        handleAllVerbs = function(selected){
+            selected = selected || all_verbs_button.hasClass('selected');
+            
+            if( !selected ){
                 $('#verbs').attr('disabled', 'disabled');
                 all_verbs_button.html(i18n.cancel);
                 all_verbs_button.addClass('selected');
@@ -240,8 +249,10 @@ ROLES.permissionWidget = (function($){
                 all_verbs_button.removeClass('selected');
             }
         },
-        handleAllTags = function(){
-            if( !all_tags_button.hasClass('selected') ){
+        handleAllTags = function(selected){
+            selected = selected || all_tags_button.hasClass('selected');
+            
+            if( !selected ){
                 $('#tags').attr('disabled', 'disabled');
                 all_tags_button.html(i18n.cancel);
                 all_tags_button.addClass('selected');
