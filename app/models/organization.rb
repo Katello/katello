@@ -59,7 +59,6 @@ class Organization < ActiveRecord::Base
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
-
   #permissions
   scope :readable, lambda {authorized_items(READ_PERM_VERBS)}
 
@@ -87,7 +86,6 @@ class Organization < ActiveRecord::Base
     User.allowed_to?([:update, :create], :organizations, nil, self)
   end
 
-
   def self.list_verbs global = false
     org_verbs = {
       :update => N_("Manage Organization and Environments"),
@@ -95,7 +93,8 @@ class Organization < ActiveRecord::Base
       :read_systems => N_("Access Systems"),
       :create_systems =>N_("Register Systems"),
       :update_systems => N_("Manage Systems"),
-      :delete_systems => N_("Delete Systems")
+      :delete_systems => N_("Delete Systems"),
+      :sync => N_("Sync Products")
    }
     org_verbs.merge!({
     :create => N_("Create Organization"),
@@ -110,6 +109,10 @@ class Organization < ActiveRecord::Base
     [:create]
   end
 
+  def syncable?
+    User.allowed_to?(SYNC_PERM_VERBS, :organizations, nil, self)
+  end
+
   private
 
   def self.authorized_items verbs, resource = :organizations
@@ -119,5 +122,6 @@ class Organization < ActiveRecord::Base
   end
 
   READ_PERM_VERBS = [:read, :create, :update, :delete]
+  SYNC_PERM_VERBS = [:sync]
 
 end
