@@ -518,7 +518,7 @@ var templateLibrary = (function($){
             
             length = permission.tags.length;
             for( i=0; i < length; i += 1){
-                html += permission.tags[i].name;
+                html += permission.tags[i].display_name;
                 if( i !== length-1 ){
                     html += ',';
                 }

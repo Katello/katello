@@ -144,7 +144,9 @@ class KPEnvironment < ActiveRecord::Base
     select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
-
+  def self.tags(ids)
+    select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
+  end
 
 
   #Permissions

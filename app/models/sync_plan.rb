@@ -67,6 +67,10 @@ class SyncPlan < ActiveRecord::Base
     [] #don't list tags for sync plans
   end
 
+  def self.tags(ids)
+    []
+  end
+
   def self.list_verbs global = false
     {
       :read_all => N_("Access all Sync Plans"),
