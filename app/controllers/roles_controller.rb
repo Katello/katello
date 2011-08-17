@@ -149,12 +149,14 @@ class RolesController < ApplicationController
     details= {}
     
     resource_types.each do |type, value|
-      details[type] = {}
-      details[type][:verbs] = Verb.verbs_for(type, false).collect {|name, display_name| VirtualTag.new(name, display_name)}
-      details[type][:verbs].sort! {|a,b| a.display_name <=> b.display_name}
-      details[type][:tags] = Tag.tags_for(type, params[:organization_id]).collect { |t| VirtualTag.new(t.name, t.display_name) }
-      details[type][:global] = value["global"]
-      details[type][:name] = value["name"]
+      if !value["global"]
+        details[type] = {}
+        details[type][:verbs] = Verb.verbs_for(type, false).collect {|name, display_name| VirtualTag.new(name, display_name)}
+        details[type][:verbs].sort! {|a,b| a.display_name <=> b.display_name}
+        details[type][:tags] = Tag.tags_for(type, params[:organization_id]).collect { |t| VirtualTag.new(t.name, t.display_name) }
+        details[type][:global] = value["global"]
+        details[type][:name] = value["name"]
+      end
     end
     
     render :json => details
