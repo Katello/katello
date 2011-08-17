@@ -175,6 +175,7 @@ class User < ActiveRecord::Base
   # on the current logged user. The class attribute User.current must be set!
   # If the current user is not set (is nil) it treats it like the 'anonymous' user.
   def self.allowed_tags_sql(verb, resource_type = nil, org = nil)
+    ResourceType.check resource_type, verb
     u = User.current
     u = User.anonymous if u.nil?
     raise ArgumentError, "current user is not set" if u.nil? or not u.is_a? User
@@ -203,7 +204,7 @@ class User < ActiveRecord::Base
 
     tags_query = allowed_tags_query(verbs, resource_type, org)
 
-    if tags.empty?
+    if tags.empty? || resource_type == :organizations
       to_count = "permissions.id"
     else
       to_count = "tags.name"
