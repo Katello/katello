@@ -62,32 +62,4 @@ class SyncPlan < ActiveRecord::Base
     self.sync_date.strftime('%Z')
   end
 
-  # returns list of virtual permission tags for the current user
-  def self.list_tags organization_id
-    [] #don't list tags for sync plans
-  end
-
-  def self.tags(ids)
-    []
-  end
-
-  def self.list_verbs global = false
-    {
-      :read_all => N_("Access all Sync Plans"),
-      :manage_all => N_("Manage all Sync Plans")
-    }.with_indifferent_access
-  end
-
-  def self.no_tag_verbs
-    SyncPlan.list_verbs.keys
-  end
-
-  def self.readable? org
-    User.allowed_to?([:read_all, :manage_all], :sync_plans, nil, org)
-  end
-
-  def self.manageable? org
-    User.allowed_to?([:manage_all], :sync_plans, nil, org)
-  end
-
 end
