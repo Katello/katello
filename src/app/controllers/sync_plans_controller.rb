@@ -23,7 +23,7 @@ class SyncPlansController < ApplicationController
 
   def rules
     read_test = lambda{Provider.any_readable?(current_organization)}
-    manage_test = lambda{true} # TODO: change when we have org syncable
+    manage_test = lambda{current_organization.syncable?}
     {
       :index => read_test,
       :items => read_test,
@@ -60,12 +60,12 @@ class SyncPlansController < ApplicationController
                  :create => _('Plan'),
                  :name => _('plan'),
                  :ajax_scroll => items_sync_plans_path(),
-                 :enable_create => true } #todo: change to org syncable
+                 :enable_create => current_organization.syncable? } 
   end
 
   def edit
     render :partial => "edit", :layout => "tupane_layout",
-           :locals => {:plan=>@plan, :editable=> true } # todo: change to org syncable
+           :locals => {:plan=>@plan, :editable=> current_organization.syncable? } 
   end
 
   def update
