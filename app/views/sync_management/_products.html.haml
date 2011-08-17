@@ -27,7 +27,6 @@
               =check_box_tag "product[#{p.id}]"
               .clickable
                 %a{ :href => "#", :onclick => ""}
-                  /= image_tag ("icons/expander-collapsed.png", :alt => "Expand")
                   %img{:src => "/images/icons/expander-collapsed.png", :alt => "Expand"}
                 #{p.name}
               %ul
@@ -39,7 +38,6 @@
             - else 
               .clickable
                 %a{ :href => "#", :onclick => ""}
-                  /= image_tag ("icons/expander-collapsed.png", :alt => "Expand")
                   %img{:src => "/images/icons/expander-collapsed.png", :alt => "Expand"}
                 #{p.name}
               %ul
