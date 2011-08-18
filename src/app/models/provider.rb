@@ -88,7 +88,6 @@ class Provider < ActiveRecord::Base
        :read => N_("Access Provider"),
        :update => N_("Manage Provider and Products"),
        :delete => N_("Delete Provider"),
-       :sync => N_("Sync Products")
     }.with_indifferent_access
   end
 
@@ -97,7 +96,6 @@ class Provider < ActiveRecord::Base
   end
 
   scope :readable, lambda {|org| authorized_items(org, READ_PERM_VERBS)}
-  scope :syncable, lambda {|org| authorized_items(org, SYNC_PERM_VERBS)}
 
   def readable?
     User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization)
@@ -119,9 +117,6 @@ class Provider < ActiveRecord::Base
     User.allowed_to?([:delete, :create], :providers, self.id, self.organization)
   end
 
-  def syncable?
-    User.allowed_to?(SYNC_PERM_VERBS, :providers, self.id, self.organization)
-  end
   protected
 
    def sanitize_repository_url
@@ -129,7 +124,6 @@ class Provider < ActiveRecord::Base
        self.repository_url.strip!
      end
    end
-
 
   def self.authorized_items org, verbs, resource = :providers
     raise "scope requires an organization" if org.nil?
@@ -140,7 +134,6 @@ class Provider < ActiveRecord::Base
     end
   end
 
-  READ_PERM_VERBS = [:read, :create, :update, :sync, :delete]
-  SYNC_PERM_VERBS = [:sync]
+  READ_PERM_VERBS = [:read, :create, :update, :delete]
 end
 
