@@ -20,9 +20,18 @@ class PromotionsController < ApplicationController
 
 
   def rules
+    show_test = lambda {
+      to_ret = User.allowed_to?([:read_contents], :environments,  @next_environment.id, current_organization)
+      if @next_environment
+        to_ret = to_ret || User.allowed_to?([:manage_changesets, :read_changesets, :promote_changesets],
+                                            :environments,  @next_environment.id, current_organization)
+      end
+      to_ret
+    }
+
     prod_test = lambda{ @product.provider.readable? and @environment.contents_readable? }
     {
-      :show => [[:read_contents, :manage_changesets, :read_changesets, :promote_changesets], :environments,  @environment.id, current_organization],
+      :show => show_test,
       :packages => prod_test,
       :repos => prod_test,
       :errata => prod_test,
@@ -53,6 +62,7 @@ class PromotionsController < ApplicationController
       :promote_changesets => @next_environment.nil? ? false : @next_environment.changesets_promotable?,
       :read_changesets => @next_environment.nil? ? false : @next_environment.changesets_readable?
     }
+    
     render :show, :locals=>locals
   end
 
@@ -167,8 +177,8 @@ class PromotionsController < ApplicationController
   end
 
   def accessible_environments
-    list = KPEnvironment.changesets_readable(current_organization)
-    KPEnvironment.content_readable(current_organization).each{|env|
+    list = KPEnvironment.content_readable(current_organization)
+    KPEnvironment.changesets_readable(current_organization).each{|env|
       list << env.prior if env.prior
     }
     list.uniq
