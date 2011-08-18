@@ -97,35 +97,47 @@ describe OrganizationsController do
     describe "with no exceptions thrown" do
       before (:each) do
         @controller.stub!(:render).and_return("") #fix for not finding partial
-        @organization = new_test_org
-        @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:name])
-        Organization.stub!(:first).and_return(@organization)
+        @org = new_test_org
+        @org.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:name])
+        Organization.stub!(:first).and_return(@org)
+        new_test_org
       end
 
       it 'should call katello organization destroy api if there are more than 1 organizations' do
         Organization.stub!(:count).and_return(2)
-        @organization.should_receive(:destroy)
-        delete 'destroy', :id => OrgControllerTest::ORG_ID
+        @org.should_receive(:destroy).with(no_args()).once.and_return(true)
+        delete 'destroy', :id => @org.id
+        response.should be_success
       end
 
       it "should generate a success notice" do
         Organization.stub!(:count).and_return(2)
+        @org.should_receive(:destroy).with(no_args()).once.and_return(true)
         controller.should_receive(:notice)
-        delete 'destroy', :id => OrgControllerTest::ORG_ID
+        delete 'destroy', :id => @org.id
+        response.should be_success
       end
       
       it "should be successful" do
         Organization.stub!(:count).and_return(2)
-        delete 'destroy', :id => OrgControllerTest::ORG_ID
+        delete 'destroy', :id => @org.id
         response.should be_success
       end
-      
+    end
+
+    describe "with exceptions thrown" do
+      before (:each) do
+        new_test_org
+        Organization.stub!(:first).and_return(@organization)
+      end
       it "should generate an errors notice" do
         controller.should_receive(:errors)
-        delete 'destroy', :id => OrgControllerTest::ORG_ID
+        delete 'destroy', :id => @organization.id
+        response.should_not be_success
       end
     end
-    
+
+
     describe "exception is thrown in katello api" do
       before (:each) do
         @organization = new_test_org
@@ -136,6 +148,7 @@ describe OrganizationsController do
       it "should generate an error notice" do
         controller.should_receive(:errors)
         delete 'destroy', :id =>  OrgControllerTest::ORG_ID
+        response.should_not be_success
       end
       
       it "should redirect to show view" do

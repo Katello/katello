@@ -33,12 +33,6 @@ user_anonymous = User.find_or_create_by_username(
   :password => Password.generate_random_string(16),
   :disabled => true)
 
-# candlepin_role for RHSM
-candlepin_role = Role.find_or_create_by_name(
-  :name => 'Candlepin',
-  :description => 'Special role for RHSM. Not to be used by regular users.')
-throw "Unable to create candlepin_role: #{candlepin_role.errors}" if candlepin_role and candlepin_role.errors.size > 0
-
 # create the default org = "admin" if none exist
 first_org = Organization.find_or_create_by_name(:name => "ACME_Corporation", :description => "ACME Corporation Organization", :cp_key => 'ACME_Corporation')
 

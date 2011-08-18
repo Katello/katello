@@ -16,7 +16,7 @@ describe UsersController do
   
   include LoginHelperMethods
   include LocaleHelperMethods
-  
+  include AuthorizationHelperMethods
     before(:each) do
       login_user
       set_default_locale
@@ -60,7 +60,7 @@ describe UsersController do
       @user.username = "foo-user"
       @user.password = "password"
       @user.save 
-      Role.allow 'Test', ["create", "read","delete"], "product", ["RHEL-4", "RHEL-5","Cluster","ClusterStorage","Fedora"]
+      allow @user.own_role, ["create", "read","delete"], "product", ["RHEL-4", "RHEL-5","Cluster","ClusterStorage","Fedora"]
     end    
     
     it "should be allowed to change the password" do 

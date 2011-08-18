@@ -16,6 +16,7 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'webrat'
 require 'helpers/login_helper_methods'
+require 'helpers/authorization_helper_methods'
 require 'helpers/locale_helper_methods'
 require 'helpers/organization_helper_methods'
 require 'helpers/system_helper_methods'
