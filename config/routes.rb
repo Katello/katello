@@ -326,6 +326,7 @@ Src::Application.routes.draw do
     match '/consumers' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
     resources :consumers, :controller => 'systems'
     match '/owners/:organization_id/environments' => 'environments#index', :via => :get
+    match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get
     match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
     match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
     match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
@@ -337,6 +338,7 @@ Src::Application.routes.draw do
     match '/consumers/:id/entitlements' => 'candlepin_proxies#get', :via => :get
     match '/consumers/:id/entitlements' => 'candlepin_proxies#post', :via => :post
     match '/consumers/:id/entitlements' => 'candlepin_proxies#delete', :via => :delete
+    match '/consumers/:id/owner' => 'candlepin_proxies#get', :via => :get
     match '/consumers/:consumer_id/certificates/:id' => 'candlepin_proxies#delete', :via => :delete
     match '/pools' => 'candlepin_proxies#get', :via => :get
     match '/products' => 'candlepin_proxies#get', :via => :get
