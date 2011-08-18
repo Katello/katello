@@ -24,7 +24,7 @@
             .grid_10
               %ul.breadcrumb
                 %li
-                  =link_to _('Locker'), "#", :class => :nohover
+                  =link_to _('Locker'), "#", :class => "crumb-nohover"
                 - for env in path
                   %li
                     %a.select_env{"data-env_id" => env.id, "data-templates_url" => system_templates_organization_environment_path(env.organization.cp_key, env)} #{env.name}
