@@ -317,7 +317,7 @@ sliding_tree.ActionBar = function(toggle_list){
                 open_panel = id;
                 options.opening = true;
             }
-
+            console.log(toggle_list);
             options = toggle_list[id](options.opening);
             slide_window.slideToggle(animate_time, options.after_function);
         }, 
@@ -325,10 +325,21 @@ sliding_tree.ActionBar = function(toggle_list){
             if( open_panel ){
                 toggle(open_panel, { opening: false });
             }
+        },
+        reset = function(){
+            close();    
+        },
+        add_to_toggle_list = function(addon){
+            if( toggle_list[addon] !== undefined ){
+                delete toggle_list[addon];
+            }
+            $.extend(toggle_list, addon);
         };
         
     return {
-        toggle  :  toggle,
-        close   :  close
+        toggle              :  toggle,
+        close               :  close,
+        reset               :  reset,
+        add_to_toggle_list  :  add_to_toggle_list
     };
 };
