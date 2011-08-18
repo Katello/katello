@@ -5,6 +5,7 @@
     #{_("No products")}
   -for product in products
     %li.clear
+      -#-if changeset_managable
       %a.content_add_remove.remove_product.st_button.fr{ "data-id" => product.id, "data-product_id" => product.id, "data-type"=>"product", "data-display_name"=>product.name, :id => "add_remove_product_#{product.id}" }
     
       .slide_link{:id=>product_bc_id(product)}
