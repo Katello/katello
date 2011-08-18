@@ -83,32 +83,44 @@ describe Api::SystemsController do
 
     context "when activation keys are provided" do
 
-      before :each do
+      before(:each) do
         @system_template = SystemTemplate.create!(:name => "system template", :environment => @environment_1)
         @activation_key_1 = ActivationKey.create!(:environment => @environment_1,
                                                   :organization => @organization,
                                                   :system_template => @system_template,
                                                   :name => "activation_key_1")
-        @activation_key_1.user = @mock_user
+        @activation_key_1.user = mock_model(User, :username => "ak_test_user")
         @activation_key_2 = ActivationKey.create!(:environment => @environment_1, :organization => @organization, :name => "activation_key_2")
         @activation_key_1.stub(:apply_to_system,:subscribe_system)
         @activation_key_2.stub(:apply_to_system,:subscribe_system)
-        @system = mock(System)
-        @controller.stub(:find_activation_keys).and_return([@activation_key_1,@activation_key_2])
       end
 
       context "and they are correct" do
 
+        before(:each) do
+          @system = mock_model(System)
+          @system.stub(:save!)
+          @system.stub(:to_json).and_return("")
+          System.stub(:new).and_return(@system)
+          @controller.stub(:find_activation_keys).and_return([@activation_key_1,@activation_key_2])
+        end
+
         it "uses user credentials of the user associated with the first activation key" do
-          pending
-          User.should_receive("current=").with(@activation_key_1.user)
+          User.should_receive("current=").at_least(:once)
+          User.should_receive("current=").with(@activation_key_1.user).once
+          post :activate, :organization_id => @organization.cp_key, :activation_keys => "#{@activation_key_1.name},#{@activation_key_2.name}"
         end
 
         it "sets the environment according the activation keys" do
-          pending
           @activation_key_2.should_receive(:apply_to_system)
           @activation_key_1.should_receive(:apply_to_system)
           @system.should_receive(:save!)
+          post :activate, :organization_id => @organization.cp_key, :activation_keys => "#{@activation_key_1.name},#{@activation_key_2.name}"
+        end
+
+        it "should subscribe the system according to activation keys" do
+          @activation_key_2.should_receive(:subscribe_system)
+          @activation_key_1.should_receive(:subscribe_system)
           post :activate, :organization_id => @organization.cp_key, :activation_keys => "#{@activation_key_1.name},#{@activation_key_2.name}"
         end
 
@@ -116,7 +128,6 @@ describe Api::SystemsController do
 
       context "and they are not in the system" do
         it "set the environment according the activation keys" do
-          pending
           post :activate, :organization_id => @organization.cp_key, :activation_keys => "notInSystem"
           response.code.should == "404"
         end
