@@ -132,7 +132,7 @@ input[type='submit'], button, .button {
   margin: 4px;
   padding: 4px 12px;
   @include border-radius(5px);
-  @include text-shadow(0, 1px, 0, #fff);
+  @include text-shadow(#fff, 0, 1px, 0);
   min-height: 14px;
   
   .nomargin {
@@ -334,7 +334,7 @@ table {
   font-size: 12px;
   padding: 5px 0 0 0;
   overflow: hidden;
-  /* @include text-shadow(0, 1px, 0, #000); */
+  /*@include text-shadow(#000, 0, 1px, 0);*/
   height: 40px;
   header {
     display: block;
@@ -383,7 +383,7 @@ table {
       padding: 8px 0 0 0;
     }
     #unread_notices {
-      @include text-shadow(0,1px,1px, #000);
+      @include text-shadow(#000,0,1px,1px);
       @include border-radius(3em);
       background-color: darken($kprimary_color,24%);
       margin: 0.3em;
@@ -471,7 +471,7 @@ nav {
           padding: 9px 18px;
           text-decoration: none;
           color: $taboff_color;
-          @include text-shadow(0,1px,0,#fff);
+          @include text-shadow(#fff,0,1px,0);
           
           &:hover {
             color: lighten($kselected_color,10%);
@@ -510,7 +510,7 @@ nav {
           cursor: pointer;
           text-transform: none;
           text-decoration: none;
-          @include text-shadow(0,1px,0,#fff);
+          @include text-shadow(#fff,0,1px,0);
           display: block;
           margin: 0;
           padding: 8px 16px 6px;
@@ -1430,7 +1430,7 @@ fieldset {
   position: relative;
 
   .selected {
-    background: $listhover_color !important; color: #FFF; @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
+    background: $listhover_color !important; color: #FFF; @include text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
     &:after {
       border-left-color: $listhover_color !important;
     }
@@ -1483,7 +1483,7 @@ fieldset {
         &:hover { 
           background: $listhover_color !important; 
           color: #FFF; 
-          @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
+          @include text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
           
           &:after { border-left-color: $listhover_color !important; }
         }
