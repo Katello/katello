@@ -41,7 +41,7 @@ class SyncManagementController < ApplicationController
 
     list_test = lambda{Provider.any_readable?(current_organization)}
     sync_read_test = lambda{@provider.readable?}
-    sync_test = lambda {@providers.all?{|prov| prov.syncable?}}
+    sync_test = lambda {current_organization.syncable?}
     
     { :index => list_test,
       :sync_status => sync_read_test,
