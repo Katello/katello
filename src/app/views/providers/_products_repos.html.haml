@@ -28,7 +28,7 @@
           = _("Add Product")
         
       -@products.each do |product|
-        %ul
+        %ul.fl.clear
           %li
             .grid_1.ra
               %a.clickable{ :href => "#", :onclick => ""}
@@ -36,7 +36,7 @@
             .grid_6.la.editable.subpanel_element{"data-url"=>edit_provider_product_path(@provider.id, product.id)} 
               #{product.name}
   
-            %ul{:style => "display:none;"}
+            %ul.fl.clear{:style => "display:none;"}
               -product.repos(product.organization.locker).each do |repo|
                 %li{:class=>'repo'}
                   .grid_6.prefix_1.la.editable.subpanel_element{"data-url"=>edit_provider_product_repository_path(@provider.id, product.id, repo.name)} #{repo.name}

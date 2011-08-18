@@ -27,20 +27,20 @@
           - else
             = @user.helptips_enabled ? _("Yes") : _("No")
       - if editable
-        %fieldset
+        %fieldset.fl.clear
           .grid_3.ra
             = label :user, :username, _("Clear Disabled Helptips:")
           .grid_5.la
             #clear_helptips{:class=>"button", "data-url"=>clear_helptips_user_path(@user.id)}
               = _("Clear")
-        %fieldset
+        %fieldset.fl.clear
           .grid_3.ra
             = label :user, :password, _("Change Password")
           .grid_5.la
             = text_field :user, :password, :id=>"password_field", :value=>"", :type=>"password"
         .grid_5.la.prefix_3
           #password_meter
-        %fieldset
+        %fieldset.fl.clear
           .grid_3.ra
             = label :user, :username, _("Confirm")
           .grid_5.la

@@ -198,7 +198,7 @@ var common = (function() {
             var orgboxapi = null;
             button.removeAttr('href');
             button.mouseup(function(switcher) {
-                box.toggle();
+                box.fadeToggle('fast');
                 button.toggleClass('active');
                 if(button.hasClass('active')){
                     if(!(box.hasClass('jspScrollable'))){
@@ -226,7 +226,7 @@ var common = (function() {
             $(document).mouseup(function(switcher) {
                 if(!($(switcher.target).parent('#switcherButton').length > 0)) {
                     button.removeClass('active');
-                    box.hide();
+                    box.fadeOut('fast');
                 }
             });
         },
