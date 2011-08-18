@@ -17,23 +17,23 @@
     .grid_9#provider
       = form_for(@provider, :html => {:multipart => true, :method => :put, :id => 'provider_edit', :remote => true}, :url => provider_path(@provider)) do |f|
   
-        %fieldset
+        %fieldset.fl.clear
           .grid_2.ra
             %label #{_("Name")}:
           .grid_5.la#provider_name{'name' => 'provider[name]', 'data-url' => provider_path(@provider.id), :class=>("editable edit_panel_element" if editable)} #{@provider[:name]}
   
-        %fieldset
+        %fieldset.fl.clear
           .grid_2.ra
             %label #{_("Description")}:
           .grid_5.la{:style => "word-wrap: break-word;", 'name' => 'provider[description]', 'data-url' => provider_path(@provider.id), :class=>("editable edit_panel_element" if editable)}<> #{@provider.description}
   
-        %fieldset
+        %fieldset.fl.clear
           .grid_2.ra
             %label #{_("Type")}:
           .grid_5.la #{@provider[:provider_type]}
   
         -if @provider.provider_type == Provider::REDHAT
-          %fieldset
+          %fieldset.fl.clear
             .grid_2.ra
               %label #{_("Repository Url")}:
             .grid_5.la.editable.edit_textfield{'name' => 'provider[repository_url]', 'data-url' => provider_path(@provider.id)} #{@provider[:repository_url]}
