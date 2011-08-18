@@ -57,16 +57,20 @@ SimpleNavigation::Configuration.run do |navigation|
     #TODO: Add correct Systems subnav items
     top_level.item :systems, _("Systems"), systems_path(), :class=>'systems' do |systems_sub|
       #TODO: tie in Registration Page (if applicable)
-      systems_sub.item :registered, _("Registered"), systems_path() do |system_sub|
+      systems_sub.item :registered, _("All"), systems_path() do |system_sub|
         if !@system.nil?
           system_sub.item :general, _("General"), edit_system_path(@system.id), :class => "navigation_element"
           system_sub.item :subscriptions, _("Subscriptions"), subscriptions_system_path(@system.id), :class => "navigation_element"
           system_sub.item :facts, _("Facts"), facts_system_path(@system.id), :class => 'navigation_element'
           system_sub.item :packages, _("Packages"), packages_system_path(@system.id), :class => "navigation_element"
-        else
-          #render tri-nav when not 2pane request
-          system_sub.item :all, _("All"), systems_path()
-          system_sub.item :env, _("Environments"), environments_systems_path()
+        end
+      end
+      systems_sub.item :env, _("By Environments"), environments_systems_path() do |env_system_sub|
+        if !@system.nil?
+          env_system_sub.item :general, _("General"), edit_system_path(@system.id), :class => "navigation_element"
+          env_system_sub.item :subscriptions, _("Subscriptions"), subscriptions_system_path(@system.id), :class => "navigation_element"
+          env_system_sub.item :facts, _("Facts"), facts_system_path(@system.id), :class => 'navigation_element'
+          env_system_sub.item :packages, _("Packages"), packages_system_path(@system.id), :class => "navigation_element"
         end
       end
       systems_sub.item :activation_keys, _("Activation Keys"), activation_keys_path do |activation_key_sub|
