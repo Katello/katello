@@ -26,8 +26,6 @@ class SyncSchedulesController < ApplicationController
     }
   end
 
-
-
   def index
 
     @organization = current_organization
@@ -35,10 +33,6 @@ class SyncSchedulesController < ApplicationController
     @products = rproducts.sort { |p1,p2| p1.name <=> p2.name }
 
     @plans = SyncPlan.where(:organization_id => current_organization.id)
-
-    for p in @products
-
-    end
 
     @products_options = { :title => _('Select Products to schedule'),
                  :col => ['name', 'plan_name'],
@@ -50,10 +44,9 @@ class SyncSchedulesController < ApplicationController
                  :col => ['name', 'interval'],
                  :create => _('Plan'),
                  :name => _('plan'),
-                :hover_text_cb => :hover_format,
+                 :hover_text_cb => :hover_format,
                  :enable_create => false,
-                :single_select => true}
-
+                 :single_select => true}
 
     respond_to do |format|
       format.html # index.html.erb
