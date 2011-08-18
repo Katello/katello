@@ -101,10 +101,6 @@ class Create(RepoAction):
         
         return os.EX_OK
 
-    def repository_name(self, name, parsedUrlPath):
-        return "%s%s" % (name, parsedUrlPath.replace("/", "_"))
-
-
 class Discovery(RepoAction):
 
     description = _('discovery repositories contained within a URL')
