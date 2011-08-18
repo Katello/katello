@@ -6,19 +6,19 @@
 = content_for :content do
   #new_user
     .grid_10#new_user
-      %fieldset
+      %fieldset.fl.clear
         .grid_2.ra
           = label :user, :username, _("Username")
         .grid_5.la
           = text_field :user, :username, :id=>"username_field", :tabindex => 1
-      %fieldset        
+      %fieldset.fl.clear
         .grid_2.ra
           = label :user, :username, _("Password")
         .grid_5.la
           = text_field :user, :username, :id=>"password_field", :type=>"password", :tabindex => 2
       .grid_5.la.prefix_2
         #password_meter             
-      %fieldset
+      %fieldset.fl.clear
         .grid_2.ra
           = label :user, :username, _("Confirm")
         .grid_5.la
