@@ -194,7 +194,7 @@ class SystemsController < ApplicationController
 
   def find_environment
     @environment = KPEnvironment.find params[:env_id] if !params[:env_id].blank?
-    @environment ||= current_organization.promotion_paths.first.first
+    @environment ||= KPEnvironment.systems_readable(current_organization).first
   end
 
   def find_system
