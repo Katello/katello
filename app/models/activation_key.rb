@@ -15,11 +15,12 @@ class ActivationKey < ActiveRecord::Base
 
   belongs_to :organization
   belongs_to :environment, :class_name => "KPEnvironment"
+  belongs_to :user
+  belongs_to :system_template
 
   has_many :key_subscriptions
   has_many :subscriptions, :class_name => "KTSubscription", :through => :key_subscriptions
 
-  has_one :system_template
 
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'key.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'key.description'
@@ -34,4 +35,42 @@ class ActivationKey < ActiveRecord::Base
   def environment_exists
     errors.add(:environment, _("id: #{environment_id} doesn't exist ")) if environment.nil?
   end
+
+  # set's up system when registering with this activation key
+  def apply_to_system(system)
+    system.environment_id = self.environment_id if self.environment_id
+    system.system_template_id = self.system_template_id if self.system_template_id
+    system.system_activation_keys.build(:activation_key => self)
+  end
+
+  def subscribe_system(system)
+    self.key_subscriptions.each do |ksub|
+      system.subscribe(ksub.subscription.subscription, ksub.allocated)
+    end
+  end
+
+  # returns list of virtual permission tags for the current user
+  def self.list_tags organization_id
+    [] #don't list tags for sync plans
+  end
+
+  def self.list_verbs global = false
+    {
+      :read_all => N_("Access all Activation Keys"),
+      :manage_all => N_("Manage all Activation Keys")
+    }.with_indifferent_access
+  end
+
+  def self.no_tag_verbs
+    ActivationKey.list_verbs.keys
+  end
+
+  def self.readable? org
+    User.allowed_to?([:read_all, :manage_all], :activation_keys, nil, org)
+  end
+
+  def self.manageable? org
+    User.allowed_to?([:manage_all], :activation_keys, nil, org)
+  end
+
 end

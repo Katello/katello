@@ -14,7 +14,7 @@ class RolesController < ApplicationController
 
   before_filter :find_role, :except => [:index, :items, :new, :create, :verbs_and_scopes]
   before_filter :authorize #call authorize after find_role so we call auth based on the id instead of cp_id
-
+  skip_before_filter :require_org
   before_filter :setup_options, :only => [:index, :items]
   helper_method :resource_types
 
@@ -107,7 +107,7 @@ class RolesController < ApplicationController
     return if @role.name == "admin"
     
     if params[:update_users]
-      if params[:update_users][:adding]
+      if params[:update_users][:adding] == "true"
         @role.users << User.find(params[:update_users][:user_id])
         @role.save!
       else
@@ -149,12 +149,14 @@ class RolesController < ApplicationController
     details= {}
     
     resource_types.each do |type, value|
-      details[type] = {}
-      details[type][:verbs] = Verb.verbs_for(type, false).collect {|name, display_name| VirtualTag.new(name, display_name)}
-      details[type][:verbs].sort! {|a,b| a.display_name <=> b.display_name}
-      details[type][:tags] = Tag.tags_for(type, params[:organization_id]).collect { |t| VirtualTag.new(t.name, t.display_name) }
-      details[type][:global] = value["global"]
-      details[type][:name] = value["name"]
+      if !value["global"]
+        details[type] = {}
+        details[type][:verbs] = Verb.verbs_for(type, false).collect {|name, display_name| VirtualTag.new(name, display_name)}
+        details[type][:verbs].sort! {|a,b| a.display_name <=> b.display_name}
+        details[type][:tags] = Tag.tags_for(type, params[:organization_id]).collect { |t| VirtualTag.new(t.name, t.display_name) }
+        details[type][:global] = value["global"]
+        details[type][:name] = value["name"]
+      end
     end
     
     render :json => details
@@ -163,18 +165,32 @@ class RolesController < ApplicationController
   def update_permission
     @permission = Permission.find(params[:permission_id])
     @permission.update_attributes(params[:permission])
-    notice _("Permission updated.")
+    notice _("Permission '#{@permission.name}' updated.")
     render :partial => "permission", :locals =>{:perm => @permission, :role=>@role, :data_new=> false}
   end
 
   def create_permission
     new_params = {:role => @role}
+    type_name = params[:permission][:resource_type_attributes][:name]
+
+    if type_name == "all"
+      new_params[:all_tags] = true
+      new_params[:all_verbs] = true
+    end
+    
+    new_params[:resource_type] = ResourceType.find_or_create_by_name(:name=>type_name)
     new_params.merge! params[:permission]
-    @perm = Permission.create! new_params
-    to_return = {}
-    add_permission_bc(to_return, @perm, false)
-    notice _("Permission created.")
-    render :json => to_return
+    
+    begin
+      @perm = Permission.create! new_params
+      to_return = { :type => @perm.resource_type.name }
+      add_permission_bc(to_return, @perm, false)
+      notice _("Permission '#{@perm.name}' created.")
+      render :json => to_return
+    rescue Exception => error
+      errors error
+      render :json=>@role.errors, :status=>:bad_request
+    end
   end
 
   def show_permission
@@ -189,7 +205,7 @@ class RolesController < ApplicationController
   def destroy_permission
     permission = Permission.find(params[:permission_id])
     permission.destroy
-    notice _("Permission removed.")
+    notice _("Permission '#{@permission.name}' removed.")
     render :json => params[:permission_id]
   end
 

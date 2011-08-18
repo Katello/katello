@@ -27,12 +27,6 @@ class UserSessionsController < ApplicationController
     end
   end
 
-  # this is called when invalid user/pass combination is submitted
-  def invalid
-    errors _("You've entered an incorrect username, password combination or account disabled, please try again."), {:persist => false}
-    redirect_to new_user_session_url
-  end
-  
   def section_id
     "loginpage"
   end  
@@ -68,7 +62,6 @@ class UserSessionsController < ApplicationController
 
   def login_user
     authenticate! :scope => :user
-    self.current_organization = Organization.first
     if logged_in?
 
       #save the hash anchor if it exsts
@@ -78,6 +71,7 @@ class UserSessionsController < ApplicationController
 
       # set the current user in the thread-local variable (before notification)
       User.current = current_user
+      self.current_organization = User.current.allowed_organizations.first
       # notice the user
       notice _("Login Successful")
       #redirect_to account_url

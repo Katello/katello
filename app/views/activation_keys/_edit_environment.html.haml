@@ -1,0 +1,24 @@
+= form_tag activation_key_path(@activation_key), :method => :post, :id => "save_env" do
+  %fieldset.promotion_paths#env_edit
+    %label #{_("Select an Environment")}:
+    = hidden_field_tag 'activation_key[environment_id]', @activation_key.environment_id
+    - unless current_organization.environments.empty?
+      - current_organization.promotion_paths.each do |path|
+        .grid_10
+          %ul.breadcrumb
+            %li
+              =link_to _('Locker'), "#", :class => :nohover
+            - for env in path
+              %li
+                - if @activation_key.environment_id == env.id
+                  %a.select_env.selected{"data-env_id" => env.id, 'data-url' => activation_key_path(@activation_key.id), "data-templates_url" => system_templates_organization_environment_path(env.organization.cp_key, env)} #{env.name}
+                - else
+                  %a.select_env{"data-env_id" => env.id, 'data-url' => activation_key_path(@activation_key.id), "data-templates_url" => system_templates_organization_environment_path(env.organization.cp_key, env)} #{env.name}
+
+  %fieldset#force_edit_system_template
+    .grid_2
+      %label #{_("System Template")}:
+    .grid_5.la
+      = select_tag 'activation_key[system_template_id]'
+
+  = button_to _("Save"), activation_key_path(@activation_key), :method => :post, :id => :save_env

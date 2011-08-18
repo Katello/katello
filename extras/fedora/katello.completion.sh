@@ -10,6 +10,13 @@ _katello_common_opts="-g -v --help
 --url --type --file --username --password --disabled"
 
 # complete functions for subcommands ($1 - current opt, $2 - previous opt)
+_katello_changeset()
+{
+  local opts="create list info update delete promote
+  ${_katello_common_opts}"
+  COMPREPLY=($(compgen -W "${opts}" -- ${1}))  
+}
+
 _katello_distribution()
 {
   local opts="info list
@@ -54,7 +61,7 @@ _katello_package()
 
 _katello_product()
 {
-  local opts="create list
+  local opts="create list synchronize promote
   ${_katello_common_opts}"
   COMPREPLY=($(compgen -W "${opts}" -- ${1}))  
 }
@@ -102,10 +109,11 @@ _katello()
 
   # top-level commands and options
   opts="-u -p -h --host --help 
-  distribution environment errata org package ping product provider repo shell system template"
+  changeset distribution environment errata org package ping product provider repo shell system template"
 
   case "${first}" in
-    distribution|\
+      changeset|\
+      distribution|\
       environment|\
       errata|\
       org|\

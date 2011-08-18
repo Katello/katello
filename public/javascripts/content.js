@@ -29,7 +29,6 @@ function fadeUpdate(fieldName, text) {
 
 $(document).ready(function() {
 
-
   // Setup initial state
   for (var i = 0; i < repo_status.length; i++) {
       var rs = repo_status[i];
@@ -39,10 +38,12 @@ $(document).ready(function() {
       }
   }
 
+  // check box collections
   $('#select_all').click(function(){$('.products input:checkbox').attr('checked',true); return false;});
   $('#select_none').click(function(){$('.products input:checkbox').attr('checked',false); return false;});
   $('#toggle_all').click(function(){$('.clickable').click(); return false;});
 
+  // start polling sync status after succesfully sync call
   $('#sync_product_form')
    .bind("ajax:success", function(evt, data, status, xhr){
        var syncs = $.parseJSON(data);
@@ -53,28 +54,29 @@ $(document).ready(function() {
    .bind("ajax:error", function(evt, xhr, status, error){
    });
   
+  // drop down arrows for parent product and child repos
   $('.products').find('ul').slideToggle();
   $('.clickable').live('click', function(){
 
       // Hide the start/stop times
       var prod_id = $(this).parent().find('input').attr('id').replace(/[^\d]+/,'');
 
-
       $(this).parent().parent().find('ul').slideToggle();
       var arrow = $(this).parent().find('a').find('img');
       if(arrow.attr("src").indexOf("collapsed") === -1){
           arrow.attr("src", "/images/icons/expander-collapsed.png");
-
       } else {
           arrow.attr("src", "/images/icons/expander-expanded.png");
       }
       return false;
   });
 
+  // if parent is checked then all children should be selected
   $('.product input:checkbox').click(function() {
     $(this).siblings().find('input:checkbox').attr('checked', this.checked);
   });
 
+  // if all children are checked, check the parent
   $('li.repo input:checkbox').click(function() {
     var td = $(this).parent().parent().parent();
     var parent_cbx = td.find('input:checkbox').first();

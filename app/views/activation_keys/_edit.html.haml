@@ -1,5 +1,11 @@
 = javascript :edit_helpers, :activation_key_edit
 
+= javascript do
+  :javascript
+    localize({
+      "edit_environment": '#{_('Edit Environment')}'
+    });
+
 = content_for :title do
   #{_("Edit Activation Key")}
 
@@ -13,15 +19,19 @@
   = help_tip_button('activation_keys_edit-help')
 
   %input#panel_element_id{:name => @activation_key.id, :type => "hidden", :value => @activation_key.id, "data-ajax_url"=>activation_key_path(@activation_key.id)}
+  %input#system_templates{ :type => "hidden", :value => @system_templates_json }
+  %input#system_templates_temp{ :type => "hidden" }
 
   #activation_key
-    .grid_8
+    = hidden_field_tag 'environment_id', @activation_key.environment_id
+
+    .grid_10
       = help_tip(_("Edit Activation Key enables you to modify the selected activation key.  This key may " + |
                  "be used during system registration.  For example, <BR/><BR/>" + |
                  "subscription-manager register --org #{@activation_key.organization.name} " + |
                  "--activationkey #{@activation_key.name}"), 'activation_keys_edit-help') |
 
-    .grid_8
+    .grid_10
       = form_for @activation_key, activation_key_path(@activation_key), :method => "put", :remote => true do |f|
   
         %fieldset.clearfix
@@ -34,17 +44,22 @@
             %label #{_("Description")}:
           .grid_5.la.editable.edit_textarea#activation_key_description{:style => "word-wrap: break-word;", 'name' => 'activation_key[description]', 'data-url' => activation_key_path(@activation_key.id)}<> #{@activation_key[:description]}
 
-        %fieldset#promotion_paths
+        %fieldset.promotion_paths
           %label #{_("Select an Environment")}:
-          = hidden_field_tag :activation_key_default_environment, @activation_key.environment_id
           - unless current_organization.environments.empty?
-            %ul
             - current_organization.promotion_paths.each do |path|
-              .grid_7.prefix_1
-                %ul.breadcrumb
+              .grid_10
+                %ul#edit_env_setup.breadcrumb_nohover{:style => 'display: none', 'data-env_url' => edit_environment_activation_key_path(@activation_key)}
                   %li
-                    =link_to _('Locker'), "#", :class => :nohover
+                    = link_to _('Locker'), "#"
                   - for env in path
                     %li
-                      %a.edit_env{"data-env_id" => env.id, 'data-url' => activation_key_path(@activation_key.id)} #{env.name}
+                      - if @activation_key.environment_id == env.id
+                        %a.selected{'data-env_id' => env.id} #{env.name}
+                      - else
+                        %a{'data-env_id' => env.id} #{env.name}
 
+        %fieldset.clearfix
+          .grid_2.ra
+            %label #{_("System Template")}:
+          .grid_5.la.editable.edit_system_template{'name' => 'activation_key[system_template_id]',  "data-url" => activation_key_path(@activation_key.id)} #{@system_template[:name] unless @system_template.nil?}

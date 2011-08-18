@@ -19,6 +19,36 @@ class Permission < ActiveRecord::Base
 
   before_save :cleanup_tags_verbs
 
+  validates :name, :presence => true
+
+  class PermissionValidator < ActiveModel::Validator
+    def validate(record)
+      if record.all_verbs? && !record.verbs.empty?
+        record.errors[:base] << N_("Cannot specify a verb if all_verbs is selected.")
+      end
+
+      if record.all_tags? && !record.tags.empty?
+        record.errors[:base] << N_("Cannot specify a tag if all_tags is selected.")
+      end
+
+      if record.all_types? && (!record.all_verbs? || !record.all_tags?)
+        record.errors[:base] << N_("Cannot specify all_types without all_tags and all_verbs")
+      end
+
+      begin
+        ResourceType.check(record.resource_type.name, record.verb_values)
+      rescue VerbNotFound => verb_error
+        record.errors[:base] << verb_error.message
+      rescue ResourceTypeNotFound => type_error
+        record.errors[:base] << type_error.message
+      end
+    end
+  end
+
+
+  validates_with PermissionValidator
+  validates_presence_of :resource_type
+
   def tag_names
     self.tags.collect {|tag| tag.name}
   end
@@ -47,7 +77,7 @@ class Permission < ActiveRecord::Base
   def to_text
     v = (all_verbs? && "any action") || verbs.collect { |v| v.verb }.join(',')
     t = (all_tags? && "all scopes") || "scopes #{tags.collect { |t| t.name }.join(',')}"
-    name = (resource_type && resource_type.name) || "all resources"
+    name = (all_types? && "all_resources") || resource_type.name
     org_id = (organization && "in organization #{organization.id}") || " across all organizations."
     "Role #{role.name}'s allowed to perform #{v} on #{t} for #{name} #{org_id}"
   end
@@ -55,7 +85,7 @@ class Permission < ActiveRecord::Base
   def to_abbrev_text
     v = (all_verbs? && "all_verbs") || "[#{verbs.collect { |v| v.verb }.join(',')}]"
     t = (all_tags? && "all_tags") || "[#{tags.collect { |t| t.name }.join(',')}]"
-    name = (resource_type && resource_type.name) || "all_resources"
+    name = (all_types? && "all_resources") || resource_type.name
     org_id = (organization && "#{organization.id}") || "all organizations"
     "#{v}, #{name}, #{t}, #{org_id}"
   end
@@ -70,14 +100,28 @@ class Permission < ActiveRecord::Base
     display_verbs.with_indifferent_access
   end
 
-  def all_types
-    resource_type.nil?
+  def all_types?
+   (!resource_type.nil?) && :all.to_s == resource_type.name
   end
 
+  def all_types= types
+    if types
+      self.all_tags=true
+      self.all_verbs=true
+      self.verbs.clear
+      self.tags.clear
+      self.resource_type = ResourceType.find_or_create_by_name(:all)
+    end
+  end
 
   private
   def cleanup_tags_verbs
     self.tags.clear if self.all_tags?
     self.verbs.clear if self.all_verbs?
   end
+
+
+
 end
+
+

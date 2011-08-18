@@ -88,7 +88,7 @@ class ApplicationController < ActionController::Base
         notice_dialog["notices"].push( _("#{self.class.helpers.link_to('Click here', notices_path)} for more details."))
       end
 
-      flash.now[level] = notice_dialog.to_json
+      flash[level] = notice_dialog.to_json
 
       if persist
         # create & store notice... but mark as 'viewed'
@@ -139,7 +139,6 @@ class ApplicationController < ActionController::Base
 
   def flash_to_headers
     return if @_response.nil? or @_response.response_code == 302
-    return unless request.xhr?
     return if flash.blank?
     [:error, :warning, :success, :message].each do |type|
       unless flash[type].nil? or flash[type].blank?

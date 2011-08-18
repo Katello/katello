@@ -77,6 +77,10 @@ class Provider < ActiveRecord::Base
   def self.list_tags org_id
     select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
+  
+  def self.tags(ids)
+    select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
+  end
 
   def self.list_verbs  global = false
     {
@@ -128,6 +132,7 @@ class Provider < ActiveRecord::Base
 
 
   def self.authorized_items org, verbs, resource = :providers
+    raise "scope requires an organization" if org.nil?
     if User.allowed_all_tags?(verbs, resource, org)
        where(:organization_id => org)
     else

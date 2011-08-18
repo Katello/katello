@@ -14,7 +14,9 @@ module LoginHelperMethods
   def login_user options={}
     if options[:mock] == false
       @user = User.create( :username => "foo-user", :password => "password", :page_size=>25 )
-      @permission = Permission.create!(:role =>@user.roles.first, :resource_type => nil)
+
+      @permission = Permission.create!(:role =>@user.roles.first, :resource_type => ResourceType.find_or_create_by_name(:all))
+
       request.env['warden'] = mock(Warden, :user => @user, :authenticate => @user, :authenticate! => @user)
       controller.stub!(:require_org).and_return({})
       return @user

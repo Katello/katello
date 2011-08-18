@@ -132,7 +132,7 @@ module Glue::Candlepin::Product
           :name => name,
           :contentUrl => path,
           :type => repo_type,
-          :label => name,
+          :label => "#{self.cp_id}_#{name}",
           :vendor => "Custom"
         }
       })
