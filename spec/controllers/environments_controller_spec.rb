@@ -41,7 +41,8 @@ describe EnvironmentsController do
      
     @locker = mock(KPEnvironment, EnvControllerTest::LOCKER)
     
-    @org = mock(Organization, EnvControllerTest::ORGANIZATION)
+    @org = new_test_org
+
     @org.stub!(:environments).and_return([@env])
     @org.environments.stub!(:first).with(:conditions => {:name => @env.name}).and_return(@env)
     @org.stub!(:locker).and_return(@locker)

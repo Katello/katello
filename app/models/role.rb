@@ -54,22 +54,6 @@ class Role < ActiveRecord::Base
     return (value =~ /%|\*/) ? value.tr_s('%*', '%') : "%#{value}%"
   end
 
-  # Create permission for given role - for more info see allow
-  #
-  # @param [Role or Array] one or more roles to allow (accepts also String for role name)
-  def self.allow(role, verb, resource_type, tags = nil)
-    raise ArgumentError, "role can't be nil" if role.nil?
-    raise ArgumentError, "verb can't be nil" if verb.nil?
-    raise ArgumentError, "Resource Type can't be nil" if verb.nil?
-    
-    roles = role.is_a?(Array) ? role : [role]
-
-    roles.each do |r|
-      allow_role = r.is_a?(String)? Role.find_or_create_by_name(r) : r
-      allow_role.allow(verb, resource_type, tags)
-    end
-  end
-
   def self.non_self_roles
     #gotta be a better way to do this, but others wouldn't work
     Role.all(:conditions=>{"users.own_role_id"=>nil}, :include=> :owner)
@@ -77,67 +61,6 @@ class Role < ActiveRecord::Base
 
   def self_role_for_user
     User.where(:own_role_id => self.id).first
-  end
-
-  # create permission with verb for the role or
-  # create permission with verb, type and tag(s) for the role
-  def allow(verb, resource_type, tags = nil, org = nil)
-
-
-    raise ArgumentError, "verb can't be nil" if verb.nil?
-    raise ArgumentError, "Resource Type can't be nil" if resource_type.nil?
-
-    #throw error if using old format, shouldn't overload methods like this
-    raise ArgumentError, "Role#allow cannot take a hash as a verb" if verb.is_a? Hash
-
-    verbs = verb.is_a?(Array) ? verb : [verb]
-
-
-    #resource_type = nil_to_string resource_type
-    tags = [] if tags.nil?
-    tags = [tags] unless tags.is_a? Array
-
-    # create permissions
-    Permission.transaction do
-      p = Permission.new(:role => self, :organization => org)
-
-      if resource_type == :all
-        p.all_verbs = true
-        p.all_tags = true
-      end
-      
-      verbs.each do |verb|
-        p.verbs << Verb.find_or_create_by_verb(verb)
-      end
-      tags.each do |tag|
-        p.tags << Tag.find_or_create_by_name(tag)
-      end
-      p.resource_type = ResourceType.find_or_create_by_name(resource_type) unless resource_type.nil?
-      
-      p.save!
-      Rails.logger.info "Permission created: #{p.to_text}"
-    end
-  end
-
-  def disallow(verb, resource_type, tags = nil, org = nil)
-    raise ArgumentError, "verb can't be nil" if verb.nil?
-    raise ArgumentError, "tag(s) can't be nil" if tags.nil?
-    raise ArgumentError, "Resource Type can't be nil" if verb.nil?
-    
-    verbs = verb.is_a?(Array) ? verb : [verb]
-
-    #tags = nil_to_string tags
-
-    # delete permissions
-    Permission.transaction do
-      Permission.select('DISTINCT(permissions.id)').joins(:resource_type, :verbs, :tags).where(
-        :role_id => id, :organization_id => (org && org.id),
-        :resource_types => { :name => resource_type },
-        :tags => { :name => tags },
-        :verbs => { :verb => verbs }).find_each do |p|
-          Permission.destroy(p.id)
-      end
-    end
   end
 
   # returns the candlepin role (for RHSM)
