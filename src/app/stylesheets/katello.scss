@@ -528,10 +528,14 @@ nav {
         &>ul {
           position: absolute;
           display: none;
+          background: $subnav_shadow_img;
+          background-position: 0 14px;
           background-color: #FFF;
           @include box-shadow(2px 2px 2px rgba(0,0,0,0.4));
           z-index: 101;
           top: 35px;
+          height: 35px;
+          @include border-bottom-lr-radius(3px);
           li {
             a {
               &.selected {
