@@ -41,7 +41,7 @@ class Glue::Pulp::Repo
   end
 
   def destroy
-    Pulp::Repository.destroy(repo_id(name))
+    Pulp::Repository.destroy(id)
   end
 
   def packages
