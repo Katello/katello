@@ -80,7 +80,8 @@ class ActivationKeysController < ApplicationController
         end
       end
     end
-    render :partial=>"subscriptions", :layout => "tupane_layout", :locals=>{:akey=>@activation_key, :subscriptions => subscriptions, :consumed => consumed}
+    render :partial=>"subscriptions", :layout => "tupane_layout", :locals=>{:akey=>@activation_key, :subscriptions => subscriptions,
+                                                                            :consumed => consumed, :editable=>ActivationKey.manageable?(current_organization)}
   end
 
   def update_subscriptions
@@ -126,7 +127,8 @@ class ActivationKeysController < ApplicationController
     templates[''] = no_template
     @system_templates_json = ActiveSupport::JSON.encode(templates)
     @system_template = SystemTemplate.find(@activation_key.system_template_id) unless @activation_key.system_template_id.nil?
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key}
+    render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key,
+                                                                       :editable=>ActivationKey.manageable?(current_organization)}
   end
 
   def edit_environment

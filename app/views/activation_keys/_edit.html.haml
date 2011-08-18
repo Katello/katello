@@ -7,10 +7,11 @@
     });
 
 = content_for :title do
-  #{_("Edit Activation Key")}
+  #{_("Activation Key")}
 
 = content_for :remove_item do
-  = link_to _("Remove Activation Key"), activation_key_path(@activation_key.id), :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
+  - if editable
+    = link_to _("Remove Activation Key"), activation_key_path(@activation_key.id), :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
 
 = content_for :navigation do
   = render_navigation(:expand_all => true, :level => 3)
@@ -37,19 +38,19 @@
         %fieldset.clearfix
           .grid_2.ra
             %label #{_("Name")}:
-          .grid_5.la.editable.edit_panel_element#activation_key_name{'name' => 'activation_key[name]', 'data-url' => activation_key_path(@activation_key.id)} #{@activation_key[:name]}
+          .grid_5.la#activation_key_name{'name' => 'activation_key[name]', :class => ("editable edit_panel_element" if editable), 'data-url' => activation_key_path(@activation_key.id)} #{@activation_key[:name]}
 
         %fieldset.clearfix
           .grid_2.ra
             %label #{_("Description")}:
-          .grid_5.la.editable.edit_textarea#activation_key_description{:style => "word-wrap: break-word;", 'name' => 'activation_key[description]', 'data-url' => activation_key_path(@activation_key.id)}<> #{@activation_key[:description]}
+          .grid_5.la#activation_key_description{:style => "word-wrap: break-word;", 'name' => 'activation_key[description]', :class => ("editable edit_textarea" if editable), 'data-url' => activation_key_path(@activation_key.id)}<> #{@activation_key[:description]}
 
         %fieldset.promotion_paths
           %label #{_("Select an Environment")}:
           - unless current_organization.environments.empty?
             - current_organization.promotion_paths.each do |path|
               .grid_10
-                %ul#edit_env_setup.breadcrumb_nohover{:style => 'display: none', 'data-env_url' => edit_environment_activation_key_path(@activation_key)}
+                %ul#env.breadcrumb_nohover{:style => 'display: none', :class => ("edit_env_setup" if editable), 'data-env_url' => edit_environment_activation_key_path(@activation_key)}
                   %li
                     = link_to _('Locker'), "#"
                   - for env in path
@@ -62,4 +63,4 @@
         %fieldset.clearfix
           .grid_2.ra
             %label #{_("System Template")}:
-          .grid_5.la.editable.edit_system_template{'name' => 'activation_key[system_template_id]',  "data-url" => activation_key_path(@activation_key.id)} #{@system_template[:name] unless @system_template.nil?}
+          .grid_5.la{'name' => 'activation_key[system_template_id]',  :class => ("editable edit_system_template" if editable), "data-url" => activation_key_path(@activation_key.id)} #{@system_template.nil? ? no_template : @system_template[:name]}
