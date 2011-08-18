@@ -7,7 +7,7 @@
         .grid_10
           %ul.breadcrumb
             %li
-              =link_to _('Locker'), "#", :class => :nohover
+              =link_to _('Locker'), "#", :class => "crumb-nohover"
             - for env in path
               %li
                 - if @activation_key.environment_id == env.id

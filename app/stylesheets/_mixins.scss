@@ -135,16 +135,42 @@
   margin-top: -1px;
 }
 
-@mixin nohover {
- .nohover {
-    cursor: default;
-    &:hover {
-      background: $breadcrumbbg_color !important;
-      color: #000;
-      text-shadow: none;
+@mixin crumb-disable-hover {
+  &:hover {
+    background: $breadcrumbbg_color !important;
+    color: #000;
+    text-shadow: none;
 
+    &:after { border-left-color: $breadcrumbbg_color !important; }
+  }
+}
 
-      &:after { border-left-color: $breadcrumbbg_color !important; }
+@mixin crumb-disable-hover-selected {
+  &:hover {
+    background: $listhover_color !important; color: #FFF; @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
+    &:after {
+      border-left-color: $listhover_color !important;
     }
+  }
+}
+
+@mixin crumb-nohover {
+  .crumb-nohover {
+    // crumb without any hover effect (color, cursor...etc)
+    cursor: default;
+    @include crumb-disable-hover;
+  }
+  .crumb-nohover-selected {
+    // a selected crumb without any hover effect (color, cursor...etc)
+    cursor: default;
+    @include crumb-disable-hover-selected;
+  }
+  .crumb-editable {
+    // a crumb that is editable... hover effect disabled, but cursor will be a hand
+    @include crumb-disable-hover;
+  }
+  .crumb-editable-selected {
+    // a selected crumb that is editable... hover effect disabled, but cursor will be a hand
+    @include crumb-disable-hover-selected;
   }
 }
