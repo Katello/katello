@@ -367,7 +367,7 @@ var roleActions = (function($){
         getPermissionDetails = function(){
             var id = current_organization.split('_')[1];
 
-            if( !roles_breadcrumb[current_organization].permission_details ){
+            if( !roles_breadcrumb[current_organization].permission_details && current_organization !== '' && current_organization !== undefined ){
                 $('#add_permission').addClass('disabled');
                 $.ajax({
                     type    : "GET",
@@ -798,6 +798,7 @@ var pageActions = (function($){
                     };
                     
             panel.switch_content_cb = function(){
+                $.bbq.removeState("role_edit");
                 $('#panel').removeClass('panel-custom');
                 ROLES.actionBar.reset();
             };
