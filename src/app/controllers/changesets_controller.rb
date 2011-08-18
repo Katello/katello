@@ -255,7 +255,9 @@ class ChangesetsController < ApplicationController
     elsif params[:env_id]
       @environment = KPEnvironment.find(params[:env_id])
     else
-      @environment ||= current_organization.locker.successor || current_organization.locker
+      #didnt' find an environment, just do the first the user has access to
+      list = KPEnvironment.changesets_readable(current_organization)
+      @environment ||= list.first || current_organization.locker
     end
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor
