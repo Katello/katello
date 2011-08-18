@@ -38,29 +38,29 @@
         %fieldset.clearfix
           .grid_2.ra
             %label #{_("Name")}:
-          .grid_5.la#activation_key_name{'name' => 'activation_key[name]', :class => ("editable edit_panel_element" if editable), 'data-url' => activation_key_path(@activation_key.id)} #{@activation_key[:name]}
+          .grid_7.la#activation_key_name{'name' => 'activation_key[name]', :class => ("editable edit_panel_element" if editable), 'data-url' => activation_key_path(@activation_key.id)} #{@activation_key[:name]}
 
         %fieldset.clearfix
           .grid_2.ra
             %label #{_("Description")}:
-          .grid_5.la#activation_key_description{:style => "word-wrap: break-word;", 'name' => 'activation_key[description]', :class => ("editable edit_textarea" if editable), 'data-url' => activation_key_path(@activation_key.id)}<> #{@activation_key[:description]}
+          .grid_7.la#activation_key_description{:style => "word-wrap: break-word;", 'name' => 'activation_key[description]', :class => ("editable edit_textarea" if editable), 'data-url' => activation_key_path(@activation_key.id)}<> #{@activation_key[:description]}
 
         %fieldset.promotion_paths
           %label #{_("Select an Environment")}:
           - unless current_organization.environments.empty?
             - current_organization.promotion_paths.each do |path|
               .grid_10
-                %ul#env.breadcrumb_nohover{:style => 'display: none', :class => ("edit_env_setup" if editable), 'data-env_url' => edit_environment_activation_key_path(@activation_key)}
+                %ul#env.breadcrumb{:style => 'display: none', :class => ("edit_env_setup" if editable), 'data-env_url' => edit_environment_activation_key_path(@activation_key)}
                   %li
-                    = link_to _('Locker'), "#"
+                    = link_to _('Locker'), "#", :class => (editable ? "crumb-editable" : "crumb-nohover")
                   - for env in path
                     %li
                       - if @activation_key.environment_id == env.id
-                        %a.selected{'data-env_id' => env.id} #{env.name}
+                        %a.selected{'data-env_id' => env.id, :class => (editable ? "crumb-editable-selected" : "crumb-nohover-selected")} #{env.name}
                       - else
-                        %a{'data-env_id' => env.id} #{env.name}
+                        %a{'data-env_id' => env.id, :class => (editable ? "crumb-editable" : "crumb-nohover")} #{env.name}
 
         %fieldset.clearfix
           .grid_2.ra
             %label #{_("System Template")}:
-          .grid_5.la{'name' => 'activation_key[system_template_id]',  :class => ("editable edit_system_template" if editable), "data-url" => activation_key_path(@activation_key.id)} #{@system_template.nil? ? no_template : @system_template[:name]}
+          .grid_7.la{'name' => 'activation_key[system_template_id]',  :class => ("editable edit_system_template" if editable), "data-url" => activation_key_path(@activation_key.id)} #{@system_template.nil? ? no_template : @system_template[:name]}

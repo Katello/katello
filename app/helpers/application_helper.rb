@@ -143,7 +143,7 @@ module ApplicationHelper
       classes << "path_link"
     else
       # if locker isn't clickable, disable the hover effect
-      classes << "nohover"
+      classes << "crumb-nohover"
     end
 
     if curr_env.id == selected_env.id
