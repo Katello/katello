@@ -20,15 +20,9 @@ class SyncSchedulesController < ApplicationController
   end
 
   def rules
-    apply_test = lambda{
-      provider_list = @products.collect{|prod| prod.provider}.uniq
-      provider_list.each{|prov| return false if !prov.syncable?}
-      return true
-    }
-
     {
       :index => lambda{Provider.any_readable?(current_organization)},
-      :apply => apply_test
+      :apply => current_organization.syncable?
     }
   end
 
