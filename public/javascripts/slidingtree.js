@@ -143,6 +143,8 @@ var sliding_tree = function(tree_id, options) {
             $.bbq.pushState(bbq);        
         },
         reset_breadcrumb = function(id) {
+            console.log(settings.breadcrumb);
+            console.log(id);
             var trail = settings.breadcrumb[id].trail,
                 crumbs = trail;
             
@@ -203,7 +205,6 @@ var sliding_tree = function(tree_id, options) {
         hash_change = function() {
             var newContent = $.bbq.getState(settings.bbq_tag) || settings.default_tab;
             if (settings.current_tab != newContent) {
-                reset_breadcrumb(newContent);
                 prerender(newContent);
             }
         },
@@ -281,8 +282,8 @@ var sliding_tree = function(tree_id, options) {
         setupSearch();
     }
 
-    $(window).bind( 'hashchange', hash_change);
-    $(window).trigger( 'hashchange' );
+    $(window).unbind('hashchange.' + tree_id).bind( 'hashchange.' + tree_id, hash_change);
+    $(window).trigger( 'hashchange.' + tree_id );
 
     container.find('.slide_link').live('click', content_clicked);
 
