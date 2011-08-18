@@ -223,7 +223,7 @@ var common = (function() {
             form.mouseup(function() {
                 return false;
             });
-            $(this).mouseup(function(switcher) {
+            $(document).mouseup(function(switcher) {
                 if(!($(switcher.target).parent('#switcherButton').length > 0)) {
                     button.removeClass('active');
                     box.hide();
@@ -236,7 +236,6 @@ var common = (function() {
                 return false;
             });
             $('#orgfilter_input').live('change, keyup', function(){
-                console.log("something");
                 if ($.trim($(this).val()).length >= 2) {
                     $("#orgbox a:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
                     $("#orgbox a:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
