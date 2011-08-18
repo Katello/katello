@@ -90,7 +90,7 @@ class Product < ActiveRecord::Base
     org.syncable? ? (joins(:provider).where('providers.organization_id' => org)) : where("0=1")
   end
 
-  READ_PERM_VERBS = [:read, :create, :update, :sync, :delete]
+  READ_PERM_VERBS = [:read, :create, :update, :delete]
 
 
 end
