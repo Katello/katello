@@ -22,10 +22,11 @@ class PromotionsController < ApplicationController
   def rules
     prod_test = lambda{ @product.provider.readable? and @environment.contents_readable? }
     {
-      :show => [[:read, :promote, :modify_changesets, :read_changesets, :promote_changesets], :environment,  @environment.id],
+      :show => [[:read_contents, :manage_changesets, :read_changesets, :promote_changesets], :environments,  @environment.id, current_organization],
       :packages => prod_test,
       :repos => prod_test,
-      :errata => prod_test
+      :errata => prod_test,
+      :distributions => prod_test
     }
   end
 
@@ -36,14 +37,23 @@ class PromotionsController < ApplicationController
   end
 
   def show
+    
     access_envs = accessible_environments
     setup_environment_selector(current_organization, access_envs)
-    @products = @environment.products.reject{|p| p.repos(@environment).empty?}.sort{|a,b| a.name <=> b.name}
+    @products = @environment.products.readable(current_organization)
+    @products = @products.reject{|p| p.repos(@environment).empty?}.sort{|a,b| a.name <=> b.name}
+    
 
     @changesets = @next_environment.working_changesets if @next_environment
     @changeset_product_ids = @changeset.products.collect { |p| p.cp_id } if @changeset
     @changeset_product_ids ||= []
-    render :show, :locals=>{:accessible_envs=> access_envs}
+    locals = {
+      :accessible_envs=> access_envs,
+      :manage_changesets => @next_environment.nil? ? false : @next_environment.changesets_manageable?,
+      :promote_changesets => @next_environment.nil? ? false : @next_environment.changesets_promotable?,
+      :read_changesets => @next_environment.nil? ? false : @next_environment.changesets_readable?
+    }
+    render :show, :locals=>locals
   end
 
 
@@ -149,8 +159,9 @@ class PromotionsController < ApplicationController
 
   def find_environment
     @organization = current_organization
-    @environment = KPEnvironment.first(:conditions => {:name=>params[:env_id], :organization_id=>@organization.id})
+    @environment = KPEnvironment.where(:name=>params[:env_id]).where(:organization_id=>@organization.id).first
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
+    print @environment.inspect
     @next_environment ||= @environment.successor
     @product = Product.find(params[:product_id]) if params[:product_id]
   end

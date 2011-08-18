@@ -14,6 +14,16 @@ class DistributionsController < ApplicationController
 
   before_filter :lookup_distribution
 
+  def rules
+    #TODO, only allow the user to see a distro if they have rights to a product its in
+    test = lambda{true}
+    {
+      :show => test,
+      :filelist => test,
+    }
+  end
+
+
   def show
     render :partial=>"show", :layout => "tupane_layout"
   end

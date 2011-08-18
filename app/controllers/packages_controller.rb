@@ -16,6 +16,19 @@ class PackagesController < ApplicationController
   before_filter :package_details_auth, :only=> [:filelist, :changelog, :dependencies]
   
   before_filter :lookup_package
+
+
+  def rules
+    #TODO, only allow the user to see a package if they have rights to a product its in
+    test = lambda{true}
+    {
+      :show => test,
+      :filelist => test,
+      :changelog => test,
+      :dependencies => test
+    }
+  end
+
 	
 	def show
 		render :partial=>"show", :layout => "tupane_layout"

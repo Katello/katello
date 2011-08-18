@@ -16,6 +16,18 @@ class ErrataController < ApplicationController
   before_filter :details_auth, :only=> [:packages]
   
   before_filter :lookup_errata
+
+
+  def rules
+    test = lambda{true}
+    {
+        :show => test,
+        :packages => test
+    }
+
+  end
+
+
   def show
     render :partial=>"show"
   end

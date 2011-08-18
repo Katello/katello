@@ -281,7 +281,6 @@ var promotion_page = (function($){
                         $("#changeset_loading").css("z-index", -1);
                         current_changeset = changeset_obj(data);
                         reset_page();
-                        $("#delete_changeset").removeClass("disabled");
                         callback();
                     }});
 
@@ -351,8 +350,10 @@ var promotion_page = (function($){
          *    //TODO make more efficient by identify exactly which page we are on and only reseting those buttons
          */
         reset_page = function() {
-            if (current_changeset) {
-                if (current_product) {
+            if (current_changeset && permissions.manage_changesets) {
+
+                if (current_product ) {
+
                     var product = current_changeset.getProducts()[current_product];
                     if( product !== undefined && product.all !== undefined ){
                         disable_all(subtypes);
@@ -367,7 +368,7 @@ var promotion_page = (function($){
                             }
                         });
                     }
-                } else {
+                } else{
                     var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
                     buttons.html(i18n.add).removeClass("remove_product").addClass("add_product").removeClass('disabled');
                     $.each(current_changeset.getProducts(), function(index, product) {
@@ -394,7 +395,14 @@ var promotion_page = (function($){
             
             if (current_changeset) {
                 status.show();
-                $("#changeset_actions > div").removeClass("disabled");
+                $("#sliding_tree_actionbar > div").removeClass("disabled");
+                if (!permissions.manage_changesets) {
+                    $('#edit_changeset').addClass("disabled");
+                    $('#delete_changeset').addClass("disabled");
+                    $('#review_changeset').addClass("disabled");
+                }
+
+
                 if (current_changeset.is_new()) {
                     cancel_btn.hide();
                     
@@ -405,6 +413,8 @@ var promotion_page = (function($){
                     $(".content_add_remove").show();
                     $('#review_changeset > span').html(i18n.review);
                     $('#promote_changeset').addClass("disabled");
+
+
                 }
                 else { //in review stage
                     cancel_btn.show();
@@ -415,8 +425,15 @@ var promotion_page = (function($){
                     }
                     $("#cslist").addClass("locked");
                     $(".content_add_remove").hide();
+
                     $('#review_changeset > span').html(i18n.cancel_review);
-                    $('#promote_changeset').removeClass("disabled");
+
+                    if (permissions.promote_changesets) {
+                        $('#promote_changeset').removeClass("disabled");
+                    }
+                    else {
+                        $('#promote_changeset').addClass("disabled");
+                    }
                 }
             }
             else {
@@ -429,8 +446,12 @@ var promotion_page = (function($){
                 cancel_btn.hide();
                 changesetEdit.close();
 
-                $("#changeset_actions > div").addClass("disabled");
+                $("#sliding_tree_actionbar > div").addClass("disabled");
                 
+            }
+
+            if (!permissions.manage_changesets) {
+                disable_all(types);
             }
 
             draw_status();
@@ -440,7 +461,7 @@ var promotion_page = (function($){
         jQuery.each(all_types, function(index, type){
             var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
             buttons.hide().html(i18n.add);
-        });        
+        });
     },
     checkUsersInResponse = function(users) {
       if (users.length > 0) {
@@ -486,7 +507,6 @@ var promotion_page = (function($){
     add_dependencies= function() {
 
        if (current_changeset === undefined) {
-           console.log("returning false");
            return false;
        }
        $.each(current_changeset.getProducts(), function(product_id, product) {
@@ -663,10 +683,14 @@ var changeset_obj = function(data_struct) {
             }
         },
         review: function(on_success, on_error) {
-            change_state("review", on_success, on_error);
+            var success = function() {
+                on_success();
+                dep_solve();
+            }
+
+            change_state("review", success, on_error);
             changeset_breadcrumb['changeset_' + id].is_new = false;
             promotion_page.add_dependencies();
-            dep_solve();
         },
         cancel_review: function(on_success, on_error) {
             change_state("new", on_success, on_error);
@@ -934,7 +958,6 @@ var promotionsRenderer = (function(){
             if( hash === 'changesets'){
                 var post_wait_function = function() {
                     promotion_page.set_changeset(undefined);
-                    $("#delete_changeset").addClass("disabled");
                     render_cb(templateLibrary.changesetsList(changeset_breadcrumb));
                 };
                 //any pending updates, if so wait!
@@ -1094,7 +1117,7 @@ var templateLibrary = (function(){
         },
         listItem = function(id, name, type, product_id, showButton) {
             var anchor = "";
-            if ( showButton ){
+            if ( showButton && permissions.manage_changesets){
                 anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"'
                                 + 'data-type="' + type + '" data-product_id="' + product_id +  '" data-id="' + id + '">';
                             anchor += i18n.remove + "</a>";
@@ -1140,7 +1163,7 @@ var templateLibrary = (function(){
         },
         productListItem = function(changeset_id, product_id, name, provider, slide_link, showButton){
             var anchor = "";
-            if ( showButton ){
+            if ( showButton  && permissions.manage_changesets){
                 anchor = '<a class="st_button content_add_remove fr remove_product" data-display_name="' +
                     name +'" data-id="' + product_id + '" data-type="product" id="add_remove_product_' + product_id +
                     '" data-product_id="' + product_id +
