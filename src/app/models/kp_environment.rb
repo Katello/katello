@@ -152,7 +152,15 @@ class KPEnvironment < ActiveRecord::Base
   #Permissions
   scope :changesets_readable, lambda {|org| authorized_items(org, [:promote_changesets, :manage_changesets, :read_changesets])}
   scope :content_readable, lambda {|org| authorized_items(org, [:read_contents])}
-  scope :systems_readable, lambda{|org| authorized_items(org, [:read_systems])}
+  scope :systems_readable, lambda{|org|
+    if  User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, org)
+      where(:organization_id => org)
+    else
+      authorized_items(org, [:read_systems])
+    end
+  }
+
+
 
   def changesets_promotable?
     User.allowed_to?([:promote_changesets], :environments, self.id,
@@ -179,6 +187,8 @@ class KPEnvironment < ActiveRecord::Base
         User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, self.organization)
   end
 
+  
+
   def self.authorized_items org, verbs, resource = :environments
     raise "scope requires an organization" if org.nil?
     if User.allowed_all_tags?(verbs, resource, org)
@@ -187,8 +197,6 @@ class KPEnvironment < ActiveRecord::Base
       where("environments.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
     end
   end
-
-
 
   def self.list_verbs global = false
     {
