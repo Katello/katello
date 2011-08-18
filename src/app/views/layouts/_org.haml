@@ -6,10 +6,11 @@
   %div{:style => "clear:both"}
   #switcherBox
     #switcherForm
-      #orgbox.scroll-pane
-        - for org in user.allowed_organizations
-          - if org.name == current_organization.name
-            = link_to current_organization.name, set_org_user_session_path(:org_id=>org.id), :method=>"POST", :class=>"selected fl clear"
-          - else
-            = link_to org.name, set_org_user_session_path(:org_id=>org.id), :method=>"POST", :class=>"fl clear"
+      #orgfilter
+        %form.filter
+          %input{ :name => "f", :type => "input", :placeholder => "Filter...", :id=>"orgfilter_input"}
+          %button.filter_button #{_("Filter")}
+      #orgbox{"data-url"=>allowed_orgs_user_session_path}
+        /Orgs pulled from above data-url dynamically each click.
+        %img{:src=>"/images/spinner.gif"}
 / orgbox Ends Here
