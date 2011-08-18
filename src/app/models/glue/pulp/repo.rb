@@ -41,7 +41,7 @@ class Glue::Pulp::Repo
   end
 
   def destroy
-    Pulp::Repository.destroy(repo_id(name))
+    Pulp::Repository.destroy(id)
   end
 
   def packages
@@ -191,15 +191,15 @@ class Glue::Pulp::Repo
   end
 
   def organization
-    Organization.find(groupid[2]["org:".size..-1].to_i)
+    Organization.find((get_groupid_param 'org').to_i)
   end
 
   def environment
-    KPEnvironment.find(groupid[1]["env:".size..-1].to_i)
+    KPEnvironment.find((get_groupid_param 'env').to_i)
   end
 
   def product
-    Product.find(groupid[0]["product:".size..-1].to_i)
+    Product.find((get_groupid_param 'product').to_i)
   end
 
   def self.find(id)
@@ -214,6 +214,16 @@ class Glue::Pulp::Repo
     Hash[*array_of_repos.collect { |r|
       [r.id, r]
     }.flatten]
+  end
+
+  private
+  def get_groupid_param name
+    idx = self.groupid.index do |s| s.start_with? name+':' end
+    if idx >= 0
+      return self.groupid[idx].split(':')[1]
+    else
+      return nil
+    end
   end
 
 end

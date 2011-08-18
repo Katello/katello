@@ -196,7 +196,7 @@ class Create(ProductAction):
 
     def __init__(self):
         super(Create, self).__init__()
-        self.createRepo = repo.Create()
+        self.discoverRepos = repo.Discovery()
 
     description = _('create new product to a custom provider')
 
@@ -242,10 +242,10 @@ class Create(ProductAction):
         if url == None:
             return os.EX_OK
             
-        repourls = self.createRepo.discover_repositories(url)
+        repourls = self.discoverRepos.discover_repositories(url)
         self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
-        selectedurls = self.createRepo.select_repositories(repourls, assumeyes)        
-        self.createRepo.create_repositories(prod["cp_id"], prod["name"], selectedurls)
+        selectedurls = self.discoverRepos.select_repositories(repourls, assumeyes)        
+        self.discoverRepos.create_repositories(prod["cp_id"], prod["name"], selectedurls)
 
         return os.EX_OK
 

@@ -5,7 +5,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.4
+Version:       0.1.5
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -64,6 +64,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug 18 2011 Mike McCune <mmccune@redhat.com> 0.1.5-1
+ - periodic retag of the cli package
 * Mon Aug 01 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.4-1
 - spec - rpmlint cleanup
 - Added api support for activation keys
