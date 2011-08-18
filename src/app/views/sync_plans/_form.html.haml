@@ -1,29 +1,29 @@
 -# parameters: form
 - raise ArgumentError, "Sync Plan form requires :form be passed in :locals" unless local_assigns[:form]
 
-%fieldset
-  %label.fl.ra.sp #{_("Name")}:
-  .grid_5.la
+%fieldset.fl.clear
+  %label.grid_2 #{_("Name")}:
+  .grid_5.la#plan_name
     = form.text_field :name
 
-%fieldset
-  %label.fl.ra.sp #{_("Description")}:
-  .grid_5.la
+%fieldset.fl.clear
+  %label.grid_2 #{_("Description")}:
+  .grid_5.la#plan_description
     = form.text_field :description
 
-%fieldset
-  %label.fl.ra.sp #{_("Interval")}:
-  .grid_5.la
+%fieldset.fl.clear
+  %label.grid_2 #{_("Interval")}:
+  .grid_5.fl.la#plan_interval
     = select_tag('sync_plan[interval]', options_for_select(SyncPlan::TYPES, @plan.interval))
 
-%fieldset
-  %label.fl.ra.sp #{_("Start Date")}:
-  .grid_5.la
+%fieldset.fl.clear
+  %label.grid_2 #{_("Start Date")}:
+  .grid_5.fl.la#plan_date
     = form.text_field :plan_date, :id => 'datepicker'
 
-%fieldset
-  %label.fl.ra.sp #{_("Time")}:
-  .grid_5.la
+%fieldset.fl.clear
+  %label.grid_2 #{_("Time")}:
+  .grid_5.fl.la#plan_time
     = form.text_field :plan_time, :id => 'timepicker'
 
 

@@ -1,6 +1,9 @@
 = content_for :title do
   #{_("New Activation Key")}
 
+= content_for :navigation do
+  / pretty
+
 = content_for :content do
   .grid_10#new_key
     = form_tag activation_keys_path, :method => "post", :id => "new_activation_key" do
