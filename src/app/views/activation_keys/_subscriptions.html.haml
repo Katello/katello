@@ -1,7 +1,7 @@
 = javascript :activation_key_subscriptions, :edit_helpers
 
 = content_for :title do
-  #{_("Edit Activation Key")}
+  #{_("Activation Key")}
 
 = content_for :remove_item do
   %a.remove_item.remove_key{"data-id"=>@activation_key.id ,"data-url"=>activation_key_path(@activation_key.id), "data-confirm-text"=>_('Are you sure?')}
@@ -29,5 +29,5 @@
                 #{sub.name}
               %td.available
                 #{sub.available}
-              %td.editable.edit_number{'id' => sub.sub, "data-url" => update_subscriptions_activation_key_path(@activation_key.id), "name" => "activation_key[allocated]"}
+              %td{'id' => sub.sub, :class => ("editable edit_number" if editable), "data-url" => update_subscriptions_activation_key_path(@activation_key.id), "name" => "activation_key[allocated]"}
                 #{sub.allocated}

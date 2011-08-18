@@ -29,13 +29,14 @@ class EnvironmentsController < ApplicationController
   def rules
     manage_rule = lambda{@organization.environments_manageable?}
     view_rule = lambda{@organization.readable?}
+    view_templates_rule = lambda{ActivationKey.readable?(current_organization)}
     {
       :new => manage_rule,
       :edit => view_rule,
       :create => manage_rule,
       :update => manage_rule,
       :destroy => manage_rule,
-      :system_templates => view_rule
+      :system_templates => view_templates_rule
     }
   end
 
