@@ -652,7 +652,7 @@ legend {
 
 /* search forms */
 
-.search {
+.search, .filter {
   position: absolute;
   button {
     position: absolute;
@@ -671,8 +671,14 @@ legend {
     float: right; /* webkit adds an extra padding and makes the widget narrower */
     width: 220px;
   }
+  input[type="input"] {
+    float: right; /* webkit adds an extra padding and makes the widget narrower */
+    width: 220px;
+    @include border-radius(16px);
+    padding-left: 10px;
+  }
 }
-.search_button {
+.search_button, .filter_button {
     background: $search_icon_white;
     position: relative;
     width: 16px; height: 16px;
@@ -683,6 +689,25 @@ legend {
     padding: 0;
     &:hover {
         background-position: 0 -16px;
+    }
+}
+.org {
+    .filter {
+        position: absolute;
+        width: 230px;
+        height: 18px;
+        left: 25px;
+    }
+    #orgfilter {
+        margin-bottom: 33px;
+    }
+    #orgfilter_input {
+        width: 230px;
+        margin-bottom: 3px;
+    }
+    .filter_button {
+        margin: 4px 0 0 0;
+        top: 0;
     }
 }
 
@@ -1827,7 +1852,7 @@ fieldset {
   @include border-radius(3px);
   padding: 10px 13px;
   margin: 0;
-  height: 100px;
+  height: 220px;
   overflow-y: auto;
   width: 223px;
 }
