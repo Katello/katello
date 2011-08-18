@@ -29,6 +29,7 @@ describe "activation_keys/_edit.html.haml" do
     view.stub(:help_tip_button)
     view.stub(:help_tip)
     view.stub(:render_navigation)
+    view.stub(:editable).and_return(true)
 
     view.stub_chain(:current_organization, :environments).and_return([])
   end
