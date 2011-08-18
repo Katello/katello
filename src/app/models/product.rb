@@ -69,10 +69,8 @@ class Product < ActiveRecord::Base
     return sync_plan.name if sync_plan
     N_('None')
   end
-  # returns list of virtual permission tags for the current user
-  def self.list_tags
-    select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
-  end
+
+  #Permissions
 
   scope :readable, lambda {|org| authorized_items(org, READ_PERM_VERBS)}
   scope :syncable, lambda {|org| sync_items(org)}
@@ -93,5 +91,6 @@ class Product < ActiveRecord::Base
   end
 
   READ_PERM_VERBS = [:read, :create, :update, :sync, :delete]
+
 
 end
