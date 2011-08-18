@@ -21,12 +21,8 @@ class PromotionsController < ApplicationController
 
   def rules
     show_test = lambda {
-      to_ret = User.allowed_to?([:read_contents], :environments,  @next_environment.id, current_organization)
-      if @next_environment
-        to_ret = to_ret || User.allowed_to?([:manage_changesets, :read_changesets, :promote_changesets],
-                                            :environments,  @next_environment.id, current_organization)
-      end
-      to_ret
+      to_ret = @environment.contents_readable?
+      to_ret = to_ret || @next_environment.changesets_readable? if @next_environment
     }
 
     prod_test = lambda{ @product.provider.readable? and @environment.contents_readable? }
@@ -171,7 +167,6 @@ class PromotionsController < ApplicationController
     @organization = current_organization
     @environment = KPEnvironment.where(:name=>params[:env_id]).where(:organization_id=>@organization.id).first
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
-    print @environment.inspect
     @next_environment ||= @environment.successor
     @product = Product.find(params[:product_id]) if params[:product_id]
   end
