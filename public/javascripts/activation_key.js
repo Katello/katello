@@ -131,7 +131,7 @@ var activation_key = (function() {
             var paths = $('.promotion_paths');
             // clear the previously selected env
             var old_env = paths.find('.selected');
-            old_env.removeClass('selected');
+            old_env.removeClass('selected crumb-editable-selected').addClass('crumb-editable');
 
             // if the new env is on the same path as the old, highlight it.. otherwise, hide the current path,
             // locate the new path, show it and highlight the new env on that path
@@ -145,7 +145,7 @@ var activation_key = (function() {
                 path.show();
             }
             // highlight the newly chosen environment
-            new_env.addClass('selected');
+            new_env.removeClass('crumb-editable').addClass('selected crumb-editable-selected');
             // save the id of the env selected
             $('#environment_id').attr('value', env_id);
 
@@ -237,9 +237,9 @@ var activation_key = (function() {
             var path = data.closest('.promotion_paths');
 
             // clear any previous selected environments
-            path.find(".selected").removeClass("selected");
+            path.find(".selected").removeClass('selected');
             // highlight the selected environment
-            data.addClass("selected");
+            data.addClass('selected');
             // save the id of the env selected
             path.find("#activation_key_environment_id").attr('value', data.attr('data-env_id'));
         }
