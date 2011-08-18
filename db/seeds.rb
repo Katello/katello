@@ -10,7 +10,8 @@ superadmin_role = Role.find_or_create_by_name(
   :name => 'Administrator', 
   :description => 'Super administrator with all access.')
 
-Permission.create!(:role => superadmin_role)
+Permission.create!(:name=> "super-admin-perm", :role => superadmin_role, :all_types => true)
+
 
 anonymous_role = Role.find_or_create_by_name(
   :name => 'Anonymous',

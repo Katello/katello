@@ -16,9 +16,10 @@ class EnvironmentsController < ApplicationController
   require 'active_support/json'
 
   skip_before_filter :authorize
-  before_filter :find_organization
+  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create, :system_templates]
   before_filter :authorize
-  before_filter :find_environment, :only => [:show, :edit, :update, :destroy]
+  before_filter :find_environment, :only => [:show, :edit, :update, :destroy, :system_templates]
+
   around_filter :catch_exceptions
 
   def section_id
@@ -33,10 +34,10 @@ class EnvironmentsController < ApplicationController
       :edit => view_rule,
       :create => manage_rule,
       :update => manage_rule,
-      :destroy => manage_rule
+      :destroy => manage_rule,
+      :system_templates => view_rule
     }
   end
-
 
   # GET /environments/new
   def new
@@ -57,7 +58,6 @@ class EnvironmentsController < ApplicationController
     @selected = @environment.prior.nil? ? env_labels[""] : env_labels[@environment.prior.id]
     render :partial=>"edit", :layout => "tupane_layout", :locals=>{:editable=> @organization.environments_manageable?}
   end
-
 
   # POST /environments
   def create
@@ -102,6 +102,11 @@ class EnvironmentsController < ApplicationController
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>edit_organization_path(@organization.cp_key)}
   end
 
+  # GET /environments/1/system_templates
+  def system_templates
+    render :json => @environment.system_templates
+  end
+
   protected
 
   def find_organization
@@ -131,6 +136,5 @@ class EnvironmentsController < ApplicationController
     envs += @organization.environments.reject {|item| !item.successor.nil?}
     envs
   end
-
 
 end

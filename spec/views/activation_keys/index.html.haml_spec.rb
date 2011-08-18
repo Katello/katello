@@ -51,4 +51,8 @@ describe "activation_keys/index.html.haml" do
     render
   end
 
+  it "renders a placeholder for the environment edit dialog" do
+    render
+    assert_select "div#environment_edit_dialog", {:count => 1}
+  end
 end

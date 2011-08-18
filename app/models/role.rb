@@ -12,7 +12,8 @@
 
 class Role < ActiveRecord::Base
   include Authorization
-  has_and_belongs_to_many :users
+  has_many :roles_users
+  has_many :users, :through => :roles_users
   has_many :permissions, :dependent => :destroy,:inverse_of =>:role, :class_name=>"Permission"
   has_one :owner, :class_name => 'User', :foreign_key => "own_role_id"
   has_many :search_tags, :class_name => 'Tag'
@@ -81,8 +82,10 @@ class Role < ActiveRecord::Base
   # create permission with verb for the role or
   # create permission with verb, type and tag(s) for the role
   def allow(verb, resource_type, tags = nil, org = nil)
+
+
     raise ArgumentError, "verb can't be nil" if verb.nil?
-    raise ArgumentError, "Resource Type can't be nil" if verb.nil?
+    raise ArgumentError, "Resource Type can't be nil" if resource_type.nil?
 
     #throw error if using old format, shouldn't overload methods like this
     raise ArgumentError, "Role#allow cannot take a hash as a verb" if verb.is_a? Hash
@@ -96,7 +99,13 @@ class Role < ActiveRecord::Base
 
     # create permissions
     Permission.transaction do
-      p = Permission.create!(:role => self, :organization => org)
+      p = Permission.new(:role => self, :organization => org)
+
+      if resource_type == :all
+        p.all_verbs = true
+        p.all_tags = true
+      end
+      
       verbs.each do |verb|
         p.verbs << Verb.find_or_create_by_verb(verb)
       end
@@ -104,6 +113,7 @@ class Role < ActiveRecord::Base
         p.tags << Tag.find_or_create_by_name(tag)
       end
       p.resource_type = ResourceType.find_or_create_by_name(resource_type) unless resource_type.nil?
+      
       p.save!
       Rails.logger.info "Permission created: #{p.to_text}"
     end

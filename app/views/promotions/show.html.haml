@@ -16,9 +16,11 @@
       "no_errata": "#{_('No errata exist in this changeset.')}",
       "no_package": "#{_('No packages exist in this changeset.')}",
       "no_repo": "#{_('No repositories exist in this changeset.')}",
+      "no_distributions": "#{_('No distributions exist in this changeset.')}",
       "errata": "#{_("Errata")}",
       "package": "#{_("Packages")}",
       "repo": "#{_("Repositories")}",
+      "distribution": "#{_('distributions')}",
       "viewing": '#{_('currently editing this changeset')}',
       "review": '#{_("Review")}',
       "cancel_review": '#{_("Cancel Review")}',
@@ -32,6 +34,8 @@
       "errata_plural": '#{_("Errata")}',
       "repo_singular": '#{_("Repository")}',
       "repo_plural": '#{_("Repositories")}',
+      "distribution_singular": "#{_('Distribution')}",
+      "distribution_plural": "#{_('Distributions')}",
       "changeset_empty": '#{_("Changeset is empty.")}',
       "summary": '#{_("Summary:")}',
       "loading_deps": '#{_("Loading dependencies.")}',
@@ -64,7 +68,7 @@
                 'exist in the next environment, you may promote other types of content. Once ' + |
                 'you have created a change set, click the "Promote" button to commit it to the next environment.'))   |
 .grid_16
-  = environment_selector(:url_proc=>lambda {|args|  promotions_path(args[:organization].name, args[:environment].name, :next_env_id=>(args[:next_environment].id if args[:next_environment] and args[:environment].locker?) )})
+  = environment_selector(:url_proc=>breadcrumb_url_proc,  :accessible_envs=>accessible_envs)
 
 .grid_16
   #container

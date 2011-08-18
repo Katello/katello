@@ -7,7 +7,7 @@
 
 -if defined? envsys
   .grid_16
-    = environment_selector(:locker_clickable=>false, :url_proc => lambda {|a| environments_systems_path(:env_id =>a[:environment].id )})
+    = environment_selector(:locker_clickable=>false, :accessible_envs=>accessible_envs,  :url_proc => lambda {|a| environments_systems_path(:env_id =>a[:environment].id )})
 
 .grid_16.tall#main
   = two_panel(@systems, @panel_options)

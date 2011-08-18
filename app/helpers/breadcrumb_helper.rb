@@ -120,6 +120,11 @@ module BreadcrumbHelper
        #product_repos
        add_crumb_node!(bc, repo_bc_id(prod), promotion_repos_path(@organization.cp_key, @environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
                        _("Repos"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
+
+     #product_distributions
+     add_crumb_node!(bc, distribution_bc_id(prod), promotion_distributions_path(@organization.cp_key, @environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
+                     _("Distributions"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
+              
      end   
      bc.to_json
     end
@@ -143,6 +148,11 @@ module BreadcrumbHelper
     def changeset_id cs
       return cs.id if cs
     end
+
+    def distribution_bc_id product
+      "distribution_#{product.id}"
+    end
+
   end
   
   module RolesBreadcrumbs
@@ -162,9 +172,13 @@ module BreadcrumbHelper
                       {:client_render => true}, { :count => 0})
       } if @organizations
       
-      @role.users.each{ |user|
+      User.all.each{ |user|
         add_crumb_node!(bc, user_bc_id(user), "", user.username, ['roles', 'role_users'],
-                      {:client_render => true})
+                      {:client_render => true}, { :has_role => false })
+      }
+      
+      @role.users.each{ |user|
+        bc[user_bc_id(user)][:has_role] = true
       }
       
       @role.permissions.each{ |perm|
@@ -175,23 +189,33 @@ module BreadcrumbHelper
     end
     
     def add_permission_bc bc, perm, adjust_count
-      if perm.resource_type.global?
-                  add_crumb_node!(bc, permission_global_bc_id(perm), "", perm.id, ['roles', 'role_permissions', 'global'],
+      global = perm.resource_type.global?
+      type = perm.resource_type.display_name
+      if global
+        add_crumb_node!(bc, permission_global_bc_id(perm), "", perm.id, ['roles', 'role_permissions', 'global'],
                     { :client_render => true }, 
-                    { :global => perm.resource_type.global?, :type =>  perm.resource_type.name,
+                    { :global => global, :type => type,
                       :name => perm.name, :description => perm.description, 
-                      :verbs => perm.verbs, :tags => perm.tags })
+                      :verbs => perm.verbs.collect {|verb| VirtualTag.new(verb.name, verb.display_name(perm.resource_type.name, global))}, 
+                      :tags => perm.tags.collect { |t| t.formatted(perm.resource_type.name) }})
         if adjust_count
           bc["global"][:count] += 1
         end
       else
         add_crumb_node!(bc, permission_bc_id(perm.organization, perm), "", perm.id, ['roles', 'role_permissions', organization_bc_id(perm.organization)],
                     { :client_render => true }, 
-                    { :organization => "organization_#{perm.organization_id}", :global => perm.resource_type.global?,
+                    { :organization => "organization_#{perm.organization_id}", 
+                      :global => global, :type =>  type,
                       :name => perm.name, :description => perm.description, 
-                      :type =>  perm.resource_type.name, :verbs => perm.verbs, :tags => perm.tags })
+                      :verbs => perm.verbs.collect {|verb| VirtualTag.new(verb.name, verb.display_name(perm.resource_type.name, global))}, 
+                      :tags => perm.tags.collect { |t| t.formatted(perm.resource_type.name) }})
         if adjust_count
           bc[organization_bc_id(perm.organization)][:count] += 1
+        end
+        if type == "All"
+          if !bc[organization_bc_id(perm.organization)].nil?
+            bc[organization_bc_id(perm.organization)][:full_access] = true
+          end
         end
       end
     end
