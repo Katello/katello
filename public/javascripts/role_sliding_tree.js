@@ -375,7 +375,9 @@ var roleActions = (function($){
                     cache   : false,
                     dataType: 'json',
                     success : function(data){
-                        roles_breadcrumb[current_organization].permission_details = data;
+                        if( roles_breadcrumb[current_organization] ){
+                            roles_breadcrumb[current_organization].permission_details = data;
+                        }
                         $('#add_permission').removeClass('disabled');
                     }
                 });
@@ -431,6 +433,8 @@ var roleActions = (function($){
         remove_permission = function(element){
             var id = element.attr('data-id');
             
+            element.html(i18n.removing);
+            
             $.ajax({
                type     : "DELETE",
                url      : "/roles/" + $('#role_id').val() + "/permission/" + id.split('_')[2] + "/destroy_permission/",
@@ -449,6 +453,11 @@ var roleActions = (function($){
         edit_user = function(element, adding){
             var submit_data = { update_users : { adding : adding, user_id : element.attr('data-id').split('_')[1] }};
 
+            if( adding ){
+                element.html(i18n.adding);
+            } else {
+                element.html(i18n.removing);
+            }
             $.ajax({
                type     : "PUT",
                url      : "/roles/" + $('#role_id').val(),

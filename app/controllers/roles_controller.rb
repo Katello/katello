@@ -205,7 +205,7 @@ class RolesController < ApplicationController
   def destroy_permission
     permission = Permission.find(params[:permission_id])
     permission.destroy
-    notice _("Permission '#{@permission.name}' removed.")
+    notice _("Permission '#{permission.name}' removed.")
     render :json => params[:permission_id]
   end
 
