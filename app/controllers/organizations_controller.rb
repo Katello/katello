@@ -72,8 +72,7 @@ class OrganizationsController < ApplicationController
       @organization.save!
       notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
       # TODO: example - create permission for the organization
-      #current_user.role.first.allow 'show', 'organization', "org_name:#{@organization.name}"
-    rescue Exception => error 
+    rescue Exception => error
       errors error
       print "\n\n\n\n", error.to_s
       Rails.logger.info error.backtrace.join("\n")
@@ -114,7 +113,7 @@ class OrganizationsController < ApplicationController
     if current_organization == @organization
       errors [_("Could not delete organization '#{params[:id]}'."),  _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
 
-      render :text => "The current organization cannot be deleted. Please switch to a different organization before deleting.", :status=>:bad_request and return
+      render :text => "The current organization cannot be deleted. Please switch to a different organization before deleting.", :status => :bad_request and return
     elsif Organization.count > 1
       @id = @organization.id
       @name = @organization.name

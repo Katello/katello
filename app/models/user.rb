@@ -241,18 +241,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  # Create permission for the user's own role - for more info see Role.allow
-  def allow(verb, resource_type, tags = nil)
-    raise ArgumentError, "user has no own role" if own_role.nil? or not own_role.is_a? Role
-    own_role.allow(verb, resource_type, tags)
-  end
-
-  # Delete permission for the user's own role - for more info see Role.allow
-  def disallow(verb, resource_type, tags)
-    raise ArgumentError, "user has no own role" if own_role.nil? or not own_role.is_a? Role
-    own_role.disallow(verb, resource_type, tags)
-  end
-
   def allowed_organizations
     #test for all orgs
     perms = Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").

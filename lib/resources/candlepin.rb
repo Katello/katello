@@ -46,24 +46,6 @@ module Candlepin
     # /candlepin by default
     self.url_prefix = URI.parse(AppConfig.candlepin.url).path
 
-    # POST /candlepin/owners/ - create new owner
-    after_post('/owners/') do |match, request, reply|
-      name = JSON.parse(reply)['key']
-      verbs = [:create, :read, :update, :delete]
-      User.current.allow(verbs, :owner, "owner_#{name}")
-    end
-
-    # DELETE /candlepin/owners/ - delete owner
-    before_delete('/owners/:name') do |match, request, reply|
-      name = match[1]
-      User.allowed_to_or_error?(:destroy, :owner, "owner_#{name}")
-    end
-
-    after_delete('/owners/:name') do |match, request, reply|
-      name = match[1]
-      verbs = [:create, :read, :update, :delete]
-      User.current.disallow(verbs, :owner, "owner_#{name}")
-    end
   end
 
   class CandlepinResource < ::HttpResource
