@@ -711,17 +711,6 @@ var changeset_obj = function(data_struct) {
     }
 };
 
-//make jQuery Contains case insensitive
-$.expr[':'].Contains = function(a, i, m) {
-  return $(a).text().toUpperCase()
-      .indexOf(m[3].toUpperCase()) >= 0;
-};
-$.expr[':'].contains = function(a, i, m) {
-  return $(a).text().toUpperCase()
-      .indexOf(m[3].toUpperCase()) >= 0;
-};
-
-
 //doc ready
 var registerEvents = function(){
 

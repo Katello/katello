@@ -165,5 +165,4 @@ module ApplicationHelper
   def get_new_notices
     {:new_notices=>current_user.pop_notices}
   end
-
 end

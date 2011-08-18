@@ -47,6 +47,10 @@ class UserSessionsController < ApplicationController
     notice _("Logout Successful"), {:persist => false}
     redirect_to root_url
   end
+
+  def allowed_orgs
+    render :partial=>"/layouts/allowed_orgs", :locals =>{:user=>current_user}
+  end
   
   def set_org
     orgs = current_user.allowed_organizations
