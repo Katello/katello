@@ -203,7 +203,7 @@ Src::Application.routes.draw do
   root :to => "user_sessions#new"
 
   match '/login' => 'user_sessions#new'
-  match '/logout' => 'user_sessions#destroy'
+  match '/logout' => 'user_sessions#destroy', :via=>:post
   match '/user_session/logout' => 'user_sessions#destroy'
   match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
 
