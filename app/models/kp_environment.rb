@@ -168,7 +168,7 @@ class KPEnvironment < ActiveRecord::Base
   end
 
   def changesets_readable?
-    User.allowed_to?([:manage_changesets, :read_changesets], :environments,
+    User.allowed_to?([:manage_changesets, :read_changesets, :promote_changesets], :environments,
                               self.id, self.organization)
   end
 
