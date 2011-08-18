@@ -16,7 +16,7 @@
 from katello.client.api.base import KatelloAPI
 
 class ActivationKeyAPI(KatelloAPI):
-    
+
     def activation_keys_by_organization(self, orgId, keyName=None):
         path = "/api/organizations/%s/activation_keys/" % orgId
         return self.server.GET(path, {} if keyName == None else {"name": keyName})[1]
@@ -24,36 +24,33 @@ class ActivationKeyAPI(KatelloAPI):
     def activation_keys_by_environment(self, envId):
         path = "/api/environments/%s/activation_keys/" % envId
         return self.server.GET(path)[1]
-        
+
     def activation_key(self, keyId):
         path = "/api/activation_keys/%s/" % keyId
         return self.server.GET(path)[1]
-        
+
     def create(self, envId, name, description, templateId=None):
         keyData = {
             "name": name,
             "description": description
         }
-        
+
         if templateId != None:
             keyData["system_template_id"] = templateId
-        
+
         path = "/api/environments/%s/activation_keys/" % envId
         return self.server.POST(path, {'activation_key': keyData})[1]
-        
+
     def update(self, keyId, environmentId, name, description, templateId):
         keyData = {}
         keyData = self.update_dict(keyData, "environment_id", environmentId)
         keyData = self.update_dict(keyData, "name", name)
         keyData = self.update_dict(keyData, "description", description)
         keyData = self.update_dict(keyData, "system_template_id", templateId)
-        
+
         path = "/api/activation_keys/%s/" % keyId
         return self.server.PUT(path, {'activation_key': keyData})[1]
-        
+
     def delete(self, keyId):
         path = "/api/activation_keys/%s/" % keyId
         return self.server.DELETE(path)[1]
-        
-        
-

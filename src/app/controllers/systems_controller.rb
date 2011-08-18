@@ -17,10 +17,9 @@ class SystemsController < ApplicationController
 
   before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments]
 
-  ENV_ACTIONS = [:environment, :env_items]
-  skip_before_filter :authorize, :only => ENV_ACTIONS
-  before_filter :find_environment, :only => ENV_ACTIONS
-  before_filter :authorize, :only => ENV_ACTIONS
+  skip_before_filter :authorize
+  before_filter :find_environment, :only => [:environments, :env_items]
+  before_filter :authorize
 
   before_filter :setup_options, :only => [:index, :items, :environments]
 
@@ -49,8 +48,6 @@ class SystemsController < ApplicationController
     }
   end
 
-
-
   def index
     begin
       @systems = System.search_for(params[:search]).where(:environment_id => current_organization.environments).limit(current_user.page_size)
@@ -64,18 +61,21 @@ class SystemsController < ApplicationController
   end
 
   def environments
+    accesible_envs = KPEnvironment.systems_readable(current_organization)
+
+
     @panel_options[:ajax_scroll] = env_items_systems_path()
     begin
 
       @systems = []
 
-      setup_environment_selector(current_organization)
+      setup_environment_selector(current_organization, accesible_envs)
       if @environment
         @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size) 
         retain_search_history
         sort_columns(COLUMNS,@systems) if params[:order]
       end
-      render :index, :locals=>{:envsys => 'true'}
+      render :index, :locals=>{:envsys => 'true', :accessible_envs=> accesible_envs}
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
       @systems = System.search_for ''
@@ -116,9 +116,40 @@ class SystemsController < ApplicationController
     end
   end
   
+  
+  def random rng, length = 8
+    o =  rng.map{|i| i.to_a}.flatten;  
+    (0..length-1).map{ o[rand(o.length)]  }.join
+  end
+
+  def rand_alpha length = 8
+    random [('a'..'m'),('A'..'M')], length
+  end
+  def rand_alpha_2ndhalf length = 8
+    random [('n'..'z'),('n'..'Z')], length
+  end
+  def rand_num length = 6
+    random [(0..9)], length
+  end
   def packages
-    packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    #packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    packages = []
+    25.times do
+      arch = ["x86_64","i686", "noarch"].choice
+      packages << OpenStruct.new(:nvrea=>"#{rand_alpha}-0.1.49-1.git.146.c#{rand_num}.fc15.#{arch}", :arch =>arch)
+    end
+    packages = packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
     render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages}
+  end
+
+  def more_packages
+    packages = []
+    25.times do
+      arch = ["x86_64","i686", "noarch"].choice
+      packages << OpenStruct.new(:nvrea=>"#{rand_alpha_2ndhalf}-0.1.49-1.git.146.c#{rand_num}.fc15.#{arch}", :arch =>arch)
+    end
+    packages = packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    render :partial=>"more_packages", :locals=>{:system=>@system, :packages => packages}
   end
   
   def edit

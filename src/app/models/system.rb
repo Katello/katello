@@ -26,6 +26,10 @@ class System < ActiveRecord::Base
   include AsyncOrchestration
 
   belongs_to :environment, :class_name => "KPEnvironment", :inverse_of => :systems
+  belongs_to :system_template
+
+  has_many :system_activation_keys, :dependent => :destroy
+  has_many :activation_keys, :through => :system_activation_keys
 
   validates :environment, :presence => true, :non_locker_environment => true
   validates :name, :presence => true, :no_trailing_space => true
@@ -66,18 +70,18 @@ class System < ActiveRecord::Base
 
   
   def readable?
-   User.allowed_to?(*[[:read_systems, :update_systems, :delete_systems], :organizations, self.organization.id]) ||
-      User.allowed_to?(*[[:read_systems, :update_systems, :delete_systems], :environment, self.environment.id])
+   User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, self.organization) ||
+      User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environment, self.environment.id, self.organization)
   end
 
   def editable?
-   User.allowed_to?(*[[:read_systems], :organizations, self.organization.id]) ||
-      User.allowed_to?(*[[:read_systems], :environment, self.environment.id])
+   User.allowed_to?(*[[:read_systems], :organizations, nil,  self.organization.id]) ||
+      User.allowed_to?(*[[:read_systems], :environment, self.environment.id, self.organization])
   end
 
   def deletable?
-   User.allowed_to?(*[[:delete_systems], :organizations, self.organization.id]) ||
-      User.allowed_to?(*[[:delete_systems], :environment, self.environment.id])
+   User.allowed_to?(*[[:delete_systems], :organizations, nil,  self.organization.id]) ||
+      User.allowed_to?(*[[:delete_systems], :environment, self.environment.id, self.organization])
   end
 
 

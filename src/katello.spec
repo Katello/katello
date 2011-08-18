@@ -1,12 +1,12 @@
 %define ruby_sitelib %(ruby -rrbconfig -e "puts Config::CONFIG['sitelibdir']")
 %define gemdir %(ruby -rubygems -e 'puts Gem::dir' 2>/dev/null)
 
-%global homedir %{_libdir}/%{name}
+%global homedir %{_datarootdir}/%{name}
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.59
+Version:	      0.1.63
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -42,6 +42,10 @@ Requires:       rubygem(scoped_search) >= 2.3.1
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
+
+# <workaround> for 714167 - undeclared dependencies (regin & multimap)
+Requires:       rubygem(regin)
+# </workaround>
 
 Requires(pre):  shadow-utils
 Requires(preun): chkconfig
@@ -190,6 +194,55 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Aug 15 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.63-1
+- 714167 - undeclared dependencies (regin & multimap)
+- Revert "714167 - broken dependencies is F14"
+- 725495 - katello service should return a valid result
+
+* Mon Aug 15 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.62-1
+- 714167 - broken dependencies is F14
+- CLI - show last sync status in repo info and status
+- Import manifest for custom provider - friendly error message
+- better code coverage for changeset api controller
+- adding the correct route for package profile update
+- new (better?) logo
+- adding sysvinit script permission check for schema.rb
+- allowing users to override rake setup denial
+- Moved jquery.ui.tablefilter.js into the jquery/plugins dir to conform with
+  convention.
+- Working packages scrollExpand (morePackages).
+- Semi-working packages page.
+- System Packages scrolling work.
+- Currently not working packages scrolling.
+- System Packages - filter.
+- fix for broken changeset controller spec tests
+- now logging both stdout and stderr in the initdb.log
+- forcing users not to run rake setup in prod mode
+- changeset cli - both environment id and name are displayed in lisitng and
+  info
+- fox for repo repo promotion
+- fixed spec tests after changes in validation of changesets
+- fixed typo in model changeset_erratum
+- changesets - can't add packs/errata from repo that has not been promoted yet
+- changesets - fix for packages and errata removal
+
+* Fri Aug 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.61-1
+- rpm in /usr/share/katello - introducing KATELLO_DATA_DIR
+
+* Fri Aug 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.60-1
+- katello rpm now installs to /usr/share/katello
+- fixing cancel sync DELETE action call
+- fixed api for listing products
+- changesets - products required by packages/errata/repos are no longer being
+  promoted
+- changeset validations - can't add items from product that has not been
+  promoted yet
+- 727627 - Fix for not being able to go to Sync page.
+- final solution for better RestClient exception messages
+- only relevant logs are rotated now
+- Have the rake task emit wiki markup as well
+- added option to update system's location via python client
+
 * Wed Aug 10 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.59-1
 - improving katello-reset-dbs script
 - Fixes for failing activation_keys and organization tests.

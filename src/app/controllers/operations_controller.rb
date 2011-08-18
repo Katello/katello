@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class OperationsController < ApplicationController
-
+  skip_before_filter :require_org
   def rules
     {
       :index => lambda{ User.any_readable? or Role.any_readable?}

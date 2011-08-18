@@ -2,33 +2,39 @@
   #{_("New Activation Key")}
 
 = content_for :content do
-  .grid_8#new_key
+  .grid_10#new_key
     = form_tag activation_keys_path, :method => "post", :id => "new_activation_key" do
       %fieldset
         .grid_2.ra
           %label #{_("Name")}:
         .grid_5.la
-          = text_field_tag :activation_key_name, params[:name], :size => "25", :tabindex => 1
+          = text_field_tag 'activation_key[name]', params[:name], :size => "25", :tabindex => 1
+
       %fieldset
         .grid_2.ra
           %label #{_("Description")}:
         .grid_5.la
-          = text_area_tag :activation_key_description, params[:description], :size => "32x4", :tabindex => 2
+          = text_area_tag 'activation_key[description]', params[:description], :size => "32x4", :tabindex => 2
 
-      %fieldset#promotion_paths
-        = hidden_field_tag :activation_key_default_environment
+      %fieldset.promotion_paths
+        = hidden_field_tag 'activation_key[environment_id]'
         %label #{_("Select an Environment")}:
         - unless current_organization.environments.empty?
-          %ul
           - current_organization.promotion_paths.each do |path|
-            .grid_8
+            .grid_10
               %ul.breadcrumb
                 %li
                   =link_to _('Locker'), "#", :class => :nohover
                 - for env in path
                   %li
-                    %a.select_env{"data-env_id" => env.id} #{env.name}
-  
+                    %a.select_env{"data-env_id" => env.id, "data-templates_url" => system_templates_organization_environment_path(env.organization.cp_key, env)} #{env.name}
+
+      %fieldset#system_templates
+        .grid_2.ra
+          %label #{_("System Template")}:
+        .grid_4.la
+          = select_tag 'activation_key[system_template_id]', options_for_select({no_template => ''})
+
       .grid_6.ra
         = button_to _("Save"), {:action => "create", :controller => "activation_keys"}, :method => :post, :id => :activation_key_save, :tabindex => 3
 

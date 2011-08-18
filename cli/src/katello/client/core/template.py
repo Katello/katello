@@ -162,7 +162,7 @@ class Import(TemplateAction):
         orgName = self.get_option('org')
         envName = self.get_option('env')
         tplPath = self.get_option('file')
-        
+
         try:
             f = open(get_abs_path(tplPath))
         except:
@@ -223,7 +223,7 @@ class Create(TemplateAction):
                 return os.EX_OK
             else:
                 print _("Could not create template [ %s ]") % template['name']
-                return os.EX_DATAERR                
+                return os.EX_DATAERR
         else:
             return os.EX_DATAERR
 
@@ -408,7 +408,7 @@ class Promote(TemplateAction):
 
         result = run_spinner_in_bg(wait_for_async_task, [task])
 
-        if result['state'] == 'finished':    
+        if result['state'] == 'finished':
             print _("Template [ %s ] promoted" % tplName)
             return os.EX_OK
         else:

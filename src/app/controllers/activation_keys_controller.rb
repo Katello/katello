@@ -12,15 +12,39 @@
 
 class ActivationKeysController < ApplicationController
   include AutoCompleteSearch
+  include ActivationKeysHelper
 
   before_filter :require_user
-  before_filter :find_activation_key, :only => [:show, :edit, :update, :destroy, :subscriptions, :update_subscriptions]
+  before_filter :find_activation_key, :only => [:show, :edit, :edit_environment, :update, :destroy, :subscriptions, :update_subscriptions]
+  before_filter :authorize #after find_activation_key, since the key is required for authorization
   before_filter :panel_options, :only => [:index, :items]
 
   respond_to :html, :js
 
   def section_id
     'systems'
+  end
+
+  def rules
+    read_test = lambda{ActivationKey.readable?(current_organization)}
+    manage_test = lambda{ActivationKey.manageable?(current_organization)}
+    {
+      :index => read_test,
+      :items => read_test,
+      :show => read_test,
+
+      :new => manage_test,
+      :create => manage_test,
+
+      :edit => read_test,
+      :edit_environment => read_test,
+      :update => manage_test,
+
+      :subscriptions => read_test,
+      :update_subscriptions => manage_test,
+
+      :destroy => manage_test
+    }
   end
 
   def index
@@ -45,21 +69,48 @@ class ActivationKeysController < ApplicationController
   end
 
   def subscriptions
-    consumed = @activation_key.subscriptions.collect { |s| s.subscription }
+    consumed = @activation_key.subscriptions
     subscriptions = reformat_subscriptions(Candlepin::Owner.pools current_organization.cp_key)
-    subscriptions.sort! {|a,b| a.sub <=> b.sub}
-    render :partial=>"subscriptions", :layout => "tupane_layout", :locals=>{:akey=>@activation_key, :all_subs => subscriptions, :consumed => consumed}
+    subscriptions.sort! {|a,b| a.name <=> b.name}
+    for sub in subscriptions
+      sub.allocated = 0
+      for consume in consumed
+        if consume.subscription == sub.sub
+          sub.allocated = consume.key_subscriptions[0].allocated 
+        end
+      end
+    end
+    render :partial=>"subscriptions", :layout => "tupane_layout", :locals=>{:akey=>@activation_key, :subscriptions => subscriptions, :consumed => consumed}
   end
 
   def update_subscriptions
-    subs = (params.has_key? :activation_key) ? params[:activation_key][:consumed_sub_ids] : []
-    if !subs.nil? and @activation_key
-      @activation_key.subscriptions = subs.collect { |s| KTSubscription.create!(:subscription => s) } 
+    subscription = KTSubscription.where(:subscription => params[:subscription_id])[0]
+    allocated = params[:activation_key][:allocated]
+
+    if subscription.nil? and @activation_key and allocated != "0"
+      KTSubscription.create!(:subscription => params[:subscription_id], :key_subscriptions => [KeySubscription.create!(:allocated=> allocated, :activation_key => @activation_key)])
       notice _("Activation Key subscriptions updated.")
-      render :nothing =>true
+      render :text => escape_html(allocated)
+    elsif subscription and @activation_key
+      key_sub = KeySubscription.where(:activation_key_id => @activation_key.id, :subscription_id => subscription.id)[0]
+
+      if key_sub
+        if allocated != "0"
+          key_sub.allocated = allocated
+          key_sub.save!
+        else
+          key_sub.destroy
+        end
+      else
+        KeySubscription.create!(:activation_key_id => @activation_key.id, :subscription_id => subscription.id, :allocated => allocated)
+      end
+      render :text => escape_html(allocated)
+      notice _("Activation Key subscriptions updated.")
     else
-      errors _("Unable to update subscriptions.")
-      render :nothing =>true
+      if allocated != "0"
+        errors _("Unable to update subscriptions.")
+      end
+      render :text => escape_html(allocated)
     end
   end
 
@@ -69,12 +120,25 @@ class ActivationKeysController < ApplicationController
   end
 
   def edit
+    # Create a hash of the system templates associated with the currently assigned default environment and
+    # convert to json for use in the edit view
+    templates = Hash[ *@activation_key.environment.system_templates.collect { |p| [p.id, p.name] }.flatten]
+    templates[''] = no_template
+    @system_templates_json = ActiveSupport::JSON.encode(templates)
+    @system_template = SystemTemplate.find(@activation_key.system_template_id) unless @activation_key.system_template_id.nil?
     render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key}
+  end
+
+  def edit_environment
+    render :partial => "edit_environment"
   end
 
   def create
     begin
-      @activation_key = ActivationKey.create!(:name => params[:activation_key_name], :description => params[:activation_key_description], :environment_id => params[:activation_key_default_environment], :organization_id => current_organization)
+      @activation_key = ActivationKey.create!(params[:activation_key]) do |key|
+        key.organization = current_organization
+        key.user = current_user
+      end
       notice _("Activation key '#{@activation_key['name']}' was created.")
       render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name']}
 
@@ -86,7 +150,6 @@ class ActivationKeysController < ApplicationController
   end
 
   def update
-    
     result = params[:activation_key].nil? ? "" : params[:activation_key].values.first
 
     begin
@@ -94,13 +157,22 @@ class ActivationKeysController < ApplicationController
         result = params[:activation_key][:description] = params[:activation_key][:description].gsub("\n",'')
       end
 
+      if !params[:activation_key][:system_template_id].nil? and params[:activation_key][:system_template_id].blank?
+        params[:activation_key][:system_template_id] = nil
+      end
+
       @activation_key.update_attributes!(params[:activation_key])
+
       notice _("Activation key '#{@activation_key["name"]}' was updated.")
 
-      respond_to do |format|
-        format.html { render :text => escape_html(result) }
-        format.js
+      unless params[:activation_key][:system_template_id].nil? or params[:activation_key][:system_template_id].blank?
+        # template is being updated.. so return template name vs id...
+        system_template = SystemTemplate.find(@activation_key.system_template_id)
+        result = system_template.name
       end
+
+      render :text => escape_html(result)
+
     rescue Exception => error
       errors error
 
@@ -149,6 +221,7 @@ class ActivationKeysController < ApplicationController
       :create => _('Key'), 
       :name => _('key'),
       :ajax_scroll => items_activation_keys_path()}
+    @panel_options[:enable_create] = false if !ActivationKey.manageable?(current_organization)
   end
 
   private
@@ -159,8 +232,9 @@ class ActivationKeysController < ApplicationController
     subscriptions = []
     all_subs.each do |s|
       cp = OpenStruct.new
-      cp.sub = s["subscriptionId"]
+      cp.sub = s["id"]
       cp.name = s["productName"]
+      cp.available = s["quantity"]
       subscriptions << cp if !subscriptions.include? cp 
     end
     subscriptions

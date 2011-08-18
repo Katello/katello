@@ -15,6 +15,6 @@ class KeySubscription < ActiveRecord::Base
   include Authorization
 
   belongs_to :activation_key
-  belongs_to :subscription
+  belongs_to :subscription, :class_name => "KTSubscription"
 
 end

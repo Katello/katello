@@ -26,7 +26,7 @@ from pprint import pprint
 
 def get_organization(orgName):
     organization_api = OrganizationAPI()
-    
+
     org = organization_api.organization(orgName)
     if org == None:
         print _("Could not find organization [ %s ]") % orgName
@@ -112,6 +112,3 @@ def get_changeset(orgName, envName, csName):
     if cset == None:
         print _("Could not find changeset [ %s ] within environment [ %s ]") % (csName, env["name"])
     return cset
-    
-    
-    

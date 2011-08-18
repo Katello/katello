@@ -1,11 +1,9 @@
 = javascript :login
 
-
 .modalbox
   %h2 #{_('Log In')}
   .katello_form
-    = form_tag user_session_path, :id=>:login_form, :method => "post" do |f|
-      /= error_messages
+    = form_tag user_session_path, :id=>:login_form, :method => "post" do
       %fieldset
         = label_tag :username
         = text_field_tag :username, params[:username]

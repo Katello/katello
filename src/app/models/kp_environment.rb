@@ -144,11 +144,15 @@ class KPEnvironment < ActiveRecord::Base
     select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
-
+  def self.tags(ids)
+    select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
+  end
 
 
   #Permissions
-  scope :changesets_readable, lambda {|org| authorized_items(org, [:manage_changesets, :read_changesets])}
+  scope :changesets_readable, lambda {|org| authorized_items(org, [:promote_changesets, :manage_changesets, :read_changesets])}
+  scope :content_readable, lambda {|org| authorized_items(org, [:read_contents])}
+  scope :systems_readable, lambda{|org| authorized_items(org, [:read_systems])}
 
   def changesets_promotable?
     User.allowed_to?([:manage_changesets], :environments, self.id,
@@ -172,10 +176,11 @@ class KPEnvironment < ActiveRecord::Base
 
   def systems_readable?
     User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, self.id, self.organization) ||
-        User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, self.organization)
+        User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, self.organization)
   end
 
   def self.authorized_items org, verbs, resource = :environments
+    raise "scope requires an organization" if org.nil?
     if User.allowed_all_tags?(verbs, resource, org)
        where(:organization_id => org)
     else
