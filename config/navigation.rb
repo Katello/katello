@@ -28,9 +28,9 @@ SimpleNavigation::Configuration.run do |navigation|
         # providers_sub.item :subscriptions, _("Schedule"), (@provider.nil? || @provider.new_record?) ? "" : schedule_provider_path(@provider.id), :class => 'disabled'
       end
       content_sub.item :sync_mgmt, _("Sync Management"), sync_management_index_path() do |sync_sub|
-        sync_sub.item :status, _("Sync Status"), sync_management_index_path()
-        sync_sub.item :plans, _("Sync Plans"), sync_plans_path()
-        sync_sub.item :schedule, _("Sync Schedule"), sync_schedules_index_path()
+        sync_sub.item :status, _("Sync Status"), sync_management_index_path(), :class=>"third_level"
+        sync_sub.item :plans, _("Sync Plans"), sync_plans_path(), :class=>"third_level"
+        sync_sub.item :schedule, _("Sync Schedule"), sync_schedules_index_path(), :class=>"third_level"
       end
       #TODO: tie in Content Locker page
       content_sub.item :promotions, _("Promotions"), promotions_path(current_organization().name, current_organization().locker.name), :highlights_on =>/\/organizations\/.*\/environments\/.*\/promotions/ ,:class => 'content' do |package_sub|

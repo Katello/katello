@@ -487,11 +487,20 @@ nav {
     font-family: $headlinefont;
     font-size: 115%;
     padding-bottom: 9px;
-    
+    .arrow_icon_menu {
+      height: 11px;
+      width: 13px;
+      background: $arrow_icon_menu;
+      float: right;
+      margin: 13px 10px 0 -13px;
+      &:hover {
+        background: $arrow_icon_menu_hover;
+      }
+    }
     &>ul {
       display: block;
       min-height: 35px;
-    
+      height: 35px;
       li {
         display: inline-block;
         margin: 0;
@@ -506,7 +515,7 @@ nav {
           margin: 0;
           padding: 8px 16px 6px;
           color: $taboff_color;
-    
+          float: left;
           &.selected {
             color: $tabon_color;
             font-weight: bold;
@@ -515,6 +524,26 @@ nav {
           }
     
           &:hover { color: lighten($kselected_color,10%); }
+        }
+        &>ul {
+          position: absolute;
+          display: none;
+          background-color: #FFF;
+          @include box-shadow(2px 2px 2px rgba(0,0,0,0.4));
+          z-index: 101;
+          top: 35px;
+          li {
+            a {
+              &.selected {
+                border-bottom: 3px solid lighten($kselected_color,10%);
+              }
+            }
+          }
+        }
+        &.selected {
+            &:first-child .arrow_icon_menu {
+              background: $arrow_icon_menu_hover;
+            }
         }
       }
     }
@@ -1871,18 +1900,17 @@ fieldset {
     padding: 7px 12px 4px 10px;
     display: block;
     float: left; }
-  .arrowIcon {
+  .arrow_icon {
     height: 11px;
     width: 13px;
-    background: url(/images/loginArrow.png) no-repeat;
-    background-position: 0 0;
+    background: $arrow_icon;
     float: right;
     margin: 10px 10px 0 0;
   }
   &.active {
     @include background-image(linear-gradient(rgb(61, 136, 151), rgb(121, 185, 199)));
     @include border-bottom-lr-radius(0);
-    .arrowIcon {
+    .arrow_icon {
       background-position: 0 -11px;
     }
   }

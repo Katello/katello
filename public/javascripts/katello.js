@@ -244,6 +244,19 @@ var common = (function() {
                 }
             });
             $('#orgfilter_input').val("").change();
+        },
+        thirdLevelNavSetup : function(){
+            var firstchild = $('.third_level:first-child');
+            var li = firstchild.parent().parent();
+            var ul = firstchild.parent();
+            li.prepend($('<div class="arrow_icon_menu"></div>'));
+            li.hover(
+                function(){
+                    ul.fadeIn('fast')
+                },
+                function(){
+                    ul.fadeOut('fast')
+            });
         }
     };
 })();
@@ -289,6 +302,7 @@ $(document).ready(function (){
 
     common.orgSwitcherSetup();
     common.orgFilterSetup();
+    common.thirdLevelNavSetup();
 });
 
 /**
