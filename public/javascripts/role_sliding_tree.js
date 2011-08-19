@@ -30,6 +30,15 @@ ROLES.permissionWidget = function(){
             'name'          :   { previous  : false,
                                   next      : 'description', 
                                   container : $('#name_container'),
+                                  validate  : function(){
+                                        if( $("#permission_name").val() === "" ){
+                                            $('#name_container').append('<div class="permission_add_container"><span class="validation_error">' + i18n.name_validation + '</span></div>');
+                                            return false;
+                                        }  else {
+                                            $('#name_container').find('span').remove();
+                                            return true;
+                                        }
+                                  },
                                   actions   : function(){
                                         previous_button.hide();
                                   }
@@ -37,6 +46,9 @@ ROLES.permissionWidget = function(){
             'description'   :   { previous  : 'name', 
                                   next      : 'resource_type',
                                   container : $('#description_container'),
+                                  validate  : function(){
+                                        return true;  
+                                  },
                                   actions   : function(){
                                         previous_button.show();
                                         if( all_types_button.hasClass('selected') ){
@@ -47,6 +59,9 @@ ROLES.permissionWidget = function(){
             'resource_type' :   { previous  : 'description', 
                                   next      : 'verbs',
                                   container : $('#resource_type_container'),
+                                  validate  : function(){
+                                      return true;
+                                  },
                                   actions   : function(){
                                       if( done_button.is(":visible") ){
                                           done_button.hide();
@@ -57,6 +72,15 @@ ROLES.permissionWidget = function(){
             'verbs'         :   { previous  : 'resource_type',
                                   next      : 'tags',
                                   container : $('#verbs_container'),
+                                  validate  : function(){
+                                        if( $('#verbs').val() === null ){
+                                            $('#verbs_container').append('<div class="permission_add_container"><span class="validation_error">' + i18n.verb_validation + '</span></div>');
+                                            return false;
+                                        } else {
+                                            $('.validation_error').parent().remove();
+                                            return true;
+                                        }
+                                  },
                                   actions   : function(){
                                         if( $('#resource_type').val() === 'organizations' ){
                                             next_button.hide();
@@ -70,6 +94,9 @@ ROLES.permissionWidget = function(){
             'tags'          :   { previous  : 'verbs',
                                   next      : false,
                                   container : $('#tags_container'),
+                                  validate  : function(){
+                                        return true;
+                                  },
                                   actions   : function(){
                                         next_button.hide();
                                         done_button.show();
@@ -109,9 +136,11 @@ ROLES.permissionWidget = function(){
         handleNext = function(){
             var next = flow[current_stage].next; 
 
-            flow[next].container.show();
-            flow[next].actions();
-            current_stage = next;
+            if( flow[current_stage].validate() ){
+                flow[next].container.show();
+                flow[next].actions();
+                current_stage = next;   
+            }
         },
         handlePrevious = function(){
             var previous = flow[current_stage].previous; 
@@ -221,7 +250,7 @@ ROLES.permissionWidget = function(){
                 $('#tag_container').hide();
                 $('#resource_type').hide();
                 $('#resource_type').val('all');
-                all_types_button.parent().prepend('<span id="all_types_selected">' + i18n.all_types_selected + '</span>');
+                $('<span id="all_types_selected" class="fl">' + i18n.all_types_selected + '</span>').insertBefore(all_types_button);
                 all_types_button.html(i18n.cancel);
                 all_types_button.addClass('selected');
             } else {
@@ -230,7 +259,7 @@ ROLES.permissionWidget = function(){
                 $('#verb_container').show();
                 $('#resource_type').show();
                 $('#all_types_selected').remove();
-                $('#add_permission_form')[0].reset();
+                $('#resource_type').val('organizations');
                 $('#resource_type').change();
                 all_types_button.html(i18n.all);
                 all_types_button.removeClass('selected');
@@ -375,7 +404,9 @@ var roleActions = (function($){
                     cache   : false,
                     dataType: 'json',
                     success : function(data){
-                        roles_breadcrumb[current_organization].permission_details = data;
+                        if( roles_breadcrumb[current_organization] ){
+                            roles_breadcrumb[current_organization].permission_details = data;
+                        }
                         $('#add_permission').removeClass('disabled');
                     }
                 });
@@ -431,6 +462,8 @@ var roleActions = (function($){
         remove_permission = function(element){
             var id = element.attr('data-id');
             
+            element.html(i18n.removing);
+            
             $.ajax({
                type     : "DELETE",
                url      : "/roles/" + $('#role_id').val() + "/permission/" + id.split('_')[2] + "/destroy_permission/",
@@ -449,6 +482,11 @@ var roleActions = (function($){
         edit_user = function(element, adding){
             var submit_data = { update_users : { adding : adding, user_id : element.attr('data-id').split('_')[1] }};
 
+            if( adding ){
+                element.html(i18n.adding);
+            } else {
+                element.html(i18n.removing);
+            }
             $.ajax({
                type     : "PUT",
                url      : "/roles/" + $('#role_id').val(),
