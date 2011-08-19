@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.65
+Version:	      0.1.66
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -197,6 +197,12 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Aug 19 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.66-1
+- katello-job - init.d script has proper name now
+- katello-job - temp files now in /var/lib/katello/tmp
+- katello-job - improving RAILS_ENV setting
+- adding Api::SyncController specs that I forgot to add earlier
+
 * Fri Aug 19 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.65-1
 - katello-job - adding new init script for delayed_job
 - 731810 Deleteing a provider renders an server side error
