@@ -43,13 +43,13 @@ class CreateTest(unittest.TestCase):
         self.create_action.api.create = Mock()
         self.create_action.api.create.return_value = { 'cp_id': self.PRODUCT_ID, 'name':self.PRODUCT }
 
-        self.create_action.createRepo.discover_repositories = Mock()
-        self.create_action.createRepo.discover_repositories.return_value = self.DISCOVERED_REPOS
+        self.create_action.discoverRepos.discover_repositories = Mock()
+        self.create_action.discoverRepos.discover_repositories.return_value = self.DISCOVERED_REPOS
 
-        self.create_action.createRepo.select_repositories = Mock()
-        self.create_action.createRepo.select_repositories.return_value = self.DISCOVERED_REPOS
+        self.create_action.discoverRepos.select_repositories = Mock()
+        self.create_action.discoverRepos.select_repositories.return_value = self.DISCOVERED_REPOS
 
-        self.create_action.createRepo.create_repositories = Mock()
+        self.create_action.discoverRepos.create_repositories = Mock()
 
         self.create_action.printer = Mock()
 
@@ -66,19 +66,19 @@ class CreateTest(unittest.TestCase):
 
     def test_discovers_repos(self):
         self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES)
-        self.create_action.createRepo.discover_repositories.assert_called_once_with(self.URL)
+        self.create_action.discoverRepos.discover_repositories.assert_called_once_with(self.URL)
         
     def test_creates_product_without_repositories_if_url_was_not_specified(self):
         self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, None, self.ASSUMEYES)
         
-        self.assertFalse(self.create_action.createRepo.discover_repositories.called)
-        self.assertFalse(self.create_action.createRepo.select_repositories.called)
-        self.assertFalse(self.create_action.createRepo.create_repositories.called)        
+        self.assertFalse(self.create_action.discoverRepos.discover_repositories.called)
+        self.assertFalse(self.create_action.discoverRepos.select_repositories.called)
+        self.assertFalse(self.create_action.discoverRepos.create_repositories.called)        
         
     def test_selects_repos(self):
         self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES)
-        self.create_action.createRepo.select_repositories.assert_called_once_with(self.DISCOVERED_REPOS, self.ASSUMEYES)
+        self.create_action.discoverRepos.select_repositories.assert_called_once_with(self.DISCOVERED_REPOS, self.ASSUMEYES)
 
     def test_create_repos(self):
         self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES)
-        self.create_action.createRepo.create_repositories.assert_called_once_with(self.PRODUCT_ID, self.PRODUCT, self.DISCOVERED_REPOS)
+        self.create_action.discoverRepos.create_repositories.assert_called_once_with(self.PRODUCT_ID, self.PRODUCT, self.DISCOVERED_REPOS)
