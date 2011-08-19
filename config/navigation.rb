@@ -20,18 +20,18 @@ SimpleNavigation::Configuration.run do |navigation|
     top_level.item :content, _("Content Management"),  organization_providers_path(current_organization()), :class=>'content' do |content_sub|
       content_sub.item :providers, _("Providers"), organization_providers_path(current_organization()), :highlights_on => /(\/organizations\/.*\/providers)|(\/providers\/.*\/(products|repos))/ do |providers_sub|
         providers_sub.item :edit, _("Basics"), (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id), :class => 'navigation_element',
-                           :if => Proc.new { !@provider.nil? && !@provider.new_record? }
+                           :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? }
         providers_sub.item :subscriptions, _("Subscriptions"),(@provider.nil? || @provider.new_record?) ? "" : subscriptions_provider_path(@provider.id), :class => 'navigation_element',
-                           :if => Proc.new { !@provider.nil? && !@provider.new_record? && @provider.has_subscriptions?}
+                           :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? && @provider.has_subscriptions?}
         providers_sub.item :products_repos, _("Products & Repositories"),(@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id), :class => 'navigation_element',
-                           :if => Proc.new { !@provider.nil? && !@provider.new_record? && !@provider.has_subscriptions?}
+                           :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? && !@provider.has_subscriptions?}
         # providers_sub.item :subscriptions, _("Schedule"), (@provider.nil? || @provider.new_record?) ? "" : schedule_provider_path(@provider.id), :class => 'disabled'
-      end
+      end if Provider.any_readable?(current_organization)
       content_sub.item :sync_mgmt, _("Sync Management"), sync_management_index_path() do |sync_sub|
-        sync_sub.item :status, _("Sync Status"), sync_management_index_path(), :class=>"third_level"
+        sync_sub.item :status, _("Sync Status"), sync_management_index_path(), :class=>"third_level" 
         sync_sub.item :plans, _("Sync Plans"), sync_plans_path(), :class=>"third_level"
         sync_sub.item :schedule, _("Sync Schedule"), sync_schedules_index_path(), :class=>"third_level"
-      end
+      end if Provider.any_readable?(current_organization)
       #TODO: tie in Content Locker page
       content_sub.item :promotions, _("Promotions"), promotions_path(current_organization().name, current_organization().locker.name), :highlights_on =>/\/organizations\/.*\/environments\/.*\/promotions/ ,:class => 'content' do |package_sub|
           if !@package.nil?
@@ -48,11 +48,11 @@ SimpleNavigation::Configuration.run do |navigation|
               package_sub.item :details, _("Details"), distribution_path(@distribution.id), :class=>"navigation_element"
               package_sub.item :details, _("Filelist"), filelist_distribution_path(@distribution.id), :class=>"navigation_element"
           end
-      end
-      content_sub.item :changeset, _("Changeset History"), changesets_path()
+      end if current_organization.readable_for_promotions?
+      content_sub.item(:changeset, _("Changeset History"), changesets_path()) if current_organization.any_changesets_readable?
       #content_sub.item :updates_bundle, _("Updates Bundle"), '#', :class => 'disabled', :if => Proc.new { false }
 
-    end if current_organization() #end content
+    end if current_organization() && (Provider.any_readable?(current_organization)|| current_organization.readable_for_promotions?) #end content
 
     #TODO: Add correct Systems subnav items
     top_level.item :systems, _("Systems"), systems_path(), :class=>'systems' do |systems_sub|
@@ -64,7 +64,7 @@ SimpleNavigation::Configuration.run do |navigation|
           system_sub.item :facts, _("Facts"), facts_system_path(@system.id), :class => 'navigation_element'
           system_sub.item :packages, _("Packages"), packages_system_path(@system.id), :class => "navigation_element"
         end
-      end
+      end if current_organization.any_systems_readable?
       systems_sub.item :env, _("By Environments"), environments_systems_path() do |env_system_sub|
         if !@system.nil?
           env_system_sub.item :general, _("General"), edit_system_path(@system.id), :class => "navigation_element"
@@ -72,7 +72,7 @@ SimpleNavigation::Configuration.run do |navigation|
           env_system_sub.item :facts, _("Facts"), facts_system_path(@system.id), :class => 'navigation_element'
           env_system_sub.item :packages, _("Packages"), packages_system_path(@system.id), :class => "navigation_element"
         end
-      end
+      end if current_organization.any_systems_readable? 
       systems_sub.item :activation_keys, _("Activation Keys"), activation_keys_path do |activation_key_sub|
         if !@activation_key.nil?
           activation_key_sub.item :general, _("General"), edit_activation_key_path(@activation_key.id), :class => "navigation_element", 
@@ -94,10 +94,10 @@ SimpleNavigation::Configuration.run do |navigation|
           user_sub.item :general, _("General"), edit_user_path(@user.id), :class => "navigation_element"
           user_sub.item :roles_and_permissions, _("Roles & Permissions"), edit_role_path(@user.own_role_id), :class => "navigation_element"
         end
-      end
-      operations_sub.item :roles, _("Roles"), roles_path
+      end if User.any_readable?
+      operations_sub.item(:roles, _("Roles"), roles_path) if Role.any_readable?
       #operations_sub.item :proxies, _("Proxies"), '#', :class => 'disabled', :if => Proc.new { false }
-    end #end operations
+    end if User.any_readable? || Role.any_readable?  #end operations
 
   end #end top_level
 

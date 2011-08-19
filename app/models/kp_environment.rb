@@ -160,6 +160,9 @@ class KPEnvironment < ActiveRecord::Base
     end
   }
 
+  def readable_for_promotions?
+    User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, self.id, self.organization)
+  end
 
 
   def changesets_promotable?
@@ -167,8 +170,9 @@ class KPEnvironment < ActiveRecord::Base
                               self.organization)
   end
 
+  CHANGE_SETS_READABLE = [:manage_changesets, :read_changesets, :promote_changesets]
   def changesets_readable?
-    User.allowed_to?([:manage_changesets, :read_changesets, :promote_changesets], :environments,
+    User.allowed_to?(CHANGE_SETS_READABLE, :environments,
                               self.id, self.organization)
   end
 
@@ -177,6 +181,7 @@ class KPEnvironment < ActiveRecord::Base
                               self.organization)
   end
 
+  CONTENTS_READABLE = [:read_contents]
   def contents_readable?
     User.allowed_to?([:read_contents], :environments, self.id,
                               self.organization)

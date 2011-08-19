@@ -189,7 +189,7 @@ class User < ActiveRecord::Base
   # * a permission Symbol (eg. :edit_project)
   #
   # This method is called by every protected controller.
-  def allowed_to?(verbs, resource_type, tags = nil, org = nil)
+  def allowed_to?(verbs, resource_type, tags = nil, org = nil, any_tags = false)
     ResourceType.check resource_type, verbs
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a? Array
@@ -212,7 +212,7 @@ class User < ActiveRecord::Base
 
     tags_query = tags_query.where({:tags=> {:name=> tags.collect{|tg| tg.to_s}}}) unless tags.empty?
     count = tags_query.count(to_count, :distinct => true)
-    if tags.empty?
+    if tags.empty? || any_tags
       count > 0
     else
       tags.length == count
@@ -222,11 +222,11 @@ class User < ActiveRecord::Base
   # Class method that has the same functionality as allowed_to? method but operates
   # on the current logged user. The class attribute User.current must be set!
   # If the current user is not set (is nil) it treats it like the 'anonymous' user.
-  def self.allowed_to?(verb, resource_type = nil, tags = nil, org = nil)
+  def self.allowed_to?(verb, resource_type = nil, tags = nil, org = nil, any_tags = false)
     u = User.current
     u = User.anonymous if u.nil?
     raise ArgumentError, "current user is not set" if u.nil? or not u.is_a? User
-    u.allowed_to?(verb, resource_type, tags, org)
+    u.allowed_to?(verb, resource_type, tags, org, any_tags)
   end
 
   # Class method with the very same functionality as allowed_to? but throws

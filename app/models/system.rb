@@ -84,8 +84,11 @@ class System < ActiveRecord::Base
       User.allowed_to?(*[[:delete_systems], :environment, self.environment.id, self.organization])
   end
 
+  def self.any_readable? org
+    
+    
 
-
+  end
 
   private
     def fill_defaults
