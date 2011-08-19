@@ -731,9 +731,13 @@ var rolesRenderer = (function($){
         },
         setStatus = function(hash_id){
             if( hash_id === 'roles' ){
-                $('#roles_status').html(i18n.rolesStatus);
+                $('#roles_status').html(i18n.roles_summary);
             } else if( hash_id === 'role_users' ){
-                $('#roles_status').html(i18n.usersStatus);
+                $('#roles_status').html(i18n.users_summary);
+            } else if ( hash_id === 'role_permissions' ){
+                $('#roles_status').html(i18n.role_permissions_summary);
+            } else if ( hash_id === 'global' || hash_id.match(/organization?/g) ){
+                $('#roles_status').html(i18n.permissions_summary);
             }
         },
         handleButtons = function(hash_id){
