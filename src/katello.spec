@@ -90,6 +90,7 @@ rm -rf %{buildroot}
 #prepare dir structure
 install -d -m0755 %{buildroot}%{homedir}
 install -d -m0755 %{buildroot}%{datadir}
+install -d -m0755 %{buildroot}%{datadir}/tmp
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
 install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 
@@ -123,7 +124,7 @@ ln -svf %{datadir}/schema.rb %{buildroot}%{homedir}/db/schema.rb
 
 #create symlinks for data
 ln -sv %{_localstatedir}/log/%{name} %{buildroot}%{homedir}/log
-ln -sv %{_tmppath} %{buildroot}%{homedir}/tmp
+ln -sv %{datadir}/tmp %{buildroot}%{homedir}/tmp
 
 #create symlink for Gemfile.lock (it's being regenerated each start)
 ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
