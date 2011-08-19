@@ -23,6 +23,7 @@ KATELLO_JOB_WORKERS=${KATELLO_JOB_WORKERS:-1}
 KATELLO_JOB_PARAMS=${KATELLO_JOB_PARAMS:--m -p katello}
 KATELLO_PID=$KATELLO_HOME/tmp/pids/delayed_job*monitor.pid
 KATELLO_PIDS_ALL=$KATELLO_HOME/tmp/pids/delayed_job*.pid
+export RAILS_ENV=$KATELLO_ENV
 
 status() {
     #check if pid file exists
@@ -63,7 +64,7 @@ start() {
         cd ${KATELLO_HOME} #rails expects you to run from the root of the app
         # delete Gemfile.lock (it will be regenerated)
         rm -f $KATELLO_DATA_DIR/Gemfile.lock
-        daemon --user ${KATELLO_USER} bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/delayed_job $KATELLO_JOB_PARAMS -n $KATELLO_JOB_WORKERS -e ${KATELLO_ENV} start >/var/log/katello/jobs-startup.log 2>&1
+        daemon --user ${KATELLO_USER} bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/delayed_job $KATELLO_JOB_PARAMS -n $KATELLO_JOB_WORKERS start >/var/log/katello/jobs-startup.log 2>&1
         RETVAL=$?
         if [ $RETVAL = 0 ]; then
             echo_success
