@@ -143,8 +143,6 @@ var sliding_tree = function(tree_id, options) {
             $.bbq.pushState(bbq);        
         },
         reset_breadcrumb = function(id) {
-            console.log(settings.breadcrumb);
-            console.log(id);
             var trail = settings.breadcrumb[id].trail,
                 crumbs = trail;
             
@@ -318,7 +316,7 @@ sliding_tree.ActionBar = function(toggle_list){
                 open_panel = id;
                 options.opening = true;
             }
-            console.log(toggle_list);
+
             options = toggle_list[id](options.opening);
             slide_window.slideToggle(animate_time, options.after_function);
         }, 
