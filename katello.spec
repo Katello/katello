@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.64
+Version:	      0.1.65
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -195,6 +195,18 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Aug 19 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.65-1
+- katello-job - adding new init script for delayed_job
+- 731810 Deleteing a provider renders an server side error
+- spec tests for Glue::Pulp::Repo
+- merge of repo#get_{env,product,org} functionality
+- repo sync - check for syncing only repos in locker
+- updated routes to support changes in rhsm related to explicit specification
+  of owners
+- Activation Keys - fix API rspec tests
+- Fix running rspec tests - move corrupted tests to pending
+- Api::SyncController, with tests now
+
 * Wed Aug 17 2011 Mike McCune <mmccune@redhat.com> 0.1.64-1
  - period tagging of Katello.
 * Mon Aug 15 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.63-1
