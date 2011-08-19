@@ -93,7 +93,7 @@ class Glue::Pulp::Repo
            return curr_repo
        end
     }
-
+    return nil
   end
 
 
