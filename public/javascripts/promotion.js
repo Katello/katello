@@ -1255,25 +1255,26 @@ var changesetStatusActions = (function($){
             changeset.css('margin-left', '0');
             changeset.prepend('<span class="changeset_status"><span class="progressbar"></span><label></label></span>');
             changeset.find('.changeset_status label').text(status + '%');
-            changeset.find('.progressbar').progressbar({value: status});
+            //changeset.find('.progressbar').progressbar({value: status});
             changeset.addClass('being_promoted');
             changeset.attr('title', i18n.changeset_progress);
+            changeset.find('.changeset_status label').text(i18n.promoting);
             set_margins();
         },
         setProgress = function(id, progress){
             var changeset = $('#' + id);  
-            changeset.find(".progressbar").progressbar({value: progress});
-            changeset.find('.changeset_status label').text(progress + '%');
+            //changeset.find(".progressbar").progressbar({value: progress});
+            //changeset.find('.changeset_status label').text(progress + '%');
         },
         finish = function(id){
             var changeset = $('#' + id);
-            changeset.find(".changeset_status").html('promoted');
-            changeset.parent().fadeOut(3000, function(){
+            changeset.find(".changeset_status").html(i18n.promoted);
+            /*changeset.parent().fadeOut(3000, function(){
                 changeset.parent().remove();
                 if( !$('.changeset_status').length ){
                     $('#cslist .slider .slide_link').animate({'margin-left' : '0'}, 200);
                 }
-            });
+            });*/
         },
         setLocked = function(id){
             var changeset = $('#' + id);
