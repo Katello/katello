@@ -43,7 +43,6 @@ class Organization < ActiveRecord::Base
 
   def promotion_paths
     #I'm sure there's a better way to do this
-    
     self.environments.joins(:priors).where("prior_id = #{self.locker.id}").collect do |env|
       env.path
     end
@@ -84,6 +83,19 @@ class Organization < ActiveRecord::Base
 
   def environments_manageable?
     User.allowed_to?([:update, :create], :organizations, nil, self)
+  end
+
+  def readable_for_promotions?
+    self.environments.collect{|env| true if env.readable_for_promotions? }.compact.empty?
+  end
+
+  def any_changesets_readable?
+    self.environments.collect{|env| true if env.changesets_readable? }.compact.empty?
+  end
+
+  def any_systems_readable?
+      User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, self) ||
+           User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, environments.collect{|e| e.id}, self, true) 
   end
 
   def self.list_verbs global = false
