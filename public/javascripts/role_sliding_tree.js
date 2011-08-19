@@ -73,8 +73,10 @@ ROLES.permissionWidget = function(){
                                   next      : 'tags',
                                   container : $('#verbs_container'),
                                   validate  : function(){
-                                        if( $('#verbs').val() === null ){
-                                            $('#verbs_container').append('<div class="permission_add_container"><span class="validation_error">' + i18n.verb_validation + '</span></div>');
+                                        if( $('#verbs').val() === null && !all_verbs_button.hasClass('selected') ){
+                                            if( !$('#verbs_container').find('span').hasClass('validation_error') ){ 
+                                                $('#verbs_container').append('<div class="permission_add_container"><span class="validation_error">' + i18n.verb_validation + '</span></div>');
+                                            }
                                             return false;
                                         } else {
                                             $('.validation_error').parent().remove();
@@ -338,7 +340,7 @@ var roleActions = (function($){
                                       roles_breadcrumb.roles.name = parsed.name;
                                       $('#list #' + $('#role_id').val() + ' .column_1').html(parsed.name);
                                       $('.edit_name_text').html(parsed.name);
-                                      ROLES.tree.rerender_breadcrumb();
+                                      $('#roles').html(parsed.name);
                                 }
                         };
                         $(this).editable( url, $.extend(settings, common));
@@ -740,7 +742,7 @@ var rolesRenderer = (function($){
                                 b_html.toUpperCase() ? 1 : -1;
                     }
             });
-          
+                
             if( hash_id === "role_permissions" ){
                 $('#global').parent().prependTo($(".will_have_content ul"));  
             }
