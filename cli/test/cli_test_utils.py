@@ -5,7 +5,7 @@ from mock import Mock
 class CLIActionTestCase(unittest.TestCase):
     
     _options = {}
-    _methods = {}
+    _mocked_props = {}
     action = None
     module = None
 
@@ -28,7 +28,7 @@ class CLIActionTestCase(unittest.TestCase):
         prop = getattr(obj, property_name)
         if not isinstance(prop, Mock) :
             key = str(obj) + "#" + property_name
-            self._methods[key] = (obj, prop, property_name)
+            self._mocked_props[key] = (obj, prop, property_name)
         
         #mock the function
         m = Mock()
@@ -40,7 +40,7 @@ class CLIActionTestCase(unittest.TestCase):
 
 
     def restore_mocks(self):
-        for key, (obj, prop, prop_name) in self._methods.iteritems():
+        for key, (obj, prop, prop_name) in self._mocked_props.iteritems():
             setattr(obj, prop_name, prop)
 
 
