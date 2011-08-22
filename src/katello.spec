@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.67
+Version:	      0.1.68
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -197,6 +197,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Aug 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.68-1
+- init script - fixing schema.rb permissions check
+- katello-jobs - suppressing error message for status info
+
 * Mon Aug 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.67-1
 - reset script - adding -f (force) option
 - reset script - missing candlepin restart string
