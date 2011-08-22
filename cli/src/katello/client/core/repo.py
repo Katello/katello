@@ -263,7 +263,7 @@ class Info(RepoAction):
     def setup_parser(self):
         self.parser.add_option('--repo_id', dest='repo_id',
                       help=_("repository id"))
-        self.parser.add_option('--repo', dest='repo',
+        self.parser.add_option('--name', dest='name',
                       help=_("repository name"))
         self.parser.add_option('--org', dest='org',
                       help=_("organization name eg: foo.example.com"))
@@ -274,13 +274,13 @@ class Info(RepoAction):
 
     def check_options(self):
         if not self.has_option('repo_id'):
-            self.require_option('repo')
+            self.require_option('name')
             self.require_option('org')
             self.require_option('product')
 
     def run(self):
         repoId   = self.get_option('repo_id')
-        repoName = self.get_option('repo')
+        repoName = self.get_option('name')
         orgName  = self.get_option('org')
         envName  = self.get_option('env')
         prodName = self.get_option('product')
@@ -318,21 +318,21 @@ class Sync(RepoAction):
         self.parser.add_option('--repo_id', dest='repo_id',
                                help=_("repo id, string value (required)"))
         self.parser.add_option('--org', dest='org',
-                      help=_("organization name eg: foo.example.com"))
-        self.parser.add_option('--repo', dest='repo',
+                      help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
                       help=_("repository name"))
         self.parser.add_option('--product', dest='product',
                       help=_("product name eg: fedora-14"))
                       
     def check_options(self):
         if not self.has_option('repo_id'):
-            self.require_option('repo')
+            self.require_option('name')
             self.require_option('org')
             self.require_option('product')
 
     def run(self):
         repoId   = self.get_option('repo_id')
-        repoName = self.get_option('repo')
+        repoName = self.get_option('name')
         orgName  = self.get_option('org')
         prodName = self.get_option('product')
         

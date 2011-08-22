@@ -29,7 +29,7 @@ class RequiredCLIOptionsTests(unittest.TestCase):
         self.assertRaises(Exception, self.action.process_options, ['synchronize'])
 
     def test_no_error_if_required_options_provided(self):
-        self.action.process_options(['synchronize', '--org=ACME', '--repo=repo1', '--product=product1'])
+        self.action.process_options(['synchronize', '--org=ACME', '--name=repo1', '--product=product1'])
         self.assertEqual(len(self.action.optErrors), 0)
 
     def test_no_error_if_required_repo_id_provided(self):
@@ -52,7 +52,7 @@ class SynchronizeTestWithRepoId(CLIActionTestCase):
     }
 
     OPTIONS_WITH_NAME = {
-        'repo': REPO_NAME,
+        'name': REPO_NAME,
         'product': 'product_1',
         'org': 'ACME'
     }
