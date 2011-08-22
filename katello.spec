@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.66
+Version:	      0.1.67
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -197,6 +197,11 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Aug 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.67-1
+- reset script - adding -f (force) option
+- reset script - missing candlepin restart string
+- fixed a broken Api::SyncController test
+
 * Fri Aug 19 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.66-1
 - katello-job - init.d script has proper name now
 - katello-job - temp files now in /var/lib/katello/tmp
