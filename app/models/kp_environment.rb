@@ -66,7 +66,7 @@ class KPEnvironment < ActiveRecord::Base
   has_many :system_templates, :class_name => "SystemTemplate", :foreign_key => :environment_id
 
   has_many :systems, :inverse_of => :environment, :foreign_key => :environment_id
-  has_many :working_changesets, :conditions => ["state = '#{Changeset::NEW}' OR state = '#{Changeset::REVIEW}'"], :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
+  has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"], :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
@@ -106,6 +106,13 @@ class KPEnvironment < ActiveRecord::Base
     end
     ret
   end
+
+  #is the environment currently being promoted to
+  def promoting_to?
+    Changeset.joins(:task_status).where('changesets.environment_id' => self.id,
+        'task_statuses.state' => [TaskStatus::Status::WAITING,  TaskStatus::Status::RUNNING]).exists?
+  end
+
 
   #Unlike path which only gives the path from this environment going forward
   #  Get the full path, that is go to the HEAD of the path this environment is on

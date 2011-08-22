@@ -82,6 +82,14 @@ describe ChangesetsController do
       Changeset.find(@changeset.id).name.should == "newname"
     end
 
+    it "should be able to check the progress of a changeset being promoted" do
+      @changeset.task_status = TaskStatus.create!(:organization_id =>@org.id, :uuid=>"FOO", :progress=>"0")
+      @changeset.save!
+      get :promotion_progress, :id=>@changeset.id
+      response.should be_success
+      response.should contain('changeset_' + @changeset.id.to_s)
+    end
+
   end
 
   describe 'creating a changeset' do
@@ -178,7 +186,7 @@ describe ChangesetsController do
     end
 
     it 'should call dependencies on the changeset' do
-      @changeset.should_receive(:dependencies).and_return({})
+      @changeset.should_receive(:calc_dependencies).and_return({})
       Changeset.stub(:find).and_return(@changeset)
       get 'dependencies', {:id=>@changeset.id}
       response.should be_success

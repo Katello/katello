@@ -288,9 +288,11 @@ module Glue::Pulp::Repos
     def promote_repos repos, to_env
       async_tasks = []
       repos.each do |repo|
-        if repo.is_cloned_in?(to_env)
+
+        cloned = repo.get_cloned_in(to_env)
+        if cloned
           #repo is already cloned, so lets just re-sync it from its parent
-          async_tasks << repo.sync
+          async_tasks << cloned.sync
         else
           async_tasks << repo.promote(to_env, self)
 

@@ -169,6 +169,7 @@ Src::Application.routes.draw do
       post :promote
       get :products
       get :object
+      get :promotion_progress
     end
     collection do
       get :auto_complete_search
