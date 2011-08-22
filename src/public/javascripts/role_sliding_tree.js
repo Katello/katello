@@ -84,7 +84,7 @@ ROLES.permissionWidget = function(){
                                         }
                                   },
                                   actions   : function(){
-                                        if( $('#resource_type').val() === 'organizations' ){
+                                        if( $('#resource_type').val() === 'organizations' || roleActions.getCurrentOrganization() === 'global' ){
                                             next_button.hide();
                                             done_button.show();        
                                         } else {
@@ -170,6 +170,7 @@ ROLES.permissionWidget = function(){
                     for( type in types ){
                         if( types.hasOwnProperty(type) ){
                             if( type !== "all" ){
+                                console.log(type);
                                 if( current_organization.split('_')[0] === 'organization' ){
                                     if( !types[type].global ){
                                         types_select.append('<option value="' + type + '">' + types[type].name + '</option>');
@@ -195,7 +196,7 @@ ROLES.permissionWidget = function(){
                     for( i=0; i < length; i+= 1){
                         verbs_select.append('<option value="' + verbs[i].name + '">' + verbs[i].display_name + "</option>");
                     }
-                    
+                    console.log(current_organization);
                     if( type !== 'organizations' && current_organization !== "global" ){
                         length = tags.length;
                         tags_select.empty();
@@ -207,9 +208,8 @@ ROLES.permissionWidget = function(){
             
             if( opening ){
                 $('#permission_add').children().show();
-                $('#resource_type').val('organization');
                 set_types();
-                set_verbs_and_tags('organizations');
+                set_verbs_and_tags($('#resource_type').val());
                 button.children('span').html(i18n.close_add_permission);
                 button.addClass("highlighted");
                 $('#resource_type').change(function(event){
@@ -252,7 +252,7 @@ ROLES.permissionWidget = function(){
                 $('#tag_container').hide();
                 $('#resource_type').hide();
                 $('#resource_type').val('all');
-                $('<span id="all_types_selected" class="fl">' + i18n.all_types_selected + '</span>').insertBefore(all_types_button);
+                $('<span id="all_types_selected">' + i18n.all_types_selected + '</span>').insertBefore(all_types_button);
                 all_types_button.html(i18n.cancel);
                 all_types_button.addClass('selected');
             } else {
@@ -340,7 +340,7 @@ var roleActions = (function($){
                                       roles_breadcrumb.roles.name = parsed.name;
                                       $('#list #' + $('#role_id').val() + ' .column_1').html(parsed.name);
                                       $('.edit_name_text').html(parsed.name);
-                                      $('#roles').html(parsed.name);
+                                      $('#roles').html(parsed.name + " \u2002\u00BB\u2002");
                                 }
                         };
                         $(this).editable( url, $.extend(settings, common));
@@ -689,7 +689,7 @@ var templateLibrary = (function($){
             for( item in globals ){
                 if( globals.hasOwnProperty(item) ){
                     if( item.split("_")[0] === "permission" && item.split("_")[1] === 'global' ){
-                        html += permissionsListItem(item, globals[item].name, options.no_slide);
+                        html += permissionsListItem(item, globals[item].name, true);
                     }
                 }
             }
