@@ -65,7 +65,7 @@ class User < ActiveRecord::Base
   # THIS CHECK MUST BE THE FIRST before_destroy
   # check if this is not the last superuser
   before_destroy do |u|
-    if u.superadmin? and User.joins(:roles).where(:roles => {:superadmin => true}).count == 1
+    unless u.can_be_deleted?
       u.errors.add(:base, "cannot delete last admin user")
       false
     else
@@ -79,6 +79,7 @@ class User < ActiveRecord::Base
     unless u.own_role.destroyed?
       Rails.logger.error error.to_s
     end
+    u.roles.clear
   end
 
   # support for session (thread-local) variables
@@ -339,7 +340,6 @@ class User < ActiveRecord::Base
     User.allowed_to?([:delete], :users, nil)
   end
 
-
   protected
 
   def own_role_included_in_roles
@@ -415,6 +415,17 @@ class User < ActiveRecord::Base
                   "left outer join verbs on verbs.id = permissions_verbs.verb_id").where({"roles_users.user_id" => id})
     return query.where(org_clause, org_hash) unless exclude_orgs_clause
     query
+  end
+
+
+  def can_be_deleted?
+    query =  Permission.joins(:resource_type, :role).
+                                joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
+                                  where(:resource_types => {:name => :all}, :organization_id => nil)
+    is_superadmin = query.where("roles_users.user_id" => id).count > 0
+    return true unless is_superadmin
+    more_than_one_supers = query.count > 1
+    more_than_one_supers
   end
 
 end
