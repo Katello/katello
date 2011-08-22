@@ -753,11 +753,13 @@ var rolesRenderer = (function($){
             }
         },
         setTreeHeight = function(){
-            var height = $('.left').height();
+            var height = $('.left').height(),
+                panel_main = $('#panel_main');
+                
             $('.sliding_list').css({ 'height' : height - 60 });
             $('.slider').css({ 'height' : height - 60 });
-            $('#panel_main').height(height);
-            $('#panel_main .jspPage').height(height);
+            panel_main.height(height);
+            panel_main.find('.jspPage').height(height);
         },
         setSizing = function(){
             var width = $('.panel-custom').width();
@@ -769,20 +771,24 @@ var rolesRenderer = (function($){
             $('.slide_up_container').width(width);
         },
         init = function(){
-            setSizing();
-            $('.left').resize(function(){
+            var left_panel = $('.left');
+            
+            left_panel.resize(function(){
                 setSizing();
             });
+            left_panel.trigger('resize');
         },
-        setStatus = function(hash_id){
+        setSummary = function(hash_id){
+            var summary = $('#roles_status');
+             
             if( hash_id === 'roles' ){
-                $('#roles_status').html(i18n.roles_summary);
+                summary.html(i18n.roles_summary);
             } else if( hash_id === 'role_users' ){
-                $('#roles_status').html(i18n.users_summary);
+                summary.html(i18n.users_summary);
             } else if ( hash_id === 'role_permissions' ){
-                $('#roles_status').html(i18n.role_permissions_summary);
+                summary.html(i18n.role_permissions_summary);
             } else if ( hash_id === 'global' || hash_id.match(/organization?/g) ){
-                $('#roles_status').html(i18n.permissions_summary);
+                summary.html(i18n.permissions_summary);
             }
         },
         handleButtons = function(hash_id){
@@ -802,7 +808,7 @@ var rolesRenderer = (function($){
         render          :   render,
         sort            :   sort,
         setTreeHeight   :   setTreeHeight,
-        setStatus       :   setStatus,
+        setSummary      :   setSummary,
         handleButtons   :   handleButtons
     }
     

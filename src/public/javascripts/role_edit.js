@@ -16,7 +16,7 @@ $(function() {
                           tab_change_cb   :  function(hash_id) {
                                 rolesRenderer.sort(hash_id);
                                 rolesRenderer.setTreeHeight();
-                                rolesRenderer.setStatus(hash_id);
+                                rolesRenderer.setSummary(hash_id);
                                 rolesRenderer.handleButtons(hash_id);
                                 roleActions.setCurrentCrumb(hash_id);
                                 ROLES.actionBar.close();
