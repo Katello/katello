@@ -18,7 +18,7 @@ class UsersController < ApplicationController
   end
    
   before_filter :setup_options, :only => [:items, :index]
-  before_filter :find_user, :only => [:edit, :update, :clear_helptips, :destroy]
+  before_filter :find_user, :only => [:edit, :update, :update_roles, :clear_helptips, :destroy]
   before_filter :authorize
   skip_before_filter :require_org
 
@@ -38,6 +38,7 @@ class UsersController < ApplicationController
        :create => create_test,
        :edit => read_test,
        :update => edit_test,
+       :update_roles => edit_test,
        :clear_helptips => edit_test,
        :destroy => delete_test,
        :enable_helptip => user_helptip,
@@ -84,19 +85,27 @@ class UsersController < ApplicationController
   end
   
   def update
-    params[:user] = {"role_ids"=>[]} unless params.has_key? :user
     params[:user].delete :username
 
-    #Add in the own role if updating roles, cause the user shouldn't see his own role
-    if params[:user][:role_ids]
-      params[:user][:role_ids] << @user.own_role.id
-    end
-
-    if  @user.update_attributes(params[:user])
+    if @user.update_attributes(params[:user])
       notice _("User updated successfully.")
       attr = params[:user].first.last if params[:user].first
       attr ||= ""
       render :text => attr and return
+    end
+    errors "", {:list_items => @user.errors.to_a}
+    render :text => @user.errors, :status=>:ok
+  end
+
+  def update_roles
+    params[:user] = {"role_ids"=>[]} unless params.has_key? :user
+
+    #Add in the own role if updating roles, cause the user shouldn't see his own role
+    params[:user][:role_ids] << @user.own_role.id
+
+    if  @user.update_attributes(params[:user])
+      notice _("User updated successfully.")
+      render :nothing => true and return
     end
     errors "", {:list_items => @user.errors.to_a}
     render :text => @user.errors, :status=>:ok

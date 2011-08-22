@@ -107,6 +107,7 @@ Src::Application.routes.draw do
     end
     member do
       post :clear_helptips
+      put :update_roles
     end
   end
 
