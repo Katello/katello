@@ -48,7 +48,11 @@ var user_page = function() {
         var checkbox = $(this);
         var name = $(this).attr("name");
         var options = {};
-        options[name] = checkbox.attr("checked");
+        if (checkbox.attr("checked") !== undefined) {
+            options[name] = "1";
+        } else {
+            options[name] = "0";
+        }
         var url = checkbox.attr("data-url");
         $.ajax({
             type: "PUT",
