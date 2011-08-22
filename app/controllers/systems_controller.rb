@@ -50,7 +50,7 @@ class SystemsController < ApplicationController
 
   def index
     begin
-      @systems = System.search_for(params[:search]).where(:environment_id => current_organization.environments).limit(current_user.page_size)
+      @systems = System.readable(current_organization).search_for(params[:search]).limit(current_user.page_size)
       retain_search_history
       sort_columns(COLUMNS,@systems) if params[:order]
     rescue Exception => error
@@ -62,7 +62,6 @@ class SystemsController < ApplicationController
 
   def environments
     accesible_envs = KPEnvironment.systems_readable(current_organization)
-
 
     @panel_options[:ajax_scroll] = env_items_systems_path()
     begin
@@ -85,13 +84,13 @@ class SystemsController < ApplicationController
 
   def items
     start = params[:offset]
-    @systems = System.search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @systems = System.readable(current_organization).search_for(params[:search]).limit(current_user.page_size).offset(start)
     render_panel_items @systems, @panel_options
   end
 
   def env_items
     start = params[:offset]
-    @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size).offset(start)
+    @systems = System.readable(current_organization).search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size).offset(start)
     render_panel_items @systems, @panel_options
   end
 
@@ -193,9 +192,16 @@ class SystemsController < ApplicationController
 
 
   def find_environment
-    @environment ||= KPEnvironment.systems_readable(current_organization).first
-    @environment ||= current_organization.promotion_paths.first.nil? ? current_organization.locker : 
-                     current_organization.promotion_paths.first.first
+    readable = KPEnvironment.systems_readable(current_organization)
+    @environment = nil
+    current_organization.promotion_paths.each{|path|
+      path.each{|env|
+        if readable.member?(env)
+          @environment = env and return
+        end
+      }
+    }
+    @environment ||=  current_organization.locker
   end
 
   def find_system

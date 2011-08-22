@@ -64,7 +64,7 @@ SimpleNavigation::Configuration.run do |navigation|
           system_sub.item :facts, _("Facts"), facts_system_path(@system.id), :class => 'navigation_element'
           system_sub.item :packages, _("Packages"), packages_system_path(@system.id), :class => "navigation_element"
         end
-      end if current_organization.any_systems_readable?
+      end if System.any_readable?(current_organization)
       systems_sub.item :env, _("By Environments"), environments_systems_path() do |env_system_sub|
         if !@system.nil?
           env_system_sub.item :general, _("General"), edit_system_path(@system.id), :class => "navigation_element"
@@ -72,7 +72,7 @@ SimpleNavigation::Configuration.run do |navigation|
           env_system_sub.item :facts, _("Facts"), facts_system_path(@system.id), :class => 'navigation_element'
           env_system_sub.item :packages, _("Packages"), packages_system_path(@system.id), :class => "navigation_element"
         end
-      end if current_organization.any_systems_readable? 
+      end if System.any_readable?(current_organization)
       systems_sub.item :activation_keys, _("Activation Keys"), activation_keys_path do |activation_key_sub|
         if !@activation_key.nil?
           activation_key_sub.item :general, _("General"), edit_activation_key_path(@activation_key.id), :class => "navigation_element", 
