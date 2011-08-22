@@ -82,7 +82,7 @@ class ChangesetsController < ApplicationController
 
 
   def dependencies
-    product_map = @changeset.dependencies
+    product_map = @changeset.calc_dependencies
     to_ret = {}
 
     #temporarily transform product_map from id=>name  to id=>{:name, :dep_of} with a fake dep_of
@@ -205,28 +205,26 @@ class ChangesetsController < ApplicationController
   end
 
   def promote
-    if @changeset.state != Changeset::REVIEW
-      errors _("The changeset must be moved to the review stage before promotion")
-      render text=>"", :status => 500
-    end
-
-
     begin
       @changeset.promote
       # remove user edit tracking for this changeset
       ChangesetUser.destroy_all(:changeset_id => @changeset.id) 
-      notice _("Promoted '#{@changeset.name}' to #{@environment.name} environment"), :synchronous_request=>false
+      notice _("Started promotion of '#{@changeset.name}' to #{@environment.name} environment")
     rescue Exception => e
         errors  "Failed to promote: #{e.to_s}", :synchronous_request=>false
         logger.error $!, $!.backtrace.join("\n\t")
     end
 
-
     render :text=>url_for(:controller=>"promotions", :action => "show",
           :env_id => @environment.name, :org_id =>  @environment.organization.cp_key)
-
   end
 
+  def promotion_progress
+    progress = @changeset.task_status.progress
+    to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'progress' => progress.to_i}
+    render :json=>to_ret
+  end
+  
 
   private
 

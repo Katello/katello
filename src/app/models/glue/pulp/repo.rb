@@ -88,13 +88,22 @@ class Glue::Pulp::Repo
 
   #is the repo cloned in the specified environment
   def is_cloned_in? env
-    clone_id = Glue::Pulp::Repos.clone_repo_id(self.id, env.name)
-    return true if self.clone_ids.include?(clone_id)
-    return false
+    get_cloned_in(env) != nil
   end
+
 
   def get_clone env
     Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(self.id, env.name))
+  end
+
+  def get_cloned_in env
+    self.clone_ids.each{ |id|
+       curr_repo = Glue::Pulp::Repo.new(Pulp::Repository.find(id))
+       if (curr_repo.groupid.index(Glue::Pulp::Repos.env_groupid(env)))
+           return curr_repo
+       end
+    }
+    return nil
   end
 
   def has_package? id

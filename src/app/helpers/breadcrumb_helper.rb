@@ -30,7 +30,7 @@ module BreadcrumbHelper
 
     @changesets.each{|cs|
       add_crumb_node!(bc, changeset_bc_id(cs), "", cs.name, ['changesets'],
-                    {:client_render => true}, {:is_new=>cs.state == Changeset::NEW})
+                    {:client_render => true}, {:is_new=>cs.state == Changeset::NEW, :progress => cs.task_status ? cs.task_status.progress : nil})
 
       cs.involved_products.each{|product|
         #product details 
