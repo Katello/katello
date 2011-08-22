@@ -68,7 +68,21 @@ class System < ActiveRecord::Base
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
-  
+
+  def self.any_readable? org
+    User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, self) ||
+           User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, org.environments.collect{|e| e.id}, self, true)
+  end
+
+  def self.readable org
+      raise "scope requires an organization" if org.nil?
+      if User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, org)
+         where(:environment_id => org.environment_ids) #list all systems in an org 
+      else #just list for environments the user can access
+        where("systems.environment_id in (#{User.allowed_tags_sql([:read_systems, :update_systems, :delete_systems], :environments, org)})")
+      end    
+  end
+
   def readable?
    User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, self.organization) ||
       User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environment, self.environment.id, self.organization)
@@ -84,13 +98,9 @@ class System < ActiveRecord::Base
       User.allowed_to?(*[[:delete_systems], :environment, self.environment.id, self.organization])
   end
 
-  def self.any_readable? org
-    
-    
-
-  end
 
   private
+  
     def fill_defaults
       self.description = "Initial Registration Params" unless self.description
       self.location = "None" unless self.location
