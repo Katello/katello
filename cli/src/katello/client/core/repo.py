@@ -234,22 +234,45 @@ class Status(RepoAction):
 
     def setup_parser(self):
         self.parser.add_option('--id', dest='id',
-                               help=_("repo id, string value (required)"))
+                        help=_("repository id, string value (required)"))
+        self.parser.add_option('--name', dest='name',
+                        help=_("repository name"))
+        self.parser.add_option('--org', dest='org',
+                        help=_("organization name eg: foo.example.com"))
+        self.parser.add_option('--environment', dest='env',
+                        help=_("environment name eg: production (default: Locker)"))
+        self.parser.add_option('--product', dest='product',
+                        help=_("product name eg: fedora-14"))
 
     def check_options(self):
-        self.require_option('id')
+        if not self.has_option('id'):
+            self.require_option('name')
+            self.require_option('org')
+            self.require_option('product')
 
     def run(self):
-        repo_id = self.get_option('id')
-        repo = self.api.repo(repo_id)
+        repoId   = self.get_option('id')
+        repoName = self.get_option('name')
+        orgName  = self.get_option('org')
+        envName  = self.get_option('env')
+        prodName = self.get_option('product')
+
+        if repoId:
+            repo = self.api.repo(repoId)
+        else:
+            repo = get_repo(orgName, prodName, repoName, envName)
+            if repo == None:
+                return os.EX_DATAERR
 
         repo['last_sync'] = self.format_sync_time(repo['last_sync'])
         repo['sync_state'] = self.format_sync_state(repo['sync_state'])
 
         self.printer.addColumn('id')
+        self.printer.addColumn('name')
         self.printer.addColumn('package_count')
         self.printer.addColumn('last_sync')
-        self.printer.addColumn('sync_state',name=_("Progress"))
+        self.printer.addColumn('sync_state')
+        self.printer.addColumn('progress')
 
         self.printer.setHeader(_("Repository Status"))
         self.printer.printItem(repo)
@@ -268,7 +291,7 @@ class Info(RepoAction):
         self.parser.add_option('--org', dest='org',
                       help=_("organization name eg: foo.example.com"))
         self.parser.add_option('--environment', dest='env',
-                      help=_("environment name eg: production (default: locker)"))
+                      help=_("environment name eg: production (default: Locker)"))
         self.parser.add_option('--product', dest='product',
                       help=_("product name eg: fedora-14"))
 
