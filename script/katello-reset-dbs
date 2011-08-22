@@ -58,7 +58,7 @@ echo "Starting Pulp instance"
 $SRV pulp-server start
 
 echo "Starting Candlepin instance"
-start_unless_running
+start_unless_running candlepin
 
 echo "Initializing Katello database"
 rm -f /var/lib/katello/initdb_done
