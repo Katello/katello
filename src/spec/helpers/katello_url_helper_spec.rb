@@ -42,6 +42,24 @@ describe KatelloUrlHelper do
         kurl_valid?('ftp://65.190.152.28/fedora/x86_64').should be_true
         kurl_valid?('ftp://ftp.fedorahosted.org/rpms/index.html').should be_true
       end
+
+      it "should validate file urls" do
+        kurl_valid?('file://opt/repo').should be_true
+        kurl_valid?('/opt/repo').should be_true
+      end
+
+      it "should validate file urls" do
+        kurl_valid?('file://opt/repo-is-long/').should be_true
+        kurl_valid?('/opt/repo-for-me').should be_true
+      end
+
+      it "should validate file urls with multiple slashes" do
+        file_prefix?('file://///opt/repo').should be_true
+        kurl_valid?('file://///opt/').should be_true
+        file_prefix?('/////opt/repo').should be_true
+        kurl_valid?('/////opt/repo').should be_true
+      end
+
     end
     describe "Invalid Urls" do
       it "should catch invalid ipv4 urls" do
