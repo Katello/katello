@@ -27,7 +27,7 @@ export RAILS_ENV=$KATELLO_ENV
 
 status() {
     #check if pid file exists
-    pidfile=`ls ${KATELLO_PID} | head -n1`
+    pidfile=`ls ${KATELLO_PID} 2>/dev/null | head -n1`
     if [ -f $pidfile ]; then
         pid=`cat "$pidfile"`
         #check if proces with pid from the file is running
