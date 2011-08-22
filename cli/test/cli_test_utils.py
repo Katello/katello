@@ -2,33 +2,24 @@ import unittest
 from mock import Mock
 
 
-class CLIActionTestCase(unittest.TestCase):
+class CLITestCase(unittest.TestCase):
     
-    _options = {}
     _mocked_props = {}
     action = None
     module = None
-
-    def __init__(self, methodName='runTest'):
-        super(CLIActionTestCase, self).__init__(methodName)
-
-    def mock_options(self, options):
-        self.action.get_option = Mock()
-        self.action.get_option.side_effect = self.mocked_get_option
-
-        self._options = options
 
 
     def mock_from_module(self, property_name, return_value=None):
         return self.mock(self.module, property_name, return_value)
 
-
-    def mock(self, obj, property_name, return_value):
+    def mock(self, obj, property_name, return_value=None):
         #backup methods
         prop = getattr(obj, property_name)
-        if not isinstance(prop, Mock) :
+        if not isinstance(prop, Mock):
             key = str(obj) + "#" + property_name
-            self._mocked_props[key] = (obj, prop, property_name)
+            #save only the original function, not mocks when it's called for second time on the same obj#property
+            if not self._mocked_props.has_key(key):
+                self._mocked_props[key] = (obj, prop, property_name)
         
         #mock the function
         m = Mock()
@@ -38,20 +29,40 @@ class CLIActionTestCase(unittest.TestCase):
         
         return m
 
-
     def restore_mocks(self):
         for key, (obj, prop, prop_name) in self._mocked_props.iteritems():
             setattr(obj, prop_name, prop)
 
-
     def set_action(self, action):
         self.action = action
-
 
     def set_module(self, module):
         self.module = module
 
+    def tearDown(self):
+        self.restore_mocks()
 
+
+
+class CLIOptionTestCase(CLITestCase):
+
+
+    def mock_options(self):
+        self.mock(self.action, 'get_option').side_effect = self.mocked_get_option
+        
+    def mocked_get_option(self, opt, default=None):
+        return getattr(self.action.opts, opt, default)
+
+
+
+class CLIActionTestCase(CLITestCase):
+
+    _options = {}
+
+    def mock_options(self, options):
+        self.mock(self.action, 'get_option').side_effect = self.mocked_get_option
+        self._options = options
+        
     def mocked_get_option(self, opt, default=None):
         try:
             return self._options[opt]

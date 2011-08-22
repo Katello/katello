@@ -1,7 +1,7 @@
 import unittest
 import os
 from mock import Mock
-from cli_test_utils import CLIActionTestCase
+from cli_test_utils import CLIOptionTestCase, CLIActionTestCase
 
 import katello.client.core.repo
 from katello.client.core.repo import Sync
@@ -11,10 +11,11 @@ try:
 except ImportError:
     import simplejson as json
 
-class RequiredCLIOptionsTests(unittest.TestCase):
+class RequiredCLIOptionsTests(CLIOptionTestCase):
     #repo is defined by either (org, product, repo_name) or repo_id
     def setUp(self):
-        self.action = Sync()
+        self.set_action(Sync())
+        self.mock_options()
 
     def test_missing_org_generates_error(self):
         self.assertRaises(Exception, self.action.process_options, ['synchronize', '--name=repo1', '--product=product1'])
