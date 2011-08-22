@@ -23,7 +23,8 @@ class Changeset < ActiveRecord::Base
   NEW = 'new'
   REVIEW = 'review'
   PROMOTED = 'promoted'
-  STATES = [NEW, REVIEW, PROMOTED]
+  PROMOTING = 'promoting'
+  STATES = [NEW, REVIEW, PROMOTING, PROMOTED]
 
   validates_inclusion_of :state,
     :in => STATES,
@@ -40,6 +41,7 @@ class Changeset < ActiveRecord::Base
   has_many :errata, :class_name=>"ChangesetErratum", :inverse_of=>:changeset
   has_many :repos, :class_name=>"ChangesetRepo", :inverse_of => :changeset
   has_many :distributions, :class_name=>"ChangesetDistribution", :inverse_of => :changeset
+  has_many :dependencies, :class_name=>"ChangesetDependency", :inverse_of =>:changeset
   belongs_to :environment, :class_name=>"KPEnvironment"
   belongs_to :task_status
   before_save :uniquify_artifacts
@@ -78,8 +80,8 @@ class Changeset < ActiveRecord::Base
     to_ret.uniq
   end
 
+  def calc_dependencies to_save = false
 
-  def dependencies
     from_env = self.environment.prior
     to_env   = self.environment
 
@@ -137,6 +139,17 @@ class Changeset < ActiveRecord::Base
 
       }
     }
+
+    if to_save
+      product_hash.each{|prod_id, pkg_array|
+        pkg_array.each{|pkg|
+          self.dependencies << ChangesetDependency.new(:package_id => pkg.id, :display_name => pkg.nvrea,
+                                                       :product_id => prod_id, :changeset => self)
+        }
+      }
+      self.save()
+    end
+
     product_hash
 
 
@@ -147,43 +160,24 @@ class Changeset < ActiveRecord::Base
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
-  def promote
-    raise _("Cannot promote a changeset when it is not in the reivew phase") if self.state != Changeset::REVIEW
 
-    from_env = self.environment.prior
-    to_env   = self.environment
+  def promote async=true
+    raise _('Cannot promote a changeset when it is not in the review phase') if self.state != Changeset::REVIEW
+    #check for other changesets promoting
+    raise _('Cannot promote a changeset while another is being promoted.') if self.environment.promoting_to?
 
-    wait_for_tasks promote_products(from_env, to_env)
-    wait_for_tasks promote_repos(from_env, to_env)
-    promote_packages from_env, to_env
-    promote_errata   from_env, to_env
-
-    self.promotion_date = Time.now
-    self.state = Changeset::PROMOTED
-    self.save!
-  end
-
-  def wait_for_tasks async_tasks
-    async_tasks = async_tasks.collect do |t|
-      ts = PulpTaskStatus.using_pulp_task(t)
-      ts.organization = self.environment.organization
-      ts
+    if async
+      task = self.async(:organization=>self.environment.organization).promote_content
+      self.task_status = task
+      self.state = Changeset::PROMOTING
+      self.save!
+    else
+      promote_content
     end
 
-    any_running = true
-    while any_running
-      any_running = false
-      for t in async_tasks
-        t.refresh
-        if ((t.state == TaskStatus::Status::WAITING) or (t.state == TaskStatus::Status::RUNNING))
-          any_running = true
-          break
-        end
-      end
-    end
-
-    async_tasks
+    true
   end
+
 
   def find_product product_name
     from_env = self.environment.prior
@@ -280,7 +274,7 @@ class Changeset < ActiveRecord::Base
         pack = repo.packages[idx]
         ChangesetPackage.destroy_all(:package_id => pack.id, :changeset_id => self.id, :product_id => product.id)
         return
-      end
+     end
     end
   end
 
@@ -321,9 +315,74 @@ class Changeset < ActiveRecord::Base
   end
 
 
-  #TODO: add validation
 
   private
+
+  def update_progress! percent
+    if self.task_status
+      self.task_status.progress = percent
+      self.task_status.save!
+    end
+  end
+
+
+  def promote_content
+    update_progress! '0'
+    self.calc_dependencies(true)
+
+    update_progress! '10'
+
+    from_env = self.environment.prior
+    to_env   = self.environment
+
+    wait_for_tasks promote_products(from_env, to_env)
+    update_progress! '50'
+    wait_for_tasks promote_repos(from_env, to_env)
+    update_progress! '80'
+    promote_packages from_env, to_env
+    update_progress! '90'
+    promote_errata   from_env, to_env
+    update_progress! '100'
+    self.promotion_date = Time.now
+    self.state = Changeset::PROMOTED
+    self.save!
+  end
+
+  def wait_for_tasks async_tasks
+
+    async_tasks = async_tasks.collect do |t|
+      ts = PulpTaskStatus.using_pulp_task(t)
+      ts.organization = self.environment.organization
+      ts
+    end
+
+    any_running = true
+    while any_running
+      any_running = false
+      for t in async_tasks
+        t.refresh
+        if ((t.state == TaskStatus::Status::WAITING.to_s) or (t.state == TaskStatus::Status::RUNNING.to_s))
+          any_running = true
+          break
+        end
+      end
+    end
+    async_tasks
+  end
+
+
+
+  def products_to_promote from_env, to_env
+    #promote all products stacked for promotion + (products required by packages,errata & repos - products in target env)
+    required_products = []
+    required_products << self.packages.collect do |p| Product.find(p.product_id) end
+    required_products << self.errata.collect do |e|   Product.find(e.product_id) end
+    required_products << self.repos.collect do |r|    Product.find(r.product_id) end
+    required_products = required_products.flatten(1)
+    products_to_promote = (self.products + (required_products - to_env.products)).uniq
+    products_to_promote
+  end
+
 
   def promote_products from_env, to_env
     async_tasks = self.products.collect do |product|
@@ -342,8 +401,9 @@ class Changeset < ActiveRecord::Base
 
       next if (products.uniq! or []).include? product
 
-      if repo.is_cloned_in?(to_env)
-        async_tasks << repo.sync
+      cloned = repo.get_cloned_in(to_env)
+      if cloned
+        async_tasks << cloned.sync
       else
         async_tasks << repo.promote(to_env, product)
       end
