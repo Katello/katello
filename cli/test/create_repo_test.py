@@ -1,29 +1,31 @@
 import unittest
 from mock import Mock
 import urlparse
+from cli_test_utils import CLIOptionTestCase
 
 import katello.client.core.repo
 from katello.client.core.repo import Discovery
 
-class RequiredCLIOptionsTests(unittest.TestCase):
+class RequiredCLIOptionsTests(CLIOptionTestCase):
     def setUp(self):
-        self.create_action = Discovery()
+        self.set_action(Discovery())
+        self.mock_options()
 
     def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.create_action.process_options, ['create', '--name=repo1', '--url=http://localhost', '--product=product1'])
+        self.assertRaises(Exception, self.action.process_options, ['create', '--name=repo1', '--url=http://localhost', '--product=product1'])
 
     def test_missing_product_generates_error(self):
-        self.assertRaises(Exception, self.create_action.process_options, ['create', '--org=ACME', '--name=repo1', '--url=http://localhost'])
+        self.assertRaises(Exception, self.action.process_options, ['create', '--org=ACME', '--name=repo1', '--url=http://localhost'])
 
     def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.create_action.process_options, ['create', '--org=ACME', '--url=http://localhost', '--product=product1'])
+        self.assertRaises(Exception, self.action.process_options, ['create', '--org=ACME', '--url=http://localhost', '--product=product1'])
 
     def test_missing_url_generates_error(self):
-        self.assertRaises(Exception, self.create_action.process_options, ['create', '--org=ACME', '--name=repo1', '--product=product1'])
+        self.assertRaises(Exception, self.action.process_options, ['create', '--org=ACME', '--name=repo1', '--product=product1'])
 
     def test_no_error_if_required_options_provided(self):
-        self.create_action.process_options(['create', '--org=ACME', '--name=repo1', '--url=http://localhost', '--product=product1'])
-        self.assertEqual(len(self.create_action.optErrors), 0)
+        self.action.process_options(['create', '--org=ACME', '--name=repo1', '--url=http://localhost', '--product=product1'])
+        self.assertEqual(len(self.action.optErrors), 0)
 
 
 class RepoDiscoveryTest(unittest.TestCase):

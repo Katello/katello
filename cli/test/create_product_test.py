@@ -1,25 +1,27 @@
 import unittest
 from mock import Mock
+from cli_test_utils import CLIOptionTestCase
 
 import katello.client.core.product
 from katello.client.core.product import Create
 
-class RequiredCLIOptionsTests(unittest.TestCase):
+class RequiredCLIOptionsTests(CLIOptionTestCase):
     def setUp(self):
-        self.create_action = Create()
+        self.set_action(Create())
+        self.mock_options()
 
     def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.create_action.process_options, ['create', '--provider=porkchop', '--name=product1'])
+        self.assertRaises(Exception, self.action.process_options, ['create', '--provider=porkchop', '--name=product1'])
 
     def test_missing_product_generates_error(self):
-        self.assertRaises(Exception, self.create_action.process_options, ['create', '--org=ACME', '--provider=porkchop'])
+        self.assertRaises(Exception, self.action.process_options, ['create', '--org=ACME', '--provider=porkchop'])
 
     def test_missing_prov_generates_error(self):
-        self.assertRaises(Exception, self.create_action.process_options, ['create', '--org=ACME', '--name=product1'])
+        self.assertRaises(Exception, self.action.process_options, ['create', '--org=ACME', '--name=product1'])
 
     def test_no_error_if_required_options_provided(self):
-        self.create_action.process_options(['create', '--org=ACME', '--provider=porkchop', '--name=product1'])
-        self.assertEqual(len(self.create_action.optErrors), 0)
+        self.action.process_options(['create', '--org=ACME', '--provider=porkchop', '--name=product1'])
+        self.assertEqual(len(self.action.optErrors), 0)
 
 
 class CreateTest(unittest.TestCase):

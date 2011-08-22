@@ -1,6 +1,7 @@
 import unittest
 from mock import Mock
 import os
+from cli_test_utils import CLIOptionTestCase
 
 import katello.client.core.provider
 from katello.client.core.provider import Sync
@@ -11,19 +12,20 @@ except ImportError:
     import simplejson as json
 
 
-class RequiredCLIOptionsTests(unittest.TestCase):
+class RequiredCLIOptionsTests(CLIOptionTestCase):
     def setUp(self):
-        self.sync_action = Sync()
+        self.set_action(Sync())
+        self.mock_options()
 
     def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.sync_action.process_options, ['sync', '--name=provider'])
+        self.assertRaises(Exception, self.action.process_options, ['sync', '--name=provider'])
 
     def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.sync_action.process_options, ['sync', '--org=ACME'])
+        self.assertRaises(Exception, self.action.process_options, ['sync', '--org=ACME'])
 
     def test_no_error_if_required_options_provided(self):
-        self.sync_action.process_options(['sync', '--org=ACME', '--name=provider'])
-        self.assertEqual(len(self.sync_action.optErrors), 0)
+        self.action.process_options(['sync', '--org=ACME', '--name=provider'])
+        self.assertEqual(len(self.action.optErrors), 0)
         
 class SyncTest(unittest.TestCase):
     
