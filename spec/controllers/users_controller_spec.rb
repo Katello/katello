@@ -79,10 +79,10 @@ describe UsersController do
     it "should allow roles to be changed" do
        role = Role.where(:name=>"Test")[0]
        assert !role.nil?
-       put 'update', {:id => @user.id, :user=>{:role_ids=>[role.id]}}
+       put 'update_roles', {:id => @user.id, :user=>{:role_ids=>[role.id]}}
        response.should be_success
        assert User.find(@user.id).roles.size == 2
-       put 'update', {:id => @user.id, :user=>{:role_ids=>[]}}
+       put 'update_roles', {:id => @user.id, :user=>{:role_ids=>[]}}
        response.should be_success
        #should still have self role
        assert User.find(@user.id).roles.size == 1
