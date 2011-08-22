@@ -32,7 +32,9 @@ ROLES.permissionWidget = function(){
                                   container : $('#name_container'),
                                   validate  : function(){
                                         if( $("#permission_name").val() === "" ){
-                                            $('#name_container').append('<div class="permission_add_container"><span class="validation_error">' + i18n.name_validation + '</span></div>');
+                                            if( !$('#name_container').find('span').hasClass('validation_error') ){
+                                                $('#name_container').append('<div class="permission_add_container"><span class="validation_error">' + i18n.name_validation + '</span></div>');
+                                            }
                                             return false;
                                         }  else {
                                             $('#name_container').find('span').remove();
@@ -134,6 +136,9 @@ ROLES.permissionWidget = function(){
             done_button.hide();
             $('#verbs').removeAttr('disabled');
             $('#tags').removeAttr('disabled');
+            current_stage = 'name';
+            $('#add_permission_form')[0].reset();
+            $('.validation_error').remove();
         },
         handleNext = function(){
             var next = flow[current_stage].next; 
@@ -207,7 +212,7 @@ ROLES.permissionWidget = function(){
                 };
             
             if( opening ){
-                $('#permission_add').children().show();
+                reset();
                 set_types();
                 set_verbs_and_tags($('#resource_type').val());
                 button.children('span').html(i18n.close_add_permission);
