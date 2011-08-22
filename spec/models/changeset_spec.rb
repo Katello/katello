@@ -89,6 +89,7 @@ describe Changeset do
         @repo.stub(:errata).and_return([@err])
         @repo.stub(:has_package?).with(1).and_return(true)
         @repo.stub(:has_erratum?).with('err').and_return(true)
+        @repo.stub(:clone_ids).and_return([])
 
         @prod.stub(:repos).and_return([@repo])
         Product.stub(:find).and_return(@prod)
@@ -188,6 +189,7 @@ describe Changeset do
         @repo.stub(:distributions).and_return([@distribution])
         @repo.stub(:packages).and_return([@pack])
         @repo.stub(:errata).and_return([@err])
+        @repo.stub(:clone_ids).and_return([])
 
 
         @prod.stub(:repos).and_return([@repo])
@@ -248,17 +250,20 @@ describe Changeset do
         @repo.stub(:has_package?).and_return(true)
         @repo.stub(:has_erratum?).and_return(true)
         @repo.stub(:is_cloned_in?).and_return(true)
+        @repo.stub(:clone_ids).and_return([])
         Glue::Pulp::Repo.stub(:find).and_return(@repo)
 
         @clone = mock('Repo', {:id => 2, :name => 'repo_clone'})
         @clone.stub(:has_package?).and_return(false)
         @clone.stub(:has_erratum?).and_return(false)
+        @repo.stub(:clone_ids).and_return([])
         @repo.stub(:get_clone).and_return(@clone)
-
+        @repo.stub(:get_cloned_in).and_return(nil)
         @prod.stub(:repos).and_return([@repo])
 
         @environment.prior.stub(:products).and_return([@prod])
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
+        @changeset.stub(:wait_for_tasks).and_return(nil)
 
       end
 
@@ -272,7 +277,7 @@ describe Changeset do
 
         @prod.should_receive(:promote).once
 
-        @changeset.promote
+        @changeset.promote(false)
       end
 
       it "should promote repositories" do
@@ -281,9 +286,10 @@ describe Changeset do
         @changeset.state = Changeset::REVIEW
 
         @repo.stub(:is_cloned_in?).and_return(false)
+        
         @repo.should_receive(:promote).once
 
-        @changeset.promote
+        @changeset.promote(false)
       end
 
       it "should synchronize repositories that have been promoted" do
@@ -291,10 +297,11 @@ describe Changeset do
         @changeset.repos << ChangesetRepo.new(:repo_id => @repo.id, :display_name => @repo.name, :product_id => @prod.id, :changeset => @changeset)
         @changeset.state = Changeset::REVIEW
 
+        @repo.stub(:get_cloned_in).and_return(@clone)
         @repo.stub(:is_cloned_in?).and_return(true)
-        @repo.should_receive(:sync).once
+        @clone.should_receive(:sync).once.and_return()
 
-        @changeset.promote
+        @changeset.promote(false)
       end
 
       it "should promote packages" do
@@ -304,7 +311,7 @@ describe Changeset do
 
         @clone.should_receive(:add_packages).once.with([@pack.id])
 
-        @changeset.promote
+        @changeset.promote(false)
       end
 
       it "should promote errata" do
@@ -314,7 +321,7 @@ describe Changeset do
 
         @clone.should_receive(:add_errata).once.with([@err.id])
 
-        @changeset.promote
+        @changeset.promote(false)
       end
 
     end
