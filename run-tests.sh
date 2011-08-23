@@ -4,7 +4,14 @@
 jsl --conf scripts/jsl-errors-only.conf 
 OUT=$?
 if [ $OUT -ge 3 ];then
-  echo "SYNTAX ERROR detected in JavaScript files in src/public/javascripts/"
+  echo ""
+  echo ""
+  echo ""
+  echo "SYNTAX ERROR detected in JavaScript files in src/public/javascripts/.  "
+  echo "Run jsl --conf scripts/jsl-errors-only.conf to reproduce locally."
+  echo ""
+  echo ""
+  echo ""
   exit 1
 fi
 
