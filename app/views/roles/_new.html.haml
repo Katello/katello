@@ -8,8 +8,8 @@
         .grid_1.ra
           = label :role, :name, _("Name")
         .grid_5.la
-          = text_field :role, :name, :id=>"role_name_field", :tabindex => 1
+          = text_field :role, :name, :id=>"role_name_field", :tabindex => auto_tab_index
   
       .grid_3.la.push_1
-        .button#save_role_button{:tabindex => 2}
+        .button#save_role_button{:tabindex => auto_tab_index}
           #{("Save Role")}
