@@ -13,8 +13,12 @@
 class Api::ProductsController < Api::ApiController
   respond_to :json
   before_filter :find_organization, :only => [:index]
-  before_filter :find_product, :only => [:repositories]
+  before_filter :find_product, :only => [:repositories, :show]
   before_filter :find_environment, :only => [:index, :repositories]
+
+  def show
+    render :json => @product.to_json
+  end
 
   def index
     query_params.delete(:organization_id)
