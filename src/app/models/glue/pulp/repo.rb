@@ -124,6 +124,11 @@ class Glue::Pulp::Repo
     [Pulp::Repository.sync(id)]
   end
 
+  #get last sync status of all repositories in this product
+  def latest_sync_statuses
+    [self._get_most_recent_sync_status()]
+  end
+
   def sync_status
     self._get_most_recent_sync_status()
   end
@@ -147,6 +152,7 @@ class Glue::Pulp::Repo
   end
 
   def cancel_sync
+    Rails.logger.info "Cancelling synchronization of repository #{@id}"
     history = Pulp::Repository.sync_history(@id)
     return if (history.nil? or history.empty?)
 

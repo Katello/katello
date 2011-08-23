@@ -37,10 +37,16 @@ module Glue::Provider
       end.flatten
     end
 
+    #get last sync status of all repositories in this provider
+    def latest_sync_statuses
+      self.products.collect do |p|
+        p.latest_sync_statuses()
+      end.flatten
+    end
+
     def cancel_sync
       Rails.logger.info "Cancelling synchronization of provider #{name}"
       self.products.each do |p|
-        Rails.logger.info "Cancelling synchronization of  product #{p.name}"
         p.cancel_sync
       end
     end

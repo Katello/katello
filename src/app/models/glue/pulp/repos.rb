@@ -100,8 +100,15 @@ module Glue::Pulp::Repos
       self.repos(locker).any? { |r| r.synced? }
     end
 
+    #get last sync status of all repositories in this product
+    def latest_sync_statuses
+      self.repos(locker).collect do |r|
+        r._get_most_recent_sync_status()
+      end
+    end
+
     # Get the most relavant status for all the repos in this Product
-    def sync_status
+    def overall_sync_status
       states = Array.new
       # Get the most recent status from all the repos in this product
       not_synced = ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED)
@@ -133,7 +140,7 @@ module Glue::Pulp::Repos
 
     def sync_start
       start_times = Array.new
-      for r in repos
+      for r in repos(locker)
         start = r.sync_start
         start_times << start unless start.nil?
       end
@@ -143,7 +150,7 @@ module Glue::Pulp::Repos
 
     def sync_finish
       finish_times = Array.new
-      for r in repos
+      for r in repos(locker)
         finish = r.sync_finish
         finish_times << finish unless finish.nil?
       end
@@ -156,7 +163,8 @@ module Glue::Pulp::Repos
     end
 
     def cancel_sync
-      for r in repos
+      Rails.logger.info "Cancelling synchronization of product #{name}"
+      for r in repos(locker)
         r.cancel_sync
       end
     end
