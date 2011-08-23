@@ -115,6 +115,11 @@ exec {"cpsetup":
     require => [Exec["CandlepinDB"],Line[katellomodule]]
 }
 
+exec {"cpsetup":
+    command => "/usr/share/candlepin/cpsetup",
+    require => [Exec["CandlepinDB"],Line[katellomodule]]
+}
+
 notify {"testing":
     message => "Verify install with curl -k -u admin:admin https://localhost:8443/candlepin/status",
     require => Exec["cpsetup"]
