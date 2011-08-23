@@ -10,23 +10,23 @@
         .grid_2.ra
           = label :user, :username, _("Username")
         .grid_5.la
-          = text_field :user, :username, :id=>"username_field", :tabindex => 1
+          = text_field :user, :username, :id=>"username_field", :tabindex => auto_tab_index
       %fieldset        
         .grid_2.ra
           = label :user, :username, _("Password")
         .grid_5.la
-          = text_field :user, :username, :id=>"password_field", :type=>"password", :tabindex => 2
+          = text_field :user, :username, :id=>"password_field", :type=>"password", :tabindex => auto_tab_index
       .grid_5.la.prefix_2
         #password_meter             
       %fieldset
         .grid_2.ra
           = label :user, :username, _("Confirm")
         .grid_5.la
-          = text_field :user, :username, :id=>"confirm_field", :type=>"password", :tabindex => 3
+          = text_field :user, :username, :id=>"confirm_field", :type=>"password", :tabindex => auto_tab_index
         .grid_2.ra
         .grid_5.la
           #password_conflict
         
     .grid_5.la.prefix_2
-      #save_user.verify_password.button{:tabindex => 4}
+      #save_user.verify_password.button{:tabindex => auto_tab_index}
         #{_("Save User")}
