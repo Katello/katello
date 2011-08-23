@@ -24,7 +24,8 @@ class Api::ProductsController < Api::ApiController
     query_params.delete(:organization_id)
     query_params.delete(:environment_id)
 
-    render :json => (@environment.products.where query_params).to_json
+    render :json => Product.where(query_params) if @environment == nil
+    render :json => @environment.products.where(query_params).all if @environment != nil
   end
 
   def repositories
@@ -41,8 +42,9 @@ class Api::ProductsController < Api::ApiController
   def find_environment
     if params[:environment_id].nil?
       return @environment = @organization.locker unless @organization.nil?
-      return @environment = @product.organization.locker
+      return @environment = @product.organization.locker unless @product.nil?
+    else
+      @environment = KPEnvironment.find(params[:environment_id])
     end
-    @environment = KPEnvironment.find(params[:environment_id])
   end
 end

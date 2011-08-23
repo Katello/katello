@@ -31,6 +31,7 @@ class Product < ActiveRecord::Base
   validates :description, :katello_description_format => true
   validates :environments, :locker_presence => true
   validates :name, :presence => true, :katello_name_format => true
+  validates_uniqueness_of :name, :scope => :provider_id, :message => N_("must be unique within one provider")
 
   scoped_search :on => :name, :complete_value => true
   scoped_search :on => :multiplier, :complete_value => true
@@ -70,15 +71,28 @@ class Product < ActiveRecord::Base
     N_('None')
   end
 
-  def to_json(options={})
-    json = self.as_json(options.merge(:except => :cp_id))
-    json = json.merge(:sync_state => self.sync_state,
+  #def to_json(options={})
+  #  json = self.as_json(options.merge(:except => :cp_id))
+  #  json = json.merge(:sync_state => self.sync_state,
+  #                    :last_sync => self.last_sync,
+  #                    :productContent => self.productContent,
+  #                    :multiplier => self.multiplier,
+  #                    :attributes => self.attrs,
+  #                    :id => self.cp_id)
+  #  ActiveSupport::JSON.encode(json)
+  #end
+
+
+  def serializable_hash(options={})
+    options = {} if options == nil
+    hash = super(options.merge(:except => :cp_id))
+    hash = hash.merge(:sync_state => self.sync_state,
                       :last_sync => self.last_sync,
                       :productContent => self.productContent,
                       :multiplier => self.multiplier,
                       :attributes => self.attrs,
                       :id => self.cp_id)
-    ActiveSupport::JSON.encode(json)
+    hash
   end
 
   #Permissions
