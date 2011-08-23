@@ -37,6 +37,10 @@ module Glue::Pulp::Repos
     parts.join("-")
   end
 
+  def self.clone_repo_path(repo, environment)
+    [environment.organization.name,environment.name,repo.product.name,repo.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
+  end
+
   def self.env_orgid(org)
       "org:#{org.id}"
   end
@@ -297,11 +301,12 @@ module Glue::Pulp::Repos
           async_tasks << repo.promote(to_env, self)
 
           new_repo_id = Glue::Pulp::Repos.clone_repo_id(repo.id, to_env.name)
+          new_repo_path = Glue::Pulp::Repos.clone_repo_path(repo, to_env)
 
           pulp_uri = URI.parse(AppConfig.pulp.url)
           new_productContent = Glue::Candlepin::ProductContent.new({:content => {
               :name => repo.name,
-              :contentUrl => "#{pulp_uri.scheme}://#{pulp_uri.host}/pulp/repos/#{new_repo_id}/",
+              :contentUrl => "/#{new_repo_path}",
               :id => new_repo_id,
               :type => "yum",
               :label => new_repo_id,
