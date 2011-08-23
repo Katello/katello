@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.68
+Version:	      0.1.69
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -197,6 +197,54 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Aug 23 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.69-1
+- 731670 - prevent user from deleting himself
+- 731670 - reformatting rescue block
+- ignore case for url validation
+- add in spec tests for invalid/valid file urls
+- support file based urls for validation
+- spec fixes
+- merging changeset promotion status to master
+- hiding the promotion progress bar and replacing it with just text, also
+  stopping the fade out upon completion
+- fixing issue with promotions where if the repo didnt exist in the next env it
+  would fail
+- two spec fixes
+- a few promotion fixes, waiting on syncing was n ot working, client side
+  updater was caching
+- fixing promotion backend to sync the cloned repo and not the repo that you
+  are promoting
+- changing notice on promotion
+- fixing issue where promotion could cause a db lock error, fixed by not
+  modifying the outside of itself
+- fixing issue where promoted changeset was not removed from the
+  changeset_breadcrumb
+- Promotion - Adjusts alignment of changesets in the list when progress and
+  locked.
+- Promotions - Changes to alignment in changesets when being promoted and
+  locked.
+- Promtoions - Fixes issue with title not appearing on a changeset being
+  promoted. Changes from redirect on promote of a changeset to return user to
+  list of changesets to see progress.
+- fixing types of changesets shown on the promotions page
+- removed rogue debugger statement
+- Promotions - Progress polling for a finished changeset now ceases upon
+  promotion reaching 100%.
+- Fixes issue with lock icon showing up when progress. Fixes issue with looking
+  for progress as a number - should receive string.
+- adding some non-accurate progress incrementing to changesets
+- Promotions - Updated to submit progress information from real data off of
+  changest task status.
+- getting async job working with promotions
+- Added basic progress spec test. Added route for getting progress along with
+  stubbed controller action to return progress for a changeset.
+- Adds new callback when rendering is done for changeset lists that adds locks
+  and progress bars as needed on changeset list load.
+- Adds javascript functionality to set a progress bar on a changeset, update it
+  and remove it. Adds javascript functionality to add and remove locked status
+  icons from changests.
+- adding changeset dependencies to be stored upon promotion time
+
 * Mon Aug 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.68-1
 - init script - fixing schema.rb permissions check
 - katello-jobs - suppressing error message for status info
