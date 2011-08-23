@@ -93,7 +93,7 @@ class Glue::Pulp::Repo
 
 
   def get_clone env
-    Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(self.id, env.name))
+    Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(self, env))
   end
 
   def get_cloned_in env
@@ -197,7 +197,7 @@ class Glue::Pulp::Repo
 
   def promote(to_environment, product)
     cloned = Glue::Pulp::Repo.new
-    cloned.id = Glue::Pulp::Repos.clone_repo_id(id, to_environment.name)
+    cloned.id = Glue::Pulp::Repos.clone_repo_id(self, to_environment)
     cloned.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_environment)
     cloned.arch = arch
     cloned.name = name
