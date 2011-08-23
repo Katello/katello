@@ -326,6 +326,7 @@ class Action(object):
         return True
 
     def error(self, errorMsg):
+        print errorMsg
         _log.error("error: %s" % str(errorMsg))
         print >> sys.stderr, _('error: operation failed: ') + str(errorMsg)
 
