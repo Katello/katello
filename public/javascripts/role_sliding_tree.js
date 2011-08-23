@@ -160,9 +160,15 @@ ROLES.permissionWidget = function(){
             current_stage = previous;
         },
         handleDone = function(){
+            if ( done_button.hasClass('disabled') ){
+                    return false;
+            }
+            
+            done_button.addClass('disabled');
             roleActions.savePermission(function(){
                 current_stage = 'name';
                 reset();
+                done_button.removeClass('disabled');
             });
         },
         permission_add = function(opening){
@@ -861,7 +867,7 @@ var pageActions = (function($){
             });
             
             $('#add_permission').live('click', function() {
-                if ($(this).hasClass('disabled')){
+                if ( $(this).hasClass('disabled') ){
                     return false;
                 }
                 ROLES.actionBar.toggle('permission_add');
