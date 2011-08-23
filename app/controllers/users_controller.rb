@@ -90,6 +90,7 @@ class UsersController < ApplicationController
   def destroy
     @id = params[:id]
     @user = User.where(:id => @id)[0]
+    raise "Cannot delete currently logged user" if @user == User.current
     #remove the user
     @user.destroy
     if @user.destroyed?
