@@ -92,4 +92,5 @@
             SPRITE
           %span.text
             = _("Remove Role")
-      #placeholder.cs_action
+      - if Role.deletable? or Role.editable?
+        #placeholder.cs_action
