@@ -630,11 +630,12 @@ var templateLibrary = (function($){
         permissionsListItem = function(permission_id, name, showButton) {
             var anchor = "";
             
-            if ( showButton ){
-                anchor = '<a ' + 'class="fr content_add_remove remove_permission st_button"'
-                                + 'data-type="permission" data-id="' + permission_id + '">';
-                            anchor += i18n.remove + "</a>";
-                        
+            if ( showButton ) {
+                if (permissions.create_roles || permissions.update_roles) {
+                    anchor = '<a ' + 'class="fr content_add_remove remove_permission st_button"'
+                                    + 'data-type="permission" data-id="' + permission_id + '">';
+                                anchor += i18n.remove + "</a>";
+                }
             }
             
             return '<li>' + anchor + '<div class="slide_link" id="' + permission_id + '"><span class="sort_attr">'  + name + '</span></div></li>';
@@ -671,12 +672,17 @@ var templateLibrary = (function($){
         },
         usersListItem = function(user_id, name, has_role, showButton) {
             var anchor = "";
-            
-            if ( showButton ){
-                anchor = '<a ' + 'class="fr content_add_remove ';
-                anchor += has_role ? 'remove_user' : 'add_user';
-                anchor += ' st_button" data-type="user" data-id="' + user_id + '">';
-                anchor += has_role ? (i18n.remove + "</a>") : (i18n.add + "</a>");
+
+            if ( showButton ) {
+                if (permissions.create_roles || permissions.update_roles) {
+                    anchor = '<a ' + 'class="fr content_add_remove ';
+                    anchor += has_role ? 'remove_user' : 'add_user';
+                    anchor += ' st_button" data-type="user" data-id="' + user_id + '">';
+                    anchor += has_role ? (i18n.remove + "</a>") : (i18n.add + "</a>");
+                } else {
+                    anchor = "<div class=\"fr st_button\">";
+                    anchor += has_role ? (i18n.rule_applied + "</div>") : (i18n.rule_not_applied + "</div>");
+                }
             }
             
             return '<li>' + anchor + '<div class="no_slide"><span class="sort_attr">'  + name + '</span></div></li>';
@@ -792,13 +798,30 @@ var rolesRenderer = (function($){
             var summary = $('#roles_status');
              
             if( hash_id === 'roles' ){
-                summary.html(i18n.roles_summary);
-            } else if( hash_id === 'role_users' ){
-                summary.html(i18n.users_summary);
-            } else if ( hash_id === 'role_permissions' ){
-                summary.html(i18n.role_permissions_summary);
+                if (permissions.create_roles || permissions.update_roles) {
+                    summary.html(i18n.roles_summary);
+                } else {
+                    summary.html(i18n.roles_summary_readonly);
+                }
+            } else if( hash_id === 'role_users' ) {
+                if (permissions.create_roles || permissions.update_roles) {
+                    summary.html(i18n.users_summary);
+                } else {
+                    summary.html(i18n.users_summary_readonly);
+                }
+
+            } else if ( hash_id === 'role_permissions' ) {
+                if (permissions.create_roles || permissions.update_roles) {
+                    summary.html(i18n.role_permissions_summary);
+                } else {
+                    summary.html(i18n.role_permissions_summary_readonly);
+                }
             } else if ( hash_id === 'global' || hash_id.match(/organization?/g) ){
-                summary.html(i18n.permissions_summary);
+                if (permissions.create_roles || permissions.update_roles) {
+                    summary.html(i18n.permissions_summary);
+                } else {
+                    summary.html(i18n.permissions_summary_readonly);
+                }
             }
         },
         handleButtons = function(hash_id){

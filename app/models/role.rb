@@ -75,11 +75,11 @@ class Role < ActiveRecord::Base
     User.allowed_to?([:create], :roles, nil)
   end
 
-  def editable?
+  def self.editable?
    User.allowed_to?([:update, :create], :roles, nil)
   end
 
-  def deletable?
+  def self.deletable?
     User.allowed_to?([:delete, :create],:roles, nil)
   end
 
@@ -87,7 +87,7 @@ class Role < ActiveRecord::Base
     User.allowed_to?(READ_PERM_VERBS, :roles, nil)
   end
 
-  def readable?
+  def self.readable?
     Role.any_readable?
   end
 
