@@ -9,18 +9,18 @@
       %b
         %label.grid_2 #{_("Name")}:
       .grid_5
-        = text_field_tag :name, params[:name], :class=>'grid_5', :tabindex => 1
+        = text_field_tag :name, params[:name], :class=>'grid_5', :tabindex => auto_tab_index
     %fieldset.clearfix
       %b
         %label.grid_2
           #{_("Description")}:
       .grid_5
-        = text_area_tag :description, params[:description], :class=>'grid_5', :tabindex => 2
+        = text_area_tag :description, params[:description], :class=>'grid_5', :tabindex => auto_tab_index
     %fieldset.clearfix
       %b
         %label.grid_2 #{_("Prior Environment")}:
       .grid_5
-        = select_tag "prior", options_for_select(@env_labels, @selected) #,{:include_blank => _("Locker"), :id => "environment_prior", :class => 'grid_5', :tabindex => 3}
+        = select_tag "prior", options_for_select(@env_labels, @selected) #,{:include_blank => _("Locker"), :id => "environment_prior", :class => 'grid_5', :tabindex => auto_tab_index}
     .grid_7
-      .button.dialogbutton.environment_create{:class=>"fr", 'data-url'=>edit_organization_path(@organization.cp_key), :tabindex => 4}
+      .button.dialogbutton.environment_create{:class=>"fr", 'data-url'=>edit_organization_path(@organization.cp_key), :tabindex => auto_tab_index}
         #{_("Create")}
