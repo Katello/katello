@@ -302,7 +302,6 @@ module Glue::Pulp::Repos
           new_productContent = Glue::Candlepin::ProductContent.new({:content => {
               :name => repo.name,
               :contentUrl => "#{pulp_uri.scheme}://#{pulp_uri.host}/pulp/repos/#{new_repo_id}/",
-              :id => new_repo_id,
               :type => "yum",
               :label => new_repo_id,
               :vendor => "Custom"
