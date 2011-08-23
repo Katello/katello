@@ -15,7 +15,7 @@ require 'helpers/product_test_data'
 
 include OrchestrationHelper
 
-describe Product do  
+describe Product do
 
   before(:each) do
     disable_org_orchestration
@@ -28,7 +28,7 @@ describe Product do
     ProductTestData::PRODUCT_WITH_ATTRS.merge!({:provider => @provider, :environments => [@organization.locker]})
     ProductTestData::PRODUCT_WITH_CONTENT.merge!({:provider => @provider, :environments => [@organization.locker]})
   end
-  
+
   describe "create product" do
 
     context "new product" do
@@ -60,7 +60,7 @@ describe Product do
           expected_product = {
               :attributes => ProductTestData::PRODUCT_WITH_ATTRS[:attributes],
               :multiplier => ProductTestData::PRODUCT_WITH_ATTRS[:multiplier],
-              :name => ProductTestData::PRODUCT_WITH_ATTRS[:name]
+              :name => @provider.name+"_"+ProductTestData::PRODUCT_WITH_ATTRS[:name]
           }
 
           Candlepin::Product.should_receive(:create).once.with(hash_including(expected_product)).and_return({:id => 1})

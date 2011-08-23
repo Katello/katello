@@ -278,7 +278,7 @@ Src::Application.routes.draw do
       post :promote, :on => :member, :action => :promote
     end
 
-    resources :products, :only => [:show] do
+    resources :products, :only => [:show, :index] do
       get :repositories, :on => :member
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
@@ -343,7 +343,6 @@ Src::Application.routes.draw do
     match '/consumers/:id/owner' => 'candlepin_proxies#get', :via => :get
     match '/consumers/:consumer_id/certificates/:id' => 'candlepin_proxies#delete', :via => :delete
     match '/pools' => 'candlepin_proxies#get', :via => :get
-    match '/products' => 'candlepin_proxies#get', :via => :get
     match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get
     match '/subscriptions' => 'candlepin_proxies#post', :via => :post
     match '/users/:username/owners' => 'organizations#list_owners', :via => :get
