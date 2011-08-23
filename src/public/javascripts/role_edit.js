@@ -2,7 +2,7 @@ $(function() {
 
     $('#panel').addClass('panel-custom');
   
-    var permissionWidget = ROLES.permissionWidget();
+    permissionWidget = ROLES.permissionWidget();
     permissionWidget.init();
   
     ROLES.actionBar.add_to_toggle_list({ 'permission_add' : permissionWidget.permission_add })
