@@ -51,6 +51,11 @@ class RepoAPI(KatelloAPI):
         data = self.server.POST(path)[1]
         return data
 
+    def last_sync_status(self, repo_id):
+        path = "/api/repositories/%s/sync" % repo_id
+        data = self.server.GET(path)[1]
+        return data
+
     def repo_discovery(self, url, repotype):
         discoverydata = {"url": url, "type": repotype}
         path = "/api/repositories/discovery"

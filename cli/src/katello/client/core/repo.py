@@ -25,7 +25,7 @@ from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_product, get_repo
-from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg
+from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, AsyncTask
 from katello.client.core.utils import ProgressBar
 
 try:
@@ -264,15 +264,26 @@ class Status(RepoAction):
             if repo == None:
                 return os.EX_DATAERR
 
+        task = AsyncTask(self.api.last_sync_status(repo['id']))
+
         repo['last_sync'] = self.format_sync_time(repo['last_sync'])
         repo['sync_state'] = self.format_sync_state(repo['sync_state'])
-
+        if task.is_running():
+            pkgsTotal = task.total_count()
+            pkgsLeft = task.items_left()
+            repo['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
+            
+        errors = task.errors()
+        if len(errors) > 0:
+            repo['last_errors'] = errors
+        
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('package_count')
         self.printer.addColumn('last_sync')
         self.printer.addColumn('sync_state')
-        self.printer.addColumn('progress')
+        self.printer.addColumn('progress', show_in_grep=False)
+        self.printer.addColumn('last_errors', multiline=True, show_in_grep=False)
 
         self.printer.setHeader(_("Repository Status"))
         self.printer.printItem(repo)
