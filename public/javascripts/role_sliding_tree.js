@@ -61,6 +61,7 @@ ROLES.permissionWidget = function(){
             'resource_type' :   { previous  : 'description', 
                                   next      : 'verbs',
                                   container : $('#resource_type_container'),
+                                  input     : $('#resource_type'),
                                   validate  : function(){
                                       return true;
                                   },
@@ -74,6 +75,7 @@ ROLES.permissionWidget = function(){
             'verbs'         :   { previous  : 'resource_type',
                                   next      : 'tags',
                                   container : $('#verbs_container'),
+                                  input     : $('#verbs'),
                                   validate  : function(){
                                         if( $('#verbs').val() === null && !all_verbs_button.hasClass('selected') ){
                                             if( !$('#verbs_container').find('span').hasClass('validation_error') ){ 
@@ -98,6 +100,7 @@ ROLES.permissionWidget = function(){
             'tags'          :   { previous  : 'verbs',
                                   next      : false,
                                   container : $('#tags_container'),
+                                  input     : $('#tags'),
                                   validate  : function(){
                                         return true;
                                   },
@@ -134,8 +137,8 @@ ROLES.permissionWidget = function(){
             previous_button.hide();
             next_button.show();
             done_button.hide();
-            $('#verbs').removeAttr('disabled');
-            $('#tags').removeAttr('disabled');
+            flow['verbs'].input.removeAttr('disabled');
+            flow['tags'].input.removeAttr('disabled');
             current_stage = 'name';
             $('#add_permission_form')[0].reset();
             $('.validation_error').remove();
@@ -169,55 +172,61 @@ ROLES.permissionWidget = function(){
                 
                 set_types = function(){
                     var types           = roles_breadcrumb[current_organization].permission_details,
-                        types_select    = $('#resource_type');
+                        types_select    = flow['resource_type'].input,
+                        html            = "";
                     
                     types_select.empty();
                     for( type in types ){
                         if( types.hasOwnProperty(type) ){
                             if( type !== "all" ){
-                                console.log(type);
                                 if( current_organization.split('_')[0] === 'organization' ){
                                     if( !types[type].global ){
-                                        types_select.append('<option value="' + type + '">' + types[type].name + '</option>');
+                                        html += '<option value="' + type + '">' + types[type].name + '</option>';
                                     }
                                 } else {
-                                    types_select.append('<option value="' + type + '">' + types[type].name + '</option>');
+                                    html += '<option value="' + type + '">' + types[type].name + '</option>';
                                 }
                             } else {
-                                types_select.append('<option class="hidden" value="all">All</option>');
+                                html += '<option class="hidden" value="all">All</option>';
                             }
                         }
                     }
+
+                    types_select.append(html);
                 },
                 set_verbs_and_tags = function(type){
                     var i, length=0,
-                        verbs_select = $('#verbs'),
-                        tags_select = $('#tags'),
+                        verbs_select = flow['verbs'].input,
+                        tags_select = flow['tags'].input,
                         verbs = roles_breadcrumb[current_organization].permission_details[type].verbs,
-                        tags = roles_breadcrumb[current_organization].permission_details[type].tags;
+                        tags = roles_breadcrumb[current_organization].permission_details[type].tags,
+                        html = '';
                 
                     length = verbs.length;
                     verbs_select.empty();
                     for( i=0; i < length; i+= 1){
-                        verbs_select.append('<option value="' + verbs[i].name + '">' + verbs[i].display_name + "</option>");
+                        html += '<option value="' + verbs[i].name + '">' + verbs[i].display_name + "</option>";
                     }
-                    console.log(current_organization);
+                    verbs_select.append(html);
+                    
+                    html = '';
                     if( type !== 'organizations' && current_organization !== "global" ){
                         length = tags.length;
                         tags_select.empty();
                         for( i=0; i < length; i+= 1){
-                            tags_select.append('<option value="' + tags[i].name + '">' + tags[i].display_name + "</option>");
+                            html += '<option value="' + tags[i].name + '">' + tags[i].display_name + "</option>";
                         }
+                        tags_select.append(html);
                     }
                 };
             
             if( opening ){
                 reset();
                 set_types();
-                set_verbs_and_tags($('#resource_type').val());
+                set_verbs_and_tags(flow['resource_type'].input.val());
                 button.children('span').html(i18n.close_add_permission);
                 button.addClass("highlighted");
-                $('#resource_type').change(function(event){
+                flow['resource_type'].input.change(function(event){
                     set_verbs_and_tags(event.currentTarget.value);
                     if( current_stage !== 'resource_type' ){
                         flow['verbs'].actions();
@@ -253,21 +262,20 @@ ROLES.permissionWidget = function(){
                 flow['verbs'].container.hide();
                 flow['tags'].container.hide();
                 current_stage = 'resource_type';
-                $('#verb_container').hide();
-                $('#tag_container').hide();
-                $('#resource_type').hide();
-                $('#resource_type').val('all');
+                flow['verbs'].container.hide();
+                flow['tags'].container.hide();
+                flow['resource_type'].container.hide();
+                flow['resource_type'].input.val('all');
                 $('<span id="all_types_selected">' + i18n.all_types_selected + '</span>').insertBefore(all_types_button);
                 all_types_button.html(i18n.cancel);
                 all_types_button.addClass('selected');
             } else {
                 next_button.show();
                 done_button.hide();
-                $('#verb_container').show();
-                $('#resource_type').show();
+                flow['verbs'].container.show();
+                flow['resource_type'].container.show();
                 $('#all_types_selected').remove();
-                $('#resource_type').val('organizations');
-                $('#resource_type').change();
+                flow['resource_type'].input.val('organizations').change();
                 all_types_button.html(i18n.all);
                 all_types_button.removeClass('selected');
             }
@@ -276,11 +284,11 @@ ROLES.permissionWidget = function(){
             selected = selected || all_verbs_button.hasClass('selected');
             
             if( !selected ){
-                $('#verbs').attr('disabled', 'disabled');
+                flow['verbs'].input.attr('disabled', 'disabled');
                 all_verbs_button.html(i18n.cancel);
                 all_verbs_button.addClass('selected');
             } else {
-                $('#verbs').removeAttr('disabled');
+                flow['verbs'].input.removeAttr('disabled');
                 all_verbs_button.html(i18n.all);
                 all_verbs_button.removeClass('selected');
             }
@@ -289,11 +297,11 @@ ROLES.permissionWidget = function(){
             selected = selected || all_tags_button.hasClass('selected');
             
             if( !selected ){
-                $('#tags').attr('disabled', 'disabled');
+                flow['tags'].input.attr('disabled', 'disabled');
                 all_tags_button.html(i18n.cancel);
                 all_tags_button.addClass('selected');
             } else {
-                $('#tags').removeAttr('disabled');
+                flow['tags'].input.removeAttr('disabled');
                 all_tags_button.html(i18n.all);
                 all_tags_button.removeClass('selected');
             }
@@ -756,19 +764,21 @@ var rolesRenderer = (function($){
             var height = $('.left').height(),
                 panel_main = $('#panel_main');
                 
-            $('.sliding_list').css({ 'height' : height - 60 });
-            $('.slider').css({ 'height' : height - 60 });
+            panel_main.find('.sliding_list').css({ 'height' : height - 60 });
+            panel_main.find('.slider').css({ 'height' : height - 60 });
             panel_main.height(height);
             panel_main.find('.jspPage').height(height);
         },
         setSizing = function(){
-            var width = $('.panel-custom').width();
+            var panel = $('.panel-custom'),
+                width = panel.width();
+            
             width -= 2;
-            $('.sliding_container').width(width);
-            $('.breadcrumb_search').width(width);
-            $('.slider').width(width);
-            $('.sliding_list').width(width * 2);
-            $('.slide_up_container').width(width);
+            panel.find('.sliding_container').width(width);
+            panel.find('.breadcrumb_search').width(width);
+            panel.find('.slider').width(width);
+            panel.find('.sliding_list').width(width * 2);
+            panel.find('.slide_up_container').width(width);
         },
         init = function(){
             var left_panel = $('.left');
