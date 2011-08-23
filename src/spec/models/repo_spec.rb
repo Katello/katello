@@ -219,8 +219,8 @@ describe Glue::Pulp::Repo do
 
       @clone = Glue::Pulp::Repo.new(RepoTestData::CLONED_PROPERTIES)
 
-      Glue::Pulp::Repos.stub(:clone_repo_id).with(@repo.id, @to_env.name).and_return(RepoTestData::CLONED_REPO_ID)
-      Glue::Pulp::Repos.stub(:clone_repo_id).with(@clone.id, @to_env.name).and_return(RepoTestData::CLONED_2_REPO_ID)
+      Glue::Pulp::Repos.stub(:clone_repo_id).with(@repo, @to_env).and_return(RepoTestData::CLONED_REPO_ID)
+      Glue::Pulp::Repos.stub(:clone_repo_id).with(@clone, @to_env).and_return(RepoTestData::CLONED_2_REPO_ID)
 
     end
 
