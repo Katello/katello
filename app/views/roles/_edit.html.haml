@@ -75,19 +75,21 @@
 
     #roles_status
     #sliding_tree_actionbar.clickable
-      #add_permission.disabled.cs_action{"title" => "#{_('You must select an organization above before you can add a permission.')}"}
-        %span#add_permission_icon.sprite
-          SPRITE
-        %span.text
-          = _("Add Permission")
-      #edit_role.cs_action
-        %span#edit_role_icon.sprite
-          SPRITE
-        %span.text
-          = _("Edit Role")
-      #remove_role.cs_action{ "data-confirm-text" => "#{_('Are you sure you want to remove this role?')}", "data-url" => role_path(@role) }
-        %span#remove_role_icon.sprite
-          SPRITE
-        %span.text
-          = _("Remove Role")
+      - if Role.editable?
+        #add_permission.disabled.cs_action{"title" => "#{_('You must select an organization above before you can add a permission.')}"}
+          %span#add_permission_icon.sprite
+            SPRITE
+          %span.text
+            = _("Add Permission")
+        #edit_role.cs_action
+          %span#edit_role_icon.sprite
+            SPRITE
+          %span.text
+            = _("Edit Role")
+      - if Role.deletable?
+        #remove_role.cs_action{ "data-confirm-text" => "#{_('Are you sure you want to remove this role?')}", "data-url" => role_path(@role) }
+          %span#remove_role_icon.sprite
+            SPRITE
+          %span.text
+            = _("Remove Role")
       #placeholder.cs_action

@@ -23,15 +23,14 @@ class RolesController < ApplicationController
   include BreadcrumbHelper::RolesBreadcrumbs
   
   def rules
-    index_check = lambda{Role.any_readable?}
     create_check = lambda{Role.creatable?}
-    read_check = lambda{@role.readable?}
-    edit_check = lambda{@role.editable?}
-    delete_check = lambda{@role.deletable?}
+    read_check = lambda{Role.any_readable?}
+    edit_check = lambda{Role.editable?}
+    delete_check = lambda{Role.deletable?}
     {
-      :index => index_check,
-      :items => index_check,
-      :verbs_and_scopes => index_check,
+      :index => read_check,
+      :items => read_check,
+      :verbs_and_scopes => read_check,
         
       :create => create_check,
       :new => create_check,
@@ -55,6 +54,7 @@ class RolesController < ApplicationController
       # as part of the user
       @roles = Role.readable.search_for(params[:search]).non_self.limit(current_user.page_size)
       retain_search_history
+
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
       @roles = Role.search_for ''
@@ -73,6 +73,7 @@ class RolesController < ApplicationController
                  :create => _('Role'),
                  :name => _('role'),
                  :ajax_scroll => items_roles_path()}
+    @panel_options[:enable_create] = false if !Role.creatable?
   end
   
   def new
