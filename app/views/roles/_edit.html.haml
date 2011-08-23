@@ -46,23 +46,23 @@
         %input{:type => "hidden", :name => "permission[organization_id]", :value => '', :id => "organization_id" }
         .permission_add_container#name_container
           %label.ra.fl #{_("Name:")}
-          %input{ :id => 'permission_name', :name => 'permission[name]', :type => "text" }
+          %input{ :id => 'permission_name', :name => 'permission[name]', :type => "text", :tabindex => 1 }
         .permission_add_container.hidden#description_container
           %label.ra.fl #{_("Description:")}
-          %textarea{ :id => 'description', :name => 'permission[description]' }
+          %textarea{ :id => 'description', :name => 'permission[description]', :tabindex => 2 }
         .permission_add_container.hidden#resource_type_container
           %label.ra.fl #{_("Permission For:")}
-          %select{ :id => 'resource_type', :name => 'permission[resource_type_attributes[name]]' }
+          %select{ :id => 'resource_type', :name => 'permission[resource_type_attributes[name]]', :tabindex => 3 }
           .button#all_types
             #{_('+ All')}
         .permission_add_container.hidden#verbs_container
           %label.ra.fl #{_("Verb(s):")}
-          %select{ :id => "verbs", :name => 'permission[verb_values][]', :multiple => 'multiple' }
+          %select{ :id => "verbs", :name => 'permission[verb_values][]', :multiple => 'multiple', :tabindex => 4 }
           .button#all_verbs
             #{_('+ All')}
         .permission_add_container.hidden#tags_container
           %label.ra.fl #{_("On:")}
-          %select.fl{ :id => "tags", :name => 'permission[tag_names][]', :multiple => 'multiple' }
+          %select.fl{ :id => "tags", :name => 'permission[tag_names][]', :multiple => 'multiple', :tabindex => 5 }
           .button.fl#all_tags
             #{_('+ All')}
         #permission_button_bar.clear
