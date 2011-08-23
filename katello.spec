@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.69
+Version:	      0.1.70
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -197,6 +197,15 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Aug 23 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.70-1
+- fixing miscommited database.yml
+- adding kill_pg_connection rake task
+- cli tests - removing assumeyes option
+- a workaround for candlepin issue: gpgUrl for content must exist, as it is
+  used during entitlement certificate generation
+- no need to specify content id for promoted repositories, as candlepin will
+  assign it
+
 * Tue Aug 23 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.69-1
 - 731670 - prevent user from deleting himself
 - 731670 - reformatting rescue block
