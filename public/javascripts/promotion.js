@@ -244,7 +244,7 @@ var promotion_page = (function($){
                 changeset.remove_item(type, id, product_id);
                 if( type !== 'product' ){
                     var product = changeset.getProducts()[product_id];
-                    if( !product.errata.length && !product.package.length && !product.repo.length ){
+                    if( !product.errata.length && !product.pkg.length && !product.repo.length ){
                         delete changeset.getProducts()[product_id];
                         changeset_tree.render_content('changeset_' + changeset.id);
                     } else {
