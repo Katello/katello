@@ -27,14 +27,8 @@ module Glue::Pulp::Repos
       [self.product_groupid(product), self.env_groupid(environment), self.env_orgid(product.locker.organization)]
   end
 
-  def self.clone_repo_id(repo_id, environment_name)
-    parts = repo_id.split("-")
-    if parts.length == 3
-      parts << parts[2]
-    end
-    parts[2] = environment_name
-
-    parts.join("-")
+  def self.clone_repo_id(repo, environment)
+    [repo.product.cp_id, repo.name, environment.name,environment.organization.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("-")
   end
 
   def self.clone_repo_path(repo, environment)
@@ -325,7 +319,7 @@ module Glue::Pulp::Repos
         else
           async_tasks << repo.promote(to_env, self)
 
-          new_repo_id = Glue::Pulp::Repos.clone_repo_id(repo.id, to_env.name)
+          new_repo_id = Glue::Pulp::Repos.clone_repo_id(repo, to_env)
           new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(repo)
 
           pulp_uri = URI.parse(AppConfig.pulp.url)
