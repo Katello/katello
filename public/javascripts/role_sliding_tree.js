@@ -137,6 +137,7 @@ ROLES.permissionWidget = function(){
             previous_button.hide();
             next_button.show();
             done_button.hide();
+            done_button.removeClass('disabled');
             flow['verbs'].input.removeAttr('disabled');
             flow['tags'].input.removeAttr('disabled');
             current_stage = 'name';
