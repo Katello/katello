@@ -70,6 +70,17 @@ class Product < ActiveRecord::Base
     N_('None')
   end
 
+  def to_json(options={})
+    json = self.as_json(options.merge(:except => :cp_id))
+    json = json.merge(:sync_state => self.sync_state,
+                      :last_sync => self.last_sync,
+                      :productContent => self.productContent,
+                      :multiplier => self.multiplier,
+                      :attributes => self.attrs,
+                      :id => self.cp_id)
+    ActiveSupport::JSON.encode(json)
+  end
+
   #Permissions
 
   scope :readable, lambda {|org| authorized_items(org, READ_PERM_VERBS)}
@@ -86,11 +97,11 @@ class Product < ActiveRecord::Base
      end
   end
 
+
   def self.sync_items org
     org.syncable? ? (joins(:provider).where('providers.organization_id' => org)) : where("0=1")
   end
 
   READ_PERM_VERBS = [:read, :create, :update, :delete]
-
 
 end
