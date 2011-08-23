@@ -444,43 +444,98 @@ def run_spinner_in_bg(function, arguments=(), message=""):
         t.join()
     return result
 
+
+# Envelope around task status structure
+#
+#{'created_at': None,
+# 'finish_time': '2011-08-23T09:07:33Z',
+# 'organization_id': None,
+# 'progress': {'error_details': [],
+#              'items_left': 0,
+#              'size_left': 0,
+#              'total_count': 8,
+#              'total_size': 17872},
+# 'result': True,
+# 'start_time': '2011-08-23T09:07:26Z',
+# 'state': 'finished',
+# 'updated_at': None,
+# 'uuid': '52456711-cd67-11e0-af50-f0def13c24e5'}
+class AsyncTask():
+
+    _tasks = []
+
+    def __init__(self, task):
+        if not isinstance(task, list):
+            self._tasks = [task]
+        else:
+            self._tasks = task
+
+    def update(self):
+        status_api = TaskStatusAPI()
+        self._tasks = [status_api.status(t['uuid']) for t in self._tasks]
+
+    def get_progress(self):
+        return progress(self.items_left(), self.total_count())
+
+    def is_running(self):
+        return (len(filter(lambda t: t['state'] not in ('finished', 'error', 'timed out', 'canceled'), self._tasks)) > 0)
+
+    def subtask_count(self):
+        return len(self._tasks)
+
+    def total_size(self):
+        return self._get_progress_sum('total_size')
+
+    def total_count(self):
+        return self._get_progress_sum('total_count')
+
+    def size_left(self):
+        return self._get_progress_sum('size_left')
+
+    def items_left(self):
+        return self._get_progress_sum('items_left')
+
+    def errors(self):
+        return [err for t in self._tasks for err in t['progress']['error_details']]
+
+    def _get_progress_sum(self, name):
+        return sum([t['progress'][name] for t in self._tasks])
+
+    def is_multiple(self):
+        return self.subtask_count() > 1
+
+    def to_hash(self):
+        return self._tasks
+        
+    def get_subtasks(self):
+        return [AsyncTask(t) for t in self._tasks]
+
+
+
 def wait_for_async_task(taskStatus):
-    task = taskStatus
-    status_api = TaskStatusAPI()
+    task = AsyncTask(taskStatus)
 
-    if type(task).__name__== 'list':
-        while len(filter(lambda t: t['state'] not in ('finished', 'error', 'timed out', 'canceled'), task)) > 0:
-            time.sleep(1)
-            task = [status_api.status(t['uuid']) for t in task]
-    else:
-        while task['state'] not in ('finished', 'error', 'timed out', 'canceled'):
-            time.sleep(1)
-            task = status_api.status(task['uuid'])
+    while task.is_running():
+        time.sleep(1)
+        task.update()            
+    return task.to_hash()
 
-    return task
 
 def run_async_task_with_status(taskStatus, progressBar):
-    task = taskStatus
-    status_api = TaskStatusAPI()
+    task = AsyncTask(taskStatus)
 
-    if type(task).__name__ == 'list':
-        while len(filter(lambda t: t['state'] not in ('finished', 'error', 'timed out', 'canceled'), task)) > 0:
-            time.sleep(0.1)
-            task = [status_api.status(t['uuid']) for t in task]
-            total = t['progress']['total_size'] if t['progress'].has_key('total_size') else 999999999999
-            overalProgress = sum([progress(t['progress']['size_left'], total) for t in task]) / len(task)
-            progressBar.updateProgress(overalProgress)
-    else:
-        while task['state'] not in ('finished', 'error', 'timed out', 'canceled'):
-            time.sleep(1)
-            task = status_api.status(task['uuid'])
-            total = task['progress']['total_size'] if task['progress'].has_key('total_size') else 999999999999
-            progressBar.updateProgress(progress(task['progress']['size_left'], total))
+    delay = 1 if not task.is_multiple() else (1.0/self.subtask_count())
+    while task.is_running():
+        time.sleep(delay)
+        task.update()
+        progressBar.updateProgress(task.get_progress())
 
     progressBar.done()
-    return task
+    return task.to_hash()
+
 
 def progress(left, total):
     sizeLeft = float(left)
     sizeTotal = float(total)
     return 0.0 if total == 0 else (sizeTotal - sizeLeft) / sizeTotal
+    
