@@ -3,7 +3,7 @@
 # Check JavaScript syntax
 jsl --conf scripts/jsl-errors-only.conf 
 OUT=$?
-if [ $OUT -eq 3 ];then
+if [ $OUT -ge 3 ];then
   echo "SYNTAX ERROR detected in JavaScript files in src/public/javascripts/"
   exit 1
 fi
