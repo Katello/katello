@@ -14,20 +14,14 @@ require 'resources/pulp'
 
 class Api::SyncController < Api::ApiController
 
-  before_filter :find_object, :only => [:index, :show, :create, :cancel]
+  before_filter :find_object, :only => [:index, :create, :cancel]
   respond_to :json
 
 
   def index
     # GET /repositories/<id>/sync/
-    # list all synces
-    render :text => N_("list of syncs"), :status => 200
-  end
-
-  def show
-    # GET /repositories/<id>/sync/<sync id>
-    # get sync status
-    render :text => N_("get sync status"), :status => 200
+    # get most recent sync status(es)
+    render :json => @obj.latest_sync_statuses
   end
 
   def create
@@ -44,8 +38,8 @@ class Api::SyncController < Api::ApiController
   end
 
   def cancel
-    # DELETE /repositories/<id>/sync/<sync id>
-    # cancel the sync action
+    # DELETE /repositories/<id>/sync/
+    # cancel the latest sync action
     @obj.cancel_sync
     render :text => "cancelled synchronization of #{@sync_of}: #{@obj.id}", :status => 200
   end
