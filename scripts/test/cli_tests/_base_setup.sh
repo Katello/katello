@@ -9,7 +9,7 @@ TEST_ORG="org_$RAND"
 TEST_ENV="env_$RAND"
 TEST_ENV_3="env_3_$RAND"
 YUM_PROVIDER="yum_provider_$RAND"
-FEWUPS_REPO_URL="http://lzap.fedorapeople.org/fakerepos/"
+FEWUPS_REPO_URL="http://lzap.fedorapeople.org/fakerepos/zoo/"
 FEWUPS_PRODUCT="fewups_product_$RAND"
 FEWUPS_REPO="repo_$RAND"
 
