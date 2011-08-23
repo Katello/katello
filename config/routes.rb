@@ -237,7 +237,7 @@ Src::Application.routes.draw do
     end
 
     resources :providers do
-      resources :sync, :only => [:index, :show, :create] do
+      resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end
       member do
@@ -280,7 +280,7 @@ Src::Application.routes.draw do
 
     resources :products, :only => [] do
       get :repositories, :on => :member
-      resources :sync, :only => [:index, :show, :create] do
+      resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end
     end
@@ -289,7 +289,7 @@ Src::Application.routes.draw do
     resources :ping, :only => [:index]
 
     resources :repositories, :only => [:index, :show, :create], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
-      resources :sync, :only => [:index, :show, :create] do
+      resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end
       resources :packages, :only => [:index]
