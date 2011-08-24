@@ -33,6 +33,7 @@ class Glue::Pulp::Repo
     Pulp::Repository.create({
         :id => self.id,
         :name => self.name,
+        :relative_path => self.relative_path,
         :arch => self.arch,
         :feed => self.feed,
         :feed_cert_data => feed_cert_data,

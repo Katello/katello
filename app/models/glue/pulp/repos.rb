@@ -32,8 +32,11 @@ module Glue::Pulp::Repos
   end
 
   def self.clone_repo_path(repo, environment)
-    prefix = [environment.organization.name,environment.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
-    [prefix,self.clone_repo_path_for_cp(repo)].join("/")
+    repo_path(environment,repo.product, repo.name)
+  end
+
+  def self.repo_path(environment, product, name)
+    [environment.organization.name,environment.name,product.name,name].map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
   end
 
   def self.clone_repo_path_for_cp(repo)
@@ -204,6 +207,7 @@ module Glue::Pulp::Repos
     def add_repo(name, url)
       repo = Glue::Pulp::Repo.new(:id => repo_id(name),
           :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
+          :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, name),
           :arch => arch,
           :name => name,
           :feed => url
@@ -229,6 +233,7 @@ module Glue::Pulp::Repos
         ca = File.open("#{Rails.root}/config/candlepin-ca.crt", 'rb') { |f| f.read }
         repo = Glue::Pulp::Repo.new(:id => repo_id(pc.content.id),
             :arch => arch,
+            :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, pc.content.name),
             :name => pc.content.name,
             :feed => repository_url(pc.content.contentUrl),
             :feed_ca => ca,
@@ -257,7 +262,7 @@ module Glue::Pulp::Repos
       self.productContent.select {|pc| added_content.include?(pc.content.label)}.each do |pc|
         if !(self.environments.map(&:name).any? {|name| pc.content.name.include?(name)}) || pc.content.name.include?('Locker')
         Rails.logger.debug "creating repository #{repo_id(pc.content.name)}"
-          self.add_repo(pc.content.name, repository_url(pc.content.contentUrl))
+          self.add_repo(pc.content.name, repository_url(pc.feed))
         else
           raise "new content was added to environment other than Locker. use promotion instead."
         end
