@@ -223,7 +223,7 @@ class User < ActiveRecord::Base
   # Class method that has the same functionality as allowed_to? method but operates
   # on the current logged user. The class attribute User.current must be set!
   # If the current user is not set (is nil) it treats it like the 'anonymous' user.
-  def self.allowed_to?(verb, resource_type = nil, tags = nil, org = nil, any_tags = false)
+  def self.allowed_to?(verb, resource_type, tags = nil, org = nil, any_tags = false)
     u = User.current
     u = User.anonymous if u.nil?
     raise ArgumentError, "current user is not set" if u.nil? or not u.is_a? User
@@ -232,10 +232,10 @@ class User < ActiveRecord::Base
 
   # Class method with the very same functionality as allowed_to? but throws
   # SecurityViolation exception leading to the denial page.
-  def self.allowed_to_or_error?(verb, resource_type = nil, tags = nil)
+  def self.allowed_to_or_error?(verb, resource_type, tags = nil, org = nil, any_tags = false)
     u = User.current
     raise ArgumentError, "current user is not set" if u.nil? or not u.is_a? User
-    unless u.allowed_to?(verb, resource_type, tags)
+    unless u.allowed_to?(verb, resource_type, tags, org, any_tags)
       msg = "User #{u.username} is not allowed to #{verb} in #{resource_type} using #{tags}"
       Rails.logger.error msg
       raise Errors::SecurityViolation, msg
