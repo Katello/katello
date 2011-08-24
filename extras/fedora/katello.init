@@ -158,7 +158,7 @@ case "$1" in
         ;;
     initdb)
         # check if there are not wrong permission of schema.rb
-        if [ $(stat -c %U $KATELLO_DATA_DIR/schema.rb) != "$KATELLO_USER" ]; then
+        if [ -f "$KATELLO_DATA_DIR/schema.rb" ] && [ "$(stat -c %U $KATELLO_DATA_DIR/schema.rb)" != "$KATELLO_USER" ]; then
             echo "Wrong permissions of schema.rb, please fix"
             exit 1
         fi
@@ -178,4 +178,4 @@ esac
 
 exit $RETVAL
 
-# :vim:sw=4:ts=4:et:
+# vim:set sw=4 ts=4 et:
