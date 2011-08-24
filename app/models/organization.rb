@@ -95,7 +95,7 @@ class Organization < ActiveRecord::Base
 
   def any_systems_readable?
       User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, self) ||
-           User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, environments.collect{|e| e.id}, self, true) 
+           User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, environment_ids, self, true)
   end
 
   def self.list_verbs global = false
