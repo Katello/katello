@@ -21,6 +21,7 @@ import urlparse
 import datetime
 from pprint import pprint
 
+from katello.client.core.utils import format_date
 from katello.client.core import repo
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
@@ -80,7 +81,7 @@ class List(ProductAction):
         self.parser.add_option('--environment', dest='env',
                        help=_('environment name eg: production (default: Locker)'))
         self.parser.add_option('--provider', dest='prov',
-                       help=_("provider name"))
+                       help=_("provider name, lists provider's product in the Locker"))
 
 
     def check_options(self):
@@ -92,12 +93,11 @@ class List(ProductAction):
         env_name = self.get_option('env')
         prov_name = self.get_option('prov')
 
-        if org_name and prov_name:
+        if prov_name:
             prov = get_provider(org_name, prov_name)
             if prov == None:
                 return os.EX_DATAERR
             self.printer.addColumn('id')
-            self.printer.addColumn('cp_id')
             self.printer.addColumn('name')
             self.printer.addColumn('provider_id')
 
@@ -109,7 +109,6 @@ class List(ProductAction):
             if env == None:
                 return os.EX_DATAERR
             self.printer.addColumn('id')
-            self.printer.addColumn('cp_id')
             self.printer.addColumn('name')
             self.printer.addColumn('provider_id')
             self.printer.setHeader(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
@@ -127,8 +126,6 @@ class Sync(ProductAction):
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
                                help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--provider', dest='prov',
-                               help=_("provider name (required)"))
         self.parser.add_option('--name', dest='name',
                                help=_("product name (required)"))
 
@@ -138,31 +135,23 @@ class Sync(ProductAction):
 
     def run(self):
         orgName     = self.get_option('org')
-        provName    = self.get_option('prov')
-        name        = self.get_option('name')
+        prodName    = self.get_option('name')
 
-        if provName != None:
-            prov = self.get_provider(orgName, provName)
-
-            if (prov == None):
-                return os.EX_DATAERR
-
-            prod = self.api.products_by_provider(prov['id'], name)
-        else:
-            prod = self.api.products_by_org(orgName, name)
-
-        if (len(prod) == 0):
+        prod = get_product(orgName, prodName)
+        if (prod == None):
             return os.EX_DATAERR
 
-        async_task = self.api.sync(prod[0]["cp_id"])
+
+        async_task = self.api.sync(prod["id"])
         result = run_async_task_with_status(async_task, ProgressBar())
 
-        if len([t for t in result if t['state'] == 'error']) > 0:
+        task = AsyncTask(async_task)
+        if task.failed():
             errors = [json.loads(t["result"])['errors'][0] for t in result if t['state'] == 'error']
-            print _("Product [ %s ] failed to sync: %s" % (name, errors))
-            return 1
+            print _("Product [ %s ] failed to sync: %s" % (prodName, errors))
+            return os.EX_DATAERR
 
-        print _("Product [ %s ] synchronized" % name)
+        print _("Product [ %s ] synchronized" % prodName)
         return os.EX_OK
 
 
@@ -191,7 +180,6 @@ class Status(ProductAction):
 
         task = AsyncTask(self.api.last_sync_status(prod['id']))
 
-        
         prod['last_sync'] = self.format_sync_time(prod['last_sync'])
         prod['sync_state'] = self.format_sync_state(prod['sync_state'])
         

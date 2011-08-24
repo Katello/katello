@@ -481,6 +481,9 @@ class AsyncTask():
     def is_running(self):
         return (len(filter(lambda t: t['state'] not in ('finished', 'error', 'timed out', 'canceled', 'not_synced'), self._tasks)) > 0)
 
+    def failed(self):
+        return (len(filter(lambda t: t['state'] in ('error', 'timed out'), self._tasks)) > 0)
+
     def subtask_count(self):
         return len(self._tasks)
 
