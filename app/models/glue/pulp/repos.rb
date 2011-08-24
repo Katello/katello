@@ -311,7 +311,7 @@ module Glue::Pulp::Repos
       repos.each do |repo|
         if repo.is_cloned_in?(to_env)
           #repo is already cloned, so lets just re-sync it from its parent
-          async_tasks << repo.sync
+          async_tasks << repo.get_cloned_in(to_env).sync
         else
           async_tasks << repo.promote(to_env, self)
 
