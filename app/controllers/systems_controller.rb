@@ -193,14 +193,7 @@ class SystemsController < ApplicationController
 
   def find_environment
     readable = KPEnvironment.systems_readable(current_organization)
-    @environment = nil
-    current_organization.promotion_paths.each{|path|
-      path.each{|env|
-        if readable.member?(env)
-          @environment = env and return
-        end
-      }
-    }
+    @environment = first_env_in_path(readable, false)
     @environment ||=  current_organization.locker
   end
 
