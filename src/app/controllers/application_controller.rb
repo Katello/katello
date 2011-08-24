@@ -247,7 +247,6 @@ class ApplicationController < ActionController::Base
     rule_set = rules.with_indifferent_access
     allowed = rule_set[action].call if Proc === rule_set[action]
     allowed = user.allowed_to? *rule_set[action] if Array === rule_set[action]
-
     return true if allowed
     raise Errors::SecurityViolation, "User #{current_user.username} is not allowed to access #{params[:controller]}/#{params[:action]}"
   end
@@ -392,6 +391,18 @@ class ApplicationController < ActionController::Base
 
   def execute_after_filters
     flash_to_headers
+  end
+
+  def first_env_in_path accessible_envs, include_locker=false
+    return current_organization.locker if include_locker && accessible_envs.member?(current_organization.locker)
+    current_organization.promotion_paths.each{|path|
+      path.each{|env|
+        if accessible_envs.member?(env)
+          return env
+        end
+      }
+    }
+    nil
   end
 
 end

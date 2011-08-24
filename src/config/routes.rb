@@ -128,13 +128,23 @@ Src::Application.routes.draw do
   match '/providers/:id' => 'providers#update', :via => :put
   match '/providers/:id' => 'providers#update', :via => :post
 
-  match '/organizations/:org_id/environments/:env_id/promotions' => 'promotions#show', :via=>:get, :as=>'promotions'
-  match '/organizations/:org_id/environments/:env_id/promotions/products' => 'promotions#products', :via=>:get, :as=>'promotion_products'
-  match '/organizations/:org_id/environments/:env_id/promotions/packages' => 'promotions#packages', :via=>:get, :as=>'promotion_packages'
-  match '/organizations/:org_id/environments/:env_id/promotions/errata' => 'promotions#errata', :via=>:get, :as=>'promotion_errata'
-  match '/organizations/:org_id/environments/:env_id/promotions/repos' => 'promotions#repos', :via=>:get, :as=>'promotion_repos'
-  match '/organizations/:org_id/environments/:env_id/promotions/distributions' => 'promotions#distributions', :via => :get, :as=> 'promotion_distributions'
-  match '/organizations/:org_id/environments/:env_id/promotions/detail' => 'promotions#detail', :via=>:get, :as=>'promotion_details'
+
+  resources :promotions, :only =>[] do
+    collection do
+      get :index, :action =>:show
+    end
+    member do
+      get :show
+      get :products
+      get :packages
+      get :errata
+      get :repos
+      get :distributions
+      get :details
+    end
+
+  end
+
   match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
   match '/organizations/:org_id/environments/:env_id/system_templates' => 'environments#system_templates', :via => :get, :as => 'system_templates_organization_environment'
 

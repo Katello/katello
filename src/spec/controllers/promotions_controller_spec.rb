@@ -30,11 +30,14 @@ describe PromotionsController do
       @org = new_test_org
       controller.stub(:current_organization).and_return(@org)
       @env = @org.locker
+      
     end
 
     it "should be successful with locker and no next environment" do
-      get 'show', :org_id=>@org.cp_key, :env_id=>@env.name
+      get 'show', :id=>@env.name
+
       response.should be_success
+
       assigns(:environment).should  == @env
       assigns(:next_environment).should == nil
     end
@@ -42,7 +45,7 @@ describe PromotionsController do
     it "should be successful on the locker and a next environment" do
       @env2 = KPEnvironment.new(:organization=>@org, :locker=>false, :name=>"otherenv", :prior=>@org.locker)
       @env2.save!
-      get 'show', :org_id=>@org.cp_key, :env_id=>@env.name
+      get 'show', :id=>@env.name
       response.should be_success
       assigns(:next_environment).should == @env2
       assigns(:environment).should  == @env
@@ -52,7 +55,7 @@ describe PromotionsController do
     it "should be successful on the next environment with no changeset" do
       @env2 = KPEnvironment.new(:organization=>@org, :locker=>false, :name=>"otherenv", :prior=>@org.locker)
       @env2.save!
-      get 'show', :org_id=>@org.cp_key, :env_id=>@env2.name
+      get 'show', :id=>@env2.name
       response.should be_success
       assigns(:environment).should == @env2
       assigns(:next_environment).should == nil
@@ -73,28 +76,28 @@ describe PromotionsController do
     end
 
     it "should be successful when requesting packages" do
-      get 'packages', :org_id=>@org.cp_key, :env_id=>@env.name, :product_id => @product.id
+      get 'packages', :id=>@env.name, :product_id => @product.id
       response.should be_success
       assigns(:environment).should == @env
       assigns(:packages).size.should == 1
     end
 
     it "should be successful when requesting errata" do
-      get 'errata', :org_id=>@org.cp_key, :env_id=>@env.name, :product_id => @product.id
+      get 'errata', :id=>@env.name, :product_id => @product.id
       response.should be_success
       assigns(:environment).should == @env
       assigns(:errata).size.should == 1
     end
 
     it "should be successful when requesting repos" do
-      get 'repos', :org_id=>@org.cp_key, :env_id=>@env.name, :product_id => @product.id
+      get 'repos', :id=>@env.name, :product_id => @product.id
       response.should be_success
       assigns(:environment).should == @env
       assigns(:repos).size.should == 1
     end
 
     it "should be successful when requesting distributions" do
-      get 'distributions', :org_id=>@org.cp_key, :env_id=>@env.name, :product_id => @product.id
+      get 'distributions', :id=>@env.name, :product_id => @product.id
       response.should be_success
       assigns(:environment).should == @env
       assigns(:distributions).size.should == 1

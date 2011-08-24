@@ -23,7 +23,7 @@ class PromotionsController < ApplicationController
       to_ret
     }
 
-    prod_test = lambda{ @product.provider.readable? and @environment.contents_readable? }
+    prod_test = lambda{ @environment.contents_readable? and @product.nil? ? true : @product.provider.readable? }
     {
       :show => show_test,
       :packages => prod_test,
@@ -40,14 +40,13 @@ class PromotionsController < ApplicationController
   end
 
   def show
-    
     access_envs = accessible_environments
     setup_environment_selector(current_organization, access_envs)
     @products = @environment.products.readable(current_organization)
     @products = @products.reject{|p| p.repos(@environment).empty?}.sort{|a,b| a.name <=> b.name}
     
 
-    @changesets = @next_environment.working_changesets if @next_environment
+    @changesets = @next_environment.working_changesets if (@next_environment && @next_environment.changesets_readable?)
     @changeset_product_ids = @changeset.products.collect { |p| p.cp_id } if @changeset
     @changeset_product_ids ||= []
     locals = {
@@ -116,7 +115,6 @@ class PromotionsController < ApplicationController
     render :partial=>"repos"
   end
 
-
   def errata
     errata_hash = {}
 
@@ -163,7 +161,9 @@ class PromotionsController < ApplicationController
 
   def find_environment
     @organization = current_organization
-    @environment = KPEnvironment.where(:name=>params[:env_id]).where(:organization_id=>@organization.id).first
+    @environment = KPEnvironment.where(:name=>params[:id]).where(:organization_id=>@organization.id).first if params[:id]
+    @environment ||= first_env_in_path(accessible_environments, true)
+    raise "Cannot find a readable environment" if @environment.nil?
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor
     @product = Product.find(params[:product_id]) if params[:product_id]
