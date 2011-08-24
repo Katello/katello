@@ -16,13 +16,11 @@ class PromotionsController < ApplicationController
   before_filter :find_environment
   before_filter :authorize
 
-
-
-
   def rules
     show_test = lambda {
       to_ret = @environment.contents_readable?
-      to_ret = to_ret || @next_environment.changesets_readable? if @next_environment
+      to_ret ||= @next_environment.changesets_readable? if @next_environment
+      to_ret
     }
 
     prod_test = lambda{ @product.provider.readable? and @environment.contents_readable? }
