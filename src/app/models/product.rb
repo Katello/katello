@@ -16,12 +16,21 @@ class LockerPresenceValidator < ActiveModel::EachValidator
   end
 end
 
+class ProductNameUniquenessValidator < ActiveModel::Validator
+  def validate(record)
+    name_duplicates = Product.select("products.id").joins(:provider).where("products.name" => record.name, "providers.organization_id" => record.organization.id).all
+    record.errors[:base] << _("Products within an organization must have unique name.") if name_duplicates.count > 0
+  end
+end
+
 class Product < ActiveRecord::Base
   include Glue::Candlepin::Product if AppConfig.use_cp
   include Glue::Pulp::Repos if (AppConfig.use_cp and AppConfig.use_pulp)
   include Glue if AppConfig.use_cp
   include Authorization
   include AsyncOrchestration
+
+  validates_with ProductNameUniquenessValidator
 
   has_and_belongs_to_many :environments, { :class_name => "KPEnvironment", :uniq => true }
   has_and_belongs_to_many :changesets
@@ -31,7 +40,6 @@ class Product < ActiveRecord::Base
   validates :description, :katello_description_format => true
   validates :environments, :locker_presence => true
   validates :name, :presence => true, :katello_name_format => true
-  validates_uniqueness_of :name, :scope => :provider_id, :message => N_("must be unique within one provider")
 
   scoped_search :on => :name, :complete_value => true
   scoped_search :on => :multiplier, :complete_value => true
@@ -70,18 +78,6 @@ class Product < ActiveRecord::Base
     return sync_plan.name if sync_plan
     N_('None')
   end
-
-  #def to_json(options={})
-  #  json = self.as_json(options.merge(:except => :cp_id))
-  #  json = json.merge(:sync_state => self.sync_state,
-  #                    :last_sync => self.last_sync,
-  #                    :productContent => self.productContent,
-  #                    :multiplier => self.multiplier,
-  #                    :attributes => self.attrs,
-  #                    :id => self.cp_id)
-  #  ActiveSupport::JSON.encode(json)
-  #end
-
 
   def serializable_hash(options={})
     options = {} if options == nil
