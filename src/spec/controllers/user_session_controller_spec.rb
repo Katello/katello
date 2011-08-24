@@ -16,6 +16,7 @@ describe UserSessionsController do
   
   include LocaleHelperMethods
   include OrganizationHelperMethods
+  include AuthorizationHelperMethods
   
     before(:each) do
       set_default_locale
@@ -37,7 +38,7 @@ describe UserSessionsController do
     
     it "should have valid org selected" do 
       org = new_test_org
-      @user.own_role.allow([:read], :providers, nil, org)
+      allow(@user.own_role, [:read], :providers, nil, org)
       User.current = @user
       post :set_org, {:org_id => org.id } 
       response.should redirect_to(dashboard_index_url)
