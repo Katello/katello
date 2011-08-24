@@ -12,11 +12,8 @@
 
 
 module AuthorizationHelperMethods
-  def create_role
-
-  end
-
   def allow role, verbs, resource_type, tags=[], org = nil
+    role = Role.find_or_create_by_name(role) if String === role
     name = "role-#{role.id}-perm-#{rand 10**6}"
     verbs = [] if verbs.nil?
     verbs = [verbs] unless Array === verbs
