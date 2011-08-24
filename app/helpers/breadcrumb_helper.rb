@@ -95,33 +95,33 @@ module BreadcrumbHelper
      content_crumb_id = "content"
      products_crumb_id = "products"   
      
-     add_crumb_node!(bc, content_crumb_id, promotion_details_path(@organization.cp_key, @environment.name) ,
+     add_crumb_node!(bc, content_crumb_id, details_promotion_path(@environment.name) ,
          _("Content"), [], {:cache =>true, :content=>render(:partial=>"detail")})
-     add_crumb_node!(bc, "all_errata", promotion_errata_path(@organization.cp_key, @environment.name),
+     add_crumb_node!(bc, "all_errata", errata_promotion_path(@environment.name),
          _("All Errata"), [content_crumb_id], {:scrollable=>true})
-     add_crumb_node!(bc, products_crumb_id, promotion_products_path(@organization.cp_key, @environment.name),
+     add_crumb_node!(bc, products_crumb_id, products_promotion_path(@environment.name),
          _("Products"), [content_crumb_id], {:cache=>true, :content=>render(:partial=>"products", :locals=>{:products=>@products, :changeset=>@changeset})})
          
      for prod in @products
        product_id = product_bc_id(prod)
        #top of this product
-       add_crumb_node!(bc, product_id, promotion_details_path(@organization.cp_key, @environment.name, :product_id=>prod.id),
+       add_crumb_node!(bc, product_id, details_promotion_path(@environment.name, :product_id=>prod.id),
           prod.name, [content_crumb_id,products_crumb_id], {:cache=>true, :content=>render(:partial=>"detail", :locals=>{:product=>prod})})
           
        #product,packages
-       add_crumb_node!(bc, packages_bc_id(prod), promotion_packages_path(@organization.cp_key, @environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
+       add_crumb_node!(bc, packages_bc_id(prod), packages_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
           _("Packages"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
           
        #product_errata
-       add_crumb_node!(bc, errata_bc_id(prod), promotion_errata_path(@organization.cp_key, @environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
+       add_crumb_node!(bc, errata_bc_id(prod), errata_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
           _("Errata"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
   
        #product_repos
-       add_crumb_node!(bc, repo_bc_id(prod), promotion_repos_path(@organization.cp_key, @environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
+       add_crumb_node!(bc, repo_bc_id(prod), repos_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
                        _("Repos"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
 
      #product_distributions
-     add_crumb_node!(bc, distribution_bc_id(prod), promotion_distributions_path(@organization.cp_key, @environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
+     add_crumb_node!(bc, distribution_bc_id(prod), distributions_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
                      _("Distributions"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
               
      end   
