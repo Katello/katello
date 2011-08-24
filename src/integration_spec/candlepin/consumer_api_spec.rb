@@ -4,13 +4,12 @@ describe 'Candlepin::Consumer' do
   
   before(:each) do
     #url = "http://192.168.56.101:8080/candlepin"    
+    #Candlepin::Consumer.prefix = URI.parse(url).path
+    #Candlepin::Consumer.site = url.gsub(Candlepin::Consumer.prefix, "")    
+    
     User.current = User.new(:username => 'admin', :password => 'admin')
     
     @test_owner = Candlepin::Owner.create('test_owner' + random_string, 'test owner')
-    
-    Candlepin::Consumer.prefix = URI.parse(url).path
-    Candlepin::Consumer.site = url.gsub(Candlepin::Consumer.prefix, "")    
-    
     @consumer_1 = Candlepin::Consumer.create @test_owner[:key], 'test_consumer_' + random_string, 'system', {}
   end
   
