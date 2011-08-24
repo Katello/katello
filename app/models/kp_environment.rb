@@ -160,7 +160,11 @@ class KPEnvironment < ActiveRecord::Base
     end
   }
 
-  def readable_for_promotions?
+  def self.any_viewable_for_promotions? org
+    User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, [], org)
+  end
+
+  def viewable_for_promotions?
     User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, self.id, self.organization)
   end
 

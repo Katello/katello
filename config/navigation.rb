@@ -48,11 +48,11 @@ SimpleNavigation::Configuration.run do |navigation|
               package_sub.item :details, _("Details"), distribution_path(@distribution.id), :class=>"navigation_element"
               package_sub.item :details, _("Filelist"), filelist_distribution_path(@distribution.id), :class=>"navigation_element"
           end
-      end if current_organization.readable_for_promotions?
-      content_sub.item(:changeset, _("Changeset History"), changesets_path()) if current_organization.any_changesets_readable?
+      end if KPEnvironment.any_viewable_for_promotions?(current_organization)
+      content_sub.item(:changeset, _("Changeset History"), changesets_path()) if KPEnvironment.any_viewable_for_promotions?(current_organization)
       #content_sub.item :updates_bundle, _("Updates Bundle"), '#', :class => 'disabled', :if => Proc.new { false }
 
-    end if current_organization() && (Provider.any_readable?(current_organization)|| current_organization.readable_for_promotions?) #end content
+    end if current_organization() && (Provider.any_readable?(current_organization)|| KPEnvironment.any_viewable_for_promotions?(current_organization)) #end content
 
     #TODO: Add correct Systems subnav items
     top_level.item :systems, _("Systems"), systems_path(), :class=>'systems' do |systems_sub|
