@@ -44,6 +44,16 @@ SYNC_STATES = { 'waiting':     _("Waiting"),
                 'not_synced':  _("Not synced") }
 
 
+def format_sync_time(sync_time):
+    if sync_time is None:
+        return 'never'
+    else:
+        return str(format_date(sync_time[0:19], '%Y-%m-%dT%H:%M:%S'))
+        #'2011-07-11T15:03:52+02:00
+
+def format_sync_state(state):
+    return SYNC_STATES[state]
+
 # base action ----------------------------------------------------------------
 
 class RepoAction(Action):
@@ -51,16 +61,6 @@ class RepoAction(Action):
     def __init__(self):
         super(RepoAction, self).__init__()
         self.api = RepoAPI()
-
-    def format_sync_time(self, sync_time):
-        if sync_time is None:
-            return 'never'
-        else:
-            return str(format_date(sync_time[0:19], '%Y-%m-%dT%H:%M:%S'))
-            #'2011-07-11T15:03:52+02:00
-
-    def format_sync_state(self, state):
-        return SYNC_STATES[state]
         
 # actions --------------------------------------------------------------------
 
@@ -266,8 +266,8 @@ class Status(RepoAction):
 
         task = AsyncTask(self.api.last_sync_status(repo['id']))
 
-        repo['last_sync'] = self.format_sync_time(repo['last_sync'])
-        repo['sync_state'] = self.format_sync_state(repo['sync_state'])
+        repo['last_sync'] = format_sync_time(repo['last_sync'])
+        repo['sync_state'] = format_sync_state(repo['sync_state'])
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
@@ -327,8 +327,8 @@ class Info(RepoAction):
                 return os.EX_DATAERR
 
         repo['url'] = repo['source']['url']
-        repo['last_sync'] = self.format_sync_time(repo['last_sync'])
-        repo['sync_state'] = self.format_sync_state(repo['sync_state'])
+        repo['last_sync'] = format_sync_time(repo['last_sync'])
+        repo['sync_state'] = format_sync_state(repo['sync_state'])
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')

@@ -25,6 +25,7 @@ from katello.client.core.utils import format_date
 from katello.client.core import repo
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
+from katello.client.core.repo import format_sync_state, format_sync_time
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
@@ -40,13 +41,6 @@ except ImportError:
 Config()
 
 
-SYNC_STATES = { 'waiting':     _("Waiting"),
-                'running':     _("Running"),
-                'error':       _("Error"),
-                'finished':    _("Finished"),
-                'cancelled':   _("Cancelled"),
-                'timed_out':   _("Timed out"),
-                'not_synced':  _("Not synced") }
 
 # base product action --------------------------------------------------------
 
@@ -57,17 +51,6 @@ class ProductAction(Action):
         self.api = ProductAPI()
         self.repoapi = RepoAPI()
         self.csapi = ChangesetAPI()
-
-
-    def format_sync_time(self, sync_time):
-        if sync_time is None:
-            return 'never'
-        else:
-            return str(format_date(sync_time[0:19], '%Y-%m-%dT%H:%M:%S'))
-            #'2011-07-11T15:03:52+02:00
-
-    def format_sync_state(self, state):
-        return SYNC_STATES[state]
 
 # product actions ------------------------------------------------------------
 
@@ -180,8 +163,8 @@ class Status(ProductAction):
 
         task = AsyncTask(self.api.last_sync_status(prod['id']))
 
-        prod['last_sync'] = self.format_sync_time(prod['last_sync'])
-        prod['sync_state'] = self.format_sync_state(prod['sync_state'])
+        prod['last_sync'] = format_sync_time(prod['last_sync'])
+        prod['sync_state'] = format_sync_state(prod['sync_state'])
         
         if task.is_running():
             pkgsTotal = task.total_count()
