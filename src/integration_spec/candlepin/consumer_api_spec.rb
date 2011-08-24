@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'Candlepin::Consumer' do
   
   before(:each) do
-    url = "http://192.168.56.101:8080/candlepin"    
+    #url = "http://192.168.56.101:8080/candlepin"    
     User.current = User.new(:username => 'admin', :password => 'admin')
     
     @test_owner = Candlepin::Owner.create('test_owner' + random_string, 'test owner')
