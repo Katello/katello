@@ -92,7 +92,7 @@ $(document).ready(function() {
         panel.handleScrollResize($('#subpanel-frame'), container, subpanel_top, bodyY, 1);
     });
 
-    $('#content').resize(function(){
+    $('#maincontent').resize(function(){
         panel.panelResize($('#panel_main'), false);
         panel.panelResize($('#subpanel_main'), true);
     });
@@ -264,7 +264,7 @@ var panel = (function(){
             var panelFrame = paneljQ.parent().parent().parent().parent();
 
             new_top = isSubpanel ? (new_top + subpanelSpacing) : new_top;
-            panelFrame.parent().animate({top: new_top}, 250);
+            panelFrame.animate({top: new_top}, 250);
 
             //if there is a lot in the list, make the panel a bit larger
             if ($('#content').height() > 642){
