@@ -70,8 +70,8 @@ class System < ActiveRecord::Base
 
 
   def self.any_readable? org
-    User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, self) ||
-           User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, org.environments.collect{|e| e.id}, self, true)
+    User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, org) ||
+           User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, org.environment_ids, org, true)
   end
 
   def self.readable org
