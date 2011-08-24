@@ -158,7 +158,7 @@ case "$1" in
         ;;
     initdb)
         # check if there are not wrong permission of schema.rb
-        if [ -f "$KATELLO_DATA_DIR/schema.rb" -a $(stat -c %U $KATELLO_DATA_DIR/schema.rb) != "$KATELLO_USER" ]; then
+        if [ -f "$KATELLO_DATA_DIR/schema.rb" ] && [ "$(stat -c %U $KATELLO_DATA_DIR/schema.rb)" != "$KATELLO_USER" ]; then
             echo "Wrong permissions of schema.rb, please fix"
             exit 1
         fi
