@@ -19,6 +19,7 @@ import sys
 import time
 import threading
 import time
+from pprint import pprint
 from katello.client.api.task_status import TaskStatusAPI
 
 # output formatting -----------------------------------------------------------
@@ -478,7 +479,7 @@ class AsyncTask():
         return progress(self.items_left(), self.total_count())
 
     def is_running(self):
-        return (len(filter(lambda t: t['state'] not in ('finished', 'error', 'timed out', 'canceled'), self._tasks)) > 0)
+        return (len(filter(lambda t: t['state'] not in ('finished', 'error', 'timed out', 'canceled', 'not_synced'), self._tasks)) > 0)
 
     def subtask_count(self):
         return len(self._tasks)

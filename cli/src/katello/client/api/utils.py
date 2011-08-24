@@ -50,10 +50,10 @@ def get_environment(orgName, envName=None):
 def get_product(orgName, prodName):
     product_api = ProductAPI()
 
-    prov = product_api.product_by_name(orgName, prodName)
-    if prov == None:
+    prod = product_api.product_by_name(orgName, prodName)
+    if prod == None:
         print _("Could not find product [ %s ] within organization [ %s ]") % (prodName, orgName)
-    return prov
+    return prod
 
 
 def get_repo(orgName, prodName, repoName, envName=None):

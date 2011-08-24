@@ -28,7 +28,7 @@ from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_provider, get_product
-from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task
+from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask
 from katello.client.core.utils import ProgressBar
 
 try:
@@ -37,6 +37,15 @@ except ImportError:
     import simplejson as json
 
 Config()
+
+
+SYNC_STATES = { 'waiting':     _("Waiting"),
+                'running':     _("Running"),
+                'error':       _("Error"),
+                'finished':    _("Finished"),
+                'cancelled':   _("Cancelled"),
+                'timed_out':   _("Timed out"),
+                'not_synced':  _("Not synced") }
 
 # base product action --------------------------------------------------------
 
@@ -48,6 +57,16 @@ class ProductAction(Action):
         self.repoapi = RepoAPI()
         self.csapi = ChangesetAPI()
 
+
+    def format_sync_time(self, sync_time):
+        if sync_time is None:
+            return 'never'
+        else:
+            return str(format_date(sync_time[0:19], '%Y-%m-%dT%H:%M:%S'))
+            #'2011-07-11T15:03:52+02:00
+
+    def format_sync_state(self, state):
+        return SYNC_STATES[state]
 
 # product actions ------------------------------------------------------------
 
@@ -146,6 +165,56 @@ class Sync(ProductAction):
         print _("Product [ %s ] synchronized" % name)
         return os.EX_OK
 
+
+# ------------------------------------------------------------------------------
+class Status(ProductAction):
+
+    description = _('status of product\'s synchronization')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                               help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                               help=_("product name (required)"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+    def run(self):
+        orgName     = self.get_option('org')
+        prodName    = self.get_option('name')
+
+        prod = get_product(orgName, prodName)
+        if (prod == None):
+            return os.EX_DATAERR
+
+        task = AsyncTask(self.api.last_sync_status(prod['id']))
+
+        
+        prod['last_sync'] = self.format_sync_time(prod['last_sync'])
+        prod['sync_state'] = self.format_sync_state(prod['sync_state'])
+        
+        if task.is_running():
+            pkgsTotal = task.total_count()
+            pkgsLeft = task.items_left()
+            prod['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
+        
+        #TODO: last errors?
+        
+        self.printer.addColumn('id')
+        self.printer.addColumn('cp_id')
+        self.printer.addColumn('name')
+        self.printer.addColumn('provider_id')
+            
+        self.printer.addColumn('last_sync')
+        self.printer.addColumn('sync_state')
+        self.printer.addColumn('progress', show_in_grep=False)
+
+        self.printer.setHeader(_("Product Status"))
+        self.printer.printItem(prod)
+        return os.EX_OK
+        
 
 # ------------------------------------------------------------------------------
 class Promote(ProductAction):
