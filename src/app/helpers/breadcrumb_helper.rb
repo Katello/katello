@@ -24,8 +24,7 @@ module BreadcrumbHelper
   module ChangesetBreadcrumbs
     def generate_cs_breadcrumb
       bc = {}
-      add_crumb_node!(bc, "changesets", "", _("Changesets"), [],
-                      {:client_render => true})
+      add_crumb_node!(bc, "changesets", "", _("Changesets"), [], {:client_render => true})
   
       @changesets.each{|cs|
         add_crumb_node!(bc, changeset_bc_id(cs), "", cs.name, ['changesets'],

@@ -31,7 +31,7 @@ class Api::SystemsController < Api::ApiController
   def activate
     activation_keys = find_activation_keys
     User.current = activation_keys.first.user
-    system = System.new(params)
+    system = System.new(params.except(:activation_keys))
     # we apply ak in reverse order so when they conflict e.g. in environment, the first wins.
     activation_keys.reverse_each {|ak| ak.apply_to_system(system) }
     system.save!
@@ -130,7 +130,7 @@ class Api::SystemsController < Api::ApiController
   end
 
   def find_activation_keys
-    if ak_names = params.delete(:activation_keys)
+    if ak_names = params[:activation_keys]
       ak_names = ak_names.split(",")
       activation_keys = ak_names.map do |ak_name|
         activation_key = @organization.activation_keys.find_by_name(ak_name)

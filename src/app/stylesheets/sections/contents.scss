@@ -103,6 +103,24 @@
         overflow: auto;
         height: $cs-height;
         min-height: $cs-height;
+                 
+        .changeset_status {
+          font-size: 80%;
+          margin-right: 5px;
+          
+          .progressbar {
+            width: 20px;
+            float: left;
+            height: 22px;
+            margin-top: 3px;
+            margin-right: 3px;
+          }
+          .ui-progressbar {
+            height: 13px;
+          }
+        }
+        .being_promoted { color: $changeset-promoting_color; font-weight: 600; }
+        .locked_icon { margin-right: 4px; }
       }
       .locked {
         outline: 2px solid gray;

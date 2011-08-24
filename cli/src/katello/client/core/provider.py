@@ -253,9 +253,11 @@ class Sync(ProviderAction):
 
     def run(self):
         provName = self.get_option('name')
-        orgName  = self.get_option('org')
-
-        prov = get_provider(orgName, provName)
+        orgName  = self.get_option('org')        
+        return self.sync_provider(provName, orgName)
+        
+    def sync_provider(self, providerName, orgName):
+        prov = get_provider(orgName, providerName)
         if prov == None:
             return os.EX_DATAERR
 
@@ -264,11 +266,12 @@ class Sync(ProviderAction):
 
         if len(filter(lambda t: t['state'] == 'error', result)) > 0:
             errors = map(lambda t: json.loads(t["result"])['errors'][0], filter(lambda t: t['state'] == 'error', result))
-            print _("Provider [ %s ] failed to sync: %s" % (provName, errors))
+            print _("Provider [ %s ] failed to sync: %s" % (providerName, errors))
             return os.EX_DATAERR
 
-        print _("Provider [ %s ] synchronized" % provName)
+        print _("Provider [ %s ] synchronized" % providerName)
         return os.EX_OK
+        
 
 # ==============================================================================
 class ImportManifest(ProviderAction):

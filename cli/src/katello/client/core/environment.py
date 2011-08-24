@@ -61,8 +61,8 @@ class List(EnvironmentAction):
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('description', multiline=True)
-        self.printer.addColumn('organization_id', 'Org Id')
-        self.printer.addColumn('prior', 'Prior Id')
+        self.printer.addColumn('organization', _('Org'))
+        self.printer.addColumn('prior', _('Prior Environment'))
 
         self.printer.setHeader(_("Environment List"))
         self.printer.printItems(envs)

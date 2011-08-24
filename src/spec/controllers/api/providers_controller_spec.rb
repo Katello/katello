@@ -112,5 +112,5 @@ describe Api::ProvidersController do
       post :import_manifest, { :id => PROVIDER_ID , :import => @temp_file }
     end
   end
-  
+
 end

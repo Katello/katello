@@ -1,29 +1,31 @@
 import unittest
 from mock import Mock
 import urlparse
+from cli_test_utils import CLIOptionTestCase
 
 import katello.client.core.repo
-from katello.client.core.repo import Create
+from katello.client.core.repo import Discovery
 
-class RequiredCLIOptionsTests(unittest.TestCase):
+class RequiredCLIOptionsTests(CLIOptionTestCase):
     def setUp(self):
-        self.create_action = Create()
+        self.set_action(Discovery())
+        self.mock_options()
 
     def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.create_action.process_options, ['create', '--name=repo1', '--url=http://localhost', '--product=product1'])
+        self.assertRaises(Exception, self.action.process_options, ['create', '--name=repo1', '--url=http://localhost', '--product=product1'])
 
     def test_missing_product_generates_error(self):
-        self.assertRaises(Exception, self.create_action.process_options, ['create', '--org=ACME', '--name=repo1', '--url=http://localhost'])
+        self.assertRaises(Exception, self.action.process_options, ['create', '--org=ACME', '--name=repo1', '--url=http://localhost'])
 
     def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.create_action.process_options, ['create', '--org=ACME', '--url=http://localhost', '--product=product1'])
+        self.assertRaises(Exception, self.action.process_options, ['create', '--org=ACME', '--url=http://localhost', '--product=product1'])
 
     def test_missing_url_generates_error(self):
-        self.assertRaises(Exception, self.create_action.process_options, ['create', '--org=ACME', '--name=repo1', '--product=product1'])
+        self.assertRaises(Exception, self.action.process_options, ['create', '--org=ACME', '--name=repo1', '--product=product1'])
 
     def test_no_error_if_required_options_provided(self):
-        self.create_action.process_options(['create', '--org=ACME', '--name=repo1', '--url=http://localhost', '--product=product1'])
-        self.assertEqual(len(self.create_action.optErrors), 0)
+        self.action.process_options(['create', '--org=ACME', '--name=repo1', '--url=http://localhost', '--product=product1'])
+        self.assertEqual(len(self.action.optErrors), 0)
 
 
 class RepoDiscoveryTest(unittest.TestCase):
@@ -39,7 +41,7 @@ class RepoDiscoveryTest(unittest.TestCase):
         self.original_system_exit = katello.client.core.repo.system_exit
         katello.client.core.repo.system_exit = Mock()
 
-        self.create_action = Create()
+        self.create_action = Discovery()
 
         self.create_action.api.repo_discovery = Mock()
         self.create_action.api.repo_discovery.return_value = self.DISCOVERY_TASK
@@ -66,7 +68,7 @@ class RepositorySelectionTest(unittest.TestCase):
     DISCOVERED_URLS = ['http://localhost/a/b/', 'http://localhost/a/c/']
     
     def setUp(self):
-        self.create_action = Create()                
+        self.create_action = Discovery()                
         self.original_system_exit = katello.client.core.repo.system_exit        
         katello.client.core.repo.system_exit = Mock()
 
@@ -102,7 +104,7 @@ class RepositoryNameTest(unittest.TestCase):
     URL = 'http://localhost/a/b/'
 
     def setUp(self):
-        self.create_action = Create()
+        self.create_action = Discovery()
         self.parsedUrl = urlparse.urlparse(self.URL)
 
     def test_replaces_slashes_with_underscores(self):
@@ -116,7 +118,7 @@ class CreateRepositoryTest(unittest.TestCase):
     URL2 = 'http://localhost/a/c/'
 
     def setUp(self):
-        self.create_action = Create()
+        self.create_action = Discovery()
         self.create_action.api.create = Mock()
 
     def test_create_repo_in_pulp(self):

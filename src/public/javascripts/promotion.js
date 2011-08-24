@@ -13,8 +13,10 @@
 
 
 var promotion_page = (function($){
-    var types =             ["errata", "product", "package", "repo"],
-        subtypes =          ["errata", "package", "repo"],
+    // Don't use the variable name 'package', it is a reserved word, use
+    // pkg instead, see: https://bugzilla.redhat.com/show_bug.cgi?id=732846
+    var types =             ["errata", "product", "pkg", "repo"],
+        subtypes =          ["errata", "pkg", "repo"],
         changeset_queue =   [],
         changeset_data =    {},
         interval_id =       undefined,
@@ -242,7 +244,7 @@ var promotion_page = (function($){
                 changeset.remove_item(type, id, product_id);
                 if( type !== 'product' ){
                     var product = changeset.getProducts()[product_id];
-                    if( !product.errata.length && !product.package.length && !product.repo.length ){
+                    if( !product.errata.length && !product.pkg.length && !product.repo.length ){
                         delete changeset.getProducts()[product_id];
                         changeset_tree.render_content('changeset_' + changeset.id);
                     } else {
@@ -265,6 +267,25 @@ var promotion_page = (function($){
                                 b_html.toUpperCase() ? 1 : -1;
                     }
             });
+        },
+        init_changeset_list = function(){
+            var changeset;
+            sort_changeset();
+            if( !current_changeset ){
+                for( id in changeset_breadcrumb ){
+                    if( changeset_breadcrumb.hasOwnProperty(id) ){
+                        if( id.split("_")[0] === "changeset" ){
+                            changeset = changeset_breadcrumb[id];
+                            if( !changeset.is_new && !changeset.progress ){
+                                changesetStatusActions.setLocked(id);
+                            } else if( changeset.progress !== null && changeset.progress !== undefined ){
+                                changesetStatusActions.initProgressBar(id, changeset.progress);
+                                changesetStatusActions.checkProgressTask(id.split("_")[1]);
+                            }
+                        }
+                    }
+                }
+            }
         },
         env_change = function(env_id, element) {
             var url = element.attr("data-url");
@@ -563,7 +584,8 @@ var promotion_page = (function($){
         hide_conflict:          hide_conflict,
         show_conflict_details:  show_conflict_details,
         add_dependencies:       add_dependencies,
-        remove_dependencies:    remove_dependencies
+        remove_dependencies:    remove_dependencies,
+        init_changeset_list:    init_changeset_list
     };
 }(jQuery));
 
@@ -662,10 +684,10 @@ var changeset_obj = function(data_struct) {
         },
         add_item:function (type, id, display_name, product_id, product_name) {
             if( type === 'product' ){
-                products[id] = {'name': display_name, 'id': id, 'package':[], 'errata':[], 'repo':[], 'all': true}
+                products[id] = {'name': display_name, 'id': id, 'pkg':[], 'errata':[], 'repo':[], 'all': true}
             } else { 
                 if ( products[product_id] === undefined ) {
-                    products[product_id] = {'name': product_name, 'id': product_id, 'package':[], 'errata':[], 'repo':[]}
+                    products[product_id] = {'name': product_name, 'id': product_id, 'pkg':[], 'errata':[], 'repo':[]}
                 }
                 products[product_id][type].push({name:display_name, id:id})
             } 
@@ -705,9 +727,17 @@ var changeset_obj = function(data_struct) {
                 if (on_success) {
                     on_success();
                 }
-                window.location = data;
+                changeset_breadcrumb['changeset_' + id].is_new = true;
+                changeset_breadcrumb['changeset_' + id].progress = 0;
+                promotion_page.get_changeset_tree().render_content('changesets');
 
-            }});
+            },
+            error: function() {
+                if(on_error) {
+                    on_error();
+                }
+            }
+            });
         },
         update: function(items, on_success, on_error) {
           var data = [];
@@ -737,8 +767,6 @@ var changeset_obj = function(data_struct) {
 
 //doc ready
 var registerEvents = function(){
-
-
     $('#save_changeset_button').live('click', function(){
         var button = $(this);
         if(button.hasClass("disabled")){return false;}
@@ -818,8 +846,10 @@ var registerEvents = function(){
         if ($(this).hasClass("disabled")) {
             return;
         }
+        $(this).addClass("disabled");
         var cs = promotion_page.get_changeset();
-        cs.promote(function() {});
+        var after = function() {$(this).removeClass("disabled");};
+        cs.promote(after, after);
 
 
     });
@@ -1043,9 +1073,6 @@ var promotionsRenderer = (function(){
 var templateLibrary = (function(){
     var changesetsListItem = function(id, name){
             var html ='<li>' + '<div class="slide_link" id="' + id + '">'
-            if (!changeset_breadcrumb[id].is_new) {
-                html += '<img  class="fl locked_icon" src="/images/icons/locked.png">'
-            }
 
             html += '<span class="sort_attr">'+ name + '</span></div></li>';
             return html;
@@ -1227,6 +1254,87 @@ var templateLibrary = (function(){
     };
 })();
 
+var changesetStatusActions = (function($){
+    var set_margins = function(){
+            if( $('.progressbar').length ) {
+                $('#cslist .slider .slide_link:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '43px');
+                $('#cslist .slider .slide_link:not(:has(.progressbar)) .locked_icon').css({'margin-left': '9px', 'margin-right' : '22px'});
+            } else if( $('#cslist .locked_icon').length ){
+                $('#cslist .slider .slide_link:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '20px');
+            }
+        },
+        initProgressBar = function(id, status){
+            var changeset = $('#' + id);
+            changeset.css('margin-left', '0');
+            changeset.prepend('<span class="changeset_status"><span class="progressbar"></span><label></label></span>');
+            changeset.find('.changeset_status label').text(status + '%');
+            //changeset.find('.progressbar').progressbar({value: status});
+            changeset.addClass('being_promoted');
+            changeset.attr('title', i18n.changeset_progress);
+            changeset.find('.changeset_status label').text(i18n.promoting);
+            set_margins();
+        },
+        setProgress = function(id, progress){
+            var changeset = $('#' + id);  
+            //changeset.find(".progressbar").progressbar({value: progress});
+            //changeset.find('.changeset_status label').text(progress + '%');
+        },
+        finish = function(id){
+            var changeset = $('#' + id);
+            changeset.find(".changeset_status").html(i18n.promoted);
+            /*changeset.parent().fadeOut(3000, function(){
+                changeset.parent().remove();
+                if( !$('.changeset_status').length ){
+                    $('#cslist .slider .slide_link').animate({'margin-left' : '0'}, 200);
+                }
+            });*/
+        },
+        setLocked = function(id){
+            var changeset = $('#' + id);
+            changeset.css('margin-left', '0');
+            changeset.prepend('<img class="fl locked_icon" src="/images/icons/locked.png">');
+            set_margins();
+        },
+        removeLocked = function(id){
+            var changeset = $('#' + id);
+            changeset.find('img').remove();
+            changeset.css('margin-left', '20px');
+            if( !$('#cslist .locked_icon').length ){
+                console.log('no more locked icons');
+                $('#cslist .slider .slide_link').css('margin-left', '0');
+            }
+        },
+        checkProgressTask = function(id){
+            var timeout = 8000;
+            var updater = $.PeriodicalUpdater('/changesets/' + id + '/promotion_progress/', {
+                method: 'GET',
+                type: 'JSON',
+                cache: false,
+                global: false,
+                minTimeout: timeout,
+                maxTimeout: timeout
+            }, function(data){
+                if( data.progress === 100 ){
+                    delete changeset_breadcrumb['changeset_' + id];
+                    setProgress(data.id, data.progress);
+                    finish(data.id);
+                    updater.stop();
+                } else {
+                    setProgress(data.id, data.progress);
+                }
+            });
+        };
+        
+    return {
+        initProgressBar     : initProgressBar,
+        setProgress         : setProgress,
+        finishProgess       : finish,
+        checkProgressTask   : checkProgressTask,
+        setLocked           : setLocked,
+        removeLocked        : removeLocked
+    }
+})(jQuery);
+
 //doc ready
 $(document).ready(function() {
 
@@ -1265,7 +1373,7 @@ $(document).ready(function() {
                                         render_cb       :  promotionsRenderer.render,
                                         enable_search   :  true,
                                         tab_change_cb   :  function(hash_id) {
-                                            promotion_page.sort_changeset();
+                                          promotion_page.init_changeset_list();
                                         }
                                     }));
 

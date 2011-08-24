@@ -61,19 +61,55 @@ class RepoAction(Action):
 
     def format_sync_state(self, state):
         return SYNC_STATES[state]
-
+        
 # actions --------------------------------------------------------------------
 
 
 class Create(RepoAction):
 
-    description = _('create a repository')
+    description = _('create a repository at a specified URL')
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
                                help=_("organization name eg: foo.example.com (required)"))
         self.parser.add_option('--name', dest='name',
-                               help=_("repository name (required)"))
+                               help=_("repository name to assign (required)"))
+        self.parser.add_option("--url", dest="url",
+                               help=_("url path to the repository (required)"))
+        self.parser.add_option('--product', dest='prod',
+                               help=_("product name (required)"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+        self.require_option('url')
+        self.require_option('prod', '--product')
+
+    def run(self):
+        name     = self.get_option('name')
+        url      = self.get_option('url')
+        prodName = self.get_option('prod')
+        orgName  = self.get_option('org')
+
+        prod = get_product(orgName, prodName)
+        if prod != None:
+            repo = self.api.create(prod["cp_id"], name, url)
+            print _("Successfully created repository [ %s ]") % name
+        else:
+            print _("No product [ %s ] found") % prodName
+            return os.EX_DATAERR
+        
+        return os.EX_OK
+
+class Discovery(RepoAction):
+
+    description = _('discovery repositories contained within a URL')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                               help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                               help=_("repository name prefix to add to all the discovered repositories (required)"))
         self.parser.add_option("--url", dest="url",
                                help=_("root url to perform discovery of repositories eg: http://porkchop.devel.redhat.com/ (required)"))
         self.parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
@@ -227,7 +263,7 @@ class Info(RepoAction):
     def setup_parser(self):
         self.parser.add_option('--repo_id', dest='repo_id',
                       help=_("repository id"))
-        self.parser.add_option('--repo', dest='repo',
+        self.parser.add_option('--name', dest='name',
                       help=_("repository name"))
         self.parser.add_option('--org', dest='org',
                       help=_("organization name eg: foo.example.com"))
@@ -238,13 +274,13 @@ class Info(RepoAction):
 
     def check_options(self):
         if not self.has_option('repo_id'):
-            self.require_option('repo')
+            self.require_option('name')
             self.require_option('org')
             self.require_option('product')
 
     def run(self):
         repoId   = self.get_option('repo_id')
-        repoName = self.get_option('repo')
+        repoName = self.get_option('name')
         orgName  = self.get_option('org')
         envName  = self.get_option('env')
         prodName = self.get_option('product')
@@ -282,40 +318,39 @@ class Sync(RepoAction):
         self.parser.add_option('--repo_id', dest='repo_id',
                                help=_("repo id, string value (required)"))
         self.parser.add_option('--org', dest='org',
-                      help=_("organization name eg: foo.example.com"))
-        self.parser.add_option('--repo', dest='repo',
+                      help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
                       help=_("repository name"))
         self.parser.add_option('--product', dest='product',
                       help=_("product name eg: fedora-14"))
                       
     def check_options(self):
         if not self.has_option('repo_id'):
-            self.require_option('repo')
+            self.require_option('name')
             self.require_option('org')
             self.require_option('product')
 
     def run(self):
         repoId   = self.get_option('repo_id')
-        repoName = self.get_option('repo')
+        repoName = self.get_option('name')
         orgName  = self.get_option('org')
-        envName  = self.get_option('env')
         prodName = self.get_option('product')
         
         if repoId:
             repo = self.api.repo(repoId)
         else:
-            repo = get_repo(orgName, prodName, repoName, envName)
+            repo = get_repo(orgName, prodName, repoName)
             if repo == None:
                 return os.EX_DATAERR
 
         async_task = self.api.sync(repo['id'])
         result = run_async_task_with_status(async_task, ProgressBar())
-
+        
         if result[0]['state'] == 'finished':
             print _("Repo [ %s ] synced" % repo['name'])
             return os.EX_OK
         else:
-            print _("Repo [ %s ] failed to sync: %s" % (repo['name'], json.loads(result["result"])['errors'][0]))
+            print _("Repo [ %s ] failed to sync: %s" % (repo['name'], json.loads(result[0]["result"])['errors'][0]))
             return os.EX_DATAERR
 
 
