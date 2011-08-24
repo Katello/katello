@@ -127,6 +127,11 @@ class UsersController < ApplicationController
       errors error
       render :json=>@user.errors, :status=>:bad_request
     end
+    errors "", {:list_items => @user.errors.to_a}
+    render :text => @user.errors, :status=>:ok
+  rescue Exception => error
+    errors error
+    render :json=>@user.errors, :status=>:bad_request
   end
 
   def clear_helptips

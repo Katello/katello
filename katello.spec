@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.63
+Version:	      0.1.70
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -90,6 +90,7 @@ rm -rf %{buildroot}
 #prepare dir structure
 install -d -m0755 %{buildroot}%{homedir}
 install -d -m0755 %{buildroot}%{datadir}
+install -d -m0755 %{buildroot}%{datadir}/tmp
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
 install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 
@@ -109,6 +110,7 @@ install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{na
 #copy init scripts and sysconfigs
 install -Dp -m0644 %{confdir}/%{name}.sysconfig %{buildroot}%{_sysconfdir}/sysconfig/%{name}
 install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
+install -Dp -m0755 %{confdir}/%{name}-jobs.init %{buildroot}%{_initddir}/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.completion.sh %{buildroot}%{_sysconfdir}/bash_completion.d/%{name}
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 
@@ -122,7 +124,7 @@ ln -svf %{datadir}/schema.rb %{buildroot}%{homedir}/db/schema.rb
 
 #create symlinks for data
 ln -sv %{_localstatedir}/log/%{name} %{buildroot}%{homedir}/log
-ln -sv %{_tmppath} %{buildroot}%{homedir}/tmp
+ln -sv %{datadir}/tmp %{buildroot}%{homedir}/tmp
 
 #create symlink for Gemfile.lock (it's being regenerated each start)
 ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
@@ -173,6 +175,7 @@ fi
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %{_initddir}/%{name}
+%{_initddir}/%{name}-jobs
 %{_sysconfdir}/bash_completion.d/%{name}
 %{homedir}
 
@@ -194,6 +197,92 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Aug 23 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.70-1
+- fixing miscommited database.yml
+- adding kill_pg_connection rake task
+- cli tests - removing assumeyes option
+- a workaround for candlepin issue: gpgUrl for content must exist, as it is
+  used during entitlement certificate generation
+- no need to specify content id for promoted repositories, as candlepin will
+  assign it
+
+* Tue Aug 23 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.69-1
+- 731670 - prevent user from deleting himself
+- 731670 - reformatting rescue block
+- ignore case for url validation
+- add in spec tests for invalid/valid file urls
+- support file based urls for validation
+- spec fixes
+- merging changeset promotion status to master
+- hiding the promotion progress bar and replacing it with just text, also
+  stopping the fade out upon completion
+- fixing issue with promotions where if the repo didnt exist in the next env it
+  would fail
+- two spec fixes
+- a few promotion fixes, waiting on syncing was n ot working, client side
+  updater was caching
+- fixing promotion backend to sync the cloned repo and not the repo that you
+  are promoting
+- changing notice on promotion
+- fixing issue where promotion could cause a db lock error, fixed by not
+  modifying the outside of itself
+- fixing issue where promoted changeset was not removed from the
+  changeset_breadcrumb
+- Promotion - Adjusts alignment of changesets in the list when progress and
+  locked.
+- Promotions - Changes to alignment in changesets when being promoted and
+  locked.
+- Promtoions - Fixes issue with title not appearing on a changeset being
+  promoted. Changes from redirect on promote of a changeset to return user to
+  list of changesets to see progress.
+- fixing types of changesets shown on the promotions page
+- removed rogue debugger statement
+- Promotions - Progress polling for a finished changeset now ceases upon
+  promotion reaching 100%.
+- Fixes issue with lock icon showing up when progress. Fixes issue with looking
+  for progress as a number - should receive string.
+- adding some non-accurate progress incrementing to changesets
+- Promotions - Updated to submit progress information from real data off of
+  changest task status.
+- getting async job working with promotions
+- Added basic progress spec test. Added route for getting progress along with
+  stubbed controller action to return progress for a changeset.
+- Adds new callback when rendering is done for changeset lists that adds locks
+  and progress bars as needed on changeset list load.
+- Adds javascript functionality to set a progress bar on a changeset, update it
+  and remove it. Adds javascript functionality to add and remove locked status
+  icons from changests.
+- adding changeset dependencies to be stored upon promotion time
+
+* Mon Aug 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.68-1
+- init script - fixing schema.rb permissions check
+- katello-jobs - suppressing error message for status info
+
+* Mon Aug 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.67-1
+- reset script - adding -f (force) option
+- reset script - missing candlepin restart string
+- fixed a broken Api::SyncController test
+
+* Fri Aug 19 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.66-1
+- katello-job - init.d script has proper name now
+- katello-job - temp files now in /var/lib/katello/tmp
+- katello-job - improving RAILS_ENV setting
+- adding Api::SyncController specs that I forgot to add earlier
+
+* Fri Aug 19 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.65-1
+- katello-job - adding new init script for delayed_job
+- 731810 Deleteing a provider renders an server side error
+- spec tests for Glue::Pulp::Repo
+- merge of repo#get_{env,product,org} functionality
+- repo sync - check for syncing only repos in locker
+- updated routes to support changes in rhsm related to explicit specification
+  of owners
+- Activation Keys - fix API rspec tests
+- Fix running rspec tests - move corrupted tests to pending
+- Api::SyncController, with tests now
+
+* Wed Aug 17 2011 Mike McCune <mmccune@redhat.com> 0.1.64-1
+ - period tagging of Katello.
 * Mon Aug 15 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.63-1
 - 714167 - undeclared dependencies (regin & multimap)
 - Revert "714167 - broken dependencies is F14"

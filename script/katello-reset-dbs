@@ -19,8 +19,23 @@ echo " # mongodump --db pulp_database --out - > pulp_database.json"
 echo " # pg_dump -c candlepin > candlepin_db.sql"
 echo " # pg_dump -c katello > katello_db.sql"
 echo -e "\n"
-read -p "Are you sure you want to proceed (yes/no)? "
-[ "$REPLY" != "yes" ] && exit 1
+
+FORCE=0
+while getopts ":f" opt; do
+  case $opt in
+    f)
+      FORCE=1
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      ;;
+  esac
+done
+
+if [ ! "$FORCE" = "1" ]; then
+  read -p "Are you sure you want to proceed (yes/no)? "
+  [ "$REPLY" != "yes" ] && exit 1
+fi
 
 echo "Erasing all data..."
 
@@ -58,7 +73,7 @@ echo "Starting Pulp instance"
 $SRV pulp-server start
 
 echo "Starting Candlepin instance"
-start_unless_running
+start_unless_running candlepin
 
 echo "Initializing Katello database"
 rm -f /var/lib/katello/initdb_done

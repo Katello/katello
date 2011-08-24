@@ -16,7 +16,7 @@ require 'rest_client'
 class Api::ProvidersController < Api::ApiController
 
   before_filter :find_organization, :only => [:create]
-  before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products, :import_manifest, :sync, :product_create]
+  before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products, :import_manifest, :product_create]
 
   def index
     render :json => (Provider.where query_params).to_json
@@ -41,9 +41,9 @@ class Api::ProvidersController < Api::ApiController
   def destroy
     @provider.destroy
     if @provider.destroyed?
-      render :text => _("Deleted provider [ %{p} ]") % {:p => @provider.name}, :status => 200
+      render :text => _("Deleted provider [ %s ]") % @provider.name , :status => 200
     else
-      raise HttpErrors::ApiError, _("Error while deleting provider [ %{p} ]") % {:p => @provider.name}
+      raise HttpErrors::ApiError, _("Error while deleting provider [ %s ]") % @provider.name
     end
   end
 
@@ -66,7 +66,7 @@ class Api::ProvidersController < Api::ApiController
     @provider.import_manifest File.expand_path(temp_file.path)
     render :text => "Manifest imported", :status => 200
     rescue => e
-      raise HttpErrors::ApiError, _("Manifest import for provider [ %{p} ] failed") % {:p => @provider.name}
+      raise HttpErrors::ApiError, _("Manifest import for provider [ %s ] failed") % @provider.name
   end
 
   def import_products
@@ -90,7 +90,7 @@ class Api::ProvidersController < Api::ApiController
 
   def find_provider
     @provider = Provider.find(params[:id])
-    raise HttpErrors::NotFound, _("Couldn't find provider '#{params[:id]}'") if @provider.nil?
+    raise HttpErrors::NotFound, _("Couldn't find provider '%s'") % params[:id] if @provider.nil?
   end
 
 end

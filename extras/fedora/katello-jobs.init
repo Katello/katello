@@ -1,0 +1,148 @@
+#!/bin/bash
+#
+# Init script for katello-jobs
+#
+# chkconfig: - 88 12
+# description: Init script for katello-jobs
+#
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+if [ -f /etc/sysconfig/katello ]; then
+    . /etc/sysconfig/katello
+fi
+
+prog=katello-job
+RETVAL=0
+KATELLO_USER=${KATELLO_USER:-katello}
+KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
+KATELLO_DATA_DIR=${KATELLO_DATA_DIR:-/var/lib/katello}
+KATELLO_ENV=${KATELLO_ENV:-production}
+KATELLO_JOB_WORKERS=${KATELLO_JOB_WORKERS:-1}
+KATELLO_JOB_PARAMS=${KATELLO_JOB_PARAMS:--m -p katello}
+KATELLO_PID=$KATELLO_HOME/tmp/pids/delayed_job*monitor.pid
+KATELLO_PIDS_ALL=$KATELLO_HOME/tmp/pids/delayed_job*.pid
+export RAILS_ENV=$KATELLO_ENV
+
+status() {
+    #check if pid file exists
+    pidfile=`ls ${KATELLO_PID} 2>/dev/null | head -n1`
+    if [ -f $pidfile ]; then
+        pid=`cat "$pidfile"`
+        #check if proces with pid from the file is running
+        if `ps -p $pid > /dev/null`; then
+            echo "$prog is running."
+            RETVAL=0
+        else
+            echo "$prog is not running."
+            RETVAL=1
+        fi
+    else
+        echo "$prog is not running."
+        RETVAL=3
+    fi
+
+    return $RETVAL
+}
+
+status_q() {
+    status &> /dev/null
+    return $?
+}
+
+start() {
+
+    [ ! -f $KATELLO_DATA_DIR/initdb_done ] && echo "Please run service katello initdb first" && echo_failure && return 1
+
+    echo -n $"Starting $prog: "
+    if status_q; then
+        echo -n $"$prog is already running. "
+        RETVAL=0
+        echo_success
+    else
+        cd ${KATELLO_HOME} #rails expects you to run from the root of the app
+        # delete Gemfile.lock (it will be regenerated)
+        rm -f $KATELLO_DATA_DIR/Gemfile.lock
+        daemon --user ${KATELLO_USER} bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/delayed_job $KATELLO_JOB_PARAMS -n $KATELLO_JOB_WORKERS start >/var/log/katello/jobs-startup.log 2>&1
+        RETVAL=$?
+        if [ $RETVAL = 0 ]; then
+            echo_success
+        else
+            echo_failure
+        fi
+    fi
+
+    echo
+    return $RETVAL
+}
+
+stop() {
+
+    echo -n $"Stopping $prog: "
+    if status_q; then
+        killproc -p ${KATELLO_PID}
+        RETVAL=$?
+    else
+        echo -n $"$prog was not running. "
+        RETVAL=0
+        echo_success
+    fi
+
+    echo
+
+    # clean all pids (they are not deleted)
+    rm -f $KATELLO_PIDS_ALL
+
+    return $RETVAL
+}
+
+restart() {
+    stop
+    start
+}
+
+condstop() {
+    if status_q; then
+        stop
+    else
+        RETVAL=0
+    fi
+}
+
+condrestart() {
+    if status_q; then
+        restart
+    else
+        RETVAL=0
+    fi
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        restart
+        ;;
+    condrestart|try-restart)
+        condrestart
+        ;;
+    condstop)
+        condstop
+        ;;
+    status)
+        status
+        ;;
+    *)
+        echo "Usage: {start|stop|restart|condrestart|condstop|status}"
+        exit 1
+        ;;
+esac
+
+exit $RETVAL
+
+# vim:set sw=4 ts=4 et:

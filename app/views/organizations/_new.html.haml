@@ -11,11 +11,11 @@
         .grid_2.ra
           %label #{_("Name")}:
         .grid_5.la
-          = text_field_tag :name, params[:name], :tabindex => 1
+          = text_field_tag :name, params[:name], :tabindex => auto_tab_index
       %fieldset
         .grid_2.ra
           %label #{_("Description")}:
         .grid_5.la
-          = text_area_tag :description, params[:description], :tabindex => 2
+          = text_area_tag :description, params[:description], :tabindex => auto_tab_index
       .grid_5.push_2.la
-        = button_to _("Save"), {:action => "create", :controller => "organizations"}, :method => :post, :id => :organization_save, :tabindex => 3
+        = button_to _("Save"), {:action => "create", :controller => "organizations"}, :method => :post, :id => :organization_save, :tabindex => auto_tab_index

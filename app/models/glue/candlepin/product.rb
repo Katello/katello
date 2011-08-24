@@ -131,6 +131,7 @@ module Glue::Candlepin::Product
       pc = Glue::Candlepin::ProductContent.new({:content => {
           :name => name,
           :contentUrl => path,
+          :gpgUrl => "",
           :type => repo_type,
           :label => "#{self.cp_id}_#{name}",
           :vendor => "Custom"
