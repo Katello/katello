@@ -76,14 +76,16 @@ class List(ProductAction):
         env_name = self.get_option('env')
         prov_name = self.get_option('prov')
 
+        self.printer.addColumn('id')
+        self.printer.addColumn('name')
+        self.printer.addColumn('provider_id')
+        self.printer.addColumn('provider_name')
+
         if prov_name:
             prov = get_provider(org_name, prov_name)
             if prov == None:
                 return os.EX_DATAERR
-            self.printer.addColumn('id')
-            self.printer.addColumn('name')
-            self.printer.addColumn('provider_id')
-
+            
             self.printer.setHeader(_("Product List For Provider %s") % (prov_name))
             prods = self.api.products_by_provider(prov["id"])
 
@@ -91,9 +93,7 @@ class List(ProductAction):
             env = get_environment(org_name, env_name)
             if env == None:
                 return os.EX_DATAERR
-            self.printer.addColumn('id')
-            self.printer.addColumn('name')
-            self.printer.addColumn('provider_id')
+            
             self.printer.setHeader(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
             prods = self.api.products_by_env(env['id'])
 
@@ -174,9 +174,9 @@ class Status(ProductAction):
         #TODO: last errors?
         
         self.printer.addColumn('id')
-        self.printer.addColumn('cp_id')
         self.printer.addColumn('name')
         self.printer.addColumn('provider_id')
+        self.printer.addColumn('provider_name')
             
         self.printer.addColumn('last_sync')
         self.printer.addColumn('sync_state')
