@@ -22,7 +22,7 @@ class SyncSchedulesController < ApplicationController
   def rules
     {
       :index => lambda{Provider.any_readable?(current_organization)},
-      :apply => current_organization.syncable?
+      :apply => lambda{current_organization.syncable?}
     }
   end
 
