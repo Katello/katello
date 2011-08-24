@@ -13,10 +13,8 @@
 
 
 var promotion_page = (function($){
-    // Don't use the variable name 'package', it is a reserved word, use
-    // pkg instead, see: https://bugzilla.redhat.com/show_bug.cgi?id=732846
-    var types =             ["errata", "product", "pkg", "repo"],
-        subtypes =          ["errata", "pkg", "repo"],
+    var types =             ["errata", "product", "package", "repo"],
+        subtypes =          ["errata", "package", "repo"],
         changeset_queue =   [],
         changeset_data =    {},
         interval_id =       undefined,
@@ -244,7 +242,7 @@ var promotion_page = (function($){
                 changeset.remove_item(type, id, product_id);
                 if( type !== 'product' ){
                     var product = changeset.getProducts()[product_id];
-                    if( !product.errata.length && !product.pkg.length && !product.repo.length ){
+                    if( !product.errata.length && !product['package'].length && !product.repo.length ){
                         delete changeset.getProducts()[product_id];
                         changeset_tree.render_content('changeset_' + changeset.id);
                     } else {
@@ -664,10 +662,10 @@ var changeset_obj = function(data_struct) {
         },
         add_item:function (type, id, display_name, product_id, product_name) {
             if( type === 'product' ){
-                products[id] = {'name': display_name, 'id': id, 'pkg':[], 'errata':[], 'repo':[], 'all': true}
+                products[id] = {'name': display_name, 'id': id, 'package':[], 'errata':[], 'repo':[], 'all': true}
             } else { 
                 if ( products[product_id] === undefined ) {
-                    products[product_id] = {'name': product_name, 'id': product_id, 'pkg':[], 'errata':[], 'repo':[]}
+                    products[product_id] = {'name': product_name, 'id': product_id, 'package':[], 'errata':[], 'repo':[]}
                 }
                 products[product_id][type].push({name:display_name, id:id})
             } 
