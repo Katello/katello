@@ -65,11 +65,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Thu Aug 18 2011 Mike McCune <mmccune@redhat.com> 0.1.5-1
- - periodic retag of the cli package
+- periodic retag of the cli package
+
 * Mon Aug 01 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.4-1
 - spec - rpmlint cleanup
 - Added api support for activation keys
-- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
 - Turn on package updating
 - Bug 725719 - Simple CLI tests are failing with -s parameter
 - Bug 726416 - Katello-cli is failing on some terminals
