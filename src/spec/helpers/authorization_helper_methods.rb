@@ -42,4 +42,28 @@ module AuthorizationHelperMethods
     role.save!
   end
 
+  class UserPermissionsGenerator
+    def initialize(user)
+      @user = user
+    end
+
+    def can(verb, resource_type, tags = nil, org = nil)
+      allow(@user.own_role, verb, resource_type, tags, org)
+    end
+
+  end
+
+  def user_with_permissions
+    @users_count ||= 0
+    @users_count += 1
+    user = User.create!(:username => "tmp#{@users_count}", :password => "tmp_password")
+    yield UserPermissionsGenerator.new(user) if block_given?
+    user
+  end
+
+  def user_without_permissions
+    user_with_permissions
+  end
 end
+
+
