@@ -17,10 +17,10 @@ var promotion_page = (function($){
         subtypes =          ["errata", "package", "repo"],
         changeset_queue =   [],
         changeset_data =    {},
-        interval_id =       undefined,
-        current_changeset = undefined,
-        current_product =   undefined,
-        changeset_tree =    undefined,
+        interval_id,
+        current_changeset,
+        current_product,
+        changeset_tree,
         
         start_timer = function() {
             interval_id = setInterval(push_changeset, 1000);
@@ -38,7 +38,7 @@ var promotion_page = (function($){
                     success: function(data) {
                         $('#depend_size').html(data);
                     }
-                })
+                });
             }
         },
         are_updates_complete = function() { //if there are no pending (and complete) updates, return true
@@ -89,7 +89,7 @@ var promotion_page = (function($){
                         products[product_name][type + "_" + action].push(name);
                     }
                 }
-            }
+            };
         },
         calculate_conflict = function(old_changeset, new_changeset) {
             var myconflict = conflict();
@@ -267,7 +267,7 @@ var promotion_page = (function($){
             });
         },
         init_changeset_list = function(){
-            var changeset;
+            var changeset, id;
             sort_changeset();
             if( !current_changeset ){
                 for( id in changeset_breadcrumb ){
@@ -376,11 +376,11 @@ var promotion_page = (function($){
                     if( product !== undefined && product.all !== undefined ){
                         disable_all(subtypes);
                     } else {
-                        jQuery.each(subtypes, function(index, type){
+                        $.each(subtypes, function(index, type){
                             var buttons = $('#list').find("a[class~=content_add_remove][data-type=" + type + "]");
                             buttons.html(i18n.add).removeClass('remove_' + type).addClass("add_" + type).show(); //reset all to 'add'
                             if (product) {
-                                jQuery.each(product[type], function(index, item) {
+                                $.each(product[type], function(index, item) {
                                     $("a[class~=content_add_remove][data-type=" + type+ "][data-id=" + item.id +"]").html(i18n.remove).removeClass('add_' + type).addClass("remove_" + type);
                                 });
                             }
@@ -453,93 +453,93 @@ var promotion_page = (function($){
             }
 
             draw_status();
-    }, 
-    disable_all = function(types){
-        var all_types = types || subtypes;
-        jQuery.each(all_types, function(index, type){
-            var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
-            buttons.hide().html(i18n.add);
-        });        
-    },
-    checkUsersInResponse = function(users) {
-      if (users.length > 0) {
-        var msg = users.join(", ") + ' ' + i18n.viewing;
-        $('#changeset_users').html(msg).fadeIn(); 
-      }
-      else {
-        $('#changeset_users').fadeOut("slow", function() { $(this).html(""); });
-      }
-    },
-    add_product_breadcrumbs = function(changeset_id, product_id, product_name){
-        var productBC = 'product-cs_' + changeset_id + '_' + product_id;
-        var changesetBC = "changeset_" + changeset_id;
-        changeset_breadcrumb[productBC] = {
-            cache: null,
-            client_render: true,
-            name: product_name,
-            trail: ['changesets', changesetBC],
-            url: 'url'
-        };
-        changeset_breadcrumb['package-cs_' + changeset_id + '_' + product_id] = {
-            cache: null,
-            client_render: true,
-            name: "Packages",
-            trail: ['changesets', changesetBC, productBC],
-            url: ''
-        };
-        changeset_breadcrumb['errata-cs_' + changeset_id + '_' + product_id] = {
-            cache: null,
-            client_render: true,
-            name: "Errata",
-            trail: ['changesets', changesetBC, productBC],
-            url: ''
-        };
-        changeset_breadcrumb['repo-cs_' + changeset_id + '_' + product_id] = {
-            cache: null,
-            client_render: true,
-            name: "Repositories",
-            trail: ['changesets', changesetBC, productBC],
-            url: ''
-        };
-    },
-    add_dependencies= function() {
-
-       if (current_changeset === undefined) {
-           console.log("returning false");
-           return false;
-       }
-       $.each(current_changeset.getProducts(), function(product_id, product) {
-           var hash = "deps-cs_" + current_changeset.id + "_" + product_id;
-           
-           if (changeset_breadcrumb[hash] === undefined) {
-            var productBC = 'product-cs_' + current_changeset.id + '_' + product_id;
-            var changesetBC = "changeset_" + current_changeset.id;
-            changeset_breadcrumb[hash] = {
+        }, 
+        disable_all = function(types){
+            var all_types = types || subtypes;
+            $.each(all_types, function(index, type){
+                var buttons = $("a[class~=content_add_remove][data-type=" + type + "]");
+                buttons.hide().html(i18n.add);
+            });        
+        },
+        checkUsersInResponse = function(users) {
+          if (users.length > 0) {
+            var msg = users.join(", ") + ' ' + i18n.viewing;
+            $('#changeset_users').html(msg).fadeIn(); 
+          }
+          else {
+            $('#changeset_users').fadeOut("slow", function() { $(this).html(""); });
+          }
+        },
+        add_product_breadcrumbs = function(changeset_id, product_id, product_name){
+            var productBC = 'product-cs_' + changeset_id + '_' + product_id;
+            var changesetBC = "changeset_" + changeset_id;
+            changeset_breadcrumb[productBC] = {
                 cache: null,
                 client_render: true,
-                name: "Dependencies",
+                name: product_name,
+                trail: ['changesets', changesetBC],
+                url: 'url'
+            };
+            changeset_breadcrumb['package-cs_' + changeset_id + '_' + product_id] = {
+                cache: null,
+                client_render: true,
+                name: "Packages",
                 trail: ['changesets', changesetBC, productBC],
                 url: ''
             };
+            changeset_breadcrumb['errata-cs_' + changeset_id + '_' + product_id] = {
+                cache: null,
+                client_render: true,
+                name: "Errata",
+                trail: ['changesets', changesetBC, productBC],
+                url: ''
+            };
+            changeset_breadcrumb['repo-cs_' + changeset_id + '_' + product_id] = {
+                cache: null,
+                client_render: true,
+                name: "Repositories",
+                trail: ['changesets', changesetBC, productBC],
+                url: ''
+            };
+        },
+        add_dependencies= function() {
+    
+           if (current_changeset === undefined) {
+               console.log("returning false");
+               return false;
            }
-       });
-
-        //changeset_breadcrumb
-    },
-    remove_dependencies = function() {
-        if (current_changeset === undefined) {
-
-            return false;
-        }
-
-        $.each(changeset_breadcrumb, function(key, value) {
-           if (key.indexOf("deps-cs_") === 0) {
-                delete changeset_breadcrumb[key];
-           }
-        });
-        
-        
-    };
+           $.each(current_changeset.getProducts(), function(product_id, product) {
+               var hash = "deps-cs_" + current_changeset.id + "_" + product_id;
+               
+               if (changeset_breadcrumb[hash] === undefined) {
+                var productBC = 'product-cs_' + current_changeset.id + '_' + product_id;
+                var changesetBC = "changeset_" + current_changeset.id;
+                changeset_breadcrumb[hash] = {
+                    cache: null,
+                    client_render: true,
+                    name: "Dependencies",
+                    trail: ['changesets', changesetBC, productBC],
+                    url: ''
+                };
+               }
+           });
+    
+            //changeset_breadcrumb
+        },
+        remove_dependencies = function() {
+            if (current_changeset === undefined) {
+    
+                return false;
+            }
+    
+            $.each(changeset_breadcrumb, function(key, value) {
+               if (key.indexOf("deps-cs_") === 0) {
+                    delete changeset_breadcrumb[key];
+               }
+            });
+            
+            
+        };
         
     return {
         subtypes:               subtypes,
@@ -651,7 +651,7 @@ var changeset_obj = function(data_struct) {
                 }
             }
             if( products.hasOwnProperty(product_id) ){
-                jQuery.each(products[product_id][type], function(index, item) {
+                $.each(products[product_id][type], function(index, item) {
                     if(item.id === id){
                         found = true;
                         return false;
@@ -1078,7 +1078,7 @@ var templateLibrary = (function(){
         },
         productDetailList = function(product, subtypes, changeset_id) {
             var html = '<ul>';
-             jQuery.each(subtypes, function(index, type) {
+             $.each(subtypes, function(index, type) {
                  if (product[type]) {
                     html += '<li class="slide_link"><div class="link_details"';
                  } else {
@@ -1106,7 +1106,7 @@ var templateLibrary = (function(){
             }
 
             var html = '<ul>';
-            jQuery.each(products[product_id].deps, function(index, item) {
+            $.each(products[product_id].deps, function(index, item) {
                 html += '<li><div class="no_slide"><span class="sort_attr">'  + item.name + ' ' + '</span>';
                // html += '<div class="dependency_of">' + i18n.dep_of + "&nbsp;" + item.dep_of + "</div>";
                 html += '</div></li>';
@@ -1122,7 +1122,7 @@ var templateLibrary = (function(){
             if (items.length === 0) {
                 return i18n["no_" + type]; //no_errata no_package no_repo
             }
-            jQuery.each(items, function(index, item) {
+            $.each(items, function(index, item) {
                //for item names that mach item.name from search hash
                html += listItem(item.id, item.name, type, product_id, showButton);
             });
