@@ -18,6 +18,20 @@ class Api::ActivationKeysController < Api::ApiController
   before_filter :find_organization, :only => [:index]
   before_filter :find_activation_key, :only => [:show, :update, :destroy]
 
+  before_filter :authorize
+
+  def rules
+    read_test = lambda{ActivationKey.readable?(@organization)}
+    manage_test = lambda{ActivationKey.manageable?(@organization)}
+    {
+      :index => read_test,
+      :show => read_test,
+      :create => manage_test,
+      :update => manage_test,
+      :destroy => manage_test
+    }
+  end
+
   def index
     query_params[:organization_id] = @organization.id unless @organization.nil?
     query_params[:environment_id] = @environment.id unless @environment.nil?
