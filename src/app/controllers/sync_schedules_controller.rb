@@ -29,7 +29,7 @@ class SyncSchedulesController < ApplicationController
   def index
 
     @organization = current_organization
-    rproducts = @organization.locker.products.reject { |p| p.productContent.empty? }
+    rproducts = @organization.locker.products.readable(@organization).reject { |p| p.productContent.empty? }
     @products = rproducts.sort { |p1,p2| p1.name <=> p2.name }
 
     @plans = SyncPlan.where(:organization_id => current_organization.id)
