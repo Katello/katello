@@ -93,7 +93,7 @@ def create_data():
                     repo_name = "Repo-%s" % randomString()
                     print "    [%s] Creating repo with name: [%s]" % (x, repo_name)
                     repoapi = RepoAPI()
-                    url = "http://repos.fedorapeople.org/repos/pulp/pulp/testing/fedora-15/x86_64/"
+                    url = "http://repos.example.com/%s" % repo_name
                     repoapi.create(product["cp_id"], repo_name, url)
     ## Create systems
     print "Creating [%s] Systems in each org and assigning to random envs" % NUM_SYSTEMS 

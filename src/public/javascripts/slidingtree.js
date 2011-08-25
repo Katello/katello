@@ -128,8 +128,9 @@ var sliding_tree = function(tree_id, options) {
                 settings.direction = undefined;
             }
         },
-        content_clicked = function() {
-            var element = $(this);
+        content_clicked = function(link) {
+            var element = link.find('.link_details');
+            
             if(element.hasClass("slide_left")) {
               settings.direction = "left";
             }else {
@@ -144,118 +145,57 @@ var sliding_tree = function(tree_id, options) {
         },
         reset_breadcrumb = function(id) {
             var trail = settings.breadcrumb[id].trail,
-                crumbs = trail;
+                crumbs = trail,
+                html = '<ul>';
             
             breadcrumb.html("");
-
+            
             if( settings.base_icon ){
                 if( trail.length > 0) {
-                    breadcrumb.append(create_crumb(trail[0], undefined, settings.base_icon));
+                    html += create_crumb(trail[0], undefined, settings.base_icon);
                 } else {
-                    breadcrumb.append(create_crumb(id, true, settings.base_icon))
+                    html += create_crumb(id, true, settings.base_icon);
                 }
                 crumbs = trail.slice(1, trail.length);
-            } else {
-                if( trail.length === 0) {
-                    breadcrumb.append('<div id="' + id + '" class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div>');
-                }
             }
     
             if( trail.length > 0){
                 for(var i = 0; i < crumbs.length; i++) {
-                    breadcrumb.append(create_crumb(crumbs[i]))
+                    html += create_crumb(crumbs[i]);
                 }
-                breadcrumb.append('<div id="' + id + '" class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div>');
+                html += '<li><div id="' + id + '" class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div></li>';
             }
+            
+            breadcrumb.append(html);
         },
         create_crumb = function(id, currentCrumb, icon) {
-            var html,
-                options =  {
-                id:id,
-                "class": 'slide_link slide_left fl crumb',
-                text: ""
-            };
+            var html = '<li class="slide_link">';
     
-            if( currentCrumb === undefined ){
-                options['text'] += "\u2002\u00BB\u2002";
-            }
-            if( !icon ){
-                options['text'] = settings.breadcrumb[id].name + ' ' + options['text'];
-            }
-            
-            html = jQuery('<div/>', options);
             if( icon ){
                 if( currentCrumb ){
-                    html.prepend(jQuery('<div/>', {
-                       'class': icon + ' fl',
-                       'text': id 
-                    }));
+                    html += '<div class="' + icon + ' fl">' + id + '</div>';
                 } else {
-                    html.prepend(jQuery('<div/>', {
-                       'class': icon + '_inactive fl',
-                       'text': id 
-                    }));
+                    html += '<div class="' + icon + '_inactive fl">' + id + '</div>';
                 }
             }
-            
-            return html;
+    
+            html += '<div class="fl crumb link_details slide_left" id= "' + id + '">';
+    
+            if( !icon ){
+                html += settings.breadcrumb[id].name;
+            }
+            if( currentCrumb === undefined ){
+                html += "\u2002\u00BB\u2002";
+            }
+    
+            return html + '</div></li>';
         },
         hash_change = function() {
             var newContent = $.bbq.getState(settings.bbq_tag) || settings.default_tab;
             if (settings.current_tab != newContent) {
+                reset_breadcrumb(newContent);
                 prerender(newContent);
             }
-        },
-        setupSearch = function(){
-            var bcs = null;
-            var bcs_height = 0;
-            
-            $('#search_form').submit(function(){
-                $('#search_filter').change();
-                return false;
-            });
-            
-            $('.search_button').toggle(
-                function() {
-                    bcs = $('.breadcrumb_search');
-                    bcs_height = bcs.height();
-                    bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
-                    $("#search_form #search_filter").css("margin-left", 0);
-                    $("#search_form").css("opacity", "0").show();
-                    $("#search_form").animate({"opacity":"1"}, { duration: 200, queue: false });
-                    $("#search_filter").animate({"width":"420px", "opacity":"1"}, { duration: 200, queue: false });
-                    $(this).css({backgroundPosition: "-32px -16px"});
-                    if( $('.remove_item').length ){
-                        $('.remove_item').css({ top : 52 });
-                    }
-                    if( $('.close').length ){
-                        $('.close').css({ top : 52 });
-                    }
-                },function() {
-                    $("#search_form").fadeOut("fast", function(){
-                        bcs.animate({ "height": bcs_height }, "fast");
-                        if( $('.remove_item').length ){
-                            $('.remove_item').css({ top : 12 });
-                        }
-                        if( $('.close').length ){
-                            $('.close').css({ top : 12 });
-                        }
-                    });
-                    $(this).css({backgroundPosition: "0 -16px"});
-                    $("#search_filter").val("").change();
-                    $("#" + tree_id + " .has_content li").fadeIn('fast');
-                }
-            );
-            
-            $('#search_filter').live('change, keyup', function(){
-                if ($.trim($(this).val()).length >= 2) {
-                    $("#" + tree_id + " .has_content li:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
-                    $("#" + tree_id + " .has_content li:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
-                } else {
-                    $("#" + tree_id + " .has_content li").fadeIn('fast');
-                }
-            });
-            $('#search_filter').val("").change();
         };
 
     var settings = {
@@ -283,7 +223,13 @@ var sliding_tree = function(tree_id, options) {
     $(window).unbind('hashchange.' + tree_id).bind( 'hashchange.' + tree_id, hash_change);
     $(window).trigger( 'hashchange.' + tree_id );
 
-    container.find('.slide_link').live('click', content_clicked);
+    container.find('.slide_link').live('click', function(event){
+        if( event.target.nodeName === "A" ){
+            return false;
+        } else {
+            content_clicked($(this));   
+        }
+    });
 
     return {
         render_content: render_content,

@@ -32,7 +32,7 @@ $(document).ready(function() {
             var fontsize = Math.floor((panelLeft/430)*100);
             //if it's bigger than 100%, make it 100%.
             fontsize = (fontsize > 100) ? 100 : fontsize;
-            $('#systems .block').css({"font-size": parseInt(fontsize, 10) + "%"});            
+            $('#systems .block').css({"font-size": parseInt(fontsize, 10) + "%"});
         }
     });
     $('.left').resize();
@@ -84,7 +84,7 @@ $(document).ready(function() {
         }
         return false;
     });
-    
+
     $(window).resize(function(){
         panel.panelResize($('#panel_main'), false);
         panel.panelResize($('#subpanel_main'), true);
@@ -92,7 +92,7 @@ $(document).ready(function() {
         panel.handleScrollResize($('#subpanel-frame'), container, subpanel_top, bodyY, 1);
     });
 
-    $('#content').resize(function(){
+    $('#maincontent').resize(function(){
         panel.panelResize($('#panel_main'), false);
         panel.panelResize($('#subpanel_main'), true);
     });
@@ -112,7 +112,7 @@ $(document).ready(function() {
     }
 
     // It is possible for the pane (e.g. right) of a panel to contain navigation
-    // links.  When that occurs, it should be possible to click the navigation 
+    // links.  When that occurs, it should be possible to click the navigation
     // link and only that pane reflect the transition to the new page. The element
     // below helps to facilitate that by binding to the click event for a navigation
     // element with the specified id, sending a request to the server using the link
@@ -237,7 +237,7 @@ var panel = (function(){
             spinner.show();
             panelContent.hide();
             panel.expand_cb(name);
-            
+
             $.ajax({
                 cache: true,
                 url: ajax_url,
@@ -263,11 +263,12 @@ var panel = (function(){
         /* must pass a jQuery object */
         panelResize : function(paneljQ, isSubpanel){
             var new_top = Math.floor($('.left').position(top).top);
-            var headerSpacing = $('#panel .head').height() + $('#panel .subnav').height() + 67;
-            var height = $(window).height() - $('#subheader').height() - $('#head').height() - $('.subnav').height() - headerSpacing - 100;            
-            
+            var headerSpacing = $('.head').height() + $('.subnav').height();
+            var height = $(window).height() - $('#subheader').height() - $('#head').height() - $('.subnav').height() - headerSpacing - 100;
+            var panelFrame = paneljQ.parent().parent().parent().parent();
+
             new_top = isSubpanel ? (new_top + subpanelSpacing) : new_top;
-            paneljQ.parent().animate({top: new_top}, 250);
+            panelFrame.animate({top: new_top}, 250);
 
             //if there is a lot in the list, make the panel a bit larger
             if ($('#content').height() > 642){

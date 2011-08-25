@@ -13,10 +13,8 @@
 
 
 var promotion_page = (function($){
-    // Don't use the variable name 'package', it is a reserved word, use
-    // pkg instead, see: https://bugzilla.redhat.com/show_bug.cgi?id=732846
-    var types =             ["errata", "product", "pkg", "repo"],
-        subtypes =          ["errata", "pkg", "repo"],
+    var types =             ["errata", "product", "package", "repo"],
+        subtypes =          ["errata", "package", "repo"],
         changeset_queue =   [],
         changeset_data =    {},
         interval_id =       undefined,
@@ -244,7 +242,7 @@ var promotion_page = (function($){
                 changeset.remove_item(type, id, product_id);
                 if( type !== 'product' ){
                     var product = changeset.getProducts()[product_id];
-                    if( !product.errata.length && !product.pkg.length && !product.repo.length ){
+                    if( !product.errata.length && !product['package'].length && !product.repo.length ){
                         delete changeset.getProducts()[product_id];
                         changeset_tree.render_content('changeset_' + changeset.id);
                     } else {
@@ -684,10 +682,10 @@ var changeset_obj = function(data_struct) {
         },
         add_item:function (type, id, display_name, product_id, product_name) {
             if( type === 'product' ){
-                products[id] = {'name': display_name, 'id': id, 'pkg':[], 'errata':[], 'repo':[], 'all': true}
+                products[id] = {'name': display_name, 'id': id, 'package':[], 'errata':[], 'repo':[], 'all': true}
             } else { 
                 if ( products[product_id] === undefined ) {
-                    products[product_id] = {'name': product_name, 'id': product_id, 'pkg':[], 'errata':[], 'repo':[]}
+                    products[product_id] = {'name': product_name, 'id': product_id, 'package':[], 'errata':[], 'repo':[]}
                 }
                 products[product_id][type].push({name:display_name, id:id})
             } 
@@ -1072,7 +1070,7 @@ var promotionsRenderer = (function(){
 
 var templateLibrary = (function(){
     var changesetsListItem = function(id, name){
-            var html ='<li>' + '<div class="slide_link" id="' + id + '">'
+            var html ='<li class="slide_link">' + '<div class="link_details" id="' + id + '">'
 
             html += '<span class="sort_attr">'+ name + '</span></div></li>';
             return html;
@@ -1093,9 +1091,10 @@ var templateLibrary = (function(){
         productDetailList = function(product, subtypes, changeset_id) {
             var html = '<ul>';
              jQuery.each(subtypes, function(index, type) {
-                html += '<li><div ';
                  if (product[type]) {
-                    html += 'class="slide_link"';
+                    html += '<li class="slide_link"><div class="link_details"';
+                 } else {
+                     html += '<li><div ';
                  }
 
                  html += 'id=' + type +'-cs_' + changeset_id + '_' + product.id + '>';
@@ -1189,18 +1188,23 @@ var templateLibrary = (function(){
             return html;
         },
         productListItem = function(changeset_id, product_id, name, provider, slide_link, showButton){
-            var anchor = "";
-            if ( showButton  && permissions.manage_changesets){
+            var anchor = "",
+                html = '';
+            
+            if ( showButton ){
                 anchor = '<a class="st_button content_add_remove fr remove_product" data-display_name="' +
                     name +'" data-id="' + product_id + '" data-type="product" id="add_remove_product_' + product_id +
                     '" data-product_id="' + product_id +
                     '">' + i18n.remove + '</a>';
             }
-            return '<li class="clear">' + anchor +
-                    '<div class="' + slide_link + '" id="product-cs_' + changeset_id + '_' + product_id + '">' +
+            html += '<li class="clear ' + slide_link + '">' + anchor + '<div class="';
+            html += (slide_link === 'slide_link') ? 'link_details' : '';
+            html += '" id="product-cs_' + changeset_id + '_' + product_id + '">' +
                     '<span class="' + provider + '-product-sprite"></span>' +
                     '<span class="product-icon sort_attr" >' + name + '</span>' +
                     '</div></li>';
+                    
+            return html;
         },
         conflictFullProducts = function(added, removed) {
             if (added.length == 0 && removed.length == 0) {
@@ -1257,10 +1261,10 @@ var templateLibrary = (function(){
 var changesetStatusActions = (function($){
     var set_margins = function(){
             if( $('.progressbar').length ) {
-                $('#cslist .slider .slide_link:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '43px');
-                $('#cslist .slider .slide_link:not(:has(.progressbar)) .locked_icon').css({'margin-left': '9px', 'margin-right' : '22px'});
+                $('#cslist .slider .link_details:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '43px');
+                $('#cslist .slider .link_details:not(:has(.progressbar)) .locked_icon').css({'margin-left': '9px', 'margin-right' : '22px'});
             } else if( $('#cslist .locked_icon').length ){
-                $('#cslist .slider .slide_link:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '20px');
+                $('#cslist .slider .link_details:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '20px');
             }
         },
         initProgressBar = function(id, status){
@@ -1285,7 +1289,7 @@ var changesetStatusActions = (function($){
             /*changeset.parent().fadeOut(3000, function(){
                 changeset.parent().remove();
                 if( !$('.changeset_status').length ){
-                    $('#cslist .slider .slide_link').animate({'margin-left' : '0'}, 200);
+                    $('#cslist .slider .link_details').animate({'margin-left' : '0'}, 200);
                 }
             });*/
         },
@@ -1301,7 +1305,7 @@ var changesetStatusActions = (function($){
             changeset.css('margin-left', '20px');
             if( !$('#cslist .locked_icon').length ){
                 console.log('no more locked icons');
-                $('#cslist .slider .slide_link').css('margin-left', '0');
+                $('#cslist .slider .link_details').css('margin-left', '0');
             }
         },
         checkProgressTask = function(id){
