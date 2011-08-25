@@ -20,7 +20,7 @@ class Organization < ActiveRecord::Base
   has_many :providers
   has_many :environments, :class_name => "KPEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
   has_one :locker, :class_name =>"KPEnvironment", :conditions => {:locker => true}, :dependent => :destroy
-  has_and_belongs_to_many :users
+  
   attr_accessor :parent_id,:pools,:statistics
 
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'organization.name'
@@ -36,10 +36,6 @@ class Organization < ActiveRecord::Base
   validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
   validates :description, :katello_description_format => true
 
-  # relationship user-org is created for current user automatically
-  after_create do |org|
-    org.users << User.current if User.current
-  end
 
   def systems
     System.where(:environment_id => environments)
@@ -47,7 +43,6 @@ class Organization < ActiveRecord::Base
 
   def promotion_paths
     #I'm sure there's a better way to do this
-    
     self.environments.joins(:priors).where("prior_id = #{self.locker.id}").collect do |env|
       env.path
     end
@@ -57,8 +52,80 @@ class Organization < ActiveRecord::Base
     self.locker = KPEnvironment.new(:name => "Locker", :locker => true, :organization => self)
   end
 
-  # returns list of virtual permission tags for the current user
-  def self.list_tags
+
+  def self.list_tags organization_id
+    #list_tags for org can ignore org_id, since its not scoped that way
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
+
+  #permissions
+  scope :readable, lambda {authorized_items(READ_PERM_VERBS)}
+
+  def self.creatable?
+    User.allowed_to?([:create], :organizations)
+  end
+
+  def editable?
+      User.allowed_to?([:update, :create], :organizations, nil, self)
+  end
+
+  def deletable?
+    User.allowed_to?([:delete, :create], :organizations)
+  end
+
+  def readable?
+    User.allowed_to?(READ_PERM_VERBS, :organizations,nil, self)
+  end
+
+  def self.any_readable?
+    Organization.readable.count > 0
+  end
+
+  def environments_manageable?
+    User.allowed_to?([:update, :create], :organizations, nil, self)
+  end
+
+  def any_systems_readable?
+      User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, self) ||
+           User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, nil, self)
+  end
+
+  def self.list_verbs global = false
+    org_verbs = {
+      :update => N_("Manage Organization and Environments"),
+      :read => N_("Access Organization"),
+      :read_systems => N_("Access Systems"),
+      :create_systems =>N_("Register Systems"),
+      :update_systems => N_("Manage Systems"),
+      :delete_systems => N_("Delete Systems"),
+      :sync => N_("Sync Products")
+   }
+    org_verbs.merge!({
+    :create => N_("Create Organization"),
+    :delete => N_("Delete Organization")
+    }) if global
+
+    org_verbs.with_indifferent_access
+
+  end
+
+  def self.no_tag_verbs
+    [:create]
+  end
+
+  def syncable?
+    User.allowed_to?(SYNC_PERM_VERBS, :organizations, nil, self)
+  end
+
+  private
+
+  def self.authorized_items verbs, resource = :organizations
+    if !User.allowed_all_tags?(verbs, resource)
+      where("organizations.id in (#{User.allowed_tags_sql(verbs, resource)})")
+    end
+  end
+
+  READ_PERM_VERBS = [:read, :create, :update, :delete]
+  SYNC_PERM_VERBS = [:sync]
+
 end

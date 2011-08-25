@@ -302,6 +302,7 @@ class Changeset < ActiveRecord::Base
     end
   end
 
+
   def remove_distribution distribution_id, product_name
     product = self.find_product(product_name)
     repos = product.repos(self.environment)
@@ -313,8 +314,6 @@ class Changeset < ActiveRecord::Base
       ChangesetDistribution.destroy_all(:distribution_id => distribution_id, :changeset_id => self.id, :product_id => product.id)
     end
   end
-
-
 
   private
 

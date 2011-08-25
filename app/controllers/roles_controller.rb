@@ -12,10 +12,38 @@
 
 class RolesController < ApplicationController
 
+  before_filter :find_role, :except => [:index, :items, :new, :create, :verbs_and_scopes]
+  before_filter :authorize #call authorize after find_role so we call auth based on the id instead of cp_id
+  skip_before_filter :require_org
   before_filter :setup_options, :only => [:index, :items]
-  
+  helper_method :resource_types
+
   include AutoCompleteSearch
-    
+  include BreadcrumbHelper
+  include BreadcrumbHelper::RolesBreadcrumbs
+  
+  def rules
+    create_check = lambda{Role.creatable?}
+    read_check = lambda{Role.any_readable?}
+    edit_check = lambda{Role.editable?}
+    delete_check = lambda{Role.deletable?}
+    {
+      :index => read_check,
+      :items => read_check,
+      :verbs_and_scopes => read_check,
+        
+      :create => create_check,
+      :new => create_check,
+      :edit => read_check,
+      :show_permission => read_check,
+      :update => edit_check,
+      :create_permission => edit_check,
+      :update_permission=> edit_check,
+      :destroy_permission => edit_check,
+      :destroy => delete_check,
+      }
+  end
+
   def section_id
      'operations'
    end
@@ -24,8 +52,9 @@ class RolesController < ApplicationController
     begin
       # retrieve only non-self roles... permissions on a self-role will be handled 
       # as part of the user
-      @roles = Role.search_for(params[:search]).non_self.limit(current_user.page_size)
+      @roles = Role.readable.search_for(params[:search]).non_self.limit(current_user.page_size)
       retain_search_history
+
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
       @roles = Role.search_for ''
@@ -34,7 +63,7 @@ class RolesController < ApplicationController
   
   def items
     start = params[:offset]
-    @roles = Role.search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @roles = Role.readable.search_for(params[:search]).limit(current_user.page_size).offset(start)
     render_panel_items @roles, @panel_options
   end
   
@@ -44,6 +73,7 @@ class RolesController < ApplicationController
                  :create => _('Role'),
                  :name => _('role'),
                  :ajax_scroll => items_roles_path()}
+    @panel_options[:enable_create] = false if !Role.creatable?
   end
   
   def new
@@ -52,15 +82,14 @@ class RolesController < ApplicationController
   end
 
   def edit
-    setup_resource_types
-    @role = Role.find(params[:id])
+    @organizations = Organization.all
 
     # render the appropriate partial depending on whether or not the role is a self role
     @user = @role.self_role_for_user
     if @user.nil?
-      render :partial=>"edit", :layout => "tupane_layout", :locals=>{:role=>@role}
+      render :partial=>"edit", :layout => "tupane_layout", :locals=>{:role=>@role, :resource_types => resource_types }
     else
-      render :partial=>"self_role_edit", :layout => "tupane_layout", :locals=>{:role=>@role}
+      render :partial=>"self_role_edit", :layout => "tupane_layout", :locals=>{:role=>@role, :editable=>@user.editable?}
     end
   end
 
@@ -68,7 +97,6 @@ class RolesController < ApplicationController
     @role = Role.new(params[:role])
     if @role.save
       notice @role.name + " " + _("Role created.")
-      #render :json=>@role
       render :partial=>"common/list_item", :locals=>{:item=>@role, :accessor=>"id", :columns=>["name"]}
     else
       errors "", {:list_items => @role.errors.to_a}
@@ -77,12 +105,20 @@ class RolesController < ApplicationController
   end
 
   def update
-    setup_resource_types
-    @role = Role.find(params[:id])
     return if @role.name == "admin"
-    if @role.update_attributes(params[:role])
+    
+    if params[:update_users]
+      if params[:update_users][:adding] == "true"
+        @role.users << User.find(params[:update_users][:user_id])
+        @role.save!
+      else
+        @role.users.delete(User.find(params[:update_users][:user_id]))
+        @role.save!
+      end
+      render :json => params[:update_users]
+    elsif @role.update_attributes(params[:role])
       notice _("Role updated.")
-      render :text=>params[:role].first[1]
+      render :json=>params[:role]
     else
       errors "", {:list_items => @role.errors.to_a}
       respond_to do |format|
@@ -95,7 +131,6 @@ class RolesController < ApplicationController
   def destroy
     @id = params[:id]
     begin
-      @role = Role.find(@id)
       #remove the user
       @role.destroy
       if @role.destroyed?
@@ -112,50 +147,79 @@ class RolesController < ApplicationController
   end
 
   def verbs_and_scopes
-    verbs = Verb.verbs_for(params[:resource_type]).collect {|v| v.verb}
-    scopes = Tag.tags_for(params[:resource_type]).collect { |t| VirtualTag.new(t.name, t.display_name) }
-
-    render :json=> {:verbs => verbs, :scopes => scopes}
+    details= {}
+    
+    resource_types.each do |type, value|
+      if !value["global"]
+        details[type] = {}
+        details[type][:verbs] = Verb.verbs_for(type, false).collect {|name, display_name| VirtualTag.new(name, display_name)}
+        details[type][:verbs].sort! {|a,b| a.display_name <=> b.display_name}
+        details[type][:tags] = Tag.tags_for(type, params[:organization_id]).collect { |t| VirtualTag.new(t.name, t.display_name) }
+        details[type][:global] = value["global"]
+        details[type][:name] = value["name"]
+      end
+    end
+    
+    render :json => details
   end
 
   def update_permission
-    setup_resource_types
-    @role = Role.find(params[:role_id])
     @permission = Permission.find(params[:permission_id])
     @permission.update_attributes(params[:permission])
-    notice _("Permission updated.")
+    notice _("Permission '#{@permission.name}' updated.")
     render :partial => "permission", :locals =>{:perm => @permission, :role=>@role, :data_new=> false}
   end
 
   def create_permission
-    setup_resource_types
-    @role = Role.find(params[:role_id])
     new_params = {:role => @role}
+    type_name = params[:permission][:resource_type_attributes][:name]
+
+    if type_name == "all"
+      new_params[:all_tags] = true
+      new_params[:all_verbs] = true
+    end
+    
+    new_params[:resource_type] = ResourceType.find_or_create_by_name(:name=>type_name)
     new_params.merge! params[:permission]
-    @perm = Permission.create! new_params
-    notice _("Permission created.")
-    render :partial => "permission", :locals =>{:perm => @perm, :role=>@role, :data_new=> false}
+    
+    begin
+      @perm = Permission.create! new_params
+      to_return = { :type => @perm.resource_type.name }
+      add_permission_bc(to_return, @perm, false)
+      notice _("Permission '#{@perm.name}' created.")
+      render :json => to_return
+    rescue Exception => error
+      errors error
+      render :json=>@role.errors, :status=>:bad_request
+    end
   end
 
   def show_permission
-    setup_resource_types
-    role = Role.find(params[:role_id])
     if params[:perm_id].nil?
-      permission = Permission.new(:role=> role, :resource_type => ResourceType.new)
+      permission = Permission.new(:role=> @role, :resource_type => ResourceType.new)
     else
       permission = Permission.find(params[:perm_id])
     end
-    render :partial=>"permission", :locals=>{:perm=>permission, :role=>role, :data_new=>permission.new_record?}
-
+    render :partial=>"permission", :locals=>{:perm=>permission, :role=>@role, :data_new=>permission.new_record?}
   end
 
+  def destroy_permission
+    permission = Permission.find(params[:permission_id])
+    permission.destroy
+    notice _("Permission '#{permission.name}' removed.")
+    render :json => params[:permission_id]
+  end
 
   private
-
-
-  def setup_resource_types
-    @resource_type_names = ResourceType.select("name").order("name asc").collect {|item| item.name}.uniq
-    @resource_type_names.delete("_rails")
+  def find_role
+    @role =  Role.find(params[:role_id]) if params.has_key? :role_id
+    @role =  Role.find(params[:id]) unless params.has_key? :role_id
+  rescue Exception => error
+    render :text=>errors.to_s, :status=>:bad_request and return false
   end
-  
+
+  def resource_types
+    ResourceType::TYPES
+  end
+
 end

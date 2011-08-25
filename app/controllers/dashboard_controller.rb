@@ -12,6 +12,8 @@
 
 class DashboardController < ApplicationController
 
+  skip_before_filter :authorize,:require_org
+
   def index
   end
 

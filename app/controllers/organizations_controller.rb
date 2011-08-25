@@ -1,3 +1,4 @@
+
 #
 # Copyright 2011 Red Hat, Inc.
 #
@@ -16,9 +17,28 @@ class OrganizationsController < ApplicationController
   navigation :organizations
   include AutoCompleteSearch
   respond_to :html, :js
-
-  before_filter :find_organization, :only => [:show, :edit, :update, :destroy]
+  skip_before_filter :authorize
+  before_filter :find_organization, :only => [:edit, :update, :destroy]
+  before_filter :authorize #call authorize after find_organization so we call auth based on the id instead of cp_id
   before_filter :setup_options, :only=>[:index, :items]
+
+  def rules
+    index_test = lambda{Organization.any_readable?}
+    create_test = lambda{Organization.creatable?}
+    read_test = lambda{@organization.readable?}
+    edit_test = lambda{@organization.editable?}
+    delete_test = lambda{@organization.deletable?}
+
+    {:index =>  index_test,
+      :items => index_test,
+      :new => create_test,
+      :create => create_test,
+      :edit => read_test,
+      :update => edit_test,
+      :destroy => delete_test,
+    }
+  end
+
 
   def section_id
     'orgs'
@@ -26,7 +46,7 @@ class OrganizationsController < ApplicationController
 
   def index
     begin
-      @organizations = Organization.search_for(params[:search]).limit(current_user.page_size)
+      @organizations = Organization.readable.search_for(params[:search]).limit(current_user.page_size)
       retain_search_history
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -37,7 +57,7 @@ class OrganizationsController < ApplicationController
 
   def items
     start = params[:offset]
-    @organizations = Organization.search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @organizations = Organization.readable.search_for(params[:search]).limit(current_user.page_size).offset(start)
     render_panel_items @organizations, @panel_options
   end
 
@@ -52,8 +72,7 @@ class OrganizationsController < ApplicationController
       @organization.save!
       notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
       # TODO: example - create permission for the organization
-      #current_user.role.first.allow 'show', 'organization', "org_name:#{@organization.name}"
-    rescue Exception => error 
+    rescue Exception => error
       errors error
       print "\n\n\n\n", error.to_s
       Rails.logger.info error.backtrace.join("\n")
@@ -64,7 +83,7 @@ class OrganizationsController < ApplicationController
 
   def edit
     @env_choices =  @organization.environments.collect {|p| [ p.name, p.name ]}
-    render :partial=>"edit", :layout => "layouts/tupane_layout"
+    render :partial=>"edit", :layout => "layouts/tupane_layout", :locals=>{:editable=>@organization.editable?}
   end
 
   def update
@@ -94,7 +113,7 @@ class OrganizationsController < ApplicationController
     if current_organization == @organization
       errors [_("Could not delete organization '#{params[:id]}'."),  _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
 
-      render :text => "The current organization cannot be deleted. Please switch to a different organization before deleting.", :status=>:bad_request and return
+      render :text => "The current organization cannot be deleted. Please switch to a different organization before deleting.", :status => :bad_request and return
     elsif Organization.count > 1
       @id = @organization.id
       @name = @organization.name
@@ -132,7 +151,8 @@ class OrganizationsController < ApplicationController
                :create => _('Organization'),
                :name => _('organization'),
                :accessor => :cp_key,
-               :ajax_scroll => items_organizations_path()}
+               :ajax_scroll => items_organizations_path(),
+               :enable_create => Organization.creatable?}
   end
 
 

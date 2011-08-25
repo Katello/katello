@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module RolesHelper
+  include BreadcrumbHelper::RolesBreadcrumbs
 
   def closed_id(f)
     "closed_#{perm_id(f)}"
@@ -27,12 +28,18 @@ module RolesHelper
   end
 
   def get_scopes(f)
-    return Tag.tags_for(@resource_type_names[0]) || [] if f.object.new_record?
+    return Tag.tags_for(resource_types.first[0]) || [] if f.object.new_record?
     Tag.tags_for(f.object.resource_type.name) || []
   end
 
   def get_verbs(f)
-    return Verb.verbs_for(@resource_type_names[0]) || [] if f.object.new_record?
+    if f.object.new_record?
+      verbs =  Verb.verbs_for(resource_types.first[0]) || {}
+      verbs = verbs.collect {|name, display| [name, display]}
+      verbs.sort! {|a,b| a[1] <=> b[1]}
+      return verbs
+    end
     Verb.verbs_for(f.object.resource_type.name) || []
   end
+
 end

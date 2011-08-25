@@ -23,7 +23,7 @@ describe SyncManagementController do
 
     @locker = KPEnvironment.new
     @mock_org.stub!(:locker).and_return(@locker)
-    @locker.stub!(:products).and_return([])
+    @locker.stub!(:products).and_return(OpenStruct.new(:readable => [], :syncable=>[]))
   end
 
   describe "GET 'index'" do

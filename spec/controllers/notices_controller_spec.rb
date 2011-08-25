@@ -19,12 +19,6 @@ describe NoticesController do
 
   before (:each) do
     @user = login_user :mock => false
-    @role = Role.create!(:name=>"Test_Notices_Role")
-    @role.allow([:read, :show, :create, :delete], "notices")
-    #@role.allow({:get_new => 'read', :details => 'read', :note_count => 'read',
-    #             :destroy_all => 'delete'})
-    @role.users = [@user]
-    @role.save
     set_default_locale
     
     controller.stub!(:errors)

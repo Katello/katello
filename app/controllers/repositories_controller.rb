@@ -16,9 +16,24 @@ class RepositoriesController < ApplicationController
 
   respond_to :html, :js
 
-  before_filter :find_provider, :only => [:show, :edit, :update, :destroy, :index, :new, :create]
-  before_filter :find_product, :only => [:show, :edit, :update, :destroy, :index, :new, :create]
+  before_filter :find_provider, :only => [:edit, :update, :destroy, :new, :create]
+  before_filter :authorize
+  before_filter :find_product, :only => [:edit, :update, :destroy, :new, :create]
   before_filter :find_repository, :only => [:edit, :update, :destroy]
+
+  def rules
+    read_test = lambda{@provider.readable?}
+    edit_test = lambda{@provider.editable?}
+    {
+      :new => edit_test,
+      :create => edit_test,
+      :edit =>read_test,
+      :update => edit_test,
+      :destroy => edit_test,
+    }
+  end
+
+  
 
   def section_id
     'contents'
@@ -29,7 +44,7 @@ class RepositoriesController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout"
+    render :partial => "edit", :layout => "tupane_layout", :locals=>{:editable=>@provider.editable?}
   end
 
   def create
