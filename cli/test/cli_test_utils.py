@@ -1,4 +1,5 @@
 import unittest
+import copy
 from mock import Mock
 
 
@@ -24,7 +25,7 @@ class CLITestCase(unittest.TestCase):
         #mock the function
         m = Mock()
         if return_value != None:
-            m.return_value = return_value
+            m.return_value = copy.copy(return_value)
         setattr(obj, property_name, m)
         
         return m

@@ -190,18 +190,211 @@ PRODUCTS = [
 ]
 
 
-SYNC_RESULT_WITHOUT_ERROR = [
-    {
-        'state': 'finished'
-    }
+
+SYNC_RESULT_NOT_SYNCED = [
+  {
+    "result": None,
+    "created_at": None,
+    "uuid": None,
+    "updated_at": None,
+    "progress": {
+      "size_left": 0,
+      "total_size": 0,
+      "total_count": 0,
+      "items_left": 0
+    },
+    "finish_time": None,
+    "organization_id": None,
+    "state": "not_synced",
+    "start_time": None
+  },
+  {
+    "result": None,
+    "created_at": None,
+    "uuid": None,
+    "updated_at": None,
+    "progress": {
+      "size_left": 0,
+      "total_size": 0,
+      "total_count": 0,
+      "items_left": 0
+    },
+    "finish_time": None,
+    "organization_id": None,
+    "state": "not_synced",
+    "start_time": None
+  }
 ]
 
-SYNC_RESULT_WITH_ERROR = [
-    {
-        'state': 'error', 
-        'result': json.dumps({'errors':["some error"]})
-    }
+
+SYNC_RESULT_WITHOUT_ERROR = [
+  {
+    "result": "{\"errors\":[null,null]}",
+    "created_at": None,
+    "uuid": "6d3d8711-cf28-11e0-b10e-f0def13c24e5",
+    "updated_at": None,
+    "progress": {
+      "error_details": [
+
+      ],
+      "size_left": 0,
+      "total_size": 17872,
+      "total_count": 8,
+      "items_left": 0
+    },
+    "finish_time": "2011-08-25T14:42:21Z",
+    "organization_id": None,
+    "state": "finished",
+    "start_time": "2011-08-25T14:42:16Z"
+  },
+  {
+    "result": "{\"errors\":[null,null]}",
+    "created_at": None,
+    "uuid": "6d523975-cf28-11e0-b196-f0def13c24e5",
+    "updated_at": None,
+    "progress": {
+      "error_details": [
+
+      ],
+      "size_left": 0,
+      "total_size": 3170837,
+      "total_count": 7,
+      "items_left": 0
+    },
+    "finish_time": "2011-08-25T14:42:21Z",
+    "organization_id": None,
+    "state": "finished",
+    "start_time": "2011-08-25T14:42:16Z"
+  }
 ]
+
+
+SYNC_RESULT_WITH_ERROR = [
+  {
+    "result": "{\"errors\":[\"some error 1\",\"some error 2\"]}",
+    "created_at": None,
+    "uuid": "6d3d8711-cf28-11e0-b10e-f0def13c24e5",
+    "updated_at": None,
+    "progress": {
+      "error_details": [
+
+      ],
+      "size_left": 17872,
+      "total_size": 17872,
+      "total_count": 8,
+      "items_left": 8
+    },
+    "finish_time": "2011-08-25T14:42:21Z",
+    "organization_id": None,
+    "state": "error",
+    "start_time": "2011-08-25T14:42:16Z"
+  },
+  {
+    "result": "{\"errors\":[null,null]}",
+    "created_at": None,
+    "uuid": "6d523975-cf28-11e0-b196-f0def13c24e5",
+    "updated_at": None,
+    "progress": {
+      "error_details": [
+
+      ],
+      "size_left": 3170837,
+      "total_size": 3170837,
+      "total_count": 7,
+      "items_left": 7
+    },
+    "finish_time": "2011-08-25T14:42:21Z",
+    "organization_id": None,
+    "state": "canceled",
+    "start_time": "2011-08-25T14:42:16Z"
+  }
+]
+
+SYNC_RESULT_CANCELLED = [
+  {
+    "result": "{\"errors\":[null,null]}",
+    "created_at": None,
+    "uuid": "6d3d8711-cf28-11e0-b10e-f0def13c24e5",
+    "updated_at": None,
+    "progress": {
+      "error_details": [
+
+      ],
+      "size_left": 17872,
+      "total_size": 17872,
+      "total_count": 8,
+      "items_left": 8
+    },
+    "finish_time": "2011-08-25T14:42:21Z",
+    "organization_id": None,
+    "state": "canceled",
+    "start_time": "2011-08-25T14:42:16Z"
+  },
+  {
+    "result": "{\"errors\":[null,null]}",
+    "created_at": None,
+    "uuid": "6d523975-cf28-11e0-b196-f0def13c24e5",
+    "updated_at": None,
+    "progress": {
+      "error_details": [
+
+      ],
+      "size_left": 3170837,
+      "total_size": 3170837,
+      "total_count": 7,
+      "items_left": 7
+    },
+    "finish_time": "2011-08-25T14:42:21Z",
+    "organization_id": None,
+    "state": "canceled",
+    "start_time": "2011-08-25T14:42:16Z"
+  }
+]
+
+
+SYNC_RUNNING_RESULT = [
+  {
+    "result": "{\"errors\":[null,null]}",
+    "created_at": "2011-08-25T14:44:17Z",
+    "uuid": "b57a9d75-cf28-11e0-8a7a-f0def13c24e5",
+    "updated_at": "2011-08-25T14:44:17Z",
+    "progress": {
+      "error_details": [
+
+      ],
+      "size_left": 9883,
+      "total_size": 17872,
+      "total_count": 8,
+      "items_left": 5
+    },
+    "id": 3,
+    "finish_time": None,
+    "organization_id": 1,
+    "state": "running",
+    "start_time": None
+  },
+  {
+    "result": "{\"errors\":[null,null]}",
+    "created_at": "2011-08-25T14:44:17Z",
+    "uuid": "b58a9635-cf28-11e0-8ae3-f0def13c24e5",
+    "updated_at": "2011-08-25T14:44:17Z",
+    "progress": {
+      "error_details": [
+
+      ],
+      "size_left": 0,
+      "total_size": 0,
+      "total_count": 0,
+      "items_left": 0
+    },
+    "id": 4,
+    "finish_time": None,
+    "organization_id": 1,
+    "state": "waiting",
+    "start_time": None
+  }
+]
+
 
 
 
