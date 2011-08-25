@@ -71,5 +71,8 @@ group :test, :development do
   gem 'gettext', '>= 1.9.3', :require => false
   gem 'ruby_parser'
   
+  # profiler
+  gem 'newrelic_rpm'
+  
   #needed for unit tests
 end
