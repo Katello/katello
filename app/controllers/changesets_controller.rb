@@ -28,7 +28,6 @@ class ChangesetsController < ApplicationController
 
 
   def rules
-
     read_perm = lambda{@environment.changesets_readable?}
     manage_perm = lambda{@environment.changesets_manageable?}
     promote_perm = lambda{@environment.changesets_promotable?}
@@ -46,7 +45,8 @@ class ChangesetsController < ApplicationController
       :dependencies => read_perm,
       :object => read_perm,
       :auto_complete_search => read_perm,
-      :promote => promote_perm
+      :promote => promote_perm,
+      :promotion_progress => read_perm
     }
   end
 
@@ -125,17 +125,23 @@ class ChangesetsController < ApplicationController
   end
 
   def create
-    @changeset = Changeset.create!(:name=>params[:name], :description => params[:description],
-                                   :environment_id=>@next_environment.id)
-    notice _("Changeset '#{@changeset["name"]}' was created.")
-    bc = {}
-    add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
-                    {:client_render => true}, {:is_new=>true})
-    render :json => {
-      'breadcrumb' => bc,
-      'id' => @changeset.id,
-      'changeset' => simplify_changeset(@changeset)
-    }
+    begin
+      @changeset = Changeset.create!(:name=>params[:name], :description => params[:description],
+                                     :environment_id=>@next_environment.id)
+      notice _("Changeset '#{@changeset["name"]}' was created.")
+      bc = {}
+      add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
+                      {:client_render => true}, {:is_new=>true})
+      render :json => {
+        'breadcrumb' => bc,
+        'id' => @changeset.id,
+        'changeset' => simplify_changeset(@changeset)
+      }
+    rescue Exception => error
+      Rails.logger.error error.to_s
+      errors error
+      render :json=>error, :status=>:bad_request
+    end
   end
 
   def update
