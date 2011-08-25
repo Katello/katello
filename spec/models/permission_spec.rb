@@ -27,7 +27,7 @@ describe Permission do
   end
 
 
-  before(:all) do
+  before(:each) do
     @some_role = Role.find_or_create_by_name(:name => 'some_role')
     @repo_admin = Role.find_or_create_by_name(:name => 'repo_admin')
     @super_admin = Role.find_or_create_by_name(:name => 'super_admin')
