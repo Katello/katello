@@ -13,21 +13,52 @@
 
 class ProvidersController < ApplicationController
   include AutoCompleteSearch
-  before_filter :find_provider, :only => [:products_repos, :subscriptions, :edit, :update, :destroy]
-  before_filter :require_user
+
+
+  before_filter :find_provider, :only => [:products_repos, :show, :subscriptions, :update_subscriptions, :edit, :update, :destroy]
+  before_filter :authorize #after find_provider
   before_filter :panel_options, :only => [:index, :items]
+
   respond_to :html, :js
 
   def section_id
     'contents'
   end
 
-  def products_repos
-    @products = @provider.products
-    render :partial => "products_repos", :layout => "tupane_layout", :locals => {:provider => @provider, :providers => @providers, :products => @products}
+
+  def rules
+    index_test = lambda{Provider.any_readable?(current_organization)}
+    create_test = lambda{Provider.creatable?(current_organization)}
+    read_test = lambda{@provider.readable?}
+    edit_test = lambda{@provider.editable?}
+    delete_test = lambda{@provider.deletable?}
+    {
+      :index => index_test,
+      :items => index_test,
+      :show => index_test,
+
+      :new => create_test,
+      :create => create_test,
+      :edit =>read_test,
+      :update => edit_test,
+      :destroy => delete_test,
+    
+      :update_subscriptions => edit_test,
+      :products_repos => read_test,
+      :subscriptions => read_test,
+    }
   end
 
-  def subscriptions
+
+
+  def products_repos
+    @products = @provider.products
+    render :partial => "products_repos", :layout => "tupane_layout", :locals => {:provider => @provider,
+                                         :providers => @providers, :products => @products, :editable=>@provider.editable?}
+  end
+
+
+  def update_subscriptions
     if !params[:provider].blank? and params[:provider].has_key? :contents
       temp_file = nil
       begin
@@ -47,7 +78,10 @@ class ProvidersController < ApplicationController
         render :nothing => true, :status => :bad_request and return
       end
     end
+    subscriptions
+  end
 
+  def subscriptions
     @providers = current_organization.providers
     @provider = Provider.find(params[:id])
     # We default to none imported until we can properly poll Candlepin for status of the import
@@ -75,7 +109,7 @@ class ProvidersController < ApplicationController
 
   def index
     begin
-      @providers = Provider.search_for(params[:search]).where(:organization_id => current_organization).order('provider_type desc').limit(current_user.page_size)
+      @providers = Provider.readable(current_organization).search_for(params[:search]).order('provider_type desc').limit(current_user.page_size)
       retain_search_history
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -86,7 +120,7 @@ class ProvidersController < ApplicationController
 
   def items
     start = params[:offset]
-    @providers = Provider.search_for(params[:search]).where(:organization_id => current_organization).order('provider_type desc').limit(current_user.page_size).offset(start)
+    @providers = Provider.readable(current_organization).search_for(params[:search]).order('provider_type desc').limit(current_user.page_size).offset(start)
     render_panel_items @providers, @panel_options
   end
 
@@ -96,7 +130,7 @@ class ProvidersController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:provider => @provider}
+    render :partial => "edit", :layout => "tupane_layout", :locals => {:provider => @provider, :editable=>@provider.editable?}
   end
 
   def new
@@ -183,6 +217,7 @@ class ProvidersController < ApplicationController
                  :create => _('Provider'),
                  :name => _('provider'),
                  :ajax_scroll=>items_providers_path()}
+        @panel_options[:enable_create] = false if !Provider.creatable?(current_organization)
   end
 
 

@@ -1,6 +1,9 @@
 = content_for :title do
   #{_("New Activation Key")}
 
+= content_for :navigation do
+  / pretty
+
 = content_for :content do
   .grid_10#new_key
     = form_tag activation_keys_path, :method => "post", :id => "new_activation_key" do
@@ -24,10 +27,10 @@
             .grid_10
               %ul.breadcrumb
                 %li
-                  =link_to _('Locker'), "#", :class => :nohover
+                  =link_to _('Locker'), "#", :class => "crumb-nohover"
                 - for env in path
                   %li
-                    %a.select_env{"data-env_id" => env.id, "data-templates_url" => system_templates_environment_path(env.id)} #{env.name}
+                    %a.select_env{"data-env_id" => env.id, "data-templates_url" => system_templates_organization_environment_path(env.organization.cp_key, env)} #{env.name}
 
       %fieldset#system_templates
         .grid_2.ra

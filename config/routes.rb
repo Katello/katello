@@ -14,6 +14,8 @@ Src::Application.routes.draw do
     end
   end
 
+  resource :account
+
   resources :sync_plans, :only => [:index, :create, :new, :edit, :update, :show, :destroy, :auto_complete_search] do
     collection do
       get :auto_complete_search
@@ -42,8 +44,8 @@ Src::Application.routes.draw do
 
   resources :dashboard do
   end
-  resources :content do
-  end
+
+  
   resources :systems do
     member do
       get :packages
@@ -55,6 +57,7 @@ Src::Application.routes.draw do
     collection do
       get :auto_complete_search
       get :items
+      get :env_items
       get :environments
     end
   end
@@ -93,22 +96,8 @@ Src::Application.routes.draw do
       get :import_status
     end
   end
-  match '/consumers/export_status' => 'consumers#export_status', :via => :get
 
-  resources :consumers do
-    member do
-      get :export
-    end
-    resources :entitlements
-    resources :certificates do
-      collection do
-        get :serials
-      end
-    end
-  end
-  match '/consumers/:id' => 'consumers#re_register', :via => :post
-
-  resources :entitlements
+  
   resources :users do
     collection do
       get :auto_complete_search
@@ -118,11 +107,10 @@ Src::Application.routes.draw do
     end
     member do
       post :clear_helptips
+      put :update_roles
     end
   end
 
-  resources :nodes, :constraints => {:id => /[^\/]+/}, :only => [:index, :show]
-  resources :puppetclasses, :only => [:index]
   resources :providers do
     resources :products do
       resources :repositories
@@ -133,21 +121,32 @@ Src::Application.routes.draw do
     member do
       get :products_repos
       get :subscriptions
-      post :subscriptions
+      post :subscriptions, :action=>:update_subscriptions
       get :schedule
     end
   end
   match '/providers/:id' => 'providers#update', :via => :put
   match '/providers/:id' => 'providers#update', :via => :post
 
-  match '/organizations/:org_id/environments/:env_id/promotions' => 'promotions#show', :via=>:get, :as=>'promotions'
-  match '/organizations/:org_id/environments/:env_id/promotions/products' => 'promotions#products', :via=>:get, :as=>'promotion_products'
-  match '/organizations/:org_id/environments/:env_id/promotions/packages' => 'promotions#packages', :via=>:get, :as=>'promotion_packages'
-  match '/organizations/:org_id/environments/:env_id/promotions/errata' => 'promotions#errata', :via=>:get, :as=>'promotion_errata'
-  match '/organizations/:org_id/environments/:env_id/promotions/repos' => 'promotions#repos', :via=>:get, :as=>'promotion_repos'
-  match '/organizations/:org_id/environments/:env_id/promotions/distributions' => 'promotions#distributions', :via => :get, :as=> 'promotion_distributions'
-  match '/organizations/:org_id/environments/:env_id/promotions/detail' => 'promotions#detail', :via=>:get, :as=>'promotion_details'
+
+  resources :promotions, :only =>[] do
+    collection do
+      get :index, :action =>:show
+    end
+    member do
+      get :show
+      get :products
+      get :packages
+      get :errata
+      get :repos
+      get :distributions
+      get :details
+    end
+
+  end
+
   match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
+  match '/organizations/:org_id/environments/:env_id/system_templates' => 'environments#system_templates', :via => :get, :as => 'system_templates_organization_environment'
 
   resources :organizations do
     resources :environments
@@ -167,7 +166,6 @@ Src::Application.routes.draw do
       put :name
       get :dependencies
       post :promote
-      get :products
       get :object
       get :promotion_progress
     end
@@ -178,25 +176,22 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :environments do
-    member do
-      get :system_templates
-    end
-  end
+  resources :environments
 
   match '/roles/show_permission' => 'roles#show_permission', :via=>:get
   resources :roles do
-    post "create_permission" => "roles#create_permission"
+    put "create_permission" => "roles#create_permission"
 
     resources :permission, :only => {} do
-      put "update_permission" => "roles#update_permission", :as => "update"
+      delete "destroy_permission" => "roles#destroy_permission", :as => "destroy"
+      post "update_permission" => "roles#update_permission", :as => "update"
     end
     collection do
       get :auto_complete_search
       get :items
     end
   end
-  match '/roles/resource_type/:resource_type/verbs_and_scopes' => 'roles#verbs_and_scopes', :via=>:get, :as=>'verbs_and_scopes'
+  match '/roles/:organization_id/resource_type/verbs_and_scopes' => 'roles#verbs_and_scopes', :via=>:get, :as=>'verbs_and_scopes'
 
   resources :search, :only => {} do
     get 'show', :on => :collection
@@ -209,12 +204,18 @@ Src::Application.routes.draw do
     delete 'favorite/:id' => 'search#destroy_favorite', :on => :collection, :as => 'destroy_favorite'
   end
 
-  resource :user_session
+
+  resource :user_session do
+    post 'set_org'
+    get 'allowed_orgs'
+  end
+  
   resource :account
+
   root :to => "user_sessions#new"
 
   match '/login' => 'user_sessions#new'
-  match '/logout' => 'user_sessions#destroy'
+  match '/logout' => 'user_sessions#destroy', :via=>:post
   match '/user_session/logout' => 'user_sessions#destroy'
   match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
 

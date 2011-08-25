@@ -1,25 +1,25 @@
 -# parameters: form
 - raise ArgumentError, "Provider form requires :form be passed in :locals" unless local_assigns[:form]
 
-%fieldset
+%fieldset.fl.clear
   .grid_2.ra
     %label #{_("Name")}:
   .grid_4.la
     = form.text_field :name
 
-%fieldset
+%fieldset.fl.clear
   .grid_2.ra
     %label #{_("Description")}:
   .grid_4.la
     = form.text_field :description
 
-%fieldset
+%fieldset.fl.clear
   .grid_2.ra
     %label #{_("Type")}:
   .grid_4.la    
     = select_tag('provider[provider_type]', options_for_select(Provider::TYPES, @provider.provider_type))
 
-%fieldset
+%fieldset.fl.clear
   .grid_2.ra
     %label #{_("Repository Url")}:
   .grid_4.la    

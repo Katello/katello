@@ -1,6 +1,9 @@
 = content_for :title do
   #{_("New Role")}
 
+= content_for :navigation do
+  / pretty
+
 = content_for :content do
   #new_role
     .grid_10#new_role
@@ -12,4 +15,4 @@
   
       .grid_3.la.push_1
         .button#save_role_button{:tabindex => auto_tab_index}
-          #{("Save Role")}
+          #{_("Save Role")}

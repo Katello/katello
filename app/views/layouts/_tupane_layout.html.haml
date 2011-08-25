@@ -1,14 +1,12 @@
-= include_javascripts :scroll_pane
-= include_stylesheets :scroll_pane
-= yield :javascripts
+- if content_for?(:title)
+  .head
+    %h2
+      = yield :title
+    = yield :remove_item  
 
-.head
-  %h2
-    = yield :title
-  = yield :remove_item    
-
-%nav.subnav.clear
-  = yield :navigation
+- if content_for?(:navigation)
+  %nav.subnav.clear
+    = yield :navigation
 
 - if content_for?(:content)
   %a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}
@@ -23,3 +21,6 @@
 = yield :footer
 
 = yield
+
+= include_javascripts :scroll_pane
+= yield :javascripts

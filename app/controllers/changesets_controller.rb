@@ -13,14 +13,45 @@
 class ChangesetsController < ApplicationController
   include AutoCompleteSearch
   include BreadcrumbHelper
-  
-  before_filter :find_changeset, :except => [:index, :list, :items, :create, :new, :auto_complete_search]
-  before_filter :find_environment, :except => [:index, :list, :items, :auto_complete_search]
+  include BreadcrumbHelper::ChangesetBreadcrumbs
+
+  skip_before_filter :authorize # want to load environment if we can
+  before_filter :find_changeset, :except => [:index, :items, :list, :create, :new, :auto_complete_search]
+  before_filter :find_environment, :except => [:auto_complete_search]
+  before_filter :authorize
   before_filter :setup_options, :only => [:index, :items, :auto_complete_search]
+
 
   after_filter :update_editors, :only => [:update]
 
-  around_filter :catch_exceptions
+  #around_filter :catch_exceptions
+
+
+  def rules
+    read_perm = lambda{@environment.changesets_readable?}
+    manage_perm = lambda{@environment.changesets_manageable?}
+    promote_perm = lambda{@environment.changesets_promotable?}
+    {
+      :index => read_perm,
+      :items => read_perm,
+      :list => read_perm,
+      :show => read_perm,
+      :new => manage_perm,
+      :create => manage_perm,
+      :edit => read_perm,
+      :update => manage_perm,
+      :destroy =>manage_perm,
+      :products => read_perm,
+      :dependencies => read_perm,
+      :object => read_perm,
+      :auto_complete_search => read_perm,
+      :promote => promote_perm,
+      :promotion_progress => read_perm
+    }
+  end
+
+
+
 
   ####
   # Changeset history methods
@@ -28,16 +59,15 @@ class ChangesetsController < ApplicationController
 
   #changeset history index
   def index
-    @environment = current_organization.locker.successor || current_organization.locker
-    setup_environment_selector(current_organization)
+    accessible_envs = KPEnvironment.changesets_readable(current_organization)
+    setup_environment_selector(current_organization, accessible_envs)
     @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size)
     retain_search_history
+    render :index, :locals=>{:accessible_envs => accessible_envs}
   end
 
   #extended scroll for changeset_history
   def items
-    @environment = KPEnvironment.find(params['env_id'])
-    setup_environment_selector(current_organization)
     start = params[:offset]
     @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size).offset(start)
     render_panel_items @changesets, @panel_options
@@ -46,23 +76,18 @@ class ChangesetsController < ApplicationController
 
   #similar to index, but only renders the actual list of the 2 pane
   def list
-    @environment = KPEnvironment.find(params['env_id'])
     @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size)
     @columns = ['name'] #from index
     render :partial=>"list"
   end
 
   def edit
-    render :partial=>"edit", :layout => "tupane_layout"
+    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:editable=>@environment.changesets_manageable?}
   end
 
   #list item
   def show
     render :partial=>"common/list_update", :locals=>{:item=>@changeset, :accessor=>"id", :columns=>['name'], :chgusers=>changeset_users}
-  end
-
-  def show_content
-    render(:partial => "changesets/changeset", :content_type => 'text/html')
   end
 
   def section_id
@@ -74,12 +99,6 @@ class ChangesetsController < ApplicationController
   ####
   # Promotion methods
   ####
-  
-  def products
-    @products = @changeset.products
-    render :partial=>"products", :locals=>{:changeset=>@changeset}
-  end
-
 
   def dependencies
     product_map = @changeset.calc_dependencies
@@ -106,17 +125,23 @@ class ChangesetsController < ApplicationController
   end
 
   def create
-    @changeset = Changeset.create!(:name=>params[:name], :description => params[:description],
-                                   :environment_id=>@next_environment.id)
-    notice _("Changeset '#{@changeset["name"]}' was created.")
-    bc = {}
-    add_crumb_node!(bc, changeset_bc_id(@changeset), products_changeset_path(@changeset), @changeset.name, ['changesets'],
-                    {:client_render => true}, {:is_new=>true})
-    render :json => {
-      'breadcrumb' => bc,
-      'id' => @changeset.id,
-      'changeset' => simplify_changeset(@changeset)
-    }
+    begin
+      @changeset = Changeset.create!(:name=>params[:name], :description => params[:description],
+                                     :environment_id=>@next_environment.id)
+      notice _("Changeset '#{@changeset["name"]}' was created.")
+      bc = {}
+      add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
+                      {:client_render => true}, {:is_new=>true})
+      render :json => {
+        'breadcrumb' => bc,
+        'id' => @changeset.id,
+        'changeset' => simplify_changeset(@changeset)
+      }
+    rescue Exception => error
+      Rails.logger.error error.to_s
+      errors error
+      render :json=>error, :status=>:bad_request
+    end
   end
 
   def update
@@ -234,13 +259,14 @@ class ChangesetsController < ApplicationController
     elsif params[:env_id]
       @environment = KPEnvironment.find(params[:env_id])
     else
-      text = _("Couldn't find environment.")
-      errors text
-      execute_after_filters
-      render :text=>text, :status=>:bad_request and return
+      #didnt' find an environment, just do the first the user has access to
+      list = KPEnvironment.changesets_readable(current_organization)
+      @environment ||= list.first || current_organization.locker
     end
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor
+
+
   end
 
   def update_editors

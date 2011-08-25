@@ -125,7 +125,7 @@ describe ChangesetsController do
 
     it 'should cause an error notification if name is left blank' do
       controller.should_receive(:errors)
-      post 'create', {:env_id => @env.id, :changesets => { :name => ''}}
+      post 'create', {:env_id => @env.id, :name => ''}
       response.should_not be_success
     end
 

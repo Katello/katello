@@ -1,6 +1,9 @@
 = content_for :title do
   #{_("Create Product")}
 
+= content_for :navigation do
+  / pretty
+
 = content_for :subcontent do
   = form_tag provider_products_path(@provider.id), :method => "post" do |f|
     %fieldset.clearfix

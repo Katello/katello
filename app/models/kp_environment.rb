@@ -148,7 +148,84 @@ class KPEnvironment < ActiveRecord::Base
   end
 
   # returns list of virtual permission tags for the current user
-  def self.list_tags
-    select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
+  def self.list_tags org_id
+    select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
+
+  def self.tags(ids)
+    select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
+  end
+
+
+  #Permissions
+  scope :changesets_readable, lambda {|org| authorized_items(org, [:promote_changesets, :manage_changesets, :read_changesets])}
+  scope :content_readable, lambda {|org| authorized_items(org, [:read_contents])}
+  scope :systems_readable, lambda{|org|
+    if  User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, org)
+      where(:organization_id => org)
+    else
+      authorized_items(org, [:read_systems])
+    end
+  }
+
+  def self.any_viewable_for_promotions? org
+    User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, [], org)
+  end
+
+  def viewable_for_promotions?
+    User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, self.id, self.organization)
+  end
+
+
+  def changesets_promotable?
+    User.allowed_to?([:promote_changesets], :environments, self.id,
+                              self.organization)
+  end
+
+  CHANGE_SETS_READABLE = [:manage_changesets, :read_changesets, :promote_changesets]
+  def changesets_readable?
+    User.allowed_to?(CHANGE_SETS_READABLE, :environments,
+                              self.id, self.organization)
+  end
+
+  def changesets_manageable?
+    User.allowed_to?([:manage_changesets], :environments, self.id,
+                              self.organization)
+  end
+
+  CONTENTS_READABLE = [:read_contents]
+  def contents_readable?
+    User.allowed_to?([:read_contents], :environments, self.id,
+                              self.organization)
+  end
+
+  def systems_readable?
+    User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, self.id, self.organization) ||
+        User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, self.organization)
+  end
+
+  
+
+  def self.authorized_items org, verbs, resource = :environments
+    raise "scope requires an organization" if org.nil?
+    if User.allowed_all_tags?(verbs, resource, org)
+       where(:organization_id => org)
+    else
+      where("environments.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+    end
+  end
+
+  def self.list_verbs global = false
+    {
+      :read_contents => N_("Access Environment Contents"),
+      :read_systems => N_("Access Systems in Environment"),
+      :create_systems =>N_("Register Systems in Environment"),
+      :update_systems => N_("Manage Systems in Environment"),
+      :delete_systems => N_("Remove Systems in Environment"),
+      :read_changesets => N_("Access Changesets in Environment"),
+      :manage_changesets => N_("Manage Changesets in Environment"),
+      :promote_changesets => N_("Promote Changesets in Environment")
+    }.with_indifferent_access
+  end
+
 end

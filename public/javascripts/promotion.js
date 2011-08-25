@@ -300,7 +300,6 @@ var promotion_page = (function($){
                         $("#changeset_loading").css("z-index", -1);
                         current_changeset = changeset_obj(data);
                         reset_page();
-                        $("#delete_changeset").removeClass("disabled");
                         callback();
                     }});
 
@@ -370,8 +369,10 @@ var promotion_page = (function($){
          *    //TODO make more efficient by identify exactly which page we are on and only reseting those buttons
          */
         reset_page = function() {
-            if (current_changeset) {
-                if (current_product) {
+            if (current_changeset && permissions.manage_changesets) {
+
+                if (current_product ) {
+
                     var product = current_changeset.getProducts()[current_product];
                     if( product !== undefined && product.all !== undefined ){
                         disable_all(subtypes);
@@ -386,7 +387,7 @@ var promotion_page = (function($){
                             }
                         });
                     }
-                } else {
+                } else{
                     var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
                     buttons.html(i18n.add).removeClass("remove_product").addClass("add_product").removeClass('disabled');
                     $.each(current_changeset.getProducts(), function(index, product) {
@@ -413,7 +414,14 @@ var promotion_page = (function($){
             
             if (current_changeset) {
                 status.show();
-                $("#changeset_actions > div").removeClass("disabled");
+                $("#sliding_tree_actionbar > div").removeClass("disabled");
+                if (!permissions.manage_changesets) {
+                    $('#edit_changeset').addClass("disabled");
+                    $('#delete_changeset').addClass("disabled");
+                    $('#review_changeset').addClass("disabled");
+                }
+
+
                 if (current_changeset.is_new()) {
                     cancel_btn.hide();
                     
@@ -424,6 +432,8 @@ var promotion_page = (function($){
                     $(".content_add_remove").show();
                     $('#review_changeset > span').html(i18n.review);
                     $('#promote_changeset').addClass("disabled");
+
+
                 }
                 else { //in review stage
                     cancel_btn.show();
@@ -434,8 +444,15 @@ var promotion_page = (function($){
                     }
                     $("#cslist").addClass("locked");
                     $(".content_add_remove").hide();
+
                     $('#review_changeset > span').html(i18n.cancel_review);
-                    $('#promote_changeset').removeClass("disabled");
+
+                    if (permissions.promote_changesets) {
+                        $('#promote_changeset').removeClass("disabled");
+                    }
+                    else {
+                        $('#promote_changeset').addClass("disabled");
+                    }
                 }
             }
             else {
@@ -448,8 +465,12 @@ var promotion_page = (function($){
                 cancel_btn.hide();
                 changesetEdit.close();
 
-                $("#changeset_actions > div").addClass("disabled");
+                $("#sliding_tree_actionbar > div").addClass("disabled");
                 
+            }
+
+            if (!permissions.manage_changesets) {
+                disable_all(types);
             }
 
             draw_status();
@@ -683,10 +704,14 @@ var changeset_obj = function(data_struct) {
             }
         },
         review: function(on_success, on_error) {
-            change_state("review", on_success, on_error);
+            var success = function() {
+                on_success();
+                dep_solve();
+            }
+
+            change_state("review", success, on_error);
             changeset_breadcrumb['changeset_' + id].is_new = false;
             promotion_page.add_dependencies();
-            dep_solve();
         },
         cancel_review: function(on_success, on_error) {
             change_state("new", on_success, on_error);
@@ -738,17 +763,6 @@ var changeset_obj = function(data_struct) {
         }
     }
 };
-
-//make jQuery Contains case insensitive
-$.expr[':'].Contains = function(a, i, m) {
-  return $(a).text().toUpperCase()
-      .indexOf(m[3].toUpperCase()) >= 0;
-};
-$.expr[':'].contains = function(a, i, m) {
-  return $(a).text().toUpperCase()
-      .indexOf(m[3].toUpperCase()) >= 0;
-};
-
 
 //doc ready
 var registerEvents = function(){
@@ -973,7 +987,6 @@ var promotionsRenderer = (function(){
             if( hash === 'changesets'){
                 var post_wait_function = function() {
                     promotion_page.set_changeset(undefined);
-                    $("#delete_changeset").addClass("disabled");
                     render_cb(templateLibrary.changesetsList(changeset_breadcrumb));
                 };
                 //any pending updates, if so wait!
@@ -1131,7 +1144,7 @@ var templateLibrary = (function(){
         },
         listItem = function(id, name, type, product_id, showButton) {
             var anchor = "";
-            if ( showButton ){
+            if ( showButton && permissions.manage_changesets){
                 anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"'
                                 + 'data-type="' + type + '" data-product_id="' + product_id +  '" data-id="' + id + '">';
                             anchor += i18n.remove + "</a>";
@@ -1337,8 +1350,6 @@ $(document).ready(function() {
     $(".content_add_remove").live('click', function() {
     
        if( !$(this).hasClass('disabled') ){
-
-
           var environment_id = $(this).attr('data-environment_id');
           var id = $(this).attr('data-id');
           var display = $(this).attr('data-display_name');
@@ -1351,20 +1362,25 @@ $(document).ready(function() {
     $('#changeset_users').hide();
 
     //initiate the left tree
-    var contentTree = sliding_tree("content_tree", {breadcrumb:content_breadcrumb,
-                                      default_tab:"content",
-                                      bbq_tag:"content",
-                                      base_icon: 'home_img',
-                                      tab_change_cb: promotion_page.set_current_product});
+    var contentTree = sliding_tree("content_tree", {
+                                        breadcrumb      :  content_breadcrumb,
+                                        default_tab     :  "content",
+                                        bbq_tag         :  "content",
+                                        base_icon       :  'home_img',
+                                        tab_change_cb   :  promotion_page.set_current_product
+                                    });
 
-    promotion_page.set_changeset_tree( sliding_tree("changeset_tree", {breadcrumb:changeset_breadcrumb,
-                                      default_tab:"changesets",
-                                      bbq_tag:"changeset",
-                                      base_icon: 'home_img',
-                                      render_cb: promotionsRenderer.render,
-                                      tab_change_cb: function(hash_id) {
+    promotion_page.set_changeset_tree( sliding_tree("changeset_tree", { 
+                                        breadcrumb      :  changeset_breadcrumb,
+                                        default_tab     :  "changesets",
+                                        bbq_tag         :  "changeset",
+                                        base_icon       :  'home_img',
+                                        render_cb       :  promotionsRenderer.render,
+                                        enable_search   :  true,
+                                        tab_change_cb   :  function(hash_id) {
                                           promotion_page.init_changeset_list();
-                                      }}));
+                                        }
+                                    }));
 
     //need to reset page during the extended scroll
     panel.extended_cb = promotion_page.reset_page;
@@ -1393,56 +1409,18 @@ $(document).ready(function() {
         }
     });
 
-    //bind to the #search_form to make it useful
-    $('#search_form').submit(function(){
-        $('#search').change();
-        return false;
-    });
-
-    $('#search').live('change, keyup', function(){
-        if ($.trim($(this).val()).length >= 2) {
-            $("#cslist .has_content li:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
-            $("#cslist .has_content li:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
-        } else {
-            $("#cslist .has_content li").fadeIn('fast');
-        }
-    });
-    $('#search').val("").change();
-
-    //click and animate the filter for changeset
-    var bcs = null;
-    var bcs_height = 0;
-    $('.search_button').toggle(
-        function() {
-            bcs = $('.breadcrumb_search');
-            bcs_height = bcs.height();
-            bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
-            $("#search_form #search").css("margin-left", 0);
-            $("#search_form").css("opacity", "0").show();
-            $("#search_form").animate({"opacity":"1"}, { duration: 200, queue: false });
-            $("#search").animate({"width":"420px", "opacity":"1"}, { duration: 200, queue: false });
-            $(this).css({backgroundPosition: "-32px -16px"});
-        },function() {
-            $("#search_form").fadeOut("fast", function(){bcs.animate({ "height": bcs_height }, "fast");});
-            $(this).css({backgroundPosition: "0 -16px"});
-            $("#search").val("").change();
-            $("#cslist .has_content li").fadeIn('fast');
-        }
-    );
-        
     
-     var container = $('#container');
-
-     var original_top = Math.floor($('.left').position(top).top);
-     if(container.length > 0){
-         var bodyY = parseInt(container.offset().top, 10) - 20;
-         var offset = $('#content_tree').width() + 50;
-         $(window).scroll(function () {
-             panel.handleScroll($('#changeset_tree'), container, original_top, bodyY, 0, offset);
-         });
-         $(window).resize(function(){
-            panel.handleScrollResize($('#changeset_tree'), container, original_top, bodyY, 0, offset);
-         });
+    var container = $('#container');
+    var original_top = Math.floor($('.left').position(top).top);
+    if(container.length > 0){
+        var bodyY = parseInt(container.offset().top, 10) - 20;
+        var offset = $('#content_tree').width() + 50;
+        $(window).scroll(function () {
+            panel.handleScroll($('#changeset_tree'), container, original_top, bodyY, 0, offset);
+        });
+        $(window).resize(function(){
+           panel.handleScrollResize($('#changeset_tree'), container, original_top, bodyY, 0, offset);
+        });
     }
     
     panel.expand_cb = function(){

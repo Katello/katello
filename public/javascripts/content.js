@@ -16,6 +16,10 @@ function getProductId(field) {
     return prod_id;
 }
 
+function getProductIdFromRepo(repo_id) {
+    return $('#' + "repo_"  +repo_id).parents('.product').attr('data-id')
+}
+
 function fadeUpdate(fieldName, text) {
   var updateField = $(fieldName);
   updateField.fadeOut('fast');
@@ -24,7 +28,6 @@ function fadeUpdate(fieldName, text) {
 }
 
 $(document).ready(function() {
-
 
   // Setup initial state
   for (var i = 0; i < repo_status.length; i++) {
@@ -35,10 +38,12 @@ $(document).ready(function() {
       }
   }
 
+  // check box collections
   $('#select_all').click(function(){$('.products input:checkbox').attr('checked',true); return false;});
   $('#select_none').click(function(){$('.products input:checkbox').attr('checked',false); return false;});
   $('#toggle_all').click(function(){$('.clickable').click(); return false;});
 
+  // start polling sync status after succesfully sync call
   $('#sync_product_form')
    .bind("ajax:success", function(evt, data, status, xhr){
        var syncs = $.parseJSON(data);
@@ -49,28 +54,29 @@ $(document).ready(function() {
    .bind("ajax:error", function(evt, xhr, status, error){
    });
   
+  // drop down arrows for parent product and child repos
   $('.products').find('ul').slideToggle();
   $('.clickable').live('click', function(){
 
       // Hide the start/stop times
       var prod_id = $(this).parent().find('input').attr('id').replace(/[^\d]+/,'');
 
-
       $(this).parent().parent().find('ul').slideToggle();
       var arrow = $(this).parent().find('a').find('img');
       if(arrow.attr("src").indexOf("collapsed") === -1){
           arrow.attr("src", "/images/icons/expander-collapsed.png");
-
       } else {
           arrow.attr("src", "/images/icons/expander-expanded.png");
       }
       return false;
   });
 
+  // if parent is checked then all children should be selected
   $('.product input:checkbox').click(function() {
     $(this).siblings().find('input:checkbox').attr('checked', this.checked);
   });
 
+  // if all children are checked, check the parent
   $('li.repo input:checkbox').click(function() {
     var td = $(this).parent().parent().parent();
     var parent_cbx = td.find('input:checkbox').first();
@@ -115,8 +121,9 @@ var content = (function(){
             progressBar.appendTo(updateField);
             cancelButton.appendTo(updateField);
             updateField.fadeIn('fast');
+            console.log(getProductIdFromRepo(repo));
             var pu = $.PeriodicalUpdater('/sync_management/sync_status/', {
-              data: {repo_id:repo, sync_id:sync},
+              data: {repo_id:repo, sync_id:sync, product_id: getProductIdFromRepo(repo)},
               method: 'get',
               type: 'json',
               global: false
@@ -171,15 +178,15 @@ var content = (function(){
         },
         cancelSync : function(repoid, syncid, updateField, pu){
             var btn = $('#' + common.escapeId("cancel_" + repoid));
+            var prod_id = getProductId(updateField);
             btn.addClass("disabled");
             pu.stop();
             $.ajax({
               type: 'DELETE',
               url: '/sync_management/' + syncid,
-              data: { repo_id: repoid },
+              data: { repo_id: repoid, product_id: prod_id },
               dataType: 'json',
               success: function(data) {
-                var prod_id = getProductId(updateField);
                 content.updateProduct(prod_id, repoid);
                 updateField.html('Sync Cancelled.');
               },
