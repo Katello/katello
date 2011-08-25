@@ -1,4 +1,3 @@
 = javascript :password, :multiselect, :user, :user_edit
-
-
+/this page is used on the Roles users pane
 = collection_select(:user, :roles, Role.all, :id, :name, {}, {:multiple=>:multiple, :class=>"multiselect", :style=>"width:500px; height:400px"})
