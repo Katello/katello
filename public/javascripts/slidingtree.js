@@ -157,6 +157,10 @@ var sliding_tree = function(tree_id, options) {
                     html += create_crumb(id, true, settings.base_icon);
                 }
                 crumbs = trail.slice(1, trail.length);
+            } else {
+                if( trail.length === 0 ){
+                    html += '<li><div id="' + id + '" class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div></li>';
+                }
             }
     
             if( trail.length > 0){
