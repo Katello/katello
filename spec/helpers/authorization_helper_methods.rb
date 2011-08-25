@@ -12,7 +12,11 @@
 
 
 module AuthorizationHelperMethods
-  def allow role, verbs, resource_type, tags=[], org = nil
+  def allow(*args)
+    AuthorizationHelperMethods.allow(*args)
+  end
+
+  def self.allow role, verbs, resource_type, tags=[], org = nil
     role = Role.find_or_create_by_name(role) if String === role
     name = "role-#{role.id}-perm-#{rand 10**6}"
     verbs = [] if verbs.nil?
@@ -48,7 +52,7 @@ module AuthorizationHelperMethods
     end
 
     def can(verb, resource_type, tags = nil, org = nil)
-      allow(@user.own_role, verb, resource_type, tags, org)
+      AuthorizationHelperMethods.allow(@user.own_role, verb, resource_type, tags, org)
     end
 
   end
