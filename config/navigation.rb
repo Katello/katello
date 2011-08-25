@@ -33,7 +33,7 @@ SimpleNavigation::Configuration.run do |navigation|
         sync_sub.item :schedule, _("Sync Schedule"), sync_schedules_index_path(), :class=>"third_level"
       end if Provider.any_readable?(current_organization)
       #TODO: tie in Content Locker page
-      content_sub.item :promotions, _("Promotions"), promotions_path, :highlights_on =>/\/organizations\/.*\/environments\/.*\/promotions/ ,:class => 'content' do |package_sub|
+      content_sub.item :promotions, _("Promotions"), promotions_path, :highlights_on =>/\/promotions.*/ ,:class => 'content' do |package_sub|
           if !@package.nil?
               package_sub.item :details, _("Details"), package_path(@package.id), :class=>"navigation_element"
               package_sub.item :details, _("Dependencies"), dependencies_package_path(@package.id), :class=>"navigation_element"
