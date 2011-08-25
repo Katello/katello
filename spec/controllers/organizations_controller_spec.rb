@@ -16,12 +16,60 @@ describe OrganizationsController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods
+  include AuthorizationHelperMethods
 
   module OrgControllerTest
     ORG_ID = 1
     ORGANIZATION = {:name => "organization_name", :description => "organization_description", :cp_key => "organization_name"}
   end
 
+  describe "rules" do
+    before (:each) do
+      @org1 = new_test_org
+      @organization = new_test_org
+    end
+    describe "GET index" do
+      let(:req) { get 'index' }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :organizations,nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      let(:on_success) do
+        assigns(:organizations).should_not include @org1
+        assigns(:organizations).should include @organization
+      end
+
+      let(:on_failure) do
+        assigns(:organizations).should be_nil
+      end
+
+      it_should_behave_like "protected action"
+    end
+
+    describe "update org put" do
+      before do
+        @organization.stub!(:update_attributes!).and_return(OrgControllerTest::ORGANIZATION)
+        @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:name])
+        Organization.stub!(:first).and_return(@organization)
+      end
+
+      let(:req) do
+        put 'update', :id => @organization.id, :organization => OrgControllerTest::ORGANIZATION
+      end
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update, :organizations,nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      let(:before_success_action) do
+        @organization.should_receive(:update_attributes!).once
+      end
+      it_should_behave_like "protected action"
+    end
+  end
 
   before (:each) do
     login_user
@@ -39,7 +87,7 @@ describe OrganizationsController do
         @organization = new_test_org #controller.current_organization
         controller.stub!(:current_organization).and_return(@organization)
       end
-  
+
       it 'should create organization' do
         post 'create', OrgControllerTest::ORGANIZATION
         response.should_not redirect_to(:action => 'new')
