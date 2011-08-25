@@ -30,7 +30,7 @@ module AuthorizationHelperMethods
       verbs.each{|verb| verbs_hash[verb.verb] = verb.verb}
       ResourceType::TYPES[resource_type] = {:model => OpenStruct.new(:list_verbs => verbs_hash)}
     else
-      model_verbs = rt[:model].list_verbs
+      model_verbs = rt[:model].list_verbs(true).merge(rt[:model].list_verbs(false))
       verbs_not_in = verbs.collect{|verb| verb.verb unless model_verbs[verb.verb]}.compact
 
       verbs_not_in.each{|verb| model_verbs[verb] = verb}
