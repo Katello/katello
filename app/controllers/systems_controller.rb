@@ -193,7 +193,8 @@ class SystemsController < ApplicationController
 
   def find_environment
     readable = KPEnvironment.systems_readable(current_organization)
-    @environment = first_env_in_path(readable, false)
+    @environment = KPEnvironment.find(params[:env_id]) if params[:env_id]
+    @environment ||= first_env_in_path(readable, false)
     @environment ||=  current_organization.locker
   end
 
