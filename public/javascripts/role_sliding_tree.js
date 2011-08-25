@@ -568,12 +568,12 @@ var roleActions = (function($){
 
 var templateLibrary = (function($){
     var listItem = function(id, name, count, notation, no_slide){
-            var html ='<li>';
+            var html ='';
             
             if( no_slide ){
-                html += '<div class="no_slide" id="' + id + '">'; 
+                html += '<li class="no_slide"><div id="' + id + '">'; 
             } else {
-                html += '<div class="slide_link" id="' + id + '">';
+                html += '<li class="slide_link"><div class="link_details" id="' + id + '">';
             }
    
             html += '<span class="sort_attr">'+ name;
@@ -643,7 +643,7 @@ var templateLibrary = (function($){
                             anchor += i18n.remove + "</a>";
             }
             
-            return '<li>' + anchor + '<div class="slide_link" id="' + permission_id + '"><span class="sort_attr">'  + name + '</span></div></li>';
+            return '<li class="slide_link">' + anchor + '<div class="link_details" id="' + permission_id + '"><span class="sort_attr">'  + name + '</span></div></li>';
         },
         permissionItem = function(permission){
             var i = 0, length = 0,
@@ -677,7 +677,7 @@ var templateLibrary = (function($){
         },
         usersListItem = function(user_id, name, has_role, no_slide, showButton) {
             var anchor = "",
-                html = "<li>";
+                html = no_slide ? '<li class="no_slide">' : '<li class="slide_link">';
 
             if ( showButton ) {
                 anchor = '<a ' + 'class="fr content_add_remove ';
@@ -690,7 +690,7 @@ var templateLibrary = (function($){
             }
             
             html += anchor + '<div class="';
-            html += no_slide ? "no_slide" : "slide_link";
+            html += no_slide ? "" : "link_details";
             html += '"><span class="sort_attr">'  + name + '</span></div></li>';
             
             return html;
