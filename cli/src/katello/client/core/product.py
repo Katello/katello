@@ -285,7 +285,7 @@ class Create(ProductAction):
         repourls = self.discoverRepos.discover_repositories(url)
         self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
         selectedurls = self.discoverRepos.select_repositories(repourls, assumeyes)        
-        self.discoverRepos.create_repositories(prod["cp_id"], prod["name"], selectedurls)
+        self.discoverRepos.create_repositories(prod["id"], prod["name"], selectedurls)
 
         return os.EX_OK
 
