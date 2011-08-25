@@ -14,6 +14,7 @@ require 'spec_helper'
 
 describe Api::ActivationKeysController do
   include LoginHelperMethods
+  include AuthorizationHelperMethods
 
 
   before(:each) do
@@ -60,6 +61,17 @@ describe Api::ActivationKeysController do
   end
 
   context "show all activation keys" do
+
+    let(:action) {:index }
+    let(:req) { get :index, :organization_id => '1234'  }
+    let(:authorized_user) do
+      user_with_permissions { |u| u.can(:read_all, :activation_keys) }
+    end
+    let(:unauthorized_user) do
+      user_without_permissions
+    end
+    it_should_behave_like "protected action"
+
     before(:each) do
       Organization.stub!(:first).and_return(@organization)
       ActivationKey.stub!(:where).and_return([@activation_key])

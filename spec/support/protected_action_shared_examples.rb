@@ -10,6 +10,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
+def login_user_by_described_class(user)
+  if described_class.name =~ /^Api::/
+    login_user_api(user)
+  else
+    login_user(:user => user, :mock => false, :superuser => false)
+  end
+end
+
 shared_examples_for "protected action" do
   before(:each) do
     # it takes action from describe method
@@ -20,7 +29,7 @@ shared_examples_for "protected action" do
         @controller.stub(action) 
         @controller.stub(:render)
       end
-      login_user(:user =>  authorized_user, :mock => false, :superuser => false)  if defined?  authorized_user 
+      login_user_by_described_class(authorized_user) if defined?  authorized_user 
       before_success if defined?(before_success)
       @controller.should_not_receive(:render_403)
       req
@@ -33,7 +42,7 @@ shared_examples_for "protected action" do
         @controller.stub(action)
         @controller.stub(:render)
       end
-      login_user(:user =>  unauthorized_user, :mock => false, :superuser => false) if defined?  unauthorized_user 
+      login_user_by_described_class(unauthorized_user) if defined?  unauthorized_user 
       before_failure if defined?(before_failure)      
       @controller.should_receive(:render_403)
       req
