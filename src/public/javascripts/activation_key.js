@@ -23,7 +23,7 @@ $(document).ready(function() {
         activation_key.delete_key($(this));
     });
 
-    $('#edit_env_setup').live('click', function(e) {
+    $('.edit_env_setup').live('click', function(e) {
         e.preventDefault();
         activation_key.edit_environment_setup($(this));
     });
@@ -131,21 +131,21 @@ var activation_key = (function() {
             var paths = $('.promotion_paths');
             // clear the previously selected env
             var old_env = paths.find('.selected');
-            old_env.removeClass('selected');
+            old_env.removeClass('selected crumb-editable-selected').addClass('crumb-editable');
 
             // if the new env is on the same path as the old, highlight it.. otherwise, hide the current path,
             // locate the new path, show it and highlight the new env on that path
-            var path = old_env.closest('#edit_env_setup');
+            var path = old_env.closest('.edit_env_setup');
             var new_env = path.find("a[data-env_id='"+env_id+"']");
             if (new_env.length < 1) {
                 // unable to locate the new env on the current path...
                 path.hide();
                 new_env = paths.find("a[data-env_id='"+env_id+"']");
-                path = new_env.closest('#edit_env_setup');
+                path = new_env.closest('.edit_env_setup');
                 path.show();
             }
             // highlight the newly chosen environment
-            new_env.addClass('selected');
+            new_env.removeClass('crumb-editable').addClass('selected crumb-editable-selected');
             // save the id of the env selected
             $('#environment_id').attr('value', env_id);
 
@@ -237,9 +237,9 @@ var activation_key = (function() {
             var path = data.closest('.promotion_paths');
 
             // clear any previous selected environments
-            path.find(".selected").removeClass("selected");
+            path.find(".selected").removeClass('selected');
             // highlight the selected environment
-            data.addClass("selected");
+            data.addClass('selected');
             // save the id of the env selected
             path.find("#activation_key_environment_id").attr('value', data.attr('data-env_id'));
         }

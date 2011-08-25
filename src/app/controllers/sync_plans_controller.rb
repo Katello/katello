@@ -20,6 +20,23 @@ class SyncPlansController < ApplicationController
     'contents'
   end
 
+
+  def rules
+    read_test = lambda{Provider.any_readable?(current_organization)}
+    manage_test = lambda{current_organization.syncable?}
+    {
+      :index => read_test,
+      :items => read_test,
+      :show => read_test,
+      :edit => read_test,
+      :update => manage_test,
+      :destroy => manage_test,
+      :new => manage_test,
+      :create => manage_test,
+    }
+  end
+
+
   def index
     begin
       @plans = SyncPlan.search_for(params[:search]).where(:organization_id => current_organization.id).limit(current_user.page_size)
@@ -42,11 +59,13 @@ class SyncPlansController < ApplicationController
                  :col => columns,
                  :create => _('Plan'),
                  :name => _('plan'),
-                 :ajax_scroll => items_sync_plans_path()}
+                 :ajax_scroll => items_sync_plans_path(),
+                 :enable_create => current_organization.syncable? } 
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:plan => @plan}
+    render :partial => "edit", :layout => "tupane_layout",
+           :locals => {:plan=>@plan, :editable=> current_organization.syncable? } 
   end
 
   def update

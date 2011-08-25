@@ -12,8 +12,9 @@
 
 class UserSessionsController < ApplicationController
   before_filter :require_no_user, :only => [:new, :create]
-  before_filter :require_user, :only => :destroy
+  before_filter :require_user, :only => [:destroy, :set_org]
   before_filter :require_org, :only => :destroy
+  protect_from_forgery
 
   # we need to skip create, destroy and all unauthenticated* methods
   skip_before_filter :authorize
@@ -41,12 +42,27 @@ class UserSessionsController < ApplicationController
     notice _("Logout Successful"), {:persist => false}
     redirect_to root_url
   end
+
+  def allowed_orgs
+    render :partial=>"/layouts/allowed_orgs", :locals =>{:user=>current_user}
+  end
+  
+  def set_org
+    orgs = current_user.allowed_organizations
+    org = Organization.find(params[:org_id])
+    if org.nil? or !orgs.include?(org)
+      errors "Invalid organization"
+      render :nothing => true
+    else
+      self.current_organization = org
+      redirect_to dashboard_index_url
+    end
+  end
   
   private
 
   def login_user
     authenticate! :scope => :user
-    self.current_organization = Organization.first
     if logged_in?
 
       #save the hash anchor if it exsts
@@ -56,6 +72,7 @@ class UserSessionsController < ApplicationController
 
       # set the current user in the thread-local variable (before notification)
       User.current = current_user
+      self.current_organization = User.current.allowed_organizations.first
       # notice the user
       notice _("Login Successful")
       #redirect_to account_url

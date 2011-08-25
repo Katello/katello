@@ -108,6 +108,16 @@ $.rails.allowAction = function(element) {
     return false;
 };
 
+//make jQuery Contains case insensitive
+$.expr[':'].Contains = function(a, i, m) {
+  return $(a).text().toUpperCase()
+      .indexOf(m[3].toUpperCase()) >= 0;
+};
+$.expr[':'].contains = function(a, i, m) {
+  return $(a).text().toUpperCase()
+      .indexOf(m[3].toUpperCase()) >= 0;
+};
+
 //requires jQuery
 var common = (function() {
     return {
@@ -178,6 +188,75 @@ var common = (function() {
                 }
             }
           });
+        },
+        orgSwitcherSetup : function() {
+            //org switcher
+            var button = $('#switcherButton');
+            var box = $('#switcherBox');
+            var form = $('#switcherForm');
+            var orgbox = $('#orgbox');
+            var orgboxapi = null;
+            button.removeAttr('href');
+            button.mouseup(function(switcher) {
+                box.fadeToggle('fast');
+                button.toggleClass('active');
+                if(button.hasClass('active')){
+                    if(!(box.hasClass('jspScrollable'))){
+                      orgbox.jScrollPane({ hideFocus: true });
+                      orgboxapi = orgbox.data('jsp');
+                    }
+                    $.ajax({
+                        type: "GET",
+                        url: orgbox.attr("data-url"),
+                        cache: false,
+                        success: function(data) {
+                          orgboxapi.getContentPane().html(data);
+                          orgboxapi.reinitialise();
+                        },
+                        error: function(data) {
+                          orgboxapi.getContentPane().html("<p>User is not allowed to access any Organizations.</p>");
+                          orgboxapi.reinitialise();
+                        }
+                    });
+                }
+            });
+            form.mouseup(function() {
+                return false;
+            });
+            $(document).mouseup(function(switcher) {
+                if(!($(switcher.target).parent('#switcherButton').length > 0)) {
+                    button.removeClass('active');
+                    box.fadeOut('fast');
+                }
+            });
+        },
+        orgFilterSetup : function(){
+            $('form.filter').submit(function(){
+                $('#orgfilter_input').change();
+                return false;
+            });
+            $('#orgfilter_input').live('change, keyup', function(){
+                if ($.trim($(this).val()).length >= 2) {
+                    $("#orgbox a:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
+                    $("#orgbox a:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
+                } else {
+                    $("#orgbox a").fadeIn('fast');
+                }
+            });
+            $('#orgfilter_input').val("").change();
+        },
+        thirdLevelNavSetup : function(){
+            var firstchild = $('.third_level:first-child');
+            var li = firstchild.parent().parent();
+            var ul = firstchild.parent();
+            li.prepend($('<div class="arrow_icon_menu"></div>'));
+            li.hover(
+                function(){
+                    ul.fadeIn('fast')
+                },
+                function(){
+                    ul.fadeOut('fast')
+            });
         }
     };
 })();
@@ -220,6 +299,10 @@ $(document).ready(function (){
     //Add a handler for helptips
     $(".helptip-open").live('click', helptip.handle_close);
     $(".helptip-close").live('click', helptip.handle_open);
+
+    common.orgSwitcherSetup();
+    common.orgFilterSetup();
+    common.thirdLevelNavSetup();
 });
 
 /**
@@ -247,5 +330,4 @@ $(window).ready(function(){
 
     window.alert = function(message){common.customAlert(message);return false;};
     $.rails.confirm = function(message) { common.customConfirm(message); return false;};
-    //window.confirm = function(message) { common.customConfirm(message); };
 });

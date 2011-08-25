@@ -14,9 +14,16 @@
 # and open the template in the editor.
 
 class NoticesController < ApplicationController
-  skip_before_filter :authorize, :only => :destroy
+  skip_before_filter :authorize
+  before_filter :notices_authorize
   include AutoCompleteSearch
   helper_method :sort_column, :sort_direction
+
+  def notices_authorize
+    user = current_user
+    user = User.anonymous unless user
+    true
+  end
 
   def show
     begin

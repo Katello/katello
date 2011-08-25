@@ -15,11 +15,13 @@
  * A small javascript file needed to load things whenever a sync_schedule is opened for editing
  *
  */
-
 $(document).ready(function() {
-    $('#apply_button').live('click', function(e)
-    {
-        $('#data').val(JSON.stringify(one_panel.selectedItems));
-        $('#sync_schedule_form').submit();
-    });
+  if (schedule.syncable == false) {
+    $('.block').die('click');
+  }
+  $('#apply_button').live('click', function(e)
+  {
+      $('#data').val(JSON.stringify(one_panel.selectedItems));
+      $('#sync_schedule_form').submit();
+  });
 });

@@ -12,35 +12,57 @@
 
 class PromotionsController < ApplicationController
 
+  skip_before_filter :authorize #load the environment
   before_filter :find_environment
+  before_filter :authorize
+
+  def rules
+    show_test = lambda {
+      to_ret = @environment.contents_readable?
+      to_ret ||= @next_environment.changesets_readable? if @next_environment
+      to_ret
+    }
+
+    prod_test = lambda{ @environment.contents_readable? and @product.nil? ? true : @product.provider.readable? }
+    {
+      :show => show_test,
+      :packages => prod_test,
+      :repos => prod_test,
+      :errata => prod_test,
+      :distributions => prod_test
+    }
+  end
+
+
 
   def section_id
     'contents'
   end
 
   def show
-    setup_environment_selector(current_organization)
-    @products = @environment.products.reject{|p| p.repos(@environment).empty?}.sort{|a,b| a.name <=> b.name}
+    access_envs = accessible_environments
+    setup_environment_selector(current_organization, access_envs)
+    @products = @environment.products.readable(current_organization)
+    @products = @products.reject{|p| p.repos(@environment).empty?}.sort{|a,b| a.name <=> b.name}
+    
 
-    @changesets = @next_environment.working_changesets if @next_environment
+    @changesets = @next_environment.working_changesets if (@next_environment && @next_environment.changesets_readable?)
     @changeset_product_ids = @changeset.products.collect { |p| p.cp_id } if @changeset
     @changeset_product_ids ||= []
+    locals = {
+      :accessible_envs=> access_envs,
+      :manage_changesets => @next_environment.nil? ? false : @next_environment.changesets_manageable?,
+      :promote_changesets => @next_environment.nil? ? false : @next_environment.changesets_promotable?,
+      :read_changesets => @next_environment.nil? ? false : @next_environment.changesets_readable?
+    }
+    
+    render :show, :locals=>locals
   end
 
-  def detail
-    if params[:product_id]
-      @product = Product.find(params[:product_id])
-    end
-    render :partial => "detail", :locals =>{:product=>@product}
-  end
+
 
 
   # AJAX Calls
-  def products
-    @products = @environment.products
-
-    render :partial=>"products", :locals=>{:product => @product, :products => @products, :changeset_product_ids => changeset_product_ids, :changset=>:changeset}
-  end
 
   def packages
       package_hash = {}
@@ -93,7 +115,6 @@ class PromotionsController < ApplicationController
     render :partial=>"repos"
   end
 
-
   def errata
     errata_hash = {}
 
@@ -140,11 +161,21 @@ class PromotionsController < ApplicationController
 
   def find_environment
     @organization = current_organization
-    @environment = KPEnvironment.first(:conditions => {:name=>params[:env_id], :organization_id=>@organization.id})
+    @environment = KPEnvironment.where(:name=>params[:id]).where(:organization_id=>@organization.id).first if params[:id]
+    @environment ||= first_env_in_path(accessible_environments, true)
+    raise "Cannot find a readable environment" if @environment.nil?
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor
-
     @product = Product.find(params[:product_id]) if params[:product_id]
   end
+
+  def accessible_environments
+    list = KPEnvironment.content_readable(current_organization)
+    KPEnvironment.changesets_readable(current_organization).each{|env|
+      list << env.prior if env.prior
+    }
+    list.uniq
+  end
+
 
 end

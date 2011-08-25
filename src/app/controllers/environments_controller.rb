@@ -15,12 +15,29 @@ class EnvironmentsController < ApplicationController
   require 'rubygems'
   require 'active_support/json'
 
-  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create]
+  skip_before_filter :authorize
+  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create, :system_templates]
+  before_filter :authorize
   before_filter :find_environment, :only => [:show, :edit, :update, :destroy, :system_templates]
+
   around_filter :catch_exceptions
 
   def section_id
     'orgs'
+  end
+
+  def rules
+    manage_rule = lambda{@organization.environments_manageable?}
+    view_rule = lambda{@organization.readable?}
+    view_templates_rule = lambda{ActivationKey.readable?(current_organization)}
+    {
+      :new => manage_rule,
+      :edit => view_rule,
+      :create => manage_rule,
+      :update => manage_rule,
+      :destroy => manage_rule,
+      :system_templates => view_templates_rule
+    }
   end
 
   # GET /environments/new
@@ -40,9 +57,8 @@ class EnvironmentsController < ApplicationController
     @env_labels_json = ActiveSupport::JSON.encode(env_labels)
 
     @selected = @environment.prior.nil? ? env_labels[""] : env_labels[@environment.prior.id]
-    render :partial=>"edit", :layout => "tupane_layout"
+    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:editable=> @organization.environments_manageable?}
   end
-
 
   # POST /environments
   def create
@@ -121,6 +137,5 @@ class EnvironmentsController < ApplicationController
     envs += @organization.environments.reject {|item| !item.successor.nil?}
     envs
   end
-
 
 end

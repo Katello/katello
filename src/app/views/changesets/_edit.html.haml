@@ -10,12 +10,15 @@
     #changeset.fieldset{'data-ajax_url'=>changeset_path(@changeset.id)}
       .grid_2.ra
         %label #{_("Name:")}
-      .grid_7.la.editable.edit_textfield{:name=>"name", "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.name}
+      .grid_7.la{:name=>"name", :class=>("editable edit_textfield" if editable), "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.name}
 
     #changeset.fieldset{'data-ajax_url'=>changeset_path(@changeset.id)}
       .grid_2.ra
         %label #{_("Description:")}
-      .grid_7.la.editable.edit_description{:name=>"description", "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.description}
+      .grid_7.la{:name=>"description", :class=>("editable edit_description" if editable), "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.description}
+
+
+
 
     .fieldset
       .grid_2.ra
@@ -46,5 +49,6 @@
                                                           :type_string=>_("Errata")}
             = render :partial=>"content_type", :locals=>{:items=>@changeset.repos.where(:product_id=>prod.id).collect{|i| i.display_name},
                                                           :type_string=>_("Repositories")}
+
 
 

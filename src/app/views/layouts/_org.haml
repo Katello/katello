@@ -1,2 +1,16 @@
-%button{:class=>"linkbutton grid_4",
-            :onClick=>"location.href='#{organizations_path}/#{current_organization.name}';return false"} #{current_organization.name}
+/ orgbox Starts Here
+#switcherContainer
+  %a#switcherButton{:href => "#"}
+    %div #{current_organization.name}
+    .arrow_icon
+  %div{:style => "clear:both"}
+  #switcherBox
+    #switcherForm
+      #orgfilter
+        %form.filter
+          %input{ :name => "f", :type => "input", :placeholder => "Filter...", :id=>"orgfilter_input"}
+          %button.filter_button #{_("Filter")}
+      #orgbox{"data-url"=>allowed_orgs_user_session_path}
+        /Orgs pulled from above data-url dynamically each click.
+        %img{:src=>"/images/spinner.gif"}
+/ orgbox Ends Here

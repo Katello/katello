@@ -3,6 +3,6 @@
 
 
 .grid_16
-  = environment_selector(:locker_clickable=>false)
+  = environment_selector(:locker_clickable=>false, :accessible_envs=>accessible_envs)
 .grid_16
   = two_panel(@changesets, @panel_options)
