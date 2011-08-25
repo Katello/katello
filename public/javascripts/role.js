@@ -32,7 +32,7 @@ $(document).ready(function() {
 });
 
 
-var roles_page = function() {
+var roles_page = (function() {
     //Re-creates new buttons that might have been added
     var reset_buttons = function() {
         $('input[data_type=tags]:radio:checked').trigger("change");
@@ -204,5 +204,5 @@ var roles_page = function() {
         update_verbs_and_scopes: update_verbs_and_scopes,
         toggle_available: toggle_available
     }
-}();
+})();
 

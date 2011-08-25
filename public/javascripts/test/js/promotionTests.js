@@ -43,16 +43,16 @@ module('Changeset Object Properties', {
     }
 });
 test('id', function(){
-   strictEqual(this.changeset.id, "6", 'true')
+   strictEqual(this.changeset.id, "6", 'true');
 });
 test('products', function(){
-   strictEqual(this.changeset.getProducts(), changeset_data_struct.products, 'true')
+   strictEqual(this.changeset.getProducts(), changeset_data_struct.products, 'true');
 });
 test('timestamp', function(){
-   strictEqual(this.changeset.timestamp(), changeset_data_struct.timestamp, 'true')
+   strictEqual(this.changeset.timestamp(), changeset_data_struct.timestamp, 'true');
 });
 test('is_new', function(){
-   strictEqual(this.changeset.is_new(), changeset_data_struct.is_new, 'true')
+   strictEqual(this.changeset.is_new(), changeset_data_struct.is_new, 'true');
 });
 test('Product Count', function(){
    equals(this.changeset.productCount(), 2, 'true'); 
@@ -92,7 +92,7 @@ test('Should properly detect a changset conflict', function() {
     var oldChangeset = this.changeset_b;
 
     //delete a package and a full product
-    newChangeset.getProducts()["1"].package.pop();
+    newChangeset.getProducts()["1"]['package'].pop();
     delete newChangeset.getProducts()["2"];
 
     var conflict = promotion_page.calc_conflict(oldChangeset, newChangeset);
@@ -131,7 +131,7 @@ test('Should properly detect a changset conflict (in reverse)', function() {
     var oldChangeset = this.changeset_b;
 
     //delete a package and a full product
-    oldChangeset.getProducts()["1"].package.pop();
+    oldChangeset.getProducts()["1"]['package'].pop();
     delete oldChangeset.getProducts()["2"];
 
     var conflict = promotion_page.calc_conflict(oldChangeset, newChangeset);
