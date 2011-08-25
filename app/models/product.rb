@@ -18,8 +18,9 @@ end
 
 class ProductNameUniquenessValidator < ActiveModel::Validator
   def validate(record)
-    name_duplicates = Product.select("products.id").joins(:provider).where("products.name" => record.name, "providers.organization_id" => record.organization.id).all
-    record.errors[:base] << _("Products within an organization must have unique name.") if name_duplicates.count > 0
+    name_duplicate_ids = Product.select("products.id").joins(:provider).where("products.name" => record.name, "providers.organization_id" => record.organization.id).all.map {|p| p.id}
+    name_duplicate_ids = name_duplicate_ids - [record.id]
+    record.errors[:base] << _("Products within an organization must have unique name.") if name_duplicate_ids.count > 0
   end
 end
 
