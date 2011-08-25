@@ -1,7 +1,9 @@
 import unittest
 import os
 from mock import Mock
+
 from cli_test_utils import CLIOptionTestCase, CLIActionTestCase
+import test_data
 
 import katello.client.core.product
 from katello.client.core.product import List
@@ -32,44 +34,20 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
 
 
 class ProductListTest(CLIActionTestCase):
-    ORG_NAME = 'ACME'
-    ENV_NAME = 'production'
-    PROV_NAME = 'provider_1'
-    PROV_ID = 83
-
+  
+    ORG = test_data.ORGS[0]
+    ENV = test_data.ENVS[0]
+    PROV = test_data.PROVIDERS[2]
 
     OPTIONS_BY_ENV = {
-        'org': ORG_NAME,
-        'env': ENV_NAME
+        'org': ORG['name'],
+        'env': ENV['name']
     }
 
     OPTIONS_BY_PROVIDER = {
-        'org': ORG_NAME,
-        'prov': PROV_NAME
+        'org': ORG['name'],
+        'prov': PROV['name']
     }
-    
-    ENV = {
-        'name': ENV_NAME,
-        'id': 83
-    }
-    
-    PROVIDER = {
-        'name': PROV_NAME,
-        'id': PROV_ID
-    }
-    
-    PRODUCTS = [
-        {
-            'name': 'prod_1',
-            'provider_id': PROV_ID,
-            'provider_name': PROV_NAME
-        },
-        {
-            'name': 'prod_2',
-            'provider_id': 2,
-            'provider_name': PROV_NAME
-        }
-    ]
 
     def setUp(self):        
         self.set_action(List())
@@ -78,21 +56,19 @@ class ProductListTest(CLIActionTestCase):
         self.mock_options(self.OPTIONS_BY_ENV)
         self.mock_printer()
         
-        self.mock(self.action.api, 'products_by_env', self.PRODUCTS)
-        self.mock(self.action.api, 'products_by_provider', self.PRODUCTS)
+        self.mock(self.action.api, 'products_by_env', test_data.PRODUCTS)
+        self.mock(self.action.api, 'products_by_provider', test_data.PRODUCTS)
         
         self.mock(self.module, 'get_environment', self.ENV)
-        self.mock(self.module, 'get_provider', self.PROVIDER)
+        self.mock(self.module, 'get_provider', self.PROV)
         
     def tearDown(self):
         self.restore_mocks()
         
-        
     def test_it_finds_environment(self):
         self.mock_options(self.OPTIONS_BY_ENV)
         self.action.run()
-        self.module.get_environment.assert_called_once_with(self.ORG_NAME, self.ENV_NAME)
-
+        self.module.get_environment.assert_called_once_with(self.ORG['name'], self.ENV['name'])
 
     def test_it_finds_products_by_environment(self):
         self.mock_options(self.OPTIONS_BY_ENV)
@@ -102,14 +78,14 @@ class ProductListTest(CLIActionTestCase):
     def test_it_finds_provider(self):
         self.mock_options(self.OPTIONS_BY_PROVIDER)
         self.action.run()
-        self.module.get_provider.assert_called_once_with(self.ORG_NAME, self.PROVIDER['name'])
+        self.module.get_provider.assert_called_once_with(self.ORG['name'], self.PROV['name'])
 
     def test_it_finds_products_by_provider(self):
         self.mock_options(self.OPTIONS_BY_PROVIDER)
         self.action.run()
-        self.action.api.products_by_provider.assert_called_once_with(self.PROVIDER['id'])
+        self.action.api.products_by_provider.assert_called_once_with(self.PROV['id'])
 
     def test_it_prints_products(self):
         self.action.run()
-        self.action.printer.printItems.assert_called_once_with(self.PRODUCTS)
+        self.action.printer.printItems.assert_called_once_with(test_data.PRODUCTS)
 
