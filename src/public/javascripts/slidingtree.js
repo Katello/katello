@@ -130,8 +130,9 @@ var sliding_tree = function(tree_id, options) {
         }
     };
 
-    var content_clicked = function() {
-        var element = $(this);
+    var content_clicked = function(link) {
+        var element = link.find('.link_details');
+        
         if(element.hasClass("slide_left")) {
           settings.direction = "left";
         }else {
@@ -146,57 +147,50 @@ var sliding_tree = function(tree_id, options) {
     };
     var reset_breadcrumb = function(id) {
         var trail = settings.breadcrumb[id].trail,
-            crumbs = trail;
+            crumbs = trail,
+            html = '<ul>';
         
         breadcrumb.html("");
         
         if( settings.base_icon ){
             if( trail.length > 0) {
-                breadcrumb.append(create_crumb(trail[0], undefined, settings.base_icon));
+                html += create_crumb(trail[0], undefined, settings.base_icon);
             } else {
-                breadcrumb.append(create_crumb(id, true, settings.base_icon))
+                html += create_crumb(id, true, settings.base_icon);
             }
             crumbs = trail.slice(1, trail.length);
         }
 
         if( trail.length > 0){
             for(var i = 0; i < crumbs.length; i++) {
-                breadcrumb.append(create_crumb(crumbs[i]))
+                html += create_crumb(crumbs[i]);
             }
-            breadcrumb.append('<div id="' + id + '" class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div>');
+            html += '<li><div id="' + id + '" class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div></li>';
         }
+        
+        breadcrumb.append(html);
     };
     var create_crumb = function(id, currentCrumb, icon) {
-        var html,
-            options =  {
-            id:id,
-            "class": 'slide_link slide_left fl crumb',
-            text: ""
-        };
+        var html = '<li class="slide_link">';
 
-        if( currentCrumb === undefined ){
-            options['text'] += "\u2002\u00BB\u2002";
-        }
-        if( !icon ){
-            options['text'] = settings.breadcrumb[id].name + ' ' + options['text'];
-        }
-        
-        html = jQuery('<div/>', options);
         if( icon ){
             if( currentCrumb ){
-                html.prepend(jQuery('<div/>', {
-                   'class': icon + ' fl',
-                   'text': id 
-                }));
+                html += '<div class="' + icon + ' fl">' + id + '</div>';
             } else {
-                html.prepend(jQuery('<div/>', {
-                   'class': icon + '_inactive fl',
-                   'text': id 
-                }));
+                html += '<div class="' + icon + '_inactive fl">' + id + '</div>';
             }
         }
-        
-        return html;
+
+        html += '<div class="fl crumb link_details slide_left" id= "' + id + '">';
+
+        if( !icon ){
+            html += settings.breadcrumb[id].name;
+        }
+        if( currentCrumb === undefined ){
+            html += "\u2002\u00BB\u2002";
+        }
+
+        return html + '</div></li>';
     };
     var hash_change = function() {
         var newContent = $.bbq.getState(settings.bbq_tag) || settings.default_tab;
@@ -228,7 +222,13 @@ var sliding_tree = function(tree_id, options) {
     $(window).bind( 'hashchange', hash_change);
     $(window).trigger( 'hashchange' );
 
-    container.find('.slide_link').live('click', content_clicked);
+    container.find('.slide_link').live('click', function(event){
+        if( event.target.nodeName === "A" ){
+            return false;
+        } else {
+            content_clicked($(this));   
+        }
+    });
 
     return {
         render_content: render_content,
