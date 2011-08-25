@@ -193,9 +193,59 @@ var sliding_tree = function(tree_id, options) {
         hash_change = function() {
             var newContent = $.bbq.getState(settings.bbq_tag) || settings.default_tab;
             if (settings.current_tab != newContent) {
-                reset_breadcrumb(newContent);
                 prerender(newContent);
             }
+        },
+        setupSearch = function(){
+             var bcs = null;
+             var bcs_height = 0;
+             
+             $('#search_form').submit(function(){
+                 $('#search_filter').change();
+                 return false;
+             });
+             
+             $('.search_button').toggle(
+                 function() {
+                     bcs = $('.breadcrumb_search');
+                     bcs_height = bcs.height();
+                     bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
+                     $("#search_form #search_filter").css("margin-left", 0);
+                     $("#search_form").css("opacity", "0").show();
+                     $("#search_form").animate({"opacity":"1"}, { duration: 200, queue: false });
+                     $("#search_filter").animate({"width":"420px", "opacity":"1"}, { duration: 200, queue: false });
+                     $(this).css({backgroundPosition: "-32px -16px"});
+                     if( $('.remove_item').length ){
+                         $('.remove_item').css({ top : 52 });
+                     }
+                     if( $('.close').length ){
+                         $('.close').css({ top : 52 });
+                     }
+                 },function() {
+                     $("#search_form").fadeOut("fast", function(){
+                         bcs.animate({ "height": bcs_height }, "fast");
+                         if( $('.remove_item').length ){
+                             $('.remove_item').css({ top : 12 });
+                         }
+                         if( $('.close').length ){
+                             $('.close').css({ top : 12 });
+                         }
+                     });
+                     $(this).css({backgroundPosition: "0 16px"});
+                     $("#search_filter").val("").change();
+                     $("#" + tree_id + " .has_content li").fadeIn('fast');
+                 }
+             );
+             
+             $('#search_filter').live('change, keyup', function(){
+                 if ($.trim($(this).val()).length >= 2) {
+                     $("#" + tree_id + " .has_content li:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
+                     $("#" + tree_id + " .has_content li:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
+                 } else {
+                     $("#" + tree_id + " .has_content li").fadeIn('fast');
+                 }
+             });
+             $('#search_filter').val("").change();
         };
 
     var settings = {
