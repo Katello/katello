@@ -387,20 +387,24 @@ var panel = (function(){
             
             offset = offset ? offset : 10;
             offset += $('#maincontent').offset().left;
-            
+
+            console.log(container.find('.left').height() );
+
             if(jQPanel.length > 0){
-                if ( scrollY < bodyY    ) {
-                    jQPanel.css({
-                        position: 'absolute',
-                        top: top,
-                        left: ''
-                    });
-                } else {
-                    jQPanel.stop().css({
-                        position: 'fixed',
-                        top: 40 + subpanelSpacing*spacing,
-                        left: -scrollX + offset
-                    });
+                if( container.find('.left').height() > 550 ){
+                    if ( scrollY < bodyY ) {
+                        jQPanel.css({
+                            position: 'absolute',
+                            top: top,
+                            left: ''
+                        });
+                    } else {
+                        jQPanel.stop().css({
+                            position: 'fixed',
+                            top: 40 + subpanelSpacing*spacing,
+                            left: -scrollX + offset
+                        });
+                }
                 }
             }
         },
