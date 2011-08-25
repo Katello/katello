@@ -46,10 +46,10 @@ describe ActivationKeysController do
 
   describe "GET index" do
 
-    let(:action) {:index }
+    let(:stub_action) {:index }
     let(:req) { get :index }
     let(:authorized_user) do
-      user_with_permissions { |u| u.can(:read_all, :activation_keys) }
+      user_with_permissions { |u| debugger; u.can(:read_all, :activation_keys) }
     end
     let(:unauthorized_user) do
       user_without_permissions
@@ -193,7 +193,7 @@ describe ActivationKeysController do
 
   describe "PUT update" do
 
-    let(:action) { :update }
+    let(:stub_action) { :update }
     let(:req) { put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_NAME }
     let(:authorized_user) do
       user_with_permissions { |u| u.can(:manage_all, :activation_keys) }

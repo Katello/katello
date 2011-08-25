@@ -13,14 +13,17 @@
 shared_examples_for "protected action" do
   before(:each) do
     # it takes action from describe method
-    @controller.stub(action)
-    @controller.stub(:render)
+    @controller.stub(stub_action) if defined?(stub_action) && !stub_action.nil?
+    @controller.stub(:render) if defined?(stub_action) && !stub_action.nil?
+    before_action if defined?(before_action) && !before_action.nil?
   end
   context "I have sufficient rights" do
     it "should let me to it" do
       login_user(:user => authorized_user, :mock => false, :superuser => false)
       @controller.should_not_receive(:render_403)
+      before_success_action if defined?(before_success_action) && !before_success_action.nil?
       req
+      on_success if defined?(on_success) && !on_success.nil?
     end
   end
 
@@ -28,7 +31,9 @@ shared_examples_for "protected action" do
     it "should not let me to it" do
       login_user(:user => unauthorized_user, :mock => false, :superuser => false)
       @controller.should_receive(:render_403)
+      before_fail_action if defined?(before_fail_action) && !before_fail_action.nil?
       req
+      on_failure if defined?(on_failure) && !on_failure.nil?
     end
   end
 end
