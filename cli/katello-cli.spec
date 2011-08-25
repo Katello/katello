@@ -57,6 +57,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
+%doc README LICENSE
 %{python_sitelib}/%{base_name}/
 %attr(755,root,root) %{_bindir}/%{base_name}
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/%{base_name}/client.conf
