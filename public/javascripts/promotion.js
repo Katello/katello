@@ -291,13 +291,13 @@ var promotion_page = (function($){
         },
         fetch_changeset = function(changeset_id, callback) {
     
-                $("#changeset_loading").css("z-index", 300);
+                $("#tree_loading").css("z-index", 300);
                 $.ajax({
                     type: "GET",
                     url: "/changesets/" + changeset_id + "/object/",
                     cache: false,
                     success: function(data) {
-                        $("#changeset_loading").css("z-index", -1);
+                        $("#tree_loading").css("z-index", -1);
                         current_changeset = changeset_obj(data);
                         reset_page();
                         callback();
