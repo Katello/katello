@@ -49,7 +49,7 @@ describe ActivationKeysController do
     let(:stub_action) {:index }
     let(:req) { get :index }
     let(:authorized_user) do
-      user_with_permissions { |u| debugger; u.can(:read_all, :activation_keys) }
+      user_with_permissions { |u| u.can(:read_all, :activation_keys) }
     end
     let(:unauthorized_user) do
       user_without_permissions
