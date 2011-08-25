@@ -128,7 +128,7 @@ class Sync(ProductAction):
         async_task = self.api.sync(prod["id"])
         result = run_async_task_with_status(async_task, ProgressBar())
 
-        task = AsyncTask(async_task)
+        task = AsyncTask(result)
         if task.failed():
             errors = [json.loads(t["result"])['errors'][0] for t in result if t['state'] == 'error']
             print _("Product [ %s ] failed to sync: %s" % (prodName, errors))
