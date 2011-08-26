@@ -7,7 +7,7 @@
   = render_navigation(:expand_all => true, :level => 3)
 
 = content_for :content do
-  %h5.grid_8 #{_("Subscriptions")}
+  %h5.grid_8
   - if editable
     = form_tag update_subscriptions_system_path, :method => "post", :id => "update_subscriptions" do |f|
       .grid_7
