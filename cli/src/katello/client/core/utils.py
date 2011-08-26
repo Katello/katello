@@ -514,7 +514,7 @@ class AsyncTask():
     def is_multiple(self):
         return self.subtask_count() > 1
 
-    def to_hash(self):
+    def get_hashes(self):
         return self._tasks
         
     def get_subtasks(self):
@@ -529,7 +529,7 @@ def wait_for_async_task(task):
     while task.is_running():
         time.sleep(1)
         task.update()            
-    return task.to_hash()
+    return task.get_hashes()
 
 
 def run_async_task_with_status(task, progressBar):
@@ -543,7 +543,7 @@ def run_async_task_with_status(task, progressBar):
         progressBar.updateProgress(task.get_progress())
 
     progressBar.done()
-    return task.to_hash()
+    return task.get_hashes()
 
 
 def progress(left, total):

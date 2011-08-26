@@ -377,14 +377,14 @@ class Sync(RepoAction):
             if repo == None:
                 return os.EX_DATAERR
 
-        async_task = self.api.sync(repo['id'])
-        result = run_async_task_with_status(async_task, ProgressBar())
+        task = AsyncTask(self.api.sync(repo['id']))
+        run_async_task_with_status(task, ProgressBar())
         
-        if result[0]['state'] == 'finished':
+        if task.succeeded():
             print _("Repo [ %s ] synced" % repo['name'])
             return os.EX_OK
         else:
-            print _("Repo [ %s ] failed to sync: %s" % (repo['name'], json.loads(result[0]["result"])['errors'][0]))
+            print _("Repo [ %s ] failed to sync: %s" % (repo['name'], json.loads(task.get_hashes()[0]["result"])['errors'][0]))
             return os.EX_DATAERR
 
 

@@ -25,7 +25,6 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     def test_no_error_if_org_and_product_provided(self):
         self.action.process_options(['list', '--org=ACME', '--name=product_1'])
         self.assertEqual(len(self.action.optErrors), 0)
-
         
 class ProductSyncTest(CLIActionTestCase):
     
@@ -44,11 +43,12 @@ class ProductSyncTest(CLIActionTestCase):
         self.set_module(katello.client.core.product)
         
         self.mock_options(self.OPTIONS)
+        self.mock_task_api_status(test_data.SYNC_RESULT_WITHOUT_ERROR)
         
         self.mock(self.action.api, 'sync', test_data.SYNC_RESULT_WITHOUT_ERROR)
         
         self.mock(self.module, 'get_product', self.PROD)
-        self.mock(self.module, 'run_async_task_with_status', test_data.SYNC_RESULT_WITHOUT_ERROR)
+        self.mock(self.module, 'run_async_task_with_status')
         
 
     def test_finds_the_product(self):
@@ -71,7 +71,7 @@ class ProductSyncTest(CLIActionTestCase):
         self.assertEqual(self.action.run(), os.EX_OK)
         
     def test_returns_error_if_sync_failed(self):
-        self.module.run_async_task_with_status.return_value = test_data.SYNC_RESULT_WITH_ERROR
+        self.mock(self.action.api, 'sync', test_data.SYNC_RESULT_WITH_ERROR)
         self.assertEqual(self.action.run(), os.EX_DATAERR)
         
 
