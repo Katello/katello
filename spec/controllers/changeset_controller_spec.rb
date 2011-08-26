@@ -205,6 +205,7 @@ describe ChangesetsController do
     end
 
     describe "GET index" do
+      let(:action) {:index}
       let(:req) { get 'index', :env_id=>@env3.id }
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:read_changesets, :environments, @env3.id, @organization) }
@@ -220,6 +221,7 @@ describe ChangesetsController do
     end
 
     describe "POST update" do
+      let(:action) {:update}
       let(:req) { post 'update', :id=>@cs.id, :name=>"apples" }
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:manage_changesets, :environments, @env3.id, @organization) }
@@ -237,7 +239,7 @@ describe ChangesetsController do
       before do
         @cs2 = Changeset.create(:name=>"FOO2", :environment=>@env2, :state=>"review")
       end
-
+      let(:action) {:promote}
       let(:req) do
         post 'promote', :id=>@cs2.id
       end
