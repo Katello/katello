@@ -43,7 +43,6 @@ class ProductSyncTest(CLIActionTestCase):
         self.set_module(katello.client.core.product)
         
         self.mock_options(self.OPTIONS)
-        self.mock_task_api_status(test_data.SYNC_RESULT_WITHOUT_ERROR)
         
         self.mock(self.action.api, 'sync', test_data.SYNC_RESULT_WITHOUT_ERROR)
         
