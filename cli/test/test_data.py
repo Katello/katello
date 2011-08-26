@@ -396,6 +396,32 @@ SYNC_RUNNING_RESULT = [
 ]
 
 
+EMPTY_CHANGESET ={
+    "name": "CS",
+    "products": [
 
+    ],
+    "created_at": "2011-08-26T09:02:01Z",
+    "errata": [
+
+    ],
+    "updated_at": "2011-08-26T09:02:01Z",
+    "task_status_id": None,
+    "promotion_date": None,
+    "repos": [
+
+    ],
+    "packages": [
+
+    ],
+    "id": 1,
+    "environment_id": 2,
+    "description": None,
+    "state": "new"
+}
+
+CHANGESETS = [
+    EMPTY_CHANGESET
+]
 
 

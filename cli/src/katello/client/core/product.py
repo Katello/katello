@@ -215,7 +215,7 @@ class Promote(ProductAction):
             return os.EX_DATAERR
 
         curTime = datetime.datetime.now()
-        cset = self.csapi.create(orgName, env["id"], "product_promote_"+str(curTime))
+        cset = self.csapi.create(orgName, env["id"], self.create_cs_name())
         try:
             patch = {}
             patch['+products'] = [prodName]
@@ -230,6 +230,8 @@ class Promote(ProductAction):
             self.csapi.delete(cset["id"])
         return os.EX_OK
         
+    def create_cs_name(self):
+        return "product_promotion_"+str(curTime)
 
 # ------------------------------------------------------------------------------
 class Create(ProductAction):

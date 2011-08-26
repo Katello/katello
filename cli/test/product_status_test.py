@@ -30,7 +30,6 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
 class ProductStatusTest(CLIActionTestCase):
     
     ORG = test_data.ORGS[0]
-    ENV = test_data.ENVS[0]
     PROV = test_data.PROVIDERS[2]
     PROD = test_data.PRODUCTS[0]
     
