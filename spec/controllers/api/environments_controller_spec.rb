@@ -17,7 +17,7 @@ describe Api::EnvironmentsController do
 
   before (:each) do
     @org         = Organization.new(:cp_key => "1")
-    @environment = KPEnvironment.new
+    @environment = KTEnvironment.new
     Organization.stub!(:first).and_return(@org)
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
@@ -25,7 +25,7 @@ describe Api::EnvironmentsController do
 
   describe "create an environment" do
     before (:each) do
-      KPEnvironment.should_receive(:new).once.and_return(@environment)
+      KTEnvironment.should_receive(:new).once.and_return(@environment)
       @org.should_receive(:save!).once
     end
 
@@ -36,21 +36,21 @@ describe Api::EnvironmentsController do
 
   describe "get a listing of environments" do
     it 'should call kalpana environment find api' do
-      KPEnvironment.should_receive(:where).once
+      KTEnvironment.should_receive(:where).once
       get 'index', :organization_id => "1"
     end
   end
 
   describe "show a environment" do
-    it 'should call KPEnvironment.first' do
-      KPEnvironment.should_receive(:find).once().and_return(@environment)
+    it 'should call KTEnvironment.first' do
+      KTEnvironment.should_receive(:find).once().and_return(@environment)
       get 'show', :id => 1, :organization_id => "1"
     end
   end
 
   describe "delete a environment" do
     before (:each) do
-      KPEnvironment.should_receive(:find).once().and_return(@environment)
+      KTEnvironment.should_receive(:find).once().and_return(@environment)
     end
 
     it 'should call katello environment find api' do
@@ -60,8 +60,8 @@ describe Api::EnvironmentsController do
   end
 
   describe "update an environment" do
-    it 'should call KPEnvironment update_attributes' do
-      KPEnvironment.should_receive(:find).once().and_return(@environment)
+    it 'should call KTEnvironment update_attributes' do
+      KTEnvironment.should_receive(:find).once().and_return(@environment)
       @environment.should_receive(:update_attributes!).once.and_return(@environment)
       put 'update', :id => 'to_update', :organization_id => "1"
     end

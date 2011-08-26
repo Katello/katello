@@ -14,7 +14,7 @@ require 'spec_helper'
 
 include OrchestrationHelper
 
-describe KPEnvironment do
+describe KTEnvironment do
 
   before(:each) do
 
@@ -36,7 +36,7 @@ describe KPEnvironment do
     @third_product = Product.new(:name =>"prod3", :cp_id => '45678', :provider => @provider, :environments => [@organization.locker])
     @fourth_product = Product.new(:name =>"prod4", :cp_id => '32683', :provider => @provider, :environments => [@organization.locker])
 
-    @environment = KPEnvironment.new({:name => @env_name, :prior => 1}) do |e|
+    @environment = KTEnvironment.new({:name => @env_name, :prior => 1}) do |e|
       e.products << @first_product
       e.products << @third_product
     end
@@ -60,7 +60,7 @@ describe KPEnvironment do
   specify { @environment.products.should include @third_product }
 
   context "prior environment can be set" do
-    before { @new_env = KPEnvironment.create!({
+    before { @new_env = KTEnvironment.create!({
         :name => @environment.name + '-prior',
         :prior => @environment.id,
         :organization => @organization
@@ -76,14 +76,14 @@ describe KPEnvironment do
     it "should delete the environment" do
       id = @environment.id
       @environment.destroy
-      lambda{KPEnvironment.find(id)}.should raise_error(ActiveRecord::RecordNotFound)
+      lambda{KTEnvironment.find(id)}.should raise_error(ActiveRecord::RecordNotFound)
     end
   end
 
   context "available products" do
     
     before(:each) do
-      @prior_env = KPEnvironment.new({:name => @env_name + '-prior', :prior => @environment.id}) do |e|
+      @prior_env = KTEnvironment.new({:name => @env_name + '-prior', :prior => @environment.id}) do |e|
         e.products << @first_product
         e.products << @second_product
         e.products << @third_product
@@ -115,7 +115,7 @@ describe KPEnvironment do
   
   context "create environment with invalid parameters" do
     it "should be invalid to create two envs with the same name within one organization" do
-      @environment2 = KPEnvironment.new({:name => @env_name})
+      @environment2 = KTEnvironment.new({:name => @env_name})
       @organization.environments << @environment2
     
       @environment2.should_not be_valid
@@ -123,7 +123,7 @@ describe KPEnvironment do
     end
     
     it "should be invalid to create an environment without a prior" do
-      @environment2 = KPEnvironment.new({:name => @env_name})
+      @environment2 = KTEnvironment.new({:name => @env_name})
       @organization.environments << @environment2
     
       @environment2.should_not be_valid
@@ -133,8 +133,8 @@ describe KPEnvironment do
   
   context "environment path" do
     before(:each) do
-      @env1 = KPEnvironment.new({:name => @env_name + '-succ1'})
-      @env2 = KPEnvironment.new({:name => @env_name + '-succ2'})
+      @env1 = KTEnvironment.new({:name => @env_name + '-succ1'})
+      @env2 = KTEnvironment.new({:name => @env_name + '-succ2'})
       @organization.environments << @env1
       @organization.environments << @env2
       @env1.prior = @environment.id
@@ -150,27 +150,27 @@ describe KPEnvironment do
   
   context "Test priors" do
     before(:each) do
-      @e1 = KPEnvironment.create!({:name => @env_name + '-succ1', 
+      @e1 = KTEnvironment.create!({:name => @env_name + '-succ1',
                 :organization => @organization, :prior => @environment})
-      @e2 = KPEnvironment.create!({:name => @env_name + '-succ2', 
+      @e2 = KTEnvironment.create!({:name => @env_name + '-succ2',
                 :organization => @organization, :prior => @e1})
       
       @organization.environments << @e1
       @organization.environments << @e2
     end
     
-    specify{ lambda {KPEnvironment.create!({:name => @env_name + '-succ3', 
+    specify{ lambda {KTEnvironment.create!({:name => @env_name + '-succ3',
               :organization => @organization, :prior => @e1})}.should raise_error(ActiveRecord::RecordInvalid)}
               
   end
   
   context "Lockers" do
-    it "should be the only KPEnvironment that can have multiple priors" do
-      @env1 = KPEnvironment.new({:name => @env_name + '1',
+    it "should be the only KTEnvironment that can have multiple priors" do
+      @env1 = KTEnvironment.new({:name => @env_name + '1',
                 :organization => @organization, :prior => @organization.locker})
-      @env2 = KPEnvironment.new({:name => @env_name + '2',
+      @env2 = KTEnvironment.new({:name => @env_name + '2',
                 :organization => @organization, :prior => @organization.locker})
-      @env3 = KPEnvironment.new({:name => @env_name + '3',
+      @env3 = KTEnvironment.new({:name => @env_name + '3',
                 :organization => @organization, :prior => @organization.locker})
                 
       @env1.should be_valid

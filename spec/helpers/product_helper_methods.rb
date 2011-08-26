@@ -4,7 +4,7 @@ module ProductHelperMethods
   
   def new_test_product_with_locker org
 
-    @locker = KPEnvironment.new
+    @locker = KTEnvironment.new
     @locker.locker = true
     @locker.organization = org
     @locker.name = "Locker"

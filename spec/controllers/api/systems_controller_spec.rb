@@ -43,7 +43,7 @@ describe Api::SystemsController do
     Pulp::Consumer.stub!(:update).and_return(true)
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment_1 = KPEnvironment.create!(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
+    @environment_1 = KTEnvironment.create!(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
   end
 
   describe "create a system" do
@@ -66,7 +66,7 @@ describe Api::SystemsController do
 
     context "in organization with multiple environments" do
       before(:each) do
-        @environment_2 = KPEnvironment.new(:name => 'test_2', :prior => @environment_1, :organization => @organization)
+        @environment_2 = KTEnvironment.new(:name => 'test_2', :prior => @environment_1, :organization => @organization)
         @environment_2.save!
       end
 
@@ -138,7 +138,7 @@ describe Api::SystemsController do
 
   describe "list systems" do
     before(:each) do
-      @environment_2 = KPEnvironment.new(:name => 'test_2', :prior => @environment_1, :organization => @organization)
+      @environment_2 = KTEnvironment.new(:name => 'test_2', :prior => @environment_1, :organization => @organization)
       @environment_2.save!
 
       @system_1 = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts)

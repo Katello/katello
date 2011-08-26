@@ -21,7 +21,7 @@ describe SystemTemplate do
     disable_product_orchestration
 
     @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
-    @environment = KPEnvironment.create!(:name => 'env_1', :prior => @organization.locker.id, :organization => @organization)
+    @environment = KTEnvironment.create!(:name => 'env_1', :prior => @organization.locker.id, :organization => @organization)
     @provider     = Provider.create!(:organization => @organization, :name => 'provider', :repository_url => "https://something.url", :provider_type => Provider::REDHAT)
 
     @tpl1 = SystemTemplate.create!(:name => "template_1", :environment => @organization.locker)

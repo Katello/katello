@@ -21,7 +21,7 @@ describe SyncManagementController do
     setup_current_organization
     set_default_locale
 
-    @locker = KPEnvironment.new
+    @locker = KTEnvironment.new
     @mock_org.stub!(:locker).and_return(@locker)
     @locker.stub!(:products).and_return(OpenStruct.new(:readable => [], :syncable=>[]))
   end

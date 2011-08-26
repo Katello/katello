@@ -14,7 +14,7 @@ class ActivationKey < ActiveRecord::Base
   include Authorization
 
   belongs_to :organization
-  belongs_to :environment, :class_name => "KPEnvironment"
+  belongs_to :environment, :class_name => "KTEnvironment"
   belongs_to :user
   belongs_to :system_template
 

@@ -36,8 +36,8 @@ describe Api::ProductsController do
     @organization = Organization.new
     @organization.id = 1
 
-    @environment = KPEnvironment.new
-    @locker = KPEnvironment.new
+    @environment = KTEnvironment.new
+    @locker = KTEnvironment.new
 
     @organization.locker = @locker
     @organization.environments << @environment
@@ -56,10 +56,10 @@ describe Api::ProductsController do
     @product.stub(:repos).and_return(repositories)
 
     Organization.stub!(:first).and_return(@organization)
-    KPEnvironment.stub!(:first).and_return(@environment)
+    KTEnvironment.stub!(:first).and_return(@environment)
 
     Organization.stub!(:find).and_return(@organization)
-    KPEnvironment.stub!(:find).and_return(@environment)
+    KTEnvironment.stub!(:find).and_return(@environment)
 
     @organization.stub!(:locker).and_return(@locker)
 
@@ -79,7 +79,7 @@ describe Api::ProductsController do
     end
 
     it "should find environment" do
-      KPEnvironment.should_receive(:find).once.with(environment_id).and_return([@environment])
+      KTEnvironment.should_receive(:find).once.with(environment_id).and_return([@environment])
       get 'index', :organization_id => organization_id, :environment_id => environment_id
     end
 
@@ -119,7 +119,7 @@ describe Api::ProductsController do
   context "show repositories for a product in an environment" do
 
     it "should find environment" do
-      KPEnvironment.should_receive(:find).once.with(environment_id).and_return([@environment])
+      KTEnvironment.should_receive(:find).once.with(environment_id).and_return([@environment])
       get 'repositories', :organization_id => organization_id, :environment_id => environment_id, :id => product_id
     end
 

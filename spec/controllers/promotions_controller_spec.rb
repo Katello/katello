@@ -44,7 +44,7 @@ describe PromotionsController do
     end
 
     it "should be successful on the locker and a next environment" do
-      @env2 = KPEnvironment.new(:organization=>@org, :locker=>false, :name=>"otherenv", :prior=>@org.locker)
+      @env2 = KTEnvironment.new(:organization=>@org, :locker=>false, :name=>"otherenv", :prior=>@org.locker)
       @env2.save!
       get 'show', :id=>@env.name
       response.should be_success
@@ -54,7 +54,7 @@ describe PromotionsController do
     end
 
     it "should be successful on the next environment with no changeset" do
-      @env2 = KPEnvironment.new(:organization=>@org, :locker=>false, :name=>"otherenv", :prior=>@org.locker)
+      @env2 = KTEnvironment.new(:organization=>@org, :locker=>false, :name=>"otherenv", :prior=>@org.locker)
       @env2.save!
       get 'show', :id=>@env2.name
       response.should be_success
@@ -111,8 +111,8 @@ describe "rules" do
     before (:each) do
       @organization = new_test_org
       @env1 = @organization.locker
-      @env2 = KPEnvironment.create!(:name=>"FOO", :prior => @env1, :organization=>@organization)
-      @env3 = KPEnvironment.create!(:name=>"FOO2", :prior => @env2, :organization=>@organization)
+      @env2 = KTEnvironment.create!(:name=>"FOO", :prior => @env1, :organization=>@organization)
+      @env3 = KTEnvironment.create!(:name=>"FOO2", :prior => @env2, :organization=>@organization)
     end
 
     describe "GET index with changesets readable" do

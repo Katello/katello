@@ -70,7 +70,7 @@ describe Organization do
       org_id = @organization.id
       
       env_name = "prod"      
-      @env = KPEnvironment.new(:name => env_name, :locker => false, :prior => 1)
+      @env = KTEnvironment.new(:name => env_name, :locker => false, :prior => 1)
       @organization.environments << @env
       @env.save!
       
@@ -78,7 +78,7 @@ describe Organization do
       
       lambda{Organization.find(org_id)}.should raise_error(ActiveRecord::RecordNotFound)
       #@env.should_receive(:destroy).at_least(:once)
-      KPEnvironment.where(:name => env_name).all.should be_empty
+      KTEnvironment.where(:name => env_name).all.should be_empty
     end
     
     
@@ -87,11 +87,11 @@ describe Organization do
       
       @org2 = Organization.create!(:name => "foobar", :cp_key => 'foobar')
 
-      @env1 = KPEnvironment.new(:name => env_name, :organization => @organization, :prior => 1)
+      @env1 = KTEnvironment.new(:name => env_name, :organization => @organization, :prior => 1)
       @organization.environments << @env1
       @env1.save!    
       
-      @env2 = KPEnvironment.new(:name => env_name, :organization => @org2, :prior => 1)
+      @env2 = KTEnvironment.new(:name => env_name, :organization => @org2, :prior => 1)
       @org2.environments << @env2
       @env2.save!
       
@@ -99,8 +99,8 @@ describe Organization do
       @organization.destroy
       lambda{Organization.find(id1)}.should raise_error(ActiveRecord::RecordNotFound)
 
-      KPEnvironment.where(:name => env_name).first.should == @env2
-      KPEnvironment.where(:name => env_name).size.should == 1
+      KTEnvironment.where(:name => env_name).first.should == @env2
+      KTEnvironment.where(:name => env_name).size.should == 1
     end
   end
 end

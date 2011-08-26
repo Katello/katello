@@ -36,10 +36,10 @@ describe EnvironmentsController do
     controller.stub!(:errors)
     
     #Candlepin::Owner.stub!(:merge_to).and_return @org
-    @env = mock(KPEnvironment, EnvControllerTest::ENVIRONMENT)
+    @env = mock(KTEnvironment, EnvControllerTest::ENVIRONMENT)
     @env.stub!(:successor).and_return("")
      
-    @locker = mock(KPEnvironment, EnvControllerTest::LOCKER)
+    @locker = mock(KTEnvironment, EnvControllerTest::LOCKER)
     
     @org = new_test_org
 
@@ -48,16 +48,16 @@ describe EnvironmentsController do
     @org.stub!(:locker).and_return(@locker)
 
     Organization.stub!(:first).with(:conditions => {:cp_key=>@org.cp_key}).and_return(@org)
-    KPEnvironment.stub!(:find).and_return(@env)
+    KTEnvironment.stub!(:find).and_return(@env)
   end
 
   describe "GET new" do
     before (:each) do
-      @new_env = mock(KPEnvironment, EnvControllerTest::EMPTY_ENVIRONMENT)
+      @new_env = mock(KTEnvironment, EnvControllerTest::EMPTY_ENVIRONMENT)
     end
 
     it "assigns a new environment as @environment" do
-      KPEnvironment.should_receive(:new).and_return(@new_env)
+      KTEnvironment.should_receive(:new).and_return(@new_env)
       get :new, :organization_id => @org.cp_key
       assigns(:environment).should_not be_nil
     end
@@ -73,14 +73,14 @@ describe EnvironmentsController do
   describe "POST create" do
     describe "with valid params" do
       before(:each) do
-        @new_env = mock(KPEnvironment, EnvControllerTest::EMPTY_ENVIRONMENT)
-        KPEnvironment.stub!(:new).and_return(@new_env)
+        @new_env = mock(KTEnvironment, EnvControllerTest::EMPTY_ENVIRONMENT)
+        KTEnvironment.stub!(:new).and_return(@new_env)
         @new_env.stub!(:save!).and_return(true)
       end
 
 
       it "should create new environment" do
-        KPEnvironment.should_receive(:new).with({:name => 'production',
+        KTEnvironment.should_receive(:new).with({:name => 'production',
               :organization_id => @org.id, :prior => @org.locker, :description => nil}).and_return(@new_env)
         post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
       end
@@ -114,16 +114,16 @@ describe EnvironmentsController do
       
       it "should call katello environment update api" do
         @env.should_receive(:update_attributes).and_return(EnvControllerTest::UPDATED_ENVIRONMENT)
-        put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kp_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
+        put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
       end
 
       it "should generate a success notice" do
         controller.should_receive(:notice)
-        put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kp_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
+        put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
       end
       
       it "should not redirect from edit view" do
-        put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kp_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
+        put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
         response.should_not redirect_to()
       end
     end
@@ -136,11 +136,11 @@ describe EnvironmentsController do
       
       it "should generate an error notice" do
         controller.should_receive(:errors)
-        put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kp_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
+        put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
       end
       
       it "should not redirect from edit view" do
-        put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kp_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
+        put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
         response.should_not redirect_to()
       end
     end

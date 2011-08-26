@@ -22,8 +22,8 @@ describe ActivationKey do
     disable_org_orchestration
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment_1 = KPEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
-    @environment_2 = KPEnvironment.create!(:name => 'test', :prior => @environment_1.id, :organization => @organization)
+    @environment_1 = KTEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
+    @environment_2 = KTEnvironment.create!(:name => 'test', :prior => @environment_1.id, :organization => @organization)
     @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1)
     @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1)
     @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization,

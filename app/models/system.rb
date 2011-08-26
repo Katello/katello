@@ -25,7 +25,7 @@ class System < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
 
-  belongs_to :environment, :class_name => "KPEnvironment", :inverse_of => :systems
+  belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :systems
   belongs_to :system_template
 
   has_many :system_activation_keys, :dependent => :destroy
