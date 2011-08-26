@@ -13,27 +13,31 @@
 shared_examples_for "protected action" do
   before(:each) do
     # it takes action from describe method
-    @controller.stub(stub_action) if defined?(stub_action) && !stub_action.nil?
-    @controller.stub(:render) if defined?(stub_action) && !stub_action.nil?
-    before_action if defined?(before_action) && !before_action.nil?
   end
   context "I have sufficient rights" do
     it "should let me to it" do
-      login_user(:user => authorized_user, :mock => false, :superuser => false)
+      unless defined? on_success
+        @controller.stub(action) 
+        @controller.stub(:render)
+      end
+      login_user(:user =>  authorized_user, :mock => false, :superuser => false)  if defined?  authorized_user 
+      before_success if defined?(before_success)
       @controller.should_not_receive(:render_403)
-      before_success_action if defined?(before_success_action) && !before_success_action.nil?
       req
-      on_success if defined?(on_success) && !on_success.nil?
+      on_success if defined?(on_success)
     end
   end
-
   context "I have not sufficient rights" do
     it "should not let me to it" do
-      login_user(:user => unauthorized_user, :mock => false, :superuser => false)
+      unless defined? on_failure
+        @controller.stub(action)
+        @controller.stub(:render)
+      end
+      login_user(:user =>  unauthorized_user, :mock => false, :superuser => false) if defined?  unauthorized_user 
+      before_failure if defined?(before_failure)      
       @controller.should_receive(:render_403)
-      before_fail_action if defined?(before_fail_action) && !before_fail_action.nil?
       req
-      on_failure if defined?(on_failure) && !on_failure.nil?
+      on_failure if defined?(on_failure)      
     end
   end
 end
