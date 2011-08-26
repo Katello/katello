@@ -16,6 +16,7 @@ describe ChangesetsController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods
+  include AuthorizationHelperMethods
 
   module CSControllerTest
 
@@ -193,5 +194,64 @@ describe ChangesetsController do
     end
 
   end
+
+ describe "rules" do
+    before (:each) do
+      @organization = new_test_org
+      @env1 = @organization.locker
+      @env2 = KPEnvironment.create!(:name=>"FOO", :prior => @env1, :organization=>@organization)
+      @env3 = KPEnvironment.create!(:name=>"FOO2", :prior => @env2, :organization=>@organization)
+      @cs = Changeset.create!(:name=>"FOO", :environment=>@env3, :state=>"promoted")
+    end
+
+    describe "GET index" do
+      let(:req) { get 'index', :env_id=>@env3.id }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read_changesets, :environments, @env3.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      let(:on_success) do
+        assigns(:changesets).should include @cs
+        assigns(:environment).should == @env3
+      end
+      it_should_behave_like "protected action"
+    end
+
+    describe "POST update" do
+      let(:req) { post 'update', :id=>@cs.id, :name=>"apples" }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:manage_changesets, :environments, @env3.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_with_permissions { |u| u.can(:read_changesets, :environments, @env3.id, @organization) }
+      end
+      let(:on_success) do
+        assigns(:environment).should == @env3
+      end
+      it_should_behave_like "protected action"
+    end
+
+    describe "POST promote" do
+      before do
+        @cs2 = Changeset.create(:name=>"FOO2", :environment=>@env2, :state=>"review")
+      end
+
+      let(:req) do
+        post 'promote', :id=>@cs2.id
+      end
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:promote_changesets, :environments, @env2.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_with_permissions { |u| u.can(:read_changesets, :environments, @env2.id, @organization) }
+        user_with_permissions { |u| u.can(:manage_changesets, :environments, @env2.id, @organization) }
+      end
+
+      it_should_behave_like "protected action"
+    end
+  end
+
 
 end
