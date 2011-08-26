@@ -6,7 +6,8 @@
       - if !(@next_env_repos & repo.clone_ids).empty?
         .fr.promoted
           = _("Promoted")
-      %a{:class => "fr content_add_remove remove_repo st_button","data-display_name"=> repo.name, "data-id" => repo.id,
+      - elsif @next_environment && @next_environment.products.member?(@product)
+        %a{:class => "fr content_add_remove remove_repo st_button","data-display_name"=> repo.name, "data-id" => repo.id,
                           "data-type" => "repo", "data-product_id" => @product.id, :id => "add_remove_repo_#{repo.id}"}
       %span.item
         = repo.name
