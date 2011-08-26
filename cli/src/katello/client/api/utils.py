@@ -70,7 +70,7 @@ def get_repo(orgName, prodName, repoName, envName=None):
         print _("Could not find product [ %s ]") % prodName
         return None
 
-    repos = repo_api.repos_by_env_product(env["id"], prod["cp_id"])
+    repos = repo_api.repos_by_env_product(env["id"], prod["id"])
     for repo in repos:
         if repo["name"] == repoName:
             return repo

@@ -93,7 +93,7 @@ class Create(RepoAction):
 
         prod = get_product(orgName, prodName)
         if prod != None:
-            repo = self.api.create(prod["cp_id"], name, url)
+            repo = self.api.create(prod["id"], name, url)
             print _("Successfully created repository [ %s ]") % name
         else:
             print _("No product [ %s ] found") % prodName
@@ -136,7 +136,7 @@ class Discovery(RepoAction):
 
         prod = get_product(orgName, prodName)
         if prod != None:
-            self.create_repositories(prod["cp_id"], name, selectedurls)
+            self.create_repositories(prod["id"], name, selectedurls)
 
         return os.EX_OK
 
@@ -417,13 +417,13 @@ class List(RepoAction):
             prod = get_product(orgName, prodName)
             if env != None and prod != None:
                 self.printer.setHeader(_("Repo List For Org %s Environment %s Product %s") % (orgName, env["name"], prodName))
-                repos = self.api.repos_by_env_product(env["id"], prod["cp_id"])
+                repos = self.api.repos_by_env_product(env["id"], prod["id"])
                 self.printer.printItems(repos)
         elif prodName:
             prod = get_product(orgName, prodName)
             if prod != None:
                 self.printer.setHeader(_("Repo List for Product %s in Org %s ") % (prodName, orgName))
-                repos = self.api.repos_by_product(prod["cp_id"])
+                repos = self.api.repos_by_product(prod["id"])
                 self.printer.printItems(repos)
         else:
             env  = get_environment(orgName, envName)
