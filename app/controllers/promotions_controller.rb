@@ -163,7 +163,8 @@ class PromotionsController < ApplicationController
     @organization = current_organization
     @environment = KPEnvironment.where(:name=>params[:id]).where(:organization_id=>@organization.id).first if params[:id]
     @environment ||= first_env_in_path(accessible_environments, true)
-    raise "Cannot find a readable environment" if @environment.nil?
+    raise Errors::SecurityViolation, _("Cannot find a readable environment.") if @environment.nil?
+
     @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor
     @product = Product.find(params[:product_id]) if params[:product_id]
