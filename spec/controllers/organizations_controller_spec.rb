@@ -29,6 +29,7 @@ describe OrganizationsController do
       @organization = new_test_org
     end
     describe "GET index" do
+      let(:action) {:index}
       let(:req) { get 'index' }
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:read, :organizations,nil, @organization) }
@@ -41,10 +42,6 @@ describe OrganizationsController do
         assigns(:organizations).should include @organization
       end
 
-      let(:on_failure) do
-        assigns(:organizations).should be_nil
-      end
-
       it_should_behave_like "protected action"
     end
 
@@ -54,7 +51,7 @@ describe OrganizationsController do
         @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:name])
         Organization.stub!(:first).and_return(@organization)
       end
-
+      let(:action) {:update}
       let(:req) do
         put 'update', :id => @organization.id, :organization => OrgControllerTest::ORGANIZATION
       end
@@ -63,9 +60,6 @@ describe OrganizationsController do
       end
       let(:unauthorized_user) do
         user_without_permissions
-      end
-      let(:before_success_action) do
-        @organization.should_receive(:update_attributes!).once
       end
       it_should_behave_like "protected action"
     end
