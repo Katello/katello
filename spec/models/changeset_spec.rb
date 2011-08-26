@@ -10,7 +10,7 @@ describe Changeset do
 
       User.current = User.find_or_create_by_username(:username => 'admin', :password => 'admin12345')
       @organization = Organization.create!(:name => 'candyroom', :cp_key => 'test_organization')
-      @environment = KPEnvironment.new({:name => 'julia', :prior=>@organization.locker})
+      @environment = KTEnvironment.new({:name => 'julia', :prior=>@organization.locker})
       @organization.environments << @environment
       @organization.save!
       @environment.save!

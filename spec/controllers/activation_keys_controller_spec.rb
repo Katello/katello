@@ -32,8 +32,8 @@ describe ActivationKeysController do
     login_user
 
     @organization = new_test_org
-    @environment_1 = KPEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
-    @environment_2 = KPEnvironment.create!(:name => 'prod', :prior => @environment_1.id, :organization => @organization)
+    @environment_1 = KTEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
+    @environment_2 = KTEnvironment.create!(:name => 'prod', :prior => @environment_1.id, :organization => @organization)
     @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1)
     @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1)
     @a_key = ActivationKey.create!(:name => "another test key", :organization_id => @organization, :environment => @environment_1)

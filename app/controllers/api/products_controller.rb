@@ -44,7 +44,7 @@ class Api::ProductsController < Api::ApiController
       return @environment = @organization.locker unless @organization.nil?
       return @environment = @product.organization.locker unless @product.nil?
     else
-      @environment = KPEnvironment.find(params[:environment_id])
+      @environment = KTEnvironment.find(params[:environment_id])
     end
   end
 end

@@ -42,7 +42,7 @@ class EnvironmentsController < ApplicationController
 
   # GET /environments/new
   def new
-    @environment = KPEnvironment.new(:organization => @organization)
+    @environment = KTEnvironment.new(:organization => @organization)
     setup_new_edit_screen
     render :partial=>"new", :layout => "tupane_layout"
   end
@@ -66,7 +66,7 @@ class EnvironmentsController < ApplicationController
               :description => params[:description],
               :prior => params[:prior],
               :organization_id => @organization.id}
-    @environment =  KPEnvironment.new env_params
+    @environment =  KTEnvironment.new env_params
 
     @environment.save!
     notice _("Environment '#{@environment.name}' was created.")
@@ -76,19 +76,19 @@ class EnvironmentsController < ApplicationController
 
   # PUT /environments/1
   def update
-    priorUpdated = !params[:kp_environment][:prior].nil?
+    priorUpdated = !params[:kt_environment][:prior].nil?
 
-    unless params[:kp_environment][:description].nil?
-      params[:kp_environment][:description] = params[:kp_environment][:description].gsub("\n",'')
+    unless params[:kt_environment][:description].nil?
+      params[:kt_environment][:description] = params[:kt_environment][:description].gsub("\n",'')
     end
 
-    @environment.update_attributes(params[:kp_environment])
+    @environment.update_attributes(params[:kt_environment])
     @environment.save!
 
     if priorUpdated
       result = @environment.prior.nil? ? _("Locker") : @environment.prior.name
     else
-      result = params[:kp_environment].values.first
+      result = params[:kt_environment].values.first
     end
 
     notice _("Environment '#{@environment.name}' was updated.")
@@ -119,7 +119,7 @@ class EnvironmentsController < ApplicationController
   def find_environment
     begin
       env_id = (params[:id].blank? ? nil : params[:id]) || params[:env_id]
-      @environment = KPEnvironment.find env_id
+      @environment = KTEnvironment.find env_id
     rescue Exception => error
       errors _("Couldn't find environment with ID=#{env_id}")
       execute_after_filters

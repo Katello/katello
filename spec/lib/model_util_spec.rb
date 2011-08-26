@@ -24,8 +24,8 @@ describe Katello::ModelUtils do
     Katello::ModelUtils.table_to_class("system_template").class_name.should match("SystemTemplate")
   end
 
-  it "should work with kp_environment" do
-    Katello::ModelUtils.table_to_class("kp_environment").class_name.should match("KPEnvironment")
+  it "should work with kt_environment" do
+    Katello::ModelUtils.table_to_class("kt_environment").class_name.should match("KTEnvironment")
   end
 
   it "should return tags for organization" do

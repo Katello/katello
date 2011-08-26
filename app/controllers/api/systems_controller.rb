@@ -113,7 +113,7 @@ class Api::SystemsController < Api::ApiController
   def find_environment
     return unless params.has_key?(:environment_id)
 
-    @environment = KPEnvironment.find(params[:environment_id])
+    @environment = KTEnvironment.find(params[:environment_id])
     raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
     @environment
   end

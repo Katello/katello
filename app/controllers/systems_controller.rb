@@ -61,7 +61,7 @@ class SystemsController < ApplicationController
   end
 
   def environments
-    accesible_envs = KPEnvironment.systems_readable(current_organization)
+    accesible_envs = KTEnvironment.systems_readable(current_organization)
 
     @panel_options[:ajax_scroll] = env_items_systems_path()
     begin
@@ -192,8 +192,8 @@ class SystemsController < ApplicationController
 
 
   def find_environment
-    readable = KPEnvironment.systems_readable(current_organization)
-    @environment = KPEnvironment.find(params[:env_id]) if params[:env_id]
+    readable = KTEnvironment.systems_readable(current_organization)
+    @environment = KTEnvironment.find(params[:env_id]) if params[:env_id]
     @environment ||= first_env_in_path(readable, false)
     @environment ||=  current_organization.locker
   end

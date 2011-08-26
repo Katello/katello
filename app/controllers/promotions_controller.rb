@@ -161,18 +161,18 @@ class PromotionsController < ApplicationController
 
   def find_environment
     @organization = current_organization
-    @environment = KPEnvironment.where(:name=>params[:id]).where(:organization_id=>@organization.id).first if params[:id]
+    @environment = KTEnvironment.where(:name=>params[:id]).where(:organization_id=>@organization.id).first if params[:id]
     @environment ||= first_env_in_path(accessible_environments, true)
     raise Errors::SecurityViolation, _("Cannot find a readable environment.") if @environment.nil?
 
-    @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
+    @next_environment = KTEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor
     @product = Product.find(params[:product_id]) if params[:product_id]
   end
 
   def accessible_environments
-    list = KPEnvironment.content_readable(current_organization)
-    KPEnvironment.changesets_readable(current_organization).each{|env|
+    list = KTEnvironment.content_readable(current_organization)
+    KTEnvironment.changesets_readable(current_organization).each{|env|
       list << env.prior if env.prior
     }
     list.uniq

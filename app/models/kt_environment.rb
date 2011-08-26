@@ -52,15 +52,15 @@ class PathDescendentsValidator < ActiveModel::Validator
   end
 end
 
-class KPEnvironment < ActiveRecord::Base
+class KTEnvironment < ActiveRecord::Base
   include Authorization
   set_table_name "environments"
 
   belongs_to :organization, :inverse_of => :environments
   has_many :activation_keys, :dependent => :destroy, :foreign_key => :environment_id
-  has_and_belongs_to_many :priors, {:class_name => "KPEnvironment", :foreign_key => :environment_id,
+  has_and_belongs_to_many :priors, {:class_name => "KTEnvironment", :foreign_key => :environment_id,
     :join_table => "environment_priors", :association_foreign_key => "prior_id", :uniq => true}
-  has_and_belongs_to_many :successors, {:class_name => "KPEnvironment", :foreign_key => "prior_id",
+  has_and_belongs_to_many :successors, {:class_name => "KTEnvironment", :foreign_key => "prior_id",
     :join_table => "environment_priors", :association_foreign_key => :environment_id, :readonly => true}
   has_and_belongs_to_many :products, { :uniq=>true }
   has_many :system_templates, :class_name => "SystemTemplate", :foreign_key => :environment_id
@@ -92,7 +92,7 @@ class KPEnvironment < ActiveRecord::Base
   def prior=(env_id)
     self.priors.clear
     return if env_id.nil? || env_id == ""
-    prior_env = KPEnvironment.find env_id
+    prior_env = KTEnvironment.find env_id
     self.priors << prior_env unless prior_env.nil?
   end
 

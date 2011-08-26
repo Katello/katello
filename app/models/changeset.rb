@@ -42,7 +42,7 @@ class Changeset < ActiveRecord::Base
   has_many :repos, :class_name=>"ChangesetRepo", :inverse_of => :changeset
   has_many :distributions, :class_name=>"ChangesetDistribution", :inverse_of => :changeset
   has_many :dependencies, :class_name=>"ChangesetDependency", :inverse_of =>:changeset
-  belongs_to :environment, :class_name=>"KPEnvironment"
+  belongs_to :environment, :class_name=>"KTEnvironment"
   belongs_to :task_status
   before_save :uniquify_artifacts
 

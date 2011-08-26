@@ -59,7 +59,7 @@ class ChangesetsController < ApplicationController
 
   #changeset history index
   def index
-    accessible_envs = KPEnvironment.changesets_readable(current_organization)
+    accessible_envs = KTEnvironment.changesets_readable(current_organization)
     setup_environment_selector(current_organization, accessible_envs)
     @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size)
     retain_search_history
@@ -257,13 +257,13 @@ class ChangesetsController < ApplicationController
     if @changeset
       @environment = @changeset.environment
     elsif params[:env_id]
-      @environment = KPEnvironment.find(params[:env_id])
+      @environment = KTEnvironment.find(params[:env_id])
     else
       #didnt' find an environment, just do the first the user has access to
-      list = KPEnvironment.changesets_readable(current_organization)
+      list = KTEnvironment.changesets_readable(current_organization)
       @environment ||= list.first || current_organization.locker
     end
-    @next_environment = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
+    @next_environment = KTEnvironment.find(params[:next_env_id]) if params[:next_env_id]
     @next_environment ||= @environment.successor
 
 
