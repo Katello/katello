@@ -112,7 +112,9 @@ def create_data(numorgs, numsystems, numproviders, numproducts, numrepos, single
         systemapi = SystemAPI()
         for x in range(numsystems):
             system_name = "System-%s" % randomString()
-            system = systemapi.register(system_name, org_names[i], random.choice(ENVIRONMENTS), [], 'system')
+            randenv = random.choice(ENVIRONMENTS)
+            print "Registering system: [%s] in environment: [%s]" % (system_name, randenv)
+            system = systemapi.register(system_name, org_names[i], randenv, [], 'system')
             print "[%s] Created system: %s" % (x, system["name"])
         
     
