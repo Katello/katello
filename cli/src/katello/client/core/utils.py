@@ -481,8 +481,14 @@ class AsyncTask():
     def is_running(self):
         return (len(filter(lambda t: t['state'] not in ('finished', 'error', 'timed out', 'canceled', 'not_synced'), self._tasks)) > 0)
 
+    def finished(self):
+        return not self.is_running()
+
     def failed(self):
         return (len(filter(lambda t: t['state'] in ('error', 'timed out'), self._tasks)) > 0)
+
+    def succeeded(self):
+        return not self.failed()
 
     def subtask_count(self):
         return len(self._tasks)
@@ -516,8 +522,9 @@ class AsyncTask():
 
 
 
-def wait_for_async_task(taskStatus):
-    task = AsyncTask(taskStatus)
+def wait_for_async_task(task):
+    if not isinstance(task, AsyncTask):
+        task = AsyncTask(task)
 
     while task.is_running():
         time.sleep(1)
@@ -525,8 +532,9 @@ def wait_for_async_task(taskStatus):
     return task.to_hash()
 
 
-def run_async_task_with_status(taskStatus, progressBar):
-    task = AsyncTask(taskStatus)
+def run_async_task_with_status(task, progressBar):
+    if not isinstance(task, AsyncTask):
+        task = AsyncTask(task)
 
     delay = 1 if not task.is_multiple() else (1.0/self.subtask_count())
     while task.is_running():

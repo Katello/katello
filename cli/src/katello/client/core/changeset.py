@@ -23,7 +23,7 @@ from pprint import pprint
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import system_exit, is_valid_record, get_abs_path, run_spinner_in_bg, format_date, wait_for_async_task
+from katello.client.core.utils import system_exit, is_valid_record, get_abs_path, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask
 from katello.client.api.utils import get_environment, get_changeset
 
 try:
@@ -315,14 +315,12 @@ class Promote(ChangesetAction):
         if cset == None:
             return os.EX_DATAERR
 
-        try:
-            task = self.api.promote(cset["id"])
-        except Exception, e:
-            system_exit(os.EX_DATAERR, _("Error: %s" % e))
+        task = self.api.promote(cset["id"])
+        task = AsyncTask(task)
 
-        result = run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the changeset, please wait... "))
+        run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the changeset, please wait... "))
 
-        if result['state'] == 'finished':
+        if task.succeeded():
             print _("Changeset [ %s ] promoted" % csName)
             return os.EX_OK
         else:
