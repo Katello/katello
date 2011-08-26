@@ -80,13 +80,13 @@ SimpleNavigation::Configuration.run do |navigation|
           activation_key_sub.item :subscriptions, _("Subscriptions"), subscriptions_activation_key_path(@activation_key.id), :class => "navigation_element", 
                                   :controller => "activation_keys"
         end
-      end
+      end if ActivationKey.readable?(current_organization())
     end if current_organization() #end systems
 
     top_level.item :organizations, _("Organizations"), organizations_path(), :class=>'organizations' do |orgs_sub|
        orgs_sub.item :index, _("List"), organizations_path()
        orgs_sub.item :subscriptions, _("Subscriptions"), subscriptions_path()
-    end if current_organization()  #end organization
+    end if current_organization() && Organization.any_readable?  #end organization
 
     top_level.item :operations, _("Administration"), operations_path(), :class=>'operations' do |operations_sub|
       operations_sub.item :users, _("Users"), users_path do |user_sub|
