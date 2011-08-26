@@ -60,7 +60,7 @@ describe Api::SyncController do
 
     it "should find repository if :repository_id is specified" do
       found_repository = Glue::Pulp::Repo.new
-      found_repository.stub!(:environment).and_return(KPEnvironment.new(:locker => true))
+      found_repository.stub!(:environment).and_return(KTEnvironment.new(:locker => true))
 
       Glue::Pulp::Repo.should_receive(:find).once.with(repository_id).and_return(found_repository)
       controller.stub!(:params).and_return({:repository_id => repository_id })

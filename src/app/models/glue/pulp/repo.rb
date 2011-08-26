@@ -210,7 +210,7 @@ class Glue::Pulp::Repo
   end
 
   def environment
-    KPEnvironment.find((get_groupid_param 'env').to_i)
+    KTEnvironment.find((get_groupid_param 'env').to_i)
   end
 
   def product

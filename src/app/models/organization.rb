@@ -18,8 +18,8 @@ class Organization < ActiveRecord::Base
 
   has_many :activation_keys, :dependent => :destroy
   has_many :providers
-  has_many :environments, :class_name => "KPEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
-  has_one :locker, :class_name =>"KPEnvironment", :conditions => {:locker => true}, :dependent => :destroy
+  has_many :environments, :class_name => "KTEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
+  has_one :locker, :class_name =>"KTEnvironment", :conditions => {:locker => true}, :dependent => :destroy
   
   attr_accessor :parent_id,:pools,:statistics
 
@@ -49,7 +49,7 @@ class Organization < ActiveRecord::Base
   end
 
   def create_locker
-    self.locker = KPEnvironment.new(:name => "Locker", :locker => true, :organization => self)
+    self.locker = KTEnvironment.new(:name => "Locker", :locker => true, :organization => self)
   end
 
 
