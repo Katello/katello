@@ -181,13 +181,11 @@ class ApplicationController < ActionController::Base
   end
 
   private
-  # TODO: default organization will be stored within the logged user - this method will be removed
+
   def require_org
     unless session && current_organization
-      logout
-      errors _("You must have at least one organization in your database to access that page. Might need to run 'rake db:seed'"), {:persist => false}
       execute_after_filters
-      redirect_to new_user_session_url and return false
+      raise Errors::SecurityViolation, _("User does not belong to an organization.")
     end
   end
 
