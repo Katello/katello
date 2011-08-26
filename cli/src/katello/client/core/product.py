@@ -213,7 +213,6 @@ class Promote(ProductAction):
         if (env == None):
             return os.EX_DATAERR
 
-        curTime = datetime.datetime.now()
         cset = self.csapi.create(orgName, env["id"], self.create_cs_name())
         try:
             patch = {}
@@ -230,6 +229,7 @@ class Promote(ProductAction):
         return os.EX_OK
         
     def create_cs_name(self):
+        curTime = datetime.datetime.now()
         return "product_promotion_"+str(curTime)
 
 # ------------------------------------------------------------------------------

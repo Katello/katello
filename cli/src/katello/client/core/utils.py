@@ -536,7 +536,7 @@ def run_async_task_with_status(task, progressBar):
     if not isinstance(task, AsyncTask):
         task = AsyncTask(task)
 
-    delay = 1 if not task.is_multiple() else (1.0/self.subtask_count())
+    delay = 1 if not task.is_multiple() else (1.0/task.subtask_count())
     while task.is_running():
         time.sleep(delay)
         task.update()

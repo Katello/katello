@@ -324,7 +324,7 @@ class Promote(ChangesetAction):
             print _("Changeset [ %s ] promoted" % csName)
             return os.EX_OK
         else:
-            print _("Changeset [ %s ] promotion failed: %s" % (csName, json.loads(result["result"])['errors'][0]))
+            print _("Changeset [ %s ] promotion failed: %s" % (csName, json.loads(task.get_hashes()[0]["result"])['errors'][0]))
             return os.EX_DATAERR
 
 
