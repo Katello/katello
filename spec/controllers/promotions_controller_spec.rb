@@ -18,6 +18,7 @@ describe PromotionsController do
   include OrchestrationHelper
   include OrganizationHelperMethods
   include ProductHelperMethods
+  include AuthorizationHelperMethods
 
   before (:each) do
     login_user
@@ -103,6 +104,51 @@ describe PromotionsController do
       assigns(:distributions).size.should == 1
     end
   end
+
+
+
+describe "rules" do
+    before (:each) do
+      @organization = new_test_org
+      @env1 = @organization.locker
+      @env2 = KPEnvironment.create!(:name=>"FOO", :prior => @env1, :organization=>@organization)
+      @env3 = KPEnvironment.create!(:name=>"FOO2", :prior => @env2, :organization=>@organization)
+    end
+
+    describe "GET index with changesets readable" do
+      let(:req) { get 'show' }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read_changesets, :environments, @env3.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      let(:on_success) do
+        assigns(:products).should be_empty
+        assigns(:environment).should == @env2
+        assigns(:next_environment).should == @env3
+      end
+      it_should_behave_like "protected action"
+    end
+
+    describe "GET index with contents readable" do
+      let(:req) { get 'show' }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read_contents, :environments, @env2.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      let(:on_success) do
+        assigns(:products).should be_empty
+        assigns(:environment).should == @env2
+        assigns(:next_environment).should == @env3
+      end
+      it_should_behave_like "protected action"
+    end
+    
+
+end
 
 
 end
