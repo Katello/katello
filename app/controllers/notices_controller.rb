@@ -14,7 +14,7 @@
 # and open the template in the editor.
 
 class NoticesController < ApplicationController
-  skip_before_filter :authorize
+  skip_before_filter :authorize,:require_org
   before_filter :notices_authorize
   include AutoCompleteSearch
   helper_method :sort_column, :sort_direction
