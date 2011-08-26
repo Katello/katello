@@ -117,6 +117,7 @@ describe "rules" do
 
     describe "GET index with changesets readable" do
       let(:req) { get 'show' }
+      let(:action) { :show}
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:read_changesets, :environments, @env3.id, @organization) }
       end
@@ -133,6 +134,7 @@ describe "rules" do
 
     describe "GET index with contents readable" do
       let(:req) { get 'show' }
+      let(:action) { :show}
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:read_contents, :environments, @env2.id, @organization) }
       end
