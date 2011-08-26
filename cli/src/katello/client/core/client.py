@@ -64,7 +64,7 @@ class Remember(ClientAction):
             print ("Successfully " + verb + " option [ {} ] ").format(option)
         except (Exception):
             print "Unsuccessfully remembered option [ {} ]".format(option)
-            return os.EX_DATAERR
+            raise # re-raise to get into main method -> log
 
         return os.EX_OK
 
@@ -88,7 +88,7 @@ class Forget(ClientAction):
             print "Successfully forgot option [ {} ]".format(option)
         except (Exception):
             print "Unsuccessfully forgot option [ {} ]".format(option)
-            return os.EX_DATAERR
+            raise # re-raise to get into main method -> log
 
         return os.EX_OK
 
