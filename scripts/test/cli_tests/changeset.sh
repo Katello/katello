@@ -16,6 +16,7 @@ if [ "$jobs" == "" ]; then
 fi
 
 test "promote changeset with one product" changeset promote --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME"
+sleep 5 # sqlite concurrency workaround
 
 test "changeset create" changeset create --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2"
 test "changeset add package" changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --from_product="$FEWUPS_PRODUCT" --add_package="cheetah"
