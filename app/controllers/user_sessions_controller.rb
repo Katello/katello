@@ -13,7 +13,7 @@
 class UserSessionsController < ApplicationController
   before_filter :require_no_user, :only => [:new, :create]
   before_filter :require_user, :only => [:destroy, :set_org]
-  before_filter :require_org, :only => :destroy
+  skip_before_filter :require_org
   protect_from_forgery
 
   # we need to skip create, destroy and all unauthenticated* methods
