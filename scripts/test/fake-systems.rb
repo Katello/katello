@@ -30,7 +30,7 @@ sys ="system-#{suffix}"
 o = Organization.first
 
 e = o.locker.successor
-e ||= KPEnvironment.create! :name=> "Scooby-#{suffix}", :prior=>o.locker.id, :organization=>o
+e ||= KTEnvironment.create! :name=> "Scooby-#{suffix}", :prior=>o.locker.id, :organization=>o
 
 
 ip = (0..2).collect{rand(255).to_s}.join(".") 
