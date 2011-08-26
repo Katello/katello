@@ -150,9 +150,25 @@ describe Product do
   end
 
   context "validation" do
-    specify { Product.new(:name => 'contains /', :environments => [@organization.locker]).should_not be_valid }
-    specify { Product.new(:name => 'contains #', :environments => [@organization.locker]).should_not be_valid }
-    specify { Product.new(:name => 'contains space', :environments => [@organization.locker]).should be_valid }
+    before(:each) do
+      disable_product_orchestration
+    end
+
+    specify { Product.new(:name => 'contains /', :environments => [@organization.locker], :provider => @provider).should_not be_valid }
+    specify { Product.new(:name => 'contains #', :environments => [@organization.locker], :provider => @provider).should_not be_valid }
+    specify { Product.new(:name => 'contains space', :environments => [@organization.locker], :provider => @provider).should be_valid }
+
+    it "should throw an exception when creating a product with duplicate name in one organization" do
+      @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
+
+      Product.new({
+        :name => @p.name,
+        :id => @p.cp_id,
+        :productContent => @p.productContent,
+        :provider => @p.provider,
+        :environments => @p.environments
+      }).should_not be_valid
+    end
   end
 
   context "product repos" do
