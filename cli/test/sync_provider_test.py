@@ -2,6 +2,7 @@ import unittest
 from mock import Mock
 import os
 from cli_test_utils import CLIOptionTestCase
+import test_data
 
 import katello.client.core.provider
 from katello.client.core.provider import Sync
@@ -32,9 +33,8 @@ class SyncTest(unittest.TestCase):
     PROVIDER = 'provider'
     PROVIDER_ID = '123'
     ORGANIZATION = 'org'
-    SYNC_TASK = {}
-    SYNC_RESULT_WITHOUT_ERROR = [{'state':'finished'}, {'state':'finished'}]
-    SYNC_RESULT_WITH_ERROR = [{'state':'error', 'result':json.dumps({'errors':["some error"]})}, {'state':'finished'}]
+    SYNC_RESULT_WITHOUT_ERROR = test_data.SYNC_RESULT_WITHOUT_ERROR
+    SYNC_RESULT_WITH_ERROR = test_data.SYNC_RESULT_WITH_ERROR
     
     def setUp(self):
         self.original_get_provider = katello.client.core.provider.get_provider
@@ -48,7 +48,7 @@ class SyncTest(unittest.TestCase):
         self.sync_action = Sync()
         
         self.sync_action.api.sync = Mock()
-        self.sync_action.api.sync.return_value = self.SYNC_TASK        
+        self.sync_action.api.sync.return_value = self.SYNC_RESULT_WITHOUT_ERROR
         
     def tearDown(self):
         katello.client.core.provider.get_provider = self.original_get_provider
@@ -75,6 +75,7 @@ class SyncTest(unittest.TestCase):
         
     def test_returns_error_if_sync_failed(self):
         katello.client.core.provider.run_async_task_with_status.return_value = self.SYNC_RESULT_WITH_ERROR
+        self.sync_action.api.sync.return_value = self.SYNC_RESULT_WITH_ERROR
         self.assertEqual(self.sync_action.sync_provider(self.PROVIDER, self.ORGANIZATION), os.EX_DATAERR)
         
         
