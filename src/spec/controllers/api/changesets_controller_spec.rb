@@ -27,6 +27,7 @@ describe Api::ChangesetsController do
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
     @environment = KTEnvironment.create!(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
+    @environment_2 = KTEnvironment.create!(:name => 'test_2', :prior => @environment, :organization => @organization)
     KTEnvironment.stub(:find).and_return(@environment)
 
     @changeset = mock(Changeset)
@@ -52,7 +53,7 @@ describe Api::ChangesetsController do
     user_with_permissions { |u| u.can(:read_changesets,:environments, @environment.id, @organization) }
   end
   let(:user_without_read_permissions) do
-    user_without_permissions
+    user_with_permissions { |u| u.can(:read_changesets,:environments, @environment_2.id, @organization) }
   end
   let(:user_with_manage_permissions) do
     user_with_permissions { |u| u.can([:manage_changesets],:environments, @environment.id, @organization) }
