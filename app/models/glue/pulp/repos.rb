@@ -103,6 +103,7 @@ module Glue::Pulp::Repos
     end
 
     def sync
+      Rails.logger.info "Syncing product #{name}"
       self.repos(locker).collect do |r|
         r.sync
       end.flatten
@@ -127,7 +128,7 @@ module Glue::Pulp::Repos
       top_status = not_synced
 
       for r in repos(self.locker)
-        curr_status = r._get_most_recent_sync_status()
+        curr_status = r.sync_status()
         repo_sync_state = curr_status.state
         if repo_sync_state == ::PulpSyncStatus::Status::ERROR.to_s
           #if one repo sync failed, consider the product sync failed
