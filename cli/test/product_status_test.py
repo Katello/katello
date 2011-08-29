@@ -17,13 +17,13 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.mock_options()
 
     def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['synchronize', '--name=product_1'])
+        self.assertRaises(Exception, self.action.process_options, ['status', '--name=product_1'])
 
     def test_missing_product_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['synchronize', '--org=ACME'])
+        self.assertRaises(Exception, self.action.process_options, ['status', '--org=ACME'])
 
     def test_no_error_if_org_and_product_provided(self):
-        self.action.process_options(['list', '--org=ACME', '--name=product_1'])
+        self.action.process_options(['status', '--org=ACME', '--name=product_1'])
         self.assertEqual(len(self.action.optErrors), 0)
 
         
