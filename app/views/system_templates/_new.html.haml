@@ -1,0 +1,20 @@
+= content_for :title do
+  #{_("New System Template")}
+
+
+= content_for :content do
+  .grid_8#template
+    = form_for template, :html => {:method => :post, :id => 'new_system_template'}, :url => system_templates_path do |form|
+      %fieldset.fl.clear
+        %label.grid_2 #{_("Name")}:
+        .grid_5.la#template_name
+          = form.text_field :name
+
+      %fieldset.fl.clear
+        %label.grid_2 #{_("Description")}:
+        .grid_5.la#template_description
+          = form.text_field :description
+
+
+      .grid_3.la.prefix_2
+        = button_to _("Save"), {:action => "create", :controller => "system_templates"}, :method => :post, :id => :template_save

@@ -139,7 +139,7 @@ class SyncPlansController < ApplicationController
         params[:sync_plan][:sync_date] = nil
       end
       @plan = SyncPlan.create! params[:sync_plan].merge({:organization => current_organization})
-      notice N_("Sync Plan '#{@plan['name']}' was created.")
+      notice _("Sync Plan '#{@plan['name']}' was created.")
       render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval']}
     rescue Exception => error
       Rails.logger.error error.to_s

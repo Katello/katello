@@ -111,6 +111,18 @@ Src::Application.routes.draw do
     end
   end
 
+  resources :system_templates do
+    collection do
+      get :auto_complete_search
+      get :items
+
+    end
+    member do
+
+    end
+  end
+
+
   resources :providers do
     resources :products do
       resources :repositories
