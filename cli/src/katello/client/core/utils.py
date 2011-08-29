@@ -506,7 +506,7 @@ class AsyncTask():
         return self._get_progress_sum('items_left')
 
     def errors(self):
-        return [err for t in self._tasks for err in t['progress']['error_details']]
+        return [err for t in self._tasks if t['progress'].has_key('error_details') for err in t['progress']['error_details']]
 
     def _get_progress_sum(self, name):
         return sum([t['progress'][name] for t in self._tasks])
