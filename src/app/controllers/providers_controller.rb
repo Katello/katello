@@ -130,7 +130,8 @@ class ProvidersController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:provider => @provider, :editable=>@provider.editable?}
+    render :partial => "edit", :layout => "tupane_layout", :locals => {:provider => @provider, :editable=>@provider.editable?,
+                                                                       :javascript_id=>javascript_id + @provider.id.to_s}
   end
 
   def new
@@ -142,7 +143,7 @@ class ProvidersController < ApplicationController
     begin
       @provider = Provider.create! params[:provider].merge({:organization => current_organization})
       notice _("Provider '#{@provider['name']}' was created.")
-      render :partial=>"common/list_item", :locals=>{:item=>@provider, :accessor=>"id", :columns=>['name', 'provider_type']}
+      render :partial=>"common/list_item", :locals=>{:item=>@provider, :accessor=>"id", :columns=>['name', 'provider_type'], :javascript_id=>javascript_id}
 
     rescue Exception => error
       Rails.logger.error error.to_s
@@ -158,7 +159,7 @@ class ProvidersController < ApplicationController
       if @provider.destroyed?
         notice _("Provider '#{@provider[:name]}' was deleted.")
         #render and do the removal in one swoop!
-        render :partial => "common/list_remove", :locals => {:id => @id}
+        render :partial => "common/list_remove", :locals => {:javascript_id=>javascript_id + params[:id].to_s}
       else
         raise
       end
@@ -216,9 +217,13 @@ class ProvidersController < ApplicationController
                  :col => ['name', 'provider_type'],
                  :create => _('Provider'),
                  :name => _('provider'),
+                 :javascript_id => javascript_id,
                  :ajax_scroll=>items_providers_path()}
         @panel_options[:enable_create] = false if !Provider.creatable?(current_organization)
   end
 
+  def javascript_id
+    return "#{_('provider')}_"
+  end
 
 end
