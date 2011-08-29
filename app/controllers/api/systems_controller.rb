@@ -23,7 +23,7 @@ class Api::SystemsController < Api::ApiController
   skip_before_filter :require_user, :only => [:activate]
 
   def rules
-    index_systems = lambda { System.any_readable?(@environment, @organization) }
+    index_systems = lambda { System.any_readable?(@organization) }
     create_system = lambda { System.creatable?(@environment, @organization) }
     edit_system = lambda { @system.editable? }
     read_system = lambda { @system.readable? }
