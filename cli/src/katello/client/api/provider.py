@@ -77,6 +77,12 @@ class ProviderAPI(KatelloAPI):
         return provider
 
 
+    def last_sync_status(self, provId):
+        path = "/api/providers/%s/sync" % provId
+        data = self.server.GET(path)[1]
+        return data
+        
+
     def import_manifest(self, provId, manifestFile):
         path = "/api/providers/%s/import_manifest" % str(provId)
         result = self.server.POST(path, {"import": manifestFile}, multipart=True)[1]
