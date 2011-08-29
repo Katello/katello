@@ -152,7 +152,7 @@ class SystemsController < ApplicationController
   end
   
   def edit
-     render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system, :editable=>@system.editable?}
+     render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system, :editable=>@system.editable?, :javascript_id=>javascript_id + @system.id.to_s}
   end  
 
   def update
@@ -209,9 +209,13 @@ class SystemsController < ApplicationController
                       :enable_create => false,
                       :enable_sort => true,
                       :name => _('system'),
+                      :javascript_id => javascript_id,
                       :list_partial => 'systems/list_systems',
                       :ajax_scroll => items_systems_path()}
   end
 
+  def javascript_id
+    return "#{_('system')}_"
+  end
 
 end
