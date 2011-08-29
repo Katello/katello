@@ -18,9 +18,29 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :upload_package_profile, :errata, :package_profile]
+  before_filter :authorize, :except => :activate
 
   skip_before_filter :require_user, :only => [:activate]
 
+  def rules
+    index_systems = lambda { System.any_readable?(@environment, @organization) }
+    create_system = lambda { System.creatable?(@environment, @organization) }
+    edit_system = lambda { @system.editable? }
+    read_system = lambda { @system.readable? }
+    delete_system = lambda { @system.deletable? }
+
+    {
+      :create => create_system,
+      :regenerate_identity_certificates => edit_system,
+      :update => edit_system,
+      :index => index_systems,
+      :show => read_system,
+      :destroy => delete_system,
+      :package_profile => read_system,
+      :errata => read_system,
+      :upload_package_profile => edit_system,
+    }
+  end
 
   def create
     system = System.create!(params.merge({:environment => @environment}))

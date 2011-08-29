@@ -14,31 +14,68 @@ require 'spec_helper'
 
 describe Api::OrganizationsController do
   include LoginHelperMethods
+  include AuthorizationHelperMethods
+  include OrganizationHelperMethods
+
+  let(:user_with_index_permissions) { user_with_permissions { |u| u.can([:read], :organizations) } }
+  let(:user_without_index_permissions) { user_without_permissions }
+  let(:user_with_read_permissions) { user_with_permissions { |u| u.can(Organization::READ_PERM_VERBS, :organizations) } }
+  let(:user_without_read_permissions) { user_without_permissions }
+  let(:user_with_create_permissions) { user_with_permissions { |u| u.can([:create], :organizations) } }
+  let(:user_without_create_permissions) { user_with_permissions { |u| u.can([:update], :organizations) } }
+  let(:user_with_update_permissions) { user_with_permissions { |u| u.can([:create], :organizations) } }
+  let(:user_without_update_permissions) { user_without_permissions }
+  let(:user_with_destroy_permissions) { user_with_permissions { |u| u.can([:delete], :organizations) } }
+  let(:user_without_destroy_permissions) { user_with_permissions { |u| u.can([:update], :organizations) } }
+
+
 
   before(:each) do
-    @org = Organization.new
+    @organization = @org = new_test_org
+    Organization.stub(:first => @org)
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
   end
 
   describe "create a root org" do
+
+    let(:action) {:create}
+    let(:req) { post 'create', :name => 'test org', :description => 'description' }
+    let(:authorized_user) { user_with_create_permissions }
+    let(:unauthorized_user) { user_without_create_permissions }
+    it_should_behave_like "protected action"
+
     it 'should call kalpana create organization api' do
       Organization.should_receive(:create!).once.with(:name => 'test org', :description => 'description', :cp_key => 'test_org').and_return(@org)
-      post 'create', :name => 'test org', :description => 'description'
+      req
     end
   end
   
   describe "get a listing of organizations" do
+
+    let(:action) {:index}
+    let(:req) { get 'index' }
+    let(:authorized_user) { user_with_index_permissions }
+    let(:unauthorized_user) { user_without_index_permissions }
+    it_should_behave_like "protected action"
+
     it 'should call katello organization find api' do
       Organization.should_receive(:where).once
-      get 'index'
+      req
     end 
   end
   
   describe "show a organization" do
+
+    let(:action) {:show }
+    let(:req) { get 'show', :id => "spec" }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
     it 'should call katello organization find api' do
       Organization.should_receive(:first).once.with(:conditions => {:cp_key => "spec"})
-      get 'show', :id => "spec"
+      req
     end
   end
 
@@ -49,11 +86,18 @@ describe Api::OrganizationsController do
     end
   end
 
-  describe "delete a organization" do    
-    it 'should call organization destroy method' do
+  describe "delete a organization" do
+
+    let(:action) {:destroy }
+    let(:req) { delete 'destroy', :id => "spec" }
+    let(:authorized_user) { user_with_destroy_permissions }
+    let(:unauthorized_user) { user_without_destroy_permissions }
+    it_should_behave_like "protected action"
+
+   it 'should call organization destroy method' do
       Organization.should_receive(:first).once.with(:conditions => {:cp_key => "spec"}).and_return(@org)
       @org.should_receive(:destroy).once
-      delete 'destroy', :id => "spec"
+      req
     end
   end
 
@@ -66,6 +110,13 @@ describe Api::OrganizationsController do
   end
 
   describe "update a organization" do
+
+    let(:action) {:update }
+    let(:req) { put 'update', :id => "spec" }
+    let(:authorized_user) { user_with_update_permissions }
+    let(:unauthorized_user) { user_without_update_permissions }
+    it_should_behave_like "protected action"
+
     it 'should call org update_attributes' do
       Organization.should_receive(:first).once.with(:conditions => {:cp_key => "spec"}).and_return(@org)
       @org.should_receive(:update_attributes!).once

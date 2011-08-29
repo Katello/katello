@@ -14,6 +14,28 @@ class Api::OrganizationsController < Api::ApiController
 
   before_filter :find_organization, :only => [:show, :update, :destroy, :products, :providers]
   respond_to :json
+  before_filter :authorize
+
+  def rules
+    index_test = lambda{Organization.any_readable?}
+    create_test = lambda{Organization.creatable?}
+    read_test = lambda{@organization.readable?}
+    edit_test = lambda{@organization.editable?}
+    delete_test = lambda{@organization.deletable?}
+    providers_test = lambda{Provider.any_readable?(@organization)}
+    products_test = lambda{Product.any_readable?(@organization)}
+
+
+    {:index =>  index_test,
+      :show => read_test,
+      :create => create_test,
+      :update => edit_test,
+      :providers => providers_test,
+      :products => products_test,
+      :destroy => delete_test,
+    }
+  end
+
 
   def index
     render :json => (Organization.where query_params).to_json
