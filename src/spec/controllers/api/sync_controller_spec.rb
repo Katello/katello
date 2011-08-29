@@ -113,4 +113,51 @@ describe Api::SyncController do
       status.any? {|s| s['uuid'] == async_task_2[:id]} .should == true
     end
   end
+
+  describe "cancel a sync" do
+    before(:each) do
+      @organization = Organization.create!(:name => "organization", :cp_key => "123")
+
+      @syncable = mock()
+      @syncable.stub!(:cance_sync)
+      @syncable.stub!(:organization).and_return(@organization)
+
+      Provider.stub!(:find).and_return(@syncable)
+    end
+
+    it "should find provider" do
+      Provider.should_receive(:find).once.with(provider_id).and_return(@syncable)
+      post :create, :provider_id => provider_id
+    end
+
+    it "should call cancel_sync on the object of synchronization" do
+       @syncable.should_receive(:cancel_sync)
+       delete :cancel, :provider_id => provider_id
+    end
+  end
+
+
+  describe "get status of last sync" do
+    before(:each) do
+      @organization = Organization.create!(:name => "organization", :cp_key => "123")
+
+      @syncable = mock()
+      @syncable.stub!(:latest_sync_statuses).once.and_return([async_task_1, async_task_2])
+      @syncable.stub!(:organization).and_return(@organization)
+
+      Provider.stub!(:find).and_return(@syncable)
+    end
+
+    it "should find provider" do
+      Provider.should_receive(:find).once.with(provider_id).and_return(@syncable)
+      post :create, :provider_id => provider_id
+    end
+
+    it "should call latest_sync_statuses on the object of synchronization" do
+       @syncable.should_receive(:latest_sync_statuses)
+       get :index, :provider_id => provider_id
+    end
+  end
+
 end
+
