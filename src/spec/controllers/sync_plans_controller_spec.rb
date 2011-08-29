@@ -88,63 +88,63 @@ describe SyncPlansController do
     it "should update a sync plan name successfully" do
       SyncPlan.first.should_not be_nil
       controller.should_receive(:notice)
-      put :update, :id => @plan.id, :plan => {:name => 'yourplan'}
+      put :update, :id => @plan.id, :sync_plan => {:name => 'yourplan'}
       response.should be_success
     end
 
     it "should update a sync plan interval successfully" do
       SyncPlan.first.should_not be_nil
       controller.should_receive(:notice)
-      put :update, :id => @plan.id, :plan => {:interval => 'daily'}
+      put :update, :id => @plan.id, :sync_plan => {:interval => 'daily'}
       response.should be_success
     end
 
     it "should update interval to none successfully" do
       SyncPlan.first.should_not be_nil
       controller.should_receive(:notice)
-      put :update, :id => @plan.id, :plan => {:interval => 'none'}
+      put :update, :id => @plan.id, :sync_plan => {:interval => 'none'}
       response.should be_success
     end
 
     it "should update a sync plan description successfully" do
       SyncPlan.first.should_not be_nil
       controller.should_receive(:notice)
-      put :update, :id => @plan.id, :plan => {:description => 'Would rather be fishing then writing tests'}
+      put :update, :id => @plan.id, :sync_plan => {:description => 'Would rather be fishing then writing tests'}
       response.should be_success
     end
 
     it "should update a sync time description successfully" do
       SyncPlan.first.should_not be_nil
       controller.should_receive(:notice)
-      put :update, :id => @plan.id, :plan => {:time => '12:00 pm'}
+      put :update, :id => @plan.id, :sync_plan => {:time => '12:00 pm'}
       response.should be_success
     end
 
     it "should update a sync date description successfully" do
       SyncPlan.first.should_not be_nil
       controller.should_receive(:notice)
-      put :update, :id => @plan.id, :plan => {:date => '11/11/11'}
+      put :update, :id => @plan.id, :sync_plan => {:date => '11/11/11'}
       response.should be_success
     end
 
     it "should not update bad sync dates" do
       SyncPlan.first.should_not be_nil
       controller.should_receive(:errors)
-      put :update, :id => @plan.id, :plan => {:date => '11/111111/11'}
+      put :update, :id => @plan.id, :sync_plan => {:date => '11/111111/11'}
       response.should_not be_success
     end
 
     it "should not update bad sync time" do
       SyncPlan.first.should_not be_nil
       controller.should_receive(:errors)
-      put :update, :id => @plan.id, :plan => {:time => '30:00 pmm'}
+      put :update, :id => @plan.id, :sync_plan => {:time => '30:00 pmm'}
       response.should_not be_success
     end
 
     it "should not update a blank name" do
       SyncPlan.first.should_not be_nil
       controller.should_receive(:errors)
-      put :update, :id => @plan.id, :plan => {:name => ''}
+      put :update, :id => @plan.id, :sync_plan => {:name => ''}
       response.should_not be_success
     end
   end

@@ -71,22 +71,22 @@ class SyncPlansController < ApplicationController
   def update
     begin
       updated_plan = SyncPlan.find(params[:id])
-      result = params[:plan].values.first
+      result = params[:sync_plan].values.first
 
-      updated_plan.name = params[:plan][:name] unless params[:plan][:name].nil?
-      updated_plan.interval = params[:plan][:interval] unless params[:plan][:interval].nil?
+      updated_plan.name = params[:sync_plan][:name] unless params[:sync_plan][:name].nil?
+      updated_plan.interval = params[:sync_plan][:interval] unless params[:sync_plan][:interval].nil?
 
-      unless params[:plan][:description].nil?
-        result = updated_plan.description = params[:plan][:description].gsub("\n",'')
+      unless params[:sync_plan][:description].nil?
+        result = updated_plan.description = params[:sync_plan][:description].gsub("\n",'')
       end
 
-      unless params[:plan][:time].nil?
-        ttime = updated_plan.plan_date + ' ' + params[:plan][:time].strip
+      unless params[:sync_plan][:time].nil?
+        ttime = updated_plan.plan_date + ' ' + params[:sync_plan][:time].strip
         updated_plan.sync_date = DateTime.strptime(ttime, '%m/%d/%Y %I:%M %p')
       end
 
-      unless params[:plan][:date].nil?
-        ddate = params[:plan][:date].strip + ' ' + updated_plan.plan_time
+      unless params[:sync_plan][:date].nil?
+        ddate = params[:sync_plan][:date].strip + ' ' + updated_plan.plan_time
         updated_plan.sync_date = DateTime.strptime(ddate, '%m/%d/%Y %I:%M %p')
       end
 
