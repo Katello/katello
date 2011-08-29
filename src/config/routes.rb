@@ -39,11 +39,9 @@ Src::Application.routes.draw do
   match 'notices' => 'notices#show', :via => :get
   match 'notices' => 'notices#destroy_all', :via => :delete
 
-  resources :subscriptions do
-  end
+  resources :subscriptions, :only => [:index]
 
-  resources :dashboard do
-  end
+  resources :dashboard, :only => [:index]
 
   
   resources :systems do
