@@ -13,7 +13,7 @@
   
 = content_for :content do
   #providers
-    %input#panel_element_id{:name => @provider.id, :type => "hidden", :value => @provider.id, "data-ajax_url"=>url_for(:action=> 'update')}
+    %input#panel_element_id{:name => @provider.id, :type => "hidden", :value => javascript_id, "data-ajax_url"=>url_for(:action=> 'update')}
     .grid_9#provider
       = form_for(@provider, :html => {:multipart => true, :method => :put, :id => 'provider_edit', :remote => true}, :url => provider_path(@provider)) do |f|
   
