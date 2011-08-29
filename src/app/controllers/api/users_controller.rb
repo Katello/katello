@@ -13,7 +13,26 @@
 class Api::UsersController < Api::ApiController
 
   before_filter :find_user, :only => [:show, :update, :destroy]
+  before_filter :authorize
   respond_to :json
+
+  def rules
+    index_test = lambda{User.any_readable?}
+    create_test = lambda{User.creatable?}
+
+    read_test = lambda{@user.readable?}
+    edit_test = lambda{@user.editable?}
+    delete_test = lambda{@user.deletable?}
+    user_helptip = lambda{true} #everyone can enable disable a helptip
+
+     {
+       :index => index_test,
+       :show => read_test,
+       :create => create_test,
+       :update => edit_test,
+       :destroy => delete_test,
+     }
+  end
 
   def index
     render :json => (User.where query_params).to_json

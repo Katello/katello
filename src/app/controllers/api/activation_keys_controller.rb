@@ -17,7 +17,6 @@ class Api::ActivationKeysController < Api::ApiController
   before_filter :find_environment, :only => [:index, :create]
   before_filter :find_organization, :only => [:index]
   before_filter :find_activation_key, :only => [:show, :update, :destroy]
-
   before_filter :authorize
 
   def rules

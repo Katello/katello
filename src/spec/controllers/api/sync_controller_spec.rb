@@ -42,6 +42,7 @@ describe Api::SyncController do
   end
 
   describe "find_object" do
+
     it "should find provider if :provider_id is specified" do
       found_provider = {}
       Provider.should_receive(:find).once.with(provider_id).and_return(found_provider)

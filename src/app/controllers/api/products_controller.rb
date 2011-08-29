@@ -15,6 +15,16 @@ class Api::ProductsController < Api::ApiController
   before_filter :find_organization, :only => [:index]
   before_filter :find_product, :only => [:repositories, :show]
   before_filter :find_environment, :only => [:index, :repositories]
+  before_filter :authorize
+
+  def rules
+    read_test = lambda { Product.any_readable?(@organization) }
+    repo_test = lambda { @product.readable? }
+    {
+      :index => read_test,
+      :repositories => repo_test,
+    }
+  end
 
   def show
     render :json => @product.to_json

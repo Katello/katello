@@ -17,6 +17,9 @@ class Api::TemplatesController < Api::ApiController
   before_filter :find_environment, :only => [:create, :import]
   before_filter :find_template, :only => [:show, :update, :update_content, :destroy, :promote, :export]
 
+  # TODO: define authorization rules
+  skip_before_filter :authorize
+
   def index
     templates = SystemTemplate.where(query_params)
     render :json => templates.to_json

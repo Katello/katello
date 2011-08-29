@@ -16,7 +16,10 @@ class Api::RepositoriesController < Api::ApiController
   respond_to :json
   before_filter :find_repository, :only => [:show]
   before_filter :find_product, :only => [:create]
-  
+
+  # TODO: define authorization rules
+  skip_before_filter :authorize
+
   def create
     content = @product.add_new_content(params[:name], params[:url], 'yum')
     render :json => content

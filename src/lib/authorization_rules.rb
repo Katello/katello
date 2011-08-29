@@ -24,7 +24,6 @@ module AuthorizationRules
 
     allowed = false
     rule_set = rules.with_indifferent_access
-    puts "checking rules"
     allowed = rule_set[action].call if Proc === rule_set[action]
     allowed = user.allowed_to? *rule_set[action] if Array === rule_set[action]
     return true if allowed
