@@ -342,6 +342,16 @@ class User < ActiveRecord::Base
 
   protected
 
+  def can_be_deleted?
+    query =  Permission.joins(:resource_type, :role).
+                                joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
+                                  where(:resource_types => {:name => :all}, :organization_id => nil)
+    is_superadmin = query.where("roles_users.user_id" => id).count > 0
+    return true unless is_superadmin
+    more_than_one_supers = query.count > 1
+    more_than_one_supers
+  end
+
   def own_role_included_in_roles
     unless own_role.nil?
       errors.add(:own_role, 'own role must be included in roles') unless roles.include? own_role
@@ -415,17 +425,6 @@ class User < ActiveRecord::Base
                   "left outer join verbs on verbs.id = permissions_verbs.verb_id").where({"roles_users.user_id" => id})
     return query.where(org_clause, org_hash) unless exclude_orgs_clause
     query
-  end
-
-
-  def can_be_deleted?
-    query =  Permission.joins(:resource_type, :role).
-                                joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
-                                  where(:resource_types => {:name => :all}, :organization_id => nil)
-    is_superadmin = query.where("roles_users.user_id" => id).count > 0
-    return true unless is_superadmin
-    more_than_one_supers = query.count > 1
-    more_than_one_supers
   end
 
 end
