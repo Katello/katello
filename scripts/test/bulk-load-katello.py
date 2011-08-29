@@ -100,7 +100,7 @@ def create_data(numorgs, numsystems, numproviders, numproducts, numrepos, single
                     print "    [%s] Creating repo with name: [%s]" % (x, repo_name)
                     repoapi = RepoAPI()
                     url = "http://repos.example.com/%s" % repo_name
-                    repoapi.create(product["cp_id"], repo_name, url)
+                    repoapi.create(product["id"], repo_name, url)
     ## Create systems
     print "Creating [%s] Systems in each org and assigning to random envs" % numsystems 
     for i in range(len(org_names)):
