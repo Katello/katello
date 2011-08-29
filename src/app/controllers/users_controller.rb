@@ -64,7 +64,7 @@ class UsersController < ApplicationController
 
   
   def edit 
-    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:user=>@user, :editable=>@user.editable?}
+    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:user=>@user, :editable=>@user.editable?, :javascript_id=>javascript_id + @user.id.to_s}
   end
   
   def new
@@ -77,7 +77,7 @@ class UsersController < ApplicationController
       @user = User.new(params[:user])
       @user.save!
       notice @user.username + _(" created successfully.")
-      render :partial=>"common/list_item", :locals=>{:item=>@user, :accessor=>"id", :columns=>["username"]}
+      render :partial=>"common/list_item", :locals=>{:item=>@user, :accessor=>"id", :columns=>["username"], :javascript_id=>javascript_id}
     rescue Exception => error
       errors error
       render :json=>@user.errors, :status=>:bad_request
@@ -119,7 +119,7 @@ class UsersController < ApplicationController
       if @user.destroyed?
         notice _("User '#{@user[:username]}' was deleted.")
         #render and do the removal in one swoop!
-        render :partial => "common/list_remove", :locals => {:id => @id} and return
+        render :partial => "common/list_remove", :locals => {:javascript_id => javascript_id + @id.to_s} and return
       end
       errors "", {:list_items => @user.errors.to_a}
       render :text => @user.errors, :status=>:ok
@@ -162,8 +162,13 @@ class UsersController < ApplicationController
                  :col => ['username'],
                  :create => _('User'),
                  :name => _('user'),
+                 :javascript_id => javascript_id,
                  :ajax_scroll => items_users_path(),
                  :enable_create => User.creatable? }
+  end
+
+  def javascript_id
+    return "#{_('user')}_"
   end
 
 end
