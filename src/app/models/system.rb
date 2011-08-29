@@ -85,17 +85,17 @@ class System < ActiveRecord::Base
 
   def readable?
    User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, self.organization) ||
-      User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environment, self.environment.id, self.organization)
+      User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, self.environment.id, self.organization)
   end
 
   def editable?
    User.allowed_to?(*[[:read_systems], :organizations, nil,  self.organization.id]) ||
-      User.allowed_to?(*[[:read_systems], :environment, self.environment.id, self.organization])
+      User.allowed_to?(*[[:read_systems], :environments, self.environment.id, self.organization])
   end
 
   def deletable?
    User.allowed_to?(*[[:delete_systems], :organizations, nil,  self.organization.id]) ||
-      User.allowed_to?(*[[:delete_systems], :environment, self.environment.id, self.organization])
+      User.allowed_to?(*[[:delete_systems], :environments, self.environment.id, self.organization])
   end
 
 
