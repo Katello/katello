@@ -42,7 +42,7 @@
               = col.to_s.sub(/[_]/, " ")
       .arrow-right
       - if custom_rows
-        = render_rows(:collection=>collection, :columns=>columns, :accessor=>accessor)
+        = render_rows(:collection=>collection, :columns=>columns, :accessor=>accessor, :javascript_id=>javascript_id)
       - else
         - for item in collection
           = render :partial=>"common/list_item", :locals=>{:item=>item, :accessor=>accessor, :columns=>columns, :javascript_id=>javascript_id}

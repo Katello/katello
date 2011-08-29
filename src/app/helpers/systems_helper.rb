@@ -14,7 +14,7 @@ module SystemsHelper
   
   def render_rows(options)
     render :partial=>"systems/list_systems",  
-            :locals=>{:accessor=>options[:accessor], :columns=>options[:columns], :collection=>options[:collection]}
+            :locals=>{:accessor=>options[:accessor], :columns=>options[:columns], :collection=>options[:collection], :javascript_id=>options[:javascript_id]}
   end
   
   def get_checkin(system)
