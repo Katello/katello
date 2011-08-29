@@ -900,7 +900,7 @@ var pageActions = (function($){
             
             $('#remove_role').live('click', function(){
                 var button = $(this);
-                common.customConfirm(button.attr('data-confirm-text'), function(){
+                KT.common.customConfirm(button.attr('data-confirm-text'), function(){
                     roleActions.removeRole(button);
                 });         
             });
