@@ -61,10 +61,10 @@ Src::Application.routes.draw do
       get :environments
     end
   end
-  resources :operations do
+  resources :operations, :only => [:index]  do
   end
 
-  resources :packages do
+  resources :packages, :only => [:show] do
     member do
       get :changelog
       get :filelist
@@ -72,7 +72,7 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :errata do
+  resources :errata, :only => [:show] do
     member do
       get :packages
     end
@@ -84,11 +84,7 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :products do
-    member do
-      get :sync
-    end
-  end
+  resources :products, :only => [:new, :create, :edit,:update, :destroy]
 
   resources :owners do
     member do
