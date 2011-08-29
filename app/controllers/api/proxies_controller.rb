@@ -12,6 +12,9 @@
 
 class Api::ProxiesController < Api::ApiController
   before_filter :proxy_request_path, :proxy_request_body
+ 
+  # TODO: define authorization rules
+  skip_before_filter :authorize
 
   rescue_from RestClient::Exception do |e|
     Rails.logger.error pp_exception(e)

@@ -17,6 +17,29 @@ class Api::ProvidersController < Api::ApiController
 
   before_filter :find_organization, :only => [:create]
   before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products, :import_manifest, :product_create]
+  before_filter :authorize
+
+  def rules
+    index_test = lambda{Provider.any_readable?(@organization)}
+    create_test = lambda{Provider.creatable?(@organization)}
+    read_test = lambda{@provider.readable?}
+    edit_test = lambda{@provider.editable?}
+    delete_test = lambda{@provider.deletable?}
+    {
+      :index => index_test,
+      :show => index_test,
+
+      :create => create_test,
+      :update => edit_test,
+      :destroy => delete_test,
+
+      :products => read_test,
+      :import_manifest => edit_test,
+      :import_products => edit_test,
+      :product_create => edit_test,
+    }
+  end
+
 
   def index
     render :json => (Provider.where query_params).to_json
@@ -90,6 +113,7 @@ class Api::ProvidersController < Api::ApiController
 
   def find_provider
     @provider = Provider.find(params[:id])
+    @organization ||= @provider.organization
     raise HttpErrors::NotFound, _("Couldn't find provider '%s'") % params[:id] if @provider.nil?
   end
 

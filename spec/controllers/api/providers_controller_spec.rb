@@ -14,6 +14,12 @@ require 'spec_helper.rb'
 
 describe Api::ProvidersController do
   include LoginHelperMethods
+  include AuthorizationHelperMethods
+
+  let(:user_with_read_permissions) { user_with_permissions { |u| u.can([:read], :providers, nil, @ogranization) } }
+  let(:user_without_read_permissions) { user_without_permissions }
+  let(:user_with_write_permissions) { user_with_permissions { |u| u.can([:delete, :create, :update], :providers, nil, @ogranization) } }
+  let(:user_without_write_permissions) { user_with_permissions { |u| u.can([:read], :providers, nil, @ogranization) } }
 
   PROVIDER_NAME = "name"
   PROVIDER_ID = 1
@@ -26,6 +32,7 @@ describe Api::ProvidersController do
     @provider = Provider.new(:name => PROVIDER_NAME)
     Provider.stub!(:find_by_name).and_return(@provider)
     Provider.stub!(:find).and_return(@provider)
+    @provider.organization = @organization
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     @request.env["organization"] = @organization.name
@@ -55,47 +62,89 @@ describe Api::ProvidersController do
   end
 
   describe "create a provider" do
+
+    let(:action) { :create }
+    let(:req) { post 'create', { :provider => to_create, :organization_id => @organization.cp_key } }
+    let(:authorized_user) { user_with_write_permissions }
+    let(:unauthorized_user) { user_without_write_permissions }
+    it_should_behave_like "protected action"
+
     it "should call Provider.create!" do
       Provider.should_receive(:create!).and_return(Provider.new)
-      post 'create', { :provider => to_create, :organization_id => @organization.cp_key }
+      req
     end
   end
 
   describe "update a provider" do
+
+    let(:action) { :update }
+    let(:req) { put 'update', { :id => PROVIDER_ID, :provider => { :name => ANOTHER_PROVIDER_NAME }} }
+    let(:authorized_user) { user_with_write_permissions }
+    let(:unauthorized_user) { user_without_write_permissions }
+    it_should_behave_like "protected action"
+
     it "should call Provider#update_attributes" do
       Provider.should_receive(:find).with(PROVIDER_ID).and_return(@provider)
       @provider.should_receive(:update_attributes!).once
       
-      put 'update', { :id => PROVIDER_ID, :provider => { :name => ANOTHER_PROVIDER_NAME }}
+      req
     end
   end
 
   describe "find a provider" do
+
+    let(:action) { :show }
+    let(:req) { get :show, :id => PROVIDER_ID }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
     it "should call Provider.first" do
       Provider.should_receive(:find).with(PROVIDER_ID).and_return(@provider)
       
-      get :show, :id => PROVIDER_ID
+      req
     end
   end
 
   describe "delete a provider" do
-    it "should remove the specified provider" do
+ 
+    let(:action) { :destroy }
+    let(:req) { delete :destroy, :id => PROVIDER_ID }
+    let(:authorized_user) { user_with_write_permissions }
+    let(:unauthorized_user) { user_without_write_permissions }
+    it_should_behave_like "protected action"
+
+   it "should remove the specified provider" do
       Provider.should_receive(:find).with(PROVIDER_ID).and_return(@provider)
       @provider.should_receive(:destroy).once
-      delete :destroy, :id => PROVIDER_ID
+      req
     end
   end
 
   describe "product create" do
+
+    let(:action) { :product_create }
+    let(:req) { post 'product_create', { :id => PROVIDER_ID , :product => product_to_create } }
+    let(:authorized_user) { user_with_write_permissions }
+    let(:unauthorized_user) { user_without_write_permissions }
+    it_should_behave_like "protected action"
+
+
     it "should remove the specified provider" do
       Provider.should_receive(:find).with(PROVIDER_ID).and_return(@provider)
       @provider.should_receive(:add_custom_product).once
-      post 'product_create', { :id => PROVIDER_ID , :product => product_to_create }
+      req
     end
   end
   
   describe "import manifest" do
-    
+
+    let(:action) { :import_manifest }
+    let(:req) { post :import_manifest, { :id => PROVIDER_ID , :import => @temp_file } }
+    let(:authorized_user) { user_with_write_permissions }
+    let(:unauthorized_user) { user_without_write_permissions }
+    it_should_behave_like "protected action"
+
     before(:each) do
       @temp_file = mock(File)
       @temp_file.stub(:read).and_return('FILE_DATA')
@@ -109,7 +158,7 @@ describe Api::ProvidersController do
     it "should call Provider#import_manifest" do
       Provider.should_receive(:find).with(PROVIDER_ID).and_return(@provider)
       @provider.should_receive(:import_manifest).once
-      post :import_manifest, { :id => PROVIDER_ID , :import => @temp_file }
+      req
     end
   end
 
