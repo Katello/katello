@@ -60,7 +60,7 @@ class Api::EnvironmentsController < Api::ApiController
   end
 
   def repositories
-    render :json => @environment.products.collect { |p| p.repos(@environment) }.flatten
+    render :json => @environment.products.readable.collect { |p| p.repos(@environment) }.flatten
   end
 
   def find_environment
