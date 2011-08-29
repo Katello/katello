@@ -39,6 +39,9 @@ class SystemTemplate < ActiveRecord::Base
   #has_many :products
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :system_templates
 
+
+  scoped_search :on => :name, :complete_value => true, :rename => :'system_template.name'
+
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :environment_id
   validates_with ParentTemplateValidator
@@ -187,6 +190,29 @@ class SystemTemplate < ActiveRecord::Base
     end
   end
 
+
+  #### Permissions
+   
+
+  def self.any_readable? org
+    return true
+    
+  end
+
+  def self.creatable? org
+    true
+  end
+
+  def readable?
+    true
+  end
+
+  def editable?
+    true
+  end
+
+
+
   protected
 
   def changeset_errata(errata)
@@ -241,4 +267,9 @@ class SystemTemplate < ActiveRecord::Base
       raise Errors::TemplateContentException.new("The template has children templates.")
     end
   end
+
+
+  
+
+
 end
