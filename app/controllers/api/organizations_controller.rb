@@ -38,7 +38,7 @@ class Api::OrganizationsController < Api::ApiController
 
 
   def index
-    render :json => (Organization.where query_params).to_json
+    render :json => (Organization.readable.where query_params).to_json
   end
 
   def show

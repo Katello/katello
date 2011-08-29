@@ -60,6 +60,7 @@ describe Api::OrganizationsController do
     it_should_behave_like "protected action"
 
     it 'should call katello organization find api' do
+      Organization.should_receive(:readable).at_least(:once).and_return(Organization)
       Organization.should_receive(:where).once
       req
     end 
