@@ -425,3 +425,105 @@ CHANGESETS = [
 ]
 
 
+REPOS = [
+    {
+    "package_count": 0,
+    "name": "prod_a2_fakerepos_zoo",
+    "clone_ids": [
+
+    ],
+    "keys": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/keys/",
+    "uri_ref": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/",
+    "use_symlinks": False,
+    "content_types": "yum",
+    "packagegroupcategories": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/packagegroupcategories/",
+    "consumer_cert": None,
+    "errata": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/errata/",
+    "files": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/files/",
+    "notes": None,
+    "relative_path": "fakerepos/zoo",
+    "arch": "noarch",
+    "checksum_type": "sha256",
+    "_id": "1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation",
+    "packages": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/packages/",
+    "next_scheduled_time": None,
+    "sync_state": "not_synced",
+    "id": "1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation",
+    "publish": True,
+    "last_sync": None,
+    "comps": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/comps/",
+    "filters": [
+
+    ],
+    "sync_schedule": None,
+    "files_count": 82,
+    "groupid": [
+        "product:1314606161997",
+        "env:1",
+        "org:1"
+    ],
+    "packagegroups": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/packagegroups/",
+    "distribution": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/distribution/",
+    "distributionid": [
+
+    ],
+    "consumer_ca": None,
+    "source": {
+        "url": "http://lzap.fedorapeople.org/fakerepos/zoo",
+        "type": "remote"
+    },
+    "feed_cert": None,
+    "feed_ca": None
+    },
+    {
+    "package_count": 0,
+    "name": "prod_a2_fakerepos_fewupdates",
+    "clone_ids": [
+
+    ],
+    "keys": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/keys/",
+    "uri_ref": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/",
+    "use_symlinks": False,
+    "content_types": "yum",
+    "packagegroupcategories": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/packagegroupcategories/",
+    "consumer_cert": None,
+    "errata": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/errata/",
+    "files": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/files/",
+    "notes": None,
+    "relative_path": "fakerepos/fewupdates",
+    "arch": "noarch",
+    "checksum_type": "sha256",
+    "_id": "1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation",
+    "packages": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/packages/",
+    "next_scheduled_time": None,
+    "sync_state": "not_synced",
+    "id": "1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation",
+    "publish": True,
+    "last_sync": None,
+    "comps": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/comps/",
+    "filters": [
+
+    ],
+    "sync_schedule": None,
+    "files_count": 89,
+    "groupid": [
+        "product:1314606161997",
+        "env:1",
+        "org:1"
+    ],
+    "packagegroups": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/packagegroups/",
+    "distribution": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/distribution/",
+    "distributionid": [
+
+    ],
+    "consumer_ca": None,
+    "source": {
+        "url": "http://lzap.fedorapeople.org/fakerepos/fewupdates",
+        "type": "remote"
+    },
+    "feed_cert": None,
+    "feed_ca": None
+    }
+]
+
+

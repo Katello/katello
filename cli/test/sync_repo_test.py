@@ -34,7 +34,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.assertEqual(len(self.action.optErrors), 0)
 
     def test_no_error_if_required_repo_id_provided(self):
-        self.action.process_options(['synchronize', '--org=ACME', '--repo_id=repo_id1'])
+        self.action.process_options(['synchronize', '--repo_id=repo_id1'])
         self.assertEqual(len(self.action.optErrors), 0)
 
 

@@ -67,9 +67,6 @@ class ProductStatusTest(CLIActionTestCase):
         self.action.run()
         self.action.api.last_sync_status.assert_called_once_with(self.PROD['id'])
 
-    def get_progress(self):
-        self.product['progress']
-
     def test_it_does_not_set_progress_for_not_running_sync(self):
         self.action.run()
         self.assertRaises(KeyError, lambda: self.product['progress'] )
@@ -77,7 +74,7 @@ class ProductStatusTest(CLIActionTestCase):
     def test_it_sets_progress_for_running_sync(self):
         self.mock(self.action.api, 'last_sync_status', test_data.SYNC_RUNNING_RESULT)
         self.action.run()
-        self.assertTrue(self.product['progress'], str)
+        self.assertTrue(isinstance(self.product['progress'], str))
 
         
 
