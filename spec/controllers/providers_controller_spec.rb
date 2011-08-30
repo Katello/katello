@@ -16,7 +16,8 @@ describe ProvidersController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods
-
+  include AuthorizationHelperMethods
+  
   before(:each) do
     login_user
     set_default_locale
@@ -52,10 +53,50 @@ describe ProvidersController do
       test_export = File.new("#{Rails.root}/spec/controllers/export.zip")
       contents = {:contents => test_export}
       id = @provider.id.to_s
-      
-      post 'subscriptions', {:id => id, :provider => contents}
+      post 'update_subscriptions', {:id => id, :provider => contents}
       response.should be_success
     end
   end
+
+
+  describe "rules" do
+    before (:each) do
+      @organization = new_test_org
+      @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
+      @provider2 = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo2", :organization=>@organization)
+    end
+    describe "GET index" do
+      let(:action) {:index}
+      let(:req) { get 'index' }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :providers, @provider.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      let(:on_success) do
+        assigns(:providers).should_not include @provider2
+        assigns(:providers).should include @provider
+      end
+
+      it_should_behave_like "protected action"
+    end
+
+    describe "update org put" do
+
+      let(:action) {:update}
+      let(:req) do
+        put 'update', :id => @provider.id, :name=>"bar"
+      end
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update, :providers, @provider.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+    end
+  end
+
 
 end

@@ -15,7 +15,7 @@ require 'helpers/product_test_data'
 
 include OrchestrationHelper
 
-describe Product do  
+describe Product do
 
   before(:each) do
     disable_org_orchestration
@@ -28,7 +28,7 @@ describe Product do
     ProductTestData::PRODUCT_WITH_ATTRS.merge!({:provider => @provider, :environments => [@organization.locker]})
     ProductTestData::PRODUCT_WITH_CONTENT.merge!({:provider => @provider, :environments => [@organization.locker]})
   end
-  
+
   describe "create product" do
 
     context "new product" do
@@ -60,7 +60,7 @@ describe Product do
           expected_product = {
               :attributes => ProductTestData::PRODUCT_WITH_ATTRS[:attributes],
               :multiplier => ProductTestData::PRODUCT_WITH_ATTRS[:multiplier],
-              :name => ProductTestData::PRODUCT_WITH_ATTRS[:name]
+              :name => @provider.name+"_"+ProductTestData::PRODUCT_WITH_ATTRS[:name]
           }
 
           Candlepin::Product.should_receive(:create).once.with(hash_including(expected_product)).and_return({:id => 1})
@@ -150,9 +150,25 @@ describe Product do
   end
 
   context "validation" do
-    specify { Product.new(:name => 'contains /', :environments => [@organization.locker]).should_not be_valid }
-    specify { Product.new(:name => 'contains #', :environments => [@organization.locker]).should_not be_valid }
-    specify { Product.new(:name => 'contains space', :environments => [@organization.locker]).should be_valid }
+    before(:each) do
+      disable_product_orchestration
+    end
+
+    specify { Product.new(:name => 'contains /', :environments => [@organization.locker], :provider => @provider).should_not be_valid }
+    specify { Product.new(:name => 'contains #', :environments => [@organization.locker], :provider => @provider).should_not be_valid }
+    specify { Product.new(:name => 'contains space', :environments => [@organization.locker], :provider => @provider).should be_valid }
+
+    it "should throw an exception when creating a product with duplicate name in one organization" do
+      @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
+
+      Product.new({
+        :name => @p.name,
+        :id => @p.cp_id,
+        :productContent => @p.productContent,
+        :provider => @p.provider,
+        :environments => @p.environments
+      }).should_not be_valid
+    end
   end
 
   context "product repos" do

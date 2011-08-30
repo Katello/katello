@@ -16,6 +16,7 @@ describe ChangesetsController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods
+  include AuthorizationHelperMethods
 
   module CSControllerTest
 
@@ -36,9 +37,9 @@ describe ChangesetsController do
 
     CSControllerTest::ENVIRONMENT["organization"] = @org
     CSControllerTest::ENVIRONMENT["prior"] = @org.locker.id
-    @env = KPEnvironment.create!(CSControllerTest::ENVIRONMENT)
+    @env = KTEnvironment.create!(CSControllerTest::ENVIRONMENT)
     CSControllerTest::NEXT_ENVIRONMENT["organization"] = @org
-    @next_env = KPEnvironment.new(CSControllerTest::NEXT_ENVIRONMENT)
+    @next_env = KTEnvironment.new(CSControllerTest::NEXT_ENVIRONMENT)
     @next_env.prior = @env;
     @next_env.save!
 
@@ -125,7 +126,7 @@ describe ChangesetsController do
 
     it 'should cause an error notification if name is left blank' do
       controller.should_receive(:errors)
-      post 'create', {:env_id => @env.id, :changesets => { :name => ''}}
+      post 'create', {:env_id => @env.id, :name => ''}
       response.should_not be_success
     end
 
@@ -193,5 +194,66 @@ describe ChangesetsController do
     end
 
   end
+
+ describe "rules" do
+    before (:each) do
+      @organization = new_test_org
+      @env1 = @organization.locker
+      @env2 = KTEnvironment.create!(:name=>"FOO", :prior => @env1, :organization=>@organization)
+      @env3 = KTEnvironment.create!(:name=>"FOO2", :prior => @env2, :organization=>@organization)
+      @cs = Changeset.create!(:name=>"FOO", :environment=>@env3, :state=>"promoted")
+    end
+
+    describe "GET index" do
+      let(:action) {:index}
+      let(:req) { get 'index', :env_id=>@env3.id }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read_changesets, :environments, @env3.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      let(:on_success) do
+        assigns(:changesets).should include @cs
+        assigns(:environment).should == @env3
+      end
+      it_should_behave_like "protected action"
+    end
+
+    describe "POST update" do
+      let(:action) {:update}
+      let(:req) { post 'update', :id=>@cs.id, :name=>"apples" }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:manage_changesets, :environments, @env3.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_with_permissions { |u| u.can(:read_changesets, :environments, @env3.id, @organization) }
+      end
+      let(:on_success) do
+        assigns(:environment).should == @env3
+      end
+      it_should_behave_like "protected action"
+    end
+
+    describe "POST promote" do
+      before do
+        @cs2 = Changeset.create(:name=>"FOO2", :environment=>@env2, :state=>"review")
+      end
+      let(:action) {:promote}
+      let(:req) do
+        post 'promote', :id=>@cs2.id
+      end
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:promote_changesets, :environments, @env2.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_with_permissions { |u| u.can(:read_changesets, :environments, @env2.id, @organization) }
+        user_with_permissions { |u| u.can(:manage_changesets, :environments, @env2.id, @organization) }
+      end
+
+      it_should_behave_like "protected action"
+    end
+  end
+
 
 end

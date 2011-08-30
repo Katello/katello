@@ -16,12 +16,35 @@ class ActivationKeysController < ApplicationController
 
   before_filter :require_user
   before_filter :find_activation_key, :only => [:show, :edit, :edit_environment, :update, :destroy, :subscriptions, :update_subscriptions]
+  before_filter :authorize #after find_activation_key, since the key is required for authorization
   before_filter :panel_options, :only => [:index, :items]
 
   respond_to :html, :js
 
   def section_id
     'systems'
+  end
+
+  def rules
+    read_test = lambda{ActivationKey.readable?(current_organization)}
+    manage_test = lambda{ActivationKey.manageable?(current_organization)}
+    {
+      :index => read_test,
+      :items => read_test,
+      :show => read_test,
+
+      :new => manage_test,
+      :create => manage_test,
+
+      :edit => read_test,
+      :edit_environment => read_test,
+      :update => manage_test,
+
+      :subscriptions => read_test,
+      :update_subscriptions => manage_test,
+
+      :destroy => manage_test
+    }
   end
 
   def index
@@ -57,7 +80,8 @@ class ActivationKeysController < ApplicationController
         end
       end
     end
-    render :partial=>"subscriptions", :layout => "tupane_layout", :locals=>{:akey=>@activation_key, :subscriptions => subscriptions, :consumed => consumed}
+    render :partial=>"subscriptions", :layout => "tupane_layout", :locals=>{:akey=>@activation_key, :subscriptions => subscriptions,
+                                                                            :consumed => consumed, :editable=>ActivationKey.manageable?(current_organization)}
   end
 
   def update_subscriptions
@@ -103,7 +127,8 @@ class ActivationKeysController < ApplicationController
     templates[''] = no_template
     @system_templates_json = ActiveSupport::JSON.encode(templates)
     @system_template = SystemTemplate.find(@activation_key.system_template_id) unless @activation_key.system_template_id.nil?
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key}
+    render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key,
+                                                                       :editable=>ActivationKey.manageable?(current_organization)}
   end
 
   def edit_environment
@@ -198,6 +223,7 @@ class ActivationKeysController < ApplicationController
       :create => _('Key'), 
       :name => _('key'),
       :ajax_scroll => items_activation_keys_path()}
+    @panel_options[:enable_create] = false if !ActivationKey.manageable?(current_organization)
   end
 
   private

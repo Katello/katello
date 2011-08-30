@@ -24,7 +24,7 @@ describe Api::ActivationKeysController do
       o.id = 1234
     end
 
-    @environment = KPEnvironment.new(:organization => @organization)
+    @environment = KTEnvironment.new(:organization => @organization)
     @activation_key = ActivationKey.new(:name => 'activation key')
   end
 
@@ -45,7 +45,7 @@ describe Api::ActivationKeysController do
 
   context "before_filter :find_environment should retrieve environment" do
     before do
-      KPEnvironment.should_receive(:find).once.with(123).and_return(@environment)
+      KTEnvironment.should_receive(:find).once.with(123).and_return(@environment)
     end
 
     specify { get :index, :environment_id => 123 }
@@ -53,7 +53,7 @@ describe Api::ActivationKeysController do
   end
 
   it "before_filter :find_environment should return 404 if environment wasn't found" do
-    KPEnvironment.stub!(:find).and_return(nil)
+    KTEnvironment.stub!(:find).and_return(nil)
 
     get :index, :environment_id => 123
     response.status.should == 404
@@ -92,7 +92,7 @@ describe Api::ActivationKeysController do
 
   context "create an activation key" do
     before(:each) do
-      KPEnvironment.stub!(:find).and_return(@environment)
+      KTEnvironment.stub!(:find).and_return(@environment)
       ActivationKey.stub!(:find).and_return(@activation_key)
     end
 

@@ -13,15 +13,44 @@
 class SystemsController < ApplicationController
   include AutoCompleteSearch
   include SystemsHelper
+
+
   before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments]
+
+  skip_before_filter :authorize
+  before_filter :find_environment, :only => [:environments, :env_items]
+  before_filter :authorize
+
   before_filter :setup_options, :only => [:index, :items, :environments]
 
   # two pane columns and mapping for sortable fields
   COLUMNS = {'name' => 'name', 'lastCheckin' => 'lastCheckin', 'created' => 'created_at' }
-  
+
+
+  def rules
+    edit_system = lambda{System.find(params[:id]).editable?}
+    read_system = lambda{System.find(params[:id]).readable?}
+    env_system = lambda{@environment.systems_readable?}
+    any_readable = lambda{System.any_readable?(current_organization)}
+
+    {
+      :index => any_readable,
+      :items => any_readable,
+      :environments => env_system,
+      :env_items => env_system,
+      :subscriptions => read_system,
+      :update_subscriptions => edit_system,
+      :packages => read_system,
+      :update => edit_system,
+      :edit => read_system,
+      :show => read_system,
+      :facts => read_system
+    }
+  end
+
   def index
     begin
-      @systems = System.search_for(params[:search]).where(:environment_id => current_organization.environments).limit(current_user.page_size)
+      @systems = System.readable(current_organization).search_for(params[:search]).limit(current_user.page_size)
       retain_search_history
       sort_columns(COLUMNS,@systems) if params[:order]
     rescue Exception => error
@@ -32,17 +61,20 @@ class SystemsController < ApplicationController
   end
 
   def environments
+    accesible_envs = KTEnvironment.systems_readable(current_organization)
+
+    @panel_options[:ajax_scroll] = env_items_systems_path()
     begin
-      @environment = KPEnvironment.find params[:env_id] if !params[:env_id].blank?
+
       @systems = []
-      
-      setup_environment_selector(current_organization)
+
+      setup_environment_selector(current_organization, accesible_envs)
       if @environment
         @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size) 
         retain_search_history
         sort_columns(COLUMNS,@systems) if params[:order]
       end
-      render :index, :locals=>{:envsys => 'true'}
+      render :index, :locals=>{:envsys => 'true', :accessible_envs=> accesible_envs}
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
       @systems = System.search_for ''
@@ -52,19 +84,14 @@ class SystemsController < ApplicationController
 
   def items
     start = params[:offset]
-    @systems = System.search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @systems = System.readable(current_organization).search_for(params[:search]).limit(current_user.page_size).offset(start)
     render_panel_items @systems, @panel_options
   end
 
-  def setup_options
-    @panel_options = { :title => _('Systems'),
-                      :col => COLUMNS.keys,
-                      :custom_rows => true,
-                      :enable_create => false,
-                      :enable_sort => true,
-                      :name => _('system'),
-                      :list_partial => 'systems/list_systems',
-                      :ajax_scroll => items_systems_path()}
+  def env_items
+    start = params[:offset]
+    @systems = System.readable(current_organization).search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size).offset(start)
+    render_panel_items @systems, @panel_options
   end
 
   def subscriptions
@@ -72,7 +99,9 @@ class SystemsController < ApplicationController
     consumed = @system.consumed_pool_ids
     all_pools = all.collect {|pool| OpenStruct.new(:poolId => pool["id"], :poolName => pool["productName"])}
     all_pools.sort! {|a,b| a.poolName <=> b.poolName}
-    render :partial=>"subscriptions", :layout => "tupane_layout", :locals=>{:system=>@system, :all_subs => all_pools, :consumed => consumed}
+    render :partial=>"subscriptions", :layout => "tupane_layout", :locals=>{:system=>@system, :all_subs => all_pools,
+                                                        :consumed => consumed, :editable=>@system.editable?}
+
   end
 
   def update_subscriptions
@@ -123,7 +152,7 @@ class SystemsController < ApplicationController
   end
   
   def edit
-     render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system}
+     render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system, :editable=>@system.editable?}
   end  
 
   def update
@@ -160,9 +189,29 @@ class SystemsController < ApplicationController
 
   private
   include SortColumnList
-  
+
+
+  def find_environment
+    readable = KTEnvironment.systems_readable(current_organization)
+    @environment = KTEnvironment.find(params[:env_id]) if params[:env_id]
+    @environment ||= first_env_in_path(readable, false)
+    @environment ||=  current_organization.locker
+  end
+
   def find_system
     @system = System.find(params[:id])
   end
+
+  def setup_options
+    @panel_options = { :title => _('Systems'),
+                      :col => COLUMNS.keys,
+                      :custom_rows => true,
+                      :enable_create => false,
+                      :enable_sort => true,
+                      :name => _('system'),
+                      :list_partial => 'systems/list_systems',
+                      :ajax_scroll => items_systems_path()}
+  end
+
 
 end

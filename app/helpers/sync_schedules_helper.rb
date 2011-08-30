@@ -18,7 +18,7 @@ module SyncSchedulesHelper
       when 'daily'
         _("Daily at #{item.plan_time} from #{item.plan_date} #{item.plan_zone}")
       when 'weekly'
-        _("Every #{plan_day} at #{item.plan_time} from #{item.plan_date} #{item.plan_zone}")
+        _("Every #{item.plan_day} at #{item.plan_time} from #{item.plan_date} #{item.plan_zone}")
       else
         _("Hourly from #{item.plan_date} - #{item.plan_time} #{item.plan_zone}")
     end

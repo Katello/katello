@@ -96,7 +96,7 @@ module Glue::Candlepin::Product
     def set_product
       Rails.logger.info "Creating a product in candlepin: #{name}"
       json = Candlepin::Product.create({
-        :name => self.name,
+        :name => self.provider.name+"_"+self.name,
         :multiplier => self.multiplier || 1,
         :attributes => self.attrs || [] # name collision with ActiveRecord
       })
@@ -131,6 +131,7 @@ module Glue::Candlepin::Product
       pc = Glue::Candlepin::ProductContent.new({:content => {
           :name => name,
           :contentUrl => path,
+          :gpgUrl => "",
           :type => repo_type,
           :label => "#{self.cp_id}_#{name}",
           :vendor => "Custom"

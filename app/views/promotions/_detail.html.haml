@@ -1,26 +1,26 @@
 - if !defined? product or product.nil?
   %ul
-    %li
-      .slide_link{:id=>"products"}
+    %li.slide_link
+      .link_details{:id=>"products"}
         #{_("Products")}
-    %li
-      .slide_link{:id=>"all_errata"}
+    %li.slide_link
+      .link_details{:id=>"all_errata"}
         #{_("All Errata")} 
       
 - else
   %ul 
-    %li
-      .slide_link{:id=>packages_bc_id(product)}
+    %li.slide_link
+      .link_details{:id=>packages_bc_id(product)}
         #{_("Packages")}
       
-    %li
-      .slide_link{:id=>errata_bc_id(product)}
+    %li.slide_link
+      .link_details{:id=>errata_bc_id(product)}
         #{_("Errata")}
 
-    %li
-      .slide_link{:id=>repo_bc_id(product)}
+    %li.slide_link
+      .link_details{:id=>repo_bc_id(product)}
         #{_("Repositories")}
 
-    %li
-      .slide_link{:id=>distribution_bc_id(product)}
+    %li.slide_link
+      .link_details{:id=>distribution_bc_id(product)}
         #{_("Distributions")}

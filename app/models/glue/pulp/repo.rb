@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Glue::Pulp::Repo
-  attr_accessor :id, :groupid, :arch, :name, :feed, :feed_cert, :feed_key, :feed_ca, :clone_ids, :uri_ref, :relative_path
+  attr_accessor :id, :groupid, :arch, :name, :feed, :feed_cert, :feed_key, :feed_ca, :clone_ids, :uri_ref, :last_sync, :relative_path
 
   def initialize(params = {})
     @params = params
@@ -124,6 +124,11 @@ class Glue::Pulp::Repo
     [Pulp::Repository.sync(id)]
   end
 
+  #get last sync status of all repositories in this product
+  def latest_sync_statuses
+    [self._get_most_recent_sync_status()]
+  end
+
   def sync_status
     self._get_most_recent_sync_status()
   end
@@ -147,6 +152,7 @@ class Glue::Pulp::Repo
   end
 
   def cancel_sync
+    Rails.logger.info "Cancelling synchronization of repository #{@id}"
     history = Pulp::Repository.sync_history(@id)
     return if (history.nil? or history.empty?)
 
@@ -205,7 +211,7 @@ class Glue::Pulp::Repo
   end
 
   def environment
-    KPEnvironment.find((get_groupid_param 'env').to_i)
+    KTEnvironment.find((get_groupid_param 'env').to_i)
   end
 
   def product

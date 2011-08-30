@@ -16,6 +16,7 @@ describe RolesController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods
+  include AuthorizationHelperMethods
   
   module RolesControllerTest
     ADMIN_ID = 2
@@ -125,5 +126,45 @@ describe RolesController do
     end
     
   end
+
+
+  describe "rules" do
+    before (:each) do
+      @organization = new_test_org
+      @role = Role.create!(:name=>"TestRole")
+    end
+    describe "GET index" do
+      let(:action) {:index}
+      let(:req) { get 'index' }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :roles, nil, nil) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      let(:on_success) do
+        assigns(:roles).should include @role
+      end
+
+      it_should_behave_like "protected action"
+    end
+
+    describe "update user put" do
+
+      let(:action) {:update}
+      let(:req) do
+        put 'update', :id => @role.id, :name=>"barfoo"
+      end
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update, :roles, nil, nil) }
+      end
+      let(:unauthorized_user) do
+         user_with_permissions { |u| u.can(:read, :roles, nil, nil) }
+      end
+      it_should_behave_like "protected action"
+    end
+  end
+
+
    
 end

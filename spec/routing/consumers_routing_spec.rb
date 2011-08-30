@@ -28,10 +28,9 @@ describe Api::ProxiesController do
     it {{ :delete => "/api/consumers/1/entitlements" }.should route_to(:controller => "api/candlepin_proxies", :action => "delete", :id => "1")}
     it {{ :delete => "/api/consumers/1/certificates/1" }.should route_to(:controller => "api/candlepin_proxies", :action => "delete", :consumer_id => "1", :id => "1")}
     it {{ :get => "/api/pools" }.should route_to(:controller => "api/candlepin_proxies", :action => "get")}
-    it {{ :get => "/api/products" }.should route_to(:controller => "api/candlepin_proxies", :action => "get")}
     it {{ :get => "/api/entitlements/1" }.should route_to(:controller => "api/candlepin_proxies", :action => "get", :id => "1")}
     it {{ :post => "/api/subscriptions" }.should route_to(:controller => "api/candlepin_proxies", :action => "post")}
-    
+
     it {{ :put => "/api/consumers/1/profile/" }.should route_to(:controller => "api/systems", :action => "upload_package_profile", :id => "1")}
 
   end

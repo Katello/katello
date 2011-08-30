@@ -20,6 +20,23 @@ class SyncPlansController < ApplicationController
     'contents'
   end
 
+
+  def rules
+    read_test = lambda{Provider.any_readable?(current_organization)}
+    manage_test = lambda{current_organization.syncable?}
+    {
+      :index => read_test,
+      :items => read_test,
+      :show => read_test,
+      :edit => read_test,
+      :update => manage_test,
+      :destroy => manage_test,
+      :new => manage_test,
+      :create => manage_test,
+    }
+  end
+
+
   def index
     begin
       @plans = SyncPlan.search_for(params[:search]).where(:organization_id => current_organization.id).limit(current_user.page_size)
@@ -42,32 +59,34 @@ class SyncPlansController < ApplicationController
                  :col => columns,
                  :create => _('Plan'),
                  :name => _('plan'),
-                 :ajax_scroll => items_sync_plans_path()}
+                 :ajax_scroll => items_sync_plans_path(),
+                 :enable_create => current_organization.syncable? } 
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:plan => @plan}
+    render :partial => "edit", :layout => "tupane_layout",
+           :locals => {:plan=>@plan, :editable=> current_organization.syncable? } 
   end
 
   def update
     begin
       updated_plan = SyncPlan.find(params[:id])
-      result = params[:plan].values.first
+      result = params[:sync_plan].values.first
 
-      updated_plan.name = params[:plan][:name] unless params[:plan][:name].nil?
-      updated_plan.interval = params[:plan][:interval] unless params[:plan][:interval].nil?
+      updated_plan.name = params[:sync_plan][:name] unless params[:sync_plan][:name].nil?
+      updated_plan.interval = params[:sync_plan][:interval] unless params[:sync_plan][:interval].nil?
 
-      unless params[:plan][:description].nil?
-        result = updated_plan.description = params[:plan][:description].gsub("\n",'')
+      unless params[:sync_plan][:description].nil?
+        result = updated_plan.description = params[:sync_plan][:description].gsub("\n",'')
       end
 
-      unless params[:plan][:time].nil?
-        ttime = updated_plan.plan_date + ' ' + params[:plan][:time].strip
+      unless params[:sync_plan][:time].nil?
+        ttime = updated_plan.plan_date + ' ' + params[:sync_plan][:time].strip
         updated_plan.sync_date = DateTime.strptime(ttime, '%m/%d/%Y %I:%M %p')
       end
 
-      unless params[:plan][:date].nil?
-        ddate = params[:plan][:date].strip + ' ' + updated_plan.plan_time
+      unless params[:sync_plan][:date].nil?
+        ddate = params[:sync_plan][:date].strip + ' ' + updated_plan.plan_time
         updated_plan.sync_date = DateTime.strptime(ddate, '%m/%d/%Y %I:%M %p')
       end
 

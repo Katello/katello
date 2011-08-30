@@ -1,6 +1,9 @@
 = content_for :title do
   #{_("New Activation Key")}
 
+= content_for :navigation do
+  / pretty
+
 = content_for :content do
   .grid_10#new_key
     = form_tag activation_keys_path, :method => "post", :id => "new_activation_key" do
@@ -8,13 +11,13 @@
         .grid_2.ra
           %label #{_("Name")}:
         .grid_5.la
-          = text_field_tag 'activation_key[name]', params[:name], :size => "25", :tabindex => 1
+          = text_field_tag 'activation_key[name]', params[:name], :size => "25", :tabindex => auto_tab_index
 
       %fieldset
         .grid_2.ra
           %label #{_("Description")}:
         .grid_5.la
-          = text_area_tag 'activation_key[description]', params[:description], :size => "32x4", :tabindex => 2
+          = text_area_tag 'activation_key[description]', params[:description], :size => "32x4", :tabindex => auto_tab_index
 
       %fieldset.promotion_paths
         = hidden_field_tag 'activation_key[environment_id]'
@@ -24,10 +27,10 @@
             .grid_10
               %ul.breadcrumb
                 %li
-                  =link_to _('Locker'), "#", :class => :nohover
+                  =link_to _('Locker'), "#", :class => "crumb-nohover"
                 - for env in path
                   %li
-                    %a.select_env{"data-env_id" => env.id, "data-templates_url" => system_templates_environment_path(env.id)} #{env.name}
+                    %a.select_env{"data-env_id" => env.id, "data-templates_url" => system_templates_organization_environment_path(env.organization.cp_key, env)} #{env.name}
 
       %fieldset#system_templates
         .grid_2.ra
@@ -36,5 +39,5 @@
           = select_tag 'activation_key[system_template_id]', options_for_select({no_template => ''})
 
       .grid_6.ra
-        = button_to _("Save"), {:action => "create", :controller => "activation_keys"}, :method => :post, :id => :activation_key_save, :tabindex => 3
+        = button_to _("Save"), {:action => "create", :controller => "activation_keys"}, :method => :post, :id => :activation_key_save, :tabindex => auto_tab_index
 

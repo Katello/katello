@@ -13,14 +13,19 @@
 class Api::ProductsController < Api::ApiController
   respond_to :json
   before_filter :find_organization, :only => [:index]
-  before_filter :find_product, :only => [:repositories]
+  before_filter :find_product, :only => [:repositories, :show]
   before_filter :find_environment, :only => [:index, :repositories]
+
+  def show
+    render :json => @product.to_json
+  end
 
   def index
     query_params.delete(:organization_id)
     query_params.delete(:environment_id)
 
-    render :json => (@environment.products.where query_params).to_json
+    render :json => Product.select("products.*, providers.name AS provider_name").joins(:provider).where(query_params) if @environment == nil
+    render :json => @environment.products.select("products.*, providers.name AS provider_name").joins(:provider).where(query_params).all if @environment != nil
   end
 
   def repositories
@@ -37,8 +42,9 @@ class Api::ProductsController < Api::ApiController
   def find_environment
     if params[:environment_id].nil?
       return @environment = @organization.locker unless @organization.nil?
-      return @environment = @product.organization.locker
+      return @environment = @product.organization.locker unless @product.nil?
+    else
+      @environment = KTEnvironment.find(params[:environment_id])
     end
-    @environment = KPEnvironment.find(params[:environment_id])
   end
 end
