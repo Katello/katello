@@ -12,7 +12,7 @@
 
 class Api::OrganizationsController < Api::ApiController
 
-  before_filter :find_organization, :only => [:show, :update, :destroy, :products, :providers]
+  before_filter :find_organization, :only => [:show, :update, :destroy, :products]
   respond_to :json
   before_filter :authorize
 
@@ -22,7 +22,6 @@ class Api::OrganizationsController < Api::ApiController
     read_test = lambda{@organization.readable?}
     edit_test = lambda{@organization.editable?}
     delete_test = lambda{@organization.deletable?}
-    providers_test = lambda{Provider.any_readable?(@organization)}
     products_test = lambda{Product.any_readable?(@organization)}
 
 
@@ -30,7 +29,6 @@ class Api::OrganizationsController < Api::ApiController
       :show => read_test,
       :create => create_test,
       :update => edit_test,
-      :providers => providers_test,
       :products => products_test,
       :destroy => delete_test,
     }
@@ -53,12 +51,6 @@ class Api::OrganizationsController < Api::ApiController
     render :json => @organization.update_attributes!(params[:organization]).to_json
   end
 
-  def providers
-    query_params.delete(:id)
-
-    render :json => (@organization.providers.where query_params).to_json
-  end
-  
   def destroy
     @organization.destroy
     render :text => _("Deleted organization '#{params[:id]}'"), :status => 200

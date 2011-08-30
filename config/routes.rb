@@ -259,9 +259,7 @@ Src::Application.routes.draw do
         resources :changesets, :only => [:index, :create]
       end
       resources :tasks, :only => [:index]
-      member do
-        get :providers
-      end
+      resources :providers, :only => [:index]
       resources :systems, :only => [:index]
       match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :activation_keys, :only => [:index]
