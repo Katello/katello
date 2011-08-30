@@ -50,6 +50,7 @@ module Glue::Provider
     # Get the most relavant status for all the repos in this Provider
     def sync_status
       statuses = self.products.map {|r| r.sync_status()}
+      return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
 
       #if any of repos sync still running -> provider sync running
       idx = statuses.index do |r| r.state == ::PulpSyncStatus::Status::RUNNING.to_s end

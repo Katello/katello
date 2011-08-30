@@ -123,7 +123,8 @@ module Glue::Pulp::Repos
     # Get the most relavant status for all the repos in this Product
     def sync_status
       statuses = repos(self.locker).map {|r| r.sync_status()}
-
+      return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
+      
       #if any of repos sync still running -> product sync running
       idx = statuses.index do |r| r.state == ::PulpSyncStatus::Status::RUNNING.to_s end
       return statuses[idx] if idx != nil
