@@ -53,6 +53,7 @@ describe Api::ProductsController do
     Product.stub!(:find).and_return(@product)
 
     Product.stub!(:select).and_return(products)
+    products.stub!(:readable).and_return(products)
     products.stub!(:select).and_return(products)
     products.stub!(:joins).and_return(products)
     products.stub!(:where).and_return(products)
@@ -69,7 +70,7 @@ describe Api::ProductsController do
     KTEnvironment.stub!(:first).and_return(@environment)
 
     Organization.stub!(:find).and_return(@organization)
-    KTEnvironment.stub!(:find).and_return(@environment)
+    KTEnvironment.stub!(:find_by_id).and_return(@environment)
 
     @organization.stub!(:locker).and_return(@locker)
 
@@ -96,7 +97,7 @@ describe Api::ProductsController do
     end
 
     it "should find environment" do
-      KTEnvironment.should_receive(:find).once.with(environment_id).and_return([@environment])
+      KTEnvironment.should_receive(:find_by_id).once.with(environment_id).and_return([@environment])
       get 'index', :organization_id => organization_id, :environment_id => environment_id
     end
 
@@ -142,7 +143,7 @@ describe Api::ProductsController do
     it_should_behave_like "protected action"
 
     it "should find environment" do
-      KTEnvironment.should_receive(:find).once.with(environment_id).and_return([@environment])
+      KTEnvironment.should_receive(:find_by_id).once.with(environment_id).and_return([@environment])
       get 'repositories', :organization_id => organization_id, :environment_id => environment_id, :id => product_id
     end
 
