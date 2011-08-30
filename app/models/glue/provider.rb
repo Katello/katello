@@ -47,34 +47,28 @@ module Glue::Provider
       end.flatten
     end
 
-    # Get the most relavant status for all the repos in this Product
+    # Get the most relavant status for all the repos in this Provider
     def sync_status
-      states = Array.new
-      # Get the most recent status from all the repos in this product
-      not_synced = ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED)
-      top_status = not_synced
+      statuses = self.products.map {|r| r.sync_status()}
 
-      for p in self.products
-        curr_status = p.sync_status()
-        repo_sync_state = curr_status.state
-        if repo_sync_state == ::PulpSyncStatus::Status::ERROR.to_s
-          #if one repo sync failed, consider the product sync failed
-          top_status = curr_status
+      #if any of repos sync still running -> provider sync running
+      idx = statuses.index do |r| r.state == ::PulpSyncStatus::Status::RUNNING.to_s end
+      return statuses[idx] if idx != nil
 
-        elsif repo_sync_state == ::PulpSyncStatus::Status::RUNNING.to_s and
-              top_status != ::PulpSyncStatus::Status::ERROR.to_s
-          #if one repo sync is running and there are no errors so far, consider the product sync running
-          top_status = curr_status
+      #else if any of repos not synced -> provider not synced
+      idx = statuses.index do |r| r.state == ::PulpSyncStatus::Status::NOT_SYNCED.to_s end
+      return statuses[idx] if idx != nil
 
-        elsif repo_sync_state == ::PulpSyncStatus::Status::FINISHED.to_s and
-              top_status  != ::PulpSyncStatus::Status::RUNNING.to_s and
-              top_status  != ::PulpSyncStatus::Status::ERROR.to_s
-          #if one repo is finished and there are no running or failing repos so far, consider the product sync finished
-          top_status = curr_status
+      #else if any of repos sync cancelled -> provider sync cancelled
+      idx = statuses.index do |r| r.state == ::PulpSyncStatus::Status::CANCELLED.to_s end
+      return statuses[idx] if idx != nil
 
-        end
-      end
-      top_status
+      #else if any of repos sync finished with error -> provider sync finished with error
+      idx = statuses.index do |r| r.state == ::PulpSyncStatus::Status::ERROR.to_s end
+      return statuses[idx] if idx != nil
+
+      #else -> all finished
+      return statuses[0]
     end
 
     def sync_state
