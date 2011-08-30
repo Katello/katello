@@ -87,33 +87,33 @@ describe SystemsController do
           it_should_behave_like "protected action"
         end
 
-      describe "edit sys with #{perm} on #{resource} " do
-        let(:action) {:update}
-        let(:req) {post :update,{ :id => @system.id, :system => { :name=> "foo" }}}
-        let(:authorized_user) do
-          @run_auth_action.call(resource, perm)
-        end
-        let(:unauthorized_user) do
-          user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) }
-        end
-        it_should_behave_like "protected action"
-      end if [:create_systems, :update_systems].include? perm
+        describe "edit sys with #{perm} on #{resource} " do
+          let(:action) {:update}
+          let(:req) {post :update,{ :id => @system.id, :system => { :name=> "foo" }}}
+          let(:authorized_user) do
+            @run_auth_action.call(resource, perm)
+          end
+          let(:unauthorized_user) do
+            user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) }
+          end
+          it_should_behave_like "protected action"
+        end if [:create_systems, :update_systems].include? perm
 
 
-      describe "show manageable environments with #{perm} on #{resource} " do
-        let(:action) {:environments}
-        let(:req) { get :environments, :id => @system.id}
-        let(:authorized_user) do
-          @run_auth_action.call(resource, perm)
+        describe "show manageable environments with #{perm} on #{resource} " do
+          let(:action) {:environments}
+          let(:req) { get :environments, :id => @system.id}
+          let(:authorized_user) do
+            @run_auth_action.call(resource, perm)
+          end
+          let(:unauthorized_user) do
+            user_without_permissions
+          end
+          it_should_behave_like "protected action"
         end
-        let(:unauthorized_user) do
-          user_without_permissions
-        end
-        it_should_behave_like "protected action"
       end
     end
-  end
- end
+   end
 
   describe "main" do
     let(:uuid) { '1234' }
