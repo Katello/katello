@@ -60,6 +60,8 @@ def setup_admin(admin):
     org_cmd.add_action('list', organization.List())
     org_cmd.add_action('update', organization.Update())
     org_cmd.add_action('delete', organization.Delete())
+    org_cmd.add_action('generate_debug_cert', organization.GenerateDebugCert())
+    org_cmd.add_action('delete_debug_cert', organization.DeleteDebugCert())
     admin.add_command('org', org_cmd)
 
     user_cmd = user.User()

@@ -46,3 +46,12 @@ class OrganizationAPI(KatelloAPI):
         path = "/api/organizations/%s" % str(name)
         org = self.server.GET(path)[1]
         return org
+
+    def generate_debug_cert(self, name):
+        path = "/api/organizations/%s/generate_debug_cert" % str(name)
+        return self.server.POST(path, {})[1]
+
+    def delete_debug_cert(self, name):
+        path = "/api/organizations/%s/delete_debug_cert" % str(name)
+        return self.server.POST(path, {})[1]
+

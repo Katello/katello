@@ -151,6 +151,45 @@ class Update(OrganizationAction):
         print _("Successfully updated org [ %s ]") % name
         return os.EX_OK
 
+# ------------------------------------------------------------------------------
+
+class GenerateDebugCert(OrganizationAction):
+
+    description = _('generate ueber certificate')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("organization name eg: foo.example.com (required)"))
+
+    def check_options(self):
+        self.require_option('name')
+
+    def run(self):
+        name        = self.get_option('name')
+
+        self.api.generate_debug_cert(name)
+        print _("Successfully generated debug cert for org [ %s ]") % name
+        return os.EX_OK
+
+# ------------------------------------------------------------------------------
+
+class DeleteDebugCert(OrganizationAction):
+
+    description = _('remove ueber certificate')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("organization name eg: foo.example.com (required)"))
+
+    def check_options(self):
+        self.require_option('name')
+
+    def run(self):
+        name        = self.get_option('name')
+
+        self.api.delete_debug_cert(name)
+        print _("Successfully deleted debug cert for org [ %s ]") % name
+        return os.EX_OK
 
 # organization command ------------------------------------------------------------
 
