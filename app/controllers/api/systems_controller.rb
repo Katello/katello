@@ -135,6 +135,7 @@ class Api::SystemsController < Api::ApiController
 
     @environment = KTEnvironment.find(params[:environment_id])
     raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
+    @organization = @environment.organization
     @environment
   end
 
