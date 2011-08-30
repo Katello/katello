@@ -130,7 +130,7 @@ ln -sv %{datadir}/tmp %{buildroot}%{homedir}/tmp
 ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
 
 #re-configure database to the /var/lib/katello directory
-sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{_sysconfdir}/%{name}/katello.yml
+sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{homedir}/config/database.yml
 
 #remove files which are not needed in the homedir
 rm -rf %{buildroot}%{homedir}/README
