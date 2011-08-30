@@ -53,10 +53,6 @@ class Api::OrganizationsController < Api::ApiController
     render :json => @organization.update_attributes!(params[:organization]).to_json
   end
 
-  def products
-    render :json => @organization.products() and return
-  end
-
   def providers
     query_params.delete(:id)
 
