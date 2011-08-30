@@ -44,7 +44,7 @@ Src::Application.routes.draw do
   resources :dashboard, :only => [:index]
 
   
-  resources :systems do
+  resources :systems, :except => [:destroy] do
     member do
       get :packages
       get :more_packages
