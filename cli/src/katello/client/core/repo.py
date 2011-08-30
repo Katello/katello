@@ -295,7 +295,7 @@ class Info(RepoAction):
     description = _('information about a repository')
 
     def setup_parser(self):
-        self.parser.add_option('--repo_id', dest='repo_id',
+        self.parser.add_option('--id', dest='id',
                       help=_("repository id"))
         self.parser.add_option('--name', dest='name',
                       help=_("repository name"))
@@ -307,13 +307,13 @@ class Info(RepoAction):
                       help=_("product name eg: fedora-14"))
 
     def check_options(self):
-        if not self.has_option('repo_id'):
+        if not self.has_option('id'):
             self.require_option('name')
             self.require_option('org')
             self.require_option('product')
 
     def run(self):
-        repoId   = self.get_option('repo_id')
+        repoId   = self.get_option('id')
         repoName = self.get_option('name')
         orgName  = self.get_option('org')
         envName  = self.get_option('env')
@@ -349,7 +349,7 @@ class Sync(RepoAction):
     description = _('synchronize a repository')
 
     def setup_parser(self):
-        self.parser.add_option('--repo_id', dest='repo_id',
+        self.parser.add_option('--id', dest='id',
                                help=_("repo id, string value (required)"))
         self.parser.add_option('--org', dest='org',
                       help=_("organization name eg: foo.example.com (required)"))
@@ -359,13 +359,13 @@ class Sync(RepoAction):
                       help=_("product name eg: fedora-14"))
                       
     def check_options(self):
-        if not self.has_option('repo_id'):
+        if not self.has_option('id'):
             self.require_option('name')
             self.require_option('org')
             self.require_option('product')
 
     def run(self):
-        repoId   = self.get_option('repo_id')
+        repoId   = self.get_option('id')
         repoName = self.get_option('name')
         orgName  = self.get_option('org')
         prodName = self.get_option('product')
