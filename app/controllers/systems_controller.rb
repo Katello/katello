@@ -30,12 +30,12 @@ class SystemsController < ApplicationController
   def rules
     edit_system = lambda{System.find(params[:id]).editable?}
     read_system = lambda{System.find(params[:id]).readable?}
-    delete_system = lambda{ System.find(params[:id]).deletable? }
     env_system = lambda{@environment.systems_readable?}
+    any_readable = lambda{System.any_readable?(current_organization)}
 
     {
-      :index => lambda{true},
-      :items => lambda{true},
+      :index => any_readable,
+      :items => any_readable,
       :environments => env_system,
       :env_items => env_system,
       :subscriptions => read_system,

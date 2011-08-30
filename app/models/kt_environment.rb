@@ -161,10 +161,10 @@ class KTEnvironment < ActiveRecord::Base
   scope :changesets_readable, lambda {|org| authorized_items(org, [:promote_changesets, :manage_changesets, :read_changesets])}
   scope :content_readable, lambda {|org| authorized_items(org, [:read_contents])}
   scope :systems_readable, lambda{|org|
-    if  User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, org)
+    if  org.systems_readable?
       where(:organization_id => org)
     else
-      authorized_items(org, [:read_systems])
+      authorized_items(org, SYSTEMS_READABLE)
     end
   }
 
@@ -199,12 +199,23 @@ class KTEnvironment < ActiveRecord::Base
                               self.organization)
   end
 
+
+  SYSTEMS_READABLE = [:read_systems, :create_systems, :update_systems, :delete_systems]
   def systems_readable?
-    User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, self.id, self.organization) ||
-        User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, self.organization)
+    self.organization.systems_readable? ||
+        User.allowed_to?(SYSTEMS_READABLE, :environments, self.id, self.organization)
   end
 
-  
+  def systems_editable?
+    User.allowed_to?([:create_systems, :update_systems], :organizations, nil, self.organization) ||
+        User.allowed_to?([:create_systems, :update_systems], :environments, self.id, self.organization)
+  end
+
+  def systems_deletable?
+    User.allowed_to?([:create_systems, :delete_systems], :organizations, nil, self.organization) ||
+        User.allowed_to?([:create_systems, :delete_systems], :environments, self.id, self.organization)
+  end
+
 
   def self.authorized_items org, verbs, resource = :environments
     raise "scope requires an organization" if org.nil?
