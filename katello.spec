@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.72
+Version:	      0.1.73
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -196,6 +196,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Aug 30 2011 Partha Aji <paji@redhat.com> 0.1.73-1
+- Fixed the db directory link (paji@redhat.com)
+- Updated some spacing issues (paji@redhat.com)
+
 * Tue Aug 30 2011 Partha Aji <paji@redhat.com> 0.1.72-1
 - Updated spec to not include database yml in etc katello and instead for the
   user to user /etc/katello/katello.yml for db info (paji@redhat.com)
