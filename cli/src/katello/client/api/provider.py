@@ -62,12 +62,6 @@ class ProviderAPI(KatelloAPI):
         return providers
 
 
-    def provider(self, provId):
-        path = "/api/providers/%s" % str(provId)
-        provider = self.server.GET(path)[1]
-        return provider
-
-
     def provider_by_name(self, orgName, provName):
         path = "/api/organizations/%s/providers/" % str(orgName)
         providers = self.server.GET(path, {"name": provName})[1]

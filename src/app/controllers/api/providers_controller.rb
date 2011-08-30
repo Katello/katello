@@ -15,7 +15,7 @@ require 'rest_client'
 
 class Api::ProvidersController < Api::ApiController
 
-  before_filter :find_organization, :only => [:create]
+  before_filter :find_organization, :only => [:index, :create]
   before_filter :find_provider, :only => [:show, :update, :destroy, :products, :import_products, :import_manifest, :product_create]
   before_filter :authorize
 
@@ -42,7 +42,8 @@ class Api::ProvidersController < Api::ApiController
 
 
   def index
-    render :json => (Provider.where query_params).to_json
+    query_params.delete(:organization_id)
+    render :json => (Provider.readable(@organization).where query_params).to_json
   end
 
   def show

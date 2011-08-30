@@ -61,6 +61,21 @@ describe Api::ProvidersController do
     }
   end
 
+  describe "list providers" do
+
+    let(:action) { :index }
+    let(:req) { get :index, :organization_id => @organization.name }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
+    it "should scope providers by readable permissions" do
+      Provider.should_receive(:readable).with(@organization).and_return({})
+      req
+    end
+
+  end
+
   describe "create a provider" do
 
     let(:action) { :create }
