@@ -1,0 +1,39 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          thin
+# Required-Start:    $local_fs $remote_fs
+# Required-Stop:     $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      S 0 1 6
+# Short-Description: thin initscript
+# Description:       thin
+### END INIT INFO
+
+# Original author: Forrest Robertson
+
+# Do NOT "set -e"
+
+DAEMON=/usr/bin/thin
+SCRIPT_NAME=/etc/init.d/thin
+
+# Exit if the package is not installed
+[ -x "$DAEMON" ] || exit 0
+
+case "$1" in
+  start)
+	$DAEMON start --config /etc/thin/thin.yml 
+	;;
+  stop)
+	$DAEMON stop --config /etc/thin/thin.yml 
+	;;
+  restart)
+	$DAEMON restart --config /etc/thin/thin.yml 
+	;;
+  *)
+	echo "Usage: $SCRIPT_NAME {start|stop|restart}" >&2
+	exit 3
+	;;
+esac
+
+:
+
