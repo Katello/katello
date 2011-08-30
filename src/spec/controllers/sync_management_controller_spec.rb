@@ -15,22 +15,74 @@ require 'spec_helper'
 describe SyncManagementController do
   include LoginHelperMethods
   include LocaleHelperMethods
+  include AuthorizationHelperMethods
+  include ProductHelperMethods
+  include OrchestrationHelper
 
+
+  
   before (:each) do
     login_user
-    setup_current_organization
     set_default_locale
-
-    @locker = KPEnvironment.new
-    @mock_org.stub!(:locker).and_return(@locker)
-    @locker.stub!(:products).and_return([])
   end
 
   describe "GET 'index'" do
+    before (:each) do
+      setup_current_organization
+      @locker = KTEnvironment.new
+      @mock_org.stub!(:locker).and_return(@locker)
+      @locker.stub!(:products).and_return(OpenStruct.new(:readable => [], :syncable=>[]))
+    end
+
+
     it "should be successful" do
       get 'index'
       response.should be_success
     end
   end
+
+
+  describe "rules" do
+    before (:each) do
+      @organization = new_test_org
+      @product = new_test_product @organization, @organization.locker
+      Provider.stub(:find).and_return @product.provider
+      Product.stub(:find).and_return @product
+      
+    end
+    describe "GET index" do
+
+      let(:action) {:index}
+      let(:req) { get 'index' }
+      let(:authorized_user) do
+        
+        user_with_permissions { |u| u.can(:read, :providers, @product.provider.id, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+
+
+      it_should_behave_like "protected action"
+    end
+
+    describe "sync" do
+
+      let(:action) {:sync}
+      let(:req) do
+        put 'sync', :repo => {@product.repos(@organization.locker).first.id=>@product.id}, :name=>"barfoo", :product_id=>@product.id
+      end
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:sync, :organizations, nil, @organization) }
+      end
+      let(:unauthorized_user) do
+         user_with_permissions { |u| u.can(:read, :providers, @product.provider.id, @organization) }
+      end
+      it_should_behave_like "protected action"
+    end
+  end
+
+
+
 
 end

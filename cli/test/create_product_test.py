@@ -43,7 +43,7 @@ class CreateTest(unittest.TestCase):
         self.create_action = Create()
 
         self.create_action.api.create = Mock()
-        self.create_action.api.create.return_value = { 'cp_id': self.PRODUCT_ID, 'name':self.PRODUCT }
+        self.create_action.api.create.return_value = { 'id': self.PRODUCT_ID, 'name':self.PRODUCT }
 
         self.create_action.discoverRepos.discover_repositories = Mock()
         self.create_action.discoverRepos.discover_repositories.return_value = self.DISCOVERED_REPOS

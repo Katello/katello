@@ -51,11 +51,7 @@ class Api::OrganizationsController < Api::ApiController
     # we only need key and displayName
     @user = User.find_by_username(params[:username])
     raise HttpErrors::NotFound, _("Couldn't find user '#{params[:username]}'") if @user.nil?
-    if @user.superadmin?
-      orgs = Organization.all
-    else
-      orgs = @user.organizations
-    end
+    orgs = @user.allowed_organizations
     # rhsm expects owner (Candlepin format)
     render :json => orgs.map {|o| {:key => o.cp_key, :displayName => o.name} }
   end

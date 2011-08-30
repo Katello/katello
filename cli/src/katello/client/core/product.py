@@ -21,14 +21,16 @@ import urlparse
 import datetime
 from pprint import pprint
 
+from katello.client.core.utils import format_date
 from katello.client.core import repo
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI
+from katello.client.core.repo import format_sync_state, format_sync_time
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_provider, get_product
-from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task
+from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask
 from katello.client.core.utils import ProgressBar
 
 try:
@@ -37,6 +39,8 @@ except ImportError:
     import simplejson as json
 
 Config()
+
+
 
 # base product action --------------------------------------------------------
 
@@ -47,7 +51,6 @@ class ProductAction(Action):
         self.api = ProductAPI()
         self.repoapi = RepoAPI()
         self.csapi = ChangesetAPI()
-
 
 # product actions ------------------------------------------------------------
 
@@ -61,7 +64,7 @@ class List(ProductAction):
         self.parser.add_option('--environment', dest='env',
                        help=_('environment name eg: production (default: Locker)'))
         self.parser.add_option('--provider', dest='prov',
-                       help=_("provider name"))
+                       help=_("provider name, lists provider's product in the Locker"))
 
 
     def check_options(self):
@@ -73,15 +76,16 @@ class List(ProductAction):
         env_name = self.get_option('env')
         prov_name = self.get_option('prov')
 
-        if org_name and prov_name:
+        self.printer.addColumn('id')
+        self.printer.addColumn('name')
+        self.printer.addColumn('provider_id')
+        self.printer.addColumn('provider_name')
+
+        if prov_name:
             prov = get_provider(org_name, prov_name)
             if prov == None:
                 return os.EX_DATAERR
-            self.printer.addColumn('id')
-            self.printer.addColumn('cp_id')
-            self.printer.addColumn('name')
-            self.printer.addColumn('provider_id')
-
+            
             self.printer.setHeader(_("Product List For Provider %s") % (prov_name))
             prods = self.api.products_by_provider(prov["id"])
 
@@ -89,10 +93,7 @@ class List(ProductAction):
             env = get_environment(org_name, env_name)
             if env == None:
                 return os.EX_DATAERR
-            self.printer.addColumn('id')
-            self.printer.addColumn('cp_id')
-            self.printer.addColumn('name')
-            self.printer.addColumn('provider_id')
+            
             self.printer.setHeader(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
             prods = self.api.products_by_env(env['id'])
 
@@ -108,8 +109,6 @@ class Sync(ProductAction):
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
                                help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--provider', dest='prov',
-                               help=_("provider name (required)"))
         self.parser.add_option('--name', dest='name',
                                help=_("product name (required)"))
 
@@ -119,33 +118,73 @@ class Sync(ProductAction):
 
     def run(self):
         orgName     = self.get_option('org')
-        provName    = self.get_option('prov')
-        name        = self.get_option('name')
+        prodName    = self.get_option('name')
 
-        if provName != None:
-            prov = self.get_provider(orgName, provName)
-
-            if (prov == None):
-                return os.EX_DATAERR
-
-            prod = self.api.products_by_provider(prov['id'], name)
-        else:
-            prod = self.api.products_by_org(orgName, name)
-
-        if (len(prod) == 0):
+        prod = get_product(orgName, prodName)
+        if (prod == None):
             return os.EX_DATAERR
 
-        async_task = self.api.sync(prod[0]["cp_id"])
-        result = run_async_task_with_status(async_task, ProgressBar())
 
-        if len([t for t in result if t['state'] == 'error']) > 0:
-            errors = [json.loads(t["result"])['errors'][0] for t in result if t['state'] == 'error']
-            print _("Product [ %s ] failed to sync: %s" % (name, errors))
-            return 1
+        task = AsyncTask(self.api.sync(prod["id"]))
+        run_async_task_with_status(task, ProgressBar())
 
-        print _("Product [ %s ] synchronized" % name)
+        if task.failed():
+            errors = [json.loads(t["result"])['errors'][0] for t in task.get_hashes() if t['state'] == 'error']
+            print _("Product [ %s ] failed to sync: %s" % (prodName, errors))
+            return os.EX_DATAERR
+
+        print _("Product [ %s ] synchronized" % prodName)
         return os.EX_OK
 
+
+# ------------------------------------------------------------------------------
+class Status(ProductAction):
+
+    description = _('status of product\'s synchronization')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                               help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                               help=_("product name (required)"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+    def run(self):
+        orgName     = self.get_option('org')
+        prodName    = self.get_option('name')
+
+        prod = get_product(orgName, prodName)
+        if (prod == None):
+            return os.EX_DATAERR
+
+        task = AsyncTask(self.api.last_sync_status(prod['id']))
+
+        prod['last_sync'] = format_sync_time(prod['last_sync'])
+        prod['sync_state'] = format_sync_state(prod['sync_state'])
+        
+        if task.is_running():
+            pkgsTotal = task.total_count()
+            pkgsLeft = task.items_left()
+            prod['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
+        
+        #TODO: last errors?
+        
+        self.printer.addColumn('id')
+        self.printer.addColumn('name')
+        self.printer.addColumn('provider_id')
+        self.printer.addColumn('provider_name')
+            
+        self.printer.addColumn('last_sync')
+        self.printer.addColumn('sync_state')
+        self.printer.addColumn('progress', show_in_grep=False)
+
+        self.printer.setHeader(_("Product Status"))
+        self.printer.printItem(prod)
+        return os.EX_OK
+        
 
 # ------------------------------------------------------------------------------
 class Promote(ProductAction):
@@ -174,8 +213,7 @@ class Promote(ProductAction):
         if (env == None):
             return os.EX_DATAERR
 
-        curTime = datetime.datetime.now()
-        cset = self.csapi.create(orgName, env["id"], "product_promote_"+str(curTime))
+        cset = self.csapi.create(orgName, env["id"], self.create_cs_name())
         try:
             patch = {}
             patch['+products'] = [prodName]
@@ -190,6 +228,9 @@ class Promote(ProductAction):
             self.csapi.delete(cset["id"])
         return os.EX_OK
         
+    def create_cs_name(self):
+        curTime = datetime.datetime.now()
+        return "product_promotion_"+str(curTime)
 
 # ------------------------------------------------------------------------------
 class Create(ProductAction):
@@ -245,7 +286,7 @@ class Create(ProductAction):
         repourls = self.discoverRepos.discover_repositories(url)
         self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
         selectedurls = self.discoverRepos.select_repositories(repourls, assumeyes)        
-        self.discoverRepos.create_repositories(prod["cp_id"], prod["name"], selectedurls)
+        self.discoverRepos.create_repositories(prod["id"], prod["name"], selectedurls)
 
         return os.EX_OK
 

@@ -4,6 +4,11 @@
 
 = javascript do
   :javascript
+    var permissions = {
+      manage_changesets: #{manage_changesets},
+      promote_changesets: #{promote_changesets},
+      read_changesets: #{read_changesets},
+    };
     var content_breadcrumb = $.parseJSON('#{escape_javascript(generate_content_breadcrumb())}');
     var changeset_breadcrumb = $.parseJSON('#{escape_javascript(generate_cs_breadcrumb())}');
     localize({
@@ -73,18 +78,18 @@
                 'exist in the next environment, you may promote other types of content. Once ' + |
                 'you have created a change set, click the "Promote" button to commit it to the next environment.'))   |
 .grid_16
-  = environment_selector(:url_proc=>lambda {|args|  promotions_path(args[:organization].name, args[:environment].name, :next_env_id=>(args[:next_environment].id if args[:next_environment] and args[:environment].locker?) )})
+  = environment_selector(:url_proc=>breadcrumb_url_proc,  :accessible_envs=>accessible_envs)
 
 .grid_16
   #container
-    .right_tree
+    .right_tree.sliding_tree
       #changeset_tree
-        - if @next_environment
+        - if read_changesets
           %h2 #{@next_environment.name + _(" Changesets")}
           .breadcrumb_search.fl.clear.clickable
   
             %form#search_form.search.clear
-              %input{ :name => "s", :type => "search", :placeholder => "Filter...", :id=>"search"}
+              %input{ :name => "s", :type => "input", :placeholder => "Filter...", :id=>"search_filter"}
               %button.action #{_("Search")}
               %br.clear
   
@@ -93,7 +98,7 @@
             .tree_breadcrumb
           .sliding_container
             #cslist.list.sliding_list{"data-page_size"=>current_user.page_size}
-              #changeset_loading.slider
+              #tree_loading.slider
                 .text
                   = _("Loading Changeset")
                   = image_tag ("spinner.gif")
@@ -111,39 +116,45 @@
               .grid_4.la.editable.edit_description{'name' => 'description'}
               
           #changeset_status
-          #changeset_actions.clickable
-            #delete_changeset.cs_action{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure you want to remove this changeset?')}
-              %span#delete_changeset_icon.sprite
-                SPRITE
-              %span.text
-                = _("Remove")
-            #edit_changeset.cs_action
-              %span#edit_changeset_icon.sprite
-                SPRITE
-              %span.text
-                = _('Edit Details')
-            #review_changeset.cs_action
-              %span#review_changeset_icon.sprite
-                SPRITE
-              %span.text
-                = _('Review')
-            #promote_changeset.cs_action
-              %span#promote_changeset_icon.sprite
-              %span.text
-                = _('Promote')
+          - if manage_changesets || promote_changesets
+            #sliding_tree_actionbar.clickable
+              #delete_changeset.cs_action{"data-url"=>changesets_path(), "data-confirm-text"=>_('Are you sure?')}
+                %span#delete_changeset_icon.sprite
+                  SPRITE
+                %span.text
+                  = _("Remove")
+              #edit_changeset.cs_action
+                %span#edit_changeset_icon.sprite
+                  SPRITE
+                %span.text
+                  = _('Edit Details')
+              #review_changeset.cs_action
+                %span#review_changeset_icon.sprite
+                  SPRITE
+                %span.text
+                  = _('Review')
+              #promote_changeset.cs_action
+                %span#promote_changeset_icon.sprite
+                %span.text
+                  = _('Promote')
           #changeset_users
+        - elsif @next_environment
+          %h2 #{_("Changesets")}
+          = _("You do not have permissions to view changesets for #{@next_environment.name}. Please contact your administrator to gain access.")
         - else
           %h2 #{_("Changesets")}
           = _("An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment.")
-  
+
+
+
     = render :partial=>"common/tupane"
   
-    #content_tree.left
-      - if @next_environment
+    #content_tree.left.sliding_tree
+      - if manage_changesets
         %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}&next_env_id=#{@next_environment.id}"}
           #{_('+ New Changeset')}
           .arrow-right
-      - else
+      - elsif @environment.organization.environments_manageable? 
         %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}"}
           #{_('+ New Changeset')}
           .arrow-right

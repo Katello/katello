@@ -18,11 +18,37 @@ class UsersController < ApplicationController
   end
    
   before_filter :setup_options, :only => [:items, :index]
+  before_filter :find_user, :only => [:edit, :update, :update_roles, :clear_helptips, :destroy]
+  before_filter :authorize
+  skip_before_filter :require_org
 
+  def rules
+    index_test = lambda{User.any_readable?}
+    create_test = lambda{User.creatable?}
+
+    read_test = lambda{@user.readable?}
+    edit_test = lambda{@user.editable?}
+    delete_test = lambda{@user.deletable?}
+    user_helptip = lambda{true} #everyone can enable disable a helptip
+    
+     {
+       :index => index_test,
+       :items => index_test,
+       :new => create_test,
+       :create => create_test,
+       :edit => read_test,
+       :update => edit_test,
+       :update_roles => edit_test,
+       :clear_helptips => edit_test,
+       :destroy => delete_test,
+       :enable_helptip => user_helptip,
+       :disable_helptip => user_helptip,
+     }
+  end
   
   def index
     begin
-      @users = User.search_for(params[:search]).limit(current_user.page_size)
+      @users = User.readable.search_for(params[:search]).limit(current_user.page_size)
       retain_search_history
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -32,21 +58,13 @@ class UsersController < ApplicationController
   
   def items
     start = params[:offset]
-    @users = User.search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @users = User.readable.search_for(params[:search]).limit(current_user.page_size).offset(start)
     render_panel_items @users, @panel_options
   end
-  
-  def setup_options
-    @panel_options = { :title => _('Users'), 
-                 :col => ['username'], 
-                 :create => _('User'),
-                 :name => _('user'),
-                 :ajax_scroll => items_users_path()}
-  end
+
   
   def edit 
-    @user = User.where(:id => params[:id])[0]
-    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:user=>@user}
+    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:user=>@user, :editable=>@user.editable?}
   end
   
   def new
@@ -67,17 +85,9 @@ class UsersController < ApplicationController
   end
   
   def update
-    params[:user] = {"role_ids"=>[]} unless params.has_key? :user
     params[:user].delete :username
 
-    @user = User.where(:id => params[:id])[0]
-
-    #Add in the own role if updating roles, cause the user shouldn't see his own role
-    if params[:user][:role_ids]
-      params[:user][:role_ids] << @user.own_role.id
-    end
-
-    if  @user.update_attributes(params[:user])
+    if @user.update_attributes(params[:user])
       notice _("User updated successfully.")
       attr = params[:user].first.last if params[:user].first
       attr ||= ""
@@ -87,16 +97,35 @@ class UsersController < ApplicationController
     render :text => @user.errors, :status=>:ok
   end
 
+  def update_roles
+    params[:user] = {"role_ids"=>[]} unless params.has_key? :user
+
+    #Add in the own role if updating roles, cause the user shouldn't see his own role
+    params[:user][:role_ids] << @user.own_role.id
+
+    if  @user.update_attributes(params[:user])
+      notice _("User updated successfully.")
+      render :nothing => true and return
+    end
+    errors "", {:list_items => @user.errors.to_a}
+    render :text => @user.errors, :status=>:ok
+  end
+
   def destroy
     @id = params[:id]
-    @user = User.where(:id => @id)[0]
-    raise "Cannot delete currently logged user" if @user == User.current
-    #remove the user
-    @user.destroy
-    if @user.destroyed?
-      notice _("User '#{@user[:username]}' was deleted.")
-      #render and do the removal in one swoop!
-      render :partial => "common/list_remove", :locals => {:id => @id} and return
+    begin
+      #remove the user
+      @user.destroy
+      if @user.destroyed?
+        notice _("User '#{@user[:username]}' was deleted.")
+        #render and do the removal in one swoop!
+        render :partial => "common/list_remove", :locals => {:id => @id} and return
+      end
+      errors "", {:list_items => @user.errors.to_a}
+      render :text => @user.errors, :status=>:ok
+    rescue Exception => error
+      errors error
+      render :json=>@user.errors, :status=>:bad_request
     end
     errors "", {:list_items => @user.errors.to_a}
     render :text => @user.errors, :status=>:ok
@@ -106,8 +135,6 @@ class UsersController < ApplicationController
   end
 
   def clear_helptips
-
-    @user = User.find params[:id]
     @user.clear_helptips
     notice _("Disabled help tips have been re-enabled.")
     render :text => _("Cleared")
@@ -123,6 +150,20 @@ class UsersController < ApplicationController
     render :text => ""
   end
 
+  private
+
+  def find_user
+    @user = User.find params[:id]
+  end
   
-  
+
+  def setup_options
+    @panel_options = { :title => _('Users'),
+                 :col => ['username'],
+                 :create => _('User'),
+                 :name => _('user'),
+                 :ajax_scroll => items_users_path(),
+                 :enable_create => User.creatable? }
+  end
+
 end

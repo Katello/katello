@@ -5,7 +5,9 @@
   = _("Environment") + ": " + @environment.name
 
 = content_for :remove_item do
-  = link_to _("Remove Environment"), {:controller=>"environments", :action=>"destroy"}, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true, "data-forward"=>edit_organization_path(@organization.cp_key)
+  -# editable on the org means CRUD on the environments
+  -if editable
+    = link_to _("Remove Environment"), {:controller=>"environments", :action=>"destroy"}, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true, "data-forward"=>edit_organization_path(@organization.cp_key)
 
 = content_for :subcontent do
   .clear
@@ -14,15 +16,15 @@
     %fieldset.clearfix
       .grid_2.ra
         %label #{_("Name")}:
-      .grid_5.la.editable.edit_env_name{'name' => 'kp_environment[name]', "data-url"=>organization_environment_path(@organization.cp_key, @environment.id),  "data-forward"=>edit_organization_path(@organization.cp_key)}<> #{@environment.name}
+      .grid_5.la{'name' => 'kt_environment[name]', :class=>("editable edit_env_name" if editable), "data-url"=>organization_environment_path(@organization.cp_key, @environment.id),  "data-forward"=>edit_organization_path(@organization.cp_key)}<> #{@environment.name}
   
     %fieldset.clearfix
       .grid_2.ra
         %label #{_("Description")}:
-      .grid_5.la.editable.edit_textarea{:style => "word-wrap: break-word;", "data-url"=>organization_environment_path(@organization.cp_key, @environment.id), 'name' => 'kp_environment[description]'}<> #{@environment.description}
+      .grid_5.la{:style => "word-wrap: break-word;", :class=>("editable edit_textarea" if editable), "data-url"=>organization_environment_path(@organization.cp_key, @environment.id), 'name' => 'kt_environment[description]'}<> #{@environment.description}
   
     %fieldset.clearfix
       %input{ :type => "hidden", :name => "prior_envs", :value => @env_labels_json }
       .grid_2.ra
         %label #{_("Prior Environments")}:
-      .grid_5.la.editable.edit_prior_envs{'name' => 'kp_environment[prior]',  "data-url"=>organization_environment_path(@organization.cp_key, @environment.id),  "data-forward"=>edit_organization_path(@organization.cp_key)} #{@selected}
+      .grid_5.la{'name' => 'kt_environment[prior]',  :class=>("editable edit_prior_envs" if editable), "data-url"=>organization_environment_path(@organization.cp_key, @environment.id),  "data-forward"=>edit_organization_path(@organization.cp_key)} #{@selected}

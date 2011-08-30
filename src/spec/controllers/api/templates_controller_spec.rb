@@ -22,9 +22,9 @@ describe Api::TemplatesController do
     @organization = Organization.new(:name => 'organization', :cp_key => 'organization')
     @organization.id = 1
 
-    @environment = KPEnvironment.new(:name => 'environment')
+    @environment = KTEnvironment.new(:name => 'environment')
     @environment.id = 1
-    @locker = KPEnvironment.new
+    @locker = KTEnvironment.new
     @locker.id = 2
 
     @organization.locker = @locker
@@ -34,8 +34,8 @@ describe Api::TemplatesController do
     SystemTemplate.stub(:find).and_return(@tpl)
     SystemTemplate.stub(:new).and_return(@tpl)
 
-   # KPEnvironment.stub(:find).with(@environment.id).and_return(@environment)
-   # KPEnvironment.stub(:find).with(@locker.id).and_return(@locker)
+   # KTEnvironment.stub(:find).with(@environment.id).and_return(@environment)
+   # KTEnvironment.stub(:find).with(@locker.id).and_return(@locker)
 
 
     @request.env["HTTP_ACCEPT"] = "application/json"
@@ -58,7 +58,7 @@ describe Api::TemplatesController do
     end
     
     it 'should not fail if no templates are found, but return an empty list' do
-      @environment2 = KPEnvironment.new(:name => 'environment2')
+      @environment2 = KTEnvironment.new(:name => 'environment2')
       @environment2.id = 3
       
       SystemTemplate.should_receive(:where).with("environment_id" => @environment2.id).and_return([])
@@ -78,7 +78,7 @@ describe Api::TemplatesController do
 
   describe "create" do
     it "should call new and save!" do
-      KPEnvironment.stub(:find).and_return(@environment)
+      KTEnvironment.stub(:find).and_return(@environment)
 
       SystemTemplate.should_receive(:new).and_return(@tpl)
       @tpl.should_receive(:save!)
@@ -90,8 +90,8 @@ describe Api::TemplatesController do
 
   describe "update" do
     it 'should call update_attributes' do
-      #KPEnvironment.should_receive(:find).and_return(@environment)
-      #KPEnvironment.stub(:find).and_return(@environment)
+      #KTEnvironment.should_receive(:find).and_return(@environment)
+      #KTEnvironment.stub(:find).and_return(@environment)
 
       @tpl.should_receive(:update_attributes!).once
       put 'update', :id => TEMPLATE_ID, :template => {}
@@ -153,7 +153,7 @@ describe Api::TemplatesController do
       @temp_file.stub(:path).and_return("/a/b/c")
 
       File.stub(:new).and_return(@temp_file)
-      KPEnvironment.stub(:find).and_return(@environment)
+      KTEnvironment.stub(:find).and_return(@environment)
     end
 
     it "should call import" do

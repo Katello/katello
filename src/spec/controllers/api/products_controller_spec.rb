@@ -36,25 +36,31 @@ describe Api::ProductsController do
     @organization = Organization.new
     @organization.id = 1
 
-    @environment = KPEnvironment.new
-    @locker = KPEnvironment.new
+    @environment = KTEnvironment.new
+    @locker = KTEnvironment.new
 
     @organization.locker = @locker
     @organization.environments << @environment
 
     products.stub(:where).and_return(products)
-    
+
     @product = products[0]
     Product.stub!(:find_by_cp_id).and_return(@product)
     Product.stub!(:find).and_return(@product)
+
+    Product.stub!(:select).and_return(products)
+    products.stub!(:select).and_return(products)
+    products.stub!(:joins).and_return(products)
+    products.stub!(:where).and_return(products)
+    products.stub!(:all).and_return(products)
     @product.stub(:repos).and_return(repositories)
-    
+
     Organization.stub!(:first).and_return(@organization)
-    KPEnvironment.stub!(:first).and_return(@environment)
+    KTEnvironment.stub!(:first).and_return(@environment)
 
     Organization.stub!(:find).and_return(@organization)
-    KPEnvironment.stub!(:find).and_return(@environment)
-    
+    KTEnvironment.stub!(:find).and_return(@environment)
+
     @organization.stub!(:locker).and_return(@locker)
 
     @environment.stub!(:products).and_return(products)
@@ -73,7 +79,7 @@ describe Api::ProductsController do
     end
 
     it "should find environment" do
-      KPEnvironment.should_receive(:find).once.with(environment_id).and_return([@environment])
+      KTEnvironment.should_receive(:find).once.with(environment_id).and_return([@environment])
       get 'index', :organization_id => organization_id, :environment_id => environment_id
     end
 
@@ -113,7 +119,7 @@ describe Api::ProductsController do
   context "show repositories for a product in an environment" do
 
     it "should find environment" do
-      KPEnvironment.should_receive(:find).once.with(environment_id).and_return([@environment])
+      KTEnvironment.should_receive(:find).once.with(environment_id).and_return([@environment])
       get 'repositories', :organization_id => organization_id, :environment_id => environment_id, :id => product_id
     end
 

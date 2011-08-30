@@ -17,7 +17,6 @@
 import os
 import ConfigParser
 
-
 class Config(object):
     """
     The katello client configuration.
@@ -33,7 +32,8 @@ class Config(object):
     http://docs.python.org/library/configparser.html .
 
     To save to the config file after making changes, call 'Config.save()' and the
-    changes will be written to file.
+    changes will be written to file. Please note this only saves 'options'
+    section of the file storing it in the client-options.conf file.
 
     Config throws an Exception if 'Config.save()' is called before initializing
     the Config object.
@@ -48,6 +48,7 @@ class Config(object):
     FILE = 'client.conf'
     PATH = os.path.join('/etc/katello', FILE)
     USER = os.path.expanduser(os.path.join('~/.katello', FILE))
+    USER_OPTIONS = os.path.expanduser(os.path.join('~/.katello', 'client-options.conf'))
 
     parser = None
 
@@ -66,13 +67,29 @@ class Config(object):
         # read user config if it exists
         Config.parser.read(Config.USER)
 
+        # read user options if it exists
+        Config.parser.read(Config.USER_OPTIONS)
+
+        if Config.parser.has_section("DEFAULT"):
+            raise Exception('Default section in configuration is not supported')
+
     @staticmethod
     def save():
         """
-        Save the current state of the RawConfigParser to file
+        Save the "options" section to the client-options.conf file.
+
+        Please note other settings (other sections) are not saved!
         """
         if not Config.parser:
             raise Exception('Config.parser has not been initialized.')
 
-        # only writes to ~/.katello/client.conf
-        Config.parser.write(open(Config.USER, 'w'))
+        opt = ConfigParser.RawConfigParser()
+        # write a comment informing user not to use this file for own settings
+        opt.set('', '# = do not edit and use client.conf instead', '')
+        opt.add_section('options')
+
+        for option in Config.parser.options('options'):
+            value = Config.parser.get('options', option)
+            opt.set('options', option, value)
+
+        opt.write(open(Config.USER_OPTIONS, 'w'))

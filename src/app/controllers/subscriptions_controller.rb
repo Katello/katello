@@ -13,6 +13,13 @@ require 'ostruct'
 
 class SubscriptionsController < ApplicationController
 
+  def rules
+    {
+      :index => lambda{current_organization.readable?}
+    }
+  end
+
+
   def index
     all_subs = Candlepin::Owner.pools current_organization.cp_key
     @subscriptions = reformat_subscriptions(all_subs)

@@ -1,11 +1,31 @@
+<% config = YAML.load_file('/etc/katello/katello.yml') rescue nil
+  def find_db(config, env)
+    db = nil
+    if config
+      if config[env] && config[env]['database']
+        db = config[env]['database']
+      elsif config['common'] && config['common']['database']
+        db = config['common']['database']
+      end
+    end
+    return db.collect {|k,v| "  #{k}: #{v}"}.sort.join("\n") if db
+    nil
+  end
+%>
+
+
 # SQLite version 3.x
 #   gem install sqlite3-ruby (not necessary on OS X Leopard)
 development:
+  <%db = find_db(config, 'development')%>
+  <%if db %>
+<%=db%>
+  <%else%>
   adapter: sqlite3
   database: db/development.sqlite3
   pool: 5
   timeout: 5000
-
+  <%end%>
 #development:
 #  adapter: postgresql
 #  username: katello
@@ -18,13 +38,23 @@ development:
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
+  <%db = find_db(config, 'development')%>
+  <%if db %>
+<%=db%>
+  <%else%>
   adapter: sqlite3
   database: db/test.sqlite3
   pool: 5
   timeout: 5000
+  <%end%>
 
 production:
+  <%db = find_db(config, 'development')%>
+  <%if db %>
+<%=db%>
+  <%else%>
   adapter: sqlite3
   database: db/production.sqlite3
   pool: 5
   timeout: 5000
+  <%end%>

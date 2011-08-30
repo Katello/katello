@@ -5,15 +5,31 @@ describe SubscriptionsController do
 
   include LoginHelperMethods
   include LocaleHelperMethods
-
-
-
+  include OrganizationHelperMethods
+  include AuthorizationHelperMethods
+  describe "rules" do
+    before (:each) do
+      new_test_org
+      Organization.stub!(:first).with(:conditions => {:cp_key=>@organization.cp_key}).and_return(@organization)
+    end
+    describe "GET index" do
+      let(:action) {:index}
+      let(:req) { get :index}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :organizations,nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+    end
+  end
 
   describe "viewing subs" do
     before (:each) do
       login_user
       set_default_locale
-      setup_current_organization
+      setup_current_organization(new_test_org)
       Candlepin::Owner.stub!(:pools).and_return([ProductTestData::POOLS])
       Candlepin::Owner.stub!(:statistics).and_return([])
 

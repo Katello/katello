@@ -42,7 +42,7 @@ class Changeset < ActiveRecord::Base
   has_many :repos, :class_name=>"ChangesetRepo", :inverse_of => :changeset
   has_many :distributions, :class_name=>"ChangesetDistribution", :inverse_of => :changeset
   has_many :dependencies, :class_name=>"ChangesetDependency", :inverse_of =>:changeset
-  belongs_to :environment, :class_name=>"KPEnvironment"
+  belongs_to :environment, :class_name=>"KTEnvironment"
   belongs_to :task_status
   before_save :uniquify_artifacts
 
@@ -302,6 +302,7 @@ class Changeset < ActiveRecord::Base
     end
   end
 
+
   def remove_distribution distribution_id, product_name
     product = self.find_product(product_name)
     repos = product.repos(self.environment)
@@ -313,8 +314,6 @@ class Changeset < ActiveRecord::Base
       ChangesetDistribution.destroy_all(:distribution_id => distribution_id, :changeset_id => self.id, :product_id => product.id)
     end
   end
-
-
 
   private
 

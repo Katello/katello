@@ -76,6 +76,7 @@ def setup_admin(admin):
     prod_cmd.add_action('create', product.Create())
     prod_cmd.add_action('list', product.List())
     prod_cmd.add_action('synchronize', product.Sync())
+    prod_cmd.add_action('status', product.Status())
     prod_cmd.add_action('promote', product.Promote())
     admin.add_command('product', prod_cmd)
 

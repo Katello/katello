@@ -16,7 +16,7 @@ describe UsersController do
   
   include LoginHelperMethods
   include LocaleHelperMethods
-  
+  include AuthorizationHelperMethods
     before(:each) do
       login_user
       set_default_locale
@@ -60,7 +60,7 @@ describe UsersController do
       @user.username = "foo-user"
       @user.password = "password"
       @user.save 
-      Role.allow 'Test', ["create", "read","delete"], "product", ["RHEL-4", "RHEL-5","Cluster","ClusterStorage","Fedora"]
+      allow 'Test', ["create", "read","delete"], "product", ["RHEL-4", "RHEL-5","Cluster","ClusterStorage","Fedora"]
     end    
     
     it "should be allowed to change the password" do 
@@ -79,10 +79,10 @@ describe UsersController do
     it "should allow roles to be changed" do
        role = Role.where(:name=>"Test")[0]
        assert !role.nil?
-       put 'update', {:id => @user.id, :user=>{:role_ids=>[role.id]}}
+       put 'update_roles', {:id => @user.id, :user=>{:role_ids=>[role.id]}}
        response.should be_success
        assert User.find(@user.id).roles.size == 2
-       put 'update', {:id => @user.id, :user=>{:role_ids=>[]}}
+       put 'update_roles', {:id => @user.id, :user=>{:role_ids=>[]}}
        response.should be_success
        #should still have self role
        assert User.find(@user.id).roles.size == 1
@@ -139,5 +139,45 @@ describe UsersController do
   
     
   end  
+
+
+  describe "rules" do
+    before (:each) do
+      @organization = new_test_org
+      @testuser = User.create!(:username=>"TestUser", :password=>"foobar")
+    end
+    describe "GET index" do
+      let(:action) {:index}
+      let(:req) { get 'index' }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :users, nil, nil) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      let(:on_success) do
+        assigns(:users).should include @testuser
+      end
+
+      it_should_behave_like "protected action"
+    end
+
+    describe "update user put" do
+
+      let(:action) {:update}
+      let(:req) do
+        put 'update', :id => @testuser.id, :password=>"barfoo"
+      end
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update, :users, nil, nil) }
+      end
+      let(:unauthorized_user) do
+         user_with_permissions { |u| u.can(:read, :users, nil, nil) }
+      end
+      it_should_behave_like "protected action"
+    end
+  end
+
+
 
 end

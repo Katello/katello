@@ -48,9 +48,9 @@ class Api::ProvidersController < Api::ApiController
   end
 
   def products
-    render :json => @provider.products.to_json
+    render :json => @provider.products.select("products.*, providers.name AS provider_name").joins(:provider).to_json
   end
-  
+
   def import_manifest
     if @provider.yum_repo?
       raise HttpErrors::BadRequest, _("It is not allowed to import manifest for a custom provider.")
@@ -62,7 +62,7 @@ class Api::ProvidersController < Api::ApiController
     ensure
       temp_file.close
     end
-    
+
     @provider.import_manifest File.expand_path(temp_file.path)
     render :text => "Manifest imported", :status => 200
     rescue => e

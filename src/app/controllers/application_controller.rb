@@ -22,12 +22,14 @@ class ApplicationController < ActionController::Base
   before_filter :set_locale
   before_filter :require_user,:require_org
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
-  before_filter :authorize
+
   after_filter :flash_to_headers
 
 
-  # support for session (thread-local) variables must be the last filter in this class
+  # support for session (thread-local) variables must be the last filter (except authorize)in this class
   include Katello::ThreadSession::Controller
+  before_filter :authorize
+
 
   def section_id
     'generic'
@@ -179,13 +181,11 @@ class ApplicationController < ActionController::Base
   end
 
   private
-  # TODO: default organization will be stored within the logged user - this method will be removed
+
   def require_org
     unless session && current_organization
-      logout
-      errors _("You must have at least one organization in your database to access that page. Might need to run 'rake db:seed'"), {:persist => false}
       execute_after_filters
-      redirect_to new_user_session_url and return false
+      raise Errors::SecurityViolation, _("User does not belong to an organization.")
     end
   end
 
@@ -231,18 +231,22 @@ class ApplicationController < ActionController::Base
     hal.nil? ? 'en' : hal.scan(/^[a-z]{2}/).first
   end
 
+  def rules
+    raise Errors::SecurityViolation,"Rules not defined for  #{current_user.username} for #{params[:controller]}/#{params[:action]}"
+  end
+
   # authorize the user for the requested action
   def authorize(ctrl = params[:controller], action = params[:action])
-
     user = current_user
     user = User.anonymous unless user
     logger.debug "Authorizing #{current_user.username} for #{ctrl}/#{action}"
-    allowed = user.allowed_to?(action, ctrl)
-    if allowed
-      return true
-    else
-      raise Errors::SecurityViolation, "User #{current_user.username} is not allowed to access #{params[:controller]}/#{params[:action]}"
-    end
+
+    allowed = false
+    rule_set = rules.with_indifferent_access
+    allowed = rule_set[action].call if Proc === rule_set[action]
+    allowed = user.allowed_to? *rule_set[action] if Array === rule_set[action]
+    return true if allowed
+    raise Errors::SecurityViolation, "User #{current_user.username} is not allowed to access #{params[:controller]}/#{params[:action]}"
   end
 
   # render 403 page
@@ -307,12 +311,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def setup_environment_selector org
-    next_env = KPEnvironment.find(params[:next_env_id]) if params[:next_env_id]
+  def setup_environment_selector org, accessible
+    next_env = KTEnvironment.find(params[:next_env_id]) if params[:next_env_id]
 
     @paths = []
     @paths = org.promotion_paths.collect{|tmp_path| [org.locker] + tmp_path}
     @paths = [[org.locker]] if @paths.empty?
+
+    # reject any paths that don't have accessible envs
+    @paths.reject!{|path|  (path & accessible).empty?}
+    
     if @environment and !@environment.locker?
       @paths.each{|path|
         path.each{|env|
@@ -356,7 +364,7 @@ class ApplicationController < ActionController::Base
     }
 
     cs.products.each {|product|
-      to_ret[:products][product.id][:all] =  true;
+      to_ret[:products][product.id][:all] =  true
     }
 
     ['repo', 'errata', 'package'].each{ |type|
@@ -381,6 +389,18 @@ class ApplicationController < ActionController::Base
 
   def execute_after_filters
     flash_to_headers
+  end
+
+  def first_env_in_path accessible_envs, include_locker=false
+    return current_organization.locker if include_locker && accessible_envs.member?(current_organization.locker)
+    current_organization.promotion_paths.each{|path|
+      path.each{|env|
+        if accessible_envs.member?(env)
+          return env
+        end
+      }
+    }
+    nil
   end
 
 end

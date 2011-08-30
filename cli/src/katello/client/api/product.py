@@ -14,6 +14,7 @@
 # in this software or its documentation.
 
 from katello.client.api.base import KatelloAPI
+from pprint import pprint
 
 class ProductAPI(KatelloAPI):
     """
@@ -60,3 +61,8 @@ class ProductAPI(KatelloAPI):
     def sync(self, prodId):
         path = "/api/products/%s/sync" % prodId
         return self.server.POST(path)[1]
+
+    def last_sync_status(self, prodId):
+        path = "/api/products/%s/sync" % prodId
+        data = self.server.GET(path)[1]
+        return data

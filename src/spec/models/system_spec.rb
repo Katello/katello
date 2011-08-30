@@ -38,7 +38,7 @@ describe System do
     disable_org_orchestration
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-    @environment = KPEnvironment.create!(:name => 'test', :prior => @organization.locker.id, :organization => @organization)
+    @environment = KTEnvironment.create!(:name => 'test', :prior => @organization.locker.id, :organization => @organization)
 
     Organization.stub!(:first).and_return(@organization)
 

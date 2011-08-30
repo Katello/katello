@@ -1,4 +1,5 @@
 import unittest
+import copy
 from mock import Mock
 
 
@@ -24,7 +25,7 @@ class CLITestCase(unittest.TestCase):
         #mock the function
         m = Mock()
         if return_value != None:
-            m.return_value = return_value
+            m.return_value = copy.copy(return_value)
         setattr(obj, property_name, m)
         
         return m
@@ -58,6 +59,14 @@ class CLIOptionTestCase(CLITestCase):
 class CLIActionTestCase(CLITestCase):
 
     _options = {}
+
+    def mock_printer(self):
+        printer = self.mock(self.action, 'printer')
+        printer.setHeader = Mock()
+        printer.addColumn = Mock()
+        printer.printItem = Mock()
+        printer.printItems = Mock()
+        return printer
 
     def mock_options(self, options):
         self.mock(self.action, 'get_option').side_effect = self.mocked_get_option

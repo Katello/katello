@@ -71,7 +71,7 @@ class SynchronizeTestWithRepoId(CLIActionTestCase):
         self.mock(self.action.api, 'sync', self.SYNC_RESULT_WITHOUT_ERROR)
         
         self.mock(self.module, 'get_repo', self.REPO)
-        self.mock(self.module, 'run_async_task_with_status', self.SYNC_RESULT_WITHOUT_ERROR)
+        self.mock(self.module, 'run_async_task_with_status')
         
     def tearDown(self):
         self.restore_mocks()
@@ -104,7 +104,7 @@ class SynchronizeTestWithRepoId(CLIActionTestCase):
         self.assertEqual(self.action.run(), os.EX_OK)
         
     def test_returns_error_if_sync_failed(self):
-        self.module.run_async_task_with_status.return_value = self.SYNC_RESULT_WITH_ERROR
+        self.mock(self.action.api, 'sync', self.SYNC_RESULT_WITH_ERROR)
         self.assertEqual(self.action.run(), os.EX_DATAERR)
 
 

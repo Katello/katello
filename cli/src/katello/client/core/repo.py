@@ -25,7 +25,7 @@ from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_product, get_repo
-from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg
+from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, AsyncTask
 from katello.client.core.utils import ProgressBar
 
 try:
@@ -44,6 +44,16 @@ SYNC_STATES = { 'waiting':     _("Waiting"),
                 'not_synced':  _("Not synced") }
 
 
+def format_sync_time(sync_time):
+    if sync_time is None:
+        return 'never'
+    else:
+        return str(format_date(sync_time[0:19], '%Y-%m-%dT%H:%M:%S'))
+        #'2011-07-11T15:03:52+02:00
+
+def format_sync_state(state):
+    return SYNC_STATES[state]
+
 # base action ----------------------------------------------------------------
 
 class RepoAction(Action):
@@ -51,16 +61,6 @@ class RepoAction(Action):
     def __init__(self):
         super(RepoAction, self).__init__()
         self.api = RepoAPI()
-
-    def format_sync_time(self, sync_time):
-        if sync_time is None:
-            return 'never'
-        else:
-            return str(format_date(sync_time[0:19], '%Y-%m-%dT%H:%M:%S'))
-            #'2011-07-11T15:03:52+02:00
-
-    def format_sync_state(self, state):
-        return SYNC_STATES[state]
         
 # actions --------------------------------------------------------------------
 
@@ -93,7 +93,7 @@ class Create(RepoAction):
 
         prod = get_product(orgName, prodName)
         if prod != None:
-            repo = self.api.create(prod["cp_id"], name, url)
+            repo = self.api.create(prod["id"], name, url)
             print _("Successfully created repository [ %s ]") % name
         else:
             print _("No product [ %s ] found") % prodName
@@ -136,7 +136,7 @@ class Discovery(RepoAction):
 
         prod = get_product(orgName, prodName)
         if prod != None:
-            self.create_repositories(prod["cp_id"], name, selectedurls)
+            self.create_repositories(prod["id"], name, selectedurls)
 
         return os.EX_OK
 
@@ -234,22 +234,56 @@ class Status(RepoAction):
 
     def setup_parser(self):
         self.parser.add_option('--id', dest='id',
-                               help=_("repo id, string value (required)"))
+                        help=_("repository id, string value (required)"))
+        self.parser.add_option('--name', dest='name',
+                        help=_("repository name"))
+        self.parser.add_option('--org', dest='org',
+                        help=_("organization name eg: foo.example.com"))
+        self.parser.add_option('--environment', dest='env',
+                        help=_("environment name eg: production (default: Locker)"))
+        self.parser.add_option('--product', dest='product',
+                        help=_("product name eg: fedora-14"))
 
     def check_options(self):
-        self.require_option('id')
+        if not self.has_option('id'):
+            self.require_option('name')
+            self.require_option('org')
+            self.require_option('product')
 
     def run(self):
-        repo_id = self.get_option('id')
-        repo = self.api.repo(repo_id)
+        repoId   = self.get_option('id')
+        repoName = self.get_option('name')
+        orgName  = self.get_option('org')
+        envName  = self.get_option('env')
+        prodName = self.get_option('product')
 
-        repo['last_sync'] = self.format_sync_time(repo['last_sync'])
-        repo['sync_state'] = self.format_sync_state(repo['sync_state'])
+        if repoId:
+            repo = self.api.repo(repoId)
+        else:
+            repo = get_repo(orgName, prodName, repoName, envName)
+            if repo == None:
+                return os.EX_DATAERR
 
+        task = AsyncTask(self.api.last_sync_status(repo['id']))
+
+        repo['last_sync'] = format_sync_time(repo['last_sync'])
+        repo['sync_state'] = format_sync_state(repo['sync_state'])
+        if task.is_running():
+            pkgsTotal = task.total_count()
+            pkgsLeft = task.items_left()
+            repo['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
+            
+        errors = task.errors()
+        if len(errors) > 0:
+            repo['last_errors'] = errors
+        
         self.printer.addColumn('id')
+        self.printer.addColumn('name')
         self.printer.addColumn('package_count')
         self.printer.addColumn('last_sync')
-        self.printer.addColumn('sync_state',name=_("Progress"))
+        self.printer.addColumn('sync_state')
+        self.printer.addColumn('progress', show_in_grep=False)
+        self.printer.addColumn('last_errors', multiline=True, show_in_grep=False)
 
         self.printer.setHeader(_("Repository Status"))
         self.printer.printItem(repo)
@@ -268,7 +302,7 @@ class Info(RepoAction):
         self.parser.add_option('--org', dest='org',
                       help=_("organization name eg: foo.example.com"))
         self.parser.add_option('--environment', dest='env',
-                      help=_("environment name eg: production (default: locker)"))
+                      help=_("environment name eg: production (default: Locker)"))
         self.parser.add_option('--product', dest='product',
                       help=_("product name eg: fedora-14"))
 
@@ -293,8 +327,8 @@ class Info(RepoAction):
                 return os.EX_DATAERR
 
         repo['url'] = repo['source']['url']
-        repo['last_sync'] = self.format_sync_time(repo['last_sync'])
-        repo['sync_state'] = self.format_sync_state(repo['sync_state'])
+        repo['last_sync'] = format_sync_time(repo['last_sync'])
+        repo['sync_state'] = format_sync_state(repo['sync_state'])
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
@@ -343,14 +377,14 @@ class Sync(RepoAction):
             if repo == None:
                 return os.EX_DATAERR
 
-        async_task = self.api.sync(repo['id'])
-        result = run_async_task_with_status(async_task, ProgressBar())
+        task = AsyncTask(self.api.sync(repo['id']))
+        run_async_task_with_status(task, ProgressBar())
         
-        if result[0]['state'] == 'finished':
+        if task.succeeded():
             print _("Repo [ %s ] synced" % repo['name'])
             return os.EX_OK
         else:
-            print _("Repo [ %s ] failed to sync: %s" % (repo['name'], json.loads(result[0]["result"])['errors'][0]))
+            print _("Repo [ %s ] failed to sync: %s" % (repo['name'], json.loads(task.get_hashes()[0]["result"])['errors'][0]))
             return os.EX_DATAERR
 
 
@@ -383,13 +417,13 @@ class List(RepoAction):
             prod = get_product(orgName, prodName)
             if env != None and prod != None:
                 self.printer.setHeader(_("Repo List For Org %s Environment %s Product %s") % (orgName, env["name"], prodName))
-                repos = self.api.repos_by_env_product(env["id"], prod["cp_id"])
+                repos = self.api.repos_by_env_product(env["id"], prod["id"])
                 self.printer.printItems(repos)
         elif prodName:
             prod = get_product(orgName, prodName)
             if prod != None:
                 self.printer.setHeader(_("Repo List for Product %s in Org %s ") % (prodName, orgName))
-                repos = self.api.repos_by_product(prod["cp_id"])
+                repos = self.api.repos_by_product(prod["id"])
                 self.printer.printItems(repos)
         else:
             env  = get_environment(orgName, envName)

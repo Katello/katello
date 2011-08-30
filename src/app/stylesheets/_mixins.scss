@@ -13,6 +13,21 @@
   border-bottom-left-radius: $radius;
 }
 
+@mixin border-trbrbl-radius($radius) {
+  -webkit-border-bottom-right-radius: $radius;
+  -webkit-border-bottom-left-radius: $radius;
+  -moz-border-radius-bottomright: $radius;
+  -moz-border-radius-bottomleft: $radius;
+  border-bottom-right-radius: $radius;
+  border-bottom-left-radius: $radius;
+  -webkit-border-top-right-radius: $radius;
+  -moz-border-radius-topright: $radius;
+  border-top-right-radius: $radius;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-left-radius: 0;
+}
+
 @mixin border-right-radius($radius) {
   -webkit-border-bottom-right-radius: $radius;
   -webkit-border-top-right-radius: $radius;
@@ -44,6 +59,12 @@
     -webkit-border-top-right-radius: $radius;
     -moz-border-radius-topright: $radius;
     border-top-right-radius: $radius;
+}
+
+@mixin border-top-l-radius($radius) {
+    -webkit-border-top-left-radius: $radius;
+    -moz-border-radius-topleft: $radius;
+    border-top-left-radius: $radius;
 }
 
 @mixin box-shadow($x,$y,$blur,$color) {
@@ -108,4 +129,56 @@
   -o-background-size: $size;
   -moz-background-size: $size;
   background-size: $size;
+}
+@mixin sliding-tree-actionbar-image-spacing {
+  margin-left: 6px;
+  margin-top: -1px;
+}
+
+@mixin crumb-disable-hover {
+  &:hover {
+    background: $breadcrumbbg_color !important;
+    color: #000;
+    text-shadow: none;
+
+    &:after { border-left-color: $breadcrumbbg_color !important; }
+  }
+}
+
+@mixin crumb-disable-hover-selected {
+  &:hover {
+    background: $listhover_color !important; color: #FFF; @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
+    &:after {
+      border-left-color: $listhover_color !important;
+    }
+  }
+}
+
+@mixin crumb-nohover {
+  .crumb-nohover {
+    // crumb without any hover effect (color, cursor...etc)
+    cursor: default;
+    @include crumb-disable-hover;
+  }
+  .crumb-nohover-selected {
+    // a selected crumb without any hover effect (color, cursor...etc)
+    cursor: default;
+    @include crumb-disable-hover-selected;
+  }
+  .crumb-editable {
+    // a crumb that is editable... hover effect disabled, but cursor will be a hand
+    @include crumb-disable-hover;
+  }
+  .crumb-editable-selected {
+    // a selected crumb that is editable... hover effect disabled, but cursor will be a hand
+    @include crumb-disable-hover-selected;
+  }
+}
+
+@mixin product-sprite {
+  background: $base_product_icon;
+  height: 16px;
+  width: 16px;
+  position: absolute;
+  margin-top: 2px;
 }

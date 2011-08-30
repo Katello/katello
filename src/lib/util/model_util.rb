@@ -15,7 +15,7 @@ module Katello
 
     # hardcoded model names (uses kp_ prefix)
     @@table_to_model_hash = { 
-      "kp_environment" => KPEnvironment
+      "kt_environment" => KTEnvironment
     }
 
     # convert Rails Model name to Class or nil when no such table name exists

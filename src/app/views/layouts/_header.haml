@@ -7,7 +7,7 @@
     %img{:src => '/images/spinner_head.gif', :alt => 'Spinning Work Indicator'}
 .grid_13
   - if current_user
-    /
+    -if current_organization
       %div.org
         = render :partial => '/layouts/org'
     %ul
@@ -19,5 +19,4 @@
         %a{ :id => "unread_notices", :href => "/notices", :title => "System Notifications"}
           #{current_user.user_notices.length}
       %li.logout
-        %a{ :href => "/logout"}
-          #{_("Logout")}
+        = link_to _("Logout"), logout_path, :method=>"POST"

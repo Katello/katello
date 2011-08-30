@@ -12,6 +12,7 @@
 */
 
 
+
 var notices = (function() {
     return {
         setup_notices: function(pollingTimeOut) {
@@ -86,9 +87,8 @@ var notices = (function() {
               url: '/notices/get_new/',
               dataType: 'json',
               global: false,
-              success: function(data) {
-                notices.addNotices(data);
-              }
+              success: notices.addNotices
+              
             });
         },
         checkNoticesInResponse : function(xhr) {

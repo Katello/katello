@@ -2,7 +2,8 @@ module OrganizationHelperMethods
   def new_test_org user=nil
     Candlepin::Owner.stub!(:create_user).and_return(true)
     Candlepin::Owner.stub!(:create).and_return({})
-    @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
+    suffix = Organization.count + 1
+    @organization = Organization.create!(:name => "test_organization#{suffix}", :cp_key => "test_organization#{suffix}")
 
     session[:current_organization_id] = @organization.id
     return @organization

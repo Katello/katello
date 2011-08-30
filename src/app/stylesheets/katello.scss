@@ -2,7 +2,7 @@
 @import "grid";
 @import "text";
 @import "mixins";
-@import "compass/css3/gradient";
+@import "compass";
 @import "colors";
 @import "sprites";
 
@@ -15,7 +15,7 @@ strong { font-weight: bold; }
 .nomargin { margin: none; }
 .placeholder { margin-bottom: 2em; }
 .disabled { opacity: 0.4; cursor: default; }
-
+.hidden { display: none; }
 .outlined { outline: 2px solid $kselected_color; }
 .alt { background-color: lighten($lightgrey_color, 35%) !important; }
 .clickable { cursor: pointer; cursor: hand; }
@@ -33,6 +33,8 @@ strong { font-weight: bold; }
 }
 
 a {
+  cursor: hand;
+  cursor: pointer;
   color: $linkfg_color;
   text-decoration: none;
   
@@ -130,7 +132,7 @@ input[type='submit'], button, .button {
   margin: 4px;
   padding: 4px 12px;
   @include border-radius(5px);
-  @include text-shadow(0, 1px, 0, #fff);
+  @include text-shadow(#fff, 0, 1px, 0);
   min-height: 14px;
   
   .nomargin {
@@ -332,7 +334,7 @@ table {
   font-size: 12px;
   padding: 5px 0 0 0;
   overflow: hidden;
-  /* @include text-shadow(0, 1px, 0, #000); */
+  /*@include text-shadow(#000, 0, 1px, 0);*/
   height: 40px;
   header {
     display: block;
@@ -381,62 +383,13 @@ table {
       padding: 8px 0 0 0;
     }
     #unread_notices {
-      @include text-shadow(0,1px,1px, #000);
+      @include text-shadow(#000,0,1px,1px);
       @include border-radius(3em);
       background-color: darken($kprimary_color,24%);
       margin: 0.3em;
       padding: 0.2em 0.7em;
       width: auto;
       color: #FFF;
-          /* @include box-shadow(0, 1px, 1px, #000); */
-    }
-  }
-  
-  /* HEADER BUTTONS */
-  input[type='submit'],button,.button {
-    font-family: $screenfont;
-    font-weight: bold;
-    font-size: 10px;
-    display: inline-block;
-    background: -moz-linear-gradient(top, lighten($kprimary_color, 20%), $kprimary_color );
-    background: -webkit-gradient(linear, left top, left bottom, from(lighten($kprimary_color, 20%)),  to($kprimary_color));
-    @include no-box-shadow;
-    border: 0 none;
-    color: #FFF;
-    cursor: pointer;
-    @include border-radius(5px);
-    @include text-shadow(0, 1px, 0, #000);
-     min-height: 14px;
-    .nomargin {
-      margin: 0;
-    }
-    &:hover {
-      background: -moz-linear-gradient(top, lighten($kprimary_color, 30%), lighten($kprimary_color, 20%));
-      background: -webkit-gradient(linear, left top, left bottom, from(lighten($kprimary_color, 30%)), to(lighten($kprimary_color, 20%)));
-      @include box-shadow(0, 1px, 2px, rgba(0,0,0,0.5));
-      text-decoration: none;
-      color: #fff;
-    }
-    &:active {
-      background: -moz-linear-gradient(top, lighten($kprimary_color, 30%), lighten($kprimary_color, 20%));
-      background: -webkit-gradient(linear, left top, left bottom, from(lighten($kprimary_color, 30%)), to(lighten($kprimary_color, 20%)));
-      @include no-box-shadow;
-      text-decoration: none;
-      @include text-shadow(0, 2px, 2px, #000);
-    }
-    &:focus {
-      text-decoration: none;
-      color: #FFF;
-    }
-    &.disabled, &[disabled] {
-      cursor: default;
-      background: transparent;
-      opacity: 0.4;
-      /* @include no-box-shadow; */
-      &:hover {
-        background: transparent;
-        @include no-box-shadow;
-      }
     }
   }
 }
@@ -518,7 +471,7 @@ nav {
           padding: 9px 18px;
           text-decoration: none;
           color: $taboff_color;
-          @include text-shadow(0,1px,0,#fff);
+          @include text-shadow(#fff,0,1px,0);
           
           &:hover {
             color: lighten($kselected_color,10%);
@@ -534,11 +487,20 @@ nav {
     font-family: $headlinefont;
     font-size: 115%;
     padding-bottom: 9px;
-    
+    .arrow_icon_menu {
+      height: 11px;
+      width: 13px;
+      background: $arrow_icon_menu;
+      float: right;
+      margin: 13px 10px 0 -13px;
+      &:hover {
+        background: $arrow_icon_menu_hover;
+      }
+    }
     &>ul {
       display: block;
       min-height: 35px;
-    
+      height: 35px;
       li {
         display: inline-block;
         margin: 0;
@@ -548,12 +510,12 @@ nav {
           cursor: pointer;
           text-transform: none;
           text-decoration: none;
-          @include text-shadow(0,1px,0,#fff);
+          @include text-shadow(#fff,0,1px,0);
           display: block;
           margin: 0;
           padding: 8px 16px 6px;
           color: $taboff_color;
-    
+          float: left;
           &.selected {
             color: $tabon_color;
             font-weight: bold;
@@ -562,6 +524,30 @@ nav {
           }
     
           &:hover { color: lighten($kselected_color,10%); }
+        }
+        &>ul {
+          position: absolute;
+          display: none;
+          background: $subnav_shadow_img;
+          background-position: 0 14px;
+          background-color: #FFF;
+          @include box-shadow(2px 2px 2px rgba(0,0,0,0.4));
+          z-index: 101;
+          top: 35px;
+          height: 35px;
+          @include border-bottom-lr-radius(3px);
+          li {
+            a {
+              &.selected {
+                border-bottom: 3px solid lighten($kselected_color,10%);
+              }
+            }
+          }
+        }
+        &.selected {
+            &:first-child .arrow_icon_menu {
+              background: $arrow_icon_menu_hover;
+            }
         }
       }
     }
@@ -618,11 +604,10 @@ nav {
       margin-left: 10px;
     }
   }
-  a {
-    cursor: pointer;
-    cursor: hand;
-  }
 }
+
+
+
 /* FORMS */
 /* generic */
 label {
@@ -700,7 +685,7 @@ legend {
 
 /* search forms */
 
-.search {
+.search, .filter {
   position: absolute;
   button {
     position: absolute;
@@ -719,8 +704,14 @@ legend {
     float: right; /* webkit adds an extra padding and makes the widget narrower */
     width: 220px;
   }
+  input[type="input"] {
+    float: right; /* webkit adds an extra padding and makes the widget narrower */
+    width: 220px;
+    @include border-radius(16px);
+    padding-left: 10px;
+  }
 }
-.search_button {
+.search_button, .filter_button {
     background: $search_icon_white;
     position: relative;
     width: 16px; height: 16px;
@@ -733,17 +724,24 @@ legend {
         background-position: 0 -16px;
     }
 }
-#filter_form {
-    float: right;
-    position: relative;
-    padding-bottom: 5px;
-}
-.filter {
-    @extend .search;
-}
-.filter_button {
-    @extend .search_button;
-    left: -30px;
+.org {
+    .filter {
+        position: absolute;
+        width: 230px;
+        height: 18px;
+        left: 25px;
+    }
+    #orgfilter {
+        margin-bottom: 33px;
+    }
+    #orgfilter_input {
+        width: 230px;
+        margin-bottom: 3px;
+    }
+    .filter_button {
+        margin: 4px 0 0 0;
+        top: 0;
+    }
 }
 
 /*footer*/
@@ -827,27 +825,27 @@ footer {
 
 .notifications {
     tr.success {
-        @include linear-gradient(color-stops(white, white, rgb(242,255,229)));
+        @include background-image(linear-gradient(white, white, rgb(242,255,229)));
         &:hover {
-            @include linear-gradient(color-stops(white, rgb(242,255,229)));
+            @include background-image(linear-gradient(white, rgb(242,255,229)));
         }
     }
     tr.error {
-        @include linear-gradient(color-stops(white, white, rgb(255,229,229)));
+        @include background-image(linear-gradient(white, white, rgb(255,229,229)));
         &:hover {
-            @include linear-gradient(color-stops(white, rgb(255,229,229)));
+            @include background-image(linear-gradient(white, rgb(255,229,229)));
         }
     }
     tr.message {
-        @include linear-gradient(color-stops(white, white, rgb(239,239,239)));
+        @include background-image(linear-gradient(white, white, rgb(239,239,239)));
         &:hover {
-            @include linear-gradient(color-stops(white, rgb(239,239,239)));
+            @include background-image(linear-gradient(white, rgb(239,239,239)));
         }
     }
     tr.warning {
-        @include linear-gradient(color-stops(white, white, rgb(255,255,229)));
+        @include background-image(linear-gradient(white, white, rgb(255,255,229)));
         &:hover {
-            @include linear-gradient(color-stops(white, rgb(255,255,229)));
+            @include background-image(linear-gradient(white, rgb(255,255,229)));
         }
     }
 }
@@ -962,9 +960,7 @@ fieldset {
         border: none;
         padding: 0;
         &:hover {
-          box-shadow: none;
-          -webkit-shadow: none;
-          -moz-box-shadow: none;
+          @include no-box-shadow;
         }
       }
       input[type="text"] {
@@ -1144,7 +1140,7 @@ fieldset {
     position: absolute;
     top: 9px;
   }
-  h2 { padding-left: 20px; }
+  h2 { padding-left: 20px; margin: 0.25em 0; }
   #panel_main, #subpanel_main {
     overflow-y: auto;
     overflow-x: hidden;
@@ -1210,7 +1206,7 @@ fieldset {
     }
     //span { vertical-align: middle; }
   }
-  .slide_link {
+  .link_details {
     background: $dotdotdot_icon;
     margin: 6px 0;
   }
@@ -1235,6 +1231,7 @@ fieldset {
     font-weight: bolder;
     text-align: center;
     padding: 4px 12px;
+    z-index: 400;
   }
   #slider {
     .block {
@@ -1419,9 +1416,9 @@ fieldset {
       border-style: solid;
       border-width: 1px;
       border-color: #d3d3d3;
-  
+
       display: none;
-  
+
       z-index: 200;
       position: absolute;
       background-color: #FFF;
@@ -1432,55 +1429,49 @@ fieldset {
   overflow: hidden; 
   font: 14px;
   position: relative;
-  
+
   .selected {
-    background: $listhover_color !important; color: #FFF; @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
+    background: $listhover_color !important; color: #FFF; @include text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
     &:after {
       border-left-color: $listhover_color !important;
     }
   }
 
-  li { 
+  li {
       float: left; 
       margin-left: 0;
 
       &:first-child {
+        @include crumb-nohover;
         a {
           padding-left: 20px;
           @include border-left-radius(5px);
         }
-        .nohover {
-          &:hover {
-            background: $breadcrumbbg_color !important;
-            color: #000;
-            text-shadow: none;
-
-            &:after { border-left-color: $breadcrumbbg_color !important; }
-          }
-        }
       }
-      &:nth-child(2) {
+      &:nth-child(n) {
+        @include crumb-nohover;
         a {
           background: $breadcrumbbg_color;
           &:after { border-left-color: $breadcrumbbg_color; }
         }
       }
       &:last-child {
+        @include crumb-nohover;
         a {
           padding-right: 30px;
           @include border-right-radius(5px);
-          
+
           &:hover {
             color: #FFF;
             background: $listhover_color !important;
           }
-          &:after { 
+          &:after {
             border: 0;
             &:hover { border-left-color: $listhover_color !important; }
           }
         }
       }
-      
+
       a {
         color: #000;
         text-decoration: none; 
@@ -1489,11 +1480,11 @@ fieldset {
         position: relative; 
         display: block;
         float: left;
-      
+        
         &:hover { 
           background: $listhover_color !important; 
           color: #FFF; 
-          @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
+          @include text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
           
           &:after { border-left-color: $listhover_color !important; }
         }
@@ -1502,93 +1493,6 @@ fieldset {
           color: white;
           
           &:hover:after { border-left-color: $listhover_color !important; }
-          &:after { border-left-color: $kselected_color !important; }
-        }
-        &:after {
-          content: " "; 
-          display: block; 
-          width: 0; 
-          height: 0;
-          border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
-          border-bottom: 50px solid transparent;
-          border-left: 30px solid $breadcrumbbg_color;
-          position: absolute;
-          top: 50%;
-          margin-top: -50px; 
-          left: 100%;
-          z-index: 2; 
-        }
-        &:before { 
-          content: " "; 
-          display: block; 
-          width: 0; 
-          height: 0;
-          border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
-          border-bottom: 50px solid transparent;
-          border-left: 30px solid white;
-          position: absolute;
-          top: 50%;
-          margin-top: -50px; 
-          margin-left: 1px;
-          left: 100%;
-          z-index: 1; 
-        }
-     }
-  }
-}
-.breadcrumb_nohover { 
-  list-style: none; 
-  overflow: hidden; 
-  font: 14px;
-  position: relative;
-  
-  .selected {
-    background: $listhover_color !important; color: #FFF; @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
-    &:after {
-      border-left-color: $listhover_color !important;
-    }
-  }
-
-  li { 
-      float: left; 
-      margin-left: 0;
-
-      &:first-child {
-          a {
-            padding-left: 20px;
-            @include border-left-radius(5px);
-          }
-      }
-      &:nth-child(2) {
-        a {
-          background: $breadcrumbbg_color;
-          &:after { border-left-color: $breadcrumbbg_color; }
-        }
-      }
-      &:last-child {
-        a {
-          padding-right: 30px;
-          @include border-right-radius(5px);
-          
-          &:after { 
-            border: 0;
-          }
-        }
-      }
-      
-      a {
-        color: #000;
-        text-decoration: none; 
-        padding: 8px 0 8px 55px;
-        background: $breadcrumbbg_color;                   /* fallback color */
-        position: relative; 
-        display: block;
-        float: left;
-      
-        &.active {
-          background: $kselected_color; 
-          color: white;
-          
           &:after { border-left-color: $kselected_color !important; }
         }
         &:after {
@@ -1692,4 +1596,296 @@ fieldset {
     height: 16px;
     width: 16px;
     text-indent: -4000em;
+}
+
+.sliding_tree {
+  .tree_breadcrumb {
+    font-weight: 600;
+    font-size: 110%;
+    color: #000;
+    background-color: $tree-container_color;
+    word-wrap: break-word;
+    border: 1px solid $tree-border_color;
+    border-bottom: none;
+    padding: 10px 5px;
+    overflow: auto;
+    height: 20px;
+    
+    .currentCrumb{ color: #000; }
+    .crumb { color: #356e76; }
+    .slide_link { display: inline; }
+    
+    .home_img {
+      width: 16px;
+      height: 16px;
+      margin: 0 2px;
+      background: $home_icon_black;
+      text-indent: -4000em;
+      position: relative;
+    }
+    .home_img_inactive {
+      @extend .home_img;
+      background: $home_icon_green;
+    }
+    .locked_icon {
+      width: 16px;
+      height: 16px;
+      margin: 2px;
+      background: $locked_icon;
+      text-indent: -4000em;
+      position: relative;
+    }
+  }
+  .breadcrumb_search {
+    font-size: 100%;
+    margin: 0 0 0 0;
+    display: block;
+    width: 448px;
+    font-weight: 200;
+    color: #FFF;
+    background-color: $tree-container_color;
+    word-wrap: break-word;
+    border: 1px solid $tree-border_color;
+    border-bottom: none;
+    #search_form {
+        display: none;
+        margin-right: 4px;
+    }
+    .search {
+        position: relative;
+        clear: both;
+        display: inline-block;
+        margin: 5px auto;
+        input[type="input"] {
+          //float: right; /* webkit adds an extra padding and makes the widget narrower */
+          border: 3px solid #436fa8;
+          background: #FFF;
+          padding-right: 0px;
+        }
+        button {
+          background: $search_icon_black;
+          top: 15px;
+        }
+    }
+    .search_button {
+        margin-top: 12px;
+        background: $search_icon_black;
+    }
+    .tree_breadcrumb {
+        display: inline-block;
+        outline: 0 none;
+        width: 90%;
+        border: none;
+        padding: 10px 5px 6px 5px;
+    }
+  }
+  .sliding_container {
+    overflow: hidden;
+    position: relative;
+    width: 448px;
+    border: 1px solid #B5B5B5;
+  
+    .sliding_list {
+      width: 896px;
+      position: relative;
+      top: 0;
+      left: 0;
+      border: none;
+      
+      .slider {
+        width: 448px;
+        min-height: 450px;
+        float: left;
+        
+        h5 {
+          border-bottom: solid 2px #F2F2F2;
+          font-size: 120%;
+          width: 90%;
+          margin-top: 10px;
+          margin-left: 10px;
+        }
+        
+        .empty_list { padding: 10px 0 0 10px; }
+        
+        li{
+          height: 34px;
+          border-top: 2px solid #FFF;
+          border-bottom: 2px solid #FFF;
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+        
+        li:hover {
+          background-color: #bde4e8;
+          border-top-color: #7bbcc5;
+          border-bottom-color: #7bbcc5;
+          color: #000;
+          
+          a {
+            color: #356e76;
+          }
+        }
+      }
+    }
+  }
+  #tree_loading {
+    position: absolute;
+    opacity: .8;
+    background-color: white;
+    z-index: -1;
+    width: 440px; 
+    height: 415px;
+    .text {
+        //vertically center
+        height: 10em;
+        margin-top:-5em;
+        top: 50%;
+        width: 50%;
+        text-align: center; 
+       // display:inline;
+        position:relative;
+        margin-left:auto;
+        margin-right:auto;
+    }
+  }
+  #sliding_tree_actionbar {
+    width: 100%;
+    .cs_action {
+        float: left;
+        
+        margin-right: -1px;
+        width: 24.7%; // ~1/4 of the right panel width
+        height: 20px;
+        padding-top: 9px;
+        font-size: 90%;
+        word-wrap: break-word;
+        border-bottom: 1px solid #B5B5B5;
+        border-right: 1px solid #B5B5B5;
+        border-left: 1px solid #B5B5B5;
+       
+        background-color: $tree-container_color;
+
+        .text {
+            margin-left: 26px;
+
+        }
+        &:hover {
+            background-color: #bde4e8; //same as li under #contents
+        }
+    }
+    .highlighted {
+         background-color: #bde4e8; //same as hover
+    }
+    .disabled {
+        border-bottom: 1px solid #B5B5B5;
+        border-right: 1px solid #B5B5B5;
+        &:hover {
+            background-color: $tree-container_color; 
+        }
+    }
+  }
+  .sprite {
+    height: 16px;
+    width: 16px;
+    position: absolute;
+    margin-top: 2px;
+    
+  }
+}
+
+
+/*-------switcher STARTS HERE -------*/
+
+/* switcher Container (default to float:right) */
+#switcherContainer {
+  position: absolute;
+  margin-top: 4px;
+}
+
+/* switcher Button */
+ #switcherButton {
+  display: inline-block;
+  float: right;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  position: relative;
+  z-index: 30;
+  cursor: pointer;
+  div:first-child {
+    padding: 7px 12px 4px 10px;
+    display: block;
+    float: left; }
+  .arrow_icon {
+    height: 11px;
+    width: 13px;
+    background: $arrow_icon;
+    float: right;
+    margin: 10px 10px 0 0;
+  }
+  &.active {
+    @include background-image(linear-gradient(rgb(61, 136, 151), rgb(121, 185, 199)));
+    @include border-bottom-lr-radius(0);
+    .arrow_icon {
+      background-position: 0 -11px;
+    }
+  }
+  &:hover {
+    @include background-image(linear-gradient(rgb(61, 136, 151), rgb(121, 185, 199)));
+    text-decoration: underline;
+  }
+}
+
+/* switcher Box */
+#switcherBox {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  display: none;
+  z-index: 2000;
+  a {
+    color: #000 !important;
+  }
+}
+
+/* switcher Form */
+#switcherForm {
+  width: 248px;
+  border: 1px solid $orgbox_color;
+  @include border-trbrbl-radius(3px);
+  @include box-shadow(2px 2px 2px rgba(0,0,0,0.4));
+  margin-top: -1px;
+  background-color: $orgbox_color;
+  padding: 6px;
+  fieldset {
+    margin: 0 0 12px 0;
+    display: block;
+    border: 0;
+    padding: 0;
+  }
+  a {
+      @include border-radius(3px);
+      width: 90%;
+      padding: 3%;
+      &:hover {
+        color: #FFF !important;
+        background-color: $listhover_color;
+      }
+      &.selected {
+         background-color: $lightkprimary_color;
+      }
+  }
+}
+
+#orgbox {
+  background: #fff;
+  @include border-radius(3px);
+  padding: 10px 13px;
+  margin: 0;
+  height: 220px;
+  overflow-y: auto;
+  width: 223px;
+}
+
+input:focus {
+  outline: none;
 }
