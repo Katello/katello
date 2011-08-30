@@ -16,6 +16,8 @@ class SystemTemplatesController < ApplicationController
   before_filter :setup_options, :only => [:index, :items]
   before_filter :find_template, :only =>[:update, :edit, :destroy, :show]
 
+  around_filter :catch_exceptions
+
   def section_id
     'systems'
   end
@@ -40,7 +42,7 @@ class SystemTemplatesController < ApplicationController
 
 
   def index
-    @templates = SystemTemplate.where(:environment_id => current_organization.locker.id).search_for(params[:search]).limit(current_user.page_size)
+    @templates = SystemTemplate.search_for(params[:search]).where(:environment_id => current_organization.locker.id).limit(current_user.page_size)
     retain_search_history
   end
   
@@ -66,16 +68,16 @@ class SystemTemplatesController < ApplicationController
   end
 
   def update
-    attrs = params[:template]
+    attrs = params[:system_template]
     if attrs[:name]
-      @template.name = attrs[:name]
-      @template.save!
-      render :text=>@template.name
+      result = @template.name = attrs[:name]
     elsif attrs[:description]
-      @template.description = attrs[:description]
-      @template.save!
-      render :text=>@template.description
+      result = @template.description = attrs[:description]
+
     end
+    @template.save!
+    notice _("Template #{@template.name} updated successfully.")
+    render :text=>result
 
   rescue Exception => e
     errors e
@@ -83,13 +85,13 @@ class SystemTemplatesController < ApplicationController
   end
 
   def destroy
-    begin
+      
       @template.destroy
       notice _("Template '#{@template.name}' was deleted.")
-    rescue Exception => e
+      render :partial => "common/list_remove", :locals => {:id => @template.id}
+  rescue Exception => e
       errors e.to_s
-    end
-    render :partial => "common/list_remove", :locals => {:id => @template.id}
+      render :text=> e, :status=>:bad_request
   end
 
   def show
@@ -102,11 +104,13 @@ class SystemTemplatesController < ApplicationController
   end
 
   def create
-    obj_params = params['system_template']
+    
+    obj_params = params[:system_template]
     obj_params[:environment_id] = current_organization.locker
-    template = SystemTemplate.create!(obj_params)
-    notice _("Sync Plan '#{template.name}' was created.")
-    render :partial=>"common/list_item", :locals=>{:item=>template, :accessor=>"id", :columns=>['name']}
+
+    @template = SystemTemplate.create!(obj_params)
+    notice _("Sync Plan '#{@template.name}' was created.")
+    render :partial=>"common/list_item", :locals=>{:item=>@template, :accessor=>"id", :columns=>['name']}
   rescue Exception => e
     errors e
     render :text => e, :status => :bad_request
@@ -116,6 +120,9 @@ class SystemTemplatesController < ApplicationController
 
   def find_template
     @template = SystemTemplate.find(params[:id])
+  rescue Exception => e
+    errors e
+    render :text=>e, :status=>400 and return false
   end
 
 end
