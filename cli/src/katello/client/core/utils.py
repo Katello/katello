@@ -359,8 +359,7 @@ def format_date(date, from_format="%Y-%m-%dT%H:%M:%SZ", to_format="%Y/%m/%d %H:%
     @param date: arguments for the function
     @return string, formatted date
     """
-    #t = time.strptime(date, from_format)
-    t = time.localtime()
+    t = time.strptime(date, from_format)
     return time.strftime(to_format, t)
 
 
