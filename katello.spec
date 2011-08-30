@@ -104,7 +104,7 @@ cp -R .bundle * %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 644 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
-install -m 644 config/database.yml %{buildroot}%{_sysconfdir}/%{name}/database.yml
+#install -m 644 config/database.yml %{buildroot}%{_sysconfdir}/%{name}/database.yml
 install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/environment.rb
 
 #copy init scripts and sysconfigs
@@ -116,7 +116,7 @@ install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logro
 
 #overwrite config files with symlinks to /etc/katello
 ln -svf %{_sysconfdir}/%{name}/katello.yml %{buildroot}%{homedir}/config/katello.yml
-ln -svf %{_sysconfdir}/%{name}/database.yml %{buildroot}%{homedir}/config/database.yml
+#ln -svf %{_sysconfdir}/%{name}/database.yml %{buildroot}%{homedir}/config/database.yml
 ln -svf %{_sysconfdir}/%{name}/environment.rb %{buildroot}%{homedir}/config/environments/production.rb
 
 #create symlinks for some db/ files
@@ -130,7 +130,7 @@ ln -sv %{datadir}/tmp %{buildroot}%{homedir}/tmp
 ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
 
 #re-configure database to the /var/lib/katello directory
-sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{_sysconfdir}/%{name}/database.yml
+sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{_sysconfdir}/%{name}/katello.yml
 
 #remove files which are not needed in the homedir
 rm -rf %{buildroot}%{homedir}/README
@@ -170,7 +170,6 @@ fi
 %defattr(-,root,root)
 %doc README LICENSE doc/
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
-%config(noreplace) %{_sysconfdir}/%{name}/database.yml
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
