@@ -12,7 +12,7 @@
 
 class Api::OrganizationsController < Api::ApiController
 
-  before_filter :find_organization, :only => [:show, :update, :destroy, :products, :providers]
+  before_filter :find_organization, :only => [:show, :update, :destroy, :products, :providers, :generate_debug_cert, :delete_debug_cert]
   respond_to :json
 
   def index
@@ -44,6 +44,30 @@ class Api::OrganizationsController < Api::ApiController
   def destroy
     @organization.destroy
     render :text => _("Deleted organization '#{params[:id]}'"), :status => 200
+  end
+
+  def generate_debug_cert
+    raise HttpErrors::BadRequest, _("Certificate already generated") if @organization.debug_product_cp_id
+
+    # create fake product
+    cp_id = Candlepin::Product.create({
+      :name => "#{@organization.name}_fake",
+      :multiplier => 1,
+      :attributes => []
+    })[:id]
+    # store the id in the organization
+    @organization.debug_product_cp_id = cp_id
+    @organization.save!
+    render :json => { :cp_id => cp_id }
+  end
+
+  def delete_debug_cert
+    raise HttpErrors::BadRequest, _("No debug certificate found for this organization") unless @organization.debug_product_cp_id
+
+    Candlepin::Product.destroy @organization.debug_product_cp_id
+    @organization.debug_product_cp_id = nil
+    @organization.save!
+    render :text => _("Deleted certificate"), :status => 200
   end
 
   # rhsm
