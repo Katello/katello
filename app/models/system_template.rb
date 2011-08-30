@@ -37,7 +37,7 @@ class SystemTemplate < ActiveRecord::Base
   include AsyncOrchestration
 
   #has_many :products
-  belongs_to :environment, :class_name => "KPEnvironment", :inverse_of => :system_templates
+  belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :system_templates
 
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :environment_id

@@ -4,7 +4,9 @@
   = _("Product: ") + @product.name
 
 = content_for :remove_item do
-  = link_to _("Remove Repository"), {:controller=>"repositories", :action=>"destroy"}, :confirm => _('Are you sure you want to remove this repository?'), :method => :delete, :class=>"remove_item", :remote=>true
+  -if editable
+    = link_to _("Remove Repository"), {:controller=>"repositories", :action=>"destroy"}, :confirm => _('Are you sure you want to remove this repository?'), :method => :delete, :class=>"remove_item", :remote=>true
+
 
 = content_for :subcontent do
   %h3
@@ -13,12 +15,12 @@
   %fieldset
     .grid_2.ra
       %label #{_("Name")}:
-    .grid_5.la.editable.edit_providername#repo_name{'name' => 'repo[name]', 'data-url' => provider_path(@provider.id)} #{@repository[:name]}
+    .grid_5.la#repo_name{'name' => 'repo[name]', 'data-url' => provider_path(@provider.id), :class=>("edit_providername" if editable)} #{@repository[:name]}
   
   %fieldset
     .grid_2.ra
       %label #{_("URL")}:
-    .grid_5.la.editable.edit_textarea{'name' => 'repo[feed]', 'data-url' => provider_path(@provider.id)} #{@repository[:source][:url]}
+    .grid_5.la{'name' => 'repo[feed]', 'data-url' => provider_path(@provider.id), :class=>("edit_textarea" if editable)} #{@repository[:source][:url]}
   
   %fieldset
     .grid_2.ra

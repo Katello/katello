@@ -15,6 +15,8 @@ require 'spec_helper'
 describe EnvironmentsController do
   include LoginHelperMethods
   include LocaleHelperMethods
+  include OrganizationHelperMethods
+  include AuthorizationHelperMethods
 
   module EnvControllerTest
     ENV_NAME = "environment_name"
@@ -28,137 +30,186 @@ describe EnvironmentsController do
     ORG_ID = 1
     ORGANIZATION = {:id => 1, :name => "organization_name", :description => "organization_description", :cp_key=>"foo"}
   end
-  
-  before (:each) do
-    login_user
-    set_default_locale
-    controller.stub!(:notice)
-    controller.stub!(:errors)
-    
-    #Candlepin::Owner.stub!(:merge_to).and_return @org
-    @env = mock(KPEnvironment, EnvControllerTest::ENVIRONMENT)
-    @env.stub!(:successor).and_return("")
-    
-    @locker = mock(KPEnvironment, EnvControllerTest::LOCKER)
-    
-    @org = mock(Organization, EnvControllerTest::ORGANIZATION)
-    @org.stub!(:environments).and_return([@env])
-    @org.environments.stub!(:first).with(:conditions => {:name => @env.name}).and_return(@env)
-    @org.stub!(:locker).and_return(@locker)
 
-    Organization.stub!(:first).with(:conditions => {:cp_key=>@org.cp_key}).and_return(@org)
-    KPEnvironment.stub!(:find).and_return(@env)
-  end
 
-  describe "GET new" do
+  describe "rules" do
     before (:each) do
-      @new_env = mock(KPEnvironment, EnvControllerTest::EMPTY_ENVIRONMENT)
+      new_test_org
+      Organization.stub!(:first).with(:conditions => {:cp_key=>@organization.cp_key}).and_return(@organization)
+    end
+    describe "GET new" do
+      let(:action) {:new}
+      let(:req) { get :new, :organization_id => @organization.cp_key}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update, :organizations,nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
     end
 
-    it "assigns a new environment as @environment" do
-      KPEnvironment.should_receive(:new).and_return(@new_env)
-      get :new, :organization_id => @org.cp_key
-      assigns(:environment).should_not be_nil
+    describe "post create" do
+      let(:action) {:create}
+      let(:req) { post :create, :organization_id => @organization.cp_key,
+                              :name => 'production', :prior => @organization.locker}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update, :organizations,nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+    end
+
+    describe "view_templates" do
+      before do
+        @env = KTEnvironment.create!(:name => "test-env", :organization => @organization, :prior => @organization.locker)
+        @controller.stub!(:find_environment).and_return(@env)
+      end
+      let(:action) {:system_templates}
+      let(:req) { get :system_templates, :env_id => @env.id, :org_id => @organization.cp_key}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read_all, :activation_keys, nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
     end
   end
+  describe "other-tests" do
+    before (:each) do
+      login_user
+      set_default_locale
+      controller.stub!(:notice)
+      controller.stub!(:errors)
 
-  describe "GET edit" do
-    it "assigns the requested environment as @environment" do
-      get :edit, :id => @env.id, :organization_id => @org.cp_key
-      assigns(:environment).should == @env
+      #Candlepin::Owner.stub!(:merge_to).and_return @org
+      @env = mock(KTEnvironment, EnvControllerTest::ENVIRONMENT)
+      @env.stub!(:successor).and_return("")
+
+      @locker = mock(KTEnvironment, EnvControllerTest::LOCKER)
+
+      @org = new_test_org
+
+      @org.stub!(:environments).and_return([@env])
+      @org.environments.stub!(:first).with(:conditions => {:name => @env.name}).and_return(@env)
+      @org.stub!(:locker).and_return(@locker)
+
+      Organization.stub!(:first).with(:conditions => {:cp_key=>@org.cp_key}).and_return(@org)
+      KTEnvironment.stub!(:find).and_return(@env)
     end
-  end
 
-  describe "POST create" do
-    describe "with valid params" do
-      before(:each) do
-        @new_env = mock(KPEnvironment, EnvControllerTest::EMPTY_ENVIRONMENT)
-        KPEnvironment.stub!(:new).and_return(@new_env)
-        @new_env.stub!(:save!).and_return(true)
+    describe "GET new" do
+      before (:each) do
+        @new_env = mock(KTEnvironment, EnvControllerTest::EMPTY_ENVIRONMENT)
       end
 
-
-      it "should create new environment" do
-        KPEnvironment.should_receive(:new).with({:name => 'production',
-              :organization_id => @org.id, :prior => @org.locker, :description => nil}).and_return(@new_env)
-        post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
-      end
-
-      it "should save new environment" do
-        @new_env.should_receive(:save!).and_return(true)
-        post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
-      end
-
-      it "assigns a newly created environment as @environment" do
-        post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
+      it "assigns a new environment as @environment" do
+        KTEnvironment.should_receive(:new).and_return(@new_env)
+        get :new, :organization_id => @org.cp_key
         assigns(:environment).should_not be_nil
       end
+    end
 
-      it "redirects to the created environment" do
-        post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
-        env = assigns(:environment)
-        response.should be_success
+    describe "GET edit" do
+      it "assigns the requested environment as @environment" do
+        get :edit, :id => @env.id, :organization_id => @org.cp_key
+        assigns(:environment).should == @env
+      end
+    end
+
+    describe "POST create" do
+      describe "with valid params" do
+        before(:each) do
+          @new_env = mock(KTEnvironment, EnvControllerTest::EMPTY_ENVIRONMENT)
+          KTEnvironment.stub!(:new).and_return(@new_env)
+          @new_env.stub!(:save!).and_return(true)
+        end
+
+
+        it "should create new environment" do
+          KTEnvironment.should_receive(:new).with({:name => 'production',
+                :organization_id => @org.id, :prior => @org.locker, :description => nil}).and_return(@new_env)
+          post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
+        end
+
+        it "should save new environment" do
+          @new_env.should_receive(:save!).and_return(true)
+          post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
+        end
+
+        it "assigns a newly created environment as @environment" do
+          post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
+          assigns(:environment).should_not be_nil
+        end
+
+        it "redirects to the created environment" do
+          post :create, :organization_id => @org.cp_key, :name => 'production', :prior => @org.locker
+          env = assigns(:environment)
+          response.should be_success
+        end
+
+      end
+    end
+
+    describe "update an environment" do
+      describe "with no exceptions thrown" do
+
+        before (:each) do
+          @env.stub(:update_attributes).and_return(EnvControllerTest::UPDATED_ENVIRONMENT)
+          @env.stub(:save!)
+        end
+
+        it "should call katello environment update api" do
+          @env.should_receive(:update_attributes).and_return(EnvControllerTest::UPDATED_ENVIRONMENT)
+          put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
+        end
+
+        it "should generate a success notice" do
+          controller.should_receive(:notice)
+          put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
+        end
+
+        it "should not redirect from edit view" do
+          put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
+          response.should_not redirect_to()
+        end
       end
 
+      describe "exception is thrown in katello api" do
+        before(:each) do
+          @env.stub(:update_attributes).and_raise(Exception)
+          @env.stub(:save!)
+        end
+
+        it "should generate an error notice" do
+          controller.should_receive(:errors)
+          put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
+        end
+
+        it "should not redirect from edit view" do
+          put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
+          response.should_not redirect_to()
+        end
+      end
+
+    end
+
+    describe "destroy an environment" do
+        before(:each) do
+          @env.stub(:destroy)
+        end
+
+      it "destroys the requested environment" do
+        @env.should_receive(:destroy)
+        delete :destroy, :id => @env.id, :organization_id => @org.cp_key
+      end
+
+      it "redirects to the environments list" do
+        delete :destroy, :id => @env.id, :organization_id => @org.cp_key
+      end
     end
   end
-
-  describe "update an environment" do
-    describe "with no exceptions thrown" do
-      
-      before (:each) do
-        @env.stub(:update_attributes).and_return(EnvControllerTest::UPDATED_ENVIRONMENT)
-        @env.stub(:save!)
-      end
-      
-      it "should call katello environment update api" do
-        @env.should_receive(:update_attributes).and_return(EnvControllerTest::UPDATED_ENVIRONMENT)
-        put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kp_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
-      end
-
-      it "should generate a success notice" do
-        controller.should_receive(:notice)
-        put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kp_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
-      end
-      
-      it "should not redirect from edit view" do
-        put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kp_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
-        response.should_not redirect_to()
-      end
-    end
-    
-    describe "exception is thrown in katello api" do
-      before(:each) do
-        @env.stub(:update_attributes).and_raise(Exception)
-        @env.stub(:save!)
-      end
-      
-      it "should generate an error notice" do
-        controller.should_receive(:errors)
-        put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kp_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
-      end
-      
-      it "should not redirect from edit view" do
-        put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kp_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
-        response.should_not redirect_to()
-      end
-    end
-    
-  end
-
-  describe "destroy an environment" do
-      before(:each) do
-        @env.stub(:destroy)
-      end
-    
-    it "destroys the requested environment" do
-      @env.should_receive(:destroy)
-      delete :destroy, :id => @env.id, :organization_id => @org.cp_key
-    end
-
-    it "redirects to the environments list" do
-      delete :destroy, :id => @env.id, :organization_id => @org.cp_key
-    end
-  end
-
 end

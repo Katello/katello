@@ -24,8 +24,8 @@ describe Katello::ModelUtils do
     Katello::ModelUtils.table_to_class("system_template").class_name.should match("SystemTemplate")
   end
 
-  it "should work with kp_environment" do
-    Katello::ModelUtils.table_to_class("kp_environment").class_name.should match("KPEnvironment")
+  it "should work with kt_environment" do
+    Katello::ModelUtils.table_to_class("kt_environment").class_name.should match("KTEnvironment")
   end
 
   it "should return tags for organization" do
@@ -33,7 +33,7 @@ describe Katello::ModelUtils do
     @o1 = Organization.create!(:name => 'test_org1', :cp_key => 'test_org1')
     @o2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org2')
     Organization.stub!(:all).and_return([@o1, @o2])
-    Tag.tags_for("organization").size.should be(2)
+    Tag.tags_for("organizations", nil).size.should be(2)
   end
 
 end

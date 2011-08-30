@@ -104,28 +104,38 @@ module Glue::Pulp::Repos
       self.repos(locker).any? { |r| r.synced? }
     end
 
+    #get last sync status of all repositories in this product
+    def latest_sync_statuses
+      self.repos(locker).collect do |r|
+        r._get_most_recent_sync_status()
+      end
+    end
+
     # Get the most relavant status for all the repos in this Product
     def sync_status
       states = Array.new
       # Get the most recent status from all the repos in this product
       not_synced = ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED)
       top_status = not_synced
-      foo = 0
+
       for r in repos(self.locker)
         curr_status = r._get_most_recent_sync_status()
         repo_sync_state = curr_status.state
         if repo_sync_state == ::PulpSyncStatus::Status::ERROR.to_s
+          #if one repo sync failed, consider the product sync failed
           top_status = curr_status
-          foo = 1
+
         elsif repo_sync_state == ::PulpSyncStatus::Status::RUNNING.to_s and
-                 top_status != ::PulpSyncStatus::Status::ERROR.to_s
+              top_status != ::PulpSyncStatus::Status::ERROR.to_s
+          #if one repo sync is running and there are no errors so far, consider the product sync running
           top_status = curr_status
-          foo = 2
+
         elsif repo_sync_state == ::PulpSyncStatus::Status::FINISHED.to_s and
-                top_status  != ::PulpSyncStatus::Status::RUNNING.to_s and
-                top_status  != ::PulpSyncStatus::Status::ERROR.to_s
+              top_status  != ::PulpSyncStatus::Status::RUNNING.to_s and
+              top_status  != ::PulpSyncStatus::Status::ERROR.to_s
+          #if one repo is finished and there are no running or failing repos so far, consider the product sync finished
           top_status = curr_status
-          foo = 3
+
         end
       end
       top_status
@@ -137,7 +147,7 @@ module Glue::Pulp::Repos
 
     def sync_start
       start_times = Array.new
-      for r in repos
+      for r in repos(locker)
         start = r.sync_start
         start_times << start unless start.nil?
       end
@@ -147,7 +157,7 @@ module Glue::Pulp::Repos
 
     def sync_finish
       finish_times = Array.new
-      for r in repos
+      for r in repos(locker)
         finish = r.sync_finish
         finish_times << finish unless finish.nil?
       end
@@ -159,8 +169,19 @@ module Glue::Pulp::Repos
       size = self.repos(locker).inject(0) { |sum,v| sum + v.sync_status.progress.total_size }
     end
 
+    def last_sync
+      sync_times = Array.new
+      for r in repos(locker)
+        sync = r.last_sync
+        sync_times << sync unless sync.nil?
+      end
+      sync_times.sort!
+      sync_times.last
+    end
+
     def cancel_sync
-      for r in repos
+      Rails.logger.info "Cancelling synchronization of product #{name}"
+      for r in repos(locker)
         r.cancel_sync
       end
     end
@@ -292,11 +313,9 @@ module Glue::Pulp::Repos
     def promote_repos repos, to_env
       async_tasks = []
       repos.each do |repo|
-
-        cloned = repo.get_cloned_in(to_env)
-        if cloned
+        if repo.is_cloned_in?(to_env)
           #repo is already cloned, so lets just re-sync it from its parent
-          async_tasks << cloned.sync
+          async_tasks << repo.get_cloned_in(to_env).sync
         else
           async_tasks << repo.promote(to_env, self)
 
@@ -307,7 +326,7 @@ module Glue::Pulp::Repos
           new_productContent = Glue::Candlepin::ProductContent.new({:content => {
               :name => repo.name,
               :contentUrl => "/#{new_repo_path}",
-              :id => new_repo_id,
+              :gpgUrl => "",
               :type => "yum",
               :label => new_repo_id,
               :vendor => "Custom"

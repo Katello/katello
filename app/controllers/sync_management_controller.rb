@@ -25,15 +25,40 @@ class SyncManagementController < ApplicationController
                      PulpSyncStatus::Status::RUNNING => _("Running."),
                      PulpSyncStatus::Status::NOT_SYNCED => _("Not synced.")}
 
+
+  before_filter :find_provider, :except => [:index, :sync]
+  before_filter :find_providers, :only => [:sync]
+  before_filter :authorize
+  
+
   def section_id
     'contents'
   end
 
+
+
+  def rules
+
+    list_test = lambda{Provider.any_readable?(current_organization)}
+    sync_read_test = lambda{@provider.readable?}
+    sync_test = lambda {current_organization.syncable?}
+    
+    { :index => list_test,
+      :sync_status => sync_read_test,
+      :product_status => sync_read_test,
+      :sync => sync_test,
+      :destroy => sync_test
+    }
+  end
+
+
   def index
     # TODO: We need to switch to using an Org's ID vs the display name.  See BZ 701406
     @organization = current_organization
-    rproducts = @organization.locker.products.reject { |p| p.repos(p.organization.locker).empty? }
+    rproducts = @organization.locker.products.readable(@organization).reject { |p| p.repos(p.organization.locker).empty? }
     @products = rproducts.sort { |p1,p2| p1.name <=> p2.name }
+    # syncable products
+    @sproducts = @organization.locker.products.syncable(@organization)
     @product_status = Hash.new
     @product_size = Hash.new
     @repo_status = Hash.new
@@ -90,6 +115,28 @@ class SyncManagementController < ApplicationController
   end
 
 private
+
+  def find_provider
+    prod = Product.find(params[:product_id])
+    verify_repo(prod, params[:repo_id])
+    @provider = prod.provider
+  end
+
+  def find_providers
+    @providers = []
+    params[:repo].each{|repo_id, prod_id|
+      prod = Product.find(prod_id)
+      verify_repo(prod, repo_id)
+      @providers << prod.provider if !@providers.member?(prod.provider)
+    }
+  end
+
+  def verify_repo product, repo_id
+    product.repos(current_organization.locker).each { |tmp_repo|
+      return true if repo_id == tmp_repo.id
+    }
+    raise _("The specified repo does not match the specified product")
+  end
 
   def format_sync_progress(sync_status)
     progress = {:progress => calc_progress(sync_status)}

@@ -136,13 +136,14 @@ module ApplicationHelper
     render :partial=>"/common/env_select", :locals => options
   end
 
-  def env_select_class curr_env, selected_env, curr_path, selected_path, locker_clickable
+  def env_select_class curr_env, selected_env, curr_path, selected_path, accessible_envs, locker_clickable
+
     classes = []
-    if locker_clickable or !curr_env.locker?
+    if (locker_clickable or !curr_env.locker?) and accessible_envs.member?(curr_env)
       classes << "path_link"
     else
       # if locker isn't clickable, disable the hover effect
-      classes << "nohover"
+      classes << "crumb-nohover"
     end
 
     if curr_env.id == selected_env.id
@@ -165,4 +166,9 @@ module ApplicationHelper
     {:new_notices=>current_user.pop_notices}
   end
 
+  # auto_tab_index: this method may be used to simplify adding a tabindex to UI forms.
+  def auto_tab_index
+    @current_index ||= 0
+    @current_index += 1
+  end
 end

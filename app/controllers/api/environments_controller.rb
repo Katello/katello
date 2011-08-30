@@ -17,7 +17,7 @@ class Api::EnvironmentsController < Api::ApiController
 
   def index
     query_params[:organization_id] = @organization.id
-    render :json => (KPEnvironment.where query_params).to_json
+    render :json => (KTEnvironment.where query_params).to_json
   end
 
   def show
@@ -25,7 +25,7 @@ class Api::EnvironmentsController < Api::ApiController
   end
 
   def create
-    environment = KPEnvironment.new(params[:environment])
+    environment = KTEnvironment.new(params[:environment])
     @organization.environments << environment
     @organization.save!
     render :json => environment
@@ -50,7 +50,7 @@ class Api::EnvironmentsController < Api::ApiController
   end
 
   def find_environment
-    @environment = KPEnvironment.find(params[:id])
+    @environment = KTEnvironment.find(params[:id])
     raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:id]}'") if @environment.nil?
     @environment
   end

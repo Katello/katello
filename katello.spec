@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.69
+Version:	      0.1.71
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -197,6 +197,491 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Aug 26 2011 Justin Sherrill <jsherril@redhat.com> 0.1.71-1
+- fixing a couple issues with promotions (jsherril@redhat.com)
+- adding some missing navigation permission checking (jsherril@redhat.com)
+- fixing issue where logout would throw a permission denied
+  (jsherril@redhat.com)
+- adding provider roles spec tests (jsherril@redhat.com)
+- Decreasing min validate_length for name fields to 2.  (Kept getting denied
+  for "QA"). (jrist@redhat.com)
+- Raising a permission denied exception of org is required, but not present.
+  Previously we would log the user out, which does not make much sense
+  (jsherril@redhat.com)
+- KPEnvironment (and subsequent kp_environment(s)) => KTEnvironment (and
+  kt_environment(s)). (jrist@redhat.com)
+- fixing broken unit tests (jsherril@redhat.com)
+- Fixed an issue where clicking on notices caused a user with no org perms to
+  log out (paji@redhat.com)
+- adding promotions permissions spec tests (jsherril@redhat.com)
+- Fixed some unit tests (paji@redhat.com)
+- Updated the protected shared example and unit tests (paji@redhat.com)
+- spec tests - modification after changes in product model/controller
+  (tstrachota@redhat.com)
+- fix for product name validations (tstrachota@redhat.com)
+- products cli - now displaying provider name (tstrachota@redhat.com)
+- products cli - fixed commands according to recent changes
+  (tstrachota@redhat.com)
+- products - name unique in scope of product's organziation
+  (tstrachota@redhat.com)
+- products - name unique in scope of provider now + product sync info reworked
+  (tstrachota@redhat.com)
+- product api - added synchronization data (tstrachota@redhat.com)
+- sync - api for sync status and cancelling (tstrachota@redhat.com)
+- katello-jobs.init executable (tstrachota@redhat.com)
+- changeset controller (jsherril@redhat.com)
+- removed an accidental typo (paji@redhat.com)
+- Added authorization controller tests based of ivan's initial work
+  (paji@redhat.com)
+- adding small simplification to notices (jsherril@redhat.com)
+- Fixes broken promotions page icons. (ehelms@redhat.com)
+- Fixes issue with incorrect icon being displayed for custom products.
+  (ehelms@redhat.com)
+- 732920 - Fixes issue with right side panel in promotions moving up and down
+  with scroll bar unncessarily. (ehelms@redhat.com)
+- Adds missing changeset loading spinner. (ehelms@redhat.com)
+- Code cleanup and fixes for filter box on promotions and roles page styling
+  and actions. (ehelms@redhat.com)
+- making sure sync plans page only shows readable products
+  (jsherril@redhat.com)
+- fixing issue where promotions would not highlight the correct nav
+  (jsherril@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (ehelms@redhat.com)
+- Javascript syntax and error fixing. (ehelms@redhat.com)
+- Merge branch 'master' into roles-ui (paji@redhat.com)
+- removing uneeded test (jsherril@redhat.com)
+- Merge branch 'master' into perf (shughes@redhat.com)
+- Merge branch 'roles-ui' of ssh://git.fedorahosted.org/git/katello into roles-
+  ui (ehelms@redhat.com)
+- Fixes to roles ui widget as a result of a re-factor as a result of bug
+  729728. (ehelms@redhat.com)
+- Fixed perm spec bug (paji@redhat.com)
+- Further Merge conflicts as a result of merging master in. (ehelms@redhat.com)
+- fixing spec tests (jsherril@redhat.com)
+- Merge branch 'master' into roles-ui (ehelms@redhat.com)
+- adding version for newrelic gem (shughes@redhat.com)
+- adding dev gem newrelic (shughes@redhat.com)
+- config for newrelic profiling (shughes@redhat.com)
+- Fix failing tests - controller authorization rules (inecas@redhat.com)
+- Persmissions rspec - use before(:each) instead of before(:all)
+  (inecas@redhat.com)
+- Shared example for authorization rules (inecas@redhat.com)
+- improving reset-dbs script (lzap+git@redhat.com)
+- Fixed some changeset controller tests (paji@redhat.com)
+- fixing spec test (jsherril@redhat.com)
+- Fixed a spec test in user controllers (paji@redhat.com)
+- Made the syncable check a lambda function (paji@redhat.com)
+- Fixed some unit tests (paji@redhat.com)
+- 729728 - Makes it so that clicking anywhere inside a highlighted row on
+  promotions page will click it instead of just a narrow strip of the
+  highlighted row. (ehelms@redhat.com)
+- Fixes issue with changeset loading as a result of previous bug fix.
+  (ehelms@redhat.com)
+- converting promotions to use a more simple url scheme that helps navigation
+  not have to worry about which environments the user can access via promotions
+  (jsherril@redhat.com)
+- Fixed the panel sliding up and down. (jrist@redhat.com)
+- Fixed panel sliding up and down when closing or opening helptips.
+  (jrist@redhat.com)
+- make sure we delete all the pulp database files vs just the 1
+  (mmccune@redhat.com)
+- Fixed merge conflicts (paji@redhat.com)
+- restructured the any  rules  in org to be in environment to be more
+  consistent (paji@redhat.com)
+- 726724 - Fixes Validation Error text not showing up in notices.
+  (ehelms@redhat.com)
+- removed beaker rake task (dmitri@redhat.com)
+- Fixed a rules bug that would wrongly return nil instead of true .
+  (paji@redhat.com)
+- commented-out non localhost setting for candlepin integration tests
+  (dmitri@redhat.com)
+- commented-out non localhost setting for candlepin integration tests
+  (dmitri@redhat.com)
+- first cut at candlepin integration tests (dmitri@redhat.com)
+- fixing issue with System.any_readable? referring to self instead of org
+  (jsherril@redhat.com)
+- fixing systems to only look up what the user can read (jsherril@redhat.com)
+- Notices - fix specs broken in in the roles refactor (bbuckingham@redhat.com)
+- removing error message from initdb script (lzap+git@redhat.com)
+- 723308 - verbose environment information should list names not ids
+  (inecas@redhat.com)
+- Made the code use environment ids instead of collecting one env at a time
+  (paji@redhat.com)
+- 732846 - reverting back to working code (mmccune@redhat.com)
+- 732846 - purposefully checking in syntax error - see if jenkins fails
+  (mmccune@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (mmccune@redhat.com)
+- 732846 - adding a javascript lint to our unit tests and fixing errors
+  (mmccune@redhat.com)
+- Added protect_from_forgery for user_sessinos_controller - now passes auth
+  token on post. (jrist@redhat.com)
+- auto_tab_index - introduce a view helper to simplify adding tabindex to forms
+  (bbuckingham@redhat.com)
+- Role - Changes to javascript permission lockdown. (ehelms@redhat.com)
+- Role - Adds tab order to permission widget input and some look and feel
+  changes. (ehelms@redhat.com)
+- Role - Makes permission name unique with a role and an organization.
+  (ehelms@redhat.com)
+- Role - Adds disable to Done button to prevent multiple clicks.
+  (ehelms@redhat.com)
+- Roles - updating role ui to use the new permissions model
+  (bbuckingham@redhat.com)
+- Re-factor of Roles-UI javascript for performance. (ehelms@redhat.com)
+- Modified the super admin before destroy query to use the new way to do super
+  admins (paji@redhat.com)
+- Re-factoring and fixes for setting summary on roles ui. (ehelms@redhat.com)
+- Adds better form and flow rest on permission widget. (ehelms@redhat.com)
+- Fixes for wrong verbs showing up initially in permission widget.  Fix for
+  non-display of tags on global permissions. (ehelms@redhat.com)
+- Changes filter to input box.  Adds fixes for validation during permission
+  creation. (ehelms@redhat.com)
+- Users - fix issue where user update would remove user's roles
+  (bbuckingham@redhat.com)
+- Navigation related changes to hide different resources (paji@redhat.com)
+- Fixing the initial summary on roles-ui page. (jrist@redhat.com)
+- `Merge branch 'roles-ui' of ssh://git.fedorahosted.org/git/katello into
+  roles-ui (jrist@redhat.com)
+- Sliding tree summaries. (jrist@redhat.com)
+- Role - Adds client side validation to permission widget steps.
+  (ehelms@redhat.com)
+- Adds enhancements to add/remove of users and permissions. (ehelms@redhat.com)
+- Fixing a bunch of labels and the "shadow bar" on panels without nav.
+  (jrist@redhat.com)
+- Revert "729115 - Fix for overpass font request failure in FF.  Caused by
+  ordering of request for font type." (jrist@redhat.com)
+- 729115 - Fix for overpass font request failure in FF.  Caused by ordering of
+  request for font type. (jrist@redhat.com)
+- Merge branch 'roles-ui' of ssh://git.fedorahosted.org/git/katello into roles-
+  ui (jrist@redhat.com)
+- 722432 - Fix for CSRF exploit on /logout (jrist@redhat.com)
+- Role - Adds fixes for sliding tree that led to multiple hashchange handlers
+  and inconsistent navigation. (ehelms@redhat.com)
+- Merge branch 'roles-ui' of ssh://git.fedorahosted.org/git/katello into roles-
+  ui (jrist@redhat.com)
+- Activation Keys - fix specs resulting from roles and perms changes
+  (bbuckingham@redhat.com)
+- 730754 - Fix for rendering of wider panels. (jrist@redhat.com)
+- Fixes background issues on roles and permissions on users page.
+  (ehelms@redhat.com)
+- Moves bulk of roles sliding tree code to new file.  Changes paradigm to load
+  bulk of roles editing javascript code once and have initialization/resets
+  occur on individual ajax loads. (ehelms@redhat.com)
+- Roles - update env breadcrumb path used by akeys...etc to better handle
+  scenarios involving permissions (bbuckingham@redhat.com)
+- unbind live click handler for non syncable schedules (shughes@redhat.com)
+- js call to disable non syncable schedule commits (shughes@redhat.com)
+- removing unnecessary products loop (shughes@redhat.com)
+- Removed the 'allow' method in roles, since it was being used only in tests.
+  So moved it to tests (paji@redhat.com)
+- Rounded bottom corners on third level subnav. Added bg. (jrist@redhat.com)
+- Merge branch 'roles-ui' of ssh://git.fedorahosted.org/git/katello into roles-
+  ui (jrist@redhat.com)
+- Third-level nav hover. (jrist@redhat.com)
+- fix bug with viewing systems with nil environments (shughes@redhat.com)
+- 3rd level nav bumped up to 2nd level for systems (shughes@redhat.com)
+- remove 3rd level nav from systems page (shughes@redhat.com)
+- making promotions controller rules more readable (jsherril@redhat.com)
+- Subscriptions - fix accidental commit... :( (bbuckingham@redhat.com)
+- having the systems environment page default to an environment the user can
+  actually read (jsherril@redhat.com)
+- fixing issue where changesets history would default to a changeset that the
+  user was not able to read (jsherril@redhat.com)
+- fixing permission for accessing the promotions page (jsherril@redhat.com)
+- remove provider sync perms from schedules (shughes@redhat.com)
+- update sync mgt to use org syncable perms (shughes@redhat.com)
+- remove sync from provider. moved to org. (shughes@redhat.com)
+- readable perms update to remove sync (shughes@redhat.com)
+- Roles - Activation Keys - add the logic to UI side to honor permissions
+  (bbuckingham@redhat.com)
+- making the promotions page honor roles and perms (jsherril@redhat.com)
+- fixing issue with sync_schedules (jsherril@redhat.com)
+- Fixes for the filter. (jrist@redhat.com)
+- Merge branch 'roles-ui' of ssh://git.fedorahosted.org/git/katello into roles-
+  ui (jrist@redhat.com)
+- Converted orgSwitcher to an ajax call for each click. Added a filter.
+  (jrist@redhat.com)
+- Fixed a tags glitch that was checking for id instead of name
+  (paji@redhat.com)
+- Fix for reseting add permission widget. (ehelms@redhat.com)
+- Role - Adds support for all tags and all verbs selection when adding a
+  permission. (ehelms@redhat.com)
+- update product to be syncable only by org sync access (shughes@redhat.com)
+- disable sync submit btn if user does not have syncable products
+  (shughes@redhat.com)
+- change sync plans to use org syncable permission (shughes@redhat.com)
+- add sync resource to orgs (shughes@redhat.com)
+- fix sync plan create/edit access (shughes@redhat.com)
+- adjust sync plan to use provider readable access (shughes@redhat.com)
+- remove sync plan resource type (shughes@redhat.com)
+- remove sync plan permission on model (shughes@redhat.com)
+- Fixed bunch of lookups that were checking on org tags instead of looking at
+  org scope (paji@redhat.com)
+- Fixed a typo in the perms query to make it not look for tags names for
+  :organizations (paji@redhat.com)
+- Fixed a typo (paji@redhat.com)
+- Roles - remove debugger statement from roles controller
+  (bbuckingham@redhat.com)
+- Roles - fix typo on systems controller (bbuckingham@redhat.com)
+- fix qunit tests for rails.allowedAction (shughes@redhat.com)
+- Role - Fix for permission creation workflow. (ehelms@redhat.com)
+- Role - Adds function to Tag to display pretty name of tags on permission
+  detail view. (ehelms@redhat.com)
+- Role - Adds display of verb and resource type names in proper formatting when
+  viewing permission details. (ehelms@redhat.com)
+- Role - First cut of permission widget with step through flow.
+  (ehelms@redhat.com)
+- Role - Re-factoring for clarity and preparation for permission widget.
+  (ehelms@redhat.com)
+- Role - Fix to update role name in list upon edit. (ehelms@redhat.com)
+- sync js cleanup and more comments (shughes@redhat.com)
+- Role - Activation Keys - add resource type, model and controller controls
+  (bbuckingham@redhat.com)
+- disable product repos that are not syncable by permissions
+  (shughes@redhat.com)
+- adding snippet to restrict tags returned for eric (jsherril@redhat.com)
+- remove unwanted images for sync drop downs (shughes@redhat.com)
+- Updated the navs to deal with org less login (paji@redhat.com)
+- Quick fix to remove the Organization.first reference (paji@redhat.com)
+- Made the login page choose the first 'accessible org' as users org
+  (paji@redhat.com)
+- filter out non syncable products (shughes@redhat.com)
+- nil org check for authorized verbs (shughes@redhat.com)
+- check if product is readable/syncable, sync mgt (shughes@redhat.com)
+- adding check for nil org for authorized verbs (shughes@redhat.com)
+- blocking off product remove link if provider isnt editable
+  (jsherril@redhat.com)
+- merging in master (jsherril@redhat.com)
+- Role - Fixes fetching of verbs and tags on reload of global permission.
+  (ehelms@redhat.com)
+- Role - Adds missing user add/remove breadcrumb code.  Fixes for sending all
+  types across and not displaying all type in UI.  Fixes sending multiple verbs
+  and tags to work properly. (ehelms@redhat.com)
+- Made it easier to give all_types access by letting one use all_type = method
+  (paji@redhat.com)
+- Role - Adds missing user add/remove breadcrumb code.  Fixes for sending all
+  type across and not displaying all type in UI.  Fixes sending multiple verbs
+  and tags to work properly. (ehelms@redhat.com)
+- fixing issue with creation, and nested attribute not validating correctly
+  (jsherril@redhat.com)
+- Added some permission checking code on the save of a permission so that the
+  perms with invalid resource types or verbs don;t get created
+  (paji@redhat.com)
+- Role - Adds validation to prevent blank name on permissions.
+  (ehelms@redhat.com)
+- Role - Fixes typo (ehelms@redhat.com)
+- Role - Refactor to move generic actionbar code into sliding tree and add
+  roles namespace to role_edit module. (ehelms@redhat.com)
+- unit test fixes and adding some (jsherril@redhat.com)
+- adding validator for permissions (jsherril@redhat.com)
+- fix for verb check where symbol and string were not comparing correctly
+  (jsherril@redhat.com)
+- Made resource type called 'All' instead of using nil for 'all' so that one
+  can now check if user has permissions to all in a more transparent manner
+  (paji@redhat.com)
+- making system environments work with env selector and permissions
+  (jsherril@redhat.com)
+- Role - Adds 'all' types selection to UI and allows creation of full access
+  permissions on organizations. (ehelms@redhat.com)
+- adapting promotions to use the env_selector with auth (jsherril@redhat.com)
+- switching to a simpler string substitution that wont blow up on nil
+  (mmccune@redhat.com)
+- Merge branch 'roles-ui' of ssh://git.fedorahosted.org/git/katello into roles-
+  ui (jrist@redhat.com)
+- Org switcher with box shadow. (jrist@redhat.com)
+- fixing the include on last child of env selector being at wrong level
+  (jsherril@redhat.com)
+- moving nohover mixin to mixins scss file (jsherril@redhat.com)
+- making env-selector only accept environments the user has access to, will
+  temporarily break other pages using the env selector (jsherril@redhat.com)
+- Role - Fixes for opening and closing of edit subpanels from roles actionbar.
+  (ehelms@redhat.com)
+- Role - Adds button highlighting and text changes on add permission.
+  (ehelms@redhat.com)
+- Role - Changes role removal button location.  Moves role removal to bottom
+  actionbar and implements custom confirm dialog. (ehelms@redhat.com)
+- Merge branch 'roles-ui' of ssh://git.fedorahosted.org/git/katello into roles-
+  ui (jrist@redhat.com)
+- Org switcher with scroll pane. (jrist@redhat.com)
+- made a method shorter (paji@redhat.com)
+- Adding list filtering to roles and users (paji@redhat.com)
+- LoginArrow for org switcher. (jrist@redhat.com)
+- Merge branch 'roles-ui' of ssh://git.fedorahosted.org/git/katello into roles-
+  ui (jrist@redhat.com)
+- Working org switcher. Bit more to do, but it works :) (jrist@redhat.com)
+- Added list filtering for org controllers (paji@redhat.com)
+- Added code to accept org or org_id so that people sending org_ids to
+  allowed_to can deal with it ok (paji@redhat.com)
+- Role - Fix for tags not displaying properly on add permission.
+  (ehelms@redhat.com)
+- Made the names of the scopes more sensible... (paji@redhat.com)
+- Role - Adds Global permission adding and fixes to getting permission details
+  with bbq hash rendering. (ehelms@redhat.com)
+- Role - Fix for creating new role.  Cleans up role.js (ehelms@redhat.com)
+- Tupane - Removes previous custom_panel variable from tupane options and moves
+  the logic into the role_edit.js file for overiding a single panel. New
+  callbacks added to tupane javascript panel object. (ehelms@redhat.com)
+- Role - Moved i18n for role edit to index page to only load once.  Added
+  display of global permissions in list. Added heading for add permission
+  widget.  Added basic global permission add widget. (ehelms@redhat.com)
+- Role - Adds bbq hash clearing on panel close. (ehelms@redhat.com)
+- fixing more unit tests (jsherril@redhat.com)
+- Update the permissions query to effectively deal with organization resource
+  vs any other resource type (paji@redhat.com)
+- Fixed a permissions issue with providers page (paji@redhat.com)
+- Added a display_verbs method to permissions to get a nice list of verbs
+  needed by the UI (paji@redhat.com)
+- added read in the non global list for orgs (paji@redhat.com)
+- Role - Hides tags on adding permission when organization is selected.
+  (ehelms@redhat.com)
+- fixing list_tags to only show tags within an org for ones that should do so
+  (jsherril@redhat.com)
+- fixing merge from master conflict (jsherril@redhat.com)
+- some spec test fixes (jsherril@redhat.com)
+- Added a 'global' tag for verbs in a model to denote verbs that are global vs
+  local (paji@redhat.com)
+- Updated the debug message on perms (paji@redhat.com)
+- Role - Adds cacheing of organization verbs_and_tags. (ehelms@redhat.com)
+- Role - Adds Name and Description to a permission.  Adds Name and Description
+  to add permission UI widget.  Adds viewing of permissiond etails in sliding
+  tree. (ehelms@redhat.com)
+- blocking off UI elements based on read/write perms for changeset history
+  (jsherril@redhat.com)
+- fixing permission http methods (jsherril@redhat.com)
+- Role - Adds permission removal from Organization. (ehelms@redhat.com)
+- Role - Adds pop-up panel close on breadcrumb change. (ehelms@redhat.com)
+- fixing issue where environments would not show tags (jsherril@redhat.com)
+- Role - Adds the ability to add and remove users from a role.
+  (ehelms@redhat.com)
+- spec test for user allowed orgs perms (shughes@redhat.com)
+- Role - Adds permission add functionality with controller changes to return
+  breadcrumb for new permission.  Adds element sorting within roles sliding
+  tree. (ehelms@redhat.com)
+- Role - Adds population of add permission ui widget with permission data based
+  on the current organization being browsed. (ehelms@redhat.com)
+- Role - Adds missing i18n call. (ehelms@redhat.com)
+- Roles - Changes verbs_and_scopes route to take in organization_id and not
+  resource_type.  Changes the generated verbs_and_scopes object to do it for
+  all resource types based on the organization id. (ehelms@redhat.com)
+- Role - Adds organization_id parameter to list_tags and tags_for methods.
+  (ehelms@redhat.com)
+- Role - Changes to allow multiple slide up screens from sliding tree actionbar
+  and skeleton of add permission section. (ehelms@redhat.com)
+- Role - Adds global count display and fixes non count object display problems.
+  (ehelms@redhat.com)
+- Role - Adds global permission checking.  Adds global permissions listing in
+  sliding tree and adds counts to both Organization and Globals.
+  (ehelms@redhat.com)
+- Role - Added Globals breadcrumb and changed main load page from Organizations
+  to Permissions. (ehelms@redhat.com)
+- Role - Adds role detail editing to UI and controller support fixes.
+  (ehelms@redhat.com)
+- Role - Adds actionbar to roles sliding tree and two default buttons for add
+  and edit that do not perform any actions.  Refactors more of sliding tree
+  into katello.scss. (ehelms@redhat.com)
+- Roles - Adds resizing to roles sliding tree to fill up right side panel
+  entirely.  Adds status bar to bottom of sliding tree. Adds Remove and Close
+  buttons. (ehelms@redhat.com)
+- Roles - Changes to use custom panel option and make sliding tree fill up
+  panel on roles page.  Adds base breadcrumb for Role name that leads down
+  paths of either Organizations or Users. (ehelms@redhat.com)
+- Changes to tupanel sizing calculations and changes to sliding tree to handle
+  non-image based first breadcrumb. (ehelms@redhat.com)
+- Tupane - Adds new option for customizing overall panel look and feel for
+  specific widgets on slide out. (ehelms@redhat.com)
+- Roles - Initial commit of sliding tree roles viewer. (ehelms@redhat.com)
+- Roles - Adds basic roles breadcrumb that populates all organizations.
+  (ehelms@redhat.com)
+- Changesets - Moves breadcrumb creation to centralized helper and modularizes
+  each major breadcrumb generator. (ehelms@redhat.com)
+- Adds unminified jscrollpane for debugging. Sets jscrollpane elements to hide
+  focus and prevent outline. (ehelms@redhat.com)
+- Added a scope based auth filtering strategy that could be used
+  acrossdifferent models (paji@redhat.com)
+- locking down sync plans according to roles (jsherril@redhat.com)
+- adding back accounts controller since it is a valid stub
+  (jsherril@redhat.com)
+- removing unused controllers (jsherril@redhat.com)
+- hiding UI widets for systems based on roles (jsherril@redhat.com)
+- removing consumers controller (jsherril@redhat.com)
+- fix for org selection of allowed orgs (shughes@redhat.com)
+- spec tests for org selector (shughes@redhat.com)
+- blocking UI widgets for organizations based on roles (jsherril@redhat.com)
+- route for org selector (shughes@redhat.com)
+- stubbing out user sesson spec tests for org selector (shughes@redhat.com)
+- ability to select org (shughes@redhat.com)
+- hiding select UI widgets based on roles in users controller
+  (jsherril@redhat.com)
+- Added code to return all details about a resource type as opposed to just the
+  name for the roles perms pages (paji@redhat.com)
+- renaming couple of old updatable methods to editable (jsherril@redhat.com)
+- adding ability to get the list of available organizations for a user
+  (jsherril@redhat.com)
+- walling off access to UI bits in providers management (jsherril@redhat.com)
+- fixing operations controller rules (jsherril@redhat.com)
+- fixing user controller roles (jsherril@redhat.com)
+- some roles controller fixes for rules (jsherril@redhat.com)
+- fixing rules controller rules (jsherril@redhat.com)
+- fixing a few more controllers (jsherril@redhat.com)
+- fixing rules for subscriptions controller (jsherril@redhat.com)
+- Made the roles controller deal with the new model based rules
+  (paji@redhat.com)
+- Made permission model deal with 'no-tag' verbs (paji@redhat.com)
+- fixing sync mgmnt controller rules (jsherril@redhat.com)
+- adding better rules for provider, products, and repositories
+  (jsherril@redhat.com)
+- fixing organization and environmental rules (jsherril@redhat.com)
+- getting promotions and changesets working with new role structure, fixing
+  user referencing (jsherril@redhat.com)
+- making editable updatable (jsherril@redhat.com)
+- adding system rules (jsherril@redhat.com)
+- adding rules to subscription page (jsherril@redhat.com)
+- removing with indifferent access, since authorize now handles this
+  (jsherril@redhat.com)
+- adding environment rule enforcement (jsherril@redhat.com)
+- adding rules to the promotions controller (jsherril@redhat.com)
+- adding operations rules for role enforcement (jsherril@redhat.com)
+- adding roles enforcement for the changesets controller (jsherril@redhat.com)
+- Merge branch 'master' into roles-ui (ehelms@redhat.com)
+- using org instead of org_id for rules (jsherril@redhat.com)
+- adding rules for sync management and modifying the sync management javascript
+  to send product ids (jsherril@redhat.com)
+- Fixed some rules for org_controller and added rules for users and roles pages
+  (paji@redhat.com)
+- making provider permission rules more generic (jsherril@redhat.com)
+- moving subscriptions and subscriptions update to different actions, and
+  adding permission rules for providers, products, and repositories controllers
+  (jsherril@redhat.com)
+- Cleaned up the notices to authorize based with out a user perm. Don;t see a
+  case for auth on notices. (paji@redhat.com)
+- Made the app controller accept a rules manifest from each controller before
+  authorizing (paji@redhat.com)
+- Initial commit on the the org controllers authorization (paji@redhat.com)
+- Removed the use of superadmin flag since its a permission now
+  (paji@redhat.com)
+- Roles cleanup + unit tests cleanup (paji@redhat.com)
+- Optimized the permission check query from the Users side (paji@redhat.com)
+- Updated database.yml so that one could now update katello.yml for db info
+  (paji@redhat.com)
+- Improved the allowed_to method to make use of rails scoping features
+  (paji@redhat.com)
+- Removed a duplicated unit test (paji@redhat.com)
+- Fixed the role file to more elegantly handle the allowed_to and not
+  allowed_to cases (paji@redhat.com)
+- Updated the permissions model to deal with nil orgs and nil resource types
+  (paji@redhat.com)
+- Initial commit on Updated Roles UI functionality (paji@redhat.com)
+
+* Tue Aug 23 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.70-1
+- fixing miscommited database.yml
+- adding kill_pg_connection rake task
+- cli tests - removing assumeyes option
+- a workaround for candlepin issue: gpgUrl for content must exist, as it is
+  used during entitlement certificate generation
+- no need to specify content id for promoted repositories, as candlepin will
+  assign it
+
 * Tue Aug 23 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.69-1
 - 731670 - prevent user from deleting himself
 - 731670 - reformatting rescue block

@@ -1,3 +1,4 @@
+
 #
 # Copyright 2011 Red Hat, Inc.
 #
@@ -24,7 +25,7 @@ class System < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
 
-  belongs_to :environment, :class_name => "KPEnvironment", :inverse_of => :systems
+  belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :systems
   belongs_to :system_template
 
   has_many :system_activation_keys, :dependent => :destroy
@@ -67,7 +68,36 @@ class System < ActiveRecord::Base
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
+
+  def self.any_readable? org
+    org.systems_readable? ||
+        User.allowed_to?(KTEnvironment::SYSTEMS_READABLE, :environments, org.environment_ids, org, true)
+  end
+
+  def self.readable org
+      raise "scope requires an organization" if org.nil?
+      if org.systems_readable?
+         where(:environment_id => org.environment_ids) #list all systems in an org 
+      else #just list for environments the user can access
+        where("systems.environment_id in (#{User.allowed_tags_sql(KTEnvironment::SYSTEMS_READABLE, :environments, org)})")
+      end    
+  end
+
+  def readable?
+    environment.systems_readable?
+  end
+
+  def editable?
+    environment.systems_editable?
+  end
+
+  def deletable?
+    environment.systems_deletable?
+  end
+
+
   private
+  
     def fill_defaults
       self.description = "Initial Registration Params" unless self.description
       self.location = "None" unless self.location

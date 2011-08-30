@@ -11,9 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class AccountsController < ApplicationController
-  before_filter :require_user
-  
+
+  skip_before_filter :authorize
+
   def show
-  end
-  
+   end
 end
+

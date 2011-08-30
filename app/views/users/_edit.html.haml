@@ -4,7 +4,8 @@
   #{_("Edit User")}
   
 = content_for :remove_item do
-  = link_to _("Remove User"), { :controller => "users", :action => "destroy" }, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
+  -if @user.deletable?
+    = link_to _("Remove User"), { :controller => "users", :action => "destroy" }, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
   
 = content_for :navigation do
   = render_navigation(:expand_all => true, :level => 3)
@@ -13,35 +14,39 @@
   #users
     .grid_10
       %fieldset
-        .grid_2.ra
-          = label :name, _("Username")
+        .grid_3.ra
+          = label :name, _("Username:")
         .grid_5.la 
           #{user.username}
       %fieldset
-        .grid_2.ra
-          = label :helptips_enable, _("Enable inline help")
+        .grid_3.ra
+          = label :helptips_enable, _("Inline help enabled:")
         .grid_5.la
-          = check_box("user", "helptips_enabled", :id=>"helptips_enabled", 'data-url'=>user_path(@user.id), :checked=>@user.helptips_enabled ? "checked": "")
-      %fieldset
-        .grid_2.ra
-          = label :user, :username, _("Clear Disabled Helptips")
-        .grid_5.la
-          #clear_helptips{:class=>"button", "data-url"=>clear_helptips_user_path(@user.id)}
-            = _("Clear")
-      %fieldset 
-        .grid_2.ra
-          = label :user, :password, _("Change Password")
-        .grid_5.la
-          = text_field :user, :password, :id=>"password_field", :value=>"", :type=>"password"
-      .grid_5.la.prefix_2
-        #password_meter           
-      %fieldset
-        .grid_2.ra
-          = label :user, :username, _("Confirm")
-        .grid_5.la
-          = text_field :user, :username, :id=>"confirm_field", :value=>"", :type=>"password"     
-      .grid_5.la.prefix_2
-        #save_password.verify_password.button{'data-url'=>user_path(@user.id)}
-          #{_("Save")}
-      .grid_5.la.prefix_2
-        #password_conflict
+          - if editable
+            = check_box("user", "helptips_enabled", :id=>"helptips_enabled", 'data-url'=>user_path(@user.id), :checked=>@user.helptips_enabled ? "checked": "")
+          - else
+            = @user.helptips_enabled ? _("Yes") : _("No")
+      - if editable
+        %fieldset.fl.clear
+          .grid_3.ra
+            = label :user, :username, _("Clear Disabled Helptips:")
+          .grid_5.la
+            #clear_helptips{:class=>"button", "data-url"=>clear_helptips_user_path(@user.id)}
+              = _("Clear")
+        %fieldset.fl.clear
+          .grid_3.ra
+            = label :user, :password, _("Change Password")
+          .grid_5.la
+            = text_field :user, :password, :id=>"password_field", :value=>"", :type=>"password"
+        .grid_5.la.prefix_3
+          #password_meter
+        %fieldset.fl.clear
+          .grid_3.ra
+            = label :user, :username, _("Confirm")
+          .grid_5.la
+            = text_field :user, :username, :id=>"confirm_field", :value=>"", :type=>"password"
+        .grid_5.la.prefix_3
+          #save_password.verify_password.button{'data-url'=>user_path(@user.id)}
+            #{_("Save")}
+        .grid_5.la.prefix_2
+          #password_conflict

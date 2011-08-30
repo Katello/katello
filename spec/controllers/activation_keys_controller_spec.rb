@@ -17,6 +17,8 @@ describe ActivationKeysController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods
+  include AuthorizationHelperMethods
+
 
   module AKeyControllerTest
     AKEY_INVALID = {}
@@ -30,8 +32,8 @@ describe ActivationKeysController do
     login_user
 
     @organization = new_test_org
-    @environment_1 = KPEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
-    @environment_2 = KPEnvironment.create!(:name => 'prod', :prior => @environment_1.id, :organization => @organization)
+    @environment_1 = KTEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
+    @environment_2 = KTEnvironment.create!(:name => 'prod', :prior => @environment_1.id, :organization => @organization)
     @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1)
     @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1)
     @a_key = ActivationKey.create!(:name => "another test key", :organization_id => @organization, :environment => @environment_1)
@@ -43,6 +45,17 @@ describe ActivationKeysController do
   end
 
   describe "GET index" do
+
+    let(:action) {:index }
+    let(:req) { get :index }
+    let(:authorized_user) do
+      user_with_permissions { |u| u.can(:read_all, :activation_keys) }
+    end
+    let(:unauthorized_user) do
+      user_without_permissions
+    end
+    it_should_behave_like "protected action"
+
     it "requests activation keys using search criteria" do
       ActivationKey.should_receive(:search_for) {ActivationKey}
       ActivationKey.stub_chain(:where, :limit)
@@ -179,6 +192,17 @@ describe ActivationKeysController do
   end
 
   describe "PUT update" do
+
+    let(:action) { :update }
+    let(:req) { put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_NAME }
+    let(:authorized_user) do
+      user_with_permissions { |u| u.can(:manage_all, :activation_keys) }
+    end
+    let(:unauthorized_user) do
+      user_with_permissions { |u| u.can(:read_all, :activation_keys) }
+    end
+    it_should_behave_like "protected action"
+
     describe "with valid activation key id" do
       describe "with valid params" do
         it "should update requested field - name" do

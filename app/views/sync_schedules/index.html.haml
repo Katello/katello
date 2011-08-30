@@ -2,10 +2,15 @@
 = include_common_i18n
 = include_editable_i18n
 
+= javascript do
+  :javascript
+    var schedule = {
+      syncable: #{@organization.syncable?}
+    };
 
 #main.container_16
-  %nav.grid_16.subsubnav
-    = render_navigation(:expand_all => true, :level => 3)
+  /%nav.grid_16.subsubnav
+  /  = render_navigation(:expand_all => true, :level => 3)
   .grid_8
     = one_panel('products', @products, @products_options)
   .grid_8
@@ -13,4 +18,4 @@
   = form_tag sync_schedules_apply_path, :method => "post", :id => "sync_schedule_form" do |f|
     = hidden_field_tag :data
     = button_to _("Apply Selected Plan to Selected Products"), {:action => "apply",
-      :controller => "sync_schedules"}, :method => :post, :class => 'dialogbutton fr', :id => 'apply_button'
+      :controller => "sync_schedules"}, :disabled => !@organization.syncable?, :method => :post, :class => 'dialogbutton fr', :id => 'apply_button'

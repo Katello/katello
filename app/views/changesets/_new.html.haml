@@ -1,6 +1,9 @@
 = content_for :title do
   #{_("New Changeset")}
 
+= content_for :navigation do
+  / pretty
+
 = content_for :content do
   .grid_8#new_changeset123
     -if @next_environment
@@ -11,14 +14,14 @@
           .grid_2.ra
             %label #{_("Name")}:
           .grid_4.la
-            = text_field_tag :name, params[:name], :tabindex => 1
+            = text_field_tag :name, params[:name], :tabindex => auto_tab_index
         %filedset
           .grid_2.ra
             %label #{_("Description")}:
           .grid_4.la
-            = text_area_tag :description, nil, :tabindex => 2
+            = text_area_tag :description, nil, :tabindex => auto_tab_index
         .grid_5.ra
-          .button#save_changeset_button{:tabindex => 3}
+          .button#save_changeset_button{:tabindex => auto_tab_index}
             #{_("Save Changeset")}
     -else
       #{_("Cannot create a new changeset without a next environment to promote in to. <br> Create a next environment on the organization screen.")}

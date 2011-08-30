@@ -9,6 +9,8 @@
 .grid_6.la
   - if perm.all_tags?
     #{_("All")}
+  - elsif perm.tags.nil? || perm.tags.empty?
+    #{_("None")}
   - else
     = perm.tags.collect{|tag| tag.name}.join(", ")
 .grid_1.ra
@@ -17,4 +19,4 @@
   - if perm.all_verbs?
     #{_("All")}
   - else
-    = perm.verbs.collect{|verb| verb.verb}.join(", ")
+    = perm.verbs.collect{|verb| verb.display_name perm.resource_type.name}.join(", ")

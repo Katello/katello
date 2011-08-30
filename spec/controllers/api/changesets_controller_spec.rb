@@ -19,10 +19,10 @@ describe Api::ChangesetsController do
   CSET_NAME = "changeset_x"
 
   before(:each) do
-    @environment = mock(KPEnvironment)
+    @environment = mock(KTEnvironment)
     @environment.stub(:id).and_return(1)
 
-    KPEnvironment.stub(:find).and_return(@environment)
+    KTEnvironment.stub(:find).and_return(@environment)
 
     @organization = mock(Organization)
     @organization.stub(:id).and_return(1)

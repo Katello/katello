@@ -16,12 +16,54 @@ describe OrganizationsController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include OrganizationHelperMethods
+  include AuthorizationHelperMethods
 
   module OrgControllerTest
     ORG_ID = 1
     ORGANIZATION = {:name => "organization_name", :description => "organization_description", :cp_key => "organization_name"}
   end
 
+  describe "rules" do
+    before (:each) do
+      @org1 = new_test_org
+      @organization = new_test_org
+    end
+    describe "GET index" do
+      let(:action) {:index}
+      let(:req) { get 'index' }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :organizations,nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      let(:on_success) do
+        assigns(:organizations).should_not include @org1
+        assigns(:organizations).should include @organization
+      end
+
+      it_should_behave_like "protected action"
+    end
+
+    describe "update org put" do
+      before do
+        @organization.stub!(:update_attributes!).and_return(OrgControllerTest::ORGANIZATION)
+        @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:name])
+        Organization.stub!(:first).and_return(@organization)
+      end
+      let(:action) {:update}
+      let(:req) do
+        put 'update', :id => @organization.id, :organization => OrgControllerTest::ORGANIZATION
+      end
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update, :organizations,nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+    end
+  end
 
   before (:each) do
     login_user
@@ -39,7 +81,7 @@ describe OrganizationsController do
         @organization = new_test_org #controller.current_organization
         controller.stub!(:current_organization).and_return(@organization)
       end
-  
+
       it 'should create organization' do
         post 'create', OrgControllerTest::ORGANIZATION
         response.should_not redirect_to(:action => 'new')
@@ -96,41 +138,51 @@ describe OrganizationsController do
     
     describe "with no exceptions thrown" do
       before (:each) do
-        
         @controller.stub!(:render).and_return("") #fix for not finding partial
-        
-        @organization = mock_model(Organization)
-        @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:name])
-        Organization.stub!(:first).and_return(@organization)
+        @org = new_test_org
+        @org.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:name])
+        Organization.stub!(:first).and_return(@org)
+        new_test_org
       end
 
       it 'should call katello organization destroy api if there are more than 1 organizations' do
-        Organization.stub!(:count).and_return(2)   
-        @organization.should_receive(:destroy)
-        delete 'destroy', :id => OrgControllerTest::ORG_ID
-      end 
-      
+        Organization.stub!(:count).and_return(2)
+        @org.should_receive(:destroy).with(no_args()).once.and_return(true)
+        delete 'destroy', :id => @org.id
+        response.should be_success
+      end
+
       it "should generate a success notice" do
         Organization.stub!(:count).and_return(2)
+        @org.should_receive(:destroy).with(no_args()).once.and_return(true)
         controller.should_receive(:notice)
-        delete 'destroy', :id => OrgControllerTest::ORG_ID
+        delete 'destroy', :id => @org.id
+        response.should be_success
       end
       
       it "should be successful" do
         Organization.stub!(:count).and_return(2)
-        delete 'destroy', :id => OrgControllerTest::ORG_ID
+        delete 'destroy', :id => @org.id
         response.should be_success
       end
-      
+    end
+
+    describe "with exceptions thrown" do
+      before (:each) do
+        new_test_org
+        Organization.stub!(:first).and_return(@organization)
+      end
       it "should generate an errors notice" do
         controller.should_receive(:errors)
-        delete 'destroy', :id => OrgControllerTest::ORG_ID
+        delete 'destroy', :id => @organization.id
+        response.should_not be_success
       end
     end
-    
+
+
     describe "exception is thrown in katello api" do
       before (:each) do
-        @organization = mock_model(Organization)
+        @organization = new_test_org
         @organization.stub!(:destroy).and_raise(Exception)
         Organization.stub!(:first).and_return(@organization)
       end
@@ -138,6 +190,7 @@ describe OrganizationsController do
       it "should generate an error notice" do
         controller.should_receive(:errors)
         delete 'destroy', :id =>  OrgControllerTest::ORG_ID
+        response.should_not be_success
       end
       
       it "should redirect to show view" do
@@ -152,7 +205,7 @@ describe OrganizationsController do
     describe "with no exceptions thrown" do
 
       before (:each) do
-        @organization = mock_model(Organization)
+        @organization = new_test_org
         @organization.stub!(:update_attributes!).and_return(OrgControllerTest::ORGANIZATION)
         @organization.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:name])
         Organization.stub!(:first).and_return(@organization)
@@ -176,7 +229,7 @@ describe OrganizationsController do
     
     describe "exception is thrown in katello api" do
       before(:each) do
-        @organization = mock_model(Organization)
+        @organization = new_test_org
         @organization.stub!(:update).and_raise(Exception)
         Organization.stub!(:first).and_return(@organization)
       end
