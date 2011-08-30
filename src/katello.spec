@@ -42,6 +42,7 @@ Requires:       rubygem(scoped_search) >= 2.3.1
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
+Requires:       rubygem(thin)
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
 Requires:       rubygem(regin)
@@ -93,6 +94,17 @@ install -d -m0755 %{buildroot}%{datadir}
 install -d -m0755 %{buildroot}%{datadir}/tmp
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
 install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
+
+# Apache Configuration
+mkdir -p %{buildroot}/etc/httpd/conf.d/
+cp etc/httpd/conf.d/katello.conf %{buildroot}/etc/httpd/conf.d/
+
+# Thin Configuration
+mkdir -p %{buildroot}/etc/thin/
+mkdir -p %{buildroot}/etc/init.d/
+cp etc/thin/thin.yml %{buildroot}/etc/thin/
+cp etc/init.d/thin %{buildroot}/etc/init.d/
+
 
 # clean the application directory before installing
 [ -d tmp ] && rm -rf tmp
@@ -171,6 +183,8 @@ fi
 %doc README LICENSE doc/
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/database.yml
+%config %{_sysconfdir}/httpd/conf.d/katello.conf
+%config %{_sysconfdir}/thin/thin.conf
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
