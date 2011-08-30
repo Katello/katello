@@ -27,91 +27,92 @@ describe SystemsController do
       Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Candlepin::Consumer.stub!(:update).and_return(true)
       @system = System.create!(:name=>"bar1", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
-    end
-    describe "GET index" do
-      let(:action) {:index}
-      let(:req) { get :index}
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) }
+      @run_auth_action = lambda do |resource, perm|
+            if :organization == resource
+              user_with_permissions { |u| u.can([perm], :organizations, nil, @organization) }
+            else
+              user_with_permissions { |u| u.can([perm], :environments, @environment.id, @organization) }
+            end
       end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      let(:on_success) do
-        assigns[:systems].should include @system
-      end
-      it_should_behave_like "protected action"
-    end
-    describe "GET index multiple orgs" do
-      before do
-        new_test_org
-        @environment = KTEnvironment.new(:name => 'test2', :prior => @organization.locker.id, :organization => @organization)
-        @system2 = System.create!(:name=>"bar2", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
-      end
-      let(:action) {:index}
-      let(:req) { get :index}
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      let(:on_success) do
-        assigns[:systems].should include @system2
-        assigns[:systems].should_not include @system
-      end
-      it_should_behave_like "protected action"
     end
 
-    describe "show sys" do
-      let(:action) {:show}
-      let(:req) { get :show, :id => @system.id}
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:read_systems, :environments, @environment.id, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-    end
+    [:create_systems, :update_systems, :read_systems, :delete_systems].each do |perm|
+      [:environment, :organization].each do |resource|
+
+        describe "GET index with #{perm} on #{resource} " do
+          let(:action) {:index}
+          let(:req) { get :index}
+          let(:authorized_user) do
+
+          end
+          let(:unauthorized_user) do
+            user_without_permissions
+          end
+          let(:on_success) do
+            assigns[:systems].should include @system
+          end
+          it_should_behave_like "protected action"
+        end
+        describe "GET index multiple orgs with #{perm} on #{resource}" do
+          before do
+            new_test_org
+            @environment = KTEnvironment.new(:name => 'test2', :prior => @organization.locker.id, :organization => @organization)
+            @system2 = System.create!(:name=>"bar2", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+          end
+          let(:action) {:index}
+          let(:req) { get :index}
+          let(:authorized_user) do
+            @run_auth_action.call(resource, perm)
+          end
+          let(:unauthorized_user) do
+            user_without_permissions
+          end
+          let(:on_success) do
+            assigns[:systems].should include @system2
+            assigns[:systems].should_not include @system
+          end
+          it_should_behave_like "protected action"
+        end
+
+        describe "show sys with #{perm} on #{resource}" do
+          let(:action) {:show}
+          let(:req) { get :show, :id => @system.id}
+          let(:authorized_user) do
+            @run_auth_action.call(resource, perm)
+          end
+          let(:unauthorized_user) do
+            user_without_permissions
+          end
+          it_should_behave_like "protected action"
+        end
+
+      describe "edit sys with #{perm} on #{resource} " do
+        let(:action) {:update}
+        let(:req) {post :update,{ :id => @system.id, :system => { :name=> "foo" }}}
+        let(:authorized_user) do
+          @run_auth_action.call(resource, perm)
+        end
+        let(:unauthorized_user) do
+          user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) }
+        end
+        it_should_behave_like "protected action"
+      end if [:create_systems, :update_systems].include? perm
 
 
-    describe "edit sys" do
-      let(:action) {:update}
-      let(:req) {post :update,{ :id => @system.id, :system => { :name=> "foo" }}}
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:update_systems, :organizations, nil, @organization) }
+      describe "show manageable environments with #{perm} on #{resource} " do
+        let(:action) {:environments}
+        let(:req) { get :environments, :id => @system.id}
+        let(:authorized_user) do
+          @run_auth_action.call(resource, perm)
+        end
+        let(:unauthorized_user) do
+          user_without_permissions
+        end
+        it_should_behave_like "protected action"
       end
-      let(:unauthorized_user) do
-        user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) }
-      end
-      it_should_behave_like "protected action"
-    end
-
-    describe "edit sys with create perms" do
-      let(:action) {:update}
-      let(:req) {post :update,{ :id => @system.id, :system => { :name=> "foo" }}}
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:create_systems, :organizations, nil, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) }
-      end
-      it_should_behave_like "protected action"
-    end
-
-    describe "show manageable environments" do
-      let(:action) {:environments}
-      let(:req) { get :environments, :id => @system.id}
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:read_systems, :environments, @environment.id, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
     end
   end
+ end
 
   describe "main" do
     let(:uuid) { '1234' }
