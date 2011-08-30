@@ -161,6 +161,20 @@ describe SystemTemplatesController do
         response.should_not be_success
       end
     end
+
+    describe "with template not in locker" do
+      before(:each) do
+        @other_env = KTEnvironment.create!(:name=>"devel123", :prior=> @organization.locker, :organization=>@organization)
+        @system_template_3 = SystemTemplate.create!(:name => 'template1', :environment => @other_env)
+
+      end
+      it "should generate an error notice" do
+        controller.should_receive(:errors)
+        put :update, :id => @system_template_3.id,  :system_template=>{:description=>"bar"}
+        response.should_not be_success
+      end
+    end
+
   end
 
   describe "DELETE destroy" do

@@ -120,6 +120,7 @@ class SystemTemplatesController < ApplicationController
 
   def find_template
     @template = SystemTemplate.find(params[:id])
+    raise _("Cannot modify a template that is another environment") if !@template.environment.locker?
   rescue Exception => e
     errors e
     render :text=>e, :status=>400 and return false
