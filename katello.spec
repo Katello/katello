@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.71
+Version:	      0.1.72
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -196,6 +196,34 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Aug 30 2011 Partha Aji <paji@redhat.com> 0.1.72-1
+- Updated spec to not include database yml in etc katello and instead for the
+  user to user /etc/katello/katello.yml for db info (paji@redhat.com)
+- Fixed an accidental goof up in the systems controllers test (paji@redhat.com)
+- made a more comprehensive test matrix for systems (paji@redhat.com)
+- Added rules based tests to test systems controller (paji@redhat.com)
+- Added rules for sync_schedules spec (paji@redhat.com)
+- Added tests for sync plans (paji@redhat.com)
+- Added rules tests for subscriptions (paji@redhat.com)
+- Restricted the routes for subscriptions  + dashboard resource to only :index
+  (paji@redhat.com)
+- Added tests for repositories controller (paji@redhat.com)
+- Updated routes in a for a bunch of resources limiting em tp see exactly what
+  they can see (paji@redhat.com)
+- Added unit tests for products controller (paji@redhat.com)
+- fixing permission denied on accounts controller (jsherril@redhat.com)
+- 731540 - Sync Plans - update edit UI to use sync_plan vs plan
+  (bbuckingham@redhat.com)
+- added rules checking for environment (paji@redhat.com)
+- Added tests for operations controller (paji@redhat.com)
+- Bug fix - resource should be in plural when checking permissions
+  (inecas@redhat.com)
+- adding sync management controller rules tests (jsherril@redhat.com)
+- adding users controller rules tests (jsherril@redhat.com)
+- adding roles controller rules tests (jsherril@redhat.com)
+- 734033 - deleteUser API call fails (inecas@redhat.com)
+- 734080 - katello now returns orgs for owner (lzap+git@redhat.com)
+
 * Fri Aug 26 2011 Justin Sherrill <jsherril@redhat.com> 0.1.71-1
 - fixing a couple issues with promotions (jsherril@redhat.com)
 - adding some missing navigation permission checking (jsherril@redhat.com)
