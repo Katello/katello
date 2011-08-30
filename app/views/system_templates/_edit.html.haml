@@ -15,7 +15,7 @@
   .grid_8#plan
     %fieldset.fl.clear
       %label.grid_2 #{_("Name")}:
-      .grid_5.la#template_name{'name' => 'template[name]', :class=>("editable edit_templatename" if editable), 'data-url' => url_for(:action => 'update')} #{@template[:name]}
+      .grid_5.la#template_name{'name' => 'system_template[name]', :class=>("editable edit_templatename" if editable), 'data-url' => url_for(:action => 'update')} #{@template[:name]}
     %fieldset.fl.clear
       %label.grid_2 #{_("Description")}:
-      .grid_5.la#plan_description{'name' => 'template[description]', :class=>("editable edit_textarea" if editable), 'data-url' => url_for(:action => 'update')} #{@template[:description]}
+      .grid_5.la#plan_description{'name' => 'system_template[description]', :class=>("editable edit_textarea" if editable), 'data-url' => url_for(:action => 'update')} #{@template[:description]}
