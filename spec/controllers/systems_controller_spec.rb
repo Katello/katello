@@ -36,14 +36,14 @@ describe SystemsController do
       end
     end
 
-    [:create_systems, :update_systems, :read_systems, :delete_systems].each do |perm|
+    [:read_systems, :create_systems, :update_systems, :delete_systems].each do |perm|
       [:environment, :organization].each do |resource|
 
         describe "GET index with #{perm} on #{resource} " do
           let(:action) {:index}
           let(:req) { get :index}
           let(:authorized_user) do
-
+            @run_auth_action.call(resource, perm)
           end
           let(:unauthorized_user) do
             user_without_permissions
@@ -53,6 +53,7 @@ describe SystemsController do
           end
           it_should_behave_like "protected action"
         end
+
         describe "GET index multiple orgs with #{perm} on #{resource}" do
           before do
             new_test_org
