@@ -31,16 +31,21 @@ module Glue::Pulp::Repos
     [repo.product.cp_id, repo.name, environment.name,environment.organization.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("-")
   end
 
-  def self.clone_repo_path(repo, environment)
-    repo_path(environment,repo.product, repo.name)
+  def self.clone_repo_path(repo, environment, for_cp = false)
+    repo_path(environment,repo.product, repo.name, for_cp)
   end
 
-  def self.repo_path(environment, product, name)
-    [environment.organization.name,environment.name,product.name,name].map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
+  # if for_cp tells it's used for contentUrl in candlepin
+  # CP computes the rest of path automaticly - it does not to be specified here
+  def self.repo_path(environment, product, name, for_cp = false)
+    parts = []
+    parts += [environment.organization.name,environment.name] unless for_cp
+    parts += [product.name,name]
+    parts.map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
   end
 
   def self.clone_repo_path_for_cp(repo)
-    [repo.product.name,repo.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
+    self.clone_repo_path(repo, nil, true)
   end
 
 
