@@ -96,7 +96,7 @@ module Glue::Candlepin::Product
     def set_product
       Rails.logger.info "Creating a product in candlepin: #{name}"
       json = Candlepin::Product.create({
-        :name => self.provider.name+"_"+self.name,
+        :name => self.organization.name+"-"+self.name,
         :multiplier => self.multiplier || 1,
         :attributes => self.attrs || [] # name collision with ActiveRecord
       })
