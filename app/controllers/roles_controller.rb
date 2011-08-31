@@ -71,8 +71,7 @@ class RolesController < ApplicationController
     @panel_options = { :title => _('Roles'),
                  :col => ['name'],
                  :create => _('Role'),
-                 :name => _('role'),
-                 :javascript_id => javascript_id,
+                 :name => controller_name,
                  :ajax_scroll => items_roles_path()}
     @panel_options[:enable_create] = false if !Role.creatable?
   end
@@ -98,7 +97,7 @@ class RolesController < ApplicationController
     @role = Role.new(params[:role])
     if @role.save
       notice @role.name + " " + _("Role created.")
-      render :partial=>"common/list_item", :locals=>{:item=>@role, :accessor=>"id", :columns=>["name"], :javascript_id=>javascript_id}
+      render :partial=>"common/list_item", :locals=>{:item=>@role, :accessor=>"id", :columns=>["name"], :name=>controller_name}
     else
       errors "", {:list_items => @role.errors.to_a}
       render :json=>@role.errors, :status=>:bad_request
@@ -137,7 +136,7 @@ class RolesController < ApplicationController
       if @role.destroyed?
         notice _("Role '#{@role[:name]}' was deleted.")
         #render and do the removal in one swoop!
-        render :partial => "common/list_remove", :locals => {:javascript_id => javascript_id + id.to_s}
+        render :partial => "common/list_remove", :locals => {:id=>id, :name=>controller_name}
       else
         raise
       end
@@ -223,8 +222,8 @@ class RolesController < ApplicationController
     ResourceType::TYPES
   end
 
-  def javascript_id
-    return "#{_('role')}_"
+  def controller_name
+    return _('role')
   end
 
 end

@@ -1,4 +1,4 @@
-.block{:id => "#{defined?(javascript_id).nil? ? "" : javascript_id}#{item.send(accessor)}", "data-ajax_url" => url_for(:action=> 'edit', :id => item.send(accessor))}
+.block{:id => "#{name}_#{item.send(accessor)}", "data-ajax_url" => url_for(:action=> 'edit', :id => item.send(accessor))}
   - for col in columns
     %div{:class => 'column_' + columns.length.to_s}
       - if col.to_s == "name"
