@@ -87,7 +87,7 @@ class ChangesetsController < ApplicationController
 
   #list item
   def show
-    render :partial=>"common/list_update", :locals=>{:item=>@changeset, :accessor=>"id", :columns=>['name'], :chgusers=>changeset_users}
+    render :partial=>"common/list_update", :locals=>{:item=>@changeset, :accessor=>"id", :columns=>['name']}
   end
 
   def section_id
