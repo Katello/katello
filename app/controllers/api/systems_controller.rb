@@ -81,10 +81,10 @@ class Api::SystemsController < Api::ApiController
     error_msg = "No systems found" if expected_params.empty?
     error_msg = "Couldn't find system '#{expected_params[:name]}'" unless expected_params.empty?
     unless @environment.nil?
-      systems = @environment.systems.where(expected_params)
+      systems = @environment.systems.readable(@organization).where(expected_params)
       raise HttpErrors::NotFound, _(error_msg + " in environment '#{@environment.name}'") if systems.empty?
     else
-      systems = @organization.systems.where(expected_params)
+      systems = @organization.systems.readable(@organization).where(expected_params)
       raise HttpErrors::NotFound, _(error_msg + " in organization '#{@organization.name}'") if systems.empty?
     end
     render :json => systems.to_json
