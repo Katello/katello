@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.74
+Version:	      0.1.75
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -196,6 +196,32 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Aug 31 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.75-1
+- 734833 - service katello-jobs stop shows non-absolute home (ArgumentError)
+- Refactor repo path generator
+- Merge branch 'repo-path'
+- Fix failing repo spec
+- Pulp repo for Locker products consistent with other envs
+- 734755 - Service katello-jobs status shows no file or directory
+- Refactor generating repo id when cloning
+- Change CP content url to product/repo
+- Scope system by readable permissions
+- Scope users by readable permissions
+- Scope products by readability scope
+- Refactor - move providers from OrganziationController
+- Fix scope error - readable repositories
+- Remove unused code: OrganizationController#providers
+- Authorization rules - fix for systmes auth check
+- More specific test case pro changeset permissions
+- Scope products for environment by readable providers
+- Fix bug in permissions
+- Scope orgranizations list in API by the readable permissions
+- Fix failing spec
+- Authorization rules for API actions
+- Integrate authorization rules to API controllers
+- Merge remote-tracking branch 'origin/master' into repo-path
+- Format of CP content url: /org/env/productName/repoName
+
 * Tue Aug 30 2011 Partha Aji <paji@redhat.com> 0.1.74-1
 - Fixed more bugs related to the katello.yml and spec (paji@redhat.com)
 
