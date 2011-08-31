@@ -99,9 +99,11 @@ class SystemsController < ApplicationController
     all = @system.pools + @system.available_pools
     consumed = @system.consumed_pool_ids
     all_pools = all.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
-                                    :poolName => pool["productName"], :quantity => pool["quantity"])}
+                            :poolName => pool["productName"], 
+                            :expires => DateTime.parse(pool["endDate"], "%m/%d/%Y"),
+                            :quantity => pool["quantity"])}
     all_pools.sort! {|a,b| a.poolName <=> b.poolName}
-
+    debugger
     render :partial=>"subscriptions", :layout => "tupane_layout", 
                                       :locals=>{:system=>@system, :all_subs => all_pools,
                                                 :consumed => consumed, :editable=>@system.editable?}
