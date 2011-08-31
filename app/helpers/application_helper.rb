@@ -85,8 +85,7 @@ module ApplicationHelper
     render :partial => "common/panel", 
            :locals => {
              :title => options[:title], 
-             :name => options[:name],
-             :javascript_id => options[:javascript_id] ||= "", 
+             :name => options[:name], 
              :create => options[:create],
              :enable_create => enable_create,
              :enable_sort => enable_sort,
