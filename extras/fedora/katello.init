@@ -14,6 +14,7 @@ if [ -f /etc/sysconfig/katello ]; then
 fi
 
 prog=katello
+THIN=/usr/share/katello/script/thin
 RETVAL=0
 KATELLO_PORT=${KATELLO_PORT:-3000}
 KATELLO_USER=${KATELLO_USER:-katello}
@@ -70,9 +71,8 @@ start() {
         cd ${KATELLO_HOME} #rails expects you to run from the root of the app
         # delete Gemfile.lock (it will be regenerated)
         rm -f $KATELLO_DATA_DIR/Gemfile.lock
-        #daemon --user ${KATELLO_USER} bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} -d >/var/log/katello/startup.log 2>&1
-        # <workaround> for the bug 726030 - Webrick wont start with the -d (daemon) option
-        daemon --user ${KATELLO_USER} nohup bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} >/var/log/katello/startup.log 2>&1 &
+        export HOME=
+        daemon $THIN start --user ${KATELLO_USER} --config /etc/katello/thin.yml > /var/log/katello/startup.log 2>&1 &
         sleep 5s
         # </workaround>
         RETVAL=$?
@@ -92,7 +92,7 @@ stop() {
 
     echo -n $"Stopping $prog: "
     if status_q; then
-        killproc -p ${KATELLO_PID}
+        $THIN stop --config  /etc/katello/thin.yml
         RETVAL=$?
     else
         echo -n $"$prog was not running. "
