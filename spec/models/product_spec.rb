@@ -60,7 +60,7 @@ describe Product do
           expected_product = {
               :attributes => ProductTestData::PRODUCT_WITH_ATTRS[:attributes],
               :multiplier => ProductTestData::PRODUCT_WITH_ATTRS[:multiplier],
-              :name => @provider.name+"_"+ProductTestData::PRODUCT_WITH_ATTRS[:name]
+              :name => @organization.name+"-"+ProductTestData::PRODUCT_WITH_ATTRS[:name]
           }
 
           Candlepin::Product.should_receive(:create).once.with(hash_including(expected_product)).and_return({:id => 1})
