@@ -230,7 +230,7 @@ Src::Application.routes.draw do
       end
     end
 
-    resources :providers do
+    resources :providers, :except => [:index] do
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end
