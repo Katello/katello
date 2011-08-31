@@ -103,7 +103,6 @@ class SystemsController < ApplicationController
                             :expires => DateTime.parse(pool["endDate"], "%m/%d/%Y"),
                             :quantity => pool["quantity"])}
     all_pools.sort! {|a,b| a.poolName <=> b.poolName}
-    debugger
     render :partial=>"subscriptions", :layout => "tupane_layout", 
                                       :locals=>{:system=>@system, :all_subs => all_pools,
                                                 :consumed => consumed, :editable=>@system.editable?}
