@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # synchronize repo to load the packages
-test "repo synchronize" repo synchronize --repo_id="$REPO_ID"
+test "repo synchronize" repo synchronize --id="$REPO_ID"
 
 # testing changesets
 CS_NAME="changeset_$RAND"
