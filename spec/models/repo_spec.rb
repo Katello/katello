@@ -211,9 +211,9 @@ describe Glue::Pulp::Repo do
 
     before :each do
       stub_reference_objects
-      @locker = mock(KPEnvironment, {:id => RepoTestData::REPO_ENV_ID, :name => 'Locker'})
+      @locker = mock(KTEnvironment, {:id => RepoTestData::REPO_ENV_ID, :name => 'Locker'})
       @locker.stub(:organization).and_return(@org)
-      @to_env = mock(KPEnvironment, {:id => RepoTestData::CLONED_REPO_ENV_ID, :name => 'Prod'})
+      @to_env = mock(KTEnvironment, {:id => RepoTestData::CLONED_REPO_ENV_ID, :name => 'Prod'})
       @to_env.stub(:organization).and_return(@org)
       @product.stub(:locker).and_return(@locker)
 
@@ -273,8 +273,8 @@ def stub_reference_objects
   @org = mock(Organization, {:id => RepoTestData::REPO_ORG_ID, :name => "Corp"})
   Organization.stub(:find).with(RepoTestData::REPO_ORG_ID).and_return(@org)
 
-  @env = mock(KPEnvironment, {:id => RepoTestData::REPO_ENV_ID, :name => "Dev"})
-  KPEnvironment.stub(:find).with(RepoTestData::REPO_ENV_ID).and_return(@env)
+  @env = mock(KTEnvironment, {:id => RepoTestData::REPO_ENV_ID, :name => "Dev"})
+  KTEnvironment.stub(:find).with(RepoTestData::REPO_ENV_ID).and_return(@env)
  
   @product = mock(Product, {:id => RepoTestData::REPO_PRODUCT_ID, :cp_id => RepoTestData::REPO_PRODUCT_CP_ID, :name => "Ruby"})
   Product.stub(:find).with(RepoTestData::REPO_PRODUCT_ID).and_return(@product)
