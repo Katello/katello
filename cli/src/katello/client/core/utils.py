@@ -29,9 +29,12 @@ class Printer:
     """
     Class for unified printing of the CLI output.
     """
-
-    def __init__(self, grep, delimiter=""):
-        self._grep = grep
+    OUTPUT_FORCE_NONE = 0
+    OUTPUT_FORCE_GREP = 1
+    OUTPUT_FORCE_VERBOSE = 2
+    
+    def __init__(self, output_mode, delimiter=""):
+        self._output_mode = output_mode
         self._columns = []
         self._heading = ""
         self._delim = delimiter
@@ -44,7 +47,7 @@ class Printer:
         #print '+' + '-'*(width-2) + '+'
         print '-'*width
 
-    def _printHeader(self, heading, widths={}):
+    def _printHeader(self, heading, grep_mode, widths={}):
         """
         Print a fancy header to stdout.
         @type heading: string or list of strings
@@ -59,7 +62,7 @@ class Printer:
                 padding = ((header_width - len(line)) / 2) - 1
             print ' ' * padding, line
 
-        if self._grep:
+        if grep_mode:
             print
             print self._delim,
             for col in self._columns:
@@ -214,9 +217,15 @@ class Printer:
         @type indent: string
         @param indent: text that is prepended to every printed line in multiline mode
         """
-        items = []
-        items.append(item)
-        self.printItems(items, indent)
+        if self._output_mode == Printer.OUTPUT_FORCE_GREP:
+            widths = self._calculateGrepWidths([item])
+            self._printHeader(self._heading, True, widths)
+            self._printItemGrep(item, widths)
+            print
+        else:
+            self._printHeader(self._heading, False)
+            self._printItem(item, indent)
+            print
 
 
     def printItems(self, items, indent=""):
@@ -227,17 +236,18 @@ class Printer:
         @type indent: string
         @param indent: text that is prepended to every printed line in multiline mode
         """
-        if self._grep:
-            widths = self._calculateGrepWidths(items)
-            self._printHeader(self._heading, widths)
-            for item in items:
-                self._printItemGrep(item, widths)
-                print
-        else:
-            self._printHeader(self._heading)
+        if self._output_mode == Printer.OUTPUT_FORCE_VERBOSE:
+            self._printHeader(self._heading, False)
             for item in items:
                 self._printItem(item, indent)
                 print
+        else:
+            widths = self._calculateGrepWidths(items)
+            self._printHeader(self._heading, True, widths)
+            for item in items:
+                self._printItemGrep(item, widths)
+                print
+
 
 
 
