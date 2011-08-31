@@ -7,17 +7,73 @@
   = render_navigation(:expand_all => true, :level => 3)
 
 = content_for :content do
-  %h5.grid_8
-  - if editable
-    = form_tag update_subscriptions_system_path, :method => "post", :id => "update_subscriptions" do |f|
-      .grid_7
-        = select_tag "system[consumed_pool_ids]", options_from_collection_for_select(all_subs, 'poolId', 'poolName', consumed), :multiple => true, :class => 'multiselect', :style=>"width:400px; height:200px"
-      .grid_2
-        = button_to _("Save Subscriptions"), {:action => "update_subscriptions", :controller => "systems"}, :method => :post, :id => :subcription_save
-  - else
-    - for sub in all_subs
-      .grid_6.prefix_1
-        = sub.poolName
+  .grid_8.subs
+    %h4 Entitlements Required
+  .grid_4.ca.subs
+    Socket Requirement
+    #{"--"}
+  .grid_4.ca.subs
+    Guests Requirement
+    #{"--"}
+  .grid_8
+    %h5 System Current Subscription(s)
+    %table
+      %thead
+        %tr
+          %th #{_("Subscription")}
+          %th #{_("Sockets")}
+          %th #{_("Guests")}
+          %th #{_("Quantity")}
+          %th #{_("Expires")}
+      %tbody
+        - for sub in all_subs
+          %tr
+            %td
+              %span.fl
+                = check_box_tag sub.poolId, sub.poolId, consumed
+              &nbsp;
+              #{sub.poolName}
+            %td #{"--"}
+            %td #{"--"}
+            %td
+              #{sub.quantity}
+            %td #{"--"}
+    %h5 Available Subscriptions
+    %table
+      %thead
+        %tr
+          %th #{_("Subscription")}
+          %th #{_("Sockets")}
+          %th #{_("Guests")}
+          %th #{_("Quantity")}
+          %th #{_("Expires")}
+      %tbody
+        - for sub in all_subs
+          %tr
+            %td
+              %span.fl
+                = check_box_tag sub.poolId, sub.poolId, consumed
+              &nbsp;
+              #{sub.poolName}
+            %td #{"--"}
+            %td #{"--"}
+            %td
+              #{sub.quantity}
+            %td #{"--"}
+
+-#some potentially useful stuff:
 
 
-            
+-#- if editable
+-#  = form_tag update_subscriptions_system_path, :method => "post", :id => "update_subscriptions" do |f|
+-#    .grid_7
+-#      = select_tag "system[consumed_pool_ids]", options_from_collection_for_select(all_subs, 'poolId', 'poolName', consumed), :multiple => true, :class => 'multiselect', :style=>"width:400px; height:200px"
+-#    .grid_2
+-#      = button_to _("Save Subscriptions"), {:action => "update_subscriptions", :controller => "systems"}, :method => :post, :id => :subcription_save
+-#- else
+-#  - for sub in all_subs
+-#    .grid_6.prefix_1
+-#      = sub.poolName
+
+-#%td{'id' => sub.sub, :class => ("editable edit_number" if editable), }
+-#"data-url" => update_subscriptions_system_path(sub.sub)
