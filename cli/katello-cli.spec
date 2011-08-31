@@ -5,7 +5,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.6
+Version:       0.1.7
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -65,6 +65,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 31 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.7-1
+- Scope products by readability scope
+- Refactor - move providers from OrganziationController
+
 * Mon Aug 29 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.6-1
 - cli - fixes for several typos
 - cli tests - removed call of nonexisting function
