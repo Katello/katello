@@ -27,15 +27,22 @@ module Glue::Pulp::Repos
       [self.product_groupid(product), self.env_groupid(environment), self.env_orgid(product.locker.organization)]
   end
 
-  def self.clone_repo_id(repo_id, environment_name)
-    parts = repo_id.split("-")
-    if parts.length == 3
-      parts << parts[2]
-    end
-    parts[2] = environment_name
-
-    parts.join("-")
+  def self.clone_repo_id(repo, environment)
+    [repo.product.cp_id, repo.name, environment.name,environment.organization.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("-")
   end
+
+  def self.clone_repo_path(repo, environment)
+    repo_path(environment,repo.product, repo.name)
+  end
+
+  def self.repo_path(environment, product, name)
+    [environment.organization.name,environment.name,product.name,name].map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
+  end
+
+  def self.clone_repo_path_for_cp(repo)
+    [repo.product.name,repo.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
+  end
+
 
   def self.env_orgid(org)
       "org:#{org.id}"
@@ -200,6 +207,7 @@ module Glue::Pulp::Repos
     def add_repo(name, url)
       repo = Glue::Pulp::Repo.new(:id => repo_id(name),
           :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
+          :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, name),
           :arch => arch,
           :name => name,
           :feed => url
@@ -225,6 +233,7 @@ module Glue::Pulp::Repos
         ca = File.open("#{Rails.root}/config/candlepin-ca.crt", 'rb') { |f| f.read }
         repo = Glue::Pulp::Repo.new(:id => repo_id(pc.content.id),
             :arch => arch,
+            :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, pc.content.name),
             :name => pc.content.name,
             :feed => repository_url(pc.content.contentUrl),
             :feed_ca => ca,
@@ -315,12 +324,13 @@ module Glue::Pulp::Repos
         else
           async_tasks << repo.promote(to_env, self)
 
-          new_repo_id = Glue::Pulp::Repos.clone_repo_id(repo.id, to_env.name)
+          new_repo_id = Glue::Pulp::Repos.clone_repo_id(repo, to_env)
+          new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(repo)
 
           pulp_uri = URI.parse(AppConfig.pulp.url)
           new_productContent = Glue::Candlepin::ProductContent.new({:content => {
               :name => repo.name,
-              :contentUrl => "#{pulp_uri.scheme}://#{pulp_uri.host}/pulp/repos/#{new_repo_id}/",
+              :contentUrl => new_repo_path,
               :gpgUrl => "",
               :type => "yum",
               :label => new_repo_id,
