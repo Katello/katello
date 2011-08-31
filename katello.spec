@@ -17,6 +17,7 @@ Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       pulp
+Requires:       httpd
 Requires:       openssl
 Requires:       candlepin-tomcat6
 Requires:       rubygems
@@ -97,14 +98,10 @@ install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 
 # Apache Configuration
 mkdir -p %{buildroot}/etc/httpd/conf.d/
-cp etc/httpd/conf.d/katello.conf %{buildroot}/etc/httpd/conf.d/
+cp etc/httpd/conf.d/%{name}.conf %{buildroot}/%{_sysconfdir}/httpd/conf.d/
 
 # Thin Configuration
-mkdir -p %{buildroot}/etc/thin/
-mkdir -p %{buildroot}/etc/init.d/
-cp etc/thin/thin.yml %{buildroot}/etc/thin/
-cp etc/init.d/thin %{buildroot}/etc/init.d/
-
+install -m 644 etc/%{name}/thin.yml %{buildroot}%{_sysconfdir}/%{name}/
 
 # clean the application directory before installing
 [ -d tmp ] && rm -rf tmp
