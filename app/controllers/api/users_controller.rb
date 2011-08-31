@@ -35,7 +35,7 @@ class Api::UsersController < Api::ApiController
   end
 
   def index
-    render :json => (User.where query_params).to_json
+    render :json => (User.readable.where query_params).to_json
   end
 
   def show
