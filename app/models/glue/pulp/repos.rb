@@ -38,8 +38,14 @@ module Glue::Pulp::Repos
   end
 
   def self.clone_repo_path(repo, environment)
-    [environment.organization.name,environment.name,repo.product.name,repo.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
+    prefix = [environment.organization.name,environment.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
+    [prefix,self.clone_repo_path_for_cp(repo)].join("/")
   end
+
+  def self.clone_repo_path_for_cp(repo)
+    [repo.product.name,repo.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
+  end
+
 
   def self.env_orgid(org)
       "org:#{org.id}"
@@ -320,12 +326,12 @@ module Glue::Pulp::Repos
           async_tasks << repo.promote(to_env, self)
 
           new_repo_id = Glue::Pulp::Repos.clone_repo_id(repo.id, to_env.name)
-          new_repo_path = Glue::Pulp::Repos.clone_repo_path(repo, to_env)
+          new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(repo)
 
           pulp_uri = URI.parse(AppConfig.pulp.url)
           new_productContent = Glue::Candlepin::ProductContent.new({:content => {
               :name => repo.name,
-              :contentUrl => "/#{new_repo_path}",
+              :contentUrl => new_repo_path,
               :gpgUrl => "",
               :type => "yum",
               :label => new_repo_id,
