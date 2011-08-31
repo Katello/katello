@@ -14,22 +14,26 @@ require 'spec_helper'
 
 describe Api::ProductsController do
   include LoginHelperMethods
+  include AuthorizationHelperMethods
+
+  let(:user_with_read_permissions) { user_with_permissions { |u| u.can([:read], :providers, nil, @ogranization) } }
+  let(:user_without_read_permissions) { user_without_permissions }
 
   let(:products) do
     [{
       :name => 'a_product',
       :id => 'id',
       :multiplier => 1
-    }]
+    }].map{|attr| Product.new(attr) }
   end
   let(:organization_id) { 'organization' }
   let(:environment_id) { '1' }
   let(:product_id) { '1234' }
   let(:repositories) do
     [
-        { :id => 1 },
-        { :id => 2 }
-    ]
+        { :id => "1" },
+        { :id => "2" }
+    ].map {|repo_attrs| Glue::Pulp::Repo.new(repo_attrs)}
   end
 
   before (:each) do
@@ -49,17 +53,24 @@ describe Api::ProductsController do
     Product.stub!(:find).and_return(@product)
 
     Product.stub!(:select).and_return(products)
+    products.stub!(:readable).and_return(products)
     products.stub!(:select).and_return(products)
     products.stub!(:joins).and_return(products)
     products.stub!(:where).and_return(products)
     products.stub!(:all).and_return(products)
     @product.stub(:repos).and_return(repositories)
+    @product.stub(:sync_state => ::PulpSyncStatus::Status::NOT_SYNCED)
+    Pulp::Repository.stub(:sync_history => [])
 
+    @provider = Provider.new
+    @provider.organization = @organization
+    @product.provider = @provider
+    
     Organization.stub!(:first).and_return(@organization)
     KTEnvironment.stub!(:first).and_return(@environment)
 
     Organization.stub!(:find).and_return(@organization)
-    KTEnvironment.stub!(:find).and_return(@environment)
+    KTEnvironment.stub!(:find_by_id).and_return(@environment)
 
     @organization.stub!(:locker).and_return(@locker)
 
@@ -73,13 +84,20 @@ describe Api::ProductsController do
   end
 
   context "show all products in an environment" do
+
+    let(:action) { :index }
+    let(:req) { get 'index', :organization_id => organization_id }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
     it "should find organization" do
       Organization.should_receive(:first).once.with({:conditions => {:cp_key => organization_id}}).and_return(@organization)
       get 'index', :organization_id => organization_id
     end
 
     it "should find environment" do
-      KTEnvironment.should_receive(:find).once.with(environment_id).and_return([@environment])
+      KTEnvironment.should_receive(:find_by_id).once.with(environment_id).and_return([@environment])
       get 'index', :organization_id => organization_id, :environment_id => environment_id
     end
 
@@ -118,8 +136,14 @@ describe Api::ProductsController do
 
   context "show repositories for a product in an environment" do
 
+    let(:action) { :repositories }
+    let(:req) { get 'repositories', :organization_id => organization_id, :environment_id => environment_id, :id => product_id }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
     it "should find environment" do
-      KTEnvironment.should_receive(:find).once.with(environment_id).and_return([@environment])
+      KTEnvironment.should_receive(:find_by_id).once.with(environment_id).and_return([@environment])
       get 'repositories', :organization_id => organization_id, :environment_id => environment_id, :id => product_id
     end
 

@@ -17,6 +17,8 @@ class Api::SyncController < Api::ApiController
   before_filter :find_object, :only => [:index, :create, :cancel]
   respond_to :json
 
+  # TODO: define authorization rules
+  skip_before_filter :authorize
 
   def index
     # GET /repositories/<id>/sync/
