@@ -146,11 +146,14 @@ module Pulp
       end
 
       # Get all the Repositories known by Pulp
-      def all groupids=nil
+      # currently filtering against only one groupid is supported in PULP
+      def all groupids=nil, search_params = {}
         custom = self.repository_path
         if groupids
-            custom += "?" + groupids.collect{|id| "groupid=#{url_encode(id)}"}.join("&")
+            search_params = search_params.merge(:groupid => groupids.join(","))
         end
+
+        custom += "?#{search_params.to_query}" unless search_params.empty?
         response = get(custom , self.default_headers)
         body = response.body
         JSON.parse(body)

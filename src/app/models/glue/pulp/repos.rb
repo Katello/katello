@@ -67,12 +67,12 @@ module Glue::Pulp::Repos
       return self.repos(locker).empty?
     end
 
-    def repos env
+    def repos env, search_params = {}
       @repos = {} if @repos.nil?
       return @repos[env.id] if @repos[env.id]
 
       # TODO: temporary hack until groupid AND groupid  querying is added to pulp
-      total_repos = Pulp::Repository.all [Glue::Pulp::Repos.env_groupid(env)]
+      total_repos = Pulp::Repository.all [Glue::Pulp::Repos.env_groupid(env)], search_params
       env_repos = []
       total_repos.collect {|repo|
          repo_obj = Glue::Pulp::Repo.new(repo)
