@@ -103,7 +103,7 @@ class SystemsController < ApplicationController
                             :quantity => pool["quantity"])}
     consumed_pools.sort! {|a,b| a.poolName <=> b.poolName}
 
-    avail_pools = @system.pools.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
+    avail_pools = @system.available_pools.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
                             :poolName => pool["productName"],
                             :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
                             :consumed => pool["consumed"],
