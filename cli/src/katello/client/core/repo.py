@@ -199,8 +199,9 @@ class Discovery(RepoAction):
     def create_repositories(self, productid, name, selectedurls):
         for repourl in selectedurls:
             parsedUrl = urlparse.urlparse(repourl)
-            repoName = self.repository_name(name, parsedUrl.path)
+            repoName = self.repository_name(name, parsedUrl.path) # pylint: disable=E1101
             repo = self.api.create(productid, repoName, repourl)
+            
             print _("Successfully created repository [ %s ]") % repoName
 
     def repository_name(self, name, parsedUrlPath):
