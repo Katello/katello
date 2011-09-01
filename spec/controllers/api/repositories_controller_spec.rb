@@ -16,6 +16,19 @@ describe Api::RepositoriesController do
       
       post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1'
     end
+
+    context 'there is already a repo for the product with the same name' do
+      before do
+        Product.stub(:find_by_cp_id => @product)
+        @product.stub(:add_new_content).and_return { raise Errors::ConflictException }
+      end
+
+      it "should notify about conflict" do
+        post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1'
+        response.code.should == '409'
+      end
+    end
+
   end
   
   describe "get a listing of repositories" do
