@@ -284,6 +284,9 @@ var sliding_tree = function(tree_id, options) {
 
     $(window).unbind('hashchange.' + tree_id).bind( 'hashchange.' + tree_id, hash_change);
 
+    $(window).trigger( 'hashchange.' + tree_id );
+
+
 
     container.find('.slide_link').live('click', function(event){
         if( event.target.nodeName === "A" ){

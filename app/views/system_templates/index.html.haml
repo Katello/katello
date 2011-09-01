@@ -1,8 +1,87 @@
-= javascript :edit, :multiselect,:form, :system_template
+
+
+
+= javascript :panel, :edit, :system_template
 = include_editable_i18n
 
+
+
+
+= javascript do
+  :javascript
+    KT.content_breadcrumb = $.parseJSON('#{escape_javascript(template_content_breadcrumb())}');
+    KT.template_breadcrumb = $.parseJSON('#{escape_javascript(generate_template_breadcrumb())}');
+    localize({
+      "add": '+ #{_('Add')}',
+      "products": '#{_('Products')}',
+      "packages": '#{_('Packages')}',
+      "edit_label": '#{_("Edit Details")}',
+      "edit_close_label": '#{_("Close Edit")}',
+      "add_label": '#{_("Add")}',
+      "add_close_label": '#{_("Cancel Add")}',
+      "templates_empty": '#{_("No System Templates are currently defined")}'
+      });
+
+
+
+
 .grid_16
+  #container
 
 
-.grid_16#main
-  = two_panel(@templates, @panel_options)
+    #template_tree.right_tree.sliding_tree
+      %h2= _("System Templates")
+      .tree_breadcrumb.clickable.clear
+      .sliding_container
+        #template_list.list.sliding_list{"data-page_size"=>current_user.page_size}
+          #tree_loading.slider
+            .text
+              = _("Loading System Template")
+              = image_tag ("spinner.gif")
+          .slider_one.has_content.slider.will_have_content
+          .slider_two.no_content.slider
+
+
+      #add_template_container.slide_up_container
+        %h2= _("New System Template")
+        = render :partial=>"new"
+
+      #edit_template_container.slide_up_container
+        %h2= _("Edit System Template")
+        = render :partial=>"edit", :locals=>{:editable=>true}
+      #sliding_tree_actionbar.clickable
+        - if editable
+          #add_template.cs_action
+            %span#add_template_icon.sprite
+              SPRITE
+            %span.text
+              = _("Add")
+          #edit_template.cs_action
+            %span#edit_template_icon.sprite
+              SPRITE
+            %span.text
+              = _("Edit")
+        - if deletable
+          #remove_template.cs_action{ "data-confirm-text" => "#{_('Are you sure you want to remove this template?')}" }
+            %span#remove_template_icon.sprite
+              SPRITE
+            %span.text
+              = _("Remove")
+        - if editable or deleteable
+          #placeholder.cs_action
+
+
+
+    = render :partial=>"common/tupane"
+    #content_tree.left.sliding_tree
+      %h2= _("Eligible Content")
+      .tree_breadcrumb.clickable.clear
+      .sliding_container
+        #list.list.sliding_list{"data-page_size"=>current_user.page_size}
+          .slider_one.has_content.slider
+          .slider_two.no_content.slider
+
+
+
+#error_dialog{:style=>"display: none"}
+  = _("An error has occured when communicating with the server, please refresh the page to retrieve the current changeset.")

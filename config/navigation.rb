@@ -33,6 +33,9 @@ SimpleNavigation::Configuration.run do |navigation|
         sync_sub.item :schedule, _("Sync Schedule"), sync_schedules_index_path(), :class=>"third_level"
       end if Provider.any_readable?(current_organization)
       #TODO: tie in Content Locker page
+      content_sub.item :system_templates, _("System Templates"), system_templates_path do |template_key_sub|
+
+      end if SystemTemplate.any_readable?(current_organization())
       content_sub.item :promotions, _("Promotions"), promotions_path, :highlights_on =>/\/promotions.*/ ,:class => 'content' do |package_sub|
           if !@package.nil?
               package_sub.item :details, _("Details"), package_path(@package.id), :class=>"navigation_element"

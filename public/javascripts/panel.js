@@ -388,8 +388,6 @@ var panel = (function(){
             offset = offset ? offset : 10;
             offset += $('#maincontent').offset().left;
 
-            console.log(container.find('.left').height() );
-
             if(jQPanel.length > 0){
                 if( container.find('.left').height() > 550 ){
                     if ( scrollY < bodyY ) {

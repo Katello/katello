@@ -130,10 +130,7 @@
   -moz-background-size: $size;
   background-size: $size;
 }
-@mixin sliding-tree-actionbar-image-spacing {
-  margin-left: 6px;
-  margin-top: -1px;
-}
+
 
 @mixin crumb-disable-hover {
   &:hover {
@@ -181,4 +178,11 @@
   width: 16px;
   position: absolute;
   margin-top: 2px;
+}
+
+@mixin action-icon($icon) {
+    background: $icon;
+    margin-left: 6px;
+    margin-top: -1px;
+
 }
