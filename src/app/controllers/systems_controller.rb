@@ -115,7 +115,7 @@ class SystemsController < ApplicationController
       notice _("System subscriptions updated.")
       render :nothing =>true
     else
-      errors "Unable to update subscriptions."
+      errors _("Unable to update subscriptions.")
       render :nothing =>true
     end
   end
