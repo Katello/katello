@@ -154,15 +154,19 @@ class InstalledPackages(SystemAction):
 
         packages = self.api.packages(systems[0]['uuid'])
 
-        self.printer.addColumn('name')
+        for p in packages:
+            p['name_version_release_arch'] = "%s-%s-%s.%s" % \
+                    (p['name'], p['version'], p['release'], p['arch'])
 
         if verbose:
+            self.printer.addColumn('name')
             self.printer.addColumn('vendor')
             self.printer.addColumn('version')
             self.printer.addColumn('release')
             self.printer.addColumn('arch')
         else:
             # print compact list of package names only
+            self.printer.addColumn('name_version_release_arch')
             self.printer._grep = True
 
         self.printer.printItems(packages)
