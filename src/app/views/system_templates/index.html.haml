@@ -31,7 +31,16 @@
 
     #template_tree.right_tree.sliding_tree
       %h2= _("System Templates")
-      .tree_breadcrumb.clickable.clear
+      .breadcrumb_search.fl.clear.clickable
+        %form#search_form.search.clear
+          %input{ :name => "s", :type => "input", :placeholder => "Filter...", :id=>"search_filter"}
+          %button.action #{_("Search")}
+          %br.clear
+
+        .search_button.fr.clickable
+          #{_('Search')}
+          
+        .tree_breadcrumb.clickable.clear
       .sliding_container
         #template_list.list.sliding_list{"data-page_size"=>current_user.page_size}
           #tree_loading.slider

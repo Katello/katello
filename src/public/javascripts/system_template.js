@@ -106,7 +106,7 @@ KT.templates = function() {
             buttons.edit.removeClass("disabled");
             buttons.remove.removeClass("disabled");
         }
-
+        sort_content();
 
     },
     throw_error = function() {
@@ -117,6 +117,16 @@ KT.templates = function() {
             open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); }
         });
 
+    },
+    sort_content = function() {
+        $(".right_tree .will_have_content").find("li").sortElements(function(a,b){
+                var a_html = $(a).find(".sort_attr").html();
+                var b_html = $(b).find(".sort_attr").html();
+                if (a_html && b_html ) {
+                    return  a_html.toUpperCase() >
+                            b_html.toUpperCase() ? 1 : -1;
+                }
+        });
     };
 
     
@@ -128,7 +138,8 @@ KT.templates = function() {
         set_current_description: set_current_description,
         reset_page: reset_page,
         buttons: buttons,
-        throw_error: throw_error
+        throw_error: throw_error,
+        sort_content: sort_content
     }
 
 
@@ -396,7 +407,8 @@ $(document).ready(function() {
                             base_icon       :  'home_img',
                             enable_search   :  false,
                             render_cb       :  KT.template_renderer.render_hash,
-                            tab_change_cb   :  KT.templates.reset_page
+                            tab_change_cb   :  KT.templates.reset_page,
+                            enable_search   :  true
                         });
 
  
