@@ -18,7 +18,7 @@ KT.options = {
     template_tree: undefined,
     content_tree: undefined,
     current_template: undefined,
-    templates: undefined,
+    templates: undefined
     
 };
 
@@ -96,6 +96,20 @@ KT.templates = function() {
         };
         
     },
+    add_package = function(name) {
+      var pkgs = KT.options.current_template.packages;
+      if ($.inArray(name, pkgs) === -1) {
+        pkgs.push(name);
+      }
+      KT.options.template_tree.rerender_content();
+    },
+    remove_package = function(name) {
+        var pkgs = KT.options.current_template.packages;
+        var loc = $.inArray(name, pkgs);
+        if (loc > -1) {
+            pkgs.splice(loc, 1);
+        }
+    },
     reset_page = function() {
 
         if (KT.options.current_template === undefined) {
@@ -139,7 +153,9 @@ KT.templates = function() {
         reset_page: reset_page,
         buttons: buttons,
         throw_error: throw_error,
-        sort_content: sort_content
+        sort_content: sort_content,
+        add_package: add_package,
+        remove_package: remove_package
     }
 
 
@@ -162,9 +178,12 @@ KT.template_renderer = function() {
                 cb();
             });
         }
+        else {
+            cb();
+        }
     },
     render_hash = function(hash_id, render_cb) {
-        
+        console.log(hash_id);
         var node = hash_id.split('_')[0];
         var template_id = hash_id.split('_')[1];
 
@@ -176,6 +195,9 @@ KT.template_renderer = function() {
             else if(node === "details") {
                 content = details(template_id);
             }
+            else if (node === "packages") {
+                content = packages();
+            }
             else {
                 console.log("Can't render: " +  id);
             }
@@ -183,22 +205,41 @@ KT.template_renderer = function() {
         });
 
     },
+    list_item = function(id, text, is_slide_link) {
+        var html = '<li class="' + (is_slide_link ? 'slide_link' : '')  + '">';
+        html += '<div class="link_details" id="' + id + '">';
+        html += '<span class="sort_attr">' + text + '</span>';
+        html += "</div></li>";
+        return html ;
+    },
+    package_item = function(pkg_name) {
+        var html = '<li class="">';
+        html += '<div class="" id=pkg_"' + pkg_name + '">';
+        html += '<span class="sort_attr">' + pkg_name + '</span>';
+        html += '<a id="" class="fr st_button remove_package">' + i18n.remove + '</a>';
+        html += "</div></li>";
+        return html ;
+    },
+    packages = function() {
+        var html = '<ul><li><form id="add_package_form"><input id="add_package_input" type="text" size="35"><form>  ';
+        html += '<a id="add_package" class="fr st_button ">' + i18n.add_plus + '</a>';
+        html += ' </li></ul>';
+
+        html +=  "<ul>";
+        $.each(KT.options.current_template.packages, function(index, item) {
+            html += package_item(item);//TODO do ths correctly
+            
+        });
+
+        
+        return html + "</ul>";
+    },
     details = function(t_id) {
         var html = "<ul>";
         $.each([['products_', i18n.products], ['packages_', i18n.packages]], function(index, item_set) {
-            html += '<li class="slide_link">';
-            html += '<div class="link_details" id="' + item_set[0] + t_id +  '">';
-            html += '<span class="sort_attr">' + item_set[1] + '</span>';
-            html += "</div></li>";
+            html += list_item(item_set[0] + t_id, item_set[1], true);
         });
         return html + "</ul>";
-    },
-    template_list_item = function(id, name) {
-        var html = '<li class="slide_link">';
-        html += '<div class="link_details" id="details_' + id + '">';
-        html += '<span class="sort_attr">' + name + '</span>';
-        html += "</div></li>";
-        return html ;
     },
     template_list = function() {
         var templates = KT.options.templates;
@@ -208,7 +249,7 @@ KT.template_renderer = function() {
 
         var html = "<ul>";
         $.each(templates, function(index, template) {
-            html += template_list_item(template.template_id, template.template_name);
+            html += list_item("details_" + template.template_id, template.template_name, true);
         });
         html += "</ul>";
         return html;
@@ -318,8 +359,29 @@ KT.actions =  (function(){
                     error: KT.templates.throw_error
                 });
             });
-
         });
+        var add_package = function(e) {
+            var input = $("#add_package_input");
+            e.preventDefault();
+            var pkg = input.attr("value");
+            if (pkg.length > 0) {
+                KT.templates.add_package(pkg);
+            }
+            //Why doesn't jquery work here!!!!
+            document.getElementById("add_package_input").focus();
+            //input.focus();
+        };
+        $("#add_package").live('click', add_package);
+        $(".right_tree").delegate( "#add_package_form", "submit", add_package);
+        $(".remove_package").live('click', function() {
+            var pkg = $(this).siblings("span").text();
+            if (pkg && pkg.length > 0) {
+                KT.templates.remove_package(pkg);
+            }
+            $(this).closest("li").remove();
+        });
+        
+
     };
 
 
