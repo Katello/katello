@@ -15,9 +15,9 @@
  * A small javascript file needed to load things whenever a role is opened for editing
  *
  */
-var ROLES = {};
+KT.roles = {};
 
-ROLES.permissionWidget = function(){
+KT.roles.permissionWidget = function(){
     var current_stage       = undefined,
         next_button         = $('#next_button'),
         previous_button     = $('#previous_button'),
@@ -469,7 +469,7 @@ var roleActions = (function($){
                dataType : 'json',
                success  : function(data){
                    $.extend(roles_breadcrumb, data);
-                   ROLES.tree.rerender_content();
+                   KT.roles.tree.rerender_content();
                    form[0].reset();
                    roles_breadcrumb[current_organization].count += 1
 
@@ -497,7 +497,7 @@ var roleActions = (function($){
                     }*/
                     delete roles_breadcrumb[id];
                     roles_breadcrumb[current_organization].count -= 1;
-                    ROLES.tree.rerender_content();
+                    KT.roles.tree.rerender_content();
                }
             });
         },
@@ -521,7 +521,7 @@ var roleActions = (function($){
                     } else {
                         roles_breadcrumb[element.attr('data-id')].has_role = false;
                     }
-                    ROLES.tree.rerender_content();
+                    KT.roles.tree.rerender_content();
                }
             });
         },
@@ -883,14 +883,14 @@ var pageActions = (function($){
                 if ($(this).hasClass('disabled')){
                     return false;
                 }
-                ROLES.actionBar.toggle('role_edit');
+                KT.roles.actionBar.toggle('role_edit');
             });
             
             $('#add_permission').live('click', function() {
                 if ( $(this).hasClass('disabled') ){
                     return false;
                 }
-                ROLES.actionBar.toggle('permission_add');
+                KT.roles.actionBar.toggle('permission_add');
             });
             
             $('.content_add_remove').live('click', function(){
@@ -908,13 +908,13 @@ var pageActions = (function($){
             panel.contract_cb = function(name){
                         $.bbq.removeState("role_edit");
                         $('#panel').removeClass('panel-custom');
-                        ROLES.actionBar.reset();
+                        KT.roles.actionBar.reset();
                     };
                     
             panel.switch_content_cb = function(){
                 $.bbq.removeState("role_edit");
                 $('#panel').removeClass('panel-custom');
-                ROLES.actionBar.reset();
+                KT.roles.actionBar.reset();
             };
         };
     
@@ -927,7 +927,7 @@ var pageActions = (function($){
 
 $(document).ready(function() {
   
-    ROLES.actionBar = sliding_tree.ActionBar(pageActions.toggle_list);
+    KT.roles.actionBar = sliding_tree.ActionBar(pageActions.toggle_list);
   
     pageActions.registerEvents();
 });
