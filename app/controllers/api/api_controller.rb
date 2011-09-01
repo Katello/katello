@@ -30,6 +30,7 @@ class Api::ApiController < ActionController::Base
   rescue_from HttpErrors::BadRequest, :with => proc { |e| render_wrapped_exception(400, e) }
 
   rescue_from Errors::SecurityViolation, :with => :render_403
+  rescue_from Errors::ConflictException, :with => proc { |e| render_exception(409, e) }
 
   # support for session (thread-local) variables must be the last filter in this class
   include Katello::ThreadSession::Controller
