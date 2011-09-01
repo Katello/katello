@@ -28,20 +28,24 @@
             %th #{_("Quantity")}
             %th #{_("Expires")}
         %tbody
-          - for sub in all_subs
+          - if consumed.length > 0
+            - for sub in consumed
+              %tr
+                %td
+                  %span.fl
+                    = check_box_tag sub.poolId, sub.poolId, false
+                  &nbsp;
+                  #{sub.poolName}
+                %td #{"--"}
+                %td #{"--"}
+                %td #{sub.quantity}
+                %td #{sub.expires}
+          - else
             %tr
-              %td
-                %span.fl
-                  = check_box_tag sub.poolId, sub.poolId, consumed
-                &nbsp;
-                #{sub.poolName}
-              %td #{"--"}
-              %td #{"--"}
-              %td
-                #{sub.quantity}
-              %td #{"--"}
-
-      = submit_tag _('Unsubscribe'), :class => 'submit dialogbutton'
+              %td{:colspan=>5} #{_("The system is not currently consuming any subscriptions.")}
+      - if editable
+        .actions
+          = submit_tag _('Unsubscribe'), :class => 'submit dialogbutton'
   .grid_8
     = form_tag update_subscriptions_system_path, :id=>"subscribe", :method=>"post", :remote=>true do
       %h5 #{_("Available Subscriptions")}
@@ -58,16 +62,16 @@
             %tr
               %td
                 %span.fl
-                  = check_box_tag sub.poolId, sub.poolId, consumed
+                  = check_box_tag sub.poolId, sub.poolId, false
                 &nbsp;
                 #{sub.poolName}
               %td #{"--"}
               %td #{"--"}
-              %td
-                #{sub.quantity}
-              %td #{"--"}
-
-      = submit_tag _('Subscribe'), :class => 'submit dialogbutton'
+              %td #{sub.quantity}
+              %td #{sub.expires}
+      - if editable
+        .actions
+          = submit_tag _('Subscribe'), :class => 'submit dialogbutton'
 
 -#some potentially useful stuff:
 
