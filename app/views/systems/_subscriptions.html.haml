@@ -8,7 +8,7 @@
 
 = content_for :content do
   .grid_8.subs
-    = image_tag ("icons/status_icons_sprite.png", :class=>"icon")
+    = image_tag("icons/status_icons_sprite.png", :class=>"icon")
     %h4 #{_("Entitlements Required")}
   .grid_4.ca.subs
     #{_("Socket Requirement")}
@@ -28,12 +28,12 @@
             %th #{_("Quantity")}
             %th #{_("Expires")}
         %tbody
-          - if consumed.length > 0
-            - for sub in consumed
+          - if consumed_subs.length > 0
+            - for sub in consumed_subs
               %tr
                 %td
                   %span.fl
-                    = check_box_tag sub.poolId, sub.poolId, false
+                    = check_box_tag "system[#{sub.poolId}]", value="#{sub.poolId}", false
                   &nbsp;
                   #{sub.poolName}
                 %td #{"--"}
@@ -58,11 +58,13 @@
             %th #{_("Quantity")}
             %th #{_("Expires")}
         %tbody
-          - for sub in all_subs
+          - for sub in avail_subs
             %tr
               %td
                 %span.fl
-                  = check_box_tag sub.poolId, sub.poolId, false
+                  = check_box_tag system[sub.poolId], false
+                  -#/ put the product's id in the value field so we know what product is syncing
+                  -#=check_box_tag "repo[#{r.id}]", value="#{p.id}"
                 &nbsp;
                 #{sub.poolName}
               %td #{"--"}
