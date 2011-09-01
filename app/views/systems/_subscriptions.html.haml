@@ -8,61 +8,81 @@
 
 = content_for :content do
   .grid_8.subs
-    %h4 Entitlements Required
+    = image_tag ("icons/status_icons_sprite.png", :class=>"icon")
+    %h4 #{_("Entitlements Required")}
   .grid_4.ca.subs
-    Socket Requirement
+    #{_("Socket Requirement")}
     #{"--"}
   .grid_4.ca.subs
-    Guests Requirement
+    #{_("Guests Requirement")}
     #{"--"}
   .grid_8
-    %h5 System Current Subscription(s)
-    %table
-      %thead
-        %tr
-          %th #{_("Subscription")}
-          %th #{_("Sockets")}
-          %th #{_("Guests")}
-          %th #{_("Quantity")}
-          %th #{_("Expires")}
-      %tbody
-        - for sub in all_subs
+    = form_tag update_subscriptions_system_path, :id=>"unsubscribe", :method=>"post", :remote=>true do
+      %h5 #{_("System Current Subscription(s)")}
+      %table
+        %thead
           %tr
-            %td
-              %span.fl
-                = check_box_tag sub.poolId, sub.poolId, consumed
-              &nbsp;
-              #{sub.poolName}
-            %td #{"--"}
-            %td #{"--"}
-            %td
-              #{sub.quantity}
-            %td #{"--"}
-    %h5 Available Subscriptions
-    %table
-      %thead
-        %tr
-          %th #{_("Subscription")}
-          %th #{_("Sockets")}
-          %th #{_("Guests")}
-          %th #{_("Quantity")}
-          %th #{_("Expires")}
-      %tbody
-        - for sub in all_subs
+            %th #{_("Subscription")}
+            %th #{_("Sockets")}
+            %th #{_("Guests")}
+            %th #{_("Quantity")}
+            %th #{_("Expires")}
+        %tbody
+          - for sub in all_subs
+            %tr
+              %td
+                %span.fl
+                  = check_box_tag sub.poolId, sub.poolId, consumed
+                &nbsp;
+                #{sub.poolName}
+              %td #{"--"}
+              %td #{"--"}
+              %td
+                #{sub.quantity}
+              %td #{"--"}
+
+      = submit_tag _('Unsubscribe'), :class => 'submit dialogbutton'
+  .grid_8
+    = form_tag update_subscriptions_system_path, :id=>"subscribe", :method=>"post", :remote=>true do
+      %h5 #{_("Available Subscriptions")}
+      %table
+        %thead
           %tr
-            %td
-              %span.fl
-                = check_box_tag sub.poolId, sub.poolId, consumed
-              &nbsp;
-              #{sub.poolName}
-            %td #{"--"}
-            %td #{"--"}
-            %td
-              #{sub.quantity}
-            %td #{"--"}
+            %th #{_("Subscription")}
+            %th #{_("Sockets")}
+            %th #{_("Guests")}
+            %th #{_("Quantity")}
+            %th #{_("Expires")}
+        %tbody
+          - for sub in all_subs
+            %tr
+              %td
+                %span.fl
+                  = check_box_tag sub.poolId, sub.poolId, consumed
+                &nbsp;
+                #{sub.poolName}
+              %td #{"--"}
+              %td #{"--"}
+              %td
+                #{sub.quantity}
+              %td #{"--"}
+
+      = submit_tag _('Subscribe'), :class => 'submit dialogbutton'
 
 -#some potentially useful stuff:
 
+-#
+-#= form_tag user_session_path, :id=>:login_form, :method => "post" do
+-#  %fieldset
+-#    = label_tag :username
+-#    = text_field_tag :username, params[:username]
+-#  %fieldset
+-#    = label_tag :password
+-#    = password_field_tag :password, params[:password]
+-#  %div.indented
+-#    = check_box_tag :remember_me
+-#    = label_tag :remember_me
+-#  = submit_tag _('Log In'), :class => 'submit dialogbutton'
 
 -#- if editable
 -#  = form_tag update_subscriptions_system_path, :method => "post", :id => "update_subscriptions" do |f|
