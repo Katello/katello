@@ -5,7 +5,10 @@ $(function() {
     permissionWidget = KT.roles.permissionWidget();
     permissionWidget.init();
   
-    KT.roles.actionBar.add_to_toggle_list({ 'permission_add' : permissionWidget.permission_add })
+    KT.roles.actionBar.add_to_toggle_list({ 'add_permission' : { container : 'permission_widget',
+    															setup_fn   : permissionWidget.add_permission }});
+  	KT.roles.actionBar.add_to_toggle_list({ 'edit_permission': { container : 'permission_widget',
+    															setup_fn   : permissionWidget.edit_permission }});
   
     KT.roles.tree = sliding_tree("roles_tree", {
                           breadcrumb      :  roles_breadcrumb,
