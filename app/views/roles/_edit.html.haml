@@ -81,8 +81,13 @@
             SPRITE
           %span.text
             = _("Add Permission")
+        #edit_permission.disabled.cs_action{"title" => "#{_('You must select and view a permission before you can edit it.')}"}
+          %span#edit_icon.sprite
+            SPRITE
+          %span.text
+            = _("Edit Permission")
         #edit_role.cs_action
-          %span#edit_role_icon.sprite
+          %span#edit_icon.sprite
             SPRITE
           %span.text
             = _("Edit Role")
@@ -92,5 +97,3 @@
             SPRITE
           %span.text
             = _("Remove Role")
-      - if Role.deletable? or Role.editable?
-        #placeholder.cs_action

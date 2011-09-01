@@ -848,17 +848,31 @@ var rolesRenderer = (function($){
                 } else {
                     summary.html(i18n.permissions_summary_readonly);
                 }
+            } else if ( hash_id.match(/permission?/g) ){
+            	if (permissions.create_roles || permissions.update_roles) {
+                    summary.html(i18n.permission_detail_summary);
+                } else {
+                    summary.html(i18n.permission_detail_readonly);
+                }
             }
         },
         handleButtons = function(hash_id){
-            var type = hash_id.split('_')[0];
+            var type = hash_id.split('_')[0],
+            	add_permission_button = $('#add_permission'),
+            	edit_permission_button = $('#edit_permission');
 
             if( type === 'organization' || type === 'permission' || type === 'global' ){
-                $('#add_permission').removeClass('disabled');
+                add_permission_button.removeClass('disabled');
                 roleActions.setCurrentOrganization(hash_id);
             } else {
-                $('#add_permission').addClass('disabled');
+                add_permission_button.addClass('disabled');
                 roleActions.setCurrentOrganization('');
+            }
+            
+            if( type === 'permission' ){
+            	edit_permission_button.removeClass('disabled');
+            } else if( !edit_permission_button.hasClass('disabled') ) {
+            	edit_permission_button.addClass('disabled');
             }
         };
     
