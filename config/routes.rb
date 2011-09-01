@@ -118,7 +118,7 @@ Src::Application.routes.draw do
 
     end
     member do
-
+      get :object
     end
   end
 

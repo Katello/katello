@@ -14,12 +14,13 @@ class SystemTemplatesController < ApplicationController
   include AutoCompleteSearch
 
   before_filter :setup_options, :only => [:index, :items]
-  before_filter :find_template, :only =>[:update, :edit, :destroy, :show]
+  before_filter :find_template, :only =>[:update, :edit, :destroy, :show, :object]
 
-  around_filter :catch_exceptions
+
+  #around_filter :catch_exceptions
 
   def section_id
-    'systems'
+    'contents'
   end
 
 
@@ -31,6 +32,7 @@ class SystemTemplatesController < ApplicationController
     {
       :index => read_test,
       :items => read_test,
+      :object => read_test,
       :show => read_test,
       :edit => read_test,
       :update => manage_test,
@@ -42,8 +44,11 @@ class SystemTemplatesController < ApplicationController
 
 
   def index
+    @environment = current_organization.locker
+    @products = @environment.products
     @templates = SystemTemplate.search_for(params[:search]).where(:environment_id => current_organization.locker.id).limit(current_user.page_size)
     retain_search_history
+    render :index, :locals=>{:editable=>true, :deletable=>true}
   end
   
   def items
@@ -60,6 +65,15 @@ class SystemTemplatesController < ApplicationController
                  :name => _('template'),
                  :ajax_scroll => items_system_templates_path(),
                  :enable_create => SystemTemplate.creatable?(current_organization) }
+  end
+
+
+  def object
+    pkgs = @template.packages.collect{|pkg| {:name=>pkg.name}}
+    products = @template.packages.collect{|prod| {:name=>prod.name, :id=>prod.id}}
+    to_ret = {:id=> @template.id, :name=>@template.name, :description=>@template.description,
+              :packages=>pkgs, :products=>products}
+    render :json=>to_ret
   end
 
   def edit
@@ -110,7 +124,8 @@ class SystemTemplatesController < ApplicationController
 
     @template = SystemTemplate.create!(obj_params)
     notice _("Sync Plan '#{@template.name}' was created.")
-    render :partial=>"common/list_item", :locals=>{:item=>@template, :accessor=>"id", :columns=>['name']}
+    render :json=>{:name=>@template.name, :id=>@template.id}
+
   rescue Exception => e
     errors e
     render :text => e, :status => :bad_request

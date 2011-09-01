@@ -1,5 +1,7 @@
 @import "katello";
 
+
+
 #contents {
   .locked_breadcrumb {
     background-color: #FEE7C6;
@@ -16,25 +18,30 @@
                    // The issue is that the full panel is 448 pixes wide, and with 4 buttons, there are
                    //  3  vertical 1 px seperators (borders), and 448-3 isn't divisible by 4.  We come up 1 px short
   }
+  
+
+
   #edit_changeset_icon {
-      background: $edit_icon_black;
-      margin-left: 6px;
-      margin-top: -1px;
+    @include action-icon($edit_icon_black);
   }
   #review_changeset_icon {
-      background: $comp_icon_black; 
-      margin-left: 6px;
-      margin-top: -1px;
+    @include action-icon($comp_icon_black);
   }
   #delete_changeset_icon {
-      background: $circle_x_icon_black;
-      margin-left: 6px;
-      margin-top: -1px;
+    @include action-icon($circle_x_icon_black);
   }
   #promote_changeset_icon {
-      background: $play_icon_black;
-      margin-left: 6px;
-      margin-top: -1px;
+    @include action-icon($play_icon_black);
+  }
+
+  #edit_template_icon {
+    @include action-icon($edit_icon_black);
+  }
+  #add_template_icon {
+   @include action-icon($circle_x_icon_black);
+  }
+  #remove_template_icon {
+    @include action-icon($circle_x_icon_black);
   }
 
   #changeset_edit {
@@ -229,6 +236,41 @@
       }
     }
   }
+
+
+  .slide_up_container {
+    height: 250px;
+    width: 448px;
+    overflow: auto;
+    .validation_error { color: red; font-weight: 500; }
+    h2 {
+      margin-left: 5px;
+    }
+    .permission_add_container {
+      float: none;
+      width: 90%;
+      margin: 10px auto;
+
+      label {
+        width: 100px;
+      }
+      select, input, textarea {
+        margin-left: 15px;
+      }
+    }
+
+    span { margin-left: 85px; word-wrap: break-word; }
+
+    #permission_button_bar {
+      width: 90%;
+      margin: 0 auto;
+    }
+  }
+  
+
+
+
+
 }
 
 .cs_content {

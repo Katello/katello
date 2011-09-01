@@ -124,7 +124,7 @@ module BreadcrumbHelper
      add_crumb_node!(bc, distribution_bc_id(prod), distributions_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
                      _("Distributions"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
               
-     end   
+     end
      bc.to_json
     end
   
@@ -257,4 +257,72 @@ module BreadcrumbHelper
       "permission_global_#{permission.id}"
     end
   end
+
+
+  module TemplateContentBreadcrumb
+
+    def template_content_breadcrumb
+     bc = {}
+
+     products_crumb_id = "products"
+
+     add_crumb_node!(bc, products_crumb_id, "",
+         _("Products"), [], {:cache=>true,
+                         :content=>render(:partial=>"products", :locals=>{:products=>@products})})
+
+     for prod in @products
+       product_id = product_bc_id(prod)
+       #top of this product, only need packages for now
+       #add_crumb_node!(bc, product_id, "",
+       #   prod.name, [products_crumb_id], {:cache=>true, :content=>render(:partial=>"product_detail", :locals=>{:product=>prod})})
+
+       #product,packages
+       add_crumb_node!(bc, packages_bc_id(prod), packages_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
+          prod.name + " " +  _("Packages"), [products_crumb_id], {:scrollable=>true})
+          
+
+     end
+     bc.to_json
+    end
+
+
+    def generate_template_breadcrumb
+      bc = {}
+      root_id = "templates"
+
+      add_crumb_node!(bc, root_id, "", _("Templates"), [],
+                      {:client_render => true },
+                      {:templates => template_list})
+
+      @templates.each{|template|
+        template_id = template_bc_id(template)
+        add_crumb_node!(bc, template_id, "", template.name, [root_id], {:client_render => true})
+
+        add_crumb_node!(bc, packages_bc_id(template), "", _("Packages"), [root_id, template_id], {:client_render => true})
+        add_crumb_node!(bc, products_bc_id(template), "", _("Products"), [root_id, template_id], {:client_render => true})
+      }
+
+      bc.to_json
+    end
+
+
+    def template_bc_id template
+      "details_#{template.id}"
+    end
+
+    def packages_bc_id template
+      "packages_#{template.id}"
+    end
+
+    def products_bc_id template
+      "products_#{template.id}"
+    end
+
+    def template_list
+      @templates.collect{|t| {:template_id=>t.id, :template_name=>t.name, :url=>object_system_template_path(t.id)} }
+    end
+
+  end
+
+
 end
