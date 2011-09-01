@@ -95,18 +95,24 @@ class SystemsController < ApplicationController
   end
 
   def subscriptions
-    # system subs plus what is available
-    all = @system.pools + @system.available_pools
-    consumed = @system.consumed_pool_ids
-    all_pools = all.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
+
+    consumed_pools = @system.pools.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
                             :poolName => pool["productName"],
                             :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
                             :consumed => pool["consumed"],
                             :quantity => pool["quantity"])}
-    all_pools.sort! {|a,b| a.poolName <=> b.poolName}
+    consumed_pools.sort! {|a,b| a.poolName <=> b.poolName}
+
+    avail_pools = @system.pools.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
+                            :poolName => pool["productName"],
+                            :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                            :consumed => pool["consumed"],
+                            :quantity => pool["quantity"])}
+    avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
+
     render :partial=>"subscriptions", :layout => "tupane_layout", 
-                                      :locals=>{:system=>@system, :all_subs => all_pools,
-                                                :consumed => consumed, :editable=>@system.editable?}
+                                      :locals=>{:system=>@system, :avail_subs => avail_pools,
+                                                :consumed_subs => consumed_pools, :editable=>@system.editable?}
   end
 
   def update_subscriptions
