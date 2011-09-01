@@ -100,7 +100,7 @@ class SystemsController < ApplicationController
     consumed = @system.consumed_pool_ids
     all_pools = all.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
                             :poolName => pool["productName"],
-                            :expires => Date.parse(pool["endDate"], "%m/%d/%Y"),
+                            :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
                             :consumed => pool["consumed"],
                             :quantity => pool["quantity"])}
     all_pools.sort! {|a,b| a.poolName <=> b.poolName}
