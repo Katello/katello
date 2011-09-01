@@ -54,7 +54,6 @@ class ApplicationController < ActionController::Base
   #   details:             String containing additional details.  This would typically be to store
   #                        information such as a stack trace that is in addition to the notice text.
   def notice notice, options = {}
-   
     notice = "" if notice.nil?
     
     # set the defaults

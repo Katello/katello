@@ -18,6 +18,8 @@
  * Date: 09/01/2010
  */
 
+var KT = {};
+
 //i18n global variable
 var i18n = {};
 
