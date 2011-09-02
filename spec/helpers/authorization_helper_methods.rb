@@ -39,11 +39,9 @@ module AuthorizationHelperMethods
     end
     resource_type = ResourceType.find_or_create_by_name(resource_type)
     tags = [tags] unless Array === tags
-    tags = tags.collect{|t| t.to_s}
-    tags = tags.collect{|tag| Tag.find_or_create_by_name(tag)}
-
+    tags = [] unless tags
     role.permissions << Permission.create!(:role => role, :name => name, :verbs => verbs, :resource_type => resource_type,
-                                              :tags => tags, :organization => org)
+                                              :organization => org, :tag_values => tags)
     role.save!
   end
 
