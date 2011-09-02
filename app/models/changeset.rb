@@ -38,6 +38,7 @@ class Changeset < ActiveRecord::Base
   has_and_belongs_to_many :products, :uniq => true
   has_many :packages, :class_name=>"ChangesetPackage", :inverse_of=>:changeset
   has_many :users, :class_name=>"ChangesetUser", :inverse_of=>:changeset
+  has_and_belongs_to_many :system_templates
   has_many :errata, :class_name=>"ChangesetErratum", :inverse_of=>:changeset
   has_many :repos, :class_name=>"ChangesetRepo", :inverse_of => :changeset
   has_many :distributions, :class_name=>"ChangesetDistribution", :inverse_of => :changeset
