@@ -29,39 +29,34 @@ KT.roles.permissionWidget = function(){
         
         flow = {
             'name'          :   { previous  : false,
-                                  next      : 'description', 
+                                  next      : 'resource_type', 
                                   container : $('#name_container'),
                                   input		: $('#permission_name'),
                                   validate  : function(){
                                         if( $("#permission_name").val() === "" ){
                                             if( !$('#name_container').find('span').hasClass('validation_error') ){
-                                                $('#name_container').append('<div class="permission_widget_container"><span class="validation_error">' + i18n.name_validation + '</span></div>');
+                                                $('#name_container').append('<span class="validation_error">' + i18n.name_validation + '</span>');
+                                                $('#permission_name').addClass("input_error");
                                             }
                                             return false;
                                         }  else {
                                             $('#name_container').find('span').remove();
+                                            $('#permission_name').removeClass("input_error");
                                             return true;
                                         }
                                   },
                                   actions   : function(){
                                         previous_button.hide();
-                                  }
-                                },
-            'description'   :   { previous  : 'name', 
-                                  next      : 'resource_type',
-                                  container : $('#description_container'),
-                                  input		: $('#description'),
-                                  validate  : function(){
-                                        return true;  
-                                  },
-                                  actions   : function(){
-                                        previous_button.show();
+                                        if( mode !== 'update' ){
+                                        	$('#step_1').addClass('active-step');
+                                        	$('#step_1').show();
+                                        }
                                         if( all_types_button.hasClass('selected') ){
                                             handleAllTypes();
                                         }
                                   }
                                 },
-            'resource_type' :   { previous  : 'description', 
+            'resource_type' :   { previous  : 'name', 
                                   next      : 'verbs',
                                   container : $('#resource_type_container'),
                                   input     : $('#resource_type'),
@@ -69,10 +64,18 @@ KT.roles.permissionWidget = function(){
                                       return true;
                                   },
                                   actions   : function(){
-                                      if( done_button.is(":visible") ){
-                                          done_button.hide();
-                                          next_button.show();
-                                      }
+                                  		if( mode !== 'update' ){
+	                                  		$('#step_1').removeClass('active-step');
+	                                  		$('#step_1').hide();
+	                                  		$('#step_2').addClass('active-step');
+	                                  		$('#step_2').show();
+                                  		}
+                                  		previous_button.show();
+                                  			
+                                      	if( done_button.is(":visible") ){
+                                        	done_button.hide();
+                                          	next_button.show();
+                                      	}
                                   }
                                 },
             'verbs'         :   { previous  : 'resource_type',
@@ -91,13 +94,14 @@ KT.roles.permissionWidget = function(){
                                         }
                                   },
                                   actions   : function(){
-                                        if( $('#resource_type').val() === 'organizations' || roleActions.getCurrentOrganization() === 'global' ){
-                                            next_button.hide();
-                                            done_button.show();        
-                                        } else {
-                                            done_button.hide();
-                                            next_button.show();
-                                        }
+                                  		if( mode !== 'update' ){
+	                                  		$('#step_2').removeClass('active-step');
+	                                  		$('#step_2').hide();
+	                                  		$('#step_3').addClass('active-step');
+	                                  		$('#step_3').show();
+                                  		}
+	                                    done_button.hide();
+	                                    next_button.show();
                                   }
                                 }, 
             'tags'          :   { previous  : 'verbs',
@@ -108,6 +112,12 @@ KT.roles.permissionWidget = function(){
                                         return true;
                                   },
                                   actions   : function(){
+                                  		if( mode !== 'update' ){
+	                                  		$('#step_3').hide();
+	                                  		$('#step_3').removeClass('active-step');
+	                                  		$('#step_4').addClass('active-step');
+	                                  		$('#step_4').show();
+                                  		}
                                         next_button.hide();
                                         done_button.show();
                                   }
@@ -172,11 +182,15 @@ KT.roles.permissionWidget = function(){
             }
             
             done_button.addClass('disabled');
-            roleActions.savePermission(mode, function(){
-                current_stage = 'name';
-                reset();
-                done_button.removeClass('disabled');
-            });
+            roleActions.savePermission(mode, 
+            	function(){
+                	current_stage = 'name';
+                	reset();
+                	done_button.removeClass('disabled');
+            	},
+            	function(){
+            		done_button.removeClass('disabled');
+            	});
         },
         set_types = function(current_organization){
             var types           = roles_breadcrumb[current_organization].permission_details,
@@ -225,6 +239,13 @@ KT.roles.permissionWidget = function(){
                     html += '<option value="' + tags[i].name + '">' + tags[i].display_name + "</option>";
                 }
                 tags_select.append(html);
+                tags_select.show();
+                flow['tags'].container.find('.info_text').remove();
+                all_tags_button.show();
+            } else {
+            	tags_select.hide();
+            	all_tags_button.hide();
+            	flow['tags'].container.append('<span class="info_text" >' + i18n.no_tags_for_type + '</span>');
             }
         },
        	add_permission = function(options){
@@ -277,13 +298,16 @@ KT.roles.permissionWidget = function(){
         		i = 0, length = 0, values =[];
         	
         	mode = 'update';
+        	$('#step_1').hide();
+        	$('#step_2').hide();
+        	$('#step_3').hide();
+        	$('#step_4').hide();
         	
             if( opening ){
                 reset();
                 button.children('span').html(i18n.close_edit_permission);
                 button.addClass("highlighted");
                 set_types(current_organization);
-                set_verbs_and_tags(permission.type, current_organization);
 
 				for( item in flow ){
 					flow[item].container.show();
@@ -291,7 +315,7 @@ KT.roles.permissionWidget = function(){
 
 				flow['resource_type'].input.val(permission.type);
 				flow['name'].input.val(permission.name);
-				flow['description'].input.val(permission.description);
+				$('#description').val(permission.description);
                 
                 flow['resource_type'].input.unbind('change').change(function(event){
                     set_verbs_and_tags(event.currentTarget.value, current_organization);
@@ -299,15 +323,15 @@ KT.roles.permissionWidget = function(){
                     if( event.currentTarget.value === 'all' ){
                     	handleAllTypes();
                     }
-                    console.log(event.currentTarget.value);
-                    if( current_stage !== 'resource_type' && event.currentTarget.value !== 'organization' ){
+
+                    /*if( current_stage !== 'resource_type' && event.currentTarget.value !== 'organization' ){
                         flow['verbs'].actions();
                         current_stage = 'verbs';
                     } else if( current_stage !== 'resource_type' ){
                         flow['verbs'].actions();
                         current_stage = 'verbs';
                         flow['tags'].container.hide();
-                    }
+                    }*/
                     if( all_verbs_button.hasClass('selected') ){
                         handleAllVerbs();
                     }
@@ -520,7 +544,7 @@ var roleActions = (function($){
                 });
             }
         },
-        savePermission = function(mode, callback){
+        savePermission = function(mode, successCallback, errorCallback){
             var org_id = current_crumb.split('_')[1],
                 form = $('#add_permission_form'),
                 to_submit = form;
@@ -564,7 +588,10 @@ var roleActions = (function($){
 	                       roles_breadcrumb[current_organization].full_access = true
 	                   }
 	                   
-	                   callback();
+	                   successCallback();
+	               },
+	               error	: function(){
+	               		errorCallback();	
 	               }
 	            });
             } else if( mode === 'update' ){
@@ -583,7 +610,10 @@ var roleActions = (function($){
 	                       roles_breadcrumb[current_organization].full_access = true
 	                   }
 	                   
-	                   callback();
+	                   successCallback();
+	               },
+	               error	: function(){
+	               		errorCallback();
 	               }
 	            });
             }
