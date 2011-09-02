@@ -18,6 +18,5 @@
  */
 
 $(document).ready(function() {
-  //$(".multiselect").multiselect({"dividerLocation":0.5, "sortable":false})
-
+  $('.ui-spinner').spinner();
 });

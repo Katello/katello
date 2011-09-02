@@ -38,7 +38,9 @@
                   #{sub.poolName}
                 %td #{"--"}
                 %td #{"--"}
-                %td #{sub.quantity}
+                %td
+                  = number_field_tag 'quantity', nil, :in => 1...sub.quantity, :class=>"ui-spinner"
+                  #{sub.quantity}
                 %td #{sub.expires}
           - else
             %tr
@@ -58,19 +60,25 @@
             %th #{_("Quantity")}
             %th #{_("Expires")}
         %tbody
-          - for sub in avail_subs
+          - if avail_subs.length > 0
+            - for sub in avail_subs
+              %tr
+                %td
+                  %span.fl
+                    = check_box_tag system[sub.poolId], false
+                    -#/ put the product's id in the value field so we know what product is syncing
+                    -#=check_box_tag "repo[#{r.id}]", value="#{p.id}"
+                  &nbsp;
+                  #{sub.poolName}
+                %td #{"--"}
+                %td #{"--"}
+                %td
+                  = number_field_tag 'quantity', nil, :in => 1...sub.quantity, :class=>"ui-spinner"
+                  #{sub.quantity}
+                %td #{sub.expires}
+          - else
             %tr
-              %td
-                %span.fl
-                  = check_box_tag system[sub.poolId], false
-                  -#/ put the product's id in the value field so we know what product is syncing
-                  -#=check_box_tag "repo[#{r.id}]", value="#{p.id}"
-                &nbsp;
-                #{sub.poolName}
-              %td #{"--"}
-              %td #{"--"}
-              %td #{sub.quantity}
-              %td #{sub.expires}
+              %td{:colspan=>5} #{_("There are no more subscriptions available.")}
       - if editable
         .actions
           = submit_tag _('Subscribe'), :class => 'submit dialogbutton'
