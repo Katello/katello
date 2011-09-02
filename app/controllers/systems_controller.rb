@@ -95,6 +95,7 @@ class SystemsController < ApplicationController
   end
 
   def subscriptions
+    debugger
     consumed_pools = sys_consumed_pools
     avail_pools = sys_available_pools
 
@@ -105,28 +106,23 @@ class SystemsController < ApplicationController
   end
 
   def update_subscriptions
-    #debugger
-    #params[:system].map{|h| h.first}
-    #params[:system].map(&:first)
-    #params[:spinner]['00000000320739e20132075431480010']
-    #eval params[:system].keys
-    #eval params[:system]['00000000320739e20132075431480010']
-    if params.has_key? :system
-      params[:system].keys.each do |pool|
-        @system.subscribe pool, params[:spinner][pool] 
+    begin
+      if params.has_key? :system
+        params[:system].keys.each do |pool|
+          @system.subscribe pool, params[:spinner][pool] if params[:commit].downcase == "subscribe"
+          @system.unsubscribe pool if params[:commit].downcase == "unsubscribe"
+        end
+        notice _("System subscriptions updated.")
+        consumed_pools = sys_consumed_pools
+        avail_pools = sys_available_pools
+        render :partial=>"subscriptions", :locals=>{:system=>@system, :avail_subs => avail_pools,
+                                                    :consumed_subs => consumed_pools, 
+                                                    :editable=>@system.editable?}
       end
-      notice _("System subscriptions updated.")
-      render :nothing =>true
+    rescue Exception => error
+      errors error.to_s, {:level => :message, :persist => false}
+      render :nothing => true
     end
-
-   # params[:system] = {"consumed_pool_ids"=>[]} unless params.has_key? :system
-   # if @system.update_attributes(params[:system])
-   #   notice _("System subscriptions updated.")
-   #   render :nothing =>true
-   # else
-   #   errors _("Unable to update subscriptions.")
-   #   render :nothing =>true
-   # end
   end
 
   def packages
