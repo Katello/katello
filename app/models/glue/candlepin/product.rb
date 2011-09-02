@@ -206,7 +206,7 @@ module Glue::Candlepin::Product
           if self.provider and self.provider.yum_repo?
             queue.create(:name => "create unlimited subscription for product in candlepin: #{self.name}", :priority => 7, :action => [self, :create_unlimited_subscription])
           end
-        when :update, :promote
+        when :promote
           queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])
         when :import_from_cp
           #do nothing
