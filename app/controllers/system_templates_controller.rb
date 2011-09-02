@@ -33,6 +33,7 @@ class SystemTemplatesController < ApplicationController
       :index => read_test,
       :items => read_test,
       :object => read_test,
+      :auto_complete_package => read_test,
       :show => read_test,
       :edit => read_test,
       :update => manage_test,
@@ -134,7 +135,7 @@ class SystemTemplatesController < ApplicationController
 
   def auto_complete_package
     name = params[:name]
-
+    render :json=>Pulp::Package.name_search(name).sort.uniq
   end
 
   def create

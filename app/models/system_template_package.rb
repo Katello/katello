@@ -26,8 +26,7 @@ class SystemTemplatePackage < ActiveRecord::Base
   validates_with PackageValidator
 
   def to_package
-
-    self.system_template.products.each do |product|
+    self.system_template.environment.products.each do |product|
        product.repos(self.system_template.environment).each do |repo|
         #search for errata in all repos in a product
         idx = repo.packages.index do |p| p.name == self.package_name end
