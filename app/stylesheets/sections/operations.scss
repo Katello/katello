@@ -66,7 +66,14 @@
     #permission_widget {
       height: 470px;
       overflow: auto;
-      .validation_error { color: red; font-weight: 500; }
+      .validation_error { color: $kt_red_color; font-weight: 600; font-size: 110%; }
+      .input_error { border: 2px solid $kt_red_color; }
+      .info_text { margin-left: 15px; }
+      
+      input { width: 175px; }
+      
+      .active-step { color: $kselected_color; }
+      h5 { font-size: 135%; margin-left: 0px; }
       
       .permission_widget_container { 
         float: none;
@@ -81,7 +88,7 @@
         }
       }
     
-      span { margin-left: 85px; word-wrap: break-word; }
+      span { word-wrap: break-word; }
     
       #permission_button_bar {
         width: 90%;
