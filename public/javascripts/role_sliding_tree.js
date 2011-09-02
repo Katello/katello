@@ -273,7 +273,8 @@ KT.roles.permissionWidget = function(){
         	var permission 				= roles_breadcrumb[options.id],
         		opening 			 	= options.opening,
                 current_organization 	= roleActions.getCurrentOrganization(),
-        		button 					= $('#edit_permission');
+        		button 					= $('#edit_permission'),
+        		i = 0, length = 0, values =[];
         	
         	mode = 'update';
         	
@@ -291,8 +292,6 @@ KT.roles.permissionWidget = function(){
 				flow['resource_type'].input.val(permission.type);
 				flow['name'].input.val(permission.name);
 				flow['description'].input.val(permission.description);
-				flow['tags'].input.val();
-				flow['verbs'].input.val();
                 
                 flow['resource_type'].input.unbind('change').change(function(event){
                     set_verbs_and_tags(event.currentTarget.value, current_organization);
@@ -300,8 +299,11 @@ KT.roles.permissionWidget = function(){
                     if( event.currentTarget.value === 'all' ){
                     	handleAllTypes();
                     }
-                    
-                    if( current_stage !== 'resource_type' ){
+                    console.log(event.currentTarget.value);
+                    if( current_stage !== 'resource_type' && event.currentTarget.value !== 'organization' ){
+                        flow['verbs'].actions();
+                        current_stage = 'verbs';
+                    } else if( current_stage !== 'resource_type' ){
                         flow['verbs'].actions();
                         current_stage = 'verbs';
                         flow['tags'].container.hide();
@@ -313,6 +315,30 @@ KT.roles.permissionWidget = function(){
                         handleAllTags();
                     }
                 }).change();
+
+				if( permission.verbs === 'all' ){
+					handleAllVerbs(false);
+				} else {
+					length = permission.verbs.length;
+					for( i=0; i < length; i += 1){
+						values.push(permission.verbs[i].name);
+					}
+					flow['verbs'].input.val(values);
+				}
+				
+				if( permission.tags === 'all'){
+					handleAllTags(false);
+				} else {
+					length = permission.tags.length;
+					values = [];
+					for( i=0; i < length; i += 1){
+						values.push(permission.tags[i].name);
+					}
+					flow['tags'].input.val(values);	
+				}
+
+				current_stage = 'tags';
+				flow['tags'].actions();
 
                 $('#permission_widget_header').html(i18n.edit_permission_header + ' ' + roles_breadcrumb[current_organization].name + ' - ' + permission.name);
             } else {
@@ -499,8 +525,6 @@ var roleActions = (function($){
                 form = $('#add_permission_form'),
                 to_submit = form;
             
-            console.log(mode);
-            
             if( current_organization !== "global" ){
                 to_submit.find("#organization_id").val(org_id);
             }
@@ -551,7 +575,7 @@ var roleActions = (function($){
 	               data     : to_submit,
 	               dataType : 'json',
 	               success  : function(data){
-	                   //$.extend(roles_breadcrumb, data);
+	                   roles_breadcrumb[current_crumb] = data[current_crumb];
 	                   KT.roles.tree.rerender_content();
 	                   form[0].reset();
 	
@@ -734,25 +758,33 @@ var templateLibrary = (function($){
             
             html += '<div class="permission_detail_container"><label class="grid_3 ra">Name: </label><span>' + permission.name + '</span></div>';
             html += '<div class="permission_detail_container"><label class="grid_3 ra">Description: </label><span>' + permission.description + '</span></div>';
-                
             html += '<div class="permission_detail_container"><label class="grid_3 ra">Permission For: </label><span>' + permission.type_name + '</span></div>';
             
             html += '<div class="permission_detail_container"><label class="grid_3 ra">Verb(s): </label><span>'
-            length = permission.verbs.length;
-            for( i=0; i < length; i += 1){
-                html += permission.verbs[i].display_name;
-                if( i !== length-1 ){
-                    html += ', ';
-                }
+            
+            if( permission.verbs === 'all'){
+            	html += 'All';
+            } else {
+	            length = permission.verbs.length;
+	            for( i=0; i < length; i += 1){
+	                html += permission.verbs[i].display_name;
+	                if( i !== length-1 ){
+	                    html += ', ';
+	                }
+	            }
             }
             html += '</span></div><div class="permission_detail_container"><label class="grid_3 ra">On:</label><span>';
             
-            length = permission.tags.length;
-            for( i=0; i < length; i += 1){
-                html += permission.tags[i].display_name;
-                if( i !== length-1 ){
-                    html += ',';
-                }
+            if( permission.tags === 'all' ){
+            	html += 'All';
+            } else {
+	            length = permission.tags.length;
+	            for( i=0; i < length; i += 1){
+	                html += permission.tags[i].display_name;
+	                if( i !== length-1 ){
+	                    html += ',';
+	                }
+	            }
             }
             html += '</span></div></div>';
 
