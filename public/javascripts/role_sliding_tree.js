@@ -324,14 +324,6 @@ KT.roles.permissionWidget = function(){
                     	handleAllTypes();
                     }
 
-                    /*if( current_stage !== 'resource_type' && event.currentTarget.value !== 'organization' ){
-                        flow['verbs'].actions();
-                        current_stage = 'verbs';
-                    } else if( current_stage !== 'resource_type' ){
-                        flow['verbs'].actions();
-                        current_stage = 'verbs';
-                        flow['tags'].container.hide();
-                    }*/
                     if( all_verbs_button.hasClass('selected') ){
                         handleAllVerbs();
                     }
@@ -790,33 +782,28 @@ var templateLibrary = (function($){
             html += '<div class="permission_detail_container"><label class="grid_3 ra">Description: </label><span>' + permission.description + '</span></div>';
             html += '<div class="permission_detail_container"><label class="grid_3 ra">Permission For: </label><span>' + permission.type_name + '</span></div>';
             
-            html += '<div class="permission_detail_container"><label class="grid_3 ra">Verb(s): </label><span>'
+            html += '<div class="permission_detail_container"><label class="grid_3 ra">Verb(s): </label><ul>'
             
             if( permission.verbs === 'all'){
-            	html += 'All';
+            	html += '<li>All</li>';
             } else {
 	            length = permission.verbs.length;
 	            for( i=0; i < length; i += 1){
-	                html += permission.verbs[i].display_name;
-	                if( i !== length-1 ){
-	                    html += ', ';
-	                }
+	                html += '<li>' + permission.verbs[i].display_name + '</li>';
 	            }
             }
-            html += '</span></div><div class="permission_detail_container"><label class="grid_3 ra">On:</label><span>';
+            html += '</ul></div>';
             
+            html += '<div class="permission_detail_container"><label class="grid_3 ra">On:</label><ul>';
             if( permission.tags === 'all' ){
-            	html += 'All';
+            	html += '<li>All</li>';
             } else {
 	            length = permission.tags.length;
 	            for( i=0; i < length; i += 1){
-	                html += permission.tags[i].display_name;
-	                if( i !== length-1 ){
-	                    html += ',';
-	                }
+	                html += '<li>' + permission.tags[i].display_name + '</li>';
 	            }
             }
-            html += '</span></div></div>';
+            html += '</ul></div></div>';
 
             return html;
         },
