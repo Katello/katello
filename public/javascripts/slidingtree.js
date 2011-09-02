@@ -245,16 +245,16 @@ var sliding_tree = function(tree_id, options) {
                      });
                      $(this).css({backgroundPosition: "0 -16px"});
                      search_filter.val("").change();
-                     $("#" + tree_id + " .has_content li").fadeIn('fast');
+                     $("#" + tree_id + " .has_content .filterable li").fadeIn('fast');
                  }
              );
              
              search_filter.live('change, keyup', function(){
                  if ($.trim($(this).val()).length >= 2) {
-                     $("#" + tree_id + " .has_content li:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
-                     $("#" + tree_id + " .has_content li:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
+                     $("#" + tree_id + " .has_content .filterable li:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
+                     $("#" + tree_id + " .has_content .filterable li:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
                  } else {
-                     $("#" + tree_id + " .has_content li").fadeIn('fast');
+                     $("#" + tree_id + " .has_content .filterable li").fadeIn('fast');
                  }
              });
              search_filter.val("").change();

@@ -720,7 +720,7 @@ var templateLibrary = (function($){
             return html;
         },
         list = function(items, type, options){
-            var html = '<ul>',
+            var html = '<ul class="filterable">',
                 options = options ? options : {};
             for( item in items){
                 if( items.hasOwnProperty(item) ){
@@ -733,7 +733,7 @@ var templateLibrary = (function($){
             return html;
         },
         organizationsList = function(items, type, options){
-            var html = '<ul>',
+            var html = '<ul class="filterable">',
                 options = options ? options : {},
                 full_access = false;
             
@@ -751,7 +751,7 @@ var templateLibrary = (function($){
             return html;
         },
         permissionsList = function(permissions, organization_id, options){
-            var html = '<ul>';
+            var html = '<ul class="filterable">';
             
             for( item in permissions){
                 if( permissions.hasOwnProperty(item) ){
@@ -828,7 +828,7 @@ var templateLibrary = (function($){
             return html;
         },
         usersList = function(users, options){
-            var html = '<ul>',
+            var html = '<ul class="filterable">',
                 user = undefined;
             
             for( item in users){
@@ -843,7 +843,7 @@ var templateLibrary = (function($){
             return html;
         },
         globalsList = function(globals, options){
-            var html = '<ul>';
+            var html = '<ul class="filterable">';
             
             for( item in globals ){
                 if( globals.hasOwnProperty(item) ){
