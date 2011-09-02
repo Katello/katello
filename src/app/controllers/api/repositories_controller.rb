@@ -43,6 +43,16 @@ class Api::RepositoriesController < Api::ApiController
     render :json => task
   end
 
+  def package_groups
+    r = ::Pulp::PackageGroup.all params[:id]
+    render :json => r
+  end
+
+  def package_group_categories
+    r = ::Pulp::PackageGroupCategory.all params[:id]
+    render :json => r
+  end
+
   def find_repository
     @repository = Glue::Pulp::Repo.find params[:id]
     raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:id]}'") if @repository.nil?

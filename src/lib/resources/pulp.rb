@@ -52,6 +52,11 @@ module Pulp
     def self.default_headers
       {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.current.pulp_oauth_header)
     end
+
+    # the path is expected to have trailing slash
+    def self.path_with_prefix path
+      PulpResource.prefix + path
+    end
   end
 
   class PulpPing < PulpResource
@@ -317,6 +322,32 @@ module Pulp
 
       def path uuid=nil
         "/pulp/api/tasks/"
+      end
+    end
+  end
+
+  class PackageGroup < PulpResource
+    class << self
+      def all repo_id
+        response = get path(repo_id), self.default_headers
+        JSON.parse(response.body)
+      end
+
+      def path repo_id
+        self.path_with_prefix("/repositories/#{repo_id}/packagegroups/")
+      end
+    end
+  end
+
+  class PackageGroupCategory < PulpResource
+    class << self
+      def all repo_id
+        response = get path(repo_id), self.default_headers
+        JSON.parse(response.body)
+      end
+
+      def path repo_id
+        self.path_with_prefix("/repositories/#{repo_id}/packagegroupcategories/")
       end
     end
   end
