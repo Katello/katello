@@ -28,7 +28,7 @@
               =check_box_tag "product[#{p.id}]"
               .clickable
                 %a{ :href => "#", :onclick => ""}
-                  %img{:src => "/images/icons/expander-collapsed.png", :alt => "Expand"}
+                  = image_tag('icons/expander-collapsed.png', :alt => _('Expand'))
                 #{p.name}
               %ul
                 -for r in p.repos(p.organization.locker)
@@ -41,7 +41,7 @@
               =check_box_tag "product[#{p.id}]", nil, false, :disabled => true
               .clickable
                 %a{ :href => "#", :onclick => ""}
-                  %img{:src => "/images/icons/expander-collapsed.png", :alt => "Expand"}
+                  = image_tag('icons/expander-collapsed.png', :alt => _('Expand'))
                 #{p.name}
               %ul
                 -for r in p.repos(p.organization.locker)

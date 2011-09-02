@@ -1,10 +1,10 @@
 .grid_3
   %a{:href => '/dashboard', :class => "logo"}
-    %img{:src => '/images/logo.png', :alt => 'Katello Logo'}
+    = image_tag('logo.png', :alt => _('Katello Logo'))
     %span{:class => 'pipe'}
     %h1 Katello
   #loading.fr
-    %img{:src => '/images/spinner_head.gif', :alt => 'Spinning Work Indicator'}
+    = image_tag('spinner_head.gif', :alt => _('Spinning Work Indicator'))
 .grid_13
   - if current_user
     -if current_organization
