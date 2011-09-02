@@ -77,10 +77,6 @@ SimpleNavigation::Configuration.run do |navigation|
           env_system_sub.item :packages, _("Packages"), packages_system_path(@system.id), :class => "navigation_element"
         end
       end if System.any_readable?(current_organization)
-
-      systems_sub.item :system_templates, _("System Templates"), system_templates_path do |template_key_sub|
-
-      end if SystemTemplate.any_readable?(current_organization())
       
       systems_sub.item :activation_keys, _("Activation Keys"), activation_keys_path do |activation_key_sub|
         if !@activation_key.nil?

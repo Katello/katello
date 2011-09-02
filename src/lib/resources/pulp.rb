@@ -90,8 +90,9 @@ module Pulp
         JSON.parse(response)
       end
 
-      def search_starts_with name
-        search("^" + name, true)
+      def name_search name
+        pkgs = search("^" + name, true)
+        pkgs.collect{|pkg| pkg["name"]}
       end
 
       def package_path
