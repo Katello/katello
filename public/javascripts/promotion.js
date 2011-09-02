@@ -1075,7 +1075,7 @@ var templateLibrary = (function(){
             return html;
         },
         changesetsList = function(changesets){
-            var html = '<ul>';
+            var html = '<ul class="filterable">';
             for( item in changesets){
                 if( changesets.hasOwnProperty(item) ){
                     //do the search filter here
@@ -1088,7 +1088,7 @@ var templateLibrary = (function(){
             return html;
         },
         productDetailList = function(product, subtypes, changeset_id) {
-            var html = '<ul>';
+            var html = '<ul class="filterable">';
              $.each(subtypes, function(index, type) {
                  if (product[type]) {
                     html += '<li class="slide_link"><div class="link_details"';
@@ -1116,7 +1116,7 @@ var templateLibrary = (function(){
                 return i18n.loading_deps + "&nbsp;" + "<img  src='/images/spinner.gif'>";
             }
 
-            var html = '<ul>';
+            var html = '<ul class="filterable">';
             $.each(products[product_id].deps, function(index, item) {
                 html += '<li><div class="no_slide"><span class="sort_attr">'  + item.name + ' ' + '</span>';
                // html += '<div class="dependency_of">' + i18n.dep_of + "&nbsp;" + item.dep_of + "</div>";
@@ -1128,7 +1128,7 @@ var templateLibrary = (function(){
             return html;
         },
         listItems = function(products, type, product_id, showButton) {
-            var html = '<ul>';
+            var html = '<ul class="filterable">';
             var items = products[product_id][type];
             if (items.length === 0) {
                 return i18n["no_" + type]; //no_errata no_package no_repo
@@ -1152,7 +1152,7 @@ var templateLibrary = (function(){
 
         },
         productList = function(changeset, changeset_id, showButton){
-            var html = '<ul>',
+            var html = '<ul class="filterable">',
                 all_list = '',
                 partial_list = '',
                 product, provider,
