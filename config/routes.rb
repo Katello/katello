@@ -119,6 +119,7 @@ Src::Application.routes.draw do
     end
     member do
       get :object
+      put :update_content
     end
   end
 
