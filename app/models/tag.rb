@@ -12,14 +12,7 @@
 
 require 'util/model_util'
 
-class Tag < ActiveRecord::Base
-  has_and_belongs_to_many :permission
-
-  # used for user-friendly presentation of this record
-  def display_name
-    name
-  end
-  
+class Tag
   def formatted(resource_type_name)
     model_klass = ResourceType::TYPES[resource_type_name][:model]
         

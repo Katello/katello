@@ -65,8 +65,11 @@ describe Permission do
     add_test_type :TestResourceTypefoo, ["magic_verb", "magic_verb_foo", "do_magic_verb"]
     add_test_type :xxx, ["create"]
 
-    allow @repo_admin, :create_repo, :repogroup, :repogroup_internal
-    allow @repo_admin, :delete_repo, :repo, [:repogroup_internal, :repo_rhel6]
+    @repogroup_internal = 1
+    @repo_rhel6 = 2
+
+    allow @repo_admin, :create_repo, :repogroup, @repogroup_internal
+    allow @repo_admin, :delete_repo, :repo, [@repogroup_internal, @repo_rhel6]
   end
 
   it "should list tags properly" do
@@ -90,13 +93,13 @@ describe Permission do
 
   context "repo_admin" do
     it { @user_bob.allowed_to?('create', 'organizations').should be_false }
-    it { @user_bob.allowed_to?("create_repo", "repogroup", :repogroup_internal).should be_true }
-    it { @user_bob.allowed_to?("create_repo", "repogroup", 'repogroup_external').should be_false }
+    it { @user_bob.allowed_to?("create_repo", "repogroup", @repogroup_internal).should be_true }
+    it { @user_bob.allowed_to?("create_repo", "repogroup", 10**7).should be_false }
     it { @user_bob.allowed_to?("create_repo", "repo-bad").should be_false }
-    it { @user_bob.allowed_to?("delete_repo", "repo", [:repogroup_internal, :repo_rhel6]).should be_true }
-    it { @user_bob.allowed_to?("delete_repo", "repo", [:repogroup_internal]).should be_true }
-    it { @user_bob.allowed_to?("create_repo", "repogroup", :repogroup_internal).should be_true }
-    it { @user_bob.allowed_to?("delete_repo", "repo", [:repogroup_internal]).should be_true }
+    it { @user_bob.allowed_to?("delete_repo", "repo", [@repogroup_internal, @repo_rhel6]).should be_true }
+    it { @user_bob.allowed_to?("delete_repo", "repo", [@repogroup_internal]).should be_true }
+    it { @user_bob.allowed_to?("create_repo", "repogroup", @repogroup_internal).should be_true }
+    it { @user_bob.allowed_to?("delete_repo", "repo", [@repogroup_internal]).should be_true }
   end
 
   context "global org tests" do
@@ -117,19 +120,18 @@ describe Permission do
 
     describe "allow all verbs" do
       before do
-        @tag_name = "magic_tag"
-        @tag = Tag.find_or_create_by_name(@tag_name)
+        @tag = 1
         @res_type_name = "TestResourceType"
         @res_type = ResourceType.find_or_create_by_name(@res_type_name)
-        @magic_perm = Permission.create!(:name => :test1000, :role => @some_role, :all_verbs => true, :tags =>[@tag],
+        @magic_perm = Permission.create!(:name => :test1000, :role => @some_role, :all_verbs => true, :tag_values =>[@tag],
                                       :resource_type=> @res_type)
       end
       specify {@admin.allowed_to?("do_magic_verb", @res_type_name, "").should be_true}
       specify {@admin.allowed_to?("do_magic_verb", @res_type_name, "", @organization).should be_true}
-      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, @tag_name).should be_true}
-      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, @tag_name, @organization).should be_true}
-      specify {@admin.allowed_to?("do_magic_verb", @res_type_name + "foo", :magic_tag).should be_false}
-      specify {@admin.allowed_to?("do_magic_verb", @res_type_name + "foo", :magic_tag, @organization).should be_false}
+      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, @tag).should be_true}
+      specify {@admin.allowed_to?("do_magic_verb", @res_type_name, @tag, @organization).should be_true}
+      specify {@admin.allowed_to?("do_magic_verb", @res_type_name + "foo", 10 ** 6).should be_false}
+      specify {@admin.allowed_to?("do_magic_verb", @res_type_name + "foo", 10 ** 6, @organization).should be_false}
     end
 
     describe "allow all tags" do
