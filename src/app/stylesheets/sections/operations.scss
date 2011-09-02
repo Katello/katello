@@ -21,7 +21,26 @@
     
     .permission_detail {
       border-bottom: 2px solid #B5B5B5;
-      .permission_detail_container { height: 30px; width: 100%; }
+      
+      .permission_detail_container { 
+        width: 100%;
+        min-height: 24px;
+        overflow: auto;
+        margin: 3px 0;
+        
+        ul {
+          float: left;
+         
+          li {
+            height: 17px;
+            border: none;
+            padding: 0;
+            cursor: auto;
+            
+            &:hover { background: none; }
+          }
+        }
+      }
     }
     
     #roles_status {
