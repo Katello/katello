@@ -8,15 +8,19 @@
 
 = content_for :content do
   .grid_8.subs
-  .grid_6
-    = image_tag("icons/status_icons_sprite.png", :class=>"icon")
-    #{_("Entitlements Required")}
-  .grid_3.ca
-    #{_("Socket Requirement")}
-    #{"--"}
-  .grid_3.ca
-    #{_("Guests Requirement")}
-    #{"--"}
+    .subs_top
+      .subs_icon
+      .fl
+        = image_tag("boxshadow.png")
+      .subs_text.fl #{_("Entitlements Subscriptions are Current")}
+    .subs_left.ca
+      #{_("Socket Requirement")}
+      %br
+      .subs_num #{"--"}
+    .subs_right.ca
+      #{_("Guests Requirement")}
+      %br
+      .subs_num #{"--"}
   .grid_8
     = form_tag update_subscriptions_system_path, :id=>"unsubscribe", :method=>"post", :remote=>true do
       %h5 #{_("System Current Subscription(s)")}
