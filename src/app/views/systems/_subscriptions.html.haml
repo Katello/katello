@@ -40,7 +40,7 @@
                 %td #{"--"}
                 %td
                   = number_field_tag 'quantity', nil, :in => 1...sub.quantity, :class=>"ui-spinner"
-                  #{sub.quantity}
+                  %span.fr of #{sub.quantity}
                 %td #{sub.expires}
           - else
             %tr
@@ -65,7 +65,7 @@
               %tr
                 %td
                   %span.fl
-                    = check_box_tag system[sub.poolId], false
+                    = check_box_tag "system[#{sub.poolId}]", false
                     -#/ put the product's id in the value field so we know what product is syncing
                     -#=check_box_tag "repo[#{r.id}]", value="#{p.id}"
                   &nbsp;
@@ -74,7 +74,7 @@
                 %td #{"--"}
                 %td
                   = number_field_tag 'quantity', nil, :in => 1...sub.quantity, :class=>"ui-spinner"
-                  #{sub.quantity}
+                  %span.fr of #{sub.quantity}
                 %td #{sub.expires}
           - else
             %tr
