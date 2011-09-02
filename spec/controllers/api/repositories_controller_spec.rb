@@ -61,4 +61,24 @@ describe Api::RepositoriesController do
     end
   end
 
+  describe "get list of repository package groups" do
+    subject { get :package_groups, :id => "123" }
+    before { Pulp::PackageGroup.stub(:all => {}) }
+    it "should call Pulp layer" do
+      Pulp::PackageGroup.should_receive(:all).with("123")
+      subject
+    end
+    it { should be_success }
+  end
+
+  describe "get list of repository package categories" do
+    subject { get :package_group_categories, :id => "123" }
+    before { Pulp::PackageGroupCategory.stub(:all => {}) }
+    it "should call Pulp layer" do
+      Pulp::PackageGroupCategory.should_receive(:all).with("123")
+      subject
+    end
+    it { should be_success }
+  end
+
 end

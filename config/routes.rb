@@ -291,6 +291,10 @@ Src::Application.routes.draw do
       resources :packages, :only => [:index]
       resources :errata, :only => [:index]
       resources :distributions, :only => [:index]
+      member do
+        get :package_groups
+        get :package_group_categories
+      end
     end
 
     resources :environments, :only => [:show, :update, :destroy] do
