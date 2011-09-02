@@ -84,6 +84,16 @@ module Pulp
         JSON.parse(response)
       end
 
+      def search name, regex=false
+        path = '/pulp/api/services/search/packages/'
+        response = post(path, {:name=>name, :regex=>regex}.to_json, self.default_headers)
+        JSON.parse(response)
+      end
+
+      def search_starts_with name
+        search("^" + name, true)
+      end
+
       def package_path
         "/pulp/api/packages/"
       end

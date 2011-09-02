@@ -14,7 +14,7 @@ class SystemTemplatesController < ApplicationController
   include AutoCompleteSearch
 
   before_filter :setup_options, :only => [:index, :items]
-  before_filter :find_template, :only =>[:update, :edit, :destroy, :show, :object]
+  before_filter :find_template, :only =>[:update, :edit, :destroy, :show, :object, :update_content]
 
 
   #around_filter :catch_exceptions
@@ -36,6 +36,7 @@ class SystemTemplatesController < ApplicationController
       :show => read_test,
       :edit => read_test,
       :update => manage_test,
+      :update_content => manage_test,
       :destroy => manage_test,
       :new => manage_test,
       :create => manage_test,
@@ -69,8 +70,8 @@ class SystemTemplatesController < ApplicationController
 
 
   def object
-    pkgs = @template.packages.collect{|pkg| {:name=>pkg.name}}
-    products = @template.packages.collect{|prod| {:name=>prod.name, :id=>prod.id}}
+    pkgs = @template.packages.collect{|pkg| {:name=>pkg.package_name}}
+    products = @template.products.collect{|prod| {:name=>prod.name, :id=>prod.id}}
     to_ret = {:id=> @template.id, :name=>@template.name, :description=>@template.description,
               :packages=>pkgs, :products=>products}
     render :json=>to_ret
@@ -81,13 +82,26 @@ class SystemTemplatesController < ApplicationController
            :locals => {:template=>@template, :editable=> @template.editable? }
   end
 
+
+  def update_content
+    pkgs = params[:packages]
+    products = params[:products]
+
+    @template.packages.delete_all
+    pkgs.each{|pkg|
+      @template.packages << SystemTemplatePackage.new(:system_template=>@template, :package_name=>pkg[:name])
+    }
+    @template.save!
+    notice _("Template #{@template.name} has been updated successfully")
+    object()
+  end
+
   def update
     attrs = params[:system_template]
     if attrs[:name]
       result = @template.name = attrs[:name]
     elsif attrs[:description]
       result = @template.description = attrs[:description]
-
     end
     @template.save!
     notice _("Template #{@template.name} updated successfully.")
@@ -115,6 +129,12 @@ class SystemTemplatesController < ApplicationController
   def new
     @template = SystemTemplate.new
     render :partial => "new", :layout => "tupane_layout", :locals => {:template => @template}
+  end
+
+
+  def auto_complete_package
+    name = params[:name]
+
   end
 
   def create
