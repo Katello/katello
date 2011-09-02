@@ -49,6 +49,7 @@ class SystemTemplatesController < ApplicationController
     @environment = current_organization.locker
     @products = @environment.products
     @templates = SystemTemplate.search_for(params[:search]).where(:environment_id => current_organization.locker.id).limit(current_user.page_size)
+    
     retain_search_history
     render :index, :locals=>{:editable=>true, :deletable=>true}
   end
