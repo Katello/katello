@@ -271,10 +271,25 @@
       margin: 0 auto;
     }
   }
-  
-  #add_package_form {
-    margin-top: 4px;
-    margin-left: 20px;
+
+
+
+
+  #package_input_item {
+    &:hover {
+      background-color: #FFF;
+      border-top-color: #FFF;
+      border-bottom-color: #FFF;
+    }
+    #add_package_form {
+      margin-top: 4px;
+      margin-left: 20px;
+      .error {
+        border-size: 2px;
+        border-color: $error_color;
+      }
+
+    }
 
   }
 
