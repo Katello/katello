@@ -87,7 +87,7 @@ class SystemTemplate < ActiveRecord::Base
     json["parameters"].each_pair {|k,v| self.parameters[k] = v } if json["parameters"]
   end
 
-  def hash_export
+  def export_as_json
     tpl = {
       :name => self.name,
       :revision => self.revision,
@@ -340,7 +340,7 @@ class SystemTemplate < ActiveRecord::Base
   def copy_to_env env
     new_tpl = SystemTemplate.new
     new_tpl.environment = env
-    new_tpl.string_import(self.string_export)
+    new_tpl.string_import(self.export_as_json)
     new_tpl.save!
   end
 

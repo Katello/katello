@@ -84,7 +84,7 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def export
-    json = @template.string_export
+    json = @template.export_as_json
     render :json => json
   end
 

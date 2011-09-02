@@ -274,7 +274,7 @@ describe SystemTemplate do
       @export_tpl.stub(:package_groups).and_return [SystemTemplatePackGroup.new({:name => 'xxx'})]
       @export_tpl.stub(:pg_categories).and_return [SystemTemplatePgCategory.new({:name => 'xxx'})]
 
-      str = @export_tpl.string_export
+      str = @export_tpl.export_as_json
       json = ActiveSupport::JSON.decode(str)
       json['products'].size.should == 2
       json['packages'].size.should == 1
