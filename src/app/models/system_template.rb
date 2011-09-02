@@ -38,7 +38,7 @@ class SystemTemplate < ActiveRecord::Base
 
   #has_many :products
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :system_templates
-
+  has_and_belongs_to_many :changesets
 
   scoped_search :on => :name, :complete_value => true, :rename => :'system_template.name'
 
@@ -267,9 +267,5 @@ class SystemTemplate < ActiveRecord::Base
       raise Errors::TemplateContentException.new("The template has children templates.")
     end
   end
-
-
-  
-
 
 end
