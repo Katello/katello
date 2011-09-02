@@ -95,7 +95,6 @@ class SystemsController < ApplicationController
   end
 
   def subscriptions
-    debugger
     consumed_pools = sys_consumed_pools
     avail_pools = sys_available_pools
 
@@ -112,12 +111,13 @@ class SystemsController < ApplicationController
           @system.subscribe pool, params[:spinner][pool] if params[:commit].downcase == "subscribe"
           @system.unsubscribe pool if params[:commit].downcase == "unsubscribe"
         end
-        notice _("System subscriptions updated.")
         consumed_pools = sys_consumed_pools
         avail_pools = sys_available_pools
-        render :partial=>"subscriptions", :locals=>{:system=>@system, :avail_subs => avail_pools,
-                                                    :consumed_subs => consumed_pools, 
+        render :partial=>"subs_update", :locals=>{:system=>@system, :avail_subs => avail_pools,
+                                                    :consumed_subs => consumed_pools,
                                                     :editable=>@system.editable?}
+        notice _("System subscriptions updated.")
+
       end
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
