@@ -438,6 +438,7 @@ KT.actions =  (function(){
                     return false;
                 }
                 $('#save_template').addClass("disabled");
+                $("#tree_saving").css("z-index", 300);
                 var current = KT.options.current_template;
                 var data = {
                     packages: current.packages,
@@ -450,7 +451,7 @@ KT.actions =  (function(){
                     data: JSON.stringify(data),
                     cache: false,
                     success: function(data){
-                        
+                        $("#tree_saving").css("z-index", -1);
                         KT.options.current_template = data;
                     },
                     error: KT.templates.throw_error

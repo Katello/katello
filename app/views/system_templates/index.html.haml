@@ -46,9 +46,13 @@
         .tree_breadcrumb.clickable.clear
       .sliding_container
         #template_list.list.sliding_list{"data-page_size"=>current_user.page_size}
-          #tree_loading.slider
+          #tree_loading.slider.tree_loading
             .text
               = _("Loading System Template")
+              = image_tag ("spinner.gif")
+          #tree_saving.slider.tree_loading
+            .text
+              = _("Saving System Template")
               = image_tag ("spinner.gif")
           .slider_one.has_content.slider.will_have_content
           .slider_two.no_content.slider
@@ -97,4 +101,4 @@
 
 
 #error_dialog{:style=>"display: none"}
-  = _("An error has occured when communicating with the server, please refresh the page to retrieve the current changeset.")
+  = _("An error has occured when communicating with the server, please refresh the page to retrieve the current System Template")
