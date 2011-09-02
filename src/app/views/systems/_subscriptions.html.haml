@@ -40,7 +40,7 @@
                 %td #{"--"}
                 %td #{"--"}
                 %td
-                  = number_field_tag 'quantity', nil, :in => 1...sub.quantity, :class=>"ui-spinner"
+                  = number_field_tag "spinner[#{sub.poolId}]", nil, :in => 1...sub.quantity, :class=>"ui-spinner"
                 %td #{sub.expires}
           - else
             %tr
@@ -73,7 +73,7 @@
                 %td #{"--"}
                 %td #{"--"}
                 %td
-                  = number_field_tag 'quantity', nil, :in => 1...sub.quantity, :class=>"ui-spinner"
+                  = number_field_tag "spinner[#{sub.poolId}]", nil, :in => 1...sub.quantity, :class=>"ui-spinner"
                 %td #{sub.expires}
           - else
             %tr
