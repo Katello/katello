@@ -18,6 +18,6 @@
  */
 
 $(document).ready(function() {
-  $('.ui-spinner').spinner();
+  //$('.ui-spinner').spinner();
 });
 
