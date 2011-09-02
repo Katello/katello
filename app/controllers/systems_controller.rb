@@ -116,14 +116,28 @@ class SystemsController < ApplicationController
   end
 
   def update_subscriptions
-    params[:system] = {"consumed_pool_ids"=>[]} unless params.has_key? :system
-    if @system.update_attributes(params[:system])
+    #debugger
+    #params[:system].map{|h| h.first}
+    #params[:system].map(&:first)
+    #params[:spinner]['00000000320739e20132075431480010']
+    #eval params[:system].keys
+    #eval params[:system]['00000000320739e20132075431480010']
+    if params.has_key? :system
+      params[:system].keys.each do |pool|
+        @system.subscribe pool, params[:spinner][pool] 
+      end
       notice _("System subscriptions updated.")
       render :nothing =>true
-    else
-      errors _("Unable to update subscriptions.")
-      render :nothing =>true
     end
+
+   # params[:system] = {"consumed_pool_ids"=>[]} unless params.has_key? :system
+   # if @system.update_attributes(params[:system])
+   #   notice _("System subscriptions updated.")
+   #   render :nothing =>true
+   # else
+   #   errors _("Unable to update subscriptions.")
+   #   render :nothing =>true
+   # end
   end
 
   def packages
