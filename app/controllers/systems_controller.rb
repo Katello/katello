@@ -95,24 +95,13 @@ class SystemsController < ApplicationController
   end
 
   def subscriptions
-
-    consumed_pools = @system.pools.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
-                            :poolName => pool["productName"],
-                            :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
-                            :consumed => pool["consumed"],
-                            :quantity => pool["quantity"])}
-    consumed_pools.sort! {|a,b| a.poolName <=> b.poolName}
-
-    avail_pools = @system.available_pools.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
-                            :poolName => pool["productName"],
-                            :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
-                            :consumed => pool["consumed"],
-                            :quantity => pool["quantity"])}
-    avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
+    consumed_pools = sys_consumed_pools
+    avail_pools = sys_available_pools
 
     render :partial=>"subscriptions", :layout => "tupane_layout", 
                                       :locals=>{:system=>@system, :avail_subs => avail_pools,
-                                                :consumed_subs => consumed_pools, :editable=>@system.editable?}
+                                                :consumed_subs => consumed_pools, 
+                                                :editable=>@system.editable?}
   end
 
   def update_subscriptions
@@ -188,8 +177,8 @@ class SystemsController < ApplicationController
   end    
 
   private
-  include SortColumnList
 
+  include SortColumnList
 
   def find_environment
     readable = KTEnvironment.systems_readable(current_organization)
@@ -213,5 +202,23 @@ class SystemsController < ApplicationController
                       :ajax_scroll => items_systems_path()}
   end
 
+  def sys_consumed_pools
+    consumed_pools = @system.pools.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
+                            :poolName => pool["productName"],
+                            :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                            :consumed => pool["consumed"],
+                            :quantity => pool["quantity"])}
+    consumed_pools.sort! {|a,b| a.poolName <=> b.poolName}
+    consumed_pools
+  end
+
+  def sys_available_pools
+    avail_pools = @system.available_pools.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
+                            :poolName => pool["productName"],
+                            :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                            :consumed => pool["consumed"],
+                            :quantity => pool["quantity"])}
+    avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
+  end
 
 end
