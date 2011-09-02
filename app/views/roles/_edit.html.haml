@@ -45,22 +45,30 @@
       %form{ :id => "add_permission_form" }
         %input{:type => "hidden", :name => "permission[organization_id]", :value => '', :id => "organization_id" }
         .permission_widget_container#name_container
+          %h5#step_1.active-step
+            #{_('Step 1 of 4:')}
           %label.ra.fl #{_("Name:")}
           %input{ :id => 'permission_name', :name => 'permission[name]', :type => "text", :tabindex => 1 }
-        .permission_widget_container.hidden#description_container
+        .permission_widget_container#description_container
           %label.ra.fl #{_("Description:")}
           %textarea{ :id => 'description', :name => 'permission[description]', :tabindex => 2 }
         .permission_widget_container.hidden#resource_type_container
+          %h5#step_2
+            #{_('Step 2 of 4:')}
           %label.ra.fl #{_("Permission For:")}
           %select{ :id => 'resource_type', :name => 'permission[resource_type_attributes[name]]', :tabindex => 3 }
           .button#all_types
             #{_('+ All')}
         .permission_widget_container.hidden#verbs_container
+          %h5#step_3
+            #{_('Step 3 of 4:')}
           %label.ra.fl #{_("Verb(s):")}
           %select{ :id => "verbs", :name => 'permission[verb_values][]', :multiple => 'multiple', :tabindex => 4 }
           .button#all_verbs
             #{_('+ All')}
         .permission_widget_container.hidden#tags_container
+          %h5#step_4
+            #{_('Step 4 of 4:')}
           %label.ra.fl #{_("On:")}
           %select.fl{ :id => "tags", :name => 'permission[tag_names][]', :multiple => 'multiple', :tabindex => 5 }
           .button.fl#all_tags
