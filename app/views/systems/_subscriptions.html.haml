@@ -8,12 +8,13 @@
 
 = content_for :content do
   .grid_8.subs
+  .grid_6
     = image_tag("icons/status_icons_sprite.png", :class=>"icon")
-    %h4 #{_("Entitlements Required")}
-  .grid_4.ca.subs
+    #{_("Entitlements Required")}
+  .grid_3.ca
     #{_("Socket Requirement")}
     #{"--"}
-  .grid_4.ca.subs
+  .grid_3.ca
     #{_("Guests Requirement")}
     #{"--"}
   .grid_8
@@ -40,12 +41,11 @@
                 %td #{"--"}
                 %td
                   = number_field_tag 'quantity', nil, :in => 1...sub.quantity, :class=>"ui-spinner"
-                  %span.fr of #{sub.quantity}
                 %td #{sub.expires}
           - else
             %tr
               %td{:colspan=>5} #{_("The system is not currently consuming any subscriptions.")}
-      - if editable
+      - if editable && avail_subs.length > 0
         .actions
           = submit_tag _('Unsubscribe'), :class => 'submit dialogbutton'
   .grid_8
@@ -74,40 +74,12 @@
                 %td #{"--"}
                 %td
                   = number_field_tag 'quantity', nil, :in => 1...sub.quantity, :class=>"ui-spinner"
-                  %span.fr of #{sub.quantity}
                 %td #{sub.expires}
           - else
             %tr
               %td{:colspan=>5} #{_("There are no more subscriptions available.")}
-      - if editable
+      - if editable && avail_subs.length > 0
         .actions
           = submit_tag _('Subscribe'), :class => 'submit dialogbutton'
 
--#some potentially useful stuff:
-
--#
--#= form_tag user_session_path, :id=>:login_form, :method => "post" do
--#  %fieldset
--#    = label_tag :username
--#    = text_field_tag :username, params[:username]
--#  %fieldset
--#    = label_tag :password
--#    = password_field_tag :password, params[:password]
--#  %div.indented
--#    = check_box_tag :remember_me
--#    = label_tag :remember_me
--#  = submit_tag _('Log In'), :class => 'submit dialogbutton'
-
--#- if editable
--#  = form_tag update_subscriptions_system_path, :method => "post", :id => "update_subscriptions" do |f|
--#    .grid_7
--#      = select_tag "system[consumed_pool_ids]", options_from_collection_for_select(all_subs, 'poolId', 'poolName', consumed), :multiple => true, :class => 'multiselect', :style=>"width:400px; height:200px"
--#    .grid_2
--#      = button_to _("Save Subscriptions"), {:action => "update_subscriptions", :controller => "systems"}, :method => :post, :id => :subcription_save
--#- else
--#  - for sub in all_subs
--#    .grid_6.prefix_1
--#      = sub.poolName
-
--#%td{'id' => sub.sub, :class => ("editable edit_number" if editable), }
--#"data-url" => update_subscriptions_system_path(sub.sub)
+  %br.clear
