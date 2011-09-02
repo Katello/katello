@@ -21,7 +21,10 @@
       "edit_close_label": '#{_("Close Edit")}',
       "add_label": '#{_("Add")}',
       "add_close_label": '#{_("Cancel Add")}',
-      "templates_empty": '#{_("No System Templates are currently defined")}'
+      "templates_empty": '#{_("No System Templates are currently defined")}',
+      "save" : '#{_("Save")}',
+      "saving" : '#{_("Save")}'
+
       });
 
 
@@ -59,25 +62,26 @@
         %h2= _("Edit System Template")
         = render :partial=>"edit", :locals=>{:editable=>true}
       #sliding_tree_actionbar.clickable
-        - if editable
-          #add_template.cs_action
-            %span#add_template_icon.sprite
-              SPRITE
-            %span.text
-              = _("Add")
-          #edit_template.cs_action
-            %span#edit_template_icon.sprite
-              SPRITE
-            %span.text
-              = _("Edit")
-        - if deletable
-          #remove_template.cs_action{ "data-confirm-text" => "#{_('Are you sure you want to remove this template?')}" }
-            %span#remove_template_icon.sprite
-              SPRITE
-            %span.text
-              = _("Remove")
-        - if editable or deleteable
-          #placeholder.cs_action
+        #add_template.cs_action
+          %span#add_template_icon.sprite
+            SPRITE
+          %span.text
+            = _("Add")
+        #edit_template.cs_action
+          %span#edit_template_icon.sprite
+            SPRITE
+          %span.text
+            = _("Edit")
+        #remove_template.cs_action{ "data-confirm-text" => "#{_('Are you sure you want to remove this template?')}" }
+          %span#remove_template_icon.sprite
+            SPRITE
+          %span.text
+            = _("Remove")
+        #save_template.cs_action.disabled
+          %span#save_template_icon.sprite
+            SPRITE
+          %span.text
+            = _("Save")
 
 
 

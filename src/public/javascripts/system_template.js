@@ -26,7 +26,8 @@ KT.templates = function() {
     var buttons = {
         add: undefined,
         edit: undefined,
-        remove: undefined
+        remove: undefined,
+        save: undefined
     },
     fetch_template = function(template_id, callback) {
         $("#tree_loading").css("z-index", 300);
@@ -96,32 +97,55 @@ KT.templates = function() {
         };
         
     },
+    in_pkg_array = function(name) {
+        var to_ret = -1;
+        $.each(KT.options.current_template.packages, function(index, item) {
+            console.log(item.name.length + "," + name.length);
+            console.log(item.name + "," + name);
+            if (item.name === name) {
+                to_ret = index;
+                return false;
+            }
+        });
+        return to_ret;
+    },
     add_package = function(name) {
       var pkgs = KT.options.current_template.packages;
-      if ($.inArray(name, pkgs) === -1) {
-        pkgs.push(name);
+      if (in_pkg_array(name) === -1) {
+        pkgs.push({name:name});
       }
+      KT.options.current_template.modified = true;
       KT.options.template_tree.rerender_content();
     },
     remove_package = function(name) {
         var pkgs = KT.options.current_template.packages;
-        var loc = $.inArray(name, pkgs);
+        var loc = in_pkg_array(name);
+        console.log(loc + "," + name);
         if (loc > -1) {
             pkgs.splice(loc, 1);
+            KT.options.current_template.modified = true;
+            reset_page();
         }
+
     },
     reset_page = function() {
-
+        console.log(KT.options.current_template);
         if (KT.options.current_template === undefined) {
             buttons.edit.addClass("disabled");
             buttons.remove.addClass("disabled");
+            buttons.save.addClass("disabled");
         }
         else {
             buttons.edit.removeClass("disabled");
             buttons.remove.removeClass("disabled");
+            if (KT.options.current_template.modified) {
+                buttons.save.removeClass("disabled");
+            }
+            else {
+                buttons.save.addClass("disabled");
+            }
         }
         sort_content();
-
     },
     throw_error = function() {
         $("#error_dialog").dialog({
@@ -183,7 +207,6 @@ KT.template_renderer = function() {
         }
     },
     render_hash = function(hash_id, render_cb) {
-        console.log(hash_id);
         var node = hash_id.split('_')[0];
         var template_id = hash_id.split('_')[1];
 
@@ -227,7 +250,7 @@ KT.template_renderer = function() {
 
         html +=  "<ul>";
         $.each(KT.options.current_template.packages, function(index, item) {
-            html += package_item(item);//TODO do ths correctly
+            html += package_item(item.name);//TODO do ths correctly
             
         });
 
@@ -361,15 +384,15 @@ KT.actions =  (function(){
             });
         });
         var add_package = function(e) {
-            var input = $("#add_package_input");
+            var pkg = $("#add_package_input").attr("value");
             e.preventDefault();
-            var pkg = input.attr("value");
             if (pkg.length > 0) {
                 KT.templates.add_package(pkg);
             }
-            //Why doesn't jquery work here!!!!
-            document.getElementById("add_package_input").focus();
-            //input.focus();
+            //have to looup input again or focus won't work since we re-rendered 
+            $("#add_package_input").focus();
+
+
         };
         $("#add_package").live('click', add_package);
         $(".right_tree").delegate( "#add_package_form", "submit", add_package);
@@ -380,7 +403,29 @@ KT.actions =  (function(){
             }
             $(this).closest("li").remove();
         });
-        
+        $('#save_template').live('click', function(){
+                if ($(this).hasClass("disabled")) {
+                    return false;
+                }
+                $('#save_template').addClass("disabled");
+                var current = KT.options.current_template;
+                var data = {
+                    packages: current.packages,
+                    products: current.products
+                };
+                $.ajax({
+                    type: "PUT",
+                    contentType:"application/json",
+                    url: '/system_templates/' + options.current_template.id + '/update_content/',
+                    data: JSON.stringify(data),
+                    cache: false,
+                    success: function(data){
+                        
+                        KT.options.current_template = data;
+                    },
+                    error: KT.templates.throw_error
+                });
+        });
 
     };
 
@@ -444,11 +489,12 @@ KT.editable = {
 
 
 $(document).ready(function() {
-    
+
     var buttons =KT.templates.buttons;
     buttons.edit = $("#edit_template");
     buttons.add = $("#add_template");
     buttons.remove = $("#remove_template");
+    buttons.save = $("#save_template");
 
     KT.options.templates = KT.template_breadcrumb["templates"].templates
 
