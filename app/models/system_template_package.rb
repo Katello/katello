@@ -25,6 +25,7 @@ class SystemTemplatePackage < ActiveRecord::Base
   validates_uniqueness_of :package_name, :scope =>  :system_template_id
   validates_with PackageValidator
 
+  #package name should exist in a product in the environment
   def to_package
     self.system_template.environment.products.each do |product|
        product.repos(self.system_template.environment).each do |repo|

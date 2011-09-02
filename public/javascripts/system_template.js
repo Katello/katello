@@ -100,8 +100,6 @@ KT.templates = function() {
     in_pkg_array = function(name) {
         var to_ret = -1;
         $.each(KT.options.current_template.packages, function(index, item) {
-            console.log(item.name.length + "," + name.length);
-            console.log(item.name + "," + name);
             if (item.name === name) {
                 to_ret = index;
                 return false;
@@ -120,7 +118,6 @@ KT.templates = function() {
     remove_package = function(name) {
         var pkgs = KT.options.current_template.packages;
         var loc = in_pkg_array(name);
-        console.log(loc + "," + name);
         if (loc > -1) {
             pkgs.splice(loc, 1);
             KT.options.current_template.modified = true;
@@ -129,7 +126,6 @@ KT.templates = function() {
 
     },
     reset_page = function() {
-        console.log(KT.options.current_template);
         if (KT.options.current_template === undefined) {
             buttons.edit.addClass("disabled");
             buttons.remove.addClass("disabled");
@@ -244,7 +240,7 @@ KT.template_renderer = function() {
         return html ;
     },
     packages = function() {
-        var html = '<ul><li><form id="add_package_form"><input id="add_package_input" type="text" size="35"><form>  ';
+        var html = '<ul><li id="package_input_item"><form id="add_package_form"><input id="add_package_input" type="text" size="35"><form>  ';
         html += '<a id="add_package" class="fr st_button ">' + i18n.add_plus + '</a>';
         html += ' </li></ul>';
 
@@ -384,13 +380,45 @@ KT.actions =  (function(){
             });
         });
         var add_package = function(e) {
-            var pkg = $("#add_package_input").attr("value");
+            var btn = $("#add_package");
+            var input = $("#add_package_input");
+            var pkg = input.attr("value");
+
             e.preventDefault();
-            if (pkg.length > 0) {
-                KT.templates.add_package(pkg);
+            if (btn.hasClass("working") || pkg.length === 0){
+                return;
             }
-            //have to looup input again or focus won't work since we re-rendered 
-            $("#add_package_input").focus();
+            btn.addClass("working");
+            input.removeClass("error");
+            btn.html("<img  src='/images/spinner.gif'>");
+            input.attr("disabled", "disabled");
+            input.autocomplete('disable');
+            input.autocomplete('close');
+
+            
+            $.ajax({
+                type: "GET",
+                url: '/system_templates/auto_complete_package',
+                data: {name:pkg},
+                cache: false,
+                success: function(data){
+                    btn.removeClass('working');
+                    btn.html(i18n.add_plus);
+                    input.removeAttr('disabled');
+                    input.autocomplete('enable');
+                    if ($.inArray(pkg, data) > -1) {
+                        KT.templates.add_package(pkg);
+                    }
+                    else {
+                        input.addClass("error");
+                    }
+                    $("#add_package_input").focus();
+                },
+                error: KT.templates.throw_error
+            });
+            
+            //have to lokoup input again or focus won't work since we re-rendered
+
 
 
         };
@@ -431,17 +459,14 @@ KT.actions =  (function(){
 
     },
     register_autocomplete = function() {
-        console.log("REGISTER");
         $("#add_package_input").autocomplete({
             source: function(req, response_cb){
-                    console.log("REQUEST");
                     $.ajax({
                         type: "GET",
                         url: '/system_templates/auto_complete_package',
                         data: {name:req.term},
                         cache: false,
                         success: function(data){
-                            console.log(data);
                             response_cb(data);
                         },
                         error: KT.templates.throw_error
