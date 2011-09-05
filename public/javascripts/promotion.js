@@ -1103,7 +1103,7 @@ var templateLibrary = (function(){
                     html += ' (' + product[type].length  + ')';
                 }
                 else {
-//                    html += "<img class='fr' src='../images/spinner.gif'>";
+                    html += "<img class='fr' src='../images/spinner.gif'>";
                 }
 
                 html += '</span></li>';
