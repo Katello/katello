@@ -556,4 +556,16 @@ PACKAGE_GROUPS = {
   }
 }
 
-
+PACKAGE_GROUP_CATEGORIES = {
+"development": 
+{"name": "Development",
+  "_id": "development",
+  "id": "development",
+  "immutable": False,
+  "translated_description": {},
+  "display_order": 99,
+  "repo_defined": False,
+  "description": "",
+  "packagegroupids": ["123"],
+  "translated_name": {}}
+}
