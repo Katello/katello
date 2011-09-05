@@ -181,7 +181,6 @@ fi
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/database.yml
 %config %{_sysconfdir}/httpd/conf.d/katello.conf
-%config %{_sysconfdir}/thin/thin.conf
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
