@@ -64,3 +64,11 @@ class RepoAPI(KatelloAPI):
     def repo_discovery_status(self, discoveryTaskId):
         path = "/api/repositories/discovery/%s" % discoveryTaskId
         return self.server.GET(path)[1]
+
+    def packagegroups(self, repoid):
+        path = "/api/repositories/%s/package_groups" % repoid
+        return self.server.GET(path)[1]
+
+    def packagegroupcategories(self, repoid):
+        path = "/api/repositories/%s/package_group_categories/" % repoid
+        return self.server.GET(path)[1]
