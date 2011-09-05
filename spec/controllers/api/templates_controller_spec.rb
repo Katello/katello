@@ -181,10 +181,16 @@ describe Api::TemplatesController do
 
 
   describe "export" do
-    it "should call export" do
+    it "should call export_as_json" do
       @tpl.should_receive(:export_as_json)
 
       get :export, :id => TEMPLATE_ID
+    end
+
+    it "should call export_as_tdl" do
+      @tpl.should_receive(:export_as_tdl)
+
+      get :export, :id => TEMPLATE_ID, :format => 'tdl'
     end
   end
 
