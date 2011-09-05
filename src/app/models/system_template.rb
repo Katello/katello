@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'util/package_util'
+require 'active_support/builder' unless defined?(Builder)
 
 class ParentTemplateValidator < ActiveModel::Validator
   def validate(record)
@@ -104,6 +105,41 @@ class SystemTemplate < ActiveRecord::Base
 
   def string_export
     self.hash_export.to_json
+  end
+
+
+  # Returns template in XML TDL format:
+  # https://github.com/aeolusproject/imagefactory/blob/master/Documentation/TDL.xsd
+  def export_as_tdl
+    xm = Builder::XmlMarkup.new
+    xm.instruct!
+    xm.template {
+      # mandatory tags
+      xm.name self.name
+      xm.os {
+        xm.name "Fedora"
+        xm.version "14"
+        xm.arch "x86_64"
+        xm.install("type" => "url") {
+          xm.url "http://repo.fedora.org/f14/os"
+        }
+      }
+      # optional tags
+      xm.description self.description unless self.description.nil?
+      xm.packages {
+        self.packages.each { |p| xm.package "name" => p.package_name }
+        # TODO package groups
+      }
+      xm.repositories {
+        self.products.each do |p|
+          pc = p.productContent.each do |pc|
+            xm.repository("name" => pc.content.name) {
+              xm.url p.repository_url(pc.content.contentUrl)
+            }
+          end
+        end
+      }
+    }
   end
 
 
