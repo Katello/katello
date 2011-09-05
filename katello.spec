@@ -180,6 +180,7 @@ fi
 %doc README LICENSE doc/
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config(noreplace) %{_sysconfdir}/%{name}/database.yml
+%config %{_sysconfdir}/%{name}/thin.yml
 %config %{_sysconfdir}/httpd/conf.d/katello.conf
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
