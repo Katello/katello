@@ -64,9 +64,9 @@ $(document).ready(function() {
       $(this).parent().parent().find('ul').slideToggle();
       var arrow = $(this).parent().find('a').find('img');
       if(arrow.attr("src").indexOf("collapsed") === -1){
-          arrow.attr("src", "/images/icons/expander-collapsed.png");
+          arrow.attr("src", "../images/icons/expander-collapsed.png");
       } else {
-          arrow.attr("src", "/images/icons/expander-expanded.png");
+          arrow.attr("src", "../images/icons/expander-expanded.png");
       }
       return false;
   });

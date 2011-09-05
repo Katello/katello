@@ -34,7 +34,7 @@ var packages = (function(){
             list.parent().append($('<div/>', {
                 'id': "list-spinner"
             }));
-            $('#list-spinner').html( "<img src='/images/spinner.gif' class='ajax_scroll'>");
+            $('#list-spinner').html( "<img src='../images/spinner.gif' class='ajax_scroll'>");
 
             $.ajax({
                 type: "GET",
