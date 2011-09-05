@@ -8,6 +8,7 @@ from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
+from katello.client.core.utils import system_exit
 
 Config()
 
