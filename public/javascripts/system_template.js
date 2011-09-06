@@ -143,9 +143,9 @@ KT.templates = function() {
             else {
                 buttons.save.addClass("disabled");
             }
-            $('.content_add_remove').text(i18n.add_plus); //reset all add/remove to add
+            $('.content_add_remove').not('.working').text(i18n.add_plus); //reset all add/remove to add
             $.each(KT.options.current_template.packages, function(index, item){
-                var btn = $('a[data-name=' + item.name + ']');
+                var btn = $('a[data-name=' + item.name + ']').not('.working');
                 if (btn.length > 0) {
                     btn.text(i18n.remove);
                 }
@@ -628,6 +628,17 @@ $(document).ready(function() {
     KT.actions.register_events();
 
 
-
+    var container = $('#container');
+    var original_top = Math.floor($('.left').position(top).top);
+    if(container.length > 0){
+        var bodyY = parseInt(container.offset().top, 10) - 20;
+        var offset = $('#template_tree').width() + 50;
+        $(window).scroll(function () {
+            panel.handleScroll($('#template_tree'), container, original_top, bodyY, 0, offset);
+        });
+        $(window).resize(function(){
+           panel.handleScrollResize($('#template_tree'), container, original_top, bodyY, 0, offset);
+        });
+    }
 
 });
