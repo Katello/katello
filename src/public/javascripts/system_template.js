@@ -484,6 +484,10 @@ KT.actions =  (function(){
             var btn = $("#add_package");
             var input = $("#add_package_input");
             var pkg = input.attr("value");
+            if (pkg === i18n.default_search_text) {
+                return;
+            }
+
             e.preventDefault();
             verify_add_package(pkg, btn, true);
 
