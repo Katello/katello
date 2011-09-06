@@ -1,2 +1,3 @@
-!= "list.remove('#{escape_javascript(id.to_s)}');"
+!= "list.remove('#{escape_javascript("#{name}_#{id.to_s}")}');"
+!= "panel.closeSubPanel($('#subpanel'));"
 != "panel.closePanel($('#panel'));"

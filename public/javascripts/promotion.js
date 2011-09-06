@@ -46,7 +46,7 @@ var promotion_page = (function($){
         },
         //Finds the add/remove buttons in the left pane
         find_button = function(id, type) {
-            return $("a[class~=content_add_remove][data-id=" + common.escapeId(id) + "][data-type=" + type + "]");
+            return $("a[class~=content_add_remove][data-id=" + KT.common.escapeId(id) + "][data-type=" + type + "]");
         },
         conflict = function(){
             //conflict object that stores conflict information
@@ -372,7 +372,6 @@ var promotion_page = (function($){
             if (current_changeset && permissions.manage_changesets) {
 
                 if (current_product ) {
-
                     var product = current_changeset.getProducts()[current_product];
                     if( product !== undefined && product.all !== undefined ){
                         disable_all(subtypes);
@@ -389,7 +388,7 @@ var promotion_page = (function($){
                     }
                 } else{
                     var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
-                    buttons.html(i18n.add).removeClass("remove_product").addClass("add_product").removeClass('disabled');
+                    buttons.html(i18n.add).removeClass("remove_product").addClass("add_product").show();
                     $.each(current_changeset.getProducts(), function(index, product) {
                         $.each(buttons, function(button_index, button){
                             if( $(button).attr('id') === ('add_remove_product_' + product.id) ){ 
@@ -429,7 +428,6 @@ var promotion_page = (function($){
                     $(".breadcrumb_search").removeClass("locked_breadcrumb_search");
                     $("#cslist").removeClass("locked");
                     $('#locked_icon').remove();
-                    $(".content_add_remove").show();
                     $('#review_changeset > span').html(i18n.review);
                     $('#promote_changeset').addClass("disabled");
 
@@ -793,7 +791,7 @@ var registerEvents = function(){
             return false;
         }
         var id = promotion_page.get_changeset().id;
-        common.customConfirm(button.attr('data-confirm-text'), function(){
+        KT.common.customConfirm(button.attr('data-confirm-text'), function(){
             button.addClass('disabled');
             $.ajax({
                 type: "DELETE",
@@ -1305,7 +1303,6 @@ var changesetStatusActions = (function($){
             changeset.find('img').remove();
             changeset.css('margin-left', '20px');
             if( !$('#cslist .locked_icon').length ){
-                console.log('no more locked icons');
                 $('#cslist .slider .link_details').css('margin-left', '0');
             }
         },

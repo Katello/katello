@@ -15,6 +15,17 @@ class Api::ProductsController < Api::ApiController
   before_filter :find_organization, :only => [:index]
   before_filter :find_product, :only => [:repositories, :show]
   before_filter :find_environment, :only => [:index, :repositories]
+  before_filter :verify_presence_of_organization_or_environment, :only => [:index]
+  before_filter :authorize
+
+  def rules
+    read_test = lambda { Product.any_readable?(@organization) }
+    repo_test = lambda { @product.readable? }
+    {
+      :index => read_test,
+      :repositories => repo_test,
+    }
+  end
 
   def show
     render :json => @product.to_json
@@ -24,8 +35,8 @@ class Api::ProductsController < Api::ApiController
     query_params.delete(:organization_id)
     query_params.delete(:environment_id)
 
-    render :json => Product.select("products.*, providers.name AS provider_name").joins(:provider).where(query_params) if @environment == nil
-    render :json => @environment.products.select("products.*, providers.name AS provider_name").joins(:provider).where(query_params).all if @environment != nil
+    render :json => Product.readable(@organization).select("products.*, providers.name AS provider_name").joins(:provider).where(query_params) if @environment == nil
+    render :json => @environment.products.readable(@organization).select("products.*, providers.name AS provider_name").joins(:provider).where(query_params).all if @environment != nil
   end
 
   def repositories
@@ -41,10 +52,18 @@ class Api::ProductsController < Api::ApiController
 
   def find_environment
     if params[:environment_id].nil?
-      return @environment = @organization.locker unless @organization.nil?
-      return @environment = @product.organization.locker unless @product.nil?
+      @environment = @organization.locker unless @organization.nil?
+      @environment = @product.organization.locker unless @product.nil?
     else
-      @environment = KTEnvironment.find(params[:environment_id])
+      @environment = KTEnvironment.find_by_id(params[:environment_id])
+      raise HttpErrors::NotFound, _("Couldn't find environment '%s'") % params[:environment_id] if @environment.nil?
     end
+    @organization ||= @environment.organization if @environment
   end
+
+  def verify_presence_of_organization_or_environment
+    return if @organization || @environment
+    raise HttpErrors::BadRequest, _("Either organization id or environment id needs to be specified")
+  end
+
 end

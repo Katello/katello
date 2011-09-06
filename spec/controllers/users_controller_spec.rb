@@ -140,4 +140,44 @@ describe UsersController do
     
   end  
 
+
+  describe "rules" do
+    before (:each) do
+      @organization = new_test_org
+      @testuser = User.create!(:username=>"TestUser", :password=>"foobar")
+    end
+    describe "GET index" do
+      let(:action) {:index}
+      let(:req) { get 'index' }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :users, nil, nil) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      let(:on_success) do
+        assigns(:users).should include @testuser
+      end
+
+      it_should_behave_like "protected action"
+    end
+
+    describe "update user put" do
+
+      let(:action) {:update}
+      let(:req) do
+        put 'update', :id => @testuser.id, :password=>"barfoo"
+      end
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:update, :users, nil, nil) }
+      end
+      let(:unauthorized_user) do
+         user_with_permissions { |u| u.can(:read, :users, nil, nil) }
+      end
+      it_should_behave_like "protected action"
+    end
+  end
+
+
+
 end

@@ -39,14 +39,12 @@ Src::Application.routes.draw do
   match 'notices' => 'notices#show', :via => :get
   match 'notices' => 'notices#destroy_all', :via => :delete
 
-  resources :subscriptions do
-  end
+  resources :subscriptions, :only => [:index]
 
-  resources :dashboard do
-  end
+  resources :dashboard, :only => [:index]
 
-  
-  resources :systems do
+
+  resources :systems, :except => [:destroy] do
     member do
       get :packages
       get :more_packages
@@ -61,10 +59,10 @@ Src::Application.routes.draw do
       get :environments
     end
   end
-  resources :operations do
+  resources :operations, :only => [:index]  do
   end
 
-  resources :packages do
+  resources :packages, :only => [:show] do
     member do
       get :changelog
       get :filelist
@@ -72,7 +70,7 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :errata do
+  resources :errata, :only => [:show] do
     member do
       get :packages
     end
@@ -84,11 +82,7 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :products do
-    member do
-      get :sync
-    end
-  end
+  resources :products, :only => [:new, :create, :edit,:update, :destroy]
 
   resources :owners do
     member do
@@ -97,7 +91,7 @@ Src::Application.routes.draw do
     end
   end
 
-  
+
   resources :users do
     collection do
       get :auto_complete_search
@@ -209,7 +203,7 @@ Src::Application.routes.draw do
     post 'set_org'
     get 'allowed_orgs'
   end
-  
+
   resource :account
 
   root :to => "user_sessions#new"
@@ -236,7 +230,7 @@ Src::Application.routes.draw do
       end
     end
 
-    resources :providers do
+    resources :providers, :except => [:index] do
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end
@@ -265,12 +259,14 @@ Src::Application.routes.draw do
         resources :changesets, :only => [:index, :create]
       end
       resources :tasks, :only => [:index]
-      member do
-        get :providers
-      end
+      resources :providers, :only => [:index]
       resources :systems, :only => [:index]
       match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :activation_keys, :only => [:index]
+
+      resources :repositories, :only => [] do
+        post :discovery, :on => :collection
+      end
     end
 
     resources :changesets, :only => [:show, :destroy] do
@@ -278,7 +274,7 @@ Src::Application.routes.draw do
       post :promote, :on => :member, :action => :promote
     end
 
-    resources :products, :only => [:show, :index] do
+    resources :products, :only => [:show] do
       get :repositories, :on => :member
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
@@ -295,9 +291,11 @@ Src::Application.routes.draw do
       resources :packages, :only => [:index]
       resources :errata, :only => [:index]
       resources :distributions, :only => [:index]
+      member do
+        get :package_groups
+        get :package_group_categories
+      end
     end
-    match '/repositories/discovery' => 'repositories#discovery', :via => :post
-    match '/repositories/discovery/:id' => 'repositories#discovery_status', :via => :get
 
     resources :environments, :only => [:show, :update, :destroy] do
       resources :systems, :only => [:create, :index]

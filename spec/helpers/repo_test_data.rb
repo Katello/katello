@@ -18,6 +18,7 @@ module RepoTestData
   CLONED_2_REPO_ID = 'cloned_2_repository_id'
 
   REPO_PRODUCT_ID = 1313597888827
+  REPO_PRODUCT_CP_ID = 4312314881818
   REPO_ENV_ID = 3
   REPO_ORG_ID = 2
   CLONED_REPO_ENV_ID = 4
@@ -28,7 +29,7 @@ module RepoTestData
     :arch => 'architecture',
     :feed => 'url',
     "groupid" => [
-      "product:"+REPO_PRODUCT_ID.to_s,
+      "product:"+REPO_PRODUCT_CP_ID.to_s,
       "env:"+REPO_ENV_ID.to_s,
       "org:"+REPO_ORG_ID.to_s
     ],
@@ -43,7 +44,7 @@ module RepoTestData
     :arch => 'architecture',
     :feed => 'url',
     "groupid" => [
-      "product:"+REPO_PRODUCT_ID.to_s,
+      "product:"+REPO_PRODUCT_CP_ID.to_s,
       "env:"+CLONED_REPO_ENV_ID.to_s,
       "org:"+REPO_ORG_ID.to_s
     ],

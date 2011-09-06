@@ -28,7 +28,7 @@ export RAILS_ENV=$KATELLO_ENV
 status() {
     #check if pid file exists
     pidfile=`ls ${KATELLO_PID} 2>/dev/null | head -n1`
-    if [ -f $pidfile ]; then
+    if [ -f "$pidfile" ]; then
         pid=`cat "$pidfile"`
         #check if proces with pid from the file is running
         if `ps -p $pid > /dev/null`; then
@@ -61,16 +61,20 @@ start() {
         RETVAL=0
         echo_success
     else
-        cd ${KATELLO_HOME} #rails expects you to run from the root of the app
+        # rails expects you to run from the root of the app
+        pushd ${KATELLO_HOME} >/dev/null
         # delete Gemfile.lock (it will be regenerated)
         rm -f $KATELLO_DATA_DIR/Gemfile.lock
-        daemon --user ${KATELLO_USER} bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/delayed_job $KATELLO_JOB_PARAMS -n $KATELLO_JOB_WORKERS start >/var/log/katello/jobs-startup.log 2>&1
+        # start jobs
+        rm -f /var/log/katello/jobs-startup.log
+        su katello -s /bin/bash -c "bundle exec script/delayed_job $KATELLO_JOB_PARAMS -n $KATELLO_JOB_WORKERS start >/var/log/katello/jobs-startup.log 2>&1"
         RETVAL=$?
         if [ $RETVAL = 0 ]; then
             echo_success
         else
             echo_failure
         fi
+        popd >/dev/null
     fi
 
     echo
@@ -81,8 +85,13 @@ stop() {
 
     echo -n $"Stopping $prog: "
     if status_q; then
-        killproc -p ${KATELLO_PID}
+        # rails expects you to run from the root of the app
+        pushd ${KATELLO_HOME} >/dev/null
+        # delete Gemfile.lock (it will be regenerated)
+        rm -f $KATELLO_DATA_DIR/Gemfile.lock
+        su katello -s /bin/bash -c "bundle exec script/delayed_job stop 2>&1 >/dev/null"
         RETVAL=$?
+        popd >/dev/null
     else
         echo -n $"$prog was not running. "
         RETVAL=0
