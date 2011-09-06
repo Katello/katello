@@ -121,7 +121,8 @@ var content = (function(){
             progressBar.appendTo(updateField);
             cancelButton.appendTo(updateField);
             updateField.fadeIn('fast');
-            var pu = $.PeriodicalUpdater('/sync_management/sync_status/', {
+            var url = $('#sync_status_url').attr('data-url');
+            var pu = $.PeriodicalUpdater(url, {
               data: {repo_id:repo, sync_id:sync, product_id: getProductIdFromRepo(repo)},
               method: 'get',
               type: 'json',
@@ -157,9 +158,10 @@ var content = (function(){
             return false;
         },
         updateProduct : function (prod_id, repo_id) {
+            var url = $('#sync_status_url').attr('data-url');
             $.ajax({
               type: 'GET',
-              url: '/sync_management/product_status/',
+              url: url,
               data: { product_id: prod_id, repo_id: repo_id},
               dataType: 'json',
               success: function(data) {
@@ -176,13 +178,13 @@ var content = (function(){
             });
         },
         cancelSync : function(repoid, syncid, updateField, pu){
-            var btn = $('#' + KT.common.escapeId("cancel_" + repoid));
-            var prod_id = getProductId(updateField);
+            var btn = $('#' + KT.common.escapeId("cancel_" + repoid)),
+                prod_id = getProductId(updateField);
             btn.addClass("disabled");
             pu.stop();
             $.ajax({
               type: 'DELETE',
-              url: '/sync_management/' + syncid,
+              url: KT.common.rootURL() + 'sync_management/' + syncid,
               data: { repo_id: repoid, product_id: prod_id },
               dataType: 'json',
               success: function(data) {
