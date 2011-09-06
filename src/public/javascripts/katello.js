@@ -18,6 +18,9 @@
  * Date: 09/01/2010
  */
 
+//Katello global object namespace that all others should be attached to
+var KT = {};
+
 //i18n global variable
 var i18n = {};
 
@@ -54,21 +57,8 @@ function log(msg) {
     }, 0);
 }
 
-var helptip =  (function() {
-    return {
-        handle_close: function(){
-          var key = this.id.split("helptip-opened_")[1];
-          $("#helptip-opened_" + key).hide();
-          $("#helptip-closed_" + key).show();
-          helptip.disable(key); 
-        },
-        handle_open: function(){
-          var key = this.id.split("helptip-closed_")[1];
-          $("#helptip-opened_" + key).show();
-          $("#helptip-closed_" + key).hide();
-          helptip.enable(key);
-        },
-        enable: function(key) {
+KT.helptip =  (function($) {
+    var enable = function(key) {
           $.ajax({
             type: "POST",
             url: "/users/enable_helptip",
@@ -76,16 +66,32 @@ var helptip =  (function() {
             cache: false
            });
         },
-        disable: function(key) {
+        disable = function(key) {
           $.ajax({
             type: "POST",
             url: "/users/disable_helptip",
             data: { "key":key},
             cache: false
            });
-        }
+        },
+        handle_close = function(){
+          var key = this.id.split("helptip-opened_")[1];
+          $("#helptip-opened_" + key).hide();
+          $("#helptip-closed_" + key).show();
+          disable(key); 
+        },
+        handle_open = function(){
+          var key = this.id.split("helptip-closed_")[1];
+          $("#helptip-opened_" + key).show();
+          $("#helptip-closed_" + key).hide();
+          enable(key);
+        };
+        
+    return {
+        handle_close    :    handle_close,
+        handle_open     :    handle_open
     };
-})();
+})(jQuery);
 
 //override the jQuery UJS $.rails.allowAction
 $.rails.allowAction = function(element) {
@@ -94,7 +100,7 @@ $.rails.allowAction = function(element) {
     if (!message) { return true; }
 
     if ($.rails.fire(element, 'confirm')) {
-        common.customConfirm(message, function() {
+        KT.common.customConfirm(message, function() {
             callback = $.rails.fire(element,
                     'confirm:complete', [answer]);
             if(callback) {
@@ -119,7 +125,7 @@ $.expr[':'].contains = function(a, i, m) {
 };
 
 //requires jQuery
-var common = (function() {
+KT.common = (function() {
     return {
         height: function() {
             return $(window).height();
@@ -144,6 +150,7 @@ var common = (function() {
           var html = "<div style='margin:20px;'><span class='status_confirm_icon'/><div style='margin-left: 24px; display:table;height:1%;'>" + message + "</div></div>";
           var confirmTrue = new Boolean(true);
           var confirmFalse = new Boolean(false);
+          
           $(html).dialog({
             closeOnEscape: false,
             open: function (event, ui) {
@@ -297,12 +304,12 @@ $(document).ready(function (){
 	});
 
     //Add a handler for helptips
-    $(".helptip-open").live('click', helptip.handle_close);
-    $(".helptip-close").live('click', helptip.handle_open);
+    $(".helptip-open").live('click', KT.helptip.handle_close);
+    $(".helptip-close").live('click', KT.helptip.handle_open);
 
-    common.orgSwitcherSetup();
-    common.orgFilterSetup();
-    common.thirdLevelNavSetup();
+    KT.common.orgSwitcherSetup();
+    KT.common.orgFilterSetup();
+    KT.common.thirdLevelNavSetup();
 });
 
 /**
@@ -328,6 +335,6 @@ $(window).ready(function(){
         }
     });
 
-    window.alert = function(message){common.customAlert(message);return false;};
-    $.rails.confirm = function(message) { common.customConfirm(message); return false;};
+    window.alert = function(message){KT.common.customAlert(message);return false;};
+    $.rails.confirm = function(message) { KT.common.customConfirm(message); return false;};
 });

@@ -5,7 +5,8 @@
     %li.clear
       %span.item.block{:id => e.id, "data-ajax_url" => erratum_path(e.id)}
         = e.title
-        %a{:class => "fr content_add_remove remove_errata st_button", "data-id" => e.id, "data-display_name"=> e.title,
+        - if @next_environment && @next_environment.products.member?(@product)
+          %a{:class => "fr content_add_remove remove_errata st_button", "data-id" => e.id, "data-display_name"=> e.title,
               "data-type" => "errata", "data-product_id" => @product.id, :id => "add_remove_errata_#{e.id}"}
 
 

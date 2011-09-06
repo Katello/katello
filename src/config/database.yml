@@ -38,7 +38,7 @@ development:
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <%db = find_db(config, 'development')%>
+  <%db = find_db(config, 'test')%>
   <%if db %>
 <%=db%>
   <%else%>
@@ -49,7 +49,7 @@ test:
   <%end%>
 
 production:
-  <%db = find_db(config, 'development')%>
+  <%db = find_db(config, 'production')%>
   <%if db %>
 <%=db%>
   <%else%>

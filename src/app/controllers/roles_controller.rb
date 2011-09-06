@@ -71,7 +71,7 @@ class RolesController < ApplicationController
     @panel_options = { :title => _('Roles'),
                  :col => ['name'],
                  :create => _('Role'),
-                 :name => _('role'),
+                 :name => controller_name,
                  :ajax_scroll => items_roles_path()}
     @panel_options[:enable_create] = false if !Role.creatable?
   end
@@ -95,32 +95,36 @@ class RolesController < ApplicationController
 
   def create
     @role = Role.new(params[:role])
-    if @role.save
-      notice @role.name + " " + _("Role created.")
-      render :partial=>"common/list_item", :locals=>{:item=>@role, :accessor=>"id", :columns=>["name"]}
-    else
-      errors "", {:list_items => @role.errors.to_a}
+    begin
+      @role.save!
+      notice _("Role '#{@role.name}' was created.")
+      render :partial=>"common/list_item", :locals=>{:item=>@role, :accessor=>"id", :columns=>["name"], :name=>controller_name}
+    rescue Exception => error
+      errors error
       render :json=>@role.errors, :status=>:bad_request
     end
   end
 
   def update
     return if @role.name == "admin"
-    
-    if params[:update_users]
-      if params[:update_users][:adding] == "true"
-        @role.users << User.find(params[:update_users][:user_id])
-        @role.save!
-      else
-        @role.users.delete(User.find(params[:update_users][:user_id]))
-        @role.save!
+
+    begin
+      if params[:update_users]
+        if params[:update_users][:adding] == "true"
+          @role.users << User.find(params[:update_users][:user_id])
+          @role.save!
+        else
+          @role.users.delete(User.find(params[:update_users][:user_id]))
+          @role.save!
+        end
+        render :json => params[:update_users]
+      else 
+        @role.update_attributes!(params[:role])
+        notice _("Role '#{@role.name}' was updated.")
+        render :json=>params[:role]
       end
-      render :json => params[:update_users]
-    elsif @role.update_attributes(params[:role])
-      notice _("Role updated.")
-      render :json=>params[:role]
-    else
-      errors "", {:list_items => @role.errors.to_a}
+    rescue Exception => error
+      errors error
       respond_to do |format|
         format.html { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
         format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -129,19 +133,19 @@ class RolesController < ApplicationController
   end
 
   def destroy
-    @id = params[:id]
+    id = params[:id]
     begin
       #remove the user
       @role.destroy
       if @role.destroyed?
         notice _("Role '#{@role[:name]}' was deleted.")
         #render and do the removal in one swoop!
-        render :partial => "common/list_remove", :locals => {:id => @id}
+        render :partial => "common/list_remove", :locals => {:id=>id, :name=>controller_name}
       else
         raise
       end
     rescue Exception => error
-      errors error.to_s
+      errors error
       render :text=> error.to_s, :status=>:bad_request and return
     end
   end
@@ -166,7 +170,7 @@ class RolesController < ApplicationController
   def update_permission
     @permission = Permission.find(params[:permission_id])
     @permission.update_attributes(params[:permission])
-    notice _("Permission '#{@permission.name}' updated.")
+    notice _("Permission '#{@permission.name}' was updated.")
     render :partial => "permission", :locals =>{:perm => @permission, :role=>@role, :data_new=> false}
   end
 
@@ -186,7 +190,7 @@ class RolesController < ApplicationController
       @perm = Permission.create! new_params
       to_return = { :type => @perm.resource_type.name }
       add_permission_bc(to_return, @perm, false)
-      notice _("Permission '#{@perm.name}' created.")
+      notice _("Permission '#{@perm.name}' was created.")
       render :json => to_return
     rescue Exception => error
       errors error
@@ -206,7 +210,7 @@ class RolesController < ApplicationController
   def destroy_permission
     permission = Permission.find(params[:permission_id])
     permission.destroy
-    notice _("Permission '#{permission.name}' removed.")
+    notice _("Permission '#{permission.name}' was removed.")
     render :json => params[:permission_id]
   end
 
@@ -220,6 +224,10 @@ class RolesController < ApplicationController
 
   def resource_types
     ResourceType::TYPES
+  end
+
+  def controller_name
+    return _('role')
   end
 
 end

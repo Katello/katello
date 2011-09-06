@@ -103,7 +103,7 @@ var content = (function(){
     return {
         statusChecker : function(repo, sync, product_id){
             fadeUpdate("#prod_sync_start_" + product_id, ' ');
-            var updateField = $('#' + common.escapeId("repo_bar_" + repo));
+            var updateField = $('#' + KT.common.escapeId("repo_bar_" + repo));
             updateField.fadeOut('fast');
             updateField.html('');
             cancelButton = $('<a/>')
@@ -177,7 +177,7 @@ var content = (function(){
             });
         },
         cancelSync : function(repoid, syncid, updateField, pu){
-            var btn = $('#' + common.escapeId("cancel_" + repoid));
+            var btn = $('#' + KT.common.escapeId("cancel_" + repoid));
             var prod_id = getProductId(updateField);
             btn.addClass("disabled");
             pu.stop();

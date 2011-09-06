@@ -19,6 +19,18 @@ package {"pulp":
     require => Augeas["fedora-pulp.repo"]
 }
 
+file {"/etc/pki/pulp/ca.crt":
+    ensure => link,
+    target => "/etc/candlepin/certs/candlepin-ca.crt",
+    require => Package[pulp]}
+
+file {"/etc/pki/pulp/ca.key":
+    ensure => link,
+    target => "/etc/candlepin/certs/candlepin-ca.key",
+    require => Package[pulp]}
+
+
+
 exec {"initpulp":
         command => "service pulp-server init",
         creates => "/var/lib/pulp/init.flag",

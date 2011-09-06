@@ -96,7 +96,7 @@ function test() {
     fi
     
 
-    if [ $? -ne 0 ] || [ "`echo $result | egrep -i "'nt\b|\bnot\b|\bfail|\berror\b"`" ]; then
+    if [ $? -ne 0 ] || [ "`echo $result | egrep -i "\bfail|\berror\b"`" ]; then
         if [ $PRINT_ALL -eq 1 ]; then
             printf "%s\n\n" "$result"
         else

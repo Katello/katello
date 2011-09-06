@@ -85,9 +85,10 @@ class Organization < ActiveRecord::Base
     User.allowed_to?([:update, :create], :organizations, nil, self)
   end
 
-  def any_systems_readable?
-      User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, self) ||
-           User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, nil, self)
+  SYSTEMS_READABLE = [:read_systems, :create_systems, :update_systems, :delete_systems]
+
+  def systems_readable?
+    User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
   end
 
   def self.list_verbs global = false

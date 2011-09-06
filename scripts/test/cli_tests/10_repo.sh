@@ -5,4 +5,4 @@ test "repo list by org and product" repo list --org="$TEST_ORG" --product="$FEWU
 REPO_NAME=`$CMD repo list --org="$TEST_ORG" -g | grep $FEWUPS_REPO | awk '{print $2}'`
 REPO_ID=`$CMD repo list --org="$TEST_ORG" -g | grep $FEWUPS_REPO | awk '{print $1}'`
 test "repo status" repo status --id="$REPO_ID"
-test "repo synchronize" repo synchronize --repo_id="$REPO_ID"
+test "repo synchronize" repo synchronize --id="$REPO_ID"

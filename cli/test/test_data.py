@@ -54,45 +54,54 @@ ENVS = [
 PROVIDERS = [
   {
     "name": "porkchop",
-    "created_at": "2011-08-23T08:10:53Z",
-    "updated_at": "2011-08-23T08:10:53Z",
+    "created_at": "2011-08-29T08:19:02Z",
+    "updated_at": "2011-08-29T08:19:02Z",
     "id": 1,
+    "sync_state": "not_synced",
     "repository_url": "http://download.fedoraproject.org/pub/fedora/linux/releases/",
+    "last_sync": None,
     "description": None,
     "organization_id": 1,
     "provider_type": "Custom"
   },
   {
     "name": "redhat",
-    "created_at": "2011-08-23T08:10:53Z",
-    "updated_at": "2011-08-23T08:10:53Z",
+    "created_at": "2011-08-29T08:19:03Z",
+    "updated_at": "2011-08-29T08:19:03Z",
     "id": 2,
+    "sync_state": "not_synced",
     "repository_url": "https://somehost.example.com/content/",
+    "last_sync": None,
     "description": None,
     "organization_id": 1,
     "provider_type": "Red Hat"
   },
   {
     "name": "prov_a1",
-    "created_at": "2011-08-25T11:50:55Z",
-    "updated_at": "2011-08-25T11:50:55Z",
+    "created_at": "2011-08-29T08:22:30Z",
+    "updated_at": "2011-08-29T08:22:30Z",
     "id": 3,
+    "sync_state": "not_synced",
     "repository_url": None,
+    "last_sync": "2011-08-29T14:03:02+02:00",
     "description": None,
     "organization_id": 1,
     "provider_type": "Custom"
   },
   {
     "name": "prov_a2",
-    "created_at": "2011-08-25T11:50:56Z",
-    "updated_at": "2011-08-25T11:50:56Z",
+    "created_at": "2011-08-29T08:22:31Z",
+    "updated_at": "2011-08-29T08:22:31Z",
     "id": 4,
+    "sync_state": "not_synced",
     "repository_url": None,
+    "last_sync": None,
     "description": None,
     "organization_id": 1,
     "provider_type": "Custom"
   }
 ]
+
 
 
 PRODUCTS = [
@@ -425,3 +434,138 @@ CHANGESETS = [
 ]
 
 
+REPOS = [
+    {
+    "package_count": 0,
+    "name": "prod_a2_fakerepos_zoo",
+    "clone_ids": [
+
+    ],
+    "keys": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/keys/",
+    "uri_ref": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/",
+    "use_symlinks": False,
+    "content_types": "yum",
+    "packagegroupcategories": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/packagegroupcategories/",
+    "consumer_cert": None,
+    "errata": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/errata/",
+    "files": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/files/",
+    "notes": None,
+    "relative_path": "fakerepos/zoo",
+    "arch": "noarch",
+    "checksum_type": "sha256",
+    "_id": "1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation",
+    "packages": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/packages/",
+    "next_scheduled_time": None,
+    "sync_state": "not_synced",
+    "id": "1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation",
+    "publish": True,
+    "last_sync": None,
+    "comps": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/comps/",
+    "filters": [
+
+    ],
+    "sync_schedule": None,
+    "files_count": 82,
+    "groupid": [
+        "product:1314606161997",
+        "env:1",
+        "org:1"
+    ],
+    "packagegroups": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/packagegroups/",
+    "distribution": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_zoo-ACME_Corporation/distribution/",
+    "distributionid": [
+
+    ],
+    "consumer_ca": None,
+    "source": {
+        "url": "http://lzap.fedorapeople.org/fakerepos/zoo",
+        "type": "remote"
+    },
+    "feed_cert": None,
+    "feed_ca": None
+    },
+    {
+    "package_count": 0,
+    "name": "prod_a2_fakerepos_fewupdates",
+    "clone_ids": [
+
+    ],
+    "keys": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/keys/",
+    "uri_ref": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/",
+    "use_symlinks": False,
+    "content_types": "yum",
+    "packagegroupcategories": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/packagegroupcategories/",
+    "consumer_cert": None,
+    "errata": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/errata/",
+    "files": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/files/",
+    "notes": None,
+    "relative_path": "fakerepos/fewupdates",
+    "arch": "noarch",
+    "checksum_type": "sha256",
+    "_id": "1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation",
+    "packages": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/packages/",
+    "next_scheduled_time": None,
+    "sync_state": "not_synced",
+    "id": "1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation",
+    "publish": True,
+    "last_sync": None,
+    "comps": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/comps/",
+    "filters": [
+
+    ],
+    "sync_schedule": None,
+    "files_count": 89,
+    "groupid": [
+        "product:1314606161997",
+        "env:1",
+        "org:1"
+    ],
+    "packagegroups": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/packagegroups/",
+    "distribution": "/pulp/api/repositories/1314606161997-prod_a2_fakerepos_fewupdates-ACME_Corporation/distribution/",
+    "distributionid": [
+
+    ],
+    "consumer_ca": None,
+    "source": {
+        "url": "http://lzap.fedorapeople.org/fakerepos/fewupdates",
+        "type": "remote"
+    },
+    "feed_cert": None,
+    "feed_ca": None
+    }
+]
+
+PACKAGE_GROUPS = {
+"123":
+{"name": "katello",
+  "conditional_package_names": {},
+  "mandatory_package_names": [],
+  "default": True,
+  "_id": "123",
+  "langonly": None,
+  "id": "123",
+  "immutable": False,
+  "optional_package_names": [],
+  "default_package_names": ["pulp-test-package-0.2.1-1.fc11.x86_64.rpm"],
+  "translated_description": {},
+  "user_visible": True,
+  "display_order": 1024,
+  "repo_defined": False,
+  "description": "Katello related packages",
+  "translated_name": {}
+  }
+}
+
+PACKAGE_GROUP_CATEGORIES = {
+"development": 
+{"name": "Development",
+  "_id": "development",
+  "id": "development",
+  "immutable": False,
+  "translated_description": {},
+  "display_order": 99,
+  "repo_defined": False,
+  "description": "",
+  "packagegroupids": ["123"],
+  "translated_name": {}}
+}

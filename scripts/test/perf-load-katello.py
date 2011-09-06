@@ -24,7 +24,7 @@ ENVIRONMENTS = ["DEV", "TEST", "STAGE", "PROD"]
 
 def hit_url(hits, cookie, concurrency, url):
     #  ab  -n 10 -C "_src_session=BAh7CSIQX2NzcmZfW..snip..b9c7f05ccd78027" "http://0.0.0.0:3000/dashboard"
-    retval = os.system("ab -t 60 -n %s -C \"%s\" -c %s %s" % (hits, cookie, concurrency, url))
+    retval = os.system("ab -n %s -C \"%s\" -c %s %s" % (hits, cookie, concurrency, url))
         
 if __name__ == '__main__':
  

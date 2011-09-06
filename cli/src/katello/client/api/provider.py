@@ -50,12 +50,6 @@ class ProviderAPI(KatelloAPI):
         return self.server.PUT(path, {"provider": provdata})[1]
 
 
-    def providers(self):
-        path = "/api/providers/"
-        providers = self.server.GET(path)[1]
-        return providers
-
-
     def providers_by_org(self, orgId):
         path = "/api/organizations/%s/providers/" % str(orgId)
         providers = self.server.GET(path)[1]
@@ -82,6 +76,12 @@ class ProviderAPI(KatelloAPI):
         provider = self.server.POST(path)[1]
         return provider
 
+
+    def last_sync_status(self, provId):
+        path = "/api/providers/%s/sync" % provId
+        data = self.server.GET(path)[1]
+        return data
+        
 
     def import_manifest(self, provId, manifestFile):
         path = "/api/providers/%s/import_manifest" % str(provId)
