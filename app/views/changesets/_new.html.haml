@@ -7,7 +7,7 @@
 = content_for :content do
   .grid_8#new_changeset123
     -if @next_environment
-      = form_tag changesets_path, :method => "post", :id => "new_changeset" do |f|
+      = form_tag changesets_path, :method => "post", :id => "new_changeset" do
         %input{ :type => "hidden", :name => "env_id", :value => @environment.id }
         %input{ :type => "hidden", :name => "next_env_id", :value => @next_environment.id }
         %fieldset
