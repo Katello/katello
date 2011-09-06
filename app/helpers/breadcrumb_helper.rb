@@ -277,7 +277,7 @@ module BreadcrumbHelper
        #   prod.name, [products_crumb_id], {:cache=>true, :content=>render(:partial=>"product_detail", :locals=>{:product=>prod})})
 
        #product,packages
-       add_crumb_node!(bc, packages_bc_id(prod), packages_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
+       add_crumb_node!(bc, packages_bc_id(prod), product_packages_system_templates_path(:product_id=>prod.id),
           prod.name + " " +  _("Packages"), [products_crumb_id], {:scrollable=>true})
           
 
