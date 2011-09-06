@@ -9,7 +9,7 @@
 = content_for :content do
   %h5.grid_8 #{_("Subscriptions")}
   - if editable
-    = form_tag update_subscriptions_system_path, :method => "post", :id => "update_subscriptions" do |f|
+    = form_tag update_subscriptions_system_path, :method => "post", :id => "update_subscriptions" do
       .grid_7
         = select_tag "system[consumed_pool_ids]", options_from_collection_for_select(all_subs, 'poolId', 'poolName', consumed), :multiple => true, :class => 'multiselect', :style=>"width:400px; height:200px"
       .grid_2
