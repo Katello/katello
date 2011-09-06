@@ -1,7 +1,7 @@
 import unittest
 from mock import Mock
 import urlparse
-from cli_test_utils import CLIOptionTestCase
+from cli_test_utils import CLIOptionTestCase, CLIActionTestCase
 
 import katello.client.core.repo
 from katello.client.core.repo import Discovery
@@ -28,40 +28,36 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.assertEqual(len(self.action.optErrors), 0)
 
 
-class RepoDiscoveryTest(unittest.TestCase):
-    RESULT = {'result':''}
+class RepoDiscoveryTest(CLIActionTestCase):
+    RESULT = {'result':[]}
     DISCOVERY_TASK = {}
     URL = 'http://localhost'
+    ORG = 'ACME'
 
     def setUp(self):
-        self.original_run_spinner_in_bg = katello.client.core.repo.run_spinner_in_bg
-        katello.client.core.repo.run_spinner_in_bg = Mock()
-        katello.client.core.repo.run_spinner_in_bg.return_value = self.RESULT
-
-        self.original_system_exit = katello.client.core.repo.system_exit
-        katello.client.core.repo.system_exit = Mock()
-
-        self.create_action = Discovery()
-
-        self.create_action.api.repo_discovery = Mock()
-        self.create_action.api.repo_discovery.return_value = self.DISCOVERY_TASK
+        self.set_action(Discovery())
+        self.set_module(katello.client.core.repo)
+        
+        self.mock(self.module, 'run_spinner_in_bg', [self.RESULT])
+        self.mock(self.module, 'system_exit')
+        
+        self.mock(self.action.api, 'repo_discovery', self.DISCOVERY_TASK)
 
     def tearDown(self):
-        katello.client.core.repo.run_spinner_in_bg = self.original_run_spinner_in_bg
-        katello.client.core.repo.system_exit = self.original_system_exit
+        self.restore_mocks()
 
     def test_performs_pulp_repo_discovery(self):
-        self.create_action.discover_repositories(self.URL)
-        self.create_action.api.repo_discovery.assert_called_once_with(self.URL, 'yum')
+        self.action.discover_repositories(self.ORG, self.URL)
+        self.action.api.repo_discovery.assert_called_once_with(self.ORG, self.URL, 'yum')
 
     def test_polls_pulp(self):
-        self.create_action.discover_repositories(self.URL)
-        katello.client.core.repo.run_spinner_in_bg.assert_called_once_with(self.create_action.wait_for_discovery, [self.DISCOVERY_TASK])
+        self.action.discover_repositories(self.ORG, self.URL)
+        self.module.run_spinner_in_bg.assert_called_once_with(self.module.wait_for_async_task, [self.DISCOVERY_TASK])
 
     def test_exit_when_no_repos_were_discovered(self):
-        katello.client.core.repo.run_spinner_in_bg.return_value = {'result':[]}
-        self.create_action.discover_repositories(self.URL)
-        katello.client.core.repo.system_exit.assert_called_once
+        self.module.run_spinner_in_bg.return_value = [self.RESULT]
+        self.action.discover_repositories(self.ORG, self.URL)
+        self.module.system_exit.assert_called_once
 
 
 class RepositorySelectionTest(unittest.TestCase):

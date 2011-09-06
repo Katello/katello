@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.75
+Version:	      0.1.76
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -196,6 +196,39 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Sep 05 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.76-1
+- 730358 - repo discovery now uses asynchronous tasks - the route has been
+  changed to /organizations/ID/repositories/discovery/
+- 735359 - Don't create content in CP when creating a repo.
+- Fixed a couple of errors that occured due to wrong sql in postgres
+- reset-dbs - katello-jobs are restarted now
+- Changes roles and permission success and error notices to include the name of
+  the role/permission and fit the format of other pages.
+- Validate uniqueness of repo name within a product scope
+- products - cp name now join of <org_name>-<product_name> used to be
+  <provider_name>-<product_name>
+- sync - comparing strings instead of symbols in sync_status fix for AR
+  returning symbols
+- sync - fix for sync_status failing when there were no syncable subitems
+  (repos for product, products for providers)
+- sync - change in product&provider sync_status logic
+- provider sync status - cli + api
+- sync - spec tests for cancel and index actions
+- Fixes for editing name of changeset on changeset history page.
+- Further re-work of HTML and JS model naming convention.  Changes the behavior
+  of setting the HTML id for each model type by introducing a simple
+  controller_name function that returns the controller name to be used for
+  tupane, edit, delete and list items.
+- Adds KT javascript global object for all other modules to attach to. Moves
+  helptip and common to be attached to KT.
+- Changes to Users page to fit new HTML model id convention.
+- Changes Content Management page items to use new HTML model id convention.
+- Changes to Systems page for HTML and JS model id.
+- Changes Organizations section to use of new HTML model id convention.
+- Changes to model id's in views.
+- 734851 - service katello start - Permission denied
+- Refactor providers - remove unused routes
+
 * Wed Aug 31 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.75-1
 - 734833 - service katello-jobs stop shows non-absolute home (ArgumentError)
 - Refactor repo path generator

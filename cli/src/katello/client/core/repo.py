@@ -25,7 +25,7 @@ from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_product, get_repo
-from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, AsyncTask
+from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask
 from katello.client.core.utils import ProgressBar
 
 try:
@@ -130,7 +130,7 @@ class Discovery(RepoAction):
         prodName = self.get_option('prod')
         orgName  = self.get_option('org')
 
-        repourls = self.discover_repositories(url)
+        repourls = self.discover_repositories(orgName, url)
         self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
         selectedurls = self.select_repositories(repourls, assumeyes)
 
@@ -140,15 +140,15 @@ class Discovery(RepoAction):
 
         return os.EX_OK
 
-    def discover_repositories(self, url):
+    def discover_repositories(self, org_name, url):
         print(_("Discovering repository urls, this could take some time..."))
         try:
-            task = self.api.repo_discovery(url, 'yum')
+            task = self.api.repo_discovery(org_name, url, 'yum')
         except Exception,e:
             system_exit(os.EX_DATAERR, _("Error: %s" % e))
 
-        discoveryResult = run_spinner_in_bg(self.wait_for_discovery, [task])
-        repourls = discoveryResult['result'] or []
+        discoveryResult = run_spinner_in_bg(wait_for_async_task, [task])
+        repourls = discoveryResult[0]['result'] or []
 
         if not len(repourls):
             system_exit(os.EX_OK, "No repositories discovered @ url location [%s]" % url)
@@ -213,13 +213,6 @@ class Discovery(RepoAction):
                 print "(+)  [%s] %-5s" % (index+1, url)
             else:
                 print "(-)  [%s] %-5s" % (index+1, url)
-
-    def wait_for_discovery(self, discoveryTask):
-        while discoveryTask['state'] not in ('finished', 'error', 'timed out', 'canceled'):
-            time.sleep(0.25)
-            discoveryTask = self.api.repo_discovery_status(discoveryTask['id'])
-
-        return discoveryTask
 
 
 class Selection(list):
