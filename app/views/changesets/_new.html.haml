@@ -21,7 +21,7 @@
           .grid_4.la
             = text_area_tag :description, nil, :tabindex => auto_tab_index
         .grid_5.ra
-          .button#save_changeset_button{:tabindex => auto_tab_index}
+          .button#save_changeset_button{'data-url' => changesets_path, :tabindex => auto_tab_index}
             #{_("Save Changeset")}
     -else
       #{_("Cannot create a new changeset without a next environment to promote in to. <br> Create a next environment on the organization screen.")}

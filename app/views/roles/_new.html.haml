@@ -14,5 +14,5 @@
           = text_field :role, :name, :id=>"role_name_field", :tabindex => auto_tab_index
   
       .grid_3.la.push_1
-        .button#save_role_button{:tabindex => auto_tab_index}
+        .button#save_role_button{'data-url' => roles_path, :tabindex => auto_tab_index}
           #{_("Save Role")}
