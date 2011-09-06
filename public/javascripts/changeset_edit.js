@@ -45,6 +45,8 @@ $(document).ready(function() {
             placeholder :  i18n.clickToEdit,
             submitdata  :  {authenticity_token: AUTH_TOKEN},
             onsuccess   :  function(data) {
+               var parsed = $.parseJSON(data);
+               $(this).html(parsed.name);
                changeset_page.signal_rename($(this).attr("data-id"));
 
             },

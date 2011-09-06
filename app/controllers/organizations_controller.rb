@@ -78,7 +78,7 @@ class OrganizationsController < ApplicationController
       Rails.logger.info error.backtrace.join("\n")
       render :text=> error.to_s, :status=>:bad_request and return
     end
-    render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name']}
+    render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_name}
   end
 
   def edit
@@ -115,7 +115,7 @@ class OrganizationsController < ApplicationController
 
       render :text => "The current organization cannot be deleted. Please switch to a different organization before deleting.", :status => :bad_request and return
     elsif Organization.count > 1
-      @id = @organization.id
+      id = @organization.cp_key
       @name = @organization.name
       begin
         @organization.destroy
@@ -124,7 +124,7 @@ class OrganizationsController < ApplicationController
         errors error.to_s
         render :text=> error.to_s, :status=>:bad_request and return
       end
-      render :partial => "post_delete", :locals => {:id => @name}
+      render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_name}
     else
       errors [_("Could not delete organization '#{params[:id]}'."),  _("At least one organization must exist.")]
       
@@ -149,11 +149,14 @@ class OrganizationsController < ApplicationController
     @panel_options = { :title => _('Organizations'),
                :col => ['name'],
                :create => _('Organization'),
-               :name => _('organization'),
+               :name => controller_name,
                :accessor => :cp_key,
                :ajax_scroll => items_organizations_path(),
                :enable_create => Organization.creatable?}
   end
 
+  def controller_name
+    return _('organization')
+  end
 
 end

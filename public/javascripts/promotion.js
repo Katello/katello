@@ -46,7 +46,7 @@ var promotion_page = (function($){
         },
         //Finds the add/remove buttons in the left pane
         find_button = function(id, type) {
-            return $("a[class~=content_add_remove][data-id=" + common.escapeId(id) + "][data-type=" + type + "]");
+            return $("a[class~=content_add_remove][data-id=" + KT.common.escapeId(id) + "][data-type=" + type + "]");
         },
         conflict = function(){
             //conflict object that stores conflict information
@@ -791,7 +791,7 @@ var registerEvents = function(){
             return false;
         }
         var id = promotion_page.get_changeset().id;
-        common.customConfirm(button.attr('data-confirm-text'), function(){
+        KT.common.customConfirm(button.attr('data-confirm-text'), function(){
             button.addClass('disabled');
             $.ajax({
                 type: "DELETE",

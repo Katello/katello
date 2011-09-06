@@ -33,8 +33,8 @@ var changeset_page = {
         panel.closePanel($('#panel'));
         list.complete_refresh('/changesets/items?env_id=' + env_id);
     },
-    signal_rename: function(changeset_id) {
-        list.refresh(changeset_id, $('#changeset').attr("data-ajax_url"));
+    signal_rename: function(changeset_id, name) {
+        list.refresh('changeset_' + changeset_id, $('#changeset').attr("data-ajax_url"));
     },
     environment_search:  function(env_id) {
         panel.closePanel($('#panel'));

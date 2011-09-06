@@ -26,6 +26,8 @@ describe "activation_keys/_edit.html.haml" do
       :organization => @organization
     ))
 
+    view.should_receive(:name).any_number_of_times.and_return('activation_key')
+
     view.stub(:help_tip_button)
     view.stub(:help_tip)
     view.stub(:render_navigation)
