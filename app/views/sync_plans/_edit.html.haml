@@ -11,20 +11,20 @@
     = link_to _("Remove Sync Plan"), {:action => "destroy", :controller => "sync_plans"}, :method => :delete, :confirm => _('Are you sure?'), :class => "remove_item", :remote => true
 
 = content_for :content do
-  %input#plan_id{:name => @plan.id, :type => "hidden", :value => @plan.id, "data-ajax_url"=>url_for(:action=> 'update')}
+  %input#plan_id{:name => @plan.id, :type => "hidden", :value => "#{name}_#{@plan.id}", "data-ajax_url"=>url_for(:action=> 'update')}
   .grid_8#plan
     %fieldset.fl.clear
       %label.grid_2 #{_("Name")}:
-      .grid_5.la#plan_name{'name' => 'plan[name]', :class=>("editable edit_planname" if editable), 'data-url' => url_for(:action => 'update')} #{@plan[:name]}
+      .grid_5.la#plan_name{'name' => 'sync_plan[name]', :class=>("editable edit_planname" if editable), 'data-url' => url_for(:action => 'update')} #{@plan[:name]}
     %fieldset.fl.clear
       %label.grid_2 #{_("Description")}:
-      .grid_5.la#plan_description{'name' => 'plan[description]', :class=>("editable edit_textarea" if editable), 'data-url' => url_for(:action => 'update')}<> #{@plan[:description]}
+      .grid_5.la#plan_description{'name' => 'sync_plan[description]', :class=>("editable edit_textarea" if editable), 'data-url' => url_for(:action => 'update')}<> #{@plan[:description]}
     %fieldset.fl.clear
       %label.grid_2 #{_("Interval")}:
-      .grid_5.la#plan_interval{'name' => 'plan[interval]', :class=>("editable edit_planinterval" if editable), 'data-url' => url_for(:action => 'update')} #{@plan[:interval]}
+      .grid_5.la#plan_interval{'name' => 'sync_plan[interval]', :class=>("editable edit_planinterval" if editable), 'data-url' => url_for(:action => 'update')} #{@plan[:interval]}
     %fieldset.fl.clear
       %label.grid_2 #{_("Start Date")}:
-      .grid_5.la#plan_date{'name' => 'plan[date]', :class=>("editable edit_datepicker" if editable), 'data-url' => url_for(:action => 'update')} #{@plan.plan_date}
+      .grid_5.la#plan_date{'name' => 'sync_plan[date]', :class=>("editable edit_datepicker" if editable), 'data-url' => url_for(:action => 'update')} #{@plan.plan_date}
     %fieldset.fl.clear
       %label.grid_2 #{_("Time")}:
-      .grid_5.la#plan_time{'name' => 'plan[time]', :class=>("editable edit_timepicker" if editable), 'data-url' => url_for(:action => 'update')} #{@plan.plan_time}
+      .grid_5.la#plan_time{'name' => 'sync_plan[time]', :class=>("editable edit_timepicker" if editable), 'data-url' => url_for(:action => 'update')} #{@plan.plan_time}

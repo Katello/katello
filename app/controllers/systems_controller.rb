@@ -30,12 +30,12 @@ class SystemsController < ApplicationController
   def rules
     edit_system = lambda{System.find(params[:id]).editable?}
     read_system = lambda{System.find(params[:id]).readable?}
-    delete_system = lambda{ System.find(params[:id]).deletable? }
     env_system = lambda{@environment.systems_readable?}
+    any_readable = lambda{System.any_readable?(current_organization)}
 
     {
-      :index => lambda{true},
-      :items => lambda{true},
+      :index => any_readable,
+      :items => any_readable,
       :environments => env_system,
       :env_items => env_system,
       :subscriptions => read_system,
@@ -137,7 +137,7 @@ class SystemsController < ApplicationController
   end
   
   def edit
-     render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system, :editable=>@system.editable?}
+     render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system, :editable=>@system.editable?, :name=>controller_name}
   end  
 
   def update
@@ -193,7 +193,7 @@ class SystemsController < ApplicationController
                       :custom_rows => true,
                       :enable_create => false,
                       :enable_sort => true,
-                      :name => _('system'),
+                      :name => controller_name,
                       :list_partial => 'systems/list_systems',
                       :ajax_scroll => items_systems_path()}
   end
@@ -215,6 +215,11 @@ class SystemsController < ApplicationController
                             :consumed => pool["consumed"],
                             :quantity => pool["quantity"])}
     avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
+    avail_pools
+  end
+
+  def controller_name
+    return _('system')
   end
 
 end

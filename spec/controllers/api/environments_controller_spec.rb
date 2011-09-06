@@ -14,17 +14,35 @@ require 'spec_helper'
 
 describe Api::EnvironmentsController do
   include LoginHelperMethods
+  include AuthorizationHelperMethods
 
-  before (:each) do
+  before(:each) do
     @org         = Organization.new(:cp_key => "1")
     @environment = KTEnvironment.new
+    @environment.organization = @org
     Organization.stub!(:first).and_return(@org)
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
   end
 
+  let(:user_with_read_permissions) do
+    user_with_permissions { |u| u.can(Organization::READ_PERM_VERBS, :organizations, nil, @ogranization) }
+  end
+  let(:user_without_read_permissions) do
+    user_without_permissions
+  end
+  let(:user_with_manage_permissions) do
+    user_with_permissions { |u| u.can([:update, :create], :organizations, nil, @ogranization) }
+  end
+  let(:user_without_manage_permissions) do
+    # todo - it's sufficient to have only one permission?
+    # user_with_permissions { |u| u.can([:update], :organizations, nil, @ogranization) }
+    user_without_permissions
+  end
+
+
   describe "create an environment" do
-    before (:each) do
+    before(:each) do
       KTEnvironment.should_receive(:new).once.and_return(@environment)
       @org.should_receive(:save!).once
     end
@@ -35,16 +53,34 @@ describe Api::EnvironmentsController do
   end
 
   describe "get a listing of environments" do
+
+    let(:action) {:index }
+    let(:req) { get 'index', :organization_id => "1" }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
     it 'should call kalpana environment find api' do
       KTEnvironment.should_receive(:where).once
-      get 'index', :organization_id => "1"
+      req
     end
   end
 
   describe "show a environment" do
+
+    before(:each) do
+      KTEnvironment.stub(:find => @environment)
+    end
+
+    let(:action) {:show }
+    let(:req) { get 'show', :id => 1, :organization_id => "1" }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
     it 'should call KTEnvironment.first' do
       KTEnvironment.should_receive(:find).once().and_return(@environment)
-      get 'show', :id => 1, :organization_id => "1"
+      req
     end
   end
 
@@ -53,17 +89,35 @@ describe Api::EnvironmentsController do
       KTEnvironment.should_receive(:find).once().and_return(@environment)
     end
 
+    let(:action) {:destroy }
+    let(:req) { delete 'destroy', :id => 1, :organization_id => "1" }
+    let(:authorized_user) { user_with_manage_permissions }
+    let(:unauthorized_user) { user_without_manage_permissions }
+    it_should_behave_like "protected action"
+
+
     it 'should call katello environment find api' do
         @environment.should_receive(:destroy).once
-        delete 'destroy', :id => 1 , :organization_id => "1"
+        req
     end
   end
 
   describe "update an environment" do
-    it 'should call KTEnvironment update_attributes' do
+
+    before(:each) do
+      KTEnvironment.stub(:find => @environment)
+    end
+
+    let(:action) { :update }
+    let(:req) { put 'update', :id => 'to_update', :organization_id => "1" }
+    let(:authorized_user) { user_with_manage_permissions }
+    let(:unauthorized_user) { user_without_manage_permissions }
+    it_should_behave_like "protected action"
+
+    it 'should call KPEnvironment update_attributes' do
       KTEnvironment.should_receive(:find).once().and_return(@environment)
       @environment.should_receive(:update_attributes!).once.and_return(@environment)
-      put 'update', :id => 'to_update', :organization_id => "1"
+      req
     end
   end
 

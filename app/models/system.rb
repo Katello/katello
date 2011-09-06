@@ -70,32 +70,37 @@ class System < ActiveRecord::Base
 
 
   def self.any_readable? org
-    User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, org) ||
-           User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environments, org.environment_ids, org, true)
+    org.systems_readable? ||
+        User.allowed_to?(KTEnvironment::SYSTEMS_READABLE, :environments, org.environment_ids, org, true)
   end
 
   def self.readable org
       raise "scope requires an organization" if org.nil?
-      if User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, org)
+      if org.systems_readable?
          where(:environment_id => org.environment_ids) #list all systems in an org 
       else #just list for environments the user can access
-        where("systems.environment_id in (#{User.allowed_tags_sql([:read_systems, :update_systems, :delete_systems], :environments, org)})")
+        where("systems.environment_id in (#{User.allowed_tags_sql(KTEnvironment::SYSTEMS_READABLE, :environments, org)})")
       end    
   end
 
   def readable?
-   User.allowed_to?([:read_systems, :update_systems, :delete_systems], :organizations, nil, self.organization) ||
-      User.allowed_to?([:read_systems, :update_systems, :delete_systems], :environment, self.environment.id, self.organization)
+    environment.systems_readable?
   end
 
   def editable?
-   User.allowed_to?(*[[:read_systems], :organizations, nil,  self.organization.id]) ||
-      User.allowed_to?(*[[:read_systems], :environment, self.environment.id, self.organization])
+    environment.systems_editable?
   end
 
   def deletable?
-   User.allowed_to?(*[[:delete_systems], :organizations, nil,  self.organization.id]) ||
-      User.allowed_to?(*[[:delete_systems], :environment, self.environment.id, self.organization])
+    environment.systems_deletable?
+  end
+
+  def self.creatable? env, org
+    org ||= env.organization if env
+    ret = false
+    ret ||= User.allowed_to?([:create_systems], :organizations, nil, org) if org
+    ret ||= User.allowed_to?([:create_systems], :environments, env.id, org) if env
+    ret
   end
 
 

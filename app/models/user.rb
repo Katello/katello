@@ -202,7 +202,7 @@ class User < ActiveRecord::Base
 
     tags = [] if tags.nil?
     tags = [tags] unless tags.is_a? Array
-
+    tags = tags.collect {|t| t.to_s}
     tags_query = allowed_tags_query(verbs, resource_type, org)
 
     if tags.empty? || resource_type == :organizations
@@ -249,7 +249,7 @@ class User < ActiveRecord::Base
     return Organization.all if perms > 0
 
     perms = Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
-        where("roles_users.user_id = ?", self.id).where("organization_id NOT ?", nil)
+        where("roles_users.user_id = ?", self.id).where("organization_id is NOT null")
     #return the individual organizations
     perms.collect{|perm| perm.organization}.uniq
   end
@@ -342,6 +342,16 @@ class User < ActiveRecord::Base
 
   protected
 
+  def can_be_deleted?
+    query =  Permission.joins(:resource_type, :role).
+                                joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
+                                  where(:resource_types => {:name => :all}, :organization_id => nil)
+    is_superadmin = query.where("roles_users.user_id" => id).count > 0
+    return true unless is_superadmin
+    more_than_one_supers = query.count > 1
+    more_than_one_supers
+  end
+
   def own_role_included_in_roles
     unless own_role.nil?
       errors.add(:own_role, 'own role must be included in roles') unless roles.include? own_role
@@ -415,17 +425,6 @@ class User < ActiveRecord::Base
                   "left outer join verbs on verbs.id = permissions_verbs.verb_id").where({"roles_users.user_id" => id})
     return query.where(org_clause, org_hash) unless exclude_orgs_clause
     query
-  end
-
-
-  def can_be_deleted?
-    query =  Permission.joins(:resource_type, :role).
-                                joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
-                                  where(:resource_types => {:name => :all}, :organization_id => nil)
-    is_superadmin = query.where("roles_users.user_id" => id).count > 0
-    return true unless is_superadmin
-    more_than_one_supers = query.count > 1
-    more_than_one_supers
   end
 
 end

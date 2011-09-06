@@ -14,7 +14,12 @@ require 'spec_helper'
 
 describe Api::ActivationKeysController do
   include LoginHelperMethods
+  include AuthorizationHelperMethods
 
+  let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read_all, :activation_keys) } }
+  let(:user_without_read_permissions) { user_without_permissions }
+  let(:user_with_manage_permissions) { user_with_permissions { |u| u.can(:manage_all, :activation_keys) } }
+  let(:user_without_manage_permissions) { user_with_permissions { |u| u.can(:read_all, :activation_keys) } }
 
   before(:each) do
     login_user_api
@@ -65,6 +70,12 @@ describe Api::ActivationKeysController do
       ActivationKey.stub!(:where).and_return([@activation_key])
     end
 
+    let(:action) {:index }
+    let(:req) { get :index, :organization_id => '1234'  }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
     it "should retrieve organization" do
       Organization.should_receive(:first).once.with(hash_including(:conditions => {:cp_key => '1234'})).and_return(@organization)
       get :index, :organization_id => '1234'
@@ -84,6 +95,12 @@ describe Api::ActivationKeysController do
   context "show an activation key" do
     before { ActivationKey.stub!(:find).and_return(@activation_key) }
 
+    let(:action) {:show }
+    let(:req) { get :show, :id => '123'  }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
     it "should return json representation of the activation key" do
       get :show, :id => 123
       response.body.should == @activation_key.to_json
@@ -95,6 +112,12 @@ describe Api::ActivationKeysController do
       KTEnvironment.stub!(:find).and_return(@environment)
       ActivationKey.stub!(:find).and_return(@activation_key)
     end
+
+    let(:action) {:create }
+    let(:req) { post :create, :environment_id => 123, :activation_key => {:name => 'blah'} }
+    let(:authorized_user) { user_with_manage_permissions }
+    let(:unauthorized_user) { user_without_manage_permissions }
+    it_should_behave_like "protected action"
 
     it "should create an activation key" do
       ActivationKey.should_receive(:create!).once.with(hash_including(:name => 'blah')).and_return(@activation_key)
@@ -115,6 +138,12 @@ describe Api::ActivationKeysController do
       @activation_key.stub!(:update_attributes!).and_return(@activation_key)
     end
 
+    let(:action) {:update }
+    let(:req) { put :update, :id => 123, :activation_key => {:name => 'blah'} }
+    let(:authorized_user) { user_with_manage_permissions }
+    let(:unauthorized_user) { user_without_manage_permissions }
+    it_should_behave_like "protected action"
+
     it "should update activation key" do
       @activation_key.should_receive(:update_attributes!).once.with(hash_including(:name => 'blah')).and_return(@activation_key)
       put :update, :id => 123, :activation_key => {:name => 'blah'}
@@ -131,6 +160,12 @@ describe Api::ActivationKeysController do
       ActivationKey.stub!(:find).and_return(@activation_key)
       @activation_key.stub!(:destroy)
     end
+
+    let(:action) {:destroy }
+    let(:req) { delete :destroy, :id => 123 }
+    let(:authorized_user) { user_with_manage_permissions }
+    let(:unauthorized_user) { user_without_manage_permissions }
+    it_should_behave_like "protected action"
 
     it "should destroy activation key" do
       @activation_key.should_receive(:destroy).once

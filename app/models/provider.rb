@@ -77,7 +77,7 @@ class Provider < ActiveRecord::Base
   def self.list_tags org_id
     select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
-  
+
   def self.tags(ids)
     select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
   end
@@ -115,6 +115,14 @@ class Provider < ActiveRecord::Base
 
   def deletable?
     User.allowed_to?([:delete, :create], :providers, self.id, self.organization)
+  end
+
+  def serializable_hash(options={})
+    options = {} if options == nil
+    hash = super(options)
+    hash = hash.merge(:sync_state => self.sync_state,
+                      :last_sync => self.last_sync)
+    hash
   end
 
   protected
