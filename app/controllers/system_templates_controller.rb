@@ -36,6 +36,7 @@ class SystemTemplatesController < ApplicationController
       :auto_complete_package => read_test,
       :show => read_test,
       :edit => read_test,
+      :product_packages => read_test,
       :update => manage_test,
       :update_content => manage_test,
       :destroy => manage_test,
@@ -84,6 +85,30 @@ class SystemTemplatesController < ApplicationController
            :locals => {:template=>@template, :editable=> @template.editable? }
   end
 
+
+  def product_packages
+    @product = Product.find(params[:product_id])
+      @packages = []
+      @product.repos(current_organization.locker).each{|repo|
+        repo.packages.each{|pkg|
+          @packages << pkg.name
+        }
+      }
+
+
+    @packages.sort!
+    offset = params[:offset].to_i if params[:offset]
+
+    if offset
+      @packages = @packages[offset..offset+current_user.page_size]
+      render :text=>"" and return if @packages.empty?
+    else
+      @packages = @packages[0..current_user.page_size]
+    end
+
+    render :partial=>"product_packages"
+
+  end
 
   def update_content
     pkgs = params[:packages]
