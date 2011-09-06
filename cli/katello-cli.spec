@@ -5,7 +5,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.8
+Version:       0.1.9
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -65,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 06 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.9-1
+- cli - bumping cli version because of tito bug
+
 * Tue Sep 06 2011 Lukas Zapletal <lzap+git@redhat.com>
 - system test - moving cli_tests into cli/test-system
 - Fix missing import in CLI
