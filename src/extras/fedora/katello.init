@@ -16,13 +16,17 @@ fi
 prog=katello
 THIN=/usr/share/katello/script/thin
 RETVAL=0
+KATELLO_PREFIX=${KATELLO_PREFIX:-/katello}
 KATELLO_PORT=${KATELLO_PORT:-3000}
 KATELLO_USER=${KATELLO_USER:-katello}
+KATELLO_GROUP=${KATELLO_GROUP:-katello}
 KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
 KATELLO_DATA_DIR=${KATELLO_DATA_DIR:-/var/lib/katello}
 KATELLO_ENV=${KATELLO_ENV:-production}
 KATELLO_PID=${KATELLO_PID:-${KATELLO_HOME}/tmp/pids/server.pid}
 export KATELLO_LOGGING=${KATELLO_LOGGING:-info}
+
+export RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX
 
 check_privilege() {
     runuser -s /bin/sh ${KATELLO_USER} -c "echo x > /dev/null" 2> /dev/null || RETVAL=4
@@ -72,7 +76,7 @@ start() {
         # delete Gemfile.lock (it will be regenerated)
         rm -f $KATELLO_DATA_DIR/Gemfile.lock
         export HOME=
-        daemon $THIN start --user ${KATELLO_USER} --config /etc/katello/thin.yml > /var/log/katello/startup.log 2>&1 &
+        daemon $THIN start --user ${KATELLO_USER} --group ${KATELLO_GROUP} --config /etc/katello/thin.yml --prefix ${KATELLO_PREFIX} --rackup "${KATELLO_HOME}/config.ru" > /var/log/katello/startup.log 2>&1 &
         sleep 5s
         # </workaround>
         RETVAL=$?
