@@ -1,6 +1,7 @@
 
 %h2 #{_("Sync Status - Products") }
 = form_tag("sync", :method => :post, :remote => true, :id => 'sync_product_form') do
+  = hidden_field_tag 'sync_status_url', nil, 'data-url' => sync_management_product_status_path
   %table.products
     %thead
       %th #{_("Product")}

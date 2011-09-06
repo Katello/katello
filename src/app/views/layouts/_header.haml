@@ -6,6 +6,8 @@
   #loading.fr
     = image_tag('spinner_head.gif', :alt => _('Spinning Work Indicator'))
 .grid_13
+  = hidden_field_tag 'root_url', nil, 'data-url' => root_path
+  = hidden_field_tag 'get_notices_url', nil, 'data-url' => notices_get_new_path
   - if current_user
     -if current_organization
       %div.org
@@ -16,7 +18,6 @@
           %strong
             = current_user.username
       %li
-        %a{ :id => "unread_notices", :href => "/notices", :title => "System Notifications"}
-          #{current_user.user_notices.length}
+        = link_to current_user.user_notices.length, notices_path, :id => 'unread_notices', :title => _('System Notifications')
       %li.logout
         = link_to _("Logout"), logout_path, :method=>"POST"

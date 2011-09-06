@@ -1,3 +1,3 @@
-%div{:id=>"helptip-closed_#{key}", :class=>"helptip-close", :style=> current_user().helptip_enabled?(key) ? "display: none;": ""}
+%div{:id=>"helptip-closed_#{key}", :class=>"helptip-close", :style=> current_user().helptip_enabled?(key) ? "display: none;": "", 'data-url' => enable_helptip_users_path}
   .helptip-open-button
     &nbsp;

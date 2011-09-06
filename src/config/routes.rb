@@ -35,7 +35,7 @@ Src::Application.routes.draw do
   get "notices/note_count"
   get "notices/get_new"
   get "notices/auto_complete_search"
-  match 'notices/:id/details' => 'notices#details', :via => :get
+  match 'notices/:id/details' => 'notices#details', :via => :get, :as => 'notices_details'
   match 'notices' => 'notices#show', :via => :get
   match 'notices' => 'notices#destroy_all', :via => :delete
 
