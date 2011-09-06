@@ -41,6 +41,7 @@ class SystemsController < ApplicationController
       :subscriptions => read_system,
       :update_subscriptions => edit_system,
       :packages => read_system,
+      :more_packages => read_system,
       :update => edit_system,
       :edit => read_system,
       :show => read_system,
@@ -127,13 +128,17 @@ class SystemsController < ApplicationController
 
   def packages
     packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    packages = packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages}
+    packages = packages[0...current_user.page_size]
+    offset = current_user.page_size
+    render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages, :offset => offset}
   end
 
   def more_packages
-    packages = []
-    render :partial=>"more_packages", :locals=>{:system=>@system, :packages => packages}
+    offset = params[:offset].to_i
+    size = current_user.page_size
+    packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    packages = packages[offset...offset+size]
+    render :partial=>"more_packages", :locals=>{:system=>@system, :packages => packages, :offset=> offset}
   end
   
   def edit
