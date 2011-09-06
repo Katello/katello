@@ -152,6 +152,7 @@ Src::Application.routes.draw do
       get :products
       get :packages
       get :errata
+      get :system_templates
       get :repos
       get :distributions
       get :details

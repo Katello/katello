@@ -93,15 +93,20 @@ module BreadcrumbHelper
     def generate_content_breadcrumb
      bc = {}
      content_crumb_id = "content"
-     products_crumb_id = "products"   
+     products_crumb_id = "products"
+     templates_crumb_id = "templates"
      
      add_crumb_node!(bc, content_crumb_id, details_promotion_path(@environment.name) ,
          _("Content"), [], {:cache =>true, :content=>render(:partial=>"detail")})
      add_crumb_node!(bc, "all_errata", errata_promotion_path(@environment.name),
          _("All Errata"), [content_crumb_id], {:scrollable=>true})
+
      add_crumb_node!(bc, products_crumb_id, products_promotion_path(@environment.name),
          _("Products"), [content_crumb_id], {:cache=>true, :content=>render(:partial=>"products", :locals=>{:products=>@products, :changeset=>@changeset})})
-         
+
+
+     add_crumb_node!(bc, templates_crumb_id, system_templates_promotion_path(@environment.name),
+                              _("System Templates"), [content_crumb_id])
      for prod in @products
        product_id = product_bc_id(prod)
        #top of this product
@@ -125,13 +130,14 @@ module BreadcrumbHelper
                      _("Distributions"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
               
      end
+
      bc.to_json
     end
   
     def product_bc_id product
       "details_#{product.id}"
     end
-    
+
     def packages_bc_id product
       "packages_#{product.id}"
     end
