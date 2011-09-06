@@ -5,7 +5,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.7
+Version:       0.1.8
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -65,6 +65,32 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Sep 06 2011 Lukas Zapletal <lzap+git@redhat.com>
+- system test - moving cli_tests into cli/test-system
+- Fix missing import in CLI
+- Cli unit tests for package group categories
+- Cli unit tests for package groups
+- Cli support for package groups and package group categories
+- 730358 - repo discovery now uses asynchronous tasks - the route has been
+  changed to /organizations/ID/repositories/discovery/
+- Move the cli over to the public zanata server
+- cli packages - listing now same as rpm -q for system packages
+- 735038 - Storing an option as root fails when .katello does not exist
+- cli - disabled two pylint false alarms
+- cli - new behaviour of verbose/grep output switching - for printing single
+  item verbose is default - for printing collection of items grep is default -
+  can be forced by flags -v, -g or in the config file
+- repo cli - parameter --repo_id renamed to --id to make the cli uniform
+- cli - fix for format_date returning only current time
+- cli tests - files renamed according to pattern COMMAND_ACTION_test.py
+- cli tests - provider status test
+- cli tests - fixed typo in product status options test
+- cli tests - fixed test for provider sync
+- provider sync status - cli + api
+- cli tests - repo status
+- cli - fix for key error in getting error details from async tasks
+- Refactor providers - remove unused routes
+
 * Wed Aug 31 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.7-1
 - Scope products by readability scope
 - Refactor - move providers from OrganziationController
