@@ -54,8 +54,12 @@ var sliding_tree = function(tree_id, options) {
             render(id, newPanel);
         },
         render = function (id, newPanel) {
+            if (settings.breadcrumb[id] === undefined) {
+                id = settings.default_tab;
+            }
+
             var crumb = settings.breadcrumb[id];
-    
+
             if (crumb.client_render) {
                 settings.render_cb(id, function(html) {
                         newPanel.html(html);
@@ -148,6 +152,9 @@ var sliding_tree = function(tree_id, options) {
             $.bbq.pushState(bbq);        
         },
         reset_breadcrumb = function(id) {
+            if (settings.breadcrumb[id] === undefined) {
+                id = settings.default_tab;
+            }
             var trail = settings.breadcrumb[id].trail,
                 crumbs = trail,
                 html = '<ul>';
