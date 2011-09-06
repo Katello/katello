@@ -13,7 +13,7 @@ class katello::install {
   }
 
 	package{["katello", "katello-cli"]:
-    require => Yumrepo["fedora-katello"],
+    require => [Yumrepo["fedora-katello"],Class["pulp::install"],Class["candlepin::install"]],
     ensure  => installed
   }
 }

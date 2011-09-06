@@ -10,7 +10,7 @@ class candlepin::config {
     require => Postgres::Createuser[$candlepin::params::db_user],
   }
 
-  line {
+  common::line {
     "katellomodule":
       line    => "module.config.katello=org.fedoraproject.candlepin.katello.KatelloModule",
       file    => "/etc/candlepin/candlepin.conf",
