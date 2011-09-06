@@ -64,7 +64,7 @@ initdb()
   # clean pulp
   #echo 'db.dropDatabase();' | mongo pulp_database
   service mongod stop
-  rm -rf /var/lib/mongodb/pulp_database
+  rm -rf /var/lib/mongodb/pulp_database*
   service mongod start
   pulp-migrate
 
