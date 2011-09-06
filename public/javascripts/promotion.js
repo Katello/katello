@@ -13,7 +13,7 @@
 
 
 var promotion_page = (function($){
-    var types =             ["errata", "product", "package", "repo"],
+    var types =             ["errata", "product", "package", "repo", "template"],
         subtypes =          ["errata", "package", "repo"],
         changeset_queue =   [],
         changeset_data =    {},
@@ -361,6 +361,11 @@ var promotion_page = (function($){
             }
 
         },
+
+        reset_add_remove = function(type) {
+          var buttons = $('#list').find("a[class~=content_add_remove][data-type=" + type + "]");
+          buttons.html(i18n.add).removeClass('remove_' + type).addClass("add_" + type).show(); //reset all to 'add'
+        },
         /*
          *  Resets anything that is listed to have the correct button value
          *    if there is no changeset selected this will reset everything
@@ -387,8 +392,7 @@ var promotion_page = (function($){
                         });
                     }
                 } else{
-                    var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
-                    buttons.html(i18n.add).removeClass("remove_product").addClass("add_product").show();
+                  reset_add_remove("product");
                     $.each(current_changeset.getProducts(), function(index, product) {
                         $.each(buttons, function(button_index, button){
                             if( $(button).attr('id') === ('add_remove_product_' + product.id) ){ 
@@ -400,7 +404,8 @@ var promotion_page = (function($){
                             }
                         });
                     });
-                }
+                 reset_add_remove("template");
+               }
             } else {
                 disable_all(types);
             }

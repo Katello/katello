@@ -26,6 +26,7 @@ class PromotionsController < ApplicationController
     prod_test = lambda{ @environment.contents_readable? and @product.nil? ? true : @product.provider.readable? }
     {
       :show => show_test,
+      :system_templates => lambda{true},
       :packages => prod_test,
       :repos => prod_test,
       :errata => prod_test,
@@ -157,6 +158,12 @@ class PromotionsController < ApplicationController
     render :partial=>"distributions"
   end
 
+  def system_templates
+    # render the list of system_templates
+    render :partial=>"system_templates", :locals => {:system_templates => templates}
+  end
+
+
   private
 
   def find_environment
@@ -178,5 +185,10 @@ class PromotionsController < ApplicationController
     list.uniq
   end
 
+
+  def templates
+    @environment.system_templates || []
+  end
+  helper_method :templates
 
 end
