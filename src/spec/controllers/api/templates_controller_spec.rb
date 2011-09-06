@@ -22,21 +22,18 @@ describe Api::TemplatesController do
     @organization = Organization.new(:name => 'organization', :cp_key => 'organization')
     @organization.id = 1
 
-    @environment = KTEnvironment.new(:name => 'environment')
+    @environment = KTEnvironment.new(:name => 'environment', :locker => false)
     @environment.id = 1
-    @locker = KTEnvironment.new
+    @locker = KTEnvironment.new(:name => 'Locker', :locker => true)
     @locker.id = 2
 
     @organization.locker = @locker
+    @organization.environments << @locker
     @organization.environments << @environment
 
-    @tpl = SystemTemplate.new(:name => TEMPLATE_NAME, :environment => @environment)
+    @tpl = SystemTemplate.new(:name => TEMPLATE_NAME, :environment => @locker)
     SystemTemplate.stub(:find).and_return(@tpl)
     SystemTemplate.stub(:new).and_return(@tpl)
-
-   # KTEnvironment.stub(:find).with(@environment.id).and_return(@environment)
-   # KTEnvironment.stub(:find).with(@locker.id).and_return(@locker)
-
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
@@ -50,17 +47,17 @@ describe Api::TemplatesController do
   end
 
   describe "index" do
-    
+
     it 'should get a list of templates from specified environment ID' do
-      SystemTemplate.should_receive(:where).with("environment_id" => @environment.id).and_return([@tpl])
-      get 'index', :environment_id => @environment.id
+      SystemTemplate.should_receive(:where).with("environment_id" => @locker.id).and_return([@tpl])
+      get 'index', :environment_id => @locker.id
       response.should be_success
     end
-    
+
     it 'should not fail if no templates are found, but return an empty list' do
       @environment2 = KTEnvironment.new(:name => 'environment2')
       @environment2.id = 3
-      
+
       SystemTemplate.should_receive(:where).with("environment_id" => @environment2.id).and_return([])
       get 'index', :environment_id => @environment2.id
       response.should be_success
@@ -77,22 +74,33 @@ describe Api::TemplatesController do
 
 
   describe "create" do
+
+    it "should fail when creating in non-locker environment" do
+      post 'create', :template => to_create, :environment_id => @environment.id
+      SystemTemplate.should_not_receive(:new)
+      response.should_not be_success
+    end
+
     it "should call new and save!" do
-      KTEnvironment.stub(:find).and_return(@environment)
+      KTEnvironment.stub(:find).and_return(@locker)
 
       SystemTemplate.should_receive(:new).and_return(@tpl)
       @tpl.should_receive(:save!)
 
-      post 'create', :template => to_create, :environment_id => @environment.id
+      post 'create', :template => to_create, :environment_id => @locker.id
     end
   end
 
 
   describe "update" do
-    it 'should call update_attributes' do
-      #KTEnvironment.should_receive(:find).and_return(@environment)
-      #KTEnvironment.stub(:find).and_return(@environment)
+    it "should fail when updating in non-locker environment" do
+      @tpl.environment = @environment
+      put 'update_content', :id => TEMPLATE_ID
+      @tpl.should_not_receive(:update_attributes!)
+      response.should_not be_success
+    end
 
+    it 'should call update_attributes' do
       @tpl.should_receive(:update_attributes!).once
       put 'update', :id => TEMPLATE_ID, :template => {}
     end
@@ -100,6 +108,12 @@ describe Api::TemplatesController do
 
 
   describe "update_content" do
+
+    it "should fail when updating in non-locker environment" do
+      @tpl.environment = @environment
+      put 'update_content', :id => TEMPLATE_ID
+      response.should_not be_success
+    end
 
     it 'should call add_product' do
       @tpl.should_receive(:add_product).once
@@ -153,14 +167,19 @@ describe Api::TemplatesController do
       @temp_file.stub(:path).and_return("/a/b/c")
 
       File.stub(:new).and_return(@temp_file)
-      KTEnvironment.stub(:find).and_return(@environment)
+      KTEnvironment.stub(:find).and_return(@locker)
+    end
+
+    it "should fail when imporing into non-locker environment" do
+      post :import, :template_file => @temp_file, :environment_id => @environment.id
+      response.should_not be_success
     end
 
     it "should call import" do
       SystemTemplate.should_receive(:new).and_return(@tpl)
       @tpl.should_receive(:import).once
 
-      post :import, :template_file => @temp_file, :environment_id => @environment.id
+      post :import, :template_file => @temp_file, :environment_id => @locker.id
     end
   end
 
