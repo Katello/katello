@@ -20,7 +20,7 @@ package {"katello-cli":
 
 exec {"oauth":
         command => "/usr/share/katello/script/reset-oauth",
-        notify => [Service[tomcat6], Service[pulp-server]],
+        notify => [Service[tomcat6], Service[pulp-server], Service[httpd]],
         require => Package[katello]
 }
 
@@ -29,6 +29,10 @@ service {"tomcat6":
 }
 
 service {"pulp-server":
+        ensure => running
+}
+
+service {"httpd":
         ensure => running
 }
 

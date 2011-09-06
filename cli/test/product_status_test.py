@@ -17,13 +17,13 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.mock_options()
 
     def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['synchronize', '--name=product_1'])
+        self.assertRaises(Exception, self.action.process_options, ['status', '--name=product_1'])
 
     def test_missing_product_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['synchronize', '--org=ACME'])
+        self.assertRaises(Exception, self.action.process_options, ['status', '--org=ACME'])
 
     def test_no_error_if_org_and_product_provided(self):
-        self.action.process_options(['list', '--org=ACME', '--name=product_1'])
+        self.action.process_options(['status', '--org=ACME', '--name=product_1'])
         self.assertEqual(len(self.action.optErrors), 0)
 
         
@@ -67,9 +67,6 @@ class ProductStatusTest(CLIActionTestCase):
         self.action.run()
         self.action.api.last_sync_status.assert_called_once_with(self.PROD['id'])
 
-    def get_progress(self):
-        self.product['progress']
-
     def test_it_does_not_set_progress_for_not_running_sync(self):
         self.action.run()
         self.assertRaises(KeyError, lambda: self.product['progress'] )
@@ -77,7 +74,7 @@ class ProductStatusTest(CLIActionTestCase):
     def test_it_sets_progress_for_running_sync(self):
         self.mock(self.action.api, 'last_sync_status', test_data.SYNC_RUNNING_RESULT)
         self.action.run()
-        self.assertTrue(self.product['progress'], str)
+        self.assertTrue(isinstance(self.product['progress'], str))
 
         
 

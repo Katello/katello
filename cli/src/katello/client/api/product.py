@@ -35,11 +35,6 @@ class ProductAPI(KatelloAPI):
         products = self.server.GET(path, {"name": prodName} if prodName != None else {})[1]
         return products
 
-    def products(self):
-        path = "/api/products"
-        products = self.server.GET(path)[1]
-        return products
-
     def product_by_name(self, orgName, prodName):
         path = "/api/organizations/%s/products" % orgName
         products = self.server.GET(path, {"name": prodName})[1]

@@ -14,6 +14,9 @@ require 'resources/candlepin'
 
 class Api::CandlepinProxiesController < Api::ProxiesController
 
+  # TODO: define authorization rules
+  skip_before_filter :authorize
+
   def get
     r = ::Candlepin::Proxy.get(@request_path)
     render :text => r, :content_type => :json

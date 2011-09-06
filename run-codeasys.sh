@@ -9,6 +9,9 @@ which flog >/dev/null || gem install flog
 which flay >/dev/null || gem install flay
 which haml >/dev/null || gem install haml
 
+echo Checking for pylint
+which pylint >/dev/null || yum -y install pylint
+
 #check python syntax and stop on errors only
 PYTHONPATH=cli/src/ pylint katello -f html -d C0103,C0111,C0301,E1101,E1103 >reports/pylint-cli.html
 RESCODE=$?
@@ -43,7 +46,7 @@ echo Running flay
 find src/app src/lib -name \*.rb | xargs flay > reports/flay.txt
 
 echo Checking for source-highlight
-which source-highlight >/dev/null || (echo "Need: yum -y install source-highlight" && exit 1)
+which source-highlight >/dev/null || yum -y install source-highlight
 
 # require_dependency
 echo Checking for require_dependency

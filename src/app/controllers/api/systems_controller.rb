@@ -18,9 +18,29 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :upload_package_profile, :errata, :package_profile]
+  before_filter :authorize, :except => :activate
 
   skip_before_filter :require_user, :only => [:activate]
 
+  def rules
+    index_systems = lambda { System.any_readable?(@organization) }
+    create_system = lambda { System.creatable?(@environment, @organization) }
+    edit_system = lambda { @system.editable? }
+    read_system = lambda { @system.readable? }
+    delete_system = lambda { @system.deletable? }
+
+    {
+      :create => create_system,
+      :regenerate_identity_certificates => edit_system,
+      :update => edit_system,
+      :index => index_systems,
+      :show => read_system,
+      :destroy => delete_system,
+      :package_profile => read_system,
+      :errata => read_system,
+      :upload_package_profile => edit_system,
+    }
+  end
 
   def create
     system = System.create!(params.merge({:environment => @environment}))
@@ -61,10 +81,10 @@ class Api::SystemsController < Api::ApiController
     error_msg = "No systems found" if expected_params.empty?
     error_msg = "Couldn't find system '#{expected_params[:name]}'" unless expected_params.empty?
     unless @environment.nil?
-      systems = @environment.systems.where(expected_params)
+      systems = @environment.systems.readable(@organization).where(expected_params)
       raise HttpErrors::NotFound, _(error_msg + " in environment '#{@environment.name}'") if systems.empty?
     else
-      systems = @organization.systems.where(expected_params)
+      systems = @organization.systems.readable(@organization).where(expected_params)
       raise HttpErrors::NotFound, _(error_msg + " in organization '#{@organization.name}'") if systems.empty?
     end
     render :json => systems.to_json
@@ -115,6 +135,7 @@ class Api::SystemsController < Api::ApiController
 
     @environment = KTEnvironment.find(params[:environment_id])
     raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
+    @organization = @environment.organization
     @environment
   end
 

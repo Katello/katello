@@ -30,12 +30,12 @@ class SystemsController < ApplicationController
   def rules
     edit_system = lambda{System.find(params[:id]).editable?}
     read_system = lambda{System.find(params[:id]).readable?}
-    delete_system = lambda{ System.find(params[:id]).deletable? }
     env_system = lambda{@environment.systems_readable?}
+    any_readable = lambda{System.any_readable?(current_organization)}
 
     {
-      :index => lambda{true},
-      :items => lambda{true},
+      :index => any_readable,
+      :items => any_readable,
       :environments => env_system,
       :env_items => env_system,
       :subscriptions => read_system,
@@ -95,64 +95,49 @@ class SystemsController < ApplicationController
   end
 
   def subscriptions
-    all = @system.pools + @system.available_pools
-    consumed = @system.consumed_pool_ids
-    all_pools = all.collect {|pool| OpenStruct.new(:poolId => pool["id"], :poolName => pool["productName"])}
-    all_pools.sort! {|a,b| a.poolName <=> b.poolName}
-    render :partial=>"subscriptions", :layout => "tupane_layout", :locals=>{:system=>@system, :all_subs => all_pools,
-                                                        :consumed => consumed, :editable=>@system.editable?}
+    consumed_pools = sys_consumed_pools
+    avail_pools = sys_available_pools
 
+    render :partial=>"subscriptions", :layout => "tupane_layout", 
+                                      :locals=>{:system=>@system, :avail_subs => avail_pools,
+                                                :consumed_subs => consumed_pools, 
+                                                :editable=>@system.editable?}
   end
 
   def update_subscriptions
-    params[:system] = {"consumed_pool_ids"=>[]} unless params.has_key? :system
-    if @system.update_attributes(params[:system])
-      notice _("System subscriptions updated.")
-      render :nothing =>true
-    else
-      errors "Unable to update subscriptions."
-      render :nothing =>true
+    begin
+      if params.has_key? :system
+        params[:system].keys.each do |pool|
+          @system.subscribe pool, params[:spinner][pool] if params[:commit].downcase == "subscribe"
+          @system.unsubscribe pool if params[:commit].downcase == "unsubscribe"
+        end
+        consumed_pools = sys_consumed_pools
+        avail_pools = sys_available_pools
+        render :partial=>"subs_update", :locals=>{:system=>@system, :avail_subs => avail_pools,
+                                                    :consumed_subs => consumed_pools,
+                                                    :editable=>@system.editable?}
+        notice _("System subscriptions updated.")
+
+      end
+    rescue Exception => error
+      errors error.to_s, {:level => :message, :persist => false}
+      render :nothing => true
     end
-  end
-  
-  
-  def random rng, length = 8
-    o =  rng.map{|i| i.to_a}.flatten;  
-    (0..length-1).map{ o[rand(o.length)]  }.join
   end
 
-  def rand_alpha length = 8
-    random [('a'..'m'),('A'..'M')], length
-  end
-  def rand_alpha_2ndhalf length = 8
-    random [('n'..'z'),('n'..'Z')], length
-  end
-  def rand_num length = 6
-    random [(0..9)], length
-  end
   def packages
-    #packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    packages = []
-    25.times do
-      arch = ["x86_64","i686", "noarch"].choice
-      packages << OpenStruct.new(:nvrea=>"#{rand_alpha}-0.1.49-1.git.146.c#{rand_num}.fc15.#{arch}", :arch =>arch)
-    end
+    packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
     packages = packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
     render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages}
   end
 
   def more_packages
     packages = []
-    25.times do
-      arch = ["x86_64","i686", "noarch"].choice
-      packages << OpenStruct.new(:nvrea=>"#{rand_alpha_2ndhalf}-0.1.49-1.git.146.c#{rand_num}.fc15.#{arch}", :arch =>arch)
-    end
-    packages = packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
     render :partial=>"more_packages", :locals=>{:system=>@system, :packages => packages}
   end
   
   def edit
-     render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system, :editable=>@system.editable?}
+     render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system, :editable=>@system.editable?, :name=>controller_name}
   end  
 
   def update
@@ -188,8 +173,8 @@ class SystemsController < ApplicationController
   end    
 
   private
-  include SortColumnList
 
+  include SortColumnList
 
   def find_environment
     readable = KTEnvironment.systems_readable(current_organization)
@@ -208,10 +193,33 @@ class SystemsController < ApplicationController
                       :custom_rows => true,
                       :enable_create => false,
                       :enable_sort => true,
-                      :name => _('system'),
+                      :name => controller_name,
                       :list_partial => 'systems/list_systems',
                       :ajax_scroll => items_systems_path()}
   end
 
+  def sys_consumed_pools
+    consumed_pools = @system.pools.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
+                            :poolName => pool["productName"],
+                            :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                            :consumed => pool["consumed"],
+                            :quantity => pool["quantity"])}
+    consumed_pools.sort! {|a,b| a.poolName <=> b.poolName}
+    consumed_pools
+  end
+
+  def sys_available_pools
+    avail_pools = @system.available_pools.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
+                            :poolName => pool["productName"],
+                            :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                            :consumed => pool["consumed"],
+                            :quantity => pool["quantity"])}
+    avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
+    avail_pools
+  end
+
+  def controller_name
+    return _('system')
+  end
 
 end

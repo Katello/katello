@@ -50,6 +50,9 @@ function start_unless_running {
 echo "Stopping Katello instance"
 stop_if_running katello
 
+echo "Stopping Katello jobs instance"
+stop_if_running katello-jobs
+
 echo "Stopping Pulp instance"
 stop_if_running pulp-server
 
@@ -81,5 +84,8 @@ $SRV katello initdb
 
 echo "Starting Katello instance"
 $SRV katello start
+
+echo "Starting Katello jobs instance"
+$SRV katello-jobs start
 
 echo "DONE. CHECK ALL THE MESSAGES ABOVE!"

@@ -14,6 +14,22 @@ class Api::ChangesetsController < Api::ApiController
 
   before_filter :find_environment, :only => [:index, :create]
   before_filter :find_changeset, :only => [:show, :destroy, :update_content, :promote]
+  before_filter :authorize
+
+  def rules
+    read_perm = lambda{@environment.changesets_readable?}
+    manage_perm = lambda{@environment.changesets_manageable?}
+    promote_perm = lambda{@environment.changesets_promotable?}
+    {
+      :index => read_perm,
+      :show => read_perm,
+      :create => manage_perm,
+      :promote => promote_perm,
+      :destroy =>manage_perm,
+      :update_content => manage_perm,
+    }
+  end 
+
   respond_to :json
 
   def index
@@ -76,6 +92,7 @@ class Api::ChangesetsController < Api::ApiController
   def find_changeset
     @changeset = Changeset.find(params[:id])
     raise HttpErrors::NotFound, _("Couldn't find changeset '#{params[:id]}'") if @changeset.nil?
+    @environment = @changeset.environment
     @changeset
   end
 

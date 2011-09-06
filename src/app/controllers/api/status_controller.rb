@@ -13,6 +13,7 @@
 class Api::StatusController < Api::ApiController
 
   skip_before_filter :require_user
+  skip_before_filter :authorize
 
   def memory
     User.as :admin do

@@ -92,4 +92,11 @@ class Config(object):
             value = Config.parser.get('options', option)
             opt.set('options', option, value)
 
+        Config.ensure_dir(Config.USER_OPTIONS)
         opt.write(open(Config.USER_OPTIONS, 'w'))
+
+    @staticmethod
+    def ensure_dir(f):
+        d = os.path.dirname(f)
+        if not os.path.exists(d):
+            os.makedirs(d)

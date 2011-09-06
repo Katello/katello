@@ -32,9 +32,12 @@ module Glue::Provider
     def sync
       Rails.logger.info "Syncing provider #{name}"
       self.products.collect do |p|
-        Rails.logger.info "Syncing product #{p.name}"
         p.sync
       end.flatten
+    end
+
+    def synced?
+      self.products.any? { |p| p.synced? }
     end
 
     #get last sync status of all repositories in this provider
@@ -42,6 +45,69 @@ module Glue::Provider
       self.products.collect do |p|
         p.latest_sync_statuses()
       end.flatten
+    end
+
+    # Get the most relavant status for all the repos in this Provider
+    def sync_status
+      statuses = self.products.reject{|r| r.empty?}.map{|r| r.sync_status()}
+      return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
+
+      #if any of repos sync still running -> provider sync running
+      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::RUNNING.to_s end
+      return statuses[idx] if idx != nil
+
+      #else if any of repos not synced -> provider not synced
+      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::NOT_SYNCED.to_s end
+      return statuses[idx] if idx != nil
+
+      #else if any of repos sync cancelled -> provider sync cancelled
+      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::CANCELLED.to_s end
+      return statuses[idx] if idx != nil
+
+      #else if any of repos sync finished with error -> provider sync finished with error
+      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::ERROR.to_s end
+      return statuses[idx] if idx != nil
+
+      #else -> all finished
+      return statuses[0]
+    end
+
+    def sync_state
+      self.sync_status().state
+    end
+
+    def sync_start
+      start_times = Array.new
+      for p in self.products
+        start = p.sync_start
+        start_times << start unless start.nil?
+      end
+      start_times.sort!
+      start_times.last
+    end
+
+    def sync_finish
+      finish_times = Array.new
+      for r in self.products
+        finish = r.sync_finish
+        finish_times << finish unless finish.nil?
+      end
+      finish_times.sort!
+      finish_times.last
+    end
+
+    def sync_size
+      size = self.products.inject(0) { |sum,v| sum + v.sync_status.progress.total_size }
+    end
+
+    def last_sync
+      sync_times = Array.new
+      for p in self.products
+        sync = p.last_sync
+        sync_times << sync unless sync.nil?
+      end
+      sync_times.sort!
+      sync_times.last
     end
 
     def cancel_sync

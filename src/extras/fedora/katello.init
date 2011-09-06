@@ -36,6 +36,16 @@ check_privilege() {
     fi
 }
 
+check_permissions() {
+    if [ -f "$KATELLO_PID" ] && [ "$(stat -c %U $KATELLO_PID)" != "$KATELLO_USER" ]; then
+        echo "Incorrect permissions, please do not run katello as root"
+        echo "Correct permission of all log files and pid file to 'katello' user:"
+        echo "chown katello:katello $KATELLO_PID"
+        echo "chown -R katello:katello $KATELLO_DATA_DIR"
+        exit 1
+    fi
+}
+
 status() {
     #check if pid file exists
     if [ -f ${KATELLO_PID} ]; then
@@ -63,6 +73,7 @@ status_q() {
 
 start() {
     check_privilege
+    check_permissions
 
     [ ! -f $KATELLO_DATA_DIR/initdb_done ] && echo "Please run initdb first" && echo_failure && return 1
 
@@ -72,6 +83,8 @@ start() {
         RETVAL=0
         echo_success
     else
+        # the pid file is stored under katello user - delete it (user might run it as root)
+        rm -f $KATELLO_PID
         cd ${KATELLO_HOME} #rails expects you to run from the root of the app
         # delete Gemfile.lock (it will be regenerated)
         rm -f $KATELLO_DATA_DIR/Gemfile.lock
