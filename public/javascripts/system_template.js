@@ -468,7 +468,7 @@ KT.actions =  (function(){
                         data: {name:req.term},
                         cache: false,
                         success: function(data){
-                            response_cb(data);
+                            response_cb(data.splice(0, 20)); //only show 20 packages at a time
                         },
                         error: KT.templates.throw_error
                     });
