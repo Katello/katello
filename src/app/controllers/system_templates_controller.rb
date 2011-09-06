@@ -96,7 +96,7 @@ class SystemTemplatesController < ApplicationController
       }
 
 
-    @packages.sort!
+    @packages.sort!.uniq!
     offset = params[:offset].to_i if params[:offset]
 
     if offset

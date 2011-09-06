@@ -25,6 +25,7 @@
       "save" : '#{_("Save")}',
       "saving" : '#{_("Save")}',
       "default_search_text": '#{_("Search available package names...")}',
+      "modify_message": '#{_('The current template "$TEMPLATE" has been modified.  Would you like to save the changes?')}'
 
       });
 
@@ -104,3 +105,8 @@
 
 #error_dialog{:style=>"display: none"}
   = _("An error has occured when communicating with the server, please refresh the page to retrieve the current System Template")
+
+#modified_dialog{:style=>"display: none"}
+  %div.text
+  %input#discard_dialog.button.fr{:type => "button", :value=>"#{('Discard Changes')}"}
+  %input#save_dialog.button.fr{:type => "button", :value=>"#{('Save Changes')}"}

@@ -27,7 +27,10 @@ KT.templates = function() {
         add: undefined,
         edit: undefined,
         remove: undefined,
-        save: undefined
+        save: undefined,
+        discard_dialog: undefined,
+        save_dialog: undefined
+
     },
     fetch_template = function(template_id, callback) {
         $("#tree_loading").css("z-index", 300);
@@ -133,6 +136,7 @@ KT.templates = function() {
             buttons.edit.addClass("disabled");
             buttons.remove.addClass("disabled");
             buttons.save.addClass("disabled");
+            $('.content_add_remove').hide();
         }
         else {
             buttons.edit.removeClass("disabled");
@@ -143,7 +147,7 @@ KT.templates = function() {
             else {
                 buttons.save.addClass("disabled");
             }
-            $('.content_add_remove').not('.working').text(i18n.add_plus); //reset all add/remove to add
+            $('.content_add_remove').not('.working').show().text(i18n.add_plus); //reset all add/remove to add
             $.each(KT.options.current_template.packages, function(index, item){
                 var btn = $('a[data-name=' + item.name + ']').not('.working');
                 if (btn.length > 0) {
@@ -227,24 +231,39 @@ KT.template_renderer = function() {
     render_hash = function(hash_id, render_cb) {
         var node = hash_id.split('_')[0];
         var template_id = hash_id.split('_')[1];
+        var curr_t = KT.options.current_template;
+        var modified = false;
 
-        template_check(template_id, function() {
-            var content = "";
-            if (hash_id === "templates") {
-                content = template_list();
-            }
-            else if(node === "details") {
-                content = details(template_id);
-            }
-            else if (node === "packages") {
-                content = packages();
-            }
-            else {
-                console.log("Can't render: " +  id);
-            }
-            render_cb(content);
-        });
+        if(curr_t && (hash_id === "templates" ||  template_id + "" !== curr_t.id + "")) {
+            modified = curr_t.modified;
+        }
 
+        var after_cb = function() {
+            template_check(template_id, function() {
+                var content = "";
+                if (hash_id === "templates") {
+                    content = template_list();
+                }
+                else if(node === "details") {
+                    content = details(template_id);
+                }
+                else if (node === "packages") {
+                    content = packages();
+                }
+                else {
+                    console.log("Can't render: " +  id);
+                }
+                render_cb(content);
+            });
+        };
+        if (modified) {
+            KT.actions.open_modified_dialog(function(){
+                KT.templates.buttons.save.click();
+            }, after_cb);
+        }
+        else {
+            after_cb();
+        }
     },
     list_item = function(id, text, is_slide_link) {
         var html = '<li class="' + (is_slide_link ? 'slide_link' : '')  + '">';
@@ -342,6 +361,28 @@ KT.actions =  (function(){
         buttons.edit.find(".text").text(text);
 
         return {};
+    },
+    close_modified_dialog = function() {
+        $("#modified_dialog").dialog('close');
+         buttons.save_dialog.unbind('click');
+        buttons.save_dialog.unbind('click');
+    },
+    open_modified_dialog = function(save_cb, next_cb) {
+        var text = i18n.modify_message;
+        text = text.replace("$TEMPLATE", options.current_template.name);
+        
+       $("#modified_dialog").dialog('open');
+       $("#modified_dialog").find(".text").text(text);
+
+       buttons.save_dialog.click(function() {
+           close_modified_dialog();
+           save_cb();
+           next_cb();
+       });
+       buttons.discard_dialog.click(function() {
+           close_modified_dialog();
+           next_cb();
+       });
     },
     toggle_list = {
             'edit_template_container'   :  toggle_edit,
@@ -534,7 +575,8 @@ KT.actions =  (function(){
     return {
         toggle_list: toggle_list,
         register_events: register_events,
-        register_autocomplete: register_autocomplete
+        register_autocomplete: register_autocomplete,
+        open_modified_dialog: open_modified_dialog
     };
 })();
 
@@ -596,6 +638,12 @@ $(document).ready(function() {
     buttons.add = $("#add_template");
     buttons.remove = $("#remove_template");
     buttons.save = $("#save_template");
+    buttons.save_dialog = $("#save_dialog");
+    buttons.discard_dialog = $("#discard_dialog");
+
+    $("#modified_dialog").dialog({modal: true, width: 400, autoOpen: false});
+
+
 
     KT.options.templates = KT.template_breadcrumb["templates"].templates
 
@@ -606,6 +654,7 @@ $(document).ready(function() {
                             base_icon       :  'home_img',
                             enable_search   :  false,
                             tab_change_cb   :  function(hash_id) {
+                                KT.templates.reset_page();
                             }
                         });
 
