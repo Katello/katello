@@ -22,7 +22,7 @@ from katello.client.api.template import TemplateAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import system_exit, is_valid_record, get_abs_path, run_spinner_in_bg, wait_for_async_task
-from katello.client.api.utils import get_environment, get_template
+from katello.client.api.utils import get_locker, get_environment, get_template
 
 try:
     import json
@@ -72,7 +72,8 @@ class List(TemplateAction):
 
         environment = get_environment(orgName, envName)
 
-        if not environment: return os.EX_OK
+        if not environment:
+            return os.EX_DATAERR
         templates = self.api.templates(environment["id"])
 
         if not templates:
@@ -144,8 +145,6 @@ class Import(TemplateAction):
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev (Locker by default)"))
         self.parser.add_option("--file", dest="file",
                                help=_("path to the template file (required)"))
         self.parser.add_option("--description", dest="description",
@@ -160,24 +159,26 @@ class Import(TemplateAction):
     def run(self):
         desc    = self.get_option('description')
         orgName = self.get_option('org')
-        envName = self.get_option('env')
         tplPath = self.get_option('file')
 
+        env = get_locker(orgName)
+        if env == None: 
+            return os.EX_DATAERR
+
         try:
-            f = open(get_abs_path(tplPath))
+            f = self.open_file(tplPath)
         except:
             print _("File %s does not exist" % tplPath)
             return os.EX_IOERR
-
-        env = get_environment(orgName, envName)
-        if env != None:
-            response = run_spinner_in_bg(self.api.import_tpl, (env["id"], desc, f), message=_("Importing template, please wait... "))
-            print response
-            f.close()
-            return os.EX_OK
-        else:
-            f.close()
-            return os.EX_DATAERR
+            
+        response = run_spinner_in_bg(self.api.import_tpl, (env["id"], desc, f), message=_("Importing template, please wait... "))
+        print response
+        f.close()
+        return os.EX_OK
+        
+    def open_file(self, path):
+        return open(get_abs_path(tplPath))
+                    
 
 # ==============================================================================
 class Create(TemplateAction):
@@ -192,8 +193,6 @@ class Create(TemplateAction):
                                help=_("name of the parent template"))
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--environment', dest='env',
-                               help=_("target environment name eg: dev (Locker by default)"))
         self.parser.add_option("--description", dest="description",
                                help=_("template description"))
 
@@ -207,13 +206,12 @@ class Create(TemplateAction):
         name    = self.get_option('name')
         desc    = self.get_option('description')
         orgName = self.get_option('org')
-        envName = self.get_option('env')
         parentName = self.get_option('parent')
 
-        env = get_environment(orgName, envName)
+        env = get_locker(orgName)
         if env != None:
             if parentName != None:
-                parentId = self.get_parent_id(orgName, env['name'] ,parentName)
+                parentId = self.get_parent_id(orgName, env['name'], parentName)
             else:
                 parentId = None
 
@@ -222,7 +220,7 @@ class Create(TemplateAction):
                 print _("Successfully created template [ %s ]") % template['name']
                 return os.EX_OK
             else:
-                print _("Could not create template [ %s ]") % template['name']
+                print _("Could not create template [ %s ]") % name
                 return os.EX_DATAERR
         else:
             return os.EX_DATAERR
@@ -240,8 +238,6 @@ class Update(TemplateAction):
                                help=_("name of the parent template"))
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev (required)"))
         self.parser.add_option('--new_name', dest='new_name',
                                help=_("new template name"))
         self.parser.add_option("--description", dest="description",
@@ -250,21 +246,22 @@ class Update(TemplateAction):
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
-        self.require_option('env')
 
     def run(self):
         tplName = self.get_option('name')
         orgName = self.get_option('org')
-        envName = self.get_option('env')
         newName = self.get_option('new_name')
         desc    = self.get_option('description')
         parentName = self.get_option('parent')
 
+        env = get_locker(orgName)
+        if env == None:
+            return os.EX_DATAERR
 
-        template = get_template(orgName, envName, tplName)
+        template = get_template(orgName, env["name"], tplName)
         if template != None:
             if parentName != None:
-                parentId = self.get_parent_id(orgName, envName, parentName)
+                parentId = self.get_parent_id(orgName, env["name"], parentName)
             else:
                 parentId = None
             self.api.update(template["id"], newName, desc, parentId)
@@ -296,8 +293,6 @@ class UpdateContent(TemplateAction):
                                help=_("template name (required)"))
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
-        self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev (Locker by default)"))
 
         #add all actions
         actionParams = set()
@@ -329,10 +324,12 @@ class UpdateContent(TemplateAction):
     def run(self):
         tplName = self.get_option('name')
         orgName = self.get_option('org')
-        envName = self.get_option('env')
 
+        env = get_locker(orgName)
+        if env == None:
+            return os.EX_DATAERR
 
-        template = get_template(orgName, envName, tplName)
+        template = get_template(orgName, env['name'], tplName)
 
         if template != None:
             updateParams = {}
@@ -388,11 +385,12 @@ class Promote(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev (Locker by default)"))
+                               help=_("environment name eg: dev"))
 
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
+        self.require_option('env', '--environment')
 
     def run(self):
         tplName = self.get_option('name')
@@ -400,11 +398,10 @@ class Promote(TemplateAction):
         envName = self.get_option('env')
 
         template = get_template(orgName, envName, tplName)
-        if template != None:
-            try:
-                task = self.api.promote(template["id"])
-            except Exception,e:
-                system_exit(os.EX_DATAERR, _("Error: %s" % e))
+        if template == None:
+            return os.EX_DATAERR
+        
+        task = self.api.promote(template["id"])
 
         result = run_spinner_in_bg(wait_for_async_task, [task])
 

@@ -32,6 +32,7 @@ def get_organization(orgName):
         print _("Could not find organization [ %s ]") % orgName
 
     return org
+    
 
 def get_environment(orgName, envName=None):
     environment_api = EnvironmentAPI()
@@ -46,6 +47,10 @@ def get_environment(orgName, envName=None):
         print _("Could not find environment [ %s ] within organization [ %s ]") % (envName, orgName)
     return env
 
+
+def get_locker(orgName):
+    return get_environment(orgName, None)
+    
 
 def get_product(orgName, prodName):
     product_api = ProductAPI()
