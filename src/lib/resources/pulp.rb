@@ -330,7 +330,7 @@ module Pulp
     class << self
       def all repo_id
         response = get path(repo_id), self.default_headers
-        JSON.parse(response.body)
+        JSON.parse(response.body).with_indifferent_access
       end
 
       def path repo_id
@@ -343,7 +343,7 @@ module Pulp
     class << self
       def all repo_id
         response = get path(repo_id), self.default_headers
-        JSON.parse(response.body)
+        JSON.parse(response.body).with_indifferent_access
       end
 
       def path repo_id

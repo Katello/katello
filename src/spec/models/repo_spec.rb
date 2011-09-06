@@ -256,6 +256,32 @@ describe Glue::Pulp::Repo do
     end
   end
 
+  describe "#package_groups" do
+    before { Pulp::PackageGroup.stub(:all => RepoTestData::REPO_PACKAGE_GROUPS) }
+    it "should call pulp layer" do
+      Pulp::PackageGroup.should_receive(:all).with(RepoTestData::REPO_PROPERTIES[:id])
+      @repo.package_groups
+    end
+
+    it "should find a repo by attr" do
+      @repo.package_groups(:name => "katello").should_not be_empty
+      @repo.package_groups(:name => "non-existing").should be_empty
+    end
+  end
+
+  describe "#package_group_categories" do
+    before { Pulp::PackageGroupCategory.stub(:all => RepoTestData::REPO_PACKAGE_GROUP_CATEGORIES) }
+    it "should call pulp layer" do
+      Pulp::PackageGroupCategory.should_receive(:all).with(RepoTestData::REPO_PROPERTIES[:id])
+      @repo.package_group_categories
+    end
+
+    it "should find a repo by attr" do
+      @repo.package_group_categories(:name => "Development").should_not be_empty
+      @repo.package_group_categories(:name => "non-existing").should be_empty
+    end
+  end
+
 end
 
 
