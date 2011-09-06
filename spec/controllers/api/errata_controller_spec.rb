@@ -14,6 +14,7 @@ require 'spec_helper.rb'
 
 describe Api::ErrataController do
   include LoginHelperMethods
+  include AuthorizationHelperMethods
 
   before(:each) do
     login_user_api

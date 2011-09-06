@@ -45,7 +45,7 @@ module LoginHelperMethods
 
   def login_user_api user=nil
     @mock_user = user
-    @mock_user ||= mock(User).as_null_object
+    @mock_user ||= mock_model(User, :username=>"test_mock_user", :password=>"Password", :page_size=>25).as_null_object
     request.env['warden'] = mock(Warden, :user => @mock_user, :authenticate => @mock_user, :authenticate! => @mock_user)
     controller.stub!(:require_user).and_return({})
     controller.stub!(:current_user).and_return(@mock_user)

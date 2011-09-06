@@ -12,6 +12,6 @@ test('localize_i18n', function() {
 })
 
 test('escapeSelector', function() {
-  var val = common.escapeId("#my.val");
+  var val = KT.common.escapeId("#my.val");
   ok(val.indexOf("\\") != -1, "properly escape Jquery selectors");
 })

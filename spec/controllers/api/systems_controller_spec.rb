@@ -17,6 +17,7 @@ describe Api::SystemsController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include SystemHelperMethods
+  include AuthorizationHelperMethods
 
   let(:facts) { {"distribution.name" => "Fedora"} }
   let(:uuid) { '1234' }
@@ -30,6 +31,15 @@ describe Api::SystemsController do
      {"epoch" => 0, "name" => "gtk-vnc", "arch" => "x86_64", "version" => "0.4.2", "vendor" => "Fedora Project", "release" => "4.fc14"}]
   }
   let(:sorted) { package_profile.sort {|a,b| a["name"].downcase <=> b["name"].downcase} }
+
+  let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) } }
+  let(:user_without_read_permissions) { user_without_permissions }
+  let(:user_with_create_permissions) { user_with_permissions { |u| u.can([:create_systems], :environments, @environment_1.id, @organization) } }
+  let(:user_without_create_permissions) { user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) } }
+  let(:user_with_update_permissions) { user_with_permissions { |u| u.can([:read_systems, :update_systems], :organizations, nil, @organization) } }
+  let(:user_without_update_permissions) { user_without_permissions }
+  let(:user_with_destroy_permissions) { user_with_permissions { |u| u.can([:delete_systems], :organizations, nil, @organization) } }
+  let(:user_without_destroy_permissions) { user_with_permissions { |u| u.can([:read_systems], :organizations, nil, @organization) } }
 
   before (:each) do
     login_user
@@ -47,6 +57,13 @@ describe Api::SystemsController do
   end
 
   describe "create a system" do
+
+    let(:action) { :create }
+    let(:req) { post :create, :owner => @organization.name, :name => 'test', :cp_type => 'system', :facts => facts }
+    let(:authorized_user) { user_with_create_permissions }
+    let(:unauthorized_user) { user_without_create_permissions }
+    it_should_behave_like "protected action"
+
     it "requires either environment_id, owner, or organization_id to be specified" do
       post :create
       response.code.should == "400"
@@ -145,6 +162,12 @@ describe Api::SystemsController do
       @system_2 = System.create!(:name => 'test', :environment => @environment_2, :cp_type => 'system', :facts => facts)
     end
 
+    let(:action) { :index }
+    let(:req) { get :index, :owner => @organization.cp_key }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
     it "requires either organization_id, owner, or environment_id" do
       get :index
       response.code.should == "400"
@@ -168,22 +191,40 @@ describe Api::SystemsController do
   end
   
   describe "upload package profile" do
-    it "successfully" do
+
+    before(:each) do
       @sys = System.new(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
-      
-      Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
       System.stub!(:first).and_return(@sys)
+    end
+
+    let(:action) { :upload_package_profile }
+    let(:req) { put :upload_package_profile, :id => uuid, :_json => package_profile }
+    let(:authorized_user) { user_with_update_permissions }
+    let(:unauthorized_user) { user_without_update_permissions }
+    it_should_behave_like "protected action"
+
+    it "successfully" do
+      Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
       put :upload_package_profile, :id => uuid, :_json => package_profile
       response.body.should == @sys.to_json
     end
   end
   
   describe "view packages in a specific system" do
-    it "successfully" do
-      @sys = System.new(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
 
-      @sys.should_receive(:package_profile).once.and_return(package_profile)
+    before(:each) do
+      @sys = System.new(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
       System.stub!(:first).and_return(@sys)
+    end
+ 
+    let(:action) { :package_profile }
+    let(:req) { get :package_profile, :id => uuid }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
+    it "successfully" do
+      @sys.should_receive(:package_profile).once.and_return(package_profile)
       get :package_profile, :id => uuid
       response.body.should == sorted.to_json
       response.should be_success
@@ -196,6 +237,12 @@ describe Api::SystemsController do
       Candlepin::Consumer.stub!(:get).and_return({:uuid => uuid})
       System.stub!(:first).and_return(@sys)
     end
+
+    let(:action) { :update }
+    let(:req) { post :update, :id => uuid, :name => "foo_name" }
+    let(:authorized_user) { user_with_update_permissions }
+    let(:unauthorized_user) { user_without_update_permissions }
+    it_should_behave_like "protected action"
     
     it "should change the name" do
       Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true)
@@ -224,6 +271,12 @@ describe Api::SystemsController do
       @system = System.new(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
       System.stub!(:first).and_return(@system)
     end
+
+    let(:action) { :errata }
+    let(:req) { get :errata, :id => @system.uuid }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
 
     it "should find System" do
       System.should_receive(:first).once.with(hash_including(:conditions => {:uuid => @system.uuid})).and_return(@system)

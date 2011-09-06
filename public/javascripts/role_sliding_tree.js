@@ -358,7 +358,7 @@ var roleActions = (function($){
                                 onsuccess   :  function(data) {
                                       var parsed = $.parseJSON(data);
                                       roles_breadcrumb.roles.name = parsed.name;
-                                      $('#list #' + $('#role_id').val() + ' .column_1').html(parsed.name);
+                                      $('#list #role_' + $('#role_id').val() + ' .column_1').html(parsed.name);
                                       $('.edit_name_text').html(parsed.name);
                                       $('#roles').html(parsed.name + " \u2002\u00BB\u2002");
                                 }
@@ -900,7 +900,7 @@ var pageActions = (function($){
             
             $('#remove_role').live('click', function(){
                 var button = $(this);
-                common.customConfirm(button.attr('data-confirm-text'), function(){
+                KT.common.customConfirm(button.attr('data-confirm-text'), function(){
                     roleActions.removeRole(button);
                 });         
             });

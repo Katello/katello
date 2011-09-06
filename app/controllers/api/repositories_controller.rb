@@ -16,7 +16,12 @@ class Api::RepositoriesController < Api::ApiController
   respond_to :json
   before_filter :find_repository, :only => [:show]
   before_filter :find_product, :only => [:create]
-  
+  before_filter :find_organization, :only => [:discovery]
+  before_filter :fake_find_repository, :only => [:package_groups, :package_group_categories]
+
+  # TODO: define authorization rules
+  skip_before_filter :authorize
+
   def create
     content = @product.add_new_content(params[:name], params[:url], 'yum')
     render :json => content
@@ -33,21 +38,33 @@ class Api::RepositoriesController < Api::ApiController
 
   # proxy repository discovery call to pulp, so we don't have to create an async task to keep track of async task on pulp side
   def discovery
-    r = ::Pulp::Proxy.post('/services/discovery/repo/', @_request.body)
+    pulp_task = Pulp::Repository.start_discovery(params[:url], params[:type])
+    task = PulpSyncStatus.using_pulp_task(pulp_task) {|t| t.organization = @organization}
+    task.save!
+    render :json => task
+  end
+
+  def package_groups
+    r = @repository.package_groups
     render :json => r
   end
 
-  def discovery_status
-    r = ::Pulp::Proxy.get("/services/discovery/repo/#{params[:id]}/")
-    render :json => r
+  def package_group_categories
+    c = @repository.package_group_categories
+    render :json => c
   end
-  
+
   def find_repository
     @repository = Glue::Pulp::Repo.find params[:id]
     raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:id]}'") if @repository.nil?
     @repository
   end
-  
+
+  # Doesn't call Pulp really - used for loading asslociated resources
+  def fake_find_repository
+    @repository = Glue::Pulp::Repo.new :id => params[:id]
+  end
+
   def find_product
     @product = Product.find_by_cp_id params[:product_id]
     raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:product_id]}'") if @product.nil?

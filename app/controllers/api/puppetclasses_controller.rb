@@ -12,6 +12,9 @@
 
 class Api::PuppetclassesController < Api::ApiController
 
+  # TODO: define authorization rules
+  skip_before_filter :authorize
+
   def index
     @klasses = Puppetclasses.all
     respond_to do |format|

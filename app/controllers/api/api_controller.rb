@@ -29,8 +29,12 @@ class Api::ApiController < ActionController::Base
   rescue_from HttpErrors::NotFound, :with => proc { |e| render_wrapped_exception(404, e) }
   rescue_from HttpErrors::BadRequest, :with => proc { |e| render_wrapped_exception(400, e) }
 
+  rescue_from Errors::SecurityViolation, :with => :render_403
+  rescue_from Errors::ConflictException, :with => proc { |e| render_exception(409, e) }
+
   # support for session (thread-local) variables must be the last filter in this class
   include Katello::ThreadSession::Controller
+  include AuthorizationRules
 
   def set_locale
     hal = request.env['HTTP_ACCEPT_LANGUAGE']
@@ -71,6 +75,10 @@ class Api::ApiController < ActionController::Base
   def exception_with_response(exception)
     logger.error "exception when talking to a remote client: #{exception.message} " << pp_exception(exception)
     render :text => pp_exception(exception) , :status => exception.http_code
+  end
+
+  def render_403(e)
+    render :text => pp_exception(e) , :status => 403
   end
 
   def invalid_record(exception)

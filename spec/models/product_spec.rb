@@ -60,7 +60,7 @@ describe Product do
           expected_product = {
               :attributes => ProductTestData::PRODUCT_WITH_ATTRS[:attributes],
               :multiplier => ProductTestData::PRODUCT_WITH_ATTRS[:multiplier],
-              :name => @provider.name+"_"+ProductTestData::PRODUCT_WITH_ATTRS[:name]
+              :name => ProductTestData::PRODUCT_WITH_ATTRS[:name]
           }
 
           Candlepin::Product.should_receive(:create).once.with(hash_including(expected_product)).and_return({:id => 1})
@@ -194,6 +194,20 @@ describe Product do
       it "should be the same as content id for cloned repository" do
         @p.repo_id("#{ProductTestData::PRODUCT_ID}-123-root-#{ProductTestData::ORG_ID}").should == "#{ProductTestData::PRODUCT_ID}-123-root-#{ProductTestData::ORG_ID}"
       end
+    end
+
+    describe "add repo" do
+      context "when there is a repo with the same name for the product" do
+        before do
+          @repo_name = "repo"
+        end
+
+        it "should raise conflict error" do
+          @p.should_receive(:repos).with(@p.locker, {:name => "repo"}).and_return([Glue::Pulp::Repo.new(:id => "123")])
+          lambda { @p.add_new_content("repo", "http://test/repo","yum") }.should raise_error(Errors::ConflictException)
+        end
+      end
+
     end
   end
 
