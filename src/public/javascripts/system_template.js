@@ -107,9 +107,12 @@ KT.templates = function() {
         });
         return to_ret;
     },
+    has_package = function(name) {
+        return in_pkg_array(name) > -1;
+    },
     add_package = function(name) {
       var pkgs = KT.options.current_template.packages;
-      if (in_pkg_array(name) === -1) {
+      if (!has_package(name)) {
         pkgs.push({name:name});
       }
       KT.options.current_template.modified = true;
@@ -121,9 +124,9 @@ KT.templates = function() {
         if (loc > -1) {
             pkgs.splice(loc, 1);
             KT.options.current_template.modified = true;
-            reset_page();
+            change_content_toggle(name, false);
+            KT.options.template_tree.rerender_content();
         }
-
     },
     reset_page = function() {
         if (KT.options.current_template === undefined) {
@@ -140,6 +143,13 @@ KT.templates = function() {
             else {
                 buttons.save.addClass("disabled");
             }
+            $('.content_add_remove').text(i18n.add_plus); //reset all add/remove to add
+            $.each(KT.options.current_template.packages, function(index, item){
+                var btn = $('a[data-name=' + item.name + ']');
+                if (btn.length > 0) {
+                    btn.text(i18n.remove);
+                }
+            });
         }
         sort_content();
     },
@@ -161,6 +171,17 @@ KT.templates = function() {
                             b_html.toUpperCase() ? 1 : -1;
                 }
         });
+    },
+    change_content_toggle = function(pkg_name, adding) {
+        var btn = $("a[data-name=" + pkg_name + "]");
+        if (btn.length > 0) {
+            if (adding) {
+                btn.text(i18n.remove);
+            }
+            else {
+                btn.text(i18n.add_plus);
+            }
+        }
     };
 
     
@@ -175,7 +196,8 @@ KT.templates = function() {
         throw_error: throw_error,
         sort_content: sort_content,
         add_package: add_package,
-        remove_package: remove_package
+        remove_package: remove_package,
+        has_package: has_package
     }
 
 
@@ -325,6 +347,44 @@ KT.actions =  (function(){
             'edit_template_container'   :  toggle_edit,
             'add_template_container'   :  toggle_new
     },
+    verify_add_package = function(name, btn, focus){
+            var input = $("#add_package_input");
+            
+            if (btn.hasClass("working") || name.length === 0){
+                return;
+            }
+            btn.addClass("working");
+
+            btn.html("<img  src='/images/spinner.gif'>");
+            input.attr("disabled", "disabled");
+            input.autocomplete('disable');
+            input.autocomplete('close');
+
+            $.ajax({
+                type: "GET",
+                url: '/system_templates/auto_complete_package',
+                data: {name:name},
+                cache: false,
+                success: function(data){
+                    btn.removeClass('working');
+                    btn.html(i18n.add_plus);
+                    input.removeAttr('disabled');
+                    input.autocomplete('enable');
+                    if ($.inArray(name, data) > -1) {
+                        KT.templates.add_package(name);
+                    }
+                    else {
+                        input.addClass("error");
+                    }
+                    if (focus) {
+                        $("#add_package_input").focus();
+                    }
+                },
+                error: KT.templates.throw_error
+            });
+
+
+    },
     register_events = function() {
 
         $('form[id^=new_system_template]').live('submit', function(e) {
@@ -383,43 +443,8 @@ KT.actions =  (function(){
             var btn = $("#add_package");
             var input = $("#add_package_input");
             var pkg = input.attr("value");
-
             e.preventDefault();
-            if (btn.hasClass("working") || pkg.length === 0){
-                return;
-            }
-            btn.addClass("working");
-            input.removeClass("error");
-            btn.html("<img  src='/images/spinner.gif'>");
-            input.attr("disabled", "disabled");
-            input.autocomplete('disable');
-            input.autocomplete('close');
-
-            
-            $.ajax({
-                type: "GET",
-                url: '/system_templates/auto_complete_package',
-                data: {name:pkg},
-                cache: false,
-                success: function(data){
-                    btn.removeClass('working');
-                    btn.html(i18n.add_plus);
-                    input.removeAttr('disabled');
-                    input.autocomplete('enable');
-                    if ($.inArray(pkg, data) > -1) {
-                        KT.templates.add_package(pkg);
-                    }
-                    else {
-                        input.addClass("error");
-                    }
-                    $("#add_package_input").focus();
-                },
-                error: KT.templates.throw_error
-            });
-            
-            //have to lokoup input again or focus won't work since we re-rendered
-
-
+            verify_add_package(pkg, btn, true);
 
         };
         $("#add_package").live('click', add_package);
@@ -429,7 +454,6 @@ KT.actions =  (function(){
             if (pkg && pkg.length > 0) {
                 KT.templates.remove_package(pkg);
             }
-            $(this).closest("li").remove();
         });
 
 
@@ -458,9 +482,25 @@ KT.actions =  (function(){
                 });
         });
 
+        $(".content_add_remove").live('click', function(){
+            var btn = $(this);
+            var name = btn.attr("data-name");
+            if (KT.templates.has_package(name)) {
+                //need to remove
+                KT.templates.remove_package(name);
+            }
+            else {
+                //need to add
+                verify_add_package(name, btn, false);
+            }
+
+        });
+
     },
     register_autocomplete = function() {
-        $("#add_package_input").autocomplete({
+        var input = $("#add_package_input");
+        input.val(i18n.default_search_text);
+        input.autocomplete({
             source: function(req, response_cb){
                     $.ajax({
                         type: "GET",
@@ -474,8 +514,20 @@ KT.actions =  (function(){
                     });
             } 
         });
+        input.focus(function() {
+            if (input.val() === i18n.default_search_text) {
+                input.val("");
+            }
+        });
+        input.blur(function() {
+            if(input.val() === "") {
+                input.val(i18n.default_search_text);
+            }
+
+        });
 
     };
+    
 
 
 

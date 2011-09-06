@@ -116,6 +116,7 @@ Src::Application.routes.draw do
       get :auto_complete_search
       get :items
       get :auto_complete_package
+      get :product_packages
     end
     member do
       get :object
