@@ -681,6 +681,7 @@ $(document).ready(function() {
     KT.actions.register_events();
 
 
+    //Handle scrolling
     var container = $('#container');
     var original_top = Math.floor($('.left').position(top).top);
     if(container.length > 0){
@@ -693,5 +694,13 @@ $(document).ready(function() {
            panel.handleScrollResize($('#template_tree'), container, original_top, bodyY, 0, offset);
         });
     }
+
+    //Ask the user if they really want to leave the page if the template isn't saved
+    window.onbeforeunload = function(){
+        if(KT.options.current_template && KT.options.current_template.modified){
+            return i18n.leave_page.replace("$TEMPLATE",  KT.options.current_template.name);
+        }
+    };
+
 
 });
