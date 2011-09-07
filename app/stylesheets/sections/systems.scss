@@ -1,6 +1,9 @@
 @import "katello";
 
 #systems {
+  table {
+    margin-bottom: 4px;
+  }
   .tall {
     .block{
       @extend .block;
@@ -32,7 +35,7 @@
     
     .lower_content {
       border: 1px solid #9C9C9C;
-      background: #FFF;
+      background: $white_color;
       margin: 10px 20px 0 0;
       padding: 5px 5px 20px 5px;
     
@@ -100,5 +103,58 @@
         }
       }
     }
+  }
+  .subs {
+    background-color: $white_color;
+    @include border-radius(5px);
+    border: 1px solid $border_color;
+    font-family: $headlinefont;
+    color: #747474;
+    font-size: 14px;
+    .subs_text {
+        margin: 8px 0 2px 8px;
+        padding: 0px;
+        float: left;
+    }
+    .subs_icon {
+      height: 23px;
+      width: 25px;
+      background: $status_icons_green;
+      float: left;
+      margin: 8px;
+      &.green {
+       background: $status_icons_green;
+      }
+      &.yellow {
+       background: $status_icons_yellow;
+      }
+      &.red {
+       background: $status_icons_red;
+      }
+    }
+    .subs_top {
+      width: 100%;
+      height: 36px;
+      font-size: 15px;
+      border-bottom: 1px solid $border_color;
+      @include border-radius(10px)
+    }
+    .subs_left {
+      border-right: 1px solid $border_color;
+      width: 49%;
+      float: left;
+      clear: left;
+    }
+    .subs_right {
+      width: 49%;
+      float: right;
+    }
+    .subs_num {
+      font-size: 24px;
+      color: #999;
+    }
+  }
+  #list-spinner {
+    display: none;
   }
 }

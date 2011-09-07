@@ -20,43 +20,43 @@
  */
 
 $(document).ready(function() {
-    $('#more').live('click', function(){
-        console.log("Awesome.");packages.morePackages()});
+    $('#more').bind('click', function(){
+        packages.morePackages();
+    });
 });
 
 var packages = (function(){
     return {
         morePackages : function(){
             var list = $('.packages');
-            var dataScrollURL = list.attr("data-scroll_url");
-            var page_size = list.attr("data-page_size");
-            console.log(dataScrollURL + ", page_size: " + page_size);
-            list.parent().append($('<div/>', {
-                'id': "list-spinner"
-            }));
-            $('#list-spinner').html( "<img src='/images/spinner.gif' class='ajax_scroll'>");
-
+            var more = $('#more');
+            var spinner = $('#list-spinner');
+            var dataScrollURL = more.attr("data-scroll_url");
+            var offset = parseInt(more.attr("data-offset"), 10) + parseInt(more.attr("data-page_size"), 10);
+            dataScrollURL = dataScrollURL + "?offset=" + offset + "&";
+            console.log(dataScrollURL + ", page_size: " + offset);
+            spinner.fadeIn();
             $.ajax({
                 type: "GET",
-                //url: $.param.querystring(url, params),
                 url: dataScrollURL,
                 cache: false,
                 success: function(data) {
-                    var expand_list = $('.packages');
                     packages.retrievingNewContent = false;
-                    expand_list.append(data);
-                    $('#list-spinner').remove();
+                    spinner.fadeOut();
+                    list.append(data);
                     $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
-                    $('#more').fadeOut();
                     if (data.length == 0) {
-                        list.removeClass("ajaxScroll");
+                        more.empty().remove();
+                    }else{
+                        $('#more').attr("data-offset", offset);
                     }
                 },
                 error: function() {
-                    $('#list-spinner').remove();
+                    spinner.fadeOut();
                     packages.retrievingNewContent = false;
                 }
             });
-        }
+        },
+        retrievingNewContent : true
     }
 })();

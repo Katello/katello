@@ -30,6 +30,8 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def create
+    raise HttpErrors::BadRequest, _("New templates can be created only in a Locker environment") if not @environment.locker?
+
     @template = SystemTemplate.new(params[:template])
     @template.environment = @environment
     @template.save!
@@ -38,6 +40,8 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def update
+    raise HttpErrors::BadRequest, _("Templates can be updated only in a Locker environment") if not @template.environment.locker?
+
     params[:template].delete(:products_json)
     params[:template].delete(:packages_json)
     params[:template].delete(:errata_json)
@@ -49,6 +53,7 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def update_content
+    raise HttpErrors::BadRequest, _("Templates can be updated only in a Locker environment") if not @template.environment.locker?
 
     case params[:do].to_s
       when 'add_product'
@@ -100,6 +105,8 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def import
+    raise HttpErrors::BadRequest, _("New templates can be imported only into a Locker environment") if not @environment.locker?
+
     begin
       temp_file = File.new(File.join("#{Rails.root}/tmp", "template_#{SecureRandom.hex(10)}.json"), 'w+', 0600)
       temp_file.write params[:template_file].read

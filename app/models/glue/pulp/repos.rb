@@ -194,9 +194,9 @@ module Glue::Pulp::Repos
       end
     end
 
-    def repo_id content_id, env_name = nil
-      return content_id if content_id.include?(self.organization.name) && content_id.include?(self.cp_id.to_s)
-      [self.cp_id.to_s, content_id.to_s, env_name, self.organization.name].compact.join("-").gsub(/[^-\w]/,"_")
+    def repo_id content_name, env_name = nil
+      return content_name if content_name.include?(self.organization.name) && content_name.include?(self.cp_id.to_s)
+      [self.cp_id.to_s, content_name.to_s, env_name, self.organization.name].compact.join("-").gsub(/[^-\w]/,"_")
     end
 
     def repository_url content_url
@@ -236,7 +236,7 @@ module Glue::Pulp::Repos
         cert = self.certificate
         key = self.key
         ca = File.open("#{Rails.root}/config/candlepin-ca.crt", 'rb') { |f| f.read }
-        repo = Glue::Pulp::Repo.new(:id => repo_id(pc.content.id),
+        repo = Glue::Pulp::Repo.new(:id => repo_id(pc.content.name),
             :arch => arch,
             :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, pc.content.name),
             :name => pc.content.name,
@@ -284,7 +284,7 @@ module Glue::Pulp::Repos
       #end
       #
       #changed_content.each do |pc|
-      #  Pulp::Repository.update(repo_id(pc.content.id), {
+      #  Pulp::Repository.update(repo_id(pc.content.name), {
       #    :feed => repository_url(pc.content.contentUrl)
       #  })
       #end
