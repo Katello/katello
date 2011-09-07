@@ -1,3 +1,6 @@
+.grid_16
+  = two_panel(@roles, @panel_options)
+
 = javascript :edit, :role
 = include_editable_i18n
 
@@ -46,6 +49,3 @@
       update_roles: #{Role.editable?},
       delete_roles: #{Role.deletable?}
     };
-
-.grid_16
-  = two_panel(@roles, @panel_options)
