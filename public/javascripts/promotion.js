@@ -250,12 +250,18 @@ var promotion_page = (function($){
                 button.html(i18n.add).addClass("add_" + type).removeClass('remove_' + type);
                 changeset.remove_item(type, id, product_id);
                 if( type !== 'product' ){
-                    var product = changeset.getProducts()[product_id];
-                    if( !product.errata.length && !product['package'].length && !product.repo.length ){
-                        delete changeset.getProducts()[product_id];
-                        changeset_tree.render_content('changeset_' + changeset.id);
-                    } else {
-                        changeset_tree.rerender_content();
+                    if (type == "template") {
+                      delete changeset.getTemplates()[id];
+                      changeset_tree.rerender_content();
+                    }
+                    else {
+                      var product = changeset.getProducts()[product_id];
+                      if( !product.errata.length && !product['package'].length && !product.repo.length ){
+                          delete changeset.getProducts()[product_id];
+                          changeset_tree.render_content('changeset_' + changeset.id);
+                      } else {
+                          changeset_tree.rerender_content();
+                      }
                     }
                 } else {
                     changeset_tree.rerender_content();       
@@ -690,6 +696,11 @@ var changeset_obj = function(data_struct) {
         },
         has_item: function(type, id, product_id) {
             var found = undefined;
+            if (type === 'template') {
+               if( templates.hasOwnProperty(id) ){
+                    return true;
+                }
+            }
             if( type === 'product'){
                 if( products.hasOwnProperty(id) ){
                     return true;
@@ -1187,7 +1198,8 @@ var templateLibrary = (function(){
                 partial_list = '',
                 system_templates_list = '',
                 product, provider,
-                products = changeset.getProducts();
+                products = changeset.getProducts(),
+                templates = changeset.getTemplates();
             
             if( changeset.productCount() === 0 ){
                 html += '<h5>'+i18n.product_plural+'</h5>'
@@ -1200,11 +1212,7 @@ var templateLibrary = (function(){
                         provider = (product.provider === 'REDHAT') ? 'rh' : 'custom';
                         toSlide = product.all ? 'no_slide' : 'slide_link';
                         if( product.all ){
-                            if( showButton ){
-                                all_list += productListItem(changeset_id, key, product.name, provider, toSlide, showButton);
-                            } else {
-                                all_list += productListItem(changeset_id, key, product.name, provider, toSlide, showButton);
-                            }
+                          all_list += productListItem(changeset_id, key, product.name, provider, toSlide, showButton);
                         }
                         else {
                             partial_list += productListItem(changeset_id, key, product.name, provider, toSlide, false);
@@ -1212,7 +1220,14 @@ var templateLibrary = (function(){
                     }
                 }
             }
-            
+
+            for(key in templates) {
+               if(templates.hasOwnProperty(key) ){
+                  template = templates[key];
+                  system_templates_list += templateItem(changeset_id, key, template.name, showButton);
+               }
+            }
+
             html += all_list ? ('<h5>'+i18n.full_product+'</h5>' + all_list) : '';
             html += partial_list ? ('<h5>'+i18n.partial_product+'</h5>' + partial_list) : '';
 
@@ -1221,10 +1236,37 @@ var templateLibrary = (function(){
             html += '</ul>';
             return html;
         },
+        templateItem = function(changeset_id, id, name, showButton){
+            var anchor = "",
+                html = '';
+            if ( showButton ){
+                anchor = '<a class="st_button content_add_remove fr remove_template" data-display_name="' +
+                    name +'" data-id="' + id + '" data-type="template" id="add_remove_template_' + id +
+                    '" data-template_id="' + id +
+                    '">' + i18n.remove + '</a>';
+            }
+            html += '<li class="clear">' + anchor;
+            html += '<div id="template-cs_' + changeset_id + '_' + id + '">' +
+                    '<span class="template-icon sort_attr" >' + name + '</span>' +
+                    '</div></li>';
+
+            return html;
+        },
+        conflictTemplates = function(added, removed) {
+            if (added.length == 0 && removed.length == 0) {
+                return "";
+            }
+            var html = "<h3>"+ i18n.template +"</h3>";
+            html +="<div>";
+            html += conflictAccordianListItem(true, added);
+            html += conflictAccordianListItem(false, removed);
+            html += "</div>";
+            return html;
+        },
         productListItem = function(changeset_id, product_id, name, provider, slide_link, showButton){
             var anchor = "",
                 html = '';
-            
+
             if ( showButton ){
                 anchor = '<a class="st_button content_add_remove fr remove_product" data-display_name="' +
                     name +'" data-id="' + product_id + '" data-type="product" id="add_remove_product_' + product_id +
@@ -1237,7 +1279,7 @@ var templateLibrary = (function(){
                     '<span class="' + provider + '-product-sprite"></span>' +
                     '<span class="product-icon sort_attr" >' + name + '</span>' +
                     '</div></li>';
-                    
+
             return html;
         },
         conflictFullProducts = function(added, removed) {
@@ -1250,7 +1292,7 @@ var templateLibrary = (function(){
             html += conflictAccordianListItem(false, removed);
             html += "</div>";
             return html;
-        },    
+        },
         conflictProduct = function(product_name, conflict_product) {
             var html = '<h3><a href="#">'+ product_name+ '</a></h3>';
             html +="<div>";
