@@ -129,12 +129,16 @@ class SystemsController < ApplicationController
   def packages
     offset = current_user.page_size
     packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    if params.has_key? :pkg_order
-      if params[:pkg_order].downcase == "desc"
-        packages.reverse!
+    if packages.length > 0
+      if params.has_key? :pkg_order
+        if params[:pkg_order].downcase == "desc"
+          packages.reverse!
+        end
       end
+      packages = packages[0...offset]
+    else
+      packages = []
     end
-    packages = packages[0...offset]
     render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages, :offset => offset}
   end
 
@@ -143,22 +147,26 @@ class SystemsController < ApplicationController
     size = current_user.page_size
     #what packages are available?
     packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    #check for the params offset (start of array chunk)
-    if params.has_key? :offset
-      offset = params[:offset].to_i
-    else
-      offset = current_user.page_size
-    end
-    if params.has_key? :pkg_order
-      if params[:pkg_order].downcase == "desc"
-        #reverse if order is desc
-        packages.reverse!
+    if packages.length > 0
+      #check for the params offset (start of array chunk)
+      if params.has_key? :offset
+        offset = params[:offset].to_i
+      else
+        offset = current_user.page_size
       end
-    end
-    if params.has_key? :reverse
-      packages = packages[0...params[:reverse].to_i]
+      if params.has_key? :pkg_order
+        if params[:pkg_order].downcase == "desc"
+          #reverse if order is desc
+          packages.reverse!
+        end
+      end
+      if params.has_key? :reverse
+        packages = packages[0...params[:reverse].to_i]
+      else
+        packages = packages[offset...offset+size]
+      end
     else
-      packages = packages[offset...offset+size]
+      packages = []
     end
     render :partial=>"more_packages", :locals=>{:system=>@system, :packages => packages, :offset=> offset}
   end
