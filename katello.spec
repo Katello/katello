@@ -3,7 +3,7 @@
 
 %global homedir %{_datarootdir}/%{name}
 %global datadir %{_sharedstatedir}/%{name}
-%global confdir extras/fedora
+%global confdir deploy/common
 
 Name:           katello
 Version:	      0.1.76
@@ -96,19 +96,12 @@ install -d -m0755 %{buildroot}%{datadir}/tmp
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
 install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 
-# Apache Configuration
-mkdir -p %{buildroot}/etc/httpd/conf.d/
-cp etc/httpd/conf.d/%{name}.conf %{buildroot}/%{_sysconfdir}/httpd/conf.d/
-
-# Thin Configuration
-install -m 644 etc/%{name}/thin.yml %{buildroot}%{_sysconfdir}/%{name}/
-
 # clean the application directory before installing
 [ -d tmp ] && rm -rf tmp
 
 #copy the application to the target directory
 mkdir .bundle
-mv ./extras/bundle-config .bundle/config
+mv ./deploy/bundle-config .bundle/config
 cp -R .bundle * %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
@@ -122,6 +115,8 @@ install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
 install -Dp -m0755 %{confdir}/%{name}-jobs.init %{buildroot}%{_initddir}/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.completion.sh %{buildroot}%{_sysconfdir}/bash_completion.d/%{name}
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+install -Dp -m0644 %{confdir}/%{name}.httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
+install -Dp -m0644 %{confdir}/thin.yml %{buildroot}%{_sysconfdir}/%{name}/
 
 #overwrite config files with symlinks to /etc/katello
 ln -svf %{_sysconfdir}/%{name}/katello.yml %{buildroot}%{homedir}/config/katello.yml
@@ -145,7 +140,7 @@ sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{bui
 rm -rf %{buildroot}%{homedir}/README
 rm -rf %{buildroot}%{homedir}/LICENSE
 rm -rf %{buildroot}%{homedir}/doc
-rm -rf %{buildroot}%{homedir}/extras
+rm -rf %{buildroot}%{homedir}/deploy
 rm -rf %{buildroot}%{homedir}/%{name}.spec
 rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
