@@ -1,0 +1,9 @@
+%ul.expand_list
+  -if @packages.empty?
+    #{_("No packages available.")}
+  - @packages.each do |pack|
+    %li
+      %a{:class => "fr package_add_remove st_button", "data-name"=> pack, :id => "add_remove_package_#{pack}"}= "+ #{_("Add")}"
+      .no_slide
+        %span.block{"data-name"=>pack}
+          = pack
