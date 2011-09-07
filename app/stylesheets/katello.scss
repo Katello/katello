@@ -1206,15 +1206,6 @@ fieldset {
     }
     //span { vertical-align: middle; }
   }
-  .simple_link{
-    margin: 6px 0;
-  }
-  .link_details {
-    background: $dotdotdot_icon;
-  }
-  .no_slide {
-    padding-left: 5px;
-  }
   .item {
     position: relative;
     top: 4px;
@@ -1707,6 +1698,23 @@ fieldset {
         }
         
         .empty_list { padding: 10px 0 0 10px; }
+        
+        .simple_link{
+          margin: 6px 0;
+        }
+        .link_details {
+          background: $dotdotdot_icon;
+        }
+        .no_slide {
+          padding-left: 5px;
+          cursor: default;
+        }
+        .no_hover {
+          &:hover {
+            border-color: $white_color;
+            background: none;
+          }
+        }
         
         li{
           height: 34px;
