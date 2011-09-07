@@ -621,10 +621,20 @@ var roleActions = (function($){
                cache    : false,
                dataType : 'json',
                success  : function(data){
-                    /*if( roles_breadcrumb[id].type === "all" ){
-                        roles_breadcrumb[current_organization].full_access = false
-                    }*/
-                    delete roles_breadcrumb[id];
+                    if( roles_breadcrumb[id].type === "all" ){
+	                    delete roles_breadcrumb[id];
+                    	roles_breadcrumb[current_organization].full_access = false;
+                    	
+                    	for( item in roles_breadcrumb ){
+                    		if( roles_breadcrumb.hasOwnProperty(item) ){
+                    			if( item.split('_')[0] === 'permission' && item.split('_')[1] === id.split('_')[1] && roles_breadcrumb[item].type === 'all'){
+                    				roles_breadcrumb[current_organization].full_access = true;
+                    			}
+                    		}
+                    	}
+                    } else {
+                		delete roles_breadcrumb[id];
+                	}
                     roles_breadcrumb[current_organization].count -= 1;
                     KT.roles.tree.rerender_content();
                }
