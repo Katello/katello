@@ -1,23 +1,26 @@
 = javascript :system_subscriptions
 
 = content_for :title do
-  #{_("System")}
+  #{@system.name}
 
 = content_for :navigation do
   = render_navigation(:expand_all => true, :level => 3)
 
 = content_for :content do
-  %h5.grid_8 #{_("Subscriptions")}
-  - if editable
-    = form_tag update_subscriptions_system_path, :method => "post", :id => "update_subscriptions" do |f|
-      .grid_7
-        = select_tag "system[consumed_pool_ids]", options_from_collection_for_select(all_subs, 'poolId', 'poolName', consumed), :multiple => true, :class => 'multiselect', :style=>"width:400px; height:200px"
-      .grid_2
-        = button_to _("Save Subscriptions"), {:action => "update_subscriptions", :controller => "systems"}, :method => :post, :id => :subcription_save
-  - else
-    - for sub in all_subs
-      .grid_6.prefix_1
-        = sub.poolName
-
-
-            
+  .grid_8.subs
+    .subs_top
+      .subs_icon
+      .fl
+        = image_tag("boxshadow.png")
+      .subs_text.fl #{_("Entitlements Subscriptions are Current")}
+    .subs_left.ca
+      #{_("Socket Requirement")}
+      %br
+      .subs_num #{"--"}
+    .subs_right.ca
+      #{_("Guests Requirement")}
+      %br
+      .subs_num #{"--"}
+  #subs_data
+    = render :partial=>"subs", :locals=>{:system=>@system, :avail_subs => avail_subs, :consumed_subs => consumed_subs, :editable=>editable}
+  %br.clear

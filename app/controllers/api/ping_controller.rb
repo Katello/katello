@@ -13,6 +13,7 @@
 class Api::PingController < Api::ApiController
 
   skip_before_filter :require_user
+  skip_before_filter :authorize
 
   def index
     # status backend engine calls must be done as the admin user

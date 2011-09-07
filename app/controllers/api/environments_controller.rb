@@ -14,6 +14,20 @@ class Api::EnvironmentsController < Api::ApiController
   respond_to :json
   before_filter :find_organization, :only => [:index, :create]
   before_filter :find_environment, :only => [:show, :update, :destroy, :repositories]
+  before_filter :authorize
+
+  def rules
+    manage_rule = lambda{@organization.environments_manageable?}
+    view_rule = lambda{@organization.readable?}
+    {
+      :index => view_rule,
+      :show => view_rule,
+      :create => manage_rule,
+      :update => manage_rule,
+      :destroy => manage_rule,
+      :repositories => view_rule
+    }
+  end
 
   def index
     query_params[:organization_id] = @organization.id
@@ -46,12 +60,13 @@ class Api::EnvironmentsController < Api::ApiController
   end
 
   def repositories
-    render :json => @environment.products.collect { |p| p.repos(@environment) }.flatten
+    render :json => @environment.products.readable(@organization).collect { |p| p.repos(@environment) }.flatten
   end
 
   def find_environment
     @environment = KTEnvironment.find(params[:id])
     raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:id]}'") if @environment.nil?
+    @organization = @environment.organization
     @environment
   end
   

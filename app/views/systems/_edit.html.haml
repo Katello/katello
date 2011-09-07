@@ -1,14 +1,14 @@
 = javascript :edit_helpers
 
 = content_for :title do 
-  #{_("System")}
+  #{@system.name}
 
 = content_for :navigation do
   = render_navigation(:expand_all => true, :level => 3)  
 
 = content_for :content do
   #system
-    %input#panel_element_id{:name => @system.id, :type => "hidden", :value => @system.id, "data-ajax_url"=>url_for(:action=> 'update')}
+    %input#panel_element_id{:name => @system.id, :type => "hidden", :value => "#{name}_#{system.id.to_s}", "data-ajax_url"=>url_for(:action=> 'update')}
     .grid_8
       %h5 #{_("System Info")}
     .grid_8#system_info

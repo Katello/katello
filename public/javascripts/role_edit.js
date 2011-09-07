@@ -2,12 +2,15 @@ $(function() {
 
     $('#panel').addClass('panel-custom');
   
-    permissionWidget = ROLES.permissionWidget();
+    permissionWidget = KT.roles.permissionWidget();
     permissionWidget.init();
   
-    ROLES.actionBar.add_to_toggle_list({ 'permission_add' : permissionWidget.permission_add })
+    KT.roles.actionBar.add_to_toggle_list({ 'add_permission' : { container : 'permission_widget',
+    															setup_fn   : permissionWidget.add_permission }});
+  	KT.roles.actionBar.add_to_toggle_list({ 'edit_permission': { container : 'permission_widget',
+    															setup_fn   : permissionWidget.edit_permission }});
   
-    ROLES.tree = sliding_tree("roles_tree", {
+    KT.roles.tree = sliding_tree("roles_tree", {
                           breadcrumb      :  roles_breadcrumb,
                           default_tab     :  "roles",
                           bbq_tag         :  "role_edit",
@@ -19,7 +22,7 @@ $(function() {
                                 rolesRenderer.setSummary(hash_id);
                                 rolesRenderer.handleButtons(hash_id);
                                 roleActions.setCurrentCrumb(hash_id);
-                                ROLES.actionBar.close();
+                                KT.roles.actionBar.close();
                           }
                       });
   

@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
 
   # support for session (thread-local) variables must be the last filter (except authorize)in this class
   include Katello::ThreadSession::Controller
-  before_filter :authorize
+  include AuthorizationRules
 
 
   def section_id
@@ -228,24 +228,6 @@ class ApplicationController < ActionController::Base
   def extract_locale_from_accept_language_header
     hal = request.env['HTTP_ACCEPT_LANGUAGE']
     hal.nil? ? 'en' : hal.scan(/^[a-z]{2}/).first
-  end
-
-  def rules
-    raise Errors::SecurityViolation,"Rules not defined for  #{current_user.username} for #{params[:controller]}/#{params[:action]}"
-  end
-
-  # authorize the user for the requested action
-  def authorize(ctrl = params[:controller], action = params[:action])
-    user = current_user
-    user = User.anonymous unless user
-    logger.debug "Authorizing #{current_user.username} for #{ctrl}/#{action}"
-
-    allowed = false
-    rule_set = rules.with_indifferent_access
-    allowed = rule_set[action].call if Proc === rule_set[action]
-    allowed = user.allowed_to? *rule_set[action] if Array === rule_set[action]
-    return true if allowed
-    raise Errors::SecurityViolation, "User #{current_user.username} is not allowed to access #{params[:controller]}/#{params[:action]}"
   end
 
   # render 403 page

@@ -14,6 +14,9 @@ class Api::TasksController < Api::ApiController
   respond_to :json
   before_filter :find_organization, :only => [:index]
 
+  # TODO: define authorization rules
+  skip_before_filter :authorize
+
   def index
     render :json => TaskStatus.where(:organization_id => @organization).to_json(:except => :id)
   end

@@ -93,7 +93,7 @@ var notices = (function() {
         },
         checkNoticesInResponse : function(xhr) {
             if (xhr !== undefined) {
-                var message = common.decode(xhr.getResponseHeader('X-Message'));
+                var message = KT.common.decode(xhr.getResponseHeader('X-Message'));
                 if (message === "null") {message = null;}
                 var messageType = xhr.getResponseHeader('X-Message-Type');
                 if (message) {

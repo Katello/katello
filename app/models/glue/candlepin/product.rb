@@ -96,7 +96,7 @@ module Glue::Candlepin::Product
     def set_product
       Rails.logger.info "Creating a product in candlepin: #{name}"
       json = Candlepin::Product.create({
-        :name => self.provider.name+"_"+self.name,
+        :name => self.name,
         :multiplier => self.multiplier || 1,
         :attributes => self.attrs || [] # name collision with ActiveRecord
       })
@@ -127,6 +127,7 @@ module Glue::Candlepin::Product
     end
 
     def add_new_content(name, path, repo_type)
+      check_for_repo_conflicts(name)
       # create new content
       pc = Glue::Candlepin::ProductContent.new({:content => {
           :name => name,
@@ -205,7 +206,7 @@ module Glue::Candlepin::Product
           if self.provider and self.provider.yum_repo?
             queue.create(:name => "create unlimited subscription for product in candlepin: #{self.name}", :priority => 7, :action => [self, :create_unlimited_subscription])
           end
-        when :update, :promote
+        when :promote
           queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])
         when :import_from_cp
           #do nothing
@@ -215,6 +216,14 @@ module Glue::Candlepin::Product
     def destroy_product_orchestration
       queue.create(:name => "delete subscriptions for product in candlepin: #{self.name}", :priority => 7, :action => [self, :delete_subscriptions])
       queue.create(:name => "candlepin product: #{self.name}", :priority => 8, :action => [self, :del_product])
+    end
+
+    protected
+
+    def check_for_repo_conflicts(repo_name)
+      unless self.repos(self.locker, {:name => repo_name}).empty?
+        raise Errors::ConflictException.new(_("There is already a repo with the name [ %s ] for product [ %s ]") % [repo_name, self.name])
+      end
     end
 
   end

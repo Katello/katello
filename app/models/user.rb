@@ -202,7 +202,7 @@ class User < ActiveRecord::Base
 
     tags = [] if tags.nil?
     tags = [tags] unless tags.is_a? Array
-
+    tags = tags.collect {|t| t.to_s}
     tags_query = allowed_tags_query(verbs, resource_type, org)
 
     if tags.empty? || resource_type == :organizations
@@ -249,7 +249,7 @@ class User < ActiveRecord::Base
     return Organization.all if perms > 0
 
     perms = Permission.joins(:role).joins("INNER JOIN roles_users ON roles_users.role_id = roles.id").
-        where("roles_users.user_id = ?", self.id).where("organization_id NOT ?", nil)
+        where("roles_users.user_id = ?", self.id).where("organization_id is NOT null")
     #return the individual organizations
     perms.collect{|perm| perm.organization}.uniq
   end

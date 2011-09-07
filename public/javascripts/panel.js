@@ -272,7 +272,7 @@ var panel = (function(){
 
             //if there is a lot in the list, make the panel a bit larger
             if ($('#content').height() > 642){
-                var extraHeight =  common.height() - 192;
+                var extraHeight =  KT.common.height() - 192;
                 if (isSubpanel) {
                     extraHeight -= subpanelSpacing;
                 }
@@ -381,8 +381,8 @@ var panel = (function(){
             }
         },
         handleScroll : function(jQPanel, container, top, bodyY, spacing, offset) {
-            var scrollY = common.scrollTop(),
-                scrollX = common.scrollLeft(),
+            var scrollY = KT.common.scrollTop(),
+                scrollX = KT.common.scrollLeft(),
                 isfixed = jQPanel.css('position') === 'fixed';
             
             offset = offset ? offset : 10;
