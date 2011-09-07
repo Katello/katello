@@ -15,6 +15,9 @@ require 'resources/pulp'
 class Api::DistributionsController < Api::ApiController
   respond_to :json
 
+  # TODO: define authorization rules
+  skip_before_filter :authorize
+
   def index
     repo = Glue::Pulp::Repo.find(params[:repository_id])
     render :json => repo.distributions

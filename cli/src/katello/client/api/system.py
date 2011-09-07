@@ -39,7 +39,7 @@ class SystemAPI(KatelloAPI):
         if activation_keys:
             sysdata["activation_keys"] = activation_keys
         return self.server.POST(path, sysdata)[1]
-          
+
     def unregister(self, system_id):
         path = "/api/systems/" + str(system_id)
         return self.server.DELETE(path)[1]

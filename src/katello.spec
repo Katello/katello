@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.71
+Version:	      0.1.76
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -104,7 +104,7 @@ cp -R .bundle * %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 644 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
-install -m 644 config/database.yml %{buildroot}%{_sysconfdir}/%{name}/database.yml
+#install -m 644 config/database.yml %{buildroot}%{_sysconfdir}/%{name}/database.yml
 install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/environment.rb
 
 #copy init scripts and sysconfigs
@@ -116,7 +116,7 @@ install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logro
 
 #overwrite config files with symlinks to /etc/katello
 ln -svf %{_sysconfdir}/%{name}/katello.yml %{buildroot}%{homedir}/config/katello.yml
-ln -svf %{_sysconfdir}/%{name}/database.yml %{buildroot}%{homedir}/config/database.yml
+#ln -svf %{_sysconfdir}/%{name}/database.yml %{buildroot}%{homedir}/config/database.yml
 ln -svf %{_sysconfdir}/%{name}/environment.rb %{buildroot}%{homedir}/config/environments/production.rb
 
 #create symlinks for some db/ files
@@ -130,7 +130,7 @@ ln -sv %{datadir}/tmp %{buildroot}%{homedir}/tmp
 ln -svf %{datadir}/Gemfile.lock %{buildroot}%{homedir}/Gemfile.lock
 
 #re-configure database to the /var/lib/katello directory
-sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{_sysconfdir}/%{name}/database.yml
+sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{buildroot}%{homedir}/config/database.yml
 
 #remove files which are not needed in the homedir
 rm -rf %{buildroot}%{homedir}/README
@@ -170,7 +170,6 @@ fi
 %defattr(-,root,root)
 %doc README LICENSE doc/
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
-%config(noreplace) %{_sysconfdir}/%{name}/database.yml
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
@@ -197,6 +196,100 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Sep 05 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.76-1
+- 730358 - repo discovery now uses asynchronous tasks - the route has been
+  changed to /organizations/ID/repositories/discovery/
+- 735359 - Don't create content in CP when creating a repo.
+- Fixed a couple of errors that occured due to wrong sql in postgres
+- reset-dbs - katello-jobs are restarted now
+- Changes roles and permission success and error notices to include the name of
+  the role/permission and fit the format of other pages.
+- Validate uniqueness of repo name within a product scope
+- products - cp name now join of <org_name>-<product_name> used to be
+  <provider_name>-<product_name>
+- sync - comparing strings instead of symbols in sync_status fix for AR
+  returning symbols
+- sync - fix for sync_status failing when there were no syncable subitems
+  (repos for product, products for providers)
+- sync - change in product&provider sync_status logic
+- provider sync status - cli + api
+- sync - spec tests for cancel and index actions
+- Fixes for editing name of changeset on changeset history page.
+- Further re-work of HTML and JS model naming convention.  Changes the behavior
+  of setting the HTML id for each model type by introducing a simple
+  controller_name function that returns the controller name to be used for
+  tupane, edit, delete and list items.
+- Adds KT javascript global object for all other modules to attach to. Moves
+  helptip and common to be attached to KT.
+- Changes to Users page to fit new HTML model id convention.
+- Changes Content Management page items to use new HTML model id convention.
+- Changes to Systems page for HTML and JS model id.
+- Changes Organizations section to use of new HTML model id convention.
+- Changes to model id's in views.
+- 734851 - service katello start - Permission denied
+- Refactor providers - remove unused routes
+
+* Wed Aug 31 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.75-1
+- 734833 - service katello-jobs stop shows non-absolute home (ArgumentError)
+- Refactor repo path generator
+- Merge branch 'repo-path'
+- Fix failing repo spec
+- Pulp repo for Locker products consistent with other envs
+- 734755 - Service katello-jobs status shows no file or directory
+- Refactor generating repo id when cloning
+- Change CP content url to product/repo
+- Scope system by readable permissions
+- Scope users by readable permissions
+- Scope products by readability scope
+- Refactor - move providers from OrganziationController
+- Fix scope error - readable repositories
+- Remove unused code: OrganizationController#providers
+- Authorization rules - fix for systmes auth check
+- More specific test case pro changeset permissions
+- Scope products for environment by readable providers
+- Fix bug in permissions
+- Scope orgranizations list in API by the readable permissions
+- Fix failing spec
+- Authorization rules for API actions
+- Integrate authorization rules to API controllers
+- Merge remote-tracking branch 'origin/master' into repo-path
+- Format of CP content url: /org/env/productName/repoName
+
+* Tue Aug 30 2011 Partha Aji <paji@redhat.com> 0.1.74-1
+- Fixed more bugs related to the katello.yml and spec (paji@redhat.com)
+
+* Tue Aug 30 2011 Partha Aji <paji@redhat.com> 0.1.73-1
+- Fixed the db directory link (paji@redhat.com)
+- Updated some spacing issues (paji@redhat.com)
+
+* Tue Aug 30 2011 Partha Aji <paji@redhat.com> 0.1.72-1
+- Updated spec to not include database yml in etc katello and instead for the
+  user to user /etc/katello/katello.yml for db info (paji@redhat.com)
+- Fixed an accidental goof up in the systems controllers test (paji@redhat.com)
+- made a more comprehensive test matrix for systems (paji@redhat.com)
+- Added rules based tests to test systems controller (paji@redhat.com)
+- Added rules for sync_schedules spec (paji@redhat.com)
+- Added tests for sync plans (paji@redhat.com)
+- Added rules tests for subscriptions (paji@redhat.com)
+- Restricted the routes for subscriptions  + dashboard resource to only :index
+  (paji@redhat.com)
+- Added tests for repositories controller (paji@redhat.com)
+- Updated routes in a for a bunch of resources limiting em tp see exactly what
+  they can see (paji@redhat.com)
+- Added unit tests for products controller (paji@redhat.com)
+- fixing permission denied on accounts controller (jsherril@redhat.com)
+- 731540 - Sync Plans - update edit UI to use sync_plan vs plan
+  (bbuckingham@redhat.com)
+- added rules checking for environment (paji@redhat.com)
+- Added tests for operations controller (paji@redhat.com)
+- Bug fix - resource should be in plural when checking permissions
+  (inecas@redhat.com)
+- adding sync management controller rules tests (jsherril@redhat.com)
+- adding users controller rules tests (jsherril@redhat.com)
+- adding roles controller rules tests (jsherril@redhat.com)
+- 734033 - deleteUser API call fails (inecas@redhat.com)
+- 734080 - katello now returns orgs for owner (lzap+git@redhat.com)
+
 * Fri Aug 26 2011 Justin Sherrill <jsherril@redhat.com> 0.1.71-1
 - fixing a couple issues with promotions (jsherril@redhat.com)
 - adding some missing navigation permission checking (jsherril@redhat.com)

@@ -20,7 +20,8 @@ from gettext import gettext as _
 from katello.client.api.provider import ProviderAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg
+from katello.client.core.utils import is_valid_record, get_abs_path, run_async_task_with_status, run_spinner_in_bg, AsyncTask
+from katello.client.core.repo import format_sync_state, format_sync_time
 from katello.client.core.utils import ProgressBar
 from katello.client.api.utils import get_provider
 
@@ -241,7 +242,6 @@ class Sync(ProviderAction):
 
 
     def setup_parser(self):
-        # always provide --id option for create, even on registered clients
         self.parser.add_option('--name', dest='name',
                                help=_("provider name (required)"))
         self.parser.add_option('--org', dest='org',
@@ -253,25 +253,72 @@ class Sync(ProviderAction):
 
     def run(self):
         provName = self.get_option('name')
-        orgName  = self.get_option('org')        
+        orgName  = self.get_option('org')
         return self.sync_provider(provName, orgName)
-        
+
     def sync_provider(self, providerName, orgName):
         prov = get_provider(orgName, providerName)
         if prov == None:
             return os.EX_DATAERR
 
-        async_task = self.api.sync(prov["id"])
-        result = run_async_task_with_status(async_task, ProgressBar())
+        task = AsyncTask(self.api.sync(prov["id"]))
+        result = run_async_task_with_status(task, ProgressBar())
 
-        if len(filter(lambda t: t['state'] == 'error', result)) > 0:
-            errors = map(lambda t: json.loads(t["result"])['errors'][0], filter(lambda t: t['state'] == 'error', result))
+        if task.failed():
+            errors = [json.loads(t["result"])['errors'][0] for t in task.get_hashes() if t['state'] == 'error']
             print _("Provider [ %s ] failed to sync: %s" % (providerName, errors))
             return os.EX_DATAERR
 
         print _("Provider [ %s ] synchronized" % providerName)
         return os.EX_OK
-        
+
+
+# ------------------------------------------------------------------------------
+class Status(ProviderAction):
+
+    description = _('status of provider\'s synchronization')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("provider name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+    def run(self):
+        provName = self.get_option('name')
+        orgName  = self.get_option('org')
+
+        prov = get_provider(orgName, provName)
+        if prov == None:
+            return os.EX_DATAERR
+
+        task = AsyncTask(self.api.last_sync_status(prov['id']))
+
+        prov['last_sync'] = format_sync_time(prov['last_sync'])
+        prov['sync_state'] = format_sync_state(prov['sync_state'])
+
+        if task.is_running():
+            pkgsTotal = task.total_count()
+            pkgsLeft = task.items_left()
+            prov['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
+
+        #TODO: last errors?
+
+        self.printer.addColumn('id')
+        self.printer.addColumn('name')
+
+        self.printer.addColumn('last_sync')
+        self.printer.addColumn('sync_state')
+        self.printer.addColumn('progress', show_in_grep=False)
+
+        self.printer.setHeader(_("Provider Status"))
+        self.printer.printItem(prov)
+        return os.EX_OK
+
 
 # ==============================================================================
 class ImportManifest(ProviderAction):

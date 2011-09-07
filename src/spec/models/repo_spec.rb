@@ -189,14 +189,7 @@ describe Glue::Pulp::Repo do
   context "Get referenced objects" do
 
     before :each do
-      @env = mock(KTEnvironment, {:id => RepoTestData::REPO_ENV_ID})
-      KTEnvironment.stub(:find).with(RepoTestData::REPO_ENV_ID).and_return(@env)
-
-      @org = mock(Organization, {:id => RepoTestData::REPO_ORG_ID})
-      Organization.stub(:find).with(RepoTestData::REPO_ORG_ID).and_return(@org)
-
-      @prod = mock(Product, {:id => RepoTestData::REPO_PRODUCT_ID})
-      Product.stub(:find).with(RepoTestData::REPO_PRODUCT_ID).and_return(@prod)
+      stub_reference_objects
     end
 
     it "should return correct environment" do
@@ -208,7 +201,7 @@ describe Glue::Pulp::Repo do
     end
 
     it "should return correct product" do
-      @repo.product.should == @prod
+      @repo.product.should == @product
     end
 
   end
@@ -217,18 +210,17 @@ describe Glue::Pulp::Repo do
   context "Repo promote" do
 
     before :each do
-      @org = mock(Organization, {:id => RepoTestData::REPO_ORG_ID})
+      stub_reference_objects
       @locker = mock(KTEnvironment, {:id => RepoTestData::REPO_ENV_ID, :name => 'Locker'})
       @locker.stub(:organization).and_return(@org)
-      @to_env = mock(KTEnvironment, {:id => RepoTestData::CLONED_REPO_ENV_ID, :name => 'dev'})
+      @to_env = mock(KTEnvironment, {:id => RepoTestData::CLONED_REPO_ENV_ID, :name => 'Prod'})
       @to_env.stub(:organization).and_return(@org)
-      @product = mock(Product, {:cp_id => RepoTestData::REPO_PRODUCT_ID, :name => 'product'})
       @product.stub(:locker).and_return(@locker)
 
       @clone = Glue::Pulp::Repo.new(RepoTestData::CLONED_PROPERTIES)
 
-      Glue::Pulp::Repos.stub(:clone_repo_id).with(@repo.id, @to_env.name).and_return(RepoTestData::CLONED_REPO_ID)
-      Glue::Pulp::Repos.stub(:clone_repo_id).with(@clone.id, @to_env.name).and_return(RepoTestData::CLONED_2_REPO_ID)
+      Glue::Pulp::Repos.stub(:clone_repo_id).with(@repo, @to_env).and_return(RepoTestData::CLONED_REPO_ID)
+      Glue::Pulp::Repos.stub(:clone_repo_id).with(@clone, @to_env).and_return(RepoTestData::CLONED_2_REPO_ID)
 
     end
 
@@ -254,6 +246,40 @@ describe Glue::Pulp::Repo do
       clone = @repo.get_clone(@to_env)
       clone.id.should == RepoTestData::CLONED_PROPERTIES[:id]
     end
+
+    it "should set relative path correctly" do
+      Pulp::Repository.should_receive(:clone_repo).with do |repo, cloned|
+        cloned.relative_path.should == "Corp/Prod/Ruby/repo"
+        true
+      end
+      @repo.promote(@to_env, @product)
+    end
+  end
+
+  describe "#package_groups" do
+    before { Pulp::PackageGroup.stub(:all => RepoTestData::REPO_PACKAGE_GROUPS) }
+    it "should call pulp layer" do
+      Pulp::PackageGroup.should_receive(:all).with(RepoTestData::REPO_PROPERTIES[:id])
+      @repo.package_groups
+    end
+
+    it "should find a repo by attr" do
+      @repo.package_groups(:name => "katello").should_not be_empty
+      @repo.package_groups(:name => "non-existing").should be_empty
+    end
+  end
+
+  describe "#package_group_categories" do
+    before { Pulp::PackageGroupCategory.stub(:all => RepoTestData::REPO_PACKAGE_GROUP_CATEGORIES) }
+    it "should call pulp layer" do
+      Pulp::PackageGroupCategory.should_receive(:all).with(RepoTestData::REPO_PROPERTIES[:id])
+      @repo.package_group_categories
+    end
+
+    it "should find a repo by attr" do
+      @repo.package_group_categories(:name => "Development").should_not be_empty
+      @repo.package_group_categories(:name => "non-existing").should be_empty
+    end
   end
 
 end
@@ -267,4 +293,16 @@ def disable_repo_orchestration
   Pulp::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
   Pulp::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
   Pulp::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
+end
+
+def stub_reference_objects
+  @org = mock(Organization, {:id => RepoTestData::REPO_ORG_ID, :name => "Corp"})
+  Organization.stub(:find).with(RepoTestData::REPO_ORG_ID).and_return(@org)
+
+  @env = mock(KTEnvironment, {:id => RepoTestData::REPO_ENV_ID, :name => "Dev"})
+  KTEnvironment.stub(:find).with(RepoTestData::REPO_ENV_ID).and_return(@env)
+ 
+  @product = mock(Product, {:id => RepoTestData::REPO_PRODUCT_ID, :cp_id => RepoTestData::REPO_PRODUCT_CP_ID, :name => "Ruby"})
+  Product.stub(:find).with(RepoTestData::REPO_PRODUCT_ID).and_return(@product)
+  Product.stub("find_by_cp_id!").with(RepoTestData::REPO_PRODUCT_CP_ID.to_s).and_return(@product)
 end

@@ -25,7 +25,7 @@ from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_product, get_repo
-from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, AsyncTask
+from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask
 from katello.client.core.utils import ProgressBar
 
 try:
@@ -61,7 +61,7 @@ class RepoAction(Action):
     def __init__(self):
         super(RepoAction, self).__init__()
         self.api = RepoAPI()
-        
+
 # actions --------------------------------------------------------------------
 
 
@@ -98,7 +98,7 @@ class Create(RepoAction):
         else:
             print _("No product [ %s ] found") % prodName
             return os.EX_DATAERR
-        
+
         return os.EX_OK
 
 class Discovery(RepoAction):
@@ -130,7 +130,7 @@ class Discovery(RepoAction):
         prodName = self.get_option('prod')
         orgName  = self.get_option('org')
 
-        repourls = self.discover_repositories(url)
+        repourls = self.discover_repositories(orgName, url)
         self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
         selectedurls = self.select_repositories(repourls, assumeyes)
 
@@ -140,15 +140,15 @@ class Discovery(RepoAction):
 
         return os.EX_OK
 
-    def discover_repositories(self, url):
+    def discover_repositories(self, org_name, url):
         print(_("Discovering repository urls, this could take some time..."))
         try:
-            task = self.api.repo_discovery(url, 'yum')
+            task = self.api.repo_discovery(org_name, url, 'yum')
         except Exception,e:
             system_exit(os.EX_DATAERR, _("Error: %s" % e))
 
-        discoveryResult = run_spinner_in_bg(self.wait_for_discovery, [task])
-        repourls = discoveryResult['result'] or []
+        discoveryResult = run_spinner_in_bg(wait_for_async_task, [task])
+        repourls = discoveryResult[0]['result'] or []
 
         if not len(repourls):
             system_exit(os.EX_OK, "No repositories discovered @ url location [%s]" % url)
@@ -199,8 +199,9 @@ class Discovery(RepoAction):
     def create_repositories(self, productid, name, selectedurls):
         for repourl in selectedurls:
             parsedUrl = urlparse.urlparse(repourl)
-            repoName = self.repository_name(name, parsedUrl.path)
+            repoName = self.repository_name(name, parsedUrl.path) # pylint: disable=E1101
             repo = self.api.create(productid, repoName, repourl)
+
             print _("Successfully created repository [ %s ]") % repoName
 
     def repository_name(self, name, parsedUrlPath):
@@ -212,13 +213,6 @@ class Discovery(RepoAction):
                 print "(+)  [%s] %-5s" % (index+1, url)
             else:
                 print "(-)  [%s] %-5s" % (index+1, url)
-
-    def wait_for_discovery(self, discoveryTask):
-        while discoveryTask['state'] not in ('finished', 'error', 'timed out', 'canceled'):
-            time.sleep(0.25)
-            discoveryTask = self.api.repo_discovery_status(discoveryTask['id'])
-
-        return discoveryTask
 
 
 class Selection(list):
@@ -272,11 +266,11 @@ class Status(RepoAction):
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
             repo['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
-            
+
         errors = task.errors()
         if len(errors) > 0:
             repo['last_errors'] = errors
-        
+
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('package_count')
@@ -295,7 +289,7 @@ class Info(RepoAction):
     description = _('information about a repository')
 
     def setup_parser(self):
-        self.parser.add_option('--repo_id', dest='repo_id',
+        self.parser.add_option('--id', dest='id',
                       help=_("repository id"))
         self.parser.add_option('--name', dest='name',
                       help=_("repository name"))
@@ -307,13 +301,13 @@ class Info(RepoAction):
                       help=_("product name eg: fedora-14"))
 
     def check_options(self):
-        if not self.has_option('repo_id'):
+        if not self.has_option('id'):
             self.require_option('name')
             self.require_option('org')
             self.require_option('product')
 
     def run(self):
-        repoId   = self.get_option('repo_id')
+        repoId   = self.get_option('id')
         repoName = self.get_option('name')
         orgName  = self.get_option('org')
         envName  = self.get_option('env')
@@ -349,7 +343,7 @@ class Sync(RepoAction):
     description = _('synchronize a repository')
 
     def setup_parser(self):
-        self.parser.add_option('--repo_id', dest='repo_id',
+        self.parser.add_option('--id', dest='id',
                                help=_("repo id, string value (required)"))
         self.parser.add_option('--org', dest='org',
                       help=_("organization name eg: foo.example.com (required)"))
@@ -357,19 +351,19 @@ class Sync(RepoAction):
                       help=_("repository name"))
         self.parser.add_option('--product', dest='product',
                       help=_("product name eg: fedora-14"))
-                      
+
     def check_options(self):
-        if not self.has_option('repo_id'):
+        if not self.has_option('id'):
             self.require_option('name')
             self.require_option('org')
             self.require_option('product')
 
     def run(self):
-        repoId   = self.get_option('repo_id')
+        repoId   = self.get_option('id')
         repoName = self.get_option('name')
         orgName  = self.get_option('org')
         prodName = self.get_option('product')
-        
+
         if repoId:
             repo = self.api.repo(repoId)
         else:
@@ -379,7 +373,7 @@ class Sync(RepoAction):
 
         task = AsyncTask(self.api.sync(repo['id']))
         run_async_task_with_status(task, ProgressBar())
-        
+
         if task.succeeded():
             print _("Repo [ %s ] synced" % repo['name'])
             return os.EX_OK

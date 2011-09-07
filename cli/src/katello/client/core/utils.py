@@ -29,9 +29,12 @@ class Printer:
     """
     Class for unified printing of the CLI output.
     """
+    OUTPUT_FORCE_NONE = 0
+    OUTPUT_FORCE_GREP = 1
+    OUTPUT_FORCE_VERBOSE = 2
 
-    def __init__(self, grep, delimiter=""):
-        self._grep = grep
+    def __init__(self, output_mode, delimiter=""):
+        self._output_mode = output_mode
         self._columns = []
         self._heading = ""
         self._delim = delimiter
@@ -44,7 +47,7 @@ class Printer:
         #print '+' + '-'*(width-2) + '+'
         print '-'*width
 
-    def _printHeader(self, heading, widths={}):
+    def _printHeader(self, heading, grep_mode, widths={}):
         """
         Print a fancy header to stdout.
         @type heading: string or list of strings
@@ -59,13 +62,13 @@ class Printer:
                 padding = ((header_width - len(line)) / 2) - 1
             print ' ' * padding, line
 
-        if self._grep:
+        if grep_mode:
             print
             print self._delim,
             for col in self._columns:
                 if col['show_in_grep']:
 
-                    if widths.has_key(col['attr_name']):
+                    if col['attr_name'] in widths:
                         width = widths[col['attr_name']]
                     else:
                         width = 0
@@ -140,7 +143,7 @@ class Printer:
         print
         for col in self._columns:
             #skip missing attributes
-            if not item.has_key(col['attr_name']):
+            if not col['attr_name'] in item:
                 continue
 
             value = item[col['attr_name']]
@@ -162,13 +165,13 @@ class Printer:
         print self._delim,
         for col in self._columns:
             #get defined width
-            if widths.has_key(col['attr_name']):
+            if col['attr_name'] in widths:
                 width = widths[col['attr_name']]
             else:
                 width = 0
 
             #skip missing attributes
-            if not item.has_key(col['attr_name']):
+            if not col['attr_name'] in item:
                 print " " * width,
                 print self._delim,
                 continue
@@ -189,7 +192,7 @@ class Printer:
             key = col['attr_name']
             widths[key] = len(str(col['name']))+1
             for item in items:
-                if ( item.has_key(key) ) and ( widths[key] < len(str(item[key])) ):
+                if ( key in item ) and ( widths[key] < len(str(item[key])) ):
                     widths[key] = len(str(item[key]))+1
 
         return widths
@@ -214,9 +217,15 @@ class Printer:
         @type indent: string
         @param indent: text that is prepended to every printed line in multiline mode
         """
-        items = []
-        items.append(item)
-        self.printItems(items, indent)
+        if self._output_mode == Printer.OUTPUT_FORCE_GREP:
+            widths = self._calculateGrepWidths([item])
+            self._printHeader(self._heading, True, widths)
+            self._printItemGrep(item, widths)
+            print
+        else:
+            self._printHeader(self._heading, False)
+            self._printItem(item, indent)
+            print
 
 
     def printItems(self, items, indent=""):
@@ -227,17 +236,18 @@ class Printer:
         @type indent: string
         @param indent: text that is prepended to every printed line in multiline mode
         """
-        if self._grep:
-            widths = self._calculateGrepWidths(items)
-            self._printHeader(self._heading, widths)
-            for item in items:
-                self._printItemGrep(item, widths)
-                print
-        else:
-            self._printHeader(self._heading)
+        if self._output_mode == Printer.OUTPUT_FORCE_VERBOSE:
+            self._printHeader(self._heading, False)
             for item in items:
                 self._printItem(item, indent)
                 print
+        else:
+            widths = self._calculateGrepWidths(items)
+            self._printHeader(self._heading, True, widths)
+            for item in items:
+                self._printItemGrep(item, widths)
+                print
+
 
 
 
@@ -249,10 +259,10 @@ def is_valid_record(rec):
     @param rec: record returned from server
     @return True if record contains created_at field with value.
     """
-    if rec.has_key('created_at'):
+    if 'created_at' in rec:
         return (rec['created_at'] != None)
 
-    elif rec.has_key('created'):
+    elif 'created' in rec:
         return (rec['created'] != None)
 
     else:
@@ -359,8 +369,7 @@ def format_date(date, from_format="%Y-%m-%dT%H:%M:%SZ", to_format="%Y/%m/%d %H:%
     @param date: arguments for the function
     @return string, formatted date
     """
-    #t = time.strptime(date, from_format)
-    t = time.localtime()
+    t = time.strptime(date, from_format)
     return time.strftime(to_format, t)
 
 
@@ -506,7 +515,7 @@ class AsyncTask():
         return self._get_progress_sum('items_left')
 
     def errors(self):
-        return [err for t in self._tasks for err in t['progress']['error_details']]
+        return [err for t in self._tasks if 'error_details' in t['progress'] for err in t['progress']['error_details']]
 
     def _get_progress_sum(self, name):
         return sum([t['progress'][name] for t in self._tasks])
@@ -516,7 +525,7 @@ class AsyncTask():
 
     def get_hashes(self):
         return self._tasks
-        
+
     def get_subtasks(self):
         return [AsyncTask(t) for t in self._tasks]
 
@@ -528,7 +537,7 @@ def wait_for_async_task(task):
 
     while task.is_running():
         time.sleep(1)
-        task.update()            
+        task.update()
     return task.get_hashes()
 
 
@@ -550,4 +559,3 @@ def progress(left, total):
     sizeLeft = float(left)
     sizeTotal = float(total)
     return 0.0 if total == 0 else (sizeTotal - sizeLeft) / sizeTotal
-    

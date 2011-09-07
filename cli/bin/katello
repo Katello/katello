@@ -27,6 +27,7 @@ from katello.client.core import (
   ping,
   product,
   repo,
+  packagegroup,
   distribution,  
   package,
   errata,
@@ -89,6 +90,13 @@ def setup_admin(admin):
     repo_cmd.add_action('synchronize', repo.Sync())
     admin.add_command('repo', repo_cmd)
 
+    package_group_cmd = packagegroup.PackageGroup()
+    package_group_cmd.add_action('list', packagegroup.List())
+    package_group_cmd.add_action('info', packagegroup.Info())
+    package_group_cmd.add_action('category_list', packagegroup.CategoryList())
+    package_group_cmd.add_action('category_info', packagegroup.CategoryInfo())
+    admin.add_command('package_group',package_group_cmd)
+
     dist_cmd = distribution.Distribution()
     dist_cmd.add_action('info', distribution.Info())
     dist_cmd.add_action('list', distribution.List())
@@ -135,6 +143,7 @@ def setup_admin(admin):
     prov_cmd.add_action('update', provider.Update())
     prov_cmd.add_action('delete', provider.Delete())
     prov_cmd.add_action('synchronize', provider.Sync())
+    prov_cmd.add_action('status', provider.Status())
     prov_cmd.add_action('import_manifest', provider.ImportManifest())
     admin.add_command('provider', prov_cmd)
 

@@ -284,16 +284,13 @@ class Action(object):
         """
         return
 
-    def grep_output(self):
-        if self.has_option('grep'):
-            return True
-        elif self.has_option('verbose'):
-            return False
+    def output_mode(self):
+        if (self.has_option('grep') or (Config.parser.has_option('interface', 'force_grep_friendly') and Config.parser.get('interface', 'force_grep_friendly').lower() == 'true')):
+            return Printer.OUTPUT_FORCE_GREP
+        elif (self.has_option('verbose') or (Config.parser.has_option('interface', 'force_verbose') and Config.parser.get('interface', 'force_verbose').lower() == 'true')):
+            return Printer.OUTPUT_FORCE_VERBOSE
         else:
-            return (Config.parser.get('interface', 'grep_friendly').lower() == 'true')
-
-
-#    def _pre_setup_parser(self):
+            return  Printer.OUTPUT_FORCE_NONE
 
 
     def process_options(self, args):
@@ -303,7 +300,7 @@ class Action(object):
         """
         self.opts, self.args = self.parser.parse_args(args)
 
-        self.printer = Printer(self.grep_output(), self.get_option('delimiter'))
+        self.printer = Printer(self.output_mode(), self.get_option('delimiter'))
 
         self.optErrors = []
         self.check_options()

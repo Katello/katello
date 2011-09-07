@@ -34,11 +34,6 @@ def randomString():
     return "".join(random.choice(chars) for x in range(random.randint(8, 16)))     
 
 # Defaults that eventually can get set by CLI args
-NUM_ORGS = 5
-NUM_SYSTEMS = 5
-NUM_PROVIDERS = 5
-NUM_PRODUCTS = 5
-NUM_REPOS = 5
 ENVIRONMENTS = ["DEV", "TEST", "STAGE", "PROD"]
 
 def randomString():
@@ -86,7 +81,7 @@ def create_data(numorgs, numsystems, numproviders, numproducts, numrepos, single
                 envids.append(existing_env["id"])
 
     ## create providers, products and repos
-    print "Creating [%s] providers in each org" % NUM_PROVIDERS 
+    print "Creating [%s] providers in each org" % numproviders 
     for i in range(len(org_names)):
         for y in range(numproviders):
             provider_name = "Provider-%s" % randomString()
@@ -105,7 +100,7 @@ def create_data(numorgs, numsystems, numproviders, numproducts, numrepos, single
                     print "    [%s] Creating repo with name: [%s]" % (x, repo_name)
                     repoapi = RepoAPI()
                     url = "http://repos.example.com/%s" % repo_name
-                    repoapi.create(product["cp_id"], repo_name, url)
+                    repoapi.create(product["id"], repo_name, url)
     ## Create systems
     print "Creating [%s] Systems in each org and assigning to random envs" % numsystems 
     for i in range(len(org_names)):
@@ -121,7 +116,7 @@ def create_data(numorgs, numsystems, numproviders, numproducts, numrepos, single
 if __name__ == '__main__':
  
     parser = OptionParser("usage: %prog [options]")
-    parser.add_option('--numorgs',  dest='numorgs',  type="int", default=None)
+    parser.add_option('--numorgs',  dest='numorgs',  type="int")
     parser.add_option('--numsystems',  dest='numsystems', type="int", default=1)
     parser.add_option('--numproviders',  dest='numproviders', type="int", default=1)
     parser.add_option('--numproducts',  dest='numproducts', type="int", default=1)
@@ -132,7 +127,7 @@ if __name__ == '__main__':
     
     if (options.numorgs and options.singleorg):
         sys.exit("ERROR: You specified --numorgs and --singleorg which contradict each other, please pick only one.")
-    else:
+    elif not options.numorgs and not options.singleorg:
         options.numorgs = 1
     
     threads = []

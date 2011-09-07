@@ -298,7 +298,7 @@ class KatelloServer(Server):
         if response.status >= 300:
             # if the server has responded with a python traceback
             # try to split it out
-            if isinstance(response_body, basestring) and not response_body.startswith('<html'):
+            if isinstance(response_body, basestring) and not response_body.startswith('<html'): # pylint: disable=E1103
                 response_body += "\n"
                 message, traceback = response_body.split('\n', 1)
                 raise ServerRequestError(response.status, message.strip(), traceback.strip())

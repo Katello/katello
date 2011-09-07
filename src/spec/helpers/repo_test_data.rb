@@ -18,6 +18,7 @@ module RepoTestData
   CLONED_2_REPO_ID = 'cloned_2_repository_id'
 
   REPO_PRODUCT_ID = 1313597888827
+  REPO_PRODUCT_CP_ID = 4312314881818
   REPO_ENV_ID = 3
   REPO_ORG_ID = 2
   CLONED_REPO_ENV_ID = 4
@@ -28,7 +29,7 @@ module RepoTestData
     :arch => 'architecture',
     :feed => 'url',
     "groupid" => [
-      "product:"+REPO_PRODUCT_ID.to_s,
+      "product:"+REPO_PRODUCT_CP_ID.to_s,
       "env:"+REPO_ENV_ID.to_s,
       "org:"+REPO_ORG_ID.to_s
     ],
@@ -43,7 +44,7 @@ module RepoTestData
     :arch => 'architecture',
     :feed => 'url',
     "groupid" => [
-      "product:"+REPO_PRODUCT_ID.to_s,
+      "product:"+REPO_PRODUCT_CP_ID.to_s,
       "env:"+CLONED_REPO_ENV_ID.to_s,
       "org:"+REPO_ORG_ID.to_s
     ],
@@ -124,6 +125,41 @@ module RepoTestData
       "title" => "Zoo package enhancements"
     }.with_indifferent_access
   ]
+
+  REPO_PACKAGE_GROUPS = {
+    "123" =>
+    {"name" => "katello",
+     "conditional_package_names" => {},
+     "mandatory_package_names" => [],
+     "default" => true,
+     "_id" => "123",
+     "langonly" => nil,
+     "id" => "123",
+     "immutable" => false,
+     "optional_package_names" => [],
+     "default_package_names" => ["pulp-test-package-0.2.1-1.fc11.x86_64.rpm"],
+     "translated_description" => {},
+     "user_visible" => true,
+     "display_order" => 1024,
+     "repo_defined" => false,
+     "description" => "Katello related packages",
+     "translated_name" => {}
+    }
+  }.with_indifferent_access
+
+  REPO_PACKAGE_GROUP_CATEGORIES = {
+    "development" => 
+    {"name" => "Development",
+     "_id" => "development",
+     "id" => "development",
+     "immutable" => false,
+     "translated_description" => {},
+     "display_order" => 99,
+     "repo_defined" => false,
+     "description" => "",
+     "packagegroupids" => ["123"],
+     "translated_name" => {}}
+  }.with_indifferent_access
 
   REPO_DISTRIBUTIONS = [
     {

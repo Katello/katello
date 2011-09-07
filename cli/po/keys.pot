@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-18 12:47-0400\n"
+"POT-Creation-Date: 2011-09-02 10:11-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -255,18 +255,28 @@ msgstr ""
 #: ../src/katello/client/core/system.py:45
 #: ../src/katello/client/core/system.py:81
 #: ../src/katello/client/core/system.py:129
-#: ../src/katello/client/core/system.py:178
+#: ../src/katello/client/core/system.py:182
 #: ../src/katello/client/core/repo.py:74
-#: ../src/katello/client/core/repo.py:114
-#: ../src/katello/client/core/product.py:60
-#: ../src/katello/client/core/product.py:110
-#: ../src/katello/client/core/product.py:157
-#: ../src/katello/client/core/product.py:205
+#: ../src/katello/client/core/repo.py:110
+#: ../src/katello/client/core/repo.py:356
+#: ../src/katello/client/core/product.py:63
+#: ../src/katello/client/core/product.py:111
+#: ../src/katello/client/core/product.py:147
+#: ../src/katello/client/core/product.py:196
+#: ../src/katello/client/core/product.py:246
 #: ../src/katello/client/core/organization.py:62
 #: ../src/katello/client/core/organization.py:91
 #: ../src/katello/client/core/organization.py:118
 #: ../src/katello/client/core/organization.py:139
 msgid "organization name eg: foo.example.com (required)"
+msgstr ""
+
+#: ../src/katello/client/core/environment.py:64
+msgid "Org"
+msgstr ""
+
+#: ../src/katello/client/core/environment.py:65
+msgid "Prior Environment"
 msgstr ""
 
 #: ../src/katello/client/core/environment.py:67
@@ -303,7 +313,7 @@ msgstr ""
 #: ../src/katello/client/core/changeset.py:199
 #: ../src/katello/client/core/changeset.py:270
 #: ../src/katello/client/core/changeset.py:302
-#: ../src/katello/client/core/product.py:161
+#: ../src/katello/client/core/product.py:200
 msgid "environment name (required)"
 msgstr ""
 
@@ -366,10 +376,11 @@ msgstr ""
 #: ../src/katello/client/core/activation_key.py:140
 #: ../src/katello/client/core/activation_key.py:187
 #: ../src/katello/client/core/activation_key.py:243
-#: ../src/katello/client/core/provider.py:137
-#: ../src/katello/client/core/provider.py:218
+#: ../src/katello/client/core/provider.py:138
+#: ../src/katello/client/core/provider.py:219
 #: ../src/katello/client/core/provider.py:248
-#: ../src/katello/client/core/provider.py:283
+#: ../src/katello/client/core/provider.py:285
+#: ../src/katello/client/core/provider.py:333
 #: ../src/katello/client/core/template.py:101
 #: ../src/katello/client/core/template.py:146
 #: ../src/katello/client/core/template.py:194
@@ -458,27 +469,20 @@ msgid "promotes a changeset to the next environment"
 msgstr ""
 
 #: ../src/katello/client/core/changeset.py:321
-#: ../src/katello/client/core/repo.py:152
-#: ../src/katello/client/core/template.py:407
-#, python-format
-msgid "Error: %s"
-msgstr ""
-
-#: ../src/katello/client/core/changeset.py:323
 msgid "Promoting the changeset, please wait... "
 msgstr ""
 
-#: ../src/katello/client/core/changeset.py:326
+#: ../src/katello/client/core/changeset.py:324
 #, python-format
 msgid "Changeset [ %s ] promoted"
 msgstr ""
 
-#: ../src/katello/client/core/changeset.py:329
+#: ../src/katello/client/core/changeset.py:327
 #, python-format
 msgid "Changeset [ %s ] promotion failed: %s"
 msgstr ""
 
-#: ../src/katello/client/core/changeset.py:335
+#: ../src/katello/client/core/changeset.py:333
 msgid "changeset specific actions in the katello server"
 msgstr ""
 
@@ -487,7 +491,7 @@ msgid "list systems within an organization"
 msgstr ""
 
 #: ../src/katello/client/core/system.py:47
-#: ../src/katello/client/core/system.py:227
+#: ../src/katello/client/core/system.py:231
 msgid "environment name eg: development"
 msgstr ""
 
@@ -507,18 +511,18 @@ msgstr ""
 
 #: ../src/katello/client/core/system.py:83
 #: ../src/katello/client/core/system.py:131
-#: ../src/katello/client/core/system.py:180
-#: ../src/katello/client/core/system.py:223
-#: ../src/katello/client/core/system.py:268
-#: ../src/katello/client/core/system.py:294
+#: ../src/katello/client/core/system.py:184
+#: ../src/katello/client/core/system.py:227
+#: ../src/katello/client/core/system.py:272
+#: ../src/katello/client/core/system.py:298
 #: ../src/katello/client/core/errata.py:91
 msgid "system name (required)"
 msgstr ""
 
 #: ../src/katello/client/core/system.py:85
 #: ../src/katello/client/core/system.py:133
-#: ../src/katello/client/core/system.py:182
-#: ../src/katello/client/core/system.py:296
+#: ../src/katello/client/core/system.py:186
+#: ../src/katello/client/core/system.py:300
 msgid "environment name"
 msgstr ""
 
@@ -547,95 +551,95 @@ msgid ""
 "Package Information for System [ %s ] in Environment [ %s ] in Org [ %s ]"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:174
+#: ../src/katello/client/core/system.py:178
 msgid "display a the hardware facts of a system"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:195
+#: ../src/katello/client/core/system.py:199
 #, python-format
 msgid "System Facts For System [ %s ] in Org [ %s ]"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:198
+#: ../src/katello/client/core/system.py:202
 #, python-format
 msgid "System Facts For System [ %s ] in Environment [ %s]  in Org [ %s ]"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:219
+#: ../src/katello/client/core/system.py:223
 msgid "register a system"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:225
-#: ../src/katello/client/core/system.py:266
-#: ../src/katello/client/core/system.py:292
-#: ../src/katello/client/core/provider.py:54
-#: ../src/katello/client/core/provider.py:86
+#: ../src/katello/client/core/system.py:229
+#: ../src/katello/client/core/system.py:270
+#: ../src/katello/client/core/system.py:296
+#: ../src/katello/client/core/provider.py:55
+#: ../src/katello/client/core/provider.py:87
 #: ../src/katello/client/core/errata.py:89
 msgid "organization name (required)"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:229
+#: ../src/katello/client/core/system.py:233
 msgid ""
 "activation key, more keys are separated with comma e.g. --activationkey=key1,"
 "key2"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:237
+#: ../src/katello/client/core/system.py:241
 #, python-format
 msgid "Option %s can not be specified with %s"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:255
+#: ../src/katello/client/core/system.py:259
 #, python-format
 msgid "Successfully registered system [ %s ]"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:257
+#: ../src/katello/client/core/system.py:261
 #, python-format
 msgid "Could not register system [ %s ]"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:262
+#: ../src/katello/client/core/system.py:266
 msgid "unregister a system"
-msgstr ""
-
-#: ../src/katello/client/core/system.py:279
-#, python-format
-msgid "Could not find System [ %s ] in Org [ %s ]"
 msgstr ""
 
 #: ../src/katello/client/core/system.py:283
 #, python-format
+msgid "Could not find System [ %s ] in Org [ %s ]"
+msgstr ""
+
+#: ../src/katello/client/core/system.py:287
+#, python-format
 msgid "Successfully unregistered System [ %s ]"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:288
+#: ../src/katello/client/core/system.py:292
 msgid "update a system"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:299
+#: ../src/katello/client/core/system.py:303
 msgid "a new name for the system"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:301
+#: ../src/katello/client/core/system.py:305
 msgid "a description of the system"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:303
+#: ../src/katello/client/core/system.py:307
 msgid "location of the system"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:335
+#: ../src/katello/client/core/system.py:339
 #, python-format
 msgid "Successfully updated system [ %s ]"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:337
+#: ../src/katello/client/core/system.py:341
 #, python-format
 msgid "Could not update system [ %s ]"
 msgstr ""
 
-#: ../src/katello/client/core/system.py:344
+#: ../src/katello/client/core/system.py:348
 msgid "system specific actions in the katello server"
 msgstr ""
 
@@ -660,40 +664,41 @@ msgid "list packages in a repository"
 msgstr ""
 
 #: ../src/katello/client/core/package.py:78
-#: ../src/katello/client/core/repo.py:269
+#: ../src/katello/client/core/repo.py:300
 #: ../src/katello/client/core/distribution.py:44
 #: ../src/katello/client/core/errata.py:45
 msgid "repository id"
 msgstr ""
 
 #: ../src/katello/client/core/package.py:80
-#: ../src/katello/client/core/repo.py:271
-#: ../src/katello/client/core/repo.py:327
+#: ../src/katello/client/core/repo.py:240
+#: ../src/katello/client/core/repo.py:302
+#: ../src/katello/client/core/repo.py:358
 #: ../src/katello/client/core/distribution.py:46
 #: ../src/katello/client/core/errata.py:47
 msgid "repository name"
 msgstr ""
 
 #: ../src/katello/client/core/package.py:82
-#: ../src/katello/client/core/repo.py:273
-#: ../src/katello/client/core/repo.py:325
+#: ../src/katello/client/core/repo.py:242
+#: ../src/katello/client/core/repo.py:304
 #: ../src/katello/client/core/distribution.py:48
 #: ../src/katello/client/core/errata.py:49
 msgid "organization name eg: foo.example.com"
 msgstr ""
 
 #: ../src/katello/client/core/package.py:84
-#: ../src/katello/client/core/repo.py:275
-#: ../src/katello/client/core/repo.py:370
+#: ../src/katello/client/core/repo.py:400
 #: ../src/katello/client/core/distribution.py:50
 #: ../src/katello/client/core/errata.py:51
 msgid "environment name eg: production (default: locker)"
 msgstr ""
 
 #: ../src/katello/client/core/package.py:86
-#: ../src/katello/client/core/repo.py:277
-#: ../src/katello/client/core/repo.py:329
-#: ../src/katello/client/core/repo.py:372
+#: ../src/katello/client/core/repo.py:246
+#: ../src/katello/client/core/repo.py:308
+#: ../src/katello/client/core/repo.py:360
+#: ../src/katello/client/core/repo.py:402
 #: ../src/katello/client/core/distribution.py:52
 #: ../src/katello/client/core/errata.py:53
 msgid "product name eg: fedora-14"
@@ -863,15 +868,16 @@ msgid "url path to the repository (required)"
 msgstr ""
 
 #: ../src/katello/client/core/repo.py:80
-#: ../src/katello/client/core/repo.py:122
-#: ../src/katello/client/core/product.py:114
-#: ../src/katello/client/core/product.py:159
-#: ../src/katello/client/core/product.py:209
+#: ../src/katello/client/core/repo.py:118
+#: ../src/katello/client/core/product.py:113
+#: ../src/katello/client/core/product.py:149
+#: ../src/katello/client/core/product.py:198
+#: ../src/katello/client/core/product.py:250
 msgid "product name (required)"
 msgstr ""
 
 #: ../src/katello/client/core/repo.py:97
-#: ../src/katello/client/core/repo.py:208
+#: ../src/katello/client/core/repo.py:205
 #, python-format
 msgid "Successfully created repository [ %s ]"
 msgstr ""
@@ -881,114 +887,128 @@ msgstr ""
 msgid "No product [ %s ] found"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:110
+#: ../src/katello/client/core/repo.py:106
 msgid "discovery repositories contained within a URL"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:116
+#: ../src/katello/client/core/repo.py:112
 msgid ""
 "repository name prefix to add to all the discovered repositories (required)"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:118
+#: ../src/katello/client/core/repo.py:114
 msgid ""
 "root url to perform discovery of repositories eg: http://porkchop.devel."
 "redhat.com/ (required)"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:120
-#: ../src/katello/client/core/product.py:215
+#: ../src/katello/client/core/repo.py:116
+#: ../src/katello/client/core/product.py:256
 msgid ""
 "assume yes; automatically create candidate repositories for discovered urls "
 "(optional)"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:138
-#: ../src/katello/client/core/product.py:246
+#: ../src/katello/client/core/repo.py:134
+#: ../src/katello/client/core/product.py:287
 #, python-format
 msgid "Repository Urls discovered @ [%s]"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:148
+#: ../src/katello/client/core/repo.py:144
 msgid "Discovering repository urls, this could take some time..."
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:172
+#: ../src/katello/client/core/repo.py:148
+#: ../src/katello/client/core/template.py:407
+#, python-format
+msgid "Error: %s"
+msgstr ""
+
+#: ../src/katello/client/core/repo.py:168
 msgid ""
 "\n"
 "Select urls for which candidate repos should be created; use `y` to confirm "
 "(h for help):"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:182
+#: ../src/katello/client/core/repo.py:178
 msgid "Operation aborted upon user request."
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:237
+#: ../src/katello/client/core/repo.py:234
 msgid "status information about a repository"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:241
-#: ../src/katello/client/core/repo.py:323
-msgid "repo id, string value (required)"
+#: ../src/katello/client/core/repo.py:238
+msgid "repository id, string value (required)"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:256
-#: ../src/katello/client/core/repo.py:309
-msgid "Progress"
+#: ../src/katello/client/core/repo.py:244
+#: ../src/katello/client/core/repo.py:306
+#: ../src/katello/client/core/product.py:65
+msgid "environment name eg: production (default: Locker)"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:258
+#: ../src/katello/client/core/repo.py:289
 msgid "Repository Status"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:265
+#: ../src/katello/client/core/repo.py:296
 msgid "information about a repository"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:311
+#: ../src/katello/client/core/repo.py:340
+msgid "Progress"
+msgstr ""
+
+#: ../src/katello/client/core/repo.py:342
 #, python-format
 msgid "Information About Repo %s"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:319
+#: ../src/katello/client/core/repo.py:350
 msgid "synchronize a repository"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:355
+#: ../src/katello/client/core/repo.py:354
+msgid "repo id, string value (required)"
+msgstr ""
+
+#: ../src/katello/client/core/repo.py:385
 #, python-format
 msgid "Repo [ %s ] synced"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:358
+#: ../src/katello/client/core/repo.py:388
 #, python-format
 msgid "Repo [ %s ] failed to sync: %s"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:364
+#: ../src/katello/client/core/repo.py:394
 msgid "list repos within an organization"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:368
+#: ../src/katello/client/core/repo.py:398
 msgid "organization name eg: ACME_Corporation (required)"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:390
+#: ../src/katello/client/core/repo.py:420
 #, python-format
 msgid "Repo List For Org %s Environment %s Product %s"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:396
+#: ../src/katello/client/core/repo.py:426
 #, python-format
 msgid "Repo List for Product %s in Org %s "
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:402
+#: ../src/katello/client/core/repo.py:432
 #, python-format
 msgid "Repo List For Org %s Environment %s"
 msgstr ""
 
-#: ../src/katello/client/core/repo.py:412
+#: ../src/katello/client/core/repo.py:442
 #: ../src/katello/client/core/distribution.py:119
 msgid "repo specific actions in the katello server"
 msgstr ""
@@ -1014,87 +1034,90 @@ msgstr ""
 msgid "Distribution Information"
 msgstr ""
 
-#: ../src/katello/client/core/product.py:56
+#: ../src/katello/client/core/product.py:59
 msgid "list known products"
 msgstr ""
 
-#: ../src/katello/client/core/product.py:62
-msgid "environment name eg: production (default: Locker)"
+#: ../src/katello/client/core/product.py:67
+msgid "provider name, lists provider's product in the Locker"
 msgstr ""
 
-#: ../src/katello/client/core/product.py:64
-#: ../src/katello/client/core/provider.py:148
-msgid "provider name"
-msgstr ""
-
-#: ../src/katello/client/core/product.py:85
+#: ../src/katello/client/core/product.py:89
 #, python-format
 msgid "Product List For Provider %s"
 msgstr ""
 
-#: ../src/katello/client/core/product.py:96
+#: ../src/katello/client/core/product.py:97
 #, python-format
 msgid "Product List For Organization %s, Environment '%s'"
 msgstr ""
 
-#: ../src/katello/client/core/product.py:106
+#: ../src/katello/client/core/product.py:107
 msgid "synchronize a product"
 msgstr ""
 
-#: ../src/katello/client/core/product.py:112
-#: ../src/katello/client/core/product.py:207
-#: ../src/katello/client/core/provider.py:84
-#: ../src/katello/client/core/provider.py:131
-#: ../src/katello/client/core/provider.py:216
-#: ../src/katello/client/core/provider.py:246
-#: ../src/katello/client/core/provider.py:281
-msgid "provider name (required)"
-msgstr ""
-
-#: ../src/katello/client/core/product.py:143
+#: ../src/katello/client/core/product.py:133
 #, python-format
 msgid "Product [ %s ] failed to sync: %s"
 msgstr ""
 
-#: ../src/katello/client/core/product.py:146
+#: ../src/katello/client/core/product.py:136
 #, python-format
 msgid "Product [ %s ] synchronized"
 msgstr ""
 
-#: ../src/katello/client/core/product.py:153
+#: ../src/katello/client/core/product.py:143
+msgid "status of product's synchronization"
+msgstr ""
+
+#: ../src/katello/client/core/product.py:184
+msgid "Product Status"
+msgstr ""
+
+#: ../src/katello/client/core/product.py:192
 msgid "promote a product to an environment"
 msgstr ""
 
-#: ../src/katello/client/core/product.py:186
+#: ../src/katello/client/core/product.py:224
 msgid "Promoting the product, please wait... "
 msgstr ""
 
-#: ../src/katello/client/core/product.py:187
+#: ../src/katello/client/core/product.py:225
 #, python-format
 msgid "Product [ %s ] promoted to environment [ %s ]"
 msgstr ""
 
-#: ../src/katello/client/core/product.py:201
+#: ../src/katello/client/core/product.py:242
 msgid "create new product to a custom provider"
 msgstr ""
 
-#: ../src/katello/client/core/product.py:211
+#: ../src/katello/client/core/product.py:248
+#: ../src/katello/client/core/provider.py:85
+#: ../src/katello/client/core/provider.py:132
+#: ../src/katello/client/core/provider.py:217
+#: ../src/katello/client/core/provider.py:246
+#: ../src/katello/client/core/provider.py:283
+#: ../src/katello/client/core/provider.py:331
+msgid "provider name (required)"
+msgstr ""
+
+#: ../src/katello/client/core/product.py:252
 msgid "product description"
 msgstr ""
 
-#: ../src/katello/client/core/product.py:213
-#: ../src/katello/client/core/provider.py:135
+#: ../src/katello/client/core/product.py:254
+#: ../src/katello/client/core/provider.py:136
 msgid ""
 "repository url eg: http://download.fedoraproject.org/pub/fedora/linux/"
 "releases/"
 msgstr ""
 
-#: ../src/katello/client/core/product.py:240
+#: ../src/katello/client/core/product.py:281
 #, python-format
 msgid "Successfully created product [ %s ]"
 msgstr ""
 
-#: ../src/katello/client/core/product.py:256
+#: ../src/katello/client/core/product.py:297
 msgid "product specific actions in the katello server"
 msgstr ""
 
@@ -1142,59 +1165,59 @@ msgstr ""
 msgid "Scheduled time is in the past: %s.  Please re-run with a valid time."
 msgstr ""
 
-#: ../src/katello/client/core/base.py:330
+#: ../src/katello/client/core/base.py:328
 msgid "error: operation failed: "
 msgstr ""
 
-#: ../src/katello/client/core/base.py:344
+#: ../src/katello/client/core/base.py:342
 msgid ""
 "ERROR: The server hostname you have configured in /etc/katello/client.conf "
 "does not match the"
 msgstr ""
 
-#: ../src/katello/client/core/base.py:345
+#: ../src/katello/client/core/base.py:343
 msgid "hostname returned from the katello server you are connecting to.  "
 msgstr ""
 
-#: ../src/katello/client/core/base.py:347
+#: ../src/katello/client/core/base.py:345
 #, python-format
 msgid "You have: [%s] configured but got: [%s] from the server."
 msgstr ""
 
-#: ../src/katello/client/core/base.py:349
+#: ../src/katello/client/core/base.py:347
 msgid "Please correct the host in the /etc/katello/client.conf file"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:49
+#: ../src/katello/client/core/provider.py:50
 msgid "list all known providers"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:71
+#: ../src/katello/client/core/provider.py:72
 msgid "Provider List"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:79
+#: ../src/katello/client/core/provider.py:80
 msgid "list information about a provider"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:105
+#: ../src/katello/client/core/provider.py:106
 msgid "Provider Information"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:118
+#: ../src/katello/client/core/provider.py:119
 msgid "create a provider"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:120
+#: ../src/katello/client/core/provider.py:121
 msgid "update a provider"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:133
+#: ../src/katello/client/core/provider.py:134
 #: ../src/katello/client/core/template.py:152
 msgid "provider description"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:141
+#: ../src/katello/client/core/provider.py:142
 msgid ""
 "provider type, one of:\n"
 "                                  \"redhat\"   for Red Hat,\n"
@@ -1202,62 +1225,74 @@ msgid ""
 "(default)"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:165
+#: ../src/katello/client/core/provider.py:149
+msgid "provider name"
+msgstr ""
+
+#: ../src/katello/client/core/provider.py:166
 msgid "Option --url has to start with http:// or https://"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:171
+#: ../src/katello/client/core/provider.py:172
 #, python-format
 msgid "Successfully created provider [ %s ]"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:174
+#: ../src/katello/client/core/provider.py:175
 #, python-format
 msgid "Could not create provider [ %s ]"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:183
+#: ../src/katello/client/core/provider.py:184
 #, python-format
 msgid "Successfully updated provider [ %s ]"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:211
+#: ../src/katello/client/core/provider.py:212
 msgid "delete a provider"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:240
+#: ../src/katello/client/core/provider.py:241
 msgid "synchronize a provider"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:267
+#: ../src/katello/client/core/provider.py:269
 #, python-format
 msgid "Provider [ %s ] failed to sync: %s"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:270
+#: ../src/katello/client/core/provider.py:272
 #, python-format
 msgid "Provider [ %s ] synchronized"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:276
+#: ../src/katello/client/core/provider.py:279
+msgid "status of provider's synchronization"
+msgstr ""
+
+#: ../src/katello/client/core/provider.py:318
+msgid "Provider Status"
+msgstr ""
+
+#: ../src/katello/client/core/provider.py:326
 msgid "import a manifest file"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:285
+#: ../src/katello/client/core/provider.py:335
 msgid "path to the manifest file (required)"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:302
+#: ../src/katello/client/core/provider.py:352
 #: ../src/katello/client/core/template.py:169
 #, python-format
 msgid "File %s does not exist"
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:307
+#: ../src/katello/client/core/provider.py:357
 msgid "Importing manifest, please wait... "
 msgstr ""
 
-#: ../src/katello/client/core/provider.py:319
+#: ../src/katello/client/core/provider.py:369
 msgid "provider specific actions in the katello server"
 msgstr ""
 

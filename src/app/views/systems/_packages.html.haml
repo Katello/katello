@@ -1,22 +1,30 @@
 = javascript :filtertable, :system_packages
 
 = content_for :title do
-  #{_("System")}
+  #{@system.name}
 
 = content_for :navigation do
   = render_navigation(:expand_all => true, :level => 3)
 
 = content_for :content do
-  = render :partial => "common/filter_table"
-  %table.filter_table.packages.ajaxScroll{"data-scroll_url"=>url_for(more_packages_system_path), "data-page_size"=>current_user.page_size}
-    %thead
-      %th #{_("Name")}
-      %th #{_("Arch")}
-    %tbody
-      -packages.each do |p|
-        %tr
-          %td{:class=>'package'}
-            #{p.nvrea}
-          %td{:class=>"arch"}
-            #{p.arch}
-  %a#more More...
+  - if packages.length > 0
+    = render :partial => "common/filter_table"
+    %table.filter_table.packages.ajaxScroll
+      %thead
+        %th
+          %a#package_sort{"data-sort"=>"asc", :class=>"ascending"}
+            #{_("Name")}
+        %th
+          #{_("Arch")}
+      %tbody
+        -packages.each do |p|
+          %tr
+            %td{:class=>"package"}
+              #{p.nvrea}
+            %td{:class=>"arch"}
+              #{p.arch}
+      %a#more{"data-scroll_url"=>url_for(more_packages_system_path()), "data-page_size"=>current_user.page_size, "data-offset"=>offset} #{_("More...")}
+    #list-spinner
+      = image_tag("spinner.gif", :class=>"ajax_scroll")
+  - else
+    %p There are no packages to display.
