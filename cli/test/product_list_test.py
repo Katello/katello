@@ -11,7 +11,7 @@ from katello.client.core.product import List
 
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
-    
+
     def setUp(self):
         self.set_action(List())
         self.mock_options()
@@ -26,7 +26,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     def test_no_error_if_org_and_env_provided(self):
         self.action.process_options(['list', '--org=ACME', '--environment=env'])
         self.assertEqual(len(self.action.optErrors), 0)
-        
+
     def test_no_error_if_org_and_provider_provided(self):
         self.action.process_options(['list', '--org=ACME', '--provider=prov'])
         self.assertEqual(len(self.action.optErrors), 0)
@@ -34,7 +34,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
 
 
 class ProductListTest(CLIActionTestCase):
-  
+
     ORG = test_data.ORGS[0]
     ENV = test_data.ENVS[0]
     PROV = test_data.PROVIDERS[2]
@@ -49,22 +49,22 @@ class ProductListTest(CLIActionTestCase):
         'prov': PROV['name']
     }
 
-    def setUp(self):        
+    def setUp(self):
         self.set_action(List())
         self.set_module(katello.client.core.product)
-        
+
         self.mock_options(self.OPTIONS_BY_ENV)
         self.mock_printer()
-        
+
         self.mock(self.action.api, 'products_by_env', test_data.PRODUCTS)
         self.mock(self.action.api, 'products_by_provider', test_data.PRODUCTS)
-        
+
         self.mock(self.module, 'get_environment', self.ENV)
         self.mock(self.module, 'get_provider', self.PROV)
-        
+
     def tearDown(self):
         self.restore_mocks()
-        
+
     def test_it_finds_environment(self):
         self.mock_options(self.OPTIONS_BY_ENV)
         self.action.run()
@@ -88,4 +88,3 @@ class ProductListTest(CLIActionTestCase):
     def test_it_prints_products(self):
         self.action.run()
         self.action.printer.printItems.assert_called_once_with(test_data.PRODUCTS)
-

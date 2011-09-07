@@ -52,6 +52,11 @@ module Pulp
     def self.default_headers
       {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.current.pulp_oauth_header)
     end
+
+    # the path is expected to have trailing slash
+    def self.path_with_prefix path
+      PulpResource.prefix + path
+    end
   end
 
   class PulpPing < PulpResource
@@ -169,11 +174,6 @@ module Pulp
         raise RuntimeError, "#{response.code}, failed to start repository discovery: #{response.body}"
       end
 
-      def discovery_status task_id
-        response = get("/pulp/api/services/discovery/repo/#{task_id}/", self.default_headers)
-        JSON.parse(response.body).with_indifferent_access
-      end
-
       def repository_path
         "/pulp/api/repositories/"
       end
@@ -263,21 +263,21 @@ module Pulp
   class Consumer < PulpResource
 
     class << self
-      
+
       def create key, uuid, description = "", key_value_pairs = {}
         url = consumer_path() + "?owner=#{key}"
         attrs = {:id => uuid, :description => description, :key_value_pairs => key_value_pairs}
         response = self.post(url, attrs.to_json, self.default_headers)
         JSON.parse(response.body).with_indifferent_access
       end
-      
+
       def upload_package_profile uuid, package_profile
         attrs = {:id => uuid, :package_profile => package_profile}
         response = put(consumer_path(uuid) + "package_profile/", attrs.to_json, self.default_headers)
         raise RuntimeError, "update failed" unless response
         return response
       end
-      
+
       def update key, uuid, description = ""
         url = consumer_path(uuid) + "?owner=#{key}"
         attrs = {:id => uuid, :description => description}
@@ -285,7 +285,7 @@ module Pulp
         raise RuntimeError, "update failed" unless response
         return response
       end
-      
+
       def find consumer_id
         response = get(consumer_path(consumer_id), self.default_headers)
         JSON.parse(response.body).with_indifferent_access
@@ -322,6 +322,32 @@ module Pulp
 
       def path uuid=nil
         "/pulp/api/tasks/"
+      end
+    end
+  end
+
+  class PackageGroup < PulpResource
+    class << self
+      def all repo_id
+        response = get path(repo_id), self.default_headers
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def path repo_id
+        self.path_with_prefix("/repositories/#{repo_id}/packagegroups/")
+      end
+    end
+  end
+
+  class PackageGroupCategory < PulpResource
+    class << self
+      def all repo_id
+        response = get path(repo_id), self.default_headers
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def path repo_id
+        self.path_with_prefix("/repositories/#{repo_id}/packagegroupcategories/")
       end
     end
   end

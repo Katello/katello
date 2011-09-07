@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="template">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="name"/>
+        <xs:element ref="os"/>
+        <xs:element minOccurs="0" ref="description"/>
+        <xs:element minOccurs="0" ref="packages"/>
+        <xs:element minOccurs="0" ref="files"/>
+        <xs:element minOccurs="0" ref="commands"/>
+        <xs:element minOccurs="0" ref="repositories"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="name" type="xs:string"/>
+  <xs:element name="os">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="name"/>
+        <xs:element ref="version"/>
+        <xs:element ref="arch"/>
+        <xs:element ref="install"/>
+        <xs:element minOccurs="0" ref="rootpw"/>
+        <xs:element minOccurs="0" ref="key"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="version" type="xs:string"/>
+  <xs:element name="arch">
+    <xs:simpleType>
+      <xs:restriction base="xs:token">
+        <xs:enumeration value="i386"/>
+        <xs:enumeration value="x86_64"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="install">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="url"/>
+        <xs:group ref="iso"/>
+      </xs:choice>
+      <xs:attribute name="type" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="url"/>
+            <xs:enumeration value="iso"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="rootpw" type="xs:string"/>
+  <xs:element name="key" type="xs:string"/>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="packages">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="package"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="package">
+    <xs:complexType>
+      <xs:all>
+        <xs:element minOccurs="0" name="repository" type="xs:string"/>
+        <xs:element minOccurs="0" name="file" type="xs:string"/>
+        <xs:element minOccurs="0" ref="arguments"/>
+      </xs:all>
+      <xs:attribute name="name" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="arguments" type="xs:string"/>
+  <xs:element name="files">
+    <xs:annotation>
+      <xs:documentation>
+        Specify files to add to the image.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="file">
+          <xs:annotation>
+            <xs:documentation>
+              Adds content to the image in a file at the specified path.
+            </xs:documentation>
+            <xs:documentation>
+              Ex. <file name='/root/myfile.txt'>hello!</file> adds a file to the image at the path /root/myfile.txt with the contents "hello"!"
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexType mixed="true">
+            <xs:attribute name="name" use="required"/>
+            <xs:attribute name="type">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="raw"/>
+                  <xs:enumeration value="base64"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="commands">
+    <xs:annotation>
+      <xs:documentation>
+        Commands can be thought of much like the "post" section of a package manager.  Commands listed will be executed at the end of image customization.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="command">
+          <xs:complexType mixed="true">
+            <xs:attribute name="name" use="required"/>
+            <xs:attribute name="type">
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:enumeration value="raw"/>
+                  <xs:enumeration value="base64"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="repositories">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="repository">
+          <xs:complexType>
+            <xs:all>
+              <xs:element ref="url"/>
+              <xs:element minOccurs="0" ref="signed"/>
+            </xs:all>
+            <xs:attribute name="name" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="url" type="xs:string"/>
+  <xs:element name="signed" type="bool"/>
+  <xs:attributeGroup name="url">
+    <xs:attribute name="type" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="url"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:group name="iso">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="iso"/>
+        <xs:choice>
+          <xs:element ref="md5sum"/>
+          <xs:element ref="sha1sum"/>
+          <xs:element ref="sha256sum"/>
+        </xs:choice>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="iso" type="xs:string"/>
+  <xs:element name="md5sum" type="xs:string"/>
+  <xs:element name="sha1sum" type="xs:string"/>
+  <xs:element name="sha256sum" type="xs:string"/>
+  <xs:attributeGroup name="iso">
+    <xs:attribute name="type" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="iso"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:simpleType name="bool">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[Tt][Rr][Uu][Ee]"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[Ff][Aa][Ll][Ss][Ee]"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[Yy][Ee][Ss]"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[Nn][Oo]"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:attributeGroup name="rawtype">
+    <xs:attribute name="type">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="raw"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:simpleType name="base64">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[a-zA-Z0-9+/]+={0,2}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="base64type">
+    <xs:restriction base="base64"/>
+  </xs:simpleType>
+  <xs:attributeGroup name="base64type">
+    <xs:attribute name="type" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="base64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+</xs:schema>

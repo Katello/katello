@@ -30,6 +30,4 @@ test "changeset remove erratum" changeset update  --org="$TEST_ORG" --environmen
 test "changeset remove repo" changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --from_product="$FEWUPS_PRODUCT" --remove_repo="$REPO_NAME"
 
 test "changeset list" changeset list --org="$TEST_ORG" --environment="$TEST_ENV"
-test "changeset info" changeset info --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME" 
-
-
+test "changeset info" changeset info --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME"

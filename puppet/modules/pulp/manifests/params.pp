@@ -1,0 +1,2 @@
+class pulp::params {
+}
