@@ -19,7 +19,7 @@ class CLITestCase(unittest.TestCase):
         if not isinstance(prop, Mock):
             key = str(obj) + "#" + property_name
             #save only the original function, not mocks when it's called for second time on the same obj#property
-            if not self._mocked_props.has_key(key):
+            if not key in self._mocked_props:
                 self._mocked_props[key] = (obj, prop, property_name)
 
         #mock the function
