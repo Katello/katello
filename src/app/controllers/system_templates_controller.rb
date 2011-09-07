@@ -50,9 +50,12 @@ class SystemTemplatesController < ApplicationController
     @environment = current_organization.locker
     @products = @environment.products
     @templates = SystemTemplate.search_for(params[:search]).where(:environment_id => current_organization.locker.id).limit(current_user.page_size)
-    
+
+    product_hash = {}
+    @products.each{|prd|  product_hash[prd.name] = prd.id}
+
     retain_search_history
-    render :index, :locals=>{:editable=>true, :deletable=>true}
+    render :index, :locals=>{:editable=>true, :deletable=>true, :product_hash => product_hash}
   end
   
   def items
@@ -161,7 +164,7 @@ class SystemTemplatesController < ApplicationController
 
   def auto_complete_package
     name = params[:name]
-    render :json=>Pulp::Package.name_search(name).sort.uniq
+    render :json=>Pulp::Package.name_search(name).sort.uniq[0..19]
   end
 
   def create
