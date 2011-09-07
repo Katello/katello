@@ -110,7 +110,7 @@ describe SystemTemplatesController do
 
         assigns[:template].name.should eq(params[:name])
         assigns[:template].description.should eq(params[:description])
-        response.should render_template(:partial => "common/_list_item")
+        response.should be_success
       end
 
     end
@@ -120,6 +120,35 @@ describe SystemTemplatesController do
         controller.should_receive(:errors)
         post :create, :template => {}
         response.should_not be_success
+      end
+    end
+  end
+
+
+  describe "Put update_content" do
+    describe "with valid params" do
+
+      it "should return succesfully being blank" do
+        controller.should_receive(:notice)
+        put :update_content, :id=>@system_template_1.id, :packages=>[], :products=>[]
+        response.should be_success
+      end
+
+      it "should return succesfully with packages and products" do
+        pkg1 = {:name=>"FOO"}
+        prd1 = {:name=>"FOO", :id=>"3"}
+        prod = Product.new(:environment=>Organization.first.locker, :name=>"FOO")
+        prod.stub(:save)
+        prod.stub(:save!)
+        Product.stub(:find).and_return(prod)
+        stp = SystemTemplatePackage.new(:system_template=>@system_template_1, :package_name=>"FOO")
+        stp.stub(:to_package).and_return("FOO")
+        SystemTemplatePackage.stub(:new).and_return(stp)
+
+
+        controller.should_receive(:notice)
+        put :update_content, :id=>@system_template_1.id, :packages=>[pkg1], :products=>[prd1]
+        response.should be_success
       end
     end
   end
@@ -200,4 +229,17 @@ describe SystemTemplatesController do
 
     end
   end
+
+  describe "get auto_complete_package" do
+    before (:each) do
+      Pulp::Package.should_receive(:name_search).once.and_return(["a", "aa"])
+    end
+
+    it 'should call pulp' do
+      get :auto_complete_package, :name => "a"
+      response.should be_success
+    end
+  end
+
+
 end
