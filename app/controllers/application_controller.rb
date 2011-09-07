@@ -356,7 +356,8 @@ class ApplicationController < ActionController::Base
   #produce a simple datastructure of a changeset for the browser
   def simplify_changeset cs
 
-    to_ret = {:id=>cs.id.to_s, :name=>cs.name, :description=>cs.description, :timestamp =>cs.updated_at.to_i.to_s, :products=>{}, :is_new => cs.state == Changeset::NEW}
+    to_ret = {:id=>cs.id.to_s, :name=>cs.name, :description=>cs.description, :timestamp =>cs.updated_at.to_i.to_s,
+                          :system_templates => {},:products=>{}, :is_new => cs.state == Changeset::NEW}
     cs.system_templates.each do |temp|
       to_ret[:system_templates][temp.id] = {:id=> temp.id, :name=>temp.name}
     end
@@ -377,8 +378,6 @@ class ApplicationController < ActionController::Base
         cs_product[type] << {:id=>item.send("#{type}_id"), :name=>item.display_name}
       }
     }
-    to_ret[:products] = [] unless to_ret.has_key? :products
-    to_ret[:system_templates] = [] unless to_ret.has_key? :system_templates
     to_ret
   end
 
