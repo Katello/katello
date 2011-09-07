@@ -121,6 +121,12 @@ class SystemTemplatesController < ApplicationController
     pkgs.each{|pkg|
       @template.packages << SystemTemplatePackage.new(:system_template=>@template, :package_name=>pkg[:name])
     }
+
+    @template.products = []
+    products.each{|prod|
+      @template.products << Product.find(prod[:id])
+    }
+
     @template.save!
     notice _("Template #{@template.name} has been updated successfully")
     object()
