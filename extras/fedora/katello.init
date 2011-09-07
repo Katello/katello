@@ -23,7 +23,7 @@ KATELLO_GROUP=${KATELLO_GROUP:-katello}
 KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
 KATELLO_DATA_DIR=${KATELLO_DATA_DIR:-/var/lib/katello}
 KATELLO_ENV=${KATELLO_ENV:-production}
-KATELLO_PID=${KATELLO_PID:-${KATELLO_HOME}/tmp/pids/server.pid}
+KATELLO_PID=${KATELLO_PID:-${KATELLO_HOME}/tmp/pids/thin.5000.pid}
 export KATELLO_LOGGING=${KATELLO_LOGGING:-info}
 
 export RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX
@@ -105,20 +105,7 @@ start() {
 }
 
 stop() {
-    check_privilege
-
-    echo -n $"Stopping $prog: "
-    if status_q; then
-        $THIN stop --config  /etc/katello/thin.yml
-        RETVAL=$?
-    else
-        echo -n $"$prog was not running. "
-        RETVAL=0
-        echo_success
-    fi
-
-    echo
-    return $RETVAL
+    $THIN --config /etc/katello/thin.yml stop
 }
 
 restart() {
