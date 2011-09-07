@@ -250,6 +250,9 @@ KT.template_renderer = function() {
                 else if (node === "packages") {
                     content = packages();
                 }
+                else if (node === "products") {
+                    content = products();
+                }
                 else {
                     console.log("Can't render: " +  id);
                 }
@@ -281,17 +284,35 @@ KT.template_renderer = function() {
         return html ;
     },
     packages = function() {
-        var html = '<ul><li id="package_input_item"><form id="add_package_form"><input id="add_package_input" type="text" size="35"><form>  ';
+        var html = '<ul><li id="package_input_item"><form id="add_package_form">';
+        html += '<input id="add_package_input" type="text" size="35"><form>  ';
         html += '<a id="add_package" class="fr st_button ">' + i18n.add_plus + '</a>';
         html += ' </li></ul>';
-
         html +=  "<ul>";
         $.each(KT.options.current_template.packages, function(index, item) {
-            html += package_item(item.name);//TODO do ths correctly
+            html += package_item(item.name);
             
         });
+        return html + "</ul>";
+    },
+    product_item = function(pkg_name, id) {
+        var html = '<li class="">';
+        html += '<div class="" id=pkg_"' + id + '">';
+        html += '<span class="sort_attr">' + pkg_name + '</span>';
+        html += '<a id="" class="fr st_button remove_package">' + i18n.remove + '</a>';
+        html += "</div></li>";
+        return html ;
+    },
+    products = function() {
+        var html = '<ul><li id="product_input_item"><form id="add_product_form">';
+        html += '<input id="add_product_input" type="text" size="35"><form>  ';
+        html += '<a id="add_product" class="fr st_button ">' + i18n.add_plus + '</a>';
+        html += ' </li></ul>';
+        html +=  "<ul>";
+        $.each(KT.options.current_template.products, function(index, item) {
+            html += product_item(item.name, item.id);
 
-        
+        });
         return html + "</ul>";
     },
     details = function(t_id) {
@@ -323,90 +344,134 @@ KT.template_renderer = function() {
 
 
 
-KT.package_actions = (function() {
-    var options = KT.options;
-    var verify_add_package = function(name, btn, focus){
-            var input = $("#add_package_input");
+KT.auto_complete_box = function(params) {
 
-            if (btn.hasClass("working") || name.length === 0){
+    var settings = {
+        values: undefined,       //either a url, an array, or a callback of items for auto_completion
+        default_text: undefined,  //default text to go into the search box if desired
+        input_id: undefined,
+        form_id: undefined,
+        add_btn_id: undefined,
+        add_text: i18n.add_plus,
+        add_cb: function(t, cb){}
+    };
+    $.extend( settings, params );
+    
+    var input = $("#" + settings.input_id);
+    var form = $("#" + settings.form_id);
+    var add_btn = $("#" + settings.add_btn_id);
+
+    var add_item_from_input = function(e) {
+        var item = input.attr("value");
+        e.preventDefault();
+        if (item.length === 0 || item === settings.default_text ||item.length === 0 ){
                 return;
-            }
-            btn.addClass("working");
-
-            btn.html("<img  src='/images/spinner.gif'>");
-            input.attr("disabled", "disabled");
-            input.autocomplete('disable');
-            input.autocomplete('close');
-
-            $.ajax({
-                type: "GET",
-                url: '/system_templates/auto_complete_package',
-                data: {name:name},
-                cache: false,
-                success: function(data){
-                    btn.removeClass('working');
-                    btn.html(i18n.add_plus);
-                    input.removeAttr('disabled');
-                    input.autocomplete('enable');
-                    if ($.inArray(name, data) > -1) {
-                        KT.templates.add_package(name);
-                    }
-                    else {
-                        input.addClass("error");
-                    }
-                    if (focus) {
-                        $("#add_package_input").focus();
-                    }
-                },
-                error: KT.templates.throw_error
-            });
+        }
+        add_btn.addClass("working");
+        add_item_base(item, true);
     },
-    register_autocomplete = function() {
-        var input = $("#add_package_input");
-        input.val(i18n.default_search_text);
-        input.autocomplete({
-            source: function(req, response_cb){
-                    $.ajax({
-                        type: "GET",
-                        url: '/system_templates/auto_complete_package',
-                        data: {name:req.term},
-                        cache: false,
-                        success: function(data){
-                            response_cb(data.splice(0, 20)); //only show 20 packages at a time
-                        },
-                        error: KT.templates.throw_error
-                    });
+    add_item_base = function(item, focus) {
+        
+        add_btn.html("<img  src='/images/spinner.gif'>");
+        input.attr("disabled", "disabled");
+        input.autocomplete('disable');
+        input.autocomplete('close');
+
+        settings.add_cb(item, function(){
+            add_success_cleanup();
+            if (focus) {
+                $("#add_package_input").focus();
             }
         });
+
+    },
+    add_success_cleanup = function() {
+        add_btn.removeClass('working');
+        add_btn.html(settings.add_text);
+        input.removeAttr('disabled');
+        input.autocomplete('enable');
+    },
+    manually_add = function(item) {
+        add_item_base(item, false);
+    },
+    error = function() {
+        input.addClass("error");
+
+    };
+
+    //initialization
+    if (settings.default_text) {
+        input.val(settings.default_text);
         input.focus(function() {
-            if (input.val() === i18n.default_search_text) {
+            if (input.val() === settings.default_text) {
                 input.val("");
             }
         });
         input.blur(function() {
             if(input.val() === "") {
-                input.val(i18n.default_search_text);
+                input.val(settings.default_text);
             }
-
         });
+    }
+    
+    input.autocomplete({
+        source: settings.values
+    });
 
+    add_btn.live('click', add_item_from_input);
+    form.submit(add_item_from_input);
+
+    return {
+        manually_add: manually_add,
+        error: error
+    }
+};
+
+
+KT.package_actions = (function() {
+    var current_input = undefined;
+
+    var verify_add_package = function(name, cleanup_cb){
+        $.ajax({
+            type: "GET",
+            url: '/system_templates/auto_complete_package',
+            data: {name:name},
+            cache: false,
+            success: function(data){
+                if ($.inArray(name, data) > -1) {
+                    KT.templates.add_package(name);
+                }
+                else {
+                    current_input.error();
+                }
+                cleanup_cb();
+            },
+            error: KT.templates.throw_error
+        });
+    },
+    auto_complete_call = function(req, response_cb) {
+        $.ajax({
+            type: "GET",
+            url: '/system_templates/auto_complete_package',
+            data: {name:req.term},
+            cache: false,
+            success: function(data){
+                response_cb(data.splice(0, 20)); //only show 20 packages at a time
+            },
+            error: KT.templates.throw_error
+        });
+    },
+    register_autocomplete = function() {
+        current_input = KT.auto_complete_box({
+            values:       auto_complete_call,
+            default_text: i18n.default_search_text,
+            input_id:     "add_package_input",
+            form_id:      "add_package_form",
+            add_btn_id:   "add_package",
+            add_cb:       verify_add_package
+        });
     },
     register_events = function() {
-        var tmp_add_package = function(e) {
-            var btn = $("#add_package");
-            var input = $("#add_package_input");
-            var pkg = input.attr("value");
-            if (pkg === i18n.default_search_text) {
-                return;
-            }
-
-            e.preventDefault();
-            verify_add_package(pkg, btn, true);
-
-        };
-        
-        $("#add_package").live('click', tmp_add_package);
-        $(".right_tree").delegate( "#add_package_form", "submit", tmp_add_package);
         $(".remove_package").live('click', function() {
             var pkg = $(this).siblings("span").text();
             if (pkg && pkg.length > 0) {
@@ -423,9 +488,9 @@ KT.package_actions = (function() {
             }
             else {
                 //need to add
-                verify_add_package(name, btn, false);
+                btn.html("<img  src='/images/spinner.gif'>");
+                current_input.manually_add(name);
             }
-
         });
 
     };
