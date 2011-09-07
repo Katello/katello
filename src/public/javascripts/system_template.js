@@ -137,6 +137,7 @@ KT.templates = function() {
             buttons.remove.addClass("disabled");
             buttons.save.addClass("disabled");
             $('.package_add_remove').hide();
+            $('.product_add_remove').hide();
         }
         else {
             buttons.edit.removeClass("disabled");
@@ -152,6 +153,15 @@ KT.templates = function() {
             $('.package_add_remove').not('.working').show().text(i18n.add_plus); //reset all add/remove to add
             $.each(KT.options.current_template.packages, function(index, item){
                 var btn = $('a[data-name=' + item.name + '].package_add_remove').not('.working');
+                if (btn.length > 0) {
+                    btn.text(i18n.remove);
+                }
+            });
+
+            //handle products
+            $('.product_add_remove').not('.working').show().text(i18n.add_plus); //reset all add/remove to add
+            $.each(KT.options.current_template.products, function(index, item){
+                var btn = $('a[data-id=' + item.id + '].product_add_remove').not('.working');
                 if (btn.length > 0) {
                     btn.text(i18n.remove);
                 }
@@ -495,6 +505,20 @@ KT.product_actions = (function() {
             if (name && id) {
 
                 KT.templates.remove_product(name, id);
+            }
+        });
+        $(".product_add_remove").live('click', function(){
+            var btn = $(this);
+            var name = btn.attr("data-name");
+            var id = btn.attr("data-id");
+            if (KT.templates.has_product(name, id)) {
+                //need to remove
+                KT.templates.remove_product(name, id);
+            }
+            else {
+                //need to add
+                btn.html("<img  src='/images/spinner.gif'>");
+                current_input.manually_add(name, KT.product_hash[name]);
             }
         });
 
