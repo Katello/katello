@@ -763,7 +763,7 @@ var templateLibrary = (function($){
                 }
             }
             if( count === 0 ){
-            	html += '<li class="no_slide">' + i18n.no_permissions + '</li>';
+            	html += '<li class="no_slide no_hover">' + i18n.no_permissions + '</li>';
             }
             html += '</ul>';
             return html;
@@ -860,7 +860,7 @@ var templateLibrary = (function($){
                 }
             }
             if( count === 0 ){
-            	html += '<li class="no_slide">' + i18n.no_global_permissions + '</li>';
+            	html += '<li class="no_slide no_hover">' + i18n.no_global_permissions + '</li>';
             }
             html += '</ul>';
             return html;
