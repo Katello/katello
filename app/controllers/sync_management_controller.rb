@@ -146,6 +146,7 @@ private
     progress[:raw_state] = sync_status.state
     progress[:start_time] = format_date(sync_status.start_time)
     progress[:finish_time] = format_date(sync_status.finish_time)
+    progress[:duration] = format_duration(sync_status.finish_time, sync_status.start_time)
     progress[:packages] = sync_status.progress.total_count
     progress[:size] = number_to_human_size(sync_status.progress.total_size)
     progress
@@ -153,6 +154,14 @@ private
 
   def format_state(state)
     @@status_values[state.to_sym]
+  end
+
+  def format_duration(finish, start)
+    retval = nil
+    if !finish.nil? and !start.nil?
+      retval = distance_of_time_in_words(finish, start)
+    end
+    retval
   end
 
   def format_date(check_date)
