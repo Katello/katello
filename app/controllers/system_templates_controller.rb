@@ -126,7 +126,7 @@ class SystemTemplatesController < ApplicationController
     products.each{|prod|
       @template.products << Product.find(prod[:id])
     }
-
+    
     @template.save!
     notice _("Template #{@template.name} has been updated successfully")
     object()
