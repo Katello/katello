@@ -1,6 +1,6 @@
 .grid_3
-  %a{:href => '/dashboard', :class => "logo"}
-    = image_tag('logo.png', :alt => _('Katello Logo'))
+  = link_to dashboard_index_path, :class => 'logo' do
+    = image_tag("logo.png", :alt => _('Katello Logo'))
     %span{:class => 'pipe'}
     %h1 Katello
   #loading.fr
