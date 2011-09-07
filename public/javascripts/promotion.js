@@ -1185,10 +1185,12 @@ var templateLibrary = (function(){
             var html = '<ul class="filterable">',
                 all_list = '',
                 partial_list = '',
+                system_templates_list = '',
                 product, provider,
                 products = changeset.getProducts();
             
             if( changeset.productCount() === 0 ){
+                html += '<h5>'+i18n.product_plural+'</h5>'
                 html += '<div class="empty_list">' + i18n['no_products'] + '</div>';
                 //html += i18n['no_products'];
             } else {
@@ -1213,6 +1215,9 @@ var templateLibrary = (function(){
             
             html += all_list ? ('<h5>'+i18n.full_product+'</h5>' + all_list) : '';
             html += partial_list ? ('<h5>'+i18n.partial_product+'</h5>' + partial_list) : '';
+
+            html += '<h5>'+i18n.system_template_plural+'</h5>';
+            html += system_templates_list ? system_templates_list : '<div class="empty_list">' + i18n['no_system_templates'] + '</div>';
             html += '</ul>';
             return html;
         },
