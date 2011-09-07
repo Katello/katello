@@ -226,11 +226,20 @@ var promotion_page = (function($){
             }
     
             var button = find_button(id, type);
-            var product_name = content_breadcrumb['details_' + product_id].name;
+            var product_name = '';
+            if (product_id != null) {
+              product_name = content_breadcrumb['details_' + product_id].name;
+            }
+
             if (adding) {
                 button.html(i18n.remove).addClass("remove_" + type).removeClass('add_'+type);
                 if( type !== 'product'){
-                    if( changeset.getProducts()[product_id] === undefined ){
+                    if (type == "template") {
+                      if (changeset.getTemplates()[id] === undefined) {
+                        add_template_breadcrumbs(changeset.id, id, display);
+                      }
+                    }
+                    else if( changeset.getProducts()[product_id] === undefined ){
                         add_product_breadcrumbs(changeset.id, product_id, product_name);
                     }
                 }
@@ -494,6 +503,17 @@ var promotion_page = (function($){
             $('#changeset_users').fadeOut("slow", function() { $(this).html(""); });
           }
         },
+        add_template_breadcrumbs = function(changeset_id, id, name){
+          var changesetBC = "changeset_" + changeset_id;
+          var templateBC = 'template-cs_' + changeset_id + '_' + id;
+          changeset_breadcrumb[templateBC] = {
+                cache: null,
+                client_render: true,
+                name: name,
+                trail: ['changesets', changesetBC],
+                url: 'url'
+          };
+        },
         add_product_breadcrumbs = function(changeset_id, product_id, product_name){
             var productBC = 'product-cs_' + changeset_id + '_' + product_id;
             var changesetBC = "changeset_" + changeset_id;
@@ -596,6 +616,7 @@ var changeset_obj = function(data_struct) {
     var id = data_struct["id"],
         timestamp = data_struct["timestamp"],
         products = data_struct.products,
+        templates = data_struct.system_templates,
         is_new = data_struct.is_new,
         name = data_struct.name,
         description = data_struct.description;
@@ -654,6 +675,7 @@ var changeset_obj = function(data_struct) {
         getDescription: function(){return description},
         setDescription: function(newDesc){description = newDesc;},
         getProducts: function(){return products},
+        getTemplates: function() {return templates},
         is_new : function() {return is_new},
         set_timestamp:function(ts) { timestamp = ts; },
         timestamp: function(){return timestamp},
@@ -687,6 +709,8 @@ var changeset_obj = function(data_struct) {
         add_item:function (type, id, display_name, product_id, product_name) {
             if( type === 'product' ){
                 products[id] = {'name': display_name, 'id': id, 'package':[], 'errata':[], 'repo':[], 'all': true}
+            } else if (type == 'template') {
+                templates[id] = {'name': display_name, 'id': id};
             } else { 
                 if ( products[product_id] === undefined ) {
                     products[product_id] = {'name': product_name, 'id': product_id, 'package':[], 'errata':[], 'repo':[]}
@@ -697,6 +721,8 @@ var changeset_obj = function(data_struct) {
         remove_item:function(type, id, product_id) {
             if( type === 'product' ){
                 delete products[id];
+            } else if (type == 'template') {
+              delete templates[id];
             } else if (products[product_id] !== undefined) {
                 $.each(products[product_id][type], function(index,item) {
                     if (item.id === id) {

@@ -128,7 +128,7 @@ module BreadcrumbHelper
      #product_distributions
      add_crumb_node!(bc, distribution_bc_id(prod), distributions_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
                      _("Distributions"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
-              
+
      end
 
      bc.to_json
