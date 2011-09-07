@@ -613,20 +613,21 @@ KT.actions =  (function(){
     var toggle_new = function(is_opening) {
         var text = i18n.add_close_label;
 
-        if (is_opening) {
+        if (is_opening.opening) {
             $("#system_template_name").attr("value", "");
             $("#system_template_description").attr("value", "");
         }
         else {
             text = i18n.add_label;
         }
+        reset_buttons();
         buttons.add.find(".text").text(text);
 
         return {};
     },
     toggle_edit = function(is_opening) {
         var text = i18n.edit_close_label;
-        if (is_opening) {
+        if (is_opening.opening) {
             var curr = KT.options.current_template;
             $("#edit_template_name").text(curr.name);
             $("#edit_template_description").text(curr.description);
@@ -641,6 +642,7 @@ KT.actions =  (function(){
         else {
             text = i18n.edit_label;
         }
+        reset_buttons();
         buttons.edit.find(".text").text(text);
 
         return {};
@@ -667,6 +669,10 @@ KT.actions =  (function(){
            next_cb();
        });
     },
+    reset_buttons = function() {
+        buttons.add.find(".text").text(i18n.add_label);
+        buttons.edit.find(".text").text(i18n.edit_label);
+    }
     toggle_list = {
 
             'template_edit': { container 	: 'edit_template_container',
