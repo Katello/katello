@@ -414,7 +414,7 @@ KT.package_actions = (function() {
             }
         });
         
-        $(".content_add_remove").live('click', function(){
+        $(".package_add_remove").live('click', function(){
             var btn = $(this);
             var name = btn.attr("data-name");
             if (KT.templates.has_package(name)) {
