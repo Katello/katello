@@ -15,17 +15,34 @@ require 'spec_helper'
 describe OperationsController do
   include LoginHelperMethods
   include LocaleHelperMethods
+  include OrganizationHelperMethods
+  include AuthorizationHelperMethods
 
-  before (:each) do
-    login_user
-    set_default_locale
-  end
-
-  describe "GET 'index'" do
-    it "should be successful" do
-      get 'index'
-      response.should be_success
+  describe "rules" do
+    describe "GET index - on users" do
+      let(:action) {:index}
+      let(:req) { get 'index' }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :users,nil, nil) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
     end
+
+    describe "GET index - on roles" do
+      let(:action) {:index}
+      let(:req) { get 'index' }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :roles,nil, nil) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      it_should_behave_like "protected action"
+    end
+
   end
 
 end

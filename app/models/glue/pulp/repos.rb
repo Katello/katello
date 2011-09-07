@@ -27,15 +27,27 @@ module Glue::Pulp::Repos
       [self.product_groupid(product), self.env_groupid(environment), self.env_orgid(product.locker.organization)]
   end
 
-  def self.clone_repo_id(repo_id, environment_name)
-    parts = repo_id.split("-")
-    if parts.length == 3
-      parts << parts[2]
-    end
-    parts[2] = environment_name
-
-    parts.join("-")
+  def self.clone_repo_id(repo, environment)
+    [repo.product.cp_id, repo.name, environment.name,environment.organization.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("-")
   end
+
+  def self.clone_repo_path(repo, environment, for_cp = false)
+    repo_path(environment,repo.product, repo.name, for_cp)
+  end
+
+  # if for_cp tells it's used for contentUrl in candlepin
+  # CP computes the rest of path automaticly - it does not to be specified here
+  def self.repo_path(environment, product, name, for_cp = false)
+    parts = []
+    parts += [environment.organization.name,environment.name] unless for_cp
+    parts += [product.name,name]
+    parts.map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
+  end
+
+  def self.clone_repo_path_for_cp(repo)
+    self.clone_repo_path(repo, nil, true)
+  end
+
 
   def self.env_orgid(org)
       "org:#{org.id}"
@@ -51,12 +63,16 @@ module Glue::Pulp::Repos
 
   module InstanceMethods
 
-    def repos env
+    def empty?
+      return self.repos(locker).empty?
+    end
+
+    def repos env, search_params = {}
       @repos = {} if @repos.nil?
       return @repos[env.id] if @repos[env.id]
 
       # TODO: temporary hack until groupid AND groupid  querying is added to pulp
-      total_repos = Pulp::Repository.all [Glue::Pulp::Repos.env_groupid(env)]
+      total_repos = Pulp::Repository.all [Glue::Pulp::Repos.env_groupid(env)], search_params
       env_repos = []
       total_repos.collect {|repo|
          repo_obj = Glue::Pulp::Repo.new(repo)
@@ -91,6 +107,7 @@ module Glue::Pulp::Repos
     end
 
     def sync
+      Rails.logger.info "Syncing product #{name}"
       self.repos(locker).collect do |r|
         r.sync
       end.flatten
@@ -109,32 +126,27 @@ module Glue::Pulp::Repos
 
     # Get the most relavant status for all the repos in this Product
     def sync_status
-      states = Array.new
-      # Get the most recent status from all the repos in this product
-      not_synced = ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED)
-      top_status = not_synced
+      statuses = repos(self.locker).map {|r| r.sync_status()}
+      return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
 
-      for r in repos(self.locker)
-        curr_status = r._get_most_recent_sync_status()
-        repo_sync_state = curr_status.state
-        if repo_sync_state == ::PulpSyncStatus::Status::ERROR.to_s
-          #if one repo sync failed, consider the product sync failed
-          top_status = curr_status
+      #if any of repos sync still running -> product sync running
+      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::RUNNING.to_s end
+      return statuses[idx] if idx != nil
 
-        elsif repo_sync_state == ::PulpSyncStatus::Status::RUNNING.to_s and
-              top_status != ::PulpSyncStatus::Status::ERROR.to_s
-          #if one repo sync is running and there are no errors so far, consider the product sync running
-          top_status = curr_status
+      #else if any of repos not synced -> product not synced
+      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::NOT_SYNCED.to_s end
+      return statuses[idx] if idx != nil
 
-        elsif repo_sync_state == ::PulpSyncStatus::Status::FINISHED.to_s and
-              top_status  != ::PulpSyncStatus::Status::RUNNING.to_s and
-              top_status  != ::PulpSyncStatus::Status::ERROR.to_s
-          #if one repo is finished and there are no running or failing repos so far, consider the product sync finished
-          top_status = curr_status
+      #else if any of repos sync cancelled -> product sync cancelled
+      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::CANCELED.to_s end
+      return statuses[idx] if idx != nil
 
-        end
-      end
-      top_status
+      #else if any of repos sync finished with error -> product sync finished with error
+      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::ERROR.to_s end
+      return statuses[idx] if idx != nil
+
+      #else -> all finished
+      return statuses[0]
     end
 
     def sync_state
@@ -182,9 +194,9 @@ module Glue::Pulp::Repos
       end
     end
 
-    def repo_id content_id, env_name = nil
-      return content_id if content_id.include?(self.organization.name) && content_id.include?(self.cp_id.to_s)
-      [self.cp_id.to_s, content_id.to_s, env_name, self.organization.name].compact.join("-").gsub(/[^-\w]/,"_")
+    def repo_id content_name, env_name = nil
+      return content_name if content_name.include?(self.organization.name) && content_name.include?(self.cp_id.to_s)
+      [self.cp_id.to_s, content_name.to_s, env_name, self.organization.name].compact.join("-").gsub(/[^-\w]/,"_")
     end
 
     def repository_url content_url
@@ -200,6 +212,7 @@ module Glue::Pulp::Repos
     def add_repo(name, url)
       repo = Glue::Pulp::Repo.new(:id => repo_id(name),
           :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
+          :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, name),
           :arch => arch,
           :name => name,
           :feed => url
@@ -223,8 +236,9 @@ module Glue::Pulp::Repos
         cert = self.certificate
         key = self.key
         ca = File.open("#{Rails.root}/config/candlepin-ca.crt", 'rb') { |f| f.read }
-        repo = Glue::Pulp::Repo.new(:id => repo_id(pc.content.id),
+        repo = Glue::Pulp::Repo.new(:id => repo_id(pc.content.name),
             :arch => arch,
+            :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, pc.content.name),
             :name => pc.content.name,
             :feed => repository_url(pc.content.contentUrl),
             :feed_ca => ca,
@@ -270,7 +284,7 @@ module Glue::Pulp::Repos
       #end
       #
       #changed_content.each do |pc|
-      #  Pulp::Repository.update(repo_id(pc.content.id), {
+      #  Pulp::Repository.update(repo_id(pc.content.name), {
       #    :feed => repository_url(pc.content.contentUrl)
       #  })
       #end
@@ -315,12 +329,13 @@ module Glue::Pulp::Repos
         else
           async_tasks << repo.promote(to_env, self)
 
-          new_repo_id = Glue::Pulp::Repos.clone_repo_id(repo.id, to_env.name)
+          new_repo_id = Glue::Pulp::Repos.clone_repo_id(repo, to_env)
+          new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(repo)
 
           pulp_uri = URI.parse(AppConfig.pulp.url)
           new_productContent = Glue::Candlepin::ProductContent.new({:content => {
               :name => repo.name,
-              :contentUrl => "#{pulp_uri.scheme}://#{pulp_uri.host}/pulp/repos/#{new_repo_id}/",
+              :contentUrl => new_repo_path,
               :gpgUrl => "",
               :type => "yum",
               :label => new_repo_id,

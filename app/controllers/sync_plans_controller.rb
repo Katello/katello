@@ -58,35 +58,35 @@ class SyncPlansController < ApplicationController
     @panel_options = { :title => _('Sync Plans'),
                  :col => columns,
                  :create => _('Plan'),
-                 :name => _('plan'),
+                 :name => controller_name,
                  :ajax_scroll => items_sync_plans_path(),
                  :enable_create => current_organization.syncable? } 
   end
 
   def edit
     render :partial => "edit", :layout => "tupane_layout",
-           :locals => {:plan=>@plan, :editable=> current_organization.syncable? } 
+           :locals => {:plan=>@plan, :editable=> current_organization.syncable?, :name=>controller_name } 
   end
 
   def update
     begin
       updated_plan = SyncPlan.find(params[:id])
-      result = params[:plan].values.first
+      result = params[:sync_plan].values.first
 
-      updated_plan.name = params[:plan][:name] unless params[:plan][:name].nil?
-      updated_plan.interval = params[:plan][:interval] unless params[:plan][:interval].nil?
+      updated_plan.name = params[:sync_plan][:name] unless params[:sync_plan][:name].nil?
+      updated_plan.interval = params[:sync_plan][:interval] unless params[:sync_plan][:interval].nil?
 
-      unless params[:plan][:description].nil?
-        result = updated_plan.description = params[:plan][:description].gsub("\n",'')
+      unless params[:sync_plan][:description].nil?
+        result = updated_plan.description = params[:sync_plan][:description].gsub("\n",'')
       end
 
-      unless params[:plan][:time].nil?
-        ttime = updated_plan.plan_date + ' ' + params[:plan][:time].strip
+      unless params[:sync_plan][:time].nil?
+        ttime = updated_plan.plan_date + ' ' + params[:sync_plan][:time].strip
         updated_plan.sync_date = DateTime.strptime(ttime, '%m/%d/%Y %I:%M %p')
       end
 
-      unless params[:plan][:date].nil?
-        ddate = params[:plan][:date].strip + ' ' + updated_plan.plan_time
+      unless params[:sync_plan][:date].nil?
+        ddate = params[:sync_plan][:date].strip + ' ' + updated_plan.plan_time
         updated_plan.sync_date = DateTime.strptime(ddate, '%m/%d/%Y %I:%M %p')
       end
 
@@ -116,7 +116,7 @@ class SyncPlansController < ApplicationController
     rescue Exception => e
       errors e.to_s
     end
-    render :partial => "common/list_remove", :locals => {:id => @id}
+    render :partial => "common/list_remove", :locals => {:id=>@id, :name=>controller_name}
   end
 
   def show
@@ -139,8 +139,8 @@ class SyncPlansController < ApplicationController
         params[:sync_plan][:sync_date] = nil
       end
       @plan = SyncPlan.create! params[:sync_plan].merge({:organization => current_organization})
-      notice _("Sync Plan '#{@plan['name']}' was created.")
-      render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval']}
+      notice N_("Sync Plan '#{@plan['name']}' was created.")
+      render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval'], :name=>controller_name}
     rescue Exception => error
       Rails.logger.error error.to_s
       errors error
@@ -160,4 +160,8 @@ class SyncPlansController < ApplicationController
     end
   end
       
+      
+  def controller_name
+    return _('sync_plan')
+  end
 end

@@ -23,6 +23,7 @@ class SyncManagementController < ApplicationController
                      PulpSyncStatus::Status::FINISHED => _("Sync complete."),
                      PulpSyncStatus::Status::ERROR => _("Error syncing!"),
                      PulpSyncStatus::Status::RUNNING => _("Running."),
+                     PulpSyncStatus::Status::CANCELED => _("Canceled."),
                      PulpSyncStatus::Status::NOT_SYNCED => _("Not synced.")}
 
 
@@ -142,6 +143,7 @@ private
     progress = {:progress => calc_progress(sync_status)}
     progress[:sync_id] = sync_status.uuid
     progress[:state] = format_state(sync_status.state)
+    progress[:raw_state] = sync_status.state
     progress[:start_time] = format_date(sync_status.start_time)
     progress[:finish_time] = format_date(sync_status.finish_time)
     progress[:packages] = sync_status.progress.total_count

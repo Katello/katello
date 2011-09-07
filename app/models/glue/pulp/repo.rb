@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Glue::Pulp::Repo
-  attr_accessor :id, :groupid, :arch, :name, :feed, :feed_cert, :feed_key, :feed_ca, :clone_ids, :uri_ref, :last_sync
+  attr_accessor :id, :groupid, :arch, :name, :feed, :feed_cert, :feed_key, :feed_ca, :clone_ids, :uri_ref, :last_sync, :relative_path
 
   def initialize(params = {})
     @params = params
@@ -33,6 +33,7 @@ class Glue::Pulp::Repo
     Pulp::Repository.create({
         :id => self.id,
         :name => self.name,
+        :relative_path => self.relative_path,
         :arch => self.arch,
         :feed => self.feed,
         :feed_cert_data => feed_cert_data,
@@ -86,6 +87,26 @@ class Glue::Pulp::Repo
     @repo_distributions
   end
 
+  def package_groups search_args = {}
+    groups = ::Pulp::PackageGroup.all @id
+    unless search_args.empty?
+      groups.delete_if do |group_id, group_attrs|
+        search_args.any?{ |attr,value| group_attrs[attr] != value }
+      end
+    end
+    groups
+  end
+
+  def package_group_categories search_args = {}
+    categories = ::Pulp::PackageGroupCategory.all @id
+    unless search_args.empty?
+      categories.delete_if do |category_id, category_attrs|
+        search_args.any?{ |attr,value| category_attrs[attr] != value }
+      end
+    end
+    categories
+  end
+
   #is the repo cloned in the specified environment
   def is_cloned_in? env
     get_cloned_in(env) != nil
@@ -93,7 +114,7 @@ class Glue::Pulp::Repo
 
 
   def get_clone env
-    Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(self.id, env.name))
+    Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(self, env))
   end
 
   def get_cloned_in env
@@ -197,7 +218,8 @@ class Glue::Pulp::Repo
 
   def promote(to_environment, product)
     cloned = Glue::Pulp::Repo.new
-    cloned.id = Glue::Pulp::Repos.clone_repo_id(id, to_environment.name)
+    cloned.id = Glue::Pulp::Repos.clone_repo_id(self, to_environment)
+    cloned.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_environment)
     cloned.arch = arch
     cloned.name = name
     cloned.feed = feed
@@ -214,7 +236,7 @@ class Glue::Pulp::Repo
   end
 
   def product
-    Product.find((get_groupid_param 'product').to_i)
+    Product.find_by_cp_id!(get_groupid_param 'product')
   end
 
   def self.find(id)

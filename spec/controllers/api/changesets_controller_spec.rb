@@ -14,21 +14,21 @@ require 'spec_helper.rb'
 
 describe Api::ChangesetsController do
   include LoginHelperMethods
+  include AuthorizationHelperMethods
+  include OrchestrationHelper
 
   CSET_ID = 1
   CSET_NAME = "changeset_x"
 
+  let(:uuid) { '1234' }
+
   before(:each) do
-    @environment = mock(KTEnvironment)
-    @environment.stub(:id).and_return(1)
+    disable_org_orchestration
 
+    @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
+    @environment = KTEnvironment.create!(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
+    @environment_2 = KTEnvironment.create!(:name => 'test_2', :prior => @environment, :organization => @organization)
     KTEnvironment.stub(:find).and_return(@environment)
-
-    @organization = mock(Organization)
-    @organization.stub(:id).and_return(1)
-    @organization.stub(:locker).and_return(@environment)
-    @organization.stub(:environments).and_return([@environment])
-    @environment.stub(:organization).and_return(@organization)
 
     @changeset = mock(Changeset)
     @changeset.stub(:environment).and_return(@environment)
@@ -49,34 +49,80 @@ describe Api::ChangesetsController do
     }
   end
 
+  let(:user_with_read_permissions) do
+    user_with_permissions { |u| u.can(:read_changesets,:environments, @environment.id, @organization) }
+  end
+  let(:user_without_read_permissions) do
+    user_with_permissions { |u| u.can(:read_changesets,:environments, @environment_2.id, @organization) }
+  end
+  let(:user_with_manage_permissions) do
+    user_with_permissions { |u| u.can([:manage_changesets],:environments, @environment.id, @organization) }
+  end
+  let(:user_without_manage_permissions) do
+    user_with_permissions { |u| u.can(:read_changesets,:environments, @environment.id, @organization) }
+  end
+  let(:user_with_promote_permissions) do
+    user_with_permissions { |u| u.can([:promote_changesets],:environments, @environment.id, @organization) }
+  end
+  let(:user_without_promote_permissions) do
+    user_without_permissions
+    # user_with_permissions { |u| u.can([:manage_changesets],:environments, @environment.id, @organization) }
+  end
+
   describe "index" do
+
+    let(:action) {:index }
+    let(:req) { get :index, :organization_id => "1", :environment_id => 1 }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
     it 'should call working_changesets on an environment' do
       Changeset.should_receive(:select).once
-      get :index, :organization_id => "1", :environment_id => 1
+      req
     end
   end
 
 
   describe "show" do
+
+    let(:action) {:show }
+    let(:req) { get :show, :id => CSET_ID, :organization_id => "1", :environment_id => 1 }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
     it "should call Changeset.first" do
       Changeset.should_receive(:find).with(CSET_ID).and_return(@changeset)
-      get :show, :id => CSET_ID, :organization_id => "1", :environment_id => 1
+      req
     end
   end
 
 
   describe "create" do
-    it "should call new and save!" do
 
+    let(:action) {:create }
+    let(:req) { post :create, :changeset => {'name' => 'XXX'}, :organization_id => "1", :environment_id => 1 }
+    let(:authorized_user) { user_with_manage_permissions }
+    let(:unauthorized_user) { user_without_manage_permissions }
+    it_should_behave_like "protected action"
+
+    it "should call new and save!" do
       Changeset.should_receive(:new).and_return(@changeset)
       @changeset.should_receive(:save!)
 
-      post :create, :changeset => {'name' => 'XXX'}, :organization_id => "1", :environment_id => 1
+      req
     end
   end
 
 
   describe "update_content" do
+
+    let(:action) {:update_content }
+    let(:req) { put :update_content, :id => CSET_ID, :organization_id => "1", :environment_id => 1, :patch => {'+products' => ['prod']}}
+    let(:authorized_user) { user_with_manage_permissions }
+    let(:unauthorized_user) { user_without_manage_permissions }
+    it_should_behave_like "protected action"
 
     it 'should call add_product' do
       @changeset.should_receive(:add_product).with('prod').once
@@ -121,19 +167,33 @@ describe Api::ChangesetsController do
   end
 
   describe "destroy" do
+
+    let(:action) {:destroy }
+    let(:req) { delete :destroy, :id => CSET_ID, :organization_id => "1", :environment_id => 1}
+    let(:authorized_user) { user_with_manage_permissions }
+    let(:unauthorized_user) { user_without_manage_permissions }
+    it_should_behave_like "protected action"
+
     it "should remove the changeset" do
       Changeset.should_receive(:find).with(CSET_ID).and_return(@changeset)
       @changeset.should_receive(:destroy).once
 
-      delete :destroy, :id => CSET_ID, :organization_id => "1", :environment_id => 1
+      req
     end
   end
 
   describe "promote" do
+
+    let(:action) {:promote }
+    let(:req) { post :promote, :id => CSET_ID, :organization_id => "1", :environment_id => 1 }
+    let(:authorized_user) { user_with_promote_permissions }
+    let(:unauthorized_user) { user_without_promote_permissions }
+    it_should_behave_like "protected action"
+
     it "should call Changeset.promote asynchronously" do
       @changeset.should_receive(:promote).once
       @changeset.should_receive(:async).once
-      post :promote, :id => CSET_ID, :organization_id => "1", :environment_id => 1
+      req
     end
   end
 
