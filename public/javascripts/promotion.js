@@ -1102,7 +1102,7 @@ var templateLibrary = (function(){
                     html += ' (' + product[type].length  + ')';
                 }
                 else {
-                    html += "<img class='fr' src='../images/spinner.gif'>";
+                    html += "<img class='fr' src='images/spinner.gif'>";
                 }
 
                 html += '</span></li>';
@@ -1112,7 +1112,7 @@ var templateLibrary = (function(){
         },
         dependencyItems = function(products, product_id) {
             if (!products[product_id].deps) {
-                return i18n.loading_deps + "&nbsp;" + "<img  src='../images/spinner.gif'>";
+                return i18n.loading_deps + "&nbsp;" + "<img  src='images/spinner.gif'>";
             }
 
             var html = '<ul>';
@@ -1294,7 +1294,7 @@ var changesetStatusActions = (function($){
         setLocked = function(id){
             var changeset = $('#' + id);
             changeset.css('margin-left', '0');
-            changeset.prepend('<img class="fl locked_icon" src="../images/icons/locked.png">');
+            changeset.prepend('<img class="fl locked_icon" src="images/icons/locked.png">');
             set_margins();
         },
         removeLocked = function(id){
