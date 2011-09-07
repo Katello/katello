@@ -371,10 +371,6 @@ var promotion_page = (function($){
 
         },
 
-        reset_add_remove = function(type) {
-          var buttons = $('#list').find("a[class~=content_add_remove][data-type=" + type + "]");
-          buttons.html(i18n.add).removeClass('remove_' + type).addClass("add_" + type).show(); //reset all to 'add'
-        },
         /*
          *  Resets anything that is listed to have the correct button value
          *    if there is no changeset selected this will reset everything
@@ -401,19 +397,22 @@ var promotion_page = (function($){
                         });
                     }
                 } else{
-                  reset_add_remove("product");
-                    $.each(current_changeset.getProducts(), function(index, product) {
-                        $.each(buttons, function(button_index, button){
-                            if( $(button).attr('id') === ('add_remove_product_' + product.id) ){ 
-                                if( product.all === true){
-                                    $(button).html(i18n.remove).removeClass('add_product').addClass("remove_product").removeClass("disabled");
-                                } else {
-                                    $(button).html('');
-                                }
-                            }
-                        });
+                  var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
+                  buttons.html(i18n.add).removeClass('remove_product').addClass("add_product").show(); //reset all to 'add'
+                  $.each(current_changeset.getProducts(), function(index, product) {
+                    $.each(buttons, function(button_index, button){
+                      if( $(button).attr('id') === ('add_remove_product_' + product.id) ){ 
+                         if( product.all === true){
+                            $(button).html(i18n.remove).removeClass('add_product').addClass("remove_product").removeClass("disabled");
+                         } else {
+                            $(button).html('');
+                         }
+                      }
                     });
-                 reset_add_remove("template");
+                  });
+                 buttons = $('#list').find("a[class~=content_add_remove][data-type=template]");
+                 buttons.html(i18n.add).removeClass('remove_template').addClass("add_template").show(); //reset all to 'add'
+
                }
             } else {
                 disable_all(types);
