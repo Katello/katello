@@ -61,7 +61,7 @@ module Glue::Provider
       return statuses[idx] if idx != nil
 
       #else if any of repos sync cancelled -> provider sync cancelled
-      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::CANCELLED.to_s end
+      idx = statuses.index do |r| r.state.to_s == ::PulpSyncStatus::Status::CANCELED.to_s end
       return statuses[idx] if idx != nil
 
       #else if any of repos sync finished with error -> provider sync finished with error
