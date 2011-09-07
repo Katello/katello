@@ -24,7 +24,7 @@ class SyncManagementController < ApplicationController
                      PulpSyncStatus::Status::ERROR => _("Error syncing!"),
                      PulpSyncStatus::Status::RUNNING => _("Running."),
                      PulpSyncStatus::Status::CANCELED => _("Canceled."),
-                     PulpSyncStatus::Status::NOT_SYNCED => _("Not synced.")}
+                     PulpSyncStatus::Status::NOT_SYNCED => ""}
 
 
   before_filter :find_provider, :except => [:index, :sync]
