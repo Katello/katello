@@ -1107,4 +1107,6 @@ $(document).ready(function() {
     KT.roles.actionBar = sliding_tree.ActionBar(pageActions.toggle_list);
   
     pageActions.registerEvents();
+    
+    $('.left').resizable('destroy');
 });
