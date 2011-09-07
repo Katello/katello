@@ -188,25 +188,28 @@ class ChangesetsController < ApplicationController
         name = item["item_name"] #display of item being added/removed
         pid = item["product_id"]
         case type
-        when "product"
-          @changeset.products << Product.where(:id => id) if adding
-          @changeset.products.delete Product.find(id) if !adding
-        when "errata"
-          @changeset.errata << ChangesetErratum.new(:errata_id=>id, :display_name=>name,
-                                              :product_id => pid, :changeset => @changeset) if adding
-          ChangesetErrata.destroy_all(:errata_id =>id, :changeset_id => @changeset.id) if !adding
-        when "package"
-          @changeset.packages << ChangesetPackage.new(:package_id=>id, :display_name=>name, :product_id => pid,
-                                              :changeset => @changeset) if adding
-          ChangesetPackage.destroy_all(:package_id =>id, :changeset_id => @changeset.id) if !adding
+          when "template"
+            @changeset.system_templates << SystemTemplate.where(:id => id) if adding
+            @changeset.system_templates.delete SystemTemplate.find(id) if !adding
+          when "product"
+            @changeset.products << Product.where(:id => id) if adding
+            @changeset.products.delete Product.find(id) if !adding
+          when "errata"
+            @changeset.errata << ChangesetErratum.new(:errata_id=>id, :display_name=>name,
+                                                :product_id => pid, :changeset => @changeset) if adding
+            ChangesetErrata.destroy_all(:errata_id =>id, :changeset_id => @changeset.id) if !adding
+          when "package"
+            @changeset.packages << ChangesetPackage.new(:package_id=>id, :display_name=>name, :product_id => pid,
+                                                :changeset => @changeset) if adding
+            ChangesetPackage.destroy_all(:package_id =>id, :changeset_id => @changeset.id) if !adding
 
-        when "repo"
-            @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
-            ChangesetRepo.destroy_all(:repo_id =>id, :changeset_id => @changeset.id) if !adding
+          when "repo"
+              @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
+              ChangesetRepo.destroy_all(:repo_id =>id, :changeset_id => @changeset.id) if !adding
 
-        when "distribution"
-            @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
-            ChangesetRepo.destroy_all(:repo_id =>id, :changeset_id => @changeset.id) if !adding
+          when "distribution"
+              @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
+              ChangesetRepo.destroy_all(:repo_id =>id, :changeset_id => @changeset.id) if !adding
 
         end
       end
@@ -294,8 +297,48 @@ class ChangesetsController < ApplicationController
                  :ajax_scroll => items_changesets_path()}
   end
 
+
   def controller_name
     return _('changeset')
+  end
+
+
+  def validate_data_perms
+    if params.has_key? :data
+      params[:data].each do |item|
+        type = item["type"]
+        id = item["item_id"] #id of item being added/removed
+        name = item["item_name"] #display of item being added/removed
+        pid = item["product_id"]
+        case type
+          when "template"
+            temp = SystemTemplate.where(:id => id)
+
+            @changeset.system_templates << SystemTemplate.where(:id => id) if adding
+            @changeset.system_templates.delete SystemTemplate.find(id) if !adding
+          when "product"
+            @changeset.products << Product.where(:id => id) if adding
+            @changeset.products.delete Product.find(id) if !adding
+          when "errata"
+            @changeset.errata << ChangesetErratum.new(:errata_id=>id, :display_name=>name,
+                                                :product_id => pid, :changeset => @changeset) if adding
+            ChangesetErrata.destroy_all(:errata_id =>id, :changeset_id => @changeset.id) if !adding
+          when "package"
+            @changeset.packages << ChangesetPackage.new(:package_id=>id, :display_name=>name, :product_id => pid,
+                                                :changeset => @changeset) if adding
+            ChangesetPackage.destroy_all(:package_id =>id, :changeset_id => @changeset.id) if !adding
+
+          when "repo"
+              @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
+              ChangesetRepo.destroy_all(:repo_id =>id, :changeset_id => @changeset.id) if !adding
+
+          when "distribution"
+              @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
+              ChangesetRepo.destroy_all(:repo_id =>id, :changeset_id => @changeset.id) if !adding
+
+        end
+      end
+    end
   end
 
 end
