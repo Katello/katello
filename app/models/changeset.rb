@@ -465,6 +465,7 @@ class Changeset < ActiveRecord::Base
 
 
   def uniquify_artifacts
+    system_templates.uniq! unless self.system_templates.nil?
     products.uniq! unless self.products.nil?
     [[:packages,:package_id],[:errata, :errata_id],[:repos, :repo_id]].each do |items, item_id|
       unless self.send(items).nil?
