@@ -323,7 +323,120 @@ KT.template_renderer = function() {
 
 
 
+KT.package_actions = (function() {
+    var options = KT.options;
+    var verify_add_package = function(name, btn, focus){
+            var input = $("#add_package_input");
 
+            if (btn.hasClass("working") || name.length === 0){
+                return;
+            }
+            btn.addClass("working");
+
+            btn.html("<img  src='/images/spinner.gif'>");
+            input.attr("disabled", "disabled");
+            input.autocomplete('disable');
+            input.autocomplete('close');
+
+            $.ajax({
+                type: "GET",
+                url: '/system_templates/auto_complete_package',
+                data: {name:name},
+                cache: false,
+                success: function(data){
+                    btn.removeClass('working');
+                    btn.html(i18n.add_plus);
+                    input.removeAttr('disabled');
+                    input.autocomplete('enable');
+                    if ($.inArray(name, data) > -1) {
+                        KT.templates.add_package(name);
+                    }
+                    else {
+                        input.addClass("error");
+                    }
+                    if (focus) {
+                        $("#add_package_input").focus();
+                    }
+                },
+                error: KT.templates.throw_error
+            });
+    },
+    register_autocomplete = function() {
+        var input = $("#add_package_input");
+        input.val(i18n.default_search_text);
+        input.autocomplete({
+            source: function(req, response_cb){
+                    $.ajax({
+                        type: "GET",
+                        url: '/system_templates/auto_complete_package',
+                        data: {name:req.term},
+                        cache: false,
+                        success: function(data){
+                            response_cb(data.splice(0, 20)); //only show 20 packages at a time
+                        },
+                        error: KT.templates.throw_error
+                    });
+            }
+        });
+        input.focus(function() {
+            if (input.val() === i18n.default_search_text) {
+                input.val("");
+            }
+        });
+        input.blur(function() {
+            if(input.val() === "") {
+                input.val(i18n.default_search_text);
+            }
+
+        });
+
+    },
+    register_events = function() {
+        var tmp_add_package = function(e) {
+            var btn = $("#add_package");
+            var input = $("#add_package_input");
+            var pkg = input.attr("value");
+            if (pkg === i18n.default_search_text) {
+                return;
+            }
+
+            e.preventDefault();
+            verify_add_package(pkg, btn, true);
+
+        };
+        
+        $("#add_package").live('click', tmp_add_package);
+        $(".right_tree").delegate( "#add_package_form", "submit", tmp_add_package);
+        $(".remove_package").live('click', function() {
+            var pkg = $(this).siblings("span").text();
+            if (pkg && pkg.length > 0) {
+                KT.templates.remove_package(pkg);
+            }
+        });
+        
+        $(".content_add_remove").live('click', function(){
+            var btn = $(this);
+            var name = btn.attr("data-name");
+            if (KT.templates.has_package(name)) {
+                //need to remove
+                KT.templates.remove_package(name);
+            }
+            else {
+                //need to add
+                verify_add_package(name, btn, false);
+            }
+
+        });
+
+    };
+    return {
+        register_events: register_events,
+        register_autocomplete: register_autocomplete
+    }
+})();
+
+
+//Actions related with templates (CRUD)
 KT.actions =  (function(){
     var options = KT.options;
     var buttons = KT.templates.buttons;
@@ -388,44 +501,7 @@ KT.actions =  (function(){
             'edit_template_container'   :  toggle_edit,
             'add_template_container'   :  toggle_new
     },
-    verify_add_package = function(name, btn, focus){
-            var input = $("#add_package_input");
-            
-            if (btn.hasClass("working") || name.length === 0){
-                return;
-            }
-            btn.addClass("working");
 
-            btn.html("<img  src='/images/spinner.gif'>");
-            input.attr("disabled", "disabled");
-            input.autocomplete('disable');
-            input.autocomplete('close');
-
-            $.ajax({
-                type: "GET",
-                url: '/system_templates/auto_complete_package',
-                data: {name:name},
-                cache: false,
-                success: function(data){
-                    btn.removeClass('working');
-                    btn.html(i18n.add_plus);
-                    input.removeAttr('disabled');
-                    input.autocomplete('enable');
-                    if ($.inArray(name, data) > -1) {
-                        KT.templates.add_package(name);
-                    }
-                    else {
-                        input.addClass("error");
-                    }
-                    if (focus) {
-                        $("#add_package_input").focus();
-                    }
-                },
-                error: KT.templates.throw_error
-            });
-
-
-    },
     register_events = function() {
 
         $('form[id^=new_system_template]').live('submit', function(e) {
@@ -449,8 +525,6 @@ KT.actions =  (function(){
                     }
             });
         });
-
-
 
         buttons.add.click(function(){
             if ( $(this).hasClass('disabled') ){
@@ -480,27 +554,6 @@ KT.actions =  (function(){
                 });
             });
         });
-        var add_package = function(e) {
-            var btn = $("#add_package");
-            var input = $("#add_package_input");
-            var pkg = input.attr("value");
-            if (pkg === i18n.default_search_text) {
-                return;
-            }
-
-            e.preventDefault();
-            verify_add_package(pkg, btn, true);
-
-        };
-        $("#add_package").live('click', add_package);
-        $(".right_tree").delegate( "#add_package_form", "submit", add_package);
-        $(".remove_package").live('click', function() {
-            var pkg = $(this).siblings("span").text();
-            if (pkg && pkg.length > 0) {
-                KT.templates.remove_package(pkg);
-            }
-        });
-
 
         $('#save_template').live('click', function(){
                 if ($(this).hasClass("disabled")) {
@@ -527,59 +580,10 @@ KT.actions =  (function(){
                 });
         });
 
-        $(".content_add_remove").live('click', function(){
-            var btn = $(this);
-            var name = btn.attr("data-name");
-            if (KT.templates.has_package(name)) {
-                //need to remove
-                KT.templates.remove_package(name);
-            }
-            else {
-                //need to add
-                verify_add_package(name, btn, false);
-            }
-
-        });
-
-    },
-    register_autocomplete = function() {
-        var input = $("#add_package_input");
-        input.val(i18n.default_search_text);
-        input.autocomplete({
-            source: function(req, response_cb){
-                    $.ajax({
-                        type: "GET",
-                        url: '/system_templates/auto_complete_package',
-                        data: {name:req.term},
-                        cache: false,
-                        success: function(data){
-                            response_cb(data.splice(0, 20)); //only show 20 packages at a time
-                        },
-                        error: KT.templates.throw_error
-                    });
-            } 
-        });
-        input.focus(function() {
-            if (input.val() === i18n.default_search_text) {
-                input.val("");
-            }
-        });
-        input.blur(function() {
-            if(input.val() === "") {
-                input.val(i18n.default_search_text);
-            }
-
-        });
-
     };
-    
-
-
-
     return {
         toggle_list: toggle_list,
         register_events: register_events,
-        register_autocomplete: register_autocomplete,
         open_modified_dialog: open_modified_dialog
     };
 })();
@@ -669,7 +673,7 @@ $(document).ready(function() {
                             base_icon       :  'home_img',
                             render_cb       :  KT.template_renderer.render_hash,
                             tab_change_cb   :  function(hash) {
-                                KT.actions.register_autocomplete();
+                                KT.package_actions.register_autocomplete();
                                 KT.templates.reset_page();
                             },
                             enable_search   :  true
@@ -679,6 +683,7 @@ $(document).ready(function() {
 
     KT.options.action_bar = sliding_tree.ActionBar(KT.actions.toggle_list);
     KT.actions.register_events();
+    KT.package_actions.register_events();
 
 
     //Handle scrolling
