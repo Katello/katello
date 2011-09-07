@@ -43,7 +43,7 @@ Src::Application.routes.draw do
 
   resources :dashboard, :only => [:index]
 
-  
+
   resources :systems, :except => [:destroy] do
     member do
       get :packages
@@ -91,7 +91,7 @@ Src::Application.routes.draw do
     end
   end
 
-  
+
   resources :users do
     collection do
       get :auto_complete_search
@@ -203,7 +203,7 @@ Src::Application.routes.draw do
     post 'set_org'
     get 'allowed_orgs'
   end
-  
+
   resource :account
 
   root :to => "user_sessions#new"
@@ -263,6 +263,10 @@ Src::Application.routes.draw do
       resources :systems, :only => [:index]
       match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :activation_keys, :only => [:index]
+
+      resources :repositories, :only => [] do
+        post :discovery, :on => :collection
+      end
     end
 
     resources :changesets, :only => [:show, :destroy] do
@@ -287,9 +291,11 @@ Src::Application.routes.draw do
       resources :packages, :only => [:index]
       resources :errata, :only => [:index]
       resources :distributions, :only => [:index]
+      member do
+        get :package_groups
+        get :package_group_categories
+      end
     end
-    match '/repositories/discovery' => 'repositories#discovery', :via => :post
-    match '/repositories/discovery/:id' => 'repositories#discovery_status', :via => :get
 
     resources :environments, :only => [:show, :update, :destroy] do
       resources :systems, :only => [:create, :index]

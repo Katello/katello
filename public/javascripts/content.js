@@ -121,7 +121,6 @@ var content = (function(){
             progressBar.appendTo(updateField);
             cancelButton.appendTo(updateField);
             updateField.fadeIn('fast');
-            console.log(getProductIdFromRepo(repo));
             var pu = $.PeriodicalUpdater('/sync_management/sync_status/', {
               data: {repo_id:repo, sync_id:sync, product_id: getProductIdFromRepo(repo)},
               method: 'get',
