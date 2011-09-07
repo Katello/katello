@@ -177,7 +177,7 @@ class Import(TemplateAction):
         return os.EX_OK
         
     def open_file(self, path):
-        return open(get_abs_path(tplPath))
+        return open(get_abs_path(path))
                     
 
 # ==============================================================================
