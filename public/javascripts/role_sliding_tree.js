@@ -702,7 +702,7 @@ var templateLibrary = (function($){
             if( no_slide ){
                 html += '<li class="no_slide"><div id="' + id + '">'; 
             } else {
-                html += '<li class="slide_link"><div class="link_details" id="' + id + '">';
+                html += '<li class="slide_link"><div class="simple_link link_details" id="' + id + '">';
             }
    
             html += '<span class="sort_attr">'+ name;
@@ -751,14 +751,19 @@ var templateLibrary = (function($){
             return html;
         },
         permissionsList = function(permissions, organization_id, options){
-            var html = '<ul class="filterable">';
+            var html = '<ul class="filterable">',
+            	count = 0;
             
             for( item in permissions){
                 if( permissions.hasOwnProperty(item) ){
                     if( item.split("_")[0] === "permission" && permissions[item].organization === 'organization_' + organization_id ){
                         html += permissionsListItem(item, permissions[item].name, options.show_button);
+                        count += 1;
                     }
                 }
+            }
+            if( count === 0 ){
+            	html += '<li class="no_slide">' + i18n.no_permissions + '</li>';
             }
             html += '</ul>';
             return html;
@@ -772,7 +777,7 @@ var templateLibrary = (function($){
                             anchor += i18n.remove + "</a>";
             }
             
-            return '<li class="slide_link">' + anchor + '<div class="link_details" id="' + permission_id + '"><span class="sort_attr">'  + name + '</span></div></li>';
+            return '<li class="slide_link">' + anchor + '<div class="simple_link link_details" id="' + permission_id + '"><span class="sort_attr">'  + name + '</span></div></li>';
         },
         permissionItem = function(permission){
             var i = 0, length = 0,
@@ -821,7 +826,7 @@ var templateLibrary = (function($){
                 anchor += has_role ? (i18n.rule_applied + "</div>") : (i18n.rule_not_applied + "</div>");                
             }
             
-            html += anchor + '<div class="';
+            html += anchor + '<div class="simple_link ';
             html += no_slide ? "" : "link_details";
             html += '"><span class="sort_attr">'  + name + '</span></div></li>';
             
@@ -843,16 +848,20 @@ var templateLibrary = (function($){
             return html;
         },
         globalsList = function(globals, options){
-            var html = '<ul class="filterable">';
+            var html = '<ul class="filterable">',
+            	count = 0;
             
             for( item in globals ){
                 if( globals.hasOwnProperty(item) ){
                     if( item.split("_")[0] === "permission" && item.split("_")[1] === 'global' ){
                         html += permissionsListItem(item, globals[item].name, options.show_button);
+                        count += 1;
                     }
                 }
             }
-            
+            if( count === 0 ){
+            	html += '<li class="no_slide">' + i18n.no_global_permissions + '</li>';
+            }
             html += '</ul>';
             return html;
         };
