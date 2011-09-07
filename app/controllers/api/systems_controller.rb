@@ -18,7 +18,7 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :upload_package_profile, :errata, :package_profile]
-  before_filter :authorize, :except => :activate
+  before_filter :authorize, :except => [:activate, :create] # TODO: create was added as a workaround for BZ 736384
 
   skip_before_filter :require_user, :only => [:activate]
 
