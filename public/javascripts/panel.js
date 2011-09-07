@@ -168,7 +168,7 @@ var list = (function(){
            return false;
        },
        complete_refresh: function(url) {
-        $('#list').html('<img src="../images/spinner.gif">');
+        $('#list').html('<img src="images/spinner.gif">');
         list.refresh("list", url);
        },
        refresh : function(id, url){
@@ -356,7 +356,7 @@ var panel = (function(){
                 list.append(jQuery('<div/>', {
                     'id': "list-spinner"
                 }));
-                $('#list-spinner').html( "<img src='../images/spinner.gif' class='ajax_scroll'>");
+                $('#list-spinner').html( "<img src='images/spinner.gif' class='ajax_scroll'>");
 
                 $.ajax({
                     type: "GET",
