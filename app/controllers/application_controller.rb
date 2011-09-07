@@ -357,6 +357,9 @@ class ApplicationController < ActionController::Base
   def simplify_changeset cs
 
     to_ret = {:id=>cs.id.to_s, :name=>cs.name, :description=>cs.description, :timestamp =>cs.updated_at.to_i.to_s, :products=>{}, :is_new => cs.state == Changeset::NEW}
+    cs.system_templates.each do |temp|
+      to_ret[:system_templates][temp.id] = {:id=> temp.id, :name=>temp.name}
+    end
 
     cs.involved_products.each{|product|
       to_ret[:products][product.id] = {:id=> product.id, :name=>product.name, :provider=>product.provider.provider_type, 'package'=>[], 'errata'=>[], 'repo'=>[]}
@@ -374,7 +377,8 @@ class ApplicationController < ActionController::Base
         cs_product[type] << {:id=>item.send("#{type}_id"), :name=>item.display_name}
       }
     }
-
+    to_ret[:products] = [] unless to_ret.has_key? :products
+    to_ret[:system_templates] = [] unless to_ret.has_key? :system_templates
     to_ret
   end
 
