@@ -61,7 +61,7 @@ class RepoAction(Action):
     def __init__(self):
         super(RepoAction, self).__init__()
         self.api = RepoAPI()
-        
+
 # actions --------------------------------------------------------------------
 
 
@@ -98,7 +98,7 @@ class Create(RepoAction):
         else:
             print _("No product [ %s ] found") % prodName
             return os.EX_DATAERR
-        
+
         return os.EX_OK
 
 class Discovery(RepoAction):
@@ -201,7 +201,7 @@ class Discovery(RepoAction):
             parsedUrl = urlparse.urlparse(repourl)
             repoName = self.repository_name(name, parsedUrl.path) # pylint: disable=E1101
             repo = self.api.create(productid, repoName, repourl)
-            
+
             print _("Successfully created repository [ %s ]") % repoName
 
     def repository_name(self, name, parsedUrlPath):
@@ -266,11 +266,11 @@ class Status(RepoAction):
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
             repo['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
-            
+
         errors = task.errors()
         if len(errors) > 0:
             repo['last_errors'] = errors
-        
+
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('package_count')
@@ -351,7 +351,7 @@ class Sync(RepoAction):
                       help=_("repository name"))
         self.parser.add_option('--product', dest='product',
                       help=_("product name eg: fedora-14"))
-                      
+
     def check_options(self):
         if not self.has_option('id'):
             self.require_option('name')
@@ -363,7 +363,7 @@ class Sync(RepoAction):
         repoName = self.get_option('name')
         orgName  = self.get_option('org')
         prodName = self.get_option('product')
-        
+
         if repoId:
             repo = self.api.repo(repoId)
         else:
@@ -373,7 +373,7 @@ class Sync(RepoAction):
 
         task = AsyncTask(self.api.sync(repo['id']))
         run_async_task_with_status(task, ProgressBar())
-        
+
         if task.succeeded():
             print _("Repo [ %s ] synced" % repo['name'])
             return os.EX_OK

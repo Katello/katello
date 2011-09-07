@@ -12,7 +12,7 @@ from katello.client.core.template import Delete
 class RequiredCLIOptionsTests(CLIOptionTestCase):
     #requires: organization, name
     #optional: environment (defaults to Locker)
-    
+
     def setUp(self):
         self.set_action(Delete())
         self.mock_options()
@@ -32,13 +32,13 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.assertEqual(len(self.action.optErrors), 0)
 
 
-        
+
 class TemplateInfoTest(CLIActionTestCase):
-    
+
     ORG = test_data.ORGS[0]
     ENV = test_data.ENVS[0]
     TPL = test_data.TEMPLATES[0]
-    
+
     OPTIONS = {
         'org': ORG['name'],
         'env': ENV['name'],
@@ -49,9 +49,9 @@ class TemplateInfoTest(CLIActionTestCase):
         self.set_action(Delete())
         self.set_module(katello.client.core.template)
         self.mock_printer()
-        
+
         self.mock_options(self.OPTIONS)
-        
+
         self.mock(self.module, 'get_template', self.TPL)
         self.mock(self.action.api, 'delete')
 
@@ -69,5 +69,3 @@ class TemplateInfoTest(CLIActionTestCase):
     def test_it_calls_delete_api(self):
         self.action.run()
         self.action.api.delete.assert_called_once_with(self.TPL['id'])
-
-

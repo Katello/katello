@@ -162,7 +162,7 @@ class Import(TemplateAction):
         tplPath = self.get_option('file')
 
         env = get_locker(orgName)
-        if env == None: 
+        if env == None:
             return os.EX_DATAERR
 
         try:
@@ -170,15 +170,15 @@ class Import(TemplateAction):
         except:
             print _("File %s does not exist" % tplPath)
             return os.EX_IOERR
-            
+
         response = run_spinner_in_bg(self.api.import_tpl, (env["id"], desc, f), message=_("Importing template, please wait... "))
         print response
         f.close()
         return os.EX_OK
-        
+
     def open_file(self, path):
         return open(get_abs_path(path))
-                    
+
 
 # ==============================================================================
 class Create(TemplateAction):
@@ -400,7 +400,7 @@ class Promote(TemplateAction):
         template = get_template(orgName, envName, tplName)
         if template == None:
             return os.EX_DATAERR
-        
+
         task = self.api.promote(template["id"])
 
         result = run_spinner_in_bg(wait_for_async_task, [task])

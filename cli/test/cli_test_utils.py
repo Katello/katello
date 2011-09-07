@@ -4,7 +4,7 @@ from mock import Mock
 
 
 class CLITestCase(unittest.TestCase):
-    
+
     _mocked_props = {}
     action = None
     module = None
@@ -21,12 +21,12 @@ class CLITestCase(unittest.TestCase):
             #save only the original function, not mocks when it's called for second time on the same obj#property
             if not self._mocked_props.has_key(key):
                 self._mocked_props[key] = (obj, prop, property_name)
-        
+
         #mock the function
         m = Mock()
         m.return_value = copy.copy(return_value)
         setattr(obj, property_name, m)
-        
+
         return m
 
     def restore_mocks(self):
@@ -49,7 +49,7 @@ class CLIOptionTestCase(CLITestCase):
 
     def mock_options(self):
         self.mock(self.action, 'get_option').side_effect = self.mocked_get_option
-        
+
     def mocked_get_option(self, opt, default=None):
         return getattr(self.action.opts, opt, default)
 
@@ -70,11 +70,9 @@ class CLIActionTestCase(CLITestCase):
     def mock_options(self, options):
         self.mock(self.action, 'get_option').side_effect = self.mocked_get_option
         self._options = options
-        
+
     def mocked_get_option(self, opt, default=None):
         try:
             return self._options[opt]
         except:
             return default
-
-

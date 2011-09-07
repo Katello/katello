@@ -32,7 +32,7 @@ class Printer:
     OUTPUT_FORCE_NONE = 0
     OUTPUT_FORCE_GREP = 1
     OUTPUT_FORCE_VERBOSE = 2
-    
+
     def __init__(self, output_mode, delimiter=""):
         self._output_mode = output_mode
         self._columns = []
@@ -525,7 +525,7 @@ class AsyncTask():
 
     def get_hashes(self):
         return self._tasks
-        
+
     def get_subtasks(self):
         return [AsyncTask(t) for t in self._tasks]
 
@@ -537,7 +537,7 @@ def wait_for_async_task(task):
 
     while task.is_running():
         time.sleep(1)
-        task.update()            
+        task.update()
     return task.get_hashes()
 
 
@@ -559,4 +559,3 @@ def progress(left, total):
     sizeLeft = float(left)
     sizeTotal = float(total)
     return 0.0 if total == 0 else (sizeTotal - sizeLeft) / sizeTotal
-    

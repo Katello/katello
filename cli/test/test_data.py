@@ -1,7 +1,7 @@
 try:
     import json
 except ImportError:
-    import simplejson as json 
+    import simplejson as json
 
 
 ORGS = [
@@ -559,7 +559,7 @@ PACKAGE_GROUPS = {
 }
 
 PACKAGE_GROUP_CATEGORIES = {
-"development": 
+"development":
 {"name": "Development",
   "_id": "development",
   "id": "development",

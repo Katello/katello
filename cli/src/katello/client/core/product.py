@@ -85,7 +85,7 @@ class List(ProductAction):
             prov = get_provider(org_name, prov_name)
             if prov == None:
                 return os.EX_DATAERR
-            
+
             self.printer.setHeader(_("Product List For Provider %s") % (prov_name))
             prods = self.api.products_by_provider(prov["id"])
 
@@ -93,7 +93,7 @@ class List(ProductAction):
             env = get_environment(org_name, env_name)
             if env == None:
                 return os.EX_DATAERR
-            
+
             self.printer.setHeader(_("Product List For Organization %s, Environment '%s'") % (org_name, env["name"]))
             prods = self.api.products_by_env(env['id'])
 
@@ -164,19 +164,19 @@ class Status(ProductAction):
 
         prod['last_sync'] = format_sync_time(prod['last_sync'])
         prod['sync_state'] = format_sync_state(prod['sync_state'])
-        
+
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
             prod['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
-        
+
         #TODO: last errors?
-        
+
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('provider_id')
         self.printer.addColumn('provider_name')
-            
+
         self.printer.addColumn('last_sync')
         self.printer.addColumn('sync_state')
         self.printer.addColumn('progress', show_in_grep=False)
@@ -184,7 +184,7 @@ class Status(ProductAction):
         self.printer.setHeader(_("Product Status"))
         self.printer.printItem(prod)
         return os.EX_OK
-        
+
 
 # ------------------------------------------------------------------------------
 class Promote(ProductAction):
@@ -198,7 +198,7 @@ class Promote(ProductAction):
                                help=_("product name (required)"))
         self.parser.add_option('--environment', dest='env',
                                help=_("environment name (required)"))
-                               
+
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
@@ -218,16 +218,16 @@ class Promote(ProductAction):
             patch = {}
             patch['+products'] = [prodName]
             cset = self.csapi.update_content(cset["id"], patch)
-        
+
             task = self.csapi.promote(cset["id"])
-            
+
             result = run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the product, please wait... "))
             print _("Product [ %s ] promoted to environment [ %s ]" % (prodName, envName))
-        
+
         finally:
             self.csapi.delete(cset["id"])
         return os.EX_OK
-        
+
     def create_cs_name(self):
         curTime = datetime.datetime.now()
         return "product_promotion_"+str(curTime)
@@ -275,17 +275,17 @@ class Create(ProductAction):
     def create_product_with_repos(self, provName, orgName, name, description, url, assumeyes):
         prov = get_provider(orgName, provName)
         if prov == None:
-            return os.EX_DATAERR        
-        
+            return os.EX_DATAERR
+
         prod = self.api.create(prov["id"], name, description)
         print _("Successfully created product [ %s ]") % name
 
         if url == None:
             return os.EX_OK
-            
+
         repourls = self.discoverRepos.discover_repositories(orgName, url)
         self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
-        selectedurls = self.discoverRepos.select_repositories(repourls, assumeyes)        
+        selectedurls = self.discoverRepos.select_repositories(repourls, assumeyes)
         self.discoverRepos.create_repositories(prod["id"], prod["name"], selectedurls)
 
         return os.EX_OK
