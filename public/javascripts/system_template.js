@@ -328,11 +328,11 @@ KT.template_renderer = function() {
         return html ;
     },
     packages = function() {
-        var html = '<ul><li class="content_input_item"><form id="add_package_form">';
+        var html = '<ul ><li class="content_input_item"><form id="add_package_form">';
         html += '<input id="add_package_input" type="text" size="35"><form>  ';
         html += '<a id="add_package" class="fr st_button ">' + i18n.add_plus + '</a>';
         html += ' </li></ul>';
-        html +=  "<ul>";
+        html +=  '<ul class="filterable">';
         $.each(KT.options.current_template.packages, function(index, item) {
             html += package_item(item.name);
             
@@ -353,7 +353,7 @@ KT.template_renderer = function() {
         html += '<input id="add_product_input" type="text" size="35"><form>  ';
         html += '<a id="add_product" class="fr st_button ">' + i18n.add_plus + '</a>';
         html += ' </li></ul>';
-        html +=  "<ul>";
+        html +=  '<ul class="filterable">';
         $.each(KT.options.current_template.products, function(index, item) {
             html += product_item(item.name, item.id);
 
@@ -373,7 +373,7 @@ KT.template_renderer = function() {
             return i18n.templates_empty;
         }
 
-        var html = "<ul>";
+        var html = '<ul class="filterable">';
         $.each(templates, function(index, template) {
             html += list_item("details_" + template.template_id, template.template_name, true);
         });
@@ -668,8 +668,15 @@ KT.actions =  (function(){
        });
     },
     toggle_list = {
-            'edit_template_container'   :  toggle_edit,
-            'add_template_container'   :  toggle_new
+
+            'template_edit': { container 	: 'edit_template_container',
+                                setup_fn: toggle_edit
+
+            },
+            'template_add': { container: 'add_template_container',
+                              setup_fn: toggle_new
+
+            }
     },
 
     register_events = function() {
@@ -686,7 +693,7 @@ KT.actions =  (function(){
                     success:function(data) {
                         button.removeAttr("disabled");
                         slide_button.removeClass("disabled");
-                        options.action_bar.toggle('add_template_container');
+                        options.action_bar.toggle('template_add');
                         KT.templates.add_new_template(data.id, data.name);
                     },
                     error:function() {
@@ -700,13 +707,13 @@ KT.actions =  (function(){
             if ( $(this).hasClass('disabled') ){
                 return false;
             }
-            options.action_bar.toggle('add_template_container');
+            options.action_bar.toggle('template_add');
         });
         buttons.edit.click(function(){
             if ( $(this).hasClass('disabled') || !KT.options.current_template){
                 return false;
             }
-            options.action_bar.toggle('edit_template_container');
+            options.action_bar.toggle('template_edit');
         });
         buttons.remove.click(function(){
             if ( $(this).hasClass('disabled') || !KT.options.current_template ){
