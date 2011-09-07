@@ -637,6 +637,9 @@ var roleActions = (function($){
                 	}
                     roles_breadcrumb[current_organization].count -= 1;
                     KT.roles.tree.rerender_content();
+               },
+               error 	: function(){
+               		element.removeClass('disabled');
                }
             });
         },
@@ -661,10 +664,15 @@ var roleActions = (function($){
                         roles_breadcrumb[element.attr('data-id')].has_role = false;
                     }
                     KT.roles.tree.rerender_content();
+               },
+               error 	: function(){
+               		element.removeClass('disabled');
                }
             });
         },
         handleContentAddRemove = function(element){
+        	element.addClass('disabled');
+        	
             if( element.attr('data-type') === 'permission' ){
                 if( element.hasClass('remove_permission') ){
                     remove_permission(element);
@@ -1071,6 +1079,9 @@ var pageActions = (function($){
             });            
             
             $('.content_add_remove').live('click', function(){
+            	if( $(this).hasClass('disabled') ){
+            		return false;
+            	}
                 roleActions.handleContentAddRemove($(this));
             });
             
