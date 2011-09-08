@@ -68,7 +68,7 @@ class Status(PingAction):
             detail = details[key]
             detail['service'] = key
 
-            if detail.has_key("duration_ms"):
+            if "duration_ms" in detail:
                 detail["duration"] = detail["duration_ms"] + "ms"
             statusList.append(detail)
 

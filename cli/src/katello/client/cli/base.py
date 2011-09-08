@@ -210,10 +210,10 @@ class KatelloCLI(object):
             command.process_options(command_args)
             action = command.extract_action(command_args)
             if action:
-               action.process_options(command_args)
+                action.process_options(command_args)
             self.setup_server()
             if not action or action.require_credentials():
-              self.setup_credentials()
+                self.setup_credentials()
             return command.main(command_args)
 
         except OptionParserExitError, opee:

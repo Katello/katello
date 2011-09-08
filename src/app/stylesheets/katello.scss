@@ -59,7 +59,7 @@ input, textarea {
   &:focus {
     border-width: 2px;
     padding: 3px;
-    background-color: #fff;
+    background-color: $white_color;
     outline: none;
   }
   &.disabled, &[disabled] {
@@ -132,15 +132,15 @@ input[type='submit'], button, .button {
   margin: 4px;
   padding: 4px 12px;
   @include border-radius(5px);
-  @include text-shadow(#fff, 0, 1px, 0);
+  @include text-shadow($white_color, 0, 1px, 0);
   min-height: 14px;
   
   .nomargin {
     margin: 0;
   }
   &:hover {
-    background: -moz-linear-gradient(top, #fff, #fff, #cfcfcf);
-    background: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(0.6, #fff), to(#cfcfcf));
+    background: -moz-linear-gradient(top, $white_color, $white_color, #cfcfcf);
+    background: -webkit-gradient(linear, left top, left bottom, from($white_color), color-stop(0.6, $white_color), to(#cfcfcf));
     @include box-shadow(0, 1px, 2px, rgba(0,0,0,0.5));
     text-decoration: none;
     color: black;
@@ -351,7 +351,7 @@ table {
       }
     }
     a {
-      color: #fff;
+      color: $white_color;
       &:hover, &:focus {
         text-decoration: none;
       }
@@ -360,14 +360,14 @@ table {
       display: inline-block;
       font-size: 14px;
       letter-spacing: 0.3em;        
-      color: #FFF;
+      color: $white_color;
       margin: 9px 0 0 6px;
     }
     .pipe {
       display: inline-block;
       height: 24px;
       width: 1px;
-      background-color: #fff;
+      background-color: $white_color;
       background-color: rgba(255,255,255,0.7);
       vertical-align: middle;
     }
@@ -389,7 +389,7 @@ table {
       margin: 0.3em;
       padding: 0.2em 0.7em;
       width: auto;
-      color: #FFF;
+      color: $white_color;
     }
   }
 }
@@ -428,7 +428,7 @@ table {
       }
     }
     a {
-      color: #fff;
+      color: $white_color;
       margin-right: 10px;
     }
   }
@@ -452,12 +452,12 @@ nav {
         padding: 0;
         color: #888;
         background-color: #ddd;
-        background: -moz-linear-gradient(top, #fff, #ddd 2px, #ddd 70%, lighten($stroke_color, 10%));
+        background: -moz-linear-gradient(top, $white_color, #ddd 2px, #ddd 70%, lighten($stroke_color, 10%));
         background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(lighten($stroke_color,10%)), color-stop(.01, #ddd), color-stop(.7,#ddd));
         border: 1px solid $stroke_color;
   
         &.selected {
-          background: #fff;
+          background: $white_color;
           padding-bottom: 1px;
           border-bottom: none;
   
@@ -471,7 +471,7 @@ nav {
           padding: 9px 18px;
           text-decoration: none;
           color: $taboff_color;
-          @include text-shadow(#fff,0,1px,0);
+          @include text-shadow($white_color,0,1px,0);
           
           &:hover {
             color: lighten($kselected_color,10%);
@@ -510,7 +510,7 @@ nav {
           cursor: pointer;
           text-transform: none;
           text-decoration: none;
-          @include text-shadow(#fff,0,1px,0);
+          @include text-shadow($white_color,0,1px,0);
           display: block;
           margin: 0;
           padding: 8px 16px 6px;
@@ -530,7 +530,7 @@ nav {
           display: none;
           background: $subnav_shadow_img;
           background-position: 0 14px;
-          background-color: #FFF;
+          background-color: $white_color;
           @include box-shadow(2px 2px 2px rgba(0,0,0,0.4));
           z-index: 101;
           top: 35px;
@@ -585,7 +585,7 @@ nav {
           &.selected {
             background-color: $kselected_color;
             @include border-radius(5px);
-            color: #FFF;
+            color: $white_color;
           }
         }
       }
@@ -1039,7 +1039,7 @@ fieldset {
   font-size: 90%;
   &.active {
     background-color: $kselected_color;
-    color: #FFF;
+    color: $white_color;
     .arrow-right {
       border-bottom: 21px solid transparent;
       border-left: 21px solid $kselected_color;
@@ -1053,16 +1053,16 @@ fieldset {
       z-index: 220;
     }
     a, a:hover, a:visited, a:active, a:link {
-     font-color: #FFF;
+     font-color: $white_color;
     }
   }
   &.add {
     background-color: $listhover_color;
-    color: #FFF;
+    color: $white_color;
   }
   &:hover {
       background-color: $listhover_color;
-      color: #FFF;
+      color: $white_color;
       .arrow-right {
         border-left: 21px solid $listhover_color;
       }
@@ -1183,7 +1183,7 @@ fieldset {
 .list {
   min-height:450px;
   border: 1px solid #B5B5B5;
-  background-color: #FFF;
+  background-color: $white_color;
   font-size: 105%;
   clear: both;
   .ajax_scroll {
@@ -1198,21 +1198,13 @@ fieldset {
     height: 2.7em;
     &:hover {
       background-color: $listhover_color;
-      color: #FFF;
+      color: $white_color;
       
       .st_button {
-        color: #FFF;
+        color: $white_color;
       }    
     }
     //span { vertical-align: middle; }
-  }
-  .link_details {
-    background: $dotdotdot_icon;
-    margin: 6px 0;
-  }
-  .no_slide {
-    margin: 6px 0;
-    padding-left: 5px;
   }
   .item {
     position: relative;
@@ -1246,7 +1238,7 @@ fieldset {
     display: block;
     height:74px;
     width: 449px;
-    background-color: #FFF;
+    background-color: $white_color;
     
     header { height: 40px;}
 }
@@ -1345,11 +1337,11 @@ fieldset {
 .ui-multiselect li.ui-draggable-dragging { padding-left: 10px; }
 
 .ui-multiselect div.selected { position: relative; padding: 0; margin: 0; border: 0; float:left; }
-.ui-multiselect ul.selected { position: relative; padding: 0; overflow: auto; overflow-x: hidden; background: #fff; margin: 0; list-style: none; border: 0; position: relative; width: 100%; }
+.ui-multiselect ul.selected { position: relative; padding: 0; overflow: auto; overflow-x: hidden; background: $white_color; margin: 0; list-style: none; border: 0; position: relative; width: 100%; }
 .ui-multiselect ul.selected li { }
 
 .ui-multiselect div.available { position: relative; padding: 0; margin: 0; border: 0; float:left; border-left: 1px solid; }
-.ui-multiselect ul.available { position: relative; padding: 0; overflow: auto; overflow-x: hidden; background: #fff; margin: 0; list-style: none; border: 0; width: 100%; }
+.ui-multiselect ul.available { position: relative; padding: 0; overflow: auto; overflow-x: hidden; background: $white_color; margin: 0; list-style: none; border: 0; width: 100%; }
 .ui-multiselect ul.available li { padding-left: 10px; }
 
 .ui-multiselect .ui-state-default { border: none; margin-bottom: 1px; position: relative; padding-left: 20px;}
@@ -1407,7 +1399,7 @@ fieldset {
       
       &:hover {
         background-color: $lightgrey_color;
-        color: #FFF;
+        color: $white_color;
       }
   }
   .path_entries {
@@ -1421,7 +1413,7 @@ fieldset {
 
       z-index: 200;
       position: absolute;
-      background-color: #FFF;
+      background-color: $white_color;
   }
 }
 .breadcrumb { 
@@ -1431,7 +1423,7 @@ fieldset {
   position: relative;
 
   .selected {
-    background: $listhover_color !important; color: #FFF; @include text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
+    background: $listhover_color !important; color: $white_color; @include text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
     &:after {
       border-left-color: $listhover_color !important;
     }
@@ -1462,7 +1454,7 @@ fieldset {
           @include border-right-radius(5px);
 
           &:hover {
-            color: #FFF;
+            color: $white_color;
             background: $listhover_color !important;
           }
           &:after {
@@ -1483,7 +1475,7 @@ fieldset {
         
         &:hover { 
           background: $listhover_color !important; 
-          color: #FFF; 
+          color: $white_color; 
           @include text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
           
           &:after { border-left-color: $listhover_color !important; }
@@ -1642,7 +1634,7 @@ fieldset {
     display: block;
     width: 448px;
     font-weight: 200;
-    color: #FFF;
+    color: $white_color;
     background-color: $tree-container_color;
     word-wrap: break-word;
     border: 1px solid $tree-border_color;
@@ -1659,7 +1651,7 @@ fieldset {
         input[type="input"] {
           //float: right; /* webkit adds an extra padding and makes the widget narrower */
           border: 3px solid #436fa8;
-          background: #FFF;
+          background: $white_color;
           padding-right: 0px;
         }
         button {
@@ -1707,10 +1699,27 @@ fieldset {
         
         .empty_list { padding: 10px 0 0 10px; }
         
+        .simple_link{
+          margin: 6px 0;
+        }
+        .link_details {
+          background: $dotdotdot_icon;
+        }
+        .no_slide {
+          padding-left: 5px;
+          cursor: default;
+        }
+        .no_hover {
+          &:hover {
+            border-color: $white_color;
+            background: none;
+          }
+        }
+        
         li{
           height: 34px;
-          border-top: 2px solid #FFF;
-          border-bottom: 2px solid #FFF;
+          border-top: 2px solid $white_color;
+          border-bottom: 2px solid $white_color;
           padding-left: 10px;
           padding-right: 10px;
         }
@@ -1867,7 +1876,7 @@ fieldset {
       width: 90%;
       padding: 3%;
       &:hover {
-        color: #FFF !important;
+        color: $white_color !important;
         background-color: $listhover_color;
       }
       &.selected {
@@ -1877,7 +1886,7 @@ fieldset {
 }
 
 #orgbox {
-  background: #fff;
+  background: $white_color;
   @include border-radius(3px);
   padding: 10px 13px;
   margin: 0;
@@ -1888,4 +1897,8 @@ fieldset {
 
 input:focus {
   outline: none;
+}
+
+.ui-spinner {
+    width: 40px;
 }

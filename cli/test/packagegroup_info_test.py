@@ -16,12 +16,12 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.assertRaises(Exception, self.action.process_options, ['info'])
 
     def test_missing_id_generates_error(self):
-      self.assertRaises(Exception, self.action.process_options,
-                        ['info', '--repoid=123'])
+        self.assertRaises(Exception, self.action.process_options,
+                          ['info', '--repoid=123'])
 
     def test_missing_repoid_generates_error(self):
-      self.assertRaises(Exception, self.action.process_options,
-                        ['info', '--id=123'])
+        self.assertRaises(Exception, self.action.process_options,
+                          ['info', '--id=123'])
 
     def test_no_error_if_required_options_provided(self):
         self.action.process_options(['info', '--repoid=123','--id=123'])

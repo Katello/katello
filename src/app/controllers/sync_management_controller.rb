@@ -23,7 +23,8 @@ class SyncManagementController < ApplicationController
                      PulpSyncStatus::Status::FINISHED => _("Sync complete."),
                      PulpSyncStatus::Status::ERROR => _("Error syncing!"),
                      PulpSyncStatus::Status::RUNNING => _("Running."),
-                     PulpSyncStatus::Status::NOT_SYNCED => _("Not synced.")}
+                     PulpSyncStatus::Status::CANCELED => _("Canceled."),
+                     PulpSyncStatus::Status::NOT_SYNCED => ""}
 
 
   before_filter :find_provider, :except => [:index, :sync]
@@ -142,8 +143,10 @@ private
     progress = {:progress => calc_progress(sync_status)}
     progress[:sync_id] = sync_status.uuid
     progress[:state] = format_state(sync_status.state)
+    progress[:raw_state] = sync_status.state
     progress[:start_time] = format_date(sync_status.start_time)
     progress[:finish_time] = format_date(sync_status.finish_time)
+    progress[:duration] = format_duration(sync_status.finish_time, sync_status.start_time)
     progress[:packages] = sync_status.progress.total_count
     progress[:size] = number_to_human_size(sync_status.progress.total_size)
     progress
@@ -151,6 +154,14 @@ private
 
   def format_state(state)
     @@status_values[state.to_sym]
+  end
+
+  def format_duration(finish, start)
+    retval = nil
+    if !finish.nil? and !start.nil?
+      retval = distance_of_time_in_words(finish, start)
+    end
+    retval
   end
 
   def format_date(check_date)

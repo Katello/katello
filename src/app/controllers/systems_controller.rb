@@ -24,7 +24,7 @@ class SystemsController < ApplicationController
   before_filter :setup_options, :only => [:index, :items, :environments]
 
   # two pane columns and mapping for sortable fields
-  COLUMNS = {'name' => 'name', 'lastCheckin' => 'lastCheckin', 'created' => 'created_at' }
+  COLUMNS = {'name' => 'name', 'lastCheckin' => 'lastCheckin', 'created' => 'created_at'}
 
 
   def rules
@@ -41,6 +41,7 @@ class SystemsController < ApplicationController
       :subscriptions => read_system,
       :update_subscriptions => edit_system,
       :packages => read_system,
+      :more_packages => read_system,
       :update => edit_system,
       :edit => read_system,
       :show => read_system,
@@ -95,60 +96,79 @@ class SystemsController < ApplicationController
   end
 
   def subscriptions
-    all = @system.pools + @system.available_pools
-    consumed = @system.consumed_pool_ids
-    all_pools = all.collect {|pool| OpenStruct.new(:poolId => pool["id"], :poolName => pool["productName"])}
-    all_pools.sort! {|a,b| a.poolName <=> b.poolName}
-    render :partial=>"subscriptions", :layout => "tupane_layout", :locals=>{:system=>@system, :all_subs => all_pools,
-                                                        :consumed => consumed, :editable=>@system.editable?}
+    consumed_pools = sys_consumed_pools
+    avail_pools = sys_available_pools
 
+    render :partial=>"subscriptions", :layout => "tupane_layout", 
+                                      :locals=>{:system=>@system, :avail_subs => avail_pools,
+                                                :consumed_subs => consumed_pools, 
+                                                :editable=>@system.editable?}
   end
 
   def update_subscriptions
-    params[:system] = {"consumed_pool_ids"=>[]} unless params.has_key? :system
-    if @system.update_attributes(params[:system])
-      notice _("System subscriptions updated.")
-      render :nothing =>true
-    else
-      errors "Unable to update subscriptions."
-      render :nothing =>true
+    begin
+      if params.has_key? :system
+        params[:system].keys.each do |pool|
+          @system.subscribe pool, params[:spinner][pool] if params[:commit].downcase == "subscribe"
+          @system.unsubscribe pool if params[:commit].downcase == "unsubscribe"
+        end
+        consumed_pools = sys_consumed_pools
+        avail_pools = sys_available_pools
+        render :partial=>"subs_update", :locals=>{:system=>@system, :avail_subs => avail_pools,
+                                                    :consumed_subs => consumed_pools,
+                                                    :editable=>@system.editable?}
+        notice _("System subscriptions updated.")
+
+      end
+    rescue Exception => error
+      errors error.to_s, {:level => :message, :persist => false}
+      render :nothing => true
     end
-  end
-  
-  
-  def random rng, length = 8
-    o =  rng.map{|i| i.to_a}.flatten;  
-    (0..length-1).map{ o[rand(o.length)]  }.join
   end
 
-  def rand_alpha length = 8
-    random [('a'..'m'),('A'..'M')], length
-  end
-  def rand_alpha_2ndhalf length = 8
-    random [('n'..'z'),('n'..'Z')], length
-  end
-  def rand_num length = 6
-    random [(0..9)], length
-  end
   def packages
-    #packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    packages = []
-    25.times do
-      arch = ["x86_64","i686", "noarch"].choice
-      packages << OpenStruct.new(:nvrea=>"#{rand_alpha}-0.1.49-1.git.146.c#{rand_num}.fc15.#{arch}", :arch =>arch)
+    offset = current_user.page_size
+    packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    if packages.length > 0
+      if params.has_key? :pkg_order
+        if params[:pkg_order].downcase == "desc"
+          packages.reverse!
+        end
+      end
+      packages = packages[0...offset]
+    else
+      packages = []
     end
-    packages = packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages}
+    render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages, :offset => offset}
   end
 
   def more_packages
-    packages = []
-    25.times do
-      arch = ["x86_64","i686", "noarch"].choice
-      packages << OpenStruct.new(:nvrea=>"#{rand_alpha_2ndhalf}-0.1.49-1.git.146.c#{rand_num}.fc15.#{arch}", :arch =>arch)
+    #grab the current user setting for page size
+    size = current_user.page_size
+    #what packages are available?
+    packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    if packages.length > 0
+      #check for the params offset (start of array chunk)
+      if params.has_key? :offset
+        offset = params[:offset].to_i
+      else
+        offset = current_user.page_size
+      end
+      if params.has_key? :pkg_order
+        if params[:pkg_order].downcase == "desc"
+          #reverse if order is desc
+          packages.reverse!
+        end
+      end
+      if params.has_key? :reverse
+        packages = packages[0...params[:reverse].to_i]
+      else
+        packages = packages[offset...offset+size]
+      end
+    else
+      packages = []
     end
-    packages = packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    render :partial=>"more_packages", :locals=>{:system=>@system, :packages => packages}
+    render :partial=>"more_packages", :locals=>{:system=>@system, :packages => packages, :offset=> offset}
   end
   
   def edit
@@ -188,8 +208,8 @@ class SystemsController < ApplicationController
   end    
 
   private
-  include SortColumnList
 
+  include SortColumnList
 
   def find_environment
     readable = KTEnvironment.systems_readable(current_organization)
@@ -211,6 +231,26 @@ class SystemsController < ApplicationController
                       :name => controller_name,
                       :list_partial => 'systems/list_systems',
                       :ajax_scroll => items_systems_path()}
+  end
+
+  def sys_consumed_pools
+    consumed_pools = @system.pools.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
+                            :poolName => pool["productName"],
+                            :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                            :consumed => pool["consumed"],
+                            :quantity => pool["quantity"])}
+    consumed_pools.sort! {|a,b| a.poolName <=> b.poolName}
+    consumed_pools
+  end
+
+  def sys_available_pools
+    avail_pools = @system.available_pools.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
+                            :poolName => pool["productName"],
+                            :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                            :consumed => pool["consumed"],
+                            :quantity => pool["quantity"])}
+    avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
+    avail_pools
   end
 
   def controller_name

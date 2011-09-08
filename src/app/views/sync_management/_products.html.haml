@@ -1,13 +1,13 @@
 
-%h2 #{_("Sync Status - Products") }
+%h2 #{_("Sync Status - Last Sync") }
 = form_tag("sync", :method => :post, :remote => true, :id => 'sync_product_form') do
   %table.products
     %thead
       %th #{_("Product")}
       %th.max_width #{_("Start Time")}
-      %th.max_width  #{_("Finish Time")}
-      %th #{_("Est Size (Packages)")}
-      %th #{_("Progress")}
+      %th.max_width  #{_("Duration")}
+      %th #{_("Size (Packages)")}
+      %th #{_("Result")}
     %tbody
       :javascript
         var product_ids = new Array();
@@ -58,11 +58,11 @@
                   #{@repo_status[r.id][:start_time]}
           %td.max_width
             %div.max_width{:id =>"#{'prod_sync_finish_' + p.id.to_s}"}
-              #{@product_status[p.id][:finish_time]}
+              #{@product_status[p.id][:duration]}
             %ul
               -for r in p.repos(p.organization.locker)
                 %li{:id =>"#{'repo_sync_finish_' + r.id.to_s}", :class=>'repo'}
-                  #{@repo_status[r.id][:finish_time]}
+                  #{@repo_status[r.id][:duration]}
           %td
             %div{:id =>"#{'prod_size_' + p.id.to_s}"}
               #{@product_size[p.id]}

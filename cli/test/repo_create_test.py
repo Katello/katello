@@ -37,10 +37,10 @@ class RepoDiscoveryTest(CLIActionTestCase):
     def setUp(self):
         self.set_action(Discovery())
         self.set_module(katello.client.core.repo)
-        
+
         self.mock(self.module, 'run_spinner_in_bg', [self.RESULT])
         self.mock(self.module, 'system_exit')
-        
+
         self.mock(self.action.api, 'repo_discovery', self.DISCOVERY_TASK)
 
     def tearDown(self):
@@ -62,37 +62,37 @@ class RepoDiscoveryTest(CLIActionTestCase):
 
 class RepositorySelectionTest(unittest.TestCase):
     DISCOVERED_URLS = ['http://localhost/a/b/', 'http://localhost/a/c/']
-    
+
     def setUp(self):
-        self.create_action = Discovery()                
-        self.original_system_exit = katello.client.core.repo.system_exit        
+        self.create_action = Discovery()
+        self.original_system_exit = katello.client.core.repo.system_exit
         katello.client.core.repo.system_exit = Mock()
 
 
     def tearDown(self):
         katello.client.core.repo.system_exit = self.original_system_exit
-        
+
     def test_q_forces_exit(self):
-        raw_input_stub = RawInputStub(['q'])                
+        raw_input_stub = RawInputStub(['q'])
         self.create_action.select_repositories(self.DISCOVERED_URLS, False, raw_input_stub.raw_input)
-        
+
         katello.client.core.repo.system_exit.assert_called_once
-        
+
     def test_a_y_adds_all_discovered_repos(self):
         raw_input_stub = RawInputStub(['a', 'y'])
         selected_repos = self.create_action.select_repositories(self.DISCOVERED_URLS, False, raw_input_stub.raw_input)
-        
+
         self.assertEqual(selected_repos, self.DISCOVERED_URLS)
-        
+
     def test_1_y_adds_first_discovered_repo(self):
         raw_input_stub = RawInputStub(['1', 'y'])
         selected_repos = self.create_action.select_repositories(self.DISCOVERED_URLS, False, raw_input_stub.raw_input)
-        
+
         self.assertEqual(selected_repos, [self.DISCOVERED_URLS[0]])
-        
+
     def test_assumeyes_adds_all_discovered_repos(self):
         selected_repos = self.create_action.select_repositories(self.DISCOVERED_URLS, True)
-        self.assertEqual(selected_repos, self.DISCOVERED_URLS)        
+        self.assertEqual(selected_repos, self.DISCOVERED_URLS)
 
 
 class RepositoryNameTest(unittest.TestCase):
@@ -128,17 +128,13 @@ class CreateRepositoryTest(unittest.TestCase):
 
 
 class RawInputStub:
-    
+
     def __init__(self, input):
         self.invocation = 0
         self.input = input
-        
+
     def raw_input(self, prompt):
         to_return = self.input[self.invocation]
         self.invocation = self.invocation + 1
-        
+
         return to_return
-
-
-
-

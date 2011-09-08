@@ -168,10 +168,37 @@ class RolesController < ApplicationController
   end
 
   def update_permission
+    attributes = params[:permission]
     @permission = Permission.find(params[:permission_id])
-    @permission.update_attributes(params[:permission])
+    
+    if attributes.has_key?(:tag_names) and @permission.all_tags
+      @permission.all_tags = false
+    end
+    
+    if attributes.has_key?(:verb_values) and @permission.all_verbs
+      @permission.all_verbs = false
+    end
+
+    if attributes.has_key?(:all_verbs)
+      for verb in @permission.verbs
+        verb.destroy
+      end
+    end
+
+    if attributes.has_key?(:all_tags)
+      for tag in @permission.tags
+        tag.destroy
+      end
+    end
+
+    @permission.update_attributes!(params[:permission])
+    to_return = { :type => @permission.resource_type.name }
+    add_permission_bc(to_return, @permission, false)
     notice _("Permission '#{@permission.name}' was updated.")
-    render :partial => "permission", :locals =>{:perm => @permission, :role=>@role, :data_new=> false}
+    render :json => to_return
+  rescue Exception => error
+      errors error
+      render :json=>@permission.errors, :status=>:bad_request
   end
 
   def create_permission

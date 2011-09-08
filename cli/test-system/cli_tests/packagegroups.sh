@@ -4,19 +4,16 @@ PACKAGE_GROUP_CATEGORY_ID=test
 
 # create sample package group and category
 curl -k -u admin:admin  -H "Content-Type: application/json" -H "Accept: application/json" -X POST -d \
-"{\"groupid\":\"$PACKAGE_GROUP_ID\",\"groupname\":\"test\",\"description\":\"test description\"}" \
+"{\"groupid\":\"$PACKAGE_GROUP_ID\",\"groupname\":\"test\",\"description\":\"test description\"}" -s \
 https://localhost/pulp/api/repositories/$REPO_ID/create_packagegroup/ > /dev/null
-echo
 
 curl  -k -u admin:admin -H "Content-Type: application/json" -H "Accept: application/json" -X POST -d \
-"{\"categoryid\":\"$PACKAGE_GROUP_CATEGORY_ID\",\"categoryname\":\"test\",\"description\":\"test description\"}" \
+"{\"categoryid\":\"$PACKAGE_GROUP_CATEGORY_ID\",\"categoryname\":\"test\",\"description\":\"test description\"}" -s \
 https://localhost/pulp/api/repositories/$REPO_ID/create_packagegroupcategory/ > /dev/null
-echo
 
 curl -k -u admin:admin -H "Content-Type: application/json" -H "Accept: application/json" -X POST -d \
-"{\"categoryid\":\"$PACKAGE_GROUP_CATEGORY_ID\",\"groupid\":\"$PACKAGE_GROUP_ID\"}" \
+"{\"categoryid\":\"$PACKAGE_GROUP_CATEGORY_ID\",\"groupid\":\"$PACKAGE_GROUP_ID\"}" -s  \
 https://localhost/pulp/api/repositories/$REPO_ID/add_packagegroup_to_category/ > /dev/null
-echo
 
 test "list package groups" package_group list --repoid $REPO_ID
 test "show package group" package_group info --repoid $REPO_ID --id $PACKAGE_GROUP_ID

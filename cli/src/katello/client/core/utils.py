@@ -32,7 +32,7 @@ class Printer:
     OUTPUT_FORCE_NONE = 0
     OUTPUT_FORCE_GREP = 1
     OUTPUT_FORCE_VERBOSE = 2
-    
+
     def __init__(self, output_mode, delimiter=""):
         self._output_mode = output_mode
         self._columns = []
@@ -68,7 +68,7 @@ class Printer:
             for col in self._columns:
                 if col['show_in_grep']:
 
-                    if widths.has_key(col['attr_name']):
+                    if col['attr_name'] in widths:
                         width = widths[col['attr_name']]
                     else:
                         width = 0
@@ -143,7 +143,7 @@ class Printer:
         print
         for col in self._columns:
             #skip missing attributes
-            if not item.has_key(col['attr_name']):
+            if not col['attr_name'] in item:
                 continue
 
             value = item[col['attr_name']]
@@ -165,13 +165,13 @@ class Printer:
         print self._delim,
         for col in self._columns:
             #get defined width
-            if widths.has_key(col['attr_name']):
+            if col['attr_name'] in widths:
                 width = widths[col['attr_name']]
             else:
                 width = 0
 
             #skip missing attributes
-            if not item.has_key(col['attr_name']):
+            if not col['attr_name'] in item:
                 print " " * width,
                 print self._delim,
                 continue
@@ -192,7 +192,7 @@ class Printer:
             key = col['attr_name']
             widths[key] = len(str(col['name']))+1
             for item in items:
-                if ( item.has_key(key) ) and ( widths[key] < len(str(item[key])) ):
+                if ( key in item ) and ( widths[key] < len(str(item[key])) ):
                     widths[key] = len(str(item[key]))+1
 
         return widths
@@ -259,10 +259,10 @@ def is_valid_record(rec):
     @param rec: record returned from server
     @return True if record contains created_at field with value.
     """
-    if rec.has_key('created_at'):
+    if 'created_at' in rec:
         return (rec['created_at'] != None)
 
-    elif rec.has_key('created'):
+    elif 'created' in rec:
         return (rec['created'] != None)
 
     else:
@@ -515,7 +515,7 @@ class AsyncTask():
         return self._get_progress_sum('items_left')
 
     def errors(self):
-        return [err for t in self._tasks if t['progress'].has_key('error_details') for err in t['progress']['error_details']]
+        return [err for t in self._tasks if 'error_details' in t['progress'] for err in t['progress']['error_details']]
 
     def _get_progress_sum(self, name):
         return sum([t['progress'][name] for t in self._tasks])
@@ -525,7 +525,7 @@ class AsyncTask():
 
     def get_hashes(self):
         return self._tasks
-        
+
     def get_subtasks(self):
         return [AsyncTask(t) for t in self._tasks]
 
@@ -537,7 +537,7 @@ def wait_for_async_task(task):
 
     while task.is_running():
         time.sleep(1)
-        task.update()            
+        task.update()
     return task.get_hashes()
 
 
@@ -559,4 +559,3 @@ def progress(left, total):
     sizeLeft = float(left)
     sizeTotal = float(total)
     return 0.0 if total == 0 else (sizeTotal - sizeLeft) / sizeTotal
-    

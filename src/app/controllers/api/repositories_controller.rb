@@ -17,6 +17,7 @@ class Api::RepositoriesController < Api::ApiController
   before_filter :find_repository, :only => [:show]
   before_filter :find_product, :only => [:create]
   before_filter :find_organization, :only => [:discovery]
+  before_filter :fake_find_repository, :only => [:package_groups, :package_group_categories]
 
   # TODO: define authorization rules
   skip_before_filter :authorize
@@ -44,19 +45,24 @@ class Api::RepositoriesController < Api::ApiController
   end
 
   def package_groups
-    r = ::Pulp::PackageGroup.all params[:id]
+    r = @repository.package_groups
     render :json => r
   end
 
   def package_group_categories
-    r = ::Pulp::PackageGroupCategory.all params[:id]
-    render :json => r
+    c = @repository.package_group_categories
+    render :json => c
   end
 
   def find_repository
     @repository = Glue::Pulp::Repo.find params[:id]
     raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:id]}'") if @repository.nil?
     @repository
+  end
+
+  # Doesn't call Pulp really - used for loading asslociated resources
+  def fake_find_repository
+    @repository = Glue::Pulp::Repo.new :id => params[:id]
   end
 
   def find_product
