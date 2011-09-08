@@ -3,15 +3,13 @@
 %ul.expand_list
   -if system_templates.empty?
     #{_("No Templates")}
-  -for system_template in system_templates
+  - system_templates.each do |system_template|
     %li.clear.slide_link
       %a.content_add_remove.remove_template.st_button.fr{ "data-id" => system_template.id,
        "data-template_id" => system_template.id, "data-type"=>"template",
        "data-display_name"=>system_template.name, :id => "add_remove_template_#{system_template.id}" }
-    
-      .link_details{:id=>system_template.id}
-        %span.template-sprite
-        %span.template-icon{:style=>"display: inline;"}
-          #{system_template.name}&nbsp;
 
+      .no_slide
+        %span.block{:id => system_template.id, "data-ajax_url" => promotion_details_system_template_path(system_template.id)}
+          = system_template.name
 %br.clear

@@ -1,0 +1,35 @@
+= content_for :title do
+  = template.name
+
+= content_for :content do
+  .clear
+  %fieldset
+    .grid_1.ra
+      %label #{_("Name")}:
+    .grid_4.la
+      = template.name
+
+  %fieldset
+    .grid_1.ra
+      %label #{_("Contents")}:
+
+
+    -if template.products.empty? && template.packages.empty?
+      .grid_7.la
+        #{_("This template contains no content.")}
+    -else
+      .grid_10
+      #system_template_accordion.grid_8.prefix_1.system_templates_tab
+        - unless template.products.empty?
+          %h3
+            %a{:href=>'#'}= _("Products")
+          #system_templates.products_tab
+            %ul
+              -for prod in template.products
+                %li #{prod.name}
+        - unless template.packages.empty?
+          %h3
+            %a{:href=>'#'}= _("Packages")
+          .packages_tab
+            = render :partial=>"content_type", :locals=>{:items=>template.packages.collect{|i| i.display_name},
+                                                          :type_string=>_("Packages")}
