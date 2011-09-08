@@ -25,11 +25,16 @@ class ApplicationController < ActionController::Base
 
   after_filter :flash_to_headers
 
+  #custom 404 pages
+  rescue_from Exception, :with => :render_error
+  rescue_from ActiveRecord::RecordNotFound, :with => :render_404
+  rescue_from ActionController::RoutingError, :with => :render_404
+  rescue_from ActionController::UnknownController, :with => :render_404
+  rescue_from ActionController::UnknownAction, :with => :render_404
 
   # support for session (thread-local) variables must be the last filter (except authorize)in this class
   include Katello::ThreadSession::Controller
   include AuthorizationRules
-
 
   def section_id
     'generic'
@@ -157,7 +162,11 @@ class ApplicationController < ActionController::Base
 
   def current_organization
     return false unless session[:current_organization_id]
-    @current_org ||=  Organization.find(session[:current_organization_id])
+    begin
+      @current_org ||=  Organization.find(session[:current_organization_id])
+    rescue Exception => error
+      Rails.logger.error error.to_s
+    end
   end
 
   def current_organization=(org)
@@ -240,7 +249,34 @@ class ApplicationController < ActionController::Base
     end
     return false
   end
-  
+
+  # render a 404 page
+  def render_404(exception = nil)
+    if exception
+        logger.info "Rendering 404: #{exception.message}"
+    end
+    respond_to do |format|
+      format.html { render :template => "common/404", :layout => !request.xhr?, :status => 404 }
+      format.atom { head 404 }
+      format.xml  { head 404 }
+      format.json { head 404 }
+    end
+  end
+
+  # take care of 500 pages too
+  def render_error(exception = nil)
+    if exception
+      logger.info "Rendering 500: #{exception.message}"
+    end
+    respond_to do |format|
+      format.html { render :template => "common/500", :layout => "katello_error", :status => 500, :locals=>{:error=>exception} }
+      format.atom { head 500 }
+      format.xml  { head 500 }
+      format.json { head 500 }
+    end
+
+  end
+
   def retain_search_history
     begin
       # save the request in the user's search history
@@ -371,7 +407,8 @@ class ApplicationController < ActionController::Base
     yield
   rescue Exception => error
     errors error
-    render :text => error, :status => :bad_request
+    #render :text => error, :status => :bad_request
+    render :partial => "common/500", :locals=>{:error=>error}, :status=>:bad_request
   end
 
   def execute_after_filters
@@ -389,6 +426,7 @@ class ApplicationController < ActionController::Base
     }
     nil
   end
+
 
 end
 
