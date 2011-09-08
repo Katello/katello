@@ -26,12 +26,18 @@ shared_examples_for "protected action" do
   context "I have sufficient rights" do
     it "should let me to it" do
       unless defined? on_success
-        @controller.stub(action) 
+        @controller.stub(action)
         @controller.stub(:render)
       end
-      login_user_by_described_class(authorized_user) if defined?  authorized_user 
+      login_user_by_described_class(authorized_user) if defined?  authorized_user
       before_success if defined?(before_success)
-      @controller.should_not_receive(:render_403)
+
+      if @controller.kind_of? Api::ApiController
+        @controller.should_not_receive(:render_exception).with { |status, e| status.should == 403 }
+      else
+        @controller.should_not_receive(:render_403)
+      end
+
       req
       on_success if defined?(on_success)
     end
@@ -42,11 +48,17 @@ shared_examples_for "protected action" do
         @controller.stub(action)
         @controller.stub(:render)
       end
-      login_user_by_described_class(unauthorized_user) if defined?  unauthorized_user 
-      before_failure if defined?(before_failure)      
-      @controller.should_receive(:render_403)
+      login_user_by_described_class(unauthorized_user) if defined?  unauthorized_user
+      before_failure if defined?(before_failure)
+
+      if @controller.kind_of? Api::ApiController
+        @controller.should_receive(:render_exception).with { |status, e| status.should == 403 }
+      else
+        @controller.should_receive(:render_403)
+      end
+
       req
-      on_failure if defined?(on_failure)      
+      on_failure if defined?(on_failure)
     end
   end
 end
