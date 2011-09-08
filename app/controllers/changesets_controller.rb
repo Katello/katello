@@ -30,6 +30,7 @@ class ChangesetsController < ApplicationController
   def rules
     read_perm = lambda{@environment.changesets_readable?}
     manage_perm = lambda{@environment.changesets_manageable?}
+    update_perm =  lambda {@environment.changesets_manageable? && update_artifacts_valid?}
     promote_perm = lambda{@environment.changesets_promotable?}
     {
       :index => read_perm,
@@ -39,7 +40,7 @@ class ChangesetsController < ApplicationController
       :new => manage_perm,
       :create => manage_perm,
       :edit => read_perm,
-      :update => manage_perm,
+      :update => update_perm,
       :destroy =>manage_perm,
       :products => read_perm,
       :dependencies => read_perm,
@@ -178,8 +179,6 @@ class ChangesetsController < ApplicationController
     render :text => "This changeset is already promoted, no content modifications can be made.",
                :status => :bad_request if @changeset.state == Changeset::PROMOTED
 
-
-
     if params.has_key? :data
       params[:data].each do |item|
         adding = item["adding"]
@@ -223,7 +222,7 @@ class ChangesetsController < ApplicationController
     to_ret[:changeset] = simplify_changeset(@changeset) if send_changeset
     render :json=>to_ret
   end
-  
+
   def destroy
     name = @changeset.name
     id = @changeset.id
@@ -302,43 +301,38 @@ class ChangesetsController < ApplicationController
     return _('changeset')
   end
 
-
-  def validate_data_perms
+  private
+  def update_artifacts_valid?
     if params.has_key? :data
       params[:data].each do |item|
         type = item["type"]
-        id = item["item_id"] #id of item being added/removed
-        name = item["item_name"] #display of item being added/removed
+        id = item["item_id"]
         pid = item["product_id"]
+        item = nil
         case type
           when "template"
-            temp = SystemTemplate.where(:id => id)
+            item = SystemTemplate.find(id)
 
-            @changeset.system_templates << SystemTemplate.where(:id => id) if adding
-            @changeset.system_templates.delete SystemTemplate.find(id) if !adding
           when "product"
-            @changeset.products << Product.where(:id => id) if adding
-            @changeset.products.delete Product.find(id) if !adding
+            item = Product.find(id)
+
           when "errata"
-            @changeset.errata << ChangesetErratum.new(:errata_id=>id, :display_name=>name,
-                                                :product_id => pid, :changeset => @changeset) if adding
-            ChangesetErrata.destroy_all(:errata_id =>id, :changeset_id => @changeset.id) if !adding
+            item = Product.find(pid)
           when "package"
-            @changeset.packages << ChangesetPackage.new(:package_id=>id, :display_name=>name, :product_id => pid,
-                                                :changeset => @changeset) if adding
-            ChangesetPackage.destroy_all(:package_id =>id, :changeset_id => @changeset.id) if !adding
-
+            item = Product.find(pid)
           when "repo"
-              @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
-              ChangesetRepo.destroy_all(:repo_id =>id, :changeset_id => @changeset.id) if !adding
-
+            item = Product.find(pid)
           when "distribution"
-              @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
-              ChangesetRepo.destroy_all(:repo_id =>id, :changeset_id => @changeset.id) if !adding
-
+            item = Product.find(pid)
+        end
+        unless item && item.readable?
+          return false
         end
       end
     end
+    true
   end
+
+
 
 end
