@@ -22,7 +22,7 @@ gem 'haml-rails'
 gem 'compass', '>= 0.11.5'
 gem 'compass-960-plugin', '>= 0.10.4'
 gem 'simple-navigation', '3.3.4'
-gem 'scoped_search', '>= 2.3.1'
+gem 'scoped_search', '>= 2.3.3'
 # Stuff for i18n
 gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
