@@ -56,16 +56,6 @@ class Api::OrganizationsController < Api::ApiController
     render :text => _("Deleted organization '#{params[:id]}'"), :status => 200
   end
 
-  # rhsm
-  def list_owners
-    # we only need key and displayName
-    @user = User.find_by_username(params[:username])
-    raise HttpErrors::NotFound, _("Couldn't find user '#{params[:username]}'") if @user.nil?
-    orgs = @user.allowed_organizations
-    # rhsm expects owner (Candlepin format)
-    render :json => orgs.map {|o| {:key => o.cp_key, :displayName => o.name} }
-  end
-
   def find_organization
     @organization = Organization.first(:conditions => {:cp_key => params[:id].tr(' ', '_')})
     raise HttpErrors::NotFound, _("Couldn't find organization '#{params[:id]}'") if @organization.nil?
