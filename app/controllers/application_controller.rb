@@ -297,11 +297,13 @@ class ApplicationController < ActionController::Base
 
     @paths = []
     @paths = org.promotion_paths.collect{|tmp_path| [org.locker] + tmp_path}
-    @paths = [[org.locker]] if @paths.empty?
 
     # reject any paths that don't have accessible envs
     @paths.reject!{|path|  (path & accessible).empty?}
-    
+
+    @paths = [[org.locker]] if @paths.empty?
+
+
     if @environment and !@environment.locker?
       @paths.each{|path|
         path.each{|env|
