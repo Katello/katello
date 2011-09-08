@@ -141,9 +141,11 @@ $(document).ready(function() {
                                   });
     $('.search').fancyQueries();
 
-    //hash change for panel to trigger on refresh or back/forward or link passing
-    $(window).bind( 'hashchange', panel.hash_change);
-    $(window).trigger( 'hashchange' );
+    if (panel.control_bbq) {
+        //hash change for panel to trigger on refresh or back/forward or link passing
+        $(window).bind( 'hashchange', panel.hash_change);
+        $(window).trigger( 'hashchange' );
+    }
 
 //end doc ready
 });
@@ -167,11 +169,11 @@ var list = (function(){
            });
            return false;
        },
-       complete_refresh: function(url) {
+       complete_refresh: function(url, success_cb) {
         $('#list').html('<img src="images/spinner.gif">');
-        list.refresh("list", url);
+        list.refresh("list", url, success_cb);
        },
-       refresh : function(id, url){
+       refresh : function(id, url, success_cb){
            var jQid = $('#' + id);
             $.ajax({
                 cache: 'false',
@@ -181,6 +183,9 @@ var list = (function(){
                 success: function(data) {
                     notices.checkNotices();
                     jQid.html(data);
+                    if (success_cb) {
+                        success_cb();
+                    }
                 }
             });
            return false;
@@ -194,6 +199,7 @@ var panel = (function(){
         expand_cb           : function() {}, //callback after a pane is loaded
         contract_cb         : function() {},
         switch_content_cb   : function() {},
+        control_bbq         : true,
         select_item :    function(activeBlockId) {
             thisPanel = $("#panel");
             subpanel = $('#subpanel');
@@ -295,18 +301,20 @@ var panel = (function(){
         },
         closePanel : function(jPanel){
             var content = jPanel.find('.panel-content');
-            $('.block.active').removeClass('active');
-            jPanel.animate({
-                left: 0,
-                opacity: 0
-            }, 400, function(){
-                $(this).css({"z-index":"0"});
-                $(this).parent().css({"z-index":"1"});
-            }).removeClass('opened').addClass('closed').attr("data-id", "");
-            content.html('');
-            $.bbq.removeState("panel");
-            panel.updateResult();
-            panel.contract_cb(name);
+            if(jPanel.hasClass("opened")){
+                $('.block.active').removeClass('active');
+                jPanel.animate({
+                    left: 0,
+                    opacity: 0
+                }, 400, function(){
+                    $(this).css({"z-index":"0"});
+                    $(this).parent().css({"z-index":"1"});
+                }).removeClass('opened').addClass('closed').attr("data-id", "");
+                content.html('');
+                $.bbq.removeState("panel");
+                panel.updateResult();
+                panel.contract_cb(name);
+            }
             return false;
         },
         closeSubPanel : function(jPanel){

@@ -76,7 +76,15 @@ var env_select =   {
         env_select.highlight_selected();
         return false;
     },
+    get_selected_env: function() {
+        return $(".path_link.active").attr("data-env_id");
+    },
+    set_selected: function(env_id) {
+        console.log("SETTING");
+        $('[data-env_id=' + env_id + '].path_link').click();
+    },
     env_selected: function() {
+        console.log("SELECTED");
         env_select.close();
         var id = $(this).attr('data-env_id') ;
 
