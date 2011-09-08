@@ -136,10 +136,10 @@ var content = (function(){
                $("#repo_sync_start_" + data.repo_id).text(data.start_time);
                // Only stop when we reach 100% and the finish_time is done
                // sometimes they arent both complete
-               if (data.progress.progress == 100 && data.finish_time != null) {
+               if (data.raw_state == 'canceled' || (data.progress.progress == 100 && data.finish_time != null)) {
                  pu.stop();
                  updateField.html(data.state);
-                 fadeUpdate("#repo_sync_finish_" + data.repo_id, data.finish_time);
+                 fadeUpdate("#repo_sync_finish_" + data.repo_id, data.duration);
                  fadeUpdate("#repo_sync_size_" + data.repo_id,
                              data.size + ' (' + data.packages + ')');
                  content.updateProduct(prod_id, data.repo_id);
@@ -166,12 +166,12 @@ var content = (function(){
               dataType: 'json',
               success: function(data) {
                 $('#table_' + prod_id).find('div.productstatus').html(data.state);
-                fadeUpdate("#prod_sync_finish_" + data.product_id, data.finish_time);
+                fadeUpdate("#prod_sync_finish_" + data.product_id, data.duration);
                 fadeUpdate("#prod_sync_start_" + data.product_id, data.start_time);
                 fadeUpdate("#prod_size_" + data.product_id, data.size);
               },
               error: function(data) {
-                fadeUpdate("#prod_sync_finish_" + data.product_id, data.finish_time);
+                fadeUpdate("#prod_sync_finish_" + data.product_id, data.duration);
                 fadeUpdate("#prod_sync_start_" + data.product_id, data.start_time);
                 fadeUpdate("#prod_size_" + data.product_id, data.size);
               }
@@ -189,7 +189,7 @@ var content = (function(){
               dataType: 'json',
               success: function(data) {
                 content.updateProduct(prod_id, repoid);
-                updateField.html('Sync Cancelled.');
+                updateField.html('Sync Canceled.');
               },
               error: function(data) {
                 btn.removeClass("disabled");
