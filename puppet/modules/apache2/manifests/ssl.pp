@@ -6,7 +6,8 @@ class apache2::ssl {
   }
   file {
     "/etc/httpd/conf.d/ssl.conf":
-      source => "puppet:///modules/apache2/etc/httpd/conf.d/ssl.conf",
+    # does not force config file for now until we sort out our vhost layout
+#      source => "puppet:///modules/apache2/etc/httpd/conf.d/ssl.conf",
       mode => 0644, owner => root, group => root,
       notify => Exec["reload-apache2"];
     ["/var/cache/mod_ssl", "/var/cache/mod_ssl/scache"]:
