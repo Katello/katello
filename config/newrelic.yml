@@ -237,7 +237,7 @@ development:
   # executed since starting the mongrel.
   # NOTE: There is substantial overhead when running in developer mode.
   # Do not use for production or load testing.  
-  developer_mode: true
+  developer_mode: false
   
   # Enable textmate links
   # textmate: true
@@ -254,12 +254,12 @@ test:
 # incurring any user-visible performance degradation.
 production:
   <<: *default_settings
-  monitor_mode: true
+  monitor_mode: false
 
 # Many applications have a staging environment which behaves
 # identically to production.  Support for that environment is provided
 # here.  By default, the staging environment has the agent turned on.
 staging:
   <<: *default_settings
-  monitor_mode: true
+  monitor_mode: false
   app_name: <%= @app_name %> (Staging)
