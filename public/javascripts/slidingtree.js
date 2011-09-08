@@ -25,7 +25,8 @@
 var sliding_tree = function(tree_id, options) {
     var container = $('#' + tree_id),
         list = container.find(".sliding_container .sliding_list"),
-        breadcrumb = container.find(".tree_breadcrumb");
+        breadcrumb = container.find(".tree_breadcrumb"),
+        current_crumb;
 
     var prerender = function(id) {
             var crumb = settings.breadcrumb[id],
@@ -150,6 +151,7 @@ var sliding_tree = function(tree_id, options) {
                 crumbs = trail,
                 html = '<ul>';
             
+            current_crumb = id;
             breadcrumb.html("");
             
             if( settings.base_icon ){
@@ -243,16 +245,16 @@ var sliding_tree = function(tree_id, options) {
                      });
                      $(this).css({backgroundPosition: "0 -16px"});
                      search_filter.val("").change();
-                     $("#" + tree_id + " .has_content li").fadeIn('fast');
+                     $("#" + tree_id + " .has_content .filterable li").fadeIn('fast');
                  }
              );
              
              search_filter.live('change, keyup', function(){
                  if ($.trim($(this).val()).length >= 2) {
-                     $("#" + tree_id + " .has_content li:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
-                     $("#" + tree_id + " .has_content li:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
+                     $("#" + tree_id + " .has_content .filterable li:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
+                     $("#" + tree_id + " .has_content .filterable li:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
                  } else {
-                     $("#" + tree_id + " .has_content li").fadeIn('fast');
+                     $("#" + tree_id + " .has_content .filterable li").fadeIn('fast');
                  }
              });
              search_filter.val("").change();
@@ -292,11 +294,14 @@ var sliding_tree = function(tree_id, options) {
     });
 
     return {
-        render_content: render_content,
-        rerender_content: function() {
+    	get_current_crumb	: function(){
+    		return current_crumb;
+    	},
+        render_content		: render_content,
+        rerender_content	: function() {
                 render($.bbq.getState(settings.bbq_tag), list.children('.has_content'));
             },
-        rerender_breadcrumb: function() {
+        rerender_breadcrumb	: function() {
             reset_breadcrumb($.bbq.getState(settings.bbq_tag));
         }
     };
@@ -306,26 +311,35 @@ sliding_tree.ActionBar = function(toggle_list){
     var open_panel = undefined,
         
         toggle = function(id, options){
-            var animate_time = 500,
-                slide_window = $('#' + id),
-                options = options || {};
+            var options = options || {};
+            
+            options.animate_time = 500;
             
             if( open_panel !== id && open_panel !== undefined ){
-                toggle_list[open_panel](false);
-                $("#" + open_panel).slideToggle(animate_time);
-                open_panel = id;
-                options.opening = true;
+            	options.opening = false;
+                toggle_list[open_panel].setup_fn(options);
+                
+                $("#" + toggle_list[open_panel].container).slideToggle(options.animate_time, function(){
+		            open_panel = id;
+		            options.opening = true;
+		            handle_toggle(options, id);
+                });
             } else if( open_panel !== undefined ){
                 open_panel = undefined;
                 options.opening = false;
+                handle_toggle(options, id);
             } else {
                 open_panel = id;
                 options.opening = true;
+                handle_toggle(options, id);
             }
-
-            options = toggle_list[id](options.opening);
-            slide_window.slideToggle(animate_time, options.after_function);
         }, 
+        handle_toggle = function(options, id){
+        	var slide_window = $('#' + toggle_list[id].container);
+            
+            options = toggle_list[id].setup_fn(options);
+            slide_window.slideToggle(options.animate_time, options.after_function);        	
+        },
         close = function() {
             if( open_panel ){
                 toggle(open_panel, { opening: false });
