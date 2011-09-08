@@ -58,13 +58,12 @@
           $.get(menuurl, function (data) {
             var $list, hidden, $hideme;
             $qdropdown.html(data).css('top', height - 1);
-            if ($qdropdown.width()+offset.left > $(document).width()) {
+            if ($qdropdown.width()+offset.left > $('#maincontent').width()) {
               $qdropdown.removeClass('left-menu').addClass('right-menu');
             } else {
               $qdropdown.removeClass('right-menu').addClass('left-menu');
             }
             $qdropdown.show(200);
-            //console.log($qdropdown.width());
             $button.addClass('open');
             $list = $("ul:first", $qdropdown);
             $("li.item:gt(9)", $list).hide();
@@ -85,14 +84,12 @@
       /* Query Editor */
       $(".queryeditor", $qdropdown[0]).live('click', function (e) {
         var content = '<h1>Query Editor</h1>';
-        //console.log(this);
         content += "<div><h2>FIXME</h2>";
         content += "<p style='width: 400px; min-height: 100px;'>Initially I think this would provide help on how to compose a query. Once we have a better idea on what the queries look like, a gui editor.</p>" +
                 "<a href='#' onclick='$(document).click()'>Close</a></div>";
         $button.removeClass('open').addClass('queryeditor');
         $qdropdown.empty().hide().addClass('queryeditor').html(content);
-        //console.log($qdropdown.width()+offset.left, $(document).width());
-        if ($qdropdown.width()+offset.left > $(document).width()) {
+        if ($qdropdown.width()+offset.left > $('#maincontent').width()) {
               $qdropdown.removeClass('left-menu').addClass('right-menu');
             } else {
               $qdropdown.removeClass('right-menu').addClass('left-menu');

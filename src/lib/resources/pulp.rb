@@ -222,8 +222,8 @@ module Pulp
       end
 
       def cancel(repo_id, sync_id)
-        path = Repository.repository_path + repo_id + "/sync/" + sync_id + "/"
-        response = delete(path, self.default_headers)
+        path = "/pulp/api/tasks/" + sync_id + "/cancel/"
+        response = post(path, {}, self.default_headers)
         JSON.parse(response.body).with_indifferent_access
       end
 

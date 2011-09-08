@@ -36,7 +36,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.action.process_options(['status', '--id=repo_id1'])
         self.assertEqual(len(self.action.optErrors), 0)
 
-        
+
 class RepoStatusTest(CLIActionTestCase):
 
     ORG = test_data.ORGS[0]
@@ -54,21 +54,21 @@ class RepoStatusTest(CLIActionTestCase):
         'org': ORG['name'],
         'env': ENV['name'],
     }
-    
+
     repo = None
-    
+
     def setUp(self):
         self.set_action(Status())
         self.set_module(katello.client.core.repo)
         self.mock_printer()
-        
+
         self.mock_options(self.OPTIONS_WITH_NAME)
-        
+
         self.mock(self.action.api, 'repo', self.REPO)
         self.mock(self.action.api, 'last_sync_status', test_data.SYNC_RESULT_WITHOUT_ERROR)
-        
+
         self.repo = self.mock(self.module, 'get_repo', self.REPO).return_value
-        
+
     def tearDown(self):
         self.restore_mocks()
 
@@ -81,12 +81,12 @@ class RepoStatusTest(CLIActionTestCase):
         self.mock_options(self.OPTIONS_WITH_NAME)
         self.action.run()
         self.module.get_repo.assert_called_once_with(self.ORG['name'], self.PROD['name'], self.REPO['name'], self.ENV['name'])
-    
+
     def test_returns_with_error_when_no_repo_found(self):
         self.mock_options(self.OPTIONS_WITH_NAME)
         self.module.get_repo.return_value =  None
         self.assertEqual(self.action.run(), os.EX_DATAERR)
-        
+
     def test_it_calls_last_sync_status_api(self):
         self.action.run()
         self.action.api.last_sync_status.assert_called_once_with(self.REPO['id'])
@@ -99,5 +99,3 @@ class RepoStatusTest(CLIActionTestCase):
         self.mock(self.action.api, 'last_sync_status', test_data.SYNC_RUNNING_RESULT)
         self.action.run()
         self.assertTrue(isinstance(self.repo['progress'], str))
-        
-

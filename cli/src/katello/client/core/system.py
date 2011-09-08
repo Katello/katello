@@ -243,9 +243,9 @@ class Register(SystemAction):
 
     def require_credentials(self):
         if self.option_specified('activationkey'):
-          return False
+            return False
         else:
-          return super
+            return super
 
     def run(self):
         name = self.get_option('name')

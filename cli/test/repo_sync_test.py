@@ -44,7 +44,7 @@ class SynchronizeTestWithRepoId(CLIActionTestCase):
     REPO_NAME = 'repo_name'
 
     REPO = {
-        'id': REPO_ID, 
+        'id': REPO_ID,
         'name': REPO_NAME
     }
 
@@ -61,22 +61,22 @@ class SynchronizeTestWithRepoId(CLIActionTestCase):
     SYNC_RESULT_WITHOUT_ERROR = [{'state':'finished'}]
     SYNC_RESULT_WITH_ERROR = [{'state':'error', 'result':json.dumps({'errors':["some error"]})}]
 
-    def setUp(self):        
+    def setUp(self):
         self.set_action(Sync())
         self.set_module(katello.client.core.repo)
-        
+
         self.mock_options(self.OPTIONS_WITH_ID)
-        
+
         self.mock(self.action.api, 'repo', self.REPO)
         self.mock(self.action.api, 'sync', self.SYNC_RESULT_WITHOUT_ERROR)
-        
+
         self.mock(self.module, 'get_repo', self.REPO)
         self.mock(self.module, 'run_async_task_with_status')
-        
+
     def tearDown(self):
         self.restore_mocks()
-        
-        
+
+
     def test_finds_repo_by_id(self):
         self.mock_options(self.OPTIONS_WITH_ID)
         self.action.run()
@@ -86,26 +86,23 @@ class SynchronizeTestWithRepoId(CLIActionTestCase):
         self.mock_options(self.OPTIONS_WITH_NAME)
         self.action.run()
         self.module.get_repo.assert_called_once()
-    
+
     def test_returns_with_error_when_no_repo_found(self):
         self.mock_options(self.OPTIONS_WITH_NAME)
         self.module.get_repo.return_value =  None
         self.assertEqual(self.action.run(), os.EX_DATAERR)
-        
+
     def test_calls_sync_api(self):
         self.action.run()
         self.action.api.sync.assert_called_once_with(self.REPO_ID)
-        
+
     def test_waits_for_sync(self):
         self.action.run()
         self.module.run_async_task_with_status.assert_called_once()
 
     def test_returns_ok_when_sync_was_successful(self):
         self.assertEqual(self.action.run(), os.EX_OK)
-        
+
     def test_returns_error_if_sync_failed(self):
         self.mock(self.action.api, 'sync', self.SYNC_RESULT_WITH_ERROR)
         self.assertEqual(self.action.run(), os.EX_DATAERR)
-
-
-

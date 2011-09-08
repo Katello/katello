@@ -255,7 +255,7 @@ class Sync(ProviderAction):
         provName = self.get_option('name')
         orgName  = self.get_option('org')
         return self.sync_provider(provName, orgName)
-        
+
     def sync_provider(self, providerName, orgName):
         prov = get_provider(orgName, providerName)
         if prov == None:
@@ -271,7 +271,7 @@ class Sync(ProviderAction):
 
         print _("Provider [ %s ] synchronized" % providerName)
         return os.EX_OK
-        
+
 
 # ------------------------------------------------------------------------------
 class Status(ProviderAction):
@@ -300,17 +300,17 @@ class Status(ProviderAction):
 
         prov['last_sync'] = format_sync_time(prov['last_sync'])
         prov['sync_state'] = format_sync_state(prov['sync_state'])
-        
+
         if task.is_running():
             pkgsTotal = task.total_count()
             pkgsLeft = task.items_left()
             prov['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
-        
+
         #TODO: last errors?
-        
+
         self.printer.addColumn('id')
         self.printer.addColumn('name')
-            
+
         self.printer.addColumn('last_sync')
         self.printer.addColumn('sync_state')
         self.printer.addColumn('progress', show_in_grep=False)
