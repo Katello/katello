@@ -5,7 +5,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.9
+Version:       0.1.10
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -65,6 +65,19 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Sep 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.10-1
+- cli - deprecated 'has_key' replaced by 'in'
+- cli - reindented .py scripts
+- system tests - fix for unknown parameter in template test removed
+  --environment parameter that is no longer used in template update action
+- templates cli - typo in function parameter
+- cli unittests - tests for template command + mock utility can now set also
+  None as return value
+- template cli - removed environment option from create/update actions -
+  affected actions: import, create, update, update_content - environment option
+  in promote action made required
+- packagegroups - don't print curl output in system test
+
 * Tue Sep 06 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.9-1
 - cli - bumping cli version because of tito bug
 
