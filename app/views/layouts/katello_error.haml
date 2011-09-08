@@ -2,7 +2,7 @@
 %html
   %head
     %meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
-    = favicon_link_tag 'favicon.png'
+    %link(rel="shortcut icon" href="/favicon.png")
     %title
       = project_name
       = "-"
@@ -30,18 +30,14 @@
   %body{:id => controller.section_id}
     %div#head.container_16
       %header
-        = render :partial => '/layouts/header', :locals => {:error=>false}
+        = render :partial => '/layouts/header', :locals => {:error=>true}
     - if not current_user
       #maincontent.container_16
         #formwindow
           = yield
     - else
       #subheader.container_16
-        %nav.tab_nav
-          = render_navigation(:expand_all => true, :level => 1)
       #maincontent.container_16
-        %nav.subnav.container_16
-          = render_navigation(:expand_all => true, :level => 2..3)
         .inner.container_16
           = yield
     %footer
