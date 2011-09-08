@@ -13,6 +13,7 @@
 class Api::UsersController < Api::ApiController
 
   before_filter :find_user, :only => [:show, :update, :destroy]
+  before_filter :find_user_by_username, :only => [:list_owners]
   before_filter :authorize
   respond_to :json
 
@@ -65,4 +66,18 @@ class Api::UsersController < Api::ApiController
     raise HttpErrors::NotFound, _("Couldn't find user '#{params[:id]}'") if @user.nil?
     @user
   end
+
+  def find_user_by_username
+    @user = User.find_by_username(params[:username])
+    raise HttpErrors::NotFound, _("Couldn't find user '#{params[:username]}'") if @user.nil?
+    @user
+  end
+
+  # rhsm
+  def list_owners
+    orgs = @user.allowed_organizations
+    # rhsm expects owner (Candlepin format)
+    render :json => orgs.map {|o| {:key => o.cp_key, :displayName => o.name} }
+  end
+
 end

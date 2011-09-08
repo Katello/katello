@@ -330,6 +330,7 @@ Src::Application.routes.draw do
     match '/environments/:environment_id/consumers' => 'systems#index', :via => :get
     match '/environments/:environment_id/consumers' => 'systems#create', :via => :post
     match '/consumers/:id' => 'systems#regenerate_identity_certificates', :via => :post
+    match '/users/:username/owners' => 'users#list_owners', :via => :get
 
     # proxies -------------------
       # candlepin proxy ---------
@@ -343,7 +344,6 @@ Src::Application.routes.draw do
     match '/pools' => 'candlepin_proxies#get', :via => :get
     match '/entitlements/:id' => 'candlepin_proxies#get', :via => :get
     match '/subscriptions' => 'candlepin_proxies#post', :via => :post
-    match '/users/:username/owners' => 'organizations#list_owners', :via => :get
 
       # pulp proxy --------------
     match '/consumers/:id/profile/' => 'systems#upload_package_profile', :via => :put
