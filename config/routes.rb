@@ -113,6 +113,7 @@ Src::Application.routes.draw do
       get :product_packages
     end
     member do
+      get :promotion_details
       get :object
       put :update_content
     end

@@ -15,6 +15,7 @@ class SystemTemplatesController < ApplicationController
 
   before_filter :setup_options, :only => [:index, :items]
   before_filter :find_template, :only =>[:update, :edit, :destroy, :show, :object, :update_content]
+  before_filter :find_read_only_template, :only =>[:promotion_details]
 
 
   #around_filter :catch_exceptions
@@ -33,6 +34,7 @@ class SystemTemplatesController < ApplicationController
       :index => read_test,
       :items => read_test,
       :object => read_test,
+      :promotion_details => read_test,
       :auto_complete_package => read_test,
       :show => read_test,
       :edit => read_test,
@@ -167,6 +169,9 @@ class SystemTemplatesController < ApplicationController
     render :partial => "new", :layout => "tupane_layout", :locals => {:template => @template}
   end
 
+  def promotion_details
+    render :partial => "promotion_details", :layout => "tupane_layout", :locals=>{:template=>@template}
+  end
 
   def auto_complete_package
     name = params[:name]
@@ -189,8 +194,12 @@ class SystemTemplatesController < ApplicationController
   
   protected
 
-  def find_template
+  def find_read_only_template
     @template = SystemTemplate.find(params[:id])
+  end
+
+  def find_template
+    find_read_only_template
     raise _("Cannot modify a template that is another environment") if !@template.environment.locker?
   rescue Exception => e
     errors e
