@@ -25,6 +25,7 @@ class Api::UsersController < Api::ApiController
     edit_test = lambda{@user.editable?}
     delete_test = lambda{@user.deletable?}
     user_helptip = lambda{true} #everyone can enable disable a helptip
+    list_owners_test = lambda{@user.id == User.current.id} #user can see only his/her owners
 
      {
        :index => index_test,
@@ -32,6 +33,7 @@ class Api::UsersController < Api::ApiController
        :create => create_test,
        :update => edit_test,
        :destroy => delete_test,
+       :list_owners => list_owners_test,
      }
   end
 
