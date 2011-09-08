@@ -78,7 +78,7 @@ class OrganizationsController < ApplicationController
       Rails.logger.info error.backtrace.join("\n")
       render :text=> error.to_s, :status=>:bad_request and return
     end
-    render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_name}
+    render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
   end
 
   def edit
@@ -124,7 +124,7 @@ class OrganizationsController < ApplicationController
         errors error.to_s
         render :text=> error.to_s, :status=>:bad_request and return
       end
-      render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_name}
+      render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
     else
       errors [_("Could not delete organization '#{params[:id]}'."),  _("At least one organization must exist.")]
       
@@ -149,13 +149,13 @@ class OrganizationsController < ApplicationController
     @panel_options = { :title => _('Organizations'),
                :col => ['name'],
                :create => _('Organization'),
-               :name => controller_name,
+               :name => controller_display_name,
                :accessor => :cp_key,
                :ajax_scroll => items_organizations_path(),
                :enable_create => Organization.creatable?}
   end
 
-  def controller_name
+  def controller_display_name
     return _('organization')
   end
 

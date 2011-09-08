@@ -58,14 +58,14 @@ class SyncPlansController < ApplicationController
     @panel_options = { :title => _('Sync Plans'),
                  :col => columns,
                  :create => _('Plan'),
-                 :name => controller_name,
+                 :name => controller_display_name,
                  :ajax_scroll => items_sync_plans_path(),
                  :enable_create => current_organization.syncable? } 
   end
 
   def edit
     render :partial => "edit", :layout => "tupane_layout",
-           :locals => {:plan=>@plan, :editable=> current_organization.syncable?, :name=>controller_name } 
+           :locals => {:plan=>@plan, :editable=> current_organization.syncable?, :name=>controller_display_name } 
   end
 
   def update
@@ -116,7 +116,7 @@ class SyncPlansController < ApplicationController
     rescue Exception => e
       errors e.to_s
     end
-    render :partial => "common/list_remove", :locals => {:id=>@id, :name=>controller_name}
+    render :partial => "common/list_remove", :locals => {:id=>@id, :name=>controller_display_name}
   end
 
   def show
@@ -140,7 +140,7 @@ class SyncPlansController < ApplicationController
       end
       @plan = SyncPlan.create! params[:sync_plan].merge({:organization => current_organization})
       notice N_("Sync Plan '#{@plan['name']}' was created.")
-      render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval'], :name=>controller_name}
+      render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval'], :name=>controller_display_name}
     rescue Exception => error
       Rails.logger.error error.to_s
       errors error
@@ -161,7 +161,7 @@ class SyncPlansController < ApplicationController
   end
       
       
-  def controller_name
+  def controller_display_name
     return _('sync_plan')
   end
 end
