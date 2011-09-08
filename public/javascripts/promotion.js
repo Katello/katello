@@ -376,7 +376,6 @@ var promotion_page = (function($){
             }
 
         },
-
         /*
          *  Resets anything that is listed to have the correct button value
          *    if there is no changeset selected this will reset everything
@@ -418,6 +417,13 @@ var promotion_page = (function($){
                   });
                  buttons = $('#list').find("a[class~=content_add_remove][data-type=template]");
                  buttons.html(i18n.add).removeClass('remove_template').addClass("add_template").show(); //reset all to 'add'
+                  $.each(current_changeset.getTemplates(), function(index, template) {
+                    $.each(buttons, function(button_index, button){
+                      if( $(button).attr('id') === ('add_remove_template_' + template.id) ){ 
+                        $(button).html(i18n.remove).removeClass('add_template').addClass("remove_template").removeClass("disabled");
+                      }
+                    });
+                  });
 
                }
             } else {
