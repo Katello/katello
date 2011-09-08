@@ -170,6 +170,8 @@ case "$1" in
         rm -rf $TMPDIR
         ;;
     initdb)
+        [ -f $KATELLO_DATA_DIR/initdb_done ] && echo "Database was already initialized, remove $KATELLO_DATA_DIR/initdb_done" && echo_failure && return 1
+
         # check if there are not wrong permission of schema.rb
         if [ -f "$KATELLO_DATA_DIR/schema.rb" ] && [ "$(stat -c %U $KATELLO_DATA_DIR/schema.rb)" != "$KATELLO_USER" ]; then
             echo "Wrong permissions of schema.rb, please fix"
