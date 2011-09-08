@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# cd to root of project
+cd ..
+
 # prepare dirs
 mkdir -p reports/xref/{rails,cli,js} 2>/dev/null
 

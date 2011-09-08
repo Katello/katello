@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# cd to root of project
+cd ..
+
 # Check JavaScript syntax
 jsl --conf scripts/jsl-errors-only.conf 
 OUT=$?
