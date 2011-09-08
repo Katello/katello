@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.77
+Version:	      0.1.78
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -196,6 +196,20 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Sep 08 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.78-1
+- scoped_search - bumping version to 2.3.3 (bbuckingham@redhat.com)
+- 735747 - fixing issue where creating a permission with create verb would
+  result in an error (jsherril@redhat.com)
+- Changes from using controller_name (a pre-defined rails function) to using
+  controller_display_name for use in setting model object ids in views.
+  (ehelms@redhat.com)
+- 736440 - Failures based on authorization return valid json
+  (tstrachota@redhat.com)
+- default newrelic profiling to false in dev mode (shughes@redhat.com)
+- Merge branch 'oauth_provider' (dmitri@redhat.com)
+- added support for katello api acting as a 2-legged oauth provider
+  (dmitri@redhat.com)
+
 * Thu Sep 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.77-1
 - puppet - adding initdb 'run twice' check
 - 731158: add ajax call to update sync duration
