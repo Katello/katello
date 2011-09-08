@@ -262,7 +262,7 @@ class ChangesetsController < ApplicationController
       @environment = KTEnvironment.find(params[:env_id])
     else
       #didnt' find an environment, just do the first the user has access to
-      list = KTEnvironment.changesets_readable(current_organization)
+      list = KTEnvironment.changesets_readable(current_organization).where(:locker=>false)
       @environment ||= list.first || current_organization.locker
     end
     @next_environment = KTEnvironment.find(params[:next_env_id]) if params[:next_env_id]
