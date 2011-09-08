@@ -6,7 +6,7 @@
 %global confdir extras/fedora
 
 Name:           katello
-Version:	      0.1.76
+Version:	      0.1.77
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -196,6 +196,89 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Sep 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.77-1
+- puppet - adding initdb 'run twice' check
+- 731158: add ajax call to update sync duration
+- sync-status removing finish_time from ui
+- sync status - add sync duration calculations
+- sync status - update title per QE request
+- 731158: remove 'not synced' status and leave blank
+- 734196 - Disabled add and remove buttons in roles sliding tree after they
+  have been clicked to prevent multiple server calls.
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+- 725842 - Fix for Search: fancyqueries dropdown - alignment
+- Merge branch 'master' into roles-ui
+- Role - Disabled the resizing on the roles ui sliding tree.
+- Fix for when system has no packages - should not see list or filter.
+- Fix for systems with no packages.
+- 736148 - update code to properly cancel a sync and render it in UI
+- Role - Changes to display of full access label on organizations in roles ui
+  list when a permission granting full access is removed.
+- 731158: misc improvements to sync status page
+- 736384 - workaround for perm. denied (unit test)
+- Role - Look and feel fixes for displaying of no current permissions message.
+- 734448 - Fix for Broken 'logout' link at web page's footer o    modified:
+  src/app/views/layouts/_footer.haml
+- Package sort asc and desc via header.  Ajax refresh and indicators.
+- 736384 - workaround for perm. denied for rhsm registration
+- Roles - Adds text to empty permissions list instructing user what to do next
+  for global and organizational permissions.
+- Merge branch 'master' into roles-ui
+- 736251 - use content name for repo id when importing manifest
+- templates - it is possible to create/edit only templates in the locker -
+  added checks into template controller - spec tests fixed according to changes
+- Packages offset loading via "More..." now working with registered system.
+- 734026 - removing uneeded debug line that caused syncs to fail
+- packagegroups - refactor: move menthods to Glue::Pulp::Repo
+- Merge branch 'master' into sub
+- product - removed org name from product name
+- Api for listing package groups and categories
+- Fixing error with spinner on pane.
+- Refresh of subs page.
+- Area to re-render subs.
+- unsubscribe support for sub pools
+- Merge branch 'subway' of ssh://git.fedorahosted.org/git/katello into subway
+- Fix for avail_subs vs. consumed_subs.
+- move sys pools and avail pools to private methods, reuse
+- Adds class requirement 'filterable' on sliding lists that should be
+  filterable by search box.
+- Update to permission detail view to display verbs and tags in a cleaner way.
+- Adds step indicators on permission create.  Adds more validation handling for
+  blank name.
+- initial subscription consumption, sunny day
+- Fixes to permission add and edit flow for consistency.
+- More subscriptions work. Rounded top box with shadow and borders.  Fixed some
+  other stuff with spinner.
+- Updated subscription spinner to have useful info.
+- More work on subscriptions page.
+- Small change for wrong sub.poolId.
+- Added a spinner to subscriptions.
+- fix error on not grabbing latest subscription pools
+- Fixed views for subscriptions.
+- Merge branch 'subway' of ssh://git.fedorahosted.org/git/katello into subway
+- Fixed a non i18n string.
+- support mvc better for subscriptions availability and consumption
+- Role editing commit that adds workflow functionality.  This also provides
+  updated and edits to the create permission workflow.
+- Modifies sliding tree action bar to require an identifier for the toggled
+  item and a dictionary with the container and setup function to be called.
+  This was in order to re-use the same HTML container for two different
+  actions.
+- change date format for sub expires
+- changing to DateTime to Date for expires sub
+- Wires up edit permission button and adds summary for viewing an individual
+  permission.
+- Switches from ROLES object to KT.roles object.
+- added consumed value for pool of subs
+- Subscriptions page changes to include consumed and non-consumed.
+- Subscriptions page coming along.
+- remove debugger line
+- add expires to subscriptions
+- Subscriptions page.  Mostly mocked up (no css yet).
+- cleaning up subscriptions logic
+- add in subscription qty for systems
+- Small change to subscriptions page, uploading of assets for new subscriptions
+  page.
 * Mon Sep 05 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.76-1
 - 730358 - repo discovery now uses asynchronous tasks - the route has been
   changed to /organizations/ID/repositories/discovery/
