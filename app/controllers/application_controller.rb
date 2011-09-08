@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
 
   after_filter :flash_to_headers
 
-  #custom 404 pages
+  #custom 404 (render_404) and 500 (render_error) pages
   rescue_from Exception, :with => :render_error
   rescue_from ActiveRecord::RecordNotFound, :with => :render_404
   rescue_from ActionController::RoutingError, :with => :render_404
@@ -253,7 +253,7 @@ class ApplicationController < ActionController::Base
   # render a 404 page
   def render_404(exception = nil)
     if exception
-        logger.info "Rendering 404: #{exception.message}"
+        logger.info _("Rendering 404:") + "#{exception.message}"
     end
     respond_to do |format|
       format.html { render :template => "common/404", :layout => !request.xhr?, :status => 404 }
@@ -266,7 +266,8 @@ class ApplicationController < ActionController::Base
   # take care of 500 pages too
   def render_error(exception = nil)
     if exception
-      logger.info "Rendering 500: #{exception.message}"
+      logger.info _("Rendering 500:") + "#{exception.message}"
+      errors exception
     end
     respond_to do |format|
       format.html { render :template => "common/500", :layout => "katello_error", :status => 500, :locals=>{:error=>exception} }
@@ -408,7 +409,7 @@ class ApplicationController < ActionController::Base
   rescue Exception => error
     errors error
     #render :text => error, :status => :bad_request
-    render :partial => "common/500", :locals=>{:error=>error}, :status=>:bad_request
+    render_error(error)
   end
 
   def execute_after_filters
