@@ -965,7 +965,7 @@ var rolesRenderer = (function($){
             var panel = $('.panel-custom'),
                 width = panel.width();
             
-            width -= 2;
+            width -= 4;
             panel.find('.sliding_container').width(width);
             panel.find('.breadcrumb_search').width(width);
             panel.find('.slider').width(width);
@@ -1120,5 +1120,6 @@ $(document).ready(function() {
   
     pageActions.registerEvents();
     
-    $('.left').resizable('destroy');
+    $('.left').resizable('destroy');    
+    
 });
