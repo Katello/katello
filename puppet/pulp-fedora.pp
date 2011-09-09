@@ -9,7 +9,7 @@ file {"/etc/yum.repos.d/fedora-pulp.repo":
 }
 
 augeas {"fedora-pulp.repo":
-        context => "/files/etc/yum.repos.d/fedora-updates-testing.repo/updates-testing",
+        context => "/files/etc/yum.repos.d/fedora-pulp.repo/testing-fedora-pulp",
         changes => ["set enabled 1"],
         require => Exec["getRepoFile"]
 }
