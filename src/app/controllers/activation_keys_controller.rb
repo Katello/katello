@@ -129,7 +129,7 @@ class ActivationKeysController < ApplicationController
     @system_template = SystemTemplate.find(@activation_key.system_template_id) unless @activation_key.system_template_id.nil?
     render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key,
                                                                        :editable=>ActivationKey.manageable?(current_organization),
-                                                                       :name=>controller_name}
+                                                                       :name=>controller_display_name}
   end
 
   def edit_environment
@@ -143,7 +143,7 @@ class ActivationKeysController < ApplicationController
         key.user = current_user
       end
       notice _("Activation key '#{@activation_key['name']}' was created.")
-      render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name'], :name=>controller_name}
+      render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
 
     rescue Exception => error
       Rails.logger.error error.to_s
@@ -191,7 +191,7 @@ class ActivationKeysController < ApplicationController
       if @activation_key.destroyed?
         notice _("Activation key '#{@activation_key[:name]}' was deleted.")
         #render and do the removal in one swoop!
-        render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_name}
+        render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
       else
         raise
       end
@@ -222,7 +222,7 @@ class ActivationKeysController < ApplicationController
       :title => _('Activation Keys'),
       :col => ['name'],
       :create => _('Key'), 
-      :name => controller_name,
+      :name => controller_display_name,
       :ajax_scroll => items_activation_keys_path()}
     @panel_options[:enable_create] = false if !ActivationKey.manageable?(current_organization)
   end
@@ -243,7 +243,7 @@ class ActivationKeysController < ApplicationController
     subscriptions
   end
   
-  def controller_name
+  def controller_display_name
     return _('activation_key')
   end
 end

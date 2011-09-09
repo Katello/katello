@@ -189,13 +189,14 @@ module BreadcrumbHelper
     
     def add_permission_bc bc, perm, adjust_count
       global = perm.resource_type.global?
+
       type = perm.resource_type
       type_name = type.display_name
       
       if perm.all_verbs
         verbs = 'all'
       else
-        verbs = perm.verbs.collect {|verb| VirtualTag.new(verb.name, verb.display_name(perm.resource_type.name, global)) }
+        verbs = perm.verbs.collect {|verb| VirtualTag.new(verb.name, verb.all_display_names(perm.resource_type.name)) }
       end
       
       if perm.all_tags

@@ -172,7 +172,7 @@ class SystemsController < ApplicationController
   end
   
   def edit
-     render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system, :editable=>@system.editable?, :name=>controller_name}
+     render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system, :editable=>@system.editable?, :name=>controller_display_name}
   end  
 
   def update
@@ -228,7 +228,7 @@ class SystemsController < ApplicationController
                       :custom_rows => true,
                       :enable_create => false,
                       :enable_sort => true,
-                      :name => controller_name,
+                      :name => controller_display_name,
                       :list_partial => 'systems/list_systems',
                       :ajax_scroll => items_systems_path()}
   end
@@ -253,7 +253,7 @@ class SystemsController < ApplicationController
     avail_pools
   end
 
-  def controller_name
+  def controller_display_name
     return _('system')
   end
 

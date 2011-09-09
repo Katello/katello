@@ -24,7 +24,7 @@ class pulp::config {
   exec {"setenforce":
     command => "setenforce 0",
     path    => "/usr/sbin:/bin",
-    unless  => "getenforce |grep -iq disable",
+    unless  => "getenforce |egrep -iq 'disable|Permissive'",
     before  => Class["pulp::service"]
   }
 
