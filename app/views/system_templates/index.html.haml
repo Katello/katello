@@ -9,6 +9,10 @@
 
 = javascript do
   :javascript
+
+    KT.permissions = {
+      editable: #{editable}
+    }
     KT.content_breadcrumb = $.parseJSON('#{escape_javascript(template_content_breadcrumb())}');
     KT.template_breadcrumb = $.parseJSON('#{escape_javascript(generate_template_breadcrumb())}');
     KT.product_hash = $.parseJSON('#{escape_javascript(product_hash.to_json)}');
@@ -75,27 +79,28 @@
         #edit_template_container.slide_up_container
           %h2= _("Edit System Template")
           = render :partial=>"edit", :locals=>{:editable=>true}
-        #sliding_tree_actionbar.clickable
-          #add_template.cs_action
-            %span#add_template_icon.sprite
-              SPRITE
-            %span.text
-              = _("Add")
-          #edit_template.cs_action
-            %span#edit_template_icon.sprite
-              SPRITE
-            %span.text
-              = _("Edit Details")
-          #remove_template.cs_action{ "data-confirm-text" => "#{_('Are you sure you want to remove this template?')}" }
-            %span#remove_template_icon.sprite
-              SPRITE
-            %span.text
-              = _("Remove")
-          #save_template.cs_action.disabled
-            %span#save_template_icon.sprite
-              SPRITE
-            %span.text
-              = _("Save")
+        - if editable
+          #sliding_tree_actionbar.clickable
+            #add_template.cs_action
+              %span#add_template_icon.sprite
+                SPRITE
+              %span.text
+                = _("Add")
+            #edit_template.cs_action
+              %span#edit_template_icon.sprite
+                SPRITE
+              %span.text
+                = _("Edit Details")
+            #remove_template.cs_action{ "data-confirm-text" => "#{_('Are you sure you want to remove this template?')}" }
+              %span#remove_template_icon.sprite
+                SPRITE
+              %span.text
+                = _("Remove")
+            #save_template.cs_action.disabled
+              %span#save_template_icon.sprite
+                SPRITE
+              %span.text
+                = _("Save")
 
 
 
