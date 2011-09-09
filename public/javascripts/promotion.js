@@ -856,7 +856,7 @@ var registerEvents = function(){
               $.extend(changeset_breadcrumb, data.breadcrumb);
               promotion_page.set_changeset(changeset_obj(data.changeset));
               promotion_page.get_changeset_tree().render_content('changeset_' + data.id);
-              panel.closePanel($('#panel'));
+              KT.panel.closePanel($('#panel'));
           },
           error: function(){ button.removeClass("disabled");}
         });
@@ -1496,17 +1496,17 @@ $(document).ready(function() {
                                     }));
 
     //need to reset page during the extended scroll
-    panel.extended_cb = promotion_page.reset_page;
+    KT.panel.set_extended_cb(promotion_page.reset_page);
 
     //when loading the new panel item, if its new, we need to add a form submit handler
-    panel.expand_cb = function(id) {
+    KT.panel.set_expand_cb(function(id) {
         if (id === 'new') {
           $('#new_changeset').submit(function(e) {
               e.preventDefault();
               $('#save_changeset_button').trigger('click');
           });
         }
-    };
+    });
 
 
     //set function for env selection callback
@@ -1529,15 +1529,15 @@ $(document).ready(function() {
         var bodyY = parseInt(container.offset().top, 10) - 20;
         var offset = $('#content_tree').width() + 50;
         $(window).scroll(function () {
-            panel.handleScroll($('#changeset_tree'), container, original_top, bodyY, 0, offset);
+            KT.panel.handleScroll($('#changeset_tree'), container, original_top, bodyY, 0, offset);
         });
         $(window).resize(function(){
-           panel.handleScrollResize($('#changeset_tree'), container, original_top, bodyY, 0, offset);
+           KT.panel.handleScrollResize($('#changeset_tree'), container, original_top, bodyY, 0, offset);
         });
     }
     
-    panel.expand_cb = function(){
+    KT.panel.set_expand_cb(function(){
        $('.block').parent().parent().removeClass('activeItem');
        $('.active').parent().parent().addClass('activeItem'); 
-    };
+    });
 });
