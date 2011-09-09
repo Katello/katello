@@ -181,7 +181,7 @@ class SystemTemplatesController < ApplicationController
   def create
     
     obj_params = params[:system_template]
-    obj_params[:environment_id] = current_organization.locker
+    obj_params[:environment_id] = current_organization.locker.id
 
     @template = SystemTemplate.create!(obj_params)
     notice _("Sync Plan '#{@template.name}' was created.")
