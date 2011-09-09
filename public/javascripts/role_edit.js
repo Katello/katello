@@ -27,5 +27,9 @@ $(function() {
                       });
   
     rolesRenderer.init();
+    
+    $('.data').addClass('roles-selected-border');
+    $('.arrow-right').remove();
+    $('.active').width($('.active').width() + 1);
 
 });
