@@ -192,23 +192,28 @@ class SystemTemplate < ActiveRecord::Base
 
 
   #### Permissions
-   
+  def self.list_verbs global = false
+    {
+      :manage_all => N_("Manage All System Templates"),
+      :read_all => N_("Read All System Templates")
+   }.with_indifferent_access
+  end
+
+  def self.no_tag_verbs
+    SystemTemplate.list_verbs
+  end
 
   def self.any_readable? org
-    return true
+    User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
     
   end
 
-  def self.creatable? org
-    true
+  def self.readable? org
+    User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
   end
 
-  def readable?
-    true
-  end
-
-  def editable?
-    true
+  def self.manageable? org
+    User.allowed_to?([:manage_all], :system_templates, nil, org)
   end
 
 

@@ -55,7 +55,7 @@ SimpleNavigation::Configuration.run do |navigation|
       content_sub.item(:changeset, _("Changeset History"), changesets_path()) if KTEnvironment.any_viewable_for_promotions?(current_organization)
       #content_sub.item :updates_bundle, _("Updates Bundle"), '#', :class => 'disabled', :if => Proc.new { false }
 
-    end if current_organization() && (Provider.any_readable?(current_organization)|| KTEnvironment.any_viewable_for_promotions?(current_organization)) #end content
+    end if current_organization() && (Provider.any_readable?(current_organization)|| KTEnvironment.any_viewable_for_promotions?(current_organization) || SystemTemplate.any_readable?(current_organization)) #end content
 
     #TODO: Add correct Systems subnav items
     top_level.item :systems, _("Systems"), systems_path(), :class=>'systems' do |systems_sub|
