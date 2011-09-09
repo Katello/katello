@@ -26,10 +26,9 @@ class SystemTemplatesController < ApplicationController
 
 
   def rules
-    #read_test = lambda{Provider.any_readable?(current_organization)}
-    #manage_test = lambda{current_organization.syncable?}
-    read_test = lambda{true}
-    manage_test = lambda{true}
+
+    read_test = lambda{SystemTemplate.readable?(current_organization)}
+    manage_test = lambda{SystemTemplate.manageable?(current_organization)}
     {
       :index => read_test,
       :items => read_test,
@@ -50,14 +49,14 @@ class SystemTemplatesController < ApplicationController
 
   def index
     @environment = current_organization.locker
-    @products = @environment.products
+    @products = Product.readable(current_organization).joins(:environments).where("environments.id = #{@environment.id}")
     @templates = SystemTemplate.search_for(params[:search]).where(:environment_id => current_organization.locker.id).limit(current_user.page_size)
 
     product_hash = {}
     @products.each{|prd|  product_hash[prd.name] = prd.id}
 
     retain_search_history
-    render :index, :locals=>{:editable=>true, :deletable=>true, :product_hash => product_hash}
+    render :index, :locals=>{:editable=>SystemTemplate.manageable?(current_organization), :product_hash => product_hash}
   end
   
   def items
@@ -73,7 +72,7 @@ class SystemTemplatesController < ApplicationController
                  :create => _('Template'),
                  :name => _('template'),
                  :ajax_scroll => items_system_templates_path(),
-                 :enable_create => SystemTemplate.creatable?(current_organization) }
+                 :enable_create => SystemTemplate.manageable?(current_organization) }
   end
 
 
@@ -87,12 +86,12 @@ class SystemTemplatesController < ApplicationController
 
   def edit
     render :partial => "edit", :layout => "tupane_layout",
-           :locals => {:template=>@template, :editable=> @template.editable? }
+           :locals => {:template=>@template, :editable=> SystemTemplate.editable? }
   end
 
 
   def product_packages
-    @product = Product.find(params[:product_id])
+    @product = Product.readable(current_organization).find(params[:product_id])
       @packages = []
       @product.repos(current_organization.locker).each{|repo|
         repo.packages.each{|pkg|
@@ -126,7 +125,7 @@ class SystemTemplatesController < ApplicationController
 
     @template.products = []
     products.each{|prod|
-      @template.products << Product.find(prod[:id])
+      @template.products << Product.readable(current_organization).find(prod[:id])
     }
     
     @template.save!
