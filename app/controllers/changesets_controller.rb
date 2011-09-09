@@ -78,11 +78,11 @@ class ChangesetsController < ApplicationController
   def list
     @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size)
     @columns = ['name'] #from index
-    render :partial=>"list", :locals=>{:name=>controller_name}
+    render :partial=>"list", :locals=>{:name=>controller_display_name}
   end
 
   def edit
-    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:editable=>@environment.changesets_manageable?, :name=>controller_name}
+    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:editable=>@environment.changesets_manageable?, :name=>controller_display_name}
   end
 
   #list item
@@ -289,12 +289,12 @@ class ChangesetsController < ApplicationController
     @panel_options = { :title => _('Changesets'),
                  :col => ['name'],
                  :enable_create => false,
-                 :name => controller_name,
+                 :name => controller_display_name,
                  :accessor => :id,
                  :ajax_scroll => items_changesets_path()}
   end
 
-  def controller_name
+  def controller_display_name
     return _('changeset')
   end
 
