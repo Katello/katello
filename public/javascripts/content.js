@@ -64,9 +64,9 @@ $(document).ready(function() {
       $(this).parent().parent().find('ul').slideToggle();
       var arrow = $(this).parent().find('a').find('img');
       if(arrow.attr("src").indexOf("collapsed") === -1){
-          arrow.attr("src", "/images/icons/expander-collapsed.png");
+          arrow.attr("src", "../images/icons/expander-collapsed.png");
       } else {
-          arrow.attr("src", "/images/icons/expander-expanded.png");
+          arrow.attr("src", "../images/icons/expander-expanded.png");
       }
       return false;
   });
@@ -121,7 +121,8 @@ var content = (function(){
             progressBar.appendTo(updateField);
             cancelButton.appendTo(updateField);
             updateField.fadeIn('fast');
-            var pu = $.PeriodicalUpdater('/sync_management/sync_status/', {
+            var url = $('#sync_status_url').attr('data-url');
+            var pu = $.PeriodicalUpdater(url, {
               data: {repo_id:repo, sync_id:sync, product_id: getProductIdFromRepo(repo)},
               method: 'get',
               type: 'json',
@@ -138,7 +139,7 @@ var content = (function(){
                if (data.raw_state == 'canceled' || (data.progress.progress == 100 && data.finish_time != null)) {
                  pu.stop();
                  updateField.html(data.state);
-                 fadeUpdate("#repo_sync_finish_" + data.repo_id, data.finish_time);
+                 fadeUpdate("#repo_sync_finish_" + data.repo_id, data.duration);
                  fadeUpdate("#repo_sync_size_" + data.repo_id,
                              data.size + ' (' + data.packages + ')');
                  content.updateProduct(prod_id, data.repo_id);
@@ -157,32 +158,33 @@ var content = (function(){
             return false;
         },
         updateProduct : function (prod_id, repo_id) {
+            var url = $('#sync_status_url').attr('data-url');
             $.ajax({
               type: 'GET',
-              url: '/sync_management/product_status/',
+              url: url,
               data: { product_id: prod_id, repo_id: repo_id},
               dataType: 'json',
               success: function(data) {
                 $('#table_' + prod_id).find('div.productstatus').html(data.state);
-                fadeUpdate("#prod_sync_finish_" + data.product_id, data.finish_time);
+                fadeUpdate("#prod_sync_finish_" + data.product_id, data.duration);
                 fadeUpdate("#prod_sync_start_" + data.product_id, data.start_time);
                 fadeUpdate("#prod_size_" + data.product_id, data.size);
               },
               error: function(data) {
-                fadeUpdate("#prod_sync_finish_" + data.product_id, data.finish_time);
+                fadeUpdate("#prod_sync_finish_" + data.product_id, data.duration);
                 fadeUpdate("#prod_sync_start_" + data.product_id, data.start_time);
                 fadeUpdate("#prod_size_" + data.product_id, data.size);
               }
             });
         },
         cancelSync : function(repoid, syncid, updateField, pu){
-            var btn = $('#' + KT.common.escapeId("cancel_" + repoid));
-            var prod_id = getProductId(updateField);
+            var btn = $('#' + KT.common.escapeId("cancel_" + repoid)),
+                prod_id = getProductId(updateField);
             btn.addClass("disabled");
             pu.stop();
             $.ajax({
               type: 'DELETE',
-              url: '/sync_management/' + syncid,
+              url: KT.common.rootURL() + 'sync_management/' + syncid,
               data: { repo_id: repoid, product_id: prod_id },
               dataType: 'json',
               success: function(data) {

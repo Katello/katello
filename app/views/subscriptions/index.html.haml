@@ -20,9 +20,9 @@
           %th= _('Expires')
         %tbody
           - @subscriptions.each do |sub|
-            - new_group = sub.product.id
+            - new_group = sub.product.object_id
             - if (new_group != group)
-              - group = sub.product.id
+              - group = sub.product.object_id
               %tr{:id => group}
                 %td= sub.productName
                 %td
@@ -32,7 +32,7 @@
                 %td
                 %td
                 %td
-            %tr{:class => "child-of-#{group}", :id => sub.id}
+            %tr{:class => "child-of-#{group}", :id => sub.object_id}
               %td= sub.productName
               %td
                 = sub.consumed

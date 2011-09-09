@@ -14,14 +14,19 @@ if [ -f /etc/sysconfig/katello ]; then
 fi
 
 prog=katello
+THIN=/usr/share/katello/script/thin
 RETVAL=0
+KATELLO_PREFIX=${KATELLO_PREFIX:-/katello}
 KATELLO_PORT=${KATELLO_PORT:-3000}
 KATELLO_USER=${KATELLO_USER:-katello}
+KATELLO_GROUP=${KATELLO_GROUP:-katello}
 KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
 KATELLO_DATA_DIR=${KATELLO_DATA_DIR:-/var/lib/katello}
 KATELLO_ENV=${KATELLO_ENV:-production}
-KATELLO_PID=${KATELLO_PID:-${KATELLO_HOME}/tmp/pids/server.pid}
+KATELLO_PID=${KATELLO_PID:-${KATELLO_HOME}/tmp/pids/thin.5000.pid}
 export KATELLO_LOGGING=${KATELLO_LOGGING:-info}
+
+export RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX
 
 check_privilege() {
     runuser -s /bin/sh ${KATELLO_USER} -c "echo x > /dev/null" 2> /dev/null || RETVAL=4
@@ -83,9 +88,8 @@ start() {
         cd ${KATELLO_HOME} #rails expects you to run from the root of the app
         # delete Gemfile.lock (it will be regenerated)
         rm -f $KATELLO_DATA_DIR/Gemfile.lock
-        #daemon --user ${KATELLO_USER} bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} -d >/var/log/katello/startup.log 2>&1
-        # <workaround> for the bug 726030 - Webrick wont start with the -d (daemon) option
-        daemon --user ${KATELLO_USER} nohup bundle exec /usr/bin/ruby ${KATELLO_HOME}/script/rails s -p ${KATELLO_PORT} -e ${KATELLO_ENV} >/var/log/katello/startup.log 2>&1 &
+        export HOME=
+        daemon --user ${KATELLO_USER} $THIN start --user ${KATELLO_USER} --group ${KATELLO_GROUP} --config /etc/katello/thin.yml --prefix ${KATELLO_PREFIX} --rackup "${KATELLO_HOME}/config.ru" > /var/log/katello/startup.log 2>&1 &
         sleep 5s
         # </workaround>
         RETVAL=$?
@@ -101,20 +105,7 @@ start() {
 }
 
 stop() {
-    check_privilege
-
-    echo -n $"Stopping $prog: "
-    if status_q; then
-        killproc -p ${KATELLO_PID}
-        RETVAL=$?
-    else
-        echo -n $"$prog was not running. "
-        RETVAL=0
-        echo_success
-    fi
-
-    echo
-    return $RETVAL
+    $THIN --config /etc/katello/thin.yml stop
 }
 
 restart() {
@@ -170,6 +161,8 @@ case "$1" in
         rm -rf $TMPDIR
         ;;
     initdb)
+        [ -f $KATELLO_DATA_DIR/initdb_done ] && echo "Database was already initialized, remove $KATELLO_DATA_DIR/initdb_done" && echo_failure && return 1
+
         # check if there are not wrong permission of schema.rb
         if [ -f "$KATELLO_DATA_DIR/schema.rb" ] && [ "$(stat -c %U $KATELLO_DATA_DIR/schema.rb)" != "$KATELLO_USER" ]; then
             echo "Wrong permissions of schema.rb, please fix"

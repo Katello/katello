@@ -9,7 +9,7 @@
     = _("Create Repository")
   .clear
     &nbsp;
-  = form_tag provider_product_repositories_path(@provider.id, @product.id), :method => "post" do |f|
+  = form_tag provider_product_repositories_path(@provider.id, @product.id), :method => "post" do
     %fieldset.clearfix
       .grid_2.ra
         = label :repo, :name, _("Name")

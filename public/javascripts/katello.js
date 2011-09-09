@@ -59,33 +59,37 @@ function log(msg) {
 }
 
 KT.helptip =  (function($) {
-    var enable = function(key) {
-          $.ajax({
-            type: "POST",
-            url: "/users/enable_helptip",
-            data: { "key":key},
-            cache: false
-           });
+    var enable = function(key, url) {
+        $.ajax({
+          type: "POST",
+          url: url,
+          data: { "key":key},
+          cache: false
+          });
         },
-        disable = function(key) {
+        disable = function(key, url) {
           $.ajax({
             type: "POST",
-            url: "/users/disable_helptip",
+            url: url,
             data: { "key":key},
             cache: false
            });
         },
         handle_close = function(){
-          var key = this.id.split("helptip-opened_")[1];
+          var key = this.id.split("helptip-opened_")[1],
+              url = $(this).attr('data-url');
+
           $("#helptip-opened_" + key).hide();
           $("#helptip-closed_" + key).show();
-          disable(key); 
+          disable(key, url);
         },
         handle_open = function(){
-          var key = this.id.split("helptip-closed_")[1];
+          var key = this.id.split("helptip-closed_")[1],
+              url = $(this).attr('data-url');
+
           $("#helptip-opened_" + key).show();
           $("#helptip-closed_" + key).hide();
-          enable(key);
+          enable(key, url);
         };
         
     return {
@@ -138,6 +142,7 @@ $.expr[':'].contains = function(a, i, m) {
 
 //requires jQuery
 KT.common = (function() {
+    var root_url = undefined; 
     return {
         height: function() {
             return $(window).height();
@@ -263,6 +268,12 @@ KT.common = (function() {
                 }
             });
             $('#orgfilter_input').val("").change();
+        },
+        rootURL : function() {
+            if (root_url === undefined) {
+                root_url = $('#root_url').attr('data-url');
+            }
+            return root_url;
         },
         thirdLevelNavSetup : function(){
             var firstchild = $('.third_level:first-child');
