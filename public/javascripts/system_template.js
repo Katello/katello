@@ -329,7 +329,7 @@ KT.template_renderer = function() {
     },
     packages = function() {
         var html = '<ul ><li class="content_input_item"><form id="add_package_form">';
-        html += '<input id="add_package_input" type="text" size="35"><form>  ';
+        html += '<input id="add_package_input" type="text" size="33"><form>  ';
         html += '<a id="add_package" class="fr st_button ">' + i18n.add_plus + '</a>';
         html += ' </li></ul>';
         html +=  '<ul class="filterable">';
@@ -350,7 +350,7 @@ KT.template_renderer = function() {
     },
     products = function() {
         var html = '<ul><li class="content_input_item"><form id="add_product_form">';
-        html += '<input id="add_product_input" type="text" size="35"><form>  ';
+        html += '<input id="add_product_input" type="text" size="33"><form>  ';
         html += '<a id="add_product" class="fr st_button ">' + i18n.add_plus + '</a>';
         html += ' </li></ul>';
         html +=  '<ul class="filterable">';
