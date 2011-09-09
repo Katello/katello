@@ -1422,7 +1422,6 @@ var changesetStatusActions = (function($){
 
 //doc ready
 $(document).ready(function() {
-    $('#system_template_accordion').accordion({});
     $('.left').resizable('destroy');
     
     promotion_page.start_timer();
