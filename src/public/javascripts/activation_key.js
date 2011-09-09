@@ -82,8 +82,8 @@ var activation_key = (function() {
             data.ajaxSubmit({
                 success: function(data) {
                     list.add(data);
-                    panel.closePanel($('#panel'));
-                    panel.select_item(list.last_child().attr("id"));
+                    KT.panel.closePanel($('#panel'));
+                    KT.panel.select_item(list.last_child().attr("id"));
                 },
                 error: function(e) {
                     button.removeAttr('disabled');
@@ -98,8 +98,8 @@ var activation_key = (function() {
                     url: data.attr('data-url'),
                     cache: false,
                     success: function() {
-                        panel.closeSubPanel($('#subpanel'));
-                        panel.closePanel($('#panel'));
+                        KT.panel.closeSubPanel($('#subpanel'));
+                        KT.panel.closePanel($('#panel'));
                         list.remove(data.attr("data-id").replace(/ /g, '_'));
                     }
                 });

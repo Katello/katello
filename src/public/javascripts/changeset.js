@@ -49,17 +49,15 @@ $(document).ready(function() {
 
 var changeset_page = {
     current_env: undefined,
-    environment_select:  function(env_id, cb) {
-        panel.closePanel($('#panel'));
-
+    environment_select:  function(env_id) {
+        KT.panel.closePanel($('#panel'));
         list.complete_refresh(KT.common.rootURL() + '/changesets/items?env_id=' + env_id);
-        
     },
     signal_rename: function(changeset_id, name) {
         list.refresh('changeset_' + changeset_id, $('#changeset').attr("data-ajax_url"));
     },
     environment_search:  function(env_id) {
-        panel.closePanel($('#panel'));
+        KT.panel.closePanel($('#panel'));
         list.complete_refresh(KT.common.rootURL() + '/changesets/items?env_id=' + env_id + '&search=' + $('#search').val());
     },
     hash_change: function() {

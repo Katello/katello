@@ -33,7 +33,7 @@ var roles_page = (function($) {
             cache: false,
             success: function(data) {
                   list.add(data);
-                  panel.closePanel($('#panel'));
+                  KT.panel.closePanel($('#panel'));
                 },
             error: function(){button.removeClass("disabled");}
         });
