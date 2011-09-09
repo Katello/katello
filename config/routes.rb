@@ -261,12 +261,11 @@ Src::Application.routes.draw do
       resources :tasks, :only => [:index]
       member do
         get :providers
-        post :generate_debug_cert
-        post :delete_debug_cert
       end
       resources :systems, :only => [:index]
       match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :activation_keys, :only => [:index]
+      resource :uebercert, :only => [:create, :show]
     end
 
     resources :changesets, :only => [:show, :destroy] do
