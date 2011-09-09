@@ -181,11 +181,11 @@ module Candlepin
                              self.default_headers)
       end
 
-      def pools key
+      def pools key, filter = {}
         if key
-          jsonStr = self.get(join_path(path(key), 'pools'), self.default_headers).body
+          jsonStr = self.get(join_path(path(key), 'pools') + hash_to_query(filter), self.default_headers).body
         else
-          jsonStr = self.get(join_path('candlepin', 'pools'), self.default_headers).body
+          jsonStr = self.get(join_path('candlepin', 'pools') + hash_to_query(filter), self.default_headers).body
         end
         JSON.parse(jsonStr).collect {|p| p.with_indifferent_access }
       end
