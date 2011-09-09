@@ -28,7 +28,7 @@ var roles_page = (function($) {
 
         $.ajax({
             type: "POST",
-            url: "/roles/",
+            url: button.attr('data-url'),
             data: { "role":{"name":$('#role_name_field').val()}},
             cache: false,
             success: function(data) {

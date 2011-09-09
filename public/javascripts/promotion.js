@@ -305,11 +305,10 @@ var promotion_page = (function($){
             window.location = url;
         },
         fetch_changeset = function(changeset_id, callback) {
-    
                 $("#tree_loading").css("z-index", 300);
                 $.ajax({
                     type: "GET",
-                    url: "/changesets/" + changeset_id + "/object/",
+                    url: KT.common.rootURL() + "changesets/" + changeset_id + "/object/",
                     cache: false,
                     success: function(data) {
                         $("#tree_loading").css("z-index", -1);
@@ -637,7 +636,7 @@ var changeset_obj = function(data_struct) {
           $.ajax({
             contentType:"application/json",
             type: "PUT",
-            url: "/changesets/" + id,
+            url: KT.common.rootURL() + "changesets/" + id,
             data: JSON.stringify({timestamp:timestamp, state:state}),
             cache: false,
             success: function(data) {
@@ -660,7 +659,7 @@ var changeset_obj = function(data_struct) {
 
         $.ajax({
             type: "GET",
-            url: "/changesets/" + id + "/dependencies",
+            url: KT.common.rootURL() + "changesets/" + id + "/dependencies",
             cache: false,
             success: function(data) {
                 $.each(data, function(key, value) {
@@ -765,7 +764,7 @@ var changeset_obj = function(data_struct) {
         promote: function(on_success, on_error) {
          $.ajax({
             type: "POST",
-            url: "/changesets/" + id + "/promote",
+            url: KT.common.rootURL() + "changesets/" + id + "/promote",
             cache: false,
             success: function(data) {
                 if (on_success) {
@@ -799,7 +798,7 @@ var changeset_obj = function(data_struct) {
           $.ajax({
             contentType:"application/json",
             type: "PUT",
-            url: "/changesets/" + id,
+            url: KT.common.rootURL() + "changesets/" + id,
             data: JSON.stringify({data:data, timestamp:timestamp}),
             cache: false,
             success: on_success,
@@ -819,7 +818,7 @@ var registerEvents = function(){
 
         $.ajax({
           type: "POST",
-          url: "/changesets/",
+          url: button.attr('data-url'),
           data: $('#new_changeset').serialize(),
           cache: false,
           success: function(data){
@@ -956,7 +955,7 @@ var changesetEdit = (function(){
     setup_edit = function() {
         
         var changeset = promotion_page.get_changeset();
-        var url = "/changesets/" + changeset.id;
+        var url = KT.common.rootURL() + "changesets/" + changeset.id;
         var name_box = $('.edit_name_text');
         var description = $('.edit_description');
         
@@ -1150,7 +1149,7 @@ var templateLibrary = (function(){
                     html += ' (' + product[type].length  + ')';
                 }
                 else {
-                    html += "<img class='fr' src='/images/spinner.gif'>";
+                    html += "<img class='fr' src='images/spinner.gif'>";
                 }
 
                 html += '</span></li>';
@@ -1160,7 +1159,7 @@ var templateLibrary = (function(){
         },
         dependencyItems = function(products, product_id) {
             if (!products[product_id].deps) {
-                return i18n.loading_deps + "&nbsp;" + "<img  src='/images/spinner.gif'>";
+                return i18n.loading_deps + "&nbsp;" + "<img  src='images/spinner.gif'>";
             }
 
             var html = '<ul class="filterable">';
@@ -1378,7 +1377,7 @@ var changesetStatusActions = (function($){
         setLocked = function(id){
             var changeset = $('#' + id);
             changeset.css('margin-left', '0');
-            changeset.prepend('<img class="fl locked_icon" src="/images/icons/locked.png">');
+            changeset.prepend('<img class="fl locked_icon" src="images/icons/locked.png">');
             set_margins();
         },
         removeLocked = function(id){
@@ -1391,7 +1390,7 @@ var changesetStatusActions = (function($){
         },
         checkProgressTask = function(id){
             var timeout = 8000;
-            var updater = $.PeriodicalUpdater('/changesets/' + id + '/promotion_progress/', {
+            var updater = $.PeriodicalUpdater(KT.common.rootURL() + 'changesets/' + id + '/promotion_progress/', {
                 method: 'GET',
                 type: 'JSON',
                 cache: false,

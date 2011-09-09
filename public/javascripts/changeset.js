@@ -51,14 +51,16 @@ var changeset_page = {
     current_env: undefined,
     environment_select:  function(env_id, cb) {
         panel.closePanel($('#panel'));
-        list.complete_refresh('/changesets/items?env_id=' + env_id, cb);
+
+        list.complete_refresh(KT.common.rootURL() + '/changesets/items?env_id=' + env_id);
+        
     },
     signal_rename: function(changeset_id, name) {
         list.refresh('changeset_' + changeset_id, $('#changeset').attr("data-ajax_url"));
     },
     environment_search:  function(env_id) {
         panel.closePanel($('#panel'));
-        list.complete_refresh('/changesets/items?env_id=' + env_id + '&search=' + $('#search').val());
+        list.complete_refresh(KT.common.rootURL() + '/changesets/items?env_id=' + env_id + '&search=' + $('#search').val());
     },
     hash_change: function() {
         var env_id = $.bbq.getState("env_id");
@@ -75,7 +77,6 @@ var changeset_page = {
         else {
             panel.hash_change();
         }
-
     }
 
 };

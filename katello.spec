@@ -3,10 +3,10 @@
 
 %global homedir %{_datarootdir}/%{name}
 %global datadir %{_sharedstatedir}/%{name}
-%global confdir extras/fedora
+%global confdir deploy/common
 
 Name:           katello
-Version:	      0.1.76
+Version:	      0.1.79
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -17,6 +17,7 @@ Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       pulp
+Requires:       httpd
 Requires:       openssl
 Requires:       candlepin-tomcat6
 Requires:       rubygems
@@ -42,6 +43,7 @@ Requires:       rubygem(scoped_search) >= 2.3.1
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
+Requires:       rubygem(thin)
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
 Requires:       rubygem(regin)
@@ -99,7 +101,7 @@ install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 
 #copy the application to the target directory
 mkdir .bundle
-mv ./extras/bundle-config .bundle/config
+mv ./deploy/bundle-config .bundle/config
 cp -R .bundle * %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
@@ -113,6 +115,8 @@ install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
 install -Dp -m0755 %{confdir}/%{name}-jobs.init %{buildroot}%{_initddir}/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.completion.sh %{buildroot}%{_sysconfdir}/bash_completion.d/%{name}
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+install -Dp -m0644 %{confdir}/%{name}.httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
+install -Dp -m0644 %{confdir}/thin.yml %{buildroot}%{_sysconfdir}/%{name}/
 
 #overwrite config files with symlinks to /etc/katello
 ln -svf %{_sysconfdir}/%{name}/katello.yml %{buildroot}%{homedir}/config/katello.yml
@@ -136,7 +140,7 @@ sed -Ei 's/\s*database:\s+db\/(.*)$/  database: \/var\/lib\/katello\/\1/g' %{bui
 rm -rf %{buildroot}%{homedir}/README
 rm -rf %{buildroot}%{homedir}/LICENSE
 rm -rf %{buildroot}%{homedir}/doc
-rm -rf %{buildroot}%{homedir}/extras
+rm -rf %{buildroot}%{homedir}/deploy
 rm -rf %{buildroot}%{homedir}/%{name}.spec
 rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
@@ -170,6 +174,8 @@ fi
 %defattr(-,root,root)
 %doc README LICENSE doc/
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
+%config %{_sysconfdir}/%{name}/thin.yml
+%config %{_sysconfdir}/httpd/conf.d/katello.conf
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
@@ -196,6 +202,143 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Sep 09 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.79-1
+- Merge branch 'master' into thin (mmccune@redhat.com)
+- Merge branch 'master' into thin (mmccune@redhat.com)
+- moving new thin and httpd conf files to match existing config locations
+  (mmccune@redhat.com)
+- Simplify the stop command and make sure status works (mmccune@redhat.com)
+- JS - fix image paths in javascript (bbuckingham@redhat.com)
+- Promotions packages - replace hardcoded path w/ helper
+  (bbuckingham@redhat.com)
+- katello.init - update thin start so that log/pid files are owned by katello
+  (bbuckingham@redhat.com)
+- Views - updates to support /katello prefix (bbuckingham@redhat.com)
+- Views/JS - updates to support /katello prefix (bbuckingham@redhat.com)
+- Merge branch 'master' into thin (bbuckingham@redhat.com)
+- app server - update apache katello.conf to use candlepin cert
+  (bbuckingham@redhat.com)
+- View warning - address view warning on Org->Subscriptions (Object#id vs
+  Object#object_id) (bbuckingham@redhat.com)
+- View warnings - address view warnings resulting from incorrect usage of
+  form_tag (bbuckingham@redhat.com)
+- app server - changes to support /katello prefix in base path
+  (bbuckingham@redhat.com)
+- app server - removing init.d/thin (bbuckingham@redhat.com)
+- katello.spec - add thin.yml to files (bbuckingham@redhat.com)
+- katello.spec - remove thin/thin.conf (bbuckingham@redhat.com)
+- promotion.js - uncomment line accidentally committed (bbuckingham@redhat.com)
+- app server - setting relative paths on fonts/images in css & js
+  (bbuckingham@redhat.com)
+- Views - update to use image_tag helper (bbuckingham@redhat.com)
+- app server - removing script/rails ... developers will instead use
+  script/thin start (bbuckingham@redhat.com)
+- Apache - first pass update to katello.conf to add SSL
+  (bbuckingham@redhat.com)
+- thin - removing etc/thin/thin.yml (bbuckingham@redhat.com)
+- forgot to add this config file (mmccune@redhat.com)
+- adding new 'thin' startup script (mmccune@redhat.com)
+- moving thin into a katello config (mmccune@redhat.com)
+- first pass at having Katello use thin and apache together
+  (mmccune@redhat.com)
+
+* Thu Sep 08 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.78-1
+- scoped_search - bumping version to 2.3.3 (bbuckingham@redhat.com)
+- 735747 - fixing issue where creating a permission with create verb would
+  result in an error (jsherril@redhat.com)
+- Changes from using controller_name (a pre-defined rails function) to using
+  controller_display_name for use in setting model object ids in views.
+  (ehelms@redhat.com)
+- 736440 - Failures based on authorization return valid json
+  (tstrachota@redhat.com)
+- default newrelic profiling to false in dev mode (shughes@redhat.com)
+- Merge branch 'oauth_provider' (dmitri@redhat.com)
+- added support for katello api acting as a 2-legged oauth provider
+  (dmitri@redhat.com)
+
+* Thu Sep 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.77-1
+- puppet - adding initdb 'run twice' check
+- 731158: add ajax call to update sync duration
+- sync-status removing finish_time from ui
+- sync status - add sync duration calculations
+- sync status - update title per QE request
+- 731158: remove 'not synced' status and leave blank
+- 734196 - Disabled add and remove buttons in roles sliding tree after they
+  have been clicked to prevent multiple server calls.
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+- 725842 - Fix for Search: fancyqueries dropdown - alignment
+- Merge branch 'master' into roles-ui
+- Role - Disabled the resizing on the roles ui sliding tree.
+- Fix for when system has no packages - should not see list or filter.
+- Fix for systems with no packages.
+- 736148 - update code to properly cancel a sync and render it in UI
+- Role - Changes to display of full access label on organizations in roles ui
+  list when a permission granting full access is removed.
+- 731158: misc improvements to sync status page
+- 736384 - workaround for perm. denied (unit test)
+- Role - Look and feel fixes for displaying of no current permissions message.
+- 734448 - Fix for Broken 'logout' link at web page's footer o    modified:
+  src/app/views/layouts/_footer.haml
+- Package sort asc and desc via header.  Ajax refresh and indicators.
+- 736384 - workaround for perm. denied for rhsm registration
+- Roles - Adds text to empty permissions list instructing user what to do next
+  for global and organizational permissions.
+- Merge branch 'master' into roles-ui
+- 736251 - use content name for repo id when importing manifest
+- templates - it is possible to create/edit only templates in the locker -
+  added checks into template controller - spec tests fixed according to changes
+- Packages offset loading via "More..." now working with registered system.
+- 734026 - removing uneeded debug line that caused syncs to fail
+- packagegroups - refactor: move menthods to Glue::Pulp::Repo
+- Merge branch 'master' into sub
+- product - removed org name from product name
+- Api for listing package groups and categories
+- Fixing error with spinner on pane.
+- Refresh of subs page.
+- Area to re-render subs.
+- unsubscribe support for sub pools
+- Merge branch 'subway' of ssh://git.fedorahosted.org/git/katello into subway
+- Fix for avail_subs vs. consumed_subs.
+- move sys pools and avail pools to private methods, reuse
+- Adds class requirement 'filterable' on sliding lists that should be
+  filterable by search box.
+- Update to permission detail view to display verbs and tags in a cleaner way.
+- Adds step indicators on permission create.  Adds more validation handling for
+  blank name.
+- initial subscription consumption, sunny day
+- Fixes to permission add and edit flow for consistency.
+- More subscriptions work. Rounded top box with shadow and borders.  Fixed some
+  other stuff with spinner.
+- Updated subscription spinner to have useful info.
+- More work on subscriptions page.
+- Small change for wrong sub.poolId.
+- Added a spinner to subscriptions.
+- fix error on not grabbing latest subscription pools
+- Fixed views for subscriptions.
+- Merge branch 'subway' of ssh://git.fedorahosted.org/git/katello into subway
+- Fixed a non i18n string.
+- support mvc better for subscriptions availability and consumption
+- Role editing commit that adds workflow functionality.  This also provides
+  updated and edits to the create permission workflow.
+- Modifies sliding tree action bar to require an identifier for the toggled
+  item and a dictionary with the container and setup function to be called.
+  This was in order to re-use the same HTML container for two different
+  actions.
+- change date format for sub expires
+- changing to DateTime to Date for expires sub
+- Wires up edit permission button and adds summary for viewing an individual
+  permission.
+- Switches from ROLES object to KT.roles object.
+- added consumed value for pool of subs
+- Subscriptions page changes to include consumed and non-consumed.
+- Subscriptions page coming along.
+- remove debugger line
+- add expires to subscriptions
+- Subscriptions page.  Mostly mocked up (no css yet).
+- cleaning up subscriptions logic
+- add in subscription qty for systems
+- Small change to subscriptions page, uploading of assets for new subscriptions
+  page.
 * Mon Sep 05 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.76-1
 - 730358 - repo discovery now uses asynchronous tasks - the route has been
   changed to /organizations/ID/repositories/discovery/

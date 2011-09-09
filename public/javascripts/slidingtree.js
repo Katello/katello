@@ -86,7 +86,7 @@ var sliding_tree = function(tree_id, options) {
                     }
                   });
                   postrender(id);
-                  newPanel.html("<img src='/images/spinner.gif' >");
+                  newPanel.html("<img src='images/spinner.gif' >");
             }
         },
         postrender = function(id) {

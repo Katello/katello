@@ -78,7 +78,7 @@
             #{_("<< Previous")}
           .button.fr#next_button
             #{_("Next >>")}
-          .button.fr#save_permission_button
+          .button.fr#save_permission_button{'data-url' => role_create_permission_path(@role.id)}
             #{_("Done")}
 
     #roles_status

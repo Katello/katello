@@ -81,10 +81,12 @@ var notices = (function() {
             return true;
         },
         checkNotices : function() {
+            var url = $('#get_notices_url').attr('data-url');
+
             //Make sure when we load the page we get notifs
             $.ajax({
               type: 'GET',
-              url: '/notices/get_new/',
+              url: url,
               dataType: 'json',
               global: false,
               success: notices.addNotices
@@ -102,7 +104,8 @@ var notices = (function() {
             }
         },
         start: function () {
-            var pu = $.PeriodicalUpdater('/notices/get_new/', {
+            var url = $('#get_notices_url').attr('data-url');
+            var pu = $.PeriodicalUpdater(url, {
                 method: 'get',
                 type: 'json',
                 global: false,
