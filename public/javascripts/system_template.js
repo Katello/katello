@@ -36,7 +36,7 @@ KT.templates = function() {
         $("#tree_loading").css("z-index", 300);
         $.ajax({
             type: "GET",
-            url: "/system_templates/" + template_id + "/object/",
+            url: KT.common.rootURL() + "/system_templates/" + template_id + "/object/",
             cache: false,
             success: function(data) {
                 $("#tree_loading").css("z-index", -1);
@@ -417,7 +417,7 @@ KT.auto_complete_box = function(params) {
     },
     add_item_base = function(item, focus) {
         
-        add_btn.html("<img  src='/images/spinner.gif'>");
+        add_btn.html("<img  src='images/spinner.gif'>");
         input.attr("disabled", "disabled");
         input.autocomplete('disable');
         input.autocomplete('close');
@@ -517,7 +517,7 @@ KT.product_actions = (function() {
             }
             else {
                 //need to add
-                btn.html("<img  src='/images/spinner.gif'>");
+                btn.html("<img  src='images/spinner.gif'>");
                 current_input.manually_add(name, KT.product_hash[name]);
             }
         });
@@ -548,7 +548,7 @@ KT.package_actions = (function() {
     verify_add_package = function(name, cleanup_cb){
         $.ajax({
             type: "GET",
-            url: '/system_templates/auto_complete_package',
+            url: KT.common.rootURL() + '/system_templates/auto_complete_package',
             data: {name:name},
             cache: false,
             success: function(data){
@@ -566,7 +566,7 @@ KT.package_actions = (function() {
     auto_complete_call = function(req, response_cb) {
         $.ajax({
             type: "GET",
-            url: '/system_templates/auto_complete_package',
+            url: KT.common.rootURL() + '/system_templates/auto_complete_package',
             data: {name:req.term},
             cache: false,
             success: function(data){
@@ -593,7 +593,7 @@ KT.package_actions = (function() {
             }
             else {
                 //need to add
-                btn.html("<img  src='/images/spinner.gif'>");
+                btn.html("<img  src='images/spinner.gif'>");
                 current_input.manually_add(name);
             }
         });
@@ -725,10 +725,10 @@ KT.actions =  (function(){
             if ( $(this).hasClass('disabled') || !KT.options.current_template ){
                 return false;
             }
-            common.customConfirm($(this).attr('data-confirm-text'), function(){
+            KT.common.customConfirm($(this).attr('data-confirm-text'), function(){
                 $.ajax({
                     type: "DELETE",
-                    url: '/system_templates/' + options.current_template.id,
+                    url: KT.common.rootURL() + '/system_templates/' + options.current_template.id,
                     cache: false,
                     success: function(data){
                         KT.templates.remove_template(options.current_template.id)
@@ -752,7 +752,7 @@ KT.actions =  (function(){
                 $.ajax({
                     type: "PUT",
                     contentType:"application/json",
-                    url: '/system_templates/' + options.current_template.id + '/update_content/',
+                    url: KT.common.rootURL() + '/system_templates/' + options.current_template.id + '/update_content/',
                     data: JSON.stringify(data),
                     cache: false,
                     success: function(data){
@@ -778,7 +778,7 @@ KT.actions =  (function(){
 KT.editable = {
     setup_editable_name : function(id, success) {
         $('.edit_template_name').each(function() {
-            $(this).editable("/system_templates/" + id, {
+            $(this).editable(KT.common.rootURL() + "/system_templates/" + id, {
                 type        :  'text',
                 width       :  250,
                 method      :  'PUT',
@@ -798,7 +798,7 @@ KT.editable = {
     },
     setup_editable_description : function(id, success) {
         $('.edit_template_description').each(function() {
-            $(this).editable("/system_templates/" + id, {
+            $(this).editable(KT.common.rootURL() + "/system_templates/" + id, {
                 type        :  'textarea',
                 rows        :  6,
                 cols        : 30,
