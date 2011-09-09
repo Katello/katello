@@ -1094,17 +1094,18 @@ var pageActions = (function($){
                 });         
             });
             
-            panel.contract_cb = function(name){
+            KT.panel.set_contract_cb(function(name){
                 $.bbq.removeState("role_edit");
                 $('#panel').removeClass('panel-custom');
                 action_bar.reset();
-            };
+            });
                     
-            panel.switch_content_cb = function(){
+            KT.panel.set_switch_content_cb(function(){
                 $.bbq.removeState("role_edit");
                 $('#panel').removeClass('panel-custom');
                 action_bar.reset();
-            };
+                console.log('swap');
+            });
         };
     
     return {
