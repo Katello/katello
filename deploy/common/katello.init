@@ -89,7 +89,7 @@ start() {
         # delete Gemfile.lock (it will be regenerated)
         rm -f $KATELLO_DATA_DIR/Gemfile.lock
         export HOME=
-        daemon --user ${KATELLO_USER} $THIN start --user ${KATELLO_USER} --group ${KATELLO_GROUP} --config /etc/katello/thin.yml --prefix ${KATELLO_PREFIX} --rackup "${KATELLO_HOME}/config.ru" > /var/log/katello/startup.log 2>&1 &
+        daemon --user ${KATELLO_USER} $THIN start --user ${KATELLO_USER} --group ${KATELLO_GROUP} --config /etc/katello/thin.yml --rackup "${KATELLO_HOME}/config.ru" > /var/log/katello/startup.log 2>&1 &
         sleep 5s
         # </workaround>
         RETVAL=$?
