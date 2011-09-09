@@ -42,14 +42,14 @@ throw "Are you sure you cleared candlepin! unable to create first org!" if first
 #create a provider
 if Provider.count == 0
   porkchop = Provider.create!({
-      :name => 'porkchop',
+      :name => 'Custom Provider 1',
       :organization => first_org,
       :repository_url => 'http://download.fedoraproject.org/pub/fedora/linux/releases/',
       :provider_type => Provider::CUSTOM
   })
 
   Provider.create!({
-      :name => 'redhat',
+      :name => 'Red Hat',
       :organization => first_org,
       :repository_url => 'https://somehost.example.com/content/',
       :provider_type => Provider::REDHAT

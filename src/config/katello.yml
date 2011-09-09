@@ -16,7 +16,6 @@ common:
   warden: database
   use_cp: true
   use_pulp: true
-  use_ssl: true
   rest_client_timeout: 30
 
 #setup how often you want 
@@ -74,6 +73,10 @@ common:
 # Setup your foreman environment here
   foreman:
     url: https://foreman.instance.company.com:443
+
+  cloud_forms:
+    oauth_key: cloud_forms
+    oauth_secret: shhh
 
 #
 # Production environment configuration

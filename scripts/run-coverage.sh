@@ -1,5 +1,5 @@
 #!/bin/bash
-cd src
+cd src/
 sudo bundle install
 RAILS_ENV=test rake db:migrate:reset --trace 
 RAILS_ENV=test rake rcov SPEC_OPTS="-p" --trace

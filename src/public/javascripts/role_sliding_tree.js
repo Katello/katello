@@ -433,10 +433,11 @@ var roleActions = (function($){
                 description     = $('.edit_description'),    
                 after_function  = undefined,
                 nameBreadcrumb  = $('.tree_breadcrumb'),
+                options         = {},
                 opening         = options.opening,
                 
                 setup_edit = function() {
-                    var url = "/roles/" + $('#role_id').val(),
+                    var url = KT.common.rootURL() + "roles/" + $('#role_id').val(),
                         name_box = $('.edit_name_text'),
                         description = $('.edit_description'),
                         common = {
@@ -524,7 +525,7 @@ var roleActions = (function($){
                 $('#add_permission').addClass('disabled');
                 $.ajax({
                     type    : "GET",
-                    url     : '/roles/' + id + '/resource_type/verbs_and_scopes',
+                    url     : KT.common.rootURL() + 'roles/' + id + '/resource_type/verbs_and_scopes',
                     cache   : false,
                     dataType: 'json',
                     success : function(data){
@@ -566,7 +567,7 @@ var roleActions = (function($){
             if( mode === 'create' ){
 	            $.ajax({
 	               type     : "PUT",
-	               url      : "/roles/" + $('#role_id').val() + "/create_permission/",
+                   url      : $('#save_permission_button').attr('data-url'),
 	               cache    : false,
 	               data     : to_submit,
 	               dataType : 'json',
@@ -589,7 +590,7 @@ var roleActions = (function($){
             } else if( mode === 'update' ){
 	            $.ajax({
 	               type     : "POST",
-	               url      : "/roles/" + $('#role_id').val() + "/permission/" + current_crumb.split('_')[2] + "/update_permission/",
+	               url      : KT.common.rootURL() + "roles/" + $('#role_id').val() + "/permission/" + current_crumb.split('_')[2] + "/update_permission/",
 	               cache    : false,
 	               data     : to_submit,
 	               dataType : 'json',
@@ -612,12 +613,12 @@ var roleActions = (function($){
         },
         remove_permission = function(element){
             var id = element.attr('data-id');
-            
+
             element.html(i18n.removing);
             
             $.ajax({
                type     : "DELETE",
-               url      : "/roles/" + $('#role_id').val() + "/permission/" + id.split('_')[2] + "/destroy_permission/",
+               url      : KT.common.rootURL() + "roles/" + $('#role_id').val() + "/permission/" + id.split('_')[2] + "/destroy_permission/",
                cache    : false,
                dataType : 'json',
                success  : function(data){
@@ -653,7 +654,7 @@ var roleActions = (function($){
             }
             $.ajax({
                type     : "PUT",
-               url      : "/roles/" + $('#role_id').val(),
+               url      : KT.common.rootURL() + "roles/" + $('#role_id').val(),
                cache    : false,
                data     : $.param(submit_data),
                dataType : 'json',
@@ -964,7 +965,7 @@ var rolesRenderer = (function($){
             var panel = $('.panel-custom'),
                 width = panel.width();
             
-            width -= 2;
+            width -= 4;
             panel.find('.sliding_container').width(width);
             panel.find('.breadcrumb_search').width(width);
             panel.find('.slider').width(width);
@@ -1119,5 +1120,6 @@ $(document).ready(function() {
   
     pageActions.registerEvents();
     
-    $('.left').resizable('destroy');
+    $('.left').resizable('destroy');    
+    
 });

@@ -5,7 +5,7 @@
   / pretty
 
 = content_for :subcontent do
-  = form_tag provider_products_path(@provider.id), :method => "post" do |f|
+  = form_tag provider_products_path(@provider.id), :method => "post" do
     %fieldset.clearfix
       .grid_2.ra
         = label :product, :name, _("Name")

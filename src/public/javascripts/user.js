@@ -100,7 +100,7 @@ var user_page = function() {
             var password = $('#password_field').val();
             $.ajax({
                 type: "POST",
-                url: "/users/",
+                url: button.attr('data-url'),
                 data: { "user":{"username":username, "password":password}},
                 cache: false,
                 success: function(data) {

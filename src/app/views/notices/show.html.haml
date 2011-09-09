@@ -32,7 +32,7 @@
             %td #{notice.level}
             %td= "#{notice.text}".html_safe
         - else
-          %tr.details{:id => "#{notice.id}", :class => "#{notice.level}"}
+          %tr.details{:id => "#{notice.id}", :class => "#{notice.level}", 'data-url' => notices_details_path(notice.id)}
             %td #{notice.created_at}
             %td #{notice.level}
             %td.details-icon= "#{notice.text}".html_safe

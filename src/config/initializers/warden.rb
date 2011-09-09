@@ -1,4 +1,6 @@
 require 'net/ldap'
+require 'oauth'
+require 'oauth/request_proxy/rack_request'
 
 Rails.configuration.middleware.use RailsWarden::Manager do |config|
   config.failure_app = FailedAuthenticationController
@@ -15,7 +17,7 @@ Rails.configuration.middleware.use RailsWarden::Manager do |config|
   # API requests are handled in the :api scope
   config.scope_defaults(
     :api,
-    :strategies   => [:sso, :certificate, AppConfig.warden.to_sym],
+    :strategies   => [:oauth, :sso, :certificate, AppConfig.warden.to_sym],
     :store        => false,
     :action       => 'unauthenticated_api'
   )
@@ -112,6 +114,39 @@ Warden::Strategies.add(:sso) do
     user_id = request.env['HTTP_X_FORWARDED_USER'].split("@").first
     u = User.where(:username => user_id).first
     u ? success!(u) : fail!("Username is not correct - could not log in")
+  end
+end
+
+Warden::Strategies.add(:oauth) do
+  def valid?
+    true
+  end
+
+  def authenticate!
+    return fail("no 'katello-user' header") if request.env['HTTP_KATELLO_USER'].blank?
+
+    consumer_key = OAuth::RequestProxy.proxy(request).oauth_consumer_key
+    signature=OAuth::Signature.build(request) do
+      [nil, consumer(consumer_key).secret]
+    end
+
+    fail!("Invalid oauth signature") unless signature.verify
+
+    u = User.where(:username => request.env['HTTP_KATELLO_USER']).first
+    u ? success!(u) : fail!("Username is not correct - could not log in")
+  rescue OAuth::Signature::UnknownSignatureMethod => e
+    Rails.logger.error "Unknown oauth signature method"+ e.to_s
+    fail!("Unknown oauth signature method"+ e.to_s)
+  rescue Exception => e
+    Rails.logger.error "exception occured while authenticating via oauth "+ e.to_s
+    fail!("exception occured while authenticating via oauth "+ e.to_s)
+  end
+
+  def consumer(consumer_key)
+    raise "No consumer #{consumer_key}" unless AppConfigHash.has_key?(consumer_key)
+
+    config_hash = AppConfigHash[consumer_key]
+    OAuth::Consumer.new(config_hash[:oauth_key], config_hash[:oauth_secret])
   end
 end
 

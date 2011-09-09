@@ -24,10 +24,10 @@ $(document).ready(function() {
   });
 
   $('.details').bind('click', function(){
-    var notice_id = $(this).attr('id');
+    var button = $(this);
     $.ajax({
         type: "GET",
-        url: "/notices/" + notice_id + "/details",
+        url: button.attr('data-url'),
         cache: false,
         success: function(data, status, xhr) {
             $('#dialog_content').html(data).dialog('open');

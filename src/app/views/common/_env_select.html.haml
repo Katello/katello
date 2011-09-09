@@ -4,9 +4,9 @@
   #path-controller
     - if @paths.length > 1
       #path-collapsed.path_selector
-        %img{:src => "/images/icons/expander-collapsed-left.png", :alt => _("Expand")}
+        = image_tag('icons/expander-collapsed-left.png', :alt => _('Expand'))
       #path-expanded.path_selector
-        %img{:src => "/images/icons/expander-expanded.png", :alt => _("Collapse")}
+        = image_tag('icons/expander-expanded.png', :alt => _('Collapse'))
 
 
     #path-selected.path_selected

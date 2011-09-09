@@ -10,7 +10,8 @@ class apache2::config {
   # support RHEL5/RHEL6 only
   file{
     "/etc/httpd/conf/httpd.conf":
-      source  => ["puppet:///modules/apache2/etc/httpd/conf/httpd.conf.${lsbmajdistrelease}","puppet:///apache2/etc/httpd/conf/httpd.conf.6"],
+    # does not force config file for now until we sort out our vhost layout
+    #  source  => ["puppet:///modules/apache2/etc/httpd/conf/httpd.conf.${lsbmajdistrelease}","puppet:///apache2/etc/httpd/conf/httpd.conf.6"],
       mode    => 0644,
       notify  => Exec["reload-apache2"],
       require => Package["httpd"];
