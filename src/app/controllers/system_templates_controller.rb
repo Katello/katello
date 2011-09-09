@@ -154,7 +154,7 @@ class SystemTemplatesController < ApplicationController
       
       @template.destroy
       notice _("Template '#{@template.name}' was deleted.")
-      render :partial => "common/list_remove", :locals => {:id => @template.id}
+      render :partial => "common/list_remove", :locals => {:id => @template.id, :name=>"details"}
   rescue Exception => e
       errors e.to_s
       render :text=> e, :status=>:bad_request
