@@ -6,7 +6,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:	      0.1.78
+Version:	      0.1.79
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -202,6 +202,46 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Sep 09 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.79-1
+- Merge branch 'master' into thin (mmccune@redhat.com)
+- Merge branch 'master' into thin (mmccune@redhat.com)
+- moving new thin and httpd conf files to match existing config locations
+  (mmccune@redhat.com)
+- Simplify the stop command and make sure status works (mmccune@redhat.com)
+- JS - fix image paths in javascript (bbuckingham@redhat.com)
+- Promotions packages - replace hardcoded path w/ helper
+  (bbuckingham@redhat.com)
+- katello.init - update thin start so that log/pid files are owned by katello
+  (bbuckingham@redhat.com)
+- Views - updates to support /katello prefix (bbuckingham@redhat.com)
+- Views/JS - updates to support /katello prefix (bbuckingham@redhat.com)
+- Merge branch 'master' into thin (bbuckingham@redhat.com)
+- app server - update apache katello.conf to use candlepin cert
+  (bbuckingham@redhat.com)
+- View warning - address view warning on Org->Subscriptions (Object#id vs
+  Object#object_id) (bbuckingham@redhat.com)
+- View warnings - address view warnings resulting from incorrect usage of
+  form_tag (bbuckingham@redhat.com)
+- app server - changes to support /katello prefix in base path
+  (bbuckingham@redhat.com)
+- app server - removing init.d/thin (bbuckingham@redhat.com)
+- katello.spec - add thin.yml to files (bbuckingham@redhat.com)
+- katello.spec - remove thin/thin.conf (bbuckingham@redhat.com)
+- promotion.js - uncomment line accidentally committed (bbuckingham@redhat.com)
+- app server - setting relative paths on fonts/images in css & js
+  (bbuckingham@redhat.com)
+- Views - update to use image_tag helper (bbuckingham@redhat.com)
+- app server - removing script/rails ... developers will instead use
+  script/thin start (bbuckingham@redhat.com)
+- Apache - first pass update to katello.conf to add SSL
+  (bbuckingham@redhat.com)
+- thin - removing etc/thin/thin.yml (bbuckingham@redhat.com)
+- forgot to add this config file (mmccune@redhat.com)
+- adding new 'thin' startup script (mmccune@redhat.com)
+- moving thin into a katello config (mmccune@redhat.com)
+- first pass at having Katello use thin and apache together
+  (mmccune@redhat.com)
+
 * Thu Sep 08 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.78-1
 - scoped_search - bumping version to 2.3.3 (bbuckingham@redhat.com)
 - 735747 - fixing issue where creating a permission with create verb would
