@@ -54,7 +54,7 @@ var promotion_page = (function($){
                 product_remove =[],
                 products = {};
 
-            var add_emtpy_product = function(name){
+            var add_empty_product = function(name){
                 products[name] = {name:name};
                 $.each(subtypes, function(index, type){
                     products[name][type + "_" + "add"] = [];
@@ -62,13 +62,18 @@ var promotion_page = (function($){
                 });
             };
 
+            var template_add = [],
+                template_remove =[];
+
             return {
+                templates_added: template_add,
+                templates_removed: template_remove,
                 products_added: product_add,
                 products_removed: product_remove,
                 products: products,
                 size : function() {
                     var total = 0;
-                        total += product_add.length + product_remove.length;
+                        total += product_add.length + product_remove.length + template_add.length + template_remove.length;
                         $.each(products, function(key, prod) {
                             $.each(subtypes, function(index, type) {
                                 total += prod[type + "_add"].length + prod[type + "_remove"].length;
@@ -82,9 +87,13 @@ var promotion_page = (function($){
                         var prod_array = added ? product_add : product_remove;
                         prod_array.push(name);
                     }
+                    else if (type == 'template') {
+                         var template_array = added ? template_add : template_remove;
+                         template_array.push(name);
+                    }
                     else {
                         if (products[product_name] === undefined) {
-                            add_emtpy_product(product_name);
+                            add_empty_product(product_name);
                         }
                         products[product_name][type + "_" + action].push(name);
                     }
@@ -96,6 +105,9 @@ var promotion_page = (function($){
             var old_products = {}; //save products as hash so we dont have to loop to look them up
             var new_products = {};
             var all_products = {};
+            var old_templates = {}; //save products as hash so we dont have to loop to look them up
+            var new_templates= {};
+            var all_templates = {};
 
             $.each(new_changeset.getProducts(), function(index, item) {
                 new_products[item.id] = item;
@@ -107,8 +119,8 @@ var promotion_page = (function($){
             });
 
             $.each(all_products, function(id, product){
-                var old_p = old_products[id] || {};
-                var new_p = new_products[id] || {};
+                var old_p = old_products[id];
+                var new_p = new_products[id];
 
                 if (new_p && new_p.all && (!old_p || !old_p.all)) { //product added
                     myconflict.add_item('product', product.name, true);
@@ -119,8 +131,15 @@ var promotion_page = (function($){
 
                 $.each(subtypes, function(index, type) {
 
-                    var new_items = new_p[type] || [];
-                    var old_items = old_p[type] || [];
+                    var new_items = [];
+                    if(new_p) {
+                      new_items = new_p[type];
+                    }
+
+                    var old_items = [];
+                    if(old_p) {
+                      old_items = old_p[type];
+                    }
                     var all_types = new_items.concat(old_items);
 
                     $.each(all_types, function(index, item){
@@ -136,6 +155,28 @@ var promotion_page = (function($){
                     });
                 });
             });
+
+            $.each(new_changeset.getTemplates(), function(index, item) {
+                new_templates[item.id] = item;
+                all_templates[item.id] = item;
+            });
+            $.each(old_changeset.getTemplates(), function(index, item) {
+                old_templates[item.id] = item;
+                all_templates[item.id] = item;
+            });
+
+            $.each(all_templates, function(id, item){
+                var old_t = old_templates[id];
+                var new_t = new_templates[id];
+
+                if (new_t && !old_t) { //template added
+                    myconflict.add_item('template', item.name, true);
+                }
+                else if(old_t && !new_t) { // template removed
+                    myconflict.add_item('template', item.name, false);
+                }
+            });
+
             return myconflict;
 
         },
@@ -591,8 +632,6 @@ var promotion_page = (function($){
                     delete changeset_breadcrumb[key];
                }
             });
-            
-            
         };
         
     return {
@@ -684,11 +723,11 @@ var changeset_obj = function(data_struct) {
         },
         getDescription: function(){return description},
         setDescription: function(newDesc){description = newDesc;},
-        getProducts: function(){return products},
-        getTemplates: function() {return templates},
-        is_new : function() {return is_new},
+        getProducts: function(){return products;},
+        getTemplates: function() {return templates;},
+        is_new : function() {return is_new;},
         set_timestamp:function(ts) { timestamp = ts; },
-        timestamp: function(){return timestamp},
+        timestamp: function(){return timestamp;},
         productCount: function(){
             var count = 0;
             
@@ -723,14 +762,14 @@ var changeset_obj = function(data_struct) {
         },
         add_item:function (type, id, display_name, product_id, product_name) {
             if( type === 'product' ){
-                products[id] = {'name': display_name, 'id': id, 'package':[], 'errata':[], 'repo':[], 'all': true}
-            } else if (type == 'template') {
+                products[id] = {'name': display_name, 'id': id, 'package':[], 'errata':[], 'repo':[], 'all': true};
+            } else if (type === 'template') {
                 templates[id] = {'name': display_name, 'id': id};
             } else { 
                 if ( products[product_id] === undefined ) {
-                    products[product_id] = {'name': product_name, 'id': product_id, 'package':[], 'errata':[], 'repo':[]}
+                    products[product_id] = {'name': product_name, 'id': product_id, 'package':[], 'errata':[], 'repo':[]};
                 }
-                products[product_id][type].push({name:display_name, id:id})
+                products[product_id][type].push({name:display_name, id:id});
             } 
         },
         remove_item:function(type, id, product_id) {
@@ -1104,6 +1143,7 @@ var promotionsRenderer = (function(){
             $.each(conflict.products, function(key, product){
                 html += templateLibrary.conflictProduct(key, product);
             });
+            html += templateLibrary.conflictTemplates(conflict.templates_added, conflict.templates_removed);
             return html;
         };
 
@@ -1115,7 +1155,7 @@ var promotionsRenderer = (function(){
 
 var templateLibrary = (function(){
     var changesetsListItem = function(id, name){
-            var html ='<li class="slide_link">' + '<div class="link_details" id="' + id + '">'
+            var html ='<li class="slide_link">' + '<div class="link_details" id="' + id + '">';
 
             html += '<span class="sort_attr">'+ name + '</span></div></li>';
             return html;
@@ -1167,7 +1207,6 @@ var templateLibrary = (function(){
                 html += '<li><div class="no_slide"><span class="sort_attr">'  + item.name + ' ' + '</span>';
                // html += '<div class="dependency_of">' + i18n.dep_of + "&nbsp;" + item.dep_of + "</div>";
                 html += '</div></li>';
-                
 
             });
             html += '</ul>';
@@ -1189,10 +1228,9 @@ var templateLibrary = (function(){
         listItem = function(id, name, type, product_id, showButton) {
             var anchor = "";
             if ( showButton && permissions.manage_changesets){
-                anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"'
-                                + 'data-type="' + type + '" data-product_id="' + product_id +  '" data-id="' + id + '">';
+                anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"' +
+                                 'data-type="' + type + '" data-product_id="' + product_id +  '" data-id="' + id + '">';
                             anchor += i18n.remove + "</a>";
-                        
             }
             return '<li>' + anchor + '<div class="no_slide"><span class="sort_attr">'  + name + '</span></div></li>';
 
@@ -1205,9 +1243,9 @@ var templateLibrary = (function(){
                 product, provider,
                 products = changeset.getProducts(),
                 templates = changeset.getTemplates();
-            
+
             if( changeset.productCount() === 0 ){
-                html += '<h5>'+i18n.product_plural+'</h5>'
+                html += '<h5>'+i18n.product_plural+'</h5>';
                 html += '<div class="empty_list">' + i18n['no_products'] + '</div>';
                 //html += i18n['no_products'];
             } else {
@@ -1258,10 +1296,10 @@ var templateLibrary = (function(){
             return html;
         },
         conflictTemplates = function(added, removed) {
-            if (added.length == 0 && removed.length == 0) {
+            if (added.length === 0 && removed.length === 0) {
                 return "";
             }
-            var html = "<h3>"+ i18n.template +"</h3>";
+            var html = "<h3>"+ i18n.templates +"</h3>";
             html +="<div>";
             html += conflictAccordianListItem(true, added);
             html += conflictAccordianListItem(false, removed);
@@ -1288,7 +1326,7 @@ var templateLibrary = (function(){
             return html;
         },
         conflictFullProducts = function(added, removed) {
-            if (added.length == 0 && removed.length == 0) {
+            if (added.length === 0 && removed.length === 0) {
                 return "";
             }
             var html = "<h3>"+ i18n.full_product +"</h3>";
@@ -1322,7 +1360,7 @@ var templateLibrary = (function(){
             var html = '<div class="conflict_item_type"><div>' + (added ? i18n.added : i18n.removed) + '</div>';
             html += '<ul>';
             $.each(items, function(index, item) {
-                html += "<li class='conflict_item'>" + item +  "</li>"
+                html += "<li class='conflict_item'>" + item +  "</li>";
             });
             html += '</ul></div>';
             return html;
@@ -1334,6 +1372,7 @@ var templateLibrary = (function(){
         listItems : listItems,
         productDetailList: productDetailList,
         conflictFullProducts: conflictFullProducts,
+        conflictTemplates: conflictTemplates,
         conflictProduct: conflictProduct,
         dependencyItems: dependencyItems
     };
