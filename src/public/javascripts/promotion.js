@@ -207,10 +207,7 @@ var promotion_page = (function($){
 
                 current_changeset.update(data,
                     function(data) {
-                        if (changeset_queue.length !== 0 && data.changeset) {
-                            //don't update timestamp
-                        }
-                        else {
+                        if (changeset_queue.length === 0 || !data.changeset) {
                             if(data.changeset) {
                                 var old_changeset = current_changeset;
                                 current_changeset = changeset_obj(data.changeset);
@@ -219,9 +216,6 @@ var promotion_page = (function($){
                                 var diff = calculate_conflict(old_changeset, current_changeset);
                                 if (diff.size() > 0) {
                                     show_conflict(diff);
-                                }
-                                else {
-                                    //console.log("Got newer changeset, but no differences");
                                 }
                             }
                             else {
@@ -268,14 +262,14 @@ var promotion_page = (function($){
     
             var button = find_button(id, type);
             var product_name = '';
-            if (product_id != null) {
+            if (product_id !== null) {
               product_name = content_breadcrumb['details_' + product_id].name;
             }
 
             if (adding) {
                 button.html(i18n.remove).addClass("remove_" + type).removeClass('add_'+type);
                 if( type !== 'product'){
-                    if (type == "template") {
+                    if (type === "template") {
                       if (changeset.getTemplates()[id] === undefined) {
                         add_template_breadcrumbs(changeset.id, id, display);
                       }
@@ -291,7 +285,7 @@ var promotion_page = (function($){
                 button.html(i18n.add).addClass("add_" + type).removeClass('remove_' + type);
                 changeset.remove_item(type, id, product_id);
                 if( type !== 'product' ){
-                    if (type == "template") {
+                    if (type === "template") {
                       delete changeset.getTemplates()[id];
                       changeset_tree.rerender_content();
                     }
@@ -716,12 +710,12 @@ var changeset_obj = function(data_struct) {
 
     return {
         id:id,
-        getName: function(){return name},
+        getName: function(){return name;},
         setName: function(newName){
             name = newName;
             changeset_breadcrumb["changeset_" + id].name = newName;
         },
-        getDescription: function(){return description},
+        getDescription: function(){return description;},
         setDescription: function(newDesc){description = newDesc;},
         getProducts: function(){return products;},
         getTemplates: function() {return templates;},
@@ -790,7 +784,7 @@ var changeset_obj = function(data_struct) {
             var success = function() {
                 on_success();
                 dep_solve();
-            }
+            };
 
             change_state("review", success, on_error);
             changeset_breadcrumb['changeset_' + id].is_new = false;
@@ -844,7 +838,7 @@ var changeset_obj = function(data_struct) {
             error: on_error
           });
         }
-    }
+    };
 };
 
 //doc ready
@@ -1455,7 +1449,7 @@ var changesetStatusActions = (function($){
         checkProgressTask   : checkProgressTask,
         setLocked           : setLocked,
         removeLocked        : removeLocked
-    }
+    };
 })(jQuery);
 
 //doc ready
@@ -1520,7 +1514,7 @@ $(document).ready(function() {
 
     $(document).ajaxComplete(function(event, xhr, options){
         var userHeader = xhr.getResponseHeader('X-ChangesetUsers');
-        if(userHeader != null) {
+        if(userHeader !== null) {
           var userj = $.parseJSON(userHeader); 
           promotion_page.checkUsersInResponse(userj);
         }
