@@ -139,12 +139,10 @@ $.rails.allowAction = function(element) {
 
 //make jQuery Contains case insensitive
 $.expr[':'].Contains = function(a, i, m) {
-  return $(a).text().toUpperCase()
-      .indexOf(m[3].toUpperCase()) >= 0;
+  return $(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
 };
 $.expr[':'].contains = function(a, i, m) {
-  return $(a).text().toUpperCase()
-      .indexOf(m[3].toUpperCase()) >= 0;
+  return $(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
 };
 
 //requires jQuery
@@ -289,10 +287,10 @@ KT.common = (function() {
             li.prepend($('<div class="arrow_icon_menu"></div>'));
             li.hover(
                 function(){
-                    ul.fadeIn('fast')
+                    ul.fadeIn('fast');
                 },
                 function(){
-                    ul.fadeOut('fast')
+                    ul.fadeOut('fast');
             });
         }
     };
