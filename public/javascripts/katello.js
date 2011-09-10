@@ -113,7 +113,7 @@ if(!Object.keys) {
      }
      return ret;
   };
-};
+}
 
 
 //override the jQuery UJS $.rails.allowAction
