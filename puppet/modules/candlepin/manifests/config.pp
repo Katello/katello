@@ -10,13 +10,12 @@ class candlepin::config {
     require => Postgres::Createuser[$candlepin::params::db_user],
   }
 
-  common::line {
-    "katellomodule":
-      line    => "module.config.katello=org.fedoraproject.candlepin.katello.KatelloModule",
-      file    => "/etc/candlepin/candlepin.conf",
-      require => Exec["cpsetup"],
-      notify  => Service["tomcat6"];
-    "allow_cpsetup_to_execute_sudo_HACK":
+  file { "/etc/candlepin/candlepin.conf":
+    content => template("candlepin/etc/candlepin/candlepin.conf.erb"),
+    require => Exec["cpsetup"],
+    notify  => Service["tomcat6"];
+  }
+  common::line { "allow_cpsetup_to_execute_sudo_HACK":
       file => "/etc/sudoers",
       line    => "Defaults:root !requiretty",
       before => Exec["cpsetup"];
@@ -24,8 +23,11 @@ class candlepin::config {
 
   # this does not really work if you use a password
    exec {"cpsetup":
-     command => "/usr/share/candlepin/cpsetup >> /tmp/cpsetup.log 2>&1",
-     require => [Class["postgres::install"],Postgres::Createdb[$candlepin::params::db_name]],
+     command => "/usr/share/candlepin/cpsetup >> ${candlepin::params::cpsetup_log} 2>&1",
+     require => [
+       Class["candlepin::install"],Class["postgres::install"],
+       Postgres::Createdb[$candlepin::params::db_name]
+     ],
      creates => "/etc/candlepin/certs/candlepin-ca.crt", # another hack not to run it again
    }
 }

@@ -1,0 +1,15 @@
+--- 
+pid: tmp/pids/thin.pid
+address: 0.0.0.0
+wait: 30
+timeout: 30
+port: <%= scope.lookupvar("katello::params::thin_start_port") %>
+log: <%= scope.lookupvar("katello::params::thin_log") %>
+max_conns: 1024
+require: []
+
+environment: production
+max_persistent_conns: 512
+servers: <%= processorcount +1 %>
+daemonize: yes
+chdir: <%= scope.lookupvar("katello::params::katello_dir") %>

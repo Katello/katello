@@ -1,12 +1,16 @@
 class pulp::service {
   include apache2::ssl
+  include mongodb
+  include qpid
 
+  # we dont really want to run the pulp-server init.d
+  # it restarts other daemons, but we an controll them via puppet
   service {"pulp-server":
-    ensure    => running,
-    enable    => true,
-    hasstatus => true,
-    require   => Class["pulp::config"],
-    before    => Class["apache2::service"],
+    ensure    => stopped,
+    enable    => false,
+    hasstatus => false,
+    require   => [ Class["pulp::config"], Class["mongodb::service"], Class["qpid::service"], Class["apache2::config"] ],
+    before    => Class["apache2::service"]
   }
 
 }
