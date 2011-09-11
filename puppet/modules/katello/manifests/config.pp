@@ -25,24 +25,15 @@ class katello::config {
     recurse => true;
   }
 
-  # setup common oauth secret between katello,pulp and candlepin
-  # TODO, dont use this script.
-  exec {"oauth":
-    command => "/usr/share/katello/script/reset-oauth",
-    notify  => [Class["katello::service"], Class["pulp::service"], Exec["initkatello"]],
-    creates => "/var/lib/katello/initdb_done",
-    require => [Class["katello::install"], Postgres::Createdb[$katello::params::db_name]]
-  }
-
   # seed our DB across pulp/candlepin and katello
   # should only run once.
   exec {"initkatello":
-    command     => "service katello initdb",
-    path        => "/sbin",
-    creates     => "/var/lib/katello/initdb_done",
-    refreshonly => true,
-    before      => Class["katello::service"],
-    require     => Exec[oauth],
+    command => "service katello initdb",
+    path    => "/sbin",
+    creates => "/var/lib/katello/initdb_done",
+    before  => Class["katello::service"],
+    require => [ Class["katello::install"], Postgres::Createdb[$katello::params::db_name],
+                 Class["candlepin::service"], Class["pulp::service"] ],
   }
   define config_file($source = "", $template = "") {
     file {$name:
