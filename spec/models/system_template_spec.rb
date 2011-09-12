@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
+require 'helpers/repo_test_data'
 
 include OrchestrationHelper
 
@@ -238,5 +239,49 @@ describe SystemTemplate do
     end
 
   end
+
+  describe "package groups" do
+    before { Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups) }
+    let(:pg_attributes) { {:repo_id => "repo-123", :id => RepoTestData.repo_package_groups.values.first["id"]} }
+    let(:missing_pg_attributes) { {:repo_id => "repo-123", :id => "missing-id"} }
+
+    describe "#add_package_group" do
+
+      it "should make a record to the database about the assignment" do
+        @tpl1.add_package_group(pg_attributes)
+        pg = @tpl1.package_groups(true).last
+        pg.should_not be_new_record
+        pg.repo_id.should == pg_attributes[:repo_id]
+        pg.package_group_id.should == pg_attributes[:id]
+      end
+
+      it "should prevent from adding the same package group twice" do
+        @tpl1.add_package_group(pg_attributes)
+        lambda { @tpl1.add_package_group(pg_attributes) }.should raise_error(ActiveRecord::RecordInvalid)
+        @tpl1.package_groups.count.should == 1
+      end
+
+      it "should raise exception if package group is missing" do
+        lambda { @tpl1.add_package_group(missing_pg_attributes) }.should raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
+
+    describe "#remove_package_group" do
+      before do
+        @tpl1.package_groups.create!(:repo_id => pg_attributes[:repo_id], :package_group_id => pg_attributes[:id])
+      end
+
+      it "should remove a record from the database about the assignment" do
+        @tpl1.remove_package_group(pg_attributes)
+        pg = @tpl1.package_groups(true).last
+        pg.should be_nil
+      end
+
+      it "should raise exception if package group is missing" do
+        lambda { @tpl1.remove_package_group(missing_pg_attributes) }.should raise_error(Errors::TemplateContentException)
+      end
+    end
+  end
+
 
 end

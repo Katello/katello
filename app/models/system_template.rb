@@ -51,6 +51,7 @@ class SystemTemplate < ActiveRecord::Base
   has_and_belongs_to_many :products, :uniq => true
   has_many :errata,   :class_name => "SystemTemplateErratum", :inverse_of => :system_template, :dependent => :destroy
   has_many :packages, :class_name => "SystemTemplatePackage", :inverse_of => :system_template, :dependent => :destroy
+  has_many :package_groups, :class_name => "SystemTemplatePackGroup", :inverse_of => :system_template, :dependent => :destroy
 
   attr_accessor :host_group
   lazy_accessor :parameters, :initializer => lambda { init_parameters }, :unless => lambda { false }
@@ -156,6 +157,18 @@ class SystemTemplate < ActiveRecord::Base
     save!
   rescue ActiveRecord::RecordInvalid
     raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{product_name}.")
+  end
+
+  def add_package_group pg_attrs
+      self.package_groups.create!(:repo_id => pg_attrs[:repo_id], :package_group_id => pg_attrs[:id])
+  end
+
+  def remove_package_group pg_attrs
+    package_group = self.package_groups.where(:repo_id => pg_attrs[:repo_id], :package_group_id => pg_attrs[:id]).first
+    if package_group == nil
+      raise Errors::TemplateContentException.new(_("Package group '%s' not found in this template.") % pg_attrs[:repo_id])
+    end
+    package_group.delete
   end
 
 
