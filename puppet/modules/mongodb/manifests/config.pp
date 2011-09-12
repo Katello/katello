@@ -4,9 +4,10 @@ class mongodb::config {
     "/etc/mongodb.conf":
       require => Class["mongodb::install"];
     "/var/lib/mongodb":
-      ensure => directory,
-      owner => "mongodb",
-      group => "root",
+      ensure  => directory,
+      mode    => 644,
+      owner   => "mongodb",
+      group   => "root",
       require => Class["mongodb::install"];
   }
 
