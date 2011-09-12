@@ -29,5 +29,6 @@ class candlepin::config {
        Postgres::Createdb[$candlepin::params::db_name]
      ],
      creates => "/etc/candlepin/certs/candlepin-ca.crt", # another hack not to run it again
+     before  => Class["apache2::service"],               # another hack, as we reuse cp certs by default
    }
 }
