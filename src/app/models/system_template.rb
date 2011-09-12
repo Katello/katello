@@ -52,6 +52,7 @@ class SystemTemplate < ActiveRecord::Base
   has_many :errata,   :class_name => "SystemTemplateErratum", :inverse_of => :system_template, :dependent => :destroy
   has_many :packages, :class_name => "SystemTemplatePackage", :inverse_of => :system_template, :dependent => :destroy
   has_many :package_groups, :class_name => "SystemTemplatePackGroup", :inverse_of => :system_template, :dependent => :destroy
+  has_many :pg_categories, :class_name => "SystemTemplatePgCategory", :inverse_of => :system_template, :dependent => :destroy
 
   attr_accessor :host_group
   lazy_accessor :parameters, :initializer => lambda { init_parameters }, :unless => lambda { false }
@@ -171,6 +172,17 @@ class SystemTemplate < ActiveRecord::Base
     package_group.delete
   end
 
+  def add_pg_category pg_cat_attrs
+    self.pg_categories.create!(:repo_id => pg_cat_attrs[:repo_id], :pg_category_id => pg_cat_attrs[:id])
+  end
+
+  def remove_pg_category pg_cat_attrs
+    pg_category = self.pg_categories.where(:repo_id => pg_cat_attrs[:repo_id], :pg_category_id => pg_cat_attrs[:id]).first
+    if pg_category == nil
+      raise Errors::TemplateContentException.new(_("Package group category '%s' not found in this template.") % pg_cat_attrs[:id])
+    end
+    pg_category.delete
+  end
 
   def to_json(options={})
      super(options.merge({
