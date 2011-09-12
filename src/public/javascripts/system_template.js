@@ -245,7 +245,7 @@ KT.templates = function() {
         add_product: add_product,
         remove_product: remove_product,
         has_product: has_product
-    }
+    };
 
 
 }();
@@ -391,10 +391,9 @@ KT.template_renderer = function() {
         return html;
     };
 
-    
     return {
         render_hash: render_hash
-    }
+    };
 }();
 
 
@@ -441,8 +440,14 @@ KT.auto_complete_box = function(params) {
 
     },
     add_success_cleanup = function() {
+        //re-lookup all items, since a redraw may have happened
+        input = $("#" + settings.input_id);
+        form = $("#" + settings.form_id);
+        add_btn = $("#" + settings.add_btn_id);
         add_btn.removeClass('working');
-        add_btn.html(settings.add_text);
+        if (add_btn.text() === "") {
+            add_btn.html(settings.add_text);
+        }
         input.removeAttr('disabled');
         input.autocomplete('enable');
     },
@@ -479,7 +484,7 @@ KT.auto_complete_box = function(params) {
     return {
         manually_add: manually_add,
         error: error
-    }
+    };
 };
 
 
@@ -539,7 +544,7 @@ KT.product_actions = (function() {
     return {
         register_autocomplete: register_autocomplete,
         register_events: register_events
-    }
+    };
 
 })();
 
@@ -614,7 +619,7 @@ KT.package_actions = (function() {
     return {
         register_events: register_events,
         register_autocomplete: register_autocomplete
-    }
+    };
 })();
 
 
@@ -649,7 +654,7 @@ KT.actions =  (function(){
             });
             KT.editable.setup_editable_description(curr.id, function(desc){
                 KT.templates.set_current_description(desc);
-            })
+            });
         }
         else {
             text = i18n.edit_label;
@@ -684,7 +689,7 @@ KT.actions =  (function(){
     reset_buttons = function() {
         buttons.add.find(".text").text(i18n.add_label);
         buttons.edit.find(".text").text(i18n.edit_label);
-    }
+    },
     toggle_list = {
 
             'template_edit': { container 	: 'edit_template_container',
@@ -722,16 +727,16 @@ KT.actions =  (function(){
         });
 
         buttons.add.click(function(){
-            if ( $(this).hasClass('disabled') ){
-                return false;
+            if (! $(this).hasClass('disabled') ){
+                options.action_bar.toggle('template_add');
             }
-            options.action_bar.toggle('template_add');
         });
         buttons.edit.click(function(){
             if ( $(this).hasClass('disabled') || !KT.options.current_template){
                 return false;
             }
             options.action_bar.toggle('template_edit');
+            return false;
         });
         buttons.remove.click(function(){
             if ( $(this).hasClass('disabled') || !KT.options.current_template ){
@@ -743,38 +748,39 @@ KT.actions =  (function(){
                     url: KT.common.rootURL() + '/system_templates/' + options.current_template.id,
                     cache: false,
                     success: function(data){
-                        KT.templates.remove_template(options.current_template.id)
+                        KT.templates.remove_template(options.current_template.id);
                     },
                     error: KT.templates.throw_error
                 });
             });
+            return false;
         });
 
         $('#save_template').live('click', function(){
-                if ($(this).hasClass("disabled")) {
-                    return false;
-                }
-                $('#save_template').addClass("disabled");
-                $("#tree_saving").css("z-index", 300);
-                var current = KT.options.current_template;
-                var data = {
-                    packages: current.packages,
-                    products: current.products
-                };
-                $.ajax({
-                    type: "PUT",
-                    contentType:"application/json",
-                    url: KT.common.rootURL() + '/system_templates/' + options.current_template.id + '/update_content/',
-                    data: JSON.stringify(data),
-                    cache: false,
-                    success: function(data){
-                        $("#tree_saving").css("z-index", -1);
-                        KT.options.current_template = data;
-                    },
-                    error: KT.templates.throw_error
-                });
+            if ($(this).hasClass("disabled")) {
+                return false;
+            }
+            $('#save_template').addClass("disabled");
+            $("#tree_saving").css("z-index", 300);
+            var current = KT.options.current_template;
+            var data = {
+                packages: current.packages,
+                products: current.products
+            };
+            $.ajax({
+                type: "PUT",
+                contentType:"application/json",
+                url: KT.common.rootURL() + '/system_templates/' + options.current_template.id + '/update_content/',
+                data: JSON.stringify(data),
+                cache: false,
+                success: function(data){
+                    $("#tree_saving").css("z-index", -1);
+                    KT.options.current_template = data;
+                },
+                error: KT.templates.throw_error
+            });
+            return false;
         });
-
     };
     return {
         toggle_list: toggle_list,
@@ -848,7 +854,7 @@ $(document).ready(function() {
 
 
 
-    KT.options.templates = KT.template_breadcrumb["templates"].templates
+    KT.options.templates = KT.template_breadcrumb["templates"].templates;
 
     KT.options.content_tree = sliding_tree("content_tree", {
                             breadcrumb      :  KT.content_breadcrumb,
