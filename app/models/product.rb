@@ -82,7 +82,7 @@ class Product < ActiveRecord::Base
 
   def serializable_hash(options={})
     options = {} if options == nil
-    hash = super(options.merge(:except => :cp_id))
+    hash = super(options.merge(:except => [:cp_id, :id]))
     hash = hash.merge(:sync_state => self.sync_state,
                       :last_sync => self.last_sync,
                       :productContent => self.productContent,
