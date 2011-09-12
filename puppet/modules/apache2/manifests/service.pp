@@ -1,6 +1,6 @@
 class apache2::service {
   service { "httpd":
-    ensure    => running,
+    ensure    => running, enable => true, hasstatus => true, hasrestart => true,
     subscribe => Package["httpd"]
    }
 }
