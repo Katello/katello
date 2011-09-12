@@ -312,7 +312,6 @@ class ChangesetsController < ApplicationController
         case type
           when "template"
             item = SystemTemplate.find(id)
-
           when "product"
             item = Product.find(id)
 
@@ -325,7 +324,7 @@ class ChangesetsController < ApplicationController
           when "distribution"
             item = Product.find(pid)
         end
-        unless item && item.readable?
+        unless item && item.readable?(current_organization)
           return false
         end
       end
