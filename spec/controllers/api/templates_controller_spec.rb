@@ -159,6 +159,20 @@ describe Api::TemplatesController do
       end
     end
 
+    describe "package group categories assignment" do
+      let(:pg_category_attributes) { {:repo_id => "repo-123", :id => "cat-123"} }
+
+      it 'should call add_pg_category' do
+        @tpl.should_receive(:add_pg_category).once.with(pg_category_attributes.stringify_keys)
+        put 'update_content', :id => TEMPLATE_ID, :do => :add_package_group_category, :package_group_category => pg_category_attributes
+      end
+
+      it 'should call remove_pg_category' do
+        @tpl.should_receive(:remove_pg_category).once.with(pg_category_attributes.stringify_keys)
+        put 'update_content', :id => TEMPLATE_ID, :do => :remove_package_group_category, :package_group_category => pg_category_attributes
+      end
+    end
+
   end
 
 

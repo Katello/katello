@@ -105,6 +105,16 @@ class Api::TemplatesController < Api::ApiController
         @template.remove_package_group(params[:package_group])
         @template.save!
         render :text => _("Removed package group '%s'") % params[:package_group][:id]
+
+      when 'add_package_group_category'
+        @template.add_pg_category(params[:package_group_category])
+        @template.save!
+        render :text => _("Added package group category '%s'") % params[:package_group_category][:id]
+
+      when 'remove_package_group_category'
+        @template.remove_pg_category(params[:package_group_category])
+        @template.save!
+        render :text => _("Removed package group category '%s'") % params[:package_group_category][:id]
     end
 
   end
