@@ -6,7 +6,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:	      0.1.79
+Version:	      0.1.80
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -202,6 +202,21 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Sep 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.80-1
+- error text now include 'Warning' not to confuse users
+- initscript - removing temporary sleep
+- initscript - removing pid removal
+- 736716 - product api was returning 2 ids per product
+- 736438 - implement permission check for list_owners
+- 736438 - move list_owners from orgs to users controller
+- app server - updates to use thin Rack handler vs script/thin
+- script/rails - adding back in... needed to run rails console
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+- renaming the 2 providers to something more useful
+- Changeset History - Fix for new URL scheme on changeset history page.
+- Roles UI - Adds selected color border to roles slide out widget and removes
+  arrow from left list on roles page only.
+
 * Fri Sep 09 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.79-1
 - Merge branch 'master' into thin (mmccune@redhat.com)
 - Merge branch 'master' into thin (mmccune@redhat.com)

@@ -14,7 +14,7 @@ class apache2::config {
     #  source  => ["puppet:///modules/apache2/etc/httpd/conf/httpd.conf.${lsbmajdistrelease}","puppet:///apache2/etc/httpd/conf/httpd.conf.6"],
       mode    => 0644,
       notify  => Exec["reload-apache2"],
-      require => Package["httpd"];
+      require => Class["apache2::install"];
 #ensure that only managed apache file are present - commented out by default
     "/etc/httpd/conf.d":
       source  => "puppet:///modules/apache2/empty",
@@ -24,7 +24,7 @@ class apache2::config {
       # recurse => true, purge => true, force => true,
       mode    => 0644,
       notify  => Exec["reload-apache2"],
-      require => Package["httpd"]
+      require => Class["apache2::install"],
   }
 
 }

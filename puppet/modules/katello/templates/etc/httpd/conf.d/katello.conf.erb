@@ -1,0 +1,45 @@
+NameVirtualHost *:443
+<VirtualHost *:443>
+
+  ErrorLog /etc/httpd/logs/ssl_kt_error_log
+  TransferLog /etc/httpd/logs/ssl_kt_access_log
+  LogLevel debug
+
+  ProxyRequests Off
+  SSLEngine On
+  SSLCertificateFile <%= scope.lookupvar("katello::params::ssl_certificate_file") %>
+  SSLCertificateKeyFile <%= scope.lookupvar("katello::params::ssl_certificate_key_file") %>
+  ProxyPreserveHost Off
+  RequestHeader set X_FORWARDED_PROTO 'https'
+
+  Timeout 5400
+  ProxyTimeout 5400
+
+  <Proxy balancer://thinservers>
+  <%- (processorcount +1).to_i.times do |i| -%>
+    <%= "BalancerMember http://127.0.0.1:#{scope.lookupvar('katello::params::thin_start_port').to_i + i}/katello" %>
+  <%- end -%>
+  </Proxy>
+
+  Alias /katello/assets "/usr/share/katello/public/assets"
+  Alias /katello/images "/usr/share/katello/public/images"
+  Alias /katello/fonts "/usr/share/katello/public/fonts"
+
+  ProxyPass /katello/assets !
+  ProxyPass /katello/images !
+  ProxyPass /katello/fonts !
+  ProxyPass /katello balancer://thinservers/
+
+  ProxyPassReverse /katello balancer://thinservers/
+  ProxyPassReverse /katello/assets !
+  ProxyPassReverse /katello/images !
+  ProxyPassReverse /katello/fonts !
+
+</VirtualHost>
+
+NameVirtualHost *:80
+<VirtualHost *:80>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule /katello(.*)$ https://%{HTTP_HOST}%{REQUEST_URI}
+</VirtualHost>

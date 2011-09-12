@@ -1,0 +1,108 @@
+# Katello configuration
+#
+# :vim:sw=2:ts=2:et:
+
+#
+# Common configuration
+#
+# The following configuration values are the same for production, test
+# and development environments. Values can be overriden bellow.
+#
+common:
+  ldap:
+    host: <%= scope.lookupvar("katello::params::ldap_server") %>
+    base: <%= scope.lookupvar("katello::params::ldap_basedn") %>
+
+  warden: database
+  use_cp: true
+  use_pulp: true
+  rest_client_timeout: 30
+
+#setup how often you want 
+#your notifications to be checked
+#for you to receive the right notifications
+#default value = 45 seconds
+#
+  notification:
+    polling_seconds: 120
+
+# Setup your UI search configuration.
+# max_history (default=5): specifies the number of search history elements 
+#   that will be retained for users
+# max_favorites (default=5): specifies the number of search favorites that 
+#   a user may store per search box
+  search:
+    max_history: 5
+    max_favorites: 5
+
+# Setup your candlepin environment here
+# url: refers to the url of the candlepin
+#     example https://localhost:8443/candlepin
+# username: refers to admin login in candlepin
+# password: refers to the admin password in candlepin
+# oauth_key and oauth_secre :Specify your oauth key and secret
+#   used to authenticate between Katello and Candlepin
+# ca_cert_file: refers to the candlepin-ca.crt location that is needed
+#   to connect to candlepin over https.This is not necessary
+#   if the candlepin server is running on the same machine as katello
+#   but required if the server is on a different machine. 
+#   In the different machine case the katello host needs to have a 
+#   copy of /etc/candlepin/certs/candlepin-ca.crt copied from 
+#   the candlepin host and the location of the copied file needs to be
+#   specified here.. 
+  candlepin:
+    url: <%= scope.lookupvar("katello::params::candlepin_url") %>
+    oauth_key: <%= scope.lookupvar("katello::params::oauth_key") %>
+    oauth_secret: <%= scope.lookupvar("katello::params::oauth_secret") %>
+
+# Setup your pulp environment here
+# url: refers to the url of the candlepin
+#     example https://localhost/pulp/api
+# oauth_key and oauth_secre :Specify your oauth key and secret
+#   used to authenticate between Katello and Pulp
+# ca_cert_file: refers to the apache certificate 
+#   (typically /etc/pki/tls/certs/localhost.crt) location that is needed
+#   to connect to pulp over https.
+  pulp:
+    url: <%= scope.lookupvar("katello::params::pulp_url") %>
+    oauth_key: <%= scope.lookupvar("katello::params::oauth_key") %>
+    oauth_secret: <%= scope.lookupvar("katello::params::oauth_secret") %>
+    sync_threads: 15
+    sync_KBlimit: 100
+
+# Setup your foreman environment here
+  foreman:
+    url: <%= scope.lookupvar("katello::params::foreman_url") %>
+
+  cloud_forms:
+    oauth_key: <%= scope.lookupvar("katello::params::oauth_key") %>
+    oauth_secret: <%= scope.lookupvar("katello::params::oauth_secret") %>
+
+#
+# Production environment configuration
+#
+# The following configuration values override ones from the common section
+#
+  database:
+   adapter: postgresql
+   username: <%= scope.lookupvar("katello::params::db_user") %>
+   password: <%= scope.lookupvar("katello::params::db_pass") %>
+   database: <%= scope.lookupvar("katello::params::db_name") %>
+   host: localhost
+   encoding: UTF8
+
+#
+# Development environment configuration
+#
+# The following configuration values override ones from the common section
+#
+development:
+
+#
+# Test environment configuration
+#
+# The following configuration values override ones from the common section
+#
+test:
+
+# EOF

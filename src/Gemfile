@@ -1,6 +1,7 @@
 source 'http://repos.fedorapeople.org/repos/katello/gems/'
 
 gem 'rails', '3.0.5'
+gem 'thin', '>=1.2.11'
 
 gem 'json'
 gem 'rest-client', :require => 'rest_client'

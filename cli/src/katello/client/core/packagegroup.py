@@ -1,10 +1,6 @@
 import os
-import time
-import urlparse
 from gettext import gettext as _
 
-from katello.client import constants
-from katello.client.core.utils import format_date
 from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command

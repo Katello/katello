@@ -16,12 +16,8 @@
 
 import os
 from gettext import gettext as _
-import time
-import urlparse
 import datetime
-from pprint import pprint
 
-from katello.client.core.utils import format_date
 from katello.client.core import repo
 from katello.client.api.product import ProductAPI
 from katello.client.api.repo import RepoAPI

@@ -15,7 +15,6 @@
 #
 
 import os
-import time
 import urlparse
 from gettext import gettext as _
 
