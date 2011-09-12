@@ -86,7 +86,7 @@ class SystemTemplatesController < ApplicationController
 
   def edit
     render :partial => "edit", :layout => "tupane_layout",
-           :locals => {:template=>@template, :editable=> SystemTemplate.editable? }
+           :locals => {:template=>@template, :editable=> SystemTemplate.manageable?(current_organization)}
   end
 
 
