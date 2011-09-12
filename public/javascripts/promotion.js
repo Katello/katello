@@ -262,7 +262,7 @@ var promotion_page = (function($){
     
             var button = find_button(id, type);
             var product_name = '';
-            if (product_id !== null) {
+            if (product_id) {
               product_name = content_breadcrumb['details_' + product_id].name;
             }
 
@@ -592,7 +592,6 @@ var promotion_page = (function($){
             };
         },
         add_dependencies= function() {
-    
            if (current_changeset === undefined) {
                console.log("returning false");
                return false;
@@ -612,7 +611,7 @@ var promotion_page = (function($){
                 };
                }
            });
-    
+           return true; 
             //changeset_breadcrumb
         },
         remove_dependencies = function() {
@@ -626,6 +625,7 @@ var promotion_page = (function($){
                     delete changeset_breadcrumb[key];
                }
             });
+            return true;
         };
         
     return {
@@ -847,8 +847,6 @@ var registerEvents = function(){
         var button = $(this);
         if(button.hasClass("disabled")){return false;}
         button.addClass("disabled");
-
-
         $.ajax({
           type: "POST",
           url: button.attr('data-url'),
@@ -862,6 +860,7 @@ var registerEvents = function(){
           },
           error: function(){ button.removeClass("disabled");}
         });
+        return true;
     });
     
     $("#delete_changeset").click(function() {
@@ -883,6 +882,7 @@ var registerEvents = function(){
                 }
             });
         });
+        return true;
     });
 
 
@@ -916,18 +916,18 @@ var registerEvents = function(){
                 promotion_page.remove_dependencies();
             });
         }
+        return true;
     });
 
     $("#promote_changeset").live('click', function() {
         if ($(this).hasClass("disabled")) {
-            return;
+            return false;
         }
         $(this).addClass("disabled");
         var cs = promotion_page.get_changeset();
         var after = function() {$(this).removeClass("disabled");};
         cs.promote(after, after);
-
-
+        return true;
     });
 
 
@@ -947,6 +947,7 @@ var registerEvents = function(){
             return false;
         }
         changesetEdit.toggle();
+        return true;
     });
 
 
@@ -1514,7 +1515,7 @@ $(document).ready(function() {
 
     $(document).ajaxComplete(function(event, xhr, options){
         var userHeader = xhr.getResponseHeader('X-ChangesetUsers');
-        if(userHeader !== null) {
+        if(userHeader !== null && userHeader !== undefined) {
           var userj = $.parseJSON(userHeader); 
           promotion_page.checkUsersInResponse(userj);
         }

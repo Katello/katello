@@ -216,6 +216,9 @@ class SystemTemplate < ActiveRecord::Base
     User.allowed_to?([:manage_all], :system_templates, nil, org)
   end
 
+  def readable? org
+    self.class.readable?(org)
+  end
 
 
   protected
