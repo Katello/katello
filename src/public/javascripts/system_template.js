@@ -61,7 +61,7 @@ KT.templates = function() {
     remove_template = function(id) {
         delete KT.template_breadcrumb["details_" + id];
         $.each(KT.options.templates, function(index, item){
-            if (item.template_id === id) {
+            if (item && item.template_id === id) {
                 KT.options.templates.splice(index, 1);
                 return true;
             }
@@ -221,8 +221,7 @@ KT.templates = function() {
     },
     remove_product = function(name, id) {
         var products = KT.options.current_template.products;
-        var loc = in_product_array(name);
-        console.log(loc);
+        var loc = in_product_array(id);
         if (loc > -1) {
             products.splice(loc, 1);
             KT.options.current_template.modified = true;
@@ -350,7 +349,7 @@ KT.template_renderer = function() {
         html += '<div class="" id=pkg_"' + id + '">';
         html += '<span class="sort_attr">' + name + '</span>';
         if (KT.permissions.editable) {
-            html += '<a id="" class="fr st_button remove_product" data-id="' + name + '" data-name="'+ id + '">';
+            html += '<a id="" class="fr st_button remove_product" data-id="' + id + '" data-name="'+ name + '">';
             html += i18n.remove + '</a>';
         }
         html += "</div></li>";
@@ -436,7 +435,7 @@ KT.auto_complete_box = function(params) {
         settings.add_cb(item, function(){
             add_success_cleanup();
             if (focus) {
-                $("#add_package_input").focus();
+                $('#' + settings.input_id).focus();
             }
         });
 
@@ -513,6 +512,7 @@ KT.product_actions = (function() {
             var btn = $(this);
             var id = btn.attr("data-id");
             var name = btn.attr("data-name");
+
             if (name && id) {
 
                 KT.templates.remove_product(name, id);
@@ -522,6 +522,7 @@ KT.product_actions = (function() {
             var btn = $(this);
             var name = btn.attr("data-name");
             var id = btn.attr("data-id");
+
             if (KT.templates.has_product(name, id)) {
                 //need to remove
                 KT.templates.remove_product(name, id);
