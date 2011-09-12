@@ -145,6 +145,20 @@ describe Api::TemplatesController do
       put 'update_content', :id => TEMPLATE_ID, :do => :remove_erratum
     end
 
+    describe "package groups assignment" do
+      let(:package_group_attributes) { {:repo_id => "repo-123", :id => "group-123"} }
+
+      it 'should call add_package_group' do
+        @tpl.should_receive(:add_package_group).once.with(package_group_attributes.stringify_keys)
+        put 'update_content', :id => TEMPLATE_ID, :do => :add_package_group, :package_group => package_group_attributes
+      end
+
+      it 'should call remove_package_group' do
+        @tpl.should_receive(:remove_package_group).once.with(package_group_attributes.stringify_keys)
+        put 'update_content', :id => TEMPLATE_ID, :do => :remove_package_group, :package_group => package_group_attributes
+      end
+    end
+
   end
 
 

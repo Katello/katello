@@ -95,6 +95,16 @@ class Api::TemplatesController < Api::ApiController
         @template.parameters.delete(params[:parameter])
         @template.save!
         render :text => _("Removed kickstart attribute '#{params[:attribute]}'"), :status => 200 and return
+
+      when 'add_package_group'
+        @template.add_package_group(params[:package_group])
+        @template.save!
+        render :text => _("Added package group '%s'") % params[:package_group][:id]
+
+      when 'remove_package_group'
+        @template.remove_package_group(params[:package_group])
+        @template.save!
+        render :text => _("Removed package group '%s'") % params[:package_group][:id]
     end
 
   end
