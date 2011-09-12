@@ -19,6 +19,7 @@ class katello::install {
 
 	package{["katello", "katello-cli"]:
     require => [Yumrepo["fedora-katello"],Class["pulp::install"],Class["candlepin::install"]],
+    before  => [Class["candlepin::config"], Class["pulp::config"] ], #avoid some funny post rpm scripts
     ensure  => installed
   }
 }

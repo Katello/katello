@@ -9,8 +9,6 @@ class pulp::service {
     ensure    => stopped,
     enable    => false,
     hasstatus => false,
-    require   => [ Class["pulp::config"], Class["mongodb::service"], Class["qpid::service"], Class["apache2::config"] ],
-    before    => Class["apache2::service"]
+    require   => [ Class["pulp::config"], Class["mongodb::service"], Class["qpid::service"], Class["apache2::service"] ],
   }
-
 }

@@ -9,6 +9,9 @@ class katello::params {
   $group       = "katello"
   $config_dir  = "/etc/katello"
   $katello_dir = "/usr/share/katello"
+  $environment = "production"
+  $migrate_log = "${katello_dir}/log/db_migrate.log"
+  $seed_log    = "${katello_dir}/log/db_seed.log"
 
   # SSL settings
   $ssl_certificate_file     = "/etc/candlepin/certs/candlepin-ca.crt"

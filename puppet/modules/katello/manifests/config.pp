@@ -25,16 +25,29 @@ class katello::config {
     recurse => true;
   }
 
+  exec {"katello_db_migrate":
+    cwd         => $katello::params::katello_dir,
+    user        => $katello::params::user,
+    environment => "RAILS_ENV=${katello::params::environment}",
+    refreshonly => true,
+    subscribe   => Package["katello"],
+    require     => [ Config_file["${katello::params::config_dir}/katello.yml"],
+                     Postgres::Createdb[$katello::params::db_name] ],
+    command     => "/usr/bin/env rake db:migrate >> ${katello::params::migrate_log} 2>&1",
+  }
+
   # seed our DB across pulp/candlepin and katello
   # should only run once.
-  exec {"initkatello":
-    command => "service katello initdb",
-    path    => "/sbin",
+  exec {"katello_seed_db":
+    cwd         => $katello::params::katello_dir,
+    user        => $katello::params::user,
+    environment => "RAILS_ENV=${katello::params::environment}",
+    command     => "/usr/bin/env rake db:seed >> ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/initdb_done",
     creates => "/var/lib/katello/initdb_done",
     before  => Class["katello::service"],
-    require => [ Class["katello::install"], Postgres::Createdb[$katello::params::db_name],
-                 Class["candlepin::service"], Class["pulp::service"] ],
+    require => [ Exec["katello_db_migrate"], Class["candlepin::service"], Class["pulp::service"] ],
   }
+
   define config_file($source = "", $template = "") {
     file {$name:
       content => $template ? {
