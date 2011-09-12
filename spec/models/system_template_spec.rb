@@ -283,5 +283,47 @@ describe SystemTemplate do
     end
   end
 
+  describe "package group categories" do
+    before { Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories) }
+    let(:pg_cat_attributes) { {:repo_id => "repo-123", :id => RepoTestData.repo_package_group_categories.values.first["id"]} }
+    let(:missing_pg_cat_attributes) { {:repo_id => "repo-123", :id => "missing-id"} }
+
+    describe "#add_pg_category" do
+
+      it "should make a record to the database about the assignment" do
+        @tpl1.add_pg_category(pg_cat_attributes)
+        pg = @tpl1.pg_categories(true).last
+        pg.should_not be_new_record
+        pg.repo_id.should == pg_cat_attributes[:repo_id]
+        pg.pg_category_id.should == pg_cat_attributes[:id]
+      end
+
+      it "should prevent from adding the same package group twice" do
+        @tpl1.add_pg_category(pg_cat_attributes)
+        lambda { @tpl1.add_pg_category(pg_cat_attributes) }.should raise_error(ActiveRecord::RecordInvalid)
+        @tpl1.pg_categories.count.should == 1
+      end
+
+      it "should raise exception if package group is missing" do
+        lambda { @tpl1.add_pg_category(missing_pg_cat_attributes) }.should raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
+
+    describe "#remove_pg_category" do
+      before do
+        @tpl1.pg_categories.create!(:repo_id => pg_cat_attributes[:repo_id], :pg_category_id => pg_cat_attributes[:id])
+      end
+
+      it "should remove a record from the database about the assignment" do
+        @tpl1.remove_pg_category(pg_cat_attributes)
+        pg = @tpl1.pg_categories(true).last
+        pg.should be_nil
+      end
+
+      it "should raise exception if package group is missing" do
+        lambda { @tpl1.remove_pg_category(missing_pg_cat_attributes) }.should raise_error(Errors::TemplateContentException)
+      end
+    end
+  end
 
 end
