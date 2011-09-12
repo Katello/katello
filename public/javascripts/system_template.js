@@ -411,12 +411,10 @@ KT.auto_complete_box = function(params) {
     };
     $.extend( settings, params );
     
-    var input = $("#" + settings.input_id);
-    var form = $("#" + settings.form_id);
-    var add_btn = $("#" + settings.add_btn_id);
-
     var add_item_from_input = function(e) {
-        var item = input.attr("value");
+        var item = $("#" + settings.input_id).attr("value");
+        var add_btn = $("#" + settings.add_btn_id);
+        
         e.preventDefault();
         if (item.length === 0 || item === settings.default_text ||item.length === 0 ){
                 return;
@@ -425,6 +423,8 @@ KT.auto_complete_box = function(params) {
         add_item_base(item, true);
     },
     add_item_base = function(item, focus) {
+        var input = $("#" + settings.input_id);
+        var add_btn = $("#" + settings.add_btn_id);
         
         add_btn.html("<img  src='images/spinner.gif'>");
         input.attr("disabled", "disabled");
@@ -441,9 +441,8 @@ KT.auto_complete_box = function(params) {
     },
     add_success_cleanup = function() {
         //re-lookup all items, since a redraw may have happened
-        input = $("#" + settings.input_id);
-        form = $("#" + settings.form_id);
-        add_btn = $("#" + settings.add_btn_id);
+        var input = $("#" + settings.input_id);
+        var add_btn = $("#" + settings.add_btn_id);
         add_btn.removeClass('working');
         if (add_btn.text() === "") {
             add_btn.html(settings.add_text);
@@ -455,11 +454,16 @@ KT.auto_complete_box = function(params) {
         add_item_base(item, false);
     },
     error = function() {
+        var input = $("#" + settings.input_id);
         input.addClass("error");
 
     };
 
     //initialization
+
+    var input = $("#" + settings.input_id);
+    var form = $("#" + settings.form_id);
+    var add_btn = $("#" + settings.add_btn_id);
     if (settings.default_text) {
         input.val(settings.default_text);
         input.focus(function() {
