@@ -22,7 +22,6 @@ from katello.client.api.repo import RepoAPI
 from katello.client.api.provider import ProviderAPI
 from katello.client.api.template import TemplateAPI
 from katello.client.api.changeset import ChangesetAPI
-from pprint import pprint
 
 def get_organization(orgName):
     organization_api = OrganizationAPI()
