@@ -200,7 +200,7 @@ class SystemTemplate < ActiveRecord::Base
   end
 
   def self.no_tag_verbs
-    SystemTemplate.list_verbs
+    SystemTemplate.list_verbs.keys
   end
 
   def self.any_readable? org

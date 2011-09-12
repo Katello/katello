@@ -126,7 +126,7 @@ class User < ActiveRecord::Base
 
 
     verbs = verbs.collect {|verb| action_to_verb(verb, resource_type)}
-    no_tag_verbs = ResourceType::TYPES[resource_type][:model].no_tag_verbs rescue []
+    no_tag_verbs = ResourceType::TYPES[resource_type][:model].no_tag_verbs.clone rescue []
     no_tag_verbs ||= []
     no_tag_verbs.delete_if{|verb| !verbs.member? verb}
     verbs.delete_if{|verb| no_tag_verbs.member? verb}
