@@ -8,12 +8,13 @@ class pulp::config {
   }
 
   exec {"migrate_pulp_db":
-    command => "pulp-migrate && touch /var/lib/pulp/init.flag",
-    creates => "/var/lib/pulp/init.flag",
-    path    => "/bin:/usr/bin",
+    command     => "pulp-migrate && touch /var/lib/pulp/init.flag",
+    creates     => "/var/lib/pulp/init.flag",
+    path        => "/bin:/usr/bin",
     refreshonly => true,
-    before => Class["pulp::service"],
-    require => [Class["mongodb::service"],Class["pulp::install"], File["/etc/pulp/pulp.conf"]],
+    subscribe   => Class["pulp::install"],
+    before      => Class["pulp::service"],
+    require     => [Class["mongodb::service"], File["/etc/pulp/pulp.conf"]],
   }
 
   # disable SELinux
