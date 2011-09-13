@@ -93,9 +93,7 @@ class ApplicationController < ActionController::Base
         notice_dialog["notices"].push( _("#{self.class.helpers.link_to('Click here', notices_path)} for more details."))
       end
 
-      #this doesn't appear to be working?
-      #TODO:
-      flash[level] = notice_string.to_json
+      flash[level] = notice_dialog.to_json
 
       if persist
         # create & store notice... but mark as 'viewed'
