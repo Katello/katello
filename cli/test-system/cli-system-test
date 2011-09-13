@@ -64,10 +64,19 @@ for param in $*; do
     esac
 done
 
+
 if [ $TEST_ALL -eq 1 ]; then
+    #use all tests
     required_tests=$all_tests
+else
+    #check if the tests exist
+    for t in $required_tests; do
+        if [ "`echo $all_tests | grep $t`" == "" ]; then
+            printf "Requred test suite [ $t ] does not exist.\n"
+            exit
+        fi
+    done
 fi
-#echo $required_tests
 
 function get_repo_id() {
   echo `$CMD repo list --org="$TEST_ORG" -g | grep $FEWUPS_REPO | awk '{print $1}'`
