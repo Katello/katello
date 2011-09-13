@@ -119,6 +119,7 @@ describe Api::SyncController do
       @organization = Organization.create!(:name => "organization", :cp_key => "123")
 
       @syncable = mock()
+      @syncable.stub!(:id)
       @syncable.stub!(:cance_sync)
       @syncable.stub!(:organization).and_return(@organization)
 
