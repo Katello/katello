@@ -166,6 +166,7 @@ describe SystemsController do
       describe 'and requesting individual data' do
         before (:each) do
           @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
+
           Pulp::Consumer.stub!(:installed_packages).and_return([])
         end
 
@@ -176,6 +177,8 @@ describe SystemsController do
         end
 
         it "should show subscriptions" do
+          @system.stub(:facts).and_return({'cpu.cpu_socket(s)'=>"3"})
+          System.stub(:find).and_return(@system)
           get :subscriptions, :id => @system.id
           response.should be_success
           response.should render_template("subscriptions")
