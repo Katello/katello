@@ -16,3 +16,14 @@ test "template update_content remove erratum" template update_content --name="$T
 test "template update_content remove product" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_product --product="$FEWUPS_PRODUCT"
 test "template update_content add parameter" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_parameter    --parameter "attr" --value "X"
 test "template update_content remove parameter" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_parameter --parameter "attr"
+
+REPO_ID=$(get_repo_id)
+PACKAGE_GROUP_ID=test
+PACKAGE_GROUP_CATEGORY_ID=test
+create_sample_package_groups
+
+test "template update_content add package group" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_package_group    --repo="$REPO_ID" --package_group "$PACKAGE_GROUP_ID"
+test "template update_content remove package group" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --remove_package_group    --repo="$REPO_ID" --package_group "$PACKAGE_GROUP_ID"
+
+test "template update_content add package group categrory" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_package_group_category    --repo="$REPO_ID" --package_group_cateogry "$PACKAGE_GROUP_CATEGORY_ID"
+test "template update_content remove package group" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --remove_package_group    --repo="$REPO_ID" --package_group "$PACKAGE_GROUP_ID"
