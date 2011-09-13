@@ -193,7 +193,8 @@ class User < ActiveRecord::Base
   def allowed_to?(verbs, resource_type, tags = nil, org = nil, any_tags = false)
     tags = [] if tags.nil?
     tags = [tags] unless tags.is_a? Array
-
+    raise  ArgumentError, "Tags need to be integers - #{tags} are not."  if
+               tags.detect{|tag| !(Numeric === tag ||(String === tag && /^\d+$/=== tag.to_s))}
     ResourceType.check resource_type, verbs
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a? Array

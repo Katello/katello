@@ -23,15 +23,15 @@ describe Api::SyncController do
   let(:async_task_1) do
     { :id => "123",
       :state => "waiting",
-      :start_time => DateTime.new,
-      :finish_time => DateTime.new,
+      :start_time => DateTime.now,
+      :finish_time => DateTime.now,
       :progress => nil }
   end
   let(:async_task_2) do
     { :id => "456",
       :state => "waiting",
-      :start_time => DateTime.new,
-      :finish_time => DateTime.new,
+      :start_time => DateTime.now,
+      :finish_time => DateTime.now,
       :progress => nil }
   end
 

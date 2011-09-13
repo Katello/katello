@@ -177,8 +177,14 @@ class SystemsController < ApplicationController
   end  
 
   def update
-    begin 
-      @system.update_attributes(params[:system])
+    begin
+      unless @system.update_attributes(params[:system])
+        errors @system.errors
+        respond_to do |format|
+          format.html { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
+          format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
+        end
+      end
       notice _("System updated.")
       
       respond_to do |format|
