@@ -98,10 +98,10 @@ class SystemsController < ApplicationController
   def subscriptions
     consumed_pools = sys_consumed_pools
     avail_pools = sys_available_pools
-
-    render :partial=>"subscriptions", :layout => "tupane_layout", 
+    sockets = eval @system.facts['cpu.cpu_socket(s)']
+    render :partial=>"subscriptions", :layout => "tupane_layout",
                                       :locals=>{:system=>@system, :avail_subs => avail_pools,
-                                                :consumed_subs => consumed_pools, 
+                                                :consumed_subs => consumed_pools, :sockets=>sockets,
                                                 :editable=>@system.editable?}
   end
 

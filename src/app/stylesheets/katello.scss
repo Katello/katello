@@ -15,7 +15,7 @@ strong { font-weight: bold; }
 .nomargin { margin: none; }
 .placeholder { margin-bottom: 2em; }
 .disabled { opacity: 0.4; cursor: default; }
-.hidden { display: none; }
+.hidden { display: none !important; }
 .outlined { outline: 2px solid $kselected_color; }
 .alt { background-color: lighten($lightgrey_color, 35%) !important; }
 .clickable { cursor: pointer; cursor: hand; }
@@ -101,6 +101,14 @@ input[type="checkbox"],input[type="radio"] {
 /* FILE INPUT */
 input[type="file"] {
   /* FIXME */
+}
+
+input:focus {
+  outline: none;
+}
+/* custom ui spinner class for HTML5 like spinners */
+.ui-spinner {
+    width: 40px;
 }
 
 .status_exclamation_icon {
@@ -1918,14 +1926,7 @@ fieldset {
   width: 223px;
 }
 
-input:focus {
-  outline: none;
-}
-
-.ui-spinner {
-    width: 40px;
-}
-
+/* box for "errors" on the custom 500 error page */
 .error {
     @include border-radius(3px);
     background-color: $lightergrey_color;
