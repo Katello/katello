@@ -97,24 +97,24 @@ class Api::TemplatesController < Api::ApiController
         render :text => _("Removed kickstart attribute '#{params[:attribute]}'"), :status => 200 and return
 
       when 'add_package_group'
-        @template.add_package_group(params[:package_group])
+        @template.add_package_group(:id => params[:package_group], :repo_id => params[:repo])
         @template.save!
-        render :text => _("Added package group '%s'") % params[:package_group][:id]
+        render :text => _("Added package group '%s'") % params[:package_group]
 
       when 'remove_package_group'
-        @template.remove_package_group(params[:package_group])
+        @template.remove_package_group(:id => params[:package_group], :repo_id => params[:repo])
         @template.save!
-        render :text => _("Removed package group '%s'") % params[:package_group][:id]
+        render :text => _("Removed package group '%s'") % params[:package_group]
 
       when 'add_package_group_category'
-        @template.add_pg_category(params[:package_group_category])
+        @template.add_pg_category(:id => params[:package_group_category], :repo_id => params[:repo])
         @template.save!
         render :text => _("Added package group category '%s'") % params[:package_group_category][:id]
 
       when 'remove_package_group_category'
-        @template.remove_pg_category(params[:package_group_category])
+        @template.remove_pg_category(:id => params[:package_group_category], :repo_id => params[:repo])
         @template.save!
-        render :text => _("Removed package group category '%s'") % params[:package_group_category][:id]
+        render :text => _("Removed package group category '%s'") % params[:package_group_category]
     end
 
   end
