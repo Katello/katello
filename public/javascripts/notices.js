@@ -94,12 +94,13 @@ var notices = (function() {
             });
         },
         checkNoticesInResponse : function(xhr) {
+            var message, messageType;
+
             if (xhr !== undefined) {
-                var message = KT.common.decode(xhr.getResponseHeader('X-Message'));
-                if (message === "null") {message = null;}
-                var messageType = xhr.getResponseHeader('X-Message-Type');
+                message = xhr.getResponseHeader('X-Message');
                 if (message) {
-                    notices.displayNotice(messageType, message);
+                    messageType = xhr.getResponseHeader('X-Message-Type');
+                    notices.displayNotice(messageType, KT.common.decode(message));
                 }
             }
         },
