@@ -232,6 +232,8 @@ KT.roles.permissionWidget = function(){
             verbs_select.append(html);
             
             html = '';
+            flow['tags'].container.find('.info_text').remove();
+            
             if( type !== 'organizations' && current_organization !== "global" ){
                 length = tags.length;
                 tags_select.empty();
@@ -240,7 +242,6 @@ KT.roles.permissionWidget = function(){
                 }
                 tags_select.append(html);
                 tags_select.show();
-                flow['tags'].container.find('.info_text').remove();
                 all_tags_button.show();
             } else {
             	tags_select.hide();
@@ -597,6 +598,7 @@ var roleActions = (function($){
 	               success  : function(data){
 	                   roles_breadcrumb[current_crumb] = data[current_crumb];
 	                   KT.roles.tree.rerender_content();
+	                   KT.roles.tree.rerender_breadcrumb();
 	                   form[0].reset();
 	
 	                   if( data.type === "all" ){
@@ -1104,7 +1106,6 @@ var pageActions = (function($){
                 $.bbq.removeState("role_edit");
                 $('#panel').removeClass('panel-custom');
                 action_bar.reset();
-                console.log('swap');
             });
         };
     
