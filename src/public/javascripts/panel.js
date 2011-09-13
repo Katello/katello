@@ -141,9 +141,9 @@ $(document).ready(function() {
                                   });
     $('.search').fancyQueries();
 
-    if (panel.control_bbq) {
+    if (KT.panel.control_bbq) {
         //hash change for panel to trigger on refresh or back/forward or link passing
-        $(window).bind( 'hashchange', panel.hash_change);
+        $(window).bind( 'hashchange', KT.panel.hash_change);
         $(window).trigger( 'hashchange' );
     }
 
@@ -195,13 +195,14 @@ var list = (function(){
 
 KT.panel = (function($){
 	var retrievingNewContent = false,
+	    control_bbq = true,
 	
-		extended_cb         = function() {}, //callback for post extended scroll
+	extended_cb         = function() {}, //callback for post extended scroll
         expand_cb           = function() {}, //callback after a pane is loaded
         contract_cb         = function() {},
         switch_content_cb   = function() {},
 	
-		select_item = function(activeBlockId) {
+	select_item = function(activeBlockId) {
             var activeBlock = $('#' + activeBlockId),
             	ajax_url = activeBlock.attr("data-ajax_url"),
             	previousBlockId = null;
@@ -311,9 +312,9 @@ KT.panel = (function($){
                 }).removeClass('opened').addClass('closed').attr("data-id", "");
                 content.html('');
                 $.bbq.removeState("panel");
-                panel.updateResult();
-                panel.contract_cb(name);
-                panel.closeSubPanel(subpanel);
+                updateResult();
+                contract_cb(name);
+                closeSubPanel(subpanel);
             }
             return false;
         },
@@ -448,7 +449,8 @@ KT.panel = (function($){
         closeSubPanel			: closeSubPanel,
         closePanel				: closePanel,
         panelResize				: panelResize,
-        panelAjax				: panelAjax
+        panelAjax				: panelAjax,
+        control_bbq             : control_bbq
     };
 
 })(jQuery);
