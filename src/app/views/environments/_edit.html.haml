@@ -26,5 +26,5 @@
     %fieldset.clearfix
       %input{ :type => "hidden", :name => "prior_envs", :value => @env_labels_json }
       .grid_2.ra
-        %label #{_("Prior Environments")}:
-      .grid_5.la{'name' => 'kt_environment[prior]',  :class=>("editable edit_prior_envs" if editable), "data-url"=>organization_environment_path(@organization.cp_key, @environment.id),  "data-forward"=>edit_organization_path(@organization.cp_key)} #{@selected}
+        %label #{_("Prior Environment")}:
+      .grid_5.la #{@environment.prior.name}
