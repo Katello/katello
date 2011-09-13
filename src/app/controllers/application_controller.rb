@@ -288,6 +288,7 @@ class ApplicationController < ActionController::Base
     elsif notice.kind_of? RuntimeError
       items["notices"].push(notice.message)
     else
+      Rails.logger.error("Recieved unrecognized notice: " + notice.inspect)
       items["notices"].push(notice)
     end
   end
