@@ -13,7 +13,7 @@
 
 
 //must be outside of document ready
-panel.control_bbq = false;
+KT.panel.control_bbq = false;
 
 $(document).ready(function() {
 
@@ -69,11 +69,11 @@ var changeset_page = {
         if (changeset_page.current_env != env_id) {
             changeset_page.current_env = env_id;
             changeset_page.environment_select(env_id, function() {
-                panel.hash_change();
+                KT.panel.hash_change();
             })
         }
         else {
-            panel.hash_change();
+            KT.panel.hash_change();
         }
     }
 
