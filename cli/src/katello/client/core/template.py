@@ -285,8 +285,8 @@ class UpdateContent(TemplateAction):
             'remove_parameter': [{'parameter': None}],
             'add_package_group':    [{'package_group': _("Package group id")},{'repo': _("Repo id")}],
             'remove_package_group':    [{'package_group': _("Package group id")},{'repo': _("Repo id")}],
-            'add_package_group_category':    [{'package_group': _("Package group id")},{'repo': _("Repo id")}],
-            'remove_package_group_category':    [{'package_group': _("Package group id")},{'repo': _("Repo id")}],
+            'add_package_group_category':    [{'package_group_category': _("Package group category id")},{'repo': _("Repo id")}],
+            'remove_package_group_category':    [{'package_group_category': _("Package group category id")},{'repo': _("Repo id")}],
     }
 
     description = _('updates content of a template')

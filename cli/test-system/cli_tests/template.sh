@@ -25,5 +25,5 @@ create_sample_package_groups
 test "template update_content add package group" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_package_group    --repo="$REPO_ID" --package_group "$PACKAGE_GROUP_ID"
 test "template update_content remove package group" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --remove_package_group    --repo="$REPO_ID" --package_group "$PACKAGE_GROUP_ID"
 
-test "template update_content add package group categrory" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_package_group_category    --repo="$REPO_ID" --package_group_cateogry "$PACKAGE_GROUP_CATEGORY_ID"
-test "template update_content remove package group" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --remove_package_group    --repo="$REPO_ID" --package_group "$PACKAGE_GROUP_ID"
+test "template update_content add package group categrory" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_package_group_category    --repo="$REPO_ID" --package_group_category "$PACKAGE_GROUP_CATEGORY_ID"
+test "template update_content remove package group" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --remove_package_group_category    --repo="$REPO_ID" --package_group_category "$PACKAGE_GROUP_CATEGORY_ID"
