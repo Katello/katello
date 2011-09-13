@@ -25,9 +25,9 @@ class Api::SystemsController < Api::ApiController
   def rules
     index_systems = lambda { System.any_readable?(@organization) }
     register_system = lambda { System.registrable?(@environment, @organization) }
-    edit_system = lambda { @system.editable? }
-    read_system = lambda { @system.readable? }
-    delete_system = lambda { @system.deletable? }
+    edit_system = lambda { @system.editable? or User.consumer? }
+    read_system = lambda { @system.readable? or User.consumer? }
+    delete_system = lambda { @system.deletable? or User.consumer? }
 
     {
       :create => register_system,

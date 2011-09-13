@@ -303,6 +303,10 @@ class User < ActiveRecord::Base
     { 'pulp-user' => self.username }
   end
 
+  # is the current user consumer? (rhsm)
+  def self.consumer?
+    User.current.is_a? CpConsumerUser
+  end
 
   def self.list_verbs global = false
     {
