@@ -146,30 +146,32 @@ describe Api::TemplatesController do
     end
 
     describe "package groups assignment" do
-      let(:package_group_attributes) { {:repo_id => "repo-123", :id => "group-123"} }
+      let(:package_group) { {:repo_id => "repo-123", :id => "group-123"} }
+      let(:package_group_params) { {:repo => package_group[:repo_id], :package_group => package_group[:id]} }
 
       it 'should call add_package_group' do
-        @tpl.should_receive(:add_package_group).once.with(package_group_attributes.stringify_keys)
-        put 'update_content', :id => TEMPLATE_ID, :do => :add_package_group, :package_group => package_group_attributes
+        @tpl.should_receive(:add_package_group).once.with(package_group)
+        put 'update_content', { :id => TEMPLATE_ID, :do => :add_package_group }.merge(package_group_params)
       end
 
       it 'should call remove_package_group' do
-        @tpl.should_receive(:remove_package_group).once.with(package_group_attributes.stringify_keys)
-        put 'update_content', :id => TEMPLATE_ID, :do => :remove_package_group, :package_group => package_group_attributes
+        @tpl.should_receive(:remove_package_group).once.with(package_group)
+        put 'update_content', { :id => TEMPLATE_ID, :do => :remove_package_group }.merge(package_group_params)
       end
     end
 
     describe "package group categories assignment" do
-      let(:pg_category_attributes) { {:repo_id => "repo-123", :id => "cat-123"} }
+      let(:pg_category) { {:repo_id => "repo-123", :id => "cat-123"} }
+      let(:pg_category_params) { {:repo => pg_category[:repo_id], :package_group_category => pg_category[:id]} }
 
       it 'should call add_pg_category' do
-        @tpl.should_receive(:add_pg_category).once.with(pg_category_attributes.stringify_keys)
-        put 'update_content', :id => TEMPLATE_ID, :do => :add_package_group_category, :package_group_category => pg_category_attributes
+        @tpl.should_receive(:add_pg_category).once.with(pg_category)
+        put 'update_content', { :id => TEMPLATE_ID, :do => :add_package_group_category }.merge(pg_category_params)
       end
 
       it 'should call remove_pg_category' do
-        @tpl.should_receive(:remove_pg_category).once.with(pg_category_attributes.stringify_keys)
-        put 'update_content', :id => TEMPLATE_ID, :do => :remove_package_group_category, :package_group_category => pg_category_attributes
+        @tpl.should_receive(:remove_pg_category).once.with(pg_category)
+        put 'update_content', { :id => TEMPLATE_ID, :do => :remove_package_group_category }.merge(pg_category_params)
       end
     end
 
