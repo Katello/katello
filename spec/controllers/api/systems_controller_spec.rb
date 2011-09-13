@@ -34,7 +34,7 @@ describe Api::SystemsController do
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) } }
   let(:user_without_read_permissions) { user_without_permissions }
-  let(:user_with_create_permissions) { user_with_permissions { |u| u.can([:create_systems], :environments, @environment_1.id, @organization) } }
+  let(:user_with_create_permissions) { user_with_permissions { |u| u.can([:register_systems], :environments, @environment_1.id, @organization) } }
   let(:user_without_create_permissions) { user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) } }
   let(:user_with_update_permissions) { user_with_permissions { |u| u.can([:read_systems, :update_systems], :organizations, nil, @organization) } }
   let(:user_without_update_permissions) { user_without_permissions }

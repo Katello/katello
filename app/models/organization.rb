@@ -79,7 +79,7 @@ class Organization < ActiveRecord::Base
     User.allowed_to?([:update, :create], :organizations, nil, self)
   end
 
-  SYSTEMS_READABLE = [:read_systems, :create_systems, :update_systems, :delete_systems]
+  SYSTEMS_READABLE = [:read_systems, :register_systems, :update_systems, :delete_systems]
 
   def systems_readable?
     User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
@@ -90,7 +90,7 @@ class Organization < ActiveRecord::Base
       :update => N_("Manage Organization and Environments"),
       :read => N_("Access Organization"),
       :read_systems => N_("Access Systems"),
-      :create_systems =>N_("Register Systems"),
+      :register_systems =>N_("Register Systems"),
       :update_systems => N_("Manage Systems"),
       :delete_systems => N_("Delete Systems"),
       :sync => N_("Sync Products")

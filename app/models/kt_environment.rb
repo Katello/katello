@@ -200,20 +200,20 @@ class KTEnvironment < ActiveRecord::Base
   end
 
 
-  SYSTEMS_READABLE = [:read_systems, :create_systems, :update_systems, :delete_systems]
+  SYSTEMS_READABLE = [:read_systems, :register_systems, :update_systems, :delete_systems]
   def systems_readable?
     self.organization.systems_readable? ||
         User.allowed_to?(SYSTEMS_READABLE, :environments, self.id, self.organization)
   end
 
   def systems_editable?
-    User.allowed_to?([:create_systems, :update_systems], :organizations, nil, self.organization) ||
-        User.allowed_to?([:create_systems, :update_systems], :environments, self.id, self.organization)
+    User.allowed_to?([:update_systems], :organizations, nil, self.organization) ||
+        User.allowed_to?([:update_systems], :environments, self.id, self.organization)
   end
 
   def systems_deletable?
-    User.allowed_to?([:create_systems, :delete_systems], :organizations, nil, self.organization) ||
-        User.allowed_to?([:create_systems, :delete_systems], :environments, self.id, self.organization)
+    User.allowed_to?([:delete_systems], :organizations, nil, self.organization) ||
+        User.allowed_to?([:delete_systems], :environments, self.id, self.organization)
   end
 
 
@@ -230,7 +230,7 @@ class KTEnvironment < ActiveRecord::Base
     {
       :read_contents => N_("Access Environment Contents"),
       :read_systems => N_("Access Systems in Environment"),
-      :create_systems =>N_("Register Systems in Environment"),
+      :register_systems =>N_("Register Systems in Environment"),
       :update_systems => N_("Manage Systems in Environment"),
       :delete_systems => N_("Remove Systems in Environment"),
       :read_changesets => N_("Access Changesets in Environment"),
