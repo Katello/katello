@@ -80,7 +80,12 @@ describe SystemTemplate do
 
     it "should fail with invalid content" do
       @pack1 = SystemTemplatePackage.new(:package_name => "pack1")
+      @pack1.stub(:to_package).and_return {}
+      @pack1.stub(:valid?).and_return false
+
       @err1  = SystemTemplateErratum.new(:erratum_id => "err1")
+      @err1.stub(:to_erratum).and_return {}
+      @err1.stub(:valid?).and_return false
 
       @tpl1.packages << @pack1
       @tpl1.errata   << @err1
