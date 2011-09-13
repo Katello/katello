@@ -148,7 +148,7 @@ class Printer:
             value = item[col['attr_name']]
             if not col['multiline']:
                 output = format_date(value) if col['time_format'] else value
-                print ("{:<" + str(colWidth + 1) + "} {}").format(col['name'] + ":", output)
+                print ("{0:<" + str(colWidth + 1) + "} {1}").format(col['name'] + ":", output)
                 # +1 to account for the : after the column name
             else:
                 print indent+col['name']+":"
