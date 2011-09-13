@@ -6,7 +6,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:	      0.1.80
+Version:	      0.1.81
 Release:	      1%{?dist}
 Summary:	      A package for managing application life-cycle for Linux systems
 	
@@ -202,6 +202,153 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Sep 13 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.81-1
+- notices - fix change to app controller that accidentally affected notices
+  (bbuckingham@redhat.com)
+- systems - spec test fix (jsherril@redhat.com)
+- panel - fixing issue where panel closing would not close the subpanel
+  (jsherril@redhat.com)
+- 733157 - removing ability to change prior environment, and showing correct
+  prior on details/edit page (jsherril@redhat.com)
+- notices - fixing javascript error that happens when uploading a manifest via
+  the UI (jsherril@redhat.com)
+- 734894 - promotions - fixing issue where hover text on promoting changeset
+  would still say it is being promoted even after it has been promoted
+  (jsherril@redhat.com)
+- Subscriptions udpates, packages fix, ui spinner fix, universal KT object for
+  applying subs. (jrist@redhat.com)
+- Subscription quantity inside spinner now. (jrist@redhat.com)
+- 403 code, 500 code, and some changes to the 500 render. (jrist@redhat.com)
+- Fix for the look of the error. (jrist@redhat.com)
+- 404 and 500 error pages. (jrist@redhat.com)
+- Fixed a unit test (paji@redhat.com)
+- adding logging catch for notices that are objects we dont expect
+  (jsherril@redhat.com)
+- 737563 - Subscription Manager fails permissions on accessing subscriptions
+  (lzap+git@redhat.com)
+- 736141 - Systems Registration perms need to be reworked (lzap+git@redhat.com)
+- Revert "736384 - workaround for perm. denied (unit test)"
+  (lzap+git@redhat.com)
+- Revert "736384 - workaround for perm. denied for rhsm registration"
+  (lzap+git@redhat.com)
+- remove-depretactions - use let variables insted of constants in rspec
+  (inecas@redhat.com)
+- remove-deprecations - already defined constant in katello_url_helper
+  (inecas@redhat.com)
+- remove-deprecations - Object#id deprecated (inecas@redhat.com)
+- remove-deprecations - use errors.add :base instead of add_to_base
+  (inecas@redhat.com)
+- remove-deprecations - should_not be_redirect insted of redirect_to()
+  (inecas@redhat.com)
+- remove-deprecations - validate overriding (inecas@redhat.com)
+- Fixed the tags_for to return an empty array instead of nil and also removed
+  the list tags in org since we are not doling out org perms on a per org basis
+  (paji@redhat.com)
+- system templates - adding more rules spec tests (jsherril@redhat.com)
+- Fix typo in template error messages (inecas@redhat.com)
+- packagegroups-templates - CLI for package groups in templates
+  (inecas@redhat.com)
+- packagegroups-templates - assigning packege group categories to template
+  (inecas@redhat.com)
+- packagegroups-templates - assigning package groups to system templates
+  (inecas@redhat.com)
+- templates - unittest fix (tstrachota@redhat.com)
+- unit test fixes (jsherril@redhat.com)
+- Fixes to get  the promotion pages working (paji@redhat.com)
+- Fix on system template model - no_tag was returning map instead of array
+  (paji@redhat.com)
+- Merge branch 'master' into template-ui (jsherril@redhat.com)
+- system templates - making sure that all ui elements are looked up again in
+  each function in case they are redrawn (jsherril@redhat.com)
+- system templates - making jslint happy, and looking up elements that may have
+  been redrawn (jsherril@redhat.com)
+- system templates - a few javascript fixes for product removal
+  (jsherril@redhat.com)
+- Updated katello.js to keep jslint happy (paji@redhat.com)
+- Updated katello.js to keep jslint happy (paji@redhat.com)
+- Updated katello.js to keep jslint happy (paji@redhat.com)
+- Code changes to make jslint happy (paji@redhat.com)
+- Fixed some system template conflict handling issues (paji@redhat.com)
+- system templates - adding permission for system templates
+  (jsherril@redhat.com)
+- system templates - fixing things that broke due to master merge
+  (jsherril@redhat.com)
+- merge fix (jsherril@redhat.com)
+- system templates - fixing issue with firefox showing a longer form than
+  chrome causing the add button to go to another line (jsherril@redhat.com)
+- Added a 'details' page for system templates promotion (paji@redhat.com)
+- changeset history - adding bbq support for cs history, and making bbq work
+  properly on this page for panel (jsherril@redhat.com)
+- Added a system templates details page needed for promotion (paji@redhat.com)
+- Quick fix on promotions javascript to get the add/remove properly showing up
+  (paji@redhat.com)
+- 734899 - fixing issue where changeset history would default to locker
+  (jsherril@redhat.com)
+- changeset history - adding indentation to content items (jsherril@redhat.com)
+- Added some auth rules for changeset updating (paji@redhat.com)
+- adding system templates to changeset history and fixing spacing issues with
+  accordion (jsherril@redhat.com)
+- Got the add remove working on system templates (paji@redhat.com)
+- system templates - fixing action bar buttons from not changing name properly
+  (jsherril@redhat.com)
+- Added code to show 'empty' templates (paji@redhat.com)
+-  fixing merge conflict (jsherril@redhat.com)
+- system templates - adapting the system templates tow ork with the new action
+  bar api (jsherril@redhat.com)
+- Fixed errors that crept up in a previous commit (paji@redhat.com)
+- Fixed the simplyfy_changeset to have an init :system_templates
+  (paji@redhat.com)
+- Made got the add/remove system templates functionality somewhat working
+  (paji@redhat.com)
+- fixing merge conflicts (jsherril@redhat.com)
+- system templates - adding additional tests (jsherril@redhat.com)
+- system templates - adding help tip (jsherril@redhat.com)
+- system templates - adding & removing from content pane now works as well as
+  saving product changes within the template (jsherril@redhat.com)
+- system templates - adding working auto complete box for products
+  (jsherril@redhat.com)
+- system-templates - making the auto complete box more abstract so products can
+  still use it, as well as adding product rendering (jsherril@redhat.com)
+- system templates - adding missing view (jsherril@redhat.com)
+- breaking out packge actions to their own js object (jsherril@redhat.com)
+- Initial cut of the system templates promotion page - Add/remove changeset
+  functionality TBD (paji@redhat.com)
+- system template - add warning when browsing away from an unsaved changeset
+  (jsherril@redhat.com)
+- system template - fixing issue where clicking add when default search text
+  was there would attempt to add a package (jsherril@redhat.com)
+- system templates - added save dialog for moving away from a template when it
+  was modified (jsherril@redhat.com)
+- sliding tree - making it so that links to invalid breadcrumb entries redirect
+  to teh default tab (jsherril@redhat.com)
+- system templates - got floating box to work with scrolling properly and list
+  to have internal scrolling instead of making the box bigger
+  (jsherril@redhat.com)
+- system templates - adding package add/remove on left hand content panel, and
+  only showing package names (jsherril@redhat.com)
+- system template - only show 20 packages in auto complete drop down
+  (jsherril@redhat.com)
+- Adding changeset to system templates connection (paji@redhat.com)
+- adding saving indicator and moving tree_loading css to be a class instead of
+  an id (jsherril@redhat.com)
+- adding package validation before adding (jsherril@redhat.com)
+- adding autocomplete for packages on system template page
+  (jsherril@redhat.com)
+- making save functionality work to actually save template packages
+  (jsherril@redhat.com)
+- added client side adding of packages to system templates
+  (jsherril@redhat.com)
+- adding search and sorting to templates page (jsherril@redhat.com)
+- moving system templates to a sliding tree and to the content section
+  (jsherril@redhat.com)
+- making sure sliding tree does not double render on page load
+  (jsherril@redhat.com)
+- only allowing modification of a system template in locker within system
+  templates controller (jsherril@redhat.com)
+- adding spec tests for system_templates controller (jsherril@redhat.com)
+- fixing row height on system templates (jsherril@redhat.com)
+- adding initial system template CRUD (jsherril@redhat.com)
+
 * Mon Sep 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.80-1
 - error text now include 'Warning' not to confuse users
 - initscript - removing temporary sleep
