@@ -247,10 +247,76 @@ describe SystemTemplatesController do
     before (:each) do
       @organization = new_test_org
       @testuser = User.create!(:username=>"TestUser", :password=>"foobar")
+      @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @organization.locker)
+
     end
     describe "GET index" do
       let(:action) {:index}
       let(:req) {get 'index' }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read_all, :system_templates, nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+
+      it_should_behave_like "protected action"
+    end
+
+    describe "PUT update" do
+      let(:action) {:update}
+      let(:req) {put 'update', {:id=> @system_template_1.id}}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:manage_all, :system_templates, nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_with_permissions { |u| u.can(:read_all, :system_templates, nil, @organization) }
+      end
+
+      it_should_behave_like "protected action"
+    end
+
+    describe "PUT update_content" do
+      let(:action) {:update_content}
+      let(:req) {put 'update_content', {:id=> @system_template_1.id, :products=>{}, :packages=>{}}}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:manage_all, :system_templates, nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_with_permissions { |u| u.can(:read_all, :system_templates, nil, @organization) }
+      end
+
+      it_should_behave_like "protected action"
+    end
+
+    describe "PUT create" do
+      let(:action) {:create}
+      let(:req) {post 'create', {:name=>"FOOBAR"}}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:manage_all, :system_templates, nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_with_permissions { |u| u.can(:read_all, :system_templates, nil, @organization) }
+      end
+
+      it_should_behave_like "protected action"
+    end
+
+    describe "DELETE delete" do
+      let(:action) {:destroy}
+      let(:req) {delete 'destroy', {:id=> @system_template_1.id}}
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:manage_all, :system_templates, nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_with_permissions { |u| u.can(:read_all, :system_templates, nil, @organization) }
+      end
+      it_should_behave_like "protected action"
+    end
+
+    describe "GET object" do
+      let(:action) {:object}
+      let(:req) {put 'object', {:id=> @system_template_1.id}}
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:read_all, :system_templates, nil, @organization) }
       end
