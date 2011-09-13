@@ -40,7 +40,7 @@ describe ChangesetsController do
     @env = KTEnvironment.create!(CSControllerTest::ENVIRONMENT)
     CSControllerTest::NEXT_ENVIRONMENT["organization"] = @org
     @next_env = KTEnvironment.new(CSControllerTest::NEXT_ENVIRONMENT)
-    @next_env.prior = @env;
+    @next_env.prior = @env
     @next_env.save!
 
     CSControllerTest::CHANGESET["environment_id"] = @env.id
@@ -107,7 +107,7 @@ describe ChangesetsController do
     describe 'with a next environment id' do
       it 'should create a changeset correctly and send a notification' do
         controller.should_receive(:notice)
-        post 'create', {:name => "Changeset 7055", :env_id=>1, :next_env_id=>@next_env.id}
+        post 'create', {:name => "Changeset 7055", :env_id=>@env.id, :next_env_id=>@next_env.id}
         response.should be_success
         Changeset.exists?(:name=>'Changeset 7055').should be_true
       end

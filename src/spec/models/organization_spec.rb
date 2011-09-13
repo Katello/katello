@@ -70,7 +70,7 @@ describe Organization do
       org_id = @organization.id
       
       env_name = "prod"      
-      @env = KTEnvironment.new(:name => env_name, :locker => false, :prior => 1)
+      @env = KTEnvironment.new(:name => env_name, :locker => false, :prior => @organization.locker)
       @organization.environments << @env
       @env.save!
       
@@ -87,11 +87,11 @@ describe Organization do
       
       @org2 = Organization.create!(:name => "foobar", :cp_key => 'foobar')
 
-      @env1 = KTEnvironment.new(:name => env_name, :organization => @organization, :prior => 1)
+      @env1 = KTEnvironment.new(:name => env_name, :organization => @organization, :prior => @organization.locker)
       @organization.environments << @env1
       @env1.save!    
       
-      @env2 = KTEnvironment.new(:name => env_name, :organization => @org2, :prior => 1)
+      @env2 = KTEnvironment.new(:name => env_name, :organization => @org2, :prior => @organization.locker)
       @org2.environments << @env2
       @env2.save!
       
