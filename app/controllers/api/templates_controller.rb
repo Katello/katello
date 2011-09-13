@@ -15,14 +15,19 @@ require 'rest_client'
 class Api::TemplatesController < Api::ApiController
 
   before_filter :find_environment, :only => [:create, :import]
+  before_filter :try_find_environment, :only => [:index]
   before_filter :find_template, :only => [:show, :update, :update_content, :destroy, :promote, :export]
 
   # TODO: define authorization rules
   skip_before_filter :authorize
 
   def index
-    templates = SystemTemplate.where(query_params)
-    render :json => templates.to_json
+    if @environment.nil?
+      tpls = SystemTemplate.all
+    else
+      tpls = @environment.system_templates
+    end
+    render :json => tpls.to_json
   end
 
   def show
@@ -156,6 +161,10 @@ class Api::TemplatesController < Api::ApiController
     @environment = KTEnvironment.find(params[:environment_id])
     raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
     @environment
+  end
+
+  def try_find_environment
+    find_environment if not params[:environment_id].nil?
   end
 
   def find_template
