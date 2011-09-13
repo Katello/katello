@@ -95,11 +95,11 @@ class System < ActiveRecord::Base
     environment.systems_deletable?
   end
 
-  def self.creatable? env, org
+  def self.registrable? env, org
     org ||= env.organization if env
     ret = false
-    ret ||= User.allowed_to?([:create_systems], :organizations, nil, org) if org
-    ret ||= User.allowed_to?([:create_systems], :environments, env.id, org) if env
+    ret ||= User.allowed_to?([:register_systems], :organizations, nil, org) if org
+    ret ||= User.allowed_to?([:register_systems], :environments, env.id, org) if env
     ret
   end
 
