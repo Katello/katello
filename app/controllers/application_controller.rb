@@ -46,11 +46,11 @@ class ApplicationController < ActionController::Base
   # options:             Optional hash containing various optional parameters.  This includes:
   #   level:               The type of notice to be generated.  Supported values include:
   #                        :message, :success (Default), :warning, :error
-  #   synchronous_request: true. if this notice is associated with an event where 
-  #                        the user would expect to receive a response immediately 
-  #                        as part of a response. This typically applies for events 
+  #   synchronous_request: true. if this notice is associated with an event where
+  #                        the user would expect to receive a response immediately
+  #                        as part of a response. This typically applies for events
   #                        involving things such as create, update and delete.
-  #   persist:             true, if this notice should be stored via ActiveRecord.  
+  #   persist:             true, if this notice should be stored via ActiveRecord.
   #                        Note: this option only applies when synchronous_request is true.
   #   list_items:          Array of items to include with the generated notice (text).  If included,
   #                        the array will be converted to a string (separated by newlines) and
@@ -59,8 +59,9 @@ class ApplicationController < ActionController::Base
   #   details:             String containing additional details.  This would typically be to store
   #                        information such as a stack trace that is in addition to the notice text.
   def notice notice, options = {}
+
     notice = "" if notice.nil?
-    
+
     # set the defaults
     level = :success
     synchronous_request = true
@@ -70,13 +71,13 @@ class ApplicationController < ActionController::Base
     details = nil
 
     unless options.nil?
-      level = options[:level] unless options[:level].nil? 
+      level = options[:level] unless options[:level].nil?
       synchronous_request = options[:synchronous_request] unless options[:synchronous_request].nil?
       persist = options[:persist] unless options[:persist].nil?
       global = options[:global] unless options[:global].nil?
       details = options[:details] unless options[:details].nil?
     end
-     
+
     notice_dialog = build_notice notice, options[:list_items]
 
     notice_string = notice_dialog["notices"].join("<br />")
@@ -85,14 +86,16 @@ class ApplicationController < ActionController::Base
     end
 
     if synchronous_request
-      # On a sync request, the client should expect to receive a notification 
+      # On a sync request, the client should expect to receive a notification
       # immediately without polling.  In order to support this, we will send a flash
       # notice.
-      if !details.nil? 
+      if !details.nil?
         notice_dialog["notices"].push( _("#{self.class.helpers.link_to('Click here', notices_path)} for more details."))
       end
 
-      flash[level] = notice_dialog.to_json
+      #this doesn't appear to be working?
+      #TODO:
+      flash[level] = notice_string.to_json
 
       if persist
         # create & store notice... but mark as 'viewed'
@@ -107,13 +110,13 @@ class ApplicationController < ActionController::Base
         end
       end
     else
-      # On an async request, the client shouldn't expect to receive a notification 
-      # immediately. As a result, we'll store the notification and it will be 
+      # On an async request, the client shouldn't expect to receive a notification
+      # immediately. As a result, we'll store the notification and it will be
       # retrieved by the client on it's next polling interval.
       #
       # create & store notice... and mark as 'not viewed'
       Notice.create!(:text => notice_string, :details => details, :level => level, :global => global, :user_notices => [UserNotice.new(:user => current_user, :viewed=>false)])
-      
+
     end
   end
 
@@ -123,11 +126,11 @@ class ApplicationController < ActionController::Base
   # options:             Hash containing various optional parameters.  This includes:
   #   level:               The type of notice to be generated.  Supported values include:
   #                        :message, :success (Default), :warning, :error
-  #   synchronous_request: true. if this notice is associated with an event where 
-  #                        the user would expect to receive a response immediately 
-  #                        as part of a response. This typically applies for events 
+  #   synchronous_request: true. if this notice is associated with an event where
+  #                        the user would expect to receive a response immediately
+  #                        as part of a response. This typically applies for events
   #                        involving things such as create, update and delete.
-  #   persist:             true, if this notice should be stored via ActiveRecord.  
+  #   persist:             true, if this notice should be stored via ActiveRecord.
   #                        Note: this option only applies when synchronous_request is true.
   #   list_items:          Array of items to include with the generated notice.  If included,
   #                        the array will be converted to a string (separated by newlines) and
@@ -306,7 +309,7 @@ class ApplicationController < ActionController::Base
       end
     elsif notice.kind_of? String
       unless list_items.nil? or list_items.length == 0
-        notice = notice + list_items.join("<br />")  
+        notice = notice + list_items.join("<br />")
       end
       items["notices"].push(notice)
     else
@@ -340,7 +343,6 @@ class ApplicationController < ActionController::Base
     @paths.reject!{|path|  (path & accessible).empty?}
 
     @paths = [[org.locker]] if @paths.empty?
-
 
     if @environment and !@environment.locker?
       @paths.each{|path|
