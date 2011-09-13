@@ -18,6 +18,7 @@
  */
 
 $(document).ready(function() {
-  //$('.ui-spinner').spinner();
+    KT.subs.unsubSetup();
+    KT.subs.subSetup();
+    KT.subs.spinnerSetup();
 });
-

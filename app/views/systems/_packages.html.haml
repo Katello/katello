@@ -23,7 +23,7 @@
               #{p.nvrea}
             %td{:class=>"arch"}
               #{p.arch}
-      %a#more{"data-scroll_url"=>url_for(more_packages_system_path()), "data-page_size"=>current_user.page_size, "data-offset"=>offset} #{_("More...")}
+    %a#more{"data-scroll_url"=>url_for(more_packages_system_path()), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("More...")}
     #list-spinner
       = image_tag("spinner.gif", :class=>"ajax_scroll")
   - else

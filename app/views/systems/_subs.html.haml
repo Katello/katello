@@ -21,14 +21,15 @@
               %td #{"--"}
               %td #{"--"}
               %td
-                = number_field_tag "spinner[#{sub.poolId}]", nil, :in => 1...sub.quantity, :step=>1, :value=>sub.consumed, :class=>"ui-spinner"
+                = number_field_tag "spinner[#{sub.poolId}]", nil, :in => 1...sub.quantity, :step=>1, :value=>1, :class=>"ui-spinner"
               %td #{sub.expires}
         - else
           %tr
             %td{:colspan=>5} #{_("The system is not currently consuming any subscriptions.")}
     - if editable && consumed_subs.length > 0
       .actions
-        = submit_tag _('Unsubscribe'), :class => 'submit dialogbutton'
+        %a{:class=>'dialogbutton button disabled', :id=>"fake_unsub_submit"} #{_('Unsubscribe')}
+        = submit_tag _('Unsubscribe'), :class => 'submit dialogbutton hidden', :id=>"unsub_submit"
 .grid_8
   = form_tag update_subscriptions_system_path, :id=>"subscribe", :method=>"post", :remote=>true do
     %h5 #{_("Available Subscriptions")}
@@ -61,4 +62,5 @@
             %td{:colspan=>5} #{_("There are no more subscriptions available.")}
     - if editable && avail_subs.length > 0
       .actions
-        = submit_tag _('Subscribe'), :class => 'submit dialogbutton'
+        = submit_tag _('Subscribe'), :class => 'submit dialogbutton hidden', :id=>"sub_submit"
+        %a{:class=>'dialogbutton button disabled', :id=>"fake_sub_submit"} #{_('Subscribe')}
