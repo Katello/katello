@@ -23,10 +23,10 @@ class TemplateContentValidator < ActiveModel::Validator
   def validate(record)
     #check if packages and errate are valid
     for p in record.packages
-      record.errors[:packages] << _("Package '#{p.package_name}' has doesn't belong to any product in this template") if not p.valid?
+      record.errors[:packages] << _("Package '#{p.package_name}' does not belong to any product in this template") if not p.valid?
     end
     for e in record.errata
-      record.errors[:errata] << _("Erratum '#{e.erratum_id}' has doesn't belong to any product in this template") if not e.valid?
+      record.errors[:errata] << _("Erratum '#{e.erratum_id}' does not belong to any product in this template") if not e.valid?
     end
   end
 end

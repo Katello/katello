@@ -13,7 +13,7 @@
 class PackageValidator < ActiveModel::Validator
   def validate(record)
     if record.to_package.nil?
-      record.errors[:base] <<  _("Package '#{record.package_name}' has doesn't belong to any product in this template")
+      record.errors[:base] <<  _("Package '#{record.package_name}' does not belong to any product in this template")
     end
   end
 end
