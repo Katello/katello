@@ -1401,6 +1401,7 @@ var changesetStatusActions = (function($){
         finish = function(id){
             var changeset = $('#' + id);
             changeset.find(".changeset_status").html(i18n.promoted);
+            changeset.attr('title', i18n.promoted);
             /*changeset.parent().fadeOut(3000, function(){
                 changeset.parent().remove();
                 if( !$('.changeset_status').length ){
