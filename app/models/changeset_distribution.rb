@@ -22,7 +22,7 @@ class ChangesetDistributionValidator < ActiveModel::Validator
         idx = (d.id == record.distribution_id)
       end
     end
-    record.errors[:base] <<  _("Distribution '#{record.distribution_id}' has doesn't belong to any product in the environment the changeset should be promoted from!") if idx == nil
+    record.errors[:base] <<  _("Distribution '#{record.distribution_id}' does not belong to any product in the environment the changeset should be promoted from!") if idx == nil
   end
 end
 
