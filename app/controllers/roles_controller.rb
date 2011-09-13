@@ -179,14 +179,14 @@ class RolesController < ApplicationController
     end
 
     if attributes.has_key?(:all_verbs)
-      for verb in @permission.verbs
-        verb.destroy
+      @permission.verbs.each do |verb|
+        @permission.verbs.delete(Verb.find_or_create_by_verb(verb.name))
       end
     end
 
     if attributes.has_key?(:all_tags)
-      for tag in @permission.tags
-        tag.destroy
+      @permission.tags.each do |tag|
+        @permission.tags.delete(tag)
       end
     end
 
