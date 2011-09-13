@@ -35,7 +35,7 @@ class SyncPlan < ActiveRecord::Base
   scoped_search :on => :name, :complete_value => true
 
   def validate_sync_date
-    errors.add_to_base _("Start Date and Time can't be blank") if self.sync_date.nil?
+    errors.add :base, _("Start Date and Time can't be blank") if self.sync_date.nil?
   end
 
   def plan_day
