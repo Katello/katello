@@ -314,6 +314,7 @@ var panel = (function(){
                 $.bbq.removeState("panel");
                 panel.updateResult();
                 panel.contract_cb(name);
+                panel.closeSubPanel(subpanel);
             }
             return false;
         },
