@@ -319,6 +319,7 @@ Src::Application.routes.draw do
         get :repositories, :on => :member
       end
       resources :activation_keys, :only => [:index, :create]
+      resources :templates, :only => [:index]
     end
 
     resources :activation_keys, :only => [:show, :update, :destroy]

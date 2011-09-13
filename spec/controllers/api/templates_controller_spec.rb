@@ -48,17 +48,28 @@ describe Api::TemplatesController do
 
   describe "index" do
 
-    it 'should get a list of templates from specified environment ID' do
-      SystemTemplate.should_receive(:where).with("environment_id" => @locker.id).and_return([@tpl])
+    before :each do
+      @environment2 = KTEnvironment.new(:name => 'environment2')
+      @environment2.id = 3
+
+      KTEnvironment.stub(:find).with(@locker.id).and_return(@locker)
+      KTEnvironment.stub(:find).with(@environment2.id).and_return(@environment2)
+    end
+
+    it 'should get a list of templates from specified environment' do
+      @locker.should_receive(:system_templates).and_return([@tpl])
       get 'index', :environment_id => @locker.id
       response.should be_success
     end
 
-    it 'should not fail if no templates are found, but return an empty list' do
-      @environment2 = KTEnvironment.new(:name => 'environment2')
-      @environment2.id = 3
+    it 'should get a list of all templates' do
+      SystemTemplate.should_receive(:all).and_return([@tpl])
+      get 'index'
+      response.should be_success
+    end
 
-      SystemTemplate.should_receive(:where).with("environment_id" => @environment2.id).and_return([])
+    it 'should not fail if no templates are found, but return an empty list' do
+      @environment2.should_receive(:system_templates).and_return([])
       get 'index', :environment_id => @environment2.id
       response.should be_success
     end
