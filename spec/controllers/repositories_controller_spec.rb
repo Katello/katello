@@ -13,8 +13,8 @@ describe RepositoriesController do
       @organization = new_test_org
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stub!(:find).and_return(@provider)
-      @product = OpenStruct.new(:provider => @provider, :id => 1000)
-      @repository = OpenStruct.new(:id =>1222)
+      @product = MemoStruct.new(:provider => @provider, :id => 1000)
+      @repository = MemoStruct.new(:id =>1222)
     end
     describe "GET New" do
       let(:action) {:new}
