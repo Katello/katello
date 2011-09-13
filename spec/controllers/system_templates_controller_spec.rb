@@ -163,7 +163,7 @@ describe SystemTemplatesController do
             controller.should_receive(:notice)
             put :update, :id => @system_template_1.id, :system_template=>{:name=>"bar"}
             assigns[:template].name.should eq("bar")
-            response.should_not redirect_to()
+            response.should_not be_redirect
             response.should be_success
           end
 

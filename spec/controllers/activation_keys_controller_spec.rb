@@ -232,7 +232,7 @@ describe ActivationKeysController do
 
         it "should not redirect from edit view" do
           put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_DESCRIPTION
-          response.should_not redirect_to()
+          response.should_not be_redirect
         end
 
         it "should be successful" do
