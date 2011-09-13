@@ -18,7 +18,7 @@ from katello.client.api.base import KatelloAPI
 class TemplateAPI(KatelloAPI):
 
     def templates(self, envId):
-        path = "/api//environmants/%s/templates/" % str(envId)
+        path = "/api//environments/%s/templates/" % str(envId)
         tpls = self.server.GET(path)[1]
         return tpls
 
