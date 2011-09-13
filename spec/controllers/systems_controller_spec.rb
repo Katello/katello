@@ -36,7 +36,7 @@ describe SystemsController do
       end
     end
 
-    [:read_systems, :create_systems, :update_systems, :delete_systems].each do |perm|
+    [:read_systems, :register_systems, :update_systems, :delete_systems].each do |perm|
       [:environment, :organization].each do |resource|
 
         describe "GET index with #{perm} on #{resource} " do
@@ -97,7 +97,7 @@ describe SystemsController do
             user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) }
           end
           it_should_behave_like "protected action"
-        end if [:create_systems, :update_systems].include? perm
+        end if perm == :update_systems
 
 
         describe "show manageable environments with #{perm} on #{resource} " do
