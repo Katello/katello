@@ -34,6 +34,7 @@ class Tag < ActiveRecord::Base
     
     if model_klass
       tag_list = model_klass.list_tags(organization_id) if model_klass.respond_to? :list_tags
+      tag_list ||= []
       return tag_list
     else
       raise "Unrecognized model #{model_klass}"

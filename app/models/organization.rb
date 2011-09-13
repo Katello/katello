@@ -52,12 +52,6 @@ class Organization < ActiveRecord::Base
     self.locker = KTEnvironment.new(:name => "Locker", :locker => true, :organization => self)
   end
 
-
-  def self.list_tags organization_id
-    #list_tags for org can ignore org_id, since its not scoped that way
-    select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
-  end
-
   #permissions
   scope :readable, lambda {authorized_items(READ_PERM_VERBS)}
 
