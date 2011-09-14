@@ -244,7 +244,8 @@ module Glue::Pulp::Repos
             :feed_ca => ca,
             :feed_cert => cert,
             :feed_key => key,
-            :groupid => Glue::Pulp::Repos.groupid(self, self.locker)
+            :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
+            :preserve_metadata => orchestration_for == :import_from_cp #preserve repo metadata when importing from cp
         )
         repo.create
       end
