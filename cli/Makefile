@@ -25,4 +25,4 @@ uniq-po:
 	done
 
 cover:
-	nosetests --with-coverage --cover-package=katello --cover-html .
+	nosetests --with-coverage --cover-package=katello --cover-html --cover-inclusive .
