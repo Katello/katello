@@ -13,6 +13,13 @@
 
 $(document).ready(function() {
 
+    panel.expand_cb = function() {
+
+      $(".jbreadcrumb").jBreadCrumb();
+
+    };
+
+
    $('.environment_link').live('click', function() {
         $(this).siblings().show();
 
