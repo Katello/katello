@@ -21,6 +21,7 @@ class ActivationKey < ActiveRecord::Base
   has_many :key_subscriptions
   has_many :subscriptions, :class_name => "KTSubscription", :through => :key_subscriptions
 
+  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
 
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'key.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'key.description'

@@ -14,17 +14,16 @@
 class ProvidersController < ApplicationController
   include AutoCompleteSearch
 
-
   before_filter :find_provider, :only => [:products_repos, :show, :subscriptions, :update_subscriptions, :edit, :update, :destroy]
   before_filter :authorize #after find_provider
   before_filter :panel_options, :only => [:index, :items]
+  before_filter :search_filter, :only => [:auto_complete_search]
 
   respond_to :html, :js
 
   def section_id
     'contents'
   end
-
 
   def rules
     index_test = lambda{Provider.any_readable?(current_organization)}
@@ -36,7 +35,7 @@ class ProvidersController < ApplicationController
       :index => index_test,
       :items => index_test,
       :show => index_test,
-
+      :auto_complete_search => index_test,
       :new => create_test,
       :create => create_test,
       :edit =>read_test,
@@ -49,14 +48,11 @@ class ProvidersController < ApplicationController
     }
   end
 
-
-
   def products_repos
     @products = @provider.products
     render :partial => "products_repos", :layout => "tupane_layout", :locals => {:provider => @provider,
                                          :providers => @providers, :products => @products, :editable=>@provider.editable?}
   end
-
 
   def update_subscriptions
     if !params[:provider].blank? and params[:provider].has_key? :contents
@@ -225,4 +221,7 @@ class ProvidersController < ApplicationController
     return _('provider')
   end
 
+  def search_filter
+    @filter = {:organization_id => current_organization}
+  end
 end

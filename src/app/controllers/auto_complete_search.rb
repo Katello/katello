@@ -16,7 +16,14 @@ module AutoCompleteSearch
   def auto_complete_search
     begin
       query = "#{params[:search]}"
-      @items = eval(controller_name.singularize.camelize).complete_for(params[:search])
+
+      # a filter may be optionally defined by the calling controller... the filter can be used to ensure that
+      # auto complete only returns results that are applicable to the user performing the search...
+      # if a filter is provided, use it...
+      # an example filter could be something like: {:organization_id => current_organization}
+      @filter = {} if @filter.nil?
+      @items = eval(controller_name.singularize.camelize).complete_for(params[:search], @filter)
+
       @items = @items.map do |item|
         category = (['and','or','not','has'].include?(item.to_s.sub(/^.*\s+/,''))) ? 'Operators' : ''
         {:label => item, :category => category}
