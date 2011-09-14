@@ -174,8 +174,6 @@ describe Product do
   context "product repos" do
     before(:each) do
       disable_product_orchestration
-      Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
-      @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
     end
 
     context "repo id" do
@@ -197,6 +195,11 @@ describe Product do
     end
 
     describe "add repo" do
+      before(:each) do
+        Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
+        @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
+      end
+
       context "when there is a repo with the same name for the product" do
         before do
           @repo_name = "repo"
@@ -208,7 +211,21 @@ describe Product do
         end
       end
 
+      context "when importing product from candlepin" do
+        before do
+          Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
+          @repo = Glue::Pulp::Repo.new(:id => '123')
+        end
+
+        it "should preserve repository metadata" do
+          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:preserve_metadata => true)).and_return(@repo)
+          Product.create!(ProductTestData::PRODUCT_WITH_CONTENT)
+        end
+      end
+
     end
   end
+
+
 
 end
