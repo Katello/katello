@@ -1150,7 +1150,7 @@ var promotionsRenderer = (function(){
 
 var templateLibrary = (function(){
     var changesetsListItem = function(id, name){
-            var html ='<li class="slide_link">' + '<div class="link_details" id="' + id + '">';
+            var html ='<li class="slide_link">' + '<div class="simple_link link_details" id="' + id + '">';
 
             html += '<span class="sort_attr">'+ name + '</span></div></li>';
             return html;
@@ -1172,7 +1172,7 @@ var templateLibrary = (function(){
             var html = '<ul class="filterable">';
              $.each(subtypes, function(index, type) {
                  if (product[type]) {
-                    html += '<li class="slide_link"><div class="link_details"';
+                    html += '<li class="slide_link"><div class="simple_link link_details"';
                  } else {
                      html += '<li><div ';
                  }
@@ -1536,8 +1536,8 @@ $(document).ready(function() {
         });
     }
     
-    KT.panel.set_expand_cb(function(){
+    /*KT.panel.set_expand_cb(function(){
        $('.block').parent().parent().removeClass('activeItem');
        $('.active').parent().parent().addClass('activeItem'); 
-    });
+    });*/
 });
