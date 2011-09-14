@@ -1582,6 +1582,7 @@ fieldset {
 
 .sliding_tree {
   position: relative;
+  
   .tree_breadcrumb {
     font-weight: 600;
     font-size: 110%;
@@ -1700,7 +1701,6 @@ fieldset {
         }
         
         .empty_list { padding: 0px 0 0 25px; }
-        
         .simple_link{
           margin: 6px 0;
         }
@@ -1708,13 +1708,28 @@ fieldset {
           background: $dotdotdot_icon;
         }
         .no_slide {
-          padding-left: 5px;
+          //padding-left: 5px;
           cursor: default;
         }
         .no_hover {
           &:hover {
             border-color: $white_color;
             background: none;
+          }
+        }
+        .block {
+          cursor: pointer;
+          font-size: 100%;
+        }
+        .active {
+          background-color: $tree-item-background-hover_color;
+          border-top-color: $tree-item-border-hover_color;
+          border-bottom-color: $tree-item-border-hover_color;
+          color: $tree-item-hover_color;
+        
+          a {
+            color: $tree-breadcrumb_color;
+            background: inherit;
           }
         }
         
