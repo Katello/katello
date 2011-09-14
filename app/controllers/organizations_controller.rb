@@ -74,7 +74,6 @@ class OrganizationsController < ApplicationController
       # TODO: example - create permission for the organization
     rescue Exception => error
       errors error
-      print "\n\n\n\n", error.to_s
       Rails.logger.info error.backtrace.join("\n")
       render :text=> error.to_s, :status=>:bad_request and return
     end
