@@ -1441,109 +1441,113 @@ fieldset {
       background-color: $white_color;
   }
 }
-.breadcrumb { 
-  list-style: none; 
-  overflow: hidden; 
-  font: 14px;
-  position: relative;
 
-  .selected {
-    background: $listhover_color !important; color: $white_color; @include text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
-    &:after {
-      border-left-color: $listhover_color !important;
-    }
-  }
 
-  li {
-      float: left; 
-      margin-left: 0;
 
-      &:first-child {
-        @include crumb-nohover;
-        a {
-          padding-left: 20px;
-          @include border-left-radius(5px);
-        }
-      }
-      &:nth-child(n) {
-        @include crumb-nohover;
-        a {
-          background: $breadcrumbbg_color;
-          &:after { border-left-color: $breadcrumbbg_color; }
-        }
-      }
-      &:last-child {
-        @include crumb-nohover;
-        a {
-          padding-right: 30px;
-          @include border-right-radius(5px);
+.jbreadcrumb
+{
+  $bc_height: 20px;
 
-          &:hover {
-            color: $white_color;
-            background: $listhover_color !important;
-          }
-          &:after {
-            border: 0;
-            &:hover { border-left-color: $listhover_color !important; }
-          }
-        }
-      }
+	margin: 0;
+	padding: 0;
+	float: left;
+	display: block;
+	height: $bc_height;
+	overflow: hidden;
+	width: 990px;
 
-      a {
-        color: #000;
-        text-decoration: none; 
-        padding: 8px 0 8px 55px;
-        background: $breadcrumbbg_color;                   /* fallback color */
-        position: relative; 
-        display: block;
-        float: left;
-        
-        &:hover { 
-          background: $listhover_color !important; 
-          color: $white_color; 
-          @include text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
-          
-          &:after { border-left-color: $listhover_color !important; }
-        }
-        &.active {
-          background: $kselected_color; 
-          color: white;
-          
-          &:hover:after { border-left-color: $listhover_color !important; }
-          &:after { border-left-color: $kselected_color !important; }
-        }
-        &:after {
-          content: " "; 
-          display: block; 
-          width: 0; 
-          height: 0;
-          border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
-          border-bottom: 50px solid transparent;
-          border-left: 30px solid $breadcrumbbg_color;
-          position: absolute;
-          top: 50%;
-          margin-top: -50px; 
-          left: 100%;
-          z-index: 2; 
-        }
-        &:before { 
-          content: " "; 
-          display: block; 
-          width: 0; 
-          height: 0;
-          border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
-          border-bottom: 50px solid transparent;
-          border-left: 30px solid white;
-          position: absolute;
-          top: 50%;
-          margin-top: -50px; 
-          margin-left: 1px;
-          left: 100%;
-          z-index: 1; 
-        }
+	padding-right: 5px;
+  padding-left: 5px;
+	border:solid 1px #dedede;
+	background:#fff;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    height: $bc_height;
+    display: block;
+
+    .selected {
+     background: $listhover_color !important;
+     a {
+     color: $white_color;
      }
+     @include text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
+     &:after {
+        border-left-color: $listhover_color !important;
+     }
+    }
+      
+    li {
+      display: block;
+      float: left;
+      position: relative;
+      height: $bc_height;
+      overflow: hidden;
+      line-height: $bc_height;
+      margin: 0px 6px 0px 0;
+      padding: 0px 10px 0px 0;
+      font-size: .9167em;
+      background: url(../../../images/jbreadcrumb/Chevron.gif) no-repeat 100% 0;
+
+      span {
+        /*display: block;*/
+        /*overflow: hidden;*/
+      }
+      a {
+        display: block;
+        position: relative;
+
+        height: 21px;
+        line-height: 21px;
+        overflow: hidden;
+        float: left;
+      }
+
+      &:first {
+        a {
+          height: 16px !important;
+          text-indent:-1000em;
+          width:16px;
+          padding: 0;
+          margin-top: 2px;
+          overflow: hidden;
+          /*background:url(../../../images/jbreadcrumb/IconHome.gif) no-repeat 0 0;*/
+          &:hover {
+              background-position: 0 -16px;
+          }
+        }
+      }
+      
+      &:last {
+        background: none;
+        margin-right: 0;
+        padding-right: 0;
+      }
+    }
+
+
+
+
+
+
+  }
+  .chevronOverlay {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 2;
+    display: none;
+    background: url(../../../images/jbreadcrumb/ChevronOverlay.png) no-repeat 100% 0;
+    width: 13px;
+    height: 20px;
   }
 }
+
+
+
+
+
 
 .jspContainer {
   .jspHorizontalBar, .jspVerticalBar, .jspTrack { 

@@ -242,7 +242,7 @@ var panel = (function(){
             var panelContent = thisPanel.find(".panel-content");
             spinner.show();
             panelContent.hide();
-            panel.expand_cb(name);
+            
 
             $.ajax({
                 cache: true,
@@ -252,12 +252,13 @@ var panel = (function(){
                     var pc = panelContent.html(data);
                     spinner.hide();
                     pc.fadeIn(function(){$(".panel-content :input:visible:enabled:first").focus();});
-                    //panel.expand_cb(name);
                     if( isSubpanel ){
                         panel.panelResize($('#subpanel_main'), isSubpanel);
                     } else {
                         panel.panelResize($('#panel_main'), isSubpanel);
                     }
+                    panel.expand_cb(name);
+
                 },
                 error: function (xhr, status, error) {
                     spinner.hide();
