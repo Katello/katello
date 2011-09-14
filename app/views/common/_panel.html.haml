@@ -25,11 +25,11 @@
             
       - if url.nil?
         %form#search_form.search{"data-url" => search_index_path()}
-          = auto_complete_field_tag_jquery(:search, params[:search], {:type => "text", :placeholder => "Filter..."},{ :delay => 100, :min_length => -1 })
+          = auto_complete_field_tag_jquery(:search, params[:search], {:type => "text", :placeholder => "Filter..."}, { :delay => 100, :min_length => -1, :filter => search_env })
           %button.action{:form => "search_form"} #{_("Search")}
       - else
         %form#search_form.search{"data-url" => url_for(url)}
-          = auto_complete_field_tag_jquery(:search, params[:search], {:type => "text", :placeholder => "Filter..."},{ :delay => 100, :min_length => -1 })
+          = auto_complete_field_tag_jquery(:search, params[:search], {:type => "text", :placeholder => "Filter..."}, { :delay => 100, :min_length => -1, :filter => search_env })
           %button.action{:form => "search_form"} #{_("Search")}
 
     #list.list.clear.expand_list{:class=>("ajaxScroll" if ajax_scroll), "data-scroll_url"=>ajax_scroll, "data-page_size"=>current_user.page_size}

@@ -71,6 +71,10 @@ class SystemsController < ApplicationController
 
       setup_environment_selector(current_organization, accesible_envs)
       if @environment
+        # add the environment id as a search filter.. this will be passed to the app by scoped_search as part of
+        # the auto_complete_search requests
+        @panel_options[:search_env] = @environment.id
+
         @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size) 
         retain_search_history
         sort_columns(COLUMNS,@systems) if params[:order]
@@ -259,6 +263,6 @@ class SystemsController < ApplicationController
   end
 
   def search_filter
-#    @filter = {:organization_id => current_organization}
+    @filter = {:organization_id => current_organization}
   end
 end
