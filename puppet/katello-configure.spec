@@ -41,6 +41,9 @@ rm -rf %{buildroot}
 %{_sbindir}/katello-configure
 
 %changelog
+* Wed Sep 14 2011 Mike McCune <mmccune@redhat.com> 0.1.1-1
+- new package built with tito
+
 * Wed Sep 14 2011 Jan Pazdziora 0.1.1-1
 - Initial package.
 
