@@ -177,6 +177,11 @@ describe Product do
     end
 
     context "repo id" do
+      before do
+        Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
+        @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
+      end
+
       it "should start with product id" do
         @p.repo_id('123').index("#{ProductTestData::PRODUCT_ID}").should == 0
       end
@@ -210,22 +215,21 @@ describe Product do
           lambda { @p.add_new_content("repo", "http://test/repo","yum") }.should raise_error(Errors::ConflictException)
         end
       end
+    end
 
-      context "when importing product from candlepin" do
-        before do
-          Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
-          @repo = Glue::Pulp::Repo.new(:id => '123')
-        end
-
-        it "should preserve repository metadata" do
-          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:preserve_metadata => true)).and_return(@repo)
-          Product.create!(ProductTestData::PRODUCT_WITH_CONTENT)
-        end
+    context "when importing product from candlepin" do
+      before do
+        Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
+        Candlepin::Content.stub!(:create).and_return({:id => "123"})
+        @repo = Glue::Pulp::Repo.new(:id => '123')
       end
 
+      it "should preserve repository metadata" do
+        Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:preserve_metadata => true)).and_return(@repo)
+        p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
+        p.orchestration_for = :import_from_cp
+        p.save!
+      end
     end
   end
-
-
-
 end
