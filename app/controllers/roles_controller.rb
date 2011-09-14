@@ -12,7 +12,7 @@
 
 class RolesController < ApplicationController
 
-  before_filter :find_role, :except => [:index, :items, :new, :create, :verbs_and_scopes]
+  before_filter :find_role, :except => [:index, :items, :new, :create, :verbs_and_scopes, :auto_complete_search]
   before_filter :authorize #call authorize after find_role so we call auth based on the id instead of cp_id
   skip_before_filter :require_org
   before_filter :setup_options, :only => [:index, :items]
@@ -31,7 +31,8 @@ class RolesController < ApplicationController
       :index => read_check,
       :items => read_check,
       :verbs_and_scopes => read_check,
-        
+      :auto_complete_search => read_check,
+
       :create => create_check,
       :new => create_check,
       :edit => read_check,

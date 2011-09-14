@@ -15,11 +15,11 @@ class SyncPlansController < ApplicationController
 
   before_filter :get_plan, :only => [:destroy, :edit, :show]
   before_filter :setup_options, :only => [:index, :items]
+  before_filter :search_filter, :only => [:auto_complete_search]
 
   def section_id
     'contents'
   end
-
 
   def rules
     read_test = lambda{Provider.any_readable?(current_organization)}
@@ -28,6 +28,7 @@ class SyncPlansController < ApplicationController
       :index => read_test,
       :items => read_test,
       :show => read_test,
+      :auto_complete_search => read_test,
       :edit => read_test,
       :update => manage_test,
       :destroy => manage_test,
@@ -35,7 +36,6 @@ class SyncPlansController < ApplicationController
       :create => manage_test,
     }
   end
-
 
   def index
     begin
@@ -160,8 +160,12 @@ class SyncPlansController < ApplicationController
     end
   end
       
-      
   def controller_display_name
     return _('sync_plan')
   end
+
+  def search_filter
+    @filter = {:organization_id => current_organization}
+  end
+
 end
