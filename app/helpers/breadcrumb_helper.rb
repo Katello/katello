@@ -208,7 +208,7 @@ module BreadcrumbHelper
       if perm.all_tags
         tags = 'all'
       else
-        tags = perm.tags.collect { |t| t.formatted(perm.resource_type.name) }
+        tags = perm.tag_values.collect { |t| Tag.formatted(perm.resource_type.name, t) }
       end
       
       if global

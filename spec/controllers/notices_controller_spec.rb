@@ -28,13 +28,15 @@ describe NoticesController do
   describe "viewing notices" do
     before (:each) do
       20.times{|a| Notice.create!(:text=>"bar#{a}", :level=>:success, :user_notices=>[UserNotice.new(:user => @user)])}
+      @notices = Notice.select(:id).where("text like 'bar%'").order("id desc").all.collect{|s| s.id}
     end
     
     it 'should show all user notices' do
       get :show
       response.should be_success
       response.should render_template("show")
-      assigns[:notices].should include Notice.find(8)
+      assigns[:notices].collect{|noc| noc.id}.should == @notices[0..24]
+
     end
 
     it 'should show all unread notices for a user' do
@@ -44,10 +46,10 @@ describe NoticesController do
     end
 
     it 'should show the details for a specific notice' do
-      Notice.create!(:text=>"Test notice", :level=>:success, 
+      n = Notice.create!(:text=>"Test notice", :level=>:success,
                     :details=>"Notices success details.",
                     :user_notices=>[UserNotice.new(:user => @user)])
-      get :details, :id=>21
+      get :details, :id=>n.id
       response.should be_success
     end
     
