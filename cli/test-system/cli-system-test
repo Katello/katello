@@ -1,4 +1,5 @@
 #!/bin/bash
+# vim: sw=4:ts=4:et
 script_dir_link=$(dirname "$(readlink "$0")")
 if [[ $script_dir_link == "." ]]; then
     script_dir=$(dirname "$0")
@@ -29,6 +30,8 @@ required_tests=""
 PRINT_ALL=0
 SHELL_MODE=0
 TEST_ALL=0
+NO_BASE=0
+RUN_DISABLED=0
 for param in $*; do
     case "$param" in
         "-h"|"--help")
@@ -36,6 +39,8 @@ for param in $*; do
             printf "It will fill your database with resources, and then delete them!\n\n"
             printf " -h, --help      prints this help\n"
             printf " -v,--verbose    verbose mode, prints full command output\n"
+            printf " -b,--nobase     no base tests\n"
+            printf " -d,--disabled   run disabled tests as well\n"
             printf " -s, --shell     runs tests in the shell mode\n"
             printf "\n"
             printf "Available tests:\n"
@@ -51,6 +56,12 @@ for param in $*; do
             ;;
         "-v"|"--verbose")
             PRINT_ALL=1
+            ;;
+        "-b"|"--nobase")
+            NO_BASE=1
+            ;;
+        "-d"|"--disabled")
+            RUN_DISABLED=1
             ;;
         "-s"|"--shell")
             SHELL_MODE=1
@@ -79,7 +90,7 @@ else
 fi
 
 function get_repo_id() {
-  echo `$CMD repo list --org="$TEST_ORG" -g | grep $FEWUPS_REPO | awk '{print $1}'`
+    echo `$CMD repo list --org="$TEST_ORG" -g | grep $FEWUPS_REPO | awk '{print $1}'`
 }
 
 # create sample package group and category
@@ -97,20 +108,10 @@ function create_sample_package_groups() {
         https://localhost/pulp/api/repositories/$REPO_ID/add_packagegroup_to_category/ > /dev/null
 }
 
-function skip_test() {
-    printf "%-40s" "$1"
-    shift
-    printf "[ ${txtyel}SKIPPED${txtrst} ]\t Notes: $1\n"
-}
-
-function test_own_cmd() {
-  CMD="" test "$*"
-}
-
 function test() {
     if [ $PRINT_ALL -eq 1 ]; then
         shift
-        echo $DISP_CMD $*
+        echo $*
     else
         printf "%-40s" "$1"
         shift
@@ -142,6 +143,24 @@ function test() {
         fi
     fi
     let test_cnt+=1
+}
+
+function test_own_cmd() {
+    MSG=$1
+    shift
+    CMD="" SHELL_MODE=0 test "$MSG" $*
+}
+
+function skip_test() {
+    if [ $RUN_DISABLED -eq 1 ]; then
+        MSG=$1
+        shift
+        test "$MSG" $*
+    else
+        printf "%-40s" "$1"
+        shift
+        printf "[ ${txtyel}SKIPPED${txtrst} ]\t Notes: $1\n"
+    fi
 }
 
 function todo() {
@@ -177,13 +196,13 @@ function valid_id() {
 
 
 echo "Basic environment setup"
-. $script_dir/cli_tests/_base_setup.sh
+[ $NO_BASE -eq 0 ] && . $script_dir/cli_tests/_base_setup.sh
 for t in $required_tests; do
     echo "Test suite $t"
     [ -f $script_dir/cli_tests/[0-9]*$t.sh ] && . $script_dir/cli_tests/[0-9]*$t.sh
     [ -f $script_dir/cli_tests/$t.sh ] && . $script_dir/cli_tests/*$t.sh
 done
 echo "Basic environment cleanup"
-. $script_dir/cli_tests/_base_cleanup.sh
+[ $NO_BASE -eq 0 ] && . $script_dir/cli_tests/_base_cleanup.sh
 
 summarize
