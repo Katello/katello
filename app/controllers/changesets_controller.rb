@@ -324,7 +324,7 @@ class ChangesetsController < ApplicationController
           when "distribution"
             item = Product.find(pid)
         end
-        unless item && item.readable?(current_organization)
+        unless item && item.readable?()
           return false
         end
       end
