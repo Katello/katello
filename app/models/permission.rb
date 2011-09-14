@@ -19,7 +19,7 @@ class Permission < ActiveRecord::Base
 
   before_save :cleanup_tags_verbs
 
-  validates :name, :presence => true
+  validates :name, :presence => true, :katello_name_format => true
   validates_uniqueness_of :name, :scope => [:organization_id, :role_id], :message => N_("must be unique within an organization scope")
 
 
