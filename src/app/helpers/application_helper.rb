@@ -95,7 +95,8 @@ module ApplicationHelper
              :accessor=>options[:accessor],
              :url=>options[:url], 
              :left_panel_width=>options[:left_panel_width],
-             :ajax_scroll =>options[:ajax_scroll]}
+             :ajax_scroll =>options[:ajax_scroll],
+             :search_env =>options[:search_env]}
   end
 
   def one_panel(panel_id, collection, options)
