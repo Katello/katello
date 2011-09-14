@@ -95,14 +95,13 @@ class RolesController < ApplicationController
   end
 
   def create
-    @role = Role.new(params[:role])
     begin
-      @role.save!
+      @role = Role.create!(params[:role])
       notice _("Role '#{@role.name}' was created.")
       render :partial=>"common/list_item", :locals=>{:item=>@role, :accessor=>"id", :columns=>["name"], :name=>controller_display_name}
     rescue Exception => error
       errors error
-      render :json=>@role.errors, :status=>:bad_request
+      render :json=>error.to_s, :status=>:bad_request
     end
   end
 

@@ -139,22 +139,21 @@ describe SystemsController do
     describe "viewing systems" do
       before (:each) do
         100.times{|a| System.create!(:name=>"bar#{a}", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})}
+        @systems = System.select(:id).where(:environment_id => @environment.id).all.collect{|s| s.id}
       end
 
       it "should show the system 2 pane list" do
         get :index
         response.should be_success
         response.should render_template("index")
-        assigns[:systems].should include System.find(8)
-        assigns[:systems].should_not include System.find(30)
+        assigns[:systems].collect{|sys| sys.id}.should == @systems[0..24]
       end
 
       it "should return a portion of systems" do
         get :items, :offset=>25
         response.should be_success
         response.should render_template("list_systems")
-        assigns[:systems].should include System.find(30)
-        assigns[:systems].should_not include System.find(8)
+        assigns[:systems].collect{|sys| sys.id}.should == @systems[25..49]
       end
 
       it "should throw an exception when the search parameters are invalid" do
@@ -207,20 +206,21 @@ describe SystemsController do
       end
 
       it "should update the system name" do
-        put :update, { :id => 1, :system => { :name=> "foo" }}
+        put :update, { :id => @system.id, :system => { :name=> "foo" }}
         response.should be_success
         assigns[:system].name.should == "foo"
       end
 
       it "should update a subscription" do
-        put :update_subscriptions, { :id => 1, :system => { :name=> "foo" }}
+        put :update_subscriptions, { :id => @system.id, :system => { :name=> "foo" }}
         response.should be_success
       end
 
       it "should throw an error with bad parameters" do
-        put :update, { :id => 1, :system => { :name=> 1 }}
+        invalid_name = " Foo   "
+        put :update, { :id => @system.id, :system => { :name=> invalid_name }}
         response.should_not be_success
-        System.where(:name=>1).should be_empty
+        System.where(:name=>invalid_name).should be_empty
       end
     end
 

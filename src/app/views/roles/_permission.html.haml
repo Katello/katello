@@ -23,7 +23,7 @@
         = f.label :all, _("All")
       .grid_6.prefix_1.fielditem
         = f.radio_button("all_tags", "false", :style=>"vertical-align: top;",:data_type => "tags")
-        = f.select :tag_names, get_scopes(f).collect {|t| [t.display_name, t.name]}, {}, {:multiple=>true, :data_type => "tags"}
+        = f.select :tag_values, get_scopes(f).collect {|t| [t.display_name, t.name]}, {}, {:multiple=>true, :data_type => "tags"}
       
       
       .grid_1.ra.fielditem
