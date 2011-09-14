@@ -13,13 +13,17 @@
 require 'util/model_util'
 
 class Tag
-  def formatted(resource_type_name)
+  def self.formatted(resource_type_name, tag_id)
     model_klass = ResourceType::TYPES[resource_type_name][:model]
         
     if model_klass
-      tags = model_klass.tags(self.name) if model_klass.respond_to? :tags
-      return tags[0]
+      tags = model_klass.tags(tag_id) rescue []
+      return tags[0] if tags && !tags.empty?
+    else
+      raise "Unrecognized model #{model_klass}"
     end
+
+    tag_id
   end
 
   def self.tags_for(resource_type_name, organization_id) 
