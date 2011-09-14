@@ -1,4 +1,4 @@
-= javascript :edit_helpers
+= javascript :edit_helpers, :breadcrumb, :organization_edit
 
 = content_for :title do
   = @organization.name 
@@ -16,21 +16,23 @@
   
     .grid_7
       %h5 #{_("Environment Promotion Paths")}:
+
     - unless @organization.environments.empty?
       %ul#promotion_paths
       - @organization.promotion_paths.each do |path|
         .clear
           &nbsp;
-        .grid_7
-          %ul.breadcrumb
+        .jbreadcrumb.grid_7
+          %ul
             %li
               =link_to _('Locker'), "#", :class => "crumb-nohover"
             - for env in path
-              %li
+              %li{:class=>("selected" if env.name=="Test")}
                 %a.subpanel_element{"data-url"=>edit_organization_environment_path(@organization.cp_key, env.id)} #{env.name}
     - else
       .grid_7
         #{_("No environments are available in this organization. Please add some environments to be able register systems to this organization.")}:
+
     .clear
       &nbsp;
 
