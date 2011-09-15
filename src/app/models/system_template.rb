@@ -188,7 +188,10 @@ class SystemTemplate < ActiveRecord::Base
         :methods => [:products,
                      :packages,
                      :errata,
-                     :parameters]
+                     :parameters,
+                     :package_groups,
+                     :pg_categories
+     ]
         })
      )
   end
