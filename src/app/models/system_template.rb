@@ -112,7 +112,9 @@ class SystemTemplate < ActiveRecord::Base
       :packages => self.packages.map(&:package_name),
       :errata   => self.errata.map(&:erratum_id),
       :products => self.products.map(&:name),
-      :parameters => ActiveSupport::JSON.decode(self.parameters_json)
+      :parameters => ActiveSupport::JSON.decode(self.parameters_json),
+      :package_groups => self.package_groups.map(&:export_hash),
+      :package_group_categories => self.pg_categories.map(&:export_hash)
     }
     tpl[:description] = self.description if not self.description.nil?
     tpl[:parent] = self.parent.name if not self.parent.nil?
