@@ -26,18 +26,33 @@ if sm_present; then
   test "chs add product" changeset update  --org="$RHSM_ORG" --environment="$RHSM_ENV" --name="$CS1_NAME" --add_product="$RHSM_YPROD"
   test "changeset promote" changeset promote --org="$RHSM_ORG" --environment="$RHSM_ENV" --name="$CS1_NAME"
 
+  test_own_cmd "rhsm show organizations" sudo subscription-manager orgs --username=$USER --password=$PASSWORD
+  test_own_cmd "rhsm show environments" sudo subscription-manager environments --username=$USER --password=$PASSWORD --org=$RHSM_ORG
   test_own_cmd "rhsm registration with org" sudo subscription-manager register --username=$USER --password=$PASSWORD \
     --org=$RHSM_ORG --name=$HOSTNAME --force
+  test_own_cmd "rhsm show identity" sudo subscription-manager identity
   test_own_cmd "rhsm registration with org/env" sudo subscription-manager register --username=$USER --password=$PASSWORD \
     --org=$RHSM_ORG --environment=$RHSM_ENV --name=$HOSTNAME --force
+  test_own_cmd "rhsm regenerate identity" sudo subscription-manager identity --regenerate
   test_own_cmd "rhsm registration with one ak" sudo subscription-manager register \
     --org=$RHSM_ORG --activationkey="$RHSM_AK1" --force
+  test_own_cmd "rhsm force regenerate identity" sudo subscription-manager identity --regenerate --force --username=$USER --password=$PASSWORD
   test_own_cmd "rhsm registration with two aks" sudo subscription-manager register \
     --org=$RHSM_ORG --activationkey="$RHSM_AK1,$RHSM_AK2" --force
+  test_own_cmd "rhsm auto subscribe" sudo subscription-manager subscribe --auto
+  test_own_cmd "rhsm list all" sudo subscription-manager list --available --all
+  POOLID=$(sudo subscription-manager list --available --all | grep PoolId | head -n1 | awk '{print $2}') # grab first pool
+  test_own_cmd "rhsm subscribe to pool" sudo subscription-manager subscribe --pool $POOLID
   test_own_cmd "rhsm list" sudo subscription-manager list
   test_own_cmd "rhsm list available" sudo subscription-manager list --available
-  test_own_cmd "rhsm list all available" sudo subscription-manager list --available --all
-  # TODO rhsm subscribe
+  test_own_cmd "rhsm list consumed" sudo subscription-manager list --consumed
+  test_own_cmd "rhsm list ondate" sudo subscription-manager list --ondate=2011-09-15 --available
+  test_own_cmd "rhsm list repos" sudo subscription-manager repos --list
+  test_own_cmd "rhsm refresh" sudo subscription-manager refresh
+  SERIAL=$(sudo subscription-manager list --consumed | grep SerialNumber | head -n1 | awk '{print $2}') # grab first serial
+  test_own_cmd "rhsm unsubscribe to serial" sudo subscription-manager unsubscribe --serial=$SERIAL
+  test_own_cmd "rhsm subscribe to pool" sudo subscription-manager subscribe --pool $POOLID # again
+  test_own_cmd "rhsm unsubscribe all" sudo subscription-manager unsubscribe --all
   test_own_cmd "rhsm facts update" sudo subscription-manager facts --update
   test_own_cmd "rhsm unregister" sudo subscription-manager unregister
 
