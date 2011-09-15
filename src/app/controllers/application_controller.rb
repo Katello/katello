@@ -283,7 +283,7 @@ class ApplicationController < ActionController::Base
     begin
       # save the request in the user's search history
       unless params[:search].nil? or params[:search].blank?
-        path = @_request.env['PATH_INFO']
+        path = @_request.env['REQUEST_PATH']
         histories = current_user.search_histories.where(:path => path, :params => params[:search])
         if histories.nil? or histories.empty?
           # user doesn't have this search stored, so save it
