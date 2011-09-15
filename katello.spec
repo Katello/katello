@@ -11,9 +11,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-%define ruby_sitelib %(ruby -rrbconfig -e "puts Config::CONFIG['sitelibdir']")
-%define gemdir %(ruby -rubygems -e 'puts Gem::dir' 2>/dev/null)
-
 %global homedir %{_datarootdir}/%{name}
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir deploy/common
