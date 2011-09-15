@@ -61,7 +61,7 @@ KT.subs = function() {
                 if($(this).is(":checked")){
                     checked++;
                     if(!(unsubbutton.is(":visible"))){
-                        fakeunsubbutton.fadeOut("fast", function(){unsubbutton.removeClass("hidden").fadeIn()});
+                        fakeunsubbutton.fadeOut("fast", function(){unsubbutton.fadeIn()});
                     }
                 }else{
                     checked--;
