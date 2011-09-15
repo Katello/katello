@@ -9,20 +9,22 @@
         = image_tag('icons/expander-expanded.png', :alt => _('Collapse'))
 
 
-    #path-selected.path_selected
+    #path-selected.path_selected.jbreadcrumb
       %ul.breadcrumb
         - @path.each_with_index do |env, count|
           %li
-            %a{"data-env_id"=> env.id, "data-url"=>env_select_url(url_proc, env, @path[count+1], @organization),
+            %div
+              %a{"data-env_id"=> env.id, "data-url"=>env_select_url(url_proc, env, @path[count+1], @organization),
                                   :class=>env_select_class(env, @environment, @path, @path, accessible_envs, locker_clickable)} #{env.name}
 
 
   - if @paths.length > 1
     #path-entries.path_entries
       - for path in @paths
-        %div.path_entry{"id"=> ("#{path.first.id}#{path.first.name}")}
-          %ul.breadcrumb
+        %div.jbreadcrumb.path_entry{"id"=> ("#{path.first.id}#{path.first.name}")}
+          %ul
             - path.each_with_index do |env, count|
               %li
-                %a{"data-env_id"=> env.id, "data-url"=>env_select_url(url_proc, env, path[count+1], @organization),
+                %div
+                  %a{"data-env_id"=> env.id, "data-url"=>env_select_url(url_proc, env, path[count+1], @organization),
                                       :class=>env_select_class(env, @environment, @path, path, accessible_envs, locker_clickable)} #{env.name}
