@@ -434,7 +434,6 @@ var roleActions = (function($){
                 description     = $('.edit_description'),    
                 after_function  = undefined,
                 nameBreadcrumb  = $('.tree_breadcrumb'),
-                options         = {},
                 opening         = options.opening,
                 
                 setup_edit = function() {
@@ -453,7 +452,7 @@ var roleActions = (function($){
                                 original.reset();
                             }
                         };
-                    
+
                     name_box.each(function() {
                         var settings = {
                                 type        :  'text',
@@ -1052,7 +1051,7 @@ var rolesRenderer = (function($){
 var pageActions = (function($){
     var toggle_list = {
             'role_edit'	:  { container 	: 'role_edit',
-            				setup_fn 	: roleActions.role_edit }
+            				 setup_fn 	: roleActions.role_edit }
         },
     
         registerEvents = function(){
