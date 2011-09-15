@@ -88,20 +88,15 @@ class SystemTemplate < ActiveRecord::Base
 
     self.revision = json["revision"]
     self.description = json["description"]
-    json["products"].collect do |p| self.add_product(p) end if not json["products"].nil?
-    json["packages"].collect do |p| self.add_package(p) end if not json["packages"].nil?
-    json["errata"].collect   do |e| self.add_erratum(e) end if not json["errata"].nil?
-    json["package_groups"].collect  do |e| self.add_package_group(e.symbolize_keys) end if not json["package_groups"].nil?
-    json["package_group_categories"].collect do |e| self.add_pg_category(e.symbolize_keys) end if not json["package_group_categories"].nil?
+    json["products"].each {|p| self.add_product(p) } if json["products"]
+    json["packages"].each {|p| self.add_package(p) } if json["packages"]
+    json["errata"].each {|e| self.add_erratum(e) } if json["errata"]
+    json["package_groups"].each {|pg| self.add_package_group(pg.symbolize_keys) } if json["package_groups"]
+    json["package_group_categories"].each {|pgc| self.add_pg_category(pgc.symbolize_keys) } if json["package_group_categories"]
 
-    self.name = json["name"] if not json["name"].nil?
+    self.name = json["name"] if json["name"]
 
-    if not json["parameters"].nil?
-      json["parameters"].each_pair do |k,v|
-        self.parameters[k] = v
-      end
-    end
-
+    json["parameters"].each_pair {|k,v| self.parameters[k] = v } if json["parameters"]
   end
 
 
