@@ -13,11 +13,8 @@
 
 $(document).ready(function() {
 
-    panel.expand_cb = function() {
-
-      $(".jbreadcrumb").jBreadCrumb();
-
-    };
+    var env_scroll = KT.env_select_scroll({});
+    panel.expand_cb = env_scroll.bind;
 
 
    $('.environment_link').live('click', function() {

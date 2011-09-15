@@ -1444,108 +1444,131 @@ fieldset {
 
 
 
-.jbreadcrumb
-{
-  $bc_height: 20px;
 
-	margin: 0;
-	padding: 0;
-	float: left;
-	display: block;
-	height: $bc_height;
-	overflow: hidden;
-	width: 990px;
+.jbreadcrumb {
+  list-style: none;
+  overflow: hidden;
+  max-height: 34px;
+  /*font: 14px;*/
+  position: relative;
 
-	padding-right: 5px;
-  padding-left: 5px;
-	border:solid 1px #dedede;
-	background:#fff;
+  .selected {
+    background: $listhover_color !important;
+    color:
+    $white_color;
+    @include text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
 
-  ul {
-    margin: 0;
-    padding: 0;
-    height: $bc_height;
-    display: block;
-
-    .selected {
-     background: $listhover_color !important;
-     a {
-     color: $white_color;
-     }
-     @include text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
-     &:after {
-        border-left-color: $listhover_color !important;
-     }
+    &:after {
+      border-left-color: $listhover_color !important;
     }
-      
-    li {
-      display: block;
+  }
+
+  li {
       float: left;
-      position: relative;
-      height: $bc_height;
-      overflow: hidden;
-      line-height: $bc_height;
-      margin: 0px 6px 0px 0;
-      padding: 0px 10px 0px 0;
-      font-size: .9167em;
-      background: url(../../../images/jbreadcrumb/Chevron.gif) no-repeat 100% 0;
+      margin-left: 0;
+      white-space: nowrap;
 
-      span {
-        /*display: block;*/
-        /*overflow: hidden;*/
-      }
-      a {
-        display: block;
-        position: relative;
-
-        height: 21px;
-        line-height: 21px;
-        overflow: hidden;
-        float: left;
-      }
-
-      &:first {
+      &:first-child {
+        @include crumb-nohover;
         a {
-          height: 16px !important;
-          text-indent:-1000em;
-          width:16px;
-          padding: 0;
-          margin-top: 2px;
+          padding-left: 6px;
+          @include border-left-radius(5px);
+        }
+      }
+      &:nth-child(n) {
+        @include crumb-nohover;
+        a {
+          background: $breadcrumbbg_color;
+          &:after { border-left-color: $breadcrumbbg_color; }
+        }
+      }
+      &:last-child {
+        @include crumb-nohover;
+        a {
           overflow: hidden;
-          /*background:url(../../../images/jbreadcrumb/IconHome.gif) no-repeat 0 0;*/
+          padding-right: 30px;
+          @include border-right-radius(5px);
+          &:before {
+            content: None;
+          }
+
           &:hover {
-              background-position: 0 -16px;
+            color: $white_color;
+            background: $listhover_color !important;
+          }
+          &:after {
+            border: 0;
+            border-left: 0px solid $breadcrumbbg_color;
+            &:hover { border-left-color: $listhover_color !important; }
           }
         }
       }
-      
-      &:last {
-        background: none;
-        margin-right: 0;
-        padding-right: 0;
-      }
-    }
+
+      a {
+        color: #000;
+        text-decoration: none;
+        padding: 8px 0 8px 20px;
+
+        background: $breadcrumbbg_color;                    //fallback color
+        position: relative;
+        display: block;
+        float: left;
+
+        div {
+          overflow: hidden;
+        }
+        &:hover {
+          background: $listhover_color !important;
+          color: $white_color;
+          @include text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
+
+          &:after { border-left-color: $listhover_color !important; }
+
+        }
+        &.active {
+          background: $kselected_color;
+          color: white;
+
+          &:hover:after { border-left-color: $listhover_color !important; }
+         
+          
+        }
+        &:after {
+          content: " ";
+          display: block;
+          width: 0;
+          height: 0;
+          
+          border-top: 30px solid transparent;            //Go big on the size, and let overflow hide
+          border-bottom: 30px solid transparent;
+          border-left: 15px solid $breadcrumbbg_color;
+          position: absolute;
+          top: 50%;
+          margin-top: -30px;
+          left: 100%;
+          z-index: 2;
+        }
+        &:before {
+          content: " ";
+          display: block;
+          width: 0;
+          height: 0;
+          border-top: 30px solid transparent;            //Go big on the size, and let overflow hide
+          border-bottom: 30px solid transparent;
+          border-left: 15px solid white;
+          position: absolute;
+          top: 50%;
+          margin-top: -30px;
+          margin-left: 1px;
+          left: 100%;
+          z-index: 1;
+          //background: $breadcrumbbg_color;
 
 
-
-
-
-
-  }
-  .chevronOverlay {
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: 2;
-    display: none;
-    background: url(../../../images/jbreadcrumb/ChevronOverlay.png) no-repeat 100% 0;
-    width: 13px;
-    height: 20px;
+        }
+     }
   }
 }
-
-
-
 
 
 
