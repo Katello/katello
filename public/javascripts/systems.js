@@ -55,7 +55,7 @@ KT.subs = function() {
         var unsubcheckboxes = $('#unsubscribe input[type="checkbox"]');
         var total = unsubcheckboxes.length;
         var checked = 0;
-
+        unsubbutton.hide();
         unsubcheckboxes.each(function(){
             $(this).change(function(){
                 if($(this).is(":checked")){
@@ -78,6 +78,7 @@ KT.subs = function() {
         var subcheckboxes = $('#subscribe input[type="checkbox"]');
         var total = subcheckboxes.length;
         var checked = 0;
+        subbutton.hide();
 
         subcheckboxes.each(function(){
             $(this).change(function(){
@@ -85,7 +86,7 @@ KT.subs = function() {
                     checked++;
                     $(this).parent().parent().parent().find(".ui-spinner").spinner("increment");
                     if(!(subbutton.is(":visible"))){
-                        fakesubbutton.fadeOut("fast", function(){subbutton.removeClass("hidden").fadeIn()});
+                        fakesubbutton.fadeOut("fast", function(){subbutton.fadeIn()});
                     }
                 }else{
                     checked--;
