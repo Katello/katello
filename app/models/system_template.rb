@@ -91,6 +91,8 @@ class SystemTemplate < ActiveRecord::Base
     json["products"].collect do |p| self.add_product(p) end if not json["products"].nil?
     json["packages"].collect do |p| self.add_package(p) end if not json["packages"].nil?
     json["errata"].collect   do |e| self.add_erratum(e) end if not json["errata"].nil?
+    json["package_groups"].collect  do |e| self.add_package_group(e.symbolize_keys) end if not json["package_groups"].nil?
+    json["package_group_categories"].collect do |e| self.add_pg_category(e.symbolize_keys) end if not json["package_group_categories"].nil?
 
     self.name = json["name"] if not json["name"].nil?
 
