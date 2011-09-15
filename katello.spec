@@ -6,10 +6,10 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:	      0.1.81
-Release:	      1%{?dist}
-Summary:	      A package for managing application life-cycle for Linux systems
-	
+Version:        0.1.81
+Release:        1%{?dist}
+Summary:        A package for managing application life-cycle for Linux systems
+
 Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
@@ -55,8 +55,8 @@ Requires(preun): initscripts
 Requires(post): chkconfig
 Requires(postun): initscripts 
 
-BuildRequires: 	coreutils findutils sed
-BuildRequires: 	rubygems
+BuildRequires:  coreutils findutils sed
+BuildRequires:  rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
 BuildRequires:  rubygem(jammit)
