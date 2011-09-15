@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.81
+Version:        0.1.82
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -214,6 +214,32 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Sep 15 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.82-1
+- removing two unnecessarry macros in spec file
+- correcting workaround for BZ 714167 (undeclared dependencies) in spec
+- adding copyright and modeline to our spec files
+- correcting indentatin (Jan Pazdziora)
+- packagegroups - add pacakge groups and categories to JSON
+- pacakgegroups - refactor template exports to meet Ruby conventions
+- packagegroups - add to string export of template
+- packagegroups - support for group and categories in temp import
+- adding two configuration values debug_pulp_proxy
+- promotions - fixing error where you could not add a product
+- Fixed some unit tests...
+- 734460 - Fix to have the roles UI complain on bad role names
+- Fix to get tags.formatted to work with the new changes
+- Fixed several broken tests in postgres
+- Removed 'tags' table for we could just deal with that using unique tag ids.
+  To avoid the dreaded "explicit cast" exception when joining tags to entity
+  ids table in postgres (example - Environments), we need tags to be integers.
+  All our tags at the present time are integers anyway so this seems an easy
+  enough change.
+- refactor - remove debug message to stdout
+- fixed a few issues with repo creation on manifest import test
+- added support for preserving of repo metadata during import of manifests
+- 738200 - use action_name instead of params[:action]
+- templates api - route for listing templates in an environment
+
 * Tue Sep 13 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.81-1
 - notices - fix change to app controller that accidentally affected notices
   (bbuckingham@redhat.com)
