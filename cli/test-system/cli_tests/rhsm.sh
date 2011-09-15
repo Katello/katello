@@ -36,6 +36,8 @@ if sm_present; then
     --org=$RHSM_ORG --activationkey="$RHSM_AK1,$RHSM_AK2" --force
   test_own_cmd "rhsm list" sudo subscription-manager list
   test_own_cmd "rhsm list available" sudo subscription-manager list --available
+  test_own_cmd "rhsm list all available" sudo subscription-manager list --available --all
+  # TODO rhsm subscribe
   test_own_cmd "rhsm facts update" sudo subscription-manager facts --update
   test_own_cmd "rhsm unregister" sudo subscription-manager unregister
 
