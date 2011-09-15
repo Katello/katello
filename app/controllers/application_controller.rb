@@ -97,7 +97,9 @@ class ApplicationController < ActionController::Base
 
       if persist
         # create & store notice... but mark as 'viewed'
-        new_notice = Notice.create(:text => notice_string, :details => details, :level => level, :global => global, :user_notices => [UserNotice.new(:user => current_user)])
+        new_notice = Notice.create(:text => notice_string, :details => details, :level => level, :global => global,
+                                   :controller_name => controller_name, :action_name => action_name,
+                                   :user_notices => [UserNotice.new(:user => current_user)])
 
         unless new_notice.nil?
           user_notice = current_user.user_notices.where(:notice_id => new_notice.id).first
