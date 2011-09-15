@@ -23,4 +23,8 @@ class SystemTemplatePgCategory < ActiveRecord::Base
   belongs_to :system_template, :inverse_of => :pg_categories
   validates_with PgCategoryValidator
   validates_uniqueness_of [:pg_category_id], :scope =>  [:system_template_id, :repo_id]
+
+  def export_hash
+    {:id => self.pg_category_id, :repo => self.repo_id}
+  end
 end
