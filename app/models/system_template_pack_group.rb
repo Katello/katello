@@ -11,4 +11,8 @@ class SystemTemplatePackGroup < ActiveRecord::Base
   belongs_to :system_template, :inverse_of => :package_groups
   validates_with PackGroupValidator
   validates_uniqueness_of [:package_group_id], :scope =>  [:system_template_id, :repo_id]
+
+  def export_hash
+    {:id => self.package_group_id, :repo => self.repo_id}
+  end
 end

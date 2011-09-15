@@ -210,12 +210,16 @@ describe SystemTemplate do
       @export_tpl.stub(:packages).and_return [mock({:package_name => 'xxx'})]
       @export_tpl.stub(:errata).and_return [mock({:erratum_id => 'xxx'})]
       @export_tpl.stub(:parameters_json).and_return "{}"
+      @export_tpl.stub(:package_groups).and_return [SystemTemplatePackGroup.new({:package_group_id => 'xxx', :repo_id => "repo-123" })]
+      @export_tpl.stub(:pg_categories).and_return [SystemTemplatePgCategory.new({:pg_category_id => 'xxx', :repo_id => "repo-456"})]
 
       str = @export_tpl.string_export
       json = ActiveSupport::JSON.decode(str)
       json['products'].size.should == 2
       json['packages'].size.should == 1
       json['errata'].size.should == 1
+      json['package_groups'].size.should == 1
+      json['package_group_categories'].size.should == 1
     end
 
   end
