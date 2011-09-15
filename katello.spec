@@ -59,7 +59,9 @@ Requires:       rubygem(uuidtools)
 Requires:       rubygem(thin)
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
+%if 0%{?fedora} && 0%{?fedora} == 15
 Requires:       rubygem(regin)
+%endif
 # </workaround>
 
 Requires(pre):  shadow-utils
