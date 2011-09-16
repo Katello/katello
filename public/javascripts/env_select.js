@@ -82,7 +82,7 @@ var env_select =   {
         $('#path-selected').find('ul').html(content);
         env_select.active_div = $(this);
         env_select.highlight_selected();
-        env_select.scroll_obj.bind($(".path_selected").children());
+
         return false;
     },
     get_selected_env: function() {
@@ -104,7 +104,7 @@ var env_select =   {
           env_select.click_callback(id, $(this));
         }
         
-
+        env_select.scroll_obj.bind($(".path_selected").children());
         return false;
     },
     disable_active: function() {
