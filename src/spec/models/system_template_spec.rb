@@ -59,21 +59,15 @@ describe SystemTemplate do
       lambda {SystemTemplate.create!(:name => "template_2", :environment => @organization.locker, :parent => @tpl_in_other_env)}.should raise_error
     end
 
-    it  "should save valid product, packages and errara" do
+    it  "should save valid product and packages" do
       @valid_tpl = SystemTemplate.new(:name => "valid_template", :environment => @organization.locker)
 
       @pack1 = SystemTemplatePackage.new(:package_name => "pack1")
       @pack1.stub(:to_package).and_return {}
       @pack1.stub(:valid?).and_return true
 
-      @err1 = SystemTemplateErratum.new(:erratum_id => "err1")
-      @err1.stub(:to_erratum).and_return {}
-      @err1.stub(:valid?).and_return true
-
       @valid_tpl.products << @prod1
       @valid_tpl.packages << @pack1
-      @valid_tpl.errata << @err1
-
 
       lambda {@valid_tpl.save!}.should_not raise_error
       @valid_tpl.created_at.should_not be_nil
@@ -84,12 +78,7 @@ describe SystemTemplate do
       @pack1.stub(:to_package).and_return {}
       @pack1.stub(:valid?).and_return false
 
-      @err1  = SystemTemplateErratum.new(:erratum_id => "err1")
-      @err1.stub(:to_erratum).and_return {}
-      @err1.stub(:valid?).and_return false
-
       @tpl1.packages << @pack1
-      @tpl1.errata   << @err1
 
       lambda {@tpl1.save!}.should raise_error
     end
@@ -163,9 +152,6 @@ describe SystemTemplate do
   'packages': [
     'walrus'
   ],
-  'errata': [
-    'RHEA-2010:9999'
-  ],
   'parameters': {
     'attr1': 'val1',
     'attr2': 'val2'
@@ -188,7 +174,6 @@ describe SystemTemplate do
       @import_tpl.should_receive(:add_product).once.with('prod_a1').and_return nil
       @import_tpl.should_receive(:add_product).once.with('prod_a2').and_return nil
       @import_tpl.should_receive(:add_package).once.with('walrus').and_return nil
-      @import_tpl.should_receive(:add_erratum).once.with('RHEA-2010:9999').and_return nil
       @import_tpl.should_receive(:add_package_group).once.with({:id => 'pg-123', :repo => 'repo-123'}).and_return nil
       @import_tpl.should_receive(:add_package_group).once.with({:id => 'pg-456', :repo => 'repo-123'}).and_return nil
       @import_tpl.should_receive(:add_pg_category).once.with({:id => 'pgc-123', :repo => 'repo-123'}).and_return nil
@@ -208,7 +193,6 @@ describe SystemTemplate do
       @export_tpl = SystemTemplate.new(:name => "export_template", :environment => @organization.locker)
       @export_tpl.stub(:products).and_return [@prod1, @prod2]
       @export_tpl.stub(:packages).and_return [mock({:package_name => 'xxx'})]
-      @export_tpl.stub(:errata).and_return [mock({:erratum_id => 'xxx'})]
       @export_tpl.stub(:parameters_json).and_return "{}"
       @export_tpl.stub(:package_groups).and_return [SystemTemplatePackGroup.new({:package_group_id => 'xxx', :repo_id => "repo-123" })]
       @export_tpl.stub(:pg_categories).and_return [SystemTemplatePgCategory.new({:pg_category_id => 'xxx', :repo_id => "repo-456"})]
@@ -217,7 +201,6 @@ describe SystemTemplate do
       json = ActiveSupport::JSON.decode(str)
       json['products'].size.should == 2
       json['packages'].size.should == 1
-      json['errata'].size.should == 1
       json['package_groups'].size.should == 1
       json['package_group_categories'].size.should == 1
     end
@@ -238,19 +221,13 @@ describe SystemTemplate do
       @pack1.stub(:to_package).and_return {}
       @pack1.stub(:valid?).and_return true
 
-      @err1 = SystemTemplateErratum.new(:erratum_id => "err1")
-      @err1.stub(:to_erratum).and_return {}
-      @err1.stub(:valid?).and_return true
-
       @tpl1.products << @prod1
       @tpl1.packages << @pack1
-      @tpl1.errata << @err1
       @tpl1.save!
 
       id = @tpl1.id
       @tpl1.destroy
 
-      SystemTemplateErratum.find_by_system_template_id(id).should == nil
       SystemTemplatePackage.find_by_system_template_id(id).should == nil
     end
 
