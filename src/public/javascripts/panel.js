@@ -240,8 +240,6 @@ KT.panel = (function($){
             
             spinner.show();
             panelContent.hide();
-            expand_cb(name);
-
             $.ajax({
                 cache: true,
                 url: ajax_url,
@@ -257,6 +255,8 @@ KT.panel = (function($){
                     } else {
                         panelResize($('#panel_main'), isSubpanel);
                     }
+                    panel.expand_cb(name);
+
                 },
                 error: function (xhr, status, error) {
                     spinner.hide();

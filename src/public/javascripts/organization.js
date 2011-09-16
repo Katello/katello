@@ -13,6 +13,12 @@
 
 $(document).ready(function() {
 
+    var env_scroll = KT.env_select_scroll({});
+    panel.set_expand_cb(function() {
+        env_scroll.bind(undefined);
+    });
+
+
    $('.environment_link').live('click', function() {
         $(this).siblings().show();
 
