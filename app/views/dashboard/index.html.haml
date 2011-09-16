@@ -1,4 +1,16 @@
-.grid_11
-  %h1 #{_("Dashboard")}
-  
-  %p #{_("This is to be the Dashboard area containing Monitors, Reporting, and other Workflow.")}
+.grid_16
+  %h2 #{_("Welcome back, %{u}\n" % {:u => current_user.username}) }
+.grid_9
+  .dashboard
+    .dashhead
+      %h2 #{_("Subscriptions")}
+  .dashboard
+    .dashhead
+      %h2  #{_("Available Errata")}
+.grid_7
+  .dashboard
+    %h2  #{_("Latest Notifications")}
+  .dashboard
+    %h2  #{_("Promotions Overview")}
+  .dashboard
+    %h2  #{_("Sync Overview")}
