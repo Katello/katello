@@ -25,9 +25,6 @@ class TemplateContentValidator < ActiveModel::Validator
     for p in record.packages
       record.errors[:packages] << _("Package '#{p.package_name}' does not belong to any product in this template") if not p.valid?
     end
-    for e in record.errata
-      record.errors[:errata] << _("Erratum '#{e.erratum_id}' does not belong to any product in this template") if not e.valid?
-    end
   end
 end
 
@@ -49,7 +46,6 @@ class SystemTemplate < ActiveRecord::Base
 
   belongs_to :parent, :class_name => "SystemTemplate"
   has_and_belongs_to_many :products, :uniq => true
-  has_many :errata,   :class_name => "SystemTemplateErratum", :inverse_of => :system_template, :dependent => :destroy
   has_many :packages, :class_name => "SystemTemplatePackage", :inverse_of => :system_template, :dependent => :destroy
   has_many :package_groups, :class_name => "SystemTemplatePackGroup", :inverse_of => :system_template, :dependent => :destroy
   has_many :pg_categories, :class_name => "SystemTemplatePgCategory", :inverse_of => :system_template, :dependent => :destroy
@@ -128,19 +124,6 @@ class SystemTemplate < ActiveRecord::Base
     package = self.packages.find(:first, :conditions => {:package_name => package_name})
     package.destroy
   end
-
-
-  def add_erratum erratum_id
-    err = SystemTemplateErratum.new(:erratum_id => erratum_id)
-    self.errata << err
-  end
-
-
-  def remove_erratum erratum_id
-    err = self.errata.find(:first, :conditions => {:erratum_id => erratum_id})
-    err.destroy
-  end
-
 
   def add_product product_name
     product = self.environment.products.find_by_name(product_name)
@@ -232,7 +215,7 @@ class SystemTemplate < ActiveRecord::Base
 
   def self.any_readable? org
     User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
-    
+
   end
 
   def self.readable? org
