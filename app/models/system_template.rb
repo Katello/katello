@@ -86,7 +86,6 @@ class SystemTemplate < ActiveRecord::Base
     self.description = json["description"]
     json["products"].each {|p| self.add_product(p) } if json["products"]
     json["packages"].each {|p| self.add_package(p) } if json["packages"]
-    json["errata"].each {|e| self.add_erratum(e) } if json["errata"]
     json["package_groups"].each {|pg| self.add_package_group(pg.symbolize_keys) } if json["package_groups"]
     json["package_group_categories"].each {|pgc| self.add_pg_category(pgc.symbolize_keys) } if json["package_group_categories"]
 
@@ -101,7 +100,6 @@ class SystemTemplate < ActiveRecord::Base
       :name => self.name,
       :revision => self.revision,
       :packages => self.packages.map(&:package_name),
-      :errata   => self.errata.map(&:erratum_id),
       :products => self.products.map(&:name),
       :parameters => ActiveSupport::JSON.decode(self.parameters_json),
       :package_groups => self.package_groups.map(&:export_hash),
@@ -170,7 +168,6 @@ class SystemTemplate < ActiveRecord::Base
      super(options.merge({
         :methods => [:products,
                      :packages,
-                     :errata,
                      :parameters,
                      :package_groups,
                      :pg_categories
@@ -189,7 +186,6 @@ class SystemTemplate < ActiveRecord::Base
     for tpl in self.get_inheritance_chain
 
       @changeset.products << tpl.products
-      @changeset.errata   << changeset_errata(tpl.errata)
       @changeset.packages << changeset_packages(tpl.packages)
     end
     @changeset.promote
@@ -232,13 +228,6 @@ class SystemTemplate < ActiveRecord::Base
 
 
   protected
-
-  def changeset_errata(errata)
-    errata.collect do |e|
-      e = e.to_erratum
-      ChangesetErratum.new(:errata_id=>e.id, :display_name=>e.title, :changeset => @changeset)
-    end
-  end
 
   def changeset_packages(packages)
     packages.collect do |p|
