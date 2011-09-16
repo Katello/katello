@@ -98,8 +98,7 @@ class ApplicationController < ActionController::Base
       if persist
         # create & store notice... but mark as 'viewed'
         new_notice = Notice.create(:text => notice_string, :details => details, :level => level, :global => global,
-                                   :controller_name => controller_name, :action_name => action_name,
-                                   :user_notices => [UserNotice.new(:user => current_user)])
+                                   :request_type => requested_action, :user_notices => [UserNotice.new(:user => current_user)])
 
         unless new_notice.nil?
           user_notice = current_user.user_notices.where(:notice_id => new_notice.id).first
@@ -115,8 +114,8 @@ class ApplicationController < ActionController::Base
       # retrieved by the client on it's next polling interval.
       #
       # create & store notice... and mark as 'not viewed'
-      Notice.create!(:text => notice_string, :details => details, :level => level, :global => global, :user_notices => [UserNotice.new(:user => current_user, :viewed=>false)])
-
+      Notice.create!(:text => notice_string, :details => details, :level => level, :global => global,
+                     :request_type => requested_action, :user_notices => [UserNotice.new(:user => current_user, :viewed=>false)])
     end
   end
 
@@ -143,7 +142,6 @@ class ApplicationController < ActionController::Base
     notice summary, options
   end
 
-
   def flash_to_headers
     return if @_response.nil? or @_response.response_code == 302
     return if flash.blank?
@@ -152,6 +150,7 @@ class ApplicationController < ActionController::Base
         @enc = CGI::escape(flash[type].gsub("\n","<br \\>"))
         response.headers['X-Message'] = @enc
         response.headers['X-Message-Type'] = type.to_s
+        response.headers['X-Message-Request-Type'] = requested_action
         flash.delete(type)  # clear the flash
         return
       end
@@ -333,6 +332,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def requested_action
+    controller_name + '___' + action_name
+  end
+
   def setup_environment_selector org, accessible
     next_env = KTEnvironment.find(params[:next_env_id]) if params[:next_env_id]
 
@@ -429,7 +432,6 @@ class ApplicationController < ActionController::Base
     }
     nil
   end
-
 
 end
 
