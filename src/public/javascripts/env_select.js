@@ -41,12 +41,9 @@ $(document).ready(function() {
         out:env_select.close
     });
 
-    $(".path_entries").show();
+
     env_select.scroll_obj = KT.env_select_scroll({});
-    env_select.scroll_obj.bind();
-
-    $(".path_entries").hide()
-
+    env_select.recalc_scroll();
 
 });
 
@@ -63,6 +60,11 @@ var env_select =   {
     scroll_obj: undefined,
     click_callback: undefined,
     active_div:  undefined,
+    recalc_scroll: function() {
+        $(".path_entries").show();
+        env_select.scroll_obj.bind();
+        $(".path_entries").hide()
+    },
     expand: function() {
         $('#path-collapsed').hide();
         $('#path-expanded').show();
@@ -104,7 +106,7 @@ var env_select =   {
           env_select.click_callback(id, $(this));
         }
         
-        env_select.scroll_obj.bind($(".path_selected").children());
+        env_select.recalc_scroll();
         return false;
     },
     disable_active: function() {
