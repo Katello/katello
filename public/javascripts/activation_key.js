@@ -13,6 +13,11 @@
 
 $(document).ready(function() {
 
+    KT.panel.set_expand_cb(function() {
+        activation_key.reset_env_select();
+    });
+
+
     $('#new_activation_key').live('submit', function(e) {
         e.preventDefault();
         activation_key.create_key($(this));
@@ -30,6 +35,7 @@ $(document).ready(function() {
 
     $('.select_env').live('click', function() {
         activation_key.select_environment($(this));
+        activation_key.reset_env_select();
         activation_key.get_system_templates($(this), true);
     });
 
@@ -76,6 +82,9 @@ $(document).ready(function() {
 
 var activation_key = (function() {
     return {
+        reset_env_select: function() {
+          KT.env_select_scroll().bind();
+        },
         create_key : function(data) {
             var button = data.find('input[type|="submit"]');
             button.attr("disabled","disabled");
@@ -114,6 +123,7 @@ var activation_key = (function() {
                 cache: false,
                 success: function(response) {
                     $('#environment_edit_dialog').html(response).dialog('open');
+                    activation_key.reset_env_select();
                     // hide the system template select.  this select will only be shown if user selects an env
                     $("#force_edit_system_template").hide();
                 },
