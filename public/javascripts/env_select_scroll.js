@@ -5,6 +5,7 @@ KT.env_select_scroll = function(options) {
 
     var anchor_padding = 20, //amount of padding each anchor has
         min_size = 25,
+        min_size_selected = 75;
         px_per_sec = 400,
         freq = 20;
 
@@ -39,15 +40,23 @@ KT.env_select_scroll = function(options) {
                 var anchor = $(this),
                     out_interval = undefined,
                     over_interval= undefined,
-                    total_width = anchor.width();
+                    total_width = anchor.width(),
+                    my_min_size = min_size;
 
 
-                if (cont_width < ((anchor_padding + min_size) * (anchors.length)) + anchor_padding + total_width - 10) {
-                    total_width = cont_width -  ((anchor_padding + min_size) * (anchors.length) + anchor_padding -10);
 
+                if (cont_width < ((anchor_padding + my_min_size) * (anchors.length-1)) + anchor_padding + total_width - 10 + min_size_selected) {
+                    total_width = cont_width -  ((anchor_padding + my_min_size) * (anchors.length-1) + anchor_padding -10 + min_size_selected);
                 }
 
-                $(this).width(min_size);
+                if (anchor.hasClass("active")) {
+                    my_min_size = min_size_selected;
+                    if (my_min_size > total_width) {
+                        return;
+                    }
+                }
+
+                $(this).width(my_min_size);
 
                 var total_time = (total_width - min_size)/px_per_sec,
                     num_iterations = total_time*1000/freq,
@@ -89,7 +98,6 @@ KT.env_select_scroll = function(options) {
 
                 anchor.mouseout(function() {
                     if (out_interval) {
-
                         return false;
                     }
 
@@ -97,7 +105,7 @@ KT.env_select_scroll = function(options) {
 
                     out_interval = setInterval(function() {
                         var width = anchor.width();
-                        if (width > min_size) {
+                        if (width >= my_min_size) {
                             clear_over();
                             anchor.width(width-chunk_size);
                         }
