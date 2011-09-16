@@ -593,7 +593,6 @@ var promotion_page = (function($){
         },
         add_dependencies= function() {
            if (current_changeset === undefined) {
-               console.log("returning false");
                return false;
            }
            $.each(current_changeset.getProducts(), function(product_id, product) {
