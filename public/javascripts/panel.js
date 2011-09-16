@@ -255,8 +255,7 @@ KT.panel = (function($){
                     } else {
                         panelResize($('#panel_main'), isSubpanel);
                     }
-                    panel.expand_cb(name);
-
+                    expand_cb(name);
                 },
                 error: function (xhr, status, error) {
                     spinner.hide();

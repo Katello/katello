@@ -14,7 +14,7 @@
 $(document).ready(function() {
 
     var env_scroll = KT.env_select_scroll({});
-    panel.set_expand_cb(function() {
+    KT.panel.set_expand_cb(function() {
         env_scroll.bind(undefined);
     });
 
