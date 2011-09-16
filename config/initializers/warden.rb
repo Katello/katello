@@ -87,11 +87,23 @@ Warden::Strategies.add(:certificate) do
   end
 
   def authenticate!
-    return fail('No ssl client certificate, skipping ssl-certificate authentication') if request.env['SSL_CLIENT_CERT'].blank?
-
-    consumer_cert = OpenSSL::X509::Certificate.new(request.env['SSL_CLIENT_CERT'])
+    ssl_client_cert = client_cert_from_request
+    return fail('No ssl client certificate, skipping ssl-certificate authentication') if ssl_client_cert.blank?
+    consumer_cert = OpenSSL::X509::Certificate.new(ssl_client_cert)
     u = CpConsumerUser.new(:uuid => uuid(consumer_cert), :username => uuid(consumer_cert))
     success!(u)
+  end
+
+  def client_cert_from_request
+    cert = request.env['SSL_CLIENT_CERT'] || request.env['HTTP_SSL_CLIENT_CERT']
+    return nil if cert.blank? || cert == "(null)"
+    # apache does not preserve new lines in cert file - work-around:
+    if cert.include?("-----BEGIN CERTIFICATE----- ")
+      cert = cert.to_s.gsub("-----BEGIN CERTIFICATE----- ","").gsub(" -----END CERTIFICATE-----","")
+      cert.gsub!(" ","\n")
+      cert = "-----BEGIN CERTIFICATE-----\n#{cert}-----END CERTIFICATE-----\n"
+    end
+    return cert
   end
 
   def uuid(cert)
