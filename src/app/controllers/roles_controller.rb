@@ -72,8 +72,8 @@ class RolesController < ApplicationController
                  :col => ['name'],
                  :create => _('Role'),
                  :name => controller_display_name,
-                 :ajax_scroll => items_roles_path()}
-    @panel_options[:enable_create] = false if !Role.creatable?
+                 :ajax_scroll => items_roles_path(),
+                 :enable_create=> Role.creatable?}
   end
   
   def new
