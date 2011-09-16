@@ -327,13 +327,15 @@ class ApplicationController < ActionController::Base
     elsif notice.kind_of? RuntimeError
       items["notices"].push(notice.message)
     else
-      Rails.logger.error("Recieved unrecognized notice: " + notice.inspect)
+      Rails.logger.error("Received unrecognized notice: " + notice.inspect)
       items["notices"].push(notice)
     end
   end
 
   def requested_action
-    controller_name + '___' + action_name
+    unless controller_name.nil? or action_name.nil?
+      controller_name + '___' + action_name
+    end
   end
 
   def setup_environment_selector org, accessible
