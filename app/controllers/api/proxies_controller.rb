@@ -30,7 +30,8 @@ class Api::ProxiesController < Api::ApiController
   end
 
   def drop_api_namespace(original_request_path)
-    original_request_path.gsub('/api', '')
+    prefix = "#{ENV["RAILS_RELATIVE_URL_ROOT"]}/api"
+    original_request_path.gsub(prefix, '')
   end
 
 end
