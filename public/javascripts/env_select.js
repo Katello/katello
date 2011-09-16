@@ -41,6 +41,13 @@ $(document).ready(function() {
         out:env_select.close
     });
 
+    $(".path_entries").show();
+    env_select.scroll_obj = KT.env_select_scroll({});
+    env_select.scroll_obj.bind();
+
+    $(".path_entries").hide()
+
+
 });
 
 
@@ -53,6 +60,7 @@ var env_select =   {
      * env_next_id may be undefined
      *
      */
+    scroll_obj: undefined,
     click_callback: undefined,
     active_div:  undefined,
     expand: function() {
@@ -74,17 +82,16 @@ var env_select =   {
         $('#path-selected').find('ul').html(content);
         env_select.active_div = $(this);
         env_select.highlight_selected();
+        env_select.scroll_obj.bind($(".path_selected").children());
         return false;
     },
     get_selected_env: function() {
         return $(".path_link.active").attr("data-env_id");
     },
     set_selected: function(env_id) {
-        console.log("SETTING");
         $('[data-env_id=' + env_id + '].path_link').click();
     },
     env_selected: function() {
-        console.log("SELECTED");
         env_select.close();
         var id = $(this).attr('data-env_id') ;
 
@@ -96,6 +103,8 @@ var env_select =   {
         if (env_select.click_callback) {
           env_select.click_callback(id, $(this));
         }
+        
+
         return false;
     },
     disable_active: function() {

@@ -1399,6 +1399,7 @@ fieldset {
       border-style: solid;
       border-width: 1px;
       border-color: #d3d3d3;
+      height: 34px;
       padding: 6px;  
 
       .path_selector {
@@ -1412,13 +1413,14 @@ fieldset {
      display: inline;
      padding-bottom: 6px;
      margin-bottom: 6px;
+     /*position: absolute;*/
   }
   .path_entry_selected {
         background-color: $lightgrey_color;
   }
   .path_entry {
       padding-left: 6px;
-      padding-right: 33px;
+      padding-right: 6px;
       padding-top: 6px;
       padding-bottom: 6px;
       
@@ -1451,6 +1453,8 @@ fieldset {
   max-height: 34px;
   /*font: 14px;*/
   position: relative;
+  @include no-select;
+
 
   .selected {
     background: $listhover_color !important;
@@ -1486,7 +1490,7 @@ fieldset {
         @include crumb-nohover;
         a {
           overflow: hidden;
-          padding-right: 30px;
+          padding-right: 10px;
           @include border-right-radius(5px);
           &:before {
             content: None;
@@ -1528,7 +1532,7 @@ fieldset {
         &.active {
           background: $kselected_color;
           color: white;
-
+          &:after { border-left-color: $kselected_color };
           &:hover:after { border-left-color: $listhover_color !important; }
          
           

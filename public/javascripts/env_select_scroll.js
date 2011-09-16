@@ -8,28 +8,44 @@ KT.env_select_scroll = function(options) {
         px_per_sec = 400,
         freq = 20;
 
-    var bind = function() {
+    var bind = function(element) {
+        if (!element) {
+            element = ".jbreadcrumb";
+        }
 
-        $(".jbreadcrumb").each(function() {
+        $(element).each(function() {
             var trail = $(this),
                 cont_width = $(this).width(),
-                total_width = 0;
-            
-            trail.find("a").each(function() {
-                total_width += $(this).width() + anchor_padding; 
+                combined_width = 0,
+                anchors = trail.find("a");
+                
+            anchors.unbind("mouseout").unbind("mouseover").width('auto');
+
+            anchors.each(function() {
+                combined_width += $(this).width() + anchor_padding;
+
             });
 
+            
+
             //if we don't actually need more room, then don't add the scrolling
-            if (total_width < cont_width) {
+            if (combined_width < cont_width) {
                 return true;
             }
 
 
-            trail.find("a").each(function() {
+            
+            anchors.each(function() {
                 var anchor = $(this),
                     out_interval = undefined,
                     over_interval= undefined,
                     total_width = anchor.width();
+
+
+                if (cont_width < ((anchor_padding + min_size) * (anchors.length)) + anchor_padding + total_width - 10) {
+                    total_width = cont_width -  ((anchor_padding + min_size) * (anchors.length) + anchor_padding -10);
+
+                }
 
                 $(this).width(min_size);
 
