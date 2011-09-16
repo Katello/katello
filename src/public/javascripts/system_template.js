@@ -313,14 +313,14 @@ KT.template_renderer = function() {
     },
     list_item = function(id, text, is_slide_link) {
         var html = '<li class="' + (is_slide_link ? 'slide_link' : '')  + '">';
-        html += '<div class="link_details" id="' + id + '">';
+        html += '<div class="link_details simple_link" id="' + id + '">';
         html += '<span class="sort_attr">' + text + '</span>';
         html += "</div></li>";
         return html ;
     },
     package_item = function(pkg_name) {
         var html = '<li class="">';
-        html += '<div class="" id=pkg_"' + pkg_name + '">';
+        html += '<div class="simple_link" id=pkg_"' + pkg_name + '">';
         html += '<span class="sort_attr">' + pkg_name + '</span>';
         if (KT.permissions.editable) {
             html += '<a id="" class="fr st_button remove_package">' + i18n.remove + '</a>';
@@ -346,7 +346,7 @@ KT.template_renderer = function() {
     },
     product_item = function(name, id) {
         var html = '<li class="">';
-        html += '<div class="" id=pkg_"' + id + '">';
+        html += '<div class="simple_link" id=prod_"' + id + '">';
         html += '<span class="sort_attr">' + name + '</span>';
         if (KT.permissions.editable) {
             html += '<a id="" class="fr st_button remove_product" data-id="' + id + '" data-name="'+ name + '">';
