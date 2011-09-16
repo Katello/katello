@@ -283,8 +283,6 @@ class UpdateContent(TemplateAction):
             'remove_product': [{'product': None}],
             'add_package':    [{'package': None}],
             'remove_package': [{'package': None}],
-            'add_erratum':    [{'erratum': None}],
-            'remove_erratum': [{'erratum': None}],
             'add_parameter':  [{'parameter': None}, {'value': None}],
             'remove_parameter': [{'parameter': None}],
             'add_package_group':    [{'package_group': _("Package group id")},{'repo': _("Repo id")}],
