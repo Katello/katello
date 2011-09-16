@@ -16,21 +16,26 @@
   
     .grid_7
       %h5 #{_("Environment Promotion Paths")}:
+
     - unless @organization.environments.empty?
       %ul#promotion_paths
       - @organization.promotion_paths.each do |path|
         .clear
           &nbsp;
-        .grid_7
-          %ul.breadcrumb
+        .jbreadcrumb.grid_9
+          %ul
             %li
               =link_to _('Locker'), "#", :class => "crumb-nohover"
             - for env in path
               %li
-                %a.subpanel_element{"data-url"=>edit_organization_environment_path(@organization.cp_key, env.id)} #{env.name}
+                %a.subpanel_element{"data-url"=>edit_organization_environment_path(@organization.cp_key, env.id)}
+                  %div
+                    #{env.name}
+
     - else
       .grid_7
         #{_("No environments are available in this organization. Please add some environments to be able register systems to this organization.")}:
+
     .clear
       &nbsp;
 
