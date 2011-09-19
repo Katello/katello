@@ -9,7 +9,7 @@ NameVirtualHost *:443
   SSLEngine On
   SSLCertificateFile <%= scope.lookupvar("katello::params::ssl_certificate_file") %>
   SSLCertificateKeyFile <%= scope.lookupvar("katello::params::ssl_certificate_key_file") %>
-  SSLCaCertificateFile /etc/candlepin/certs/candlepin-ca.crt
+  SSLCaCertificateFile <%= scope.lookupvar("katello::params::ssl_certificate_ca_file") %>
   ProxyPreserveHost Off
   RequestHeader set X_FORWARDED_PROTO 'https'
 
