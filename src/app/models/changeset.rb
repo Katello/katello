@@ -65,7 +65,7 @@ class Changeset < ActiveRecord::Base
     errata.collect{|erratum| erratum.errata_id}
   end
 
-  #get a list of all the products involved in teh changeset
+  #get a list of all the products involved in the changeset
   #  but not necessarily 'in' the changeset
   def involved_products
     to_ret = self.products.clone #get a copy
@@ -171,15 +171,17 @@ class Changeset < ActiveRecord::Base
     raise _("Cannot promote the changeset '#{self.name}' while another changeset (#{self.environment.promoting.first.name}) is being promoted.") if self.environment.promoting_to?
 
     if async
-      task = self.async(:organization=>self.environment.organization).promote_content
-      self.task_status = task
       self.state = Changeset::PROMOTING
       self.save!
+      task = self.async(:organization=>self.environment.organization).promote_content
+      self.task_status = task
+      self.save!
+      self.task_status
     else
+      self.task_status = nil
+      self.save!
       promote_content
     end
-
-    true
   end
 
   def add_product product_name
@@ -357,9 +359,11 @@ class Changeset < ActiveRecord::Base
     from_env = self.environment.prior
     to_env   = self.environment
 
-    wait_for_tasks promote_products(from_env, to_env)
+    PulpTaskStatus::wait_for_tasks promote_templates(from_env, to_env)
+    update_progress! '30'
+    PulpTaskStatus::wait_for_tasks promote_products(from_env, to_env)
     update_progress! '50'
-    wait_for_tasks promote_repos(from_env, to_env)
+    PulpTaskStatus::wait_for_tasks promote_repos(from_env, to_env)
     update_progress! '80'
     promote_packages from_env, to_env
     update_progress! '90'
@@ -369,29 +373,6 @@ class Changeset < ActiveRecord::Base
     self.state = Changeset::PROMOTED
     self.save!
   end
-
-  def wait_for_tasks async_tasks
-
-    async_tasks = async_tasks.collect do |t|
-      ts = PulpTaskStatus.using_pulp_task(t)
-      ts.organization = self.environment.organization
-      ts
-    end
-
-    any_running = true
-    while any_running
-      any_running = false
-      for t in async_tasks
-        t.refresh
-        if ((t.state == TaskStatus::Status::WAITING.to_s) or (t.state == TaskStatus::Status::RUNNING.to_s))
-          any_running = true
-          break
-        end
-      end
-    end
-    async_tasks
-  end
-
 
 
   def products_to_promote from_env, to_env
@@ -403,6 +384,14 @@ class Changeset < ActiveRecord::Base
     required_products = required_products.flatten(1)
     products_to_promote = (self.products + (required_products - to_env.products)).uniq
     products_to_promote
+  end
+
+
+  def promote_templates from_env, to_env
+    async_tasks = self.system_templates.collect do |tpl|
+      tpl.promote from_env, to_env
+    end
+    async_tasks.flatten(1)
   end
 
 

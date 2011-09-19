@@ -176,26 +176,33 @@ class SystemTemplate < ActiveRecord::Base
      )
   end
 
+  def promote from_env, to_env
+    #TODO: promote parent templates recursively
 
-  def promote
-    raise Errors::TemplateContentException.new("Cannot promote the template #{name}. #{self.environment.name} is the last environment in the promotion chain.") if self.environment.successor.nil?
-    to_env   = self.environment.successor
+    #promote all products
+      #promote the product only if it is not in the next env yet
+    async_tasks = []
+    self.products.each do |prod|
+      async_tasks << (prod.promote from_env, to_env) if not prod.environments.include? to_env
+    end.flatten(1)
+    PulpTaskStatus::wait_for_tasks async_tasks
 
-    #collect all parent templates into one changeset
-    @changeset = Changeset.create!(:name => "template_promotion_#{Time.now}", :environment => to_env, :state => Changeset::REVIEW)
-    for tpl in self.get_inheritance_chain
+    #TODO: promote packages
+      #if specified by nvre, ensure the nvre is there, othervise promote it
+      #if specified by name, ensure any package with this name is in the next env. If not, promote the latest.
 
-      @changeset.products << tpl.products
-      @changeset.packages << changeset_packages(tpl.packages)
+
+    #clone the template
+      #try to find template in the next env. If it is there, delete it
+      #clone the template to the next environment
+    tpl_copy = to_env.system_templates.find_by_name(self.name)
+    if not tpl_copy.nil?
+      tpl_copy.delete
     end
-    @changeset.promote
+    self.copy_to_env to_env
 
-    for tpl in self.get_inheritance_chain
-      #copy template to the environment
-      tpl.copy_to_env to_env
-    end
+    async_tasks
   end
-
 
   #### Permissions
   def self.list_verbs global = false
