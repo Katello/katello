@@ -196,7 +196,7 @@ module Candlepin
       end
 
       def generate_ueber_cert key
-        ueber_cert_json = self.post(join_path(path(key), "uebercert"), {}, self.default_headers).body
+        ueber_cert_json = self.post(join_path(path(key), "uebercert"), {}.to_json, self.default_headers).body
         JSON.parse(ueber_cert_json).with_indifferent_access
       end
 
