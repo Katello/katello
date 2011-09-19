@@ -30,20 +30,49 @@ KT.roles.permissionWidget = function(){
         
         flow = {
             'resource_type' :   { previous  : false, 
-                                  next      : 'verbs',
+                                  next      : { stage 	: 'verbs',
+                                  				actions	: function(){
+                                  					if( all_types_button.hasClass('selected') ){
+			                                  			flow['verbs'].container.hide();
+			                                  			flow['details'].container.show();
+			                                  			current_stage = 'details';
+			                                  			progress_bar.setProgress(50);
+			                                  			done_button.show();
+			                                  			next_button.hide();
+			                                  		}
+                                  				}
+                                  			  },
                                   container : $('#resource_type_container'),
                                   input     : $('#resource_type'),
                                   validate  : function(){
                                       return true;
-                                  },
-                                  actions   : function(){
-                                  		progress_bar.setProgress(25);
-                                  		previous_button.hide();
-                                  		next_button.show();
                                   }
                                 },
-            'verbs'         :   { previous  : 'resource_type',
-                                  next      : 'tags',
+            'verbs'         :   { previous  : { stage 	: 'resource_type',
+                       							actions	: function(){
+                                  					progress_bar.setProgress(25);
+                                  					previous_button.hide();
+                                  					next_button.show();                       							
+                       							}
+                       						  },
+                                  next      : { stage 	: 'tags',
+                                  				actions	: function(){
+                                  					if( $('#resource_type').val() === 'organizations' ){
+                                  						flow['tags'].container.hide();
+                                  						current_stage = 'details';
+                                  						flow[current_stage].container.show();
+                                  						next_button.hide();
+                                  						done_button.show();
+                                  						previous_button.show();
+                                  						progress_bar.setProgress(100);
+                                  					} else {
+                                  						progress_bar.setProgress(75);
+	                                  		        	done_button.hide();
+		                                    			next_button.show();
+		                                    			previous_button.show();
+		                                    		}
+                                  				}
+                                  			  },
                                   container : $('#verbs_container'),
                                   input     : $('#verbs'),
                                   validate  : function(){
@@ -56,31 +85,45 @@ KT.roles.permissionWidget = function(){
                                             $('.validation_error').parent().remove();
                                             return true;
                                         }
-                                  },
-                                  actions   : function(){
-                                  		progress_bar.setProgress(50);
-                                  		
-	                                    done_button.hide();
-	                                    next_button.show();
-	                                    previous_button.show();
                                   }
                                 }, 
-            'tags'          :   { previous  : 'verbs',
-                                  next      : 'details',
+            'tags'          :   { previous  : { stage 	: 'verbs',
+                       							actions	: function(){
+                                  					progress_bar.setProgress(50);
+                                  					next_button.show();
+                                  				}
+                       						  },
+                                  next      : { stage 	: 'details',
+                                  				actions	: function(){
+                                  					progress_bar.setProgress(100);
+	                                  		        done_button.show();
+		                                    		next_button.hide();
+		                                    		previous_button.show();
+                                  				}
+                                  			  },
                                   container : $('#tags_container'),
                                   input     : $('#tags'),
                                   validate  : function(){
                                         return true;
-                                  },
-                                  actions   : function(){
-                                  		progress_bar.setProgress(75);
-                                  		
-                                  		previous_button.show();
-                                        next_button.show();
-                                        done_button.hide();
                                   }
                                },
-            'details'       :   { previous  : 'tags',
+            'details'       :   { previous  : { stage 	: 'tags',
+                       							actions	: function(){
+                       								if( all_types_button.hasClass('selected') ){
+                       									current_stage = 'resource_type';
+                       									flow['details'].container.hide();
+                       									done_button.hide();
+                       									next_button.show();
+                       									previous_button.show();
+                       									progress_bar.setProgress(25);
+                       								} else {
+                                  						progress_bar.setProgress(75);
+                                  						previous_button.hide();
+                                  						next_button.show();
+                                  						done_button.hide();
+                                  					}                							
+                       							}
+                       						  },
                                   next      : false, 
                                   container : $('#details_container'),
                                   input		: $('#permission_name'),
@@ -96,18 +139,8 @@ KT.roles.permissionWidget = function(){
                                             $('#permission_name').removeClass("input_error");
                                             return true;
                                         }
-                                  },
-                                  actions   : function(){
-                                        progress_bar.setProgress(100);
-                                        previous_button.show();
-                                        done_button.show();
-                                        next_button.hide();
-                                        
-                                        if( all_types_button.hasClass('selected') ){
-                                            handleAllTypes();
-                                        }
                                   }
-                                },
+                                }
         },
     
         init = function(){
@@ -123,13 +156,16 @@ KT.roles.permissionWidget = function(){
         	var item;
         	
             current_stage = 'resource_type';
-            handleAllTypes(true);
-            
-            for( item in flow ){
+	        
+	        for( item in flow ){
                 if( flow.hasOwnProperty(item) && item !== current_stage ){
                     flow[item].container.hide();
                 }
             }
+        	
+            handleAllTypes(true);
+                        
+            progress_bar.setProgress(25);
             
             all_verbs_button.removeClass('selected');
             all_verbs_button.html(i18n.all);
@@ -137,8 +173,8 @@ KT.roles.permissionWidget = function(){
             all_tags_button.html(i18n.all);
             done_button.removeClass('disabled');
             
+            next_button.show();
             done_button.hide();
-            next_button.hide();
             previous_button.hide();
             
             flow['verbs'].input.removeAttr('disabled');
@@ -146,23 +182,21 @@ KT.roles.permissionWidget = function(){
             
             $('#add_permission_form')[0].reset();
             $('.validation_error').remove();
-        	
-        	flow[current_stage].actions();
         },
         handleNext = function(){
-            var next = flow[current_stage].next; 
+            var next = flow[current_stage].next.stage; 
 
             if( flow[current_stage].validate() ){
-                flow[next].container.show();
-                flow[next].actions();
-                current_stage = next;   
+            	flow[next].container.show();
+                flow[current_stage].next.actions();
+                current_stage = next;
             }
         },
         handlePrevious = function(){
-            var previous = flow[current_stage].previous; 
+            var previous = flow[current_stage].previous.stage; 
             
             flow[current_stage].container.hide();
-            flow[previous].actions();
+            flow[current_stage].previous.actions();
             current_stage = previous;
         },
         handleDone = function(){
@@ -231,10 +265,6 @@ KT.roles.permissionWidget = function(){
                 tags_select.append(html);
                 tags_select.show();
                 all_tags_button.show();
-            } else {
-            	tags_select.hide();
-            	all_tags_button.hide();
-            	flow['tags'].container.append('<span class="info_text" >' + i18n.no_tags_for_type + '</span>');
             }
         },
        	add_permission = function(options){
@@ -255,9 +285,12 @@ KT.roles.permissionWidget = function(){
                     set_verbs_and_tags(event.currentTarget.value, current_organization);
                     
                     if( current_stage !== 'resource_type' ){
-                        flow['verbs'].actions();
                         current_stage = 'verbs';
                         flow['tags'].container.hide();
+                        flow['details'].container.hide();
+                        next_button.show();
+                        done_button.hide();
+                        progress_bar.setProgress(50);
                     }
                     if( all_verbs_button.hasClass('selected') ){
                         handleAllVerbs();
@@ -355,14 +388,20 @@ KT.roles.permissionWidget = function(){
             if( !selected ){
                 current_stage = 'resource_type';
             	
+            	flow['resource_type'].container.find('span').hide();
                 flow['verbs'].container.hide();
                 flow['tags'].container.hide();
+                flow['details'].container.hide();
                 flow['resource_type'].input.hide();
                 flow['resource_type'].input.val('all');
                 $('<span id="all_types_selected">' + i18n.all_types_selected + '</span>').insertBefore(all_types_button);
                 all_types_button.html(i18n.cancel);
                 all_types_button.addClass('selected');
+                progress_bar.setProgress(25);
+                done_button.hide();
+                next_button.show();
             } else {
+                flow['resource_type'].container.find('span').show();
                 flow['resource_type'].input.show();
                 $('#all_types_selected').remove();
                 flow['resource_type'].input.val('organizations').change();
