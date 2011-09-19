@@ -195,6 +195,16 @@ module Candlepin
         JSON.parse(jsonStr).collect {|p| p.with_indifferent_access }
       end
 
+      def generate_ueber_cert key
+        ueber_cert_json = self.post(join_path(path(key), "uebercert"), {}, self.default_headers).body
+        JSON.parse(ueber_cert_json).with_indifferent_access
+      end
+
+      def get_ueber_cert key
+        ueber_cert_json = self.get(join_path(path(key), "uebercert"), {'accept' => 'application/json'}.merge(User.current.cp_oauth_header)).body
+        JSON.parse(ueber_cert_json).with_indifferent_access
+      end
+
       def path(id=nil)
         "/candlepin/owners/#{url_encode id}"
       end
