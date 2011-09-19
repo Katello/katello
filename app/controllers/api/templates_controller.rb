@@ -81,16 +81,6 @@ class Api::TemplatesController < Api::ApiController
         @template.save!
         render :text => _("Removed package '#{params[:package]}'"), :status => 200 and return
 
-      when 'add_erratum'
-        @template.add_erratum(params[:erratum])
-        @template.save!
-        render :text => _("Added erratum '#{params[:erratum]}'"), :status => 200 and return
-
-      when 'remove_erratum'
-        @template.remove_erratum(params[:erratum])
-        @template.save!
-        render :text => _("Removed erratum '#{params[:erratum]}'"), :status => 200 and return
-
       when 'add_parameter'
         @template.parameters[params[:parameter]] = params[:value]
         @template.save!
