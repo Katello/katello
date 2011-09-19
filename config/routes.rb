@@ -265,7 +265,7 @@ Src::Application.routes.draw do
       resources :systems, :only => [:index]
       match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :activation_keys, :only => [:index]
-      resource :uebercert, :only => [:create, :show]
+      resource :uebercert , :only => [:create, :show]
     end
 
     resources :changesets, :only => [:show, :destroy] do
