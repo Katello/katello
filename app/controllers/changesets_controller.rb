@@ -238,8 +238,9 @@ class ChangesetsController < ApplicationController
       ChangesetUser.destroy_all(:changeset_id => @changeset.id) 
       notice _("Started promotion of '#{@changeset.name}' to #{@environment.name} environment")
     rescue Exception => e
-        errors  "Failed to promote: #{e.to_s}", :synchronous_request=>false
-        logger.error $!, $!.backtrace.join("\n\t")
+        errors  "Failed to promote: #{e.to_s}"
+        render :text=>e.to_s, :status=>500
+        return 
     end
 
     render :text=>url_for(:controller=>"promotions", :action => "show",

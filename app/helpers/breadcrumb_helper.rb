@@ -27,8 +27,17 @@ module BreadcrumbHelper
       add_crumb_node!(bc, "changesets", "", _("Changesets"), [], {:client_render => true})
   
       @changesets.each{|cs|
+        cs_info = {:is_new=>cs.state == Changeset::NEW}
+        if (cs.state == Changeset::PROMOTING)
+          prog = cs.task_status.progress
+          if prog
+            cs_info[:progress] =  cs.task_status.progress
+          else
+            cs_info[:progress] =  0
+          end
+        end
         add_crumb_node!(bc, changeset_bc_id(cs), "", cs.name, ['changesets'],
-                      {:client_render => true}, {:is_new=>cs.state == Changeset::NEW})
+                      {:client_render => true}, cs_info)
   
         cs.involved_products.each{|product|
           #product details 
