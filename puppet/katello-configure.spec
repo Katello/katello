@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install/puppet/modules
 
 Name:           katello-configure
-Version:        0.1.1
+Version:        0.1.2
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -41,6 +41,8 @@ rm -rf %{buildroot}
 %{_sbindir}/katello-configure
 
 %changelog
+* Mon Sep 19 2011 Mike McCune <mmccune@redhat.com> 0.1.2-1
+- Correcting previous tag that was pushed improperly 
 * Wed Sep 14 2011 Mike McCune <mmccune@redhat.com> 0.1.1-1
 - new package built with tito
 
