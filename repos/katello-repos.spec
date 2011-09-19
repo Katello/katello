@@ -1,6 +1,6 @@
 
 Name:           katello-repos
-Version:        0.1.1
+Version:        0.1.2
 Release:        1%{?dist}
 Summary:        Definition of yum repositories for Katello
 
@@ -47,6 +47,8 @@ rm -rf %{buildroot}
 %{_sysconfdir}/yum.repos.d/*.repo
 
 %changelog
+* Mon Sep 19 2011 Mike McCune <mmccune@redhat.com> 0.1.2-1
+- Correcting previous tag that was pushed improperly  (mmccune@redhat.com)
 * Wed Sep 14 2011 Mike McCune <mmccune@redhat.com> 0.1.1-1
 - new package built with tito
 
