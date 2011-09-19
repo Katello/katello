@@ -18,8 +18,8 @@ class PromotionsController < ApplicationController
 
   def rules
     show_test = lambda {
-      to_ret = @environment.contents_readable?
-      to_ret ||= @next_environment.changesets_readable? if @next_environment
+      to_ret = @environment && @environment.contents_readable?
+      to_ret ||=  @next_environment.changesets_readable? if @next_environment
       to_ret
     }
 
@@ -170,10 +170,10 @@ class PromotionsController < ApplicationController
     @organization = current_organization
     @environment = KTEnvironment.where(:name=>params[:id]).where(:organization_id=>@organization.id).first if params[:id]
     @environment ||= first_env_in_path(accessible_environments, true)
-    raise Errors::SecurityViolation, _("Cannot find a readable environment.") if @environment.nil?
+    #raise Errors::SecurityViolation, _("Cannot find a readable environment.") if @environment.nil?
 
     @next_environment = KTEnvironment.find(params[:next_env_id]) if params[:next_env_id]
-    @next_environment ||= @environment.successor
+    @next_environment ||= @environment.successor if @environment
     @product = Product.find(params[:product_id]) if params[:product_id]
   end
 
