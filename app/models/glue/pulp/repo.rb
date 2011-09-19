@@ -136,6 +136,32 @@ class Glue::Pulp::Repo
     return false
   end
 
+  def find_packages_by_name name
+    Pulp::Repository.packages_by_name id, name
+  end
+
+  def find_packages_by_nvre name, release, version, epoch
+    Pulp::Repository.packages_by_nvre id, name, release, version, epoch
+  end
+
+  def find_latest_package_by_name name
+    latest_pack = nil
+
+    packages = Pulp::Repository.packages_by_name id, name
+    packages.each do |pack|
+      pack = pack.with_indifferent_access
+      if (latest_pack.nil?)
+        latest_pack = pack
+
+      elsif (pack[:release] > latest_pack[:release]) or
+         (pack[:release] == latest_pack[:release] and pack[:version] > latest_pack[:version]) or
+         (pack[:release] == latest_pack[:release] and pack[:version] == latest_pack[:version] and pack[:epoch] > latest_pack[:epoch])
+        latest_pack = pack
+      end
+    end
+    latest_pack
+  end
+
   def has_erratum? id
     self.errata.each {|err|
       return true if err.id == id
