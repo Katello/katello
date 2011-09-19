@@ -140,4 +140,8 @@ class Api::ApiController < ActionController::Base
     "#{exception.class}: #{exception.message}\n" << exception.backtrace.join("\n")
   end
 
+  def request_from_katello_cli?
+     request.headers['User-Agent'].to_s =~ /^katello-cli/
+  end
+
 end
