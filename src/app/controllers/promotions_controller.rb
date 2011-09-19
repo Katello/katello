@@ -54,7 +54,8 @@ class PromotionsController < ApplicationController
       :accessible_envs=> access_envs,
       :manage_changesets => @next_environment.nil? ? false : @next_environment.changesets_manageable?,
       :promote_changesets => @next_environment.nil? ? false : @next_environment.changesets_promotable?,
-      :read_changesets => @next_environment.nil? ? false : @next_environment.changesets_readable?
+      :read_changesets => @next_environment.nil? ? false : @next_environment.changesets_readable?,
+      :read_contents => (@environment && @environment.contents_readable?)? true: false
     }
     
     render :show, :locals=>locals
