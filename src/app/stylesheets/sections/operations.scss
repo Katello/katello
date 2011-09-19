@@ -114,11 +114,24 @@
       input { width: 175px; }
       .active-step { color: $kselected_color; }
       h5 { font-size: 135%; margin-left: 0px; }
+      h2 { margin: 10px 15px 0 15px; border-bottom: 2px solid $tree-border-color; height: 30px; padding: 0;}
+      
+      #progressbar_container {
+        margin: 10px 15px 10px 15px;
+        border-bottom: 2px solid $tree-border-color;
+        height: 40px;
+        
+        h3 { font-size: 130%; margin-top: 3px; }
+        
+        #progressbar {
+          margin: 0 0 0 90px;
+        }
+      }
       
       .permission_widget_container { 
-        float: none;
         width: 90%;
-        margin: 10px auto; 
+        margin: 10px auto;
+        overflow: auto; 
         
         label { 
           width: 100px; 
@@ -126,6 +139,12 @@
         select, input, textarea {
           margin-left: 15px;
         }
+        span {
+          margin: 2px 5px 0 5px;
+        }
+        .button {
+          margin-top: 0;
+        } 
       }
     
       span { word-wrap: break-word; }
