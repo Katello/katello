@@ -13,6 +13,9 @@
 class Api::UebercertsController < Api::ApiController
   before_filter :find_organization, :only => [:show, :create]
 
+  # TODO: define authorization rules
+  skip_before_filter :authorize
+
   def create
     render :json => Candlepin::Owner.generate_ueber_cert(@organization.cp_key)
   end
