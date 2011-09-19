@@ -352,6 +352,8 @@ class Action(object):
                 msg = ", ".join(re.args[1]["errors"])
             except:
                 msg = re.args[1]
+            if re.args[0] == 401:
+                msg = _("Invalid credentials or unable to authenticate")
 
             self.error(msg)
             return re.args[0]
