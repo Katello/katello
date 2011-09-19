@@ -256,6 +256,19 @@ module Pulp
         JSON.parse(body)
       end
 
+      def packages_by_name repo_id, name
+        response = get(repository_path  + repo_id + "/packages/?name=" + name, self.default_headers)
+        body = response.body
+        JSON.parse(body)
+      end
+
+      def packages_by_nvre repo_id, name, release, version, epoch
+        path = repository_path + repo_id + "/packages/?name=" + name + "&release=" + release + "&version=" + version + "&epoch=" + epoch
+        response = get(path, self.default_headers)
+        body = response.body
+        JSON.parse(body)
+      end
+
       def errata repo_id
         response = get(repository_path  + repo_id + "/errata/", self.default_headers)
         body = response.body
