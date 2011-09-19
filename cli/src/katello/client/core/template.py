@@ -116,7 +116,6 @@ class Info(TemplateAction):
         if template == None:
             return os.EX_DATAERR
 
-        template["errata"]   = "\n".join([e["erratum_id"] for e in template["errata"]])
         template["products"] = "\n".join([p["name"] for p in template["products"]])
         template["packages"] = "\n".join([p["package_name"] for p in template["packages"]])
         template["parameters"] = "\n".join([ key+":\t"+value for key, value in template["parameters"].iteritems() ])
