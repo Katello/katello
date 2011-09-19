@@ -16,14 +16,17 @@ describe Api::UebercertsController do
   include LoginHelperMethods
   OWNER_KEY = "some_org"
 
-  let(:org) { Organization.new }
-  before { Organization.stub!(:first).and_return(org) }
+  let(:org) { Organization.new(:cp_key => OWNER_KEY) }
+  before(:each) do
+    login_user
+    Organization.stub!(:first).and_return(org)
+  end
 
   context "create" do
     before { Candlepin::Owner.stub!(:generate_ueber_cert).and_return({}) }
 
     it "should find organization" do
-      Organization.should_receive(:first).once.with(OWNER_KEY).and_return(org)
+      Organization.should_receive(:first).once.and_return(org)
       post :create, :organization_id => OWNER_KEY
     end
 
@@ -37,7 +40,7 @@ describe Api::UebercertsController do
     before { Candlepin::Owner.stub!(:get_ueber_cert).and_return({}) }
 
     it "should find organization" do
-      Organization.should_receive(:first).once.with(OWNER_KEY).and_return(org)
+      Organization.should_receive(:first).once.and_return(org)
       post :show, :organization_id => OWNER_KEY
     end
 
