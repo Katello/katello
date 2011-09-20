@@ -61,7 +61,7 @@ class Create(UserAction):
                 help=_("user name (required)"))
         self.parser.add_option('--password', dest='password',
                 help=_("initial password (required)"))
-        self.parser.add_option("--disabled", dest="disabled",
+        self.parser.add_option("--disabled", dest="disabled", type="bool",
                 help=_("disabled account (default is 'false')"))
 
     def check_options(self):

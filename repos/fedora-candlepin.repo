@@ -1,0 +1,16 @@
+# Place this file in your /etc/yum.repos.d/ directory
+
+[candlepin]
+name=An open source entitlement management system.
+baseurl=http://repos.fedorapeople.org/repos/candlepin/candlepin/fedora-$releasever/$basearch/
+enabled=1
+skip_if_unavailable=1
+gpgcheck=0
+
+[candlepin-source]
+name=An open source entitlement management system. - Source
+baseurl=http://repos.fedorapeople.org/repos/candlepin/candlepin/fedora-$releasever/SRPMS
+enabled=0
+skip_if_unavailable=1
+gpgcheck=0
+

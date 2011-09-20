@@ -91,9 +91,9 @@ $(document).ready(function() {
 var sync_plan = (function() {
     return {
       successCreate : function(data) {
-        //panel.js calls
+        //KT.panel.js calls
         list.add(data);
-        panel.closePanel($('#panel'));
+        KT.panel.closePanel($('#panel'));
       },
       errorCreate : function(data) {
         $('#plan_save:submit').removeAttr("disabled");

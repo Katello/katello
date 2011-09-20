@@ -324,7 +324,7 @@ var promotion_page = (function($){
                     if( changeset_breadcrumb.hasOwnProperty(id) ){
                         if( id.split("_")[0] === "changeset" ){
                             changeset = changeset_breadcrumb[id];
-                            if( !changeset.is_new && !changeset.progress ){
+                            if( !changeset.is_new && ( changeset.progress === null || changeset.progress === undefined ) ){
                                 changesetStatusActions.setLocked(id);
                             } else if( changeset.progress !== null && changeset.progress !== undefined ){
                                 changesetStatusActions.initProgressBar(id, changeset.progress);
@@ -593,7 +593,6 @@ var promotion_page = (function($){
         },
         add_dependencies= function() {
            if (current_changeset === undefined) {
-               console.log("returning false");
                return false;
            }
            $.each(current_changeset.getProducts(), function(product_id, product) {
@@ -856,7 +855,7 @@ var registerEvents = function(){
               $.extend(changeset_breadcrumb, data.breadcrumb);
               promotion_page.set_changeset(changeset_obj(data.changeset));
               promotion_page.get_changeset_tree().render_content('changeset_' + data.id);
-              panel.closePanel($('#panel'));
+              KT.panel.closePanel($('#panel'));
           },
           error: function(){ button.removeClass("disabled");}
         });
@@ -926,7 +925,7 @@ var registerEvents = function(){
         $(this).addClass("disabled");
         var cs = promotion_page.get_changeset();
         var after = function() {$(this).removeClass("disabled");};
-        cs.promote(after, after);
+        cs.promote(after, function(){});
         return true;
     });
 
@@ -1150,7 +1149,7 @@ var promotionsRenderer = (function(){
 
 var templateLibrary = (function(){
     var changesetsListItem = function(id, name){
-            var html ='<li class="slide_link">' + '<div class="link_details" id="' + id + '">';
+            var html ='<li class="slide_link">' + '<div class="simple_link link_details" id="' + id + '">';
 
             html += '<span class="sort_attr">'+ name + '</span></div></li>';
             return html;
@@ -1172,7 +1171,7 @@ var templateLibrary = (function(){
             var html = '<ul class="filterable">';
              $.each(subtypes, function(index, type) {
                  if (product[type]) {
-                    html += '<li class="slide_link"><div class="link_details"';
+                    html += '<li class="slide_link"><div class="simple_link link_details"';
                  } else {
                      html += '<li><div ';
                  }
@@ -1496,17 +1495,17 @@ $(document).ready(function() {
                                     }));
 
     //need to reset page during the extended scroll
-    panel.extended_cb = promotion_page.reset_page;
+    KT.panel.set_extended_cb(promotion_page.reset_page);
 
     //when loading the new panel item, if its new, we need to add a form submit handler
-    panel.expand_cb = function(id) {
+    KT.panel.set_expand_cb(function(id) {
         if (id === 'new') {
           $('#new_changeset').submit(function(e) {
               e.preventDefault();
               $('#save_changeset_button').trigger('click');
           });
         }
-    };
+    });
 
 
     //set function for env selection callback
@@ -1529,15 +1528,15 @@ $(document).ready(function() {
         var bodyY = parseInt(container.offset().top, 10) - 20;
         var offset = $('#content_tree').width() + 50;
         $(window).scroll(function () {
-            panel.handleScroll($('#changeset_tree'), container, original_top, bodyY, 0, offset);
+            KT.panel.handleScroll($('#changeset_tree'), container, original_top, bodyY, 0, offset);
         });
         $(window).resize(function(){
-           panel.handleScrollResize($('#changeset_tree'), container, original_top, bodyY, 0, offset);
+           KT.panel.handleScrollResize($('#changeset_tree'), container, original_top, bodyY, 0, offset);
         });
     }
     
-    panel.expand_cb = function(){
+    /*KT.panel.set_expand_cb(function(){
        $('.block').parent().parent().removeClass('activeItem');
        $('.active').parent().parent().addClass('activeItem'); 
-    };
+    });*/
 });

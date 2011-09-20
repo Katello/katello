@@ -27,6 +27,9 @@ from katello.client.core.utils import system_exit, parse_tokens, Printer, System
 from katello.client.logutil import getLogger
 from katello.client.server import ServerRequestError
 
+from copy import copy
+from optparse import Option, OptionValueError
+
 Config()
 _log = getLogger(__name__)
 
@@ -103,7 +106,7 @@ class Command(object):
 
     def process_options(self, args):
 
-        self.parser = OptionParser()
+        self.parser = OptionParser(option_class=KatelloOption)
         self.parser.disable_interspersed_args()
         self.parser.set_usage(self.usage)
         if not args:
@@ -158,7 +161,7 @@ class Action(object):
         self.optErrors = []
         self.printer = None
 
-        self.parser = OptionParser()
+        self.parser = OptionParser(option_class=KatelloOption)
         self.parser.add_option('-g', dest='grep',
                         action="store_true",
                         help=_("grep friendly output"))
@@ -323,9 +326,12 @@ class Action(object):
         return True
 
     def error(self, errorMsg):
-        print errorMsg
         _log.error("error: %s" % str(errorMsg))
-        print >> sys.stderr, _('error: operation failed: ') + str(errorMsg)
+        if str(errorMsg) == '':
+            msg = _('error: operation failed')
+        else:
+            msg = str(errorMsg)
+        print >> sys.stderr, msg
 
     def main(self, args):
         """
@@ -352,6 +358,8 @@ class Action(object):
                 msg = ", ".join(re.args[1]["errors"])
             except:
                 msg = re.args[1]
+            if re.args[0] == 401:
+                msg = _("Invalid credentials or unable to authenticate")
 
             self.error(msg)
             return re.args[0]
@@ -379,3 +387,16 @@ class Action(object):
             return os.EX_NOUSER
 
         print ''
+
+# optparse type extenstions --------------------------------------------------
+
+def check_bool(option, opt, value):
+    if value.lower() in ["true","false"]:
+        return value.lower()
+    else:
+        raise OptionValueError(_("option %s: invalid boolean value: %r") % (opt, value))
+
+class KatelloOption(Option):
+    TYPES = Option.TYPES + ("bool",)
+    TYPE_CHECKER = copy(Option.TYPE_CHECKER)
+    TYPE_CHECKER["bool"] = check_bool

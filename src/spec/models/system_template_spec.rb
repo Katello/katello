@@ -169,7 +169,15 @@ describe SystemTemplate do
   'parameters': {
     'attr1': 'val1',
     'attr2': 'val2'
-  }
+  },
+  'package_groups': [
+    {'id': 'pg-123', 'repo': 'repo-123'},
+    {'id': 'pg-456', 'repo': 'repo-123'}
+  ],
+  'package_group_categories': [
+    {'id': 'pgc-123', 'repo': 'repo-123'},
+    {'id': 'pgc-456', 'repo': 'repo-123'}
+  ]
 }
 "
     end
@@ -181,6 +189,10 @@ describe SystemTemplate do
       @import_tpl.should_receive(:add_product).once.with('prod_a2').and_return nil
       @import_tpl.should_receive(:add_package).once.with('walrus').and_return nil
       @import_tpl.should_receive(:add_erratum).once.with('RHEA-2010:9999').and_return nil
+      @import_tpl.should_receive(:add_package_group).once.with({:id => 'pg-123', :repo => 'repo-123'}).and_return nil
+      @import_tpl.should_receive(:add_package_group).once.with({:id => 'pg-456', :repo => 'repo-123'}).and_return nil
+      @import_tpl.should_receive(:add_pg_category).once.with({:id => 'pgc-123', :repo => 'repo-123'}).and_return nil
+      @import_tpl.should_receive(:add_pg_category).once.with({:id => 'pgc-456', :repo => 'repo-123'}).and_return nil
 
 
       @import_tpl.string_import(@import)
@@ -198,12 +210,16 @@ describe SystemTemplate do
       @export_tpl.stub(:packages).and_return [mock({:package_name => 'xxx'})]
       @export_tpl.stub(:errata).and_return [mock({:erratum_id => 'xxx'})]
       @export_tpl.stub(:parameters_json).and_return "{}"
+      @export_tpl.stub(:package_groups).and_return [SystemTemplatePackGroup.new({:package_group_id => 'xxx', :repo_id => "repo-123" })]
+      @export_tpl.stub(:pg_categories).and_return [SystemTemplatePgCategory.new({:pg_category_id => 'xxx', :repo_id => "repo-456"})]
 
       str = @export_tpl.string_export
       json = ActiveSupport::JSON.decode(str)
       json['products'].size.should == 2
       json['packages'].size.should == 1
       json['errata'].size.should == 1
+      json['package_groups'].size.should == 1
+      json['package_group_categories'].size.should == 1
     end
 
   end

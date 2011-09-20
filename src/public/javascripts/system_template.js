@@ -24,7 +24,6 @@ KT.options = {
 
 KT.templates = function() {
     var buttons = {
-        add: undefined,
         edit: undefined,
         remove: undefined,
         save: undefined,
@@ -313,14 +312,14 @@ KT.template_renderer = function() {
     },
     list_item = function(id, text, is_slide_link) {
         var html = '<li class="' + (is_slide_link ? 'slide_link' : '')  + '">';
-        html += '<div class="link_details" id="' + id + '">';
+        html += '<div class="link_details simple_link" id="' + id + '">';
         html += '<span class="sort_attr">' + text + '</span>';
         html += "</div></li>";
         return html ;
     },
     package_item = function(pkg_name) {
         var html = '<li class="">';
-        html += '<div class="" id=pkg_"' + pkg_name + '">';
+        html += '<div class="simple_link" id=pkg_"' + pkg_name + '">';
         html += '<span class="sort_attr">' + pkg_name + '</span>';
         if (KT.permissions.editable) {
             html += '<a id="" class="fr st_button remove_package">' + i18n.remove + '</a>';
@@ -346,7 +345,7 @@ KT.template_renderer = function() {
     },
     product_item = function(name, id) {
         var html = '<li class="">';
-        html += '<div class="" id=pkg_"' + id + '">';
+        html += '<div class="simple_link" id=prod_"' + id + '">';
         html += '<span class="sort_attr">' + name + '</span>';
         if (KT.permissions.editable) {
             html += '<a id="" class="fr st_button remove_product" data-id="' + id + '" data-name="'+ name + '">';
@@ -631,22 +630,7 @@ KT.package_actions = (function() {
 KT.actions =  (function(){
     var options = KT.options;
     var buttons = KT.templates.buttons;
-    var toggle_new = function(is_opening) {
-        var text = i18n.add_close_label;
-
-        if (is_opening.opening) {
-            $("#system_template_name").attr("value", "");
-            $("#system_template_description").attr("value", "");
-        }
-        else {
-            text = i18n.add_label;
-        }
-        reset_buttons();
-        buttons.add.find(".text").text(text);
-
-        return {};
-    },
-    toggle_edit = function(is_opening) {
+    var toggle_edit = function(is_opening) {
         var text = i18n.edit_close_label;
         if (is_opening.opening) {
             var curr = KT.options.current_template;
@@ -691,7 +675,6 @@ KT.actions =  (function(){
        });
     },
     reset_buttons = function() {
-        buttons.add.find(".text").text(i18n.add_label);
         buttons.edit.find(".text").text(i18n.edit_label);
     },
     toggle_list = {
@@ -699,16 +682,12 @@ KT.actions =  (function(){
             'template_edit': { container 	: 'edit_template_container',
                                 setup_fn: toggle_edit
 
-            },
-            'template_add': { container: 'add_template_container',
-                              setup_fn: toggle_new
-
             }
     },
 
     register_events = function() {
 
-        $('form[id^=new_system_template]').live('submit', function(e) {
+        $("#panel").delegate('form[id^=new_system_template]', 'submit', function(e) {
             var button = $('#template_save');
             var  slide_button = $('#add_template');
             
@@ -720,7 +699,7 @@ KT.actions =  (function(){
                     success:function(data) {
                         button.removeAttr("disabled");
                         slide_button.removeClass("disabled");
-                        options.action_bar.toggle('template_add');
+                        KT.panel.closePanel($("#panel"));
                         KT.templates.add_new_template(data.id, data.name);
                     },
                     error:function() {
@@ -730,11 +709,6 @@ KT.actions =  (function(){
             });
         });
 
-        buttons.add.click(function(){
-            if (! $(this).hasClass('disabled') ){
-                options.action_bar.toggle('template_add');
-            }
-        });
         buttons.edit.click(function(){
             if ( $(this).hasClass('disabled') || !KT.options.current_template){
                 return false;
@@ -848,7 +822,6 @@ $(document).ready(function() {
 
     var buttons =KT.templates.buttons;
     buttons.edit = $("#edit_template");
-    buttons.add = $("#add_template");
     buttons.remove = $("#remove_template");
     buttons.save = $("#save_template");
     buttons.save_dialog = $("#save_dialog");
@@ -900,10 +873,10 @@ $(document).ready(function() {
         var bodyY = parseInt(container.offset().top, 10) - 20;
         var offset = $('#template_tree').width() + 50;
         $(window).scroll(function () {
-            panel.handleScroll($('#template_tree'), container, original_top, bodyY, 0, offset);
+            KT.panel.handleScroll($('#template_tree'), container, original_top, bodyY, 0, offset);
         });
         $(window).resize(function(){
-           panel.handleScrollResize($('#template_tree'), container, original_top, bodyY, 0, offset);
+           KT.panel.handleScrollResize($('#template_tree'), container, original_top, bodyY, 0, offset);
         });
     }
 

@@ -43,8 +43,8 @@ $(document).ready(function() {
     var dataToSend = form.serialize();
     // send a request to create the product
     client_common.create(dataToSend, url, function() {
-        panel.panelAjax('', button.attr("data-url") ,$('#panel'));
-        panel.closeSubPanel($('#subpanel'));
+        KT.panel.panelAjax('', button.attr("data-url") ,$('#panel'));
+        KT.panel.closeSubPanel($('#subpanel'));
       },
       function() {button.removeClass("disabled")
     });
@@ -60,8 +60,8 @@ $(document).ready(function() {
     var dataToSend = form.serialize();
     // send a request to create the repo
     client_common.create(dataToSend, url, function() {
-        panel.panelAjax('', button.attr("data-url") ,$('#panel'));
-        panel.closeSubPanel($('#subpanel'));
+        KT.panel.panelAjax('', button.attr("data-url") ,$('#panel'));
+        KT.panel.closeSubPanel($('#subpanel'));
       },
       function() {button.removeClass("disabled")
     });
@@ -70,11 +70,11 @@ $(document).ready(function() {
 
 var provider = (function() {
     return {
-        //custom successCreate - calls notices update and list/panel updates from panel.js
+        //custom successCreate - calls notices update and list/panel updates from KT.panel.js
         successCreate : function(data) {
-            //panel.js functions
+            //KT.panel.js functions
             list.add(data);
-            panel.closePanel($('#panel'));
+            KT.panel.closePanel($('#panel'));
         },
         failCreate : function(data) {
             // enable the form submit so that the user can resolve the error and retry
