@@ -120,6 +120,8 @@ class Info(TemplateAction):
         template["products"] = "\n".join([p["name"] for p in template["products"]])
         template["packages"] = "\n".join([p["package_name"] for p in template["packages"]])
         template["parameters"] = "\n".join([ key+":\t"+value for key, value in template["parameters"].iteritems() ])
+        template["package_groups"] = "\n".join(["{"+_("repo")+":\t"+pg["repo_id"]+", "+_("id")+":\t"+pg["package_group_id"]+"}" for pg in template["package_groups"] ])
+        template["package_group_categories"] = "\n".join(["{"+_("repo")+":\t"+pg["repo_id"]+", "+_("id")+":\t"+pg["pg_category_id"]+"}" for pg in template["pg_categories"] ])
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
@@ -131,6 +133,8 @@ class Info(TemplateAction):
         self.printer.addColumn('products', multiline=True, show_in_grep=False)
         self.printer.addColumn('packages', multiline=True, show_in_grep=False)
         self.printer.addColumn('parameters', multiline=True, show_in_grep=False)
+        self.printer.addColumn('package_groups', multiline=True, show_in_grep=False)
+        self.printer.addColumn('package_group_categories', multiline=True, show_in_grep=False)
 
         self.printer.setHeader(_("Template Info"))
         self.printer.printItem(template)
