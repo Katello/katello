@@ -29,6 +29,5 @@
         .simple_link.link_details{:id=>distribution_bc_id(product)}
           #{_("Distributions")}
 - else
-  %ul
-    %li
-      #{_("You do not have access to access contents in #{environment_name}")}
+  .empty_list
+    #{_("You do not have access to access contents in #{environment_name}")}
