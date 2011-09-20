@@ -38,4 +38,4 @@ rescue Exception => e
   p "Error retrieving test results: #{e.to_s}"
 end
 
-%x[/usr/bin/bkr system-release "#{host}"]
+#%x[/usr/bin/bkr system-release "#{host}"]
