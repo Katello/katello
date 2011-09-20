@@ -56,9 +56,10 @@ Requires:       rubygem(uuidtools)
 Requires:       rubygem(thin)
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
-%if 0%{?fedora} && 0%{?fedora} == 15
+# TODO - uncomment the statement once we push patched actionpack to our EL6 repo
+#%if 0%{?fedora} && 0%{?fedora} <= 15
 Requires:       rubygem(regin)
-%endif
+#%endif
 # </workaround>
 
 Requires(pre):  shadow-utils
