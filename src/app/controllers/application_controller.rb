@@ -449,7 +449,10 @@ class ApplicationController < ActionController::Base
   def execute_rescue exception, renderer
     if exception
       logger.error exception.message
-      logger.error '#{exception.inspect}\n#{exception.backtrace.join("\n")}'
+      logger.error "#{exception.inspect}"
+      exception.backtrace.each { |line|
+      logger.error line
+      }
     end
     if current_user
       User.current = current_user
