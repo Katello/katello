@@ -118,7 +118,6 @@ describe RolesController do
     end
 
     it "should return a portion of roles" do
-      pending "this test sometimes fails, teporary disabling - probalby problem with not specifying the order explicitly in the select"
       get :items, :offset=>25
       response.should be_success
       response.should render_template("list_items")
