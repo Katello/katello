@@ -1,6 +1,6 @@
 
 Name:           katello-repos
-Version:        0.1.1
+Version:        0.1.3
 Release:        1%{?dist}
 Summary:        Definition of yum repositories for Katello
 
@@ -9,8 +9,6 @@ License:        GPLv2
 URL:            http://www.katello.org
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-Requires:       puppet
 
 BuildArch:      noarch
 
@@ -47,6 +45,11 @@ rm -rf %{buildroot}
 %{_sysconfdir}/yum.repos.d/*.repo
 
 %changelog
+* Tue Sep 20 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.3-1
+- no Requires of puppet in katello-repos
+
+* Mon Sep 19 2011 Mike McCune <mmccune@redhat.com> 0.1.2-1
+- Correcting previous tag that was pushed improperly  (mmccune@redhat.com)
 * Wed Sep 14 2011 Mike McCune <mmccune@redhat.com> 0.1.1-1
 - new package built with tito
 

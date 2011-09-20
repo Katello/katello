@@ -75,7 +75,11 @@ class Api::ApiController < ActionController::Base
 
   def exception_with_response(exception)
     logger.error "exception when talking to a remote client: #{exception.message} " << pp_exception(exception)
-    render :text => pp_exception(exception) , :status => exception.http_code
+    if request_from_katello_cli?
+      render :text => pp_exception(exception) , :status => exception.http_code
+    else
+      render :text => exception.response , :status => exception.http_code
+    end
   end
 
   def render_403(e)
@@ -139,6 +143,10 @@ class Api::ApiController < ActionController::Base
 
   def pp_exception(exception)
     "#{exception.class}: #{exception.message}\n" << exception.backtrace.join("\n")
+  end
+
+  def request_from_katello_cli?
+     request.headers['User-Agent'].to_s =~ /^katello-cli/
   end
 
 end
