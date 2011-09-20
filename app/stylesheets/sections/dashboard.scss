@@ -12,46 +12,86 @@
     h1, h2, h3 {
         margin-top: 3px;
     }
+    h1, h2, h3, h4, h5 {
+      font-weight: normal; //as per kyle's request
+    }
     .dashhead {
         position: relative;
     }
 
+    #dashboard_promotions {
+      h5 {
+        display: inline;
+      }
+      .promotion_entry {
 
-    .error_icon {
-      width: 16px;
-      @include action-icon($warning_icon_black);
+        .col_1 {
+          min-width: 190px;
+          padding-right: 10px;
+          overflow: hidden;
+          display: inline-block;
+          margin-bottom: -5px;
+        }
+        .col_2 {
+          display: inline-block;
+          min-width: 100px;
+          overflow: hidden;
+        }
+
+      }
     }
     .icon_wrap {
       padding-top: 10px;
+      padding-bottom: 10px;
       width: 16px;
       height: 16px;
       overflow: none;
       margin-right: 15px;
 
     }
-    .notice_icon {
+    .check_icon {
       width: 16px;
       height: 16px;
       @include action-icon($check_icon_black);
       margin-left: 0px;
     }
-    .small_widget {
-      overflow: hidden;
-      height: 130px;
-      width: 380px;
-      list-style: None;
-      li {
-        margin-bottom: 3px;
-      }
-      li {
-        margin-bottom: 5px;
-      }
-      h5 {
-        margin-bottom: -5px;
-        margin-top: 0;
-        font-size: 125%;
-      }
+
+    .error_icon {
+      width: 16px;
+      @include action-icon($warning_icon_black);
+      margin-left: 0px;
     }
+
+    .gears_icon {
+      width: 16px;
+      @include action-icon($gear_icon_black);
+      margin-left: 0px;
+    }
+
+    .clock_icon {
+      width: 16px;
+      @include action-icon($gear_icon_black);
+      margin-left: 0px;
+    }
+
+    .small_widget {
+        overflow: hidden;
+        height: 130px;
+        width: 380px;
+        list-style: None;
+        li {
+          margin-bottom: 3px;
+        }
+        li {
+          margin-bottom: 5px;
+        }
+        h5 {
+          margin-bottom: -5px;
+          margin-top: 0;
+          font-size: 125%;
+          
+        }
+      }
 
 }
 .dropbutton {

@@ -1,0 +1,20 @@
+#dashboard_promotions.small_widget.scroll-pane
+  %ul
+  - for changeset in promotions()
+    %li
+      %span.icon_wrap.fl
+        %span.fl{:class=>cs_class(changeset)}
+          &nbsp;&nbsp;
+
+      %div.promotion_entry
+        .col_1
+          %h5
+            = link_to changeset.name, changeset_path(changeset.id)
+        .col_2
+          #{cs_message(changeset)}
+        .col_1
+          #{changeset.environment.name}
+        .col_2
+          #{changeset.promotion_date}
+      
+

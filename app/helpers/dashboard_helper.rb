@@ -27,4 +27,31 @@ module DashboardHelper
       {:text=>text, :level=>note.level, :date=>note.created_at}
     }
   end
+
+  def promotions
+    return  Changeset.joins(:task_status).
+        where("changesets.environment_id"=>KTEnvironment.changesets_readable(current_organization)).
+        order("task_statuses.updated_at DESC").limit(5)
+  end
+
+  def cs_class cs
+    if cs.state === Changeset::PROMOTED
+      "check_icon"
+    elsif cs.state === Changeset::PROMOTING && cs.task_status.start_time
+      "gear_icon"  #running
+    else
+      "clock_icon" #pending
+    end
+  end
+
+  def cs_message cs
+    if cs.state === Changeset::PROMOTED
+      _("Success")
+    elsif cs.state === Changeset::PROMOTING && cs.task_status.start_time
+      _("Promoting")
+    else
+      _("Pending")
+    end        
+  end
+
 end
