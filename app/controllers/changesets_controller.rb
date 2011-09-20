@@ -128,7 +128,7 @@ class ChangesetsController < ApplicationController
   def create
     begin
       @changeset = Changeset.create!(:name=>params[:name], :description => params[:description],
-                                     :environment_id=>@next_environment.id)
+                                     :environment_id=>@environment.id)
       notice _("Changeset '#{@changeset["name"]}' was created.")
       bc = {}
       add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
@@ -238,8 +238,9 @@ class ChangesetsController < ApplicationController
       ChangesetUser.destroy_all(:changeset_id => @changeset.id) 
       notice _("Started promotion of '#{@changeset.name}' to #{@environment.name} environment")
     rescue Exception => e
-        errors  "Failed to promote: #{e.to_s}", :synchronous_request=>false
-        logger.error $!, $!.backtrace.join("\n\t")
+        errors  "Failed to promote: #{e.to_s}"
+        render :text=>e.to_s, :status=>500
+        return 
     end
 
     render :text=>url_for(:controller=>"promotions", :action => "show",
@@ -265,10 +266,6 @@ class ChangesetsController < ApplicationController
       list = KTEnvironment.changesets_readable(current_organization).where(:locker=>false)
       @environment ||= list.first || current_organization.locker
     end
-    @next_environment = KTEnvironment.find(params[:next_env_id]) if params[:next_env_id]
-    @next_environment ||= @environment.successor
-
-
   end
 
   def update_editors

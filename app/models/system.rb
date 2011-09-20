@@ -32,7 +32,7 @@ class System < ActiveRecord::Base
   has_many :activation_keys, :through => :system_activation_keys
 
   validates :environment, :presence => true, :non_locker_environment => true
-  validates :name, :presence => true, :no_trailing_space => true
+  validates :name, :presence => true, :no_trailing_space => true, :uniqueness => true
   validates :description, :katello_description_format => true
   before_create  :fill_defaults
 
