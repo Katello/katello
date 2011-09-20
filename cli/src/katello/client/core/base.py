@@ -326,9 +326,12 @@ class Action(object):
         return True
 
     def error(self, errorMsg):
-        print errorMsg
         _log.error("error: %s" % str(errorMsg))
-        print >> sys.stderr, _('error: operation failed: ') + str(errorMsg)
+        if str(errorMsg) == '':
+            msg = _('error: operation failed')
+        else:
+            msg = str(errorMsg)
+        print >> sys.stderr, msg
 
     def main(self, args):
         """
