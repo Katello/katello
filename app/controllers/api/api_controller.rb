@@ -91,7 +91,7 @@ class Api::ApiController < ActionController::Base
     exception.record.errors.each_pair do |c,e|
       logger.error "#{c}: #{e}"
     end
-    render :text => pp_exception(exception), :status => 400
+    render :text => pp_exception(exception, :with_class => false), :status => 400
   end
 
   def find_organization
@@ -141,8 +141,12 @@ class Api::ApiController < ActionController::Base
     end
   end
 
-  def pp_exception(exception)
-    "#{exception.class}: #{exception.message}\n" << exception.backtrace.join("\n")
+  def pp_exception(exception, options = {})
+    options = options.reverse_merge(:with_class => true)
+    message = ""
+    message << "#{exception.class}: " if options[:with_class]
+    message << "#{exception.message}\n" << exception.backtrace.join("\n")
+    message
   end
 
   def request_from_katello_cli?
