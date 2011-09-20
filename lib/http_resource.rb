@@ -181,5 +181,12 @@ class HttpResource
     def url_encode(element)
       CGI::escape element.to_s unless element.nil?
     end
+
+    def hash_to_query(query_parameters)
+      query_parameters.inject("?") do |so_far, current|
+        so_far << "&" unless so_far == "?"
+        so_far << "#{current[0].to_s}=#{url_encode(current[1])}"
+      end
+    end
   end
 end

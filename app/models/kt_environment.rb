@@ -174,7 +174,7 @@ class KTEnvironment < ActiveRecord::Base
   }
 
   def self.any_viewable_for_promotions? org
-    User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, [], org)
+    User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, org.environment_ids, org, true)
   end
 
   def viewable_for_promotions?
