@@ -327,16 +327,43 @@ KT.roles.permissionWidget = function(){
                 button.addClass("highlighted");
                 set_types(current_organization);
 
-				for( item in flow ){
-					flow[item].container.show();
+				if( permission.tags === 'all'){
+					handleAllTags(false);
+				} else {
+					length = permission.tags.length;
+					values = [];
+					for( i=0; i < length; i += 1){
+						values.push(permission.tags[i].name);
+					}
+					flow['tags'].input.val(values);	
 				}
 
+				if( permission.verbs === 'all' ){
+					handleAllVerbs(false);
+				} else {
+					length = permission.verbs.length;
+					for( i=0; i < length; i += 1){
+						values.push(permission.verbs[i].name);
+					}
+					flow['verbs'].input.val(values);
+				}
+
+
 				flow['resource_type'].input.val(permission.type);
-				flow['name'].input.val(permission.name);
+				flow['details'].input.val(permission.name);
 				$('#description').val(permission.description);
                 
                 flow['resource_type'].input.unbind('change').change(function(event){
                     set_verbs_and_tags(event.currentTarget.value, current_organization);
+                    flow['resource_type'].next.actions();
+                    
+                    if( flow['resource_type'].input.val() !== 'organizations' ){
+                    	flow['tags'].container.show();
+	                    current_stage = 'tags';
+                    } else {
+                    	flow['tags'].container.hide();
+                    	current_stage = 'verbs';
+                    }
                     
                     if( event.currentTarget.value === 'all' ){
                     	handleAllTypes();
@@ -350,29 +377,20 @@ KT.roles.permissionWidget = function(){
                     }
                 }).change();
 
-				if( permission.verbs === 'all' ){
-					handleAllVerbs(false);
-				} else {
-					length = permission.verbs.length;
-					for( i=0; i < length; i += 1){
-						values.push(permission.verbs[i].name);
-					}
-					flow['verbs'].input.val(values);
+
+				for( item in flow ){
+					flow[item].container.show();
 				}
 				
-				if( permission.tags === 'all'){
-					handleAllTags(false);
-				} else {
-					length = permission.tags.length;
-					values = [];
-					for( i=0; i < length; i += 1){
-						values.push(permission.tags[i].name);
-					}
-					flow['tags'].input.val(values);	
+				if( permission.type === 'all' ){
+					flow['tags'].container.hide();
+					flow['verbs'].container.hide();
 				}
 
-				current_stage = 'tags';
-				flow['tags'].actions();
+				current_stage = 'details';
+				next_button.hide();
+				done_button.show();
+				previous_button.show();
 
                 $('#permission_widget_header').html(i18n.edit_permission_header + ' ' + roles_breadcrumb[current_organization].name + ' - ' + permission.name);
             } else {
@@ -407,6 +425,13 @@ KT.roles.permissionWidget = function(){
                 flow['resource_type'].input.val('organizations').change();
                 all_types_button.html(i18n.all);
                 all_types_button.removeClass('selected');
+                flow['verbs'].container.show();
+                flow['tags'].container.hide();
+                flow['details'].container.hide();
+                current_stage = 'verbs';
+                next_button.show();
+                done_button.hide();
+                previous_button.hide();
             }
         },
         handleAllVerbs = function(selected){
