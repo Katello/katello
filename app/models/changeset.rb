@@ -25,6 +25,7 @@ class Changeset < ActiveRecord::Base
   PROMOTED = 'promoted'
   PROMOTING = 'promoting'
   STATES = [NEW, REVIEW, PROMOTING, PROMOTED]
+  
 
   validates_inclusion_of :state,
     :in => STATES,
