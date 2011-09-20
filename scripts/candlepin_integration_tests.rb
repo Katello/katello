@@ -8,7 +8,7 @@ OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 username = ARGV[0]
 password = ARGV[1]
 
-beaker_start_output = %x[/usr/bin/bkr workflow-simple --username="#{username}"  --password="#{password}" --distro="Fedora-14" --whiteboard="Reserve F14 and puppet apply: candlepin, pulp" --arch=x86_64 --keyvalue="MEMORY>499" --keyvalue="DISK>6999" --task=/Kalpana/Sanity/ImportKeys --taskparam='PUBKEYS=lzap witlessb hudson_rsa' --task=/Kalpana/Installation/InstallPuppet --taskparam='PP=candlepin' --task=/Kalpana/Integration/RunSpec --taskparam='SPECDIRS=candlepin' --task=/distribution/reservesys]
+beaker_start_output = %x[/usr/bin/bkr workflow-simple --username="#{username}"  --password="#{password}" --distro="Fedora-14" --whiteboard="Reserve F14 and puppet apply: candlepin, pulp" --arch=x86_64 --keyvalue="MEMORY>499" --keyvalue="DISK>6999" --task=/Kalpana/Sanity/ImportKeys --taskparam='PUBKEYS=lzap witlessb hudson_rsa' --task=/Kalpana/Installation/InstallPuppet --task=/Kalpana/Integration/RunSpec --taskparam='SPECDIRS=candlepin' --task=/distribution/reservesys]
 
 unless beaker_start_output =~ /^Submitted:\s*\['J:(\d+)'\]/
   p "failed to start beaker job: #{beaker_start_output}" 
