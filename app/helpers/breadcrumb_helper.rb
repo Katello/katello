@@ -106,7 +106,9 @@ module BreadcrumbHelper
      templates_crumb_id = "templates"
      
      add_crumb_node!(bc, content_crumb_id, details_promotion_path(@environment.name) ,
-         _("Content"), [], {:cache =>true, :content=>render(:partial=>"detail")})
+         _("Content"), [], {:cache =>true, :content=>render(:partial=>"detail",
+                                   :locals=>{:environment_name => @environment.name,
+                                             :read_contents => @environment.contents_readable?})})
      add_crumb_node!(bc, "all_errata", errata_promotion_path(@environment.name),
          _("All Errata"), [content_crumb_id], {:scrollable=>true})
 
@@ -120,7 +122,10 @@ module BreadcrumbHelper
        product_id = product_bc_id(prod)
        #top of this product
        add_crumb_node!(bc, product_id, details_promotion_path(@environment.name, :product_id=>prod.id),
-          prod.name, [content_crumb_id,products_crumb_id], {:cache=>true, :content=>render(:partial=>"detail", :locals=>{:product=>prod})})
+          prod.name, [content_crumb_id,products_crumb_id], {:cache=>true,
+                  :content=>render(:partial=>"detail",
+                                   :locals=>{:product=>prod, :environment_name => @environment.name,
+                                             :read_contents => @environment.contents_readable?})})
           
        #product,packages
        add_crumb_node!(bc, packages_bc_id(prod), packages_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),

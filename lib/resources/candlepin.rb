@@ -181,11 +181,11 @@ module Candlepin
                              self.default_headers)
       end
 
-      def pools key
+      def pools key, filter = {}
         if key
-          jsonStr = self.get(join_path(path(key), 'pools'), self.default_headers).body
+          jsonStr = self.get(join_path(path(key), 'pools') + hash_to_query(filter), self.default_headers).body
         else
-          jsonStr = self.get(join_path('candlepin', 'pools'), self.default_headers).body
+          jsonStr = self.get(join_path('candlepin', 'pools') + hash_to_query(filter), self.default_headers).body
         end
         JSON.parse(jsonStr).collect {|p| p.with_indifferent_access }
       end
@@ -193,6 +193,16 @@ module Candlepin
       def statistics key
         jsonStr = self.get(join_path(path(key), 'statistics'), self.default_headers).body
         JSON.parse(jsonStr).collect {|p| p.with_indifferent_access }
+      end
+
+      def generate_ueber_cert key
+        ueber_cert_json = self.post(join_path(path(key), "uebercert"), {}.to_json, self.default_headers).body
+        JSON.parse(ueber_cert_json).with_indifferent_access
+      end
+
+      def get_ueber_cert key
+        ueber_cert_json = self.get(join_path(path(key), "uebercert"), {'accept' => 'application/json'}.merge(User.current.cp_oauth_header)).body
+        JSON.parse(ueber_cert_json).with_indifferent_access
       end
 
       def path(id=nil)
