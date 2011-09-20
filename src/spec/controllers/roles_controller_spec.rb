@@ -25,7 +25,7 @@ describe RolesController do
   end
   
   before(:each) do
-    login_user
+    login_user(:mock=>false)
     set_default_locale
     
     controller.stub!(:notice)
@@ -74,6 +74,17 @@ describe RolesController do
       response.should be_success
     end
 
+    it "should be able to add a user to the role" do
+      put 'update', { :id => @role.id, :update_users => { :adding => "true", :user_id => 1 }}
+      response.should be_success
+      assigns[:role].users.should include User.find(1)
+    end
+
+    it "should be able to remove a user from the role" do
+      put 'update', { :id => @role.id, :update_users => { :adding => "false", :user_id => 1 }}
+      response.should be_success
+      assigns[:role].users.should_not include User.find(1)
+    end
 
 =begin
     it 'should disallow changes to admin role' do
@@ -165,6 +176,91 @@ describe RolesController do
     end
   end
 
+  describe "create permission" do
+    
+    before (:each) do
+      @organization = new_test_org
+      @role = Role.create!(:name=>"TestRole")
+    end
+   
+    it "should be successful" do
+      controller.should_receive(:notice)
+      put "create_permission", { :role_id => @role.id, :permission => { :resource_type_attributes => { :name => 'organizations' }, :name=> "New Perm"}}
+      response.should be_success
+      assigns[:role].permissions.should include Permission.where(:name => "New Perm")[0]
+    end
+    
+    it "with all types set should be successful" do
+      controller.should_receive(:notice)
+      put "create_permission", { :role_id => @role.id, :permission => { :resource_type_attributes => { :name => 'all' }, :name=> "New Perm"}}
+      response.should be_success
+      assigns[:role].permissions.should include Permission.where(:name => "New Perm")[0]    
+    end
+    
+  end
 
+  describe 'destroy permission' do
+  
+    before (:each) do
+      @organization = new_test_org
+      @role = Role.create!(:name=>"TestRole")
+      put "create_permission", { :role_id => @role.id, :permission => { :resource_type_attributes => { :name => 'all' }, :name=> "New Perm"}}
+    end    
+  
+    it "should remove the permission from the role and delete it" do
+      controller.should_receive(:notice)
+      put "destroy_permission", { :role_id => @role.id, :permission_id => 2}
+      response.should be_success
+      assigns[:role].permissions.should_not include Permission.where(:name => "New Perm")[0]
+    end
+  
+  end
+   
+  describe 'update permission' do
+    
+    before (:each) do
+      @organization = new_test_org
+      @role = Role.create!(:name=>"TestRole")
+      put "create_permission", { :role_id => @role.id, :permission => { :resource_type_attributes => { :name => 'all' }, :name=> "New Perm"}}
+    end    
+    
+    it 'should change the name of the permission' do
+      controller.should_receive(:notice)
+      put "update_permission", { :role_id => @role.id, :permission_id => 2, :permission => { :name => "New Named Perm"}}
+      response.should be_success
+      Permission.find(2).name.should == "New Named Perm"
+    end
+
+    it 'should change the description of the permission' do
+      controller.should_receive(:notice)
+      put "update_permission", { :role_id => @role.id, :permission_id => 2, :permission => { :description => "This is the new description."}}
+      response.should be_success
+      Permission.find(2).description.should == "This is the new description."
+    end
+
+    it 'should set all verbs' do
+      controller.should_receive(:notice)
+      put "update_permission", { :role_id => @role.id, :permission_id => 2, :permission => { :all_verbs => true }}
+      response.should be_success
+      Permission.find(2).all_verbs.should == true
+    end
+    
+    it 'should set all tags' do
+      controller.should_receive(:notice)
+      put "update_permission", { :role_id => @role.id, :permission_id => 2, :permission => { :all_tags => true }}
+      response.should be_success
+      Permission.find(2).all_tags.should == true
+    end
+    
+  end
+   
+  describe 'getting verbs and tags' do
+    
+    it 'should return a json object of verbs and tags' do
+      get 'verbs_and_scopes', { :organization_id => 1 }
+      response.should be_success
+    end
+  
+  end
    
 end
