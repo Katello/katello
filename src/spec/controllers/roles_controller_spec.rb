@@ -25,7 +25,7 @@ describe RolesController do
   end
   
   before(:each) do
-    login_user(:mock=>false)
+    @user = login_user(:mock=>false)
     set_default_locale
     
     controller.stub!(:notice)
@@ -75,15 +75,15 @@ describe RolesController do
     end
 
     it "should be able to add a user to the role" do
-      put 'update', { :id => @role.id, :update_users => { :adding => "true", :user_id => 1 }}
+      put 'update', { :id => @role.id, :update_users => { :adding => "true", :user_id => @user.id }}
       response.should be_success
-      assigns[:role].users.should include User.find(1)
+      assigns[:role].users.should include @user
     end
 
     it "should be able to remove a user from the role" do
-      put 'update', { :id => @role.id, :update_users => { :adding => "false", :user_id => 1 }}
+      put 'update', { :id => @role.id, :update_users => { :adding => "false", :user_id => @user.id }}
       response.should be_success
-      assigns[:role].users.should_not include User.find(1)
+      assigns[:role].users.should_not include @user
     end
 
 =begin
@@ -205,13 +205,14 @@ describe RolesController do
       @organization = new_test_org
       @role = Role.create!(:name=>"TestRole")
       put "create_permission", { :role_id => @role.id, :permission => { :resource_type_attributes => { :name => 'all' }, :name=> "New Perm"}}
+      @perm = Permission.where(:name => "New Perm")[0]
     end    
   
     it "should remove the permission from the role and delete it" do
       controller.should_receive(:notice)
-      put "destroy_permission", { :role_id => @role.id, :permission_id => 2}
+      put "destroy_permission", { :role_id => @role.id, :permission_id => @perm.id}
       response.should be_success
-      assigns[:role].permissions.should_not include Permission.where(:name => "New Perm")[0]
+      assigns[:role].permissions.should_not include @perm
     end
   
   end
@@ -222,34 +223,35 @@ describe RolesController do
       @organization = new_test_org
       @role = Role.create!(:name=>"TestRole")
       put "create_permission", { :role_id => @role.id, :permission => { :resource_type_attributes => { :name => 'all' }, :name=> "New Perm"}}
+      @perm = Permission.where(:name => "New Perm")[0]
     end    
     
     it 'should change the name of the permission' do
       controller.should_receive(:notice)
-      put "update_permission", { :role_id => @role.id, :permission_id => 2, :permission => { :name => "New Named Perm"}}
+      put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :name => "New Named Perm"}}
       response.should be_success
-      Permission.find(2).name.should == "New Named Perm"
+      Permission.find(@perm.id).name.should == "New Named Perm"
     end
 
     it 'should change the description of the permission' do
       controller.should_receive(:notice)
-      put "update_permission", { :role_id => @role.id, :permission_id => 2, :permission => { :description => "This is the new description."}}
+      put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :description => "This is the new description."}}
       response.should be_success
-      Permission.find(2).description.should == "This is the new description."
+      Permission.find(@perm.id).description.should == "This is the new description."
     end
 
     it 'should set all verbs' do
       controller.should_receive(:notice)
-      put "update_permission", { :role_id => @role.id, :permission_id => 2, :permission => { :all_verbs => true }}
+      put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :all_verbs => true }}
       response.should be_success
-      Permission.find(2).all_verbs.should == true
+      Permission.find(@perm.id).all_verbs.should == true
     end
     
     it 'should set all tags' do
       controller.should_receive(:notice)
-      put "update_permission", { :role_id => @role.id, :permission_id => 2, :permission => { :all_tags => true }}
+      put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :all_tags => true }}
       response.should be_success
-      Permission.find(2).all_tags.should == true
+      Permission.find(@perm.id).all_tags.should == true
     end
     
   end
@@ -257,7 +259,7 @@ describe RolesController do
   describe 'getting verbs and tags' do
     
     it 'should return a json object of verbs and tags' do
-      get 'verbs_and_scopes', { :organization_id => 1 }
+      get 'verbs_and_scopes', { :organization_id => @organization.id }
       response.should be_success
     end
   
