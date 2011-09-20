@@ -1,15 +1,25 @@
-%define ruby_sitelib %(ruby -rrbconfig -e "puts Config::CONFIG['sitelibdir']")
-%define gemdir %(ruby -rubygems -e 'puts Gem::dir' 2>/dev/null)
+# vim: sw=4:ts=4:et
+#
+# Copyright 2011 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 %global homedir %{_datarootdir}/%{name}
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir deploy/common
 
 Name:           katello
-Version:	      0.1.81
-Release:	      1%{?dist}
-Summary:	      A package for managing application life-cycle for Linux systems
-	
+Version:        0.1.83
+Release:        1%{?dist}
+Summary:        A package for managing application life-cycle for Linux systems
+
 Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
@@ -46,7 +56,10 @@ Requires:       rubygem(uuidtools)
 Requires:       rubygem(thin)
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
+# TODO - uncomment the statement once we push patched actionpack to our EL6 repo
+#%if 0%{?fedora} && 0%{?fedora} <= 15
 Requires:       rubygem(regin)
+#%endif
 # </workaround>
 
 Requires(pre):  shadow-utils
@@ -55,8 +68,8 @@ Requires(preun): initscripts
 Requires(post): chkconfig
 Requires(postun): initscripts 
 
-BuildRequires: 	coreutils findutils sed
-BuildRequires: 	rubygems
+BuildRequires:  coreutils findutils sed
+BuildRequires:  rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
 BuildRequires:  rubygem(jammit)
@@ -202,6 +215,83 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Sep 20 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.83-1
+- Updates on the promotion controller page to deal with weird permission models
+- 732444 - make sure we uppercase before we sort so it is case indifferent
+- fixed an accidental typo
+- Updated the promotions page nav and rules to work correctly
+- Updated the handling of the 500 error to deal with null org cases
+- 734526 - improving error messages for promotions to include changeset names.
+- 733270 - fix failing unit tests
+- 733270 - validate uniquenss of system name
+- 734882 - format RestClient error message only for katello-cli agent
+- 734882 - User-Agent header in katello-cli and custom error messages
+- changed candlepin url in Candlepin::Consumer integration tests
+- removing unecessary debug line that was causing JS errors
+- notices - making default polling inverval 120s (when omitted from conf)
+- activation keys - fixing new env selector for activation keys
+- fixing poor coding around enabling create due to permission that had creeped
+  into multiple controllers
+- 739200 - moving system template new button to the top left instead of on the
+  bottom action bar
+- system templates - updating page to ensure list items are vertical centered,
+  required due to some changes by ehelms
+- javascript - some fixes for the new panel object
+- merging in env-selector
+- env-select - adding more javascript documentation and improving spacing
+  calculations
+- Fix proxy to candlepin due to change RAILS_RELATIVE_URL_ROOT
+- env-select - fixing a few spacing issues as well as having selected item be
+  expanded more so than others
+- 738762 - SSLVerifyClient for apache+thin
+- env select - corrected env select widget to work with the expanding nodes
+- 722439 - adding version to the footer
+- Roles UI - Fix for broken role editing on the UI.
+- env select - fixing up the new environment selector and ditching the old
+  jbreadcrumb
+- Two other small changes to fix the hidden features of subscribe and
+  unsubscribe.
+- Fix for .hidden not working :)
+- Roles UI - Fixes broken add permission workflow.
+- Fixes a number of look and feel issues related to sliding tree items and
+  clicking list items.
+- Changes multiselect to have add from list on the left and add to list on the
+  right. Moves multiselect widget css to its own file.
+- Fixes for changes to panel javascript due to rebase.
+- Fixes for editing a permission when setting the all tags or all verbs.
+- A refactor of panel in preparation for changes to address a series of bugs
+  related to making the slide out panel of tupane more robust.
+- Roles UI - Adds back missing css for blue box around roles widget.
+- CSS cleanup focused on organizing colors and adding more variable
+  definitions.
+- initial breadcrumb revamp
+
+* Thu Sep 15 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.82-1
+- removing two unnecessarry macros in spec file
+- correcting workaround for BZ 714167 (undeclared dependencies) in spec
+- adding copyright and modeline to our spec files
+- correcting indentatin (Jan Pazdziora)
+- packagegroups - add pacakge groups and categories to JSON
+- pacakgegroups - refactor template exports to meet Ruby conventions
+- packagegroups - add to string export of template
+- packagegroups - support for group and categories in temp import
+- adding two configuration values debug_pulp_proxy
+- promotions - fixing error where you could not add a product
+- Fixed some unit tests...
+- 734460 - Fix to have the roles UI complain on bad role names
+- Fix to get tags.formatted to work with the new changes
+- Fixed several broken tests in postgres
+- Removed 'tags' table for we could just deal with that using unique tag ids.
+  To avoid the dreaded "explicit cast" exception when joining tags to entity
+  ids table in postgres (example - Environments), we need tags to be integers.
+  All our tags at the present time are integers anyway so this seems an easy
+  enough change.
+- refactor - remove debug message to stdout
+- fixed a few issues with repo creation on manifest import test
+- added support for preserving of repo metadata during import of manifests
+- 738200 - use action_name instead of params[:action]
+- templates api - route for listing templates in an environment
+
 * Tue Sep 13 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.81-1
 - notices - fix change to app controller that accidentally affected notices
   (bbuckingham@redhat.com)

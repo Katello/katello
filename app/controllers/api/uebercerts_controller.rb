@@ -10,27 +10,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'resources/candlepin'
-
-class Api::CandlepinProxiesController < Api::ProxiesController
+class Api::UebercertsController < Api::ApiController
+  before_filter :find_organization, :only => [:show, :create]
 
   # TODO: define authorization rules
   skip_before_filter :authorize
 
-  def get
-    r = ::Candlepin::Proxy.get(@request_path)
-    Rails.logger.debug r if AppConfig.debug_cp_proxy
-    render :text => r, :content_type => :json
+  def create
+    render :json => Candlepin::Owner.generate_ueber_cert(@organization.cp_key)
   end
 
-  def delete
-    head ::Candlepin::Proxy.delete(@request_path).code.to_i
+  def show
+    render :json => Candlepin::Owner.get_ueber_cert(@organization.cp_key)
   end
-
-  def post
-    r = ::Candlepin::Proxy.post(@request_path, @request_body)
-    Rails.logger.debug r if AppConfig.debug_cp_proxy
-    render :text => r, :content_type => :json
-  end
-  
 end
