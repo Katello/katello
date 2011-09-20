@@ -142,7 +142,7 @@ Warden::Strategies.add(:oauth) do
       [nil, consumer(consumer_key).secret]
     end
 
-    fail!("Invalid oauth signature") unless signature.verify
+    return fail!("Invalid oauth signature") unless signature.verify
 
     u = User.where(:username => request.env['HTTP_KATELLO_USER']).first
     u ? success!(u) : fail!("Username is not correct - could not log in")
@@ -158,7 +158,7 @@ Warden::Strategies.add(:oauth) do
     raise "No consumer #{consumer_key}" unless AppConfigHash.has_key?(consumer_key)
 
     config_hash = AppConfigHash[consumer_key]
-    OAuth::Consumer.new(config_hash[:oauth_key], config_hash[:oauth_secret])
+    OAuth::Consumer.new(config_hash['oauth_key'], config_hash['oauth_secret'])
   end
 end
 
