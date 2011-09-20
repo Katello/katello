@@ -26,7 +26,8 @@ class ApplicationController < ActionController::Base
   after_filter :flash_to_headers
   #custom 404 (render_404) and 500 (render_error) pages
 
-
+  # this is always in the top
+  # order of these are important.
   rescue_from Exception do |exception|
     execute_rescue(exception, lambda{ |exception| render_error(exception)})
   end
@@ -471,7 +472,7 @@ class ApplicationController < ActionController::Base
     logger.error exception.message
     execute_after_filters
     logout
-    errors _("You current organization is no longer invalid. It is possible that the organization has been deleted, please log back in to continue."),{:persist => false}
+    errors _("You current organization is no longer valid. It is possible that the organization has been deleted, please log back in to continue."),{:persist => false}
     redirect_to new_user_session_url and return false
   end
 
