@@ -16,5 +16,6 @@ module HttpErrors
   # specific errors
   class NotFound < WrappedError; end
   class BadRequest < WrappedError; end
+  class Conflict < WrappedError; end
 
 end
