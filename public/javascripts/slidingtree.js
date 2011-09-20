@@ -324,7 +324,7 @@ sliding_tree.ActionBar = function(toggle_list){
         
         toggle = function(id, options){
             var options = options || {};
-            
+
             options.animate_time = 500;
             
             if( open_panel !== id && open_panel !== undefined ){
@@ -348,7 +348,7 @@ sliding_tree.ActionBar = function(toggle_list){
         }, 
         handle_toggle = function(options, id){
         	var slide_window = $('#' + toggle_list[id].container);
-            
+
             options = toggle_list[id].setup_fn(options);
             slide_window.slideToggle(options.animate_time, options.after_function);        	
         },

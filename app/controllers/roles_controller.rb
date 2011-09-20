@@ -52,7 +52,7 @@ class RolesController < ApplicationController
     begin
       # retrieve only non-self roles... permissions on a self-role will be handled 
       # as part of the user
-      @roles = Role.readable.search_for(params[:search]).non_self.limit(current_user.page_size)
+      @roles = Role.readable.search_for(params[:search]).non_self.order(:name).limit(current_user.page_size)
       retain_search_history
 
     rescue Exception => error
@@ -63,7 +63,7 @@ class RolesController < ApplicationController
   
   def items
     start = params[:offset]
-    @roles = Role.readable.search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @roles = Role.readable.search_for(params[:search]).order(:name).limit(current_user.page_size).offset(start)
     render_panel_items @roles, @panel_options
   end
   
@@ -72,8 +72,8 @@ class RolesController < ApplicationController
                  :col => ['name'],
                  :create => _('Role'),
                  :name => controller_display_name,
-                 :ajax_scroll => items_roles_path()}
-    @panel_options[:enable_create] = false if !Role.creatable?
+                 :ajax_scroll => items_roles_path(),
+                 :enable_create=> Role.creatable?}
   end
   
   def new
@@ -179,14 +179,14 @@ class RolesController < ApplicationController
     end
 
     if attributes.has_key?(:all_verbs)
-      for verb in @permission.verbs
-        verb.destroy
+      @permission.verbs.each do |verb|
+        @permission.verbs.delete(Verb.find_or_create_by_verb(verb.name))
       end
     end
 
     if attributes.has_key?(:all_tags)
-      for tag in @permission.tags
-        tag.destroy
+      @permission.tags.each do |tag|
+        @permission.tags.delete(tag)
       end
     end
 

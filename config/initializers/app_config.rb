@@ -23,6 +23,18 @@ module ApplicationConfiguration
       # candlepin and pulp are turned on by default
       @ostruct.use_cp = true unless @ostruct.respond_to?(:use_cp)
       @ostruct.use_pulp = true unless @ostruct.respond_to?(:use_pulp)
+      # backticks gets you the equiv of a system() command in Ruby
+      version =  `rpm -q katello --queryformat '%{VERSION}-%{RELEASE}\n'`
+      exit_code = $?
+      if exit_code != 0
+        hash = `git rev-parse --short HEAD`
+        version = "git hash (" + hash.chop + ")"
+        exit_code = $?
+        if exit_code != 0
+          version = "Unknown"
+        end
+      end
+      @ostruct.katello_version = version
     end
 
     # helper method that converts object to open struct recursively

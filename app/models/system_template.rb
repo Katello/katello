@@ -88,18 +88,15 @@ class SystemTemplate < ActiveRecord::Base
 
     self.revision = json["revision"]
     self.description = json["description"]
-    json["products"].collect do |p| self.add_product(p) end if not json["products"].nil?
-    json["packages"].collect do |p| self.add_package(p) end if not json["packages"].nil?
-    json["errata"].collect   do |e| self.add_erratum(e) end if not json["errata"].nil?
+    json["products"].each {|p| self.add_product(p) } if json["products"]
+    json["packages"].each {|p| self.add_package(p) } if json["packages"]
+    json["errata"].each {|e| self.add_erratum(e) } if json["errata"]
+    json["package_groups"].each {|pg| self.add_package_group(pg.symbolize_keys) } if json["package_groups"]
+    json["package_group_categories"].each {|pgc| self.add_pg_category(pgc.symbolize_keys) } if json["package_group_categories"]
 
-    self.name = json["name"] if not json["name"].nil?
+    self.name = json["name"] if json["name"]
 
-    if not json["parameters"].nil?
-      json["parameters"].each_pair do |k,v|
-        self.parameters[k] = v
-      end
-    end
-
+    json["parameters"].each_pair {|k,v| self.parameters[k] = v } if json["parameters"]
   end
 
 
@@ -110,7 +107,9 @@ class SystemTemplate < ActiveRecord::Base
       :packages => self.packages.map(&:package_name),
       :errata   => self.errata.map(&:erratum_id),
       :products => self.products.map(&:name),
-      :parameters => ActiveSupport::JSON.decode(self.parameters_json)
+      :parameters => ActiveSupport::JSON.decode(self.parameters_json),
+      :package_groups => self.package_groups.map(&:export_hash),
+      :package_group_categories => self.pg_categories.map(&:export_hash)
     }
     tpl[:description] = self.description if not self.description.nil?
     tpl[:parent] = self.parent.name if not self.parent.nil?
@@ -189,7 +188,10 @@ class SystemTemplate < ActiveRecord::Base
         :methods => [:products,
                      :packages,
                      :errata,
-                     :parameters]
+                     :parameters,
+                     :package_groups,
+                     :pg_categories
+     ]
         })
      )
   end
@@ -241,8 +243,8 @@ class SystemTemplate < ActiveRecord::Base
     User.allowed_to?([:manage_all], :system_templates, nil, org)
   end
 
-  def readable? org
-    self.class.readable?(org)
+  def readable?
+    self.class.readable?(self.environment.organization)
   end
 
 

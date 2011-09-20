@@ -28,6 +28,7 @@ class Api::ApiController < ActionController::Base
 
   rescue_from HttpErrors::NotFound, :with => proc { |e| render_wrapped_exception(404, e) }
   rescue_from HttpErrors::BadRequest, :with => proc { |e| render_wrapped_exception(400, e) }
+  rescue_from HttpErrors::Conflict, :with => proc { |e| render_wrapped_exception(409, e) }
 
   rescue_from Errors::SecurityViolation, :with => proc { |e| render_exception(403, e) }
   rescue_from Errors::ConflictException, :with => proc { |e| render_exception(409, e) }
@@ -74,7 +75,11 @@ class Api::ApiController < ActionController::Base
 
   def exception_with_response(exception)
     logger.error "exception when talking to a remote client: #{exception.message} " << pp_exception(exception)
-    render :text => pp_exception(exception) , :status => exception.http_code
+    if request_from_katello_cli?
+      render :text => pp_exception(exception) , :status => exception.http_code
+    else
+      render :text => exception.response , :status => exception.http_code
+    end
   end
 
   def render_403(e)
@@ -86,7 +91,7 @@ class Api::ApiController < ActionController::Base
     exception.record.errors.each_pair do |c,e|
       logger.error "#{c}: #{e}"
     end
-    render :text => pp_exception(exception), :status => 400
+    render :text => pp_exception(exception, :with_class => false), :status => 400
   end
 
   def find_organization
@@ -136,8 +141,16 @@ class Api::ApiController < ActionController::Base
     end
   end
 
-  def pp_exception(exception)
-    "#{exception.class}: #{exception.message}\n" << exception.backtrace.join("\n")
+  def pp_exception(exception, options = {})
+    options = options.reverse_merge(:with_class => true)
+    message = ""
+    message << "#{exception.class}: " if options[:with_class]
+    message << "#{exception.message}\n" << exception.backtrace.join("\n")
+    message
+  end
+
+  def request_from_katello_cli?
+     request.headers['User-Agent'].to_s =~ /^katello-cli/
   end
 
 end

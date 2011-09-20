@@ -71,10 +71,10 @@ class SystemTemplatesController < ApplicationController
                  :col => columns,
                  :create => _('Template'),
                  :name => _('template'),
+                 :create => _('Template'),
                  :ajax_scroll => items_system_templates_path(),
                  :enable_create => SystemTemplate.manageable?(current_organization) }
   end
-
 
   def object
     pkgs = @template.packages.collect{|pkg| {:name=>pkg.package_name}}

@@ -57,7 +57,7 @@ class SyncManagementController < ApplicationController
     # TODO: We need to switch to using an Org's ID vs the display name.  See BZ 701406
     @organization = current_organization
     rproducts = @organization.locker.products.readable(@organization).reject { |p| p.repos(p.organization.locker).empty? }
-    @products = rproducts.sort { |p1,p2| p1.name <=> p2.name }
+    @products = rproducts.sort { |p1,p2| p1.name.upcase() <=> p2.name.upcase() }
     # syncable products
     @sproducts = @organization.locker.products.syncable(@organization)
     @product_status = Hash.new

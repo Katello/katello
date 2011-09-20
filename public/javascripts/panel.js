@@ -49,8 +49,8 @@ $(document).ready(function() {
 
     $('#panel-frame').css({"top" : original_top});
     $('#subpanel-frame').css({"top" : subpanel_top});
-    panel.panelResize($('#panel_main'), false);
-    panel.panelResize($('#subpanel_main'), true);
+    KT.panel.panelResize($('#panel_main'), false);
+    KT.panel.panelResize($('#subpanel_main'), true);
 
     $('.block').live('click', function(e) {
         activeBlock = $(this);
@@ -63,11 +63,11 @@ $(document).ready(function() {
                 activeBlock.addClass('active');
             }
         } else {
-            if(activeBlock.hasClass('active')){ panel.closePanel(thisPanel); }
+            if(activeBlock.hasClass('active')){ KT.panel.closePanel(thisPanel); }
             else { $.bbq.pushState({panel:activeBlockId}); }
         }
         //update the selected count
-        panel.updateResult();
+        KT.panel.updateResult();
 
         return false;
     });
@@ -76,39 +76,39 @@ $(document).ready(function() {
     $('.close').live("click", function() {
         if($(this).attr("data-close") === "panel" ||
           ($(this).attr("data-close") !== "subpanel" && $(this).parent().parent().hasClass('opened'))) {
-            panel.closePanel(thisPanel);
-            panel.closeSubPanel(subpanel);
+            KT.panel.closePanel(thisPanel);
+            KT.panel.closeSubPanel(subpanel);
         }
         else {//closing the subpanel
-            panel.closeSubPanel(subpanel);
+            KT.panel.closeSubPanel(subpanel);
         }
         return false;
     });
 
     $(window).resize(function(){
-        panel.panelResize($('#panel_main'), false);
-        panel.panelResize($('#subpanel_main'), true);
-        panel.handleScrollResize($('#panel-frame'), container, original_top, bodyY, 0);
-        panel.handleScrollResize($('#subpanel-frame'), container, subpanel_top, bodyY, 1);
+        KT.panel.panelResize($('#panel_main'), false);
+        KT.panel.panelResize($('#subpanel_main'), true);
+        KT.panel.handleScrollResize($('#panel-frame'), container, original_top, bodyY, 0);
+        KT.panel.handleScrollResize($('#subpanel-frame'), container, subpanel_top, bodyY, 1);
     });
 
     $('#maincontent').resize(function(){
-        panel.panelResize($('#panel_main'), false);
-        panel.panelResize($('#subpanel_main'), true);
+        KT.panel.panelResize($('#panel_main'), false);
+        KT.panel.panelResize($('#subpanel_main'), true);
     });
 
     $('.subpanel_element').live('click', function(){
-        panel.openSubPanel($(this).attr('data-url'));
+        KT.panel.openSubPanel($(this).attr('data-url'));
     });
 
     var container = $('#container');
     if(container.length > 0){
         var bodyY = parseInt(container.offset().top, 10) - 20;
         $(window).scroll(function () {
-            panel.handleScroll($('#panel-frame'), container, original_top, bodyY, 0);
-            panel.handleScroll($('#subpanel-frame'), container, subpanel_top, bodyY, 1);
+            KT.panel.handleScroll($('#panel-frame'), container, original_top, bodyY, 0);
+            KT.panel.handleScroll($('#subpanel-frame'), container, subpanel_top, bodyY, 1);
         });
-        $(window).scroll(panel.scrollExpand);
+        $(window).scroll(KT.panel.scrollExpand);
     }
 
     // It is possible for the pane (e.g. right) of a panel to contain navigation
@@ -127,7 +127,7 @@ $(document).ready(function() {
             dataType: 'html',
             success: function(data) {
                 $(".panel-content").html(data);
-                panel.panelResize($('#panel_main'), false);
+                KT.panel.panelResize($('#panel_main'), false);
             }
         });
         return false;
@@ -141,9 +141,9 @@ $(document).ready(function() {
                                   });
     $('.search').fancyQueries();
 
-    if (panel.control_bbq) {
+    if (KT.panel.control_bbq) {
         //hash change for panel to trigger on refresh or back/forward or link passing
-        $(window).bind( 'hashchange', panel.hash_change);
+        $(window).bind( 'hashchange', KT.panel.hash_change);
         $(window).trigger( 'hashchange' );
     }
 
@@ -193,20 +193,22 @@ var list = (function(){
    };
 })();
 
-var panel = (function(){
-    return {
-        extended_cb         : function() {}, //callback for post extended scroll
-        expand_cb           : function() {}, //callback after a pane is loaded
-        contract_cb         : function() {},
-        switch_content_cb   : function() {},
-        control_bbq         : true,
-        select_item :    function(activeBlockId) {
+KT.panel = (function($){
+	var retrievingNewContent = false,
+	    control_bbq = true,
+	
+	extended_cb         = function() {}, //callback for post extended scroll
+        expand_cb           = function() {}, //callback after a pane is loaded
+        contract_cb         = function() {},
+        switch_content_cb   = function() {},
+	
+	select_item = function(activeBlockId) {
+            var activeBlock = $('#' + activeBlockId),
+            	ajax_url = activeBlock.attr("data-ajax_url"),
+            	previousBlockId = null;
+            	
             thisPanel = $("#panel");
             subpanel = $('#subpanel');
-
-            var activeBlock = $('#' + activeBlockId);
-            var ajax_url = activeBlock.attr("data-ajax_url");
-            var previousBlockId = null;
 
             if(!thisPanel.hasClass('opened') && thisPanel.attr("data-id") !== activeBlockId){
                 $('.block.active').removeClass('active');
@@ -214,13 +216,14 @@ var panel = (function(){
                 thisPanel.animate({ left: (panelLeft) + "px", opacity: 1}, 200, function(){
                     $(this).css({"z-index":"200"});
                 }).removeClass('closed').addClass('opened').attr('data-id', activeBlockId);
+                
                 activeBlock.addClass('active');
                 previousBlockId = activeBlockId;
-                panel.panelAjax(activeBlockId, ajax_url, thisPanel, false);
+                panelAjax(activeBlockId, ajax_url, thisPanel, false);
             } else if (thisPanel.hasClass('opened') && thisPanel.attr("data-id") !== activeBlockId){
-                panel.switch_content_cb();
+                switch_content_cb();
                 $('.block.active').removeClass('active');
-                panel.closeSubPanel(subpanel); //close the subpanel if it is open
+                closeSubPanel(subpanel); //close the subpanel if it is open
                 // Keep the thisPanel open if they click another block
                 // remove previous classes besides opened
                 thisPanel.addClass('opened').attr('data-id', activeBlockId);
@@ -228,36 +231,31 @@ var panel = (function(){
                 activeBlock.addClass('active');
                 previousBlockId = activeBlockId;
                 thisPanel.removeClass('closed');
-                panel.panelAjax(activeBlockId, ajax_url, thisPanel, false);
-            } else {
-                // Close the Panel
-                // Remove previous classes besides opened
-                //previousBlockId = activeBlockId;
-                //panel.closeSubPanel(subpanel);
-                //panel.closePanel(thisPanel);
+                panelAjax(activeBlockId, ajax_url, thisPanel, false);
             }
         },
-        panelAjax : function(name, ajax_url, thisPanel, isSubpanel) {
-            var spinner = thisPanel.find('.spinner');
-            var panelContent = thisPanel.find(".panel-content");
+        panelAjax = function(name, ajax_url, thisPanel, isSubpanel) {
+            var spinner = thisPanel.find('.spinner'),
+            	panelContent = thisPanel.find(".panel-content");
+            
             spinner.show();
             panelContent.hide();
-            panel.expand_cb(name);
-
             $.ajax({
                 cache: true,
                 url: ajax_url,
                 dataType: 'html',
                 success: function (data, status, xhr) {
                     var pc = panelContent.html(data);
+                    
                     spinner.hide();
                     pc.fadeIn(function(){$(".panel-content :input:visible:enabled:first").focus();});
-                    //panel.expand_cb(name);
+
                     if( isSubpanel ){
-                        panel.panelResize($('#subpanel_main'), isSubpanel);
+                        panelResize($('#subpanel_main'), isSubpanel);
                     } else {
-                        panel.panelResize($('#panel_main'), isSubpanel);
+                        panelResize($('#panel_main'), isSubpanel);
                     }
+                    expand_cb(name);
                 },
                 error: function (xhr, status, error) {
                     spinner.hide();
@@ -267,25 +265,25 @@ var panel = (function(){
             });
         },
         /* must pass a jQuery object */
-        panelResize : function(paneljQ, isSubpanel){
-            var new_top = Math.floor($('.left').position(top).top);
-            var headerSpacing = $('.head').height() + $('.subnav').height();
-            var height = $(window).height() - $('#subheader').height() - $('#head').height() - $('.subnav').height() - headerSpacing - 100;
-            var panelFrame = paneljQ.parent().parent().parent().parent();
+        panelResize = function(paneljQ, isSubpanel){
+            var leftPanel = $('.left'),
+            	new_top = Math.floor(leftPanel.position(top).top),
+            	headerSpacing = $('.head').height() + $('.subnav').height(),
+            	height = $(window).height() - $('#subheader').height() - $('#head').height() - $('.subnav').height() - headerSpacing - 100,
+            	panelFrame = paneljQ.parent().parent().parent().parent(),
+            	extraHeight = 0;
 
             new_top = isSubpanel ? (new_top + subpanelSpacing) : new_top;
             panelFrame.animate({top: new_top}, 250);
 
             //if there is a lot in the list, make the panel a bit larger
             if ($('#content').height() > 642){
-                var extraHeight =  KT.common.height() - 192;
+                extraHeight =  KT.common.height() - 192;
                 if (isSubpanel) {
                     extraHeight -= subpanelSpacing;
                 }
                 paneljQ.height(extraHeight);
             } else {
-                var leftPanel = $('.left');
-                
                 if( leftPanel.height() <= height + headerSpacing + 80){
                     height = leftPanel.height() - headerSpacing;
                 } else {
@@ -299,9 +297,10 @@ var panel = (function(){
             }
             return paneljQ;
         },
-        closePanel : function(jPanel){
+        closePanel = function(jPanel){
             var content = jPanel.find('.panel-content');
-            if(jPanel.hasClass("opened")){
+            
+	        if(jPanel.hasClass("opened")){
                 $('.block.active').removeClass('active');
                 jPanel.animate({
                     left: 0,
@@ -312,13 +311,13 @@ var panel = (function(){
                 }).removeClass('opened').addClass('closed').attr("data-id", "");
                 content.html('');
                 $.bbq.removeState("panel");
-                panel.updateResult();
-                panel.contract_cb(name);
-                panel.closeSubPanel(subpanel);
+                updateResult();
+                contract_cb(name);
+                closeSubPanel(subpanel);
             }
             return false;
         },
-        closeSubPanel : function(jPanel){
+        closeSubPanel = function(jPanel){
             if(jPanel.hasClass("opened")){
                 jPanel.animate({
                     left: 0,
@@ -327,38 +326,41 @@ var panel = (function(){
                     $(this).css({"z-index":"0"});
                     $(this).parent().css({"z-index":"0"});
                 }).removeClass('opened').addClass('closed');
-                panel.updateResult();
+                updateResult();
             }
+            
             return false;
         },
-        updateResult : function(){
+        updateResult = function(){
             $('#select-result').html($('.block.active').length + " items selected.");
         },
-        openSubPanel : function(url) {
+        openSubPanel = function(url) {
             var thisPanel = $('#subpanel');
+            
             thisPanel.animate({ left: panelLeft + "px", opacity: 1}, 200, function(){
                 $(this).css({"z-index":"204"});
                 $(this).parent().css({"z-index":"2"});
             }).removeClass('closed').addClass('opened');
-            panel.panelAjax('', url, $('#subpanel-frame'), true);
-
-
+            
+            panelAjax('', url, $('#subpanel-frame'), true);
         },
-        retrievingNewContent : false,
-        scrollExpand : function() { //If we are scrolling past the bottom, we need to request more data
-            var list = $('#list');
-            if (list.hasClass("ajaxScroll") && !panel.retrievingNewContent &&
-                    $(window).scrollTop() >=  ($(document).height() - $(window).height()) - 700) {
-                panel.retrievingNewContent = true;
-                var offset = list.find(".block").size();
-                var page_size = list.attr("data-page_size");
+        scrollExpand = function() { //If we are scrolling past the bottom, we need to request more data
+            var list = $('#list'),
+            	offset = list.find(".block").size(),
+            	page_size = list.attr("data-page_size"),
+                url = list.attr("data-scroll_url"),
+                search = $.deparam($.param.querystring()).search,
+                params = {"offset":offset};
+            
+            if (list.hasClass("ajaxScroll") && !retrievingNewContent && 
+            			$(window).scrollTop() >=  ($(document).height() - $(window).height()) - 700) {
+                
+                retrievingNewContent = true;
+
                 if (parseInt(page_size) > parseInt(offset)) {
                     return; //If we have fewer items than the pagesize, don't try to fetch anything else
                 }
 
-                var url = list.attr("data-scroll_url");
-                var search = $.deparam($.param.querystring()).search;
-                var params = {"offset":offset};
                 if (search)
                     params.search = search;
                 
@@ -373,23 +375,24 @@ var panel = (function(){
                     cache: false,
                     success: function(data) {
                         var expand_list = $('.expand_list');
-                        panel.retrievingNewContent = false;
+                        
+                        retrievingNewContent = false;
                         expand_list.append(data);
                         $('#list-spinner').remove();
                         
                         if (data.length == 0) {
                             list.removeClass("ajaxScroll");
                         }
-                        panel.extended_cb();
+                        extended_cb();
                     },
                     error: function() {
                         $('#list-spinner').remove();
-                        panel.retrievingNewContent = false;
+                        retrievingNewContent = false;
                     }
                 });
             }
         },
-        handleScroll : function(jQPanel, container, top, bodyY, spacing, offset) {
+        handleScroll = function(jQPanel, container, top, bodyY, spacing, offset) {
             var scrollY = KT.common.scrollTop(),
                 scrollX = KT.common.scrollLeft(),
                 isfixed = jQPanel.css('position') === 'fixed';
@@ -411,24 +414,42 @@ var panel = (function(){
                             top: 40 + subpanelSpacing*spacing,
                             left: -scrollX + offset
                         });
-                }
+                	}
                 }
             }
         },
-        handleScrollResize : function(jQPanel, container, top, bodyY, spacing, offset) {
+        handleScrollResize = function(jQPanel, container, top, bodyY, spacing, offset) {
             if(jQPanel.length > 0){
                 if( jQPanel.css('position') === 'fixed'){
                     jQPanel.css('left', '');
                 }
             }
         },
-        hash_change: function(event) {
+        hash_change = function(event) {
             var refresh = $.bbq.getState("panel");
             if(refresh){ 
-                panel.select_item(refresh);
+                select_item(refresh);
             }
             return false;
-        }
+        };
+	
+    return {
+        set_extended_cb         : function(callBack){ extended_cb = callBack; },
+        set_expand_cb           : function(callBack){ expand_cb = callBack; },
+        set_contract_cb         : function(callBack){ contract_cb = callBack; },
+        set_switch_content_cb	: function(callBack){ switch_content_cb = callBack; },
+        select_item				: select_item,
+        hash_change				: hash_change,
+        handleScrollResize		: handleScrollResize,
+        handleScroll			: handleScroll,
+        scrollExpand			: scrollExpand,
+        openSubPanel			: openSubPanel,
+        updateResult			: updateResult,
+        closeSubPanel			: closeSubPanel,
+        closePanel				: closePanel,
+        panelResize				: panelResize,
+        panelAjax				: panelAjax,
+        control_bbq             : control_bbq
     };
 
-})();
+})(jQuery);

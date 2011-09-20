@@ -163,9 +163,9 @@ class Changeset < ActiveRecord::Base
 
 
   def promote async=true
-    raise _('Cannot promote a changeset when it is not in the review phase') if self.state != Changeset::REVIEW
+    raise _("Cannot promote the changset '#{self.name}' because it is not in the review phase.") if self.state != Changeset::REVIEW
     #check for other changesets promoting
-    raise _('Cannot promote a changeset while another is being promoted.') if self.environment.promoting_to?
+    raise _("Cannot promote the changeset '#{self.name}' while another changeset (#{self.environment.promoting.first.name}) is being promoted.") if self.environment.promoting_to?
 
     if async
       task = self.async(:organization=>self.environment.organization).promote_content
