@@ -1,3 +1,5 @@
+=javascript :scroll_pane
+
 .grid_16
   %h2 #{_("Welcome back, %{u}\n" % {:u => current_user.username}) }
 .grid_9
@@ -16,13 +18,8 @@
       Available Errata data goes here.
     %br.clearfloat
 .grid_7
-  .dashboard
-    .dashhead
-      %h2.fl  #{_("Latest Notifications")}
-      .dropbutton.button.fr *
-    .fl.clear
-      Latest Notifications data goes here.
-    %br.clearfloat
+  = dashboard_entry(_("Latest Notifications"), "notices")
+
   .dashboard
     .dashhead
       %h2.fl  #{_("Promotions Overview")}

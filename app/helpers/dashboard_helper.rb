@@ -11,4 +11,20 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module DashboardHelper
+
+  def dashboard_entry name, partial
+    render :partial=>"entry", :locals=>{:name=>name, :partial=>partial}
+  end
+
+  def user_notices
+    trim_length = 45
+    current_user.notices.order("created_at DESC").limit(10).collect{|note|
+      if note.text.length > trim_length + 3
+        text = note.text[0..trim_length] + '...'
+      else
+        text =note.text
+      end
+      {:text=>text, :level=>note.level, :date=>note.created_at}
+    }
+  end
 end
