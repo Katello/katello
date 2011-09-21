@@ -48,17 +48,28 @@ describe Api::TemplatesController do
 
   describe "index" do
 
-    it 'should get a list of templates from specified environment ID' do
-      SystemTemplate.should_receive(:where).with("environment_id" => @locker.id).and_return([@tpl])
+    before :each do
+      @environment2 = KTEnvironment.new(:name => 'environment2')
+      @environment2.id = 3
+
+      KTEnvironment.stub(:find).with(@locker.id).and_return(@locker)
+      KTEnvironment.stub(:find).with(@environment2.id).and_return(@environment2)
+    end
+
+    it 'should get a list of templates from specified environment' do
+      @locker.should_receive(:system_templates).and_return([@tpl])
       get 'index', :environment_id => @locker.id
       response.should be_success
     end
 
-    it 'should not fail if no templates are found, but return an empty list' do
-      @environment2 = KTEnvironment.new(:name => 'environment2')
-      @environment2.id = 3
+    it 'should get a list of all templates' do
+      SystemTemplate.should_receive(:all).and_return([@tpl])
+      get 'index'
+      response.should be_success
+    end
 
-      SystemTemplate.should_receive(:where).with("environment_id" => @environment2.id).and_return([])
+    it 'should not fail if no templates are found, but return an empty list' do
+      @environment2.should_receive(:system_templates).and_return([])
       get 'index', :environment_id => @environment2.id
       response.should be_success
     end
@@ -143,6 +154,36 @@ describe Api::TemplatesController do
     it 'should call remove_erratum' do
       @tpl.should_receive(:remove_erratum).once
       put 'update_content', :id => TEMPLATE_ID, :do => :remove_erratum
+    end
+
+    describe "package groups assignment" do
+      let(:package_group) { {:repo_id => "repo-123", :id => "group-123"} }
+      let(:package_group_params) { {:repo => package_group[:repo_id], :package_group => package_group[:id]} }
+
+      it 'should call add_package_group' do
+        @tpl.should_receive(:add_package_group).once.with(package_group)
+        put 'update_content', { :id => TEMPLATE_ID, :do => :add_package_group }.merge(package_group_params)
+      end
+
+      it 'should call remove_package_group' do
+        @tpl.should_receive(:remove_package_group).once.with(package_group)
+        put 'update_content', { :id => TEMPLATE_ID, :do => :remove_package_group }.merge(package_group_params)
+      end
+    end
+
+    describe "package group categories assignment" do
+      let(:pg_category) { {:repo_id => "repo-123", :id => "cat-123"} }
+      let(:pg_category_params) { {:repo => pg_category[:repo_id], :package_group_category => pg_category[:id]} }
+
+      it 'should call add_pg_category' do
+        @tpl.should_receive(:add_pg_category).once.with(pg_category)
+        put 'update_content', { :id => TEMPLATE_ID, :do => :add_package_group_category }.merge(pg_category_params)
+      end
+
+      it 'should call remove_pg_category' do
+        @tpl.should_receive(:remove_pg_category).once.with(pg_category)
+        put 'update_content', { :id => TEMPLATE_ID, :do => :remove_package_group_category }.merge(pg_category_params)
+      end
     end
 
   end

@@ -30,7 +30,7 @@
   %body{:id => controller.section_id}
     %div#head.container_16
       %header
-        = render :partial => '/layouts/header'
+        = render :partial => '/layouts/header', :locals => {:error=>false}
     - if not current_user
       #maincontent.container_16
         #formwindow

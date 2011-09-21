@@ -98,10 +98,11 @@ class SystemsController < ApplicationController
   def subscriptions
     consumed_pools = sys_consumed_pools
     avail_pools = sys_available_pools
-
-    render :partial=>"subscriptions", :layout => "tupane_layout", 
+    facts = @system.facts.stringify_keys
+    sockets = facts['cpu.cpu_socket(s)']
+    render :partial=>"subscriptions", :layout => "tupane_layout",
                                       :locals=>{:system=>@system, :avail_subs => avail_pools,
-                                                :consumed_subs => consumed_pools, 
+                                                :consumed_subs => consumed_pools, :sockets=>sockets,
                                                 :editable=>@system.editable?}
   end
 
@@ -176,8 +177,14 @@ class SystemsController < ApplicationController
   end  
 
   def update
-    begin 
-      @system.update_attributes(params[:system])
+    begin
+      unless @system.update_attributes(params[:system])
+        errors @system.errors
+        respond_to do |format|
+          format.html { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
+          format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
+        end
+      end
       notice _("System updated.")
       
       respond_to do |format|

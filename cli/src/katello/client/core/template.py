@@ -15,6 +15,7 @@
 #
 
 import os
+import itertools
 from gettext import gettext as _
 
 from katello.client.api.template import TemplateAPI
@@ -119,6 +120,8 @@ class Info(TemplateAction):
         template["products"] = "\n".join([p["name"] for p in template["products"]])
         template["packages"] = "\n".join([p["package_name"] for p in template["packages"]])
         template["parameters"] = "\n".join([ key+":\t"+value for key, value in template["parameters"].iteritems() ])
+        template["package_groups"] = "\n".join(["{"+_("repo")+":\t"+pg["repo_id"]+", "+_("id")+":\t"+pg["package_group_id"]+"}" for pg in template["package_groups"] ])
+        template["package_group_categories"] = "\n".join(["{"+_("repo")+":\t"+pg["repo_id"]+", "+_("id")+":\t"+pg["pg_category_id"]+"}" for pg in template["pg_categories"] ])
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
@@ -130,6 +133,8 @@ class Info(TemplateAction):
         self.printer.addColumn('products', multiline=True, show_in_grep=False)
         self.printer.addColumn('packages', multiline=True, show_in_grep=False)
         self.printer.addColumn('parameters', multiline=True, show_in_grep=False)
+        self.printer.addColumn('package_groups', multiline=True, show_in_grep=False)
+        self.printer.addColumn('package_group_categories', multiline=True, show_in_grep=False)
 
         self.printer.setHeader(_("Template Info"))
         self.printer.printItem(template)
@@ -274,14 +279,18 @@ class Update(TemplateAction):
 class UpdateContent(TemplateAction):
 
     actions = {
-      'add_product':    ['product'],
-      'remove_product': ['product'],
-      'add_package':    ['package'],
-      'remove_package': ['package'],
-      'add_erratum':    ['erratum'],
-      'remove_erratum': ['erratum'],
-      'add_parameter':  ['parameter', 'value'],
-      'remove_parameter': ['parameter']
+            'add_product':    [{'product': None}],
+            'remove_product': [{'product': None}],
+            'add_package':    [{'package': None}],
+            'remove_package': [{'package': None}],
+            'add_erratum':    [{'erratum': None}],
+            'remove_erratum': [{'erratum': None}],
+            'add_parameter':  [{'parameter': None}, {'value': None}],
+            'remove_parameter': [{'parameter': None}],
+            'add_package_group':    [{'package_group': _("Package group id")},{'repo': _("Repo id")}],
+            'remove_package_group':    [{'package_group': _("Package group id")},{'repo': _("Repo id")}],
+            'add_package_group_category':    [{'package_group_category': _("Package group category id")},{'repo': _("Repo id")}],
+            'remove_package_group_category':    [{'package_group_category': _("Package group category id")},{'repo': _("Repo id")}],
     }
 
     description = _('updates content of a template')
@@ -297,12 +306,14 @@ class UpdateContent(TemplateAction):
         actionParams = set()
         for action, params in self.actions.iteritems():
             self.parser.add_option('--'+action, dest=action, action="store_true")
-            #save action parameters
-            actionParams.update(params)
 
         #add action parameters
-        for param in actionParams:
+        for param_and_help in itertools.chain(*self.actions.values()):
+            param, help = param_and_help.keys()[0], param_and_help.values()[0]
+            if param in actionParams:
+                continue
             self.parser.add_option('--'+param, dest=param)
+            actionParams.add(param)
 
 
     def check_options(self):
@@ -313,8 +324,8 @@ class UpdateContent(TemplateAction):
         for action, params in self.actions.iteritems():
             if self.has_option(action):
                 self.selectedAction = action
-                for param in params:
-                    self.require_option(param)
+                for param_and_help in params:
+                    self.require_option(param_and_help.keys()[0])
                 return
 
         self.add_option_error(_("No action was set!"))
@@ -332,7 +343,8 @@ class UpdateContent(TemplateAction):
 
         if template != None:
             updateParams = {}
-            for paramName in self.actions[self.selectedAction]:
+            for param_and_help in self.actions[self.selectedAction]:
+                paramName = param_and_help.keys()[0]
                 updateParams[paramName] = self.get_option(paramName)
 
             msg = self.api.update_content(template["id"], self.selectedAction, updateParams)

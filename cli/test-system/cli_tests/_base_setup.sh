@@ -22,4 +22,4 @@ test "provider create" provider create --name="$YUM_PROVIDER" --org="$TEST_ORG" 
 test "product create" product create --provider="$YUM_PROVIDER" --org="$TEST_ORG" --name="$FEWUPS_PRODUCT" --url="$FEWUPS_REPO_URL" --assumeyes
 test "repo create" repo create --product="$FEWUPS_PRODUCT" --org="$TEST_ORG" --name="$FEWUPS_REPO" --url="$FEWUPS_REPO_URL"
 REPO_NAME=`$CMD repo list --org="$TEST_ORG" | grep $FEWUPS_REPO | awk '{print $2}'`
-REPO_ID=`$CMD repo list --org="$TEST_ORG" | grep $FEWUPS_REPO | awk '{print $1}'`
+REPO_ID=$(get_repo_id)

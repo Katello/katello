@@ -30,6 +30,7 @@ class ChangesetsController < ApplicationController
   def rules
     read_perm = lambda{@environment.changesets_readable?}
     manage_perm = lambda{@environment.changesets_manageable?}
+    update_perm =  lambda {@environment.changesets_manageable? && update_artifacts_valid?}
     promote_perm = lambda{@environment.changesets_promotable?}
     {
       :index => read_perm,
@@ -39,7 +40,7 @@ class ChangesetsController < ApplicationController
       :new => manage_perm,
       :create => manage_perm,
       :edit => read_perm,
-      :update => manage_perm,
+      :update => update_perm,
       :destroy =>manage_perm,
       :products => read_perm,
       :dependencies => read_perm,
@@ -127,7 +128,7 @@ class ChangesetsController < ApplicationController
   def create
     begin
       @changeset = Changeset.create!(:name=>params[:name], :description => params[:description],
-                                     :environment_id=>@next_environment.id)
+                                     :environment_id=>@environment.id)
       notice _("Changeset '#{@changeset["name"]}' was created.")
       bc = {}
       add_crumb_node!(bc, changeset_bc_id(@changeset), '', @changeset.name, ['changesets'],
@@ -178,8 +179,6 @@ class ChangesetsController < ApplicationController
     render :text => "This changeset is already promoted, no content modifications can be made.",
                :status => :bad_request if @changeset.state == Changeset::PROMOTED
 
-
-
     if params.has_key? :data
       params[:data].each do |item|
         adding = item["adding"]
@@ -188,25 +187,28 @@ class ChangesetsController < ApplicationController
         name = item["item_name"] #display of item being added/removed
         pid = item["product_id"]
         case type
-        when "product"
-          @changeset.products << Product.where(:id => id) if adding
-          @changeset.products.delete Product.find(id) if !adding
-        when "errata"
-          @changeset.errata << ChangesetErratum.new(:errata_id=>id, :display_name=>name,
-                                              :product_id => pid, :changeset => @changeset) if adding
-          ChangesetErrata.destroy_all(:errata_id =>id, :changeset_id => @changeset.id) if !adding
-        when "package"
-          @changeset.packages << ChangesetPackage.new(:package_id=>id, :display_name=>name, :product_id => pid,
-                                              :changeset => @changeset) if adding
-          ChangesetPackage.destroy_all(:package_id =>id, :changeset_id => @changeset.id) if !adding
+          when "template"
+            @changeset.system_templates << SystemTemplate.where(:id => id) if adding
+            @changeset.system_templates.delete SystemTemplate.find(id) if !adding
+          when "product"
+            @changeset.products << Product.where(:id => id) if adding
+            @changeset.products.delete Product.find(id) if !adding
+          when "errata"
+            @changeset.errata << ChangesetErratum.new(:errata_id=>id, :display_name=>name,
+                                                :product_id => pid, :changeset => @changeset) if adding
+            ChangesetErrata.destroy_all(:errata_id =>id, :changeset_id => @changeset.id) if !adding
+          when "package"
+            @changeset.packages << ChangesetPackage.new(:package_id=>id, :display_name=>name, :product_id => pid,
+                                                :changeset => @changeset) if adding
+            ChangesetPackage.destroy_all(:package_id =>id, :changeset_id => @changeset.id) if !adding
 
-        when "repo"
-            @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
-            ChangesetRepo.destroy_all(:repo_id =>id, :changeset_id => @changeset.id) if !adding
+          when "repo"
+              @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
+              ChangesetRepo.destroy_all(:repo_id =>id, :changeset_id => @changeset.id) if !adding
 
-        when "distribution"
-            @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
-            ChangesetRepo.destroy_all(:repo_id =>id, :changeset_id => @changeset.id) if !adding
+          when "distribution"
+              @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
+              ChangesetRepo.destroy_all(:repo_id =>id, :changeset_id => @changeset.id) if !adding
 
         end
       end
@@ -220,7 +222,7 @@ class ChangesetsController < ApplicationController
     to_ret[:changeset] = simplify_changeset(@changeset) if send_changeset
     render :json=>to_ret
   end
-  
+
   def destroy
     name = @changeset.name
     id = @changeset.id
@@ -236,8 +238,9 @@ class ChangesetsController < ApplicationController
       ChangesetUser.destroy_all(:changeset_id => @changeset.id) 
       notice _("Started promotion of '#{@changeset.name}' to #{@environment.name} environment")
     rescue Exception => e
-        errors  "Failed to promote: #{e.to_s}", :synchronous_request=>false
-        logger.error $!, $!.backtrace.join("\n\t")
+        errors  "Failed to promote: #{e.to_s}"
+        render :text=>e.to_s, :status=>500
+        return 
     end
 
     render :text=>url_for(:controller=>"promotions", :action => "show",
@@ -260,13 +263,9 @@ class ChangesetsController < ApplicationController
       @environment = KTEnvironment.find(params[:env_id])
     else
       #didnt' find an environment, just do the first the user has access to
-      list = KTEnvironment.changesets_readable(current_organization)
+      list = KTEnvironment.changesets_readable(current_organization).where(:locker=>false)
       @environment ||= list.first || current_organization.locker
     end
-    @next_environment = KTEnvironment.find(params[:next_env_id]) if params[:next_env_id]
-    @next_environment ||= @environment.successor
-
-
   end
 
   def update_editors
@@ -294,8 +293,42 @@ class ChangesetsController < ApplicationController
                  :ajax_scroll => items_changesets_path()}
   end
 
+
   def controller_display_name
     return _('changeset')
   end
+
+  private
+  def update_artifacts_valid?
+    if params.has_key? :data
+      params[:data].each do |item|
+        type = item["type"]
+        id = item["item_id"]
+        pid = item["product_id"]
+        item = nil
+        case type
+          when "template"
+            item = SystemTemplate.find(id)
+          when "product"
+            item = Product.find(id)
+
+          when "errata"
+            item = Product.find(pid)
+          when "package"
+            item = Product.find(pid)
+          when "repo"
+            item = Product.find(pid)
+          when "distribution"
+            item = Product.find(pid)
+        end
+        unless item && item.readable?()
+          return false
+        end
+      end
+    end
+    true
+  end
+
+
 
 end

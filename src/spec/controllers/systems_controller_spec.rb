@@ -36,7 +36,7 @@ describe SystemsController do
       end
     end
 
-    [:read_systems, :create_systems, :update_systems, :delete_systems].each do |perm|
+    [:read_systems, :register_systems, :update_systems, :delete_systems].each do |perm|
       [:environment, :organization].each do |resource|
 
         describe "GET index with #{perm} on #{resource} " do
@@ -97,7 +97,7 @@ describe SystemsController do
             user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) }
           end
           it_should_behave_like "protected action"
-        end if [:create_systems, :update_systems].include? perm
+        end if perm == :update_systems
 
 
         describe "show manageable environments with #{perm} on #{resource} " do
@@ -139,22 +139,21 @@ describe SystemsController do
     describe "viewing systems" do
       before (:each) do
         100.times{|a| System.create!(:name=>"bar#{a}", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})}
+        @systems = System.select(:id).where(:environment_id => @environment.id).all.collect{|s| s.id}
       end
 
       it "should show the system 2 pane list" do
         get :index
         response.should be_success
         response.should render_template("index")
-        assigns[:systems].should include System.find(8)
-        assigns[:systems].should_not include System.find(30)
+        assigns[:systems].collect{|sys| sys.id}.should == @systems[0..24]
       end
 
       it "should return a portion of systems" do
         get :items, :offset=>25
         response.should be_success
         response.should render_template("list_systems")
-        assigns[:systems].should include System.find(30)
-        assigns[:systems].should_not include System.find(8)
+        assigns[:systems].collect{|sys| sys.id}.should == @systems[25..49]
       end
 
       it "should throw an exception when the search parameters are invalid" do
@@ -166,6 +165,7 @@ describe SystemsController do
       describe 'and requesting individual data' do
         before (:each) do
           @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
+
           Pulp::Consumer.stub!(:installed_packages).and_return([])
         end
 
@@ -176,6 +176,8 @@ describe SystemsController do
         end
 
         it "should show subscriptions" do
+          @system.stub(:facts).and_return({'cpu.cpu_socket(s)'=>"3"})
+          System.stub(:find).and_return(@system)
           get :subscriptions, :id => @system.id
           response.should be_success
           response.should render_template("subscriptions")
@@ -190,7 +192,7 @@ describe SystemsController do
         it "should show systems by env" do
           @environment2 = KTEnvironment.new(:name => 'testenv', :prior => @organization.locker.id, :organization => @organization)
           @environment2.save!
-          @system2 = System.create!(:name=>"verbose", :environment => @environment2, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
+          @system2 = System.create!(:name=>"verbose2", :environment => @environment2, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
           get :environments, :env_id => @environment2.id
           assigns[:systems].should include System.find(@system2.id)
           response.should be_success
@@ -204,20 +206,21 @@ describe SystemsController do
       end
 
       it "should update the system name" do
-        put :update, { :id => 1, :system => { :name=> "foo" }}
+        put :update, { :id => @system.id, :system => { :name=> "foo" }}
         response.should be_success
         assigns[:system].name.should == "foo"
       end
 
       it "should update a subscription" do
-        put :update_subscriptions, { :id => 1, :system => { :name=> "foo" }}
+        put :update_subscriptions, { :id => @system.id, :system => { :name=> "foo" }}
         response.should be_success
       end
 
       it "should throw an error with bad parameters" do
-        put :update, { :id => 1, :system => { :name=> 1 }}
+        invalid_name = " Foo   "
+        put :update, { :id => @system.id, :system => { :name=> invalid_name }}
         response.should_not be_success
-        System.where(:name=>1).should be_empty
+        System.where(:name=>invalid_name).should be_empty
       end
     end
 

@@ -15,12 +15,18 @@ class Permission < ActiveRecord::Base
   belongs_to :organization
   belongs_to :role, :inverse_of => :permissions
   has_and_belongs_to_many :verbs
-  has_and_belongs_to_many :tags
+  has_many :tags, :class_name=>"PermissionTag", :inverse_of=>:permission
 
   before_save :cleanup_tags_verbs
 
-  validates :name, :presence => true
+  validates :name, :presence => true, :katello_name_format => true
   validates_uniqueness_of :name, :scope => [:organization_id, :role_id], :message => N_("must be unique within an organization scope")
+
+
+  before_destroy do |p|
+    p.tags.destroy_all
+  end
+
 
   class PermissionValidator < ActiveModel::Validator
     def validate(record)
@@ -50,14 +56,12 @@ class Permission < ActiveRecord::Base
   validates_with PermissionValidator
   validates_presence_of :resource_type
 
-  def tag_names
-    self.tags.collect {|tag| tag.name}
+  def tag_values
+    self.tags.collect{|t| t.tag_id}
   end
 
-  def tag_names=attributes
-    self.tags = attributes.collect do |tag|
-      Tag.find_or_create_by_name(tag)
-    end
+  def tag_values= attributes
+    self.tags = attributes.collect {|tag| PermissionTag.new(:permission_id => id, :tag_id => tag)}
   end
 
 

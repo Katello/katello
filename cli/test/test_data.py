@@ -622,6 +622,16 @@ TEMPLATES = [
       "id": "1315309434001"
     }
   ],
+  "package_groups":
+    [{"id":1,
+      "system_template_id":1,
+      "repo_id":"1316523009485-base-one-ACME_Corporation",
+      "package_group_id":"test"}],
+   "pg_categories":
+    [{"pg_category_id":"test",
+      "id":1,
+      "system_template_id":1,
+      "repo_id":"1316523009485-base-one-ACME_Corporation"}],
   "created_at": "2011-09-06T11:47:44Z",
   "errata": [
 
@@ -647,6 +657,8 @@ TEMPLATES = [
   "parameters_json": "{\"param_1\":\"param_value\"}",
   "parameters": {
     "param_1": "param_value"
-  }
+  },
+  "package_groups": [],
+  "pg_categories": [],
 }
 ]

@@ -26,6 +26,7 @@ module Glue::Candlepin::Consumer
       lazy_accessor :entitlements, :initializer => lambda { Candlepin::Consumer.entitlements(uuid) }
       lazy_accessor :pools, :initializer => lambda { entitlements.collect { |ent| Candlepin::Pool.get ent["pool"]["id"]} }
       lazy_accessor :available_pools, :initializer => lambda { Candlepin::Consumer.available_pools(uuid) }
+      validate :validate_cp_consumer
     end
   end
 
@@ -49,7 +50,7 @@ module Glue::Candlepin::Consumer
       end
     end
 
-    def validate
+    def validate_cp_consumer
       if new_record?
         validates_inclusion_of :cp_type, :in => %w( system )
         validates_presence_of :facts

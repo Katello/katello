@@ -46,3 +46,63 @@ var systems_page = (function() {
     }
   }
 })();
+
+KT.subs = function() {
+    var unsubSetup = function(){
+        var unsubform = $('#unsubscribe');
+        var unsubbutton = $('#unsub_submit');
+        var fakeunsubbutton = $('#fake_unsub_submit');
+        var unsubcheckboxes = $('#unsubscribe input[type="checkbox"]');
+        var total = unsubcheckboxes.length;
+        var checked = 0;
+        unsubbutton.hide();
+        unsubcheckboxes.each(function(){
+            $(this).change(function(){
+                if($(this).is(":checked")){
+                    checked++;
+                    if(!(unsubbutton.is(":visible"))){
+                        fakeunsubbutton.fadeOut("fast", function(){unsubbutton.fadeIn()});
+                    }
+                }else{
+                    checked--;
+                    if((unsubbutton.is(":visible")) && checked == 0){
+                        unsubbutton.fadeOut("fast", function(){fakeunsubbutton.fadeIn()});
+                    }
+                }
+            });
+        });
+    }, subSetup = function(){
+        var subform = $('#subscribe');
+        var subbutton = $('#sub_submit');
+        var fakesubbutton = $('#fake_sub_submit');
+        var subcheckboxes = $('#subscribe input[type="checkbox"]');
+        var total = subcheckboxes.length;
+        var checked = 0;
+        subbutton.hide();
+
+        subcheckboxes.each(function(){
+            $(this).change(function(){
+                if($(this).is(":checked")){
+                    checked++;
+                    $(this).parent().parent().parent().find(".ui-spinner").spinner("increment");
+                    if(!(subbutton.is(":visible"))){
+                        fakesubbutton.fadeOut("fast", function(){subbutton.fadeIn()});
+                    }
+                }else{
+                    checked--;
+                    $(this).parent().parent().parent().find(".ui-spinner").spinner("decrement");
+                    if((subbutton.is(":visible")) && checked == 0){
+                        subbutton.fadeOut("fast", function(){fakesubbutton.fadeIn()});
+                    }
+                }
+            });
+        });
+    }, spinnerSetup = function(){
+        setTimeout("$('.ui-spinner').spinner()",1000);
+    };
+    return {
+        unsubSetup: unsubSetup,
+        subSetup: subSetup,
+        spinnerSetup: spinnerSetup
+    }
+}();

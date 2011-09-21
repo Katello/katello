@@ -1,4 +1,4 @@
-SRC_DIR = src/katello
+SRC_DIR     = src/katello
 
 po/POTFILES.in:
 	# generate the POTFILES.in file expected by intltool. it wants one
@@ -23,3 +23,6 @@ uniq-po:
 	for f in $(shell find po/ -name "*.po") ; do \
 		msguniq $$f -o $$f ; \
 	done
+
+cover:
+	nosetests --with-coverage --cover-package=katello --cover-html --cover-inclusive .

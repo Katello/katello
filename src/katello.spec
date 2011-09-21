@@ -1,15 +1,25 @@
-%define ruby_sitelib %(ruby -rrbconfig -e "puts Config::CONFIG['sitelibdir']")
-%define gemdir %(ruby -rubygems -e 'puts Gem::dir' 2>/dev/null)
+# vim: sw=4:ts=4:et
+#
+# Copyright 2011 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 %global homedir %{_datarootdir}/%{name}
 %global datadir %{_sharedstatedir}/%{name}
 %global confdir deploy/common
 
 Name:           katello
-Version:	      0.1.80
-Release:	      1%{?dist}
-Summary:	      A package for managing application life-cycle for Linux systems
-	
+Version:        0.1.83
+Release:        1%{?dist}
+Summary:        A package for managing application life-cycle for Linux systems
+
 Group:          Applications/Internet
 License:        GPLv2
 URL:            http://www.katello.org
@@ -46,7 +56,10 @@ Requires:       rubygem(uuidtools)
 Requires:       rubygem(thin)
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
+# TODO - uncomment the statement once we push patched actionpack to our EL6 repo
+#%if 0%{?fedora} && 0%{?fedora} <= 15
 Requires:       rubygem(regin)
+#%endif
 # </workaround>
 
 Requires(pre):  shadow-utils
@@ -55,8 +68,8 @@ Requires(preun): initscripts
 Requires(post): chkconfig
 Requires(postun): initscripts 
 
-BuildRequires: 	coreutils findutils sed
-BuildRequires: 	rubygems
+BuildRequires:  coreutils findutils sed
+BuildRequires:  rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
 BuildRequires:  rubygem(jammit)
@@ -202,6 +215,230 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Sep 20 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.83-1
+- Updates on the promotion controller page to deal with weird permission models
+- 732444 - make sure we uppercase before we sort so it is case indifferent
+- fixed an accidental typo
+- Updated the promotions page nav and rules to work correctly
+- Updated the handling of the 500 error to deal with null org cases
+- 734526 - improving error messages for promotions to include changeset names.
+- 733270 - fix failing unit tests
+- 733270 - validate uniquenss of system name
+- 734882 - format RestClient error message only for katello-cli agent
+- 734882 - User-Agent header in katello-cli and custom error messages
+- changed candlepin url in Candlepin::Consumer integration tests
+- removing unecessary debug line that was causing JS errors
+- notices - making default polling inverval 120s (when omitted from conf)
+- activation keys - fixing new env selector for activation keys
+- fixing poor coding around enabling create due to permission that had creeped
+  into multiple controllers
+- 739200 - moving system template new button to the top left instead of on the
+  bottom action bar
+- system templates - updating page to ensure list items are vertical centered,
+  required due to some changes by ehelms
+- javascript - some fixes for the new panel object
+- merging in env-selector
+- env-select - adding more javascript documentation and improving spacing
+  calculations
+- Fix proxy to candlepin due to change RAILS_RELATIVE_URL_ROOT
+- env-select - fixing a few spacing issues as well as having selected item be
+  expanded more so than others
+- 738762 - SSLVerifyClient for apache+thin
+- env select - corrected env select widget to work with the expanding nodes
+- 722439 - adding version to the footer
+- Roles UI - Fix for broken role editing on the UI.
+- env select - fixing up the new environment selector and ditching the old
+  jbreadcrumb
+- Two other small changes to fix the hidden features of subscribe and
+  unsubscribe.
+- Fix for .hidden not working :)
+- Roles UI - Fixes broken add permission workflow.
+- Fixes a number of look and feel issues related to sliding tree items and
+  clicking list items.
+- Changes multiselect to have add from list on the left and add to list on the
+  right. Moves multiselect widget css to its own file.
+- Fixes for changes to panel javascript due to rebase.
+- Fixes for editing a permission when setting the all tags or all verbs.
+- A refactor of panel in preparation for changes to address a series of bugs
+  related to making the slide out panel of tupane more robust.
+- Roles UI - Adds back missing css for blue box around roles widget.
+- CSS cleanup focused on organizing colors and adding more variable
+  definitions.
+- initial breadcrumb revamp
+
+* Thu Sep 15 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.82-1
+- removing two unnecessarry macros in spec file
+- correcting workaround for BZ 714167 (undeclared dependencies) in spec
+- adding copyright and modeline to our spec files
+- correcting indentatin (Jan Pazdziora)
+- packagegroups - add pacakge groups and categories to JSON
+- pacakgegroups - refactor template exports to meet Ruby conventions
+- packagegroups - add to string export of template
+- packagegroups - support for group and categories in temp import
+- adding two configuration values debug_pulp_proxy
+- promotions - fixing error where you could not add a product
+- Fixed some unit tests...
+- 734460 - Fix to have the roles UI complain on bad role names
+- Fix to get tags.formatted to work with the new changes
+- Fixed several broken tests in postgres
+- Removed 'tags' table for we could just deal with that using unique tag ids.
+  To avoid the dreaded "explicit cast" exception when joining tags to entity
+  ids table in postgres (example - Environments), we need tags to be integers.
+  All our tags at the present time are integers anyway so this seems an easy
+  enough change.
+- refactor - remove debug message to stdout
+- fixed a few issues with repo creation on manifest import test
+- added support for preserving of repo metadata during import of manifests
+- 738200 - use action_name instead of params[:action]
+- templates api - route for listing templates in an environment
+
+* Tue Sep 13 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.81-1
+- notices - fix change to app controller that accidentally affected notices
+  (bbuckingham@redhat.com)
+- systems - spec test fix (jsherril@redhat.com)
+- panel - fixing issue where panel closing would not close the subpanel
+  (jsherril@redhat.com)
+- 733157 - removing ability to change prior environment, and showing correct
+  prior on details/edit page (jsherril@redhat.com)
+- notices - fixing javascript error that happens when uploading a manifest via
+  the UI (jsherril@redhat.com)
+- 734894 - promotions - fixing issue where hover text on promoting changeset
+  would still say it is being promoted even after it has been promoted
+  (jsherril@redhat.com)
+- Subscriptions udpates, packages fix, ui spinner fix, universal KT object for
+  applying subs. (jrist@redhat.com)
+- Subscription quantity inside spinner now. (jrist@redhat.com)
+- 403 code, 500 code, and some changes to the 500 render. (jrist@redhat.com)
+- Fix for the look of the error. (jrist@redhat.com)
+- 404 and 500 error pages. (jrist@redhat.com)
+- Fixed a unit test (paji@redhat.com)
+- adding logging catch for notices that are objects we dont expect
+  (jsherril@redhat.com)
+- 737563 - Subscription Manager fails permissions on accessing subscriptions
+  (lzap+git@redhat.com)
+- 736141 - Systems Registration perms need to be reworked (lzap+git@redhat.com)
+- Revert "736384 - workaround for perm. denied (unit test)"
+  (lzap+git@redhat.com)
+- Revert "736384 - workaround for perm. denied for rhsm registration"
+  (lzap+git@redhat.com)
+- remove-depretactions - use let variables insted of constants in rspec
+  (inecas@redhat.com)
+- remove-deprecations - already defined constant in katello_url_helper
+  (inecas@redhat.com)
+- remove-deprecations - Object#id deprecated (inecas@redhat.com)
+- remove-deprecations - use errors.add :base instead of add_to_base
+  (inecas@redhat.com)
+- remove-deprecations - should_not be_redirect insted of redirect_to()
+  (inecas@redhat.com)
+- remove-deprecations - validate overriding (inecas@redhat.com)
+- Fixed the tags_for to return an empty array instead of nil and also removed
+  the list tags in org since we are not doling out org perms on a per org basis
+  (paji@redhat.com)
+- system templates - adding more rules spec tests (jsherril@redhat.com)
+- Fix typo in template error messages (inecas@redhat.com)
+- packagegroups-templates - CLI for package groups in templates
+  (inecas@redhat.com)
+- packagegroups-templates - assigning packege group categories to template
+  (inecas@redhat.com)
+- packagegroups-templates - assigning package groups to system templates
+  (inecas@redhat.com)
+- templates - unittest fix (tstrachota@redhat.com)
+- unit test fixes (jsherril@redhat.com)
+- Fixes to get  the promotion pages working (paji@redhat.com)
+- Fix on system template model - no_tag was returning map instead of array
+  (paji@redhat.com)
+- Merge branch 'master' into template-ui (jsherril@redhat.com)
+- system templates - making sure that all ui elements are looked up again in
+  each function in case they are redrawn (jsherril@redhat.com)
+- system templates - making jslint happy, and looking up elements that may have
+  been redrawn (jsherril@redhat.com)
+- system templates - a few javascript fixes for product removal
+  (jsherril@redhat.com)
+- Updated katello.js to keep jslint happy (paji@redhat.com)
+- Updated katello.js to keep jslint happy (paji@redhat.com)
+- Updated katello.js to keep jslint happy (paji@redhat.com)
+- Code changes to make jslint happy (paji@redhat.com)
+- Fixed some system template conflict handling issues (paji@redhat.com)
+- system templates - adding permission for system templates
+  (jsherril@redhat.com)
+- system templates - fixing things that broke due to master merge
+  (jsherril@redhat.com)
+- merge fix (jsherril@redhat.com)
+- system templates - fixing issue with firefox showing a longer form than
+  chrome causing the add button to go to another line (jsherril@redhat.com)
+- Added a 'details' page for system templates promotion (paji@redhat.com)
+- changeset history - adding bbq support for cs history, and making bbq work
+  properly on this page for panel (jsherril@redhat.com)
+- Added a system templates details page needed for promotion (paji@redhat.com)
+- Quick fix on promotions javascript to get the add/remove properly showing up
+  (paji@redhat.com)
+- 734899 - fixing issue where changeset history would default to locker
+  (jsherril@redhat.com)
+- changeset history - adding indentation to content items (jsherril@redhat.com)
+- Added some auth rules for changeset updating (paji@redhat.com)
+- adding system templates to changeset history and fixing spacing issues with
+  accordion (jsherril@redhat.com)
+- Got the add remove working on system templates (paji@redhat.com)
+- system templates - fixing action bar buttons from not changing name properly
+  (jsherril@redhat.com)
+- Added code to show 'empty' templates (paji@redhat.com)
+-  fixing merge conflict (jsherril@redhat.com)
+- system templates - adapting the system templates tow ork with the new action
+  bar api (jsherril@redhat.com)
+- Fixed errors that crept up in a previous commit (paji@redhat.com)
+- Fixed the simplyfy_changeset to have an init :system_templates
+  (paji@redhat.com)
+- Made got the add/remove system templates functionality somewhat working
+  (paji@redhat.com)
+- fixing merge conflicts (jsherril@redhat.com)
+- system templates - adding additional tests (jsherril@redhat.com)
+- system templates - adding help tip (jsherril@redhat.com)
+- system templates - adding & removing from content pane now works as well as
+  saving product changes within the template (jsherril@redhat.com)
+- system templates - adding working auto complete box for products
+  (jsherril@redhat.com)
+- system-templates - making the auto complete box more abstract so products can
+  still use it, as well as adding product rendering (jsherril@redhat.com)
+- system templates - adding missing view (jsherril@redhat.com)
+- breaking out packge actions to their own js object (jsherril@redhat.com)
+- Initial cut of the system templates promotion page - Add/remove changeset
+  functionality TBD (paji@redhat.com)
+- system template - add warning when browsing away from an unsaved changeset
+  (jsherril@redhat.com)
+- system template - fixing issue where clicking add when default search text
+  was there would attempt to add a package (jsherril@redhat.com)
+- system templates - added save dialog for moving away from a template when it
+  was modified (jsherril@redhat.com)
+- sliding tree - making it so that links to invalid breadcrumb entries redirect
+  to teh default tab (jsherril@redhat.com)
+- system templates - got floating box to work with scrolling properly and list
+  to have internal scrolling instead of making the box bigger
+  (jsherril@redhat.com)
+- system templates - adding package add/remove on left hand content panel, and
+  only showing package names (jsherril@redhat.com)
+- system template - only show 20 packages in auto complete drop down
+  (jsherril@redhat.com)
+- Adding changeset to system templates connection (paji@redhat.com)
+- adding saving indicator and moving tree_loading css to be a class instead of
+  an id (jsherril@redhat.com)
+- adding package validation before adding (jsherril@redhat.com)
+- adding autocomplete for packages on system template page
+  (jsherril@redhat.com)
+- making save functionality work to actually save template packages
+  (jsherril@redhat.com)
+- added client side adding of packages to system templates
+  (jsherril@redhat.com)
+- adding search and sorting to templates page (jsherril@redhat.com)
+- moving system templates to a sliding tree and to the content section
+  (jsherril@redhat.com)
+- making sure sliding tree does not double render on page load
+  (jsherril@redhat.com)
+- only allowing modification of a system template in locker within system
+  templates controller (jsherril@redhat.com)
+- adding spec tests for system_templates controller (jsherril@redhat.com)
+- fixing row height on system templates (jsherril@redhat.com)
+- adding initial system template CRUD (jsherril@redhat.com)
+
 * Mon Sep 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.80-1
 - error text now include 'Warning' not to confuse users
 - initscript - removing temporary sleep
