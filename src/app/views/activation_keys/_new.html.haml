@@ -37,5 +37,5 @@
           = select_tag 'activation_key[system_template_id]', options_for_select(@system_template_labels, @selected_template)
 
       .grid_6.ra
-        = button_to _("Save"), {:action => "create", :controller => "activation_keys"}, :method => :post, :id => :activation_key_save, :tabindex => auto_tab_index
+        = button_to _("Save"), {:action => "create", :controller => "activation_keys"}, :method => :post, :id => :save_key, :tabindex => auto_tab_index
 
