@@ -61,7 +61,8 @@ $(document).ready(function() {
     //Set the callback on the environment selector
     env_select.click_callback = function(env_id) {
         activation_key.selected_environment(env_id);
-        activation_key.get_system_templates($(this), true);
+        activation_key.get_system_templates();
+        activation_key.get_products();
     };
 });
 
@@ -101,7 +102,7 @@ var activation_key = (function() {
                 });
             }
         },
-        get_system_templates : function(data, on_edit) {
+        get_system_templates : function() {
             // this function will retrieve the system templates associated with a given environment and
             // update the page content, as appropriate
             var url = $('.path_link.active').attr('data-templates_url');
@@ -111,7 +112,6 @@ var activation_key = (function() {
                 cache: false,
                 success: function(response) {
                     // update the appropriate content on the page
-                    var options_json = '';
                     var options = '';
 
                     // create an html option list using the response
@@ -123,6 +123,21 @@ var activation_key = (function() {
                     // add the options to the system template select... this select exists on an insert form
                     // or as part of the environment edit dialog
                     $("#activation_key_system_template_id").html(options);
+                },
+                error: function(data) {
+                }
+            });
+        },
+        get_products : function(data, on_edit) {
+            // this function will retrieve the products associated with a given environment and
+            // update the products box with the results
+            var url = $('.path_link.active').attr('data-products_url');
+            $.ajax({
+                type: "GET",
+                url: url,
+                cache: false,
+                success: function(response) {
+                    $('.productsbox').html(response);
                 },
                 error: function(data) {
                 }

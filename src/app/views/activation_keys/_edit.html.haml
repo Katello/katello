@@ -63,4 +63,10 @@
               - else
                 = @system_template.nil? ? no_template : @system_template[:name]
 
-        = button_to _("Save"), activation_key_path(@activation_key), :method => :put, :id => :save_env
+          .prefix_2.la#products_in_env
+            %label #{_("Product(s) in this environment")}:
+            .grid_7.productsbox
+              = render :partial => "environments/products"
+
+        .prefix_2.grid_7.ra
+          = button_to _("Save"), activation_key_path(@activation_key), :method => :put, :id => :save_env
