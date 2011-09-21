@@ -86,12 +86,12 @@ class SystemTemplate < ActiveRecord::Base
 
     self.revision = json["revision"]
     self.description = json["description"]
+    self.name = json["name"] if json["name"]
+    self.save!
     json["products"].each {|p| self.add_product(p) } if json["products"]
     json["packages"].each {|p| self.add_package(p) } if json["packages"]
     json["package_groups"].each {|pg| self.add_package_group(pg.symbolize_keys) } if json["package_groups"]
     json["package_group_categories"].each {|pgc| self.add_pg_category(pgc.symbolize_keys) } if json["package_group_categories"]
-
-    self.name = json["name"] if json["name"]
 
     json["parameters"].each_pair {|k,v| self.parameters[k] = v } if json["parameters"]
   end
@@ -176,27 +176,77 @@ class SystemTemplate < ActiveRecord::Base
                      :packages,
                      :parameters,
                      :package_groups,
-                     :pg_categories
-     ]
+                     :pg_categories]
         })
      )
   end
 
+  def get_promotable_packages from_env, to_env, tpl_pack
+    if tpl_pack.is_nvr?
+      #if specified by nvre, ensure the nvre is there, othervise promote it
+      return [] if to_env.find_packages_by_nvre(tpl_pack.package_name, tpl_pack.release, tpl_pack.version, tpl_pack.epoch).length > 0
+      from_env.find_packages_by_nvre(tpl_pack.package_name, tpl_pack.release, tpl_pack.version, tpl_pack.epoch)
+
+    else
+      #if specified by name, ensure any package with this name is in the next env. If not, promote the latest.
+      return [] if to_env.find_packages_by_name(tpl_pack.package_name).length > 0
+      latest = from_env.find_latest_package_by_name(tpl_pack.package_name)
+      from_env.find_packages_by_nvre(latest[:name], latest[:release], latest[:version], latest[:epoch])
+
+    end
+  end
+
+
   def promote from_env, to_env
     #TODO: promote parent templates recursively
 
+    #TODO: error when calling refresh on async tasks without org_id
     #promote all products
-      #promote the product only if it is not in the next env yet
+    #promote the product only if it is not in the next env yet
     async_tasks = []
     self.products.each do |prod|
-      async_tasks << (prod.promote from_env, to_env) if not prod.environments.include? to_env
-    end.flatten(1)
+      async_tasks += (prod.promote from_env, to_env) if not prod.environments.include? to_env
+    end
     PulpTaskStatus::wait_for_tasks async_tasks
 
-    #TODO: promote packages
-      #if specified by nvre, ensure the nvre is there, othervise promote it
-      #if specified by name, ensure any package with this name is in the next env. If not, promote the latest.
+    #promote packages
+    pkgs_promote = {}
+    self.packages.each do |tpl_pack|
 
+      #get packages that need to be promoted
+      #in case there are more suitable packages (eg. two latest packages in two different repos in one product) we try to promote them all
+      packages = self.get_promotable_packages from_env, to_env, tpl_pack
+      next if packages.empty?
+
+      any_package_promoted = false
+      packages.each do |p|
+        p = p.with_indifferent_access
+
+        #check if there's where to promote them
+        repo = Glue::Pulp::Repo.find(p[:repo_id])
+        if repo.is_cloned_in? to_env
+          #remember the packages in a hash, we add them all together in one time
+          clone = repo.get_clone to_env
+          pkgs_promote[clone] ||= []
+          pkgs_promote[clone] << p[:id]
+          any_package_promoted = true
+        end
+      end
+
+      if not any_package_promoted
+        #there wasn't any package that we could promote (either it's product or repo have not been promoted yet)
+        packages.map{|p| p[:product_id]}.uniq.each do |product_id|
+          #promote (or sync) the product
+          prod = Product.find_by_cp_id product_id
+          PulpTaskStatus::wait_for_tasks prod.promote(from_env, to_env)
+        end
+      end
+    end
+
+    #promote all collected packages
+    pkgs_promote.each_pair do |repo, pkgs|
+      repo.add_packages(pkgs)
+    end
 
     #clone the template
       #try to find template in the next env. If it is there, delete it
@@ -207,7 +257,7 @@ class SystemTemplate < ActiveRecord::Base
     end
     self.copy_to_env to_env
 
-    async_tasks
+    []
   end
 
   #### Permissions

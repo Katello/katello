@@ -162,6 +162,44 @@ class KTEnvironment < ActiveRecord::Base
   end
 
 
+  def find_packages_by_name name
+    self.products.collect do |prod|
+      prod.find_packages_by_name(self, name).collect do |p|
+        p[:product_id] = prod.cp_id
+        p
+      end
+    end.flatten(1)
+  end
+
+  def find_packages_by_nvre name, release, version, epoch
+    self.products.collect do |prod|
+      prod.find_packages_by_nvre(self, name, release, version, epoch).collect do |p|
+        p[:product_id] = prod.cp_id
+        p
+      end
+    end.flatten(1)
+  end
+
+  def find_latest_package_by_name name
+    latest_pack = nil
+
+    self.products.collect do |prod|
+      pack = prod.find_latest_package_by_name self, name
+
+      next if pack.nil?
+
+      if (latest_pack.nil?) or
+         (pack[:epoch] > latest_pack[:epoch]) or
+         (pack[:epoch] == latest_pack[:epoch] and pack[:release] > latest_pack[:release]) or
+         (pack[:epoch] == latest_pack[:epoch] and pack[:release] == latest_pack[:release] and pack[:version] > latest_pack[:version])
+        latest_pack = pack
+        latest_pack[:product_id] = prod.cp_id
+      end
+    end
+    latest_pack
+  end
+
+
   #Permissions
   scope :changesets_readable, lambda {|org| authorized_items(org, [:promote_changesets, :manage_changesets, :read_changesets])}
   scope :content_readable, lambda {|org| authorized_items(org, [:read_contents])}

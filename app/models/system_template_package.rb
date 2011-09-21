@@ -12,7 +12,7 @@
 
 class PackageUniquenessValidator < ActiveModel::Validator
   def validate(record)
-    duplicate_ids = SystemTemplatePackage.where(:package_name => record.package_name, :version => record.version, :release => record.release, :epoch => record.epoch, :arch => record.arch).all.map {|p| p.id}
+    duplicate_ids = SystemTemplatePackage.where(:system_template_id => record.system_template_id, :package_name => record.package_name, :version => record.version, :release => record.release, :epoch => record.epoch, :arch => record.arch).all.map {|p| p.id}
     duplicate_ids -= [record.id]
     record.errors[:base] << _("Package '#{record.nvrea}' is already present in the template") if duplicate_ids.count > 0
   end
