@@ -31,7 +31,7 @@ Requires:       httpd
 Requires:       openssl
 Requires:       candlepin-tomcat6
 Requires:       rubygems
-Requires:       rubygem(rails) >= 3.0.5
+Requires:       rubygem(rails) >= 3.0.10
 Requires:       rubygem(multimap)
 Requires:       rubygem(haml) >= 3.1.2
 Requires:       rubygem(haml-rails)
