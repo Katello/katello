@@ -341,7 +341,7 @@ module Glue::Pulp::Repos
               :type => "yum",
               :label => new_repo_id,
               :vendor => "Custom"
-            }
+            }, :enabled => true
           })
 
           productContent_will_change!
