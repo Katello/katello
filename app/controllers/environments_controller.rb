@@ -111,7 +111,10 @@ class EnvironmentsController < ApplicationController
 
   # GET /environments/1/products
   def products
-    render :json => @environment.products
+    respond_to do |format|
+      format.html {render :partial => "products", :content_type => 'text/html'}
+      format.json {render :json => @environment.products}
+    end
   end
 
   protected
