@@ -15,7 +15,7 @@ class ActivationKeysController < ApplicationController
   include ActivationKeysHelper
 
   before_filter :require_user
-  before_filter :find_activation_key, :only => [:show, :edit, :edit_environment, :update, :destroy, :subscriptions, :update_subscriptions]
+  before_filter :find_activation_key, :only => [:show, :edit, :update, :destroy, :subscriptions, :update_subscriptions]
   before_filter :find_environment, :only => [:edit]
   before_filter :authorize #after find_activation_key, since the key is required for authorization
   before_filter :panel_options, :only => [:index, :items]
@@ -38,7 +38,6 @@ class ActivationKeysController < ApplicationController
       :create => manage_test,
 
       :edit => read_test,
-      :edit_environment => read_test,
       :update => manage_test,
 
       :subscriptions => read_test,
@@ -139,10 +138,6 @@ class ActivationKeysController < ApplicationController
                                                                        :editable => ActivationKey.manageable?(current_organization),
                                                                        :name => controller_display_name,
                                                                        :accessible_envs => accessible_envs}
-  end
-
-  def edit_environment
-    render :partial => "edit_environment"
   end
 
   def create
