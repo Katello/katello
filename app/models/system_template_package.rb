@@ -10,6 +10,14 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+class PackageUniquenessValidator < ActiveModel::Validator
+  def validate(record)
+    if SystemTemplatePackage.where(:package_name => record.package_name, :version => record.version, :release => record.release, :epoch => record.epoch, :arch => record.arch).all.count > 0
+      record.errors[:base] <<  _("Package '#{record.nvrea}' is already present in the template")
+    end
+  end
+end
+
 class PackageValidator < ActiveModel::Validator
   def validate(record)
     if record.to_package.nil?
@@ -22,7 +30,7 @@ class SystemTemplatePackage < ActiveRecord::Base
   include Authorization
 
   belongs_to :system_template, :inverse_of => :packages
-  validates_uniqueness_of :package_name, :scope =>  :system_template_id
+  validates_with PackageUniquenessValidator
   validates_with PackageValidator
 
   #package name should exist in a product in the environment
@@ -39,16 +47,16 @@ class SystemTemplatePackage < ActiveRecord::Base
   end
 
   def is_nvr?
-    (not self.package_name.nil? and self.version.nil? and self.release.nil?)
+    not (self.package_name.nil? or self.version.nil? or self.release.nil?)
   end
 
   def nvrea
     if self.is_nvr?
-      attrs = self.attributes
+      attrs = self.attributes.with_indifferent_access
       attrs[:name] = attrs[:package_name]
-      Katello::PackageUtils.build_nvrea self.attributes
+      Katello::PackageUtils.build_nvrea attrs
     else
-      nil
+      self.package_name
     end
   end
 
