@@ -86,9 +86,7 @@ class Changeset < ActiveRecord::Base
     from_env = self.environment.prior
     to_env   = self.environment
 
-
     product_hash = {}
-
 
     from_env.products.each{|prod|
       cs_pkgs = ChangesetPackage.where({:changeset_id=>self.id, :product_id=>prod.id})
@@ -98,13 +96,11 @@ class Changeset < ActiveRecord::Base
       direct_pkgs = cs_pkgs.collect{|pkg| {:name=>pkg.display_name, :id=>pkg.package_id}}
       #TODO get errata packages
 
-
-
       # mapping of repo in from_env to its repo in to_env
       repo_map = {} # {from_env => to_env}
 
       prod.repos(from_env).each{|repo|
-        cloned = prod.get_cloned repo, to_env
+        cloned = repo.get_clone to_env
         repo_map[repo] = cloned if cloned
       }
 
@@ -140,7 +136,6 @@ class Changeset < ActiveRecord::Base
         }
 
       #now we have a list of package hashes (with id and name) for the product (product_hash[prod.id])
-
       }
     }
 
@@ -155,8 +150,6 @@ class Changeset < ActiveRecord::Base
     end
 
     product_hash
-
-
   end
 
   # returns list of virtual permission tags for the current user
@@ -359,9 +352,9 @@ class Changeset < ActiveRecord::Base
     from_env = self.environment.prior
     to_env   = self.environment
 
-    PulpTaskStatus::wait_for_tasks promote_templates(from_env, to_env)
-    update_progress! '30'
     PulpTaskStatus::wait_for_tasks promote_products(from_env, to_env)
+    update_progress! '30'
+    PulpTaskStatus::wait_for_tasks promote_templates(from_env, to_env)
     update_progress! '50'
     PulpTaskStatus::wait_for_tasks promote_repos(from_env, to_env)
     update_progress! '80'
@@ -412,7 +405,7 @@ class Changeset < ActiveRecord::Base
 
       next if (products.uniq! or []).include? product
 
-      cloned = repo.get_cloned_in(to_env)
+      cloned = repo.get_clone(to_env)
       if cloned
         async_tasks << cloned.sync
       else
