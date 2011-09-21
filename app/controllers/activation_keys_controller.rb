@@ -121,6 +121,10 @@ class ActivationKeysController < ApplicationController
     @organization = current_organization
     accessible_envs = current_organization.environments
     setup_environment_selector(current_organization, accessible_envs)
+    @environment = first_env_in_path(accessible_envs)
+
+    @system_template_labels = [[no_template, '']] + (@environment.system_templates).collect {|p| [ p.name, p.id ]}
+    @selected_template = no_template
 
     render :partial => "new", :layout => "tupane_layout", :locals => {:activation_key => activation_key,
                                                                       :accessible_envs => accessible_envs}
