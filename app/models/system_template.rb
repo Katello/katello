@@ -23,10 +23,10 @@ class TemplateContentValidator < ActiveModel::Validator
   def validate(record)
     #check if packages and errate are valid
     for p in record.packages
-      record.errors[:packages] << _("Package '#{p.package_name}' has doesn't belong to any product in this template") if not p.valid?
+      record.errors[:packages] << _("Package '#{p.package_name}' does not belong to any product in this template") if not p.valid?
     end
     for e in record.errata
-      record.errors[:errata] << _("Erratum '#{e.erratum_id}' has doesn't belong to any product in this template") if not e.valid?
+      record.errors[:errata] << _("Erratum '#{e.erratum_id}' does not belong to any product in this template") if not e.valid?
     end
   end
 end
@@ -38,6 +38,9 @@ class SystemTemplate < ActiveRecord::Base
 
   #has_many :products
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :system_templates
+  has_and_belongs_to_many :changesets
+
+  scoped_search :on => :name, :complete_value => true, :rename => :'system_template.name'
 
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :environment_id
@@ -48,6 +51,8 @@ class SystemTemplate < ActiveRecord::Base
   has_and_belongs_to_many :products, :uniq => true
   has_many :errata,   :class_name => "SystemTemplateErratum", :inverse_of => :system_template, :dependent => :destroy
   has_many :packages, :class_name => "SystemTemplatePackage", :inverse_of => :system_template, :dependent => :destroy
+  has_many :package_groups, :class_name => "SystemTemplatePackGroup", :inverse_of => :system_template, :dependent => :destroy
+  has_many :pg_categories, :class_name => "SystemTemplatePgCategory", :inverse_of => :system_template, :dependent => :destroy
 
   attr_accessor :host_group
   lazy_accessor :parameters, :initializer => lambda { init_parameters }, :unless => lambda { false }
@@ -83,18 +88,15 @@ class SystemTemplate < ActiveRecord::Base
 
     self.revision = json["revision"]
     self.description = json["description"]
-    json["products"].collect do |p| self.add_product(p) end if not json["products"].nil?
-    json["packages"].collect do |p| self.add_package(p) end if not json["packages"].nil?
-    json["errata"].collect   do |e| self.add_erratum(e) end if not json["errata"].nil?
+    json["products"].each {|p| self.add_product(p) } if json["products"]
+    json["packages"].each {|p| self.add_package(p) } if json["packages"]
+    json["errata"].each {|e| self.add_erratum(e) } if json["errata"]
+    json["package_groups"].each {|pg| self.add_package_group(pg.symbolize_keys) } if json["package_groups"]
+    json["package_group_categories"].each {|pgc| self.add_pg_category(pgc.symbolize_keys) } if json["package_group_categories"]
 
-    self.name = json["name"] if not json["name"].nil?
+    self.name = json["name"] if json["name"]
 
-    if not json["parameters"].nil?
-      json["parameters"].each_pair do |k,v|
-        self.parameters[k] = v
-      end
-    end
-
+    json["parameters"].each_pair {|k,v| self.parameters[k] = v } if json["parameters"]
   end
 
 
@@ -105,7 +107,9 @@ class SystemTemplate < ActiveRecord::Base
       :packages => self.packages.map(&:package_name),
       :errata   => self.errata.map(&:erratum_id),
       :products => self.products.map(&:name),
-      :parameters => ActiveSupport::JSON.decode(self.parameters_json)
+      :parameters => ActiveSupport::JSON.decode(self.parameters_json),
+      :package_groups => self.package_groups.map(&:export_hash),
+      :package_group_categories => self.pg_categories.map(&:export_hash)
     }
     tpl[:description] = self.description if not self.description.nil?
     tpl[:parent] = self.parent.name if not self.parent.nil?
@@ -155,13 +159,39 @@ class SystemTemplate < ActiveRecord::Base
     raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{product_name}.")
   end
 
+  def add_package_group pg_attrs
+      self.package_groups.create!(:repo_id => pg_attrs[:repo_id], :package_group_id => pg_attrs[:id])
+  end
+
+  def remove_package_group pg_attrs
+    package_group = self.package_groups.where(:repo_id => pg_attrs[:repo_id], :package_group_id => pg_attrs[:id]).first
+    if package_group == nil
+      raise Errors::TemplateContentException.new(_("Package group '%s' not found in this template.") % pg_attrs[:repo_id])
+    end
+    package_group.delete
+  end
+
+  def add_pg_category pg_cat_attrs
+    self.pg_categories.create!(:repo_id => pg_cat_attrs[:repo_id], :pg_category_id => pg_cat_attrs[:id])
+  end
+
+  def remove_pg_category pg_cat_attrs
+    pg_category = self.pg_categories.where(:repo_id => pg_cat_attrs[:repo_id], :pg_category_id => pg_cat_attrs[:id]).first
+    if pg_category == nil
+      raise Errors::TemplateContentException.new(_("Package group category '%s' not found in this template.") % pg_cat_attrs[:id])
+    end
+    pg_category.delete
+  end
 
   def to_json(options={})
      super(options.merge({
         :methods => [:products,
                      :packages,
                      :errata,
-                     :parameters]
+                     :parameters,
+                     :package_groups,
+                     :pg_categories
+     ]
         })
      )
   end
@@ -186,6 +216,37 @@ class SystemTemplate < ActiveRecord::Base
       tpl.copy_to_env to_env
     end
   end
+
+
+  #### Permissions
+  def self.list_verbs global = false
+    {
+      :manage_all => N_("Manage All System Templates"),
+      :read_all => N_("Read All System Templates")
+   }.with_indifferent_access
+  end
+
+  def self.no_tag_verbs
+    SystemTemplate.list_verbs.keys
+  end
+
+  def self.any_readable? org
+    User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
+    
+  end
+
+  def self.readable? org
+    User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
+  end
+
+  def self.manageable? org
+    User.allowed_to?([:manage_all], :system_templates, nil, org)
+  end
+
+  def readable?
+    self.class.readable?(self.environment.organization)
+  end
+
 
   protected
 
@@ -241,4 +302,5 @@ class SystemTemplate < ActiveRecord::Base
       raise Errors::TemplateContentException.new("The template has children templates.")
     end
   end
+
 end

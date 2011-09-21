@@ -13,7 +13,7 @@
 
 
 var promotion_page = (function($){
-    var types =             ["errata", "product", "package", "repo"],
+    var types =             ["errata", "product", "package", "repo", "template"],
         subtypes =          ["errata", "package", "repo"],
         changeset_queue =   [],
         changeset_data =    {},
@@ -54,7 +54,7 @@ var promotion_page = (function($){
                 product_remove =[],
                 products = {};
 
-            var add_emtpy_product = function(name){
+            var add_empty_product = function(name){
                 products[name] = {name:name};
                 $.each(subtypes, function(index, type){
                     products[name][type + "_" + "add"] = [];
@@ -62,13 +62,18 @@ var promotion_page = (function($){
                 });
             };
 
+            var template_add = [],
+                template_remove =[];
+
             return {
+                templates_added: template_add,
+                templates_removed: template_remove,
                 products_added: product_add,
                 products_removed: product_remove,
                 products: products,
                 size : function() {
                     var total = 0;
-                        total += product_add.length + product_remove.length;
+                        total += product_add.length + product_remove.length + template_add.length + template_remove.length;
                         $.each(products, function(key, prod) {
                             $.each(subtypes, function(index, type) {
                                 total += prod[type + "_add"].length + prod[type + "_remove"].length;
@@ -82,9 +87,13 @@ var promotion_page = (function($){
                         var prod_array = added ? product_add : product_remove;
                         prod_array.push(name);
                     }
+                    else if (type == 'template') {
+                         var template_array = added ? template_add : template_remove;
+                         template_array.push(name);
+                    }
                     else {
                         if (products[product_name] === undefined) {
-                            add_emtpy_product(product_name);
+                            add_empty_product(product_name);
                         }
                         products[product_name][type + "_" + action].push(name);
                     }
@@ -96,6 +105,9 @@ var promotion_page = (function($){
             var old_products = {}; //save products as hash so we dont have to loop to look them up
             var new_products = {};
             var all_products = {};
+            var old_templates = {}; //save products as hash so we dont have to loop to look them up
+            var new_templates= {};
+            var all_templates = {};
 
             $.each(new_changeset.getProducts(), function(index, item) {
                 new_products[item.id] = item;
@@ -107,8 +119,8 @@ var promotion_page = (function($){
             });
 
             $.each(all_products, function(id, product){
-                var old_p = old_products[id] || {};
-                var new_p = new_products[id] || {};
+                var old_p = old_products[id];
+                var new_p = new_products[id];
 
                 if (new_p && new_p.all && (!old_p || !old_p.all)) { //product added
                     myconflict.add_item('product', product.name, true);
@@ -119,8 +131,15 @@ var promotion_page = (function($){
 
                 $.each(subtypes, function(index, type) {
 
-                    var new_items = new_p[type] || [];
-                    var old_items = old_p[type] || [];
+                    var new_items = [];
+                    if(new_p) {
+                      new_items = new_p[type];
+                    }
+
+                    var old_items = [];
+                    if(old_p) {
+                      old_items = old_p[type];
+                    }
                     var all_types = new_items.concat(old_items);
 
                     $.each(all_types, function(index, item){
@@ -136,6 +155,28 @@ var promotion_page = (function($){
                     });
                 });
             });
+
+            $.each(new_changeset.getTemplates(), function(index, item) {
+                new_templates[item.id] = item;
+                all_templates[item.id] = item;
+            });
+            $.each(old_changeset.getTemplates(), function(index, item) {
+                old_templates[item.id] = item;
+                all_templates[item.id] = item;
+            });
+
+            $.each(all_templates, function(id, item){
+                var old_t = old_templates[id];
+                var new_t = new_templates[id];
+
+                if (new_t && !old_t) { //template added
+                    myconflict.add_item('template', item.name, true);
+                }
+                else if(old_t && !new_t) { // template removed
+                    myconflict.add_item('template', item.name, false);
+                }
+            });
+
             return myconflict;
 
         },
@@ -166,10 +207,7 @@ var promotion_page = (function($){
 
                 current_changeset.update(data,
                     function(data) {
-                        if (changeset_queue.length !== 0 && data.changeset) {
-                            //don't update timestamp
-                        }
-                        else {
+                        if (changeset_queue.length === 0 || !data.changeset) {
                             if(data.changeset) {
                                 var old_changeset = current_changeset;
                                 current_changeset = changeset_obj(data.changeset);
@@ -178,9 +216,6 @@ var promotion_page = (function($){
                                 var diff = calculate_conflict(old_changeset, current_changeset);
                                 if (diff.size() > 0) {
                                     show_conflict(diff);
-                                }
-                                else {
-                                    //console.log("Got newer changeset, but no differences");
                                 }
                             }
                             else {
@@ -226,11 +261,20 @@ var promotion_page = (function($){
             }
     
             var button = find_button(id, type);
-            var product_name = content_breadcrumb['details_' + product_id].name;
+            var product_name = '';
+            if (product_id) {
+              product_name = content_breadcrumb['details_' + product_id].name;
+            }
+
             if (adding) {
                 button.html(i18n.remove).addClass("remove_" + type).removeClass('add_'+type);
                 if( type !== 'product'){
-                    if( changeset.getProducts()[product_id] === undefined ){
+                    if (type === "template") {
+                      if (changeset.getTemplates()[id] === undefined) {
+                        add_template_breadcrumbs(changeset.id, id, display);
+                      }
+                    }
+                    else if( changeset.getProducts()[product_id] === undefined ){
                         add_product_breadcrumbs(changeset.id, product_id, product_name);
                     }
                 }
@@ -241,12 +285,18 @@ var promotion_page = (function($){
                 button.html(i18n.add).addClass("add_" + type).removeClass('remove_' + type);
                 changeset.remove_item(type, id, product_id);
                 if( type !== 'product' ){
-                    var product = changeset.getProducts()[product_id];
-                    if( !product.errata.length && !product['package'].length && !product.repo.length ){
-                        delete changeset.getProducts()[product_id];
-                        changeset_tree.render_content('changeset_' + changeset.id);
-                    } else {
-                        changeset_tree.rerender_content();
+                    if (type === "template") {
+                      delete changeset.getTemplates()[id];
+                      changeset_tree.rerender_content();
+                    }
+                    else {
+                      var product = changeset.getProducts()[product_id];
+                      if( !product.errata.length && !product['package'].length && !product.repo.length ){
+                          delete changeset.getProducts()[product_id];
+                          changeset_tree.render_content('changeset_' + changeset.id);
+                      } else {
+                          changeset_tree.rerender_content();
+                      }
                     }
                 } else {
                     changeset_tree.rerender_content();       
@@ -274,7 +324,7 @@ var promotion_page = (function($){
                     if( changeset_breadcrumb.hasOwnProperty(id) ){
                         if( id.split("_")[0] === "changeset" ){
                             changeset = changeset_breadcrumb[id];
-                            if( !changeset.is_new && !changeset.progress ){
+                            if( !changeset.is_new && ( changeset.progress === null || changeset.progress === undefined ) ){
                                 changesetStatusActions.setLocked(id);
                             } else if( changeset.progress !== null && changeset.progress !== undefined ){
                                 changesetStatusActions.initProgressBar(id, changeset.progress);
@@ -386,20 +436,30 @@ var promotion_page = (function($){
                         });
                     }
                 } else{
-                    var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
-                    buttons.html(i18n.add).removeClass("remove_product").addClass("add_product").show();
-                    $.each(current_changeset.getProducts(), function(index, product) {
-                        $.each(buttons, function(button_index, button){
-                            if( $(button).attr('id') === ('add_remove_product_' + product.id) ){ 
-                                if( product.all === true){
-                                    $(button).html(i18n.remove).removeClass('add_product').addClass("remove_product").removeClass("disabled");
-                                } else {
-                                    $(button).html('');
-                                }
-                            }
-                        });
+                  var buttons = $('#list').find("a[class~=content_add_remove][data-type=product]");
+                  buttons.html(i18n.add).removeClass('remove_product').addClass("add_product").show(); //reset all to 'add'
+                  $.each(current_changeset.getProducts(), function(index, product) {
+                    $.each(buttons, function(button_index, button){
+                      if( $(button).attr('id') === ('add_remove_product_' + product.id) ){ 
+                         if( product.all === true){
+                            $(button).html(i18n.remove).removeClass('add_product').addClass("remove_product").removeClass("disabled");
+                         } else {
+                            $(button).html('');
+                         }
+                      }
                     });
-                }
+                  });
+                 buttons = $('#list').find("a[class~=content_add_remove][data-type=template]");
+                 buttons.html(i18n.add).removeClass('remove_template').addClass("add_template").show(); //reset all to 'add'
+                  $.each(current_changeset.getTemplates(), function(index, template) {
+                    $.each(buttons, function(button_index, button){
+                      if( $(button).attr('id') === ('add_remove_template_' + template.id) ){ 
+                        $(button).html(i18n.remove).removeClass('add_template').addClass("remove_template").removeClass("disabled");
+                      }
+                    });
+                  });
+
+               }
             } else {
                 disable_all(types);
             }
@@ -488,6 +548,17 @@ var promotion_page = (function($){
             $('#changeset_users').fadeOut("slow", function() { $(this).html(""); });
           }
         },
+        add_template_breadcrumbs = function(changeset_id, id, name){
+          var changesetBC = "changeset_" + changeset_id;
+          var templateBC = 'template-cs_' + changeset_id + '_' + id;
+          changeset_breadcrumb[templateBC] = {
+                cache: null,
+                client_render: true,
+                name: name,
+                trail: ['changesets', changesetBC],
+                url: 'url'
+          };
+        },
         add_product_breadcrumbs = function(changeset_id, product_id, product_name){
             var productBC = 'product-cs_' + changeset_id + '_' + product_id;
             var changesetBC = "changeset_" + changeset_id;
@@ -521,9 +592,7 @@ var promotion_page = (function($){
             };
         },
         add_dependencies= function() {
-    
            if (current_changeset === undefined) {
-               console.log("returning false");
                return false;
            }
            $.each(current_changeset.getProducts(), function(product_id, product) {
@@ -541,7 +610,7 @@ var promotion_page = (function($){
                 };
                }
            });
-    
+           return true; 
             //changeset_breadcrumb
         },
         remove_dependencies = function() {
@@ -555,8 +624,7 @@ var promotion_page = (function($){
                     delete changeset_breadcrumb[key];
                }
             });
-            
-            
+            return true;
         };
         
     return {
@@ -590,6 +658,7 @@ var changeset_obj = function(data_struct) {
     var id = data_struct["id"],
         timestamp = data_struct["timestamp"],
         products = data_struct.products,
+        templates = data_struct.system_templates,
         is_new = data_struct.is_new,
         name = data_struct.name,
         description = data_struct.description;
@@ -640,17 +709,18 @@ var changeset_obj = function(data_struct) {
 
     return {
         id:id,
-        getName: function(){return name},
+        getName: function(){return name;},
         setName: function(newName){
             name = newName;
             changeset_breadcrumb["changeset_" + id].name = newName;
         },
-        getDescription: function(){return description},
+        getDescription: function(){return description;},
         setDescription: function(newDesc){description = newDesc;},
-        getProducts: function(){return products},
-        is_new : function() {return is_new},
+        getProducts: function(){return products;},
+        getTemplates: function() {return templates;},
+        is_new : function() {return is_new;},
         set_timestamp:function(ts) { timestamp = ts; },
-        timestamp: function(){return timestamp},
+        timestamp: function(){return timestamp;},
         productCount: function(){
             var count = 0;
             
@@ -663,6 +733,11 @@ var changeset_obj = function(data_struct) {
         },
         has_item: function(type, id, product_id) {
             var found = undefined;
+            if (type === 'template') {
+               if( templates.hasOwnProperty(id) ){
+                    return true;
+                }
+            }
             if( type === 'product'){
                 if( products.hasOwnProperty(id) ){
                     return true;
@@ -680,17 +755,21 @@ var changeset_obj = function(data_struct) {
         },
         add_item:function (type, id, display_name, product_id, product_name) {
             if( type === 'product' ){
-                products[id] = {'name': display_name, 'id': id, 'package':[], 'errata':[], 'repo':[], 'all': true}
+                products[id] = {'name': display_name, 'id': id, 'package':[], 'errata':[], 'repo':[], 'all': true};
+            } else if (type === 'template') {
+                templates[id] = {'name': display_name, 'id': id};
             } else { 
                 if ( products[product_id] === undefined ) {
-                    products[product_id] = {'name': product_name, 'id': product_id, 'package':[], 'errata':[], 'repo':[]}
+                    products[product_id] = {'name': product_name, 'id': product_id, 'package':[], 'errata':[], 'repo':[]};
                 }
-                products[product_id][type].push({name:display_name, id:id})
+                products[product_id][type].push({name:display_name, id:id});
             } 
         },
         remove_item:function(type, id, product_id) {
             if( type === 'product' ){
                 delete products[id];
+            } else if (type == 'template') {
+              delete templates[id];
             } else if (products[product_id] !== undefined) {
                 $.each(products[product_id][type], function(index,item) {
                     if (item.id === id) {
@@ -704,7 +783,7 @@ var changeset_obj = function(data_struct) {
             var success = function() {
                 on_success();
                 dep_solve();
-            }
+            };
 
             change_state("review", success, on_error);
             changeset_breadcrumb['changeset_' + id].is_new = false;
@@ -758,7 +837,7 @@ var changeset_obj = function(data_struct) {
             error: on_error
           });
         }
-    }
+    };
 };
 
 //doc ready
@@ -767,8 +846,6 @@ var registerEvents = function(){
         var button = $(this);
         if(button.hasClass("disabled")){return false;}
         button.addClass("disabled");
-
-
         $.ajax({
           type: "POST",
           url: button.attr('data-url'),
@@ -778,10 +855,11 @@ var registerEvents = function(){
               $.extend(changeset_breadcrumb, data.breadcrumb);
               promotion_page.set_changeset(changeset_obj(data.changeset));
               promotion_page.get_changeset_tree().render_content('changeset_' + data.id);
-              panel.closePanel($('#panel'));
+              KT.panel.closePanel($('#panel'));
           },
           error: function(){ button.removeClass("disabled");}
         });
+        return true;
     });
     
     $("#delete_changeset").click(function() {
@@ -803,6 +881,7 @@ var registerEvents = function(){
                 }
             });
         });
+        return true;
     });
 
 
@@ -836,18 +915,18 @@ var registerEvents = function(){
                 promotion_page.remove_dependencies();
             });
         }
+        return true;
     });
 
     $("#promote_changeset").live('click', function() {
         if ($(this).hasClass("disabled")) {
-            return;
+            return false;
         }
         $(this).addClass("disabled");
         var cs = promotion_page.get_changeset();
         var after = function() {$(this).removeClass("disabled");};
-        cs.promote(after, after);
-
-
+        cs.promote(after, function(){});
+        return true;
     });
 
 
@@ -867,6 +946,7 @@ var registerEvents = function(){
             return false;
         }
         changesetEdit.toggle();
+        return true;
     });
 
 
@@ -1057,6 +1137,7 @@ var promotionsRenderer = (function(){
             $.each(conflict.products, function(key, product){
                 html += templateLibrary.conflictProduct(key, product);
             });
+            html += templateLibrary.conflictTemplates(conflict.templates_added, conflict.templates_removed);
             return html;
         };
 
@@ -1068,7 +1149,7 @@ var promotionsRenderer = (function(){
 
 var templateLibrary = (function(){
     var changesetsListItem = function(id, name){
-            var html ='<li class="slide_link">' + '<div class="link_details" id="' + id + '">'
+            var html ='<li class="slide_link">' + '<div class="simple_link link_details" id="' + id + '">';
 
             html += '<span class="sort_attr">'+ name + '</span></div></li>';
             return html;
@@ -1090,7 +1171,7 @@ var templateLibrary = (function(){
             var html = '<ul class="filterable">';
              $.each(subtypes, function(index, type) {
                  if (product[type]) {
-                    html += '<li class="slide_link"><div class="link_details"';
+                    html += '<li class="slide_link"><div class="simple_link link_details"';
                  } else {
                      html += '<li><div ';
                  }
@@ -1120,7 +1201,6 @@ var templateLibrary = (function(){
                 html += '<li><div class="no_slide"><span class="sort_attr">'  + item.name + ' ' + '</span>';
                // html += '<div class="dependency_of">' + i18n.dep_of + "&nbsp;" + item.dep_of + "</div>";
                 html += '</div></li>';
-                
 
             });
             html += '</ul>';
@@ -1142,10 +1222,9 @@ var templateLibrary = (function(){
         listItem = function(id, name, type, product_id, showButton) {
             var anchor = "";
             if ( showButton && permissions.manage_changesets){
-                anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"'
-                                + 'data-type="' + type + '" data-product_id="' + product_id +  '" data-id="' + id + '">';
+                anchor = '<a ' + 'class="fr content_add_remove remove_' + type + ' + st_button"' +
+                                 'data-type="' + type + '" data-product_id="' + product_id +  '" data-id="' + id + '">';
                             anchor += i18n.remove + "</a>";
-                        
             }
             return '<li>' + anchor + '<div class="no_slide"><span class="sort_attr">'  + name + '</span></div></li>';
 
@@ -1154,10 +1233,13 @@ var templateLibrary = (function(){
             var html = '<ul class="filterable">',
                 all_list = '',
                 partial_list = '',
+                system_templates_list = '',
                 product, provider,
-                products = changeset.getProducts();
-            
+                products = changeset.getProducts(),
+                templates = changeset.getTemplates();
+
             if( changeset.productCount() === 0 ){
+                html += '<h5>'+i18n.product_plural+'</h5>';
                 html += '<div class="empty_list">' + i18n['no_products'] + '</div>';
                 //html += i18n['no_products'];
             } else {
@@ -1167,11 +1249,7 @@ var templateLibrary = (function(){
                         provider = (product.provider === 'REDHAT') ? 'rh' : 'custom';
                         toSlide = product.all ? 'no_slide' : 'slide_link';
                         if( product.all ){
-                            if( showButton ){
-                                all_list += productListItem(changeset_id, key, product.name, provider, toSlide, showButton);
-                            } else {
-                                all_list += productListItem(changeset_id, key, product.name, provider, toSlide, showButton);
-                            }
+                          all_list += productListItem(changeset_id, key, product.name, provider, toSlide, showButton);
                         }
                         else {
                             partial_list += productListItem(changeset_id, key, product.name, provider, toSlide, false);
@@ -1179,16 +1257,53 @@ var templateLibrary = (function(){
                     }
                 }
             }
-            
+
+            for(key in templates) {
+               if(templates.hasOwnProperty(key) ){
+                  template = templates[key];
+                  system_templates_list += templateItem(changeset_id, key, template.name, showButton);
+               }
+            }
+
             html += all_list ? ('<h5>'+i18n.full_product+'</h5>' + all_list) : '';
             html += partial_list ? ('<h5>'+i18n.partial_product+'</h5>' + partial_list) : '';
+
+            html += '<h5>'+i18n.system_template_plural+'</h5>';
+            html += system_templates_list ? system_templates_list : '<div class="empty_list">' + i18n['no_system_templates'] + '</div>';
             html += '</ul>';
+            return html;
+        },
+        templateItem = function(changeset_id, id, name, showButton){
+            var anchor = "",
+                html = '';
+            if ( showButton ){
+                anchor = '<a class="st_button content_add_remove fr remove_template" data-display_name="' +
+                    name +'" data-id="' + id + '" data-type="template" id="add_remove_template_' + id +
+                    '" data-template_id="' + id +
+                    '">' + i18n.remove + '</a>';
+            }
+            html += '<li class="clear">' + anchor;
+            html += '<div id="template-cs_' + changeset_id + '_' + id + '">' +
+                    '<span class="template-icon sort_attr" >' + name + '</span>' +
+                    '</div></li>';
+
+            return html;
+        },
+        conflictTemplates = function(added, removed) {
+            if (added.length === 0 && removed.length === 0) {
+                return "";
+            }
+            var html = "<h3>"+ i18n.templates +"</h3>";
+            html +="<div>";
+            html += conflictAccordianListItem(true, added);
+            html += conflictAccordianListItem(false, removed);
+            html += "</div>";
             return html;
         },
         productListItem = function(changeset_id, product_id, name, provider, slide_link, showButton){
             var anchor = "",
                 html = '';
-            
+
             if ( showButton ){
                 anchor = '<a class="st_button content_add_remove fr remove_product" data-display_name="' +
                     name +'" data-id="' + product_id + '" data-type="product" id="add_remove_product_' + product_id +
@@ -1201,11 +1316,11 @@ var templateLibrary = (function(){
                     '<span class="' + provider + '-product-sprite"></span>' +
                     '<span class="product-icon sort_attr" >' + name + '</span>' +
                     '</div></li>';
-                    
+
             return html;
         },
         conflictFullProducts = function(added, removed) {
-            if (added.length == 0 && removed.length == 0) {
+            if (added.length === 0 && removed.length === 0) {
                 return "";
             }
             var html = "<h3>"+ i18n.full_product +"</h3>";
@@ -1214,7 +1329,7 @@ var templateLibrary = (function(){
             html += conflictAccordianListItem(false, removed);
             html += "</div>";
             return html;
-        },    
+        },
         conflictProduct = function(product_name, conflict_product) {
             var html = '<h3><a href="#">'+ product_name+ '</a></h3>';
             html +="<div>";
@@ -1239,7 +1354,7 @@ var templateLibrary = (function(){
             var html = '<div class="conflict_item_type"><div>' + (added ? i18n.added : i18n.removed) + '</div>';
             html += '<ul>';
             $.each(items, function(index, item) {
-                html += "<li class='conflict_item'>" + item +  "</li>"
+                html += "<li class='conflict_item'>" + item +  "</li>";
             });
             html += '</ul></div>';
             return html;
@@ -1251,6 +1366,7 @@ var templateLibrary = (function(){
         listItems : listItems,
         productDetailList: productDetailList,
         conflictFullProducts: conflictFullProducts,
+        conflictTemplates: conflictTemplates,
         conflictProduct: conflictProduct,
         dependencyItems: dependencyItems
     };
@@ -1284,6 +1400,7 @@ var changesetStatusActions = (function($){
         finish = function(id){
             var changeset = $('#' + id);
             changeset.find(".changeset_status").html(i18n.promoted);
+            changeset.attr('title', i18n.promoted);
             /*changeset.parent().fadeOut(3000, function(){
                 changeset.parent().remove();
                 if( !$('.changeset_status').length ){
@@ -1333,12 +1450,11 @@ var changesetStatusActions = (function($){
         checkProgressTask   : checkProgressTask,
         setLocked           : setLocked,
         removeLocked        : removeLocked
-    }
+    };
 })(jQuery);
 
 //doc ready
 $(document).ready(function() {
-
     $('.left').resizable('destroy');
     
     promotion_page.start_timer();
@@ -1379,17 +1495,17 @@ $(document).ready(function() {
                                     }));
 
     //need to reset page during the extended scroll
-    panel.extended_cb = promotion_page.reset_page;
+    KT.panel.set_extended_cb(promotion_page.reset_page);
 
     //when loading the new panel item, if its new, we need to add a form submit handler
-    panel.expand_cb = function(id) {
+    KT.panel.set_expand_cb(function(id) {
         if (id === 'new') {
           $('#new_changeset').submit(function(e) {
               e.preventDefault();
               $('#save_changeset_button').trigger('click');
           });
         }
-    };
+    });
 
 
     //set function for env selection callback
@@ -1399,7 +1515,7 @@ $(document).ready(function() {
 
     $(document).ajaxComplete(function(event, xhr, options){
         var userHeader = xhr.getResponseHeader('X-ChangesetUsers');
-        if(userHeader != null) {
+        if(userHeader !== null && userHeader !== undefined) {
           var userj = $.parseJSON(userHeader); 
           promotion_page.checkUsersInResponse(userj);
         }
@@ -1412,15 +1528,15 @@ $(document).ready(function() {
         var bodyY = parseInt(container.offset().top, 10) - 20;
         var offset = $('#content_tree').width() + 50;
         $(window).scroll(function () {
-            panel.handleScroll($('#changeset_tree'), container, original_top, bodyY, 0, offset);
+            KT.panel.handleScroll($('#changeset_tree'), container, original_top, bodyY, 0, offset);
         });
         $(window).resize(function(){
-           panel.handleScrollResize($('#changeset_tree'), container, original_top, bodyY, 0, offset);
+           KT.panel.handleScrollResize($('#changeset_tree'), container, original_top, bodyY, 0, offset);
         });
     }
     
-    panel.expand_cb = function(){
+    /*KT.panel.set_expand_cb(function(){
        $('.block').parent().parent().removeClass('activeItem');
        $('.active').parent().parent().addClass('activeItem'); 
-    };
+    });*/
 });

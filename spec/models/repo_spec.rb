@@ -257,7 +257,7 @@ describe Glue::Pulp::Repo do
   end
 
   describe "#package_groups" do
-    before { Pulp::PackageGroup.stub(:all => RepoTestData::REPO_PACKAGE_GROUPS) }
+    before { Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups) }
     it "should call pulp layer" do
       Pulp::PackageGroup.should_receive(:all).with(RepoTestData::REPO_PROPERTIES[:id])
       @repo.package_groups
@@ -270,7 +270,7 @@ describe Glue::Pulp::Repo do
   end
 
   describe "#package_group_categories" do
-    before { Pulp::PackageGroupCategory.stub(:all => RepoTestData::REPO_PACKAGE_GROUP_CATEGORIES) }
+    before { Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories) }
     it "should call pulp layer" do
       Pulp::PackageGroupCategory.should_receive(:all).with(RepoTestData::REPO_PROPERTIES[:id])
       @repo.package_group_categories

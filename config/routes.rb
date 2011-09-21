@@ -105,6 +105,21 @@ Src::Application.routes.draw do
     end
   end
 
+  resources :system_templates do
+    collection do
+      get :auto_complete_search
+      get :items
+      get :auto_complete_package
+      get :product_packages
+    end
+    member do
+      get :promotion_details
+      get :object
+      put :update_content
+    end
+  end
+
+
   resources :providers do
     resources :products do
       resources :repositories
@@ -132,6 +147,7 @@ Src::Application.routes.draw do
       get :products
       get :packages
       get :errata
+      get :system_templates
       get :repos
       get :distributions
       get :details
@@ -263,10 +279,10 @@ Src::Application.routes.draw do
       resources :systems, :only => [:index]
       match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :activation_keys, :only => [:index]
-
       resources :repositories, :only => [] do
         post :discovery, :on => :collection
       end
+      resource :uebercert , :only => [:create, :show]
     end
 
     resources :changesets, :only => [:show, :destroy] do
@@ -303,6 +319,7 @@ Src::Application.routes.draw do
         get :repositories, :on => :member
       end
       resources :activation_keys, :only => [:index, :create]
+      resources :templates, :only => [:index]
     end
 
     resources :activation_keys, :only => [:show, :update, :destroy]
@@ -354,4 +371,8 @@ Src::Application.routes.draw do
 
   # end '/api' namespace
   end
+
+
+  #Last route in routes.rb - throws routing error for everything not handled
+  match '*a', :to => 'errors#routing'
 end

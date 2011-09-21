@@ -36,7 +36,7 @@ describe KTEnvironment do
     @third_product = Product.new(:name =>"prod3", :cp_id => '45678', :provider => @provider, :environments => [@organization.locker])
     @fourth_product = Product.new(:name =>"prod4", :cp_id => '32683', :provider => @provider, :environments => [@organization.locker])
 
-    @environment = KTEnvironment.new({:name => @env_name, :prior => 1}) do |e|
+    @environment = KTEnvironment.new({:name => @env_name, :prior => @organization.locker}) do |e|
       e.products << @first_product
       e.products << @third_product
     end

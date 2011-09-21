@@ -18,7 +18,11 @@ class Api::ProxiesController < Api::ApiController
 
   rescue_from RestClient::Exception do |e|
     Rails.logger.error pp_exception(e)
-    render :json => {:errors => [e.http_body]}, :status => e.http_code
+    if request_from_katello_cli?
+      render :json => {:errors => [e.http_body]}, :status => e.http_code
+    else
+      render :text => e.http_body, :status => e.http_code
+    end
   end
 
   def proxy_request_path
@@ -30,7 +34,8 @@ class Api::ProxiesController < Api::ApiController
   end
 
   def drop_api_namespace(original_request_path)
-    original_request_path.gsub('/api', '')
+    prefix = "#{ENV["RAILS_RELATIVE_URL_ROOT"]}/api"
+    original_request_path.gsub(prefix, '')
   end
 
 end

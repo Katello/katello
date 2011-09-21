@@ -15,14 +15,19 @@ require 'rest_client'
 class Api::TemplatesController < Api::ApiController
 
   before_filter :find_environment, :only => [:create, :import]
+  before_filter :try_find_environment, :only => [:index]
   before_filter :find_template, :only => [:show, :update, :update_content, :destroy, :promote, :export]
 
   # TODO: define authorization rules
   skip_before_filter :authorize
 
   def index
-    templates = SystemTemplate.where(query_params)
-    render :json => templates.to_json
+    if @environment.nil?
+      tpls = SystemTemplate.all
+    else
+      tpls = @environment.system_templates
+    end
+    render :json => tpls.to_json
   end
 
   def show
@@ -95,6 +100,26 @@ class Api::TemplatesController < Api::ApiController
         @template.parameters.delete(params[:parameter])
         @template.save!
         render :text => _("Removed kickstart attribute '#{params[:attribute]}'"), :status => 200 and return
+
+      when 'add_package_group'
+        @template.add_package_group(:id => params[:package_group], :repo_id => params[:repo])
+        @template.save!
+        render :text => _("Added package group '%s'") % params[:package_group]
+
+      when 'remove_package_group'
+        @template.remove_package_group(:id => params[:package_group], :repo_id => params[:repo])
+        @template.save!
+        render :text => _("Removed package group '%s'") % params[:package_group]
+
+      when 'add_package_group_category'
+        @template.add_pg_category(:id => params[:package_group_category], :repo_id => params[:repo])
+        @template.save!
+        render :text => _("Added package group category '%s'") % params[:package_group_category]
+
+      when 'remove_package_group_category'
+        @template.remove_pg_category(:id => params[:package_group_category], :repo_id => params[:repo])
+        @template.save!
+        render :text => _("Removed package group category '%s'") % params[:package_group_category]
     end
 
   end
@@ -136,6 +161,10 @@ class Api::TemplatesController < Api::ApiController
     @environment = KTEnvironment.find(params[:environment_id])
     raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
     @environment
+  end
+
+  def try_find_environment
+    find_environment if not params[:environment_id].nil?
   end
 
   def find_template

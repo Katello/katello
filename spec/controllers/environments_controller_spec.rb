@@ -174,7 +174,7 @@ describe EnvironmentsController do
 
         it "should not redirect from edit view" do
           put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
-          response.should_not redirect_to()
+          response.should_not be_redirect
         end
       end
 
@@ -191,7 +191,7 @@ describe EnvironmentsController do
 
         it "should not redirect from edit view" do
           put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
-          response.should_not redirect_to()
+          response.should_not be_redirect
         end
       end
 

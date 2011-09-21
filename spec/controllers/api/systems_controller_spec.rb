@@ -34,7 +34,7 @@ describe Api::SystemsController do
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) } }
   let(:user_without_read_permissions) { user_without_permissions }
-  let(:user_with_create_permissions) { user_with_permissions { |u| u.can([:create_systems], :environments, @environment_1.id, @organization) } }
+  let(:user_with_create_permissions) { user_with_permissions { |u| u.can([:register_systems], :environments, @environment_1.id, @organization) } }
   let(:user_without_create_permissions) { user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) } }
   let(:user_with_update_permissions) { user_with_permissions { |u| u.can([:read_systems, :update_systems], :organizations, nil, @organization) } }
   let(:user_without_update_permissions) { user_without_permissions }
@@ -62,8 +62,7 @@ describe Api::SystemsController do
     let(:req) { post :create, :owner => @organization.name, :name => 'test', :cp_type => 'system', :facts => facts }
     let(:authorized_user) { user_with_create_permissions }
     let(:unauthorized_user) { user_without_create_permissions }
-    #TODO 1634bdc 736384 - workaround for perm. denied for rhsm registration
-    #it_should_behave_like "protected action"
+    it_should_behave_like "protected action"
 
     it "requires either environment_id, owner, or organization_id to be specified" do
       post :create
@@ -160,7 +159,7 @@ describe Api::SystemsController do
       @environment_2.save!
 
       @system_1 = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts)
-      @system_2 = System.create!(:name => 'test', :environment => @environment_2, :cp_type => 'system', :facts => facts)
+      @system_2 = System.create!(:name => 'test2', :environment => @environment_2, :cp_type => 'system', :facts => facts)
     end
 
     let(:action) { :index }

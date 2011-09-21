@@ -223,8 +223,8 @@ class ActivationKeysController < ApplicationController
       :col => ['name'],
       :create => _('Key'), 
       :name => controller_display_name,
-      :ajax_scroll => items_activation_keys_path()}
-    @panel_options[:enable_create] = false if !ActivationKey.manageable?(current_organization)
+      :ajax_scroll => items_activation_keys_path(),
+      :enable_create => ActivationKey.manageable?(current_organization)}
   end
 
   private

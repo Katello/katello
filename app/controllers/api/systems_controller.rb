@@ -18,19 +18,19 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :upload_package_profile, :errata, :package_profile]
-  before_filter :authorize, :except => [:activate, :create] # TODO: create was added as a workaround for BZ 736384
+  before_filter :authorize, :except => :activate
 
   skip_before_filter :require_user, :only => [:activate]
 
   def rules
     index_systems = lambda { System.any_readable?(@organization) }
-    create_system = lambda { System.creatable?(@environment, @organization) }
-    edit_system = lambda { @system.editable? }
-    read_system = lambda { @system.readable? }
-    delete_system = lambda { @system.deletable? }
+    register_system = lambda { System.registrable?(@environment, @organization) }
+    edit_system = lambda { @system.editable? or User.consumer? }
+    read_system = lambda { @system.readable? or User.consumer? }
+    delete_system = lambda { @system.deletable? or User.consumer? }
 
     {
-      :create => create_system,
+      :create => register_system,
       :regenerate_identity_certificates => edit_system,
       :update => edit_system,
       :index => index_systems,

@@ -223,7 +223,7 @@ describe OrganizationsController do
       
       it "should not redirect from edit view" do
         put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION
-        response.should_not redirect_to()
+        response.should_not be_redirect
       end
     end
     
@@ -241,7 +241,7 @@ describe OrganizationsController do
       
       it "should not redirect from edit view" do
         put 'update', :id => OrgControllerTest::ORG_ID
-        response.should_not redirect_to()
+        response.should_not be_redirect
       end
     end
     

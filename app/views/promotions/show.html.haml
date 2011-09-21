@@ -17,15 +17,18 @@
       "removed": '#{_('Removed:')}',
       "remove": '#{_('Remove')}',
       "loading": "#{_('Loading Changeset')}",
-      "no_products":"#{_('No products exist in the changeset for this product')}",
+      "no_products":"#{_('No products exist in the changeset.')}",
       "no_errata": "#{_('No errata exist in this changeset.')}",
       "no_package": "#{_('No packages exist in this changeset.')}",
       "no_repo": "#{_('No repositories exist in this changeset.')}",
       "no_distributions": "#{_('No distributions exist in this changeset.')}",
+      "no_system_templates":"#{_('No system templates exist in the changeset.')}",
       "errata": "#{_("Errata")}",
       "package": "#{_("Packages")}",
       "repo": "#{_("Repositories")}",
       "distribution": "#{_('distributions')}",
+      "system_templates": "#{_('system templates')}",
+      "templates": '#{_("System Templates")}',
       "viewing": '#{_('currently editing this changeset')}',
       "review": '#{_("Review")}',
       "cancel_review": '#{_("Cancel Review")}',
@@ -41,6 +44,8 @@
       "repo_plural": '#{_("Repositories")}',
       "distribution_singular": "#{_('Distribution')}",
       "distribution_plural": "#{_('Distributions')}",
+      "system_template_singular": "#{_('System Template')}",
+      "system_template_plural": "#{_('System Templates')}",
       "changeset_empty": '#{_("Changeset is empty.")}',
       "summary": '#{_("Summary:")}',
       "loading_deps": '#{_("Loading dependencies.")}',
@@ -98,7 +103,7 @@
             .tree_breadcrumb
           .sliding_container
             #cslist.list.sliding_list{"data-page_size"=>current_user.page_size}
-              #tree_loading.slider
+              #tree_loading.slider.tree_loading
                 .text
                   = _("Loading Changeset")
                   = image_tag ("spinner.gif")
@@ -151,7 +156,7 @@
   
     #content_tree.left.sliding_tree
       - if manage_changesets
-        %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}&next_env_id=#{@next_environment.id}"}
+        %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@next_environment.id}"}
           #{_('+ New Changeset')}
           .arrow-right
       - elsif @environment.organization.environments_manageable? 
@@ -163,7 +168,6 @@
       .sliding_container
         #list.list.sliding_list{"data-page_size"=>current_user.page_size}
           .slider_one.has_content.slider
-            = render(:partial=>"detail")
           .slider_two.no_content.slider
 
 

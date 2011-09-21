@@ -118,15 +118,15 @@ class User < ActiveRecord::Base
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a? Array
     org = Organization.find(org) if Numeric === org
-    Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
-          #{resource_type.inspect} in organization #{org && org.inspect}"
+
+    log_roles(verbs, resource_type, nil,org)
 
     org_permissions = org_permissions_query(org, resource_type == :organizations)
     org_permissions = org_permissions.where(:organization_id => nil) if resource_type == :organizations
 
 
     verbs = verbs.collect {|verb| action_to_verb(verb, resource_type)}
-    no_tag_verbs = ResourceType::TYPES[resource_type][:model].no_tag_verbs rescue []
+    no_tag_verbs = ResourceType::TYPES[resource_type][:model].no_tag_verbs.clone rescue []
     no_tag_verbs ||= []
     no_tag_verbs.delete_if{|verb| !verbs.member? verb}
     verbs.delete_if{|verb| no_tag_verbs.member? verb}
@@ -165,7 +165,7 @@ class User < ActiveRecord::Base
   #
   # This method is called by every Model's list method
   def allowed_tags_sql(verbs=nil, resource_type = nil,  org = nil)
-    select_on = "DISTINCT(tags.name)"
+    select_on = "DISTINCT(permission_tags.tag_id)"
     select_on = "DISTINCT(permissions.organization_id)" if resource_type == :organizations
 
     allowed_tags_query(verbs, resource_type, org, false).select(select_on).to_sql
@@ -191,27 +191,27 @@ class User < ActiveRecord::Base
   #
   # This method is called by every protected controller.
   def allowed_to?(verbs, resource_type, tags = nil, org = nil, any_tags = false)
+    tags = [] if tags.nil?
+    tags = [tags] unless tags.is_a? Array
+    raise  ArgumentError, "Tags need to be integers - #{tags} are not."  if
+               tags.detect{|tag| !(Numeric === tag ||(String === tag && /^\d+$/=== tag.to_s))}
     ResourceType.check resource_type, verbs
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a? Array
-    Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
-          #{resource_type.inspect} scoped #{tags.inspect} in organization #{org && org.inspect}"
+    log_roles(verbs, resource_type, tags,org, any_tags)
 
     return true if allowed_all_tags?( verbs,resource_type, org)
 
 
-    tags = [] if tags.nil?
-    tags = [tags] unless tags.is_a? Array
-    tags = tags.collect {|t| t.to_s}
     tags_query = allowed_tags_query(verbs, resource_type, org)
 
     if tags.empty? || resource_type == :organizations
       to_count = "permissions.id"
     else
-      to_count = "tags.name"
+      to_count = "permission_tags.tag_id"
     end
 
-    tags_query = tags_query.where({:tags=> {:name=> tags.collect{|tg| tg.to_s}}}) unless tags.empty?
+    tags_query = tags_query.where("permission_tags.tag_id in (:tags)", :tags=>tags) unless tags.empty?
     count = tags_query.count(to_count, :distinct => true)
     if tags.empty? || any_tags
       count > 0
@@ -303,6 +303,10 @@ class User < ActiveRecord::Base
     { 'pulp-user' => self.username }
   end
 
+  # is the current user consumer? (rhsm)
+  def self.consumer?
+    User.current.is_a? CpConsumerUser
+  end
 
   def self.list_verbs global = false
     {
@@ -378,8 +382,7 @@ class User < ActiveRecord::Base
     ResourceType.check resource_type, verbs
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a? Array
-    Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
-          #{resource_type.inspect} in organization #{org && org.inspect}"
+    log_roles(verbs, resource_type, nil,org)
     org = Organization.find(org) if Numeric === org
     org_permissions = org_permissions_query(org, resource_type == :organizations)
 
@@ -391,8 +394,7 @@ class User < ActiveRecord::Base
       clause = %{permissions.resource_type_id = (select id from resource_types where resource_types.name = :resource_type) AND
       (permissions.all_verbs=:true OR verbs.verb in (:verbs))}.split.join(" ")
 
-      org_permissions =  org_permissions.joins("left outer join permissions_tags on permissions.id = permissions_tags.permission_id").joins(
-                      "left outer join tags on tags.id = permissions_tags.tag_id")
+      org_permissions =  org_permissions.joins("left outer join permission_tags on permissions.id = permission_tags.permission_id")
     else
       if allowed_to_check
         org_clause = "permissions.organization_id is null"
@@ -427,4 +429,17 @@ class User < ActiveRecord::Base
     query
   end
 
+
+  def log_roles verbs, resource_type, tags, org, any_tags = false
+    if  AppConfig.allow_roles_logging
+      verbs_str = verbs ? verbs.join(','):"perform any verb"
+      tags_str = "any tags"
+      if tags
+        tag_str = any_tags ? "any tag in #{tags.join(',')}" : "all the tags in #{tags.join(',')}"
+      end
+
+      org_str = org ? "organization #{org.inspect}":" any organization"
+      Rails.logger.info "Checking if user #{username} is allowed to #{verbs_str} in  #{resource_type.inspect} scoped for #{tags_str} in  #{org_str}"
+    end
+  end
 end

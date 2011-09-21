@@ -27,7 +27,7 @@ $(document).ready(function() {
             placeholder :  i18n.clickToEdit,
             submitdata  :  {authenticity_token: AUTH_TOKEN},
             onsuccess   :  function() {
-              panel.panelAjax('', button.attr("data-forward") ,$('#panel')); 
+              KT.panel.panelAjax('', button.attr("data-forward") ,$('#panel')); 
             },
             onerror     :  function(settings, original, xhr) {
               original.reset();
@@ -51,7 +51,7 @@ $(document).ready(function() {
             style       :  "inherit",
             data        :  document.environment_edit.elements['prior_envs'].value,
             onsuccess   :  function() {
-                panel.panelAjax('', button.attr("data-forward") ,$('#panel')); 
+                KT.panel.panelAjax('', button.attr("data-forward") ,$('#panel')); 
             },
             onerror     :  function(settings, original, xhr) {
                 original.reset();

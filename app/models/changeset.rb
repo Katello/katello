@@ -38,6 +38,7 @@ class Changeset < ActiveRecord::Base
   has_and_belongs_to_many :products, :uniq => true
   has_many :packages, :class_name=>"ChangesetPackage", :inverse_of=>:changeset
   has_many :users, :class_name=>"ChangesetUser", :inverse_of=>:changeset
+  has_and_belongs_to_many :system_templates
   has_many :errata, :class_name=>"ChangesetErratum", :inverse_of=>:changeset
   has_many :repos, :class_name=>"ChangesetRepo", :inverse_of => :changeset
   has_many :distributions, :class_name=>"ChangesetDistribution", :inverse_of => :changeset
@@ -162,9 +163,9 @@ class Changeset < ActiveRecord::Base
 
 
   def promote async=true
-    raise _('Cannot promote a changeset when it is not in the review phase') if self.state != Changeset::REVIEW
+    raise _("Cannot promote the changset '#{self.name}' because it is not in the review phase.") if self.state != Changeset::REVIEW
     #check for other changesets promoting
-    raise _('Cannot promote a changeset while another is being promoted.') if self.environment.promoting_to?
+    raise _("Cannot promote the changeset '#{self.name}' while another changeset (#{self.environment.promoting.first.name}) is being promoted.") if self.environment.promoting_to?
 
     if async
       task = self.async(:organization=>self.environment.organization).promote_content
@@ -464,6 +465,7 @@ class Changeset < ActiveRecord::Base
 
 
   def uniquify_artifacts
+    system_templates.uniq! unless self.system_templates.nil?
     products.uniq! unless self.products.nil?
     [[:packages,:package_id],[:errata, :errata_id],[:repos, :repo_id]].each do |items, item_id|
       unless self.send(items).nil?

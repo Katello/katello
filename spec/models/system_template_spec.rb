@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
+require 'helpers/repo_test_data'
 
 include OrchestrationHelper
 
@@ -80,7 +81,12 @@ describe SystemTemplate do
 
     it "should fail with invalid content" do
       @pack1 = SystemTemplatePackage.new(:package_name => "pack1")
+      @pack1.stub(:to_package).and_return {}
+      @pack1.stub(:valid?).and_return false
+
       @err1  = SystemTemplateErratum.new(:erratum_id => "err1")
+      @err1.stub(:to_erratum).and_return {}
+      @err1.stub(:valid?).and_return false
 
       @tpl1.packages << @pack1
       @tpl1.errata   << @err1
@@ -163,7 +169,15 @@ describe SystemTemplate do
   'parameters': {
     'attr1': 'val1',
     'attr2': 'val2'
-  }
+  },
+  'package_groups': [
+    {'id': 'pg-123', 'repo': 'repo-123'},
+    {'id': 'pg-456', 'repo': 'repo-123'}
+  ],
+  'package_group_categories': [
+    {'id': 'pgc-123', 'repo': 'repo-123'},
+    {'id': 'pgc-456', 'repo': 'repo-123'}
+  ]
 }
 "
     end
@@ -175,6 +189,10 @@ describe SystemTemplate do
       @import_tpl.should_receive(:add_product).once.with('prod_a2').and_return nil
       @import_tpl.should_receive(:add_package).once.with('walrus').and_return nil
       @import_tpl.should_receive(:add_erratum).once.with('RHEA-2010:9999').and_return nil
+      @import_tpl.should_receive(:add_package_group).once.with({:id => 'pg-123', :repo => 'repo-123'}).and_return nil
+      @import_tpl.should_receive(:add_package_group).once.with({:id => 'pg-456', :repo => 'repo-123'}).and_return nil
+      @import_tpl.should_receive(:add_pg_category).once.with({:id => 'pgc-123', :repo => 'repo-123'}).and_return nil
+      @import_tpl.should_receive(:add_pg_category).once.with({:id => 'pgc-456', :repo => 'repo-123'}).and_return nil
 
 
       @import_tpl.string_import(@import)
@@ -192,12 +210,16 @@ describe SystemTemplate do
       @export_tpl.stub(:packages).and_return [mock({:package_name => 'xxx'})]
       @export_tpl.stub(:errata).and_return [mock({:erratum_id => 'xxx'})]
       @export_tpl.stub(:parameters_json).and_return "{}"
+      @export_tpl.stub(:package_groups).and_return [SystemTemplatePackGroup.new({:package_group_id => 'xxx', :repo_id => "repo-123" })]
+      @export_tpl.stub(:pg_categories).and_return [SystemTemplatePgCategory.new({:pg_category_id => 'xxx', :repo_id => "repo-456"})]
 
       str = @export_tpl.string_export
       json = ActiveSupport::JSON.decode(str)
       json['products'].size.should == 2
       json['packages'].size.should == 1
       json['errata'].size.should == 1
+      json['package_groups'].size.should == 1
+      json['package_group_categories'].size.should == 1
     end
 
   end
@@ -232,6 +254,92 @@ describe SystemTemplate do
       SystemTemplatePackage.find_by_system_template_id(id).should == nil
     end
 
+  end
+
+  describe "package groups" do
+    before { Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups) }
+    let(:pg_attributes) { {:repo_id => "repo-123", :id => RepoTestData.repo_package_groups.values.first["id"]} }
+    let(:missing_pg_attributes) { {:repo_id => "repo-123", :id => "missing-id"} }
+
+    describe "#add_package_group" do
+
+      it "should make a record to the database about the assignment" do
+        @tpl1.add_package_group(pg_attributes)
+        pg = @tpl1.package_groups(true).last
+        pg.should_not be_new_record
+        pg.repo_id.should == pg_attributes[:repo_id]
+        pg.package_group_id.should == pg_attributes[:id]
+      end
+
+      it "should prevent from adding the same package group twice" do
+        @tpl1.add_package_group(pg_attributes)
+        lambda { @tpl1.add_package_group(pg_attributes) }.should raise_error(ActiveRecord::RecordInvalid)
+        @tpl1.package_groups.count.should == 1
+      end
+
+      it "should raise exception if package group is missing" do
+        lambda { @tpl1.add_package_group(missing_pg_attributes) }.should raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
+
+    describe "#remove_package_group" do
+      before do
+        @tpl1.package_groups.create!(:repo_id => pg_attributes[:repo_id], :package_group_id => pg_attributes[:id])
+      end
+
+      it "should remove a record from the database about the assignment" do
+        @tpl1.remove_package_group(pg_attributes)
+        pg = @tpl1.package_groups(true).last
+        pg.should be_nil
+      end
+
+      it "should raise exception if package group is missing" do
+        lambda { @tpl1.remove_package_group(missing_pg_attributes) }.should raise_error(Errors::TemplateContentException)
+      end
+    end
+  end
+
+  describe "package group categories" do
+    before { Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories) }
+    let(:pg_cat_attributes) { {:repo_id => "repo-123", :id => RepoTestData.repo_package_group_categories.values.first["id"]} }
+    let(:missing_pg_cat_attributes) { {:repo_id => "repo-123", :id => "missing-id"} }
+
+    describe "#add_pg_category" do
+
+      it "should make a record to the database about the assignment" do
+        @tpl1.add_pg_category(pg_cat_attributes)
+        pg = @tpl1.pg_categories(true).last
+        pg.should_not be_new_record
+        pg.repo_id.should == pg_cat_attributes[:repo_id]
+        pg.pg_category_id.should == pg_cat_attributes[:id]
+      end
+
+      it "should prevent from adding the same package group twice" do
+        @tpl1.add_pg_category(pg_cat_attributes)
+        lambda { @tpl1.add_pg_category(pg_cat_attributes) }.should raise_error(ActiveRecord::RecordInvalid)
+        @tpl1.pg_categories.count.should == 1
+      end
+
+      it "should raise exception if package group is missing" do
+        lambda { @tpl1.add_pg_category(missing_pg_cat_attributes) }.should raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
+
+    describe "#remove_pg_category" do
+      before do
+        @tpl1.pg_categories.create!(:repo_id => pg_cat_attributes[:repo_id], :pg_category_id => pg_cat_attributes[:id])
+      end
+
+      it "should remove a record from the database about the assignment" do
+        @tpl1.remove_pg_category(pg_cat_attributes)
+        pg = @tpl1.pg_categories(true).last
+        pg.should be_nil
+      end
+
+      it "should raise exception if package group is missing" do
+        lambda { @tpl1.remove_pg_category(missing_pg_cat_attributes) }.should raise_error(Errors::TemplateContentException)
+      end
+    end
   end
 
 end
