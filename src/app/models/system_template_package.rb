@@ -38,5 +38,18 @@ class SystemTemplatePackage < ActiveRecord::Base
     nil
   end
 
+  def is_nvr?
+    (not self.package_name.nil? and self.version.nil? and self.release.nil?)
+  end
+
+  def nvrea
+    if self.is_nvr?
+      attrs = self.attributes
+      attrs[:name] = attrs[:package_name]
+      Katello::PackageUtils.build_nvrea self.attributes
+    else
+      nil
+    end
+  end
 
 end
