@@ -118,12 +118,17 @@ class ActivationKeysController < ApplicationController
 
   def new
     activation_key = ActivationKey.new
-    render :partial => "new", :layout => "tupane_layout", :locals => {:activation_key => activation_key}
+
+    @organization = current_organization
+    accessible_envs = current_organization.environments
+    setup_environment_selector(current_organization, accessible_envs)
+
+    render :partial => "new", :layout => "tupane_layout", :locals => {:activation_key => activation_key,
+                                                                      :accessible_envs => accessible_envs}
   end
 
   def edit
     @organization = current_organization
-
     accessible_envs = current_organization.environments
     setup_environment_selector(current_organization, accessible_envs)
 
@@ -131,9 +136,9 @@ class ActivationKeysController < ApplicationController
     @selected_template = @activation_key.system_template.nil? ? no_template : @activation_key.system_template.id
 
     render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key,
-                                                                       :editable=>ActivationKey.manageable?(current_organization),
-                                                                       :name=>controller_display_name,
-                                                                       :accessible_envs=>accessible_envs}
+                                                                       :editable => ActivationKey.manageable?(current_organization),
+                                                                       :name => controller_display_name,
+                                                                       :accessible_envs => accessible_envs}
   end
 
   def edit_environment
