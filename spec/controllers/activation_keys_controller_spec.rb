@@ -37,8 +37,8 @@ describe ActivationKeysController do
     @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1)
     @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1)
     @a_key = ActivationKey.create!(:name => "another test key", :organization => @organization, :environment => @environment_1)
-    @subscription = KTSubscription.create!(:subscription => "Test Subscription", 
-                                          :key_subscriptions => [KeySubscription.create!(:activation_key => @a_key, :allocated=>5)])
+    @subscription = KTPool.create!(:cp_id => "Test Subscription",
+                                          :key_pools => [KeyPool.create!(:activation_key => @a_key, :allocated=>5)])
 
     @akey_params = {:activation_key => { :name => "test key", :description => "this is the test key", :environment_id => @environment_1.id,
                                          :system_template_id => @system_template_1.id}}
@@ -246,31 +246,31 @@ describe ActivationKeysController do
           controller.should_receive(:notice)
           put :update_subscriptions, { :id => @a_key.id, :subscription_id => "abc123", :activation_key => { :allocated => "5" }}
           response.should be_success
-          @a_key.subscriptions.where(:subscription => "abc123").should_not be_empty
-          sub = KTSubscription.where(:subscription => "abc123")[0]
-          KeySubscription.where(:activation_key_id => @a_key.id, :subscription_id => sub.id)[0].allocated.should == 5
+          @a_key.pools.where(:cp_id => "abc123").should_not be_empty
+          sub = KTPool.where(:cp_id => "abc123")[0]
+          KeyPool.where(:activation_key_id => @a_key.id, :pool_id => sub.id)[0].allocated.should == 5
         end
 
         it "should successfully remove a subscription from the activation key when allocation is zero" do
           controller.should_receive(:notice)
           put :update_subscriptions, { :id => @a_key.id, :subscription_id => "Test Subscription", :activation_key => { :allocated => "0" }}
           response.should be_success
-          KeySubscription.where(:activation_key_id => @a_key.id, :subscription_id => @subscription.id).count.should == 0
+          KeyPool.where(:activation_key_id => @a_key.id, :pool_id => @subscription.id).count.should == 0
         end
 
         it "should successfully update a subscriptions allocated amount" do
           controller.should_receive(:notice)
           put :update_subscriptions, { :id => @a_key.id, :subscription_id => "Test Subscription", :activation_key => { :allocated => "10" }}
           response.should be_success
-          KeySubscription.where(:activation_key_id => @a_key.id, :subscription_id => @subscription.id)[0].allocated.should == 10
+          KeyPool.where(:activation_key_id => @a_key.id, :pool_id => @subscription.id)[0].allocated.should == 10
         end
         
         it "should successfully add an already created subscription to an activation key" do
           controller.should_receive(:notice)
-          subscription = KTSubscription.create!(:subscription => 'One Time Subscription')
+          subscription = KTPool.create!(:cp_id => 'One Time Subscription')
           put :update_subscriptions, { :id => @a_key.id, :subscription_id => "One Time Subscription", :activation_key => { :allocated => "10" }}
           response.should be_success
-          KeySubscription.where(:activation_key_id => @a_key.id, :subscription_id => subscription.id).should_not be_empty
+          KeyPool.where(:activation_key_id => @a_key.id, :pool_id => subscription.id).should_not be_empty
         end 
 
       end
