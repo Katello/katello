@@ -111,23 +111,16 @@ class Glue::Pulp::Repo
 
   #is the repo cloned in the specified environment
   def is_cloned_in? env
-    get_cloned_in(env) != nil
+    clone_id = Glue::Pulp::Repos.clone_repo_id(self, env)
+    self.clone_ids.include? clone_id
   end
-
 
   def get_clone env
-    Glue::Pulp::Repo.find(product.clone_repo_id(self, env))
+    Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(self, env))
+  rescue
+    nil
   end
 
-  def get_cloned_in env
-    self.clone_ids.each{ |id|
-       curr_repo = Glue::Pulp::Repo.new(Pulp::Repository.find(id))
-       if (curr_repo.groupid.index(Glue::Pulp::Repos.env_groupid(env)))
-           return curr_repo
-       end
-    }
-    return nil
-  end
 
   def has_package? id
     self.packages.each {|pkg|
@@ -150,12 +143,10 @@ class Glue::Pulp::Repo
     packages = Pulp::Repository.packages_by_name id, name
     packages.each do |pack|
       pack = pack.with_indifferent_access
-      if (latest_pack.nil?)
-        latest_pack = pack
-
-      elsif (pack[:release] > latest_pack[:release]) or
-         (pack[:release] == latest_pack[:release] and pack[:version] > latest_pack[:version]) or
-         (pack[:release] == latest_pack[:release] and pack[:version] == latest_pack[:version] and pack[:epoch] > latest_pack[:epoch])
+      if (latest_pack.nil?) or
+         (pack[:epoch] > latest_pack[:epoch]) or
+         (pack[:epoch] == latest_pack[:epoch] and pack[:release] > latest_pack[:release]) or
+         (pack[:epoch] == latest_pack[:epoch] and pack[:release] == latest_pack[:release] and pack[:version] > latest_pack[:version])
         latest_pack = pack
       end
     end

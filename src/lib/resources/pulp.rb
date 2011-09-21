@@ -263,7 +263,11 @@ module Pulp
       end
 
       def packages_by_nvre repo_id, name, release, version, epoch
-        path = repository_path + repo_id + "/packages/?name=" + name + "&release=" + release + "&version=" + version + "&epoch=" + epoch
+        #TODO: switch to https://fedorahosted.org/pulp/wiki/UGREST-Repositories#GetPackageByNVREA
+        path = repository_path + repo_id + "/packages/?name=" + name
+        path += "&release=" + release if not release.nil?
+        path += "&version=" + version if not version.nil?
+        path += "&epoch=" + epoch if not epoch.nil?
         response = get(path, self.default_headers)
         body = response.body
         JSON.parse(body)
