@@ -31,9 +31,9 @@ describe Katello::ModelUtils do
   it "should return tags for organization" do
     disable_org_orchestration
     @o1 = Organization.create!(:name => 'test_org1', :cp_key => 'test_org1')
-    @o2 = Organization.create!(:name => 'test_org2', :cp_key => 'test_org2')
-    Organization.stub!(:all).and_return([@o1, @o2])
-    Tag.tags_for("organizations", nil).size.should be(2)
+    @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@o1)
+    @provider2 = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo2", :organization=>@o1)
+    Tag.tags_for("providers", @o1.id).size.should be(2)
   end
 
 end

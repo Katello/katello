@@ -23,15 +23,15 @@ describe Api::SyncController do
   let(:async_task_1) do
     { :id => "123",
       :state => "waiting",
-      :start_time => DateTime.new,
-      :finish_time => DateTime.new,
+      :start_time => DateTime.now,
+      :finish_time => DateTime.now,
       :progress => nil }
   end
   let(:async_task_2) do
     { :id => "456",
       :state => "waiting",
-      :start_time => DateTime.new,
-      :finish_time => DateTime.new,
+      :start_time => DateTime.now,
+      :finish_time => DateTime.now,
       :progress => nil }
   end
 
@@ -119,6 +119,7 @@ describe Api::SyncController do
       @organization = Organization.create!(:name => "organization", :cp_key => "123")
 
       @syncable = mock()
+      @syncable.stub!(:id)
       @syncable.stub!(:cance_sync)
       @syncable.stub!(:organization).and_return(@organization)
 

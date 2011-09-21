@@ -15,7 +15,7 @@
 $(document).ready(function() {
 
 
-    $('#accordion').accordion({fillSpace:true, autoHeight:true});
+    $('#accordion').accordion({});
 
     $(".clickable").click(function(){
 

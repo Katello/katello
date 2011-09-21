@@ -126,7 +126,7 @@ module ApplicationHelper
  def notification_polling_time()
     time  = AppConfig.notification && AppConfig.notification.polling_seconds
     return time.to_i  * 1000 if time
-    return 45000
+    return 120000
  end
 
 

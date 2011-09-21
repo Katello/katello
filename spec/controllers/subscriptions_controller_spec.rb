@@ -34,11 +34,11 @@ describe SubscriptionsController do
       Candlepin::Owner.stub!(:statistics).and_return([])
 
 
-      @product = OpenStruct.new
+      @product = MemoStruct.new
       @product.id = "testid"
       @product.support_level = "test_support_level"
       @product.arch = "noarch"
-      @first = OpenStruct.new
+      @first = MemoStruct.new
       @first.first = @product
       Product.stub!(:where).and_return(@first)
     end

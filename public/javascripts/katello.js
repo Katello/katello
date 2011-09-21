@@ -18,6 +18,7 @@
  * Date: 09/01/2010
  */
 
+
 //Katello global object namespace that all others should be attached to
 var KT = {};
 
@@ -97,6 +98,24 @@ KT.helptip =  (function($) {
     };
 })(jQuery);
 
+
+//Add backwards compatible version of Object.keys
+// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/keys
+if(!Object.keys) {
+    Object.keys = function(o){
+     if (o !== Object(o))
+        throw new TypeError('Object.keys called on non-object');
+     var ret=[],p;
+     for(p in o) {
+       if(Object.prototype.hasOwnProperty.call(o,p)){
+         ret.push(p);
+       }
+     }
+     return ret;
+  };
+}
+
+
 //override the jQuery UJS $.rails.allowAction
 $.rails.allowAction = function(element) {
     var message = element.data('confirm'),
@@ -120,12 +139,10 @@ $.rails.allowAction = function(element) {
 
 //make jQuery Contains case insensitive
 $.expr[':'].Contains = function(a, i, m) {
-  return $(a).text().toUpperCase()
-      .indexOf(m[3].toUpperCase()) >= 0;
+  return $(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
 };
 $.expr[':'].contains = function(a, i, m) {
-  return $(a).text().toUpperCase()
-      .indexOf(m[3].toUpperCase()) >= 0;
+  return $(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
 };
 
 //requires jQuery
@@ -270,10 +287,10 @@ KT.common = (function() {
             li.prepend($('<div class="arrow_icon_menu"></div>'));
             li.hover(
                 function(){
-                    ul.fadeIn('fast')
+                    ul.fadeIn('fast');
                 },
                 function(){
-                    ul.fadeOut('fast')
+                    ul.fadeOut('fast');
             });
         }
     };

@@ -13,6 +13,12 @@
 
 $(document).ready(function() {
 
+    var env_scroll = KT.env_select_scroll({});
+    KT.panel.set_expand_cb(function() {
+        env_scroll.bind(undefined);
+    });
+
+
    $('.environment_link').live('click', function() {
         $(this).siblings().show();
 
@@ -32,8 +38,8 @@ $(document).ready(function() {
             data: dataToSend,
             cache: false,
             success: function() {
-                panel.panelAjax('', button.attr("data-url") ,$('#panel'));
-                panel.closeSubPanel($('#subpanel'));
+                KT.panel.panelAjax('', button.attr("data-url") ,$('#panel'));
+                KT.panel.closeSubPanel($('#subpanel'));
            },
             error: function() {button.removeClass("disabled")}
         });
@@ -46,8 +52,8 @@ $(document).ready(function() {
       $(this).ajaxSubmit({
           success: function(data) {
                 list.add(data);
-                panel.closePanel($('#panel'));
-                panel.select_item(list.last_child().attr("id"));
+                KT.panel.closePanel($('#panel'));
+                KT.panel.select_item(list.last_child().attr("id"));
                 notices.checkNotices();
           }, error: function(e) {
                 button.removeAttr('disabled');

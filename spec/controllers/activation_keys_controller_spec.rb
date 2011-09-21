@@ -36,7 +36,7 @@ describe ActivationKeysController do
     @environment_2 = KTEnvironment.create!(:name => 'prod', :prior => @environment_1.id, :organization => @organization)
     @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1)
     @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1)
-    @a_key = ActivationKey.create!(:name => "another test key", :organization_id => @organization, :environment => @environment_1)
+    @a_key = ActivationKey.create!(:name => "another test key", :organization => @organization, :environment => @environment_1)
     @subscription = KTSubscription.create!(:subscription => "Test Subscription", 
                                           :key_subscriptions => [KeySubscription.create!(:activation_key => @a_key, :allocated=>5)])
 
@@ -44,8 +44,8 @@ describe ActivationKeysController do
                                          :system_template_id => @system_template_1.id}}
   end
 
-  describe "GET index" do
 
+  describe "rules" do
     let(:action) {:index }
     let(:req) { get :index }
     let(:authorized_user) do
@@ -55,7 +55,9 @@ describe ActivationKeysController do
       user_without_permissions
     end
     it_should_behave_like "protected action"
+  end
 
+  describe "GET index" do
     it "requests activation keys using search criteria" do
       ActivationKey.should_receive(:search_for) {ActivationKey}
       ActivationKey.stub_chain(:where, :limit)
@@ -232,7 +234,7 @@ describe ActivationKeysController do
 
         it "should not redirect from edit view" do
           put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_DESCRIPTION
-          response.should_not redirect_to()
+          response.should_not be_redirect
         end
 
         it "should be successful" do

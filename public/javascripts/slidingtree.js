@@ -29,7 +29,9 @@ var sliding_tree = function(tree_id, options) {
         current_crumb;
 
     var prerender = function(id) {
+        
             var crumb = settings.breadcrumb[id],
+
                 newPanel = list.children('.no_content'),
                 oldPanel = list.children('.has_content');
                 
@@ -53,8 +55,12 @@ var sliding_tree = function(tree_id, options) {
             render(id, newPanel);
         },
         render = function (id, newPanel) {
+            if (settings.breadcrumb[id] === undefined) {
+                id = settings.default_tab;
+            }
+
             var crumb = settings.breadcrumb[id];
-    
+
             if (crumb.client_render) {
                 settings.render_cb(id, function(html) {
                         newPanel.html(html);
@@ -147,6 +153,9 @@ var sliding_tree = function(tree_id, options) {
             $.bbq.pushState(bbq);        
         },
         reset_breadcrumb = function(id) {
+            if (settings.breadcrumb[id] === undefined) {
+                id = settings.default_tab;
+            }
             var trail = settings.breadcrumb[id].trail,
                 crumbs = trail,
                 html = '<ul>';
@@ -283,7 +292,10 @@ var sliding_tree = function(tree_id, options) {
     }
 
     $(window).unbind('hashchange.' + tree_id).bind( 'hashchange.' + tree_id, hash_change);
+
     $(window).trigger( 'hashchange.' + tree_id );
+
+
 
     container.find('.slide_link').live('click', function(event){
         if( event.target.nodeName === "A" ){
@@ -312,7 +324,7 @@ sliding_tree.ActionBar = function(toggle_list){
         
         toggle = function(id, options){
             var options = options || {};
-            
+
             options.animate_time = 500;
             
             if( open_panel !== id && open_panel !== undefined ){
@@ -336,7 +348,7 @@ sliding_tree.ActionBar = function(toggle_list){
         }, 
         handle_toggle = function(options, id){
         	var slide_window = $('#' + toggle_list[id].container);
-            
+
             options = toggle_list[id].setup_fn(options);
             slide_window.slideToggle(options.animate_time, options.after_function);        	
         },

@@ -13,7 +13,7 @@
 class PackageValidator < ActiveModel::Validator
   def validate(record)
     if record.to_package.nil?
-      record.errors[:base] <<  _("Package '#{record.package_name}' has doesn't belong to any product in this template")
+      record.errors[:base] <<  _("Package '#{record.package_name}' does not belong to any product in this template")
     end
   end
 end
@@ -25,9 +25,9 @@ class SystemTemplatePackage < ActiveRecord::Base
   validates_uniqueness_of :package_name, :scope =>  :system_template_id
   validates_with PackageValidator
 
+  #package name should exist in a product in the environment
   def to_package
-
-    self.system_template.products.each do |product|
+    self.system_template.environment.products.each do |product|
        product.repos(self.system_template.environment).each do |repo|
         #search for errata in all repos in a product
         idx = repo.packages.index do |p| p.name == self.package_name end

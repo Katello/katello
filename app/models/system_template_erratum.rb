@@ -13,7 +13,7 @@
 class ErratumValidator < ActiveModel::Validator
   def validate(record)
     if record.to_erratum.nil?
-      record.errors[:base] <<  _("Erratum '#{record.erratum_id}' has doesn't belong to any product in this template")
+      record.errors[:base] <<  _("Erratum '#{record.erratum_id}' does not belong to any product in this template")
     end
   end
 end

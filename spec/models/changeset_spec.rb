@@ -204,22 +204,22 @@ describe Changeset do
       end
 
       it "should remove package" do
-        ChangesetPackage.should_receive(:destroy_all).with(:package_id => 1, :changeset_id => @changeset.id, :product_id => 1).and_return(true)
+        ChangesetPackage.should_receive(:destroy_all).with(:package_id => 1, :changeset_id => @changeset.id, :product_id => @prod.id).and_return(true)
         @changeset.remove_package("pack", "prod")
       end
 
       it "should remove erratum" do
-        ChangesetErratum.should_receive(:destroy_all).with(:errata_id => 'err', :changeset_id => @changeset.id, :product_id => 1).and_return(true)
+        ChangesetErratum.should_receive(:destroy_all).with(:errata_id => 'err', :changeset_id => @changeset.id, :product_id => @prod.id).and_return(true)
         @changeset.remove_erratum("err", "prod")
       end
 
       it "should remove repo" do
-        ChangesetRepo.should_receive(:destroy_all).with(:repo_id => 1, :changeset_id => @changeset.id, :product_id => 1).and_return(true)
+        ChangesetRepo.should_receive(:destroy_all).with(:repo_id => 1, :changeset_id => @changeset.id, :product_id => @prod.id).and_return(true)
         @changeset.remove_repo("repo", "prod")
       end
 
       it "should remove distribution" do
-        ChangesetDistribution.should_receive(:destroy_all).with(:distribution_id => 'some-distro-id', :changeset_id => @changeset.id, :product_id => 1).and_return(true)
+        ChangesetDistribution.should_receive(:destroy_all).with(:distribution_id => 'some-distro-id', :changeset_id => @changeset.id, :product_id => @prod.id).and_return(true)
         @changeset.remove_distribution('some-distro-id', "prod")
 
       end
