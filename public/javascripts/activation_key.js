@@ -27,21 +27,20 @@ $(document).ready(function() {
         activation_key.delete_key($(this));
     });
 
-    $('#save_env').live('submit', function(e) {
+    $('#save_key').live('submit', function(e) {
         e.preventDefault();
 
-        var save_button = $('input[id^=save_env]'),
-            cancel_button = $('input[id^=cancel_env]');
+        var cancel_button = $('input[id^=cancel_key]');
 
-        save_button.attr("disabled","disabled");
+        activation_key.disable_save();
         cancel_button.attr("disabled", "disabled");
 
         $(this).ajaxSubmit({
          success: function(data) {
-             save_button.removeAttr('disabled');
+             activation_key.enable_save();
              cancel_button.removeAttr('disabled');
          }, error: function(e) {
-             save_button.removeAttr('disabled');
+             activation_key.enable_save();
              cancel_button.removeAttr('disabled');
          }});
     });
@@ -106,6 +105,8 @@ var activation_key = (function() {
             // this function will retrieve the system templates associated with a given environment and
             // update the page content, as appropriate
             var url = $('.path_link.active').attr('data-templates_url');
+
+            activation_key.disable_save();
             $.ajax({
                 type: "GET",
                 url: url,
@@ -123,29 +124,44 @@ var activation_key = (function() {
                     // add the options to the system template select... this select exists on an insert form
                     // or as part of the environment edit dialog
                     $("#activation_key_system_template_id").html(options);
+
+                    activation_key.enable_save();
                 },
                 error: function(data) {
+                    activation_key.enable_save();
                 }
             });
         },
-        get_products : function(data, on_edit) {
+        get_products : function() {
             // this function will retrieve the products associated with a given environment and
             // update the products box with the results
             var url = $('.path_link.active').attr('data-products_url');
-            $.ajax({
-                type: "GET",
-                url: url,
-                cache: false,
-                success: function(response) {
-                    $('.productsbox').html(response);
-                },
-                error: function(data) {
-                }
-            });
+            if (url !== undefined) {
+                activation_key.disable_save();
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    cache: false,
+                    success: function(response) {
+                        $('.productsbox').html(response);
+                        activation_key.enable_save();
+                    },
+                    error: function(data) {
+                        activation_key.enable_save();
+                    }
+                });
+
+            }
         },
         selected_environment : function(env_id) {
             // save the id of the env selected
             $("#activation_key_environment_id").attr('value', env_id);
+        },
+        disable_save : function() {
+            $('input[id^=save_key]').attr("disabled","disabled");
+        },
+        enable_save : function() {
+            $('input[id^=save_key]').removeAttr('disabled');
         }
     }
 })();
