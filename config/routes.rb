@@ -156,10 +156,14 @@ Src::Application.routes.draw do
   end
 
   match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
-  match '/organizations/:org_id/environments/:env_id/system_templates' => 'environments#system_templates', :via => :get, :as => 'system_templates_organization_environment'
 
   resources :organizations do
-    resources :environments
+    resources :environments do
+      member do
+        get :system_templates
+        get :products
+      end
+    end
     resources :providers do
       get 'auto_complete_search', :on => :collection
     end

@@ -16,9 +16,9 @@ class EnvironmentsController < ApplicationController
   require 'active_support/json'
 
   skip_before_filter :authorize
-  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create, :system_templates]
+  before_filter :find_organization, :only => [:show, :edit, :update, :destroy, :index, :new, :create, :system_templates, :products]
   before_filter :authorize
-  before_filter :find_environment, :only => [:show, :edit, :update, :destroy, :system_templates]
+  before_filter :find_environment, :only => [:show, :edit, :update, :destroy, :system_templates, :products]
 
   around_filter :catch_exceptions
 
@@ -29,14 +29,15 @@ class EnvironmentsController < ApplicationController
   def rules
     manage_rule = lambda{@organization.environments_manageable?}
     view_rule = lambda{@organization.readable?}
-    view_templates_rule = lambda{ActivationKey.readable?(current_organization)}
+    view_akey_rule = lambda{ActivationKey.readable?(current_organization)}
     {
       :new => manage_rule,
       :edit => view_rule,
       :create => manage_rule,
       :update => manage_rule,
       :destroy => manage_rule,
-      :system_templates => view_templates_rule
+      :system_templates => view_akey_rule,
+      :products => view_akey_rule
     }
   end
 
@@ -106,6 +107,11 @@ class EnvironmentsController < ApplicationController
   # GET /environments/1/system_templates
   def system_templates
     render :json => @environment.system_templates
+  end
+
+  # GET /environments/1/products
+  def products
+    render :json => @environment.products
   end
 
   protected

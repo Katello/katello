@@ -16,6 +16,7 @@ class ActivationKeysController < ApplicationController
 
   before_filter :require_user
   before_filter :find_activation_key, :only => [:show, :edit, :edit_environment, :update, :destroy, :subscriptions, :update_subscriptions]
+  before_filter :find_environment, :only => [:edit]
   before_filter :authorize #after find_activation_key, since the key is required for authorization
   before_filter :panel_options, :only => [:index, :items]
 
@@ -121,15 +122,18 @@ class ActivationKeysController < ApplicationController
   end
 
   def edit
-    # Create a hash of the system templates associated with the currently assigned default environment and
-    # convert to json for use in the edit view
-    templates = Hash[ *@activation_key.environment.system_templates.collect { |p| [p.id, p.name] }.flatten]
-    templates[''] = no_template
-    @system_templates_json = ActiveSupport::JSON.encode(templates)
-    @system_template = SystemTemplate.find(@activation_key.system_template_id) unless @activation_key.system_template_id.nil?
+    @organization = current_organization
+
+    accessible_envs = current_organization.environments
+    setup_environment_selector(current_organization, accessible_envs)
+
+    @system_template_labels = [[no_template, '']] + (@activation_key.environment.system_templates).collect {|p| [ p.name, p.id ]}
+    @selected_template = @activation_key.system_template.nil? ? no_template : @activation_key.system_template.id
+
     render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key,
                                                                        :editable=>ActivationKey.manageable?(current_organization),
-                                                                       :name=>controller_display_name}
+                                                                       :name=>controller_display_name,
+                                                                       :accessible_envs=>accessible_envs}
   end
 
   def edit_environment
@@ -217,6 +221,10 @@ class ActivationKeysController < ApplicationController
     end
   end
 
+  def find_environment
+    @environment = @activation_key.environment
+  end
+
   def panel_options
     @panel_options = { 
       :title => _('Activation Keys'),
@@ -242,7 +250,7 @@ class ActivationKeysController < ApplicationController
     end
     subscriptions
   end
-  
+
   def controller_display_name
     return _('activation_key')
   end
