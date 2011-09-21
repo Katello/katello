@@ -13,24 +13,29 @@
 module Katello
   module PackageUtils
 
+    SUFFIX_RE = /[.](rpm)$/
+    EPOCH_RE = /([0-9]+):/
+    NVRA_RE = /^([^-]+)-([^-]+)-(.+)[.]([^.]+)$/
+    NVR_RE = /^([^-]+)-([^-]+)-(.+)$/
+
     def PackageUtils.parse_nvrea name
       #parses package nvrea and stores it in a hash
       #epoch:name-ve.rs.ion-rel.e.ase.arch.rpm
       package = {}
 
-      suffix_re = /[.](rpm)$/
+      suffix_re = SUFFIX_RE
       if name =~ suffix_re
         package[:suffix] = suffix_re.match(name).captures[0]
         name = name.sub(suffix_re, '')
       end
 
-      epoch_re = /([0-9]+):/
+      epoch_re = EPOCH_RE
       if name =~ epoch_re
         package[:epoch] = epoch_re.match(name).captures[0]
         name = name.sub(epoch_re, '')
       end
 
-      nvra_re = /^([^-]+)-([^-]+)-(.+)[.]([^.]+)$/
+      nvra_re = NVRA_RE
       if name =~ nvra_re
         parts = nvra_re.match(name).captures
         package[:name] = parts[0]
@@ -47,19 +52,19 @@ module Katello
       #epoch:name-ve.rs.ion-rel.e.ase.arch.rpm
       package = {}
 
-      suffix_re = /[.](rpm)$/
+      suffix_re = SUFFIX_RE
       if name =~ suffix_re
         package[:suffix] = suffix_re.match(name).captures[0]
         name = name.sub(suffix_re, '')
       end
 
-      epoch_re = /([0-9]+):/
+      epoch_re = EPOCH_RE
       if name =~ epoch_re
         package[:epoch] = epoch_re.match(name).captures[0]
         name = name.sub(epoch_re, '')
       end
 
-      nvra_re = /^([^-]+)-([^-]+)-(.+)$/
+      nvra_re = NVR_RE
       if name =~ nvra_re
         parts = nvra_re.match(name).captures
         package[:name] = parts[0]
@@ -77,5 +82,18 @@ module Katello
       nvrea = package[:epoch] +':'+ nvrea if not package[:epoch].nil?
       nvrea
     end
+
+
+    def PackageUtils.is_nvr name
+      name = name.sub(SUFFIX_RE, "")
+      name =~ NVR_RE
+    end
+
+
+    def PackageUtils.is_nvre name
+      name = name.sub(SUFFIX_RE, "")
+      name =~ NVR_RE and name =~ EPOCH_RE
+    end
+
   end
 end

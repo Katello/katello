@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'util/package_util'
+
 class ParentTemplateValidator < ActiveModel::Validator
   def validate(record)
     #check if the parent is from
@@ -113,8 +115,12 @@ class SystemTemplate < ActiveRecord::Base
 
 
   def add_package package_name
-    package = SystemTemplatePackage.new(:package_name => package_name)
-    self.packages << package
+    if Katello::PackageUtils.is_nvr package_name
+      pack_attrs = Katello::PackageUtils.parse_nvre package_name
+      self.packages.create!(:package_name => pack_attrs[:name], :version => pack_attrs[:version], :release => pack_attrs[:release], :epoch => pack_attrs[:epoch])
+    else
+      self.packages.create!(:package_name => package_name)
+    end
   end
 
 
