@@ -18,8 +18,8 @@ class ActivationKey < ActiveRecord::Base
   belongs_to :user
   belongs_to :system_template
 
-  has_many :key_subscriptions
-  has_many :subscriptions, :class_name => "KTSubscription", :through => :key_subscriptions
+  has_many :key_pools
+  has_many :pools, :class_name => "KTPool", :through => :key_pools
 
 
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'key.name'
@@ -44,8 +44,8 @@ class ActivationKey < ActiveRecord::Base
   end
 
   def subscribe_system(system)
-    self.key_subscriptions.each do |ksub|
-      system.subscribe(ksub.subscription.subscription, ksub.allocated)
+    self.key_pools.each do |ksub|
+      system.subscribe(ksub.pool.cp_id, ksub.allocated)
     end
   end
 
