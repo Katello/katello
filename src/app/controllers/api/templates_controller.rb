@@ -114,7 +114,7 @@ class Api::TemplatesController < Api::ApiController
       when 'add_package_group_category'
         @template.add_pg_category(:id => params[:package_group_category], :repo_id => params[:repo])
         @template.save!
-        render :text => _("Added package group category '%s'") % params[:package_group_category][:id]
+        render :text => _("Added package group category '%s'") % params[:package_group_category]
 
       when 'remove_package_group_category'
         @template.remove_pg_category(:id => params[:package_group_category], :repo_id => params[:repo])
