@@ -7,6 +7,8 @@ Src::Application.routes.draw do
       get :subscriptions
     end
     member do
+      get :applied_subscriptions
+      get :available_subscriptions
       get :subscriptions
       post :update
       post :update_subscriptions
