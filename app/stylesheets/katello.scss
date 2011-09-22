@@ -108,6 +108,7 @@ input[type="file"] {
 input:focus {
   outline: none;
 }
+
 /* custom ui spinner class for HTML5 like spinners */
 .ui-spinner {
     width: 40px;
@@ -1956,3 +1957,7 @@ fieldset {
     border:1px solid $border_color;
     padding: 0 10px 10px 10px;
 }
+
+/* classes to highlight or make "standout" inputs that require action from the user */
+.highlight_input { border: 3px solid $kselected_color; }
+.highlight_input_text { color: $kselected_color; font-weight: 600; font-size: 110%; padding-left: 10px;}
