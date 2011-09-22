@@ -200,7 +200,6 @@ class SystemTemplate < ActiveRecord::Base
   def promote from_env, to_env
     #TODO: promote parent templates recursively
 
-    #TODO: error when calling refresh on async tasks without org_id
     #promote all products
     #promote the product only if it is not in the next env yet
     async_tasks = []
