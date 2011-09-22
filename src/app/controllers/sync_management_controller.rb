@@ -101,7 +101,7 @@ class SyncManagementController < ApplicationController
     progress = format_sync_progress(status)
     progress[:product_id] = params['product_id']
     progress[:size] = number_to_human_size(product.sync_size)
-
+    progress[:repo_id] = params['repo_id']
     respond_with (progress) do |format|
       format.js { render :json => progress.to_json, :status => :ok }
     end
@@ -119,7 +119,6 @@ private
 
   def find_provider
     prod = Product.find(params[:product_id])
-    verify_repo(prod, params[:repo_id])
     @provider = prod.provider
   end
 
@@ -127,17 +126,10 @@ private
     @providers = []
     params[:repo].each{|repo_id, prod_id|
       prod = Product.find(prod_id)
-      verify_repo(prod, repo_id)
       @providers << prod.provider if !@providers.member?(prod.provider)
     }
   end
 
-  def verify_repo product, repo_id
-    product.repos(current_organization.locker).each { |tmp_repo|
-      return true if repo_id == tmp_repo.id
-    }
-    raise _("The specified repo does not match the specified product")
-  end
 
   def format_sync_progress(sync_status)
     progress = {:progress => calc_progress(sync_status)}
