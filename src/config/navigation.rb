@@ -82,7 +82,9 @@ SimpleNavigation::Configuration.run do |navigation|
         if !@activation_key.nil?
           activation_key_sub.item :general, _("General"), edit_activation_key_path(@activation_key.id), :class => "navigation_element", 
                                   :controller => "activation_keys"
-          activation_key_sub.item :subscriptions, _("Subscriptions"), subscriptions_activation_key_path(@activation_key.id), :class => "navigation_element", 
+          activation_key_sub.item :general, _("Applied Subscriptions"), applied_subscriptions_activation_key_path(@activation_key.id), :class => "navigation_element",
+                                  :controller => "activation_keys"
+          activation_key_sub.item :subscriptions, _("Available Subscriptions"), available_subscriptions_activation_key_path(@activation_key.id), :class => "navigation_element",
                                   :controller => "activation_keys"
         end
       end if ActivationKey.readable?(current_organization())

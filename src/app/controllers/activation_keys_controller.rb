@@ -68,6 +68,14 @@ class ActivationKeysController < ApplicationController
     render :partial=>"common/list_update", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name']}
   end
 
+  def available_subscriptions
+    # TODO - content coming...
+  end
+
+  def applied_subscriptions
+    # TODO - content coming...
+  end
+
   def subscriptions
     consumed = @activation_key.subscriptions
     subscriptions = reformat_subscriptions(Candlepin::Owner.pools current_organization.cp_key)
