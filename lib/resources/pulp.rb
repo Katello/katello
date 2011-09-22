@@ -363,4 +363,22 @@ module Pulp
     end
   end
 
+  class User < PulpResource
+    class << self
+      def create attrs
+        response = put path, attrs.to_json, self.default_headers
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def destroy user_id
+        raise ArgumentError, "user_id id has to be specified" unless user_id
+        self.delete(path(user_id), self.default_headers).code.to_i
+      end
+
+      def path(user_id=nil)
+        self.path_with_prefix("/users/#{user_id}/")
+      end
+    end
+  end
+
 end
