@@ -34,7 +34,7 @@ module DashboardHelper
         order("task_statuses.updated_at DESC").limit(5)
   end
 
-  def cs_class cs
+  def changeset_class cs
     if cs.state === Changeset::PROMOTED
       "check_icon"
     elsif cs.state === Changeset::PROMOTING && cs.task_status.start_time
@@ -44,7 +44,7 @@ module DashboardHelper
     end
   end
 
-  def cs_message cs
+  def changeset_message cs
     if cs.state === Changeset::PROMOTED
       _("Success")
     elsif cs.state === Changeset::PROMOTING && cs.task_status.start_time
