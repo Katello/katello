@@ -17,6 +17,8 @@ var subpanel = null;
 var subpanelSpacing = 35;
 var panelLeft = null;
 
+var count = 0;
+
 $(document).ready(function() {
     $('.left').resize(function(){
         panelLeft = $(this).width();
@@ -46,11 +48,6 @@ $(document).ready(function() {
     var ajax_url = null;
     var original_top = Math.floor($('.left').position(top).top);
     var subpanel_top =  Math.floor($('.left').position(top).top + subpanelSpacing);
-
-    $('#panel-frame').css({"top" : original_top});
-    $('#subpanel-frame').css({"top" : subpanel_top});
-    KT.panel.panelResize($('#panel_main'), false);
-    KT.panel.panelResize($('#subpanel_main'), true);
 
     $('.block').live('click', function(e) {
         activeBlock = $(this);
@@ -92,10 +89,10 @@ $(document).ready(function() {
         KT.panel.handleScrollResize($('#subpanel-frame'), container, subpanel_top, bodyY, 1);
     });
 
-    $('#maincontent').resize(function(){
+    /*$('#maincontent').resize(function(){
         KT.panel.panelResize($('#panel_main'), false);
         KT.panel.panelResize($('#subpanel_main'), true);
-    });
+    });*/
 
     $('.subpanel_element').live('click', function(){
         KT.panel.openSubPanel($(this).attr('data-url'));
@@ -107,7 +104,7 @@ $(document).ready(function() {
         $(window).scroll(function () {
             KT.panel.handleScroll($('#panel-frame'), container, original_top, bodyY, 0);
             KT.panel.handleScroll($('#subpanel-frame'), container, subpanel_top, bodyY, 1);
-        });
+        }).scroll();
         $(window).scroll(KT.panel.scrollExpand);
     }
 
@@ -194,15 +191,16 @@ var list = (function(){
 })();
 
 KT.panel = (function($){
-	var retrievingNewContent = false,
-	    control_bbq = true,
+	var retrievingNewContent= false,
+	    control_bbq 		= true,
+	    current_scroll 		= 0,
 	
-	extended_cb         = function() {}, //callback for post extended scroll
+		extended_cb         = function() {}, //callback for post extended scroll
         expand_cb           = function() {}, //callback after a pane is loaded
         contract_cb         = function() {},
         switch_content_cb   = function() {},
 	
-	select_item = function(activeBlockId) {
+		select_item = function(activeBlockId) {
             var activeBlock = $('#' + activeBlockId),
             	ajax_url = activeBlock.attr("data-ajax_url"),
             	previousBlockId = null;
@@ -266,35 +264,34 @@ KT.panel = (function($){
         },
         /* must pass a jQuery object */
         panelResize = function(paneljQ, isSubpanel){
-            var leftPanel = $('.left'),
-            	new_top = Math.floor(leftPanel.position(top).top),
-            	headerSpacing = $('.head').height() + $('.subnav').height(),
-            	height = $(window).height() - $('#subheader').height() - $('#head').height() - $('.subnav').height() - headerSpacing - 100,
-            	panelFrame = paneljQ.parent().parent().parent().parent(),
-            	extraHeight = 0;
+            var leftPanel 		= $('.left'),
+            	tupane_panel 	= $('#panel')
+            	new_top 		= Math.floor($('.list').offset().top - 60),
+            	header_spacing	= tupane_panel.find('.head').height(),
+            	subnav_spacing 	= tupane_panel.find('nav').height() + 10,
+            	content_spacing = tupane_panel.find('.jspPane').height(),
+            	height 			= content_spacing,
+            	panelFrame 		= paneljQ.parent().parent().parent().parent(),
+            	extraHeight 	= 0,
+            	window_height	= $(window).height();
+            
+            if( paneljQ.length > 0 ){
+            	
+	            new_top = isSubpanel ? (new_top + subpanelSpacing) : new_top;
+	            //panelFrame.animate({top: new_top}, 250);
+	
+	            if( window_height <= (content_spacing + header_spacing + subnav_spacing + 80) ){
+	                height = window_height - 120 - header_spacing - subnav_spacing;
+	            }
+	
+	            paneljQ.height(height);
+	            
+	            if( paneljQ.length > 0 ){
+	            	paneljQ.data('jsp').reinitialise();
+	            }
 
-            new_top = isSubpanel ? (new_top + subpanelSpacing) : new_top;
-            panelFrame.animate({top: new_top}, 250);
+			}
 
-            //if there is a lot in the list, make the panel a bit larger
-            if ($('#content').height() > 642){
-                extraHeight =  KT.common.height() - 192;
-                if (isSubpanel) {
-                    extraHeight -= subpanelSpacing;
-                }
-                paneljQ.height(extraHeight);
-            } else {
-                if( leftPanel.height() <= height + headerSpacing + 80){
-                    height = leftPanel.height() - headerSpacing;
-                } else {
-                    height += 110;
-                }
-                
-                paneljQ.height(height);
-            }
-            if( paneljQ.length ){
-                paneljQ.data('jsp').reinitialise();
-            }
             return paneljQ;
         },
         closePanel = function(jPanel){
@@ -395,7 +392,10 @@ KT.panel = (function($){
         handleScroll = function(jQPanel, container, top, bodyY, spacing, offset) {
             var scrollY = KT.common.scrollTop(),
                 scrollX = KT.common.scrollLeft(),
-                isfixed = jQPanel.css('position') === 'fixed';
+                isfixed = jQPanel.css('position') === 'fixed',
+                leftList = $('.list');
+            
+            top_position = leftList.offset().top - 60;
             
             offset = offset ? offset : 10;
             offset += $('#maincontent').offset().left;
@@ -405,15 +405,29 @@ KT.panel = (function($){
                     if ( scrollY < bodyY ) {
                         jQPanel.css({
                             position: 'absolute',
-                            top: top,
+                            top: top_position,
                             left: ''
                         });
                     } else {
-                        jQPanel.stop().css({
-                            position: 'fixed',
-                            top: 40 + subpanelSpacing*spacing,
-                            left: -scrollX + offset
-                        });
+                    	if( !isfixed && ($('#panel-frame').offset().top - $(window).scrollTop()) > 40){
+	                        jQPanel.stop().css({
+	                            position: 'fixed',
+	                            top: 40 + subpanelSpacing*spacing,
+	                            left: -scrollX + offset
+	                        });                    		
+                    	} else if( ($('.left').offset().top + $('.left').height()) > ($('#panel').offset().top + $('#panel').height() + 40) ){
+	                        jQPanel.stop().css({
+	                            position: 'fixed',
+	                            top: 40 + subpanelSpacing*spacing,
+	                            left: -scrollX + offset
+	                        });
+                       } else {
+	                       	jQPanel.css({
+	                            position: 'absolute',
+	                            top: ($('.left').offset().top + $('.left').height()) - $('#panel').height() - 40,
+	                            left: ''
+	                        });
+                       }
                 	}
                 }
             }
