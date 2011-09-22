@@ -9,7 +9,7 @@
       %div.promotion_entry
         .col_1
           %h5
-            = link_to changeset.name, changeset_path(changeset.id)
+            = link_to changeset.name, changeset_path_helper(changeset)
         .col_2
           #{cs_message(changeset)}
         .col_1
