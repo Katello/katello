@@ -11,9 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class KTPool < ActiveRecord::Base
+  include Glue::Candlepin::Pool if AppConfig.use_cp
   include Authorization
+
   set_table_name "pools"
   has_many :key_pools, :foreign_key => "pool_id"
   has_many :activation_keys, :through => :key_pools
-
 end
