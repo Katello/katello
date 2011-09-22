@@ -42,7 +42,7 @@
             %label #{_("Description")}:
           .grid_7.la#activation_key_description{:style => "word-wrap: break-word;", 'name' => 'activation_key[description]', :class => ("editable edit_textarea" if editable), 'data-url' => activation_key_path(@activation_key.id)}<> #{@activation_key[:description]}
 
-      = form_tag activation_key_path(@activation_key), :method => :put, :id => "save_env" do
+      = form_tag activation_key_path(@activation_key), :method => :put, :id => :save_key do
         .promotion_paths#env_edit
           = hidden_field_tag 'activation_key[environment_id]', @activation_key.environment_id
           .grid_2.ra
