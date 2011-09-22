@@ -89,50 +89,26 @@ describe SystemTemplate do
   describe "promote template" do
 
     before(:each) do
-      @changeset = Changeset.create(:environment => @tpl1.environment)
-      @changeset.stub(:promote)
-
-      Changeset.stub!(:create!).and_return(@changeset)
     end
 
-    it "should create changeset in the correct environment" do
-      Changeset.should_receive(:create!).once.with(hash_including(:environment => @environment, :state => Changeset::REVIEW)).and_return(@changeset)
-      @tpl1.promote
+    it "should promote products that haven't been promoted yet" do
+
     end
 
-    it "should raise an error if template's environment is the last in the chain of promotion" do
-      tpl = SystemTemplate.create!(:name => "template_2", :environment => @environment)
-      lambda { tpl.promote }.should raise_error
+    it "should not promote products that have already been promoted" do
+
     end
 
-    it "should promote also the parents content" do
-      @tpl2 = SystemTemplate.create!(:name => "template_2", :environment => @organization.locker, :parent => @tpl1)
-      @tpl2.products << @prod2
-      @tpl2.save!
+    it "should promote latest packages when the package is specified by name" do
 
-      @tpl1.products << @prod1
-      @tpl1.save!
-
-      @tpl1.should_receive(:copy_to_env).and_return {}
-      @tpl2.should_receive(:copy_to_env).and_return {}
-      @changeset.should_receive(:promote).once
-
-      @tpl2.promote
-
-      @changeset.products.should include @prod1
-      @changeset.products.should include @prod2
     end
 
-    it "should promote its products" do
-      @tpl1.products << @prod1
-      @tpl1.save
+    it "should promote the package when it is specified by nvre" do
 
-      @tpl1.should_receive(:copy_to_env).and_return {}
+    end
 
-      @changeset.should_receive(:promote).once
+    it "should promote products that are required by packages" do
 
-      @tpl1.promote
-      @changeset.products.should include @prod1
     end
 
   end
