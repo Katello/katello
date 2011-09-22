@@ -24,15 +24,37 @@ module Glue::Pulp::User
     end
   end
 
-  def set_pulp_user
-    created = Pulp::User.create(:login => self.username, :password => self.password)
-  end
+  module InstanceMethods
 
-  def save_pulp_orchestration
-    queue.create(:name => "create pulp user: #{self.name}", :priority => 3, :action => [self, :set_pulp_user])
-  end
+    def initialize(attrs = nil)
+      attrs = attrs.reject do |k, v|
+        !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+      end
 
-  def destroy_pulp_orchestration
-    queue.create(:name => "delete pulp user: #{self.name}", :priority => 3, :action => [self, :del_pulp_user])
+      super(attrs)
+    end
+
+    def set_pulp_user
+      created = Pulp::User.create(:login => self.username, :password => self.password)
+      self.pulp_id = created[:id]
+    rescue => e
+      Rails.logger.error "Failed to create pulp user #{self.username}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
+    def del_pulp_user
+      Pulp::User.destroy(self.pulp_id)
+    rescue => e
+      Rails.logger.error "Failed to delete pulp user #{self.username}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
+    def save_pulp_orchestration
+      queue.create(:name => "create pulp user: #{self.username}", :priority => 3, :action => [self, :set_pulp_user])
+    end
+
+    def destroy_pulp_orchestration
+      queue.create(:name => "delete pulp user: #{self.username}", :priority => 3, :action => [self, :del_pulp_user])
+    end
   end
 end
