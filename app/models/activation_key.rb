@@ -43,9 +43,13 @@ class ActivationKey < ActiveRecord::Base
     system.system_activation_keys.build(:activation_key => self)
   end
 
+  # subscribe to the pool which starts most recently (or with the least number available)
   def subscribe_system(system)
-    self.key_pools.each do |ksub|
-      system.subscribe(ksub.pool.cp_id, ksub.allocated)
+    sorted_kp = self.key_pools.sort { |a,b| (b.pool.startDate_as_datetime <=> a.pool.startDate_as_datetime).nonzero? || (a.pool.cp_id <=> b.pool.cp_id) }
+    if (sorted_kp.count > 0)
+      system.subscribe(sorted_kp.first.pool.cp_id, sorted_kp.first.allocated)
+    else
+      Rails.logger.warn "No available entitlements for activation key '#{self.name}'"
     end
   end
 

@@ -9,11 +9,26 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-#
 
-class KeyPool < ActiveRecord::Base
-  include Authorization
+require 'resources/candlepin'
 
-  belongs_to :activation_key
-  belongs_to :pool, :class_name => "KTPool"
+module Glue::Candlepin::Pool
+
+  def self.included(base)
+    base.send :include, LazyAccessor
+    base.send :include, InstanceMethods
+
+    base.class_eval do
+      lazy_accessor :productName, :startDate,
+        :initializer => lambda { Candlepin::Pool.get(cp_id) }
+    end
+  end
+
+  module InstanceMethods
+
+    def startDate_as_datetime
+      DateTime.parse(startDate)
+    end
+
+  end
 end
