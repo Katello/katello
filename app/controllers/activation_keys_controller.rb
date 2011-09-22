@@ -15,7 +15,8 @@ class ActivationKeysController < ApplicationController
   include ActivationKeysHelper
 
   before_filter :require_user
-  before_filter :find_activation_key, :only => [:show, :edit, :update, :destroy, :subscriptions, :update_subscriptions]
+  before_filter :find_activation_key, :only => [:show, :edit, :update, :destroy, :subscriptions,
+                                                :available_subscriptions, :applied_subscriptions, :update_subscriptions]
   before_filter :find_environment, :only => [:edit]
   before_filter :authorize #after find_activation_key, since the key is required for authorization
   before_filter :panel_options, :only => [:index, :items]
@@ -41,6 +42,8 @@ class ActivationKeysController < ApplicationController
       :update => manage_test,
 
       :subscriptions => read_test,
+      :available_subscriptions => read_test,
+      :applied_subscriptions => read_test,
       :update_subscriptions => manage_test,
 
       :destroy => manage_test
@@ -70,10 +73,12 @@ class ActivationKeysController < ApplicationController
 
   def available_subscriptions
     # TODO - content coming...
+    render :partial=>"available_subscriptions", :layout => "tupane_layout"
   end
 
   def applied_subscriptions
     # TODO - content coming...
+    render :partial=>"applied_subscriptions", :layout => "tupane_layout"
   end
 
   def subscriptions
