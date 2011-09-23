@@ -89,18 +89,18 @@ describe ActivationKey do
     end
   end
 
-  it "should map 2way subscription to keys" do 
-    s = KTSubscription.create!(:subscription => 'abc123')
-    @akey.subscriptions = [s]
-    @akey.subscriptions.first.subscription.should == 'abc123'
+  it "should map 2way pool to keys" do
+    s = KTPool.create!(:cp_id  => 'abc123')
+    @akey.pools = [s]
+    @akey.pools.first.cp_id.should == 'abc123'
     s.activation_keys.first.name.should == aname
   end
 
-  it "should assign multiple subscriptions to keys" do 
-    s = KTSubscription.create!(:subscription => 'abc123')
-    s2 = KTSubscription.create!(:subscription => 'def123')
-    @akey.subscriptions = [s,s2]
-    @akey.subscriptions.last.subscription.should == 'def123'
+  it "should assign multiple pools to keys" do
+    s = KTPool.create!(:cp_id  => 'abc123')
+    s2 = KTPool.create!(:cp_id  => 'def123')
+    @akey.pools = [s,s2]
+    @akey.pools.last.cp_id.should == 'def123'
   end
 
   describe "#apply_to_system" do
@@ -132,14 +132,78 @@ describe ActivationKey do
   describe "#subscribe_system" do
 
     before(:each) do
+      Candlepin::Pool.stub!(:get) do |x|
+        {
+          :productName => "Blah Server OS",
+          :startDate => dates[x]
+        }
+      end
       @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"})
-      @subscription = KTSubscription.create!(:subscription => "44114411")
-      @akey.key_subscriptions.create!(:subscription => @subscription, :allocated => 3)
+      dates.each_pair do |k,v|
+        pool = KTPool.create!(:cp_id => k)
+        @akey.key_pools.create!(:pool_id  => pool.id, :allocated => 2)
+      end
     end
 
-    it "consumes entitlements according to assigned subscriptions" do
-      Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid,"44114411",3)
-      @akey.subscribe_system(@system)
+    describe "entitlement out of one" do
+      let(:dates) do
+        {
+          "a" => "2011-02-11T11:11:11.111+0000",
+        }
+      end
+
+      it "consumes the correct entitlement" do
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "a", 2)
+        @akey.pools.size.should == 1
+        @akey.subscribe_system(@system)
+      end
+    end
+
+    describe "entitlement with most recent date out of two" do
+      let(:dates) do
+        {
+          "a" => "2011-02-11T11:11:11.111+0000",
+          "b" => "2011-03-11T11:11:11.111+0000",
+        }
+      end
+
+      it "consumes the correct entitlement" do
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "b", 2)
+        @akey.pools.size.should == 2
+        @akey.subscribe_system(@system)
+      end
+    end
+
+    describe "entitlement with most recent date out of three" do
+      let(:dates) do
+        {
+          "a" => "2011-02-11T11:11:11.111+0000",
+          "b" => "2011-03-11T11:11:11.111+0000",
+          "c" => "2011-01-11T11:11:11.111+0000",
+        }
+      end
+
+      it "consumes the correct entitlement" do
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "b", 2)
+        @akey.pools.size.should == 3
+        @akey.subscribe_system(@system)
+      end
+    end
+
+    describe "entitlement with least number available out of three" do
+      let(:dates) do
+        {
+          "a" => "2011-01-11T11:11:11.111+0000",
+          "b" => "2011-01-11T11:11:11.111+0000",
+          "c" => "2011-01-11T11:11:11.111+0000",
+        }
+      end
+
+      it "consumes the correct entitlement" do
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "a", 2)
+        @akey.pools.size.should == 3
+        @akey.subscribe_system(@system)
+      end
     end
 
   end
