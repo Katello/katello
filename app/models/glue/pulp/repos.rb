@@ -243,8 +243,13 @@ module Glue::Pulp::Repos
         ca = File.open("#{Rails.root}/config/candlepin-ca.crt", 'rb') { |f| f.read }
         archs = self.arch.split(",")
         archs.each do |arch|
+          # temporary solution unless pulp supports another archs
+          unless %w[noarch i386 i686 ppc64 s390x x86_64].include? arch
+            Rails.logger.error("Pulp does not support arch '#{arch}'")
+            next
+          end
           repo_name = "#{pc.content.name} #{arch}"
-          repo = Glue::Pulp::Repo.new(:id => repo_id(repo_name),
+          attrs = {:id => repo_id(repo_name),
                                       :arch => arch,
                                       :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, pc.content.name),
                                       :name => repo_name,
@@ -254,7 +259,9 @@ module Glue::Pulp::Repos
                                       :feed_key => key,
                                       :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
                                       :preserve_metadata => orchestration_for == :import_from_cp #preserve repo metadata when importing from cp
-                                     )
+          }
+          pp attrs
+          repo = Glue::Pulp::Repo.new(attrs                                     )
           repo.create
         end
       end
