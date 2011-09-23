@@ -1,3 +1,7 @@
+#!/bin/bash
+
+header "Environment"
+
 ENV="tstenv_$RAND"
 ENV2="tstenv2_$RAND"
 test "environment create" environment create --org="$TEST_ORG" --name="$ENV" --prior="Locker"

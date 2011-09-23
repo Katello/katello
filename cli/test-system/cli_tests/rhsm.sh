@@ -1,5 +1,7 @@
 #!/bin/bash
 
+header "RHSM"
+
 RHSM_ORG="org_rhsm_$RAND"
 RHSM_ENV="env_rhsm_$RAND"
 RHSM_AK1="ak1_$RAND"

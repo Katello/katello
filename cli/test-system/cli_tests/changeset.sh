@@ -1,5 +1,9 @@
 #!/bin/bash
 
+require "template"
+
+header "Changeset"
+
 # synchronize repo to load the packages
 test "repo synchronize" repo synchronize --id="$REPO_ID"
 

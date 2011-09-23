@@ -1,3 +1,7 @@
+#!/bin/bash
+
+header "Repo"
+
 #testing repositories
 test "repo list by org and env" repo list --org="$TEST_ORG" --environment="$TEST_ENV"
 test "repo list by org only" repo list --org="$TEST_ORG"

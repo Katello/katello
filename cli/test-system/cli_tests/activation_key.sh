@@ -1,5 +1,7 @@
 #!/bin/bash
 
+header "Activation keys"
+
 ACTIVATION_KEY_NAME="activation_key_$RAND"
 test "activation key create" activation_key create --name="$ACTIVATION_KEY_NAME" --description="key description" --environment="$TEST_ENV" --org="$TEST_ORG"
 test "list activation keys by environment" activation_key list --environment="$TEST_ENV" --org="$TEST_ORG"

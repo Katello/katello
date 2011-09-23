@@ -1,3 +1,7 @@
+#!/bin/bash
+
+header "Package group"
+
 REPO_ID=$(get_repo_id)
 PACKAGE_GROUP_ID=test
 PACKAGE_GROUP_CATEGORY_ID=test

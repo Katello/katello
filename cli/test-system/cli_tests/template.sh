@@ -1,5 +1,8 @@
 #!/bin/bash
 
+require "repo"
+
+header "Template"
 
 # testing templates
 TEMPLATE_NAME="template_$RAND"
@@ -11,8 +14,6 @@ test "template update" template update --name="$TEMPLATE_NAME_2" --new_name="cha
 test "template update_content add product" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_product    --product="$FEWUPS_PRODUCT"
 test "template update_content add package" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_package    --package="cheetah"
 test "template update_content remove package" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package --package="cheetah"
-test "template update_content add erratum" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_erratum    --erratum="RHEA-2010:9984"
-test "template update_content remove erratum" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_erratum --erratum="RHEA-2010:9984"
 test "template update_content remove product" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_product --product="$FEWUPS_PRODUCT"
 test "template update_content add parameter" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_parameter    --parameter "attr" --value "X"
 test "template update_content remove parameter" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_parameter --parameter "attr"

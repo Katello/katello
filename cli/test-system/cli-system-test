@@ -16,6 +16,7 @@ USER='admin'
 PASSWORD='admin'
 CMD_NOUSER="$script_dir/../../cli/bin/katello"
 CMD="$CMD_NOUSER -u $USER -p $PASSWORD"
+TEST_DIR=$script_dir'/cli_tests/'
 
 test_cnt=0
 failed_cnt=0
@@ -26,7 +27,7 @@ txtgrn=$(tput setaf 2)    # Green
 txtyel=$(tput setaf 3)    # Yellow
 txtrst=$(tput sgr0)       # Text reset
 
-all_tests=`ls $script_dir/cli_tests/ | grep -v '^_.*' | sed -s 's/^[0-9]*_//g' | sed -s 's/.sh//g'`
+all_tests=`ls $TEST_DIR/ | grep -v '^_.*' | sed -s 's/.sh//g'`
 required_tests=""
 
 PRINT_ALL=0
@@ -105,7 +106,6 @@ function test() {
         shift
     fi
 
-
     if [ $SHELL_MODE -eq 1 ]; then
         result=`echo -e "$*\nexit" | $CMD shell 2>&1`
         result=`echo "$result" | sed 's/katello>//g'`
@@ -132,6 +132,7 @@ function test() {
     fi
     let test_cnt+=1
 }
+
 
 function test_own_cmd() {
     MSG=$1
@@ -168,29 +169,33 @@ function summarize() {
     exit $failed_cnt
 }
 
-function valid_id() {
-    if [ -z "$1" ]; then
-        return 0
-    fi
 
-    #id=`echo $1 | egrep '\+-+\+'`
-    id=`echo $1 | egrep '\-{5,}'`
-    if [ -z "$id" ]; then
-        return 0
-    else
-        return 1
+function run_rest_suite() {
+    local t=$1
+    if [ "`printf "$executed_suits" | grep $t`" == "" ]; then
+        executed_suits="$t\n$executed_suits"
+        [ -f $TEST_DIR/$t.sh ] && . $TEST_DIR/*$t.sh
     fi
 }
 
+function require() {
+    local t=$1
+    if [ "`printf "$executed_suits" | grep $t`" == "" ]; then
+        run_rest_suite $t
+    fi
+}
 
-echo "Basic environment setup"
-[ $NO_BASE -eq 0 ] && . $script_dir/cli_tests/_base_setup.sh
+function header() {
+    echo "---------------------------------------------"
+    echo "Test suite $1"
+    echo "---------------------------------------------"
+}
+
+
+[ $NO_BASE -eq 0 ] && . $TEST_DIR/_base_setup.sh
 for t in $required_tests; do
-    echo "Test suite $t"
-    [ -f $script_dir/cli_tests/[0-9]*$t.sh ] && . $script_dir/cli_tests/[0-9]*$t.sh
-    [ -f $script_dir/cli_tests/$t.sh ] && . $script_dir/cli_tests/*$t.sh
+    run_rest_suite $t
 done
-echo "Basic environment cleanup"
-[ $NO_BASE -eq 0 ] && . $script_dir/cli_tests/_base_cleanup.sh
+[ $NO_BASE -eq 0 ] && . $TEST_DIR/_base_cleanup.sh
 
 summarize

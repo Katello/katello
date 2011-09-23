@@ -1,3 +1,7 @@
+#!/bin/bash
+
+header "Client"
+
 #testing client commands
 KEY="key_$RAND"
 VALUE="val_$RAND"

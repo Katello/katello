@@ -1,5 +1,7 @@
 #!/bin/bash
 
+header "Provider import"
+
 # importing manifest from our testing export
 IMPORT_ORG="Import_Org_$RAND"
 IMPORT_PROV="Import_Prov_$RAND"

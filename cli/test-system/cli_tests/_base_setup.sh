@@ -1,5 +1,7 @@
 #!/bin/bash
 
+header "Basic environment setup"
+
 #testing ping
 test "ping" ping
 

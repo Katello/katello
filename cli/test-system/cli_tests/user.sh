@@ -1,3 +1,7 @@
+#!/bin/bash
+
+header "User"
+
 #testing user
 test "user update" user update --username=$TEST_USER --password=password
 test "user list" user list

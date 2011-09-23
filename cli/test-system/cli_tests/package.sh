@@ -1,5 +1,8 @@
 #!/bin/bash
 
+require "repo"
+
+header "Package"
 
 #testing packages
 test "package list by repo id" package list --repo_id="$REPO_ID"

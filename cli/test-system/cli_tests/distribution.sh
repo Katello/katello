@@ -1,5 +1,6 @@
 #!/bin/bash
 
+header "Distribution"
 
 #testing distributions
 test "distribution list by repo id" distribution list --repo_id="$REPO_ID"
