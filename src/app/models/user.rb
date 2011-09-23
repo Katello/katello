@@ -15,6 +15,9 @@ require 'util/threadsession'
 require 'util/password'
 
 class User < ActiveRecord::Base
+  include Glue::Pulp::User if (AppConfig.use_cp and AppConfig.use_pulp)
+  include Glue if AppConfig.use_cp
+
   has_many :roles_users
   has_many :roles, :through => :roles_users
   belongs_to :own_role, :class_name => 'Role'
