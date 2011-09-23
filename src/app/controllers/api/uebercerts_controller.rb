@@ -10,19 +10,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Errors
-  class NotFound < StandardError; end
+class Api::UebercertsController < Api::ApiController
+  before_filter :find_organization, :only => [:show, :create]
 
-  # unauthorized access
-  class SecurityViolation < StandardError; end
+  # TODO: define authorization rules
+  skip_before_filter :authorize
 
-  class OrchestrationException < StandardError; end
+  def create
+    render :json => Candlepin::Owner.generate_ueber_cert(@organization.cp_key)
+  end
 
-  class TemplateContentException < StandardError; end
-
-  class ChangesetContentException < StandardError; end
-
-  class ConflictException < StandardError; end
-
-  class CurrentOrganizationNotFoundException < ActiveRecord::RecordNotFound; end
+  def show
+    render :json => Candlepin::Owner.get_ueber_cert(@organization.cp_key)
+  end
 end
