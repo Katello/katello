@@ -206,6 +206,19 @@ describe Glue::Pulp::Repo do
 
   end
 
+  describe "Cloned repo id" do
+    before do
+      stub_reference_objects
+      @to_env = mock(KTEnvironment, {:id => RepoTestData::CLONED_REPO_ENV_ID, :name => 'Prod', :organization => @org})
+      #@repo.stub(:product => @product)
+    end
+
+    it "should be composed from various attributes to be uniqe" do
+      cloned_repo_id = Glue::Pulp::Repos.clone_repo_id(@repo, @to_env)
+      cloned_repo_id.should == "#{RepoTestData::REPO_PRODUCT_CP_ID}-repo-Prod-Corp"
+    end
+
+  end
 
   context "Repo promote" do
 
