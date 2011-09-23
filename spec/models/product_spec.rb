@@ -232,7 +232,14 @@ describe Product do
         p.save!
       end
 
-      context "product has more archs" do
+     it "prepares valid name for Pulp repo" do
+          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 noarch'))
+          p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
+          p.orchestration_for = :import_from_cp
+          p.save!
+      end
+
+     context "product has more archs" do
         after do
           p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
           p.stub(:attrs => [{:name => 'arch', :value => 'x86_64,i386'}])

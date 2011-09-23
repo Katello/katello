@@ -76,7 +76,7 @@ module ProductTestData
     :productContent => [
          Glue::Candlepin::ProductContent.new(
           "content" => {
-            "name" => "some-name33",
+            "name" => "some-name(33)",
             "id" => "1234999",
             "type" => "yum",
             "label" => "some-label",
