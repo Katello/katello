@@ -62,4 +62,17 @@ module DashboardHelper
       end
   end
 
+
+  def products_synced
+    Product.readable(current_organization).reject{|prod|
+      prod.sync_status.uuid.nil?
+    }
+  end
+
+  def sync_percentage(product)
+    stat =product.sync_status.progress
+    (stat.total_size - stat.size_left)*100/stat.total_size
+  end
+
+
 end
