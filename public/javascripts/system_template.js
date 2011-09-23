@@ -855,7 +855,8 @@ $(document).ready(function() {
                                 KT.product_actions.register_autocomplete();
                                 KT.templates.reset_page();
                             },
-                            enable_search   :  true
+                            enable_search   :  true,
+                            enable_float	:  true
                         });
 
  
@@ -874,7 +875,7 @@ $(document).ready(function() {
         var offset = $('#template_tree').width() + 50;
         $(window).scroll(function () {
             KT.panel.handleScroll($('#template_tree'), container, original_top, bodyY, 0, offset);
-        });
+        }).scroll();
         $(window).resize(function(){
            KT.panel.handleScrollResize($('#template_tree'), container, original_top, bodyY, 0, offset);
         });
