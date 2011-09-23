@@ -81,12 +81,13 @@
                   #{@repo_status[r.id][:state]}
 
   .actions
-    .grid_2
-      %a{ :href => "#", :id=>"select_none", :class=>"fl" }
-        #{_("Select None")}
-    .grid_2
-      %a{ :href => "#", :id=>"select_all", :class=>"fl" }
-        #{_("Select All")}
+    - if @sproducts.length > 0
+      .grid_2
+        %a{ :href => "#", :id=>"select_none", :class=>"fl" }
+          #{_("Select None")}
+      .grid_2
+        %a{ :href => "#", :id=>"select_all", :class=>"fl" }
+          #{_("Select All")}
     .grid_3
       %a{ :href => "#", :id=>"toggle_all", :class=>"fl" }
         #{_("Expand/Contract All")}
