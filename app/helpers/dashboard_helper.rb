@@ -54,4 +54,8 @@ module DashboardHelper
     end        
   end
 
+  def systems_list
+    System.readable(current_organization).limit(10)
+  end
+
 end
