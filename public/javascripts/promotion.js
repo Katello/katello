@@ -324,7 +324,7 @@ var promotion_page = (function($){
                     if( changeset_breadcrumb.hasOwnProperty(id) ){
                         if( id.split("_")[0] === "changeset" ){
                             changeset = changeset_breadcrumb[id];
-                            if( !changeset.is_new && !changeset.progress ){
+                            if( !changeset.is_new && ( changeset.progress === null || changeset.progress === undefined ) ){
                                 changesetStatusActions.setLocked(id);
                             } else if( changeset.progress !== null && changeset.progress !== undefined ){
                                 changesetStatusActions.initProgressBar(id, changeset.progress);
@@ -925,7 +925,7 @@ var registerEvents = function(){
         $(this).addClass("disabled");
         var cs = promotion_page.get_changeset();
         var after = function() {$(this).removeClass("disabled");};
-        cs.promote(after, after);
+        cs.promote(after, function(){});
         return true;
     });
 

@@ -88,7 +88,8 @@ SimpleNavigation::Configuration.run do |navigation|
                                   :controller => "activation_keys"
         end
       end if ActivationKey.readable?(current_organization())
-    end if current_organization() #end systems
+    end if current_organization() && (System.any_readable?(current_organization) || ActivationKey.readable?(current_organization()))
+    #end systems
 
     top_level.item :organizations, _("Organizations"), organizations_path(), :class=>'organizations' do |orgs_sub|
        orgs_sub.item :index, _("List"), organizations_path()
