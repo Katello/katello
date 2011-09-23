@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.82
+Version:        0.1.84
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -31,7 +31,7 @@ Requires:       httpd
 Requires:       openssl
 Requires:       candlepin-tomcat6
 Requires:       rubygems
-Requires:       rubygem(rails) >= 3.0.5
+Requires:       rubygem(rails) >= 3.0.10
 Requires:       rubygem(multimap)
 Requires:       rubygem(haml) >= 3.1.2
 Requires:       rubygem(haml-rails)
@@ -56,9 +56,10 @@ Requires:       rubygem(uuidtools)
 Requires:       rubygem(thin)
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
-%if 0%{?fedora} && 0%{?fedora} == 15
+# TODO - uncomment the statement once we push patched actionpack to our EL6 repo
+#%if 0%{?fedora} && 0%{?fedora} <= 15
 Requires:       rubygem(regin)
-%endif
+#%endif
 # </workaround>
 
 Requires(pre):  shadow-utils
@@ -214,6 +215,105 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Sep 23 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.84-1
+- asub - adding unit tests
+- asub - ak subscribes to pool which starts most recently
+- asub - renaming KTSubscription to KTPool
+- Merge branch 'master' into rails309
+- adding dep for rails 3.0.10
+- new deps for rails 3.0.10
+- 740389 - include repoid and remove unused security checks
+- Merge branch 'master' into rails309
+- bumping candlepin to the latest rev
+- Promoted content enabled by default
+- fixed a bug with parsing of oauth provider parameters
+- Hid the select all/none button if the user doesnt have any syncable
+  products..
+- More roles controller spec fixes
+- Roles - Fixes for spec tests that made assumptions that don't hold true on
+  postgres.
+- Added some comments for app controller
+- Roles UI - Updates to edit permission workflow as a result of changes to add
+  permission workflow.
+- Roles Spec - Adds unit tests to cover CRUD on permissions.
+- Roles UI - Fixes to permission add workflow for edge cases.
+- Roles UI - Modifies role add permission workflow to add a progress bar and
+  move the name and description to the bottom of the workflow.
+- Added some padding for perm denied message
+- Updated the config file to illustrate the use of allow_roles_logging..
+- forgot to evalute the exception correctly
+- Added ordering for roles based on names
+- Added a config entry allow_roles_logging for roles logs to be printed on the
+  output log. This was becasue roles check was cluttering the console window.
+- Made the rails error messages log a nice stack trace
+- packagegroups-templates - better validation messages
+- packagegroups-templates - fix for notification message
+- More user-friendly validation failed message in CLI
+- removing an unused migration
+- Disable unstable spec test
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+- regin dep issue workaround enabled for EL6 now
+- removed access control from UebercertsController
+- Merge branch 'uebercert'
+- updates routes to support uebercert operations
+- fixed a few issues with uebercert controller specs
+- katello now uses cp's uebercert generation/retrieval
+- gemfile mods for rails 3.0.9
+- fixed a bunch of issues during uebercert generation
+- first cut at supporting ueber certs
+- ueber cert - adding cli support
+
+* Tue Sep 20 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.83-1
+- Updates on the promotion controller page to deal with weird permission models
+- 732444 - make sure we uppercase before we sort so it is case indifferent
+- fixed an accidental typo
+- Updated the promotions page nav and rules to work correctly
+- Updated the handling of the 500 error to deal with null org cases
+- 734526 - improving error messages for promotions to include changeset names.
+- 733270 - fix failing unit tests
+- 733270 - validate uniquenss of system name
+- 734882 - format RestClient error message only for katello-cli agent
+- 734882 - User-Agent header in katello-cli and custom error messages
+- changed candlepin url in Candlepin::Consumer integration tests
+- removing unecessary debug line that was causing JS errors
+- notices - making default polling inverval 120s (when omitted from conf)
+- activation keys - fixing new env selector for activation keys
+- fixing poor coding around enabling create due to permission that had creeped
+  into multiple controllers
+- 739200 - moving system template new button to the top left instead of on the
+  bottom action bar
+- system templates - updating page to ensure list items are vertical centered,
+  required due to some changes by ehelms
+- javascript - some fixes for the new panel object
+- merging in env-selector
+- env-select - adding more javascript documentation and improving spacing
+  calculations
+- Fix proxy to candlepin due to change RAILS_RELATIVE_URL_ROOT
+- env-select - fixing a few spacing issues as well as having selected item be
+  expanded more so than others
+- 738762 - SSLVerifyClient for apache+thin
+- env select - corrected env select widget to work with the expanding nodes
+- 722439 - adding version to the footer
+- Roles UI - Fix for broken role editing on the UI.
+- env select - fixing up the new environment selector and ditching the old
+  jbreadcrumb
+- Two other small changes to fix the hidden features of subscribe and
+  unsubscribe.
+- Fix for .hidden not working :)
+- Roles UI - Fixes broken add permission workflow.
+- Fixes a number of look and feel issues related to sliding tree items and
+  clicking list items.
+- Changes multiselect to have add from list on the left and add to list on the
+  right. Moves multiselect widget css to its own file.
+- Fixes for changes to panel javascript due to rebase.
+- Fixes for editing a permission when setting the all tags or all verbs.
+- A refactor of panel in preparation for changes to address a series of bugs
+  related to making the slide out panel of tupane more robust.
+- Roles UI - Adds back missing css for blue box around roles widget.
+- CSS cleanup focused on organizing colors and adding more variable
+  definitions.
+- initial breadcrumb revamp
+
 * Thu Sep 15 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.82-1
 - removing two unnecessarry macros in spec file
 - correcting workaround for BZ 714167 (undeclared dependencies) in spec

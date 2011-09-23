@@ -10,19 +10,25 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module Errors
-  class NotFound < StandardError; end
+require 'resources/candlepin'
 
-  # unauthorized access
-  class SecurityViolation < StandardError; end
+module Glue::Candlepin::Pool
 
-  class OrchestrationException < StandardError; end
+  def self.included(base)
+    base.send :include, LazyAccessor
+    base.send :include, InstanceMethods
 
-  class TemplateContentException < StandardError; end
+    base.class_eval do
+      lazy_accessor :productName, :startDate,
+        :initializer => lambda { Candlepin::Pool.get(cp_id) }
+    end
+  end
 
-  class ChangesetContentException < StandardError; end
+  module InstanceMethods
 
-  class ConflictException < StandardError; end
+    def startDate_as_datetime
+      DateTime.parse(startDate)
+    end
 
-  class CurrentOrganizationNotFoundException < ActiveRecord::RecordNotFound; end
+  end
 end

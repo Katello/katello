@@ -109,8 +109,13 @@ class KTEnvironment < ActiveRecord::Base
 
   #is the environment currently being promoted to
   def promoting_to?
-    Changeset.joins(:task_status).where('changesets.environment_id' => self.id,
-        'task_statuses.state' => [TaskStatus::Status::WAITING,  TaskStatus::Status::RUNNING]).exists?
+    self.promoting.exists?
+  end
+
+  #list changesets promoting
+  def promoting
+      Changeset.joins(:task_status).where('changesets.environment_id' => self.id,
+        'task_statuses.state' => [TaskStatus::Status::WAITING,  TaskStatus::Status::RUNNING])
   end
 
 
@@ -169,7 +174,7 @@ class KTEnvironment < ActiveRecord::Base
   }
 
   def self.any_viewable_for_promotions? org
-    User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, [], org)
+    User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, org.environment_ids, org, true)
   end
 
   def viewable_for_promotions?
