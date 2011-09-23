@@ -19,4 +19,23 @@ $(document).ready(function() {
         bar.progressbar({value: parseInt(bar.attr("percentage"))});
     })
 
+
+    $.plot($("#sub_graph"), KT.subscription_data, {
+        series: {
+            pie:{
+                show: true,
+                            label: {
+                show: false
+            }
+            }
+
+        },
+        legend: {
+            show: false
+        }
+
+
+
+    });
+
 });

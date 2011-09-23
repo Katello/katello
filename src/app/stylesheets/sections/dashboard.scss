@@ -18,7 +18,40 @@
     .dashhead {
         position: relative;
     }
+    #dashboard_subscriptions {
+      #sub_graph {
+        width: 150px;
+        height: 170px;
+      }
+      h4 {
+        display: inline;
+        margin-left: 10px;
+      }
+      h5 {
+        display: inline;
+        font-size: 130%;
+      }
+      .left {
+        width: 300px;
+        display: inline-block;
 
+        .icon {
+          margin-left: 0px;
+          width: 15px;
+          height: 15px;
+          margin-top: 3px;
+        }
+        .red_icon {background: $status_icons_red_small;}
+        .yellow_icon {background: $status_icons_yellow_small;}
+        .green_icon {background: $status_icons_green_small;}
+      }
+      .right {
+        width: 150px;
+        display: inline-block;
+      }
+
+
+    }
     #dashboard_promotions {
       h5 {
         display: inline;
