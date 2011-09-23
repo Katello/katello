@@ -39,19 +39,6 @@ class SystemTemplatePackage < ActiveRecord::Base
   validates_with PackageUniquenessValidator
   validates_with PackageValidator
 
-  #package name should exist in a product in the environment
-  def to_package
-    self.system_template.environment.products.each do |product|
-       product.repos(self.system_template.environment).each do |repo|
-        #search for errata in all repos in a product
-        idx = repo.packages.index do |p| p.name == self.package_name end
-        return repo.packages[idx] if idx != nil
-
-      end
-    end
-    nil
-  end
-
   def is_nvr?
     not (self.package_name.nil? or self.version.nil? or self.release.nil?)
   end

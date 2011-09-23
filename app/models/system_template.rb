@@ -291,13 +291,6 @@ class SystemTemplate < ActiveRecord::Base
 
   protected
 
-  def changeset_packages(packages)
-    packages.collect do |p|
-      p = p.to_package
-      ChangesetPackage.new(:package_id=>p.id, :display_name=>p.name, :changeset => @changeset)
-    end
-  end
-
   def get_inheritance_chain
     chain = [self]
     tpl = self
