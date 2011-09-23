@@ -1,0 +1,17 @@
+#dashboard_systems.big_widget.scroll-pane
+  %ul
+  - for system in systems_list
+    %li
+      %div.system_entry
+        .col_3
+          %span.icon_wrap.fl{:class=>"check_icon"}
+        .col_1.one-line-ellipsis
+          %h5
+            #{system.name}
+        .col_2
+          #{system.created_at}
+        .col_2
+          =_("Never checked in")
+        .button_col_4
+          .button{"data-url"=>system_path(system.id)}
+            = _("Resolve")
