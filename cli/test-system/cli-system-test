@@ -97,13 +97,22 @@ else
     done
 fi
 
-function test() {
-    if [ $PRINT_ALL -eq 1 ]; then
-        shift
-        echo $*
+function msg_status() {
+    printf "%-40s" "$1"
+    printf "[ %s ]" "$2"
+    if [ $# -gt 2 ]; then
+        printf "\t%s\n" "$3"
     else
-        printf "%-40s" "$1"
-        shift
+        printf "\n"
+    fi
+}
+
+function test_cmd() {
+    test_success=$1; shift
+    test_name=$1; shift
+    
+    if [ $PRINT_ALL -eq 1 ]; then
+        echo $*
     fi
 
     if [ $SHELL_MODE -eq 1 ]; then
@@ -113,53 +122,83 @@ function test() {
         result=`$CMD $* 2>&1`
     fi
 
+    if [ $? -ne 0 ] || [ "`echo $result | egrep -i "\bfail|\berror\b"`" != "" ]; then
+        #command failed
+        if [ $test_success -eq 1 ]; then status=0; else status=1; fi
+    else
+        #command succeeded
+        if [ $test_success -eq 1 ]; then status=1; else status=0; fi
+    fi
+    
 
-    if [ $? -ne 0 ] || [ "`echo $result | egrep -i "\bfail|\berror\b"`" ]; then
+    if [ $status -eq 0 ]; then
         if [ $PRINT_ALL -eq 1 ]; then
             printf "%s\n\n" "$result"
         else
-            printf "[ ${txtred}FAILED${txtrst} ]\n"
-            printf "\t%s\n" "$*"
-            printf "\t%s\n" "$result"
+            msg_status "$test_name" "${txtred}FAILED${txtrst}"
+            printf "%s\n" "$*"
+            printf "%s\n" "$result"
         fi
         let failed_cnt+=1
     else
         if [ $PRINT_ALL -eq 1 ]; then
             printf "%s\n\n" "$result"
         else
-            printf "[ ${txtgrn}OK${txtrst} ]\n"
+            msg_status "$test_name" "${txtgrn}OK${txtrst}"
         fi
     fi
     let test_cnt+=1
 }
 
 
-function test_own_cmd() {
-    MSG=$1
-    shift
-    CMD="" SHELL_MODE=0 test "$MSG" $*
+function test_success() {
+    test_cmd 1 "$@"
 }
 
-function skip_test() {
+
+function test_failure() {
+    test_cmd 0 "$@"
+}
+
+function test_own_cmd_success() {
+    MSG=$1
+    shift
+    CMD="" SHELL_MODE=0 test_success "$MSG" "$@"
+}
+
+function test_own_cmd_failure() {
+    MSG=$1
+    shift
+    CMD="" SHELL_MODE=0 test_failure "$MSG" "$@"
+}
+
+function skip_test_success() {
     if [ $RUN_DISABLED -eq 1 ]; then
         MSG=$1
         shift
-        test "$MSG" $*
+        test_success "$MSG" "$@"
     else
-        printf "%-40s" "$1"
+        msg_status "$1" "${txtyel}SKIPPED${txtrst}" "Notes: $2"
+    fi
+}
+
+function skip_test_failure() {
+    if [ $RUN_DISABLED -eq 1 ]; then
+        MSG=$1
         shift
-        printf "[ ${txtyel}SKIPPED${txtrst} ]\t Notes: $1\n"
+        test_failure "$MSG" "$@"
+    else
+        msg_status "$1" "${txtyel}SKIPPED${txtrst}" "Notes: $2"
     fi
 }
 
 function todo() {
-  printf "%-40s" "$1"
-  printf "[ TODO ]\n"
+  msg_status "$1" "TODO"
 }
 
 function summarize() {
 
-    echo "---------------------------------------------"
+    echo "----------------------------------------------"
     if [ $failed_cnt -eq 0 ]; then
         printf "%s tests, all passed\n" "$test_cnt"
     else
@@ -186,9 +225,9 @@ function require() {
 }
 
 function header() {
-    echo "---------------------------------------------"
+    echo "----------------------------------------------"
     echo "Test suite $1"
-    echo "---------------------------------------------"
+    echo "----------------------------------------------"
 }
 
 
