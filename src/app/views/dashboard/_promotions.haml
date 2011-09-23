@@ -3,15 +3,15 @@
   - for changeset in promotions()
     %li
       %span.icon_wrap.fl
-        %span.fl{:class=>cs_class(changeset)}
+        %span.fl{:class=>changeset_class(changeset)}
           &nbsp;&nbsp;
 
       %div.promotion_entry
         .col_1
           %h5
-            = link_to changeset.name, changeset_path(changeset.id)
+            = link_to changeset.name, changeset_path_helper(changeset)
         .col_2
-          #{cs_message(changeset)}
+          #{changeset_message(changeset)}
         .col_1
           #{changeset.environment.name}
         .col_2
