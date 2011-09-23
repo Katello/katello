@@ -248,7 +248,7 @@ module Glue::Pulp::Repos
             Rails.logger.error("Pulp does not support arch '#{arch}'")
             next
           end
-          repo_name = "#{pc.content.name} #{arch}"
+          repo_name = "#{pc.content.name} #{arch}".gsub(/[^a-z0-9\-_ ]/i,"")
           attrs = {:id => repo_id(repo_name),
                                       :arch => arch,
                                       :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, pc.content.name),
