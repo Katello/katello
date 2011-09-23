@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.83
+Version:        0.1.84
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -31,7 +31,7 @@ Requires:       httpd
 Requires:       openssl
 Requires:       candlepin-tomcat6
 Requires:       rubygems
-Requires:       rubygem(rails) >= 3.0.5
+Requires:       rubygem(rails) >= 3.0.10
 Requires:       rubygem(multimap)
 Requires:       rubygem(haml) >= 3.1.2
 Requires:       rubygem(haml-rails)
@@ -215,6 +215,54 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Sep 23 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.84-1
+- asub - adding unit tests
+- asub - ak subscribes to pool which starts most recently
+- asub - renaming KTSubscription to KTPool
+- Merge branch 'master' into rails309
+- adding dep for rails 3.0.10
+- new deps for rails 3.0.10
+- 740389 - include repoid and remove unused security checks
+- Merge branch 'master' into rails309
+- bumping candlepin to the latest rev
+- Promoted content enabled by default
+- fixed a bug with parsing of oauth provider parameters
+- Hid the select all/none button if the user doesnt have any syncable
+  products..
+- More roles controller spec fixes
+- Roles - Fixes for spec tests that made assumptions that don't hold true on
+  postgres.
+- Added some comments for app controller
+- Roles UI - Updates to edit permission workflow as a result of changes to add
+  permission workflow.
+- Roles Spec - Adds unit tests to cover CRUD on permissions.
+- Roles UI - Fixes to permission add workflow for edge cases.
+- Roles UI - Modifies role add permission workflow to add a progress bar and
+  move the name and description to the bottom of the workflow.
+- Added some padding for perm denied message
+- Updated the config file to illustrate the use of allow_roles_logging..
+- forgot to evalute the exception correctly
+- Added ordering for roles based on names
+- Added a config entry allow_roles_logging for roles logs to be printed on the
+  output log. This was becasue roles check was cluttering the console window.
+- Made the rails error messages log a nice stack trace
+- packagegroups-templates - better validation messages
+- packagegroups-templates - fix for notification message
+- More user-friendly validation failed message in CLI
+- removing an unused migration
+- Disable unstable spec test
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+- regin dep issue workaround enabled for EL6 now
+- removed access control from UebercertsController
+- Merge branch 'uebercert'
+- updates routes to support uebercert operations
+- fixed a few issues with uebercert controller specs
+- katello now uses cp's uebercert generation/retrieval
+- gemfile mods for rails 3.0.9
+- fixed a bunch of issues during uebercert generation
+- first cut at supporting ueber certs
+- ueber cert - adding cli support
+
 * Tue Sep 20 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.83-1
 - Updates on the promotion controller page to deal with weird permission models
 - 732444 - make sure we uppercase before we sort so it is case indifferent
