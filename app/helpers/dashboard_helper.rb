@@ -34,7 +34,7 @@ module DashboardHelper
         order("task_statuses.updated_at DESC").limit(5)
   end
 
-  def cs_class cs
+  def changeset_class cs
     if cs.state === Changeset::PROMOTED
       "check_icon"
     elsif cs.state === Changeset::PROMOTING && cs.task_status.start_time
@@ -44,7 +44,7 @@ module DashboardHelper
     end
   end
 
-  def cs_message cs
+  def changeset_message cs
     if cs.state === Changeset::PROMOTED
       _("Success")
     elsif cs.state === Changeset::PROMOTING && cs.task_status.start_time
@@ -54,8 +54,28 @@ module DashboardHelper
     end        
   end
 
+
   def systems_list
     System.readable(current_organization).limit(10)
+  end
+
+  def changeset_path_helper cs
+      if cs.state === Changeset::PROMOTED
+        changesets_path() + "#panel=changeset_#{cs.id}"
+      else
+        promotion_path(cs.environment.prior.name)
+      end
+  end
+
+  def products_synced
+    Product.readable(current_organization).reject{|prod|
+      prod.sync_status.uuid.nil?
+    }
+  end
+
+  def sync_percentage(product)
+    stat =product.sync_status.progress
+    (stat.total_size - stat.size_left)*100/stat.total_size
   end
 
 end
