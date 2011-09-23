@@ -107,7 +107,7 @@ module Pulp
       def dep_solve pkgnames, repoids
         path = "/pulp/api/services/dependencies/"
         response = post(path, JSON.generate({:pkgnames=>pkgnames, :repoids=>repoids}),  self.default_headers)
-        JSON.parse(response)["available_packages"]
+        JSON.parse(response)["resolved"]
       end
 
 
