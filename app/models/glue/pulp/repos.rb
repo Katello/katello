@@ -28,7 +28,7 @@ module Glue::Pulp::Repos
   end
 
   def self.clone_repo_id(repo, environment)
-    [repo.product.cp_id, repo.name, environment.name,environment.organization.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("-")
+    [repo.product.cp_id, repo.name, environment.name,environment.organization.name].map{|x| x.to_s.gsub(/[^-\w]/,"_") }.join("-")
   end
 
   def self.clone_repo_path(repo, environment, for_cp = false)
