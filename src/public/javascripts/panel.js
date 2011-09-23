@@ -87,7 +87,7 @@ $(document).ready(function() {
         KT.panel.panelResize($('#subpanel_main'), true);
         KT.panel.handleScrollResize($('#panel-frame'), container, original_top, bodyY, 0);
         KT.panel.handleScrollResize($('#subpanel-frame'), container, subpanel_top, bodyY, 1);
-    });
+    }).scroll();
 
     /*$('#maincontent').resize(function(){
         KT.panel.panelResize($('#panel_main'), false);
@@ -390,12 +390,12 @@ KT.panel = (function($){
             }
         },
         handleScroll = function(jQPanel, container, top, bodyY, spacing, offset) {
-            var scrollY = KT.common.scrollTop(),
-                scrollX = KT.common.scrollLeft(),
-                isfixed = jQPanel.css('position') === 'fixed',
-                leftList = $('.list');
+            var scrollY 	= KT.common.scrollTop(),
+                scrollX 	= KT.common.scrollLeft(),
+                isfixed 	= jQPanel.css('position') === 'fixed',
+                left_panel 	= $('.left');
             
-            top_position = leftList.offset().top - 60;
+            top_position = left_panel.offset().top;
             
             offset = offset ? offset : 10;
             offset += $('#maincontent').offset().left;
@@ -409,13 +409,13 @@ KT.panel = (function($){
                             left: ''
                         });
                     } else {
-                    	if( !isfixed && ($('#panel-frame').offset().top - $(window).scrollTop()) > 40){
+                    	if( !isfixed && (jQPanel.offset().top - $(window).scrollTop()) > 40){
 	                        jQPanel.stop().css({
 	                            position: 'fixed',
 	                            top: 40 + subpanelSpacing*spacing,
 	                            left: -scrollX + offset
 	                        });                    		
-                    	} else if( ($('.left').offset().top + $('.left').height()) > ($('#panel').offset().top + $('#panel').height() + 40) ){
+                    	} else if( ($('.left').offset().top + $('.left').height()) > (jQPanel.offset().top + jQPanel.height() + 40) ){
 	                        jQPanel.stop().css({
 	                            position: 'fixed',
 	                            top: 40 + subpanelSpacing*spacing,
@@ -424,7 +424,7 @@ KT.panel = (function($){
                        } else {
 	                       	jQPanel.css({
 	                            position: 'absolute',
-	                            top: ($('.left').offset().top + $('.left').height()) - $('#panel').height() - 40,
+	                            top: ($('.left').offset().top + $('.left').height()) - jQPanel.height() - 40,
 	                            left: ''
 	                        });
                        }

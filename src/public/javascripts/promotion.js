@@ -1489,6 +1489,7 @@ $(document).ready(function() {
                                         base_icon       :  'home_img',
                                         render_cb       :  promotionsRenderer.render,
                                         enable_search   :  true,
+                                        enable_float	:  true,
                                         tab_change_cb   :  function(hash_id) {
                                           promotion_page.init_changeset_list();
                                         }
