@@ -70,7 +70,7 @@ module DashboardHelper
   def products_synced
     Product.readable(current_organization).reject{|prod|
       prod.sync_status.uuid.nil?
-    }
+    }.sort{|a,b| a.start_time <=> b.start_time}[0..10]
   end
 
   def sync_percentage(product)
