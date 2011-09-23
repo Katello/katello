@@ -28,6 +28,11 @@ class PulpSyncProgress
 end
 
 class PulpSyncStatus < PulpTaskStatus
+
+  FINISHED = "finished"
+  ERROR = "error"
+  RUNNING = "running"
+
   class Status < ::TaskStatus::Status
     NOT_SYNCED = :not_synced
   end
