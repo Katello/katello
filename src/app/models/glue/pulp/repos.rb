@@ -199,9 +199,14 @@ module Glue::Pulp::Repos
       [self.cp_id.to_s, content_name.to_s, env_name, self.organization.name].compact.join("-").gsub(/[^-\w]/,"_")
     end
 
-    def repository_url content_url
-      return content_url if self.provider.provider_type == Provider::CUSTOM
-      self.provider[:repository_url] + content_url
+    def repository_url(content_url, substitutions = {})
+      if self.provider.provider_type == Provider::CUSTOM
+        url = content_url.dup
+      else
+        url = self.provider[:repository_url] + content_url
+      end
+      substitutions.each { |var, val| url.gsub!("$#{var}",val) }
+      url
     end
 
     def delete_repo(name)
@@ -236,18 +241,22 @@ module Glue::Pulp::Repos
         cert = self.certificate
         key = self.key
         ca = File.open("#{Rails.root}/config/candlepin-ca.crt", 'rb') { |f| f.read }
-        repo = Glue::Pulp::Repo.new(:id => repo_id(pc.content.name),
-            :arch => arch,
-            :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, pc.content.name),
-            :name => pc.content.name,
-            :feed => repository_url(pc.content.contentUrl),
-            :feed_ca => ca,
-            :feed_cert => cert,
-            :feed_key => key,
-            :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
-            :preserve_metadata => orchestration_for == :import_from_cp #preserve repo metadata when importing from cp
-        )
-        repo.create
+        archs = self.arch.split(",")
+        archs.each do |arch|
+          repo_name = "#{pc.content.name} #{arch}"
+          repo = Glue::Pulp::Repo.new(:id => repo_id(repo_name),
+                                      :arch => arch,
+                                      :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, pc.content.name),
+                                      :name => repo_name,
+                                      :feed => repository_url(pc.content.contentUrl, :basearch => arch),
+                                      :feed_ca => ca,
+                                      :feed_cert => cert,
+                                      :feed_key => key,
+                                      :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
+                                      :preserve_metadata => orchestration_for == :import_from_cp #preserve repo metadata when importing from cp
+                                     )
+          repo.create
+        end
       end
     end
 
