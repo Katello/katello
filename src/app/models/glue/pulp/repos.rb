@@ -249,7 +249,7 @@ module Glue::Pulp::Repos
             next
           end
           repo_name = "#{pc.content.name} #{arch}".gsub(/[^a-z0-9\-_ ]/i,"")
-          attrs = {:id => repo_id(repo_name),
+          repo = Glue::Pulp::Repo.new(:id => repo_id(repo_name),
                                       :arch => arch,
                                       :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, pc.content.name),
                                       :name => repo_name,
@@ -259,9 +259,7 @@ module Glue::Pulp::Repos
                                       :feed_key => key,
                                       :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
                                       :preserve_metadata => orchestration_for == :import_from_cp #preserve repo metadata when importing from cp
-          }
-          pp attrs
-          repo = Glue::Pulp::Repo.new(attrs                                     )
+                                      )
           repo.create
         end
       end
