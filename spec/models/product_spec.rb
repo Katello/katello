@@ -232,6 +232,11 @@ describe Product do
         p.save!
       end
 
+      it "should clear the product name to be valid" do
+        product = @provider.import_product_from_cp('name' => 'invalid (name)', :productContent => [] )
+        product.name.should == 'invalid name'
+      end
+
      it "prepares valid name for Pulp repo" do
           Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 noarch'))
           p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
