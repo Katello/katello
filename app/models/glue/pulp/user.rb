@@ -27,34 +27,57 @@ module Glue::Pulp::User
   module InstanceMethods
 
     def initialize(attrs = nil)
-      attrs = attrs.reject do |k, v|
-        !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+      unless attrs.nil?
+        attrs = attrs.reject do |k, v|
+          !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+        end
       end
 
       super(attrs)
     end
 
     def set_pulp_user
-      created = Pulp::User.create(:login => self.username, :password => self.password)
-      self.pulp_id = created[:id]
+      Pulp::User.create(:login => self.username, :name => self.username, :password => self.password, :roles => ["super-users"])
+    rescue RestClient::ExceptionWithResponse => e
+      if e.http_code == 409
+        Rails.logger.info "pulp user #{self.username}: already exists. continuing"
+      else
+        Rails.logger.error "Failed to create pulp user #{self.username}: #{e}, #{e.backtrace.join("\n")}"
+        raise e
+      end
     rescue => e
       Rails.logger.error "Failed to create pulp user #{self.username}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
+    def set_super_user_role
+      Pulp::Roles.add "super-users", self.username
+      true #assume everything is ok unless there was an exception thrown
+    end
+
     def del_pulp_user
-      Pulp::User.destroy(self.pulp_id)
+      Pulp::User.destroy(self.username)
     rescue => e
       Rails.logger.error "Failed to delete pulp user #{self.username}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
+    def del_super_admin_role
+      Pulp::Roles.remove "super-users", self.username
+      true #assume everything is ok unless there was an exception thrown
+    end
+
     def save_pulp_orchestration
-      queue.create(:name => "create pulp user: #{self.username}", :priority => 3, :action => [self, :set_pulp_user])
+      case self.orchestration_for
+        when :create
+          queue.create(:name => "create pulp user: #{self.username}", :priority => 3, :action => [self, :set_pulp_user])
+          queue.create(:name => "add 'super-user' to: #{self.username}", :priority => 4, :action => [self, :set_super_user_role])
+      end
     end
 
     def destroy_pulp_orchestration
-      queue.create(:name => "delete pulp user: #{self.username}", :priority => 3, :action => [self, :del_pulp_user])
+      queue.create(:name => "remove 'super-user' from: #{self.username}", :priority => 3, :action => [self, :del_super_admin_role])
+      queue.create(:name => "delete pulp user: #{self.username}", :priority => 4, :action => [self, :del_pulp_user])
     end
   end
 end

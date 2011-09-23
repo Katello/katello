@@ -50,7 +50,7 @@ module Pulp
     self.ca_cert_file = cfg.ca_cert_file
 
     def self.default_headers
-      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.current.pulp_oauth_header)
+      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(::User.current.pulp_oauth_header)
     end
 
     # the path is expected to have trailing slash
@@ -366,17 +366,41 @@ module Pulp
   class User < PulpResource
     class << self
       def create attrs
-        response = put path, attrs.to_json, self.default_headers
+        response = self.post path, attrs.to_json, self.default_headers
         JSON.parse(response.body).with_indifferent_access
       end
 
-      def destroy user_id
-        raise ArgumentError, "user_id id has to be specified" unless user_id
-        self.delete(path(user_id), self.default_headers).code.to_i
+      def destroy login
+        self.delete(path(login), self.default_headers).code.to_i
       end
 
-      def path(user_id=nil)
-        self.path_with_prefix("/users/#{user_id}/")
+      def find login
+        response = self.get path(login), self.default_headers
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def path(login=nil)
+        users = self.path_with_prefix("/users/")
+        login.nil? ? users : users + "#{login}/"
+      end
+    end
+  end
+
+  class Roles < PulpResource
+    class << self
+      def add role_name, username
+        added = self.post(path(role_name) + "/add/", {:username => username}.to_json, self.default_headers)
+        added.body == "true"
+      end
+
+      def remove role_name, username
+        removed = self.post(path(role_name) + "/remove/", {:username => username}.to_json, self.default_headers)
+        removed.body == "true"
+      end
+
+      def path(role_name=nil)
+        roles = self.path_with_prefix("/roles/")
+        role_name.nil? ? roles : roles + "#{role_name}/"
       end
     end
   end
