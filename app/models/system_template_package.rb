@@ -20,9 +20,15 @@ end
 
 class PackageValidator < ActiveModel::Validator
   def validate(record)
-    if record.to_package.nil?
-      record.errors[:base] <<  _("Package '#{record.package_name}' does not belong to any product in this template")
+    if record.is_nvr?
+      cnt = record.system_template.environment.find_packages_by_nvre(record.package_name, record.release, record.version, record.epoch).length
+      name = record.nvrea
+    else
+      cnt = record.system_template.environment.find_packages_by_name(record.package_name).length
+      name = record.package_name
     end
+
+    record.errors[:base] <<  _("Package '#{name}' not found in the Locker environment") if cnt == 0
   end
 end
 
