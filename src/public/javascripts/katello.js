@@ -280,9 +280,6 @@ KT.common = (function() {
             }
             return root_url;
         },
-        spinner_path : function() {
-          KT.common.rootURL() + "/images/spinner.gif"
-        },
         thirdLevelNavSetup : function(){
             var firstchild = $('.third_level:first-child');
             var li = firstchild.parent().parent();
@@ -337,6 +334,9 @@ $(document).ready(function (){
     //Add a handler for helptips
     $(".helptip-open").live('click', KT.helptip.handle_close);
     $(".helptip-close").live('click', KT.helptip.handle_open);
+
+    // Add a handler for ellipsis
+	$(".one-line-ellipsis").ellipsis();
 
     KT.common.orgSwitcherSetup();
     KT.common.orgFilterSetup();
