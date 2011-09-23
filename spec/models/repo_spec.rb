@@ -316,6 +316,7 @@ def stub_reference_objects
   KTEnvironment.stub(:find).with(RepoTestData::REPO_ENV_ID).and_return(@env)
  
   @product = Product.new({:id => RepoTestData::REPO_PRODUCT_ID, :cp_id => RepoTestData::REPO_PRODUCT_CP_ID, :name => "Ruby"})
+  @product.stub(:organization => @org)
   Product.stub(:find).with(RepoTestData::REPO_PRODUCT_ID).and_return(@product)
   Product.stub("find_by_cp_id!").with(RepoTestData::REPO_PRODUCT_CP_ID.to_s).and_return(@product)
 end

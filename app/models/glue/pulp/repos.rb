@@ -27,10 +27,6 @@ module Glue::Pulp::Repos
       [self.product_groupid(product), self.env_groupid(environment), self.env_orgid(product.locker.organization)]
   end
 
-  def clone_repo_id(repo, environment)
-    [repo.product.cp_id, repo.name, environment.name,environment.organization.name].map{|x| x.to_s.gsub(/[^-\w]/,"_") }.join("-")
-  end
-
   def self.clone_repo_path(repo, environment, for_cp = false)
     repo_path(environment,repo.product, repo.name, for_cp)
   end
@@ -194,7 +190,11 @@ module Glue::Pulp::Repos
       end
     end
 
-    def repo_id content_name, env_name = nil
+    def clone_repo_id(repo, environment)
+      self.repo_id(repo.name, environment.name)
+    end
+
+    def repo_id(content_name, env_name = nil)
       return content_name if content_name.include?(self.organization.name) && content_name.include?(self.cp_id.to_s)
       [self.cp_id.to_s, content_name.to_s, env_name, self.organization.name].compact.join("-").gsub(/[^-\w]/,"_")
     end
