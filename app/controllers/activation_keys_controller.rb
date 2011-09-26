@@ -16,7 +16,9 @@ class ActivationKeysController < ApplicationController
 
   before_filter :require_user
   before_filter :find_activation_key, :only => [:show, :edit, :update, :destroy, :subscriptions,
-                                                :available_subscriptions, :applied_subscriptions, :update_subscriptions]
+                                                :available_subscriptions, :applied_subscriptions,
+                                                :update_available_subscriptions, :update_applied_subscriptions,
+                                                :update_subscriptions]
   before_filter :find_environment, :only => [:edit]
   before_filter :authorize #after find_activation_key, since the key is required for authorization
   before_filter :panel_options, :only => [:index, :items]
@@ -44,6 +46,9 @@ class ActivationKeysController < ApplicationController
       :subscriptions => read_test,
       :available_subscriptions => read_test,
       :applied_subscriptions => read_test,
+
+      :update_available_subscriptions => manage_test,
+      :update_applied_subscriptions => manage_test,
       :update_subscriptions => manage_test,
 
       :destroy => manage_test
@@ -72,13 +77,57 @@ class ActivationKeysController < ApplicationController
   end
 
   def available_subscriptions
-    # TODO - content coming...
-    render :partial=>"available_subscriptions", :layout => "tupane_layout"
+    all_pools = retrieve_all_pools
+    available_pools = retrieve_available_pools(all_pools).sort{|a,b| a[1].name <=> b[1].name}
+
+    render :partial=>"available_subscriptions", :layout => "tupane_layout",
+           :locals => {:akey => @activation_key, :editable => ActivationKey.manageable?(current_organization),
+                       :available_subs => available_pools}
   end
 
   def applied_subscriptions
     # TODO - content coming...
     render :partial=>"applied_subscriptions", :layout => "tupane_layout"
+  end
+
+  def update_available_subscriptions
+
+    # In the current UI, the user does not provide an 'allocated' value for subscriptions.  Instead, they select
+    # the subscription and the intent is that during system registration the 'auto-subscribe' capability will
+    # be used to ensure proper subscriptions are assigned to the system. The backend currently needs this value;
+    # therefore, we are setting it to 1.  It can be refactored out, once backend no longer needs it.
+    allocated = "1"
+    begin
+      if params.has_key? :subscription_id
+        params[:subscription_id].keys.each do |pool|
+          kt_pool = KTPool.where(:cp_id => pool)[0]
+
+          if kt_pool.nil?
+            KTPool.create!(:cp_id => pool, :key_pools => [KeyPool.create!(:allocated=> allocated, :activation_key => @activation_key)])
+          else
+            key_sub = KeyPool.where(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)[0]
+
+            if key_sub
+              key_sub.allocated = allocated
+              key_sub.save!
+            else
+              KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id, :allocated => allocated)
+            end
+          end
+        end
+      end
+      notice _("Subscriptions successfully added to Activation Key '#{@activation_key.name}'.")
+      render :partial => "available_subscriptions_update"
+
+    rescue Exception => error
+      errors error.to_s
+      render :nothing => true
+    end
+
+  end
+
+  def update_applied_subscriptions
+    # TODO
   end
 
   def subscriptions
@@ -266,6 +315,34 @@ class ActivationKeysController < ApplicationController
       subscriptions << cp if !subscriptions.include? cp 
     end
     subscriptions
+  end
+
+  def retrieve_available_pools all_pools
+    available_pools = all_pools.clone
+
+    # remove pools that have been consumed from the list to be returned
+    consumed = @activation_key.pools
+    consumed.each do |pool|
+      available_pools.delete(pool.cp_id)
+    end
+    available_pools
+  end
+
+  def retrieve_all_pools
+    all_pools = {}
+
+    cp_pools = Candlepin::Owner.pools current_organization.cp_key
+    cp_pools.each do |pool|
+      p = OpenStruct.new
+      p.poolId = pool['id']
+      p.name = pool['productName']
+      p.startDate = Date.parse(pool['startDate']).strftime("%m/%d/%Y")
+      p.endDate = Date.parse(pool['endDate']).strftime("%m/%d/%Y")
+      # TODO: need to include type... and difference between 'family' and 'contract''
+
+      all_pools[p.poolId] = p if !all_pools.include? p
+    end
+    all_pools
   end
 
   def controller_display_name
