@@ -17,7 +17,7 @@ module Glue::Pulp::User
     base.send :include, InstanceMethods
     base.send :include, LazyAccessor
     base.class_eval do
-      lazy_accessor :login, :password, :name, :initializer => lambda { Pulp::User.find(self.pulp_id) }
+      lazy_accessor :login, :name, :initializer => lambda { Pulp::User.find(self.username) }
 
       before_save :save_pulp_orchestration
       before_destroy :destroy_pulp_orchestration
@@ -37,7 +37,7 @@ module Glue::Pulp::User
     end
 
     def set_pulp_user
-      Pulp::User.create(:login => self.username, :name => self.username, :password => self.password, :roles => ["super-users"])
+      Pulp::User.create(:login => self.username, :name => self.username, :password => Password.generate_random_string(16))
     rescue RestClient::ExceptionWithResponse => e
       if e.http_code == 409
         Rails.logger.info "pulp user #{self.username}: already exists. continuing"
