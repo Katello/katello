@@ -78,4 +78,13 @@ module DashboardHelper
     (stat.total_size - stat.size_left)*100/stat.total_size
   end
 
+
+  def subscription_counts
+    info = Glue::Candlepin::OwnerInfo.new(current_organization)
+
+
+
+  end
+
+
 end
