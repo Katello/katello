@@ -17,25 +17,21 @@ $(document).ready(function() {
     $(".progressbar").each(function(){
         var bar = $(this);
         bar.progressbar({value: parseInt(bar.attr("percentage"))});
-    })
-
+    });
 
     $.plot($("#sub_graph"), KT.subscription_data, {
         series: {
             pie:{
                 show: true,
-                            label: {
-                show: false
+                radius: .8,
+                label: {
+                    show: false
+                }
             }
-            }
-
         },
         legend: {
             show: false
         }
-
-
-
     });
 
 });
