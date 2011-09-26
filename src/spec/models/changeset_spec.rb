@@ -313,7 +313,7 @@ describe Changeset do
         @changeset.packages << ChangesetPackage.new(:package_id => @pack.id, :display_name => @pack.name, :product_id => @prod.id, :changeset => @changeset)
         @changeset.state = Changeset::REVIEW
 
-        Pulp::Package.stub(:dep_solve).and_return([])
+        Pulp::Package.stub(:dep_solve).and_return({})
 
         @clone.should_receive(:add_packages).once.with([@pack.id])
 
