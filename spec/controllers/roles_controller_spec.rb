@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
+include OrchestrationHelper
 
 describe RolesController do
   include LoginHelperMethods
@@ -25,6 +26,8 @@ describe RolesController do
   end
   
   before(:each) do
+    disable_user_orchestration
+
     @user = login_user(:mock=>false)
     set_default_locale
     
@@ -230,28 +233,28 @@ describe RolesController do
       controller.should_receive(:notice)
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :name => "New Named Perm"}}
       response.should be_success
-      Permission.find(2).name.should == "New Named Perm"
+      Permission.find(@perm.id).name.should == "New Named Perm"
     end
 
     it 'should change the description of the permission' do
       controller.should_receive(:notice)
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :description => "This is the new description."}}
       response.should be_success
-      Permission.find(2).description.should == "This is the new description."
+      Permission.find(@perm.id).description.should == "This is the new description."
     end
 
     it 'should set all verbs' do
       controller.should_receive(:notice)
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :all_verbs => true }}
       response.should be_success
-      Permission.find(2).all_verbs.should == true
+      Permission.find(@perm.id).all_verbs.should == true
     end
     
     it 'should set all tags' do
       controller.should_receive(:notice)
       put "update_permission", { :role_id => @role.id, :permission_id => @perm.id, :permission => { :all_tags => true }}
       response.should be_success
-      Permission.find(2).all_tags.should == true
+      Permission.find(@perm.id).all_tags.should == true
     end
     
   end

@@ -15,6 +15,9 @@ require 'util/threadsession'
 require 'util/password'
 
 class User < ActiveRecord::Base
+  include Glue::Pulp::User if (AppConfig.use_cp and AppConfig.use_pulp)
+  include Glue if AppConfig.use_cp
+
   has_many :roles_users
   has_many :roles, :through => :roles_users
   belongs_to :own_role, :class_name => 'Role'
@@ -52,13 +55,13 @@ class User < ActiveRecord::Base
   end
 
   # create own role for new user
-  after_create do |u|
-    if u.own_role.nil?
+  before_save do |u|
+    if u.new_record? and u.own_role.nil?
       # create the own_role where the name will be a string consisting of username and 20 random chars
       r = Role.create!(:name => "#{u.username}_#{Password.generate_random_string(20)}")
       u.roles << r unless u.roles.include? r
       u.own_role = r
-      u.save!
+#      u.save!
     end
   end
 
