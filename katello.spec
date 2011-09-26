@@ -28,6 +28,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       pulp
 Requires:       httpd
+Requires:       mod_ssl
 Requires:       openssl
 Requires:       candlepin-tomcat6
 Requires:       rubygems
