@@ -17,7 +17,10 @@ describe UsersController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include AuthorizationHelperMethods
+  include OrchestrationHelper
+
     before(:each) do
+      disable_user_orchestration
       login_user
       set_default_locale
     end
