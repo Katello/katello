@@ -229,13 +229,9 @@ module Glue::Pulp::Repos
       end
     end
 
-    def clone_repo_id(repo, environment)
-      self.repo_id(repo.name, environment.name)
-    end
-
     def repo_id(content_name, env_name = nil)
       return content_name if content_name.include?(self.organization.name) && content_name.include?(self.cp_id.to_s)
-      [self.cp_id.to_s, content_name.to_s, env_name, self.organization.name].compact.join("-").gsub(/[^-\w]/,"_")
+      Glue::Pulp::Repo.repo_id(self.cp_id.to_s, content_name.to_s, env_name, self.organization.name)
     end
 
     def repository_url(content_url, substitutions = {})
@@ -383,7 +379,7 @@ module Glue::Pulp::Repos
         else
           async_tasks << repo.promote(to_env, self)
 
-          new_repo_id = self.clone_repo_id(repo, to_env)
+          new_repo_id = repo.clone_id(repo, to_env)
           new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(repo)
 
           pulp_uri = URI.parse(AppConfig.pulp.url)

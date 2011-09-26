@@ -109,14 +109,18 @@ class Glue::Pulp::Repo
     categories
   end
 
+  def clone_id(environment)
+    Glue::Pulp::Repo.repo_id(self.product.cp_id, self.name, environment.name,environment.organization.name)
+  end
+
   #is the repo cloned in the specified environment
   def is_cloned_in? env
-    clone_id = Glue::Pulp::Repos.clone_repo_id(self, env)
+    clone_id = self.clone_id(env)
     self.clone_ids.include? clone_id
   end
 
   def get_clone env
-    Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(self, env))
+    Glue::Pulp::Repo.find(self.clone_id(env))
   rescue
     nil
   end
@@ -237,7 +241,7 @@ class Glue::Pulp::Repo
 
   def promote(to_environment, product)
     cloned = Glue::Pulp::Repo.new
-    cloned.id = product.clone_repo_id(self, to_environment)
+    cloned.id = self.clone_id(to_environment)
     cloned.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_environment)
     cloned.arch = arch
     cloned.name = name
@@ -256,6 +260,10 @@ class Glue::Pulp::Repo
 
   def product
     Product.find_by_cp_id!(get_groupid_param 'product')
+  end
+
+  def self.repo_id product_cp_id, repo_name, env_name, organization_name
+    [product_cp_id, repo_name, env_name, organization_name].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
   def self.find(id)
