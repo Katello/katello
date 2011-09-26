@@ -46,10 +46,11 @@ $(document).ready(function() {
     });
 
     $('#update_subscriptions').live('submit', function(e) {
+        alert("TODO: submit clicked...");
        e.preventDefault();
        var button = $(this).find('input[type|="submit"]');
        button.attr("disabled","disabled");
-       $(this).ajaxSubmit({
+       $('#sub_form').ajaxSubmit({
          success: function(data) {
                button.removeAttr('disabled');
          }, error: function(e) {
@@ -183,3 +184,31 @@ var activation_key = (function() {
     }
 })();
 
+KT.activation_key = function() {
+    var availableSubSetup = function(){
+        var subbutton = $('#sub_submit');
+        var fakesubbutton = $('#fake_sub_submit');
+        var subcheckboxes = $('input[type="checkbox"]');
+        var checked = 0;
+        subbutton.hide();
+
+        subcheckboxes.each(function(){
+            $(this).change(function(){
+                if($(this).is(":checked")){
+                    checked++;
+                    if(!(subbutton.is(":visible"))){
+                        fakesubbutton.fadeOut("fast", function(){subbutton.fadeIn()});
+                    }
+                }else{
+                    checked--;
+                    if((subbutton.is(":visible")) && checked == 0){
+                        subbutton.fadeOut("fast", function(){fakesubbutton.fadeIn()});
+                    }
+                }
+            });
+        });
+    };
+    return {
+        availableSubSetup: availableSubSetup
+    }
+}();

@@ -20,4 +20,5 @@
 $(document).ready(function() {
   $(".multiselect").multiselect({"dividerLocation":0.5, "sortable":false})
 
+    KT.activation_key.availableSubSetup();
 });
