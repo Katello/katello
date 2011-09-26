@@ -34,26 +34,19 @@
     .needs_attention { color: red; }
     
     .lower_content {
-      border: 1px solid #9C9C9C;
-      background: $white_color;
       margin: 10px 20px 0 0;
       padding: 5px 5px 20px 5px;
     
       table {
-        border: none !important;
+        border: 1px solid $lightgrey_color;
         margin: 10px auto 20px auto;
         
         thead {
           height: 35px;
-          border-left: 1px solid #9c9c9c;
-          border-right: 1px solid #9c9c9c;
-          
+
           th {
-            border-top: 1px solid #9c9c9c;
-            border-bottom: 1px solid #9c9c9c; 
             background: #A2A2A2;
-            border-right: none;       
-            color: #000;         
+            color: black;
             font-weight: 600;
             text-transform: none;
             height: 25px;
@@ -67,14 +60,10 @@
         tbody {
           tr { height: 32px }
           tr:nth-child(even) {
-            background: #f5fbfb;
-            border-left: 1px solid #F5F5F5;
-            border-right: 1px solid #F5F5F5;
+            background: lighten($lightgrey_color, 40%);
           }
           tr:nth-child(odd) {
-            background: #e8e8e8;
-            border-left: 1px solid #E8E8E8;
-            border-right: 1px solid #E8E8E8;
+            background: lighten($lightgrey_color, 30%);
           }
           td {
             vertical-align: middle;
