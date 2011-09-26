@@ -280,6 +280,9 @@ KT.common = (function() {
             }
             return root_url;
         },
+        setRootUrl : function(){
+        	KT.routes.options.prefix = $('#root_url').attr('data-url');
+        },
         thirdLevelNavSetup : function(){
             var firstchild = $('.third_level:first-child');
             var li = firstchild.parent().parent();
@@ -338,6 +341,8 @@ $(document).ready(function (){
     KT.common.orgSwitcherSetup();
     KT.common.orgFilterSetup();
     KT.common.thirdLevelNavSetup();
+    
+    KT.common.setRootUrl();
 });
 
 /**

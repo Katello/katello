@@ -169,6 +169,8 @@ module Glue::Provider
     def import_product_from_cp attrs
       Rails.logger.info "Importing product #{attrs['name']} for provider: #{name}"
       productContent_attrs = attrs.delete(:productContent) if attrs.has_key?(:productContent)
+      valid_name = attrs['name'].gsub(/[^a-z0-9\-_ ]/i,"")
+      attrs = attrs.merge('name' => valid_name)
       product = Product.new(attrs) do |p|
         p.provider = self
         p.environments << self.organization.locker
@@ -176,6 +178,7 @@ module Glue::Provider
       end
       product.orchestration_for = :import_from_cp
       product.save!
+      product
     rescue => e
       Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
