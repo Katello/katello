@@ -265,12 +265,13 @@ KT.panel = (function($){
         /* must pass a jQuery object */
         panelResize = function(paneljQ, isSubpanel){
             var leftPanel 		= $('.left'),
-            	tupane_panel 	= $('#panel')
+            	tupane_panel 	= $('#panel'),
+            	default_height	= 500,
             	new_top 		= Math.floor($('.list').offset().top - 60),
             	header_spacing	= tupane_panel.find('.head').height(),
             	subnav_spacing 	= tupane_panel.find('nav').height() + 10,
-            	content_spacing = tupane_panel.find('.jspPane').height(),
-            	height 			= content_spacing,
+            	content_spacing = paneljQ.height(),
+            	height 			= default_height - header_spacing - subnav_spacing,
             	panelFrame 		= paneljQ.parent().parent().parent().parent(),
             	extraHeight 	= 0,
             	window_height	= $(window).height();
@@ -278,11 +279,16 @@ KT.panel = (function($){
             if( paneljQ.length > 0 ){
             	
 	            new_top = isSubpanel ? (new_top + subpanelSpacing) : new_top;
-	            //panelFrame.animate({top: new_top}, 250);
-	
-	            if( window_height <= (content_spacing + header_spacing + subnav_spacing + 80) ){
-	                height = window_height - 120 - header_spacing - subnav_spacing;
+	            
+	            console.log(height);
+				
+	            if( window_height <= (height + 80) ){
+	                height = window_height - 80 - header_spacing - subnav_spacing;
 	            }
+	
+				if( isSubpanel ){
+					height -= subpanelSpacing * 2;
+				}
 	
 	            paneljQ.height(height);
 	            
@@ -405,7 +411,7 @@ KT.panel = (function($){
                     if ( scrollY < bodyY ) {
                         jQPanel.css({
                             position: 'absolute',
-                            top: top_position,
+                            top: top_position + subpanelSpacing*spacing,
                             left: ''
                         });
                     } else {
@@ -424,7 +430,7 @@ KT.panel = (function($){
                        } else {
 	                       	jQPanel.css({
 	                            position: 'absolute',
-	                            top: ($('.left').offset().top + $('.left').height()) - jQPanel.height() - 40,
+	                            top: ($('.left').offset().top + $('.left').height()) - jQPanel.height() - 40 + subpanelSpacing*spacing,
 	                            left: ''
 	                        });
                        }
