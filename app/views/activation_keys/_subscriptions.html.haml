@@ -1,33 +1,22 @@
-= javascript :activation_key_subscriptions, :edit_helpers
-
-= content_for :title do
-  #{_("Activation Key")}
-
-= content_for :remove_item do
-  %a.remove_item.remove_key{"data-id"=>@activation_key.id ,"data-url"=>activation_key_path(@activation_key.id), "data-confirm-text"=>_('Are you sure?')}
-    = _("Remove Activation Key")
-
-= content_for :navigation do
-  = render_navigation(:expand_all => true, :level => 3)
-
-= content_for :content do
-  #subscriptions
-    .lower_content.clear
-      .labels
-        / %label.la #{_("Sockets supported by your subscription(s): ")}
-        / %label.la #{_("Guests supported by your subscription(s): ")}
-      %table
-        %thead
-          %tr
-            %th #{_("Subscriptions")}
-            %th #{_("Available")}
-            %th #{_("Allocated")}
-        %tbody
-          - for sub in subscriptions
-            %tr
-              %td
-                #{sub.name}
-              %td.available
-                #{sub.available}
-              %td{'id' => sub.sub, :class => ("editable edit_number" if editable), "data-url" => update_subscriptions_activation_key_path(@activation_key.id), "name" => "activation_key[allocated]"}
-                #{sub.allocated}
+%table.filter_table
+  %thead
+    %tr
+      %th #{_("Subscription")}
+      %th #{_("Type")}
+      %th #{_("Start Date")}
+      %th #{_("End Date")}
+  %tbody
+    - if subs.length > 0
+      - subs.each do |sub_id, sub|
+        %tr
+          %td
+            %span.fl
+              = check_box_tag "subscription_id[#{sub.poolId}]", false
+            &nbsp;
+            #{sub.name}
+          %td TODO type
+          %td #{sub.startDate}
+          %td #{sub.endDate}
+    - else
+      %tr
+        %td{:colspan=>5} #{_("There are no more subscriptions available.")}

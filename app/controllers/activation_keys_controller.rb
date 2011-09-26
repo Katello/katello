@@ -15,10 +15,9 @@ class ActivationKeysController < ApplicationController
   include ActivationKeysHelper
 
   before_filter :require_user
-  before_filter :find_activation_key, :only => [:show, :edit, :update, :destroy, :subscriptions,
+  before_filter :find_activation_key, :only => [:show, :edit, :update, :destroy,
                                                 :available_subscriptions, :applied_subscriptions,
-                                                :update_available_subscriptions, :update_applied_subscriptions,
-                                                :update_subscriptions]
+                                                :add_subscriptions, :remove_subscriptions]
   before_filter :find_environment, :only => [:edit]
   before_filter :authorize #after find_activation_key, since the key is required for authorization
   before_filter :panel_options, :only => [:index, :items]
@@ -43,13 +42,11 @@ class ActivationKeysController < ApplicationController
       :edit => read_test,
       :update => manage_test,
 
-      :subscriptions => read_test,
       :available_subscriptions => read_test,
       :applied_subscriptions => read_test,
 
-      :update_available_subscriptions => manage_test,
-      :update_applied_subscriptions => manage_test,
-      :update_subscriptions => manage_test,
+      :add_subscriptions => manage_test,
+      :remove_subscriptions => manage_test,
 
       :destroy => manage_test
     }
@@ -86,12 +83,15 @@ class ActivationKeysController < ApplicationController
   end
 
   def applied_subscriptions
-    # TODO - content coming...
-    render :partial=>"applied_subscriptions", :layout => "tupane_layout"
+    all_pools = retrieve_all_pools
+    applied_pools = retrieve_applied_pools(all_pools).sort{|a,b| a[1].name <=> b[1].name}
+
+    render :partial=>"applied_subscriptions", :layout => "tupane_layout",
+           :locals => {:akey => @activation_key, :editable => ActivationKey.manageable?(current_organization),
+                       :applied_subs => applied_pools}
   end
 
-  def update_available_subscriptions
-
+  def add_subscriptions
     # In the current UI, the user does not provide an 'allocated' value for subscriptions.  Instead, they select
     # the subscription and the intent is that during system registration the 'auto-subscribe' capability will
     # be used to ensure proper subscriptions are assigned to the system. The backend currently needs this value;
@@ -123,57 +123,29 @@ class ActivationKeysController < ApplicationController
       errors error.to_s
       render :nothing => true
     end
-
   end
 
-  def update_applied_subscriptions
-    # TODO
-  end
+  def remove_subscriptions
+    begin
+      if params.has_key? :subscription_id
+        params[:subscription_id].keys.each do |pool|
+          kt_pool = KTPool.where(:cp_id => pool)[0]
 
-  def subscriptions
-    consumed = @activation_key.pools
-    subscriptions = reformat_subscriptions(Candlepin::Owner.pools current_organization.cp_key)
-    subscriptions.sort! {|a,b| a.name <=> b.name}
-    for sub in subscriptions
-      sub.allocated = 0
-      for consume in consumed
-        if consume.subscription == sub.sub
-          sub.allocated = consume.key_pools[0].allocated
+          if kt_pool
+            key_sub = KeyPool.where(:activation_key_id => @activation_key.id, :pool_id => kt_pool.id)[0]
+
+            if key_sub
+              key_sub.destroy
+            end
+          end
         end
       end
-    end
-    render :partial=>"subscriptions", :layout => "tupane_layout", :locals=>{:akey=>@activation_key, :subscriptions => subscriptions,
-                                                                            :consumed => consumed, :editable=>ActivationKey.manageable?(current_organization)}
-  end
+      notice _("Subscriptions successfully removed from Activation Key '#{@activation_key.name}'.")
+      render :partial => "applied_subscriptions_update"
 
-  def update_subscriptions
-    pool = KTPool.where(:cp_id => params[:subscription_id])[0]
-    allocated = params[:activation_key][:allocated]
-
-    if pool.nil? and @activation_key and allocated != "0"
-      KTPool.create!(:cp_id => params[:subscription_id], :key_pools => [KeyPool.create!(:allocated=> allocated, :activation_key => @activation_key)])
-      notice _("Activation Key subscriptions updated.")
-      render :text => escape_html(allocated)
-    elsif pool and @activation_key
-      key_sub = KeyPool.where(:activation_key_id => @activation_key.id, :pool_id => pool.id)[0]
-
-      if key_sub
-        if allocated != "0"
-          key_sub.allocated = allocated
-          key_sub.save!
-        else
-          key_sub.destroy
-        end
-      else
-        KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => pool.id, :allocated => allocated)
-      end
-      render :text => escape_html(allocated)
-      notice _("Activation Key subscriptions updated.")
-    else
-      if allocated != "0"
-        errors _("Unable to update subscriptions.")
-      end
-      render :text => escape_html(allocated)
+    rescue Exception => error
+      errors error.to_s
+      render :nothing => true
     end
   end
 
@@ -305,18 +277,6 @@ class ActivationKeysController < ApplicationController
 
   require 'ostruct'
 
-  def reformat_subscriptions(all_subs)
-    subscriptions = []
-    all_subs.each do |s|
-      cp = OpenStruct.new
-      cp.sub = s["id"]
-      cp.name = s["productName"]
-      cp.available = s["quantity"]
-      subscriptions << cp if !subscriptions.include? cp 
-    end
-    subscriptions
-  end
-
   def retrieve_available_pools all_pools
     available_pools = all_pools.clone
 
@@ -326,6 +286,18 @@ class ActivationKeysController < ApplicationController
       available_pools.delete(pool.cp_id)
     end
     available_pools
+  end
+
+  def retrieve_applied_pools all_pools
+    applied_pools = {}
+
+    # build a list of applied/consumed pools using the data associated with the key and
+    # the pool details retrieved from candlepin.
+    consumed = @activation_key.pools
+    consumed.each do |pool|
+      applied_pools[pool.cp_id] = all_pools[pool.cp_id]
+    end
+    applied_pools
   end
 
   def retrieve_all_pools
