@@ -75,5 +75,8 @@ group :test, :development do
   # profiler
   gem 'newrelic_rpm'
   
+  #needed to generate routes in javascript
+  gem "js-routes", :require => 'js_routes'
+
   #needed for unit tests
 end
