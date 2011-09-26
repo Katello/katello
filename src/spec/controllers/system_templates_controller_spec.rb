@@ -18,6 +18,7 @@ describe SystemTemplatesController do
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
+  include OrchestrationHelper
   
 
   describe "Controller tests" do
@@ -245,6 +246,8 @@ describe SystemTemplatesController do
 
   describe "rules" do
     before (:each) do
+      disable_user_orchestration
+
       @organization = new_test_org
       @testuser = User.create!(:username=>"TestUser", :password=>"foobar")
       @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @organization.locker)
