@@ -9,12 +9,9 @@ Src::Application.routes.draw do
     member do
       get :applied_subscriptions
       get :available_subscriptions
-      post :applied_subscriptions, :action => :update_applied_subscriptions
-      post :available_subscriptions, :action => :update_available_subscriptions
-
-      get :subscriptions
+      post :remove_subscriptions
+      post :add_subscriptions
       post :update
-      post :update_subscriptions
     end
   end
 

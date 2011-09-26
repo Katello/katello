@@ -45,19 +45,6 @@ $(document).ready(function() {
          }});
     });
 
-    $('#update_subscriptions').live('submit', function(e) {
-        alert("TODO: submit clicked...");
-       e.preventDefault();
-       var button = $(this).find('input[type|="submit"]');
-       button.attr("disabled","disabled");
-       $('#sub_form').ajaxSubmit({
-         success: function(data) {
-               button.removeAttr('disabled');
-         }, error: function(e) {
-               button.removeAttr('disabled');
-         }});
-    });
-
     //Set the callback on the environment selector
     env_select.click_callback = function(env_id) {
         activation_key.save_selected_environment(env_id);
@@ -185,10 +172,10 @@ var activation_key = (function() {
 })();
 
 KT.activation_key = function() {
-    var availableSubSetup = function(){
-        var subbutton = $('#sub_submit');
-        var fakesubbutton = $('#fake_sub_submit');
-        var subcheckboxes = $('input[type="checkbox"]');
+    var subscriptionSetup = function(){
+        var subbutton = $('#subscription_submit_button');
+        var fakesubbutton = $('#fake_subscription_submit_button');
+        var subcheckboxes = $('#subscription_form input[type="checkbox"]');
         var checked = 0;
         subbutton.hide();
 
@@ -209,6 +196,6 @@ KT.activation_key = function() {
         });
     };
     return {
-        availableSubSetup: availableSubSetup
+        subscriptionSetup: subscriptionSetup
     }
 }();
