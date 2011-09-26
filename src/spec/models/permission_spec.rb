@@ -28,6 +28,8 @@ describe Permission do
 
 
   before(:each) do
+    disable_user_orchestration
+
     @some_role = Role.find_or_create_by_name(:name => 'some_role')
     @repo_admin = Role.find_or_create_by_name(:name => 'repo_admin')
     @super_admin = Role.find_or_create_by_name(:name => 'super_admin')

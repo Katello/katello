@@ -32,4 +32,11 @@ module OrchestrationHelper
     Candlepin::Owner.stub!(:destroy)
   end
 
+  def disable_user_orchestration
+    Pulp::User.stub!(:create).and_return({})
+    Pulp::User.stub!(:destroy).and_return(200)
+    Pulp::Roles.stub!(:add).and_return(true)
+    Pulp::Roles.stub!(:remove).and_return(true)
+  end
+
 end
