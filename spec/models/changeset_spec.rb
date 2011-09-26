@@ -7,6 +7,7 @@ describe Changeset do
     before(:each) do
       disable_org_orchestration
       disable_product_orchestration
+      disable_user_orchestration
 
       User.current = User.find_or_create_by_username(:username => 'admin', :password => 'admin12345')
       @organization = Organization.create!(:name => 'candyroom', :cp_key => 'test_organization')
