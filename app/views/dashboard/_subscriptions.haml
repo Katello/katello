@@ -1,3 +1,5 @@
+- owner_info = current_organization.owner_info
+
 = javascript do
   :javascript
     KT.subscription_data = [{data:442, color:"#e13831"},      //red
@@ -33,7 +35,7 @@
             2,978
       %hr
         %h4.fr
-          4,234
+          #{owner_info.total_consumers}
           
         %h4.fr
           #{_("Total Systems")}
