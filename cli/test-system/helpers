@@ -35,3 +35,13 @@ function create_sample_package_groups() {
         https://localhost/pulp/api/repositories/$REPO_ID/add_packagegroup_to_category/ > /dev/null
 }
 
+function jobs_running() {
+    jobs_rake=`ps aux | grep -v grep | grep "rake jobs:work" > /dev/null; echo $?`
+    jobs_service=`service katello-jobs status > /dev/null ; echo $?`
+
+    if [ "$jobs_rake" == "0" ] || [ "$jobs_service" == "0" ]; then
+        return 0
+    else
+        return 1
+    fi
+}

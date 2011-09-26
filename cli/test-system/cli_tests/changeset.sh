@@ -13,8 +13,10 @@ CS_NAME_2="changeset_2_$RAND"
 test_success "changeset create" changeset create --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME"
 test_success "changeset add product" changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME" --add_product="$FEWUPS_PRODUCT"
 
-jobs=`ps aux | grep -v grep | grep "rake jobs:work"`
-if [ "$jobs" == "" ]; then
+jobs_rake=`ps aux | grep -v grep | grep "rake jobs:work" > /dev/null; echo $?`
+jobs_service=`service katello-jobs status > /dev/null ; echo $?`
+
+if ! jobs_running; then
     printf "${txtred}Warning: Jobs daemon is not running, the promotion will hang!${txtrst}\n"
     printf "${txtred}Start 'rake jobs:work' to proceed.${txtrst}\n"
 fi
