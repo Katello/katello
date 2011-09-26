@@ -86,7 +86,6 @@ $(document).ready(function() {
         KT.panel.panelResize($('#panel_main'), false);
         KT.panel.panelResize($('#subpanel_main'), true);
         KT.panel.handleScrollResize($('#panel-frame'), container, original_top, bodyY, 0);
-        KT.panel.handleScrollResize($('#subpanel-frame'), container, subpanel_top, bodyY, 1);
     }).scroll();
 
     /*$('#maincontent').resize(function(){
@@ -103,7 +102,6 @@ $(document).ready(function() {
         var bodyY = parseInt(container.offset().top, 10) - 20;
         $(window).scroll(function () {
             KT.panel.handleScroll($('#panel-frame'), container, original_top, bodyY, 0);
-            KT.panel.handleScroll($('#subpanel-frame'), container, subpanel_top, bodyY, 1);
         }).scroll();
         $(window).scroll(KT.panel.scrollExpand);
     }
@@ -264,7 +262,14 @@ KT.panel = (function($){
         },
         /* must pass a jQuery object */
         panelResize = function(paneljQ, isSubpanel){
-            var leftPanel 		= $('.left'),
+            if( paneljQ.length > 0 ){
+		        adjustHeight(paneljQ, isSubpanel);
+			}
+
+            return paneljQ;
+        },
+        adjustHeight = function(paneljQ, isSubpanel){
+        	var leftPanel 		= $('.left'),
             	tupane_panel 	= $('#panel'),
             	default_height	= 500,
             	new_top 		= Math.floor($('.list').offset().top - 60),
@@ -274,20 +279,16 @@ KT.panel = (function($){
             	height 			= default_height - header_spacing - subnav_spacing,
             	panelFrame 		= paneljQ.parent().parent().parent().parent(),
             	extraHeight 	= 0,
-            	window_height	= $(window).height();
-            
-            if( paneljQ.length > 0 ){
-            	
-	            new_top = isSubpanel ? (new_top + subpanelSpacing) : new_top;
-	            
-	            console.log(height);
-				
-	            if( window_height <= (height + 80) ){
+            	window_height	= $(window).height(),
+            	subpanelnav;
+					
+	            if( window_height <= (height + 80) && leftPanel.height() > 550 ){
 	                height = window_height - 80 - header_spacing - subnav_spacing;
 	            }
 	
 				if( isSubpanel ){
-					height -= subpanelSpacing * 2;
+					subpanelnav = ($('#subpanel').find('nav').length > 0) ? $('#subpanel').find('nav').height() + 10 : 0;
+					height = height - subpanelSpacing*2 - subpanelnav + subnav_spacing;
 				}
 	
 	            paneljQ.height(height);
@@ -295,10 +296,6 @@ KT.panel = (function($){
 	            if( paneljQ.length > 0 ){
 	            	paneljQ.data('jsp').reinitialise();
 	            }
-
-			}
-
-            return paneljQ;
         },
         closePanel = function(jPanel){
             var content = jPanel.find('.panel-content');
@@ -345,7 +342,7 @@ KT.panel = (function($){
                 $(this).parent().css({"z-index":"2"});
             }).removeClass('closed').addClass('opened');
             
-            panelAjax('', url, $('#subpanel-frame'), true);
+            panelAjax('', url, thisPanel, true);
         },
         scrollExpand = function() { //If we are scrolling past the bottom, we need to request more data
             var list = $('#list'),
@@ -468,6 +465,7 @@ KT.panel = (function($){
         closeSubPanel			: closeSubPanel,
         closePanel				: closePanel,
         panelResize				: panelResize,
+        adjustHeight			: adjustHeight,
         panelAjax				: panelAjax,
         control_bbq             : control_bbq
     };
