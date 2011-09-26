@@ -192,7 +192,7 @@ class ApplicationController < ActionController::Base
       @current_org ||=  Organization.find(session[:current_organization_id])
       return @current_org
     rescue Exception => error
-      log_exception exception
+      log_exception error
       session.delete(:current_organization_id)
       raise Errors::CurrentOrganizationNotFoundException.new error.to_s
     end
