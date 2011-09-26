@@ -1522,22 +1522,6 @@ $(document).ready(function() {
         }
     });
 
+   	KT.panel.registerPanel($('#changeset_tree'), $('#content_tree').width() + 50);
     
-    var container = $('#container');
-    var original_top = Math.floor($('.left').position(top).top);
-    if(container.length > 0){
-        var bodyY = parseInt(container.offset().top, 10) - 20;
-        var offset = $('#content_tree').width() + 50;
-        $(window).scroll(function () {
-            KT.panel.handleScroll($('#changeset_tree'), container, original_top, bodyY, 0, offset);
-        });
-        $(window).resize(function(){
-           KT.panel.handleScrollResize($('#changeset_tree'), container, original_top, bodyY, 0, offset);
-        });
-    }
-    
-    /*KT.panel.set_expand_cb(function(){
-       $('.block').parent().parent().removeClass('activeItem');
-       $('.active').parent().parent().addClass('activeItem'); 
-    });*/
 });

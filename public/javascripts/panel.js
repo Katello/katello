@@ -85,8 +85,7 @@ $(document).ready(function() {
     $(window).resize(function(){
         KT.panel.panelResize($('#panel_main'), false);
         KT.panel.panelResize($('#subpanel_main'), true);
-        KT.panel.handleScrollResize($('#panel-frame'), container, original_top, bodyY, 0);
-    }).scroll();
+    });
 
     $('.subpanel_element').live('click', function(){
         KT.panel.openSubPanel($(this).attr('data-url'));
@@ -94,10 +93,7 @@ $(document).ready(function() {
 
     var container = $('#container');
     if(container.length > 0){
-        var bodyY = parseInt(container.offset().top, 10);
-        $(window).scroll(function () {
-            KT.panel.handleScroll($('#panel-frame'), container, original_top, bodyY, 0);
-        }).scroll();
+    	KT.panel.registerPanel($('#panel-frame'), 0);
         $(window).scroll(KT.panel.scrollExpand);
     }
 
@@ -136,7 +132,6 @@ $(document).ready(function() {
         $(window).bind( 'hashchange', KT.panel.hash_change);
         $(window).trigger( 'hashchange' );
     }
-
 //end doc ready
 });
 
@@ -187,6 +182,7 @@ KT.panel = (function($){
 	var retrievingNewContent= false,
 	    control_bbq 		= true,
 	    current_scroll 		= 0,
+	    panels_list			= [],
 	
 		extended_cb         = function() {}, //callback for post extended scroll
         expand_cb           = function() {}, //callback after a pane is loaded
@@ -388,11 +384,13 @@ KT.panel = (function($){
                 });
             }
         },
-        handleScroll = function(jQPanel, container, top, bodyY, spacing, offset) {
+        handleScroll = function(jQPanel, offset) {
             var scrollY 	= KT.common.scrollTop(),
                 scrollX 	= KT.common.scrollLeft(),
                 isfixed 	= jQPanel.css('position') === 'fixed',
-                left_panel 	= $('.left');
+                container	= $('#container'),
+                bodyY       = parseInt(container.offset().top, 10),
+                left_panel 	= container.find('.left');
             
             top_position = left_panel.offset().top;
             
@@ -400,24 +398,24 @@ KT.panel = (function($){
             offset += $('#maincontent').offset().left;
 
             if(jQPanel.length > 0){
-                if( container.find('.left').height() > 550 ){
+                if( left_panel.height() > 550 ){
                     if ( scrollY < bodyY ) {
                         jQPanel.css({
                             position: 'absolute',
-                            top: top_position + subpanelSpacing*spacing,
+                            top: top_position,
                             left: ''
                         });
                     } else {
                     	if( !isfixed && (jQPanel.offset().top - $(window).scrollTop()) > 40){
 	                        jQPanel.stop().css({
 	                            position: 'fixed',
-	                            top: 40 + subpanelSpacing*spacing,
+	                            top: 40,
 	                            left: -scrollX + offset
 	                        });                    		
                     	} else if( ($('.left').offset().top + $('.left').height()) > (jQPanel.offset().top + jQPanel.height() + 40) ){
 	                        jQPanel.stop().css({
 	                            position: 'fixed',
-	                            top: 40 + subpanelSpacing*spacing,
+	                            top: 40,
 	                            left: -scrollX + offset
 	                        });
                        } else {
@@ -431,7 +429,7 @@ KT.panel = (function($){
                 }
             }
         },
-        handleScrollResize = function(jQPanel, container, top, bodyY, spacing, offset) {
+        handleScrollResize = function(jQPanel) {
             if(jQPanel.length > 0){
                 if( jQPanel.css('position') === 'fixed'){
                     jQPanel.css('left', '');
@@ -444,6 +442,28 @@ KT.panel = (function($){
                 select_item(refresh);
             }
             return false;
+        },
+        registerPanel = function(jQPanel, offset){
+        	var new_panel = {
+        			panel	: jQPanel,
+        			offset	: offset
+        		};
+
+        	$(window).scroll(function() {
+            	handleScroll(jQPanel, offset);
+        	});
+	        $(window).resize(function(){
+	        	handleScrollResize(jQPanel, offset);
+	        });
+        	        	    
+			$(document).bind('helptip-closed', function(){
+				handleScroll(jQPanel, offset);
+			});			
+			$(document).bind('helptip-opened', function(){
+				handleScroll(jQPanel, offset);
+			});
+
+        	panels_list.push(new_panel);
         };
 	
     return {
@@ -463,7 +483,8 @@ KT.panel = (function($){
         panelResize				: panelResize,
         adjustHeight			: adjustHeight,
         panelAjax				: panelAjax,
-        control_bbq             : control_bbq
+        control_bbq             : control_bbq,
+        registerPanel			: registerPanel
     };
 
 })(jQuery);
