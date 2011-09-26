@@ -500,7 +500,7 @@ var roleActions = (function($){
                 opening         = options.opening,
                 
                 setup_edit = function() {
-                    var url = KT.common.rootURL() + "roles/" + $('#role_id').val(),
+                    var url = KT.routes.role_path($('#role_id').val()), //KT.common.rootURL() + "roles/" + $('#role_id').val(),
                         name_box = $('.edit_name_text'),
                         description = $('.edit_description'),
                         common = {

@@ -120,9 +120,12 @@ class Changeset < ActiveRecord::Base
 
       next if pkg_names.empty?
 
-
-      all_pkgs = Pulp::Package.dep_solve(pkg_names, repo_map.keys.collect{|repo| repo.id}).collect do |package|
-           Glue::Pulp::Package.new(package)
+      deps = Pulp::Package.dep_solve(pkg_names, repo_map.keys.collect{|repo| repo.id})
+      all_pkgs = Array.new
+      for package_name in deps.keys
+        for package in deps[package_name]
+          all_pkgs << Glue::Pulp::Package.new(package)
+        end
       end
 
       product_hash[prod.id] = []

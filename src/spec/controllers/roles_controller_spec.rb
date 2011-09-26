@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
+include OrchestrationHelper
 
 describe RolesController do
   include LoginHelperMethods
@@ -25,6 +26,8 @@ describe RolesController do
   end
   
   before(:each) do
+    disable_user_orchestration
+
     @user = login_user(:mock=>false)
     set_default_locale
     
