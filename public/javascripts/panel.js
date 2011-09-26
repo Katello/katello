@@ -88,11 +88,6 @@ $(document).ready(function() {
         KT.panel.handleScrollResize($('#panel-frame'), container, original_top, bodyY, 0);
     }).scroll();
 
-    /*$('#maincontent').resize(function(){
-        KT.panel.panelResize($('#panel_main'), false);
-        KT.panel.panelResize($('#subpanel_main'), true);
-    });*/
-
     $('.subpanel_element').live('click', function(){
         KT.panel.openSubPanel($(this).attr('data-url'));
     });
@@ -121,7 +116,7 @@ $(document).ready(function() {
             url: $(this).attr('href'),
             dataType: 'html',
             success: function(data) {
-                $(".panel-content").html(data);
+                thisPanel.find(".panel-content").html(data);
                 KT.panel.panelResize($('#panel_main'), false);
             }
         });
@@ -236,13 +231,14 @@ KT.panel = (function($){
             
             spinner.show();
             panelContent.hide();
+
             $.ajax({
                 cache: true,
                 url: ajax_url,
                 dataType: 'html',
                 success: function (data, status, xhr) {
                     var pc = panelContent.html(data);
-                    
+
                     spinner.hide();
                     pc.fadeIn(function(){$(".panel-content :input:visible:enabled:first").focus();});
 
