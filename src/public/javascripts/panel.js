@@ -99,7 +99,7 @@ $(document).ready(function() {
 
     var container = $('#container');
     if(container.length > 0){
-        var bodyY = parseInt(container.offset().top, 10) - 20;
+        var bodyY = parseInt(container.offset().top, 10);
         $(window).scroll(function () {
             KT.panel.handleScroll($('#panel-frame'), container, original_top, bodyY, 0);
         }).scroll();
