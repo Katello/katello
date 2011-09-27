@@ -855,7 +855,8 @@ $(document).ready(function() {
                                 KT.product_actions.register_autocomplete();
                                 KT.templates.reset_page();
                             },
-                            enable_search   :  true
+                            enable_search   :  true,
+                            enable_float	:  true
                         });
 
  
@@ -867,18 +868,7 @@ $(document).ready(function() {
 
 
     //Handle scrolling
-    var container = $('#container');
-    var original_top = Math.floor($('.left').position(top).top);
-    if(container.length > 0){
-        var bodyY = parseInt(container.offset().top, 10) - 20;
-        var offset = $('#template_tree').width() + 50;
-        $(window).scroll(function () {
-            KT.panel.handleScroll($('#template_tree'), container, original_top, bodyY, 0, offset);
-        });
-        $(window).resize(function(){
-           KT.panel.handleScrollResize($('#template_tree'), container, original_top, bodyY, 0, offset);
-        });
-    }
+    KT.panel.registerPanel($('#template_tree'), $('#template_tree').width() + 50);
 
     //Ask the user if they really want to leave the page if the template isn't saved
     window.onbeforeunload = function(){

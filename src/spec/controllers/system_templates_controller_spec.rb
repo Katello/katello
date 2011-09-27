@@ -19,7 +19,7 @@ describe SystemTemplatesController do
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
   include OrchestrationHelper
-  
+
 
   describe "Controller tests" do
     before(:each) do
@@ -144,9 +144,9 @@ describe SystemTemplatesController do
           Product.stub(:find).and_return(prod)
           Product.stub(:readable).and_return(Product)
           stp = SystemTemplatePackage.new(:system_template=>@system_template_1, :package_name=>"FOO")
-          stp.stub(:to_package).and_return("FOO")
-          SystemTemplatePackage.stub(:new).and_return(stp)
+          stp.stub(:valid?).and_return(true)
 
+          SystemTemplatePackage.stub(:new).and_return(stp)
 
           controller.should_receive(:notice)
           put :update_content, :id=>@system_template_1.id, :packages=>[pkg1], :products=>[prd1]
