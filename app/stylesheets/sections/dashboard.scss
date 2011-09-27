@@ -243,9 +243,18 @@
     width: 20px;
     @include border-radius(23px);
     border:1px solid $border_color;
-    background-color: #f0f0f0;
+    background: #f0f0f0;
+    position: relative;
     &:hover{
-        background-color: #dcdcdc;
+        background: #dcdcdc;
+    }
+    span {
+        height: 16px;
+        width: 16px;
+        display: block;
+        position: relative;
+        background: $gear_icon;
+        margin: 2px;
     }
 
 }
