@@ -199,6 +199,11 @@ KT.activation_key = function() {
                 }
             });
         });
+
+        subbutton.unbind('click').click(disableSubmit);
+    },
+    disableSubmit = function() {
+        $('#subscription_submit_button').attr("disabled", "disabled");
     },
     goToAvailableSubscriptions = function() {
         var url = $('#go_to_available_subscriptions').attr('href');
