@@ -1561,15 +1561,15 @@ fieldset {
  
   .jspDrag {
       background: $kselected_color !important;
-  
-      -moz-border-radius: 10px;
-      -webkit-border-radius: 10px;
-      border-radius: 10px;
+      @include border-radius(10px);
+      @include opacity(0.3);
   }
+
   
   .jspTrack {
     .jspActive, .jspHover, .jspDrag:hover {
-       background: $jScrollPane-bar_color; 
+       background: $jScrollPane-bar_color;
+       @include opacity(1);
      }
    }
   

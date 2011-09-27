@@ -37,4 +37,6 @@ $(document).ready(function() {
         }
     });
 
+    $(".dropbutton").tipsy({live: true});
+
 });
