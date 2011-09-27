@@ -310,7 +310,19 @@ class ActivationKeysController < ApplicationController
       p.name = pool['productName']
       p.startDate = Date.parse(pool['startDate']).strftime("%m/%d/%Y")
       p.endDate = Date.parse(pool['endDate']).strftime("%m/%d/%Y")
-      # TODO: need to include type... and difference between 'family' and 'contract''
+
+      p.poolType = _('Physical')
+      if pool.has_key? :attributes
+        pool[:attributes].each do |attribute|
+          name = attribute[:name]
+          if (name == 'virt_only')
+            if (attribute[:value] == 'true')
+              p.poolType = _('Virtual')
+            end
+            break
+          end
+        end
+      end
 
       all_pools[p.poolId] = p if !all_pools.include? p
     end
