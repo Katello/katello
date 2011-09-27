@@ -171,9 +171,9 @@ class KTEnvironment < ActiveRecord::Base
     end.flatten(1)
   end
 
-  def find_packages_by_nvre name, release, version, epoch
+  def find_packages_by_nvre name, version, release, epoch
     self.products.collect do |prod|
-      prod.find_packages_by_nvre(self, name, release, version, epoch).collect do |p|
+      prod.find_packages_by_nvre(self, name, version, release, epoch).collect do |p|
         p[:product_id] = prod.cp_id
         p
       end

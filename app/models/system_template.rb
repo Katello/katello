@@ -184,15 +184,14 @@ class SystemTemplate < ActiveRecord::Base
   def get_promotable_packages from_env, to_env, tpl_pack
     if tpl_pack.is_nvr?
       #if specified by nvre, ensure the nvre is there, othervise promote it
-      return [] if to_env.find_packages_by_nvre(tpl_pack.package_name, tpl_pack.release, tpl_pack.version, tpl_pack.epoch).length > 0
-      from_env.find_packages_by_nvre(tpl_pack.package_name, tpl_pack.release, tpl_pack.version, tpl_pack.epoch)
+      return [] if to_env.find_packages_by_nvre(tpl_pack.package_name, tpl_pack.version, tpl_pack.release, tpl_pack.epoch).length > 0
+      from_env.find_packages_by_nvre(tpl_pack.package_name, tpl_pack.version, tpl_pack.release, tpl_pack.epoch)
 
     else
       #if specified by name, ensure any package with this name is in the next env. If not, promote the latest.
       return [] if to_env.find_packages_by_name(tpl_pack.package_name).length > 0
       latest = from_env.find_latest_package_by_name(tpl_pack.package_name)
-      from_env.find_packages_by_nvre(latest[:name], latest[:release], latest[:version], latest[:epoch])
-
+      from_env.find_packages_by_nvre(latest[:name], latest[:version], latest[:release], latest[:epoch])
     end
   end
 
@@ -200,15 +199,62 @@ class SystemTemplate < ActiveRecord::Base
   def promote from_env, to_env
     #TODO: promote parent templates recursively
 
-    #promote all products
+    promote_products from_env, to_env
+    promote_packages from_env, to_env
+    promote_template from_env, to_env
+
+    []
+  end
+
+  #### Permissions
+  def self.list_verbs global = false
+    {
+      :manage_all => N_("Manage All System Templates"),
+      :read_all => N_("Read All System Templates")
+   }.with_indifferent_access
+  end
+
+  def self.no_tag_verbs
+    SystemTemplate.list_verbs.keys
+  end
+
+  def self.any_readable? org
+    User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
+
+  end
+
+  def self.readable? org
+    User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
+  end
+
+  def self.manageable? org
+    User.allowed_to?([:manage_all], :system_templates, nil, org)
+  end
+
+  def readable?
+    self.class.readable?(self.environment.organization)
+  end
+
+
+  protected
+
+  def promote_template from_env, to_env
+    #clone the template
+    tpl_copy = to_env.system_templates.find_by_name(self.name)
+    tpl_copy.delete if not tpl_copy.nil?
+    self.copy_to_env to_env
+  end
+
+  def promote_products from_env, to_env
     #promote the product only if it is not in the next env yet
     async_tasks = []
     self.products.each do |prod|
       async_tasks += (prod.promote from_env, to_env) if not prod.environments.include? to_env
     end
     PulpTaskStatus::wait_for_tasks async_tasks
+  end
 
-    #promote packages
+  def promote_packages from_env, to_env
     pkgs_promote = {}
     self.packages.each do |tpl_pack|
 
@@ -246,50 +292,7 @@ class SystemTemplate < ActiveRecord::Base
     pkgs_promote.each_pair do |repo, pkgs|
       repo.add_packages(pkgs)
     end
-
-    #clone the template
-      #try to find template in the next env. If it is there, delete it
-      #clone the template to the next environment
-    tpl_copy = to_env.system_templates.find_by_name(self.name)
-    if not tpl_copy.nil?
-      tpl_copy.delete
-    end
-    self.copy_to_env to_env
-
-    []
   end
-
-  #### Permissions
-  def self.list_verbs global = false
-    {
-      :manage_all => N_("Manage All System Templates"),
-      :read_all => N_("Read All System Templates")
-   }.with_indifferent_access
-  end
-
-  def self.no_tag_verbs
-    SystemTemplate.list_verbs.keys
-  end
-
-  def self.any_readable? org
-    User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
-
-  end
-
-  def self.readable? org
-    User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
-  end
-
-  def self.manageable? org
-    User.allowed_to?([:manage_all], :system_templates, nil, org)
-  end
-
-  def readable?
-    self.class.readable?(self.environment.organization)
-  end
-
-
-  protected
 
   def get_inheritance_chain
     chain = [self]

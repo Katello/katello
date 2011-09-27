@@ -106,9 +106,9 @@ module Glue::Pulp::Repos
       end.flatten(1)
     end
 
-    def find_packages_by_nvre env, name, release, version, epoch
+    def find_packages_by_nvre env, name, version, release, epoch
       self.repos(env).collect do |repo|
-        repo.find_packages_by_nvre(name, release, version, epoch).collect do |p|
+        repo.find_packages_by_nvre(name, version, release, epoch).collect do |p|
           p[:repo_id] = repo.id
           p
         end
