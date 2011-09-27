@@ -80,7 +80,10 @@ KT.helptip =  (function($) {
               url = $(this).attr('data-url');
 
           $("#helptip-opened_" + key).hide();
-          $("#helptip-closed_" + key).show();
+          $("#helptip-closed_" + key).show(); 
+          
+          $(document).trigger('helptip-closed');
+          
           disable(key, url);
         },
         handle_open = function(){
@@ -89,6 +92,9 @@ KT.helptip =  (function($) {
 
           $("#helptip-opened_" + key).show();
           $("#helptip-closed_" + key).hide();
+          
+          $(document).trigger('helptip-opened');
+          
           enable(key, url);
         };
         

@@ -1099,7 +1099,6 @@ fieldset {
 #panel-frame {
   position:absolute;
   max-width:700px;
-  top: 13.2em;
   z-index: 1;
 }
 .panel {
@@ -1167,13 +1166,18 @@ fieldset {
     position: absolute;
     top: 9px;
   }
-  h2 { padding-left: 20px; margin: 0.25em 0; }
+  
+  h2 { margin: 0; padding: 10px 0 0 20px; }
+  
   #panel_main, #subpanel_main {
     overflow-y: auto;
     overflow-x: hidden;
     width: auto;
     margin: 0 0 0 20px;
     min-height: 250px;
+  }
+  #subpanel_main {
+    min-height: 180px;
   }
   .grid_8 {
     margin-left: 0px;
@@ -1190,21 +1194,22 @@ fieldset {
     } 
   }
 }
+.subpanel {
+  z-index: 0;
+  border-top: 1px solid #D1D1D2;
+  position: absolute;
+  top: 35px;
+  
+  h2 {
+    font-size: 100%;
+    margin: 0; 
+    padding: 10px 0 0 20px;
+  }
+}
 #subpanel-frame {
   position:absolute;
   max-width:700px;
-  top: 13.2em;
   z-index: 0;
-
-  .subpanel {
-    z-index: 0;
-    border-top: 1px solid #D1D1D2;
-    
-    h2 {
-      font-size: 100%;
-      margin-top: 9px;
-    }
-  }
 }
 
 .list {
@@ -1619,7 +1624,6 @@ fieldset {
 }
 
 .sliding_tree {
-  position: relative;
   
   .tree_breadcrumb {
     font-weight: 600;
@@ -1660,14 +1664,14 @@ fieldset {
   .slide_up_container {
     position: absolute;
     display: none;
-    //float: left;
-    bottom: 33px;
+    float: left;
+    bottom: 31px;
     left: 0px;
     z-index: 300;
     margin-left: 1px;
     height: 250px;
-    background-color:#F5FAFA;;
-    border-top: 1px solid #B5B5B5;
+    background-color: $tree-slideup-background_color;
+    border-top: 1px solid $tree-border_color;
   }
   .breadcrumb_search {
     font-size: 100%;
@@ -1814,6 +1818,7 @@ fieldset {
   }
   #sliding_tree_actionbar {
     width: 100%;
+    
     .cs_action {
         float: left;
         

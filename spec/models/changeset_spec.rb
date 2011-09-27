@@ -195,6 +195,8 @@ describe Changeset do
 
         @prod.stub(:repos).and_return([@repo])
 
+        @changeset.products = [@prod]
+
         @environment.prior.stub(:products).and_return([@prod])
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
       end
@@ -287,7 +289,8 @@ describe Changeset do
         @changeset.state = Changeset::REVIEW
 
         @repo.stub(:is_cloned_in?).and_return(false)
-        
+        @repo.stub(:get_clone).and_return(nil)
+
         @repo.should_receive(:promote).once
 
         @changeset.promote(false)
@@ -298,9 +301,9 @@ describe Changeset do
         @changeset.repos << ChangesetRepo.new(:repo_id => @repo.id, :display_name => @repo.name, :product_id => @prod.id, :changeset => @changeset)
         @changeset.state = Changeset::REVIEW
 
-        @repo.stub(:get_cloned_in).and_return(@clone)
         @repo.stub(:is_cloned_in?).and_return(true)
-        @clone.should_receive(:sync).once.and_return()
+        @repo.stub(:get_clone).and_return(@clone)
+        @clone.should_receive(:sync).once.and_return([])
 
         @changeset.promote(false)
       end
@@ -309,6 +312,8 @@ describe Changeset do
         @prod.environments << @environment
         @changeset.packages << ChangesetPackage.new(:package_id => @pack.id, :display_name => @pack.name, :product_id => @prod.id, :changeset => @changeset)
         @changeset.state = Changeset::REVIEW
+
+        Pulp::Package.stub(:dep_solve).and_return({})
 
         @clone.should_receive(:add_packages).once.with([@pack.id])
 

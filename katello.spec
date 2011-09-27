@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.84
+Version:        0.1.85
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -43,7 +43,6 @@ Requires:       rubygem(rails_warden)
 Requires:       rubygem(net-ldap)
 Requires:       rubygem(compass) >= 0.11.5
 Requires:       rubygem(compass-960-plugin) >= 0.10.4
-Requires:       rubygem(capistrano)
 Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
 Requires:       rubygem(gettext_i18n_rails)
@@ -216,6 +215,91 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Sep 27 2011 Shannon Hughes <shughes@redhat.com> 0.1.85-1
+- remove capistrano from our deps (shughes@redhat.com)
+- 736093 - Tupanel - Changes to tupanel to handle helptip open and close.
+  (ehelms@redhat.com)
+- rhsm fetch environment with owner information (lzap+git@redhat.com)
+- spec tests - fix after change in api for listing templates
+  (tstrachota@redhat.com)
+- templates - removed content validator (tstrachota@redhat.com)
+- templates api - fix for getting template by name (tstrachota@redhat.com)
+- product sync - fixed too many arguments error (tstrachota@redhat.com)
+- templates - spec tests for promotions and packages (tstrachota@redhat.com)
+- package search - reordered parameters more logically (tstrachota@redhat.com)
+- changesets - removed unused method (tstrachota@redhat.com)
+- templates - spec test fixes (tstrachota@redhat.com)
+- repos - method clone id moved from product to repo (tstrachota@redhat.com)
+- templates - removed unused methods (tstrachota@redhat.com)
+- templates - validation for packages (tstrachota@redhat.com)
+- templates promotion - fix for spec tests (tstrachota@redhat.com)
+- async tasks - pulp status not saving new records after refresh
+  (tstrachota@redhat.com)
+- template promotions - added promotions of packages (tstrachota@redhat.com)
+- templates - fix for unique nvre package validator the previous one was
+  failing for validation after updates (tstrachota@redhat.com)
+- templates - unique nvre validator for packages (tstrachota@redhat.com)
+- templates - adding packages by nvre (tstrachota@redhat.com)
+- spec tests - tests for package utils (tstrachota@redhat.com)
+- package utils - methods for parsing and building nvrea
+  (tstrachota@redhat.com)
+- repos - helper methods for searching packages (tstrachota@redhat.com)
+- templates - removed errata from update controller (tstrachota@redhat.com)
+- template promotions - promotion of products from a template
+  (tstrachota@redhat.com)
+- changesets - api for adding templates to changesets (tstrachota@redhat.com)
+- templates - fixed spec tests after errata removal (tstrachota@redhat.com)
+- templates - removed errata from imports, exports and promotions
+  (tstrachota@redhat.com)
+- templates - deleted TemplateErrata model (tstrachota@redhat.com)
+- templates - errata removed from model (tstrachota@redhat.com)
+- Tupanel - Fixes issue with tupanel ajax data being inserted twice into DOM.
+  (ehelms@redhat.com)
+- Tupanel - Fixes smoothness issue between normal tupane and sliding tree.
+  (ehelms@redhat.com)
+- Tupanel - Fixes for resizing and height setting.  Fixes for subpanel.
+  (ehelms@redhat.com)
+- Merge branch 'master' into tupanel (ehelms@redhat.com)
+- Tupanel - Changes to tupanel for look and feel and consistency.
+  (ehelms@redhat.com)
+- fixed a bunch of tests that were failing because of new user orchestration
+  (dmitri@redhat.com)
+- pulp user with 'super-users' role are now being created when a katello user
+  is created (dmitri@redhat.com)
+- first cut at pulp user glue layer (dmitri@redhat.com)
+- added interface for pulp user-related operations (dmitri@redhat.com)
+- added glue layer for pulp user (dmitri@redhat.com)
+- 740254 - dep API in pulp changed - these changes reflect new struct
+  (mmccune@redhat.com)
+- make sure we only capture everything after /katello/ and not /katello*
+  (mmccune@redhat.com)
+- adding in mod_ssl requirement. previously this was beeing indirectly pulled
+  in by pulp but katello should require it as well. (shughes@redhat.com)
+- bump down rack-test. 0.5.7 is only needed. (shughes@redhat.com)
+- Merge branch 'master' into routesjs (ehelms@redhat.com)
+- import-stage-manifest - prepare a valid name for a product
+  (inecas@redhat.com)
+- Remove debug messages to stdout (inecas@redhat.com)
+- import-stage-manifest - use pulp-valid names for repos (inecas@redhat.com)
+- import-stage-manifest - temp solution for not-supported archs in Pulp
+  (inecas@redhat.com)
+- import-stage-manifest - support for more archs with one content
+  (inecas@redhat.com)
+- import-stage-manifest - refactor clone repo id - remove duplicities
+  (inecas@redhat.com)
+- import-stage-manifest - make clone_repo_id instance method
+  (inecas@redhat.com)
+- import-stage-manifest - tests for clone repo id (inecas@redhat.com)
+- JsRoutes - Adds the base functionality to use and generate the Rails routes
+  in Javascript. (ehelms@redhat.com)
+- Adds js-routes gem as a development gem. (ehelms@redhat.com)
+- Tupane - A slew of changes to how the tupane slideout works with regards to
+  positioning. (ehelms@redhat.com)
+- bump down tzinfo version. actionpack/activerecord only need > 3.23
+  (shughes@redhat.com)
+- Tupanel - Cleanup and fixes for making the tupanel slide out panel stop at
+  the bottom. (ehelms@redhat.com)
+
 * Fri Sep 23 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.84-1
 - asub - adding unit tests
 - asub - ak subscribes to pool which starts most recently
