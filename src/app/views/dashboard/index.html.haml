@@ -4,14 +4,7 @@
 -#  %h2 #{_("Welcome back, %{u}\n" % {:u => current_user.username}) }
 .grid_9
   = dashboard_entry(_("System Subscription Status"), "subscriptions")
-  .dashboard
-    .dashhead
-      %h2.fl  #{_("Available Errata")}
-      .dropbutton.button.fr
-        %span
-    .fl.clear
-      Available Errata data goes here.
-    %br.clearfloat
+  = dashboard_entry(_("Available Errata"), "errata")
   = dashboard_entry(_("System Overview"), "systems")
 
 .grid_7
