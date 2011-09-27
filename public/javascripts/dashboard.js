@@ -27,6 +27,7 @@ $(document).ready(function() {
                 stroke: {
                     width: 0
                 },
+
                 label: {
                     show: false
                 }
@@ -35,8 +36,22 @@ $(document).ready(function() {
         legend: {
             show: false
         }
+
     });
 
-    $(".dropbutton").tipsy({live: true});
+    $("#dashboard_errata").delegate(".collapsed", "click", function() {
+        var btn = $(this);
+        btn.parents(".errata_item").siblings().show();
+        $("#dashboard_errata").find(".jspPane").resize();
+        btn.removeClass("collapsed").addClass("expanded");
+
+    });
+
+    $("#dashboard_errata").delegate(".expanded", "click", function() {
+        var btn = $(this);
+        btn.parents(".errata_item").siblings().hide();
+        $("#dashboard_errata").find(".jspPane").resize();
+        btn.removeClass("expanded").addClass("collapsed");
+    });
 
 });

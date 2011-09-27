@@ -82,9 +82,33 @@ module DashboardHelper
   def subscription_counts
     info = Glue::Candlepin::OwnerInfo.new(current_organization)
 
-
-
   end
 
+  #TODO Make this not be fake data
+  def errata_summary
+    types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
+
+    to_ret = []
+    (rand(5) + 5).times{|num|
+      errata = OpenStruct.new
+      errata.e_id = "RHSA-2011-01-#{num}"
+      errata.systems = ([1]*(rand(10) + 1)).collect{|i| "server-" + rand(10).to_s + ".example.com"}
+      errata.e_type = types[rand(3)]
+      errata.product = "Red Hat Enterprise Linux 6.0"
+      to_ret << errata
+    }
+    to_ret
+  end
+
+  def errata_type_class errata
+    case errata.e_type
+      when  Glue::Pulp::Errata::SECURITY
+        return "security_icon"
+      when  Glue::Pulp::Errata::ENHANCEMENT
+        return "enhancement_icon"
+      when  Glue::Pulp::Errata::BUGZILLA
+        return "bugzilla_icon"
+    end
+  end
 
 end
