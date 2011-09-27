@@ -295,7 +295,19 @@ KT.common = (function() {
                 function(){
                     ul.fadeOut('fast');
             });
+        },
+        jscroll_init: function(element) {
+            element.jScrollPane({ hideFocus: true });
+        },
+        jscroll_resize: function(element) {
+            element.resize(function(event){
+                var element = $('.scroll-pane');
+                if (element.length){
+                    element.data('jsp').reinitialise();
+                }
+            });
         }
+
     };
 })();
 
