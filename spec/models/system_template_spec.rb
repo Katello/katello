@@ -59,21 +59,15 @@ describe SystemTemplate do
       lambda {SystemTemplate.create!(:name => "template_2", :environment => @organization.locker, :parent => @tpl_in_other_env)}.should raise_error
     end
 
-    it  "should save valid product, packages and errara" do
+    it  "should save valid product and packages" do
       @valid_tpl = SystemTemplate.new(:name => "valid_template", :environment => @organization.locker)
 
       @pack1 = SystemTemplatePackage.new(:package_name => "pack1")
       @pack1.stub(:to_package).and_return {}
       @pack1.stub(:valid?).and_return true
 
-      @err1 = SystemTemplateErratum.new(:erratum_id => "err1")
-      @err1.stub(:to_erratum).and_return {}
-      @err1.stub(:valid?).and_return true
-
       @valid_tpl.products << @prod1
       @valid_tpl.packages << @pack1
-      @valid_tpl.errata << @err1
-
 
       lambda {@valid_tpl.save!}.should_not raise_error
       @valid_tpl.created_at.should_not be_nil
@@ -84,12 +78,7 @@ describe SystemTemplate do
       @pack1.stub(:to_package).and_return {}
       @pack1.stub(:valid?).and_return false
 
-      @err1  = SystemTemplateErratum.new(:erratum_id => "err1")
-      @err1.stub(:to_erratum).and_return {}
-      @err1.stub(:valid?).and_return false
-
       @tpl1.packages << @pack1
-      @tpl1.errata   << @err1
 
       lambda {@tpl1.save!}.should raise_error
     end
@@ -97,53 +86,131 @@ describe SystemTemplate do
   end
 
 
+  let(:package_1) {{
+    :id => 'package_foo_id',
+    :name => 'foo',
+    :package_name => 'foo',
+    :version => '0.1',
+    :release => '4.1',
+    :epoch => '1',
+    :repo_id => 'foo_repo_id',
+    :product_id => 'foo_product_id',
+  }}
+
+  let(:repo_1) {{
+    :name => 'foo repo'
+  }}
+
+  let(:repo_2) {{
+    :name => 'foo repo clone'
+  }}
+
   describe "promote template" do
 
-    before(:each) do
-      @changeset = Changeset.create(:environment => @tpl1.environment)
-      @changeset.stub(:promote)
-
-      Changeset.stub!(:create!).and_return(@changeset)
+    before :each do
+      @from_env = @organization.locker
+      @to_env = @environment
     end
 
-    it "should create changeset in the correct environment" do
-      Changeset.should_receive(:create!).once.with(hash_including(:environment => @environment, :state => Changeset::REVIEW)).and_return(@changeset)
-      @tpl1.promote
-    end
-
-    it "should raise an error if template's environment is the last in the chain of promotion" do
-      tpl = SystemTemplate.create!(:name => "template_2", :environment => @environment)
-      lambda { tpl.promote }.should raise_error
-    end
-
-    it "should promote also the parents content" do
-      @tpl2 = SystemTemplate.create!(:name => "template_2", :environment => @organization.locker, :parent => @tpl1)
-      @tpl2.products << @prod2
-      @tpl2.save!
-
+    it "should promote only products that haven't been promoted yet" do
+      @prod1.environments << @to_env
       @tpl1.products << @prod1
-      @tpl1.save!
+      @tpl1.products << @prod2
+      @tpl1.stub(:copy_to_env)
 
-      @tpl1.should_receive(:copy_to_env).and_return {}
-      @tpl2.should_receive(:copy_to_env).and_return {}
-      @changeset.should_receive(:promote).once
+      @prod1.stub(:promote).and_return([])
+      @prod2.stub(:promote).and_return([])
 
-      @tpl2.promote
+      @prod1.should_not_receive(:promote)
+      @prod2.should_receive(:promote)
 
-      @changeset.products.should include @prod1
-      @changeset.products.should include @prod2
+      @tpl1.promote(@from_env, @to_env)
     end
 
-    it "should promote its products" do
-      @tpl1.products << @prod1
-      @tpl1.save
+    it "should promote packages picked for promotion" do
 
-      @tpl1.should_receive(:copy_to_env).and_return {}
+      @tpl1.environment.stub(:find_packages_by_name).and_return([package_1])
+      @tpl1.packages << SystemTemplatePackage.new(:package_name => 'foo', :system_template => @tpl1)
+      @tpl1.stub(:copy_to_env)
+      @tpl1.stub(:get_promotable_packages).and_return([package_1])
 
-      @changeset.should_receive(:promote).once
+      repo = Glue::Pulp::Repo.new(repo_1)
+      clone = Glue::Pulp::Repo.new(repo_2)
+      repo.stub(:is_cloned_in?).and_return(true)
+      repo.stub(:get_clone).and_return(clone)
 
-      @tpl1.promote
-      @changeset.products.should include @prod1
+      Glue::Pulp::Repo.stub(:find).with(package_1[:repo_id]).and_return(repo)
+      clone.should_receive(:add_packages).with([package_1[:id]])
+
+      @tpl1.promote(@from_env, @to_env)
+    end
+
+    it "should promote products that are required by packages and haven't been promoted yet" do
+      @tpl1.environment.stub(:find_packages_by_name).and_return([package_1])
+      @tpl1.packages << SystemTemplatePackage.new(:package_name => 'foo', :system_template => @tpl1)
+      @tpl1.stub(:copy_to_env)
+      @tpl1.stub(:get_promotable_packages).and_return([package_1])
+
+      repo = Glue::Pulp::Repo.new(repo_1)
+      repo.stub(:is_cloned_in?).and_return(false)
+
+      Glue::Pulp::Repo.stub(:find).with(package_1[:repo_id]).and_return(repo)
+      Product.stub(:find_by_cp_id).with(package_1[:product_id]).and_return(@prod1)
+
+      @prod1.should_receive(:promote).with(@from_env, @to_env).and_return([])
+      clone.should_not_receive(:add_packages)
+
+      @tpl1.promote(@from_env, @to_env)
+    end
+
+
+    describe "selecting packages for promotion" do
+
+      it "should pick the latest when the package was specified by name" do
+        tpl_pack = SystemTemplatePackage.new(package_1.slice(:package_name))
+        expected = [package_1]
+
+        @to_env.should_receive(:find_packages_by_name).with(package_1[:name]).and_return([])
+        @from_env.should_receive(:find_latest_package_by_name).with(package_1[:name]).and_return(package_1)
+        @from_env.should_receive(:find_packages_by_nvre).with(package_1[:name], package_1[:version], package_1[:release], package_1[:epoch]).and_return([package_1])
+
+        @tpl1.get_promotable_packages(@from_env, @to_env, tpl_pack).should == expected
+      end
+
+      it "should return empty list when a package with the same name is already in the next environment" do
+        tpl_pack = SystemTemplatePackage.new(package_1.slice(:package_name))
+        expected = []
+
+        @to_env.should_receive(:find_packages_by_name).with(package_1[:name]).and_return([package_1])
+
+        @tpl1.get_promotable_packages(@from_env, @to_env, tpl_pack).should == expected
+      end
+
+      it "should pick the specified nvre" do
+        tpl_pack = SystemTemplatePackage.new(package_1.slice(:package_name, :version, :release, :epoch))
+        expected = [package_1]
+
+        @to_env.should_receive(:find_packages_by_nvre).with(package_1[:name], package_1[:version], package_1[:release], package_1[:epoch]).and_return([])
+        @from_env.should_receive(:find_packages_by_nvre).with(package_1[:name], package_1[:version], package_1[:release], package_1[:epoch]).and_return([package_1])
+
+        @tpl1.get_promotable_packages(@from_env, @to_env, tpl_pack).should == expected
+      end
+
+      it "should return empty list when the nvre is in the next environment" do
+        tpl_pack = SystemTemplatePackage.new(package_1.slice(:package_name, :version, :release, :epoch))
+        expected = []
+
+        @to_env.should_receive(:find_packages_by_nvre).with(package_1[:name], package_1[:version], package_1[:release], package_1[:epoch]).and_return([package_1])
+
+        @tpl1.get_promotable_packages(@from_env, @to_env, tpl_pack).should == expected
+      end
+    end
+
+
+    it "should clone the template to the next environment" do
+      @tpl1.should_receive(:copy_to_env).with(@environment)
+
+      @tpl1.promote(@organization.locker, @environment)
     end
 
   end
@@ -162,9 +229,6 @@ describe SystemTemplate do
   ],
   'packages': [
     'walrus'
-  ],
-  'errata': [
-    'RHEA-2010:9999'
   ],
   'parameters': {
     'attr1': 'val1',
@@ -188,7 +252,6 @@ describe SystemTemplate do
       @import_tpl.should_receive(:add_product).once.with('prod_a1').and_return nil
       @import_tpl.should_receive(:add_product).once.with('prod_a2').and_return nil
       @import_tpl.should_receive(:add_package).once.with('walrus').and_return nil
-      @import_tpl.should_receive(:add_erratum).once.with('RHEA-2010:9999').and_return nil
       @import_tpl.should_receive(:add_package_group).once.with({:id => 'pg-123', :repo => 'repo-123'}).and_return nil
       @import_tpl.should_receive(:add_package_group).once.with({:id => 'pg-456', :repo => 'repo-123'}).and_return nil
       @import_tpl.should_receive(:add_pg_category).once.with({:id => 'pgc-123', :repo => 'repo-123'}).and_return nil
@@ -208,7 +271,6 @@ describe SystemTemplate do
       @export_tpl = SystemTemplate.new(:name => "export_template", :environment => @organization.locker)
       @export_tpl.stub(:products).and_return [@prod1, @prod2]
       @export_tpl.stub(:packages).and_return [mock({:package_name => 'xxx'})]
-      @export_tpl.stub(:errata).and_return [mock({:erratum_id => 'xxx'})]
       @export_tpl.stub(:parameters_json).and_return "{}"
       @export_tpl.stub(:package_groups).and_return [SystemTemplatePackGroup.new({:package_group_id => 'xxx', :repo_id => "repo-123" })]
       @export_tpl.stub(:pg_categories).and_return [SystemTemplatePgCategory.new({:pg_category_id => 'xxx', :repo_id => "repo-456"})]
@@ -217,7 +279,6 @@ describe SystemTemplate do
       json = ActiveSupport::JSON.decode(str)
       json['products'].size.should == 2
       json['packages'].size.should == 1
-      json['errata'].size.should == 1
       json['package_groups'].size.should == 1
       json['package_group_categories'].size.should == 1
     end
@@ -238,23 +299,18 @@ describe SystemTemplate do
       @pack1.stub(:to_package).and_return {}
       @pack1.stub(:valid?).and_return true
 
-      @err1 = SystemTemplateErratum.new(:erratum_id => "err1")
-      @err1.stub(:to_erratum).and_return {}
-      @err1.stub(:valid?).and_return true
-
       @tpl1.products << @prod1
       @tpl1.packages << @pack1
-      @tpl1.errata << @err1
       @tpl1.save!
 
       id = @tpl1.id
       @tpl1.destroy
 
-      SystemTemplateErratum.find_by_system_template_id(id).should == nil
       SystemTemplatePackage.find_by_system_template_id(id).should == nil
     end
 
   end
+
 
   describe "package groups" do
     before { Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups) }
@@ -298,6 +354,7 @@ describe SystemTemplate do
       end
     end
   end
+
 
   describe "package group categories" do
     before { Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories) }
