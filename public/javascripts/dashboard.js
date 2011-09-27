@@ -91,8 +91,11 @@ $(window).load(function() {
         $.ajax({
             url: url,
             success: function(data){
+                var parent = div.parent();
                 div.replaceWith(data);
 
+                parent.find('.scroll-pane').jScrollPane({ hideFocus: true });
+                
                 var proc = KT.dashboard.widget_map[id];
                 if (proc) {
                     proc();
