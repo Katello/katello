@@ -24,6 +24,9 @@ $(document).ready(function() {
             pie:{
                 show: true,
                 radius: .8,
+                stroke: {
+                    width: 0
+                },
                 label: {
                     show: false
                 }
