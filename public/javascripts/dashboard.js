@@ -94,8 +94,9 @@ $(window).load(function() {
                 var parent = div.parent();
                 div.replaceWith(data);
 
-                parent.find('.scroll-pane').jScrollPane({ hideFocus: true });
-                
+                KT.common.jscroll_init(parent.find('.scroll-pane'));
+                KT.common.jscroll_resize(parent.find('.jspPane'));
+
                 var proc = KT.dashboard.widget_map[id];
                 if (proc) {
                     proc();
