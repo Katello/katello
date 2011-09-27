@@ -2,6 +2,7 @@
 
 /* box for "errors" on the custom 500 error page */
 .dashboard {
+    
     @include border-radius(3px);
     background-color: $lightergrey_color;
     border:1px solid $border_color;
@@ -60,6 +61,130 @@
             width: 118px;
             z-index: 1;
         }
+      }
+
+
+    }
+    #dashboard_errata {
+      .scroll-pane {
+        height: 180px;
+      }
+      .list {
+        height: inherit;
+        min-height: inherit;
+      }
+      .block_head {
+        background-color: lighten($stroke_color,8%);
+        display: block;
+        height: 1.3em;
+        color: $lightgrey_color;
+
+        .column_head {
+          //display: inline-block;
+          float: left;
+          height: inherit;
+          min-height: inherit;
+          text-align: left;
+          font-size: 85%;
+          font-family: $headlinefont;
+          color: lighten($header_color,20%);
+          text-transform: uppercase;
+          white-space:nowrap;
+          border-right: 1px dotted darken($stroke_color,20%);
+          &:last-child {
+            border-right: 0 none;
+          }
+        }
+      }
+      .errata_item {
+       // color: $font_color;
+        
+      }
+      .subheader {
+          font-weight: bold;
+          margin-top:5px;
+          font-size: 85%;
+          font-family: $headlinefont;
+          color: lighten($header_color,20%);
+          text-transform: uppercase;
+      }
+
+      .system {
+        font-size: 90%;
+      }
+      .col_1 {
+        display: inline-block;
+        width: 10%;
+        padding-left: 1%;
+        //float: left;
+      }
+      .col_2 {
+        display: inline-block;
+        width: 40%;
+        padding-left: 1%;
+       // float: left;
+        @extend .one-line-ellipsis;
+      }
+      .subcol_2 {
+        display: inline-block;
+        width: 30%;
+        padding-left: 1%;
+       // float: left;
+        @extend .one-line-ellipsis;
+      }
+      .subcol_3 {
+        display: inline-block;
+        width: 50%;
+        padding-left: 1%;
+       // float: left;
+        @extend .one-line-ellipsis;
+      }
+      
+      .col_3 {
+        display: inline-block;
+        width: 40%;
+        padding-left: 1%;
+       // float: left;
+        @extend .one-line-ellipsis;
+      }
+
+      .collapsed {
+        float: left;
+        width: 16px;
+        height: 16px;
+        background: $arrow_min_img;
+        margin-top: 2px;
+        margin-left: 4px;
+      }
+      .expanded {
+        float: left;
+        width: 16px;
+        height: 16px;
+        background: $arrow_max_img;
+        margin-top: 2px;
+        margin-left: 4px;
+      }
+
+      .security_icon {
+        float: left;
+        width: 16px;
+        height: 16px;
+        background: $shield_icon_black;
+        margin-top: 2px;
+      }
+      .enhancement_icon {
+        float: left;
+        width: 16px;
+        height: 16px;
+        background: $plus_icon_black;
+        margin-top: 2px;
+      }
+      .bugzilla_icon {
+        float: left;
+        width: 16px;
+        height: 16px;
+        background: $bug_icon_black;
+        margin-top: 2px;
       }
 
 
