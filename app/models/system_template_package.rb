@@ -21,7 +21,7 @@ end
 class PackageValidator < ActiveModel::Validator
   def validate(record)
     if record.is_nvr?
-      cnt = record.system_template.environment.find_packages_by_nvre(record.package_name, record.release, record.version, record.epoch).length
+      cnt = record.system_template.environment.find_packages_by_nvre(record.package_name, record.version, record.release, record.epoch).length
       name = record.nvrea
     else
       cnt = record.system_template.environment.find_packages_by_name(record.package_name).length
