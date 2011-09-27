@@ -3,11 +3,13 @@
 -#.grid_16
 -#  %h2 #{_("Welcome back, %{u}\n" % {:u => current_user.username}) }
 .grid_9
-  = dashboard_entry(_("System Subscription Status"), "subscriptions")
-  = dashboard_entry(_("Available Errata"), "errata")
-  = dashboard_entry(_("System Overview"), "systems")
+
+
+  = dashboard_ajax_entry(_("System Subscription Status"), "subscriptions",subscriptions_dashboard_index_path(), "big_widget")
+  = dashboard_ajax_entry(_("Available Errata"), "errata", errata_dashboard_index_path(), "big_widget")
+  = dashboard_ajax_entry(_("System Overview"), "systems", systems_dashboard_index_path(), "big_widget")
 
 .grid_7
-  = dashboard_entry(_("Latest Notifications"), "notices")
-  = dashboard_entry(_("Promotions Overview"), "promotions")
-  = dashboard_entry(_("Sync Overview"), "sync")
+  = dashboard_ajax_entry(_("Latest Notifications"), "notices", notices_dashboard_index_path(), "small_widget")
+  = dashboard_ajax_entry(_("Promotions Overview"), "promotions", promotions_dashboard_index_path(), "small_widget")
+  = dashboard_ajax_entry(_("Sync Overview"), "sync", sync_dashboard_index_path(), "small_widget")
