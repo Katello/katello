@@ -262,7 +262,7 @@ module Pulp
         JSON.parse(body)
       end
 
-      def packages_by_nvre repo_id, name, release, version, epoch
+      def packages_by_nvre repo_id, name, version, release, epoch
         #TODO: switch to https://fedorahosted.org/pulp/wiki/UGREST-Repositories#GetPackageByNVREA
         path = repository_path + repo_id + "/packages/?name=" + name
         path += "&release=" + release if not release.nil?

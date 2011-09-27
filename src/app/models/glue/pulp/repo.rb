@@ -137,8 +137,8 @@ class Glue::Pulp::Repo
     Pulp::Repository.packages_by_name id, name
   end
 
-  def find_packages_by_nvre name, release, version, epoch
-    Pulp::Repository.packages_by_nvre id, name, release, version, epoch
+  def find_packages_by_nvre name, version, release, epoch
+    Pulp::Repository.packages_by_nvre id, name, version, release, epoch
   end
 
   def find_latest_package_by_name name
