@@ -86,29 +86,131 @@ describe SystemTemplate do
   end
 
 
+  let(:package_1) {{
+    :id => 'package_foo_id',
+    :name => 'foo',
+    :package_name => 'foo',
+    :version => '0.1',
+    :release => '4.1',
+    :epoch => '1',
+    :repo_id => 'foo_repo_id',
+    :product_id => 'foo_product_id',
+  }}
+
+  let(:repo_1) {{
+    :name => 'foo repo'
+  }}
+
+  let(:repo_2) {{
+    :name => 'foo repo clone'
+  }}
+
   describe "promote template" do
 
-    before(:each) do
+    before :each do
+      @from_env = @organization.locker
+      @to_env = @environment
     end
 
-    it "should promote products that haven't been promoted yet" do
+    it "should promote only products that haven't been promoted yet" do
+      @prod1.environments << @to_env
+      @tpl1.products << @prod1
+      @tpl1.products << @prod2
+      @tpl1.stub(:copy_to_env)
 
+      @prod1.stub(:promote).and_return([])
+      @prod2.stub(:promote).and_return([])
+
+      @prod1.should_not_receive(:promote)
+      @prod2.should_receive(:promote)
+
+      @tpl1.promote(@from_env, @to_env)
     end
 
-    it "should not promote products that have already been promoted" do
+    it "should promote packages picked for promotion" do
 
+      @tpl1.environment.stub(:find_packages_by_name).and_return([package_1])
+      @tpl1.packages << SystemTemplatePackage.new(:package_name => 'foo', :system_template => @tpl1)
+      @tpl1.stub(:copy_to_env)
+      @tpl1.stub(:get_promotable_packages).and_return([package_1])
+
+      repo = Glue::Pulp::Repo.new(repo_1)
+      clone = Glue::Pulp::Repo.new(repo_2)
+      repo.stub(:is_cloned_in?).and_return(true)
+      repo.stub(:get_clone).and_return(clone)
+
+      Glue::Pulp::Repo.stub(:find).with(package_1[:repo_id]).and_return(repo)
+      clone.should_receive(:add_packages).with([package_1[:id]])
+
+      @tpl1.promote(@from_env, @to_env)
     end
 
-    it "should promote latest packages when the package is specified by name" do
+    it "should promote products that are required by packages and haven't been promoted yet" do
+      @tpl1.environment.stub(:find_packages_by_name).and_return([package_1])
+      @tpl1.packages << SystemTemplatePackage.new(:package_name => 'foo', :system_template => @tpl1)
+      @tpl1.stub(:copy_to_env)
+      @tpl1.stub(:get_promotable_packages).and_return([package_1])
 
+      repo = Glue::Pulp::Repo.new(repo_1)
+      repo.stub(:is_cloned_in?).and_return(false)
+
+      Glue::Pulp::Repo.stub(:find).with(package_1[:repo_id]).and_return(repo)
+      Product.stub(:find_by_cp_id).with(package_1[:product_id]).and_return(@prod1)
+
+      @prod1.should_receive(:promote).with(@from_env, @to_env).and_return([])
+      clone.should_not_receive(:add_packages)
+
+      @tpl1.promote(@from_env, @to_env)
     end
 
-    it "should promote the package when it is specified by nvre" do
 
+    describe "selecting packages for promotion" do
+
+      it "should pick the latest when the package was specified by name" do
+        tpl_pack = SystemTemplatePackage.new(package_1.slice(:package_name))
+        expected = [package_1]
+
+        @to_env.should_receive(:find_packages_by_name).with(package_1[:name]).and_return([])
+        @from_env.should_receive(:find_latest_package_by_name).with(package_1[:name]).and_return(package_1)
+        @from_env.should_receive(:find_packages_by_nvre).with(package_1[:name], package_1[:version], package_1[:release], package_1[:epoch]).and_return([package_1])
+
+        @tpl1.get_promotable_packages(@from_env, @to_env, tpl_pack).should == expected
+      end
+
+      it "should return empty list when a package with the same name is already in the next environment" do
+        tpl_pack = SystemTemplatePackage.new(package_1.slice(:package_name))
+        expected = []
+
+        @to_env.should_receive(:find_packages_by_name).with(package_1[:name]).and_return([package_1])
+
+        @tpl1.get_promotable_packages(@from_env, @to_env, tpl_pack).should == expected
+      end
+
+      it "should pick the specified nvre" do
+        tpl_pack = SystemTemplatePackage.new(package_1.slice(:package_name, :version, :release, :epoch))
+        expected = [package_1]
+
+        @to_env.should_receive(:find_packages_by_nvre).with(package_1[:name], package_1[:version], package_1[:release], package_1[:epoch]).and_return([])
+        @from_env.should_receive(:find_packages_by_nvre).with(package_1[:name], package_1[:version], package_1[:release], package_1[:epoch]).and_return([package_1])
+
+        @tpl1.get_promotable_packages(@from_env, @to_env, tpl_pack).should == expected
+      end
+
+      it "should return empty list when the nvre is in the next environment" do
+        tpl_pack = SystemTemplatePackage.new(package_1.slice(:package_name, :version, :release, :epoch))
+        expected = []
+
+        @to_env.should_receive(:find_packages_by_nvre).with(package_1[:name], package_1[:version], package_1[:release], package_1[:epoch]).and_return([package_1])
+
+        @tpl1.get_promotable_packages(@from_env, @to_env, tpl_pack).should == expected
+      end
     end
 
-    it "should promote products that are required by packages" do
 
+    it "should clone the template to the next environment" do
+      @tpl1.should_receive(:copy_to_env).with(@environment)
+
+      @tpl1.promote(@organization.locker, @environment)
     end
 
   end
@@ -209,6 +311,7 @@ describe SystemTemplate do
 
   end
 
+
   describe "package groups" do
     before { Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups) }
     let(:pg_attributes) { {:repo_id => "repo-123", :id => RepoTestData.repo_package_groups.values.first["id"]} }
@@ -251,6 +354,7 @@ describe SystemTemplate do
       end
     end
   end
+
 
   describe "package group categories" do
     before { Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories) }
