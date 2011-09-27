@@ -289,7 +289,7 @@ class ApplicationController < ActionController::Base
       errors exception.to_s
     end
     respond_to do |format|
-      format.html { render :template => "common/500", :layout => "katello_error", :status => 500,
+      format.html { render :template => "common/500", :layout => "katello", :status => 500,
                                 :locals=>{:error=>exception} }
       format.atom { head 500 }
       format.xml  { head 500 }
@@ -314,7 +314,6 @@ class ApplicationController < ActionController::Base
       end
     rescue Exception => error
       log_exception(error)
-
     end
   end
 
