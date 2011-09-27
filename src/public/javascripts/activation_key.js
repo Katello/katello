@@ -55,6 +55,11 @@ $(document).ready(function() {
     $('#activation_key_system_template_id').live('change', function() {
         activation_key.highlight_system_templates(false);
     });
+
+    $('#go_to_available_subscriptions').live('click', function(e) {
+        e.preventDefault();
+        KT.activation_key.goToAvailableSubscriptions();
+    });
 });
 
 var activation_key = (function() {
@@ -194,8 +199,22 @@ KT.activation_key = function() {
                 }
             });
         });
+    },
+    goToAvailableSubscriptions = function() {
+        var url = $('#go_to_available_subscriptions').attr('href');
+        $.ajax({
+            cache: 'false',
+            type: 'GET',
+            url: url,
+            dataType: 'html',
+            success: function(data) {
+                $(".panel-content").html(data);
+                KT.panel.panelResize($('#panel_main'), false);
+            }
+        });
     };
     return {
-        subscriptionSetup: subscriptionSetup
+        subscriptionSetup: subscriptionSetup,
+        goToAvailableSubscriptions: goToAvailableSubscriptions
     }
 }();
