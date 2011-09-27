@@ -379,7 +379,7 @@ module Glue::Pulp::Repos
         else
           async_tasks << repo.promote(to_env, self)
 
-          new_repo_id = repo.clone_id(repo, to_env)
+          new_repo_id = repo.clone_id(to_env)
           new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(repo)
 
           pulp_uri = URI.parse(AppConfig.pulp.url)
