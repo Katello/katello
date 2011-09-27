@@ -11,47 +11,99 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
+KT.dashboard = (function(){
+    var plot = function() {
+        if (KT.subscription_data) {
+            $.plot($("#sub_graph"), KT.subscription_data, {
+                series: {
+                    pie:{
+                        show: true,
+                        radius: .8,
+                        stroke: {
+                            width: 0
+                        },
+
+                        label: {
+                            show: false
+                        }
+                    }
+                },
+                legend: {
+                    show: false
+                }
+            });
+        }
+
+    },
+    register_errata = function() {
+        $("#dashboard_errata").delegate(".collapsed", "click", function() {
+            var btn = $(this);
+            btn.parents(".errata_item").siblings().show();
+            $("#dashboard_errata").find(".jspPane").resize();
+            btn.removeClass("collapsed").addClass("expanded");
+        });
+
+        $("#dashboard_errata").delegate(".expanded", "click", function() {
+            var btn = $(this);
+            btn.parents(".errata_item").siblings().hide();
+            $("#dashboard_errata").find(".jspPane").resize();
+            btn.removeClass("expanded").addClass("collapsed");
+        });
+    },
+    register_sync_progress = function() {
+        $(".progressbar").each(function(){
+            var bar = $(this);
+            bar.progressbar({value: parseInt(bar.attr("percentage"))});
+        });
+    },
+    widget_map = function() {
+        return {
+            subscriptions: plot,
+            errata: register_errata,
+            sync: register_sync_progress
+        }
+    };
+    
+    return {
+        widget_map: widget_map()
+    }
+
+})();
+
 
 $(document).ready(function() {
 
-    $(".progressbar").each(function(){
-        var bar = $(this);
-        bar.progressbar({value: parseInt(bar.attr("percentage"))});
+    //run them all if we aren't requesting them via ajax
+    $.each(KT.dashboard.widget_map, function(key, value){
+        value();
     });
 
-    $.plot($("#sub_graph"), KT.subscription_data, {
-        series: {
-            pie:{
-                show: true,
-                radius: .8,
-                stroke: {
-                    width: 0
-                },
 
-                label: {
-                    show: false
+});
+
+
+//wait until the entire page is loaded, to ensure images and things are downloaded
+$(window).load(function() {
+    console.log("FOO");
+    $(".loading").each(function(item) {
+        var div = $(this);
+        var url = div.attr("data-url");
+        var id = div.attr("data-id");
+        $.ajax({
+            url: url,
+            success: function(data){
+                div.replaceWith(data);
+
+                var proc = KT.dashboard.widget_map[id];
+                console.log(proc);
+                if (proc) {
+                    proc();
                 }
+
             }
-        },
-        legend: {
-            show: false
-        }
+        });
 
-    });
 
-    $("#dashboard_errata").delegate(".collapsed", "click", function() {
-        var btn = $(this);
-        btn.parents(".errata_item").siblings().show();
-        $("#dashboard_errata").find(".jspPane").resize();
-        btn.removeClass("collapsed").addClass("expanded");
-
-    });
-
-    $("#dashboard_errata").delegate(".expanded", "click", function() {
-        var btn = $(this);
-        btn.parents(".errata_item").siblings().hide();
-        $("#dashboard_errata").find(".jspPane").resize();
-        btn.removeClass("expanded").addClass("collapsed");
     });
 
 });
