@@ -21,15 +21,6 @@ class ParentTemplateValidator < ActiveModel::Validator
   end
 end
 
-class TemplateContentValidator < ActiveModel::Validator
-  def validate(record)
-    #check if packages and errate are valid
-    for p in record.packages
-      record.errors[:packages] << _("Package '#{p.package_name}' does not belong to any product in this template") if not p.valid?
-    end
-  end
-end
-
 class SystemTemplate < ActiveRecord::Base
   #include Authorization
   include LazyAccessor
@@ -44,7 +35,6 @@ class SystemTemplate < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :environment_id
   validates_with ParentTemplateValidator
-  validates_with TemplateContentValidator
 
   belongs_to :parent, :class_name => "SystemTemplate"
   has_and_belongs_to_many :products, :uniq => true
