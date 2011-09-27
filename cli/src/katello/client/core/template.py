@@ -77,7 +77,7 @@ class List(TemplateAction):
         templates = self.api.templates(environment["id"])
 
         if not templates:
-            print _("No templates found in environment [ %s ]") % envName
+            print _("No templates found in environment [ %s ]") % environment["name"]
             return os.EX_OK
         self.printer.addColumn('id')
         self.printer.addColumn('name')
