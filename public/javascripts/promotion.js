@@ -1523,5 +1523,12 @@ $(document).ready(function() {
     });
 
    	KT.panel.registerPanel($('#changeset_tree'), $('#content_tree').width() + 50);
+   	
+   	var tupane = $('#panel');
+   	$(document).bind('hash_change.slidingtree', function(){
+   		if( tupane.hasClass('opened') ){
+   			KT.panel.closePanel(tupane);
+   		}
+   	});
     
 });

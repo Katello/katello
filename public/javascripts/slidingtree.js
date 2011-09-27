@@ -211,6 +211,7 @@ var sliding_tree = function(tree_id, options) {
             var newContent = $.bbq.getState(settings.bbq_tag) || settings.default_tab;
             if (settings.current_tab != newContent) {
                 prerender(newContent);
+                $(document).trigger('hash_change.slidingtree');
             }
         },
         setupSearch = function(){
