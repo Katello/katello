@@ -368,18 +368,6 @@ class Changeset < ActiveRecord::Base
   end
 
 
-  def products_to_promote from_env, to_env
-    #promote all products stacked for promotion + (products required by packages,errata & repos - products in target env)
-    required_products = []
-    required_products << self.packages.collect do |p| Product.find(p.product_id) end
-    required_products << self.errata.collect do |e|   Product.find(e.product_id) end
-    required_products << self.repos.collect do |r|    Product.find(r.product_id) end
-    required_products = required_products.flatten(1)
-    products_to_promote = (self.products + (required_products - to_env.products)).uniq
-    products_to_promote
-  end
-
-
   def promote_templates from_env, to_env
     async_tasks = self.system_templates.collect do |tpl|
       tpl.promote from_env, to_env
