@@ -16,6 +16,10 @@ module DashboardHelper
     render :partial=>"entry", :locals=>{:name=>name, :partial=>partial}
   end
 
+  def dashboard_ajax_entry name, identifier, url, class_wrapper
+    render :partial=>"ajax_entry", :locals=>{:name=>name, :url=>url, :class_wrap=>class_wrapper, :identifier=>identifier}
+  end
+
   def user_notices
     trim_length = 45
     current_user.notices.order("created_at DESC").limit(10).collect{|note|
