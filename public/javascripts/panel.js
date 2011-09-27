@@ -412,7 +412,7 @@ KT.panel = (function($){
 	                            top: 40,
 	                            left: -scrollX + offset
 	                        });                    		
-                    	} else if( ($('.left').offset().top + $('.left').height()) > (jQPanel.offset().top + jQPanel.height() + 40) ){
+                    	} else if( isfixed && ($('.left').offset().top + $('.left').height()) > (jQPanel.offset().top + jQPanel.height() + 40) ){
 	                        jQPanel.stop().css({
 	                            position: 'fixed',
 	                            top: 40,
@@ -421,7 +421,7 @@ KT.panel = (function($){
                        } else {
 	                       	jQPanel.css({
 	                            position: 'absolute',
-	                            top: ($('.left').offset().top + $('.left').height()) - jQPanel.height() - 40 + subpanelSpacing*spacing,
+	                            top: ($('.left').offset().top + $('.left').height()) - jQPanel.height() - 40,
 	                            left: ''
 	                        });
                        }
