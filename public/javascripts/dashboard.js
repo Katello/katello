@@ -84,7 +84,6 @@ $(document).ready(function() {
 
 //wait until the entire page is loaded, to ensure images and things are downloaded
 $(window).load(function() {
-    console.log("FOO");
     $(".loading").each(function(item) {
         var div = $(this);
         var url = div.attr("data-url");
@@ -95,7 +94,6 @@ $(window).load(function() {
                 div.replaceWith(data);
 
                 var proc = KT.dashboard.widget_map[id];
-                console.log(proc);
                 if (proc) {
                     proc();
                 }
