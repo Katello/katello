@@ -23,9 +23,9 @@ class Api::TemplatesController < Api::ApiController
 
   def index
     if @environment.nil?
-      tpls = SystemTemplate.all
+      tpls = SystemTemplate.all.where(params.slice(:name))
     else
-      tpls = @environment.system_templates
+      tpls = @environment.system_templates.where(params.slice(:name))
     end
     render :json => tpls.to_json
   end
