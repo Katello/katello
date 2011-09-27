@@ -11,7 +11,7 @@ class pulp::install {
       descr    => "Pulp Community Releases",
       baseurl  => "http://repos.fedorapeople.org/repos/pulp/pulp/${os_type}//\$basearch/";
     "testing-fedora-pulp":
-      enabled  => "1",
+      enabled  => "0",
       gpgcheck => "0",
       descr    => "Pulp Community Releases",
       baseurl  => "http://repos.fedorapeople.org/repos/pulp/pulp/testing/${os_type}/\$basearch/";
