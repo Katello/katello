@@ -20,4 +20,32 @@ class DashboardController < ApplicationController
   def section_id
     'dashboard'
   end
+
+
+  def sync
+    render :partial=>"sync"
+  end
+
+  def errata
+    render :partial=>"errata"
+  end
+
+  def promotions
+    render :partial=>"promotions"
+  end
+
+  def systems
+    render :partial=>"systems"
+  end
+
+  def subscriptions
+    render :partial=>"subscriptions"
+  end
+
+  def notices
+    render :partial=>"notices"
+  end
+
+
+  
 end
