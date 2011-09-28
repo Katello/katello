@@ -115,6 +115,7 @@ Src::Application.routes.draw do
     member do
       get :promotion_details
       get :object
+      get :download
       put :update_content
     end
   end
