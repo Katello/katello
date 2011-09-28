@@ -52,6 +52,24 @@ describe SystemTemplatesController do
 
     end
 
+    describe "GET download" do
+      describe "with valid template id" do
+        it "sends json export of template" do
+          get :download, :id => @system_template_1.id
+          response.should be_success
+        end
+      end
+
+      describe "with invalid template id" do
+        it "should generate an error notice" do
+          controller.should_receive(:errors)
+          get :download, :id => 9999
+          response.should_not be_success
+        end
+      end
+    end
+
+
     describe "GET show" do
       describe "with valid template id" do
         it "renders a list update partial for 2 pane" do
