@@ -75,7 +75,7 @@ class ActivationKeysController < ApplicationController
 
   def available_subscriptions
     all_pools = retrieve_all_pools
-    available_pools = retrieve_available_pools(all_pools).sort{|a,b| a[1].name <=> b[1].name}
+    available_pools = retrieve_available_pools(all_pools).sort
 
     render :partial=>"available_subscriptions", :layout => "tupane_layout",
            :locals => {:akey => @activation_key, :editable => ActivationKey.manageable?(current_organization),
@@ -84,7 +84,7 @@ class ActivationKeysController < ApplicationController
 
   def applied_subscriptions
     all_pools = retrieve_all_pools
-    applied_pools = retrieve_applied_pools(all_pools).sort{|a,b| a[1].name <=> b[1].name}
+    applied_pools = retrieve_applied_pools(all_pools).sort
 
     render :partial=>"applied_subscriptions", :layout => "tupane_layout",
            :locals => {:akey => @activation_key, :editable => ActivationKey.manageable?(current_organization),
@@ -277,18 +277,26 @@ class ActivationKeysController < ApplicationController
 
   require 'ostruct'
 
+  # Using the list of pools provided, create a list of the ones that are 'available' (i.e. not already consumed/applied).
+  # The result will be a hash where the key is the product name and the value is an array of hashes where each entry
+  # in the array is for a pool and the elements of the hash are details for that pool
   def retrieve_available_pools all_pools
     available_pools = all_pools.clone
 
-    # remove pools that have been consumed from the list to be returned
+    # remove pools that have been consumed from the list
     consumed = @activation_key.pools
     consumed.each do |pool|
       available_pools.delete(pool.cp_id)
     end
-    available_pools
+
+    pools_hash available_pools
   end
 
+  # Using the list of pools provided, create a list of the ones that have been applied.
+  # The result will be a hash where the key is the product name and the value is an array of hashes where each entry
+  # in the array is for a pool and the elements of the hash are details for that pool
   def retrieve_applied_pools all_pools
+    # using the list of pools provided, create a list of the ones that have been applied
     applied_pools = {}
 
     # build a list of applied/consumed pools using the data associated with the key and
@@ -297,7 +305,19 @@ class ActivationKeysController < ApplicationController
     consumed.each do |pool|
       applied_pools[pool.cp_id] = all_pools[pool.cp_id]
     end
-    applied_pools
+
+    pools_hash applied_pools
+  end
+
+  # Iterate the pools provided creating a hash where the key is the product name and the value is an array
+  # of pool entries.
+  def pools_hash pools
+    pools_return = {}
+    pools.each do |poolId, pool|
+      pools_return[pool.productName] ||= []
+      pools_return[pool.productName] << pool
+    end
+    pools_return
   end
 
   def retrieve_all_pools
@@ -307,7 +327,7 @@ class ActivationKeysController < ApplicationController
     cp_pools.each do |pool|
       p = OpenStruct.new
       p.poolId = pool['id']
-      p.name = pool['productName']
+      p.productName = pool['productName']
       p.startDate = Date.parse(pool['startDate']).strftime("%m/%d/%Y")
       p.endDate = Date.parse(pool['endDate']).strftime("%m/%d/%Y")
 
