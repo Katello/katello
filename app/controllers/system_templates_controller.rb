@@ -38,6 +38,7 @@ class SystemTemplatesController < ApplicationController
       :show => read_test,
       :edit => read_test,
       :product_packages => read_test,
+      :product_comps => read_test,
       :update => manage_test,
       :update_content => manage_test,
       :destroy => manage_test,
@@ -113,6 +114,16 @@ class SystemTemplatesController < ApplicationController
     render :partial=>"product_packages"
 
   end
+
+  def product_comps
+
+
+    @groups = ["Test1", "Test2", "Test3"]
+
+    render :partial=>"product_comps"
+  end
+
+
 
   def update_content
     pkgs = params[:packages]
