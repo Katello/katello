@@ -13,6 +13,12 @@
 require_dependency "resources/pulp"
 
 class Glue::Pulp::Errata
+
+  SECURITY = "security"
+  BUGZILLA = "bugzilla"
+  ENHANCEMENT = "enhancement"
+
+
   attr_accessor :id, :title, :description, :version, :release, :type, :status, :updated,  :issued, :from_str, :reboot_suggested, :references, :pkglist
 
   def initialize(params = {})

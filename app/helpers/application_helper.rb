@@ -171,4 +171,11 @@ module ApplicationHelper
     @current_index ||= 0
     @current_index += 1
   end
+
+  #formats the date time if the dat is not nil
+  def format_time  date
+    return date.localtime.strftime('%m/%d/%y %I:%M %p %Z') if date
+    ""
+  end
+
 end
