@@ -339,6 +339,8 @@ module BreadcrumbHelper
 
         add_crumb_node!(bc, packages_bc_id(template), "", _("Packages"), [root_id, template_id], {:client_render => true})
         add_crumb_node!(bc, products_bc_id(template), "", _("Products"), [root_id, template_id], {:client_render => true})
+        add_crumb_node!(bc, comps_bc_id(template), "", _("Package Groups"), [root_id, template_id], {:client_render => true})
+
       }
 
       bc.to_json
