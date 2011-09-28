@@ -306,7 +306,7 @@ KT.panel = (function($){
                 
                 position = KT.common.scrollTop();
                 $.bbq.removeState("panel");
-             	$(window).scrollTop(pos);
+             	$(window).scrollTop(position);
                 
                 updateResult();
                 contract_cb(name);
