@@ -178,4 +178,7 @@ module ApplicationHelper
     ""
   end
 
+  def generate_details_url(path, id, entity )
+     path + "?search=id%3D#{id}#panel=#{entity}_#{id}"
+  end
 end

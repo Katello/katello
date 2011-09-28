@@ -40,7 +40,7 @@ class System < ActiveRecord::Base
   scoped_search :on => :description, :complete_value => true
   scoped_search :on => :location, :complete_value => true
   scoped_search :on => :uuid, :complete_value => true
-
+  scoped_search :on => :id, :complete_value => true
 
   def organization
     environment.organization
