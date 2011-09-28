@@ -26,9 +26,9 @@
     .grid_10.lower_content.clear
       = form_tag add_subscriptions_activation_key_path(@activation_key), :id=>"subscription_form", :method=>"post", :remote=>true do
 
-        = render :partial => "subscriptions", :locals => {:subs => available_subs}
+        = render :partial => "subscriptions", :locals => {:product_families => available_subs}
 
         - if editable && available_subs.length > 0
           .actions
-            = submit_tag _('Add to Key'), :class => 'submit dialogbutton', :id=>"subscription_submit_button"
+            = submit_tag _('Add to Key'), :class => 'submit dialogbutton', :id=>"subscription_submit_button", :style => 'display:none;'
             %a{:class=>'dialogbutton button disabled', :id=>"fake_subscription_submit_button"} #{_('Add to Key')}

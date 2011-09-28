@@ -6,17 +6,45 @@
       %th #{_("Start Date")}
       %th #{_("End Date")}
   %tbody
-    - if subs.length > 0
-      - subs.each do |sub_id, sub|
-        %tr
-          %td
-            %span.fl
-              = check_box_tag "subscription_id[#{sub.poolId}]", false
-            &nbsp;
-            #{sub.name}
-          %td #{sub.poolType}
-          %td #{sub.startDate}
-          %td #{sub.endDate}
+    - if product_families.length > 0
+      - product_families.each do |product_family|
+
+        - product_family_name = product_family[0]
+        - subscriptions = product_family[1]
+        - num_subscriptions_per_family = product_family[1].nil? ? 0 : product_family[1].length
+
+        - if num_subscriptions_per_family > 1
+          %tr{'data-family_begin' => product_family_name}
+            %td{:colspan => "4"}
+              %a.clickable.product_family
+                = image_tag('icons/expander-collapsed.png', :alt => _('Expand'))
+
+              = check_box_tag "family[#{product_family_name}]", false, false, :class => :family_checkbox
+              %strong #{product_family_name} #{_("(%{n} Types)" % {:n =>num_subscriptions_per_family})}
+
+        - if num_subscriptions_per_family > 0
+          - subscriptions.each do |subscription|
+            - if num_subscriptions_per_family > 1
+              %tr{:style => 'display:none;', 'data-in_family' => product_family_name}
+                %td
+                  %span.fl.subscription_row
+                    = check_box_tag "subscription_id[#{subscription.poolId}]", false
+                  &nbsp;
+                  #{subscription.productName}
+                %td #{subscription.poolType}
+                %td #{subscription.startDate}
+                %td #{subscription.endDate}
+            - else
+              %tr
+                %td
+                  %span.fl.subscription_row
+                    = check_box_tag "subscription_id[#{subscription.poolId}]", false
+                  &nbsp;
+                  #{subscription.productName}
+                %td #{subscription.poolType}
+                %td #{subscription.startDate}
+                %td #{subscription.endDate}
     - else
       %tr
-        %td{:colspan=>5} #{_("There are no more subscriptions available.")}
+        %td{:colspan=>4} #{_("There are no more subscriptions available.")}
+

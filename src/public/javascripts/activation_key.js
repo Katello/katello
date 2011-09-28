@@ -60,6 +60,59 @@ $(document).ready(function() {
         e.preventDefault();
         KT.activation_key.goToAvailableSubscriptions();
     });
+
+    $('.clickable.product_family').live('click', function() {
+        // user clicked a product family
+        var family = $(this).closest('tr').attr('data-family_begin');
+
+        // show/hide the elements that are part of the family
+        $('tr[data-in_family="'+family+'"]').slideToggle();
+
+        // toggle the expand/collapse arrow
+        var arrow = $(this).find('img');
+        if(arrow.attr("src").indexOf("collapsed") === -1){
+            arrow.attr("src", "images/icons/expander-collapsed.png");
+        } else {
+            arrow.attr("src", "images/icons/expander-expanded.png");
+        }
+
+    });
+
+    // the parent (product family) was checked, so check all children
+    $('.family_checkbox').live('click', function() {
+        var family = $(this).closest('tr'),
+            family_name = family.attr('data-family_begin');
+        family.siblings('tr[data-in_family="'+family_name+'"]').find('input:checkbox').attr('checked', this.checked);
+    });
+
+    // a child was checked, so update the parent (product family), if needed
+    $('#subscription_form input[type="checkbox"]').live('click', function() {
+        // check to see if the child is evan part of a product family...
+        var sub = $(this).closest('tr'),
+            in_family = sub.attr('data-in_family');
+        if (in_family !== undefined) {
+            // locate the family
+            var family = sub.prevAll('tr[data-family_begin="'+in_family+'"]');
+            if (family !== undefined) {
+                // retrieve the checkboxes for the family and siblings
+                var family_cbx = family.find('input:checkbox'),
+                    sibling_cbxs = family.siblings('tr[data-in_family="'+in_family+'"]').find('input:checkbox'),
+                    total = sibling_cbxs.length,
+                    checked = 0;
+
+                sibling_cbxs.each( function() { if (this.checked) checked++; });
+                if (total == checked) {
+                    family_cbx.attr('checked', true);
+                }
+                else if (checked > 0) {
+                    family_cbx.attr('checked', false);
+                }
+                else {
+                    family_cbx.attr('checked', false);
+                }
+            }
+        }
+    });
 });
 
 var activation_key = (function() {
