@@ -1,0 +1,22 @@
+#dashboard_systems.big_widget.scroll-pane
+  %ul
+  - unless systems_list.empty?
+    - for system in systems_list
+      %li
+        %div.system_entry
+          %span.icon_wrap.fl
+            - if system.entitlements_valid?
+              %span
+                .icon.green_icon.fl
+            - else
+              %span
+                .icon.red_icon.fl
+          .col_1.one-line-ellipsis
+            %h5
+              = link_to system.name, system_path(system.id)
+          .col_2
+            #{format_time(system.created_at)}
+          .col_2
+            = get_checkin(system)
+  - else
+    =_("No systems found." )

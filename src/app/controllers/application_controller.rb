@@ -192,7 +192,7 @@ class ApplicationController < ActionController::Base
       @current_org ||=  Organization.find(session[:current_organization_id])
       return @current_org
     rescue Exception => error
-      Rails.logger.error error.to_s
+      log_exception error
       session.delete(:current_organization_id)
       raise Errors::CurrentOrganizationNotFoundException.new error.to_s
     end
@@ -289,7 +289,7 @@ class ApplicationController < ActionController::Base
       errors exception.to_s
     end
     respond_to do |format|
-      format.html { render :template => "common/500", :layout => "katello_error", :status => 500,
+      format.html { render :template => "common/500", :layout => "katello", :status => 500,
                                 :locals=>{:error=>exception} }
       format.atom { head 500 }
       format.xml  { head 500 }
@@ -313,7 +313,7 @@ class ApplicationController < ActionController::Base
         end
       end
     rescue Exception => error
-      Rails.logger.error error.to_s
+      log_exception(error)
     end
   end
 
@@ -448,13 +448,7 @@ class ApplicationController < ActionController::Base
   end
 
   def execute_rescue exception, renderer
-    if exception
-      logger.error exception.message
-      logger.error "#{exception.inspect}"
-      exception.backtrace.each { |line|
-      logger.error line
-      }
-    end
+    log_exception exception
     if current_user
       User.current = current_user
       renderer.call(exception)
@@ -476,5 +470,16 @@ class ApplicationController < ActionController::Base
     redirect_to new_user_session_url and return false
   end
 
+
+  def log_exception exception
+    if exception
+      logger.error exception.to_s
+      logger.error exception.message
+      logger.error "#{exception.inspect}"
+      exception.backtrace.each { |line|
+      logger.error line
+      }
+    end
+  end
 end
 

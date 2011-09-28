@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class PulpSyncProgress
-  attr_reader :total_size, :size_left, :total_count, :items_left, :error_details
+  attr_reader :total_size, :size_left, :total_count, :items_left, :error_details, :step
 
   def initialize(progress_attrs = {})
     @total_size = @size_left = @total_count = @items_left = 0
@@ -23,11 +23,17 @@ class PulpSyncProgress
       @total_count = ht.null_safe_get(progress_attrs, 0, ['details','rpm','total_count'])
       @items_left  = ht.null_safe_get(progress_attrs, 0, ['details','rpm','items_left'])
       @error_details = ht.null_safe_get(progress_attrs, 0, ['error_details'])
+      @step = ht.null_safe_get(progress_attrs, 0, ['step'])
     end
   end
 end
 
 class PulpSyncStatus < PulpTaskStatus
+
+  FINISHED = "finished"
+  ERROR = "error"
+  RUNNING = "running"
+
   class Status < ::TaskStatus::Status
     NOT_SYNCED = :not_synced
   end
