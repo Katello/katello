@@ -295,6 +295,9 @@ KT.template_renderer = function() {
                 else if (node === "products") {
                     content = products();
                 }
+                else if (node === "comps") {
+                    content = comps();
+                }
                 else {
                     console.log("Can't render: " +  id);
                 }
@@ -369,9 +372,12 @@ KT.template_renderer = function() {
         });
         return html + "</ul>";
     },
+    comps = function() {
+        return "Comps goes here!";
+    },
     details = function(t_id) {
         var html = "<ul>";
-        $.each([['products_', i18n.products], ['packages_', i18n.packages]], function(index, item_set) {
+        $.each([['products_', i18n.products], ['packages_', i18n.packages], ['comps_', i18n.package_groups]], function(index, item_set) {
             html += list_item(item_set[0] + t_id, item_set[1], true);
         });
         return html + "</ul>";
