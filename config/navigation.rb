@@ -5,7 +5,7 @@ SimpleNavigation::Configuration.run do |navigation|
   navigation.id_generator = Proc.new {|key| "kp-#{key}"}
   
   navigation.items do |top_level|
-    top_level.item :dashboard, _("Dashboard"), dashboard_index_path(), :class=>'dashboard'  do |dashboard_sub|
+    top_level.item :dashboard, _("Dashboard"), dashboard_index_path(), :class=>'dashboard'  #do |dashboard_sub|
       #TODO: tie in monitors page/link (if in dashboard page)
       #dashboard_sub.item :monitors, _("Monitors"), '#', :class => 'disabled'
       #TODO: tie in reports page/link (if in dashboard page)
@@ -14,7 +14,7 @@ SimpleNavigation::Configuration.run do |navigation|
       #dashboard_sub.item :notifications, _("Notifications"), '#', :class => 'disabled'
       #TODO: tie in workflow page/link (if in dashboard page)
       #dashboard_sub.item :workflow, _("Workflow"),  '#', :class => 'disabled'
-    end #end dashboard_sub
+    #end #end dashboard_sub
 
 
     top_level.item :content, _("Content Management"),  organization_providers_path(current_organization()), :class=>'content' do |content_sub|
