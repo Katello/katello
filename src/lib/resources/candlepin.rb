@@ -140,6 +140,21 @@ module Candlepin
     end
   end
 
+  class OwnerInfo < CandlepinResource
+    class << self
+
+      def find key
+          owner_json = self.get(path(key), {'accept' => 'application/json'}.merge(User.current.cp_oauth_header)).body
+          JSON.parse(owner_json).with_indifferent_access
+      end
+      
+      def path(id=nil)
+        "/candlepin/owners/#{url_encode id}/info"
+      end
+    end
+  end
+
+
   class Owner < CandlepinResource
     class << self
       # Set the contentPrefic at creation time so that the client will get
