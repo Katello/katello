@@ -13,6 +13,12 @@ body { background:  $body_background_img; }
 
 strong { font-weight: bold; }
 .clear { clear: both; }
+.clearfloat { /* this class can be placed on a <br /> or empty div as the final element following the last floated div (within the #container) if the overflow:hidden on the .container is removed */
+	clear:both;
+	height:0;
+	font-size: 1px;
+	line-height: 0px;
+}
 .wrap { overflow: hidden; margin-bottom: 2em; } /* wrapper around floating elements */
 .nomargin { margin: none; }
 .placeholder { margin-bottom: 2em; }
@@ -1560,15 +1566,15 @@ fieldset {
  
   .jspDrag {
       background: $kselected_color !important;
-  
-      -moz-border-radius: 10px;
-      -webkit-border-radius: 10px;
-      border-radius: 10px;
+      @include border-radius(10px);
+      @include opacity(0.3);
   }
+
   
   .jspTrack {
     .jspActive, .jspHover, .jspDrag:hover {
-       background: $jScrollPane-bar_color; 
+       background: $jScrollPane-bar_color;
+       @include opacity(1);
      }
    }
   
@@ -1615,6 +1621,17 @@ fieldset {
   .jspArrowDown { background-position: -64px 0 !important; }
   .jspArrowLeft { background-position: -96px 0 !important; }
   .jspArrowRight{ background-position: -32px 0 !important; }
+}
+
+
+.one-line-ellipsis {
+    h5 {
+      display: inline;
+      word-wrap:  normal;
+    }
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
 }
 
 .sprite {
@@ -1955,3 +1972,5 @@ fieldset {
     border:1px solid $border_color;
     padding: 0 10px 10px 10px;
 }
+
+
