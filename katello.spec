@@ -26,11 +26,9 @@ URL:            http://www.katello.org
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:       pulp
 Requires:       httpd
 Requires:       mod_ssl
 Requires:       openssl
-Requires:       candlepin-tomcat6
 Requires:       rubygems
 Requires:       rubygem(rails) >= 3.0.10
 Requires:       rubygem(multimap)
@@ -80,6 +78,20 @@ BuildArch: noarch
 
 %description
 Provides a package for managing application life-cycle for Linux systems
+
+%package all
+Summary:        A meta-package to pull in all components for Katello
+Requires:       katello
+Requires:       katello-configure
+Requires:       postgresql-server
+Requires:       postgresql
+Requires:       pulp
+Requires:       candlepin-tomcat6
+
+%description all
+This is the Katello meta-package.  If you want to install Katello and all
+of its dependencies on a single machine, you should install this package
+and then run katello-configure to configure everything.
 
 %prep
 %setup -q
@@ -200,6 +212,8 @@ fi
 %defattr(-, katello, katello)
 %{_localstatedir}/log/%{name}
 %{datadir}
+
+%files all
 
 %pre
 # Add the "katello" user and group

@@ -290,7 +290,8 @@ KT.panel = (function($){
 	            }
         },
         closePanel = function(jPanel){
-            var content = jPanel.find('.panel-content');
+            var content = jPanel.find('.panel-content'),
+            	position;
             
 	        if(jPanel.hasClass("opened")){
                 $('.block.active').removeClass('active');
@@ -302,7 +303,11 @@ KT.panel = (function($){
                     $(this).parent().css({"z-index":"1"});
                 }).removeClass('opened').addClass('closed').attr("data-id", "");
                 content.html('');
+                
+                position = KT.common.scrollTop();
                 $.bbq.removeState("panel");
+             	$(window).scrollTop(position);
+                
                 updateResult();
                 contract_cb(name);
                 closeSubPanel(subpanel);
