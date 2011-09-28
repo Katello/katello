@@ -160,7 +160,21 @@ module Glue::Candlepin::Consumer
     def distro
       facts["distribution.name"]
     end
-    
+
+    def entitlements_valid?
+      "true" == facts["system.entitlements_valid"]
+    end
+
+    def checkinTime
+      if lastCheckin
+        convert_time(lastCheckin)
+      end
+    end
+
+    def convert_time(item)
+      Time.parse(item)
+    end
+
   end
 
 end
