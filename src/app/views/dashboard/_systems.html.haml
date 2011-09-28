@@ -5,17 +5,18 @@
       %li
         %div.system_entry
           %span.icon_wrap.fl
-            %span.fl{:class=>"check_icon"}
+            - if system.entitlements_valid?
+              %span
+                .icon.green_icon.fl
+            - else
+              %span
+                .icon.red_icon.fl
           .col_1.one-line-ellipsis
             %h5
-              #{system.name}
+              = link_to system.name, system_path(system.id)
           .col_2
-            .col_block
-              #{system.created_at}
-            .col_block
-              =_("Never checked in")
-          .button_col_4
-            .button{"data-url"=>system_path(system.id)}
-              = _("Resolve")
+            #{format_time(system.created_at)}
+          .col_2
+            = get_checkin(system)
   - else
     =_("No systems found." )
