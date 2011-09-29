@@ -81,7 +81,7 @@ class SystemTemplatesController < ApplicationController
     pkgs = @template.packages.collect{|pkg| {:name=>pkg.package_name}}
     products = @template.products.collect{|prod| {:name=>prod.name, :id=>prod.id}}
     to_ret = {:id=> @template.id, :name=>@template.name, :description=>@template.description,
-              :packages=>pkgs, :products=>products}
+              :packages=>pkgs, :products=>products, :package_groups=>[]}
     render :json=>to_ret
   end
 
