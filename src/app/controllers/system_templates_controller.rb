@@ -116,10 +116,15 @@ class SystemTemplatesController < ApplicationController
   end
 
   def product_comps
-
-
-    @groups = ["Test1", "Test2", "Test3"]
-
+    @product = Product.readable(current_organization).find(params[:product_id])
+    
+    @groups = []
+    @product.repos(current_organization.locker).each{|repo|
+      repo.package_groups.each{|grp|
+        @groups.push(grp[1]["name"])
+      }
+    }
+    @groups.sort!
     render :partial=>"product_comps"
   end
 
