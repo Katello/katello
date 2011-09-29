@@ -36,11 +36,14 @@ class System < ActiveRecord::Base
   validates :description, :katello_description_format => true
   before_create  :fill_defaults
 
+  scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
+  scope :completer_scope, lambda { |options| readable(options[:organization_id])}
+
   scoped_search :on => :name, :complete_value => true
   scoped_search :on => :description, :complete_value => true
   scoped_search :on => :location, :complete_value => true
   scoped_search :on => :uuid, :complete_value => true
-
+  scoped_search :on => :id, :complete_value => true
 
   def organization
     environment.organization

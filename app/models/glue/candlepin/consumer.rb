@@ -157,10 +157,32 @@ module Glue::Candlepin::Consumer
       facts["uname.machine"]
     end
     
-    def distro
+    def distribution_name
       facts["distribution.name"]
     end
-    
+
+    def distribution_version
+      facts["distribution.version"]
+    end
+
+    def distribution
+      "#{distribution_name} #{distribution_version}"
+    end
+
+    def entitlements_valid?
+      "true" == facts["system.entitlements_valid"]
+    end
+
+    def checkinTime
+      if lastCheckin
+        convert_time(lastCheckin)
+      end
+    end
+
+    def convert_time(item)
+      Time.parse(item)
+    end
+
   end
 
 end

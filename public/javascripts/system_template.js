@@ -27,6 +27,7 @@ KT.templates = function() {
         edit: undefined,
         remove: undefined,
         save: undefined,
+        download: undefined,
         discard_dialog: undefined,
         save_dialog: undefined
 
@@ -135,12 +136,14 @@ KT.templates = function() {
             buttons.edit.addClass("disabled");
             buttons.remove.addClass("disabled");
             buttons.save.addClass("disabled");
+            buttons.download.addClass("disabled");
             $('.package_add_remove').hide();
             $('.product_add_remove').hide();
         }
         else {
             buttons.edit.removeClass("disabled");
             buttons.remove.removeClass("disabled");
+            buttons.download.removeClass("disabled");
             if (KT.options.current_template.modified) {
                 buttons.save.removeClass("disabled");
             }
@@ -708,7 +711,12 @@ KT.actions =  (function(){
                     }
             });
         });
-
+        buttons.download.click(function(e){
+            e.preventDefault();  //stop the browser from following
+            url = KT.common.rootURL() + '/system_templates/' + options.current_template.id + '/download',
+            window.location.href = url;
+            return false;
+        });
         buttons.edit.click(function(){
             if ( $(this).hasClass('disabled') || !KT.options.current_template){
                 return false;
@@ -823,6 +831,7 @@ $(document).ready(function() {
     var buttons =KT.templates.buttons;
     buttons.edit = $("#edit_template");
     buttons.remove = $("#remove_template");
+    buttons.download = $("#download_template");
     buttons.save = $("#save_template");
     buttons.save_dialog = $("#save_dialog");
     buttons.discard_dialog = $("#discard_dialog");
