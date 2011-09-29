@@ -18,6 +18,7 @@ class ActivationKeysController < ApplicationController
   before_filter :find_activation_key, :only => [:show, :edit, :edit_environment, :update, :destroy, :subscriptions, :update_subscriptions]
   before_filter :authorize #after find_activation_key, since the key is required for authorization
   before_filter :panel_options, :only => [:index, :items]
+  before_filter :search_filter, :only => [:auto_complete_search]
 
   respond_to :html, :js
 
@@ -32,6 +33,7 @@ class ActivationKeysController < ApplicationController
       :index => read_test,
       :items => read_test,
       :show => read_test,
+      :auto_complete_search => read_test,
 
       :new => manage_test,
       :create => manage_test,
@@ -246,4 +248,9 @@ class ActivationKeysController < ApplicationController
   def controller_display_name
     return _('activation_key')
   end
+
+  def search_filter
+    @filter = {:organization_id => current_organization}
+  end
+
 end
