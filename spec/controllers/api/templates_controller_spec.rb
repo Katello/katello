@@ -54,22 +54,28 @@ describe Api::TemplatesController do
 
       KTEnvironment.stub(:find).with(@locker.id).and_return(@locker)
       KTEnvironment.stub(:find).with(@environment2.id).and_return(@environment2)
+
+      @tpl_selection_mock = mock('where')
+      @tpl_selection_mock.stub(:where).and_return([@tpl])
     end
 
     it 'should get a list of templates from specified environment' do
-      @locker.should_receive(:system_templates).and_return([@tpl])
+      @locker.should_receive(:system_templates).and_return(@tpl_selection_mock)
       get 'index', :environment_id => @locker.id
       response.should be_success
     end
 
     it 'should get a list of all templates' do
-      SystemTemplate.should_receive(:all).and_return([@tpl])
+      SystemTemplate.should_receive(:all).and_return(@tpl_selection_mock)
       get 'index'
       response.should be_success
     end
 
     it 'should not fail if no templates are found, but return an empty list' do
-      @environment2.should_receive(:system_templates).and_return([])
+      @tpl_selection_mock.stub(:where).and_return([])
+      @environment2.should_receive(:system_templates).and_return(@tpl_selection_mock)
+      @tpl_selection_mock.should_receive(:where).and_return([@tpl])
+
       get 'index', :environment_id => @environment2.id
       response.should be_success
     end
@@ -144,16 +150,6 @@ describe Api::TemplatesController do
     it 'should call remove_package' do
       @tpl.should_receive(:remove_package).once
       put 'update_content', :id => TEMPLATE_ID, :do => :remove_package
-    end
-
-    it 'should call add_erratum' do
-      @tpl.should_receive(:add_erratum).once
-      put 'update_content', :id => TEMPLATE_ID, :do => :add_erratum
-    end
-
-    it 'should call remove_erratum' do
-      @tpl.should_receive(:remove_erratum).once
-      put 'update_content', :id => TEMPLATE_ID, :do => :remove_erratum
     end
 
     describe "package groups assignment" do

@@ -18,7 +18,8 @@ describe SystemTemplatesController do
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
-  
+  include OrchestrationHelper
+
 
   describe "Controller tests" do
     before(:each) do
@@ -50,6 +51,24 @@ describe SystemTemplatesController do
       end
 
     end
+
+    describe "GET download" do
+      describe "with valid template id" do
+        it "sends json export of template" do
+          get :download, :id => @system_template_1.id
+          response.should be_success
+        end
+      end
+
+      describe "with invalid template id" do
+        it "should generate an error notice" do
+          controller.should_receive(:errors)
+          get :download, :id => 9999
+          response.should_not be_success
+        end
+      end
+    end
+
 
     describe "GET show" do
       describe "with valid template id" do
@@ -143,9 +162,9 @@ describe SystemTemplatesController do
           Product.stub(:find).and_return(prod)
           Product.stub(:readable).and_return(Product)
           stp = SystemTemplatePackage.new(:system_template=>@system_template_1, :package_name=>"FOO")
-          stp.stub(:to_package).and_return("FOO")
-          SystemTemplatePackage.stub(:new).and_return(stp)
+          stp.stub(:valid?).and_return(true)
 
+          SystemTemplatePackage.stub(:new).and_return(stp)
 
           controller.should_receive(:notice)
           put :update_content, :id=>@system_template_1.id, :packages=>[pkg1], :products=>[prd1]
@@ -245,6 +264,8 @@ describe SystemTemplatesController do
 
   describe "rules" do
     before (:each) do
+      disable_user_orchestration
+
       @organization = new_test_org
       @testuser = User.create!(:username=>"TestUser", :password=>"foobar")
       @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @organization.locker)

@@ -23,9 +23,9 @@ class Api::TemplatesController < Api::ApiController
 
   def index
     if @environment.nil?
-      tpls = SystemTemplate.all
+      tpls = SystemTemplate.all.where(params.slice(:name))
     else
-      tpls = @environment.system_templates
+      tpls = @environment.system_templates.where(params.slice(:name))
     end
     render :json => tpls.to_json
   end
@@ -81,16 +81,6 @@ class Api::TemplatesController < Api::ApiController
         @template.save!
         render :text => _("Removed package '#{params[:package]}'"), :status => 200 and return
 
-      when 'add_erratum'
-        @template.add_erratum(params[:erratum])
-        @template.save!
-        render :text => _("Added erratum '#{params[:erratum]}'"), :status => 200 and return
-
-      when 'remove_erratum'
-        @template.remove_erratum(params[:erratum])
-        @template.save!
-        render :text => _("Removed erratum '#{params[:erratum]}'"), :status => 200 and return
-
       when 'add_parameter'
         @template.parameters[params[:parameter]] = params[:value]
         @template.save!
@@ -114,7 +104,7 @@ class Api::TemplatesController < Api::ApiController
       when 'add_package_group_category'
         @template.add_pg_category(:id => params[:package_group_category], :repo_id => params[:repo])
         @template.save!
-        render :text => _("Added package group category '%s'") % params[:package_group_category][:id]
+        render :text => _("Added package group category '%s'") % params[:package_group_category]
 
       when 'remove_package_group_category'
         @template.remove_pg_category(:id => params[:package_group_category], :repo_id => params[:repo])

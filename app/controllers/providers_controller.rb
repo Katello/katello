@@ -213,8 +213,9 @@ class ProvidersController < ApplicationController
                  :col => ['name', 'provider_type'],
                  :create => _('Provider'),
                  :name => controller_display_name,
-                 :ajax_scroll=>items_providers_path()}
-        @panel_options[:enable_create] = false if !Provider.creatable?(current_organization)
+                 :ajax_scroll=>items_providers_path(),
+                 :enable_create=> Provider.creatable?(current_organization)}
+        
   end
 
   def controller_display_name

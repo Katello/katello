@@ -50,7 +50,7 @@ module Pulp
     self.ca_cert_file = cfg.ca_cert_file
 
     def self.default_headers
-      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.current.pulp_oauth_header)
+      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(::User.current.pulp_oauth_header)
     end
 
     # the path is expected to have trailing slash
@@ -107,7 +107,7 @@ module Pulp
       def dep_solve pkgnames, repoids
         path = "/pulp/api/services/dependencies/"
         response = post(path, JSON.generate({:pkgnames=>pkgnames, :repoids=>repoids}),  self.default_headers)
-        JSON.parse(response)["available_packages"]
+        JSON.parse(response)["resolved"]
       end
 
 
@@ -256,6 +256,23 @@ module Pulp
         JSON.parse(body)
       end
 
+      def packages_by_name repo_id, name
+        response = get(repository_path  + repo_id + "/packages/?name=" + name, self.default_headers)
+        body = response.body
+        JSON.parse(body)
+      end
+
+      def packages_by_nvre repo_id, name, version, release, epoch
+        #TODO: switch to https://fedorahosted.org/pulp/wiki/UGREST-Repositories#GetPackageByNVREA
+        path = repository_path + repo_id + "/packages/?name=" + name
+        path += "&release=" + release if not release.nil?
+        path += "&version=" + version if not version.nil?
+        path += "&epoch=" + epoch if not epoch.nil?
+        response = get(path, self.default_headers)
+        body = response.body
+        JSON.parse(body)
+      end
+
       def errata repo_id
         response = get(repository_path  + repo_id + "/errata/", self.default_headers)
         body = response.body
@@ -359,6 +376,48 @@ module Pulp
 
       def path repo_id
         self.path_with_prefix("/repositories/#{repo_id}/packagegroupcategories/")
+      end
+    end
+  end
+
+  class User < PulpResource
+    class << self
+      def create attrs
+        response = self.post path, attrs.to_json, self.default_headers
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def destroy login
+        self.delete(path(login), self.default_headers).code.to_i
+      end
+
+      def find login
+        response = self.get path(login), self.default_headers
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def path(login=nil)
+        users = self.path_with_prefix("/users/")
+        login.nil? ? users : users + "#{login}/"
+      end
+    end
+  end
+
+  class Roles < PulpResource
+    class << self
+      def add role_name, username
+        added = self.post(path(role_name) + "/add/", {:username => username}.to_json, self.default_headers)
+        added.body == "true"
+      end
+
+      def remove role_name, username
+        removed = self.post(path(role_name) + "/remove/", {:username => username}.to_json, self.default_headers)
+        removed.body == "true"
+      end
+
+      def path(role_name=nil)
+        roles = self.path_with_prefix("/roles/")
+        role_name.nil? ? roles : roles + "#{role_name}/"
       end
     end
   end

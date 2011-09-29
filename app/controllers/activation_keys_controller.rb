@@ -71,14 +71,14 @@ class ActivationKeysController < ApplicationController
   end
 
   def subscriptions
-    consumed = @activation_key.subscriptions
+    consumed = @activation_key.pools
     subscriptions = reformat_subscriptions(Candlepin::Owner.pools current_organization.cp_key)
     subscriptions.sort! {|a,b| a.name <=> b.name}
     for sub in subscriptions
       sub.allocated = 0
       for consume in consumed
         if consume.subscription == sub.sub
-          sub.allocated = consume.key_subscriptions[0].allocated 
+          sub.allocated = consume.key_pools[0].allocated
         end
       end
     end
@@ -87,15 +87,15 @@ class ActivationKeysController < ApplicationController
   end
 
   def update_subscriptions
-    subscription = KTSubscription.where(:subscription => params[:subscription_id])[0]
+    pool = KTPool.where(:cp_id => params[:subscription_id])[0]
     allocated = params[:activation_key][:allocated]
 
-    if subscription.nil? and @activation_key and allocated != "0"
-      KTSubscription.create!(:subscription => params[:subscription_id], :key_subscriptions => [KeySubscription.create!(:allocated=> allocated, :activation_key => @activation_key)])
+    if pool.nil? and @activation_key and allocated != "0"
+      KTPool.create!(:cp_id => params[:subscription_id], :key_pools => [KeyPool.create!(:allocated=> allocated, :activation_key => @activation_key)])
       notice _("Activation Key subscriptions updated.")
       render :text => escape_html(allocated)
-    elsif subscription and @activation_key
-      key_sub = KeySubscription.where(:activation_key_id => @activation_key.id, :subscription_id => subscription.id)[0]
+    elsif pool and @activation_key
+      key_sub = KeyPool.where(:activation_key_id => @activation_key.id, :pool_id => pool.id)[0]
 
       if key_sub
         if allocated != "0"
@@ -105,7 +105,7 @@ class ActivationKeysController < ApplicationController
           key_sub.destroy
         end
       else
-        KeySubscription.create!(:activation_key_id => @activation_key.id, :subscription_id => subscription.id, :allocated => allocated)
+        KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => pool.id, :allocated => allocated)
       end
       render :text => escape_html(allocated)
       notice _("Activation Key subscriptions updated.")
@@ -225,8 +225,8 @@ class ActivationKeysController < ApplicationController
       :col => ['name'],
       :create => _('Key'), 
       :name => controller_display_name,
-      :ajax_scroll => items_activation_keys_path()}
-    @panel_options[:enable_create] = false if !ActivationKey.manageable?(current_organization)
+      :ajax_scroll => items_activation_keys_path(),
+      :enable_create => ActivationKey.manageable?(current_organization)}
   end
 
   private

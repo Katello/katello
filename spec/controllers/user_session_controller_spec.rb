@@ -17,6 +17,7 @@ describe UserSessionsController do
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
+  include OrchestrationHelper
   
     before(:each) do
       set_default_locale
@@ -27,6 +28,8 @@ describe UserSessionsController do
     before(:each) do
       controller.stub!(:notice)
       controller.stub!(:errors)
+
+      disable_user_orchestration
 
       @user = User.new
       @user.username = "shaggy"

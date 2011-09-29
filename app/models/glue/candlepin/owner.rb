@@ -53,6 +53,10 @@ module Glue::Candlepin::Owner
     def destroy_owner_orchestration
       queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 3, :action => [self, :del_owner])
     end
+
+    def owner_info
+      Glue::Candlepin::OwnerInfo.new(self)
+    end
   end
 
 end

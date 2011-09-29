@@ -12,6 +12,25 @@
 
 class PulpTaskStatus < TaskStatus
 
+  def self.wait_for_tasks async_tasks
+    async_tasks = async_tasks.collect do |t|
+      PulpTaskStatus.using_pulp_task(t)
+    end
+
+    any_running = true
+    while any_running
+      any_running = false
+      for t in async_tasks
+        t.refresh
+        if ((t.state == TaskStatus::Status::WAITING.to_s) or (t.state == TaskStatus::Status::RUNNING.to_s))
+          any_running = true
+          break
+        end
+      end
+    end
+    async_tasks
+  end
+
   def self.using_pulp_task(sync)
     self.new(
         :uuid => sync[:id],
@@ -25,12 +44,13 @@ class PulpTaskStatus < TaskStatus
 
   def refresh
     pulp_task = Pulp::Task.find(uuid)
-    update_attributes!(
+    self.attributes = {
         :state => pulp_task[:state],
         :finish_time => pulp_task[:finish_time],
         :progress => pulp_task[:progress],
         :result => pulp_task[:result].nil? ? {:errors => [pulp_task[:exception], pulp_task[:traceback]]}.to_json : pulp_task[:result]
-    )
+    }
+    self.save! if not self.new_record?
     self
   end
 
