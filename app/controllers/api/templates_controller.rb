@@ -23,7 +23,7 @@ class Api::TemplatesController < Api::ApiController
 
   def index
     if @environment.nil?
-      tpls = SystemTemplate.all.where(params.slice(:name))
+      tpls = SystemTemplate.where(params.slice(:name))
     else
       tpls = @environment.system_templates.where(params.slice(:name))
     end

@@ -55,26 +55,26 @@ describe Api::TemplatesController do
       KTEnvironment.stub(:find).with(@locker.id).and_return(@locker)
       KTEnvironment.stub(:find).with(@environment2.id).and_return(@environment2)
 
-      @tpl_selection_mock = mock('where')
-      @tpl_selection_mock.stub(:where).and_return([@tpl])
     end
 
     it 'should get a list of templates from specified environment' do
-      @locker.should_receive(:system_templates).and_return(@tpl_selection_mock)
+      tpl_selection_mock = mock('where')
+      tpl_selection_mock.stub(:where).and_return([@tpl])
+      @locker.should_receive(:system_templates).and_return(tpl_selection_mock)
       get 'index', :environment_id => @locker.id
       response.should be_success
     end
 
     it 'should get a list of all templates' do
-      SystemTemplate.should_receive(:all).and_return(@tpl_selection_mock)
+      SystemTemplate.should_receive(:where).and_return([@tpl])
       get 'index'
       response.should be_success
     end
 
     it 'should not fail if no templates are found, but return an empty list' do
-      @tpl_selection_mock.stub(:where).and_return([])
-      @environment2.should_receive(:system_templates).and_return(@tpl_selection_mock)
-      @tpl_selection_mock.should_receive(:where).and_return([@tpl])
+      tpl_selection_mock = mock('where')
+      tpl_selection_mock.stub(:where).and_return([])
+      @environment2.should_receive(:system_templates).and_return(tpl_selection_mock)
 
       get 'index', :environment_id => @environment2.id
       response.should be_success
