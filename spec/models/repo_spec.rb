@@ -214,7 +214,7 @@ describe Glue::Pulp::Repo do
     end
 
     it "should be composed from various attributes to be uniqe" do
-      cloned_repo_id = @product.clone_repo_id(@repo, @to_env)
+      cloned_repo_id = @repo.clone_id(@to_env)
       cloned_repo_id.should == "#{RepoTestData::REPO_PRODUCT_CP_ID}-repo-Prod-Corp"
     end
 
@@ -232,8 +232,8 @@ describe Glue::Pulp::Repo do
 
       @clone = Glue::Pulp::Repo.new(RepoTestData::CLONED_PROPERTIES)
 
-      @product.stub(:clone_repo_id).with(@repo, @to_env).and_return(RepoTestData::CLONED_REPO_ID)
-      @product.stub(:clone_repo_id).with(@clone, @to_env).and_return(RepoTestData::CLONED_2_REPO_ID)
+      @repo.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_REPO_ID)
+      @clone.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_2_REPO_ID)
 
     end
 
@@ -314,7 +314,7 @@ def stub_reference_objects
 
   @env = mock(KTEnvironment, {:id => RepoTestData::REPO_ENV_ID, :name => "Dev"})
   KTEnvironment.stub(:find).with(RepoTestData::REPO_ENV_ID).and_return(@env)
- 
+
   @product = Product.new({:id => RepoTestData::REPO_PRODUCT_ID, :cp_id => RepoTestData::REPO_PRODUCT_CP_ID, :name => "Ruby"})
   @product.stub(:organization => @org)
   Product.stub(:find).with(RepoTestData::REPO_PRODUCT_ID).and_return(@product)

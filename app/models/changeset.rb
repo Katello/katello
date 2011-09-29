@@ -25,6 +25,7 @@ class Changeset < ActiveRecord::Base
   PROMOTED = 'promoted'
   PROMOTING = 'promoting'
   STATES = [NEW, REVIEW, PROMOTING, PROMOTED]
+  
 
   validates_inclusion_of :state,
     :in => STATES,
@@ -65,7 +66,7 @@ class Changeset < ActiveRecord::Base
     errata.collect{|erratum| erratum.errata_id}
   end
 
-  #get a list of all the products involved in teh changeset
+  #get a list of all the products involved in the changeset
   #  but not necessarily 'in' the changeset
   def involved_products
     to_ret = self.products.clone #get a copy
@@ -86,9 +87,7 @@ class Changeset < ActiveRecord::Base
     from_env = self.environment.prior
     to_env   = self.environment
 
-
     product_hash = {}
-
 
     from_env.products.each{|prod|
       cs_pkgs = ChangesetPackage.where({:changeset_id=>self.id, :product_id=>prod.id})
@@ -98,13 +97,11 @@ class Changeset < ActiveRecord::Base
       direct_pkgs = cs_pkgs.collect{|pkg| {:name=>pkg.display_name, :id=>pkg.package_id}}
       #TODO get errata packages
 
-
-
       # mapping of repo in from_env to its repo in to_env
       repo_map = {} # {from_env => to_env}
 
       prod.repos(from_env).each{|repo|
-        cloned = prod.get_cloned repo, to_env
+        cloned = repo.get_clone to_env
         repo_map[repo] = cloned if cloned
       }
 
@@ -119,9 +116,12 @@ class Changeset < ActiveRecord::Base
 
       next if pkg_names.empty?
 
-
-      all_pkgs = Pulp::Package.dep_solve(pkg_names, repo_map.keys.collect{|repo| repo.id}).collect do |package|
-           Glue::Pulp::Package.new(package)
+      deps = Pulp::Package.dep_solve(pkg_names, repo_map.keys.collect{|repo| repo.id})
+      all_pkgs = Array.new
+      for package_name in deps.keys
+        for package in deps[package_name]
+          all_pkgs << Glue::Pulp::Package.new(package)
+        end
       end
 
       product_hash[prod.id] = []
@@ -137,7 +137,6 @@ class Changeset < ActiveRecord::Base
         }
 
       #now we have a list of package hashes (with id and name) for the product (product_hash[prod.id])
-
       }
     }
 
@@ -152,8 +151,6 @@ class Changeset < ActiveRecord::Base
     end
 
     product_hash
-
-
   end
 
   # returns list of virtual permission tags for the current user
@@ -168,33 +165,33 @@ class Changeset < ActiveRecord::Base
     raise _("Cannot promote the changeset '#{self.name}' while another changeset (#{self.environment.promoting.first.name}) is being promoted.") if self.environment.promoting_to?
 
     if async
-      task = self.async(:organization=>self.environment.organization).promote_content
-      self.task_status = task
       self.state = Changeset::PROMOTING
       self.save!
+      task = self.async(:organization=>self.environment.organization).promote_content
+      self.task_status = task
+      self.save!
+      self.task_status
     else
+      self.task_status = nil
+      self.save!
       promote_content
     end
-
-    true
-  end
-
-
-  def find_product product_name
-    from_env = self.environment.prior
-    product = from_env.products.find_by_name(product_name)
-    raise Errors::ChangesetContentException.new("Product not found within environment you want to promote from.") if product.nil?
-    product
   end
 
   def add_product product_name
-    product = self.find_product(product_name)
+    product = find_product(product_name)
     self.products << product
     product
   end
 
+  def add_template template_name
+    tpl = find_template(template_name)
+    self.system_templates << tpl
+    tpl
+  end
+
   def add_package package_name, product_name
-    product = self.find_product(product_name)
+    product = find_product(product_name)
     product.repos(self.environment.prior).each do |repo|
       #search for package in all repos in a product
       idx = repo.packages.index do |p| p.name == package_name end
@@ -211,7 +208,7 @@ class Changeset < ActiveRecord::Base
   end
 
   def add_erratum erratum_id, product_name
-    product = self.find_product(product_name)
+    product = find_product(product_name)
     product.repos(self.environment.prior).each do |repo|
       #search for erratum in all repos in a product
       idx = repo.errata.index do |e| e.id == erratum_id end
@@ -228,7 +225,7 @@ class Changeset < ActiveRecord::Base
   end
 
   def add_repo repo_name, product_name
-    product = self.find_product(product_name)
+    product = find_product(product_name)
     repos = product.repos(self.environment.prior)
     idx = repos.index do |r| r.name == repo_name end
     if idx != nil
@@ -243,7 +240,7 @@ class Changeset < ActiveRecord::Base
   end
 
   def add_distribution distribution_id, product_name
-    product = self.find_product(product_name)
+    product = find_product(product_name)
     repos = product.repos(self.environment)
     idx = nil
     repos.each do |repo|
@@ -253,7 +250,7 @@ class Changeset < ActiveRecord::Base
       self.distributions << ChangesetDistribution.new(:distribution_id => distribution_id,
                                                       :display_name => distribution_id,
                                                       :product_id => product.id,
-                                                      :changeset => @changeset)
+                                                      :changeset => self)
       return
     end
     raise Errors::ChangesetContentException.new("Distribution not found within this environment.")
@@ -261,13 +258,19 @@ class Changeset < ActiveRecord::Base
 
 
   def remove_product product_name
-    prod = self.environment.products.find_by_name(product_name)
-    raise Errors::ChangesetContentException.new("Product #{product_name} not found in the source environment.") if prod.nil?
+    prod = self.products.find_by_name(product_name)
+    raise Errors::ChangesetContentException.new("Product #{product_name} not found in the changeset.") if prod.nil?
     self.products.delete(prod)
   end
 
+  def remove_template template_name
+    tpl = self.system_templates.find_by_name(template_name)
+    raise Errors::ChangesetContentException.new("Template #{template_name} not found in the changeset.") if tpl.nil?
+    self.system_templates.delete(tpl)
+  end
+
   def remove_package package_name, product_name
-    product = self.find_product(product_name)
+    product = find_product(product_name)
     product.repos(self.environment.prior).each do |repo|
       #search for package in all repos in a product
       idx = repo.packages.index do |p| p.name == package_name end
@@ -280,7 +283,7 @@ class Changeset < ActiveRecord::Base
   end
 
   def remove_erratum erratum_id, product_name
-    product = self.find_product(product_name)
+    product = find_product(product_name)
     product.repos(self.environment.prior).each do |repo|
       #search for erratum in all repos in a product
       idx = repo.errata.index do |e| e.id == erratum_id end
@@ -293,7 +296,7 @@ class Changeset < ActiveRecord::Base
   end
 
   def remove_repo repo_name, product_name
-    product = self.find_product(product_name)
+    product = find_product(product_name)
     repos = product.repos(self.environment.prior)
     idx = repos.index do |r| r.name == repo_name end
     if idx != nil
@@ -305,7 +308,7 @@ class Changeset < ActiveRecord::Base
 
 
   def remove_distribution distribution_id, product_name
-    product = self.find_product(product_name)
+    product = find_product(product_name)
     repos = product.repos(self.environment)
     idx = nil
     repos.each do |repo|
@@ -317,6 +320,21 @@ class Changeset < ActiveRecord::Base
   end
 
   private
+
+  def find_template template_name
+    from_env = self.environment.prior
+    tpl = from_env.system_templates.find_by_name(template_name)
+    raise Errors::ChangesetContentException.new("Template not found within environment you want to promote from.") if tpl.nil?
+    tpl
+  end
+
+  def find_product product_name
+    from_env = self.environment.prior
+    product = from_env.products.find_by_name(product_name)
+    raise Errors::ChangesetContentException.new("Product not found within environment you want to promote from.") if product.nil?
+    product
+  end
+
 
   def update_progress! percent
     if self.task_status
@@ -335,9 +353,11 @@ class Changeset < ActiveRecord::Base
     from_env = self.environment.prior
     to_env   = self.environment
 
-    wait_for_tasks promote_products(from_env, to_env)
+    PulpTaskStatus::wait_for_tasks promote_products(from_env, to_env)
+    update_progress! '30'
+    PulpTaskStatus::wait_for_tasks promote_templates(from_env, to_env)
     update_progress! '50'
-    wait_for_tasks promote_repos(from_env, to_env)
+    PulpTaskStatus::wait_for_tasks promote_repos(from_env, to_env)
     update_progress! '80'
     promote_packages from_env, to_env
     update_progress! '90'
@@ -348,39 +368,12 @@ class Changeset < ActiveRecord::Base
     self.save!
   end
 
-  def wait_for_tasks async_tasks
 
-    async_tasks = async_tasks.collect do |t|
-      ts = PulpTaskStatus.using_pulp_task(t)
-      ts.organization = self.environment.organization
-      ts
+  def promote_templates from_env, to_env
+    async_tasks = self.system_templates.collect do |tpl|
+      tpl.promote from_env, to_env
     end
-
-    any_running = true
-    while any_running
-      any_running = false
-      for t in async_tasks
-        t.refresh
-        if ((t.state == TaskStatus::Status::WAITING.to_s) or (t.state == TaskStatus::Status::RUNNING.to_s))
-          any_running = true
-          break
-        end
-      end
-    end
-    async_tasks
-  end
-
-
-
-  def products_to_promote from_env, to_env
-    #promote all products stacked for promotion + (products required by packages,errata & repos - products in target env)
-    required_products = []
-    required_products << self.packages.collect do |p| Product.find(p.product_id) end
-    required_products << self.errata.collect do |e|   Product.find(e.product_id) end
-    required_products << self.repos.collect do |r|    Product.find(r.product_id) end
-    required_products = required_products.flatten(1)
-    products_to_promote = (self.products + (required_products - to_env.products)).uniq
-    products_to_promote
+    async_tasks.flatten(1)
   end
 
 
@@ -401,7 +394,7 @@ class Changeset < ActiveRecord::Base
 
       next if (products.uniq! or []).include? product
 
-      cloned = repo.get_cloned_in(to_env)
+      cloned = repo.get_clone(to_env)
       if cloned
         async_tasks << cloned.sync
       else

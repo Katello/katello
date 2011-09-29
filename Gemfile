@@ -34,9 +34,6 @@ gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 # Use unicorn as the web server
 # gem 'unicorn'
 
-# Deploy with Capistrano
-gem 'capistrano'
-
 # @@@DEV_ONLY@@@
 # Everything bellow the line above will NOT be used in production.
 # Do not change the line contents, it's searched by sed during the build phase.

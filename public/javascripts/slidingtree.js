@@ -211,6 +211,7 @@ var sliding_tree = function(tree_id, options) {
             var newContent = $.bbq.getState(settings.bbq_tag) || settings.default_tab;
             if (settings.current_tab != newContent) {
                 prerender(newContent);
+                $(document).trigger('hash_change.slidingtree');
             }
         },
         setupSearch = function(){
@@ -290,11 +291,14 @@ var sliding_tree = function(tree_id, options) {
     if( settings.enable_search ){
         setupSearch();
     }
+    
+	if( settings.enable_float ){
+		container.css('position', 'absolute');
+	}
 
     $(window).unbind('hashchange.' + tree_id).bind( 'hashchange.' + tree_id, hash_change);
 
     $(window).trigger( 'hashchange.' + tree_id );
-
 
 
     container.find('.slide_link').live('click', function(event){
