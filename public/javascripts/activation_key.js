@@ -30,20 +30,40 @@ $(document).ready(function() {
     $('#save_key').live('submit', function(e) {
         e.preventDefault();
 
-        var cancel_button = $('input[id^=cancel_key]');
-
-        activation_key.disable_save();
-        cancel_button.attr("disabled", "disabled");
+        activation_key.disable_buttons();
 
         $(this).ajaxSubmit({
          success: function(data) {
-             activation_key.enable_save();
-             cancel_button.removeAttr('disabled');
+             activation_key.highlight_system_templates(false);
+             activation_key.enable_buttons();
          }, error: function(e) {
-             activation_key.enable_save();
-             cancel_button.removeAttr('disabled');
+             activation_key.highlight_system_templates(false);
+             activation_key.enable_buttons();
          }});
     });
+
+    $('#cancel_key').live('click', function(e) {
+        e.preventDefault();
+
+        var url = $('#cancel_key').attr('data-url');
+        if (url !== undefined) {
+            activation_key.disable_buttons();
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                cache: false,
+                success: function(response) {
+                    $('.panel-content').html(response);
+                    activation_key.initialize_edit();
+                },
+                error: function(data) {
+                    activation_key.initialize_edit();
+                }
+            });
+        }
+    });
+
 
     //Set the callback on the environment selector
     env_select.click_callback = function(env_id) {
@@ -117,6 +137,14 @@ $(document).ready(function() {
 
 var activation_key = (function() {
     return {
+        initialize_edit: function() {
+            // all promotion paths are hidden on initial render, so locate the env that is currently
+            // selected... and show it's promotion path
+            //$('.promotion_paths').find('.selected').closest('#env').show();
+
+            activation_key.enable_buttons();
+            activation_key.highlight_system_templates(false);
+        },
         reset_env_select: function() {
             $('#path-expanded').hide();
             env_select.reset_hover();
@@ -156,7 +184,7 @@ var activation_key = (function() {
             // update the page content, as appropriate
             var url = $('.path_link.active').attr('data-templates_url');
 
-            activation_key.disable_save();
+            activation_key.disable_buttons();
             $.ajax({
                 type: "GET",
                 url: url,
@@ -176,10 +204,10 @@ var activation_key = (function() {
                     $("#activation_key_system_template_id").html(options);
 
                     activation_key.highlight_system_templates(true);
-                    activation_key.enable_save();
+                    activation_key.enable_buttons();
                 },
                 error: function(data) {
-                    activation_key.enable_save();
+                    activation_key.enable_buttons();
                 }
             });
         },
@@ -188,30 +216,31 @@ var activation_key = (function() {
             // update the products box with the results
             var url = $('.path_link.active').attr('data-products_url');
             if (url !== undefined) {
-                activation_key.disable_save();
+                activation_key.disable_buttons();
                 $.ajax({
                     type: "GET",
                     url: url,
                     cache: false,
                     success: function(response) {
                         $('.productsbox').html(response);
-                        activation_key.enable_save();
+                        activation_key.enable_buttons();
                     },
                     error: function(data) {
-                        activation_key.enable_save();
+                        activation_key.enable_buttons();
                     }
                 });
-
             }
         },
         save_selected_environment : function(env_id) {
             // save the id of the env selected
             $("#activation_key_environment_id").attr('value', env_id);
         },
-        disable_save : function() {
+        disable_buttons : function() {
+            $('#cancel_key').attr("disabled","disabled");
             $('input[id^=save_key]').attr("disabled","disabled");
         },
-        enable_save : function() {
+        enable_buttons : function() {
+            $('#cancel_key').removeAttr('disabled');
             $('input[id^=save_key]').removeAttr('disabled');
         },
         highlight_system_templates : function(add_highlight) {

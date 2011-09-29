@@ -69,4 +69,6 @@
               = render :partial => "environments/products"
 
         .prefix_2.grid_7.ra
-          = button_to _("Save"), activation_key_path(@activation_key), :method => :put, :id => :save_key
+          #cancel_key.button{'data-url' => edit_activation_key_path(@activation_key)}
+            #{_("Cancel")}
+          %input#save_key.button{:type => "submit", :value => "#{_("Save")}"}
