@@ -204,8 +204,10 @@ KT.panel = (function($){
             if(!thisPanel.hasClass('opened') && thisPanel.attr("data-id") !== activeBlockId){
                 $('.block.active').removeClass('active');
                 // Open the Panel                           /4
+                thisPanel.css({"z-index":"200"});
+                thisPanel.parent().css({"z-index":"1"});
                 thisPanel.animate({ left: (panelLeft) + "px", opacity: 1}, 200, function(){
-                    $(this).css({"z-index":"200"});
+                    //$(this).css({"z-index":"200"});
                 }).removeClass('closed').addClass('opened').attr('data-id', activeBlockId);
                 
                 activeBlock.addClass('active');
@@ -303,8 +305,7 @@ KT.panel = (function($){
                     left: 0,
                     opacity: 0
                 }, 400, function(){
-                    $(this).css({"z-index":"0"});
-                    $(this).parent().css({"z-index":"-1"});
+                    $(this).css({"z-index":"-1"});
                 }).removeClass('opened').addClass('closed').attr("data-id", "");
                 content.html('');
                 
@@ -324,7 +325,7 @@ KT.panel = (function($){
                     left: 0,
                     opacity: 0
                 }, 400, function(){
-                    $(this).css({"z-index":"0"});
+                    $(this).css({"z-index":"-1"});
                 }).removeClass('opened').addClass('closed');
                 updateResult();
             }
