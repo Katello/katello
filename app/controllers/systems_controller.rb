@@ -14,7 +14,6 @@ class SystemsController < ApplicationController
   include AutoCompleteSearch
   include SystemsHelper
 
-
   before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments]
 
   skip_before_filter :authorize
@@ -22,10 +21,10 @@ class SystemsController < ApplicationController
   before_filter :authorize
 
   before_filter :setup_options, :only => [:index, :items, :environments]
+  before_filter :search_filter, :only => [:auto_complete_search]
 
   # two pane columns and mapping for sortable fields
   COLUMNS = {'name' => 'name', 'lastCheckin' => 'lastCheckin', 'created' => 'created_at'}
-
 
   def rules
     edit_system = lambda{System.find(params[:id]).editable?}
@@ -36,6 +35,7 @@ class SystemsController < ApplicationController
     {
       :index => any_readable,
       :items => any_readable,
+      :auto_complete_search => any_readable,
       :environments => env_system,
       :env_items => env_system,
       :subscriptions => read_system,
@@ -71,6 +71,10 @@ class SystemsController < ApplicationController
 
       setup_environment_selector(current_organization, accesible_envs)
       if @environment
+        # add the environment id as a search filter.. this will be passed to the app by scoped_search as part of
+        # the auto_complete_search requests
+        @panel_options[:search_env] = @environment.id
+
         @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size) 
         retain_search_history
         sort_columns(COLUMNS,@systems) if params[:order]
@@ -264,4 +268,7 @@ class SystemsController < ApplicationController
     return _('system')
   end
 
+  def search_filter
+    @filter = {:organization_id => current_organization}
+  end
 end

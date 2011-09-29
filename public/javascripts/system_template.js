@@ -27,6 +27,7 @@ KT.templates = function() {
         edit: undefined,
         remove: undefined,
         save: undefined,
+        download: undefined,
         discard_dialog: undefined,
         save_dialog: undefined
 
@@ -135,12 +136,14 @@ KT.templates = function() {
             buttons.edit.addClass("disabled");
             buttons.remove.addClass("disabled");
             buttons.save.addClass("disabled");
+            buttons.download.addClass("disabled");
             $('.package_add_remove').hide();
             $('.product_add_remove').hide();
         }
         else {
             buttons.edit.removeClass("disabled");
             buttons.remove.removeClass("disabled");
+            buttons.download.removeClass("disabled");
             if (KT.options.current_template.modified) {
                 buttons.save.removeClass("disabled");
             }
@@ -708,7 +711,12 @@ KT.actions =  (function(){
                     }
             });
         });
-
+        buttons.download.click(function(e){
+            e.preventDefault();  //stop the browser from following
+            url = KT.common.rootURL() + '/system_templates/' + options.current_template.id + '/download',
+            window.location.href = url;
+            return false;
+        });
         buttons.edit.click(function(){
             if ( $(this).hasClass('disabled') || !KT.options.current_template){
                 return false;
@@ -823,6 +831,7 @@ $(document).ready(function() {
     var buttons =KT.templates.buttons;
     buttons.edit = $("#edit_template");
     buttons.remove = $("#remove_template");
+    buttons.download = $("#download_template");
     buttons.save = $("#save_template");
     buttons.save_dialog = $("#save_dialog");
     buttons.discard_dialog = $("#discard_dialog");
@@ -855,7 +864,8 @@ $(document).ready(function() {
                                 KT.product_actions.register_autocomplete();
                                 KT.templates.reset_page();
                             },
-                            enable_search   :  true
+                            enable_search   :  true,
+                            enable_float	:  true
                         });
 
  
@@ -867,18 +877,7 @@ $(document).ready(function() {
 
 
     //Handle scrolling
-    var container = $('#container');
-    var original_top = Math.floor($('.left').position(top).top);
-    if(container.length > 0){
-        var bodyY = parseInt(container.offset().top, 10) - 20;
-        var offset = $('#template_tree').width() + 50;
-        $(window).scroll(function () {
-            KT.panel.handleScroll($('#template_tree'), container, original_top, bodyY, 0, offset);
-        });
-        $(window).resize(function(){
-           KT.panel.handleScrollResize($('#template_tree'), container, original_top, bodyY, 0, offset);
-        });
-    }
+    KT.panel.registerPanel($('#template_tree'), $('#template_tree').width() + 50);
 
     //Ask the user if they really want to leave the page if the template isn't saved
     window.onbeforeunload = function(){

@@ -10,8 +10,11 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'models/model_spec_helper'
 
 module AuthorizationHelperMethods
+  include OrchestrationHelper
+
   def allow(*args)
     AuthorizationHelperMethods.allow(*args)
   end
@@ -57,6 +60,8 @@ module AuthorizationHelperMethods
   end
 
   def user_with_permissions
+    disable_user_orchestration
+
     @users_count ||= 0
     @users_count += 1
     user = User.create!(:username => "tmp#{@users_count}", :password => "tmp_password")

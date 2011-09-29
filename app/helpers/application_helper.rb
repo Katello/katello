@@ -95,7 +95,8 @@ module ApplicationHelper
              :accessor=>options[:accessor],
              :url=>options[:url], 
              :left_panel_width=>options[:left_panel_width],
-             :ajax_scroll =>options[:ajax_scroll]}
+             :ajax_scroll =>options[:ajax_scroll],
+             :search_env =>options[:search_env]}
   end
 
   def one_panel(panel_id, collection, options)
@@ -179,5 +180,15 @@ module ApplicationHelper
   def auto_tab_index
     @current_index ||= 0
     @current_index += 1
+  end
+
+  #formats the date time if the dat is not nil
+  def format_time  date
+    return date.localtime.strftime('%m/%d/%y %I:%M %p %Z') if date
+    ""
+  end
+
+  def generate_details_url(path, id, entity )
+     path + "?search=id%3D#{id}#panel=#{entity}_#{id}"
   end
 end

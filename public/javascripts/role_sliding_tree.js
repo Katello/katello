@@ -40,6 +40,7 @@ KT.roles.permissionWidget = function(){
 			                                  			done_button.show();
 			                                  			next_button.hide();
 			                                  		}
+			                                  		previous_button.show();
                                   				}
                                   			  },
                                   container : $('#resource_type_container'),
@@ -116,9 +117,16 @@ KT.roles.permissionWidget = function(){
                        									next_button.show();
                        									previous_button.show();
                        									progress_bar.setProgress(25);
+                       								} else if( $('#resource_type').val() === 'organizations' ) {
+                       									current_stage = 'verbs';
+                       									done_button.hide();
+                       									next_button.show();
+                       									previous_button.show();
+                       									progress_bar.setProgress(50);
+                       									flow['details'].container.hide();                      									 
                        								} else {
                                   						progress_bar.setProgress(75);
-                                  						previous_button.hide();
+                                  						previous_button.show();
                                   						next_button.show();
                                   						done_button.hide();
                                   					}                							
@@ -155,6 +163,8 @@ KT.roles.permissionWidget = function(){
         reset = function(){
         	var item;
         	
+            handleAllTypes(true);
+        	
             current_stage = 'resource_type';
 	        
 	        for( item in flow ){
@@ -162,8 +172,6 @@ KT.roles.permissionWidget = function(){
                     flow[item].container.hide();
                 }
             }
-        	
-            handleAllTypes(true);
                         
             progress_bar.setProgress(25);
             
@@ -184,20 +192,22 @@ KT.roles.permissionWidget = function(){
             $('.validation_error').remove();
         },
         handleNext = function(){
-            var next = flow[current_stage].next.stage; 
+            var next = flow[current_stage].next.stage,
+            	current = current_stage; 
 
-            if( flow[current_stage].validate() ){
+            if( flow[current].validate() ){
+	            current_stage = next;
             	flow[next].container.show();
-                flow[current_stage].next.actions();
-                current_stage = next;
+                flow[current].next.actions();
             }
         },
         handlePrevious = function(){
-            var previous = flow[current_stage].previous.stage; 
+            var previous = flow[current_stage].previous.stage,
+            	current = current_stage; 
             
-            flow[current_stage].container.hide();
-            flow[current_stage].previous.actions();
             current_stage = previous;
+            flow[current].container.hide();
+            flow[current].previous.actions();
         },
         handleDone = function(){
             if ( done_button.hasClass('disabled') ){
@@ -1029,7 +1039,6 @@ var rolesRenderer = (function($){
             var panel = $('.panel-custom'),
                 width = panel.width();
             
-            width -= 4;
             panel.find('.sliding_container').width(width);
             panel.find('.breadcrumb_search').width(width);
             panel.find('.slider').width(width);
