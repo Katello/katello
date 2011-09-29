@@ -115,7 +115,12 @@ class SystemTemplate < ActiveRecord::Base
 
 
   def remove_package package_name
-    package = self.packages.find(:first, :conditions => {:package_name => package_name})
+    if Katello::PackageUtils.is_nvr package_name
+      pack_attrs = Katello::PackageUtils.parse_nvre package_name
+      package = self.packages.find(:first, :conditions => {:package_name => pack_attrs[:name], :version => pack_attrs[:version], :release => pack_attrs[:release], :epoch => pack_attrs[:epoch]})
+    else
+      package = self.packages.find(:first, :conditions => {:package_name => package_name})
+    end
     package.destroy
   end
 
@@ -123,10 +128,11 @@ class SystemTemplate < ActiveRecord::Base
     product = self.environment.products.find_by_name(product_name)
     if product == nil
       raise Errors::TemplateContentException.new("Product #{product_name} not found in this environment.")
+    elsif self.products.include? product
+      raise Errors::TemplateContentException.new("Product #{product_name} is already present in the template.")
     end
-    self.products = (self.products << product).uniq
+    self.products << product
   end
-
 
   def remove_product product_name
     product = self.environment.products.find_by_name(product_name)
@@ -134,6 +140,35 @@ class SystemTemplate < ActiveRecord::Base
     save!
   rescue ActiveRecord::RecordInvalid
     raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{product_name}.")
+  end
+
+  def add_product_by_cpid cp_id
+    product = self.environment.products.find_by_cp_id(cp_id)
+    if product == nil
+      raise Errors::TemplateContentException.new("Product #{cp_id} not found in this environment.")
+    elsif self.products.include? product
+      raise Errors::TemplateContentException.new("Product #{cp_id} is already present in the template.")
+    end
+    self.products << product
+  end
+
+  def remove_product_by_cpid cp_id
+    product = self.environment.products.find_by_cp_id(cp_id)
+    self.products.delete(product)
+    save!
+  rescue ActiveRecord::RecordInvalid
+    raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{cp_id}.")
+  end
+
+  def set_parameter key, value
+    self.parameters[key] = value
+  end
+
+  def remove_parameter key
+    if not self.parameters.has_key? key
+      raise Errors::TemplateContentException.new("Parameter #{key} not found in the template.")
+    end
+    self.parameters.delete(key)
   end
 
   def add_package_group pg_attrs
