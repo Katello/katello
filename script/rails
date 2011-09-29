@@ -32,7 +32,7 @@ if config and config['common']['use_ssl']
                   :SSLVerifyDepth  => 2,
                   :SSLCACertificateFile => "/etc/candlepin/certs/candlepin-ca.crt",
                   :SSLPrivateKey => OpenSSL::PKey::RSA.new(File.open("/etc/candlepin/certs/candlepin-ca.key").read),
-                  :SSLCertificate => OpenSSL::X509::Certificate.new(File.open("/etc/candlepin/certs/katello.crt").read),
+                  :SSLCertificate => OpenSSL::X509::Certificate.new(File.open("/etc/candlepin/certs/candlepin-ca.crt").read),
                   :SSLCertName => [["CN", WEBrick::Utils::getservername]]
               })
           end
