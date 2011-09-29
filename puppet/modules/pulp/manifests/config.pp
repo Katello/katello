@@ -4,6 +4,7 @@ class pulp::config {
   # if certificates needs to be distributed, please fix the following.
   file { "/etc/pulp/pulp.conf":
     content => template("pulp/etc/pulp/pulp.conf.erb"),
+    before => [Class["apache2::service"]],
     require => [Class["pulp::install"], Class["candlepin::config"]];
   }
 
