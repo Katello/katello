@@ -138,10 +138,7 @@ $(document).ready(function() {
 var activation_key = (function() {
     return {
         initialize_edit: function() {
-            // all promotion paths are hidden on initial render, so locate the env that is currently
-            // selected... and show it's promotion path
-            //$('.promotion_paths').find('.selected').closest('#env').show();
-
+            activation_key.reset_env_select();
             activation_key.enable_buttons();
             activation_key.highlight_system_templates(false);
         },
