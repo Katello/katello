@@ -10,11 +10,25 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+class PackageUniquenessValidator < ActiveModel::Validator
+  def validate(record)
+    duplicate_ids = SystemTemplatePackage.where(:system_template_id => record.system_template_id, :package_name => record.package_name, :version => record.version, :release => record.release, :epoch => record.epoch, :arch => record.arch).all.map {|p| p.id}
+    duplicate_ids -= [record.id]
+    record.errors[:base] << _("Package '#{record.nvrea}' is already present in the template") if duplicate_ids.count > 0
+  end
+end
+
 class PackageValidator < ActiveModel::Validator
   def validate(record)
-    if record.to_package.nil?
-      record.errors[:base] <<  _("Package '#{record.package_name}' does not belong to any product in this template")
+    if record.is_nvr?
+      cnt = record.system_template.environment.find_packages_by_nvre(record.package_name, record.version, record.release, record.epoch).length
+      name = record.nvrea
+    else
+      cnt = record.system_template.environment.find_packages_by_name(record.package_name).length
+      name = record.package_name
     end
+
+    record.errors[:base] <<  _("Package '#{name}' not found in the Locker environment") if cnt == 0
   end
 end
 
@@ -22,21 +36,21 @@ class SystemTemplatePackage < ActiveRecord::Base
   include Authorization
 
   belongs_to :system_template, :inverse_of => :packages
-  validates_uniqueness_of :package_name, :scope =>  :system_template_id
+  validates_with PackageUniquenessValidator
   validates_with PackageValidator
 
-  #package name should exist in a product in the environment
-  def to_package
-    self.system_template.environment.products.each do |product|
-       product.repos(self.system_template.environment).each do |repo|
-        #search for errata in all repos in a product
-        idx = repo.packages.index do |p| p.name == self.package_name end
-        return repo.packages[idx] if idx != nil
-
-      end
-    end
-    nil
+  def is_nvr?
+    not (self.package_name.nil? or self.version.nil? or self.release.nil?)
   end
 
+  def nvrea
+    if self.is_nvr?
+      attrs = self.attributes.with_indifferent_access
+      attrs[:name] = attrs[:package_name]
+      Katello::PackageUtils.build_nvrea attrs
+    else
+      self.package_name
+    end
+  end
 
 end

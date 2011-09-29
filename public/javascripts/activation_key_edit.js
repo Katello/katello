@@ -12,6 +12,7 @@
 */
 
 $(document).ready(function() {
+
     // all promotion paths are hidden on initial render, so locate the env that is currently
     // selected... and show it's promotion path
     $('.promotion_paths').find('.selected').closest('#env').show();

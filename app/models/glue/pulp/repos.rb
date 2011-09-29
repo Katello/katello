@@ -27,10 +27,6 @@ module Glue::Pulp::Repos
       [self.product_groupid(product), self.env_groupid(environment), self.env_orgid(product.locker.organization)]
   end
 
-  def self.clone_repo_id(repo, environment)
-    [repo.product.cp_id, repo.name, environment.name,environment.organization.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("-")
-  end
-
   def self.clone_repo_path(repo, environment, for_cp = false)
     repo_path(environment,repo.product, repo.name, for_cp)
   end
@@ -94,16 +90,55 @@ module Glue::Pulp::Repos
       async_tasks
     end
 
-    #is the repo cloned in the specified environment
-    def is_cloned_in? repo, env
-      return get_cloned(repo, env) != nil
+    def has_package? id
+      self.repos(env).each do |repo|
+        return true if repo.has_package? id
+      end
+      false
     end
 
-    def get_cloned repo, env
-      self.repos(env).each{ |curr_repo|
-        return curr_repo if repo.clone_ids.include?(curr_repo.id)
-      }
-      nil
+    def find_packages_by_name env, name
+      self.repos(env).collect do |repo|
+        repo.find_packages_by_name(name).collect do |p|
+          p[:repo_id] = repo.id
+          p
+        end
+      end.flatten(1)
+    end
+
+    def find_packages_by_nvre env, name, version, release, epoch
+      self.repos(env).collect do |repo|
+        repo.find_packages_by_nvre(name, version, release, epoch).collect do |p|
+          p[:repo_id] = repo.id
+          p
+        end
+      end.flatten(1)
+    end
+
+    def find_latest_package_by_name env, name
+      latest_pack = nil
+
+      self.repos(env).each do |repo|
+        pack = repo.find_latest_package_by_name name
+
+        next if pack.nil?
+
+        if (latest_pack.nil?) or
+           (pack[:epoch] > latest_pack[:epoch]) or
+           (pack[:epoch] == latest_pack[:epoch] and pack[:release] > latest_pack[:release]) or
+           (pack[:epoch] == latest_pack[:epoch] and pack[:release] == latest_pack[:release] and pack[:version] > latest_pack[:version])
+          latest_pack = pack
+          latest_pack[:repo_id] = repo.id
+        end
+      end
+      latest_pack
+    end
+
+    def has_erratum? id
+      self.repos(env).each do |repo|
+        return true if repo.has_erratum? id
+      end
+      false
     end
 
     def sync
@@ -126,6 +161,8 @@ module Glue::Pulp::Repos
 
     # Get the most relavant status for all the repos in this Product
     def sync_status
+      return @status if @status
+
       statuses = repos(self.locker).map {|r| r.sync_status()}
       return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED) if statuses.empty?
 
@@ -146,7 +183,7 @@ module Glue::Pulp::Repos
       return statuses[idx] if idx != nil
 
       #else -> all finished
-      return statuses[0]
+      @status = statuses[0]
     end
 
     def sync_state
@@ -194,14 +231,19 @@ module Glue::Pulp::Repos
       end
     end
 
-    def repo_id content_name, env_name = nil
+    def repo_id(content_name, env_name = nil)
       return content_name if content_name.include?(self.organization.name) && content_name.include?(self.cp_id.to_s)
-      [self.cp_id.to_s, content_name.to_s, env_name, self.organization.name].compact.join("-").gsub(/[^-\w]/,"_")
+      Glue::Pulp::Repo.repo_id(self.cp_id.to_s, content_name.to_s, env_name, self.organization.name)
     end
 
-    def repository_url content_url
-      return content_url if self.provider.provider_type == Provider::CUSTOM
-      self.provider[:repository_url] + content_url
+    def repository_url(content_url, substitutions = {})
+      if self.provider.provider_type == Provider::CUSTOM
+        url = content_url.dup
+      else
+        url = self.provider[:repository_url] + content_url
+      end
+      substitutions.each { |var, val| url.gsub!("$#{var}",val) }
+      url
     end
 
     def delete_repo(name)
@@ -236,18 +278,27 @@ module Glue::Pulp::Repos
         cert = self.certificate
         key = self.key
         ca = File.open("#{Rails.root}/config/candlepin-ca.crt", 'rb') { |f| f.read }
-        repo = Glue::Pulp::Repo.new(:id => repo_id(pc.content.name),
-            :arch => arch,
-            :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, pc.content.name),
-            :name => pc.content.name,
-            :feed => repository_url(pc.content.contentUrl),
-            :feed_ca => ca,
-            :feed_cert => cert,
-            :feed_key => key,
-            :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
-            :preserve_metadata => orchestration_for == :import_from_cp #preserve repo metadata when importing from cp
-        )
-        repo.create
+        archs = self.arch.split(",")
+        archs.each do |arch|
+          # temporary solution unless pulp supports another archs
+          unless %w[noarch i386 i686 ppc64 s390x x86_64].include? arch
+            Rails.logger.error("Pulp does not support arch '#{arch}'")
+            next
+          end
+          repo_name = "#{pc.content.name} #{arch}".gsub(/[^a-z0-9\-_ ]/i,"")
+          repo = Glue::Pulp::Repo.new(:id => repo_id(repo_name),
+                                      :arch => arch,
+                                      :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, pc.content.name),
+                                      :name => repo_name,
+                                      :feed => repository_url(pc.content.contentUrl, :basearch => arch),
+                                      :feed_ca => ca,
+                                      :feed_cert => cert,
+                                      :feed_key => key,
+                                      :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
+                                      :preserve_metadata => orchestration_for == :import_from_cp #preserve repo metadata when importing from cp
+                                      )
+          repo.create
+        end
       end
     end
 
@@ -326,11 +377,11 @@ module Glue::Pulp::Repos
       repos.each do |repo|
         if repo.is_cloned_in?(to_env)
           #repo is already cloned, so lets just re-sync it from its parent
-          async_tasks << repo.get_cloned_in(to_env).sync
+          async_tasks << repo.get_clone(to_env).sync
         else
           async_tasks << repo.promote(to_env, self)
 
-          new_repo_id = Glue::Pulp::Repos.clone_repo_id(repo, to_env)
+          new_repo_id = repo.clone_id(to_env)
           new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(repo)
 
           pulp_uri = URI.parse(AppConfig.pulp.url)
@@ -341,7 +392,7 @@ module Glue::Pulp::Repos
               :type => "yum",
               :label => new_repo_id,
               :vendor => "Custom"
-            }
+            }, :enabled => true
           })
 
           productContent_will_change!

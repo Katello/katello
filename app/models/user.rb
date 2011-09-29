@@ -15,6 +15,9 @@ require 'util/threadsession'
 require 'util/password'
 
 class User < ActiveRecord::Base
+  include Glue::Pulp::User if (AppConfig.use_cp and AppConfig.use_pulp)
+  include Glue if AppConfig.use_cp
+
   has_many :roles_users
   has_many :roles, :through => :roles_users
   belongs_to :own_role, :class_name => 'Role'
@@ -52,13 +55,13 @@ class User < ActiveRecord::Base
   end
 
   # create own role for new user
-  after_create do |u|
-    if u.own_role.nil?
+  before_save do |u|
+    if u.new_record? and u.own_role.nil?
       # create the own_role where the name will be a string consisting of username and 20 random chars
       r = Role.create!(:name => "#{u.username}_#{Password.generate_random_string(20)}")
       u.roles << r unless u.roles.include? r
       u.own_role = r
-      u.save!
+#      u.save!
     end
   end
 
@@ -118,8 +121,8 @@ class User < ActiveRecord::Base
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a? Array
     org = Organization.find(org) if Numeric === org
-    Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
-          #{resource_type.inspect} in organization #{org && org.inspect}"
+
+    log_roles(verbs, resource_type, nil,org)
 
     org_permissions = org_permissions_query(org, resource_type == :organizations)
     org_permissions = org_permissions.where(:organization_id => nil) if resource_type == :organizations
@@ -198,8 +201,7 @@ class User < ActiveRecord::Base
     ResourceType.check resource_type, verbs
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a? Array
-    Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
-          #{resource_type.inspect} scoped #{tags.inspect} in organization #{org && org.inspect}"
+    log_roles(verbs, resource_type, tags,org, any_tags)
 
     return true if allowed_all_tags?( verbs,resource_type, org)
 
@@ -383,8 +385,7 @@ class User < ActiveRecord::Base
     ResourceType.check resource_type, verbs
     verbs = [] if verbs.nil?
     verbs = [verbs] unless verbs.is_a? Array
-    Rails.logger.debug "Checking if user #{username} is allowed to #{verbs.join(',')} in
-          #{resource_type.inspect} in organization #{org && org.inspect}"
+    log_roles(verbs, resource_type, nil,org)
     org = Organization.find(org) if Numeric === org
     org_permissions = org_permissions_query(org, resource_type == :organizations)
 
@@ -431,4 +432,17 @@ class User < ActiveRecord::Base
     query
   end
 
+
+  def log_roles verbs, resource_type, tags, org, any_tags = false
+    if  AppConfig.allow_roles_logging
+      verbs_str = verbs ? verbs.join(','):"perform any verb"
+      tags_str = "any tags"
+      if tags
+        tag_str = any_tags ? "any tag in #{tags.join(',')}" : "all the tags in #{tags.join(',')}"
+      end
+
+      org_str = org ? "organization #{org.inspect}":" any organization"
+      Rails.logger.info "Checking if user #{username} is allowed to #{verbs_str} in  #{resource_type.inspect} scoped for #{tags_str} in  #{org_str}"
+    end
+  end
 end

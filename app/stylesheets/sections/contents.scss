@@ -4,8 +4,8 @@
 
 #contents {
   .locked_breadcrumb {
-    background-color: #FEE7C6;
-    color: #000;
+    background-color: $tree-locked-breadcrumb_color;
+    color: $black_color;
   }
   .locked {
     outline: 2px solid gray;
@@ -50,52 +50,26 @@
 
 
   #changeset_edit {
-    position: absolute;
-    display: none;
-    float: left;
-    bottom: 1px;
-    left: 0px;
-    z-index:300;
     width: 448px;
-    margin-left: 1px;
-    height: 250px;
     background-color: white;
-    border-top: 1px solid #B5B5B5;
+    border-top: 1px solid $tree-border_color;
   }
 
   #changeset_status {
-    border: 1px solid #B5B5B5;
+    border: 1px solid $tree-border_color;
     margin-top: -1px;
   }
   #content_tree {
     .sliding_container {
-      .block {
-        font-size: 100%;
-        border: none;
-        padding: 0;
-        
-        &:hover {
-          background: transparent;
-          color: #000;
-        }
-      }
-      .active {
-        border: none;
-        background: transparent;
-        color: #000;
 
-        &:hover {
-          color: #000;
-        }
-      }
       .activeItem {
-        background-color: #bde4e8;
-        border-top-color: #7bbcc5;
-        border-bottom-color: #7bbcc5;
-        color: #000;
+        background-color: $tree-item-background-hover_color;
+        border-top-color: $tree-item-border-hover_color;
+        border-bottom-color: $tree-item-border-hover_color;
+        color: $tree-item-hover_color;
         
         a {
-          color: #356e76;
+          color: $tree-breadcrumb_color;
           background: inherit;
         }
       }
@@ -140,8 +114,8 @@
     }
     .locked_breadcrumb_search {
       @extend breadcrumb_search;
-      background-color: #FEE7C6;
-      color: #000;
+      background-color: $tree-locked-breadcrumb_color;
+      color: $black_color;
       border: 1px solid $tree-border_color;
       border-bottom: none;
     }
@@ -223,7 +197,7 @@
       
       &.active {
         background-color: $listhover_color;
-        color: #FFF;
+        color: $white_color;
         
         .arrow-right {
           border-top: 15px solid transparent;

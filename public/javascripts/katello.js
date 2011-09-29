@@ -80,7 +80,10 @@ KT.helptip =  (function($) {
               url = $(this).attr('data-url');
 
           $("#helptip-opened_" + key).hide();
-          $("#helptip-closed_" + key).show();
+          $("#helptip-closed_" + key).show(); 
+          
+          $(document).trigger('helptip-closed');
+          
           disable(key, url);
         },
         handle_open = function(){
@@ -89,6 +92,9 @@ KT.helptip =  (function($) {
 
           $("#helptip-opened_" + key).show();
           $("#helptip-closed_" + key).hide();
+          
+          $(document).trigger('helptip-opened');
+          
           enable(key, url);
         };
         
@@ -280,6 +286,9 @@ KT.common = (function() {
             }
             return root_url;
         },
+        setRootUrl : function(){
+        	KT.routes.options.prefix = $('#root_url').attr('data-url');
+        },
         thirdLevelNavSetup : function(){
             var firstchild = $('.third_level:first-child');
             var li = firstchild.parent().parent();
@@ -292,7 +301,19 @@ KT.common = (function() {
                 function(){
                     ul.fadeOut('fast');
             });
+        },
+        jscroll_init: function(element) {
+            element.jScrollPane({ hideFocus: true });
+        },
+        jscroll_resize: function(element) {
+            element.resize(function(event){
+                var element = $('.scroll-pane');
+                if (element.length){
+                    element.data('jsp').reinitialise();
+                }
+            });
         }
+
     };
 })();
 
@@ -335,9 +356,14 @@ $(document).ready(function (){
     $(".helptip-open").live('click', KT.helptip.handle_close);
     $(".helptip-close").live('click', KT.helptip.handle_open);
 
+    // Add a handler for ellipsis
+	$(".one-line-ellipsis").ellipsis();
+
     KT.common.orgSwitcherSetup();
     KT.common.orgFilterSetup();
     KT.common.thirdLevelNavSetup();
+    
+    KT.common.setRootUrl();
 });
 
 /**

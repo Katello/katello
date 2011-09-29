@@ -41,7 +41,17 @@ Src::Application.routes.draw do
 
   resources :subscriptions, :only => [:index]
 
-  resources :dashboard, :only => [:index]
+  resources :dashboard, :only => [:index] do
+    collection do
+      get :sync
+      get :notices
+      get :errata
+      get :promotions
+      get :systems
+      get :subscriptions
+    end
+
+  end
 
 
   resources :systems, :except => [:destroy] do
@@ -115,6 +125,7 @@ Src::Application.routes.draw do
     member do
       get :promotion_details
       get :object
+      get :download
       put :update_content
     end
   end
@@ -279,10 +290,10 @@ Src::Application.routes.draw do
       resources :systems, :only => [:index]
       match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :activation_keys, :only => [:index]
-
       resources :repositories, :only => [] do
         post :discovery, :on => :collection
       end
+      resource :uebercert , :only => [:create, :show]
     end
 
     resources :changesets, :only => [:show, :destroy] do
