@@ -21,7 +21,7 @@ describe Product do
     disable_org_orchestration
 
     @organization = Organization.create!(:name => ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
-    @provider     = Provider.create!({:organization => @organization, :name => 'provider', :repository_url => "https://something.url", :provider_type => Provider::REDHAT})
+    @provider     = @organization.redhat_provider
 
     ProductTestData::SIMPLE_PRODUCT.merge!({:provider => @provider, :environments => [@organization.locker]})
     ProductTestData::SIMPLE_PRODUCT_WITH_INVALID_NAME.merge!({:provider => @provider, :environments => [@organization.locker]})
@@ -258,7 +258,7 @@ describe Product do
         end
 
         it "should substitute $basearch in the contentUrl for the repo feed" do
-          expected_feed = 'https://something.url/released-extra/RHEL-5-Server/$releasever/x86_64/os/ClusterStorage/'
+          expected_feed = "#{@provider.repository_url}/released-extra/RHEL-5-Server/$releasever/x86_64/os/ClusterStorage/"
           Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:feed => expected_feed)).and_return(@repo)
         end
       end
