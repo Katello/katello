@@ -31,6 +31,8 @@ class Provider < ActiveRecord::Base
     :message => "Please select provider type from one of the following: #{TYPES.join(', ')}."
   before_validation :sanitize_repository_url
 
+  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
+
   scoped_search :on => :name, :complete_value => true, :rename => :'provider.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'provider.description'
   scoped_search :on => :repository_url, :complete_value => true, :rename => :'provider.url'

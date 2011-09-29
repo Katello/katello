@@ -77,7 +77,7 @@ class List(TemplateAction):
         templates = self.api.templates(environment["id"])
 
         if not templates:
-            print _("No templates found in environment [ %s ]") % envName
+            print _("No templates found in environment [ %s ]") % environment["name"]
             return os.EX_OK
         self.printer.addColumn('id')
         self.printer.addColumn('name')
@@ -116,9 +116,8 @@ class Info(TemplateAction):
         if template == None:
             return os.EX_DATAERR
 
-        template["errata"]   = "\n".join([e["erratum_id"] for e in template["errata"]])
         template["products"] = "\n".join([p["name"] for p in template["products"]])
-        template["packages"] = "\n".join([p["package_name"] for p in template["packages"]])
+        template["packages"] = "\n".join([self._build_nvrea(p) for p in template["packages"]])
         template["parameters"] = "\n".join([ key+":\t"+value for key, value in template["parameters"].iteritems() ])
         template["package_groups"] = "\n".join(["{"+_("repo")+":\t"+pg["repo_id"]+", "+_("id")+":\t"+pg["package_group_id"]+"}" for pg in template["package_groups"] ])
         template["package_group_categories"] = "\n".join(["{"+_("repo")+":\t"+pg["repo_id"]+", "+_("id")+":\t"+pg["pg_category_id"]+"}" for pg in template["pg_categories"] ])
@@ -139,6 +138,22 @@ class Info(TemplateAction):
         self.printer.setHeader(_("Template Info"))
         self.printer.printItem(template)
         return os.EX_OK
+        
+        
+    def _build_nvrea(self, package):
+        
+        if package['version'] <> None and package['release'] <> None:
+            nvrea = '-'.join((package['package_name'], package['version'], package['release']))
+            if package['arch'] <> None:
+                nvrea = nvrea +'.'+ package['arch']
+            if package['epoch'] <> None:
+                nvrea = package['epoch'] +':'+ nvrea
+            return nvrea
+        
+        else:
+            return package['package_name']
+    
+    
 
 # ==============================================================================
 class Import(TemplateAction):
@@ -283,8 +298,6 @@ class UpdateContent(TemplateAction):
             'remove_product': [{'product': None}],
             'add_package':    [{'package': None}],
             'remove_package': [{'package': None}],
-            'add_erratum':    [{'erratum': None}],
-            'remove_erratum': [{'erratum': None}],
             'add_parameter':  [{'parameter': None}, {'value': None}],
             'remove_parameter': [{'parameter': None}],
             'add_package_group':    [{'package_group': _("Package group id")},{'repo': _("Repo id")}],

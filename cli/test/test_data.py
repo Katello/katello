@@ -633,20 +633,25 @@ TEMPLATES = [
       "system_template_id":1,
       "repo_id":"1316523009485-base-one-ACME_Corporation"}],
   "created_at": "2011-09-06T11:47:44Z",
-  "errata": [
-
-  ],
   "updated_at": "2011-09-06T11:51:07Z",
   "packages": [
     {
       "system_template_id": 2,
       "id": 1,
-      "package_name": "walrus"
+      "package_name": "walrus",
+      "version": "0.1",
+      "release": "0.2",
+      "epoch": "1",
+      "arch": "noarch"
     },
     {
       "system_template_id": 2,
       "id": 2,
-      "package_name": "cheetah"
+      "package_name": "cheetah",
+      "version": None,
+      "release": None,
+      "epoch": None,
+      "arch": None
     }
   ],
   "id": 2,

@@ -191,8 +191,7 @@ describe Api::ChangesetsController do
     it_should_behave_like "protected action"
 
     it "should call Changeset.promote asynchronously" do
-      @changeset.should_receive(:promote).once
-      @changeset.should_receive(:async).once
+      @changeset.should_receive(:promote).with(true).once
       req
     end
   end

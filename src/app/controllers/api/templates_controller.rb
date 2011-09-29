@@ -23,9 +23,9 @@ class Api::TemplatesController < Api::ApiController
 
   def index
     if @environment.nil?
-      tpls = SystemTemplate.all
+      tpls = SystemTemplate.all.where(params.slice(:name))
     else
-      tpls = @environment.system_templates
+      tpls = @environment.system_templates.where(params.slice(:name))
     end
     render :json => tpls.to_json
   end
@@ -80,16 +80,6 @@ class Api::TemplatesController < Api::ApiController
         @template.remove_package(params[:package])
         @template.save!
         render :text => _("Removed package '#{params[:package]}'"), :status => 200 and return
-
-      when 'add_erratum'
-        @template.add_erratum(params[:erratum])
-        @template.save!
-        render :text => _("Added erratum '#{params[:erratum]}'"), :status => 200 and return
-
-      when 'remove_erratum'
-        @template.remove_erratum(params[:erratum])
-        @template.save!
-        render :text => _("Removed erratum '#{params[:erratum]}'"), :status => 200 and return
 
       when 'add_parameter'
         @template.parameters[params[:parameter]] = params[:value]

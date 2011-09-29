@@ -113,6 +113,7 @@ class Info(ChangesetAction):
         cset["products"] = "\n".join([p["name"] for p in cset["products"]])
         cset["packages"] = "\n".join([p["display_name"] for p in cset["packages"]])
         cset["repositories"] = "\n".join([r["display_name"] for r in cset["repos"]])
+        cset["system_templates"] = "\n".join([t["name"] for t in cset["system_templates"]])
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
@@ -124,6 +125,7 @@ class Info(ChangesetAction):
         self.printer.addColumn('products', multiline=True, show_in_grep=False)
         self.printer.addColumn('packages', multiline=True, show_in_grep=False)
         self.printer.addColumn('repositories', multiline=True, show_in_grep=False)
+        self.printer.addColumn('system_templates', multiline=True, show_in_grep=False)
 
         self.printer.setHeader(_("Changeset Info"))
         self.printer.printItem(cset)
@@ -201,6 +203,12 @@ class UpdateContent(ChangesetAction):
         self.parser.add_option('--remove_product', dest='remove_product',
                                 action="append",
                                 help=_("product to remove from the changeset"))
+        self.parser.add_option('--add_template', dest='add_template',
+                                action="append",
+                                help=_("name of a template to be added to the changeset"))
+        self.parser.add_option('--remove_template', dest='remove_template',
+                                action="append",
+                                help=_("name of a template to be removed from the changeset"))
         self.parser.add_option('--from_product', dest='from_product',
                                 action="callback", callback=self.store_from_product, type="string",
                                 help=_("determines product from which the packages/errata/repositories are picked"))
@@ -247,6 +255,8 @@ class UpdateContent(ChangesetAction):
         patch['-repos'] = items["remove_repo"]
         patch['+products'] = self.get_option('add_product') or []
         patch['-products'] = self.get_option('remove_product') or []
+        patch['+templates'] = self.get_option('add_template') or []
+        patch['-templates'] = self.get_option('remove_template') or []
 
         msg = self.api.update_content(cset["id"], patch)
         print _("Successfully updated changeset [ %s ]") % csName

@@ -42,7 +42,17 @@ Src::Application.routes.draw do
 
   resources :subscriptions, :only => [:index]
 
-  resources :dashboard, :only => [:index]
+  resources :dashboard, :only => [:index] do
+    collection do
+      get :sync
+      get :notices
+      get :errata
+      get :promotions
+      get :systems
+      get :subscriptions
+    end
+
+  end
 
 
   resources :systems, :except => [:destroy] do
@@ -116,6 +126,7 @@ Src::Application.routes.draw do
     member do
       get :promotion_details
       get :object
+      get :download
       put :update_content
     end
   end
