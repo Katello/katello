@@ -19,18 +19,22 @@
         .grid_5.la
           = text_area_tag 'activation_key[description]', params[:description], :size => "32x4", :tabindex => auto_tab_index
 
-      %fieldset.promotion_paths
+      .promotion_paths
         = hidden_field_tag 'activation_key[environment_id]'
         %label #{_("Select an Environment")}:
         - unless current_organization.environments.empty?
           - current_organization.promotion_paths.each do |path|
-            .grid_10
-              %ul.breadcrumb
+            .clear
+              &nbsp;
+            .jbreadcrumb
+              %ul
                 %li
                   =link_to _('Locker'), "#", :class => "crumb-nohover"
                 - for env in path
                   %li
-                    %a.select_env{"data-env_id" => env.id, "data-templates_url" => system_templates_organization_environment_path(env.organization.cp_key, env)} #{env.name}
+                    %a.select_env{"data-env_id" => env.id, "data-templates_url" => system_templates_organization_environment_path(env.organization.cp_key, env)}
+                      %div
+                        #{env.name}
 
       %fieldset#system_templates
         .grid_2.ra

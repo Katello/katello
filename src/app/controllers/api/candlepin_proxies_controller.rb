@@ -19,6 +19,7 @@ class Api::CandlepinProxiesController < Api::ProxiesController
 
   def get
     r = ::Candlepin::Proxy.get(@request_path)
+    Rails.logger.debug r if AppConfig.debug_cp_proxy
     render :text => r, :content_type => :json
   end
 
@@ -27,7 +28,9 @@ class Api::CandlepinProxiesController < Api::ProxiesController
   end
 
   def post
-    render :text => ::Candlepin::Proxy.post(@request_path, @request_body), :content_type => :json
+    r = ::Candlepin::Proxy.post(@request_path, @request_body)
+    Rails.logger.debug r if AppConfig.debug_cp_proxy
+    render :text => r, :content_type => :json
   end
   
 end

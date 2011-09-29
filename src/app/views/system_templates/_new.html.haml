@@ -1,4 +1,10 @@
-.grid_7
+= content_for :title do
+  #{_("New System Template")}
+
+= content_for :navigation do
+  / pretty
+
+= content_for :content do
   = form_for SystemTemplate.new, :html => {:method => :post, :id => 'new_system_template'}, :url => system_templates_path do |form|
     %fieldset.fl.clear
       %label.grid_2 #{_("Name")}:

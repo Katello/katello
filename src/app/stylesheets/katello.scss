@@ -6,19 +6,28 @@
 @import "colors";
 @import "sprites";
 
+@import "widgets/multiselect";
+
 html {}
 body { background:  $body_background_img; }
 
 strong { font-weight: bold; }
 .clear { clear: both; }
+.clearfloat { /* this class can be placed on a <br /> or empty div as the final element following the last floated div (within the #container) if the overflow:hidden on the .container is removed */
+	clear:both;
+	height:0;
+	font-size: 1px;
+	line-height: 0px;
+}
 .wrap { overflow: hidden; margin-bottom: 2em; } /* wrapper around floating elements */
 .nomargin { margin: none; }
 .placeholder { margin-bottom: 2em; }
 .disabled { opacity: 0.4; cursor: default; }
-.hidden { display: none !important; }
+.hidden { display: none; }
 .outlined { outline: 2px solid $kselected_color; }
 .alt { background-color: lighten($lightgrey_color, 35%) !important; }
 .clickable { cursor: pointer; cursor: hand; }
+.light_text { color: $lightgrey_color; }
 
 .la { text-align: left; } /* text align left */
 .ra { text-align: right; } /* text align right */
@@ -51,7 +60,7 @@ a {
 input, textarea {
   @include inset-box-shadow(0,1px,1px,rgba(0, 0, 0, 0.2));
   border: 1px solid darken($stroke_color,20%);
-  background-color: #f0f0f0;
+  background-color: $input-background_color;
   background: $input_background_img;
   padding: 4px;
   margin: 0;
@@ -1097,7 +1106,6 @@ fieldset {
 #panel-frame {
   position:absolute;
   max-width:700px;
-  top: 13.2em;
   z-index: 1;
 }
 .panel {
@@ -1165,13 +1173,18 @@ fieldset {
     position: absolute;
     top: 9px;
   }
-  h2 { padding-left: 20px; margin: 0.25em 0; }
+  
+  h2 { margin: 0; padding: 10px 0 0 20px; }
+  
   #panel_main, #subpanel_main {
     overflow-y: auto;
     overflow-x: hidden;
     width: auto;
     margin: 0 0 0 20px;
     min-height: 250px;
+  }
+  #subpanel_main {
+    min-height: 180px;
   }
   .grid_8 {
     margin-left: 0px;
@@ -1188,21 +1201,22 @@ fieldset {
     } 
   }
 }
+.subpanel {
+  z-index: 0;
+  border-top: 1px solid #D1D1D2;
+  position: absolute;
+  top: 35px;
+  
+  h2 {
+    font-size: 100%;
+    margin: 0; 
+    padding: 10px 0 0 20px;
+  }
+}
 #subpanel-frame {
   position:absolute;
   max-width:700px;
-  top: 13.2em;
   z-index: 0;
-
-  .subpanel {
-    z-index: 0;
-    border-top: 1px solid #D1D1D2;
-    
-    h2 {
-      font-size: 100%;
-      margin-top: 9px;
-    }
-  }
 }
 
 .list {
@@ -1250,14 +1264,6 @@ fieldset {
     padding: 4px 12px;
     z-index: 400;
   }
-  #slider {
-    .block {
-       border-bottom: none 0;
-       &:hover {
-         background-color: #729FCF;
-       }
-    }
-  }
 }
 #list-title, .list-title {
     display: block;
@@ -1270,10 +1276,10 @@ fieldset {
 
 /* begin helptip */
 .helptip-open {
-  background-color: #EEE;
+  background-color: $helptip-background_color;
   display: block; 
   padding: 12px;
-  border: 1px solid #DDD;
+  border: 1px solid $helptip-border_color;
   margin: 10px auto 5px auto;
   @extend .clearfix;
 
@@ -1354,35 +1360,6 @@ fieldset {
   margin-top:10px;
 }
 
-/*multi select*/
-.ui-multiselect { border: solid 1px #B5B5B5; font-size: 0.8em; }
-.ui-multiselect ul { -moz-user-select: none; }
-.ui-multiselect li { margin: 0; padding: 0; cursor: default; line-height: 20px; height: 20px; font-size: 11px; list-style: none; }
-.ui-multiselect li a { color: #999; text-decoration: none; padding: 0; display: block; float: left; cursor: pointer;}
-.ui-multiselect li.ui-draggable-dragging { padding-left: 10px; }
-
-.ui-multiselect div.selected { position: relative; padding: 0; margin: 0; border: 0; float:left; }
-.ui-multiselect ul.selected { position: relative; padding: 0; overflow: auto; overflow-x: hidden; background: $white_color; margin: 0; list-style: none; border: 0; position: relative; width: 100%; }
-.ui-multiselect ul.selected li { }
-
-.ui-multiselect div.available { position: relative; padding: 0; margin: 0; border: 0; float:left; border-left: 1px solid; }
-.ui-multiselect ul.available { position: relative; padding: 0; overflow: auto; overflow-x: hidden; background: $white_color; margin: 0; list-style: none; border: 0; width: 100%; }
-.ui-multiselect ul.available li { padding-left: 10px; }
-
-.ui-multiselect .ui-state-default { border: none; margin-bottom: 1px; position: relative; padding-left: 20px;}
-.ui-multiselect .ui-state-hover { border: none; }
-.ui-multiselect .ui-widget-header {border: none; font-size: 11px; margin-bottom: 1px;}
-
-.ui-multiselect .add-all { float: right; padding: 7px;}
-.ui-multiselect .remove-all { float: right; padding: 7px;}
-.ui-multiselect .search { float: left; padding: 4px;}
-.ui-multiselect .count { float: left; padding: 7px;}
-
-.ui-multiselect li span.ui-icon-arrowthick-2-n-s { position: absolute; left: 2px; }
-.ui-multiselect li a.multi-action { position: absolute; right: 2px; top: 2px; }
-
-.ui-multiselect input.search { height: 14px; padding: 1px; opacity: 0.5; margin: 4px; width: 100px; }
-
 .ui-resizable-e { background: $grabber_icon; }  
 
 .sp {
@@ -1393,13 +1370,19 @@ fieldset {
 /*Environment selector stuff*/
 #path-widget {
   margin: 0 auto;
-  width: 50%;
-
+  
   #path-controller {
       border-style: solid;
       border-width: 1px;
-      border-color: #d3d3d3;
+
+      border-color: $path-border_color;
+      height: 34px;
+
       padding: 6px;  
+
+      .jbreadcrumb {
+        width: 550px; //needed for the env_select to detect the correct with for some reason
+      }
 
       .path_selector {
           display: inline;
@@ -1412,13 +1395,14 @@ fieldset {
      display: inline;
      padding-bottom: 6px;
      margin-bottom: 6px;
+     /*position: absolute;*/
   }
   .path_entry_selected {
         background-color: $lightgrey_color;
   }
   .path_entry {
       padding-left: 6px;
-      padding-right: 33px;
+      padding-right: 6px;
       padding-top: 6px;
       padding-bottom: 6px;
       
@@ -1432,36 +1416,49 @@ fieldset {
 
       border-style: solid;
       border-width: 1px;
-      border-color: #d3d3d3;
+      border-color: $path-border_color;
 
       display: none;
 
       z-index: 200;
       position: absolute;
       background-color: $white_color;
+      margin-left: 0;
   }
 }
-.breadcrumb { 
-  list-style: none; 
-  overflow: hidden; 
-  font: 14px;
+
+
+
+
+.jbreadcrumb {
+  list-style: none;
+  overflow: hidden;
+  max-height: 34px;
+  /*font: 14px;*/
   position: relative;
+  @include no-select;
+
 
   .selected {
-    background: $listhover_color !important; color: $white_color; @include text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
+    background: $listhover_color !important;
+    color:
+    $white_color;
+    @include text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
+
     &:after {
       border-left-color: $listhover_color !important;
     }
   }
 
   li {
-      float: left; 
+      float: left;
       margin-left: 0;
+      white-space: nowrap;
 
       &:first-child {
         @include crumb-nohover;
         a {
-          padding-left: 20px;
+          padding-left: 6px;
           @include border-left-radius(5px);
         }
       }
@@ -1475,8 +1472,12 @@ fieldset {
       &:last-child {
         @include crumb-nohover;
         a {
-          padding-right: 30px;
+          overflow: hidden;
+          padding-right: 10px;
           @include border-right-radius(5px);
+          &:before {
+            content: None;
+          }
 
           &:hover {
             color: $white_color;
@@ -1484,66 +1485,80 @@ fieldset {
           }
           &:after {
             border: 0;
+            border-left: 0px solid $breadcrumbbg_color;
             &:hover { border-left-color: $listhover_color !important; }
           }
         }
       }
 
       a {
-        color: #000;
-        text-decoration: none; 
-        padding: 8px 0 8px 55px;
-        background: $breadcrumbbg_color;                   /* fallback color */
-        position: relative; 
+
+        color: $black_color;
+        text-decoration: none;
+        padding: 8px 0 8px 20px;
+
+        background: $breadcrumbbg_color;                    //fallback color
+        position: relative;
         display: block;
         float: left;
-        
-        &:hover { 
-          background: $listhover_color !important; 
-          color: $white_color; 
+
+        div {
+          overflow: hidden;
+        }
+        &:hover {
+          background: $listhover_color !important;
+          color: $white_color;
           @include text-shadow(rgba(0,0,0,0.6),2px,2px,2px);
-          
+
           &:after { border-left-color: $listhover_color !important; }
+
         }
         &.active {
-          background: $kselected_color; 
+          background: $kselected_color;
           color: white;
-          
+          &:after { border-left-color: $kselected_color };
           &:hover:after { border-left-color: $listhover_color !important; }
-          &:after { border-left-color: $kselected_color !important; }
+         
+          
         }
         &:after {
-          content: " "; 
-          display: block; 
-          width: 0; 
+          content: " ";
+          display: block;
+          width: 0;
           height: 0;
-          border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
-          border-bottom: 50px solid transparent;
-          border-left: 30px solid $breadcrumbbg_color;
+          
+          border-top: 30px solid transparent;            //Go big on the size, and let overflow hide
+          border-bottom: 30px solid transparent;
+          border-left: 15px solid $breadcrumbbg_color;
           position: absolute;
           top: 50%;
-          margin-top: -50px; 
+          margin-top: -30px;
           left: 100%;
-          z-index: 2; 
+          z-index: 2;
         }
-        &:before { 
-          content: " "; 
-          display: block; 
-          width: 0; 
+        &:before {
+          content: " ";
+          display: block;
+          width: 0;
           height: 0;
-          border-top: 50px solid transparent;           /* Go big on the size, and let overflow hide */
-          border-bottom: 50px solid transparent;
-          border-left: 30px solid white;
+          border-top: 30px solid transparent;            //Go big on the size, and let overflow hide
+          border-bottom: 30px solid transparent;
+          border-left: 15px solid white;
           position: absolute;
           top: 50%;
-          margin-top: -50px; 
+          margin-top: -30px;
           margin-left: 1px;
           left: 100%;
-          z-index: 1; 
+          z-index: 1;
+          //background: $breadcrumbbg_color;
+
+
         }
      }
   }
 }
+
+
 
 .jspContainer {
   .jspHorizontalBar, .jspVerticalBar, .jspTrack { 
@@ -1552,15 +1567,15 @@ fieldset {
  
   .jspDrag {
       background: $kselected_color !important;
-  
-      -moz-border-radius: 10px;
-      -webkit-border-radius: 10px;
-      border-radius: 10px;
+      @include border-radius(10px);
+      @include opacity(0.3);
   }
+
   
   .jspTrack {
     .jspActive, .jspHover, .jspDrag:hover {
-       background: #8B8B9F; 
+       background: $jScrollPane-bar_color;
+       @include opacity(1);
      }
    }
   
@@ -1609,6 +1624,17 @@ fieldset {
   .jspArrowRight{ background-position: -32px 0 !important; }
 }
 
+
+.one-line-ellipsis {
+    h5 {
+      display: inline;
+      word-wrap:  normal;
+    }
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+}
+
 .sprite {
     height: 16px;
     width: 16px;
@@ -1616,11 +1642,10 @@ fieldset {
 }
 
 .sliding_tree {
-  position: relative;
+  
   .tree_breadcrumb {
     font-weight: 600;
     font-size: 110%;
-    color: #000;
     background-color: $tree-container_color;
     word-wrap: break-word;
     border: 1px solid $tree-border_color;
@@ -1629,8 +1654,8 @@ fieldset {
     overflow: auto;
     height: 20px;
     
-    .currentCrumb{ color: #000; }
-    .crumb { color: #356e76; }
+    .currentCrumb{ color: $tree-current-breadcrumb_color; }
+    .crumb { color: $tree-breadcrumb_color; }
     .slide_link { display: inline; }
     
     .home_img {
@@ -1657,14 +1682,14 @@ fieldset {
   .slide_up_container {
     position: absolute;
     display: none;
-    //float: left;
-    bottom: 33px;
+    float: left;
+    bottom: 31px;
     left: 0px;
     z-index: 300;
     margin-left: 1px;
     height: 250px;
-    background-color:#F5FAFA;;
-    border-top: 1px solid #B5B5B5;
+    background-color: $tree-slideup-background_color;
+    border-top: 1px solid $tree-border_color;
   }
   .breadcrumb_search {
     font-size: 100%;
@@ -1688,7 +1713,7 @@ fieldset {
         margin: 5px auto;
         input[type="input"] {
           //float: right; /* webkit adds an extra padding and makes the widget narrower */
-          border: 3px solid #436fa8;
+          border: 3px solid $tree-search-border_color;
           background: $white_color;
           padding-right: 0px;
         }
@@ -1713,7 +1738,7 @@ fieldset {
     overflow: hidden;
     position: relative;
     width: 448px;
-    border: 1px solid #B5B5B5;
+    border: 1px solid $tree-border_color;
   
     .sliding_list {
       width: 896px;
@@ -1728,7 +1753,7 @@ fieldset {
         float: left;
         
         h5 {
-          border-bottom: solid 2px #F2F2F2;
+          border-bottom: solid 2px $tree-header-border_color;
           font-size: 120%;
           width: 90%;
           margin-top: 10px;
@@ -1736,7 +1761,6 @@ fieldset {
         }
         
         .empty_list { padding: 0px 0 0 25px; }
-        
         .simple_link{
           margin: 6px 0;
         }
@@ -1744,13 +1768,28 @@ fieldset {
           background: $dotdotdot_icon;
         }
         .no_slide {
-          padding-left: 5px;
+          //padding-left: 5px;
           cursor: default;
         }
         .no_hover {
           &:hover {
             border-color: $white_color;
             background: none;
+          }
+        }
+        .block {
+          cursor: pointer;
+          font-size: 100%;
+        }
+        .active {
+          background-color: $tree-item-background-hover_color;
+          border-top-color: $tree-item-border-hover_color;
+          border-bottom-color: $tree-item-border-hover_color;
+          color: $tree-item-hover_color;
+        
+          a {
+            color: $tree-breadcrumb_color;
+            background: inherit;
           }
         }
         
@@ -1763,13 +1802,13 @@ fieldset {
         }
         
         li:hover {
-          background-color: #bde4e8;
-          border-top-color: #7bbcc5;
-          border-bottom-color: #7bbcc5;
-          color: #000;
+          background-color: $tree-item-background-hover_color;
+          border-top-color: $tree-item-border-hover_color;
+          border-bottom-color: $tree-item-border-hover_color;
+          color: $tree-item-hover_color;
           
           a {
-            color: #356e76;
+            color: $tree-breadcrumb_color;
           }
         }
       }
@@ -1797,6 +1836,7 @@ fieldset {
   }
   #sliding_tree_actionbar {
     width: 100%;
+    
     .cs_action {
         float: left;
         
@@ -1806,9 +1846,9 @@ fieldset {
         padding-top: 9px;
         font-size: 90%;
         word-wrap: break-word;
-        border-bottom: 1px solid #B5B5B5;
-        border-right: 1px solid #B5B5B5;
-        border-left: 1px solid #B5B5B5;
+        border-bottom: 1px solid $tree-border_color;
+        border-right: 1px solid $tree-border_color;
+        border-left: 1px solid $tree-border_color;
        
         background-color: $tree-container_color;
 
@@ -1817,11 +1857,11 @@ fieldset {
 
         }
         &:hover {
-            background-color: #bde4e8; //same as li under #contents
+            background-color: $tree-actionbar_color; //same as li under #contents
         }
     }
     .highlighted {
-         background-color: #bde4e8; //same as hover
+         background-color: $tree-actionbar_color; //same as hover
     }
   }
   .sprite {
@@ -1883,7 +1923,7 @@ fieldset {
   display: none;
   z-index: 2000;
   a {
-    color: #000 !important;
+    color: $black_color !important;
   }
 }
 
@@ -1933,3 +1973,5 @@ fieldset {
     border:1px solid $border_color;
     padding: 0 10px 10px 10px;
 }
+
+

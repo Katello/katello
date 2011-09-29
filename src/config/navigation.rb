@@ -5,7 +5,7 @@ SimpleNavigation::Configuration.run do |navigation|
   navigation.id_generator = Proc.new {|key| "kp-#{key}"}
   
   navigation.items do |top_level|
-    top_level.item :dashboard, _("Dashboard"), dashboard_index_path(), :class=>'dashboard'  do |dashboard_sub|
+    top_level.item :dashboard, _("Dashboard"), dashboard_index_path(), :class=>'dashboard'  #do |dashboard_sub|
       #TODO: tie in monitors page/link (if in dashboard page)
       #dashboard_sub.item :monitors, _("Monitors"), '#', :class => 'disabled'
       #TODO: tie in reports page/link (if in dashboard page)
@@ -14,7 +14,7 @@ SimpleNavigation::Configuration.run do |navigation|
       #dashboard_sub.item :notifications, _("Notifications"), '#', :class => 'disabled'
       #TODO: tie in workflow page/link (if in dashboard page)
       #dashboard_sub.item :workflow, _("Workflow"),  '#', :class => 'disabled'
-    end #end dashboard_sub
+    #end #end dashboard_sub
 
 
     top_level.item :content, _("Content Management"),  organization_providers_path(current_organization()), :class=>'content' do |content_sub|
@@ -86,7 +86,8 @@ SimpleNavigation::Configuration.run do |navigation|
                                   :controller => "activation_keys"
         end
       end if ActivationKey.readable?(current_organization())
-    end if current_organization() #end systems
+    end if current_organization() && (System.any_readable?(current_organization) || ActivationKey.readable?(current_organization()))
+    #end systems
 
     top_level.item :organizations, _("Organizations"), organizations_path(), :class=>'organizations' do |orgs_sub|
        orgs_sub.item :index, _("List"), organizations_path()

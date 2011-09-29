@@ -127,7 +127,7 @@ module ApplicationHelper
  def notification_polling_time()
     time  = AppConfig.notification && AppConfig.notification.polling_seconds
     return time.to_i  * 1000 if time
-    return 45000
+    return 120000
  end
 
 
@@ -171,5 +171,15 @@ module ApplicationHelper
   def auto_tab_index
     @current_index ||= 0
     @current_index += 1
+  end
+
+  #formats the date time if the dat is not nil
+  def format_time  date
+    return date.localtime.strftime('%m/%d/%y %I:%M %p %Z') if date
+    ""
+  end
+
+  def generate_details_url(path, id, entity )
+     path + "?search=id%3D#{id}#panel=#{entity}_#{id}"
   end
 end

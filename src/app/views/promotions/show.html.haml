@@ -109,7 +109,7 @@
                   = image_tag ("spinner.gif")
               .slider_one.has_content.slider.will_have_content
               .slider_two.no_content.slider
-          #changeset_edit
+          #changeset_edit.slide_up_container
             %h2
               &nbsp; #{_("Changeset Details")}
             .fieldset
@@ -156,7 +156,7 @@
   
     #content_tree.left.sliding_tree
       - if manage_changesets
-        %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}&next_env_id=#{@next_environment.id}"}
+        %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@next_environment.id}"}
           #{_('+ New Changeset')}
           .arrow-right
       - elsif @environment.organization.environments_manageable? 
@@ -168,7 +168,6 @@
       .sliding_container
         #list.list.sliding_list{"data-page_size"=>current_user.page_size}
           .slider_one.has_content.slider
-            = render(:partial=>"detail")
           .slider_two.no_content.slider
 
 

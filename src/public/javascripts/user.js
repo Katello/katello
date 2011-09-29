@@ -106,7 +106,7 @@ var user_page = function() {
                 success: function(data) {
                     button.removeClass('disabled');
                     list.add(data);
-                    panel.closePanel($('#panel'));
+                    KT.panel.closePanel($('#panel'));
                   },
                 error: function(){button.removeClass('disabled');}
             });
