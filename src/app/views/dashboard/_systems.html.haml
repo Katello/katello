@@ -11,7 +11,7 @@
             - else
               %span
                 .icon.red_icon.fl
-          .col_1.one-line-ellipsis
+          .col_1.one-line-ellipsis{:title=>system.name}
             %h5
               = link_to system.name, generate_details_url(systems_path, system.id,"system")
           .col_2{:title=>_("Distribution")}
