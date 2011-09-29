@@ -14,7 +14,7 @@ class SystemTemplatesController < ApplicationController
   include AutoCompleteSearch
 
   before_filter :setup_options, :only => [:index, :items]
-  before_filter :find_template, :only =>[:update, :edit, :destroy, :show, :object, :update_content]
+  before_filter :find_template, :only =>[:update, :edit, :destroy, :show, :download, :object, :update_content]
   before_filter :find_read_only_template, :only =>[:promotion_details]
 
 
@@ -37,6 +37,7 @@ class SystemTemplatesController < ApplicationController
       :auto_complete_package => read_test,
       :show => read_test,
       :edit => read_test,
+      :download => read_test,
       :product_packages => read_test,
       :update => manage_test,
       :update_content => manage_test,
@@ -161,6 +162,13 @@ class SystemTemplatesController < ApplicationController
 
   def show
     render :partial => "common/list_update", :locals=>{:item=>@template, :accessor=>"id", :columns=>['name']}
+  end
+
+  def download
+    json = @template.string_export
+    send_data json,
+      :filename => "%s-export.json" % @template.name,
+      :type => "application/json"
   end
 
   def new
