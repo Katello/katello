@@ -101,15 +101,7 @@ class SystemTemplatesController < ApplicationController
       }
 
 
-    @packages.sort!.uniq!
-    offset = params[:offset].to_i if params[:offset]
-
-    if offset
-      @packages = @packages[offset..offset+current_user.page_size]
-      render :text=>"" and return if @packages.empty?
-    else
-      @packages = @packages[0..current_user.page_size]
-    end
+    @packages = trim @packages
 
     render :partial=>"product_packages"
 
@@ -124,10 +116,11 @@ class SystemTemplatesController < ApplicationController
         @groups.push(grp[1]["name"])
       }
     }
-    @groups.sort!
+
+    @groups = trim @groups
+
     render :partial=>"product_comps"
   end
-
 
 
   def update_content
@@ -219,6 +212,20 @@ class SystemTemplatesController < ApplicationController
   rescue Exception => e
     errors e
     render :text=>e, :status=>400 and return false
+  end
+
+
+  def trim list
+    list.sort!.uniq!
+    offset = params[:offset].to_i if params[:offset]
+
+    if offset
+      list = list[offset..offset+current_user.page_size]
+      render :text=>"" and return if list.empty?
+    else
+      list = list[0..current_user.page_size]
+    end
+    list
   end
 
 end
