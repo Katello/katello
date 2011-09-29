@@ -39,6 +39,8 @@ describe Provider do
     disable_product_orchestration
     @organization = Organization.new(:name =>"org10020", :cp_key => 'org10020')
     @organization.save!
+    @organization.redhat_provider.destroy
+    @organization = Organization.last
   end
 
   context "import_product_from_cp creates product with correct attributes" do
@@ -195,6 +197,8 @@ describe Provider do
       @provider = Provider.new
       @provider.name = "url test"
       @provider.provider_type = Provider::REDHAT
+      @default_url = "http://boo.com"
+      AppConfig.stub!(:REDHAT_REPOSITORY_URL).and_return(@default_url)
     end
     
     context "should accept" do
@@ -239,8 +243,8 @@ describe Provider do
     context "should refuse" do
     
       it "blank url" do
-        @provider.should_not be_valid
-        @provider.errors[:repository_url].should_not be_empty
+        @provider.should be_valid
+        @provider.repository_url = @default_url
       end
       
       it "'notavalidurl'" do
