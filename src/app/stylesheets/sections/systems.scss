@@ -34,40 +34,13 @@
     .needs_attention { color: red; }
     
     .lower_content {
-      margin: 10px 20px 0 0;
-      padding: 5px 5px 20px 5px;
-    
       table {
-        border: 1px solid $lightgrey_color;
-        margin: 10px auto 20px auto;
-        
-        thead {
-          height: 35px;
-
-          th {
-            background: #A2A2A2;
-            color: black;
-            font-weight: 600;
-            text-transform: none;
-            height: 25px;
-            text-align: center;
-            font-size: 115%;
-          }
-          th:first-child { text-align: left; }
-          .buttonColumn { width: 65px; }
-        }
-        
         tbody {
-          tr { height: 32px }
           tr:nth-child(even) {
             background: lighten($lightgrey_color, 40%);
           }
           tr:nth-child(odd) {
             background: lighten($lightgrey_color, 30%);
-          }
-          td {
-            vertical-align: middle;
-            text-align: center;
           }
           td:first-child { text-align: left; text-indent: 2px; }
           td:last-child {
