@@ -282,6 +282,26 @@ Src::Application.routes.draw do
       put :update_content, :on => :member
       post :import, :on => :collection
       get :export, :on => :member
+      resources :products, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_product
+        delete :destroy, :on => :member, :action => :remove_product
+      end
+      resources :packages, :controller => :templates_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ } do
+        post   :index, :on => :collection, :action => :add_package
+        delete :destroy, :on => :member, :action => :remove_package
+      end
+      resources :parameters, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_parameter
+        delete :destroy, :on => :member, :action => :remove_parameter
+      end
+      resources :package_groups, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_package_group
+        delete :destroy, :on => :member, :action => :remove_package_group
+      end
+      resources :package_group_categories, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_package_group_category
+        delete :destroy, :on => :member, :action => :remove_package_group_category
+      end
     end
 
     #match '/organizations/:organization_id/locker/repos' => 'environments#repos', :via => :get
