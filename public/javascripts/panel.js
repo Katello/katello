@@ -49,24 +49,28 @@ $(document).ready(function() {
     var original_top = Math.floor($('.left').position(top).top);
     var subpanel_top =  Math.floor($('.left').position(top).top + subpanelSpacing);
 
-    $('.block').live('click', function(e) {
-        activeBlock = $(this);
-        ajax_url = activeBlock.attr("data-ajax_url");
-        activeBlockId = activeBlock.attr('id');
-
-        if(e.ctrlKey && !thisPanel.hasClass('opened')) {
-            if(activeBlock.hasClass('active')){activeBlock.removeClass('active');}
-            else {
-                activeBlock.addClass('active');
-            }
+    $('.block').live('click', function(event) {
+        if( event.target.nodeName === "A" && event.target.className.match('content_add_remove') ){
+            return false;
         } else {
-            if(activeBlock.hasClass('active')){ KT.panel.closePanel(thisPanel); }
-            else { $.bbq.pushState({panel:activeBlockId}); }
+	        activeBlock = $(this);
+	        ajax_url = activeBlock.attr("data-ajax_url");
+	        activeBlockId = activeBlock.attr('id');
+	
+	        if(event.ctrlKey && !thisPanel.hasClass('opened')) {
+	            if(activeBlock.hasClass('active')){activeBlock.removeClass('active');}
+	            else {
+	                activeBlock.addClass('active');
+	            }
+	        } else {
+	            if(activeBlock.hasClass('active')){ KT.panel.closePanel(thisPanel); }
+	            else { $.bbq.pushState({panel:activeBlockId}); }
+	        }
+	        //update the selected count
+	        KT.panel.updateResult();
+	
+	        return false;
         }
-        //update the selected count
-        KT.panel.updateResult();
-
-        return false;
     });
 
 
@@ -300,7 +304,7 @@ KT.panel = (function($){
                     opacity: 0
                 }, 400, function(){
                     $(this).css({"z-index":"0"});
-                    $(this).parent().css({"z-index":"1"});
+                    $(this).parent().css({"z-index":"-1"});
                 }).removeClass('opened').addClass('closed').attr("data-id", "");
                 content.html('');
                 
@@ -321,7 +325,6 @@ KT.panel = (function($){
                     opacity: 0
                 }, 400, function(){
                     $(this).css({"z-index":"0"});
-                    $(this).parent().css({"z-index":"0"});
                 }).removeClass('opened').addClass('closed');
                 updateResult();
             }
@@ -411,7 +414,7 @@ KT.panel = (function($){
                             left: ''
                         });
                     } else {
-                    	if( !isfixed && (jQPanel.offset().top - $(window).scrollTop()) > 40){
+                    	if( !isfixed && Math.abs(jQPanel.offset().top - $(window).scrollTop()) > 40){
 	                        jQPanel.stop().css({
 	                            position: 'fixed',
 	                            top: 40,

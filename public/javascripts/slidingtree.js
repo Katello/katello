@@ -23,9 +23,10 @@
  */
 
 var sliding_tree = function(tree_id, options) {
-    var container = $('#' + tree_id),
-        list = container.find(".sliding_container .sliding_list"),
-        breadcrumb = container.find(".tree_breadcrumb"),
+    var container 	= $('#' + tree_id),
+        list 		= container.find(".sliding_container .sliding_list"),
+        breadcrumb 	= container.find(".tree_breadcrumb"),
+        sliders 	= container.find('.sliders'),
         current_crumb;
 
     var prerender = function(id) {
@@ -294,6 +295,7 @@ var sliding_tree = function(tree_id, options) {
     
 	if( settings.enable_float ){
 		container.css('position', 'absolute');
+		sliders.css('height', sliders.css('minHeight'));
 	}
 
     $(window).unbind('hashchange.' + tree_id).bind( 'hashchange.' + tree_id, hash_change);
@@ -305,9 +307,9 @@ var sliding_tree = function(tree_id, options) {
         if( event.target.nodeName === "A" ){
             return false;
         } else {
-            content_clicked($(this));   
+            content_clicked($(this));
         }
-    });
+    });    
 
     return {
     	get_current_crumb	: function(){
