@@ -41,9 +41,10 @@ class Provider < ActiveRecord::Base
   scoped_search :in => :products, :on => :description, :complete_value => true, :rename => :'custom_product.description'
 
   validate :only_one_rhn_provider
-  validate :valid_url, :if => :rh_repo?
+  validate :valid_url, :if => :redhat_provider?
 
-
+  scope :redhat, where(:provider_type => REDHAT)
+  scope :custom, where(:provider_type => CUSTOM)
   def only_one_rhn_provider
     # validate only when new record is added (skip explicit valid? calls)
     if new_record? and provider_type == REDHAT and count_providers(REDHAT) != 0
@@ -63,7 +64,11 @@ class Provider < ActiveRecord::Base
     provider_type == CUSTOM
   end
 
-  def rh_repo?
+  def redhat_provider=(is_rh)
+    provider_type = is_rh ? REDHAT : CUSTOM
+  end
+
+  def redhat_provider?
     provider_type == REDHAT
   end
 
@@ -71,13 +76,13 @@ class Provider < ActiveRecord::Base
   # the products contained within.  Right now this is just redhat products but
   # wanted to centralize the logic in one method.
   def has_subscriptions?
-    rh_repo?
+    redhat_provider?
   end
 
   #permissions
   # returns list of virtual permission tags for the current user
   def self.list_tags org_id
-    select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
+    custom.select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
   def self.tags(ids)
@@ -130,6 +135,10 @@ class Provider < ActiveRecord::Base
   protected
 
    def sanitize_repository_url
+     if redhat_provider? && self.repository_url.blank?
+      self.repository_url = AppConfig.REDHAT_REPOSITORY_URL
+      self.repository_url = "https://cdn.redhat.com" unless self.repository_url
+     end
      if self.repository_url
        self.repository_url.strip!
      end
