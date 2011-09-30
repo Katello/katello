@@ -27,8 +27,6 @@ SimpleNavigation::Configuration.run do |navigation|
           providers_sub.item :custom_provider, _("Custom"),organization_providers_path(current_organization()), :class=>"third_level" do |custom_providers_sub|
             custom_providers_sub.item :edit, _("Basics"), (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id), :class => 'navigation_element',
                                :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? }
-    #        providers_sub.item :subscriptions, _("Subscriptions"),(@provider.nil? || @provider.new_record?) ? "" : subscriptions_provider_path(@provider.id), :class => 'navigation_element',
-    #                           :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? && @provider.has_subscriptions?}
             custom_providers_sub.item :products_repos, _("Products & Repositories"),(@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id), :class => 'navigation_element',
                                :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? && !@provider.has_subscriptions?}
           end

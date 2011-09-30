@@ -138,7 +138,7 @@ Src::Application.routes.draw do
     collection do
       get :items
       get :redhat_provider
-      put :redhat_provider, :action => :update_redhat_provider
+      post :redhat_provider, :action => :update_redhat_provider
     end
     member do
       get :products_repos
