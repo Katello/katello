@@ -43,7 +43,7 @@ describe ProvidersController do
       test_export = File.new("#{Rails.root}/spec/controllers/export.zip")
       contents = {:contents => test_export}
       id = @org.redhat_provider.id.to_s
-      post 'update_subscriptions', {:id => id, :provider => contents}
+      post 'update_redhat_provider', {:id => id, :provider => contents}
       response.should be_success
     end
   end
