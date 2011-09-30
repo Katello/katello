@@ -133,6 +133,21 @@ $(document).ready(function() {
             }
         }
     });
+
+     $('input[id^=filter]').live('change, keyup', function(){
+         // if the user has cleared the filter box, locate all parents and if a parent is collapsed, hide the children
+         if ($.trim($(this).val()).length == 0) {
+             var parents = $('tr[data-family_begin]');
+             parents.each(function(){
+                 // if the parent is collapsed, hide the children
+                 var arrow = $(this).find('a img');
+                 if(arrow.attr("src").indexOf("collapsed") !== -1){
+                     var family = $(this).attr('data-family_begin');
+                     $('tr[data-in_family="'+family+'"]').slideToggle();
+                 }
+             });
+         }
+     });
 });
 
 var activation_key = (function() {
