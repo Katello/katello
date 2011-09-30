@@ -231,6 +231,14 @@ class SystemTemplate < ActiveRecord::Base
     []
   end
 
+
+  def get_clones
+    Organization.find(self.environment.organization_id).environments.collect do |env|
+      env.system_templates.where(:name => self.name_was)
+    end.flatten(1)
+  end
+
+
   #### Permissions
   def self.list_verbs global = false
     {
