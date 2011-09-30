@@ -137,11 +137,13 @@ Src::Application.routes.draw do
     end
     collection do
       get :items
+      get :redhat_provider
+      put :redhat_provider, :action => :update_redhat_provider
     end
     member do
       get :products_repos
-      get :subscriptions
-      post :subscriptions, :action=>:update_subscriptions
+#      get :subscriptions
+#     post :subscriptions, :action=>:update_subscriptions
       get :schedule
     end
   end
