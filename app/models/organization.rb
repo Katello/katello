@@ -17,7 +17,7 @@ class Organization < ActiveRecord::Base
   include Authorization
 
   has_many :activation_keys, :dependent => :destroy
-  has_many :providers
+  has_many :providers, :dependent => :destroy
   has_many :environments, :class_name => "KTEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
   has_one :locker, :class_name =>"KTEnvironment", :conditions => {:locker => true}, :dependent => :destroy
   
@@ -33,6 +33,7 @@ class Organization < ActiveRecord::Base
   scoped_search :in => :providers, :on => :repository_url, :complete_value => true, :rename => :'provider.url'
 
   before_create :create_locker
+  before_create :create_redhat_provider
   validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
   validates :description, :katello_description_format => true
 
@@ -48,8 +49,16 @@ class Organization < ActiveRecord::Base
     end
   end
 
+  def redhat_provider
+    self.providers.redhat.first
+  end
+
   def create_locker
     self.locker = KTEnvironment.new(:name => "Locker", :locker => true, :organization => self)
+  end
+
+  def create_redhat_provider
+    self.providers << ::Provider.new(:name => "Red Hat", :provider_type=> ::Provider::REDHAT, :organization => self)
   end
 
   #permissions

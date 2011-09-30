@@ -33,6 +33,7 @@ describe Organization do
   context "create an organization" do
     specify {@organization.name.should == 'test_organization'}
     specify {@organization.locker.should_not be_nil}
+    specify {@organization.redhat_provider.should_not be_nil}
     specify {@organization.environments.should be_empty}
     specify {Organization.where(:name => @organization.name).size.should == 1}
     specify {Organization.where(:name => @organization.name).first.should == @organization}
