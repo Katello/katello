@@ -94,8 +94,8 @@ class SystemTemplate < ActiveRecord::Base
       :packages => self.packages.map(&:package_name),
       :products => self.products.map(&:name),
       :parameters => ActiveSupport::JSON.decode(self.parameters_json),
-      :package_groups => self.package_groups.map(&:export_hash),
-      :package_group_categories => self.pg_categories.map(&:export_hash)
+      :package_groups => self.package_groups.map(&:name),
+      :package_group_categories => self.pg_categories.map(&:name),
     }
     tpl[:description] = self.description if not self.description.nil?
     tpl[:parent] = self.parent.name if not self.parent.nil?
@@ -171,26 +171,26 @@ class SystemTemplate < ActiveRecord::Base
     self.parameters.delete(key)
   end
 
-  def add_package_group pg_attrs
-      self.package_groups.create!(:repo_id => pg_attrs[:repo_id], :package_group_id => pg_attrs[:id])
+  def add_package_group pg_name
+      self.package_groups.create!(:name => pg_name)
   end
 
-  def remove_package_group pg_attrs
-    package_group = self.package_groups.where(:repo_id => pg_attrs[:repo_id], :package_group_id => pg_attrs[:id]).first
+  def remove_package_group pg_name
+    package_group = self.package_groups.where(:name => pg_name).first
     if package_group == nil
-      raise Errors::TemplateContentException.new(_("Package group '%s' not found in this template.") % pg_attrs[:repo_id])
+      raise Errors::TemplateContentException.new(_("Package group '%s' not found in this template.") % pg_name)
     end
     package_group.delete
   end
 
-  def add_pg_category pg_cat_attrs
-    self.pg_categories.create!(:repo_id => pg_cat_attrs[:repo_id], :pg_category_id => pg_cat_attrs[:id])
+  def add_pg_category pg_cat_name
+    self.pg_categories.create!(:name => pg_cat_name)
   end
 
-  def remove_pg_category pg_cat_attrs
-    pg_category = self.pg_categories.where(:repo_id => pg_cat_attrs[:repo_id], :pg_category_id => pg_cat_attrs[:id]).first
+  def remove_pg_category pg_cat_name
+    pg_category = self.pg_categories.where(:name => pg_cat_name).first
     if pg_category == nil
-      raise Errors::TemplateContentException.new(_("Package group category '%s' not found in this template.") % pg_cat_attrs[:id])
+      raise Errors::TemplateContentException.new(_("Package group category '%s' not found in this template.") % pg_cat_name)
     end
     pg_category.delete
   end

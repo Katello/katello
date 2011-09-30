@@ -56,25 +56,25 @@ class Api::TemplatesContentController < Api::ApiController
   end
 
   def add_package_group
-    @template.add_package_group(:id => params[:id], :repo_id => params[:repo_id])
+    @template.add_package_group(params[:name])
     @template.save!
-    render :text => _("Added package group '#{params[:id]}'")
+    render :text => _("Added package group '#{params[:name]}'")
   end
 
   def remove_package_group
-    @template.remove_package_group(:id => params[:id], :repo_id => params[:repo_id])
+    @template.remove_package_group(params[:id])
     @template.save!
     render :text => _("Removed package group '#{params[:id]}'")
   end
 
   def add_package_group_category
-    @template.add_pg_category(:id => params[:id], :repo_id => params[:repo_id])
+    @template.add_pg_category(params[:name])
     @template.save!
-    render :text => _("Added package group category '#{params[:id]}'")
+    render :text => _("Added package group category '#{params[:name]}'")
   end
 
   def remove_package_group_category
-    @template.remove_pg_category(:id => params[:id], :repo_id => params[:repo_id])
+    @template.remove_pg_category(params[:id])
     @template.save!
     render :text => _("Removed package group category '#{params[:id]}'")
   end
