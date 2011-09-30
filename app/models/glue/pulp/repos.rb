@@ -288,18 +288,28 @@ module Glue::Pulp::Repos
         key = self.key
         ca = File.open("#{Rails.root}/config/candlepin-ca.crt", 'rb') { |f| f.read }
         archs = self.arch.split(",")
-        archs.each do |arch|
+        # TODO: get releases from CDN
+        releases = ["6Server"]
+        archs_with_releases = archs.map {|arch| releases.map {|release| [arch,release] } }.flatten(1)
+        used_feed_urls = Set.new
+        archs_with_releases.each do |(arch, release)|
+          feed_url = repository_url(pc.content.contentUrl, :basearch => arch, :releasever => release)
+          if used_feed_urls.include?(feed_url)
+            next
+          else
+            used_feed_urls << feed_url
+          end
           # temporary solution unless pulp supports another archs
           unless %w[noarch i386 i686 ppc64 s390x x86_64].include? arch
             Rails.logger.error("Pulp does not support arch '#{arch}'")
             next
           end
-          repo_name = "#{pc.content.name} #{arch}".gsub(/[^a-z0-9\-_ ]/i,"")
+          repo_name = "#{pc.content.name} #{arch} #{release}".gsub(/[^a-z0-9\-_ ]/i,"")
           repo = Glue::Pulp::Repo.new(:id => repo_id(repo_name),
                                       :arch => arch,
                                       :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, pc.content.name),
                                       :name => repo_name,
-                                      :feed => repository_url(pc.content.contentUrl, :basearch => arch),
+                                      :feed => feed_url,
                                       :feed_ca => ca,
                                       :feed_cert => cert,
                                       :feed_key => key,
