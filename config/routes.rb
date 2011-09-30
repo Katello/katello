@@ -256,6 +256,7 @@ Src::Application.routes.draw do
         get :errata
       end
     end
+    match '/systems/:id/subscription' => 'systems#subscribe', :via => :post
 
     resources :providers, :except => [:index] do
       resources :sync, :only => [:index, :create] do
