@@ -238,7 +238,7 @@ describe Product do
       end
 
      it "prepares valid name for Pulp repo" do
-          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 noarch'))
+          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 noarch 6Server'))
           p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
           p.orchestration_for = :import_from_cp
           p.save!
@@ -253,12 +253,12 @@ describe Product do
         end
 
         it "should create repo for each arch" do
-          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 x86_64'))
-          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 i386'))
+          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 x86_64 6Server'))
+          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 i386 6Server'))
         end
 
         it "should substitute $basearch in the contentUrl for the repo feed" do
-          expected_feed = "#{@provider.repository_url}/released-extra/RHEL-5-Server/$releasever/x86_64/os/ClusterStorage/"
+          expected_feed = "#{@provider.repository_url}/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage/"
           Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:feed => expected_feed)).and_return(@repo)
         end
       end
