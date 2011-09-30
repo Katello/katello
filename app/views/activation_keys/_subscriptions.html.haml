@@ -14,7 +14,7 @@
         - num_subscriptions_per_family = product_family[1].nil? ? 0 : product_family[1].length
 
         - if num_subscriptions_per_family > 1
-          %tr{'data-family_begin' => product_family_name}
+          %tr{:class => 'parent', 'data-family_begin' => product_family_name}
             %td{:colspan => "4"}
               %a.clickable.product_family
                 = image_tag('icons/expander-collapsed.png', :alt => _('Expand'))
@@ -25,7 +25,7 @@
         - if num_subscriptions_per_family > 0
           - subscriptions.each do |subscription|
             - if num_subscriptions_per_family > 1
-              %tr{:style => 'display:none;', 'data-in_family' => product_family_name}
+              %tr{:class => 'child', :style => 'display:none;', 'data-in_family' => product_family_name}
                 %td
                   %span.fl.subscription_row
                     = check_box_tag "subscription_id[#{subscription.poolId}]", false
@@ -35,7 +35,7 @@
                 %td #{subscription.startDate}
                 %td #{subscription.endDate}
             - else
-              %tr
+              %tr{:class => 'parent'}
                 %td
                   %span.fl.subscription_row
                     = check_box_tag "subscription_id[#{subscription.poolId}]", false
