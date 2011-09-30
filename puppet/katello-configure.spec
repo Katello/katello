@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install/puppet/modules
 
 Name:           katello-configure
-Version:        0.1.2
+Version:        0.1.3
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -41,6 +41,13 @@ rm -rf %{buildroot}
 %{_sbindir}/katello-configure
 
 %changelog
+* Fri Sep 30 2011 Ivan Necas <inecas@redhat.com> 0.1.3-1
+- 741551 - ensure pulp config is prepared before httpd starts
+- do not enable pulp-testing repo
+- Set pulp repo secured
+- replaced pub key used by hudson
+- added ssh public key for hudson job
+
 * Mon Sep 19 2011 Mike McCune <mmccune@redhat.com> 0.1.2-1
 - Correcting previous tag that was pushed improperly 
 * Wed Sep 14 2011 Mike McCune <mmccune@redhat.com> 0.1.1-1
