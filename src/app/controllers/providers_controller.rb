@@ -31,6 +31,8 @@ class ProvidersController < ApplicationController
     read_test = lambda{@provider.readable?}
     edit_test = lambda{@provider.editable?}
     delete_test = lambda{@provider.deletable?}
+    redhat_provider_read_test = lambda{current_organization.readable?}
+    redhat_provider_edit_test = lambda{current_organization.editable?}
     {
       :index => index_test,
       :items => index_test,
@@ -41,10 +43,12 @@ class ProvidersController < ApplicationController
       :edit =>read_test,
       :update => edit_test,
       :destroy => delete_test,
-    
-      :update_subscriptions => edit_test,
       :products_repos => read_test,
-      :subscriptions => read_test,
+
+      :redhat_provider =>redhat_provider_read_test,
+      :redhat_update =>redhat_provider_read_test,
+      :update_subscriptions => redhat_provider_edit_test,
+      :subscriptions => redhat_provider_read_test
     }
   end
 
@@ -54,7 +58,8 @@ class ProvidersController < ApplicationController
                                          :providers => @providers, :products => @products, :editable=>@provider.editable?}
   end
 
-  def update_subscriptions
+  def update_redhat_provider
+    @provider = current_organization.redhat_provider
     if !params[:provider].blank? and params[:provider].has_key? :contents
       temp_file = nil
       begin
@@ -74,12 +79,11 @@ class ProvidersController < ApplicationController
         render :nothing => true, :status => :bad_request and return
       end
     end
-    subscriptions
+    redhat_provider
   end
 
-  def subscriptions
-    @providers = current_organization.providers
-    @provider = Provider.find(params[:id])
+  def redhat_provider
+    @provider = current_organization.redhat_provider
     # We default to none imported until we can properly poll Candlepin for status of the import
     @subscriptions = [{'productName' => _("None Imported"), "consumed" => "0", "available" => "0"}]
     begin
@@ -100,12 +104,13 @@ class ProvidersController < ApplicationController
       Rails.logger.error error.backtrace.join("\n")
       render :nothing => true, :status => :bad_request and return
     end
-    render :partial => "subscriptions", :layout => "tupane_layout", :locals => {:provider => @provider}
+#    render :partial => "subscriptions", :layout => "tupane_layout", :locals => {:provider => @provider}
   end
+
 
   def index
     begin
-      @providers = Provider.readable(current_organization).search_for(params[:search]).order('provider_type desc').limit(current_user.page_size)
+      @providers = Provider.readable(current_organization).custom.search_for(params[:search]).order('provider_type desc').limit(current_user.page_size)
       retain_search_history
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -116,7 +121,7 @@ class ProvidersController < ApplicationController
 
   def items
     start = params[:offset]
-    @providers = Provider.readable(current_organization).search_for(params[:search]).order('provider_type desc').limit(current_user.page_size).offset(start)
+    @providers = Provider.readable(current_organization).custom.search_for(params[:search]).order('provider_type desc').limit(current_user.page_size).offset(start)
     render_panel_items @providers, @panel_options
   end
 
@@ -210,7 +215,7 @@ class ProvidersController < ApplicationController
 
   def panel_options
         @panel_options = { :title => _('Providers'),
-                 :col => ['name', 'provider_type'],
+                 :col => ['name'],
                  :create => _('Provider'),
                  :name => controller_display_name,
                  :ajax_scroll=>items_providers_path(),
