@@ -13,7 +13,7 @@
 
 $(document).ready(function() {
 
-    activation_key.initialize_edit();
+    KT.activation_key.initialize_edit();
 
     $('.edit_system_template').each(function() {
         var button = $(this);

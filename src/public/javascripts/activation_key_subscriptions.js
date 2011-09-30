@@ -18,5 +18,5 @@
  */
 
 $(document).ready(function() {
-    KT.activation_key.subscriptionSetup();
+    KT.activation_key.subscription_setup();
 });
