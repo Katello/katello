@@ -14,6 +14,7 @@ require 'http_resource'
 require 'resources/pulp'
 
 module Glue::Pulp::Repos
+  SUPPORTED_ARCHS = %w[noarch i386 i686 ppc64 s390x x86_64]
 
   def self.included(base)
     base.send :include, InstanceMethods
@@ -288,8 +289,10 @@ module Glue::Pulp::Repos
         key = self.key
         ca = File.open("#{Rails.root}/config/candlepin-ca.crt", 'rb') { |f| f.read }
         archs = self.arch.split(",")
+
         # TODO: get releases from CDN
         releases = ["6Server"]
+
         archs_with_releases = archs.map {|arch| releases.map {|release| [arch,release] } }.flatten(1)
         used_feed_urls = Set.new
         archs_with_releases.each do |(arch, release)|
@@ -300,7 +303,7 @@ module Glue::Pulp::Repos
             used_feed_urls << feed_url
           end
           # temporary solution unless pulp supports another archs
-          unless %w[noarch i386 i686 ppc64 s390x x86_64].include? arch
+          unless SUPPORTED_ARCHS.include? arch
             Rails.logger.error("Pulp does not support arch '#{arch}'")
             next
           end
