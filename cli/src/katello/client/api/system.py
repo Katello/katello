@@ -44,6 +44,14 @@ class SystemAPI(KatelloAPI):
         path = "/api/systems/" + str(system_uuid)
         return self.server.DELETE(path)[1]
 
+    def subscribe(self, system_id, pool, quantity):
+        path = "/api/systems/" + str(system_id) + "/subscription"
+        data = {
+                "pool": pool,
+                "quantity": quantity
+                }
+        return self.server.POST(path, data)[1]
+
     def unsubscribe(self, system_id, serial_id):
         path = "/api/consumers/" + str(system_id) + \
                 "/certificates/" + str(serial_id)
