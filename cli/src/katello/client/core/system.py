@@ -286,6 +286,36 @@ class Unregister(SystemAction):
             print _("Successfully unregistered System [ %s ]") % name
             return os.EX_OK
 
+class Unsubscribe(SystemAction):
+
+    description = _('unsubscribe a system from certificate')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                       help=_("organization name (required)"))
+        self.parser.add_option('--name', dest='name',
+                               help=_("system name (required)"))
+        self.parser.add_option('--serial', dest='serial',
+                               help=_("certificate serial to unsubscribe (required)"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+        self.require_option('serial')
+
+    def run(self):
+        name = self.get_option('name')
+        org = self.get_option('org')
+        serial = self.get_option('serial')
+        systems = self.api.systems_by_org(org, {'name': name})
+        if systems == None or len(systems) != 1:
+            print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
+            return os.EX_DATAERR
+        else:
+            result = self.api.unsubscribe(systems[0]['uuid'], serial)
+            print _("Successfully unsubscribed System [ %s ]") % name
+            return os.EX_OK
+
 class Update(SystemAction):
 
     description = _('update a system')
