@@ -36,19 +36,22 @@
     .lower_content {
       table {
         tbody {
-          tr:nth-child(even) {
+          tr.parent:nth-child(even) {
             background: lighten($lightgrey_color, 40%);
           }
-          tr:nth-child(odd) {
+          tr.parent:nth-child(odd) {
             background: lighten($lightgrey_color, 30%);
+          }
+          tr.parent~tr.child {
+            background: inherit;
           }
           td:first-child { text-align: left; text-indent: 2px; }
           td:last-child {
             font-weight: 500;
-            &:hover { 
+            &:hover {
               span { color: $kselected_color;}
               .remove_subscription_img { background: $circle_x_icon_black; }
-              .subscribe { background: $play_icon_black; } 
+              .subscribe { background: $play_icon_black; }
             }
           }
           .subscription_row { margin-left: 19px; }
