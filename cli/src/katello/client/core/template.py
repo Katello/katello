@@ -17,12 +17,13 @@
 import os
 import itertools
 from gettext import gettext as _
+from optparse import OptionValueError
 
 from katello.client.api.template import TemplateAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, wait_for_async_task
-from katello.client.api.utils import get_locker, get_environment, get_template
+from katello.client.api.utils import get_locker, get_environment, get_template, get_product
 
 try:
     import json
@@ -250,6 +251,23 @@ class Update(TemplateAction):
 
     description = _('updates name and description of a template')
 
+    def __init__(self):
+        self.current_parameter = None
+        self.add_parameters = {}
+        super(Update, self).__init__()
+
+
+    def store_parameter_name(self, option, opt_str, value, parser):
+        self.current_parameter = value
+        self.add_parameters[value] = None
+
+    def store_parameter_value(self, option, opt_str, value, parser):
+        if self.current_parameter == None:
+            raise OptionValueError(_("each %s must be preceeded by %s") % (option, "--add_parameter") )
+
+        self.add_parameters[self.current_parameter] = value
+        self.current_parameter = None
+
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
                                help=_("template name (required)"))
@@ -261,10 +279,63 @@ class Update(TemplateAction):
                                help=_("new template name"))
         self.parser.add_option("--description", dest="description",
                                help=_("template description"))
+                               
+        self.parser.add_option('--add_product', dest='add_products',
+                                action="append",
+                                help=_("name of the product"))
+        self.parser.add_option('--remove_product', dest='remove_products',
+                                action="append",
+                                help=_("name of the product"))
+
+        self.parser.add_option('--add_package', dest='add_packages',
+                                action="append",
+                                help=_("name or nvre of the product (epoch:name-rel.eas-ver.sio.n)"))
+        self.parser.add_option('--remove_package', dest='remove_packages',
+                                action="append",
+                                help=_("name or nvre of the product (epoch:name-rel.eas-ver.sio.n)"))
+
+        self.parser.add_option('--add_parameter', dest='add_parameters',
+                                action="callback", callback=self.store_parameter_name, type="string",
+                                help=_("name of the parameter"))
+        self.parser.add_option('--value', dest='value',
+                                action="callback", callback=self.store_parameter_value, type="string",
+                                help=_("value of the parameter"))
+        self.parser.add_option('--remove_parameter', dest='remove_parameters',
+                                action="append",
+                                help=_("name of the parameter"))
+        self.resetParameters()
+
+   #TODO: add package groups
+   #TODO: add package group categories
 
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
+        
+        #check for missing values
+        for k, v in self.add_parameters.iteritems():
+            if v == None:
+                self.add_option_error(_("missing value for parameter '%s'") % k)
+        
+    def resetParameters(self):
+        self.add_parameters = {}
+
+    def getContent(self):
+        orgName = self.get_option('org')
+        
+        content = {}
+        content['+products'] = self.get_option('add_products') or []
+        content['+products'] = self.productNamesToIds(orgName, content['+products'])
+        
+        content['-products'] = self.get_option('remove_products') or []
+        content['-products'] = self.productNamesToIds(orgName, content['-products'])
+        
+        content['+packages'] = self.get_option('add_packages') or []
+        content['-packages'] = self.get_option('remove_packages') or []
+        
+        content['+parameters'] = self.add_parameters.copy()
+        content['-parameters'] = self.get_option('remove_parameters') or []
+        return content
 
     def run(self):
         tplName = self.get_option('name')
@@ -272,6 +343,9 @@ class Update(TemplateAction):
         newName = self.get_option('new_name')
         desc    = self.get_option('description')
         parentName = self.get_option('parent')
+        content    = self.getContent()
+        #reset parameters for next call in shell mode
+        self.resetParameters()
 
         env = get_locker(orgName)
         if env == None:
@@ -283,11 +357,44 @@ class Update(TemplateAction):
                 parentId = self.get_parent_id(orgName, env["name"], parentName)
             else:
                 parentId = None
-            self.api.update(template["id"], newName, desc, parentId)
+                
+            self.updateTemplate(template["id"], newName, desc, parentId)
+            self.updateContent(template["id"], content)
             print _("Successfully updated template [ %s ]") % template['name']
             return os.EX_OK
         else:
             return os.EX_DATAERR
+       
+       
+    def productNamesToIds(self, orgName, productNames):
+        ids = []
+        for prodName in productNames:
+            p = get_product(orgName, prodName)
+            if p != None:
+                ids.append(p['id'])
+        return ids
+        
+            
+    def updateTemplate(self, tplId, name, desc, parentId):
+        self.api.update(tplId, name, desc, parentId)
+    
+    
+    def updateContent(self, tplId, content):
+
+        for p in content['-products']:
+            self.api.remove_content(tplId, 'products', p)
+        for p in content['+products']:
+            self.api.add_content(tplId, 'products', {'id': p})
+
+        for p in content['-packages']:
+            self.api.remove_content(tplId, 'packages', p)
+        for p in content['+packages']:
+            self.api.add_content(tplId, 'packages', {'name': p})
+
+        for p in content['-parameters']:
+            self.api.remove_content(tplId, 'parameters', p)
+        for p, v in content['+parameters'].iteritems():
+            self.api.add_content(tplId, 'parameters', {'name': p, 'value': v})
 
 
 # ==============================================================================

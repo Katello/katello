@@ -92,6 +92,14 @@ class TemplateAPI(KatelloAPI):
         return self.server.PUT(path, action)[1]
 
 
+    def add_content(self, tplId, contentType, attrs):
+        path = "/api/templates/%s/%s/" % (str(tplId), contentType)
+        return self.server.POST(path, attrs)[1]
+
+    def remove_content(self, tplId, contentType, contentId):
+        path = "/api/templates/%s/%s/%s/" % (str(tplId), contentType, str(contentId))
+        return self.server.DELETE(path)[1]
+
     def promote(self, template_id):
         path = "/api/templates/%s/promote" % str(template_id)
         return self.server.POST(path)[1]
