@@ -47,13 +47,16 @@ class Api::TemplatesController < Api::ApiController
   def update
     raise HttpErrors::BadRequest, _("Templates can be updated only in a Locker environment") if not @template.environment.locker?
 
-    params[:template].delete(:products_json)
-    params[:template].delete(:packages_json)
-    params[:template].delete(:errata_json)
-    params[:template].delete(:parameters_json)
-    params[:template].delete(:host_group_json)
+    clones = @template.get_clones
+    @template.attributes = params[:template].slice(:name, :parent_id, :description)
+    @template.save!
+    if params[:template].has_key?(:name)
+      clones.each do |tpl|
+        tpl.attributes = params[:template].slice(:name)
+        tpl.save!
+      end
+    end
 
-    @template.update_attributes!(params[:template])
     render :json => @template
   end
 
@@ -116,7 +119,7 @@ class Api::TemplatesController < Api::ApiController
 
   def destroy
     @template.destroy
-    render :text => _("Deleted system template '#{params[:id]}'"), :status => 200
+    render :text => _("Deleted system template '#{@template.name}'"), :status => 200
   end
 
   def import
