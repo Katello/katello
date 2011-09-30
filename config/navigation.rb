@@ -19,14 +19,23 @@ SimpleNavigation::Configuration.run do |navigation|
 
     top_level.item :content, _("Content Management"),  organization_providers_path(current_organization()), :class=>'content' do |content_sub|
       content_sub.item :providers, _("Providers"), organization_providers_path(current_organization()), :highlights_on => /(\/organizations\/.*\/providers)|(\/providers\/.*\/(products|repos))/ do |providers_sub|
-        providers_sub.item :edit, _("Basics"), (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id), :class => 'navigation_element',
-                           :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? }
-        providers_sub.item :subscriptions, _("Subscriptions"),(@provider.nil? || @provider.new_record?) ? "" : subscriptions_provider_path(@provider.id), :class => 'navigation_element',
-                           :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? && @provider.has_subscriptions?}
-        providers_sub.item :products_repos, _("Products & Repositories"),(@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id), :class => 'navigation_element',
-                           :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? && !@provider.has_subscriptions?}
+        if current_organization.readable?
+          providers_sub.item :redhat_provider, _("Red Hat"),redhat_provider_providers_path, :class=>"third_level"
+        end
+
+        if Provider.any_readable?(current_organization)
+          providers_sub.item :custom_provider, _("Custom"),organization_providers_path(current_organization()), :class=>"third_level" do |custom_providers_sub|
+            custom_providers_sub.item :edit, _("Basics"), (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id), :class => 'navigation_element',
+                               :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? }
+    #        providers_sub.item :subscriptions, _("Subscriptions"),(@provider.nil? || @provider.new_record?) ? "" : subscriptions_provider_path(@provider.id), :class => 'navigation_element',
+    #                           :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? && @provider.has_subscriptions?}
+            custom_providers_sub.item :products_repos, _("Products & Repositories"),(@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id), :class => 'navigation_element',
+                               :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? && !@provider.has_subscriptions?}
+          end
+        end
+
         # providers_sub.item :subscriptions, _("Schedule"), (@provider.nil? || @provider.new_record?) ? "" : schedule_provider_path(@provider.id), :class => 'disabled'
-      end if Provider.any_readable?(current_organization)
+      end if Provider.any_readable?(current_organization) || current_organization.readable?
       content_sub.item :sync_mgmt, _("Sync Management"), sync_management_index_path() do |sync_sub|
         sync_sub.item :status, _("Sync Status"), sync_management_index_path(), :class=>"third_level" 
         sync_sub.item :plans, _("Sync Plans"), sync_plans_path(), :class=>"third_level"
