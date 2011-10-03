@@ -12,7 +12,7 @@ URL:            http://www.katello.org
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:       puppet
+Requires:       puppet >= 2.6.6
 
 BuildArch: noarch
 
