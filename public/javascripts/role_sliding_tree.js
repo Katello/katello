@@ -1220,7 +1220,7 @@ var pageActions = (function($){
 
 $(document).ready(function() {
   
-    KT.roles.actionBar = sliding_tree.ActionBar(pageActions.toggle_list);
+    KT.roles.actionBar = sliding_tree.ActionBar();
   
     pageActions.registerEvents();
     
