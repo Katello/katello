@@ -82,16 +82,6 @@ class TemplateAPI(KatelloAPI):
         return self.server.PUT(path, tplData)[1]
 
 
-    def update_content(self, tplId, actionName, params):
-        action = {
-            'do': actionName
-        }
-        action.update(params)
-
-        path = "/api/templates/%s/update_content" % str(tplId)
-        return self.server.PUT(path, action)[1]
-
-
     def add_content(self, tplId, contentType, attrs):
         path = "/api/templates/%s/%s/" % (str(tplId), contentType)
         return self.server.POST(path, attrs)[1]
