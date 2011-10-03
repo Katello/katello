@@ -14,13 +14,13 @@ class SystemsController < ApplicationController
   include AutoCompleteSearch
   include SystemsHelper
 
-  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments]
+  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items]
 
   skip_before_filter :authorize
   before_filter :find_environment, :only => [:environments, :env_items]
   before_filter :authorize
 
-  before_filter :setup_options, :only => [:index, :items, :environments]
+  before_filter :setup_options, :only => [:index, :items, :environments, :env_items]
   before_filter :search_filter, :only => [:auto_complete_search]
 
   # two pane columns and mapping for sortable fields
@@ -50,21 +50,16 @@ class SystemsController < ApplicationController
   end
 
   def index
-    begin
-      @systems = System.readable(current_organization).search_for(params[:search]).limit(current_user.page_size)
+      @systems = System.readable(current_organization).search_for(params[:search])
       retain_search_history
-      sort_columns(COLUMNS,@systems) if params[:order]
-    rescue Exception => error
-      errors error.to_s, {:level => :message, :persist => false}
-      @systems = System.search_for ''
-      render :index, :status=>:bad_request
-    end
+      @systems = sort_order_limit(@systems)
+
   end
 
   def environments
     accesible_envs = KTEnvironment.systems_readable(current_organization)
 
-    @panel_options[:ajax_scroll] = env_items_systems_path()
+    @panel_options[:ajax_scroll] = env_items_systems_path(:env_id=>@environment.id)
     begin
 
       @systems = []
@@ -75,9 +70,10 @@ class SystemsController < ApplicationController
         # the auto_complete_search requests
         @panel_options[:search_env] = @environment.id
 
-        @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size) 
+        @systems = System.search_for(params[:search]).where(:environment_id => @environment.id)
         retain_search_history
-        sort_columns(COLUMNS,@systems) if params[:order]
+        @systems = sort_order_limit(@systems)
+
       end
       render :index, :locals=>{:envsys => 'true', :accessible_envs=> accesible_envs}
     rescue Exception => error
@@ -89,13 +85,14 @@ class SystemsController < ApplicationController
 
   def items
     start = params[:offset]
-    @systems = System.readable(current_organization).search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @systems = System.readable(current_organization).search_for(params[:search])
+    @systems = sort_order_limit(@systems)
     render_panel_items @systems, @panel_options
   end
 
   def env_items
-    start = params[:offset]
-    @systems = System.readable(current_organization).search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size).offset(start)
+    @systems = System.readable(current_organization).search_for(params[:search]).where(:environment_id => @environment.id)
+    @systems = sort_order_limit(@systems)
     render_panel_items @systems, @panel_options
   end
 
@@ -271,4 +268,14 @@ class SystemsController < ApplicationController
   def search_filter
     @filter = {:organization_id => current_organization}
   end
+
+  def sort_order_limit systems
+      sort_columns(COLUMNS, systems) if params[:order]
+      offset = params[:offset].to_i if params[:offset]
+      offset ||= 0
+      last = offset + current_user.page_size
+      last = systems.length if last > systems.length
+      systems[offset...last]
+  end
+
 end
