@@ -141,20 +141,8 @@ class Glue::Pulp::Repo
     Pulp::Repository.packages_by_nvre id, name, version, release, epoch
   end
 
-  def find_latest_package_by_name name
-    latest_pack = nil
-
-    packages = Pulp::Repository.packages_by_name id, name
-    packages.each do |pack|
-      pack = pack.with_indifferent_access
-      if (latest_pack.nil?) or
-         (pack[:epoch] > latest_pack[:epoch]) or
-         (pack[:epoch] == latest_pack[:epoch] and pack[:release] > latest_pack[:release]) or
-         (pack[:epoch] == latest_pack[:epoch] and pack[:release] == latest_pack[:release] and pack[:version] > latest_pack[:version])
-        latest_pack = pack
-      end
-    end
-    latest_pack
+  def find_latest_packages_by_name name
+    Katello::PackageUtils.find_latest_packages(Pulp::Repository.packages_by_name(id, name))
   end
 
   def has_erratum? id
