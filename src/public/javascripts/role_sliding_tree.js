@@ -1165,34 +1165,12 @@ var rolesRenderer = (function($){
 var pageActions = (function($){
     var toggle_list = {
             'role_edit'	:  { container 	: 'role_edit',
+            				 button		: 'edit_role',
             				 setup_fn 	: roleActions.role_edit }
         },
     
         registerEvents = function(){
         	var action_bar = KT.roles.actionBar;
-        	
-            $('#edit_role').live('click', function() {
-                if ($(this).hasClass('disabled')){
-                    return false;
-                }
-                action_bar.toggle('role_edit');
-            });
-            
-            $('#add_permission').live('click', function() {
-                if ( $(this).hasClass('disabled') ){
-                    return false;
-                }
-                action_bar.toggle('add_permission', { add : true });
-            });
-            
-            $('#edit_permission').live('click', function() {
-                if ( $(this).hasClass('disabled') ){
-                    return false;
-                }
-                action_bar.toggle('edit_permission', 
-                	{ edit : true, id : KT.roles.tree.get_current_crumb() }
-               	);
-            });            
             
             $('.content_add_remove').live('click', function(){
             	if( $(this).hasClass('disabled') ){
@@ -1206,7 +1184,18 @@ var pageActions = (function($){
                 var button = $(this);
                 KT.common.customConfirm(button.attr('data-confirm-text'), function(){
                     roleActions.removeRole(button);
-                });         
+                });
+            });
+            
+            $('#remove_role').live('keypress', function(event){
+                var button = $(this);
+            	event.preventDefault();
+            	
+            	if( event.which === 13 ){
+	                KT.common.customConfirm(button.attr('data-confirm-text'), function(){
+	                    roleActions.removeRole(button);
+	                });	
+            	}
             });
             
             KT.panel.set_contract_cb(function(name){

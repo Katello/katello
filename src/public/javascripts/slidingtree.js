@@ -353,6 +353,8 @@ sliding_tree.ActionBar = function(toggle_list){
             }
         }, 
         handle_toggle = function(options, id){
+        	console.log(options);
+        	console.log(id);
         	var slide_window = $('#' + toggle_list[id].container);
 
             options = toggle_list[id].setup_fn(options);
@@ -366,12 +368,34 @@ sliding_tree.ActionBar = function(toggle_list){
         reset = function(){
             close();    
         },
-        add_to_toggle_list = function(addon){
-            if( toggle_list[addon] !== undefined ){
-                delete toggle_list[addon];
+        add_to_toggle_list = function(id, properties){
+            if( toggle_list[id] !== undefined ){
+                delete toggle_list[id];
             }
-            $.extend(toggle_list, addon);
+            toggle_list[id] = properties;
+            register_toggle(id, properties);
+        },
+        register_toggle = function(id, properties){
+    	   $('#' + properties.button).live('click', function() {
+                if ($(this).hasClass('disabled')){
+                    return false;
+                }
+                toggle(id, properties.options);
+            });
+    	   $('#' + properties.button).live('keypress', function(event) {
+    	   		event.preventDefault();
+                if ($(this).hasClass('disabled')){
+                    return false;
+                }
+                if( event.which === 13 ){
+                	toggle(id, properties.options);
+                }
+            });
         };
+        
+    for( item in toggle_list ){
+    	register_toggle(item, toggle_list[item]);
+    }
         
     return {
         toggle              :  toggle,
