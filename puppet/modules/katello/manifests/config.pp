@@ -61,4 +61,8 @@ class katello::config {
       require => Class["katello::install"];
     }
   }
+
+  Class["candlepin::config"] -> File["/etc/pulp/pulp.conf"]
+  Class["candlepin::config"] -> File["/etc/pulp/repo_auth.conf"]
+  Class["candlepin::config"] -> File["/etc/pki/content/pulp-global-repo.ca"]
 }
