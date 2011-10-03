@@ -309,9 +309,7 @@ class Subscribe(SystemAction):
         name = self.get_option('name')
         org = self.get_option('org')
         pool = self.get_option('pool')
-        qty = self.get_option('quantity')
-        if qty == None:
-            qty = 1
+        qty = self.get_option('quantity') or 1
         systems = self.api.systems_by_org(org, {'name': name})
         if systems == None or len(systems) != 1:
             print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
