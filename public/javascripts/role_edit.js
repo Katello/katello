@@ -30,6 +30,10 @@ $(document).ready(function() {
   																options	   : { edit : true },
     															setup_fn   : permissionWidget.edit_permission });
   
+  	KT.roles.actionBar.add_to_toggle_list('role_edit', { container 	: 'role_edit',
+            				 							button		: 'edit_role',
+            				 							setup_fn 	: roleActions.role_edit });
+    
     rolesRenderer.init();
     
     $('#panel').addClass('roles-selected-border');
