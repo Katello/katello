@@ -119,7 +119,7 @@ class ActivationKeysController < ApplicationController
         end
       end
       notice _("Subscriptions successfully added to Activation Key '#{@activation_key.name}'.")
-      render :partial => "available_subscriptions_update"
+      render :partial => "available_subscriptions_update.js.haml"
 
     rescue Exception => error
       errors error.to_s
@@ -143,7 +143,7 @@ class ActivationKeysController < ApplicationController
         end
       end
       notice _("Subscriptions successfully removed from Activation Key '#{@activation_key.name}'.")
-      render :partial => "applied_subscriptions_update"
+      render :partial => "applied_subscriptions_update.js.haml"
 
     rescue Exception => error
       errors error.to_s
