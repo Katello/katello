@@ -82,6 +82,7 @@ class Api::TemplatesContentController < Api::ApiController
   def find_template
     @template = SystemTemplate.find(params[:template_id])
     raise HttpErrors::NotFound, _("Couldn't find template '#{params[:template_id]}'") if @template.nil?
+    raise HttpErrors::BadRequest, _("Templates can be updated only in a Locker environment") if not @template.environment.locker?
     @template
   end
 
