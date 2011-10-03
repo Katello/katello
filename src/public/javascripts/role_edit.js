@@ -27,7 +27,7 @@ $(document).ready(function() {
     															setup_fn   : permissionWidget.add_permission });
   	KT.roles.actionBar.add_to_toggle_list('edit_permission', { container : 'permission_widget',  	
   																button	   : 'edit_permission',
-  																options	   : { edit : true, id : KT.roles.tree.get_current_crumb() },
+  																options	   : { edit : true },
     															setup_fn   : permissionWidget.edit_permission });
   
     rolesRenderer.init();
