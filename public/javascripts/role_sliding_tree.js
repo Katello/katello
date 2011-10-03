@@ -368,35 +368,13 @@ KT.roles.permissionWidget = function(){
                 button.addClass("highlighted");
                 set_types(current_organization);
 
-				if( permission.tags === 'all'){
-					handleAllTags(false);
-				} else if( current_organization !== 'global' ) {
-					length = permission.tags.length;
-					values = [];
-					for( i=0; i < length; i += 1){
-						values.push(permission.tags[i].name);
-					}
-					flow['tags'].input.val(values);	
+				for( item in flow ){
+					flow[item].container.show();
 				}
-
-				if( permission.verbs === 'all' ){
-					handleAllVerbs(false);
-				} else {
-					length = permission.verbs.length;
-					for( i=0; i < length; i += 1){
-						values.push(permission.verbs[i].name);
-					}
-					flow['verbs'].input.val(values);
-				}
-
 
 				flow['resource_type'].input.val(permission.type);
 				flow['details'].input.val(permission.name);
 				$('#description').val(permission.description);
-                
-				for( item in flow ){
-					flow[item].container.show();
-				}
                 
                 flow['resource_type'].input.unbind('change').change(function(event){
                     set_verbs_and_tags(event.currentTarget.value, current_organization);
@@ -418,6 +396,29 @@ KT.roles.permissionWidget = function(){
                         handleAllTags();
                     }
                 }).change();
+				
+				if( permission.tags === 'all'){
+					handleAllTags(false);
+				} else if( current_organization !== 'global' ) {
+					length = permission.tags.length;
+					values = [];
+					for( i=0; i < length; i += 1){
+						values.push(permission.tags[i].name);
+						flow['verbs'].input.find('option[value=' + permission.tags[i].name + ']').attr('selected', true);
+					}
+					flow['tags'].input.val(values);	
+				}
+
+				if( permission.verbs === 'all' ){
+					handleAllVerbs(false);
+				} else {
+					length = permission.verbs.length;
+					for( i=0; i < length; i += 1){
+						values.push(permission.verbs[i].name);
+						flow['verbs'].input.find('option[value=' + permission.verbs[i].name + ']').attr('selected', true);
+					}
+					flow['verbs'].input.val(values);
+				}
 				
 				if( permission.type === 'all' ){
 					flow['tags'].container.hide();
