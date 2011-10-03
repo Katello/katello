@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install/puppet/modules
 
 Name:           katello-configure
-Version:        0.1.3
+Version:        0.1.4
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -41,6 +41,11 @@ rm -rf %{buildroot}
 %{_sbindir}/katello-configure
 
 %changelog
+* Mon Oct 03 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.4-1
+- added missing template required for commit:a37cdbe8
+- moved pulp config files into the pulp module, extracted values as varaibles
+  etc
+
 * Fri Sep 30 2011 Ivan Necas <inecas@redhat.com> 0.1.3-1
 - 741551 - ensure pulp config is prepared before httpd starts
 - do not enable pulp-testing repo
