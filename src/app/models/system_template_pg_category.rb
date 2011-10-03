@@ -12,10 +12,9 @@
 
 class PgCategoryValidator < ActiveModel::Validator
   def validate(record)
-    #repo = Glue::Pulp::Repo.new(:id => record.repo_id)
-    #unless repo.package_group_categories(:id => record.pg_category_id).first
-    #  record.errors[:base] <<  (_("Package group category '%s' doesn't exist in repo '%s'") % [record.pg_category_id, record.repo_id])
-    #end
+    if record.system_template.environment.package_group_categories({'name' => record.name}).length == 0
+      record.errors[:base] <<  _("Package group category '#{record.name}' not found in the Locker environment")
+    end
   end
 end
 
