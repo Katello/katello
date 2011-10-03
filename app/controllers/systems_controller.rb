@@ -93,7 +93,11 @@ class SystemsController < ApplicationController
   def env_items
     @systems = System.readable(current_organization).search_for(params[:search]).where(:environment_id => @environment.id)
     @systems = sort_order_limit(@systems)
-    render_panel_items @systems, @panel_options
+    if @systems.empty?
+      render :text=>""
+    else
+      render_panel_items @systems, @panel_options
+    end
   end
 
   def subscriptions
