@@ -326,7 +326,8 @@ var sliding_tree = function(tree_id, options) {
 };
 
 sliding_tree.ActionBar = function(toggle_list){
-    var open_panel = undefined,
+    var open_panel 	= undefined,
+    	toggle_list	= toggle_list || {},
         
         toggle = function(id, options){
             var options = options || {};
