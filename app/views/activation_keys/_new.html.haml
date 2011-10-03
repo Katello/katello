@@ -20,12 +20,15 @@
           = text_area_tag 'activation_key[description]', params[:description], :size => "53x4", :tabindex => auto_tab_index
 
       .promotion_paths
-        = hidden_field_tag 'activation_key[environment_id]', @environment.id
+        = hidden_field_tag 'activation_key[environment_id]', @environment.id unless @environment.nil?
         .grid_2.ra
           %label #{_("Environment")}:
         .grid_7.la
-          = environment_selector(:path_widget_class=>"grid_7", :path_entries_class=>"grid_7", :locker_clickable=>false,
-            :accessible_envs=>accessible_envs, :url_templates_proc=>url_templates_proc)
+          - if @environment.nil?
+            #{_("No environments are currently available in this organization.  Please add some to be able to create activation keys.")}
+          - else
+            = environment_selector(:path_widget_class=>"grid_7", :path_entries_class=>"grid_7", :locker_clickable=>false,
+              :accessible_envs=>accessible_envs, :url_templates_proc=>url_templates_proc)
 
         .clear
           &nbsp;
