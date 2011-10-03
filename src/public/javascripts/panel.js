@@ -365,10 +365,7 @@ KT.panel = (function($){
                 if (search)
                     params.search = search;
                 
-                list.append(jQuery('<div/>', {
-                    'id': "list-spinner"
-                }));
-                $('#list-spinner').html( "<img src='images/spinner.gif' class='ajax_scroll'>");
+                $(".expand_list").append('<div class="list-spinner"> <img src="/katello/images/spinner.gif" class="ajax_scroll">  </div>');
 
                 $.ajax({
                     type: "GET",
@@ -379,7 +376,7 @@ KT.panel = (function($){
                         
                         retrievingNewContent = false;
                         expand_list.append(data);
-                        $('#list-spinner').remove();
+                        $('.list-spinner').remove();
                         
                         if (data.length == 0) {
                             list.removeClass("ajaxScroll");
@@ -387,7 +384,7 @@ KT.panel = (function($){
                         extended_cb();
                     },
                     error: function() {
-                        $('#list-spinner').remove();
+                        $('.list-spinner').remove();
                         retrievingNewContent = false;
                     }
                 });
