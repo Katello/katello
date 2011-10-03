@@ -1,2 +1,1 @@
-- for item in collection
-  = render :partial=>"systems/list_system", :locals=>{:item=>item, :accessor=>accessor, :columns=>columns, :name=>name}
+= render :partial=>"systems/list_system", :collection=>collection, :as=>:item, :locals=>{:accessor=>accessor, :columns=>columns, :name=>name}
