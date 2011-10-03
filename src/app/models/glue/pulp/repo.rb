@@ -96,7 +96,7 @@ class Glue::Pulp::Repo
         search_args.any?{ |attr,value| group_attrs[attr] != value }
       end
     end
-    groups
+    groups.values
   end
 
   def package_group_categories search_args = {}
@@ -106,7 +106,7 @@ class Glue::Pulp::Repo
         search_args.any?{ |attr,value| category_attrs[attr] != value }
       end
     end
-    categories
+    categories.values
   end
 
   def clone_id(environment)

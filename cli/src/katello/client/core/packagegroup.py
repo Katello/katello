@@ -38,7 +38,7 @@ class List(PackageGroupAction):
         self.printer.addColumn('name')
         self.printer.addColumn('description')
 
-        self.printer.printItems(groups.values())
+        self.printer.printItems(groups)
 
         return os.EX_OK
 
