@@ -16,7 +16,7 @@ class Api::TemplatesController < Api::ApiController
 
   before_filter :find_environment, :only => [:create, :import]
   before_filter :try_find_environment, :only => [:index]
-  before_filter :find_template, :only => [:show, :update, :update_content, :destroy, :promote, :export]
+  before_filter :find_template, :only => [:show, :update, :destroy, :promote, :export]
 
   # TODO: define authorization rules
   skip_before_filter :authorize
@@ -58,63 +58,6 @@ class Api::TemplatesController < Api::ApiController
     end
 
     render :json => @template
-  end
-
-  def update_content
-    raise HttpErrors::BadRequest, _("Templates can be updated only in a Locker environment") if not @template.environment.locker?
-
-    case params[:do].to_s
-      when 'add_product'
-        @template.add_product(params[:product])
-        @template.save!
-        render :text => _("Added product '#{params[:product]}'"), :status => 200 and return
-
-      when 'remove_product'
-        @template.remove_product(params[:product])
-        @template.save!
-        render :text => _("Removed product '#{params[:product]}'"), :status => 200 and return
-
-      when 'add_package'
-        @template.add_package(params[:package])
-        @template.save!
-        render :text => _("Added package '#{params[:package]}'"), :status => 200 and return
-
-      when 'remove_package'
-        @template.remove_package(params[:package])
-        @template.save!
-        render :text => _("Removed package '#{params[:package]}'"), :status => 200 and return
-
-      when 'add_parameter'
-        @template.parameters[params[:parameter]] = params[:value]
-        @template.save!
-        render :text => _("Added kickstart attribute '#{params[:attribute]}': '#{params[:value]}'"), :status => 200 and return
-
-      when 'remove_parameter'
-        @template.parameters.delete(params[:parameter])
-        @template.save!
-        render :text => _("Removed kickstart attribute '#{params[:attribute]}'"), :status => 200 and return
-
-      when 'add_package_group'
-        @template.add_package_group(:id => params[:package_group], :repo_id => params[:repo])
-        @template.save!
-        render :text => _("Added package group '%s'") % params[:package_group]
-
-      when 'remove_package_group'
-        @template.remove_package_group(:id => params[:package_group], :repo_id => params[:repo])
-        @template.save!
-        render :text => _("Removed package group '%s'") % params[:package_group]
-
-      when 'add_package_group_category'
-        @template.add_pg_category(:id => params[:package_group_category], :repo_id => params[:repo])
-        @template.save!
-        render :text => _("Added package group category '%s'") % params[:package_group_category]
-
-      when 'remove_package_group_category'
-        @template.remove_pg_category(:id => params[:package_group_category], :repo_id => params[:repo])
-        @template.save!
-        render :text => _("Removed package group category '%s'") % params[:package_group_category]
-    end
-
   end
 
   def destroy
