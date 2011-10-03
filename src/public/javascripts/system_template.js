@@ -683,7 +683,8 @@ KT.actions =  (function(){
     toggle_list = {
 
             'template_edit': { container 	: 'edit_template_container',
-                                setup_fn: toggle_edit
+            					button		: 'edit_template',
+                                setup_fn	: toggle_edit
 
             }
     },
@@ -715,13 +716,6 @@ KT.actions =  (function(){
             e.preventDefault();  //stop the browser from following
             url = KT.common.rootURL() + '/system_templates/' + options.current_template.id + '/download',
             window.location.href = url;
-            return false;
-        });
-        buttons.edit.click(function(){
-            if ( $(this).hasClass('disabled') || !KT.options.current_template){
-                return false;
-            }
-            options.action_bar.toggle('template_edit');
             return false;
         });
         buttons.remove.click(function(){

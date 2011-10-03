@@ -25,17 +25,6 @@ class katello::config {
     recurse => true;
   }
 
-  file{"/etc/pki/content/pulp-global-repo.ca":
-    ensure => link,
-    target => "/etc/candlepin/certs/candlepin-ca.crt",
-    require  => [Class["candlepin::config"], Class["pulp::config"] ]
-  }
-
-  exec {"set pulp secured repo":
-    command => "/bin/sed -i 's/enabled: false/enabled: true/' /etc/pulp/repo_auth.conf",
-    require  => [Class["candlepin::config"], Class["pulp::config"] ]
-   }
-
   exec {"katello_db_migrate":
     cwd         => $katello::params::katello_dir,
     user        => $katello::params::user,
@@ -72,4 +61,8 @@ class katello::config {
       require => Class["katello::install"];
     }
   }
+
+  Class["candlepin::config"] -> File["/etc/pulp/pulp.conf"]
+  Class["candlepin::config"] -> File["/etc/pulp/repo_auth.conf"]
+  Class["candlepin::config"] -> File["/etc/pki/content/pulp-global-repo.ca"]
 }

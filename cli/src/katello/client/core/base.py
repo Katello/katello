@@ -194,7 +194,7 @@ class Action(object):
         return _('no description available')
 
 
-    def get_option(self, opt, default=None):
+    def get_option(self, opt):
         """
         Get an option from opts or from the config file
         Options from opts take precedence.
@@ -202,7 +202,7 @@ class Action(object):
         @param opt: name of option to get
         @return: value of the option or None if the option is no present
         """
-        attr = getattr(self.opts, opt, default)
+        attr = getattr(self.opts, opt, None)
         if Config.parser.has_option('options', opt) and not attr:
             attr = Config.parser.get('options', opt)
         return attr
