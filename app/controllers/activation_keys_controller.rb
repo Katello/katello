@@ -159,7 +159,11 @@ class ActivationKeysController < ApplicationController
     setup_environment_selector(current_organization, accessible_envs)
     @environment = first_env_in_path(accessible_envs)
 
-    @system_template_labels = [[no_template, '']] + (@environment.system_templates).collect {|p| [ p.name, p.id ]}
+    @system_template_labels = [[no_template, '']]
+    unless @environment.nil?
+      @system_template_labels = [[no_template, '']] + (@environment.system_templates).collect {|p| [ p.name, p.id ]}
+    end
+
     @selected_template = no_template
 
     render :partial => "new", :layout => "tupane_layout", :locals => {:activation_key => activation_key,
@@ -171,7 +175,10 @@ class ActivationKeysController < ApplicationController
     accessible_envs = current_organization.environments
     setup_environment_selector(current_organization, accessible_envs)
 
-    @system_template_labels = [[no_template, '']] + (@activation_key.environment.system_templates).collect {|p| [ p.name, p.id ]}
+    @system_template_labels = [[no_template, '']]
+    unless @environment.nil?
+      @system_template_labels = [[no_template, '']] + (@activation_key.environment.system_templates).collect {|p| [ p.name, p.id ]}
+    end
     @selected_template = @activation_key.system_template.nil? ? no_template : @activation_key.system_template.id
 
     render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key,
