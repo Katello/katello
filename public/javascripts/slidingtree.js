@@ -332,7 +332,7 @@ sliding_tree.ActionBar = function(toggle_list){
             var options = options || {};
 
             options.animate_time = 500;
-            
+
             if( open_panel !== id && open_panel !== undefined ){
             	options.opening = false;
                 toggle_list[open_panel].setup_fn(options);
@@ -353,8 +353,6 @@ sliding_tree.ActionBar = function(toggle_list){
             }
         }, 
         handle_toggle = function(options, id){
-        	console.log(options);
-        	console.log(id);
         	var slide_window = $('#' + toggle_list[id].container);
 
             options = toggle_list[id].setup_fn(options);
@@ -376,13 +374,13 @@ sliding_tree.ActionBar = function(toggle_list){
             register_toggle(id, properties);
         },
         register_toggle = function(id, properties){
-    	   $('#' + properties.button).live('click', function() {
+    	   $('#' + properties.button).unbind('click').click(function() {
                 if ($(this).hasClass('disabled')){
                     return false;
                 }
                 toggle(id, properties.options);
             });
-    	   $('#' + properties.button).live('keypress', function(event) {
+    	   $('#' + properties.button).unbind('keypress').keypress(function(event) {
     	   		event.preventDefault();
                 if ($(this).hasClass('disabled')){
                     return false;

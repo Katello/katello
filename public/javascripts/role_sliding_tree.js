@@ -354,7 +354,7 @@ KT.roles.permissionWidget = function(){
             return options;
         },
         edit_permission = function(options){
-        	var permission 				= roles_breadcrumb[options.id],
+        	var permission 				= roles_breadcrumb[KT.roles.tree.get_current_crumb()],
         		opening 			 	= options.opening,
                 current_organization 	= roleActions.getCurrentOrganization(),
         		button 					= $('#edit_permission'),
@@ -370,7 +370,7 @@ KT.roles.permissionWidget = function(){
 
 				if( permission.tags === 'all'){
 					handleAllTags(false);
-				} else {
+				} else if( current_organization !== 'global' ) {
 					length = permission.tags.length;
 					values = [];
 					for( i=0; i < length; i += 1){
