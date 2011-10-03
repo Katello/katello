@@ -115,23 +115,16 @@ module Glue::Pulp::Repos
       end.flatten(1)
     end
 
-    def find_latest_package_by_name env, name
-      latest_pack = nil
+    def find_latest_packages_by_name env, name
 
-      self.repos(env).each do |repo|
-        pack = repo.find_latest_package_by_name name
-
-        next if pack.nil?
-
-        if (latest_pack.nil?) or
-           (pack[:epoch] > latest_pack[:epoch]) or
-           (pack[:epoch] == latest_pack[:epoch] and pack[:release] > latest_pack[:release]) or
-           (pack[:epoch] == latest_pack[:epoch] and pack[:release] == latest_pack[:release] and pack[:version] > latest_pack[:version])
-          latest_pack = pack
-          latest_pack[:repo_id] = repo.id
+      packs = self.repos(env).collect do |repo|
+        repo.find_latest_packages_by_name(name).collect do |pack|
+          pack[:repo_id] = repo.id
+          pack
         end
-      end
-      latest_pack
+      end.flatten(1)
+
+      Katello::PackageUtils.find_latest_packages packs
     end
 
     def has_erratum? id

@@ -215,8 +215,7 @@ class SystemTemplate < ActiveRecord::Base
     else
       #if specified by name, ensure any package with this name is in the next env. If not, promote the latest.
       return [] if to_env.find_packages_by_name(tpl_pack.package_name).length > 0
-      latest = from_env.find_latest_package_by_name(tpl_pack.package_name)
-      from_env.find_packages_by_nvre(latest[:name], latest[:version], latest[:release], latest[:epoch])
+      from_env.find_latest_packages_by_name(tpl_pack.package_name)
     end
   end
 
