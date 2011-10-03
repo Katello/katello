@@ -290,17 +290,23 @@ KT.common = (function() {
         	KT.routes.options.prefix = $('#root_url').attr('data-url');
         },
         thirdLevelNavSetup : function(){
-            var firstchild = $('.third_level:first-child');
-            var li = firstchild.parent().parent();
-            var ul = firstchild.parent();
-            li.prepend($('<div class="arrow_icon_menu"></div>'));
-            li.hover(
-                function(){
-                    ul.fadeIn('fast');
-                },
-                function(){
-                    ul.fadeOut('fast');
+            var children = $('.third_level:first-child');
+
+            $.each(children, function(i, item) {
+                var child = $(item);
+                var li = child.parent().parent();
+                var  ul = child.parent();
+
+                li.prepend($('<div class="arrow_icon_menu"></div>'));
+                li.hover(
+                    function(){
+                        ul.fadeIn('fast');
+                    },
+                    function(){
+                        ul.fadeOut('fast');
+                });
             });
+
         },
         jscroll_init: function(element) {
             element.jScrollPane({ hideFocus: true });
