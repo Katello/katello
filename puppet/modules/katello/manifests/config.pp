@@ -42,7 +42,7 @@ class katello::config {
     cwd         => $katello::params::katello_dir,
     user        => $katello::params::user,
     environment => "RAILS_ENV=${katello::params::environment}",
-    command     => "/usr/bin/env rake db:seed >> ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/initdb_done",
+    command     => "/usr/bin/env rake db:migrate >> ${katello::params::migrate_log} 2>&1 && /usr/bin/env rake db:seed >> ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/initdb_done",
     creates => "/var/lib/katello/initdb_done",
     before  => Class["katello::service"],
     require => [ Exec["katello_db_migrate"], Class["candlepin::service"], Class["pulp::service"] ],
