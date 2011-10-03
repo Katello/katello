@@ -143,11 +143,11 @@ class Info(TemplateAction):
         
     def _build_nvrea(self, package):
         
-        if package['version'] <> None and package['release'] <> None:
+        if package['version'] != None and package['release'] != None:
             nvrea = '-'.join((package['package_name'], package['version'], package['release']))
-            if package['arch'] <> None:
+            if package['arch'] != None:
                 nvrea = nvrea +'.'+ package['arch']
-            if package['epoch'] <> None:
+            if package['epoch'] != None:
                 nvrea = package['epoch'] +':'+ nvrea
             return nvrea
         
