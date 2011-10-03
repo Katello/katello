@@ -120,8 +120,8 @@ class Info(TemplateAction):
         template["products"] = "\n".join([p["name"] for p in template["products"]])
         template["packages"] = "\n".join([self._build_nvrea(p) for p in template["packages"]])
         template["parameters"] = "\n".join([ key+":\t"+value for key, value in template["parameters"].iteritems() ])
-        template["package_groups"] = "\n".join(["{"+_("repo")+":\t"+pg["repo_id"]+", "+_("id")+":\t"+pg["package_group_id"]+"}" for pg in template["package_groups"] ])
-        template["package_group_categories"] = "\n".join(["{"+_("repo")+":\t"+pg["repo_id"]+", "+_("id")+":\t"+pg["pg_category_id"]+"}" for pg in template["pg_categories"] ])
+        template["package_groups"] = "\n".join([p["name"] for p in template["package_groups"]])
+        template["package_group_categories"] = "\n".join([p["name"] for p in template["pg_categories"]])
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
@@ -296,17 +296,29 @@ class Update(TemplateAction):
 
         self.parser.add_option('--add_parameter', dest='add_parameters',
                                 action="callback", callback=self.store_parameter_name, type="string",
-                                help=_("name of the parameter"))
+                                help=_("name of the parameter, %s must follow") % "--value")
         self.parser.add_option('--value', dest='value',
                                 action="callback", callback=self.store_parameter_value, type="string",
                                 help=_("value of the parameter"))
         self.parser.add_option('--remove_parameter', dest='remove_parameters',
                                 action="append",
                                 help=_("name of the parameter"))
+                               
+        self.parser.add_option('--add_package_group', dest='add_pgs',
+                                action="append",
+                                help=_("name of the package group"))
+        self.parser.add_option('--remove_package_group', dest='remove_pgs',
+                                action="append",
+                                help=_("name of the package group"))
+                                
+        self.parser.add_option('--add_package_group_category', dest='add_pg_categories',
+                                action="append",
+                                help=_("name of the package group category"))
+        self.parser.add_option('--remove_package_group_category', dest='remove_pg_categories',
+                                action="append",
+                                help=_("name of the package group category"))
         self.resetParameters()
 
-   #TODO: add package groups
-   #TODO: add package group categories
 
     def check_options(self):
         self.require_option('name')
@@ -333,6 +345,12 @@ class Update(TemplateAction):
         content['+packages'] = self.get_option('add_packages') or []
         content['-packages'] = self.get_option('remove_packages') or []
         
+        content['+pgs'] = self.get_option('add_pgs') or []
+        content['-pgs'] = self.get_option('remove_pgs') or []
+        
+        content['+pg_categories'] = self.get_option('add_pg_categories') or []
+        content['-pg_categories'] = self.get_option('remove_pg_categories') or []
+        
         content['+parameters'] = self.add_parameters.copy()
         content['-parameters'] = self.get_option('remove_parameters') or []
         return content
@@ -358,8 +376,8 @@ class Update(TemplateAction):
             else:
                 parentId = None
                 
-            self.updateTemplate(template["id"], newName, desc, parentId)
-            self.updateContent(template["id"], content)
+            run_spinner_in_bg(self.updateTemplate, [template["id"], newName, desc, parentId], _("Updating the template, please wait... "))
+            run_spinner_in_bg(self.updateContent,  [template["id"], content], _("Updating the template, please wait... "))
             print _("Successfully updated template [ %s ]") % template['name']
             return os.EX_OK
         else:
@@ -390,6 +408,16 @@ class Update(TemplateAction):
             self.api.remove_content(tplId, 'packages', p)
         for p in content['+packages']:
             self.api.add_content(tplId, 'packages', {'name': p})
+
+        for p in content['-pgs']:
+            self.api.remove_content(tplId, 'package_groups', p)
+        for p in content['+pgs']:
+            self.api.add_content(tplId, 'package_groups', {'name': p})
+
+        for p in content['-pg_categories']:
+            self.api.remove_content(tplId, 'package_group_categories', p)
+        for p in content['+pg_categories']:
+            self.api.add_content(tplId, 'package_group_categories', {'name': p})
 
         for p in content['-parameters']:
             self.api.remove_content(tplId, 'parameters', p)
