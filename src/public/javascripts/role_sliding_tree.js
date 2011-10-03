@@ -26,6 +26,7 @@ KT.roles.permissionWidget = function(){
         all_types_button    = $('#all_types'),
         all_verbs_button    = $('#all_verbs'),
         all_tags_button     = $('#all_tags'),
+        
         progress_bar		= KT.roles.permissionWidget.progressBar,
         
         flow = {
@@ -110,6 +111,7 @@ KT.roles.permissionWidget = function(){
 	                                  		        done_button.show();
 		                                    		next_button.hide();
 		                                    		previous_button.show();
+		                                    		flow['details'].input.focus();
                                   				}
                                   			  },
                                   container : $('#tags_container'),
@@ -170,6 +172,8 @@ KT.roles.permissionWidget = function(){
     
         init = function(){
             next_button.unbind('click').click(handleNext);
+            $('#permission_widget').find('input').unbind('keypress').keypress(handleKeypress);
+        	$('#permission_widget').find('select').unbind('keypress').keypress(handleKeypress);
             previous_button.unbind('click').click(handlePrevious);
             done_button.unbind('click').click(handleDone);
             
@@ -207,6 +211,16 @@ KT.roles.permissionWidget = function(){
             
             $('#add_permission_form')[0].reset();
             $('.validation_error').remove();
+        },
+        handleKeypress = function(event){
+        	if( event.which === 13 ){
+	        	event.preventDefault();
+        		if( current_stage === 'details' && $('#description').is(":focus") ){
+        			handleDone();
+        		} else {
+        			handleNext();
+        		}
+        	}
         },
         handleNext = function(){
             var next = flow[current_stage].next.stage,
