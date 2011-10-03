@@ -86,23 +86,23 @@
     #roles_status
     #sliding_tree_actionbar.clickable
       - if Role.editable?
-        #add_permission.disabled.cs_action{"title" => "#{_('You must select an organization above before you can add a permission.')}"}
+        #add_permission.disabled.cs_action{"title" => "#{_('You must select an organization above before you can add a permission.')}", :tabindex => 7 }
           %span#add_permission_icon.sprite
             SPRITE
           %span.text
             = _("Add Permission")
-        #edit_permission.disabled.cs_action{"title" => "#{_('You must select and view a permission before you can edit it.')}"}
+        #edit_permission.disabled.cs_action{"title" => "#{_('You must select and view a permission before you can edit it.')}", :tabindex => 8 }
           %span#edit_icon.sprite
             SPRITE
           %span.text
             = _("Edit Permission")
-        #edit_role.cs_action
+        #edit_role.cs_action{ :tabindex => 9 }
           %span#edit_icon.sprite
             SPRITE
           %span.text
             = _("Edit Role")
       - if Role.deletable?
-        #remove_role.cs_action{ "data-confirm-text" => "#{_('Are you sure you want to remove this role?')}", "data-url" => role_path(@role) }
+        #remove_role.cs_action{ "data-confirm-text" => "#{_('Are you sure you want to remove this role?')}", "data-url" => role_path(@role), :tabindex => 10 }
           %span#remove_role_icon.sprite
             SPRITE
           %span.text
