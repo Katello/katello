@@ -12,6 +12,7 @@
 
 require 'http_resource'
 require 'resources/pulp'
+require 'resources/cdn'
 
 module Glue::Pulp::Repos
   SUPPORTED_ARCHS = %w[noarch i386 i686 ppc64 s390x x86_64]
@@ -246,13 +247,12 @@ module Glue::Pulp::Repos
       Glue::Pulp::Repo.repo_id(self.cp_id.to_s, content_name.to_s, env_name, self.organization.name)
     end
 
-    def repository_url(content_url, substitutions = {})
+    def repository_url(content_url)
       if self.provider.provider_type == Provider::CUSTOM
         url = content_url.dup
       else
         url = self.provider[:repository_url] + content_url
       end
-      substitutions.each { |var, val| url.gsub!("$#{var}",val) }
       url
     end
 
@@ -287,27 +287,22 @@ module Glue::Pulp::Repos
       self.productContent.collect do |pc|
         cert = self.certificate
         key = self.key
-        ca = File.open("#{Rails.root}/config/candlepin-ca.crt", 'rb') { |f| f.read }
-        archs = self.arch.split(",")
-
-        # TODO: get releases from CDN
-        releases = ["6Server"]
-
-        archs_with_releases = archs.map {|arch| releases.map {|release| [arch,release] } }.flatten(1)
-        used_feed_urls = Set.new
-        archs_with_releases.each do |(arch, release)|
-          feed_url = repository_url(pc.content.contentUrl, :basearch => arch, :releasever => release)
-          if used_feed_urls.include?(feed_url)
-            next
-          else
-            used_feed_urls << feed_url
-          end
+        ca_file = "#{Rails.root}/config/candlepin-ca.crt"
+        ca = File.read(ca_file)
+        cdn_var_substitutor = CDN::CdnVarSubstitutor.new(self.provider[:repository_url],
+                                                         :ssl_client_cert => cert,
+                                                         :ssl_client_key => key,
+                                                         :ssl_ca_file => ca_file)
+        substitutions_with_paths = cdn_var_substitutor.substitute_vars(pc.content.contentUrl)
+        substitutions_with_paths.each do |(substitutions, path)|
+          feed_url = repository_url(path)
+          arch = substitutions["basearch"] || "noarch"
           # temporary solution unless pulp supports another archs
           unless SUPPORTED_ARCHS.include? arch
             Rails.logger.error("Pulp does not support arch '#{arch}'")
             next
           end
-          repo_name = "#{pc.content.name} #{arch} #{release}".gsub(/[^a-z0-9\-_ ]/i,"")
+          repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
           repo = Glue::Pulp::Repo.new(:id => repo_id(repo_name),
                                       :arch => arch,
                                       :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, pc.content.name),
