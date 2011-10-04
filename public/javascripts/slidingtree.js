@@ -23,9 +23,10 @@
  */
 
 var sliding_tree = function(tree_id, options) {
-    var container = $('#' + tree_id),
-        list = container.find(".sliding_container .sliding_list"),
-        breadcrumb = container.find(".tree_breadcrumb"),
+    var container 	= $('#' + tree_id),
+        list 		= container.find(".sliding_container .sliding_list"),
+        breadcrumb 	= container.find(".tree_breadcrumb"),
+        sliders 	= container.find('.sliders'),
         current_crumb;
 
     var prerender = function(id) {
@@ -294,6 +295,7 @@ var sliding_tree = function(tree_id, options) {
     
 	if( settings.enable_float ){
 		container.css('position', 'absolute');
+		sliders.css('height', sliders.css('minHeight'));
 	}
 
     $(window).unbind('hashchange.' + tree_id).bind( 'hashchange.' + tree_id, hash_change);
@@ -305,9 +307,9 @@ var sliding_tree = function(tree_id, options) {
         if( event.target.nodeName === "A" ){
             return false;
         } else {
-            content_clicked($(this));   
+            content_clicked($(this));
         }
-    });
+    });    
 
     return {
     	get_current_crumb	: function(){
@@ -324,13 +326,14 @@ var sliding_tree = function(tree_id, options) {
 };
 
 sliding_tree.ActionBar = function(toggle_list){
-    var open_panel = undefined,
+    var open_panel 	= undefined,
+    	toggle_list	= toggle_list || {},
         
         toggle = function(id, options){
             var options = options || {};
 
             options.animate_time = 500;
-            
+
             if( open_panel !== id && open_panel !== undefined ){
             	options.opening = false;
                 toggle_list[open_panel].setup_fn(options);
@@ -364,12 +367,34 @@ sliding_tree.ActionBar = function(toggle_list){
         reset = function(){
             close();    
         },
-        add_to_toggle_list = function(addon){
-            if( toggle_list[addon] !== undefined ){
-                delete toggle_list[addon];
+        add_to_toggle_list = function(id, properties){
+            if( toggle_list[id] !== undefined ){
+                delete toggle_list[id];
             }
-            $.extend(toggle_list, addon);
+            toggle_list[id] = properties;
+            register_toggle(id, properties);
+        },
+        register_toggle = function(id, properties){
+    	   $('#' + properties.button).unbind('click').click(function() {
+                if ($(this).hasClass('disabled')){
+                    return false;
+                }
+                toggle(id, properties.options);
+            });
+    	   $('#' + properties.button).unbind('keypress').keypress(function(event) {
+    	   		event.preventDefault();
+                if ($(this).hasClass('disabled')){
+                    return false;
+                }
+                if( event.which === 13 ){
+                	toggle(id, properties.options);
+                }
+            });
         };
+        
+    for( item in toggle_list ){
+    	register_toggle(item, toggle_list[item]);
+    }
         
     return {
         toggle              :  toggle,
