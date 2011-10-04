@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.85
+Version:        0.1.86
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -229,6 +229,110 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Oct 04 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.86-1
+- Added some rendering on products and repos page to explicity differentiate
+  the 2
+- dashboard - removing system list and expanding height of big_widget and
+  small_widget
+- Updated katello-js to work with multiple third level navs
+- 740921 - When editing a permission verbs and tags that were part of the
+  permission will now show up as selected already.
+- Roles UI - Fix for edit role slide up container not working after previous
+  changes to the way the action bar works.
+- tupane - fixing extended scroll spinner showing up on most pages
+- panel - rendering generic rows more efficiently
+- 740365 - fixing issue with systems sorting and extended scroll, where limits
+  were being placed before teh sorting happened
+- Fixes for Roles UI action bar edit breaking after trying to edit more than 1.
+- 737138 - Adds action bar buttons on roles pages to tab index and adds enter
+  button press handlers to activate actions.
+- 733722 - When hitting enter after editing an input will cause the next button
+  to click.
+- 741399 - Fixes for Global permissions to hide 'On' field for all resource
+  types.
+- Tupane - Changes for consistency of tupane css.
+- 741422 - Roles UI - Fixes issue with sliding tree expanding in height instead
+  of overflowing container.
+- Row/grouping coloring for products and repos.
+- Fixed a unit test failure
+- Got pretty much the providers functionality done with this
+- Initial commit related to the provider page redesign
+- sms - cli system subscribe command
+- Commiting a bunch of unit fixes
+- Made organization create a default redhat provider on its inception
+- Updated dashboard systems snippet. fixed a couple of bugs w.r.t ellipsis
+- Dashboard - lighter hr color, and shorter big_widgets.
+- 740936 - Roles UI - Fixes issue with back button disappearing, container
+  border not surrounding actior bar and with wrong containers being displayed
+  for permission create.
+- BZ 741357: fixed a spelling mistake in katello-jobs.init
+- Revert "BZ 741357: fixed a spelling mistake in katello-jobs.init"
+- BZ 741357: fixed a spelling mistake in katello-jobs.init
+- 741444/741648/739981/739655 - update *.js.haml to use the new KT namespace
+  for javascript
+- Added some modifications for the dashboard systems overview widget to include
+  the product name
+- add a spec test to the new download
+- Adding system template download button.
+- Updated the dashboard systems view to be more consistent and show an icon if
+  entitlements are valid
+- Moved methods from the systems_help to application so that the time
+  formatting can be conisistent across all helpers
+- Lighter color footer version.
+- Tupane - Fixes typo from earlier change related to tupane closing not
+  scrolling back up to top.
+- dashboard - making subscription widget load with the page
+- Added some better error handling and removed katello_error.haml as we can do
+  the same with katello.haml
+- dashboard - fixing issue where errata would not expand properly when loaded
+  via async, also moved jscroll initalization to a more central place
+- dashboard - fixing issue where scrollbar would not initialize for ajax loaded
+  widgets
+- dashboard - removing console.logs
+- dashboard - making all widgets load asyncronously
+  dashboard
+- Changes to the dashboard layout.
+- dashboard - adding errata widget with fake data
+- Dashboard gear icon in button.
+- 739654 - Tupane - Fixes issue with tupane jumping to top of page upon being
+  closed.
+- katello-all -- a meta-package to pull in all components for Katello.
+- Stroke 0 on dashboard pie graph.
+- 736090 - Tupane - Fixes for tupane drifting into footer.
+- 736828 - Promotions - Fixes packages tupane to close whenever the breadcrumb
+  is navigated away from the packages list.
+- Overlay for graph on sub status for dasyboard.  Fix for a few small bad haml
+  and js things.
+- Fixed a var name goofup
+- dashboard - adding owner infor object to katello and having the dashboard use
+  it for total systems
+- dashboard - fixing color values to work properly in firefox
+- Updated some scss styling to lengthen the scroll
+- Added a message to show empty systems
+- Added  some styling on the systems snippet
+- dashboard - adding subscription widget for dashboard with fake data
+- Added the ellipsis widget
+- glue - caching teh sync status object in repos to reduce overhead
+- dashboard - a few visual fixes
+- Fixed some merge conflicts
+- Initial cut of the systems snippet on the dashboard
+- dashboard - adding sync dashboard widget
+- dashboard - making helper function names more consistent
+- dashboard - fixing changeset link and fixing icon links on promotions
+- Made the current_organization failure check to also log the exception trace
+- dashboard - mostly got promotions pane on dashboard working
+- dashboard - got notices dashboard widget in place
+- move the SSL fix into the rpm files
+- Additional work on the dashboard L&F.  Still need gear in dropbutton and
+  content in dashboard boxes.
+- Changes to the dashboard UI headers.
+- Dashboard initial layout. Added new icons to the action-icons.png as well as
+  the chart overlay for the pie chart for subscriptions.
+- search - modifications to support service prefix (e.g. /katello)
+- search - add completer_scope to role model
+- search - systems - update to properly handle autocomplete
+- search - initial commit to address auto-complete support w/ perms
+
 * Tue Sep 27 2011 Shannon Hughes <shughes@redhat.com> 0.1.85-1
 - remove capistrano from our deps (shughes@redhat.com)
 - 736093 - Tupanel - Changes to tupanel to handle helptip open and close.
