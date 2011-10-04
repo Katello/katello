@@ -1,9 +1,23 @@
+= javascript do
+  :javascript
+    //what button should be disabled when passwords don't match
+
+    localize({
+      "password_match": '#{_('The passwords do not match')}',
+      "very_weak": '#{_("Very Weak")}',
+      "weak": '#{_("Weak")}',
+      "good": '#{_("Good")}',
+      "strong": '#{_("Strong")}',
+      "meterText": '#{_("Password Strength")}',
+      "usernameMatch": '#{_("The password should not contain the username.")}'
+    });
+
 #users
   .grid_10
     %fieldset
       .grid_3.ra
         = label :name, _("Username:")
-      .grid_5.la
+      #username.grid_5.la 
         #{user.username}
     %fieldset
       .grid_3.ra
