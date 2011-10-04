@@ -6,7 +6,7 @@ describe CDN::CdnVarSubstitutor do
   let(:provider_url) { "https://cdn.redhat.com" }
   let(:path_with_variables) { "/content/dist/rhel/server/5/$releasever/$basearch/os" }
   let(:connect_options) do
-    {:ssl_client_cert => "fake-cert.crt",:ssl_ca_file => "fake-ca.pem"}
+    {:ssl_client_cert => "456",:ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123"}
   end
 
   subject do
