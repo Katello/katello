@@ -10,42 +10,6 @@
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
-
-$(document).ready(function() {
-
-    $('#path-expanded').hide();
-    $('#path-collapsed').live('click', env_select.expand);
-    $('#path-expanded').live('click', env_select.close);
-    $('.path_link').live('click', env_select.env_selected);
-    $('.path_entry').live('click', env_select.path_selected);
-
-    //If we mouse over the entries box, deselect what is already selected
-    $('#path-entries').mouseover(env_select.disable_active);
-    $('#path-entries').mouseout(env_select.highlight_selected);
-
-
-    env_select.active_div = $(".active").parents(".path_entry");
-    env_select.highlight_selected();
-
-    //Close the drop down if the user clicks somewhere else
-    $('body').click(function(event){
-        if (!($(event.target).parents("#path-entries").size() > 0) && env_select.is_open()) {
-            env_select.close();
-          }
-    });
-
-    $('#path-widget').hoverIntent({
-        over:env_select.expand,
-        timeout:750,
-        interval: 200,
-        out:env_select.close
-    });
-
-});
-
-
-
-
 var env_select =   {
     /* Click callback should be a function:
      *
@@ -53,19 +17,24 @@ var env_select =   {
      * env_next_id may be undefined
      *
      */
+    scroll_obj: undefined,
     click_callback: undefined,
     active_div:  undefined,
+    recalc_scroll: function() {
+        $(".path_entries").show();
+        env_select.scroll_obj.bind();
+        $(".path_entries").hide()
+    },
     expand: function() {
         $('#path-collapsed').hide();
         $('#path-expanded').show();
 
         $('#path-entries').show();
-
     },
     close: function() {
         $('#path-collapsed').show();
         $('#path-expanded').hide();
-        
+
         $('#path-entries').hide();
     },
     path_selected: function() {
@@ -74,17 +43,16 @@ var env_select =   {
         $('#path-selected').find('ul').html(content);
         env_select.active_div = $(this);
         env_select.highlight_selected();
+
         return false;
     },
     get_selected_env: function() {
         return $(".path_link.active").attr("data-env_id");
     },
     set_selected: function(env_id) {
-        console.log("SETTING");
         $('[data-env_id=' + env_id + '].path_link').click();
     },
     env_selected: function() {
-        console.log("SELECTED");
         env_select.close();
         var id = $(this).attr('data-env_id') ;
 
@@ -96,6 +64,9 @@ var env_select =   {
         if (env_select.click_callback) {
           env_select.click_callback(id, $(this));
         }
+
+        env_select.recalc_scroll();
+
         return false;
     },
     disable_active: function() {
@@ -110,6 +81,40 @@ var env_select =   {
         $(".path_entry").removeClass("path_entry_selected");
         env_select.active_div.addClass("path_entry_selected");
         return false;
+    },
+    reset_hover: function() {
+        $('#path-widget').hoverIntent({
+            over:env_select.expand,
+            timeout:750,
+            interval: 200,
+            out:env_select.close
+        });
     }
-
 };
+
+$(function() {
+    $('#path-expanded').hide();
+    $('#path-collapsed').live('click', env_select.expand);
+    $('#path-expanded').live('click', env_select.close);
+    $('.path_link').live('click', env_select.env_selected);
+    $('.path_entry').live('click', env_select.path_selected);
+
+    //If we mouse over the entries box, deselect what is already selected
+    $('#path-entries').mouseover(env_select.disable_active);
+    $('#path-entries').mouseout(env_select.highlight_selected);
+
+    env_select.active_div = $(".path_link.active").parents(".path_entry");
+    env_select.highlight_selected();
+
+    //Close the drop down if the user clicks somewhere else
+    $('body').click(function(event){
+        if (!($(event.target).parents("#path-entries").size() > 0) && env_select.is_open()) {
+            env_select.close();
+          }
+    });
+
+    env_select.reset_hover();
+    env_select.scroll_obj = KT.env_select_scroll({});
+    env_select.recalc_scroll();
+});
+

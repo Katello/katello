@@ -5,7 +5,7 @@ SimpleNavigation::Configuration.run do |navigation|
   navigation.id_generator = Proc.new {|key| "kp-#{key}"}
   
   navigation.items do |top_level|
-    top_level.item :dashboard, _("Dashboard"), dashboard_index_path(), :class=>'dashboard'  do |dashboard_sub|
+    top_level.item :dashboard, _("Dashboard"), dashboard_index_path(), :class=>'dashboard'  #do |dashboard_sub|
       #TODO: tie in monitors page/link (if in dashboard page)
       #dashboard_sub.item :monitors, _("Monitors"), '#', :class => 'disabled'
       #TODO: tie in reports page/link (if in dashboard page)
@@ -14,19 +14,26 @@ SimpleNavigation::Configuration.run do |navigation|
       #dashboard_sub.item :notifications, _("Notifications"), '#', :class => 'disabled'
       #TODO: tie in workflow page/link (if in dashboard page)
       #dashboard_sub.item :workflow, _("Workflow"),  '#', :class => 'disabled'
-    end #end dashboard_sub
+    #end #end dashboard_sub
 
 
     top_level.item :content, _("Content Management"),  organization_providers_path(current_organization()), :class=>'content' do |content_sub|
       content_sub.item :providers, _("Providers"), organization_providers_path(current_organization()), :highlights_on => /(\/organizations\/.*\/providers)|(\/providers\/.*\/(products|repos))/ do |providers_sub|
-        providers_sub.item :edit, _("Basics"), (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id), :class => 'navigation_element',
-                           :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? }
-        providers_sub.item :subscriptions, _("Subscriptions"),(@provider.nil? || @provider.new_record?) ? "" : subscriptions_provider_path(@provider.id), :class => 'navigation_element',
-                           :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? && @provider.has_subscriptions?}
-        providers_sub.item :products_repos, _("Products & Repositories"),(@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id), :class => 'navigation_element',
-                           :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? && !@provider.has_subscriptions?}
+        if current_organization.readable?
+          providers_sub.item :redhat_provider, _("Red Hat"),redhat_provider_providers_path, :class=>"third_level"
+        end
+
+        if Provider.any_readable?(current_organization)
+          providers_sub.item :custom_provider, _("Custom"),organization_providers_path(current_organization()), :class=>"third_level" do |custom_providers_sub|
+            custom_providers_sub.item :edit, _("Basics"), (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id), :class => 'navigation_element',
+                               :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? }
+            custom_providers_sub.item :products_repos, _("Products & Repositories"),(@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id), :class => 'navigation_element',
+                               :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? && !@provider.has_subscriptions?}
+          end
+        end
+
         # providers_sub.item :subscriptions, _("Schedule"), (@provider.nil? || @provider.new_record?) ? "" : schedule_provider_path(@provider.id), :class => 'disabled'
-      end if Provider.any_readable?(current_organization)
+      end if Provider.any_readable?(current_organization) || current_organization.readable?
       content_sub.item :sync_mgmt, _("Sync Management"), sync_management_index_path() do |sync_sub|
         sync_sub.item :status, _("Sync Status"), sync_management_index_path(), :class=>"third_level" 
         sync_sub.item :plans, _("Sync Plans"), sync_plans_path(), :class=>"third_level"
@@ -82,11 +89,14 @@ SimpleNavigation::Configuration.run do |navigation|
         if !@activation_key.nil?
           activation_key_sub.item :general, _("General"), edit_activation_key_path(@activation_key.id), :class => "navigation_element", 
                                   :controller => "activation_keys"
-          activation_key_sub.item :subscriptions, _("Subscriptions"), subscriptions_activation_key_path(@activation_key.id), :class => "navigation_element", 
+          activation_key_sub.item :general, _("Applied Subscriptions"), applied_subscriptions_activation_key_path(@activation_key.id), :class => "navigation_element",
+                                  :controller => "activation_keys"
+          activation_key_sub.item :subscriptions, _("Available Subscriptions"), available_subscriptions_activation_key_path(@activation_key.id), :class => "navigation_element",
                                   :controller => "activation_keys"
         end
       end if ActivationKey.readable?(current_organization())
-    end if current_organization() #end systems
+    end if current_organization() && (System.any_readable?(current_organization) || ActivationKey.readable?(current_organization()))
+    #end systems
 
     top_level.item :organizations, _("Organizations"), organizations_path(), :class=>'organizations' do |orgs_sub|
        orgs_sub.item :index, _("List"), organizations_path()

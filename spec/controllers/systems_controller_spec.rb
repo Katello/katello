@@ -192,7 +192,7 @@ describe SystemsController do
         it "should show systems by env" do
           @environment2 = KTEnvironment.new(:name => 'testenv', :prior => @organization.locker.id, :organization => @organization)
           @environment2.save!
-          @system2 = System.create!(:name=>"verbose", :environment => @environment2, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
+          @system2 = System.create!(:name=>"verbose2", :environment => @environment2, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
           get :environments, :env_id => @environment2.id
           assigns[:systems].should include System.find(@system2.id)
           response.should be_success

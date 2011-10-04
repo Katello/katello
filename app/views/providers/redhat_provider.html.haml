@@ -1,0 +1,47 @@
+= javascript :edit,:edit_helpers
+= include_common_i18n
+= include_editable_i18n
+
+.grid_16
+  = help_tip_button('subscriptions-help')
+  &nbsp;
+
+#providers
+  %input#panel_element_id{:name => @provider.id, :type => "hidden", :value => "#{@provider.name}_#{@provider.id}"}
+  .grid_16#provider
+    %h4 #{_("Provider Details")}
+    %fieldset.fl.clear
+      .grid_2.ra
+        %label #{_("Redhat Repository Url")}:
+      .grid_5.la.editable.edit_textfield{'name' => 'provider[repository_url]', 'data-url' => provider_path(@provider.id)} #{@provider[:repository_url]}
+
+
+#subscriptions
+  .grid_16
+    = help_tip(_("Listed below are the subscriptions information." + |
+               " If you have a subscription manifest you may upload it below. " + |
+               "This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."), 'subscriptions-help') |
+
+  .grid_16#subscription
+    %h4 #{_("Current Subscriptions")}
+    %table
+      %thead
+        %th #{_("Name")}
+        %th #{_("Consumed Subscriptions")}
+        %th #{_("Quantity Available")}
+      %tbody
+      - @subscriptions.each do |sub|
+        %tr{:class => cycle(nil, 'alt')}
+          %td
+            = sub["productName"]
+          %td
+            = sub["consumed"]
+          %td
+            = sub["quantity"]
+    %h4 #{_("Upload Subscription Manifest")}
+    = form_for @provider, :html => {:multipart => true, :method => :post, :id => :upload_manifest}, :remote => true, :url => redhat_provider_providers_path do |f|
+      %fieldset
+        = f.label :upload, _("Specify Local Manifest")
+        = f.file_field :contents
+        .actions
+          = f.submit _("Upload")

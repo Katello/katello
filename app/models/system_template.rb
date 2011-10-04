@@ -10,23 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'util/package_util'
+
 class ParentTemplateValidator < ActiveModel::Validator
   def validate(record)
     #check if the parent is from
     if not record.parent.nil?
       record.errors[:parent] << _("Template can have parent templates only from the same environment") if record.environment_id != record.parent.environment_id
-    end
-  end
-end
-
-class TemplateContentValidator < ActiveModel::Validator
-  def validate(record)
-    #check if packages and errate are valid
-    for p in record.packages
-      record.errors[:packages] << _("Package '#{p.package_name}' does not belong to any product in this template") if not p.valid?
-    end
-    for e in record.errata
-      record.errors[:errata] << _("Erratum '#{e.erratum_id}' does not belong to any product in this template") if not e.valid?
     end
   end
 end
@@ -45,11 +35,9 @@ class SystemTemplate < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :environment_id
   validates_with ParentTemplateValidator
-  validates_with TemplateContentValidator
 
   belongs_to :parent, :class_name => "SystemTemplate"
   has_and_belongs_to_many :products, :uniq => true
-  has_many :errata,   :class_name => "SystemTemplateErratum", :inverse_of => :system_template, :dependent => :destroy
   has_many :packages, :class_name => "SystemTemplatePackage", :inverse_of => :system_template, :dependent => :destroy
   has_many :package_groups, :class_name => "SystemTemplatePackGroup", :inverse_of => :system_template, :dependent => :destroy
   has_many :pg_categories, :class_name => "SystemTemplatePgCategory", :inverse_of => :system_template, :dependent => :destroy
@@ -88,13 +76,12 @@ class SystemTemplate < ActiveRecord::Base
 
     self.revision = json["revision"]
     self.description = json["description"]
+    self.name = json["name"] if json["name"]
+    self.save!
     json["products"].each {|p| self.add_product(p) } if json["products"]
     json["packages"].each {|p| self.add_package(p) } if json["packages"]
-    json["errata"].each {|e| self.add_erratum(e) } if json["errata"]
     json["package_groups"].each {|pg| self.add_package_group(pg.symbolize_keys) } if json["package_groups"]
     json["package_group_categories"].each {|pgc| self.add_pg_category(pgc.symbolize_keys) } if json["package_group_categories"]
-
-    self.name = json["name"] if json["name"]
 
     json["parameters"].each_pair {|k,v| self.parameters[k] = v } if json["parameters"]
   end
@@ -105,7 +92,6 @@ class SystemTemplate < ActiveRecord::Base
       :name => self.name,
       :revision => self.revision,
       :packages => self.packages.map(&:package_name),
-      :errata   => self.errata.map(&:erratum_id),
       :products => self.products.map(&:name),
       :parameters => ActiveSupport::JSON.decode(self.parameters_json),
       :package_groups => self.package_groups.map(&:export_hash),
@@ -119,8 +105,12 @@ class SystemTemplate < ActiveRecord::Base
 
 
   def add_package package_name
-    package = SystemTemplatePackage.new(:package_name => package_name)
-    self.packages << package
+    if Katello::PackageUtils.is_nvr package_name
+      pack_attrs = Katello::PackageUtils.parse_nvre package_name
+      self.packages.create!(:package_name => pack_attrs[:name], :version => pack_attrs[:version], :release => pack_attrs[:release], :epoch => pack_attrs[:epoch])
+    else
+      self.packages.create!(:package_name => package_name)
+    end
   end
 
 
@@ -128,19 +118,6 @@ class SystemTemplate < ActiveRecord::Base
     package = self.packages.find(:first, :conditions => {:package_name => package_name})
     package.destroy
   end
-
-
-  def add_erratum erratum_id
-    err = SystemTemplateErratum.new(:erratum_id => erratum_id)
-    self.errata << err
-  end
-
-
-  def remove_erratum erratum_id
-    err = self.errata.find(:first, :conditions => {:erratum_id => erratum_id})
-    err.destroy
-  end
-
 
   def add_product product_name
     product = self.environment.products.find_by_name(product_name)
@@ -187,36 +164,37 @@ class SystemTemplate < ActiveRecord::Base
      super(options.merge({
         :methods => [:products,
                      :packages,
-                     :errata,
                      :parameters,
                      :package_groups,
-                     :pg_categories
-     ]
+                     :pg_categories]
         })
      )
   end
 
+  def get_promotable_packages from_env, to_env, tpl_pack
+    if tpl_pack.is_nvr?
+      #if specified by nvre, ensure the nvre is there, othervise promote it
+      return [] if to_env.find_packages_by_nvre(tpl_pack.package_name, tpl_pack.version, tpl_pack.release, tpl_pack.epoch).length > 0
+      from_env.find_packages_by_nvre(tpl_pack.package_name, tpl_pack.version, tpl_pack.release, tpl_pack.epoch)
 
-  def promote
-    raise Errors::TemplateContentException.new("Cannot promote the template #{name}. #{self.environment.name} is the last environment in the promotion chain.") if self.environment.successor.nil?
-    to_env   = self.environment.successor
-
-    #collect all parent templates into one changeset
-    @changeset = Changeset.create!(:name => "template_promotion_#{Time.now}", :environment => to_env, :state => Changeset::REVIEW)
-    for tpl in self.get_inheritance_chain
-
-      @changeset.products << tpl.products
-      @changeset.errata   << changeset_errata(tpl.errata)
-      @changeset.packages << changeset_packages(tpl.packages)
-    end
-    @changeset.promote
-
-    for tpl in self.get_inheritance_chain
-      #copy template to the environment
-      tpl.copy_to_env to_env
+    else
+      #if specified by name, ensure any package with this name is in the next env. If not, promote the latest.
+      return [] if to_env.find_packages_by_name(tpl_pack.package_name).length > 0
+      latest = from_env.find_latest_package_by_name(tpl_pack.package_name)
+      from_env.find_packages_by_nvre(latest[:name], latest[:version], latest[:release], latest[:epoch])
     end
   end
 
+
+  def promote from_env, to_env
+    #TODO: promote parent templates recursively
+
+    promote_products from_env, to_env
+    promote_packages from_env, to_env
+    promote_template from_env, to_env
+
+    []
+  end
 
   #### Permissions
   def self.list_verbs global = false
@@ -232,7 +210,7 @@ class SystemTemplate < ActiveRecord::Base
 
   def self.any_readable? org
     User.allowed_to?([:read_all, :manage_all], :system_templates, nil, org)
-    
+
   end
 
   def self.readable? org
@@ -250,17 +228,59 @@ class SystemTemplate < ActiveRecord::Base
 
   protected
 
-  def changeset_errata(errata)
-    errata.collect do |e|
-      e = e.to_erratum
-      ChangesetErratum.new(:errata_id=>e.id, :display_name=>e.title, :changeset => @changeset)
-    end
+  def promote_template from_env, to_env
+    #clone the template
+    tpl_copy = to_env.system_templates.find_by_name(self.name)
+    tpl_copy.delete if not tpl_copy.nil?
+    self.copy_to_env to_env
   end
 
-  def changeset_packages(packages)
-    packages.collect do |p|
-      p = p.to_package
-      ChangesetPackage.new(:package_id=>p.id, :display_name=>p.name, :changeset => @changeset)
+  def promote_products from_env, to_env
+    #promote the product only if it is not in the next env yet
+    async_tasks = []
+    self.products.each do |prod|
+      async_tasks += (prod.promote from_env, to_env) if not prod.environments.include? to_env
+    end
+    PulpTaskStatus::wait_for_tasks async_tasks
+  end
+
+  def promote_packages from_env, to_env
+    pkgs_promote = {}
+    self.packages.each do |tpl_pack|
+
+      #get packages that need to be promoted
+      #in case there are more suitable packages (eg. two latest packages in two different repos in one product) we try to promote them all
+      packages = self.get_promotable_packages from_env, to_env, tpl_pack
+      next if packages.empty?
+
+      any_package_promoted = false
+      packages.each do |p|
+        p = p.with_indifferent_access
+
+        #check if there's where to promote them
+        repo = Glue::Pulp::Repo.find(p[:repo_id])
+        if repo.is_cloned_in? to_env
+          #remember the packages in a hash, we add them all together in one time
+          clone = repo.get_clone to_env
+          pkgs_promote[clone] ||= []
+          pkgs_promote[clone] << p[:id]
+          any_package_promoted = true
+        end
+      end
+
+      if not any_package_promoted
+        #there wasn't any package that we could promote (either it's product or repo have not been promoted yet)
+        packages.map{|p| p[:product_id]}.uniq.each do |product_id|
+          #promote (or sync) the product
+          prod = Product.find_by_cp_id product_id
+          PulpTaskStatus::wait_for_tasks prod.promote(from_env, to_env)
+        end
+      end
+    end
+
+    #promote all collected packages
+    pkgs_promote.each_pair do |repo, pkgs|
+      repo.add_packages(pkgs)
     end
   end
 

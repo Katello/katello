@@ -3,9 +3,9 @@ require 'spec_helper'
 describe 'Candlepin::Consumer' do
   
   before(:each) do
-    #url = "http://192.168.56.101:8080/candlepin"    
-    #Candlepin::Consumer.prefix = URI.parse(url).path
-    #Candlepin::Consumer.site = url.gsub(Candlepin::Consumer.prefix, "")    
+    url = "http://localhost:8080/candlepin"    
+    Candlepin::Consumer.prefix = URI.parse(url).path
+    Candlepin::Consumer.site = url.gsub(Candlepin::Consumer.prefix, "")    
     
     User.current = User.new(:username => 'admin', :password => 'admin')
     

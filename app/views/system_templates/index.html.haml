@@ -72,20 +72,11 @@
             .slider_two.no_content.slider
 
 
-        #add_template_container.slide_up_container
-          %h2= _("New System Template")
-          = render :partial=>"new"
-
         #edit_template_container.slide_up_container
           %h2= _("Edit System Template")
           = render :partial=>"edit", :locals=>{:editable=>true}
         - if editable
           #sliding_tree_actionbar.clickable
-            #add_template.cs_action
-              %span#add_template_icon.sprite
-                SPRITE
-              %span.text
-                = _("Add")
             #edit_template.cs_action
               %span#edit_template_icon.sprite
                 SPRITE
@@ -101,11 +92,19 @@
                 SPRITE
               %span.text
                 = _("Save")
-
+            #download_template.cs_action
+              %span#save_template_icon.sprite
+                SPRITE
+              %span.text
+                = _("Download") 
 
 
     = render :partial=>"common/tupane"
     #content_tree.left.sliding_tree
+      - if editable
+        %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{new_system_template_path}"}
+          #{_('+ New Template')}
+          .arrow-right
       %h2= _("Eligible Content")
       .tree_breadcrumb.clickable.clear
       .sliding_container

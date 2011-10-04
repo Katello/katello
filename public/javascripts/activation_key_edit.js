@@ -1,3 +1,4 @@
+
 /**
  Copyright 2011 Red Hat, Inc.
 
@@ -12,9 +13,8 @@
 */
 
 $(document).ready(function() {
-    // all promotion paths are hidden on initial render, so locate the env that is currently
-    // selected... and show it's promotion path
-    $('.promotion_paths').find('.selected').closest('#env').show();
+
+    KT.activation_key.initialize_edit();
 
     $('.edit_system_template').each(function() {
         var button = $(this);
@@ -39,4 +39,5 @@ $(document).ready(function() {
             }
         });
     });
+
 });

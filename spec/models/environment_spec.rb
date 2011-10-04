@@ -24,12 +24,7 @@ describe KTEnvironment do
     @env_name =  'test_environment'
     
     @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
-    @provider = Provider.create!({
-      :name => 'test_provider',
-      :repository_url => 'https://something.url',
-      :provider_type => Provider::REDHAT,
-      :organization => @organization
-    })
+    @provider = @organization.redhat_provider
 
     @first_product = Product.new(:name =>"prod1", :cp_id => '12345', :provider => @provider, :environments => [@organization.locker])
     @second_product = Product.new(:name =>"prod2", :cp_id => '67890', :provider => @provider, :environments => [@organization.locker])

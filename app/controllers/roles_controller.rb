@@ -12,7 +12,7 @@
 
 class RolesController < ApplicationController
 
-  before_filter :find_role, :except => [:index, :items, :new, :create, :verbs_and_scopes]
+  before_filter :find_role, :except => [:index, :items, :new, :create, :verbs_and_scopes, :auto_complete_search]
   before_filter :authorize #call authorize after find_role so we call auth based on the id instead of cp_id
   skip_before_filter :require_org
   before_filter :setup_options, :only => [:index, :items]
@@ -31,7 +31,8 @@ class RolesController < ApplicationController
       :index => read_check,
       :items => read_check,
       :verbs_and_scopes => read_check,
-        
+      :auto_complete_search => read_check,
+
       :create => create_check,
       :new => create_check,
       :edit => read_check,
@@ -52,7 +53,7 @@ class RolesController < ApplicationController
     begin
       # retrieve only non-self roles... permissions on a self-role will be handled 
       # as part of the user
-      @roles = Role.readable.search_for(params[:search]).non_self.limit(current_user.page_size)
+      @roles = Role.readable.search_for(params[:search]).non_self.order(:name).limit(current_user.page_size)
       retain_search_history
 
     rescue Exception => error
@@ -63,7 +64,7 @@ class RolesController < ApplicationController
   
   def items
     start = params[:offset]
-    @roles = Role.readable.search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @roles = Role.readable.search_for(params[:search]).order(:name).limit(current_user.page_size).offset(start)
     render_panel_items @roles, @panel_options
   end
   
@@ -72,8 +73,8 @@ class RolesController < ApplicationController
                  :col => ['name'],
                  :create => _('Role'),
                  :name => controller_display_name,
-                 :ajax_scroll => items_roles_path()}
-    @panel_options[:enable_create] = false if !Role.creatable?
+                 :ajax_scroll => items_roles_path(),
+                 :enable_create=> Role.creatable?}
   end
   
   def new

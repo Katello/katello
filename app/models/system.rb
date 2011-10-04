@@ -32,15 +32,18 @@ class System < ActiveRecord::Base
   has_many :activation_keys, :through => :system_activation_keys
 
   validates :environment, :presence => true, :non_locker_environment => true
-  validates :name, :presence => true, :no_trailing_space => true
+  validates :name, :presence => true, :no_trailing_space => true, :uniqueness => true
   validates :description, :katello_description_format => true
   before_create  :fill_defaults
+
+  scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
+  scope :completer_scope, lambda { |options| readable(options[:organization_id])}
 
   scoped_search :on => :name, :complete_value => true
   scoped_search :on => :description, :complete_value => true
   scoped_search :on => :location, :complete_value => true
   scoped_search :on => :uuid, :complete_value => true
-
+  scoped_search :on => :id, :complete_value => true
 
   def organization
     environment.organization
@@ -68,6 +71,11 @@ class System < ActiveRecord::Base
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
   end
 
+  def as_json(options)
+    json = super(options)
+    json['environment'] = environment.as_json unless environment.nil?
+    json
+  end
 
   def self.any_readable? org
     org.systems_readable? ||

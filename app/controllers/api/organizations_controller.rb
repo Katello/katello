@@ -13,6 +13,8 @@
 class Api::OrganizationsController < Api::ApiController
 
   before_filter :find_organization, :only => [:show, :update, :destroy, :products]
+  before_filter :find_organization, :only => [:show, :update, :destroy, :products, :providers]
+
   respond_to :json
   before_filter :authorize
 
