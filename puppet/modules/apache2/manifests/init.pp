@@ -3,7 +3,6 @@
 # this is a CentOS 5 compatable (e.g. apache 2.2) manifest.
 class apache2 {
   include apache2::params
-  include apache2::install
   include apache2::config
   include apache2::service
 

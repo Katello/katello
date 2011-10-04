@@ -21,10 +21,11 @@ reader_role = Role.find_or_create_by_name(
   :description => 'Permissions to read everything.')
 
 # create the super admin if none exist - it must be created before any statement in the seed.rb script
-User.current = user_admin = User.find_or_create_by_username(
+User.current = user_admin = User.new(
   :roles => [ superadmin_role ],
   :username => 'admin',
   :password => 'admin')
+user_admin.save!
 
 # "nobody" user (do not change his name 'anonymous')
 user_anonymous = User.find_or_create_by_username(

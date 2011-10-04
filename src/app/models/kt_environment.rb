@@ -109,8 +109,13 @@ class KTEnvironment < ActiveRecord::Base
 
   #is the environment currently being promoted to
   def promoting_to?
-    Changeset.joins(:task_status).where('changesets.environment_id' => self.id,
-        'task_statuses.state' => [TaskStatus::Status::WAITING,  TaskStatus::Status::RUNNING]).exists?
+    self.promoting.exists?
+  end
+
+  #list changesets promoting
+  def promoting
+      Changeset.joins(:task_status).where('changesets.environment_id' => self.id,
+        'task_statuses.state' => [TaskStatus::Status::WAITING,  TaskStatus::Status::RUNNING])
   end
 
 
@@ -157,6 +162,44 @@ class KTEnvironment < ActiveRecord::Base
   end
 
 
+  def find_packages_by_name name
+    self.products.collect do |prod|
+      prod.find_packages_by_name(self, name).collect do |p|
+        p[:product_id] = prod.cp_id
+        p
+      end
+    end.flatten(1)
+  end
+
+  def find_packages_by_nvre name, version, release, epoch
+    self.products.collect do |prod|
+      prod.find_packages_by_nvre(self, name, version, release, epoch).collect do |p|
+        p[:product_id] = prod.cp_id
+        p
+      end
+    end.flatten(1)
+  end
+
+  def find_latest_package_by_name name
+    latest_pack = nil
+
+    self.products.collect do |prod|
+      pack = prod.find_latest_package_by_name self, name
+
+      next if pack.nil?
+
+      if (latest_pack.nil?) or
+         (pack[:epoch] > latest_pack[:epoch]) or
+         (pack[:epoch] == latest_pack[:epoch] and pack[:release] > latest_pack[:release]) or
+         (pack[:epoch] == latest_pack[:epoch] and pack[:release] == latest_pack[:release] and pack[:version] > latest_pack[:version])
+        latest_pack = pack
+        latest_pack[:product_id] = prod.cp_id
+      end
+    end
+    latest_pack
+  end
+
+
   #Permissions
   scope :changesets_readable, lambda {|org| authorized_items(org, [:promote_changesets, :manage_changesets, :read_changesets])}
   scope :content_readable, lambda {|org| authorized_items(org, [:read_contents])}
@@ -169,7 +212,7 @@ class KTEnvironment < ActiveRecord::Base
   }
 
   def self.any_viewable_for_promotions? org
-    User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, [], org)
+    User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, org.environment_ids, org, true)
   end
 
   def viewable_for_promotions?

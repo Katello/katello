@@ -16,6 +16,7 @@ class katello::params {
   # SSL settings
   $ssl_certificate_file     = "/etc/candlepin/certs/candlepin-ca.crt"
   $ssl_certificate_key_file = "/etc/candlepin/certs/candlepin-ca.key"
+  $ssl_certificate_ca_file  = $ssl_certificate_file
 
   # apache settings
   $thin_start_port = "5000"

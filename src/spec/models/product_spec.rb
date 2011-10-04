@@ -21,7 +21,7 @@ describe Product do
     disable_org_orchestration
 
     @organization = Organization.create!(:name => ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
-    @provider     = Provider.create!({:organization => @organization, :name => 'provider', :repository_url => "https://something.url", :provider_type => Provider::REDHAT})
+    @provider     = @organization.redhat_provider
 
     ProductTestData::SIMPLE_PRODUCT.merge!({:provider => @provider, :environments => [@organization.locker]})
     ProductTestData::SIMPLE_PRODUCT_WITH_INVALID_NAME.merge!({:provider => @provider, :environments => [@organization.locker]})
@@ -222,14 +222,47 @@ describe Product do
         Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
         Candlepin::Content.stub!(:create).and_return({:id => "123"})
         @repo = Glue::Pulp::Repo.new(:id => '123')
+        Glue::Pulp::Repo.stub(:new).and_return(@repo)
       end
 
       it "should preserve repository metadata" do
-        Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:preserve_metadata => true)).and_return(@repo)
+        Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:preserve_metadata => true))
         p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
         p.orchestration_for = :import_from_cp
         p.save!
       end
+
+      it "should clear the product name to be valid" do
+        product = @provider.import_product_from_cp('name' => 'invalid (name)', :productContent => [] )
+        product.name.should == 'invalid name'
+      end
+
+     it "prepares valid name for Pulp repo" do
+          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 noarch'))
+          p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
+          p.orchestration_for = :import_from_cp
+          p.save!
+      end
+
+     context "product has more archs" do
+        after do
+          p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
+          p.stub(:attrs => [{:name => 'arch', :value => 'x86_64,i386'}])
+          p.orchestration_for = :import_from_cp
+          p.save!
+        end
+
+        it "should create repo for each arch" do
+          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 x86_64'))
+          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 i386'))
+        end
+
+        it "should substitute $basearch in the contentUrl for the repo feed" do
+          expected_feed = "#{@provider.repository_url}/released-extra/RHEL-5-Server/$releasever/x86_64/os/ClusterStorage/"
+          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:feed => expected_feed)).and_return(@repo)
+        end
+      end
+
     end
   end
 end

@@ -18,8 +18,8 @@ class PromotionsController < ApplicationController
 
   def rules
     show_test = lambda {
-      to_ret = @environment.contents_readable?
-      to_ret ||= @next_environment.changesets_readable? if @next_environment
+      to_ret = @environment && @environment.contents_readable?
+      to_ret ||=  @next_environment.changesets_readable? if @next_environment
       to_ret
     }
 
@@ -54,7 +54,8 @@ class PromotionsController < ApplicationController
       :accessible_envs=> access_envs,
       :manage_changesets => @next_environment.nil? ? false : @next_environment.changesets_manageable?,
       :promote_changesets => @next_environment.nil? ? false : @next_environment.changesets_promotable?,
-      :read_changesets => @next_environment.nil? ? false : @next_environment.changesets_readable?
+      :read_changesets => @next_environment.nil? ? false : @next_environment.changesets_readable?,
+      :read_contents => (@environment && @environment.contents_readable?)? true: false
     }
     
     render :show, :locals=>locals
@@ -87,8 +88,9 @@ class PromotionsController < ApplicationController
       offset = params[:offset]
       offset = offset.to_i if offset
       if offset
-        @packages = @packages[offset..offset+current_user.page_size]
+        @packages = @packages[offset..offset+current_user.page_size] || []
         render :text=>"" and return if @packages.empty?
+        render :partial=>"package_items" and return
       else
         @packages = @packages[0..current_user.page_size]
       end
@@ -137,8 +139,10 @@ class PromotionsController < ApplicationController
     @errata.sort! {|a,b| a.title <=> b.title}
     offset = params[:offset]
     if offset
+      offset = offset.to_i
       @errata = @errata[offset..offset+current_user.page_size]
       render :text=>"" and return if @errata.empty?
+      render :partial=>"errata_items" and return 
     else
       @errata = @errata[0..current_user.page_size]
     end
@@ -170,10 +174,10 @@ class PromotionsController < ApplicationController
     @organization = current_organization
     @environment = KTEnvironment.where(:name=>params[:id]).where(:organization_id=>@organization.id).first if params[:id]
     @environment ||= first_env_in_path(accessible_environments, true)
-    raise Errors::SecurityViolation, _("Cannot find a readable environment.") if @environment.nil?
+    #raise Errors::SecurityViolation, _("Cannot find a readable environment.") if @environment.nil?
 
     @next_environment = KTEnvironment.find(params[:next_env_id]) if params[:next_env_id]
-    @next_environment ||= @environment.successor
+    @next_environment ||= @environment.successor if @environment
     @product = Product.find(params[:product_id]) if params[:product_id]
   end
 

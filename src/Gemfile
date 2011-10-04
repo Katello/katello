@@ -1,6 +1,6 @@
 source 'http://repos.fedorapeople.org/repos/katello/gems/'
 
-gem 'rails', '3.0.5'
+gem 'rails', '3.0.10'
 gem 'thin', '>=1.2.11'
 
 gem 'json'
@@ -33,9 +33,6 @@ gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 
 # Use unicorn as the web server
 # gem 'unicorn'
-
-# Deploy with Capistrano
-gem 'capistrano'
 
 # @@@DEV_ONLY@@@
 # Everything bellow the line above will NOT be used in production.
@@ -75,5 +72,8 @@ group :test, :development do
   # profiler
   gem 'newrelic_rpm'
   
+  #needed to generate routes in javascript
+  gem "js-routes", :require => 'js_routes'
+
   #needed for unit tests
 end

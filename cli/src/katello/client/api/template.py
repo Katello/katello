@@ -18,7 +18,7 @@ from katello.client.api.base import KatelloAPI
 class TemplateAPI(KatelloAPI):
 
     def templates(self, envId):
-        path = "/api//environments/%s/templates/" % str(envId)
+        path = "/api/environments/%s/templates/" % str(envId)
         tpls = self.server.GET(path)[1]
         return tpls
 
@@ -30,8 +30,8 @@ class TemplateAPI(KatelloAPI):
 
 
     def template_by_name(self, envId, tplName):
-        path = "/api/templates/"
-        tpls = self.server.GET(path, {"name": tplName, "environment_id": envId})[1]
+        path = "/api/environments/%s/templates/" % str(envId)
+        tpls = self.server.GET(path, {"name": tplName})[1]
         if len(tpls) > 0:
             #show provides more information than index
             return self.template(tpls[0]["id"])

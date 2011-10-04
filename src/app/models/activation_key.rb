@@ -18,9 +18,10 @@ class ActivationKey < ActiveRecord::Base
   belongs_to :user
   belongs_to :system_template
 
-  has_many :key_subscriptions
-  has_many :subscriptions, :class_name => "KTSubscription", :through => :key_subscriptions
+  has_many :key_pools
+  has_many :pools, :class_name => "KTPool", :through => :key_pools
 
+  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
 
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'key.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'key.description'
@@ -43,9 +44,13 @@ class ActivationKey < ActiveRecord::Base
     system.system_activation_keys.build(:activation_key => self)
   end
 
+  # subscribe to the pool which starts most recently (or with the least number available)
   def subscribe_system(system)
-    self.key_subscriptions.each do |ksub|
-      system.subscribe(ksub.subscription.subscription, ksub.allocated)
+    sorted_kp = self.key_pools.sort { |a,b| (b.pool.startDate_as_datetime <=> a.pool.startDate_as_datetime).nonzero? || (a.pool.cp_id <=> b.pool.cp_id) }
+    if (sorted_kp.count > 0)
+      system.subscribe(sorted_kp.first.pool.cp_id, sorted_kp.first.allocated)
+    else
+      Rails.logger.warn "No available entitlements for activation key '#{self.name}'"
     end
   end
 

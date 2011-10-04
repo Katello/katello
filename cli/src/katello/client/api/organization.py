@@ -46,3 +46,12 @@ class OrganizationAPI(KatelloAPI):
         path = "/api/organizations/%s" % str(name)
         org = self.server.GET(path)[1]
         return org
+
+    def generate_uebercert(self, name):
+        path = "/api/organizations/%s/uebercert" % str(name)
+        return self.server.POST(path, {})[1]
+        
+    def uebercert(self, name):
+        path = "/api/organizations/%s/uebercert" % str(name)
+        return self.server.GET(path)[1]
+

@@ -61,6 +61,8 @@ def setup_admin(admin):
     org_cmd.add_action('list', organization.List())
     org_cmd.add_action('update', organization.Update())
     org_cmd.add_action('delete', organization.Delete())
+    org_cmd.add_action('generate_uebercert', organization.GenerateDebugCert())
+    org_cmd.add_action('uebercert_info', organization.ShowDebugCert())
     admin.add_command('org', org_cmd)
 
     user_cmd = user.User()
@@ -117,6 +119,8 @@ def setup_admin(admin):
     system_cmd.add_action('list', system.List())
     system_cmd.add_action('register', system.Register())
     system_cmd.add_action('unregister', system.Unregister())
+    system_cmd.add_action('subscribe', system.Subscribe())
+    system_cmd.add_action('unsubscribe', system.Unsubscribe())
     system_cmd.add_action('info', system.Info())
     system_cmd.add_action('packages', system.InstalledPackages())
     system_cmd.add_action('facts', system.Facts())
