@@ -110,80 +110,39 @@ describe Api::TemplatesController do
 
 
   describe "update" do
-    it "should fail when updating in non-locker environment" do
-      @tpl.environment = @environment
-      put 'update_content', :id => TEMPLATE_ID
-      @tpl.should_not_receive(:update_attributes!)
-      response.should_not be_success
-    end
-
-    it 'should call update_attributes' do
-      @tpl.should_receive(:update_attributes!).once
-      put 'update', :id => TEMPLATE_ID, :template => {}
-    end
-  end
-
-
-  describe "update_content" do
+    let(:new_tpl_name) {"changed_"+TEMPLATE_NAME}
 
     it "should fail when updating in non-locker environment" do
       @tpl.environment = @environment
-      put 'update_content', :id => TEMPLATE_ID
+      @tpl.should_not_receive(:save!)
+
+      put 'update', :id => TEMPLATE_ID
+
       response.should_not be_success
     end
 
-    it 'should call add_product' do
-      @tpl.should_receive(:add_product).once
-      put 'update_content', :id => TEMPLATE_ID, :do => :add_product
+    it 'should update template in the Locker' do
+      @tpl.stub(:get_clones).and_return([])
+      @tpl.should_receive(:save!).once
+
+      put 'update', :id => TEMPLATE_ID, :template => {:name => new_tpl_name, :description => "new_description"}
+
+      response.should be_success
     end
 
-    it 'should call remove_product' do
-      @tpl.should_receive(:remove_product).once
-      put 'update_content', :id => TEMPLATE_ID, :do => :remove_product
+    it 'should change name of all template clones when updating template in the Locker' do
+      tpl_clone = SystemTemplate.new(:name => TEMPLATE_NAME, :environment => @environment)
+      tpl_clone.should_receive(:save!).once
+
+      @tpl.stub(:get_clones).and_return([tpl_clone])
+      @tpl.should_receive(:save!).once
+
+      put 'update', :id => TEMPLATE_ID, :template => {:name => new_tpl_name, :description => "new_description"}
+
+      tpl_clone.name.should == new_tpl_name
+      response.should be_success
     end
-
-    it 'should call add_package' do
-      @tpl.should_receive(:add_package).once
-      put 'update_content', :id => TEMPLATE_ID, :do => :add_package
-    end
-
-    it 'should call remove_package' do
-      @tpl.should_receive(:remove_package).once
-      put 'update_content', :id => TEMPLATE_ID, :do => :remove_package
-    end
-
-    describe "package groups assignment" do
-      let(:package_group) { {:repo_id => "repo-123", :id => "group-123"} }
-      let(:package_group_params) { {:repo => package_group[:repo_id], :package_group => package_group[:id]} }
-
-      it 'should call add_package_group' do
-        @tpl.should_receive(:add_package_group).once.with(package_group)
-        put 'update_content', { :id => TEMPLATE_ID, :do => :add_package_group }.merge(package_group_params)
-      end
-
-      it 'should call remove_package_group' do
-        @tpl.should_receive(:remove_package_group).once.with(package_group)
-        put 'update_content', { :id => TEMPLATE_ID, :do => :remove_package_group }.merge(package_group_params)
-      end
-    end
-
-    describe "package group categories assignment" do
-      let(:pg_category) { {:repo_id => "repo-123", :id => "cat-123"} }
-      let(:pg_category_params) { {:repo => pg_category[:repo_id], :package_group_category => pg_category[:id]} }
-
-      it 'should call add_pg_category' do
-        @tpl.should_receive(:add_pg_category).once.with(pg_category)
-        put 'update_content', { :id => TEMPLATE_ID, :do => :add_package_group_category }.merge(pg_category_params)
-      end
-
-      it 'should call remove_pg_category' do
-        @tpl.should_receive(:remove_pg_category).once.with(pg_category)
-        put 'update_content', { :id => TEMPLATE_ID, :do => :remove_package_group_category }.merge(pg_category_params)
-      end
-    end
-
   end
-
 
   describe "destroy" do
     it "should remove the specified template" do
