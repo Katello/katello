@@ -7,10 +7,11 @@ Src::Application.routes.draw do
       get :subscriptions
     end
     member do
-      get :subscriptions
-      get :edit_environment
+      get :applied_subscriptions
+      get :available_subscriptions
+      post :remove_subscriptions
+      post :add_subscriptions
       post :update
-      post :update_subscriptions
     end
   end
 
@@ -41,7 +42,17 @@ Src::Application.routes.draw do
 
   resources :subscriptions, :only => [:index]
 
-  resources :dashboard, :only => [:index]
+  resources :dashboard, :only => [:index] do
+    collection do
+      get :sync
+      get :notices
+      get :errata
+      get :promotions
+      get :systems
+      get :subscriptions
+    end
+
+  end
 
 
   resources :systems, :except => [:destroy] do
@@ -115,6 +126,7 @@ Src::Application.routes.draw do
     member do
       get :promotion_details
       get :object
+      get :download
       put :update_content
     end
   end
@@ -126,11 +138,13 @@ Src::Application.routes.draw do
     end
     collection do
       get :items
+      get :redhat_provider
+      post :redhat_provider, :action => :update_redhat_provider
     end
     member do
       get :products_repos
-      get :subscriptions
-      post :subscriptions, :action=>:update_subscriptions
+#      get :subscriptions
+#     post :subscriptions, :action=>:update_subscriptions
       get :schedule
     end
   end
@@ -156,10 +170,14 @@ Src::Application.routes.draw do
   end
 
   match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
-  match '/organizations/:org_id/environments/:env_id/system_templates' => 'environments#system_templates', :via => :get, :as => 'system_templates_organization_environment'
 
   resources :organizations do
-    resources :environments
+    resources :environments do
+      member do
+        get :system_templates
+        get :products
+      end
+    end
     resources :providers do
       get 'auto_complete_search', :on => :collection
     end
@@ -245,6 +263,7 @@ Src::Application.routes.draw do
         get :errata
       end
     end
+    match '/systems/:id/subscription' => 'systems#subscribe', :via => :post
 
     resources :providers, :except => [:index] do
       resources :sync, :only => [:index, :create] do
@@ -279,10 +298,10 @@ Src::Application.routes.draw do
       resources :systems, :only => [:index]
       match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :activation_keys, :only => [:index]
-
       resources :repositories, :only => [] do
         post :discovery, :on => :collection
       end
+      resource :uebercert , :only => [:create, :show]
     end
 
     resources :changesets, :only => [:show, :destroy] do

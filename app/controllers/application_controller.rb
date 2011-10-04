@@ -24,13 +24,38 @@ class ApplicationController < ActionController::Base
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   after_filter :flash_to_headers
-
   #custom 404 (render_404) and 500 (render_error) pages
-  rescue_from Exception, :with => :render_error
-  rescue_from ActiveRecord::RecordNotFound, :with => :render_404
-  rescue_from ActionController::RoutingError, :with => :render_404
-  rescue_from ActionController::UnknownController, :with => :render_404
-  rescue_from ActionController::UnknownAction, :with => :render_404
+
+  # this is always in the top
+  # order of these are important.
+  rescue_from Exception do |exception|
+    execute_rescue(exception, lambda{ |exception| render_error(exception)})
+  end
+
+  rescue_from ActiveRecord::RecordNotFound do |exception|
+    execute_rescue(exception, lambda{render_404})
+  end
+
+  rescue_from ActionController::RoutingError do |exception|
+    execute_rescue(exception, lambda{render_404})
+  end
+
+  rescue_from ActionController::UnknownController do |exception|
+    execute_rescue(exception, lambda{render_404})
+  end
+
+  rescue_from ActionController::UnknownAction do |exception|
+    execute_rescue(exception, lambda{render_404})
+  end
+
+  rescue_from Errors::SecurityViolation do |exception|
+    execute_rescue(exception, lambda{render_403})
+  end
+
+  rescue_from Errors::CurrentOrganizationNotFoundException do |exception|
+    org_not_found_error(exception)
+  end
+
 
   # support for session (thread-local) variables must be the last filter (except authorize)in this class
   include Katello::ThreadSession::Controller
@@ -163,27 +188,19 @@ class ApplicationController < ActionController::Base
   end
 
   def current_organization
-    return false unless session[:current_organization_id]
+    return nil unless session[:current_organization_id]
     begin
       @current_org ||=  Organization.find(session[:current_organization_id])
+      return @current_org
     rescue Exception => error
-      Rails.logger.error error.to_s
+      log_exception error
+      session.delete(:current_organization_id)
+      raise Errors::CurrentOrganizationNotFoundException.new error.to_s
     end
   end
 
   def current_organization=(org)
     session[:current_organization_id] = org.try(:id)
-  end
-
-  rescue_from 'Errors::SecurityViolation' do |exception|
-    logger.warn exception.message
-    #logger.debug pp_exception exception
-    if current_user
-      render_403
-    else
-      errors _("You must be logged in to access that page."), {:persist => false}
-      redirect_to new_user_session_url and return false
-    end
   end
 
   def escape_html input
@@ -263,28 +280,30 @@ class ApplicationController < ActionController::Base
       format.xml  { head 404 }
       format.json { head 404 }
     end
+    User.current = nil
   end
 
   # take care of 500 pages too
   def render_error(exception = nil)
     if exception
       logger.info _("Rendering 500:") + "#{exception.message}"
-      errors exception
+      errors exception.to_s
     end
     respond_to do |format|
-      format.html { render :template => "common/500", :layout => "katello_error", :status => 500, :locals=>{:error=>exception} }
+      format.html { render :template => "common/500", :layout => "katello", :status => 500,
+                                :locals=>{:error=>exception} }
       format.atom { head 500 }
       format.xml  { head 500 }
       format.json { head 500 }
     end
-
+    User.current = nil
   end
 
   def retain_search_history
     begin
       # save the request in the user's search history
       unless params[:search].nil? or params[:search].blank?
-        path = @_request.env['PATH_INFO']
+        path = @_request.env['REQUEST_PATH']
         histories = current_user.search_histories.where(:path => path, :params => params[:search])
         if histories.nil? or histories.empty?
           # user doesn't have this search stored, so save it
@@ -295,7 +314,7 @@ class ApplicationController < ActionController::Base
         end
       end
     rescue Exception => error
-      Rails.logger.error error.to_s
+      log_exception(error)
     end
   end
 
@@ -435,5 +454,39 @@ class ApplicationController < ActionController::Base
     nil
   end
 
+  def execute_rescue exception, renderer
+    log_exception exception
+    if current_user
+      User.current = current_user
+      renderer.call(exception)
+      User.current = nil
+      execute_after_filters
+      return false
+    else
+      errors _("You must be logged in to access that page."), {:persist => false}
+      execute_after_filters
+      redirect_to new_user_session_url and return false
+    end
+  end
+
+  def org_not_found_error exception
+    logger.error exception.message
+    execute_after_filters
+    logout
+    errors _("You current organization is no longer valid. It is possible that the organization has been deleted, please log back in to continue."),{:persist => false}
+    redirect_to new_user_session_url and return false
+  end
+
+
+  def log_exception exception
+    if exception
+      logger.error exception.to_s
+      logger.error exception.message
+      logger.error "#{exception.inspect}"
+      exception.backtrace.each { |line|
+      logger.error line
+      }
+    end
+  end
 end
 

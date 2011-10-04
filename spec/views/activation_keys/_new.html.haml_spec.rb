@@ -14,6 +14,9 @@ require 'spec_helper'
 
 describe "activation_keys/_new.html.haml" do
   before(:each) do
+    @environment = assign(:environment, stub_model(KTEnvironment,
+      :name => "dev").as_new_record)
+
     @key_name = "New Key"
     @key_description = "This is a new activation key"
     @activation_key = assign(:activation_key, stub_model(ActivationKey,
@@ -21,8 +24,11 @@ describe "activation_keys/_new.html.haml" do
       :description => @key_description
     ).as_new_record)
 
-    view.stub_chain(:current_organization, :environments).and_return([])
-    render
+    @system_template_labels = []
+    @selected_template = "No Template"
+    view.stub!(:environment_selector)
+
+    render :partial => "new", :locals => {:accessible_envs => [@environment]}
   end
 
   it "content_for :title is included" do
@@ -38,11 +44,10 @@ describe "activation_keys/_new.html.haml" do
       view.content_for(:content).should have_selector("input#activation_key_name", :count => 1)
       view.content_for(:content).should have_selector("textarea#activation_key_description", :count => 1)
       view.content_for(:content).should have_selector("input#activation_key_environment_id", :count => 1)
-      view.content_for(:content).should have_selector("select#activation_key_system_template_id", :count => 1)
     end
 
     it "should include button to save the new key" do
-      view.content_for(:content).should have_selector("input[type=submit]#activation_key_save", :count => 1)
+      view.content_for(:content).should have_selector("input[type=submit]#save_key", :count => 1)
     end
   end
 

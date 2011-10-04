@@ -10,12 +10,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'models/model_spec_helper'
+include OrchestrationHelper
+
 module LoginHelperMethods
   def login_user options={}
     if options[:mock] == false
       if options[:user]
         @user = options[:user]
       else
+        disable_user_orchestration
+
         @user = User.create( :username => "foo-user", :password => "password", :page_size=>25 )
         @permission = Permission.create!(:role =>@user.roles.first, :all_types => true, :name => "superadmin")
       end

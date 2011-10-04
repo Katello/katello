@@ -109,31 +109,52 @@ class Glue::Pulp::Repo
     categories
   end
 
+  def clone_id(environment)
+    Glue::Pulp::Repo.repo_id(self.product.cp_id, self.name, environment.name,environment.organization.name)
+  end
+
   #is the repo cloned in the specified environment
   def is_cloned_in? env
-    get_cloned_in(env) != nil
+    clone_id = self.clone_id(env)
+    self.clone_ids.include? clone_id
   end
-
 
   def get_clone env
-    Glue::Pulp::Repo.find(Glue::Pulp::Repos.clone_repo_id(self, env))
+    Glue::Pulp::Repo.find(self.clone_id(env))
+  rescue
+    nil
   end
 
-  def get_cloned_in env
-    self.clone_ids.each{ |id|
-       curr_repo = Glue::Pulp::Repo.new(Pulp::Repository.find(id))
-       if (curr_repo.groupid.index(Glue::Pulp::Repos.env_groupid(env)))
-           return curr_repo
-       end
-    }
-    return nil
-  end
 
   def has_package? id
     self.packages.each {|pkg|
       return true if pkg.id == id
     }
     return false
+  end
+
+  def find_packages_by_name name
+    Pulp::Repository.packages_by_name id, name
+  end
+
+  def find_packages_by_nvre name, version, release, epoch
+    Pulp::Repository.packages_by_nvre id, name, version, release, epoch
+  end
+
+  def find_latest_package_by_name name
+    latest_pack = nil
+
+    packages = Pulp::Repository.packages_by_name id, name
+    packages.each do |pack|
+      pack = pack.with_indifferent_access
+      if (latest_pack.nil?) or
+         (pack[:epoch] > latest_pack[:epoch]) or
+         (pack[:epoch] == latest_pack[:epoch] and pack[:release] > latest_pack[:release]) or
+         (pack[:epoch] == latest_pack[:epoch] and pack[:release] == latest_pack[:release] and pack[:version] > latest_pack[:version])
+        latest_pack = pack
+      end
+    end
+    latest_pack
   end
 
   def has_erratum? id
@@ -220,7 +241,7 @@ class Glue::Pulp::Repo
 
   def promote(to_environment, product)
     cloned = Glue::Pulp::Repo.new
-    cloned.id = Glue::Pulp::Repos.clone_repo_id(self, to_environment)
+    cloned.id = self.clone_id(to_environment)
     cloned.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_environment)
     cloned.arch = arch
     cloned.name = name
@@ -239,6 +260,10 @@ class Glue::Pulp::Repo
 
   def product
     Product.find_by_cp_id!(get_groupid_param 'product')
+  end
+
+  def self.repo_id product_cp_id, repo_name, env_name, organization_name
+    [product_cp_id, repo_name, env_name, organization_name].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
   def self.find(id)

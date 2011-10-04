@@ -20,8 +20,6 @@
   = help_tip_button('activation_keys_edit-help')
 
   %input#panel_element_id{:name => @activation_key.id, :type => "hidden", :value => "#{name}_#{@activation_key.id}", "data-ajax_url"=>activation_key_path(@activation_key.id)}
-  %input#system_templates{ :type => "hidden", :value => @system_templates_json }
-  %input#system_templates_temp{ :type => "hidden" }
 
   #activation_key
     = hidden_field_tag 'environment_id', @activation_key.environment_id
@@ -33,8 +31,7 @@
                  "--activationkey #{@activation_key.name}"), 'activation_keys_edit-help') |
 
     .grid_10
-      = form_for @activation_key, activation_key_path(@activation_key), :method => "put", :remote => true do |f|
-  
+      = form_tag activation_key_path(@activation_key), :method => :put, :remote => true do
         %fieldset.clearfix
           .grid_2.ra
             %label #{_("Name")}:
@@ -45,22 +42,33 @@
             %label #{_("Description")}:
           .grid_7.la#activation_key_description{:style => "word-wrap: break-word;", 'name' => 'activation_key[description]', :class => ("editable edit_textarea" if editable), 'data-url' => activation_key_path(@activation_key.id)}<> #{@activation_key[:description]}
 
-        %fieldset.promotion_paths
-          %label #{_("Select an Environment")}:
-          - unless current_organization.environments.empty?
-            - current_organization.promotion_paths.each do |path|
-              .grid_10
-                %ul#env.breadcrumb{:style => 'display: none', :class => ("edit_env_setup" if editable), 'data-env_url' => edit_environment_activation_key_path(@activation_key)}
-                  %li
-                    = link_to _('Locker'), "#", :class => (editable ? "crumb-editable" : "crumb-nohover")
-                  - for env in path
-                    %li
-                      - if @activation_key.environment_id == env.id
-                        %a.selected{'data-env_id' => env.id, :class => (editable ? "crumb-editable-selected" : "crumb-nohover-selected")} #{env.name}
-                      - else
-                        %a{'data-env_id' => env.id, :class => (editable ? "crumb-editable" : "crumb-nohover")} #{env.name}
-
-        %fieldset.clearfix
+      = form_tag activation_key_path(@activation_key), :method => :put, :id => "save_key" do
+        .promotion_paths#env_edit
+          = hidden_field_tag 'activation_key[environment_id]', @activation_key.environment_id
           .grid_2.ra
-            %label #{_("System Template")}:
-          .grid_7.la{'name' => 'activation_key[system_template_id]',  :class => ("editable edit_system_template" if editable), "data-url" => activation_key_path(@activation_key.id)} #{@system_template.nil? ? no_template : @system_template[:name]}
+            %label #{_("Environment")}:
+          .grid_7.la
+            = environment_selector(:path_widget_class=>"grid_7", :path_entries_class=>"grid_7", :locker_clickable=>false,
+              :accessible_envs=>accessible_envs, :url_templates_proc=>url_templates_proc, :url_products_proc=>url_products_proc)
+
+          .clear
+            &nbsp;
+
+          %fieldset.clearfix
+            .grid_2.ra
+              %label #{_("System Template")}:
+            .grid_7.la
+              - if editable
+                = select_tag 'activation_key[system_template_id]', options_for_select(@system_template_labels, @selected_template)
+              - else
+                = @system_template.nil? ? no_template : @system_template[:name]
+
+          .prefix_2.la#products_in_env
+            %label #{_("Product(s) in this environment")}:
+            .grid_7.productsbox
+              = render :partial => "environments/products"
+
+        .prefix_2.grid_7.ra
+          #cancel_key.button{'data-url' => edit_activation_key_path(@activation_key)}
+            #{_("Cancel")}
+          %input#save_key.button{:type => "submit", :value => "#{_("Save")}"}

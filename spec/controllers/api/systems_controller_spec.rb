@@ -159,7 +159,7 @@ describe Api::SystemsController do
       @environment_2.save!
 
       @system_1 = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts)
-      @system_2 = System.create!(:name => 'test', :environment => @environment_2, :cp_type => 'system', :facts => facts)
+      @system_2 = System.create!(:name => 'test2', :environment => @environment_2, :cp_type => 'system', :facts => facts)
     end
 
     let(:action) { :index }
