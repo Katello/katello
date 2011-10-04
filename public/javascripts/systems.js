@@ -17,6 +17,10 @@
  *
  */
 
+(function(){
+	KT.panel.getListContent(KT.routes.items_systems_path() + '?offset=0');
+})();
+
 $(document).ready(function() {
   $('#update_subscriptions').live('submit', function(e) {
      e.preventDefault();

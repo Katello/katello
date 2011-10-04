@@ -242,6 +242,7 @@ class SystemsController < ApplicationController
                       :enable_sort => true,
                       :name => controller_display_name,
                       :list_partial => 'systems/list_systems',
+                      :ajax_load  => true,
                       :ajax_scroll => items_systems_path()}
   end
 

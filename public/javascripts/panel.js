@@ -187,6 +187,7 @@ KT.panel = (function($){
 	    control_bbq 		= true,
 	    current_scroll 		= 0,
 	    panels_list			= [],
+	    left_list_content	= "",
 	
 		extended_cb         = function() {}, //callback for post extended scroll
         expand_cb           = function() {}, //callback after a pane is loaded
@@ -372,7 +373,7 @@ KT.panel = (function($){
                     url: jQuery.param.querystring(url, params),
                     cache: false,
                     success: function(data) {
-                        var expand_list = $('.expand_list');
+                        var expand_list = $('.expand_list').find('section');
                         
                         retrievingNewContent = false;
                         expand_list.append(data);
@@ -413,21 +414,18 @@ KT.panel = (function($){
                         });
                     } else {
                     	if( !isfixed && jQPanel.offset().top - $(window).scrollTop() > 40){
-                    		console.log('first if');
 	                        jQPanel.stop().css({
 	                            position: 'fixed',
 	                            top: 40,
 	                            left: -scrollX + offset
 	                        });        
                         } else if( ($('.left').offset().top + $('.left').height() - 20) < (jQPanel.offset().top + jQPanel.height() + 40) ){
-                        	console.log('second if');
 	                       	jQPanel.css({
 	                            position: 'absolute',
 	                            top: ($('.left').offset().top + $('.left').height()) - jQPanel.height() - 40,
 	                            left: ''
 	                        });            		
                     	} else if( !isfixed && ($('.left').offset().top + $('.left').height()) > (jQPanel.offset().top + jQPanel.height() + 40) ){
-                    		console.log('third if');
 	                        jQPanel.stop().css({
 	                            position: 'fixed',
 	                            top: 40,
@@ -446,6 +444,7 @@ KT.panel = (function($){
             }
         },
         hash_change = function(event) {
+        	console.log('test');
             var refresh = $.bbq.getState("panel");
             if(refresh){ 
                 select_item(refresh);
@@ -473,6 +472,22 @@ KT.panel = (function($){
 			});
 
         	panels_list.push(new_panel);
+        },
+        getListContent = function(url){
+        	KT.panel.control_bbq = false;
+        	$(window).bind( 'hashchange', hash_change);
+        	$.get(url, function(data){
+        		left_list_content = data;
+        		$(document).ready(function(){
+        			var element = $('#list');
+        			
+        			element.find('section').append(left_list_content);
+        			element.find('.spinner').hide();
+        			element.find('section').fadeIn(function(){
+        				$(window).trigger( 'hashchange' );
+        			});
+        		});
+        	});
         };
 	
     return {
@@ -482,18 +497,16 @@ KT.panel = (function($){
         set_switch_content_cb	: function(callBack){ switch_content_cb = callBack; },
         select_item				: select_item,
         hash_change				: hash_change,
-        handleScrollResize		: handleScrollResize,
-        handleScroll			: handleScroll,
         scrollExpand			: scrollExpand,
         openSubPanel			: openSubPanel,
         updateResult			: updateResult,
         closeSubPanel			: closeSubPanel,
         closePanel				: closePanel,
         panelResize				: panelResize,
-        adjustHeight			: adjustHeight,
         panelAjax				: panelAjax,
         control_bbq             : control_bbq,
-        registerPanel			: registerPanel
+        registerPanel			: registerPanel,
+        getListContent			: getListContent
     };
 
 })(jQuery);

@@ -13,8 +13,10 @@
     = yield :stylesheets
     
     = include_javascripts  :common
+    = render :partial => '/common/config'
     = render :partial => '/layouts/ajax_notices'
     = render :partial => '/layouts/notification'
+    = render :partial => "/common/common_i18n"
     = yield :javascripts
     
     = csrf_meta_tag
@@ -46,4 +48,3 @@
           = yield
     %footer
       = render :partial => "layouts/footer"
-      = render :partial => "/common/common_i18n"
