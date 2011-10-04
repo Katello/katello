@@ -21,26 +21,13 @@ module CDN
     def initialize url, options = {}
       options.reverse_merge!(:verify_ssl => 9)
       options.assert_valid_keys(:ssl_client_cert, :ssl_ca_file, :verify_ssl)
-      @url = url
       @resource = RestClient::Resource.new url, options
     end
 
     def get(path, headers={})
       @resource[path].get headers
     end
-
-    def post(path, params = {})
-      @resource[path].post headers
-    end
-
-    # Encode url element if its not nil. This helper method is used mainly in resource path methods.
-    #
-    # @param [String] element to encode
-    # @return [String] encoded element or nil
-    def url_encode(element)
-      CGI::escape element unless element.nil?
-    end
-  end
+ end
 
   class CdnVarSubstitutor
     def initialize url, options
