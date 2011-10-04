@@ -20,7 +20,7 @@ module CDN
 
     def initialize url, options = {}
       options.reverse_merge!(:verify_ssl => 9)
-      options.assert_valid_keys(:ssl_client_cert, :ssl_ca_file, :verify_ssl)
+      options.assert_valid_keys(:ssl_client_key, :ssl_client_cert, :ssl_ca_file, :verify_ssl)
       @resource = RestClient::Resource.new url, options
     end
 
