@@ -138,11 +138,13 @@ Src::Application.routes.draw do
     end
     collection do
       get :items
+      get :redhat_provider
+      post :redhat_provider, :action => :update_redhat_provider
     end
     member do
       get :products_repos
-      get :subscriptions
-      post :subscriptions, :action=>:update_subscriptions
+#      get :subscriptions
+#     post :subscriptions, :action=>:update_subscriptions
       get :schedule
     end
   end
@@ -261,6 +263,7 @@ Src::Application.routes.draw do
         get :errata
       end
     end
+    match '/systems/:id/subscription' => 'systems#subscribe', :via => :post
 
     resources :providers, :except => [:index] do
       resources :sync, :only => [:index, :create] do

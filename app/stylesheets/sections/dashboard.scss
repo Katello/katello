@@ -2,7 +2,9 @@
 
 /* box for "errors" on the custom 500 error page */
 .dashboard {
-    
+    $big_height: 350px;
+    $small_height: 154px;
+
     @include border-radius(3px);
     background-color: $lightergrey_color;
     border:1px solid $border_color;
@@ -67,10 +69,10 @@
     }
     #dashboard_errata {
       .scroll-pane {
-        height: 180px;
+        height: $big_height - 26;
       }
       .list {
-        height: inherit;
+        height: $big_height - 10;
         min-height: inherit;
       }
       .block_head {
@@ -330,7 +332,7 @@
 
     .small_widget {
         overflow: hidden;
-        height: 130px;
+        height: $small_height;
         width: 380px;
         list-style: None;
         li {
@@ -349,7 +351,7 @@
 
     .big_widget {
         overflow: hidden;
-        height: 200px;
+        height: $big_height;
         width: 500px;
         list-style: None;
         li {

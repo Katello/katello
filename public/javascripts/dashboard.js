@@ -94,6 +94,9 @@ $(window).load(function() {
                 var parent = div.parent();
                 div.replaceWith(data);
 
+                // Add a handler for ellipsis
+                parent.find(".one-line-ellipsis").ellipsis();
+
                 KT.common.jscroll_init(parent.find('.scroll-pane'));
                 KT.common.jscroll_resize(parent.find('.jspPane'));
 
