@@ -99,7 +99,7 @@ class ProvidersController < ApplicationController
 
   def index
     begin
-      @providers = Provider.readable(current_organization).custom.search_for(params[:search]).order('provider_type desc').limit(current_user.page_size)
+      @providers = Provider.readable(current_organization).custom.search_for(params[:search]).order('name').limit(current_user.page_size)
       retain_search_history
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -110,13 +110,13 @@ class ProvidersController < ApplicationController
 
   def items
     start = params[:offset]
-    @providers = Provider.readable(current_organization).custom.search_for(params[:search]).order('provider_type desc').limit(current_user.page_size).offset(start)
+    @providers = Provider.readable(current_organization).custom.search_for(params[:search]).order('name').limit(current_user.page_size).offset(start)
     render_panel_items @providers, @panel_options
   end
 
   def show
     provider = Provider.find(params[:id])
-    render :partial=>"common/list_update", :locals=>{:item=>provider, :accessor=>"id", :columns=>['name', 'provider_type']}
+    render :partial=>"common/list_update", :locals=>{:item=>provider, :accessor=>"id", :columns=>['name']}
   end
 
   def edit
