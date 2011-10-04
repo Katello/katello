@@ -46,8 +46,9 @@ module CDN
     def substitute_vars(path_with_vars)
       paths_with_vars = { {} => path_with_vars}
       paths_without_vars = {}
-      while path_with_vars = paths_with_vars.shift
-        substitutions, path = path_with_vars
+
+      while substitutions_and_path = paths_with_vars.shift
+        substitutions, path = substitutions_and_path
         if path.include?("$")
           substitute_next_var(substitutions, path) do |new_substitution, new_path|
             paths_with_vars[new_substitution] = new_path
@@ -56,6 +57,7 @@ module CDN
           paths_without_vars[substitutions] = path
         end
       end
+
       return paths_without_vars
     end
 
