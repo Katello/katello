@@ -14,17 +14,12 @@
 $(document).ready(function() {
 
     KT.panel.set_expand_cb(function() {
-        KT.activation_key.reset_env_select();
+        KT.activation_key.initialize_edit();
     });
 
     $('#new_activation_key').live('submit', function(e) {
         e.preventDefault();
         KT.activation_key.create_key($(this));
-    });
-
-    $('#remove_key').live('click', function(e) {
-        e.preventDefault();
-        KT.activation_key.delete_key($(this));
     });
 
     $('#save_key').live('submit', function(e) {
@@ -138,27 +133,11 @@ KT.activation_key = (function($) {
             success: function(data) {
                 list.add(data);
                 KT.panel.closePanel($('#panel'));
-                KT.panel.select_item(list.last_child().attr("id"));
             },
             error: function(e) {
                 enable_buttons();
             }
         });
-    },
-    delete_key = function(data) {
-        var answer = confirm(data.attr('data-confirm-text'));
-        if (answer) {
-            $.ajax({
-                type: "DELETE",
-                url: data.attr('data-url'),
-                cache: false,
-                success: function() {
-                    KT.panel.closeSubPanel($('#subpanel'));
-                    KT.panel.closePanel($('#panel'));
-                    list.remove(data.attr("data-id").replace(/ /g, '_'));
-                }
-            });
-        }
     },
     save_key = function(data) {
         disable_buttons();
@@ -323,7 +302,6 @@ KT.activation_key = (function($) {
         initialize_edit: initialize_edit,
         reset_env_select: reset_env_select,
         create_key: create_key,
-        delete_key: delete_key,
         save_key: save_key,
         cancel_key: cancel_key,
         toggle_family: toggle_family,
