@@ -36,6 +36,13 @@ module CDN
       @resource = CdnResource.new(@url, @options)
     end
 
+  # takes path e.g. "/rhel/server/5/$releasever/$basearch/os"
+  # returns hash substituting variables:
+  #
+  #   { {"releasever" => "6Server", "basearch" => "i386"} =>  "/rhel/server/5/6Server/i386/os",
+  #     {"releasever" => "6Server", "basearch" => "x86_64"} =>  "/rhel/server/5/6Server/x84_64/os"}
+  #
+  # values are loaded from CDN
     def substitute_vars(path_with_vars)
       paths_with_vars = { {} => path_with_vars}
       paths_without_vars = {}
