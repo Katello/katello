@@ -13,6 +13,7 @@
 require 'http_resource'
 require 'resources/pulp'
 require 'resources/cdn'
+require 'openssl'
 
 module Glue::Pulp::Repos
   SUPPORTED_ARCHS = %w[noarch i386 i686 ppc64 s390x x86_64]
@@ -290,8 +291,8 @@ module Glue::Pulp::Repos
         ca_file = "#{Rails.root}/config/candlepin-ca.crt"
         ca = File.read(ca_file)
         cdn_var_substitutor = CDN::CdnVarSubstitutor.new(self.provider[:repository_url],
-                                                         :ssl_client_cert => cert,
-                                                         :ssl_client_key => key,
+                                                         :ssl_client_cert => OpenSSL::X509::Certificate.new(cert),
+                                                         :ssl_client_key => OpenSSL::PKey::RSA.new(key),
                                                          :ssl_ca_file => ca_file)
         substitutions_with_paths = cdn_var_substitutor.substitute_vars(pc.content.contentUrl)
         substitutions_with_paths.each do |(substitutions, path)|
