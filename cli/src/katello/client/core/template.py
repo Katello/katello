@@ -22,7 +22,7 @@ from optparse import OptionValueError
 from katello.client.api.template import TemplateAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, wait_for_async_task
+from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, wait_for_async_task, system_exit
 from katello.client.api.utils import get_locker, get_environment, get_template, get_product
 
 try:
@@ -390,6 +390,8 @@ class Update(TemplateAction):
             p = get_product(orgName, prodName)
             if p != None:
                 ids.append(p['id'])
+            else:
+                system_exit(os.EX_DATAERR)
         return ids
         
             
