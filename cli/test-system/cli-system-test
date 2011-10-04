@@ -119,7 +119,7 @@ function test_cmd() {
         result=`echo -e "$*\nexit" | $CMD shell 2>&1`
         result=`echo "$result" | sed 's/katello>//g'`
     else
-        result=`$CMD $* 2>&1`
+        result=`$CMD "$@" 2>&1`
     fi
 
     if [ $? -ne 0 ] || [ "`echo $result | egrep -i "\bfail|\berror\b"`" != "" ]; then

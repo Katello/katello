@@ -4,7 +4,7 @@ header "Provider import"
 
 # importing manifest from our testing export
 IMPORT_ORG="Import_Org_$RAND"
-IMPORT_PROV="'Red Hat'"
+IMPORT_PROV="Red Hat"
 test_success "org create" org create --name=$IMPORT_ORG
 #the red hat provider is created automatically
 test_failure "provider create" provider create --org="$IMPORT_ORG" --name="$IMPORT_PROV" --type=redhat --url="https://example.com/path/"
