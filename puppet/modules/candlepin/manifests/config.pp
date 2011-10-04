@@ -25,7 +25,6 @@ class candlepin::config {
    exec {"cpsetup":
      command => "/usr/share/candlepin/cpsetup >> ${candlepin::params::cpsetup_log} 2>&1",
      require => [
-       Class["candlepin::install"],Class["postgres::install"],
        Postgres::Createdb[$candlepin::params::db_name]
      ],
      creates => "/etc/candlepin/certs/candlepin-ca.crt", # another hack not to run it again

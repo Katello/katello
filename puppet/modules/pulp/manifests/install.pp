@@ -1,4 +1,6 @@
 class pulp::install {
+  include mongodb::install
+
   $os_type = $operatingsystem ? {
     "Fedora" => "fedora-${operatingsystemrelease}",
     default  => "\$releasever"

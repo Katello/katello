@@ -21,7 +21,6 @@ class katello::config {
     owner   => $katello::params::user,
     group   => $katello::params::group,
     mode    => 644,
-    require => Class["katello::install"],
     recurse => true;
   }
 
@@ -30,7 +29,6 @@ class katello::config {
     user        => $katello::params::user,
     environment => "RAILS_ENV=${katello::params::environment}",
     refreshonly => true,
-    subscribe   => Package["katello"],
     require     => [ Config_file["${katello::params::config_dir}/katello.yml"],
                      Postgres::Createdb[$katello::params::db_name] ],
     command     => "/usr/bin/env rake db:migrate >> ${katello::params::migrate_log} 2>&1",
@@ -58,7 +56,6 @@ class katello::config {
         "" => undef,
         default => $source,
       },
-      require => Class["katello::install"];
     }
   }
 
