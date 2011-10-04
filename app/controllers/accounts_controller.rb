@@ -15,6 +15,7 @@ class AccountsController < ApplicationController
   skip_before_filter :authorize
 
   def show
+    @user = current_user
    end
 end
 

@@ -118,8 +118,11 @@ $(document).ready(function() {
             success: function(data) {
                 thisPanel.find(".panel-content").html(data);
                 KT.panel.panelResize($('#panel_main'), false);
+                KT.panel.get_expand_cb()();
+
             }
         });
+
         return false;
     });
 
@@ -475,6 +478,7 @@ KT.panel = (function($){
     return {
         set_extended_cb         : function(callBack){ extended_cb = callBack; },
         set_expand_cb           : function(callBack){ expand_cb = callBack; },
+        get_expand_cb           : function(){ return expand_cb },
         set_contract_cb         : function(callBack){ contract_cb = callBack; },
         set_switch_content_cb	: function(callBack){ switch_content_cb = callBack; },
         select_item				: select_item,

@@ -13,13 +13,6 @@
 
 
 $(document).ready(function() {
-   
     KT.user_page.registerEdits();
-
-    KT.panel.set_expand_cb(function() {
-        //taken out of user_edit, so it can be resused on accounts
-        $(".multiselect").multiselect({"dividerLocation":0.5, "sortable":false});
-    })
-
 });
 

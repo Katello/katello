@@ -40,9 +40,6 @@ $(document).ready(function() {
       'defaultText':i18n.meterText,
       'ratings':ratings});
 
-
     //from user.js
-    $('#helptips_enabled').bind('change', user_page.checkboxChanged);
-
-    $(".multiselect").multiselect({"dividerLocation":0.5, "sortable":false});
+    $('#helptips_enabled').bind('change', KT.user_page.checkboxChanged);
 });
