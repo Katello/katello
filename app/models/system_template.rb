@@ -172,7 +172,7 @@ class SystemTemplate < ActiveRecord::Base
   end
 
   def add_package_group pg_name
-      self.package_groups.create!(:name => pg_name)
+    self.package_groups.create!(:name => pg_name)
   end
 
   def remove_package_group pg_name
