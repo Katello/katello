@@ -57,6 +57,7 @@ class ProvidersController < ApplicationController
   end
 
   def update_redhat_provider
+
     @provider = current_organization.redhat_provider
     if !params[:provider].blank? and params[:provider].has_key? :contents
       temp_file = nil
@@ -77,8 +78,12 @@ class ProvidersController < ApplicationController
         setup_subs
         render :template =>"providers/redhat_provider", :status => :bad_request and return
       end
+      redhat_provider
+    else
+      # user didn't provide a manifest to upload
+      errors _("Subscription Manifest must be specified on upload.")
+      render :nothing => true
     end
-    redhat_provider
   end
 
   def redhat_provider
@@ -94,7 +99,7 @@ class ProvidersController < ApplicationController
       Rails.logger.error error.backtrace.join("\n")
       render :template =>"providers/redhat_provider", :status => :bad_request and return
     end
-     render :template =>"providers/redhat_provider"
+    render :template =>"providers/redhat_provider"
   end
 
   def index
