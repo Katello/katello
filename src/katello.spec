@@ -185,8 +185,6 @@ chmod +x %{buildroot}%{homedir}/script/*
 rm -rf %{buildroot}
 
 %post
-%{homedir}/script/reset-oauth
-
 #Add /etc/rc*.d links for the script
 /sbin/chkconfig --add %{name}
 
