@@ -306,7 +306,7 @@ module Glue::Pulp::Repos
           repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
           repo = Glue::Pulp::Repo.new(:id => repo_id(repo_name),
                                       :arch => arch,
-                                      :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, pc.content.name),
+                                      :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, repo_name),
                                       :name => repo_name,
                                       :feed => feed_url,
                                       :feed_ca => ca,
