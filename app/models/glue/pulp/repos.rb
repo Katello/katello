@@ -288,13 +288,13 @@ module Glue::Pulp::Repos
       self.productContent.collect do |pc|
         cert = self.certificate
         key = self.key
-        ca_file = "#{Rails.root}/config/candlepin-ca.crt"
-        ca = File.read(ca_file)
+        ca = File.read(CDN::CdnResource.ca_file)
+
         cdn_var_substitutor = CDN::CdnVarSubstitutor.new(self.provider[:repository_url],
                                                          :ssl_client_cert => OpenSSL::X509::Certificate.new(cert),
-                                                         :ssl_client_key => OpenSSL::PKey::RSA.new(key),
-                                                         :ssl_ca_file => ca_file)
+                                                         :ssl_client_key => OpenSSL::PKey::RSA.new(key))
         substitutions_with_paths = cdn_var_substitutor.substitute_vars(pc.content.contentUrl)
+
         substitutions_with_paths.each do |(substitutions, path)|
           feed_url = repository_url(path)
           arch = substitutions["basearch"] || "noarch"
