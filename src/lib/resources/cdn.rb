@@ -21,12 +21,20 @@ module CDN
     def initialize url, options = {}
       options.reverse_merge!(:verify_ssl => 9)
       options.assert_valid_keys(:ssl_client_key, :ssl_client_cert, :ssl_ca_file, :verify_ssl)
+      if options[:ssl_client_cert]
+        options.reverse_merge!(:ssl_ca_file => CdnResource.ca_file)
+      end
       @resource = RestClient::Resource.new url, options
     end
 
     def get(path, headers={})
       @resource[path].get headers
     end
+
+    def self.ca_file
+      "#{Rails.root}/config/candlepin-ca.crt"
+    end
+
  end
 
   class CdnVarSubstitutor
