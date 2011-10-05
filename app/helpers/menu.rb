@@ -14,8 +14,28 @@ module Menu
   def self.included(base)
     base.class_eval do
       helper_method :render_menu
+      helper_method :custom_provider_items
     end
   end
+
+  def custom_provider_items
+    [
+        { :key => :edit_custom_providers,
+          :name =>N_("Basics"),
+          :url => (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id),
+          :if => lambda{!@provider.nil? && @provider.readable? && !@provider.new_record?},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :products_repos,
+          :name =>N_("Products & Repositories"),
+          :url => (@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id),
+          :if => lambda{!@provider.nil? && @provider.readable? &&
+                        !@provider.new_record? && !@provider.has_subscriptions?},
+          :options => {:class=>"navigation_element"}
+        }
+    ]
+  end
+
 
   def menu_items
     redhat_providers ={:key => :redhat_providers,
@@ -29,22 +49,7 @@ module Menu
                   :name =>N_("Custom"),
                   :url => organization_providers_path(current_organization()),
                   :if => lambda{Provider.any_readable?(current_organization())},
-                  :options => {:class=>"third_level"},
-                  :items => @provider.nil? ? [] : [
-                      { :key => :edit_custom_providers,
-                        :name =>N_("Basics"),
-                        :url => (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id),
-                        :if => lambda{!@provider.nil? && @provider.readable? && !@provider.new_record?},
-                        :options => {:class=>"navigation_element"}
-                      },
-                      { :key => :products_repos,
-                        :name =>N_("Products & Repositories"),
-                        :url => (@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id),
-                        :if => lambda{!@provider.nil? && @provider.readable? &&
-                                      !@provider.new_record? && !@provider.has_subscriptions?},
-                        :options => {:class=>"navigation_element"}
-                      }
-                  ]
+                  :options => {:class=>"third_level"}
                 }
 
 
