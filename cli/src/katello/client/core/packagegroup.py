@@ -61,13 +61,15 @@ class Info(PackageGroupAction):
     def run(self):
         groupid = self.get_option('id')
         repoid = self.get_option('repoid')
-        groups = self.api.packagegroups(repoid)
-        if not groups or groupid not in groups:
-            system_exit(os.EX_DATAERR,
-                        _("Package group [%s] not found in repo [%s]") %
-                        (groupid, repoid))
+        
+        group = self.api.packagegroup_by_id(repoid, groupid)
+        if group == None:
+            system_exit(os.EX_DATAERR, _("Package group [%s] not found in repo [%s]") % (groupid, repoid))
+        
+        from pprint import pprint
+        pprint(group)
+        
         self.printer.setHeader(_("Package Group Information"))
-        info = groups[groupid]
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('description')
@@ -76,7 +78,7 @@ class Info(PackageGroupAction):
         self.printer.addColumn('optional_package_names')
         self.printer.addColumn('conditional_package_names')
 
-        self.printer.printItem(info)
+        self.printer.printItem(group)
 
 
 class CategoryList(PackageGroupAction):
@@ -101,7 +103,7 @@ class CategoryList(PackageGroupAction):
         self.printer.addColumn('id')
         self.printer.addColumn('name')
 
-        self.printer.printItems(groups.values())
+        self.printer.printItems(groups)
 
         return os.EX_OK
 
@@ -124,18 +126,17 @@ class CategoryInfo(PackageGroupAction):
     def run(self):
         categoryId = self.get_option('id')
         repoid = self.get_option('repoid')
-        categories = self.api.packagegroupcategories(repoid)
-        if not categories or categoryId not in categories:
-            system_exit(os.EX_DATAERR,
-                        _("Package group category [%s] not found in repo [%s]") %
-                        (categoryId, repoid))
+        category = self.api.packagegroupcategories(repoid, categoryId)
+        
+        if category == None:
+            system_exit(os.EX_DATAERR, _("Package group category [%s] not found in repo [%s]") % (categoryId, repoid))
+            
         self.printer.setHeader(_("Package Group Category Information"))
-        info = categories[categoryId]
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('packagegroupids')
 
-        self.printer.printItem(info)
+        self.printer.printItem(category)
 
 
 class PackageGroup(Command):
