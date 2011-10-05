@@ -200,6 +200,18 @@ PRODUCTS = [
   }
 ]
 
+COMMON_ASYNC_RESULT_SUCCESS = [
+  {
+    "result": "{\"errors\":[null,null]}",
+    "created_at": None,
+    "uuid": "6d3d8711-cf28-11e0-b10e-f0def13c24e5",
+    "updated_at": None,
+    "finish_time": "2011-08-25T14:42:21Z",
+    "organization_id": None,
+    "state": "finished",
+    "start_time": "2011-08-25T14:42:16Z"
+  }
+]
 
 
 SYNC_RESULT_NOT_SYNCED = [

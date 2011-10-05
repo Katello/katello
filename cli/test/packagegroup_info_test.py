@@ -50,7 +50,7 @@ class PackageGroupInfoTest(CLIActionTestCase):
     def tearDown(self):
         self.restore_mocks()
 
-    def test_it_finds_package_groups_by_repo(self):
+    def test_it_finds_package_group_by_id(self):
         self.mock_options(self.OPTIONS)
         self.action.run()
         self.action.api.packagegroup_by_id.assert_called_once_with(self.REPO['id'], self.PACKAGE_GROUP['id'])
