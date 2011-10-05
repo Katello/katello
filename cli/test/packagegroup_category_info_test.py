@@ -31,7 +31,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
 class PackageGroupCategoryInfoTest(CLIActionTestCase):
 
     REPO = test_data.REPOS[0]
-    PACKAGE_GROUP_CATEGORY = test_data.PACKAGE_GROUP_CATEGORIES.values()[0]
+    PACKAGE_GROUP_CATEGORY = test_data.PACKAGE_GROUP_CATEGORIES[0]
 
     OPTIONS = {
         'repoid': REPO['id'],
@@ -45,16 +45,16 @@ class PackageGroupCategoryInfoTest(CLIActionTestCase):
         self.mock_options(self.OPTIONS)
         self.mock_printer()
 
-        self.mock(self.action.api, 'packagegroupcategories',
-            test_data.PACKAGE_GROUP_CATEGORIES)
+        self.mock(self.action.api, 'packagegroupcategory_by_id',
+            self.PACKAGE_GROUP_CATEGORY)
 
     def tearDown(self):
         self.restore_mocks()
 
-    def test_it_finds_package_groups_by_repo(self):
+    def test_it_finds_package_groups_by_id(self):
         self.mock_options(self.OPTIONS)
         self.action.run()
-        self.action.api.packagegroupcategories.assert_called_once_with(self.REPO['id'])
+        self.action.api.packagegroupcategory_by_id.assert_called_once_with(self.REPO['id'], self.PACKAGE_GROUP_CATEGORY['id'])
 
     def test_it_prints_package_groups(self):
         self.action.run()

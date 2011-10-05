@@ -126,7 +126,7 @@ class CategoryInfo(PackageGroupAction):
     def run(self):
         categoryId = self.get_option('id')
         repoid = self.get_option('repoid')
-        category = self.api.packagegroupcategories(repoid, categoryId)
+        category = self.api.packagegroupcategory_by_id(repoid, categoryId)
         
         if category == None:
             system_exit(os.EX_DATAERR, _("Package group category [%s] not found in repo [%s]") % (categoryId, repoid))

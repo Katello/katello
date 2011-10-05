@@ -537,8 +537,7 @@ REPOS = [
     }
 ]
 
-PACKAGE_GROUPS = {
-"123":
+PACKAGE_GROUPS = [
 {"name": "katello",
   "conditional_package_names": {},
   "mandatory_package_names": [],
@@ -556,10 +555,9 @@ PACKAGE_GROUPS = {
   "description": "Katello related packages",
   "translated_name": {}
   }
-}
+]
 
-PACKAGE_GROUP_CATEGORIES = {
-"development":
+PACKAGE_GROUP_CATEGORIES = [
 {"name": "Development",
   "_id": "development",
   "id": "development",
@@ -570,7 +568,7 @@ PACKAGE_GROUP_CATEGORIES = {
   "description": "",
   "packagegroupids": ["123"],
   "translated_name": {}}
-}
+]
 
 
 TEMPLATES = [
