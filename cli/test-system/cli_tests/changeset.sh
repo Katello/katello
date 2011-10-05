@@ -19,7 +19,7 @@ jobs_service=`service katello-jobs status > /dev/null ; echo $?`
 
 if ! jobs_running; then
     printf "${txtred}Warning: Jobs daemon is not running, the promotion will hang!${txtrst}\n"
-    printf "${txtred}Start 'rake jobs:work' to proceed.${txtrst}\n"
+    printf "${txtred}Run 'service katello-jobs start' or 'rake jobs:work' to proceed.${txtrst}\n"
 fi
 
 test_success "promote changeset with one product" changeset promote --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME"

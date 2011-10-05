@@ -1,6 +1,7 @@
 #!/bin/bash
 
 require "repo"
+require "packagegroup"
 
 header "Template"
 
@@ -14,25 +15,18 @@ test_success "template update" template update --name="$TEMPLATE_NAME_2" --new_n
 
 test_success "template list" template list --org="$TEST_ORG" --environment="Locker"
 
-
-REPO_ID=$(get_repo_id)
-PACKAGE_GROUP_ID=test
-PACKAGE_GROUP_NAME=test
-PACKAGE_GROUP_CATEGORY_ID=test
-PACKAGE_GROUP_CATEGORY_NAME=test
-create_sample_package_groups
-
 test_success "template update add product"                 template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_product="$FEWUPS_PRODUCT"
 test_success "template update add package"                 template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package="cheetah"
-test_success "template update remove package"              template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package="cheetah"
 test_success "template update add package group"           template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group="$PACKAGE_GROUP_NAME"
 test_success "template update add package group categrory" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group_category="$PACKAGE_GROUP_CATEGORY_NAME"
+test_success "template update add parameter"                 template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_parameter="attr" --value="X"
 
+test_success "template update remove parameter"              template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_parameter="attr"
 test_success "template update remove package group category" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package_group_category="$PACKAGE_GROUP_CATEGORY_NAME"
 test_success "template update remove package group"          template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package_group="$PACKAGE_GROUP_NAME"
+test_success "template update remove package"              template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package="cheetah"
 test_success "template update remove product"                template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_product="$FEWUPS_PRODUCT"
-test_success "template update add parameter"                 template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_parameter="attr" --value="X"
-test_success "template update remove parameter"              template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_parameter="attr"
+
 
 test_failure "template update add unknown product" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_product="does_not_exist"
 test_failure "template update add unknown package" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package="does_not_exist"
