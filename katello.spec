@@ -16,8 +16,8 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.86
-Release:        2%{?dist}
+Version:        0.1.87
+Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
 Group:          Applications/Internet
@@ -228,6 +228,120 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Oct 05 2011 Shannon Hughes <shughes@redhat.com> 0.1.87-1
+- adding redhat-uep.pem to katello ca (shughes@redhat.com)
+- dashboard - prevent a divide by zero (jsherril@redhat.com)
+- import-stage-manifest - fix relative path for imported repos
+  (inecas@redhat.com)
+- Do not call reset-oauth in %post, candlepin and pulp are not installed at
+  that time anyway. (jpazdziora@redhat.com)
+- 739680 - include candlepin error text in error notice on manifest upload
+  error (bbuckingham@redhat.com)
+- import-stage-manifest - use redhat-uep.pem as feed_ca (inecas@redhat.com)
+- import-stage-manifest - refactor certificate loading (inecas@redhat.com)
+- import-stage-manifest - fix failing spec tests (inecas@redhat.com)
+- import-stage-manifest - fix validations for options (inecas@redhat.com)
+- import-stage-manifest - fix ssl verification (inecas@redhat.com)
+- import-stage-manifest - small refactoring (inecas@redhat.com)
+- import-stage-manifest - short documentation (inecas@redhat.com)
+- import-stage-manifest - remove unused code (inecas@redhat.com)
+- import-stage-manifest - use CDN to substitute vars in content url
+  (inecas@redhat.com)
+- import-stage-manifest - class for loading variable values from CDN
+  (inecas@redhat.com)
+- import-stage-manifest - refactor (inecas@redhat.com)
+- import-stage-manifest - fix unit tests (inecas@redhat.com)
+- import-stage-manifest - substitute release ver (inecas@redhat.com)
+- packagegroups - cli changed to work with array returned from api instead of
+  hashes that were returned formerly (tstrachota@redhat.com)
+- templates - fixes in spec tests (tstrachota@redhat.com)
+- templates - validations for package groups and group categories
+  (tstrachota@redhat.com)
+- package groups - groups and group categories returned in an array instead of
+  in a hash (tstrachota@redhat.com)
+- templates api - removed old content update (tstrachota@redhat.com)
+- packages search - find latest returns array of all latest packages not only
+  the first latest package found (tstrachota@redhat.com)
+- templates - package groups and categories identified by name -repo ids and
+  category/group ids removed (tstrachota@redhat.com)
+- added index for system_template_id on system_template_packages
+  (tstrachota@redhat.com)
+- templates - update changes name of all environment clones
+  (tstrachota@redhat.com)
+- templates api - added new controller for updating templates
+  (tstrachota@redhat.com)
+- templates api - fix for failure in listing all templates in the system
+  (tstrachota@redhat.com)
+- Temporarily removing dashboard pull-down. (jrist@redhat.com)
+- 740340 - manifest upload - validate file input provided
+  (bbuckingham@redhat.com)
+- 740970 - adding detection if a password contains the username
+  (jsherril@redhat.com)
+- 741669 - adding a way for users to modify their own user details
+  (jsherril@redhat.com)
+- Fixed providers show  + edit page to not show provider type (paji@redhat.com)
+- Merge branch 'master' into notices (bbuckingham@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (bbuckingham@redhat.com)
+- dashboard - adding arrow to the right of the gear (jsherril@redhat.com)
+- a-keys - fix delete and behavior on create (bbuckingham@redhat.com)
+- Merge branch 'master' into akeys (bbuckingham@redhat.com)
+- a-keys - fix view specs (bbuckingham@redhat.com)
+- a-keys - fix controller specs (bbuckingham@redhat.com)
+- a-keys - mods to handle nil env on akey create (bbuckingham@redhat.com)
+- Alternating family rows in Activation Keys by way of Ruby's handy cycle
+  method. (jrist@redhat.com)
+- a-keys - (TO BE REVERTED) temporary commit to duplicate subscriptions
+  (bbuckingham@redhat.com)
+- a-keys - some refactor/cleanup of js to use KT namespace
+  (bbuckingham@redhat.com)
+- a-keys - js fix so that clearing filter does not leave children shown
+  (bbuckingham@redhat.com)
+- a-keys - css updates for subscriptions (bbuckingham@redhat.com)
+- a-keys - change the text used to request update to template
+  (bbuckingham@redhat.com)
+- a-keys - update scss to remove some of the table css used by akey
+  subscriptions (bbuckingham@redhat.com)
+- Merge branch 'master' into akeys (bbuckingham@redhat.com)
+- a-keys - init env_select when edit pane is initialized
+  (bbuckingham@redhat.com)
+- a-keys - add cancel button to general tab (bbuckingham@redhat.com)
+- a-keys - subscriptions - updates to support listing by product
+  (bbuckingham@redhat.com)
+- a-keys - update to disable the Add/Remove button after click
+  (bbuckingham@redhat.com)
+- a-keys - subscriptions - update to include type (virtual/physical)
+  (bbuckingham@redhat.com)
+- a-keys - applied subs - add link to add subs (bbuckingham@redhat.com)
+- a-keys - initial changes for applied subscriptions page
+  (bbuckingham@redhat.com)
+- a-keys - initial changes for available subscriptions page
+  (bbuckingham@redhat.com)
+- Merge branch 'master' into akeys (bbuckingham@redhat.com)
+- a-keys - new/edit - updates to highlight the need to change template, on env
+  change... (bbuckingham@redhat.com)
+- a-keys - edit - fix broken 'save' (bbuckingham@redhat.com)
+- a-keys - subscriptions - add applied/available placeholders for view and
+  controller (bbuckingham@redhat.com)
+- a-keys - add Applied and Available subscriptions to navigation
+  (bbuckingham@redhat.com)
+- a-keys - new/edit - disable save buttons while retrieving template/product
+  info (bbuckingham@redhat.com)
+- a-keys - new - update to set env to the first available
+  (bbuckingham@redhat.com)
+- a-keys - remove the edit_environment action (bbuckingham@redhat.com)
+- a-keys - edit - update to list products in the env selected
+  (bbuckingham@redhat.com)
+- a-keys - update new key ui to use environment selector
+  (bbuckingham@redhat.com)
+- a-keys - update setting of env and system template on general tab...
+  (bbuckingham@redhat.com)
+- notices - change to fix broken tests (bbuckingham@redhat.com)
+- notices - change to support closing previous failure notices on a success
+  (bbuckingham@redhat.com)
+- notices - adding controller_name and action_name to notices
+  (bbuckingham@redhat.com)
+
 * Tue Oct 04 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.86-1
 - Added some rendering on products and repos page to explicity differentiate
   the 2
