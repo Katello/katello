@@ -488,5 +488,13 @@ class ApplicationController < ActionController::Base
       }
     end
   end
+
+  # Parse the input provided and return the value of displayMessage. If displayMessage is not available, return "".
+  # (Note: this can be used to pull the displayMessage from a Candlepin exception.)
+  # This assumes that the input follows a syntax similar to:
+  #   "{\"displayMessage\":\"Import is older than existing data\"}"
+  def parse_display_message input
+    display_message = input.include?("displayMessage") ? input.split(":\"").last.split("\"").first : ""
+  end
 end
 

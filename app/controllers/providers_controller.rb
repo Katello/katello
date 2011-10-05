@@ -68,10 +68,13 @@ class ProvidersController < ApplicationController
         temp_file.write params[:provider][:contents].read
         temp_file.close
         @provider.import_manifest File.expand_path(temp_file.path)
-        notice _("Subscription uploaded successfully"), {:synchronous_request => false}
+        notice _("Subscription manifest uploaded successfully for provider '%{name}'." % {:name => @provider.name}), {:synchronous_request => false}
 
       rescue Exception => error
-        errors _("There was a format error with your Subscription Manifest"), {:synchronous_request => false}
+        display_message = parse_display_message(error.response)
+        error_text = _("Subscription manifest upload for provider '%{name}' failed." % {:name => @provider.name})
+        error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
+        errors error_text
         Rails.logger.error "error uploading subscriptions."
         Rails.logger.error error
         Rails.logger.error error.backtrace.join("\n")
@@ -81,7 +84,7 @@ class ProvidersController < ApplicationController
       redhat_provider
     else
       # user didn't provide a manifest to upload
-      errors _("Subscription Manifest must be specified on upload.")
+      errors _("Subscription manifest must be specified on upload.")
       render :nothing => true
     end
   end
@@ -93,7 +96,10 @@ class ProvidersController < ApplicationController
     begin
       setup_subs
     rescue Exception => error
-      errors _("Unable to retrieve your Subscription Manifest"), {:synchronous_request => false}
+      display_message = parse_display_message(error.response)
+      error_text = _("Unable to retrieve subscription manifest for provider '%{name}." % {:name => @provider.name})
+      error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
+      errors error_text, {:synchronous_request => false}
       Rails.logger.error "Error fetching subscriptions from Candlepin"
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
