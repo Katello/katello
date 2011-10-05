@@ -18,25 +18,14 @@ module Menu
   end
 
   def menu_items
-    [
-      {:key => :content,
-       :name => N_("Content Management"),
-        :url => :sub_level,
-        :class=>'content',
-        :items=> [
-            {:key => :providers,
-             :name =>N_("Providers"),
-             :url => :sub_level,
-             :options => {:highlights_on => /(\/organizations\/.*\/providers)|(\/providers\/.*\/(products|repos))/},
-             :if => :sub_level,
-             :items =>[
-                 {:key => :redhat_providers,
+    redhat_providers ={:key => :redhat_providers,
                   :name =>N_("Red Hat"),
                   :url => redhat_provider_providers_path,
                   :if => lambda{current_organization.readable?},
                   :options => {:class=>"third_level"}
-                },
-                {:key => :custom_providers,
+                }
+
+    custom_providers ={:key => :custom_providers,
                   :name =>N_("Custom"),
                   :url => organization_providers_path(current_organization()),
                   :if => lambda{Provider.any_readable?(current_organization())},
@@ -57,16 +46,33 @@ module Menu
                       }
                   ]
                 }
-             ]
+
+
+
+    providers = {:key => :providers,
+             :name =>N_("Providers"),
+             :url => :sub_level,
+             :options => {:highlights_on => /(\/organizations\/.*\/providers)|(\/providers\/.*\/(products|repos))/},
+             :if => :sub_level,
+             :items =>[ redhat_providers, custom_providers]
             }
-        ]
-      },
-      {:key => :systems,
+
+
+    content = {:key => :content,
+       :name => N_("Content Management"),
+        :url => :sub_level,
+        :class=>'content',
+        :items=> [ providers  ]
+      }
+
+      system =      {:key => :systems,
      :name => N_("Systems"),
      :url => systems_path,
      :class=>'systems',
       }
-    ]
+
+
+    [ content, system ]
   end
 =begin
 {:key => :systems, :name => N_("Systems"),
