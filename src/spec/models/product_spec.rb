@@ -28,6 +28,7 @@ describe Product do
     end
 
     CDN::CdnVarSubstitutor.stub(:new => @substitutor_mock)
+    CDN::CdnResource.stub(:ca_file => "#{Rails.root}/config/candlepin-ca.crt")
     OpenSSL::X509::Certificate.stub(:new).and_return(&:to_s)
     OpenSSL::PKey::RSA.stub(:new).and_return(&:to_s)
 

@@ -32,7 +32,7 @@ module CDN
     end
 
     def self.ca_file
-      "#{Rails.root}/config/candlepin-ca.crt"
+      "#{Rails.root}/ca/redhat-uep.pem"
     end
 
  end
