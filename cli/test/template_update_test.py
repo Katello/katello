@@ -73,11 +73,19 @@ class TemplateUpdateTest(CLIActionTestCase):
         self.action.run()
         self.module.get_template.assert_called_with(self.ORG['name'], self.ENV['name'], self.TPL['name'])
      
+    def test_it_returns_error_when_template_not_found(self):
+        self.mock(self.module, 'get_template', None)
+        self.assertEqual(self.action.run(), os.EX_DATAERR)
+     
     def test_it_finds_parent_template(self):
         self.mock_options(self.OPTIONS_WITH_PARENT)
         self.mock(self.action, 'get_parent_id', self.TPL_PARENT_ID)
         self.action.run()
         self.action.get_parent_id.assert_called_once_with(self.ORG['name'], self.ENV["name"], self.TPL_PARENT_NAME)
+        
+    def test_it_returns_error_when_parent_not_found(self):
+        self.mock(self.module, 'get_template', None)
+        self.assertEqual(self.action.run(), os.EX_DATAERR)
         
     def test_it_calls_update_template(self):
         self.mock_options(self.OPTIONS)
@@ -88,3 +96,9 @@ class TemplateUpdateTest(CLIActionTestCase):
         self.mock_options(self.OPTIONS)
         self.action.run()
         self.action.updateContent.assert_called_once()
+        
+    def test_it_returns_status_ok(self):
+        self.mock_options(self.OPTIONS)
+        self.action.run()
+        self.assertEqual(self.action.run(), os.EX_OK)
+        

@@ -51,7 +51,7 @@ class TemplateAction(Action):
         parent = get_template(orgName, envName, parentName)
         if parent != None:
             return parent["id"]
-        return None
+        system_exit(os.EX_DATAERR)
 
 # ==============================================================================
 class List(TemplateAction):
