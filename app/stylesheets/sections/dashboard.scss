@@ -8,7 +8,7 @@
     @include border-radius(3px);
     background-color: $lightergrey_color;
     border:1px solid $border_color;
-    padding: 2px 3px 0px 8px;
+    padding: 10px 10px 10px 15px;
     margin-bottom: 10px;
     @include background-image(linear-gradient(#F7F7F7, #EEEEEE));
     position: relative;
@@ -16,35 +16,55 @@
         margin-top: 3px;
     }
     h1, h2, h3, h4, h5 {
-      font-weight: normal; //as per kyle's request
+      font-weight: normal;
+    }
+    h2 {
+      font-size: 145%;
+    }
+    hr {
+      color: #dedede;
+      border-color: #dedede;
     }
     .dashhead {
         position: relative;
     }
+    
     #dashboard_subscriptions {
       height: 170px;
-      
+      color: $font_color;
+      .sub_count {
+        font-size: 140%;
+      }
+      .sys_count {
+        font-size: 200%;
+        font-weight: bold;
+        text-shadow: 0px 1px 0px #ffffff;
+        margin-left: 20px;
+      }
       #sub_graph {
         width: 150px;
         height: 170px;
       }
+
       h4 {
         display: inline;
         margin-left: 10px;
       }
       h5 {
         display: inline;
-        font-size: 130%;
+        font-size: 115%;
       }
       .left {
         width: 300px;
         display: inline-block;
 
         .icon {
-          margin-left: 0px;
+          margin-left: 3px;
+          margin-right: 10px;
+          margin-top: 3px;
           width: 15px;
           height: 15px;
-          margin-top: 3px;
+
         }
         .red_icon {background: $status_icons_red_small;}
         .yellow_icon {background: $status_icons_yellow_small;}
@@ -54,6 +74,8 @@
         width: 150px;
         display: inline-block;
         position: relative;
+        margin-right: 10px;
+        margin-top: -20px;
         #overlay {
             background: url("../../../images/chart_overlay.png") no-repeat;
             height: 118px;
@@ -358,12 +380,13 @@
           margin-bottom: 3px;
         }
         li {
-          margin-bottom: 5px;
+          margin: 10px 0;
         }
         h5 {
           margin-bottom: -5px;
           margin-top: 0;
         }
+
       }
       .loading {
         position: absolute;
