@@ -66,9 +66,6 @@ class Info(PackageGroupAction):
         if group == None:
             system_exit(os.EX_DATAERR, _("Package group [%s] not found in repo [%s]") % (groupid, repoid))
         
-        from pprint import pprint
-        pprint(group)
-        
         self.printer.setHeader(_("Package Group Information"))
         self.printer.addColumn('id')
         self.printer.addColumn('name')
