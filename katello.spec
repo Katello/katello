@@ -17,7 +17,7 @@
 
 Name:           katello
 Version:        0.1.86
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
 Group:          Applications/Internet
@@ -180,6 +180,7 @@ rm %{buildroot}%{homedir}/lib/tasks/hudson.rake
 find %{buildroot}%{homedir} -type d -print0 | xargs -0 chmod 755
 find %{buildroot}%{homedir} -type f -print0 | xargs -0 chmod 644
 chmod +x %{buildroot}%{homedir}/script/*
+chmod a+r %{buildroot}%{homedir}/ca/redhat-uep.pem
 
 %clean
 rm -rf %{buildroot}
