@@ -26,7 +26,10 @@ describe Product do
     @substitutor_mock.stub!(:substitute_vars).and_return do |path|
       {{} =>  path}
     end
+
     CDN::CdnVarSubstitutor.stub(:new => @substitutor_mock)
+    OpenSSL::X509::Certificate.stub(:new).and_return(&:to_s)
+    OpenSSL::PKey::RSA.stub(:new).and_return(&:to_s)
 
     ProductTestData::SIMPLE_PRODUCT.merge!({:provider => @provider, :environments => [@organization.locker]})
     ProductTestData::SIMPLE_PRODUCT_WITH_INVALID_NAME.merge!({:provider => @provider, :environments => [@organization.locker]})
