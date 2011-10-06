@@ -263,6 +263,7 @@ Src::Application.routes.draw do
         get :errata
       end
     end
+    match '/systems/:id/subscription' => 'systems#subscription', :via => :get
     match '/systems/:id/subscription' => 'systems#subscribe', :via => :post
     match '/systems/:id/subscription/:pool' => 'systems#unsubscribe', :via => :delete
 
