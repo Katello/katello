@@ -1,7 +1,7 @@
 @import "katello";
 
 /* box for "errors" on the custom 500 error page */
-.dashboard {
+.dash {
     $big_height: 356px;
     $big_width: 490px;
     $small_height: 153px;
@@ -23,8 +23,10 @@
       font-size: 145%;
     }
     hr {
-      color: #dedede;
-      border-color: #dedede;
+      height: 1px;
+      border: 0;
+      background: #c7c7c7;
+
     }
     .dashhead {
         position: relative;
@@ -39,10 +41,11 @@
       height: 170px;
       color: $font_color;
       .sub_count {
+        font-family: $headlinefont;
         font-size: 140%;
       }
       .sys_count {
-        font-size: 200%;
+        font-size: 220%;
         font-weight: bold;
         text-shadow: 0px 1px 0px #ffffff;
         margin-left: 20px;
@@ -84,7 +87,7 @@
         margin-top: -20px;
         #overlay {
             background: url("../../../images/chart_overlay.png") no-repeat;
-            height: 118px;
+            height: 130px;
             position: absolute;
             right: 15px;
             top: 28px;
@@ -103,6 +106,16 @@
         height: $big_height - 10;
         min-height: inherit;
       }
+
+      .jspPane {
+        .errata {
+          &:first-child {
+            padding-top: 4px;
+          }
+        }
+      }
+
+
       .block_head {
         background-color: lighten($stroke_color,8%);
         display: block;
@@ -192,7 +205,7 @@
         float: left;
         width: 16px;
         height: 16px;
-        margin-top: 2px;
+        margin-top: 4px;
       }
       .security_icon {
         background: $shield_icon_black;
