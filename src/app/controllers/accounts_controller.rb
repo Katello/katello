@@ -13,6 +13,7 @@
 class AccountsController < ApplicationController
 
   skip_before_filter :authorize
+  skip_before_filter :require_org
 
   def show
     @user = current_user
