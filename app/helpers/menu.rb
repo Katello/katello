@@ -9,90 +9,25 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+require 'navigation/content_management'
+require 'navigation/administration'
+require 'navigation/main'
+
 module Menu
 
   def self.included(base)
+    base.send :include, Navigation
     base.class_eval do
       helper_method :render_menu
-      helper_method :custom_provider_items
     end
   end
-
-  def custom_provider_items
-    [
-        { :key => :edit_custom_providers,
-          :name =>N_("Basics"),
-          :url => (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id),
-          :if => lambda{!@provider.nil? && @provider.readable? && !@provider.new_record?},
-          :options => {:class=>"navigation_element"}
-        },
-        { :key => :products_repos,
-          :name =>N_("Products & Repositories"),
-          :url => (@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id),
-          :if => lambda{!@provider.nil? && @provider.readable? &&
-                        !@provider.new_record? && !@provider.has_subscriptions?},
-          :options => {:class=>"navigation_element"}
-        }
-    ]
-  end
-
-
-  def menu_items
-    redhat_providers ={:key => :redhat_providers,
-                  :name =>N_("Red Hat"),
-                  :url => redhat_provider_providers_path,
-                  :if => lambda{current_organization.readable?},
-                  :options => {:class=>"third_level"}
-                }
-
-    custom_providers ={:key => :custom_providers,
-                  :name =>N_("Custom"),
-                  :url => organization_providers_path(current_organization()),
-                  :if => lambda{Provider.any_readable?(current_organization())},
-                  :options => {:class=>"third_level"}
-                }
-
-
-
-    providers = {:key => :providers,
-             :name =>N_("Providers"),
-             :url => :sub_level,
-             :options => {:highlights_on => /(\/organizations\/.*\/providers)|(\/providers\/.*\/(products|repos))/},
-             :if => :sub_level,
-             :items =>[ redhat_providers, custom_providers]
-            }
-
-
-    content = {:key => :content,
-       :name => N_("Content Management"),
-        :url => :sub_level,
-        :class=>'content',
-        :items=> [ providers  ]
-      }
-
-      system =      {:key => :systems,
-     :name => N_("Systems"),
-     :url => systems_path,
-     :class=>'systems',
-      }
-
-
-    [ content, system ]
-  end
-=begin
-{:key => :systems, :name => N_("Systems"),
-      :url => systems_path, :class=>'systems',
-    :items => [
-    ]
-},
-=end
   def render_menu(level)
     @menu_items ||=create_menu
     render_navigation(:items=>@menu_items, :expand_all=>false, :level => level)
   end
 
   def create_menu
-    ret = menu_items
+    ret = menu_main
     ret.delete_if do |top_level|
       if_eval_top = top_level.delete(:if)
       if (!if_eval_top) || if_eval_top == :sub_level || if_eval_top.call

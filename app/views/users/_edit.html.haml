@@ -6,7 +6,7 @@
     = link_to _("Remove User"), { :controller => "users", :action => "destroy" }, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
   
 = content_for :navigation do
-  = render_navigation(:expand_all => true, :level => 3)
+  = render_navigation(:items=>user_navigation, :expand_all => true, :level => 1)
 
 = content_for :content do
   = render :partial => "edit_form", :locals=>{:editable=>editable}
