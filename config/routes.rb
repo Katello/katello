@@ -264,6 +264,7 @@ Src::Application.routes.draw do
       end
     end
     match '/systems/:id/subscription' => 'systems#subscribe', :via => :post
+    match '/systems/:id/subscription/:pool' => 'systems#unsubscribe', :via => :delete
 
     resources :providers, :except => [:index] do
       resources :sync, :only => [:index, :create] do
