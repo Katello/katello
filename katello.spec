@@ -53,6 +53,11 @@ Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
 Requires:       rubygem(thin)
 
+# bz 743816 temp fix until yum update makes to z stream
+%if 0%{?rhel} == 6
+Requires:       yum >= 3.2.29
+%endif
+
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
 # TODO - uncomment the statement once we push patched actionpack to our EL6 repo
 #%if 0%{?fedora} && 0%{?fedora} <= 15
