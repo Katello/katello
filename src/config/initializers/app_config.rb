@@ -19,6 +19,7 @@ module ApplicationConfiguration
       @hash = config['common'] || {}
       @hash.update(config[Rails.env] || {})
       @ostruct = hashes2ostruct(@hash)
+      @ostruct.app_name = (config['common']['app'] ? config['common']['app'] : "katello")
 
       # candlepin and pulp are turned on by default
       @ostruct.use_cp = true unless @ostruct.respond_to?(:use_cp)
