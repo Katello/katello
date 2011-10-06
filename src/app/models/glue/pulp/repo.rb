@@ -12,7 +12,7 @@
 
 class Glue::Pulp::Repo
   attr_accessor :id, :groupid, :arch, :name, :feed, :feed_cert, :feed_key, :feed_ca,
-                :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata
+                :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type
 
   def initialize(params = {})
     @params = params
@@ -39,7 +39,8 @@ class Glue::Pulp::Repo
         :feed => self.feed,
         :feed_cert_data => feed_cert_data,
         :groupid => self.groupid,
-        :preserve_metadata => self.preserve_metadata == true
+        :preserve_metadata => self.preserve_metadata == true,
+        :content_types => self.content_type
     })
   end
 
