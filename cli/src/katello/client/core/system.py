@@ -342,6 +342,7 @@ class Subscriptions(SystemAction):
             return os.EX_DATAERR
         else:
             result = self.api.subscriptions(systems[0]['uuid'])
+            print result
             if result == None or len(result) == 0:
                 print _("No subscriptions found for System [ %s ] in Org [ %s ]") % (name, org)
                 return os.EX_DATAERR
