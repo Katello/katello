@@ -1,15 +1,16 @@
 =javascript :scroll_pane, :dashboard
 
--#.grid_16
--#  %h2 #{_("Welcome back, %{u}\n" % {:u => current_user.username}) }
-.grid_9
+-if current_organization
+  .grid_9
+    = dashboard_entry(_("System Subscription Status"), "subscriptions")
+    = dashboard_ajax_entry(_("Available Errata"), "errata", errata_dashboard_index_path(), "big_widget")
+    -#= dashboard_ajax_entry(_("System Overview"), "systems", systems_dashboard_index_path(), "big_widget")
 
-
-  = dashboard_entry(_("System Subscription Status"), "subscriptions")
-  = dashboard_ajax_entry(_("Available Errata"), "errata", errata_dashboard_index_path(), "big_widget")
-  -#= dashboard_ajax_entry(_("System Overview"), "systems", systems_dashboard_index_path(), "big_widget")
-
-.grid_7
-  = dashboard_ajax_entry(_("Latest Notifications"), "notices", notices_dashboard_index_path(), "small_widget")
-  = dashboard_ajax_entry(_("Promotions Overview"), "promotions", promotions_dashboard_index_path(), "small_widget")
-  = dashboard_ajax_entry(_("Sync Overview"), "sync", sync_dashboard_index_path(), "small_widget")
+  .grid_7
+    = dashboard_ajax_entry(_("Latest Notifications"), "notices", notices_dashboard_index_path(), "small_widget")
+    = dashboard_ajax_entry(_("Promotions Overview"), "promotions", promotions_dashboard_index_path(), "small_widget")
+    = dashboard_ajax_entry(_("Sync Overview"), "sync", sync_dashboard_index_path(), "small_widget")
+-else
+  .grid_8
+    %h5
+      #{_("You currently do not have any permissions that grant access to an organization.  Please contact your system administrator to receive access.")}
