@@ -40,7 +40,7 @@ class Glue::Pulp::Repo
         :feed_cert_data => feed_cert_data,
         :groupid => self.groupid,
         :preserve_metadata => self.preserve_metadata == true,
-        :content_types => self.content_type
+        :content_types => self.content_type || TYPE_YUM
     })
   end
 
