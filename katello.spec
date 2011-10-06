@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.88
+Version:        0.1.89
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -236,6 +236,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Oct 06 2011 Shannon Hughes <shughes@redhat.com> 0.1.89-1
+- adding reporting gems deps (shughes@redhat.com)
+
 * Thu Oct 06 2011 Shannon Hughes <shughes@redhat.com> 0.1.88-1
 - adding yum fix until 3.2.29 hits zstream/pulp (shughes@redhat.com)
 - provider - search changes resulting from split of Custom and Red Hat
