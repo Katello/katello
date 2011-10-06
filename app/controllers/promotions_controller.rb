@@ -88,8 +88,9 @@ class PromotionsController < ApplicationController
       offset = params[:offset]
       offset = offset.to_i if offset
       if offset
-        @packages = @packages[offset..offset+current_user.page_size]
+        @packages = @packages[offset..offset+current_user.page_size] || []
         render :text=>"" and return if @packages.empty?
+        render :partial=>"package_items" and return
       else
         @packages = @packages[0..current_user.page_size]
       end
@@ -138,8 +139,10 @@ class PromotionsController < ApplicationController
     @errata.sort! {|a,b| a.title <=> b.title}
     offset = params[:offset]
     if offset
+      offset = offset.to_i
       @errata = @errata[offset..offset+current_user.page_size]
       render :text=>"" and return if @errata.empty?
+      render :partial=>"errata_items" and return 
     else
       @errata = @errata[0..current_user.page_size]
     end

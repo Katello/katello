@@ -25,26 +25,16 @@ describe ProvidersController do
     controller.stub!(:errors)
 
     @org = new_test_org
-    @org.stub!(:providers).and_return([@provider])
     current_organization=@org
+
   end
 
   PROVIDER_NAME = "a name"
   ANOTHER_PROVIDER_NAME = "another name"
 
-  let(:to_create) do
-    {
-      :name => PROVIDER_NAME,
-      :description => "a description",
-      :repository_url => "https://some.url",
-      :provider_type => Provider::REDHAT,
-       :organization => @org
-    }
-  end
 
   describe "update a provider subscriptions" do
     before(:each) do
-      @provider = Provider.create!(to_create)
       Candlepin::Owner.should_receive(:import).once.and_return("")
       Candlepin::Owner.stub!(:pools).and_return({})
     end
@@ -52,8 +42,8 @@ describe ProvidersController do
     it "should update a provider subscription" do
       test_export = File.new("#{Rails.root}/spec/controllers/export.zip")
       contents = {:contents => test_export}
-      id = @provider.id.to_s
-      post 'update_subscriptions', {:id => id, :provider => contents}
+      id = @org.redhat_provider.id.to_s
+      post 'update_redhat_provider', {:id => id, :provider => contents}
       response.should be_success
     end
   end

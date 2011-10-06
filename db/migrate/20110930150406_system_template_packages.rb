@@ -8,6 +8,7 @@ class SystemTemplatePackages < ActiveRecord::Migration
        t.string :epoch, :null => true
        t.string :arch, :null => true
     end
+    add_index :system_template_packages, :system_template_id
   end
 
   def self.down

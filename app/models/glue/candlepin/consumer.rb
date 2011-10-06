@@ -157,8 +157,16 @@ module Glue::Candlepin::Consumer
       facts["uname.machine"]
     end
     
-    def distro
+    def distribution_name
       facts["distribution.name"]
+    end
+
+    def distribution_version
+      facts["distribution.version"]
+    end
+
+    def distribution
+      "#{distribution_name} #{distribution_version}"
     end
 
     def entitlements_valid?

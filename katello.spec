@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.85
+Version:        0.1.89
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -49,9 +49,17 @@ Requires:       rubygem(sqlite3)
 Requires:       rubygem(pg)
 Requires:       rubygem(scoped_search) >= 2.3.1
 Requires:       rubygem(delayed_job) >= 2.1.4
+Requires:       rubygem(acts_as_reportable) >= 1.1.1
+Requires:       rubygem(pdf-writer) >= 1.1.8
+Requires:       rubygem(ruport) >= 1.6.3
 Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
 Requires:       rubygem(thin)
+
+# bz 743816 temp fix until yum update makes to z stream
+%if 0%{?rhel} == 6
+Requires:       yum >= 3.2.29
+%endif
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
 # TODO - uncomment the statement once we push patched actionpack to our EL6 repo
@@ -180,13 +188,12 @@ rm %{buildroot}%{homedir}/lib/tasks/hudson.rake
 find %{buildroot}%{homedir} -type d -print0 | xargs -0 chmod 755
 find %{buildroot}%{homedir} -type f -print0 | xargs -0 chmod 644
 chmod +x %{buildroot}%{homedir}/script/*
+chmod a+r %{buildroot}%{homedir}/ca/redhat-uep.pem
 
 %clean
 rm -rf %{buildroot}
 
 %post
-%{homedir}/script/reset-oauth
-
 #Add /etc/rc*.d links for the script
 /sbin/chkconfig --add %{name}
 
@@ -229,6 +236,244 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Oct 06 2011 Shannon Hughes <shughes@redhat.com> 0.1.89-1
+- adding reporting gems deps (shughes@redhat.com)
+
+* Thu Oct 06 2011 Shannon Hughes <shughes@redhat.com> 0.1.88-1
+- adding yum fix until 3.2.29 hits zstream/pulp (shughes@redhat.com)
+- provider - search changes resulting from split of Custom and Red Hat
+  providers (bbuckingham@redhat.com)
+- 715369 - use ellipsis on search favorites/history w/ long names
+  (bbuckingham@redhat.com)
+- repo - default value for content type when creating new repo
+  (tstrachota@redhat.com)
+- sms - useless comment (lzap+git@redhat.com)
+- templates - removed old way of promoting templates directly
+  (tstrachota@redhat.com)
+- import-stage-manifest - set content type for created repo (inecas@redhat.com)
+- dashboard - fixing issue where promotions ellipsis was not configured
+  correctly (jsherril@redhat.com)
+- dashboard - updating subscription status scss as per request
+  (jsherril@redhat.com)
+
+* Wed Oct 05 2011 Shannon Hughes <shughes@redhat.com> 0.1.87-1
+- adding redhat-uep.pem to katello ca (shughes@redhat.com)
+- dashboard - prevent a divide by zero (jsherril@redhat.com)
+- import-stage-manifest - fix relative path for imported repos
+  (inecas@redhat.com)
+- Do not call reset-oauth in %post, candlepin and pulp are not installed at
+  that time anyway. (jpazdziora@redhat.com)
+- 739680 - include candlepin error text in error notice on manifest upload
+  error (bbuckingham@redhat.com)
+- import-stage-manifest - use redhat-uep.pem as feed_ca (inecas@redhat.com)
+- import-stage-manifest - refactor certificate loading (inecas@redhat.com)
+- import-stage-manifest - fix failing spec tests (inecas@redhat.com)
+- import-stage-manifest - fix validations for options (inecas@redhat.com)
+- import-stage-manifest - fix ssl verification (inecas@redhat.com)
+- import-stage-manifest - small refactoring (inecas@redhat.com)
+- import-stage-manifest - short documentation (inecas@redhat.com)
+- import-stage-manifest - remove unused code (inecas@redhat.com)
+- import-stage-manifest - use CDN to substitute vars in content url
+  (inecas@redhat.com)
+- import-stage-manifest - class for loading variable values from CDN
+  (inecas@redhat.com)
+- import-stage-manifest - refactor (inecas@redhat.com)
+- import-stage-manifest - fix unit tests (inecas@redhat.com)
+- import-stage-manifest - substitute release ver (inecas@redhat.com)
+- packagegroups - cli changed to work with array returned from api instead of
+  hashes that were returned formerly (tstrachota@redhat.com)
+- templates - fixes in spec tests (tstrachota@redhat.com)
+- templates - validations for package groups and group categories
+  (tstrachota@redhat.com)
+- package groups - groups and group categories returned in an array instead of
+  in a hash (tstrachota@redhat.com)
+- templates api - removed old content update (tstrachota@redhat.com)
+- packages search - find latest returns array of all latest packages not only
+  the first latest package found (tstrachota@redhat.com)
+- templates - package groups and categories identified by name -repo ids and
+  category/group ids removed (tstrachota@redhat.com)
+- added index for system_template_id on system_template_packages
+  (tstrachota@redhat.com)
+- templates - update changes name of all environment clones
+  (tstrachota@redhat.com)
+- templates api - added new controller for updating templates
+  (tstrachota@redhat.com)
+- templates api - fix for failure in listing all templates in the system
+  (tstrachota@redhat.com)
+- Temporarily removing dashboard pull-down. (jrist@redhat.com)
+- 740340 - manifest upload - validate file input provided
+  (bbuckingham@redhat.com)
+- 740970 - adding detection if a password contains the username
+  (jsherril@redhat.com)
+- 741669 - adding a way for users to modify their own user details
+  (jsherril@redhat.com)
+- Fixed providers show  + edit page to not show provider type (paji@redhat.com)
+- Merge branch 'master' into notices (bbuckingham@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (bbuckingham@redhat.com)
+- dashboard - adding arrow to the right of the gear (jsherril@redhat.com)
+- a-keys - fix delete and behavior on create (bbuckingham@redhat.com)
+- Merge branch 'master' into akeys (bbuckingham@redhat.com)
+- a-keys - fix view specs (bbuckingham@redhat.com)
+- a-keys - fix controller specs (bbuckingham@redhat.com)
+- a-keys - mods to handle nil env on akey create (bbuckingham@redhat.com)
+- Alternating family rows in Activation Keys by way of Ruby's handy cycle
+  method. (jrist@redhat.com)
+- a-keys - (TO BE REVERTED) temporary commit to duplicate subscriptions
+  (bbuckingham@redhat.com)
+- a-keys - some refactor/cleanup of js to use KT namespace
+  (bbuckingham@redhat.com)
+- a-keys - js fix so that clearing filter does not leave children shown
+  (bbuckingham@redhat.com)
+- a-keys - css updates for subscriptions (bbuckingham@redhat.com)
+- a-keys - change the text used to request update to template
+  (bbuckingham@redhat.com)
+- a-keys - update scss to remove some of the table css used by akey
+  subscriptions (bbuckingham@redhat.com)
+- Merge branch 'master' into akeys (bbuckingham@redhat.com)
+- a-keys - init env_select when edit pane is initialized
+  (bbuckingham@redhat.com)
+- a-keys - add cancel button to general tab (bbuckingham@redhat.com)
+- a-keys - subscriptions - updates to support listing by product
+  (bbuckingham@redhat.com)
+- a-keys - update to disable the Add/Remove button after click
+  (bbuckingham@redhat.com)
+- a-keys - subscriptions - update to include type (virtual/physical)
+  (bbuckingham@redhat.com)
+- a-keys - applied subs - add link to add subs (bbuckingham@redhat.com)
+- a-keys - initial changes for applied subscriptions page
+  (bbuckingham@redhat.com)
+- a-keys - initial changes for available subscriptions page
+  (bbuckingham@redhat.com)
+- Merge branch 'master' into akeys (bbuckingham@redhat.com)
+- a-keys - new/edit - updates to highlight the need to change template, on env
+  change... (bbuckingham@redhat.com)
+- a-keys - edit - fix broken 'save' (bbuckingham@redhat.com)
+- a-keys - subscriptions - add applied/available placeholders for view and
+  controller (bbuckingham@redhat.com)
+- a-keys - add Applied and Available subscriptions to navigation
+  (bbuckingham@redhat.com)
+- a-keys - new/edit - disable save buttons while retrieving template/product
+  info (bbuckingham@redhat.com)
+- a-keys - new - update to set env to the first available
+  (bbuckingham@redhat.com)
+- a-keys - remove the edit_environment action (bbuckingham@redhat.com)
+- a-keys - edit - update to list products in the env selected
+  (bbuckingham@redhat.com)
+- a-keys - update new key ui to use environment selector
+  (bbuckingham@redhat.com)
+- a-keys - update setting of env and system template on general tab...
+  (bbuckingham@redhat.com)
+- notices - change to fix broken tests (bbuckingham@redhat.com)
+- notices - change to support closing previous failure notices on a success
+  (bbuckingham@redhat.com)
+- notices - adding controller_name and action_name to notices
+  (bbuckingham@redhat.com)
+
+* Tue Oct 04 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.86-1
+- Added some rendering on products and repos page to explicity differentiate
+  the 2
+- dashboard - removing system list and expanding height of big_widget and
+  small_widget
+- Updated katello-js to work with multiple third level navs
+- 740921 - When editing a permission verbs and tags that were part of the
+  permission will now show up as selected already.
+- Roles UI - Fix for edit role slide up container not working after previous
+  changes to the way the action bar works.
+- tupane - fixing extended scroll spinner showing up on most pages
+- panel - rendering generic rows more efficiently
+- 740365 - fixing issue with systems sorting and extended scroll, where limits
+  were being placed before teh sorting happened
+- Fixes for Roles UI action bar edit breaking after trying to edit more than 1.
+- 737138 - Adds action bar buttons on roles pages to tab index and adds enter
+  button press handlers to activate actions.
+- 733722 - When hitting enter after editing an input will cause the next button
+  to click.
+- 741399 - Fixes for Global permissions to hide 'On' field for all resource
+  types.
+- Tupane - Changes for consistency of tupane css.
+- 741422 - Roles UI - Fixes issue with sliding tree expanding in height instead
+  of overflowing container.
+- Row/grouping coloring for products and repos.
+- Fixed a unit test failure
+- Got pretty much the providers functionality done with this
+- Initial commit related to the provider page redesign
+- sms - cli system subscribe command
+- Commiting a bunch of unit fixes
+- Made organization create a default redhat provider on its inception
+- Updated dashboard systems snippet. fixed a couple of bugs w.r.t ellipsis
+- Dashboard - lighter hr color, and shorter big_widgets.
+- 740936 - Roles UI - Fixes issue with back button disappearing, container
+  border not surrounding actior bar and with wrong containers being displayed
+  for permission create.
+- BZ 741357: fixed a spelling mistake in katello-jobs.init
+- Revert "BZ 741357: fixed a spelling mistake in katello-jobs.init"
+- BZ 741357: fixed a spelling mistake in katello-jobs.init
+- 741444/741648/739981/739655 - update *.js.haml to use the new KT namespace
+  for javascript
+- Added some modifications for the dashboard systems overview widget to include
+  the product name
+- add a spec test to the new download
+- Adding system template download button.
+- Updated the dashboard systems view to be more consistent and show an icon if
+  entitlements are valid
+- Moved methods from the systems_help to application so that the time
+  formatting can be conisistent across all helpers
+- Lighter color footer version.
+- Tupane - Fixes typo from earlier change related to tupane closing not
+  scrolling back up to top.
+- dashboard - making subscription widget load with the page
+- Added some better error handling and removed katello_error.haml as we can do
+  the same with katello.haml
+- dashboard - fixing issue where errata would not expand properly when loaded
+  via async, also moved jscroll initalization to a more central place
+- dashboard - fixing issue where scrollbar would not initialize for ajax loaded
+  widgets
+- dashboard - removing console.logs
+- dashboard - making all widgets load asyncronously
+  dashboard
+- Changes to the dashboard layout.
+- dashboard - adding errata widget with fake data
+- Dashboard gear icon in button.
+- 739654 - Tupane - Fixes issue with tupane jumping to top of page upon being
+  closed.
+- katello-all -- a meta-package to pull in all components for Katello.
+- Stroke 0 on dashboard pie graph.
+- 736090 - Tupane - Fixes for tupane drifting into footer.
+- 736828 - Promotions - Fixes packages tupane to close whenever the breadcrumb
+  is navigated away from the packages list.
+- Overlay for graph on sub status for dasyboard.  Fix for a few small bad haml
+  and js things.
+- Fixed a var name goofup
+- dashboard - adding owner infor object to katello and having the dashboard use
+  it for total systems
+- dashboard - fixing color values to work properly in firefox
+- Updated some scss styling to lengthen the scroll
+- Added a message to show empty systems
+- Added  some styling on the systems snippet
+- dashboard - adding subscription widget for dashboard with fake data
+- Added the ellipsis widget
+- glue - caching teh sync status object in repos to reduce overhead
+- dashboard - a few visual fixes
+- Fixed some merge conflicts
+- Initial cut of the systems snippet on the dashboard
+- dashboard - adding sync dashboard widget
+- dashboard - making helper function names more consistent
+- dashboard - fixing changeset link and fixing icon links on promotions
+- Made the current_organization failure check to also log the exception trace
+- dashboard - mostly got promotions pane on dashboard working
+- dashboard - got notices dashboard widget in place
+- move the SSL fix into the rpm files
+- Additional work on the dashboard L&F.  Still need gear in dropbutton and
+  content in dashboard boxes.
+- Changes to the dashboard UI headers.
+- Dashboard initial layout. Added new icons to the action-icons.png as well as
+  the chart overlay for the pie chart for subscriptions.
+- search - modifications to support service prefix (e.g. /katello)
+- search - add completer_scope to role model
+- search - systems - update to properly handle autocomplete
+- search - initial commit to address auto-complete support w/ perms
+
 * Tue Sep 27 2011 Shannon Hughes <shughes@redhat.com> 0.1.85-1
 - remove capistrano from our deps (shughes@redhat.com)
 - 736093 - Tupanel - Changes to tupanel to handle helptip open and close.

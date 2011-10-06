@@ -23,12 +23,12 @@ describe SystemTemplate do
 
     @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
     @environment = KTEnvironment.create!(:name => 'env_1', :prior => @organization.locker.id, :organization => @organization)
-    @provider     = Provider.create!(:organization => @organization, :name => 'provider', :repository_url => "https://something.url", :provider_type => Provider::REDHAT)
+    @provider     = @organization.redhat_provider
 
     @tpl1 = SystemTemplate.create!(:name => "template_1", :environment => @organization.locker)
 
-    @prod1 = Product.create!(:name => "prod1", :environments => [@organization.locker], :provider => @provider)
-    @prod2 = Product.create!(:name => "prod2", :environments => [@organization.locker], :provider => @provider)
+    @prod1 = Product.create!(:cp_id => "123456", :name => "prod1", :environments => [@organization.locker], :provider => @provider)
+    @prod2 = Product.create!(:cp_id => "789123", :name => "prod2", :environments => [@organization.locker], :provider => @provider)
 
     @organization.locker.products << @prod1
     @organization.locker.products << @prod2
@@ -171,8 +171,7 @@ describe SystemTemplate do
         expected = [package_1]
 
         @to_env.should_receive(:find_packages_by_name).with(package_1[:name]).and_return([])
-        @from_env.should_receive(:find_latest_package_by_name).with(package_1[:name]).and_return(package_1)
-        @from_env.should_receive(:find_packages_by_nvre).with(package_1[:name], package_1[:version], package_1[:release], package_1[:epoch]).and_return([package_1])
+        @from_env.should_receive(:find_latest_packages_by_name).with(package_1[:name]).and_return([package_1])
 
         @tpl1.get_promotable_packages(@from_env, @to_env, tpl_pack).should == expected
       end
@@ -272,8 +271,8 @@ describe SystemTemplate do
       @export_tpl.stub(:products).and_return [@prod1, @prod2]
       @export_tpl.stub(:packages).and_return [mock({:package_name => 'xxx'})]
       @export_tpl.stub(:parameters_json).and_return "{}"
-      @export_tpl.stub(:package_groups).and_return [SystemTemplatePackGroup.new({:package_group_id => 'xxx', :repo_id => "repo-123" })]
-      @export_tpl.stub(:pg_categories).and_return [SystemTemplatePgCategory.new({:pg_category_id => 'xxx', :repo_id => "repo-456"})]
+      @export_tpl.stub(:package_groups).and_return [SystemTemplatePackGroup.new({:name => 'xxx'})]
+      @export_tpl.stub(:pg_categories).and_return [SystemTemplatePgCategory.new({:name => 'xxx'})]
 
       str = @export_tpl.string_export
       json = ActiveSupport::JSON.decode(str)
@@ -313,88 +312,113 @@ describe SystemTemplate do
 
 
   describe "package groups" do
-    before { Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups) }
-    let(:pg_attributes) { {:repo_id => "repo-123", :id => RepoTestData.repo_package_groups.values.first["id"]} }
-    let(:missing_pg_attributes) { {:repo_id => "repo-123", :id => "missing-id"} }
+
+    let(:pg_name) { RepoTestData.repo_package_groups.values[0]["name"] }
+    let(:missing_pg_name) { "missing_pg" }
+    let(:repo) {{
+      :name => 'foo repo',
+      :groupid => [
+        "product:"+@prod1.cp_id.to_s,
+        "env:"+@organization.locker.id.to_s,
+        "org:"+@organization.name.to_s
+      ]
+    }}
+
+    before :each do
+      Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups)
+      Pulp::Repository.stub(:all => [repo])
+    end
+
 
     describe "#add_package_group" do
 
       it "should make a record to the database about the assignment" do
-        @tpl1.add_package_group(pg_attributes)
+        @tpl1.add_package_group(pg_name)
         pg = @tpl1.package_groups(true).last
         pg.should_not be_new_record
-        pg.repo_id.should == pg_attributes[:repo_id]
-        pg.package_group_id.should == pg_attributes[:id]
+        pg.name.should == pg_name
       end
 
       it "should prevent from adding the same package group twice" do
-        @tpl1.add_package_group(pg_attributes)
-        lambda { @tpl1.add_package_group(pg_attributes) }.should raise_error(ActiveRecord::RecordInvalid)
+        @tpl1.add_package_group(pg_name)
+        lambda { @tpl1.add_package_group(pg_name) }.should raise_error(ActiveRecord::RecordInvalid)
         @tpl1.package_groups.count.should == 1
       end
 
       it "should raise exception if package group is missing" do
-        lambda { @tpl1.add_package_group(missing_pg_attributes) }.should raise_error(ActiveRecord::RecordInvalid)
+        lambda { @tpl1.add_package_group(missing_pg_name) }.should raise_error(ActiveRecord::RecordInvalid)
       end
     end
 
     describe "#remove_package_group" do
       before do
-        @tpl1.package_groups.create!(:repo_id => pg_attributes[:repo_id], :package_group_id => pg_attributes[:id])
+        @tpl1.package_groups.create!(:name => pg_name)
       end
 
       it "should remove a record from the database about the assignment" do
-        @tpl1.remove_package_group(pg_attributes)
+        @tpl1.remove_package_group(pg_name)
         pg = @tpl1.package_groups(true).last
         pg.should be_nil
       end
 
       it "should raise exception if package group is missing" do
-        lambda { @tpl1.remove_package_group(missing_pg_attributes) }.should raise_error(Errors::TemplateContentException)
+        lambda { @tpl1.remove_package_group(missing_pg_name) }.should raise_error(Errors::TemplateContentException)
       end
     end
   end
 
 
   describe "package group categories" do
-    before { Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories) }
-    let(:pg_cat_attributes) { {:repo_id => "repo-123", :id => RepoTestData.repo_package_group_categories.values.first["id"]} }
-    let(:missing_pg_cat_attributes) { {:repo_id => "repo-123", :id => "missing-id"} }
+
+    let(:pg_category_name) { RepoTestData.repo_package_group_categories.values[0]["name"] }
+    let(:missing_pg_category_name) { "missing_pgc" }
+    let(:repo) {{
+      :name => 'foo repo',
+      :groupid => [
+        "product:"+@prod1.cp_id.to_s,
+        "env:"+@organization.locker.id.to_s,
+        "org:"+@organization.name.to_s
+      ]
+    }}
+
+    before :each do
+      Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories)
+      Pulp::Repository.stub(:all => [repo])
+    end
 
     describe "#add_pg_category" do
 
       it "should make a record to the database about the assignment" do
-        @tpl1.add_pg_category(pg_cat_attributes)
+        @tpl1.add_pg_category(pg_category_name)
         pg = @tpl1.pg_categories(true).last
         pg.should_not be_new_record
-        pg.repo_id.should == pg_cat_attributes[:repo_id]
-        pg.pg_category_id.should == pg_cat_attributes[:id]
+        pg.name.should == pg_category_name
       end
 
       it "should prevent from adding the same package group twice" do
-        @tpl1.add_pg_category(pg_cat_attributes)
-        lambda { @tpl1.add_pg_category(pg_cat_attributes) }.should raise_error(ActiveRecord::RecordInvalid)
+        @tpl1.add_pg_category(pg_category_name)
+        lambda { @tpl1.add_pg_category(pg_category_name) }.should raise_error(ActiveRecord::RecordInvalid)
         @tpl1.pg_categories.count.should == 1
       end
 
       it "should raise exception if package group is missing" do
-        lambda { @tpl1.add_pg_category(missing_pg_cat_attributes) }.should raise_error(ActiveRecord::RecordInvalid)
+        lambda { @tpl1.add_pg_category(missing_pg_category_name) }.should raise_error(ActiveRecord::RecordInvalid)
       end
     end
 
     describe "#remove_pg_category" do
       before do
-        @tpl1.pg_categories.create!(:repo_id => pg_cat_attributes[:repo_id], :pg_category_id => pg_cat_attributes[:id])
+        @tpl1.pg_categories.create!(:name => pg_category_name)
       end
 
       it "should remove a record from the database about the assignment" do
-        @tpl1.remove_pg_category(pg_cat_attributes)
+        @tpl1.remove_pg_category(pg_category_name)
         pg = @tpl1.pg_categories(true).last
         pg.should be_nil
       end
 
       it "should raise exception if package group is missing" do
-        lambda { @tpl1.remove_pg_category(missing_pg_cat_attributes) }.should raise_error(Errors::TemplateContentException)
+        lambda { @tpl1.remove_pg_category(missing_pg_category_name) }.should raise_error(Errors::TemplateContentException)
       end
     end
   end

@@ -37,7 +37,7 @@ class NoticesController < ApplicationController
 
   def get_new
     # obtain the list of notices that user has not yet seen.
-    new_notices = Notice.select("notices.id, text, level").where("user_notices.user_id = ? AND user_notices.viewed = ?", current_user, false).joins(:user_notices)
+    new_notices = Notice.select("notices.id, text, level, request_type").where("user_notices.user_id = ? AND user_notices.viewed = ?", current_user, false).joins(:user_notices)
 
     # flag these notices as viewed for the user.  this will ensure the user is only notified once.
     new_notices.each do |notice|

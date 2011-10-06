@@ -4,19 +4,19 @@
     - for system in systems_list
       %li
         %div.system_entry
-          %span.icon_wrap.fl
+          .col_0.fl
             - if system.entitlements_valid?
               %span
                 .icon.green_icon.fl
             - else
               %span
                 .icon.red_icon.fl
-          .col_1.one-line-ellipsis
+          .col_1.one-line-ellipsis{:title=>system.name}
             %h5
-              = link_to system.name, system_path(system.id)
-          .col_2
-            #{format_time(system.created_at)}
-          .col_2
+              = link_to system.name, generate_details_url(systems_path, system.id,"system")
+          .col_2{:title=>_("Distribution")}
+            = system.distribution
+          .col_3{:title=>_("Last Checked in Date")}
             = get_checkin(system)
   - else
     =_("No systems found." )

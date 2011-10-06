@@ -61,22 +61,6 @@ describe EnvironmentsController do
       end
       it_should_behave_like "protected action"
     end
-
-    describe "view_templates" do
-      before do
-        @env = KTEnvironment.create!(:name => "test-env", :organization => @organization, :prior => @organization.locker)
-        @controller.stub!(:find_environment).and_return(@env)
-      end
-      let(:action) {:system_templates}
-      let(:req) { get :system_templates, :env_id => @env.id, :org_id => @organization.cp_key}
-      let(:authorized_user) do
-        user_with_permissions { |u| u.can(:read_all, :activation_keys, nil, @organization) }
-      end
-      let(:unauthorized_user) do
-        user_without_permissions
-      end
-      it_should_behave_like "protected action"
-    end
   end
   describe "other-tests" do
     before (:each) do
