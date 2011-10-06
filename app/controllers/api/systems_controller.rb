@@ -19,7 +19,7 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_environment, :only => [:create, :index]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
-                                        :unsubscribe, :subscription]
+                                        :unsubscribe, :subscriptions]
   before_filter :authorize, :except => :activate
 
   skip_before_filter :require_user, :only => [:activate]
@@ -43,7 +43,7 @@ class Api::SystemsController < Api::ApiController
       :upload_package_profile => edit_system,
       :subscribe => edit_system,
       :unsubscribe => edit_system,
-      :subscription=> read_system,
+      :subscriptions => read_system,
     }
   end
 
@@ -64,7 +64,7 @@ class Api::SystemsController < Api::ApiController
     render :json => system.to_json
   end
 
-  def subscription
+  def subscriptions
     render :json => @system.entitlements
   end
 
