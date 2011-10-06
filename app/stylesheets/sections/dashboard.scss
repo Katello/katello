@@ -2,8 +2,9 @@
 
 /* box for "errors" on the custom 500 error page */
 .dashboard {
-    $big_height: 350px;
-    $small_height: 154px;
+    $big_height: 356px;
+    $big_width: 490px;
+    $small_height: 153px;
 
     @include border-radius(3px);
     background-color: $lightergrey_color;
@@ -28,7 +29,12 @@
     .dashhead {
         position: relative;
     }
-    
+
+
+    #dashboard_notifications {
+
+    }
+
     #dashboard_subscriptions {
       height: 170px;
       color: $font_color;
@@ -104,7 +110,7 @@
         color: $lightgrey_color;
 
         .column_head {
-          //display: inline-block;
+          margin-left: 2px;
           float: left;
           height: inherit;
           min-height: inherit;
@@ -129,79 +135,82 @@
           text-transform: uppercase;
       }
 
+      .system_list {
+        display: none;
+      }
+
       .system {
         font-size: 90%;
       }
       .col_1 {
         display: inline-block;
-        width: 10%;
-        padding-left: 1%;
-        //float: left;
+        width: $big_width * .07;
+        padding-left: 2px;
+
       }
       .col_2 {
         display: inline-block;
-        width: 40%;
-        padding-left: 1%;
+        width: $big_width * .4;
+        padding-left: 2px;
       }
       .subcol_2 {
         display: inline-block;
         width: 30%;
-        padding-left: 1%;
+        padding-left: 2px;
       }
       .subcol_3 {
         display: inline-block;
         width: 50%;
-        padding-left: 1%;
+        padding-left: 2px;
       }
       
       .col_3 {
         display: inline-block;
-        width: 40%;
-        padding-left: 1%;
+        width: $big_width* .42;
+        padding-left: 2px;
       }
 
       .collapsed {
         float: left;
         width: 16px;
         height: 16px;
-        background: $arrow_min_img;
+        background: $arrow_min_img_small;
         margin-top: 2px;
-        margin-left: 4px;
+        margin-right: 2px;
       }
       .expanded {
         float: left;
         width: 16px;
         height: 16px;
-        background: $arrow_max_img;
+        background: $arrow_max_img_small;
         margin-top: 2px;
-        margin-left: 4px;
+        margin-right: 2px;
       }
 
-      .security_icon {
+      .errata_icon {
+        margin-left: 6px;
         float: left;
         width: 16px;
         height: 16px;
-        background: $shield_icon_black;
         margin-top: 2px;
+      }
+      .security_icon {
+        background: $shield_icon_black;
+        @extend .errata_icon;
       }
       .enhancement_icon {
-        float: left;
-        width: 16px;
-        height: 16px;
         background: $plus_icon_black;
-        margin-top: 2px;
+        @extend .errata_icon;
       }
       .bugzilla_icon {
-        float: left;
-        width: 16px;
-        height: 16px;
         background: $bug_icon_black;
-        margin-top: 2px;
+        @extend .errata_icon;
       }
 
 
     }
     #dashboard_promotions {
+
       h5 {
         display: inline;
       }
@@ -347,7 +356,7 @@
     .small_widget {
         overflow: hidden;
         height: $small_height;
-        width: 380px;
+        width: 375px;
         list-style: None;
         li {
           margin-bottom: 3px;
@@ -356,9 +365,9 @@
           margin-bottom: 5px;
         }
         h5 {
-          margin-bottom: -5px;
+          margin-bottom: -1px;
           margin-top: 0;
-          font-size: 125%;
+          font-size: 110%;
           
         }
       }
@@ -366,7 +375,7 @@
     .big_widget {
         overflow: hidden;
         height: $big_height;
-        width: 500px;
+        width: $big_width;
         list-style: None;
         li {
           margin-bottom: 3px;
@@ -396,8 +405,8 @@
 
 }
 .dropbutton {
-    height: 20px;
-    width: 30px;
+    height: 16px;
+    width: 17px;
     @include border-radius(23px);
     border:1px solid $border_color;
     background: #f0f0f0;
@@ -411,7 +420,7 @@
         display: block;
         position: relative;
         background: $gear_icon_dark;
-        margin-top: 2px;
+        margin: 0;
     }
 
 }
