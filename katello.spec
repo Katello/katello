@@ -49,6 +49,9 @@ Requires:       rubygem(sqlite3)
 Requires:       rubygem(pg)
 Requires:       rubygem(scoped_search) >= 2.3.1
 Requires:       rubygem(delayed_job) >= 2.1.4
+Requires:       rubygem(acts_as_reportable) >= 1.1.1
+Requires:       rubygem(pdf-writer) >= 1.1.8
+Requires:       rubygem(ruport) >= 1.6.3
 Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
 Requires:       rubygem(thin)
