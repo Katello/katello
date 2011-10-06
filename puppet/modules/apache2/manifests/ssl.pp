@@ -1,9 +1,5 @@
 class apache2::ssl {
   include apache2
-  package { [ "mod_ssl" , "mod_authz_ldap" ]:
-    ensure => present, require => Package["httpd"],
-    notify => Service["httpd"]
-  }
   file {
     "/etc/httpd/conf.d/ssl.conf":
     # does not force config file for now until we sort out our vhost layout

@@ -21,6 +21,7 @@ class ActivationKey < ActiveRecord::Base
   has_many :key_pools
   has_many :pools, :class_name => "KTPool", :through => :key_pools
 
+  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
 
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'key.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'key.description'

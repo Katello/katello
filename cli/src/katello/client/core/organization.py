@@ -155,7 +155,7 @@ class Update(OrganizationAction):
 
 class GenerateDebugCert(OrganizationAction):
 
-    description = _('generate ueber certificate')
+    description = _('generate/re-generate ueber certificate')
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
@@ -165,17 +165,22 @@ class GenerateDebugCert(OrganizationAction):
         self.require_option('name')
 
     def run(self):
-        name        = self.get_option('name')
+        name = self.get_option('name')
 
-        self.api.generate_debug_cert(name)
-        print _("Successfully generated debug cert for org [ %s ]") % name
+        uebercert = self.api.generate_uebercert(name)
+        
+        self.printer.addColumn('key')
+        self.printer.addColumn('cert')
+        self.printer.setHeader(_("Organization Uebercert"))
+        self.printer.printItem(uebercert)
+        
         return os.EX_OK
-
+        
 # ------------------------------------------------------------------------------
 
-class DeleteDebugCert(OrganizationAction):
+class ShowDebugCert(OrganizationAction):
 
-    description = _('remove ueber certificate')
+    description = _('show ueber certificate')
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
@@ -185,10 +190,14 @@ class DeleteDebugCert(OrganizationAction):
         self.require_option('name')
 
     def run(self):
-        name        = self.get_option('name')
-
-        self.api.delete_debug_cert(name)
-        print _("Successfully deleted debug cert for org [ %s ]") % name
+        name = self.get_option('name')
+        uebercert = self.api.uebercert(name)
+        
+        self.printer.addColumn('key')
+        self.printer.addColumn('cert')
+        self.printer.setHeader(_("Organization Uebercert"))
+        self.printer.printItem(uebercert)
+        
         return os.EX_OK
 
 # organization command ------------------------------------------------------------

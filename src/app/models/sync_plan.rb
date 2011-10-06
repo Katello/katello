@@ -32,6 +32,8 @@ class SyncPlan < ActiveRecord::Base
     :in => TYPES,
     :allow_blank => false
 
+  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
+
   scoped_search :on => :name, :complete_value => true
 
   def validate_sync_date

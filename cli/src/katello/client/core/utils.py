@@ -42,6 +42,9 @@ class Printer:
     def setHeader(self, heading):
         self._heading = heading
 
+    def setOutputMode(self, output_mode):
+        self._output_mode = output_mode
+
     def _printDivLine(self, width):
         #print '+' + '-'*(width-2) + '+'
         print '-'*width

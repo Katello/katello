@@ -23,11 +23,11 @@ function valid_id() {
 # requires $REPO_ID, $PACKAGE_GROUP_ID, $PACKAGE_GROUP_CATEGORY_ID
 function create_sample_package_groups() {
     curl -k -u admin:admin  -H "Content-Type: application/json" -H "Accept: application/json" -X POST -d \
-        "{\"groupid\":\"$PACKAGE_GROUP_ID\",\"groupname\":\"test\",\"description\":\"test description\"}" -s \
+        "{\"groupid\":\"$PACKAGE_GROUP_ID\",\"groupname\":\"$PACKAGE_GROUP_NAME\",\"description\":\"test description\"}" -s \
         https://localhost/pulp/api/repositories/$REPO_ID/create_packagegroup/ > /dev/null
 
     curl  -k -u admin:admin -H "Content-Type: application/json" -H "Accept: application/json" -X POST -d \
-        "{\"categoryid\":\"$PACKAGE_GROUP_CATEGORY_ID\",\"categoryname\":\"test\",\"description\":\"test description\"}" -s \
+        "{\"categoryid\":\"$PACKAGE_GROUP_CATEGORY_ID\",\"categoryname\":\"$PACKAGE_GROUP_CATEGORY_NAME\",\"description\":\"test description\"}" -s \
         https://localhost/pulp/api/repositories/$REPO_ID/create_packagegroupcategory/ > /dev/null
 
     curl -k -u admin:admin -H "Content-Type: application/json" -H "Accept: application/json" -X POST -d \

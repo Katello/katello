@@ -95,7 +95,8 @@ module ApplicationHelper
              :accessor=>options[:accessor],
              :url=>options[:url], 
              :left_panel_width=>options[:left_panel_width],
-             :ajax_scroll =>options[:ajax_scroll]}
+             :ajax_scroll =>options[:ajax_scroll],
+             :search_env =>options[:search_env]}
   end
 
   def one_panel(panel_id, collection, options)
@@ -129,15 +130,24 @@ module ApplicationHelper
     return 120000
  end
 
-
   def environment_selector options = {}
     options[:locker_clickable] = true if options[:locker_clickable].nil? # ||= doesn't work if false
     options[:url_proc] = nil if options[:url_proc].nil? #explicitly set url_method to nil if not provided
+
+    # the path widget and entries classes allow the user to override the classes that will be applied to these
+    # elements.  by default, they are set assuming the env selector will be displayed on a page (vs w/in a panel)
+    options[:path_widget_class] = "grid_10 prefix_3 suffix_3" if options[:path_widget_class].nil?
+    options[:path_entries_class] = "grid_10" if options[:path_entries_class].nil?
+
+    # allow user to include additional data attributes (urls) to retrieve other elements from the env, such as
+    # products and system templates
+    options[:url_templates_proc] = nil if options[:url_templates_proc].nil?
+    options[:url_products_proc] = nil if options[:url_products_proc].nil?
+
     render :partial=>"/common/env_select", :locals => options
   end
 
   def env_select_class curr_env, selected_env, curr_path, selected_path, accessible_envs, locker_clickable
-
     classes = []
     if (locker_clickable or !curr_env.locker?) and accessible_envs.member?(curr_env)
       classes << "path_link"
@@ -178,4 +188,7 @@ module ApplicationHelper
     ""
   end
 
+  def generate_details_url(path, id, entity )
+     path + "?search=id%3D#{id}#panel=#{entity}_#{id}"
+  end
 end
