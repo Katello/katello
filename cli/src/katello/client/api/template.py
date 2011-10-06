@@ -90,10 +90,6 @@ class TemplateAPI(KatelloAPI):
         path = "/api/templates/%s/%s/%s/" % (str(tplId), contentType, str(contentId))
         return self.server.DELETE(path)[1]
 
-    def promote(self, template_id):
-        path = "/api/templates/%s/promote" % str(template_id)
-        return self.server.POST(path)[1]
-
     def promotion_status(self, task_id):
         path = "/api/tasks/%s" % str(task_id)
         return self.server.GET(path)[1]

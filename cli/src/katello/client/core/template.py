@@ -458,45 +458,6 @@ class Delete(TemplateAction):
             return os.EX_DATAERR
 
 
-# ==============================================================================
-class Promote(TemplateAction):
-
-    description = _('promotes template content to a successor environment')
-
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
-                               help=_("template name (required)"))
-        self.parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
-        self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev"))
-
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
-        self.require_option('env', '--environment')
-
-    def run(self):
-        tplName = self.get_option('name')
-        orgName = self.get_option('org')
-        envName = self.get_option('env')
-
-        template = get_template(orgName, envName, tplName)
-        if template == None:
-            return os.EX_DATAERR
-
-        task = self.api.promote(template["id"])
-
-        result = run_spinner_in_bg(wait_for_async_task, [task])
-
-        if result['state'] == 'finished':
-            print _("Template [ %s ] promoted" % tplName)
-            return os.EX_OK
-        else:
-            print _("Template [ %s ] promotion failed: %s" % (tplName, json.loads(result["result"])['errors'][0]))
-            return os.EX_DATAERR
-
-
 # provider command =============================================================
 
 class Template(Command):
