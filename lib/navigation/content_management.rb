@@ -51,7 +51,7 @@ module Navigation
      :url => :sub_level,
      :options => {:highlights_on => /(\/organizations\/.*\/providers)|(\/providers\/.*\/(products|repos))/},
      :if => :sub_level,
-     :items =>[ menu_redhat_providers, menu_custom_providers]
+     :items => [menu_redhat_providers, menu_custom_providers]
     }
 
   end
@@ -60,7 +60,7 @@ module Navigation
     {:key => :redhat_providers,
       :name =>N_("Red Hat"),
       :url => redhat_provider_providers_path,
-      :if => lambda{current_organization.readable?},
+      :if => lambda{current_organization && current_organization.readable?},
       :options => {:class=>"third_level"}
     }
   end
@@ -68,8 +68,8 @@ module Navigation
   def menu_custom_providers
     {:key => :custom_providers,
       :name =>N_("Custom"),
-      :url => organization_providers_path(current_organization()),
-      :if => lambda{Provider.any_readable?(current_organization())},
+      :url => lambda{organization_providers_path(current_organization())},
+      :if => lambda{current_organization && Provider.any_readable?(current_organization())},
       :options => {:class=>"third_level"}
     }
   end

@@ -40,6 +40,7 @@ module Menu
                 second_level[:items].delete_if do |third_level|
                   if_eval = third_level.delete(:if)
                   if (!if_eval) || if_eval.call
+                    third_level[:url] =  third_level[:url].call if Proc===third_level[:url]
                     false
                   else
                     true
@@ -48,8 +49,11 @@ module Menu
                 if second_level[:url] == :sub_level && !second_level[:items].empty?
                   second_level[:url] = second_level[:items][0][:url]
                 end
+                second_level[:url] =  second_level[:url].call if Proc===second_level[:url]
+
                 second_level[:items].empty?
               else
+                second_level[:url] =  second_level[:url].call if Proc===second_level[:url]
                 false
               end
             else
@@ -60,10 +64,11 @@ module Menu
           if top_level[:url] == :sub_level && !top_level[:items].empty?
             top_level[:url] = top_level[:items][0][:url]
           end
-
+          top_level[:url] =  top_level[:url].call if Proc===top_level[:url]
           top_level[:items].empty?
         else
           # top level has no items
+          top_level[:url] =  top_level[:url].call if Proc===top_level[:url]
           false
         end
       else
