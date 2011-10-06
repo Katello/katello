@@ -29,17 +29,19 @@ class UsersController < ApplicationController
     read_test = lambda{@user.readable?}
     edit_test = lambda{@user.editable?}
     delete_test = lambda{@user.deletable?}
+    edit_details_test = lambda{@user.id == current_user.id || @user.editable?}
     user_helptip = lambda{true} #everyone can enable disable a helptip
     
      {
        :index => index_test,
        :items => index_test,
+       :auto_complete_search => index_test,
        :new => create_test,
        :create => create_test,
        :edit => read_test,
-       :update => edit_test,
+       :update => edit_details_test,
        :update_roles => edit_test,
-       :clear_helptips => edit_test,
+       :clear_helptips => edit_details_test,
        :destroy => delete_test,
        :enable_helptip => user_helptip,
        :disable_helptip => user_helptip,

@@ -14,18 +14,17 @@ class SystemsController < ApplicationController
   include AutoCompleteSearch
   include SystemsHelper
 
-
-  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments]
+  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items]
 
   skip_before_filter :authorize
   before_filter :find_environment, :only => [:environments, :env_items]
   before_filter :authorize
 
-  before_filter :setup_options, :only => [:index, :items, :environments]
+  before_filter :setup_options, :only => [:index, :items, :environments, :env_items]
+  before_filter :search_filter, :only => [:auto_complete_search]
 
   # two pane columns and mapping for sortable fields
   COLUMNS = {'name' => 'name', 'lastCheckin' => 'lastCheckin', 'created' => 'created_at'}
-
 
   def rules
     edit_system = lambda{System.find(params[:id]).editable?}
@@ -36,6 +35,7 @@ class SystemsController < ApplicationController
     {
       :index => any_readable,
       :items => any_readable,
+      :auto_complete_search => any_readable,
       :environments => env_system,
       :env_items => env_system,
       :subscriptions => read_system,
@@ -50,30 +50,30 @@ class SystemsController < ApplicationController
   end
 
   def index
-    begin
-      @systems = System.readable(current_organization).search_for(params[:search]).limit(current_user.page_size)
+      @systems = System.readable(current_organization).search_for(params[:search])
       retain_search_history
-      sort_columns(COLUMNS,@systems) if params[:order]
-    rescue Exception => error
-      errors error.to_s, {:level => :message, :persist => false}
-      @systems = System.search_for ''
-      render :index, :status=>:bad_request
-    end
+      @systems = sort_order_limit(@systems)
+
   end
 
   def environments
     accesible_envs = KTEnvironment.systems_readable(current_organization)
 
-    @panel_options[:ajax_scroll] = env_items_systems_path()
+    @panel_options[:ajax_scroll] = env_items_systems_path(:env_id=>@environment.id)
     begin
 
       @systems = []
 
       setup_environment_selector(current_organization, accesible_envs)
       if @environment
-        @systems = System.search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size) 
+        # add the environment id as a search filter.. this will be passed to the app by scoped_search as part of
+        # the auto_complete_search requests
+        @panel_options[:search_env] = @environment.id
+
+        @systems = System.search_for(params[:search]).where(:environment_id => @environment.id)
         retain_search_history
-        sort_columns(COLUMNS,@systems) if params[:order]
+        @systems = sort_order_limit(@systems)
+
       end
       render :index, :locals=>{:envsys => 'true', :accessible_envs=> accesible_envs}
     rescue Exception => error
@@ -85,14 +85,19 @@ class SystemsController < ApplicationController
 
   def items
     start = params[:offset]
-    @systems = System.readable(current_organization).search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @systems = System.readable(current_organization).search_for(params[:search])
+    @systems = sort_order_limit(@systems)
     render_panel_items @systems, @panel_options
   end
 
   def env_items
-    start = params[:offset]
-    @systems = System.readable(current_organization).search_for(params[:search]).where(:environment_id => @environment.id).limit(current_user.page_size).offset(start)
-    render_panel_items @systems, @panel_options
+    @systems = System.readable(current_organization).search_for(params[:search]).where(:environment_id => @environment.id)
+    @systems = sort_order_limit(@systems)
+    if @systems.empty?
+      render :text=>""
+    else
+      render_panel_items @systems, @panel_options
+    end
   end
 
   def subscriptions
@@ -262,6 +267,19 @@ class SystemsController < ApplicationController
 
   def controller_display_name
     return _('system')
+  end
+
+  def search_filter
+    @filter = {:organization_id => current_organization}
+  end
+
+  def sort_order_limit systems
+      sort_columns(COLUMNS, systems) if params[:order]
+      offset = params[:offset].to_i if params[:offset]
+      offset ||= 0
+      last = offset + current_user.page_size
+      last = systems.length if last > systems.length
+      systems[offset...last]
   end
 
 end

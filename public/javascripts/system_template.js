@@ -724,13 +724,6 @@ KT.actions =  (function(){
             options.action_bar.toggle('template_download');
             return false;
         });
-        buttons.edit.click(function(){
-            if ( $(this).hasClass('disabled') || !KT.options.current_template){
-                return false;
-            }
-            options.action_bar.toggle('template_edit');
-            return false;
-        });
         buttons.remove.click(function(){
             if ( $(this).hasClass('disabled') || !KT.options.current_template ){
                 return false;
