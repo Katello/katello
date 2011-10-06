@@ -367,24 +367,24 @@ class Unsubscribe(SystemAction):
                        help=_("organization name (required)"))
         self.parser.add_option('--name', dest='name',
                                help=_("system name (required)"))
-        self.parser.add_option('--serial', dest='serial',
-                               help=_("certificate serial to unsubscribe (required)"))
+        self.parser.add_option('--pool', dest='pool',
+                               help=_("pool id to unsubscribe from (required)"))
 
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
-        self.require_option('serial')
+        self.require_option('pool')
 
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
-        serial = self.get_option('serial')
+        pool = self.get_option('pool')
         systems = self.api.systems_by_org(org, {'name': name})
         if systems == None or len(systems) != 1:
             print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
-            result = self.api.unsubscribe(systems[0]['uuid'], serial)
+            result = self.api.unsubscribe(systems[0]['uuid'], pool)
             print _("Successfully unsubscribed System [ %s ]") % name
             return os.EX_OK
 

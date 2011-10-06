@@ -56,9 +56,8 @@ class SystemAPI(KatelloAPI):
         path = "/api/consumers/%s/entitlements" % str(system_id)
         return self.server.GET(path)[1] # candlepin json
 
-    def unsubscribe(self, system_id, serial_id):
-        path = "/api/consumers/" + str(system_id) + \
-                "/certificates/" + str(serial_id)
+    def unsubscribe(self, system_id, pool):
+        path = "/api/systems/%s/subscription/%s" % (system_id, pool)
         return self.server.DELETE(path)[1]
 
     def system(self, system_id):
