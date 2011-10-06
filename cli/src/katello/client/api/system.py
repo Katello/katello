@@ -52,6 +52,10 @@ class SystemAPI(KatelloAPI):
                 }
         return self.server.POST(path, data)[1]
 
+    def subscriptions(self, system_id):
+        path = "/api/consumers/%s/entitlements" % str(system_id)
+        return self.server.GET(path)[1] # candlepin json
+
     def unsubscribe(self, system_id, serial_id):
         path = "/api/consumers/" + str(system_id) + \
                 "/certificates/" + str(serial_id)

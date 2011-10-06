@@ -20,7 +20,7 @@ from gettext import gettext as _
 from katello.client.api.system import SystemAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record
+from katello.client.core.utils import is_valid_record, Printer
 
 Config()
 
@@ -317,6 +317,45 @@ class Subscribe(SystemAction):
         else:
             result = self.api.subscribe(systems[0]['uuid'], pool, qty)
             print _("Successfully subscribed System [ %s ]") % name
+            return os.EX_OK
+
+class Subscriptions(SystemAction):
+
+    description = _('list subscriptions for a system')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                help=_("organization name (required)"))
+        self.parser.add_option('--name', dest='name',
+                help=_("system name (required)"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+    def run(self):
+        name = self.get_option('name')
+        org = self.get_option('org')
+        systems = self.api.systems_by_org(org, {'name': name})
+        if systems == None or len(systems) != 1:
+            print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
+            return os.EX_DATAERR
+        else:
+            result = self.api.subscriptions(systems[0]['uuid'])
+            if result == None or len(result) == 0:
+                print _("No subscriptions found for System [ %s ] in Org [ %s ]") % (name, org)
+                return os.EX_DATAERR
+            subs = result[0]['certificates']
+            # preapare data for rendering
+            for s in subs:
+                s['expiration'] = s['serial']['expiration']
+                s['serial'] = s['serial']['serial']
+            self.printer.setHeader(_("Certificate List for System [ %s ]") % name)
+            self.printer.addColumn('id')
+            self.printer.addColumn('serial')
+            self.printer.addColumn('expiration')
+            self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
+            self.printer.printItems(subs)
             return os.EX_OK
 
 class Unsubscribe(SystemAction):
