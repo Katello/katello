@@ -63,7 +63,12 @@
             } else {
               $qdropdown.removeClass('right-menu').addClass('left-menu');
             }
+
             $qdropdown.show(200);
+
+            // process the elements of the list and truncate any that are too long with ellipsis (...) (e.g. jquery.text-overflow.js)
+            $(".one-line-ellipsis").ellipsis();
+
             $button.addClass('open');
             $list = $("ul:first", $qdropdown);
             $("li.item:gt(9)", $list).hide();
