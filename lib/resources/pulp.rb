@@ -422,4 +422,27 @@ module Pulp
     end
   end
 
+  class Filter < PulpResource
+    class << self
+      def create attrs
+        response = self.post path, attrs.to_json, self.default_headers
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def destroy id
+        self.delete(path(id), self.default_headers).code.to_i
+      end
+
+      def find id
+        response = self.get path(id), self.default_headers
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def path(id=nil)
+        filters = self.path_with_prefix("/filters/")
+        id.nil? ? filters : filters + "#{id}/"
+      end
+    end
+  end
+
 end
