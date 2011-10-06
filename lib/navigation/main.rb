@@ -11,6 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 require 'navigation/content_management'
 require 'navigation/administration'
+require 'navigation/organization'
+require 'navigation/dashboard'
 require 'navigation/main'
 
 module Navigation
@@ -18,6 +20,8 @@ module Navigation
     base.send :include, AdministrationMenu
     base.send :include, ContentMenu
     base.send :include, MainMenu
+    base.send :include, OrganizationMenu
+    base.send :include, DashboardMenu
   end
 
   module MainMenu
@@ -27,7 +31,7 @@ module Navigation
      :url => systems_path,
      :class=>'systems',
       }
-    [ menu_contents, menu_systems, menu_administration ]
+    [ menu_dashboard, menu_contents, menu_systems, menu_organization, menu_administration ]
    end
   end
 end

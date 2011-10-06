@@ -38,7 +38,8 @@ module Navigation
       {:key => :admin,
        :name => N_("Administration"),
         :url => :sub_level,
-        :class=>'operations',
+        :options => {:class=>'operations'},
+        :if => :sub_level,
         :items=> [ menu_users, menu_roles]
       }
     end
