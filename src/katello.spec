@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.87
+Version:        0.1.88
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -233,6 +233,23 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Oct 06 2011 Shannon Hughes <shughes@redhat.com> 0.1.88-1
+- adding yum fix until 3.2.29 hits zstream/pulp (shughes@redhat.com)
+- provider - search changes resulting from split of Custom and Red Hat
+  providers (bbuckingham@redhat.com)
+- 715369 - use ellipsis on search favorites/history w/ long names
+  (bbuckingham@redhat.com)
+- repo - default value for content type when creating new repo
+  (tstrachota@redhat.com)
+- sms - useless comment (lzap+git@redhat.com)
+- templates - removed old way of promoting templates directly
+  (tstrachota@redhat.com)
+- import-stage-manifest - set content type for created repo (inecas@redhat.com)
+- dashboard - fixing issue where promotions ellipsis was not configured
+  correctly (jsherril@redhat.com)
+- dashboard - updating subscription status scss as per request
+  (jsherril@redhat.com)
+
 * Wed Oct 05 2011 Shannon Hughes <shughes@redhat.com> 0.1.87-1
 - adding redhat-uep.pem to katello ca (shughes@redhat.com)
 - dashboard - prevent a divide by zero (jsherril@redhat.com)
