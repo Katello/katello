@@ -197,7 +197,7 @@ KT.panel = (function($){
         switch_content_cb   = function() {},
 	
 		select_item = function(activeBlockId) {
-            var activeBlock = $('#' + activeBlockId),
+            var activeBlock = $('#' + KT.common.escapeId(activeBlockId)),
             	ajax_url = activeBlock.attr("data-ajax_url"),
             	previousBlockId = null;
             	
