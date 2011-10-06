@@ -60,7 +60,6 @@ class Api::SystemsController < Api::ApiController
     render :json => system.to_json
   end
 
-  # POST /system/:id/subscription
   def subscribe
     expected_params = params.with_indifferent_access.slice(:pool, :quantity)
     raise HttpErrors::BadRequest, _("Please provide pool and quantity") if expected_params.count != 2
