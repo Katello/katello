@@ -278,7 +278,6 @@ Src::Application.routes.draw do
     end
 
     resources :templates do
-      post :promote, :on => :member
       post :import, :on => :collection
       get :export, :on => :member
       resources :products, :controller => :templates_content do

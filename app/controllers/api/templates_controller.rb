@@ -88,11 +88,6 @@ class Api::TemplatesController < Api::ApiController
     render :json => json
   end
 
-  def promote
-    async_job = @template.async(:organization => @template.environment.organization).promote
-    render :json => async_job, :status => 202
-  end
-
   def find_environment
     @environment = KTEnvironment.find(params[:environment_id])
     raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
