@@ -241,6 +241,13 @@ describe Product do
         p.save!
       end
 
+      it "should set content type" do
+        Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:content_type => "yum"))
+        p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
+        p.orchestration_for = :import_from_cp
+        p.save!
+      end
+
       it "should clear the product name to be valid" do
         product = @provider.import_product_from_cp('name' => 'invalid (name)', :productContent => [] )
         product.name.should == 'invalid name'
