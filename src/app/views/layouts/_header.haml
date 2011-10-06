@@ -2,7 +2,8 @@
   = link_to dashboard_index_path, :class => 'logo' do
     = image_tag("logo.png", :alt => _('Katello Logo'))
     %span{:class => 'pipe'}
-    %h1 Katello
+    %h1
+      = AppConfig.app_name.upcase
   #loading.fr
     = image_tag('spinner_head.gif', :alt => _('Spinning Work Indicator'))
 .grid_13
