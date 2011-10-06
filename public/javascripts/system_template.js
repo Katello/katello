@@ -655,6 +655,9 @@ KT.actions =  (function(){
 
         return {};
     },
+    toggle_download = function(is_opening) {
+
+    },
     close_modified_dialog = function() {
         $("#modified_dialog").dialog('close');
          buttons.save_dialog.unbind('click');
@@ -684,8 +687,11 @@ KT.actions =  (function(){
 
             'template_edit': { container 	: 'edit_template_container',
                                 setup_fn: toggle_edit
-
+            },
+            'template_download': { container 	: 'download_template_container',
+                                setup_fn: toggle_edit
             }
+
     },
 
     register_events = function() {
@@ -712,9 +718,10 @@ KT.actions =  (function(){
             });
         });
         buttons.download.click(function(e){
-            e.preventDefault();  //stop the browser from following
-            url = KT.common.rootURL() + '/system_templates/' + options.current_template.id + '/download',
-            window.location.href = url;
+            // e.preventDefault();  //stop the browser from following
+            // url = KT.common.rootURL() + '/system_templates/' + options.current_template.id + '/download',
+            // window.location.href = url;
+            options.action_bar.toggle('template_download');
             return false;
         });
         buttons.edit.click(function(){
