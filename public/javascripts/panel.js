@@ -253,6 +253,9 @@ KT.panel = (function($){
                         panelResize($('#panel_main'), isSubpanel);
                     }
                     expand_cb(name);
+                    // Add a handler for ellipsis
+                    $(".one-line-ellipsis").ellipsis(true);
+
                 },
                 error: function (xhr, status, error) {
                     spinner.hide();
