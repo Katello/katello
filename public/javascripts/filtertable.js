@@ -16,10 +16,9 @@ var filtertable = (function() {
             var theTable = $('table.filter_table');
             var filter = $('#filter');
 
-            filter.keyup(function() {
+            filter.live('change, keyup', function(){
                 $.uiTableFilter(theTable, this.value);
             });
-            filter.change(function(){filter.keyup()});
 
             //override the submit so it doesn't try to push a form
             $('#filter_form').submit(function () {

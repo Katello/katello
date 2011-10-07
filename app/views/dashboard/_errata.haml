@@ -15,12 +15,13 @@
           %div.errata_item
             .col_1
               %div{:class=>errata_type_class(errata)}
-              %div.collapsed
             .col_2.one-line-ellipsis
-              #{errata.e_id} (#{errata.systems.length} #{_('Systems')})
+              %div.collapsed
+              %span
+                #{errata.e_id} (#{errata.systems.length} #{_('Systems')})
             .col_3.one-line-ellipsis
               #{errata.product}
-          %div.system_list{:style=>"display:none;"}
+          %div.system_list
             .subheader
               .col_1
                 &nbsp;

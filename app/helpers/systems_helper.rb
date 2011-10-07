@@ -18,19 +18,19 @@ module SystemsHelper
   end
   
   def get_checkin(system)
-    if system.lastCheckin.nil?
-      return _("Never checked in.")
-    else
-      convert_time(system.lastCheckin)
+    if system.checkinTime
+      return  format_time(system.checkinTime)
     end
+    _("Never checked in.")
   end
-  
-  def convert_time(item)
-    Time.parse(item).localtime.strftime('%m/%d/%y %I:%M %p %Z')
-  end
-  
+
   def get_uptime
     return '0 days'
   end
-  
+
+  def convert_time(item)
+    format_time(Time.parse(item))
+  end
+
+
 end
