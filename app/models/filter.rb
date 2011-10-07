@@ -12,9 +12,43 @@
 
 class Filter < ActiveRecord::Base
   include Glue::Pulp::Filter if (AppConfig.use_cp and AppConfig.use_pulp)
+  include Glue
   include Authorization
 
   validates :pulp_id, :presence => true
   belongs_to :organization
 
+  def self.list_tags org_id
+    select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
+  end
+
+  def self.tags(ids)
+    select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
+  end
+
+  def self.list_verbs  global = false
+    {
+       :create => N_("Create Filter"),
+       :read => N_("Access Filter"),
+       :delete => N_("Delete Filter"),
+    }.with_indifferent_access
+  end
+
+  def self.creatable? org
+    User.allowed_to?([:create], :filters, nil, org)
+  end
+
+  def self.any_readable?(org)
+    User.allowed_to?(READ_PERM_VERBS, :filters, nil, org)
+  end
+
+  def readable?
+    User.allowed_to?(READ_PERM_VERBS, :filters, self.id, self.organization)
+  end
+
+  def deletable?
+     User.allowed_to?([:delete, :create], :filters, self.id, self.organization)
+  end
+
+  READ_PERM_VERBS = [:read, :create, :delete]
 end

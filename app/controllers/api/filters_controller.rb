@@ -14,6 +14,21 @@ class Api::FiltersController < Api::ApiController
 
   before_filter :find_organization, :only => [:index, :create]
   before_filter :find_filter, :only => [:show, :destroy]
+  before_filter :authorize
+
+  def rules
+    index_filters = lambda { Filter.any_readable?(@organization) }
+    create_filter = lambda { Filter.creatable?(@organization) }
+    read_filter = lambda { @filter.readable? }
+    delete_filter = lambda { @filter.deletable? }
+
+    {
+      :create => create_filter,
+      :index => index_filters,
+      :show => read_filter,
+      :destroy => delete_filter
+    }
+  end
 
   def index
     render :json => @organization.filters.to_json

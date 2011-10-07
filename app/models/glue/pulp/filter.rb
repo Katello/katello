@@ -10,7 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require_dependency "resources/pulp"
+require "resources/pulp"
 
 module Glue::Pulp::Filter
 
@@ -19,7 +19,7 @@ module Glue::Pulp::Filter
     base.send :include, LazyAccessor
 
     base.class_eval do
-      lazy_accessor :description, :type, :package_list, :initializer => lambda { Pulp::Filter.find(pulp_id) }
+      lazy_accessor :description, :package_list, :initializer => lambda { Pulp::Filter.find(pulp_id) }
 
       before_save :save_filter_orchestration
       before_destroy :destroy_filter_orchestration
@@ -28,9 +28,9 @@ module Glue::Pulp::Filter
 
   module InstanceMethods
 
-    def set_pulp_filter attrs
-      Rails.logger.info "creating pulp consumer '#{self.pulp_id}'"
-      Pulp::Filter.create attrs.merge(:id => self.pulp_id)
+    def set_pulp_filter
+      Rails.logger.info "creating pulp filter '#{self.pulp_id}'"
+      Pulp::Filter.create :id => self.pulp_id, :type => "blacklist", :package_list => self.package_list, :description => self.description
     rescue => e
       Rails.logger.error "Failed to create pulp filter #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
