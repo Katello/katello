@@ -35,11 +35,11 @@ SimpleNavigation::Configuration.run do |navigation|
 
           # providers_sub.item :subscriptions, _("Schedule"), (@provider.nil? || @provider.new_record?) ? "" : schedule_provider_path(@provider.id), :class => 'disabled'
         end if Provider.any_readable?(current_organization) || current_organization.readable?
-          content_sub.item :sync_mgmt, _("Sync Management"), sync_management_index_path() do |sync_sub|
-            sync_sub.item :status, _("Sync Status"), sync_management_index_path(), :class=>"third_level"
-            sync_sub.item :plans, _("Sync Plans"), sync_plans_path(), :class=>"third_level"
-            sync_sub.item :schedule, _("Sync Schedule"), sync_schedules_index_path(), :class=>"third_level"
-          end if Provider.any_readable?(current_organization)
+        content_sub.item :sync_mgmt, _("Sync Management"), sync_management_index_path() do |sync_sub|
+          sync_sub.item :status, _("Sync Status"), sync_management_index_path(), :class=>"third_level"
+          sync_sub.item :plans, _("Sync Plans"), sync_plans_path(), :class=>"third_level"
+          sync_sub.item :schedule, _("Sync Schedule"), sync_schedules_index_path(), :class=>"third_level"
+        end if Provider.any_readable?(current_organization)
         #TODO: tie in Content Locker page
         content_sub.item :system_templates, _("System Templates"), system_templates_path do |template_key_sub|
 
@@ -59,9 +59,9 @@ SimpleNavigation::Configuration.run do |navigation|
               package_sub.item :details, _("Details"), distribution_path(@distribution.id), :class=>"navigation_element"
               package_sub.item :details, _("Filelist"), filelist_distribution_path(@distribution.id), :class=>"navigation_element"
           end
-      end if KTEnvironment.any_viewable_for_promotions?(current_organization)
-      content_sub.item(:changeset, _("Changeset History"), changesets_path()) if KTEnvironment.any_viewable_for_promotions?(current_organization)
-      #content_sub.item :updates_bundle, _("Updates Bundle"), '#', :class => 'disabled', :if => Proc.new { false }
+        end if KTEnvironment.any_viewable_for_promotions?(current_organization)
+        content_sub.item(:changeset, _("Changeset History"), changesets_path()) if KTEnvironment.any_viewable_for_promotions?(current_organization)
+        #content_sub.item :updates_bundle, _("Updates Bundle"), '#', :class => 'disabled', :if => Proc.new { false }
       else
         content_sub.item :redhat_provider, _("Red Hat"), redhat_provider_providers_path, :class=>"second_level"
       end
@@ -79,14 +79,16 @@ SimpleNavigation::Configuration.run do |navigation|
         end
       end if System.any_readable?(current_organization)
 
-      systems_sub.item :env, _("By Environments"), environments_systems_path() do |env_system_sub|
-        if !@system.nil?
-          env_system_sub.item :general, _("General"), edit_system_path(@system.id), :class => "navigation_element"
-          env_system_sub.item :subscriptions, _("Subscriptions"), subscriptions_system_path(@system.id), :class => "navigation_element"
-          env_system_sub.item :facts, _("Facts"), facts_system_path(@system.id), :class => 'navigation_element'
-          env_system_sub.item :packages, _("Packages"), packages_system_path(@system.id), :class => "navigation_element"
-        end
-      end if System.any_readable?(current_organization)
+      if AppConfig.app_name == "katello"
+        systems_sub.item :env, _("By Environments"), environments_systems_path() do |env_system_sub|
+          if !@system.nil?
+            env_system_sub.item :general, _("General"), edit_system_path(@system.id), :class => "navigation_element"
+            env_system_sub.item :subscriptions, _("Subscriptions"), subscriptions_system_path(@system.id), :class => "navigation_element"
+            env_system_sub.item :facts, _("Facts"), facts_system_path(@system.id), :class => 'navigation_element'
+            env_system_sub.item :packages, _("Packages"), packages_system_path(@system.id), :class => "navigation_element"
+          end
+        end if System.any_readable?(current_organization)
+      end
       
       systems_sub.item :activation_keys, _("Activation Keys"), activation_keys_path do |activation_key_sub|
         if !@activation_key.nil?
