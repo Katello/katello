@@ -296,7 +296,7 @@ Src::Application.routes.draw do
         post :discovery, :on => :collection
       end
       resource :uebercert, :only => [:create, :show]
-      resources :filters, :only => [:index, :create, :destroy]
+      resources :filters, :only => [:index, :create, :destroy, :show]
     end
 
     resources :changesets, :only => [:show, :destroy] do
