@@ -46,7 +46,7 @@ module Menu
                     true
                   end
                 end
-                if second_level[:url] == :sub_level && !second_level[:items].empty?
+                if (!second_level[:url] || second_level[:url] == :sub_level) && !second_level[:items].empty?
                   second_level[:url] = second_level[:items][0][:url]
                 end
                 second_level[:url] =  second_level[:url].call if Proc===second_level[:url]
@@ -61,7 +61,7 @@ module Menu
               true
             end
           end
-          if top_level[:url] == :sub_level && !top_level[:items].empty?
+          if (!top_level[:url] || top_level[:url] == :sub_level) && !top_level[:items].empty?
             top_level[:url] = top_level[:items][0][:url]
           end
           top_level[:url] =  top_level[:url].call if Proc===top_level[:url]
