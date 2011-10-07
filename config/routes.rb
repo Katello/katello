@@ -262,10 +262,8 @@ Src::Application.routes.draw do
         get :packages, :action => :package_profile
         get :errata
       end
+      resources :subscriptions, :only => [:create, :index, :destroy]
     end
-    match '/systems/:id/subscriptions' => 'systems#subscriptions', :via => :get
-    match '/systems/:id/subscriptions' => 'systems#subscribe', :via => :post
-    match '/systems/:id/subscriptions/:pool' => 'systems#unsubscribe', :via => :delete
 
     resources :providers, :except => [:index] do
       resources :sync, :only => [:index, :create] do
