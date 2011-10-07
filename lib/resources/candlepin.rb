@@ -126,13 +126,13 @@ module Candlepin
         response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'entitlements'), self.default_headers).body
         JSON.parse(response).collect { |e| e.with_indifferent_access }
       end
-      
+
       def consume_entitlement uuid, pool, quantity = nil
         uri = join_path(path(uuid), 'entitlements') + "?pool=#{pool}"
         uri += "&quantity=#{quantity}" if quantity
         self.post(uri, "", self.default_headers).body
       end
-      
+
       def remove_entitlement uuid, ent_id
         uri = join_path(path(uuid), 'entitlements') + "/#{ent_id}"
         self.delete(uri, self.default_headers).code.to_i
@@ -147,7 +147,7 @@ module Candlepin
           owner_json = self.get(path(key), {'accept' => 'application/json'}.merge(User.current.cp_oauth_header)).body
           JSON.parse(owner_json).with_indifferent_access
       end
-      
+
       def path(id=nil)
         "/candlepin/owners/#{url_encode id}/info"
       end
@@ -244,7 +244,7 @@ module Candlepin
         pool_json = super(path(pool_id), self.default_headers).body
         JSON.parse(pool_json).with_indifferent_access
       end
-      
+
       def path(id=nil)
         "/candlepin/pools/#{url_encode id}"
       end
@@ -320,16 +320,16 @@ module Candlepin
         products.collect {|p| p.with_indifferent_access }
       end
 
-      
+
       def _certificate_and_key id
         subscriptions_json = Candlepin::CandlepinResource.get('/candlepin/subscriptions', self.default_headers).body
         subscriptions = JSON.parse(subscriptions_json)
-        
+
         for sub in subscriptions
           if sub["product"]["id"] == id
             return sub["certificate"]
           end
-          
+
           for provProds in sub["providedProducts"]
             if provProds["id"] == id
               return sub["certificate"]
@@ -354,6 +354,10 @@ module Candlepin
 
       def add_content product_id, content_id, enabled
         self.post(join_path(path(product_id), "content/#{url_encode content_id}?enabled=#{enabled}"), nil, self.default_headers).code.to_i
+      end
+
+      def remove_content product_id, content_id
+        self.delete(join_path(path(product_id), "content/#{url_encode content_id}"), self.default_headers).code.to_i
       end
 
       def create_unlimited_subscription owner_key, product_id

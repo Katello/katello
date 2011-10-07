@@ -27,7 +27,7 @@ module Glue::Pulp::Repos
   end
 
   def self.groupid(product, environment)
-      [self.product_groupid(product), self.env_groupid(environment), self.env_orgid(product.locker.organization)]
+      [self.product_groupid(product), self.env_groupid(environment), self.org_groupid(product.locker.organization)]
   end
 
   def self.clone_repo_path(repo, environment, for_cp = false)
@@ -48,7 +48,7 @@ module Glue::Pulp::Repos
   end
 
 
-  def self.env_orgid(org)
+  def self.org_groupid(org)
       "org:#{org.id}"
   end
 
@@ -257,9 +257,15 @@ module Glue::Pulp::Repos
       url
     end
 
-    def delete_repo(name)
+    def delete_repo_by_id(repo_id)
+      self.productContent_will_change!
+      Pulp::Repository.destroy(repo_id)
+    end
+
+    def delete_repo(name, env)
       #TODO: delete candlepin content as well
-      Pulp::Repository.destroy(repo_id(name))
+      self.productContent_will_change!
+      Pulp::Repository.destroy(repo_id(name, env))
     end
 
     def add_repo(name, url)
@@ -361,7 +367,6 @@ module Glue::Pulp::Repos
       #end
     end
 
-    # Empty method to allow rollbacks
     def del_repos
       if not self.productContent.nil?
         self.productContent.collect do |pc|
