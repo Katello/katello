@@ -55,5 +55,11 @@ module Glue::Pulp::Filter
       end
     end
 
+    def as_json(options)
+      options.nil? ?
+          super(:methods => [:description, :package_list]) :
+          super(options.merge(:methods => [:description, :package_list]) {|k, v1, v2| [v1, v2].flatten })
+    end
+
   end
 end
