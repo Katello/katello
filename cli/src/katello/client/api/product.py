@@ -52,6 +52,10 @@ class ProductAPI(KatelloAPI):
         result = self.server.POST(path, {"product": product})[1]
         return result
 
+    def delete(self, prodId):
+        path = "/api/products/%s/" % prodId
+        return self.server.DELETE(path)[1]
+
     def sync(self, prodId):
         path = "/api/products/%s/sync" % prodId
         return self.server.POST(path)[1]
