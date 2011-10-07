@@ -13,32 +13,33 @@
       .grid_2.la
         %label #{_("Description")}:
       .grid_4.la{:style => "word-wrap: break-word;", 'name' => 'organization[description]', :class=>("editable edit_textfield" if editable), 'data-url'=>edit_organization_path(@organization.cp_key)}<> #{@organization[:description]}
-  
-    .grid_7
-      %h5 #{_("Environment Promotion Paths")}:
 
-    - unless @organization.environments.empty?
-      %ul#promotion_paths
-      - @organization.promotion_paths.each do |path|
-        .clear
-          &nbsp;
-        .jbreadcrumb.grid_9
-          %ul
-            %li
-              =link_to _('Locker'), "#", :class => "crumb-nohover"
-            - for env in path
-              %li
-                %a.subpanel_element{"data-url"=>edit_organization_environment_path(@organization.cp_key, env.id)}
-                  %div
-                    #{env.name}
-
-    - else
+    - if AppConfig.app_name == "katello"
       .grid_7
-        #{_("No environments are available in this organization. Please add some environments to be able register systems to this organization.")}:
+        %h5 #{_("Environment Promotion Paths")}:
 
-    .clear
-      &nbsp;
+      - unless @organization.environments.empty?
+        %ul#promotion_paths
+        - @organization.promotion_paths.each do |path|
+          .clear
+            &nbsp;
+          .jbreadcrumb.grid_9
+            %ul
+              %li
+                =link_to _('Locker'), "#", :class => "crumb-nohover"
+              - for env in path
+                %li
+                  %a.subpanel_element{"data-url"=>edit_organization_environment_path(@organization.cp_key, env.id)}
+                    %div
+                      #{env.name}
 
-    - if editable
-      .button.subpanel_element{"data-url"=>new_organization_environment_path(@organization.cp_key)}
-        = _("Add New Environment")
+      - else
+        .grid_7
+          #{_("No environments are available in this organization. Please add some environments to be able register systems to this organization.")}:
+
+      .clear
+        &nbsp;
+
+      - if editable
+        .button.subpanel_element{"data-url"=>new_organization_environment_path(@organization.cp_key)}
+          = _("Add New Environment")
