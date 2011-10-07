@@ -17,33 +17,34 @@ SimpleNavigation::Configuration.run do |navigation|
     #end #end dashboard_sub
 
 
-    top_level.item :content, _("Content Management"),  organization_providers_path(current_organization()), :class=>'content' do |content_sub|
-      content_sub.item :providers, _("Providers"), organization_providers_path(current_organization()), :highlights_on => /(\/organizations\/.*\/providers)|(\/providers\/.*\/(products|repos))/ do |providers_sub|
-        if current_organization.readable?
-          providers_sub.item :redhat_provider, _("Red Hat"),redhat_provider_providers_path, :class=>"third_level"
-        end
-
-        if Provider.any_readable?(current_organization)
-          providers_sub.item :custom_provider, _("Custom"),organization_providers_path(current_organization()), :class=>"third_level" do |custom_providers_sub|
-            custom_providers_sub.item :edit, _("Basics"), (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id), :class => 'navigation_element',
-                               :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? }
-            custom_providers_sub.item :products_repos, _("Products & Repositories"),(@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id), :class => 'navigation_element',
-                               :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? && !@provider.has_subscriptions?}
+    top_level.item :content, _("Content Management"),  redhat_provider_providers_path, :class=>'content' do |content_sub|
+      if AppConfig.app_name == "katello"
+        content_sub.item :providers, _("Providers"), organization_providers_path(current_organization()), :highlights_on => /(\/organizations\/.*\/providers)|(\/providers\/.*\/(products|repos))/ do |providers_sub|
+          if current_organization.readable?
+            providers_sub.item :redhat_provider, _("Red Hat"),redhat_provider_providers_path, :class=>"third_level"
           end
-        end
 
-        # providers_sub.item :subscriptions, _("Schedule"), (@provider.nil? || @provider.new_record?) ? "" : schedule_provider_path(@provider.id), :class => 'disabled'
-      end if Provider.any_readable?(current_organization) || current_organization.readable?
-      content_sub.item :sync_mgmt, _("Sync Management"), sync_management_index_path() do |sync_sub|
-        sync_sub.item :status, _("Sync Status"), sync_management_index_path(), :class=>"third_level" 
-        sync_sub.item :plans, _("Sync Plans"), sync_plans_path(), :class=>"third_level"
-        sync_sub.item :schedule, _("Sync Schedule"), sync_schedules_index_path(), :class=>"third_level"
-      end if Provider.any_readable?(current_organization)
-      #TODO: tie in Content Locker page
-      content_sub.item :system_templates, _("System Templates"), system_templates_path do |template_key_sub|
+          if Provider.any_readable?(current_organization)
+            providers_sub.item :custom_provider, _("Custom"),organization_providers_path(current_organization()), :class=>"third_level" do |custom_providers_sub|
+              custom_providers_sub.item :edit, _("Basics"), (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id), :class => 'navigation_element',
+                                 :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? }
+              custom_providers_sub.item :products_repos, _("Products & Repositories"),(@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id), :class => 'navigation_element',
+                                 :if => Proc.new { !@provider.nil? && @provider.readable? && !@provider.new_record? && !@provider.has_subscriptions?}
+            end
+          end
 
-      end if SystemTemplate.any_readable?(current_organization())
-      content_sub.item :promotions, _("Promotions"), promotions_path, :highlights_on =>/\/promotions.*/ ,:class => 'content' do |package_sub|
+          # providers_sub.item :subscriptions, _("Schedule"), (@provider.nil? || @provider.new_record?) ? "" : schedule_provider_path(@provider.id), :class => 'disabled'
+        end if Provider.any_readable?(current_organization) || current_organization.readable?
+          content_sub.item :sync_mgmt, _("Sync Management"), sync_management_index_path() do |sync_sub|
+            sync_sub.item :status, _("Sync Status"), sync_management_index_path(), :class=>"third_level"
+            sync_sub.item :plans, _("Sync Plans"), sync_plans_path(), :class=>"third_level"
+            sync_sub.item :schedule, _("Sync Schedule"), sync_schedules_index_path(), :class=>"third_level"
+          end if Provider.any_readable?(current_organization)
+        #TODO: tie in Content Locker page
+        content_sub.item :system_templates, _("System Templates"), system_templates_path do |template_key_sub|
+
+        end if SystemTemplate.any_readable?(current_organization())
+        content_sub.item :promotions, _("Promotions"), promotions_path, :highlights_on =>/\/promotions.*/ ,:class => 'content' do |package_sub|
           if !@package.nil?
               package_sub.item :details, _("Details"), package_path(@package.id), :class=>"navigation_element"
               package_sub.item :details, _("Dependencies"), dependencies_package_path(@package.id), :class=>"navigation_element"
@@ -61,7 +62,9 @@ SimpleNavigation::Configuration.run do |navigation|
       end if KTEnvironment.any_viewable_for_promotions?(current_organization)
       content_sub.item(:changeset, _("Changeset History"), changesets_path()) if KTEnvironment.any_viewable_for_promotions?(current_organization)
       #content_sub.item :updates_bundle, _("Updates Bundle"), '#', :class => 'disabled', :if => Proc.new { false }
-
+      else
+        content_sub.item :redhat_provider, _("Red Hat"), redhat_provider_providers_path, :class=>"second_level"
+      end
     end if current_organization() && (Provider.any_readable?(current_organization)|| KTEnvironment.any_viewable_for_promotions?(current_organization) || SystemTemplate.any_readable?(current_organization)) #end content
 
     #TODO: Add correct Systems subnav items
