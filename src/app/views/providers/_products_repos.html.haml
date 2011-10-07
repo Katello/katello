@@ -1,7 +1,7 @@
 = javascript :products_repos
 
 = content_for :title do
-  #{_("Products & Repositories")}
+  #{@provider.name}
 
 = content_for :remove_item do
   - if @provider.deletable?

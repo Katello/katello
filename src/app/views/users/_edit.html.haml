@@ -1,5 +1,5 @@
 = content_for :title do
-  #{_("Edit User")}
+  #{@user.username}
   
 = content_for :remove_item do
   -if @user.deletable?
