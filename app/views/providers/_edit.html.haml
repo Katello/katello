@@ -1,7 +1,7 @@
 = javascript :edit_helpers
 
 = content_for :title do
-  #{_("Edit Provider")}
+  #{@provider.name}
 
 = content_for :remove_item do
   - if @provider.deletable?
