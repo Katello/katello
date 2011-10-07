@@ -19,7 +19,9 @@
         .grid_7.la
           = text_area_tag 'activation_key[description]', params[:description], :size => "53x4", :tabindex => auto_tab_index
 
-      - if AppConfig.app_name == "katello"
+      - if AppConfig.app_name != "katello"
+        = hidden_field_tag 'activation_key[environment_id]', @environment.id unless @environment.nil?
+      - else
         .promotion_paths
           = hidden_field_tag 'activation_key[environment_id]', @environment.id unless @environment.nil?
           .grid_2.ra

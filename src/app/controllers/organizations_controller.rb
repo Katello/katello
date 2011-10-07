@@ -70,6 +70,17 @@ class OrganizationsController < ApplicationController
     begin
       @organization = Organization.new(:name => params[:name], :description => params[:description], :cp_key => params[:name].tr(' ', '_'))
       @organization.save!
+
+      # Create a default environment to work in
+      if AppConfig.app_name != "katello"
+        env_params = {:name => "Headpin",
+                  :description => "Default environment for Headpin",
+                  :prior => @organization.locker.id,
+                  :organization_id => @organization.id}
+        @environment =  KTEnvironment.new env_params
+        @environment.save!
+      end
+
       notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
       # TODO: example - create permission for the organization
     rescue Exception => error
