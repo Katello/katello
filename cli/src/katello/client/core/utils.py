@@ -183,7 +183,7 @@ class Printer:
                 continue
             if col['multiline']:
                 value = text_to_line(value)
-            print str(value).ljust(width),
+            print self.u_str(value).ljust(width),
             print self._delim,
 
 
@@ -192,18 +192,28 @@ class Printer:
         #return widths
         for col in self._columns:
             key = col['attr_name']
-            widths[key] = len(str(col['name']))+1
+            widths[key] = len(self.u_str(col['name']))+1
             for item in items:
-                if ( key in item ) and ( widths[key] < len(str(item[key])) ):
-                    widths[key] = len(str(item[key]))+1
+                value = self.u_str(item[key])
+                if ( key in item ) and ( widths[key] < len(value) ):
+                    widths[key] = len(value)+1
 
         return widths
 
+    def u_str(self, value):
+        """
+        Casts value to string unless it's unicode.
+        There is a problem using str on unicode values.
+        """
+        if not isinstance(value, unicode):
+            return str(value)
+        else:
+            return value
 
     def _minColumnWidth(self):
         width = 0
         for col in self._columns:
-            width = len(str(col['name'])) if (len(str(col['name'])) > width) else width
+            width = len(self.u_str(col['name'])) if (len(self.u_str(col['name'])) > width) else width
 
         return width
 

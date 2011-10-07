@@ -292,7 +292,7 @@ class KatelloServer(Server):
         """
         response_body = response.read()
         try:
-            response_body = json.loads(response_body)
+            response_body = json.loads(response_body, encoding='utf-8')
         except:
             pass
 
