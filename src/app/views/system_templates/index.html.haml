@@ -93,8 +93,11 @@
                 SPRITE
               %span.text
                 = _("Save")
-            .cs_action.disabled
-
+            #download_template.cs_action
+              %span#save_template_icon.sprite
+                SPRITE
+              %span.text
+                = _("Download") 
 
 
     = render :partial=>"common/tupane"

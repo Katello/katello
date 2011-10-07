@@ -49,24 +49,28 @@ $(document).ready(function() {
     var original_top = Math.floor($('.left').position(top).top);
     var subpanel_top =  Math.floor($('.left').position(top).top + subpanelSpacing);
 
-    $('.block').live('click', function(e) {
-        activeBlock = $(this);
-        ajax_url = activeBlock.attr("data-ajax_url");
-        activeBlockId = activeBlock.attr('id');
-
-        if(e.ctrlKey && !thisPanel.hasClass('opened')) {
-            if(activeBlock.hasClass('active')){activeBlock.removeClass('active');}
-            else {
-                activeBlock.addClass('active');
-            }
+    $('.block').live('click', function(event) {
+        if( event.target.nodeName === "A" && event.target.className.match('content_add_remove') ){
+            return false;
         } else {
-            if(activeBlock.hasClass('active')){ KT.panel.closePanel(thisPanel); }
-            else { $.bbq.pushState({panel:activeBlockId}); }
+	        activeBlock = $(this);
+	        ajax_url = activeBlock.attr("data-ajax_url");
+	        activeBlockId = activeBlock.attr('id');
+	
+	        if(event.ctrlKey && !thisPanel.hasClass('opened')) {
+	            if(activeBlock.hasClass('active')){activeBlock.removeClass('active');}
+	            else {
+	                activeBlock.addClass('active');
+	            }
+	        } else {
+	            if(activeBlock.hasClass('active')){ KT.panel.closePanel(thisPanel); }
+	            else { $.bbq.pushState({panel:activeBlockId}); }
+	        }
+	        //update the selected count
+	        KT.panel.updateResult();
+	
+	        return false;
         }
-        //update the selected count
-        KT.panel.updateResult();
-
-        return false;
     });
 
 
@@ -114,8 +118,11 @@ $(document).ready(function() {
             success: function(data) {
                 thisPanel.find(".panel-content").html(data);
                 KT.panel.panelResize($('#panel_main'), false);
+                KT.panel.get_expand_cb()();
+
             }
         });
+
         return false;
     });
 
@@ -190,7 +197,7 @@ KT.panel = (function($){
         switch_content_cb   = function() {},
 	
 		select_item = function(activeBlockId) {
-            var activeBlock = $('#' + activeBlockId),
+            var activeBlock = $('#' + KT.common.escapeId(activeBlockId)),
             	ajax_url = activeBlock.attr("data-ajax_url"),
             	previousBlockId = null;
             	
@@ -200,8 +207,10 @@ KT.panel = (function($){
             if(!thisPanel.hasClass('opened') && thisPanel.attr("data-id") !== activeBlockId){
                 $('.block.active').removeClass('active');
                 // Open the Panel                           /4
+                thisPanel.css({"z-index":"200"});
+                thisPanel.parent().css({"z-index":"1"});
                 thisPanel.animate({ left: (panelLeft) + "px", opacity: 1}, 200, function(){
-                    $(this).css({"z-index":"200"});
+                    //$(this).css({"z-index":"200"});
                 }).removeClass('closed').addClass('opened').attr('data-id', activeBlockId);
                 
                 activeBlock.addClass('active');
@@ -299,8 +308,7 @@ KT.panel = (function($){
                     left: 0,
                     opacity: 0
                 }, 400, function(){
-                    $(this).css({"z-index":"0"});
-                    $(this).parent().css({"z-index":"1"});
+                    $(this).css({"z-index":"-1"});
                 }).removeClass('opened').addClass('closed').attr("data-id", "");
                 content.html('');
                 
@@ -320,8 +328,7 @@ KT.panel = (function($){
                     left: 0,
                     opacity: 0
                 }, 400, function(){
-                    $(this).css({"z-index":"0"});
-                    $(this).parent().css({"z-index":"0"});
+                    $(this).css({"z-index":"-1"});
                 }).removeClass('opened').addClass('closed');
                 updateResult();
             }
@@ -361,10 +368,7 @@ KT.panel = (function($){
                 if (search)
                     params.search = search;
                 
-                list.append(jQuery('<div/>', {
-                    'id': "list-spinner"
-                }));
-                $('#list-spinner').html( "<img src='images/spinner.gif' class='ajax_scroll'>");
+                $(".expand_list").append('<div class="list-spinner"> <img src="/katello/images/spinner.gif" class="ajax_scroll">  </div>');
 
                 $.ajax({
                     type: "GET",
@@ -375,7 +379,7 @@ KT.panel = (function($){
                         
                         retrievingNewContent = false;
                         expand_list.append(data);
-                        $('#list-spinner').remove();
+                        $('.list-spinner').remove();
                         
                         if (data.length == 0) {
                             list.removeClass("ajaxScroll");
@@ -383,7 +387,7 @@ KT.panel = (function($){
                         extended_cb();
                     },
                     error: function() {
-                        $('#list-spinner').remove();
+                        $('.list-spinner').remove();
                         retrievingNewContent = false;
                     }
                 });
@@ -411,7 +415,7 @@ KT.panel = (function($){
                             left: ''
                         });
                     } else {
-                    	if( !isfixed && (jQPanel.offset().top - $(window).scrollTop()) > 40){
+                    	if( !isfixed && Math.abs(jQPanel.offset().top - $(window).scrollTop()) > 40){
 	                        jQPanel.stop().css({
 	                            position: 'fixed',
 	                            top: 40,
@@ -474,6 +478,7 @@ KT.panel = (function($){
     return {
         set_extended_cb         : function(callBack){ extended_cb = callBack; },
         set_expand_cb           : function(callBack){ expand_cb = callBack; },
+        get_expand_cb           : function(){ return expand_cb },
         set_contract_cb         : function(callBack){ contract_cb = callBack; },
         set_switch_content_cb	: function(callBack){ switch_content_cb = callBack; },
         select_item				: select_item,

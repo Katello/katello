@@ -82,19 +82,13 @@ class TemplateAPI(KatelloAPI):
         return self.server.PUT(path, tplData)[1]
 
 
-    def update_content(self, tplId, actionName, params):
-        action = {
-            'do': actionName
-        }
-        action.update(params)
+    def add_content(self, tplId, contentType, attrs):
+        path = "/api/templates/%s/%s/" % (str(tplId), contentType)
+        return self.server.POST(path, attrs)[1]
 
-        path = "/api/templates/%s/update_content" % str(tplId)
-        return self.server.PUT(path, action)[1]
-
-
-    def promote(self, template_id):
-        path = "/api/templates/%s/promote" % str(template_id)
-        return self.server.POST(path)[1]
+    def remove_content(self, tplId, contentType, contentId):
+        path = "/api/templates/%s/%s/%s/" % (str(tplId), contentType, str(contentId))
+        return self.server.DELETE(path)[1]
 
     def promotion_status(self, task_id):
         path = "/api/tasks/%s" % str(task_id)

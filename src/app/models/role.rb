@@ -27,6 +27,9 @@ class Role < ActiveRecord::Base
   #validates_associated :permissions
   accepts_nested_attributes_for :permissions, :allow_destroy => true
 
+  # scope for use by auto_complete_search to only show readable non-self roles
+  scope :completer_scope, lambda {self.readable.non_self}
+
   scoped_search :on => :name, :complete_value => true, :rename => :'role.name'
   scoped_search :in => :resource_types, :on => :name, :complete_value => true, :rename => :'permission.type'
   scoped_search :in => :search_verbs, :on => :verb, :complete_value => true, :ext_method => :search_by_verb, :only_explicit => true, :rename => :'permission.verb'

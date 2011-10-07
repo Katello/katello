@@ -69,6 +69,23 @@ class RepoAPI(KatelloAPI):
         path = "/api/repositories/%s/package_groups" % repoid
         return self.server.GET(path)[1]
 
+    def packagegroup_by_id(self, repoid, groupId):
+        path = "/api/repositories/%s/package_groups/" % repoid
+        groups = self.server.GET(path, {"group_id": groupId})[1]
+        if len(groups) == 0:
+            return None
+        else:
+            return groups[0]
+
     def packagegroupcategories(self, repoid):
         path = "/api/repositories/%s/package_group_categories/" % repoid
         return self.server.GET(path)[1]
+
+    def packagegroupcategory_by_id(self, repoid, categoryId):
+        path = "/api/repositories/%s/package_group_categories/" % repoid
+        categories = self.server.GET(path, {"category_id": categoryId})[1]
+        if len(categories) == 0:
+            return None
+        else:
+            return categories[0]
+            

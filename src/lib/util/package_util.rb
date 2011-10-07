@@ -95,5 +95,30 @@ module Katello
       name =~ NVR_RE and name =~ EPOCH_RE
     end
 
+
+    def PackageUtils.find_latest_packages packages
+      latest_pack = nil
+      selected_packs = []
+
+      packages.each do |pack|
+
+        next if pack.nil?
+
+        pack = pack.with_indifferent_access
+        if (latest_pack.nil?) or
+           (pack[:epoch] > latest_pack[:epoch]) or
+           (pack[:epoch] == latest_pack[:epoch] and pack[:release] > latest_pack[:release]) or
+           (pack[:epoch] == latest_pack[:epoch] and pack[:release] == latest_pack[:release] and pack[:version] > latest_pack[:version])
+          latest_pack = pack
+          selected_packs = [pack]
+
+        elsif (pack[:epoch] == latest_pack[:epoch] and pack[:release] == latest_pack[:release] and pack[:version] == latest_pack[:version])
+          selected_packs << pack
+        end
+      end
+
+      selected_packs
+    end
+
   end
 end

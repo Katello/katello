@@ -11,8 +11,6 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-
-
 var notices = (function() {
     return {
         setup_notices: function(pollingTimeOut) {
@@ -24,15 +22,18 @@ var notices = (function() {
           //start continual checking for new notifications
           notices.start();
         },
-        displayNotice: function(level, notices) {
-            var notices= $.parseJSON(notices),
+        clearPreviousFailures: function(requestType) {
+            $('.' + requestType).closest('.jnotify-notification').remove();
+        },
+        displayNotice: function(level, notice, requestType) {
+            var noticesParsed = $.parseJSON(notice),
                 options = {
                     type: level, 
                     slideSpeed: 200,
                     alwaysClosable: true
                 },
                 generate_list = function(notices){
-                    var notices_list = '<ul>',
+                    var notices_list = '<ul class='+requestType+'>',
                         i, length = notices.length;
                     
                     for( i=0; i < length; i += 1) {
@@ -42,7 +43,11 @@ var notices = (function() {
 
                     return notices_list;
                 };
-            
+
+            if (level === 'success') {
+                notices.clearPreviousFailures(requestType);
+            }
+
             if ((level === "error") || (level === "warning")) {
                 options["sticky"] = true;
                 options["fadeSpeed"] = 600;
@@ -51,16 +56,16 @@ var notices = (function() {
                 options["fadeSpeed"] = 600;
             }
 
-            if( notices['validation_errors'] !== undefined ){
-                var validation_html = generate_list(notices['validation_errors']);
+            if( noticesParsed['validation_errors'] !== undefined ){
+                var validation_html = generate_list(noticesParsed['validation_errors']);
                 validation_html = '<span>' + i18n.validation_errors + '</span>' + validation_html;
                 $.jnotify(validation_html, options);
                 $('.jnotify-message ul').css({'list-style': 'disc',
                               'margin-left': '30px'});    
             } 
-            if( notices['notices'].length !== 0 ){
-                $.jnotify(generate_list(notices['notices']), options);
-            }  
+            if( noticesParsed['notices'].length !== 0 ){
+                $.jnotify(generate_list(noticesParsed['notices']), options);
+            }
         },
         addNotices: function(data) {
             if (!data || data.new_notices.length === 0) {
@@ -72,10 +77,8 @@ var notices = (function() {
                 $("#unread_notices").text(data.unread_count);
             }
 
-            
-            
             $.each(data.new_notices, function(index, notice) {
-                notices.displayNotice(notice.level, window.JSON.stringify({ "notices": [notice.text] }));
+                notices.displayNotice(notice.level, window.JSON.stringify({ "notices": [notice.text] }), notice.request_type);
             });
 
             return true;
@@ -90,7 +93,6 @@ var notices = (function() {
               dataType: 'json',
               global: false,
               success: notices.addNotices
-              
             });
         },
         checkNoticesInResponse : function(xhr) {
@@ -100,7 +102,8 @@ var notices = (function() {
                 message = xhr.getResponseHeader('X-Message');
                 if (message) {
                     messageType = xhr.getResponseHeader('X-Message-Type');
-                    notices.displayNotice(messageType, KT.common.decode(message));
+                    messageRequestType = xhr.getResponseHeader('X-Message-Request-Type');
+                    notices.displayNotice(messageType, KT.common.decode(message), messageRequestType);
                 }
             }
         },

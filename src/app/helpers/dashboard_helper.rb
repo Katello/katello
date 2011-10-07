@@ -79,6 +79,7 @@ module DashboardHelper
 
   def sync_percentage(product)
     stat =product.sync_status.progress
+    return 0 if stat.total_size == 0
     (stat.total_size - stat.size_left)*100/stat.total_size
   end
 
@@ -93,7 +94,7 @@ module DashboardHelper
     types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
 
     to_ret = []
-    (rand(5) + 5).times{|num|
+    (rand(5) + 10).times{|num|
       errata = OpenStruct.new
       errata.e_id = "RHSA-2011-01-#{num}"
       errata.systems = ([1]*(rand(10) + 1)).collect{|i| "server-" + rand(10).to_s + ".example.com"}
@@ -115,4 +116,10 @@ module DashboardHelper
     end
   end
 
+  def get_checkin(system)
+    if system.checkinTime
+      return  format_time system.checkinTime
+    end
+    _("Never checked in.")
+  end
 end

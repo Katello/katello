@@ -12,8 +12,11 @@
 
 require 'http_resource'
 require 'resources/pulp'
+require 'resources/cdn'
+require 'openssl'
 
 module Glue::Pulp::Repos
+  SUPPORTED_ARCHS = %w[noarch i386 i686 ppc64 s390x x86_64]
 
   def self.included(base)
     base.send :include, InstanceMethods
@@ -90,6 +93,22 @@ module Glue::Pulp::Repos
       async_tasks
     end
 
+    def package_groups env, search_args = {}
+      groups = []
+      self.repos(env).each do |repo|
+        groups << repo.package_groups(search_args)
+      end
+      groups.flatten(1)
+    end
+
+    def package_group_categories env, search_args = {}
+      categories = []
+      self.repos(env).each do |repo|
+        categories << repo.package_group_categories(search_args)
+      end
+      categories.flatten(1)
+    end
+
     def has_package? id
       self.repos(env).each do |repo|
         return true if repo.has_package? id
@@ -115,23 +134,16 @@ module Glue::Pulp::Repos
       end.flatten(1)
     end
 
-    def find_latest_package_by_name env, name
-      latest_pack = nil
+    def find_latest_packages_by_name env, name
 
-      self.repos(env).each do |repo|
-        pack = repo.find_latest_package_by_name name
-
-        next if pack.nil?
-
-        if (latest_pack.nil?) or
-           (pack[:epoch] > latest_pack[:epoch]) or
-           (pack[:epoch] == latest_pack[:epoch] and pack[:release] > latest_pack[:release]) or
-           (pack[:epoch] == latest_pack[:epoch] and pack[:release] == latest_pack[:release] and pack[:version] > latest_pack[:version])
-          latest_pack = pack
-          latest_pack[:repo_id] = repo.id
+      packs = self.repos(env).collect do |repo|
+        repo.find_latest_packages_by_name(name).collect do |pack|
+          pack[:repo_id] = repo.id
+          pack
         end
-      end
-      latest_pack
+      end.flatten(1)
+
+      Katello::PackageUtils.find_latest_packages packs
     end
 
     def has_erratum? id
@@ -236,13 +248,12 @@ module Glue::Pulp::Repos
       Glue::Pulp::Repo.repo_id(self.cp_id.to_s, content_name.to_s, env_name, self.organization.name)
     end
 
-    def repository_url(content_url, substitutions = {})
+    def repository_url(content_url)
       if self.provider.provider_type == Provider::CUSTOM
         url = content_url.dup
       else
         url = self.provider[:repository_url] + content_url
       end
-      substitutions.each { |var, val| url.gsub!("$#{var}",val) }
       url
     end
 
@@ -277,23 +288,31 @@ module Glue::Pulp::Repos
       self.productContent.collect do |pc|
         cert = self.certificate
         key = self.key
-        ca = File.open("#{Rails.root}/config/candlepin-ca.crt", 'rb') { |f| f.read }
-        archs = self.arch.split(",")
-        archs.each do |arch|
+        ca = File.read(CDN::CdnResource.ca_file)
+
+        cdn_var_substitutor = CDN::CdnVarSubstitutor.new(self.provider[:repository_url],
+                                                         :ssl_client_cert => OpenSSL::X509::Certificate.new(cert),
+                                                         :ssl_client_key => OpenSSL::PKey::RSA.new(key))
+        substitutions_with_paths = cdn_var_substitutor.substitute_vars(pc.content.contentUrl)
+
+        substitutions_with_paths.each do |(substitutions, path)|
+          feed_url = repository_url(path)
+          arch = substitutions["basearch"] || "noarch"
           # temporary solution unless pulp supports another archs
-          unless %w[noarch i386 i686 ppc64 s390x x86_64].include? arch
+          unless SUPPORTED_ARCHS.include? arch
             Rails.logger.error("Pulp does not support arch '#{arch}'")
             next
           end
-          repo_name = "#{pc.content.name} #{arch}".gsub(/[^a-z0-9\-_ ]/i,"")
+          repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
           repo = Glue::Pulp::Repo.new(:id => repo_id(repo_name),
                                       :arch => arch,
-                                      :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, pc.content.name),
+                                      :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, repo_name),
                                       :name => repo_name,
-                                      :feed => repository_url(pc.content.contentUrl, :basearch => arch),
+                                      :feed => feed_url,
                                       :feed_ca => ca,
                                       :feed_cert => cert,
                                       :feed_key => key,
+                                      :content_type => pc.content.type,
                                       :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
                                       :preserve_metadata => orchestration_for == :import_from_cp #preserve repo metadata when importing from cp
                                       )

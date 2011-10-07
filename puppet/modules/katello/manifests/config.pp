@@ -21,27 +21,14 @@ class katello::config {
     owner   => $katello::params::user,
     group   => $katello::params::group,
     mode    => 644,
-    require => Class["katello::install"],
     recurse => true;
   }
-
-  file{"/etc/pki/content/pulp-global-repo.ca":
-    ensure => link,
-    target => "/etc/candlepin/certs/candlepin-ca.crt",
-    require  => [Class["candlepin::config"], Class["pulp::config"] ]
-  }
-
-  exec {"set pulp secured repo":
-    command => "/bin/sed -i 's/enabled: false/enabled: true/' /etc/pulp/repo_auth.conf",
-    require  => [Class["candlepin::config"], Class["pulp::config"] ]
-   }
 
   exec {"katello_db_migrate":
     cwd         => $katello::params::katello_dir,
     user        => $katello::params::user,
     environment => "RAILS_ENV=${katello::params::environment}",
     refreshonly => true,
-    subscribe   => Package["katello"],
     require     => [ Config_file["${katello::params::config_dir}/katello.yml"],
                      Postgres::Createdb[$katello::params::db_name] ],
     command     => "/usr/bin/env rake db:migrate >> ${katello::params::migrate_log} 2>&1",
@@ -53,7 +40,7 @@ class katello::config {
     cwd         => $katello::params::katello_dir,
     user        => $katello::params::user,
     environment => "RAILS_ENV=${katello::params::environment}",
-    command     => "/usr/bin/env rake db:seed >> ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/initdb_done",
+    command     => "/usr/bin/env rake db:migrate >> ${katello::params::migrate_log} 2>&1 && /usr/bin/env rake db:seed >> ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/initdb_done",
     creates => "/var/lib/katello/initdb_done",
     before  => Class["katello::service"],
     require => [ Exec["katello_db_migrate"], Class["candlepin::service"], Class["pulp::service"] ],
@@ -69,7 +56,10 @@ class katello::config {
         "" => undef,
         default => $source,
       },
-      require => Class["katello::install"];
     }
   }
+
+  Class["candlepin::config"] -> File["/etc/pulp/pulp.conf"]
+  Class["candlepin::config"] -> File["/etc/pulp/repo_auth.conf"]
+  Class["candlepin::config"] -> File["/etc/pki/content/pulp-global-repo.ca"]
 }

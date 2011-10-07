@@ -1,20 +1,12 @@
 class apache2::config {
 
-  group { $apache2::params::group: ensure => present, require => Class["apache2::install"] }
-  user  { $apache2::params::user:
-  ensure => present, home => $apache2::params::home,
-    managehome => false, membership => minimum, groups => [],
-    shell => "/sbin/nologin", require => Package["httpd"],
-  }
-
   # support RHEL5/RHEL6 only
   file{
     "/etc/httpd/conf/httpd.conf":
     # does not force config file for now until we sort out our vhost layout
     #  source  => ["puppet:///modules/apache2/etc/httpd/conf/httpd.conf.${lsbmajdistrelease}","puppet:///apache2/etc/httpd/conf/httpd.conf.6"],
       mode    => 0644,
-      notify  => Exec["reload-apache2"],
-      require => Class["apache2::install"];
+      notify  => Exec["reload-apache2"];
 #ensure that only managed apache file are present - commented out by default
     "/etc/httpd/conf.d":
       source  => "puppet:///modules/apache2/empty",
@@ -24,7 +16,6 @@ class apache2::config {
       # recurse => true, purge => true, force => true,
       mode    => 0644,
       notify  => Exec["reload-apache2"],
-      require => Class["apache2::install"],
   }
 
 }
