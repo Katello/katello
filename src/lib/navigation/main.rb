@@ -13,6 +13,7 @@ require 'navigation/content_management'
 require 'navigation/administration'
 require 'navigation/organization'
 require 'navigation/dashboard'
+require 'navigation/systems'
 require 'navigation/main'
 
 module Navigation
@@ -22,15 +23,11 @@ module Navigation
     base.send :include, MainMenu
     base.send :include, OrganizationMenu
     base.send :include, DashboardMenu
+    base.send :include, SystemMenu
   end
 
   module MainMenu
    def menu_main
-      menu_systems = {:key => :systems,
-     :name => N_("Systems"),
-     :url => systems_path,
-     :class=>'systems',
-      }
     [ menu_dashboard, menu_contents, menu_systems, menu_organization, menu_administration ]
    end
   end
