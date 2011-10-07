@@ -51,7 +51,7 @@ class Api::FiltersController < Api::ApiController
   end
 
   def find_filter
-    @filter = Filter.first(:conditions => {:pulp_key => params[:id]})
+    @filter = Filter.first(:conditions => {:pulp_id => params[:id]})
     raise HttpErrors::NotFound, _("Couldn't find filter '#{params[:id]}'") if @filter.nil?
     @filter
   end
