@@ -1,12 +1,15 @@
 @import "katello";
 
 /* box for "errors" on the custom 500 error page */
-.dashboard {
-    
+.dash {
+    $big_height: 356px;
+    $big_width: 490px;
+    $small_height: 153px;
+
     @include border-radius(3px);
     background-color: $lightergrey_color;
     border:1px solid $border_color;
-    padding: 2px 3px 0px 8px;
+    padding: 10px 10px 10px 15px;
     margin-bottom: 10px;
     @include background-image(linear-gradient(#F7F7F7, #EEEEEE));
     position: relative;
@@ -14,35 +17,63 @@
         margin-top: 3px;
     }
     h1, h2, h3, h4, h5 {
-      font-weight: normal; //as per kyle's request
+      font-weight: normal;
+    }
+    h2 {
+      font-size: 145%;
+    }
+    hr {
+      height: 1px;
+      border: 0;
+      background: #c7c7c7;
+
     }
     .dashhead {
         position: relative;
     }
+
+
+    #dashboard_notifications {
+
+    }
+
     #dashboard_subscriptions {
       height: 170px;
-      
+      color: $font_color;
+      .sub_count {
+        font-family: $headlinefont;
+        font-size: 140%;
+      }
+      .sys_count {
+        font-size: 220%;
+        font-weight: bold;
+        text-shadow: 0px 1px 0px #ffffff;
+        margin-left: 20px;
+      }
       #sub_graph {
         width: 150px;
         height: 170px;
       }
+
       h4 {
         display: inline;
         margin-left: 10px;
       }
       h5 {
         display: inline;
-        font-size: 130%;
+        font-size: 115%;
       }
       .left {
         width: 300px;
         display: inline-block;
 
         .icon {
-          margin-left: 0px;
+          margin-left: 3px;
+          margin-right: 10px;
+          margin-top: 3px;
           width: 15px;
           height: 15px;
-          margin-top: 3px;
+
         }
         .red_icon {background: $status_icons_red_small;}
         .yellow_icon {background: $status_icons_yellow_small;}
@@ -52,9 +83,11 @@
         width: 150px;
         display: inline-block;
         position: relative;
+        margin-right: 10px;
+        margin-top: -20px;
         #overlay {
             background: url("../../../images/chart_overlay.png") no-repeat;
-            height: 118px;
+            height: 130px;
             position: absolute;
             right: 15px;
             top: 28px;
@@ -67,12 +100,22 @@
     }
     #dashboard_errata {
       .scroll-pane {
-        height: 180px;
+        height: $big_height - 26;
       }
       .list {
-        height: inherit;
+        height: $big_height - 10;
         min-height: inherit;
       }
+
+      .jspPane {
+        .errata {
+          &:first-child {
+            padding-top: 4px;
+          }
+        }
+      }
+
+
       .block_head {
         background-color: lighten($stroke_color,8%);
         display: block;
@@ -80,7 +123,7 @@
         color: $lightgrey_color;
 
         .column_head {
-          //display: inline-block;
+          margin-left: 2px;
           float: left;
           height: inherit;
           min-height: inherit;
@@ -105,87 +148,82 @@
           text-transform: uppercase;
       }
 
+      .system_list {
+        display: none;
+      }
+
       .system {
         font-size: 90%;
       }
       .col_1 {
         display: inline-block;
-        width: 10%;
-        padding-left: 1%;
-        //float: left;
+        width: $big_width * .07;
+        padding-left: 2px;
+
       }
       .col_2 {
         display: inline-block;
-        width: 40%;
-        padding-left: 1%;
-       // float: left;
-        @extend .one-line-ellipsis;
+        width: $big_width * .4;
+        padding-left: 2px;
       }
       .subcol_2 {
         display: inline-block;
         width: 30%;
-        padding-left: 1%;
-       // float: left;
-        @extend .one-line-ellipsis;
+        padding-left: 2px;
       }
       .subcol_3 {
         display: inline-block;
         width: 50%;
-        padding-left: 1%;
-       // float: left;
-        @extend .one-line-ellipsis;
+        padding-left: 2px;
       }
       
       .col_3 {
         display: inline-block;
-        width: 40%;
-        padding-left: 1%;
-       // float: left;
-        @extend .one-line-ellipsis;
+        width: $big_width* .42;
+        padding-left: 2px;
       }
 
       .collapsed {
         float: left;
         width: 16px;
         height: 16px;
-        background: $arrow_min_img;
+        background: $arrow_min_img_small;
         margin-top: 2px;
-        margin-left: 4px;
+        margin-right: 2px;
       }
       .expanded {
         float: left;
         width: 16px;
         height: 16px;
-        background: $arrow_max_img;
+        background: $arrow_max_img_small;
         margin-top: 2px;
-        margin-left: 4px;
+        margin-right: 2px;
       }
 
-      .security_icon {
+      .errata_icon {
+        margin-left: 6px;
         float: left;
         width: 16px;
         height: 16px;
+        margin-top: 4px;
+      }
+      .security_icon {
         background: $shield_icon_black;
-        margin-top: 2px;
+        @extend .errata_icon;
       }
       .enhancement_icon {
-        float: left;
-        width: 16px;
-        height: 16px;
         background: $plus_icon_black;
-        margin-top: 2px;
+        @extend .errata_icon;
       }
       .bugzilla_icon {
-        float: left;
-        width: 16px;
-        height: 16px;
         background: $bug_icon_black;
-        margin-top: 2px;
+        @extend .errata_icon;
       }
 
 
     }
     #dashboard_promotions {
+
       h5 {
         display: inline;
       }
@@ -203,6 +241,7 @@
           display: inline-block;
           width: 115px;
           overflow: hidden;
+          margin-bottom: -5px;
         }
       }
     }
@@ -260,29 +299,36 @@
 
     }
     #dashboard_systems {
+        .icon {
+          margin-left: 0px;
+          width: 15px;
+          height: 15px;
+          margin-top: 3px;
+        }
+      .red_icon {background: $status_icons_red_small;}
+      .yellow_icon {background: $status_icons_yellow_small;}
+      .green_icon {background: $status_icons_green_small;}
+
       .system_entry {
-        .col_1 {
-          width: 200px;
+        .col_0 {
+          width: 5%;
           padding-right: 10px;
           display: inline-block;
-          vertical-align: super;
+        }
+        .col_1 {
+          width: 35%;
+          padding-right: 10px;
+          display: inline-block;
+          vertical-align: middle;
         }
         .col_2 {
           display: inline-block;
-          width: 160px;
+          width: 20%;
         }
-        .col_block {
-          display: block;
-          width: 160px;
-        }
-        .button_col_4 {
-          width:60px;
-          display: inline-block;
-          vertical-align: top;
-          .button {
-            vertical-align: top;
-          }
 
+        .col_3 {
+          display: inline-block;
+          width: 30%;
         }
 
       }
@@ -311,20 +357,20 @@
 
     .gears_icon {
       width: 16px;
-      @include action-icon($gear_icon_black);
+      @include action-icon($gears_icon_black);
       margin-left: 0px;
     }
 
     .clock_icon {
       width: 16px;
-      @include action-icon($gear_icon_black);
+      @include action-icon($gears_icon_black);
       margin-left: 0px;
     }
 
     .small_widget {
         overflow: hidden;
-        height: 130px;
-        width: 380px;
+        height: $small_height;
+        width: 375px;
         list-style: None;
         li {
           margin-bottom: 3px;
@@ -333,28 +379,29 @@
           margin-bottom: 5px;
         }
         h5 {
-          margin-bottom: -5px;
+          margin-bottom: -1px;
           margin-top: 0;
-          font-size: 125%;
+          font-size: 110%;
           
         }
       }
 
     .big_widget {
         overflow: hidden;
-        height: 200px;
-        width: 500px;
+        height: $big_height;
+        width: $big_width;
         list-style: None;
         li {
           margin-bottom: 3px;
         }
         li {
-          margin-bottom: 5px;
+          margin: 10px 0;
         }
         h5 {
           margin-bottom: -5px;
           margin-top: 0;
         }
+
       }
       .loading {
         position: absolute;
@@ -372,8 +419,8 @@
 
 }
 .dropbutton {
-    height: 20px;
-    width: 20px;
+    height: 16px;
+    width: 17px;
     @include border-radius(23px);
     border:1px solid $border_color;
     background: #f0f0f0;
@@ -383,11 +430,11 @@
     }
     span {
         height: 16px;
-        width: 16px;
+        width: 32px;
         display: block;
         position: relative;
-        background: $gear_icon;
-        margin: 2px;
+        background: $gear_icon_dark;
+        margin: 0;
     }
 
 }

@@ -7,10 +7,11 @@ Src::Application.routes.draw do
       get :subscriptions
     end
     member do
-      get :subscriptions
-      get :edit_environment
+      get :applied_subscriptions
+      get :available_subscriptions
+      post :remove_subscriptions
+      post :add_subscriptions
       post :update
-      post :update_subscriptions
     end
   end
 
@@ -126,6 +127,7 @@ Src::Application.routes.draw do
     member do
       get :promotion_details
       get :object
+      get :download
       put :update_content
     end
   end
@@ -137,11 +139,13 @@ Src::Application.routes.draw do
     end
     collection do
       get :items
+      get :redhat_provider
+      post :redhat_provider, :action => :update_redhat_provider
     end
     member do
       get :products_repos
-      get :subscriptions
-      post :subscriptions, :action=>:update_subscriptions
+#      get :subscriptions
+#     post :subscriptions, :action=>:update_subscriptions
       get :schedule
     end
   end
@@ -167,10 +171,14 @@ Src::Application.routes.draw do
   end
 
   match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
-  match '/organizations/:org_id/environments/:env_id/system_templates' => 'environments#system_templates', :via => :get, :as => 'system_templates_organization_environment'
 
   resources :organizations do
-    resources :environments
+    resources :environments do
+      member do
+        get :system_templates
+        get :products
+      end
+    end
     resources :providers do
       get 'auto_complete_search', :on => :collection
     end
@@ -256,6 +264,7 @@ Src::Application.routes.draw do
         get :errata
       end
     end
+    match '/systems/:id/subscription' => 'systems#subscribe', :via => :post
 
     resources :providers, :except => [:index] do
       resources :sync, :only => [:index, :create] do
@@ -270,10 +279,28 @@ Src::Application.routes.draw do
     end
 
     resources :templates do
-      post :promote, :on => :member
-      put :update_content, :on => :member
       post :import, :on => :collection
       get :export, :on => :member
+      resources :products, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_product
+        delete :destroy, :on => :member, :action => :remove_product
+      end
+      resources :packages, :controller => :templates_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ } do
+        post   :index, :on => :collection, :action => :add_package
+        delete :destroy, :on => :member, :action => :remove_package
+      end
+      resources :parameters, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_parameter
+        delete :destroy, :on => :member, :action => :remove_parameter
+      end
+      resources :package_groups, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_package_group
+        delete :destroy, :on => :member, :action => :remove_package_group
+      end
+      resources :package_group_categories, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_package_group_category
+        delete :destroy, :on => :member, :action => :remove_package_group_category
+      end
     end
 
     #match '/organizations/:organization_id/locker/repos' => 'environments#repos', :via => :get

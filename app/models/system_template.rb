@@ -94,8 +94,8 @@ class SystemTemplate < ActiveRecord::Base
       :packages => self.packages.map(&:package_name),
       :products => self.products.map(&:name),
       :parameters => ActiveSupport::JSON.decode(self.parameters_json),
-      :package_groups => self.package_groups.map(&:export_hash),
-      :package_group_categories => self.pg_categories.map(&:export_hash)
+      :package_groups => self.package_groups.map(&:name),
+      :package_group_categories => self.pg_categories.map(&:name),
     }
     tpl[:description] = self.description if not self.description.nil?
     tpl[:parent] = self.parent.name if not self.parent.nil?
@@ -115,7 +115,12 @@ class SystemTemplate < ActiveRecord::Base
 
 
   def remove_package package_name
-    package = self.packages.find(:first, :conditions => {:package_name => package_name})
+    if Katello::PackageUtils.is_nvr package_name
+      pack_attrs = Katello::PackageUtils.parse_nvre package_name
+      package = self.packages.find(:first, :conditions => {:package_name => pack_attrs[:name], :version => pack_attrs[:version], :release => pack_attrs[:release], :epoch => pack_attrs[:epoch]})
+    else
+      package = self.packages.find(:first, :conditions => {:package_name => package_name})
+    end
     package.destroy
   end
 
@@ -123,10 +128,11 @@ class SystemTemplate < ActiveRecord::Base
     product = self.environment.products.find_by_name(product_name)
     if product == nil
       raise Errors::TemplateContentException.new("Product #{product_name} not found in this environment.")
+    elsif self.products.include? product
+      raise Errors::TemplateContentException.new("Product #{product_name} is already present in the template.")
     end
-    self.products = (self.products << product).uniq
+    self.products << product
   end
-
 
   def remove_product product_name
     product = self.environment.products.find_by_name(product_name)
@@ -136,26 +142,55 @@ class SystemTemplate < ActiveRecord::Base
     raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{product_name}.")
   end
 
-  def add_package_group pg_attrs
-      self.package_groups.create!(:repo_id => pg_attrs[:repo_id], :package_group_id => pg_attrs[:id])
+  def add_product_by_cpid cp_id
+    product = self.environment.products.find_by_cp_id(cp_id)
+    if product == nil
+      raise Errors::TemplateContentException.new("Product #{cp_id} not found in this environment.")
+    elsif self.products.include? product
+      raise Errors::TemplateContentException.new("Product #{cp_id} is already present in the template.")
+    end
+    self.products << product
   end
 
-  def remove_package_group pg_attrs
-    package_group = self.package_groups.where(:repo_id => pg_attrs[:repo_id], :package_group_id => pg_attrs[:id]).first
+  def remove_product_by_cpid cp_id
+    product = self.environment.products.find_by_cp_id(cp_id)
+    self.products.delete(product)
+    save!
+  rescue ActiveRecord::RecordInvalid
+    raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{cp_id}.")
+  end
+
+  def set_parameter key, value
+    self.parameters[key] = value
+  end
+
+  def remove_parameter key
+    if not self.parameters.has_key? key
+      raise Errors::TemplateContentException.new("Parameter #{key} not found in the template.")
+    end
+    self.parameters.delete(key)
+  end
+
+  def add_package_group pg_name
+    self.package_groups.create!(:name => pg_name)
+  end
+
+  def remove_package_group pg_name
+    package_group = self.package_groups.where(:name => pg_name).first
     if package_group == nil
-      raise Errors::TemplateContentException.new(_("Package group '%s' not found in this template.") % pg_attrs[:repo_id])
+      raise Errors::TemplateContentException.new(_("Package group '%s' not found in this template.") % pg_name)
     end
     package_group.delete
   end
 
-  def add_pg_category pg_cat_attrs
-    self.pg_categories.create!(:repo_id => pg_cat_attrs[:repo_id], :pg_category_id => pg_cat_attrs[:id])
+  def add_pg_category pg_cat_name
+    self.pg_categories.create!(:name => pg_cat_name)
   end
 
-  def remove_pg_category pg_cat_attrs
-    pg_category = self.pg_categories.where(:repo_id => pg_cat_attrs[:repo_id], :pg_category_id => pg_cat_attrs[:id]).first
+  def remove_pg_category pg_cat_name
+    pg_category = self.pg_categories.where(:name => pg_cat_name).first
     if pg_category == nil
-      raise Errors::TemplateContentException.new(_("Package group category '%s' not found in this template.") % pg_cat_attrs[:id])
+      raise Errors::TemplateContentException.new(_("Package group category '%s' not found in this template.") % pg_cat_name)
     end
     pg_category.delete
   end
@@ -180,8 +215,7 @@ class SystemTemplate < ActiveRecord::Base
     else
       #if specified by name, ensure any package with this name is in the next env. If not, promote the latest.
       return [] if to_env.find_packages_by_name(tpl_pack.package_name).length > 0
-      latest = from_env.find_latest_package_by_name(tpl_pack.package_name)
-      from_env.find_packages_by_nvre(latest[:name], latest[:version], latest[:release], latest[:epoch])
+      from_env.find_latest_packages_by_name(tpl_pack.package_name)
     end
   end
 
@@ -195,6 +229,14 @@ class SystemTemplate < ActiveRecord::Base
 
     []
   end
+
+
+  def get_clones
+    Organization.find(self.environment.organization_id).environments.collect do |env|
+      env.system_templates.where(:name => self.name_was)
+    end.flatten(1)
+  end
+
 
   #### Permissions
   def self.list_verbs global = false

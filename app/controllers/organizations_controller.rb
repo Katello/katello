@@ -31,6 +31,7 @@ class OrganizationsController < ApplicationController
 
     {:index =>  index_test,
       :items => index_test,
+      :auto_complete_search => index_test,
       :new => create_test,
       :create => create_test,
       :edit => read_test,
@@ -38,7 +39,6 @@ class OrganizationsController < ApplicationController
       :destroy => delete_test,
     }
   end
-
 
   def section_id
     'orgs'
