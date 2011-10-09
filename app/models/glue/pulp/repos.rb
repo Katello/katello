@@ -368,9 +368,10 @@ module Glue::Pulp::Repos
     end
 
     def del_repos
-      if not self.productContent.nil?
-        self.productContent.collect do |pc|
-          Pulp::Repository.destroy(repo_id(pc.content.name))
+      #destroy all repos in all environmnents
+      self.environments.each do |env|
+        self.repos(env).each do |repo|
+          repo.destroy
         end
       end
       true
