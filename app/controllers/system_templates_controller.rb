@@ -58,8 +58,11 @@ class SystemTemplatesController < ApplicationController
     product_hash = {}
     @products.each{|prd|  product_hash[prd.name] = prd.id}
 
+    package_groups = current_organization.locker.package_groups.collect{|grp| grp[:name]}.sort
+
     retain_search_history
-    render :index, :locals=>{:editable=>SystemTemplate.manageable?(current_organization), :product_hash => product_hash}
+    render :index, :locals=>{:editable=>SystemTemplate.manageable?(current_organization),
+                             :product_hash => product_hash, :package_groups => package_groups}
   end
   
   def items
@@ -205,10 +208,10 @@ class SystemTemplatesController < ApplicationController
     render :json=>Pulp::Package.name_search(name).sort.uniq[0..19]
   end
 
-  def auto_complete_package_groups
-    name = params[:name]
-    current_organization.locker.package_groups
-  end
+  #def auto_complete_package_groups
+  #  name = params[:name]
+  #
+  #end
 
   def create
     

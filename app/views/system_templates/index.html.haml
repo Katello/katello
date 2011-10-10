@@ -16,6 +16,8 @@
     KT.content_breadcrumb = $.parseJSON('#{escape_javascript(template_content_breadcrumb())}');
     KT.template_breadcrumb = $.parseJSON('#{escape_javascript(generate_template_breadcrumb())}');
     KT.product_hash = $.parseJSON('#{escape_javascript(product_hash.to_json)}');
+    KT.package_groups = $.parseJSON('#{escape_javascript(package_groups.to_json)}');
+    
     localize({
       "add": '+ #{_('Add')}',
       "add_plus": '+ #{_('Add')}',
