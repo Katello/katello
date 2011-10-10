@@ -33,17 +33,35 @@ $(document).ready(function() {
   });
   // check if we are viewing systems by environment 
   if (window.env_select !== undefined) {
-    env_select.click_callback = systems_page.env_change;
+    env_select.click_callback = KT.systems_page.env_change;
   }
+
+  KT.systems_page.registerActions();
 
 });
 
-var systems_page = (function() {
+KT.systems_page = (function() {
+
+    var registerActions= function() {
+        var remove = $(".panel_action[data-id=remove_systems]");
+        KT.panel.registerAction("remove_systems",
+            {  url: remove.attr("data-url"),
+               method: remove.attr("data-method"),
+               success_cb: function(ids){
+                $.each(ids,function(index, item){
+                    list.remove("system_" + item);
+                })
+               }
+            }
+        );
+    };
+
   return {
     env_change : function(env_id, element) {
       var url = element.attr("data-url");
       window.location = url;
-    }
+    },
+    registerActions: registerActions
   }
 })();
 
@@ -71,7 +89,8 @@ KT.subs = function() {
                 }
             });
         });
-    }, subSetup = function(){
+    },
+    subSetup = function(){
         var subform = $('#subscribe');
         var subbutton = $('#sub_submit');
         var fakesubbutton = $('#fake_sub_submit');
@@ -97,9 +116,11 @@ KT.subs = function() {
                 }
             });
         });
-    }, spinnerSetup = function(){
+    },
+    spinnerSetup = function(){
         setTimeout("$('.ui-spinner').spinner()",1000);
     };
+    
     return {
         unsubSetup: unsubSetup,
         subSetup: subSetup,
