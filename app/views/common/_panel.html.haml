@@ -12,6 +12,8 @@
     #{_('Select Result')}:
     %br
     #select-result
+    -if actions
+      = render :partial=>actions
   = render :partial=>"common/tupane"
 
   %div.left{:class => left_panel_width ? left_panel_width : 'column_panel_' + columns.length.to_s }

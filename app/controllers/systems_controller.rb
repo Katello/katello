@@ -14,7 +14,8 @@ class SystemsController < ApplicationController
   include AutoCompleteSearch
   include SystemsHelper
 
-  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items]
+  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :bulk_destroy]
+  before_filter :find_systems, :only=>[:bulk_destroy]
 
   skip_before_filter :authorize
   before_filter :find_environment, :only => [:environments, :env_items]
@@ -31,6 +32,7 @@ class SystemsController < ApplicationController
     read_system = lambda{System.find(params[:id]).readable?}
     env_system = lambda{@environment.systems_readable?}
     any_readable = lambda{System.any_readable?(current_organization)}
+    delete_systems = lambda{true}
 
     {
       :index => any_readable,
@@ -45,7 +47,8 @@ class SystemsController < ApplicationController
       :update => edit_system,
       :edit => read_system,
       :show => read_system,
-      :facts => read_system
+      :facts => read_system,
+      :bulk_destroy => delete_systems
     }
   end
 
@@ -219,6 +222,18 @@ class SystemsController < ApplicationController
     render :partial => 'facts', :layout => "tupane_layout"
   end    
 
+  def bulk_destroy
+    @systems.each{|sys|
+      sys.destroy
+    }
+    notice _("#{@systems.length} Systems Removed Successfully")
+    render :text=>""
+  rescue Exception => e
+    errors e
+    render :text=>e, :status=>500
+  end
+
+
   private
 
   include SortColumnList
@@ -234,6 +249,10 @@ class SystemsController < ApplicationController
     @system = System.find(params[:id])
   end
 
+  def find_systems
+    @systems = System.find(params[:ids])
+  end
+
   def setup_options
     @panel_options = { :title => _('Systems'),
                       :col => COLUMNS.keys,
@@ -242,7 +261,8 @@ class SystemsController < ApplicationController
                       :enable_sort => true,
                       :name => controller_display_name,
                       :list_partial => 'systems/list_systems',
-                      :ajax_scroll => items_systems_path()}
+                      :ajax_scroll => items_systems_path(),
+                      :actions => "actions"}
   end
 
   def sys_consumed_pools
