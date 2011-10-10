@@ -121,4 +121,4 @@ SimpleNavigation::Configuration.run do |navigation|
 
   end #end top_level
 
-end #end  navigation
+end #end navigation
