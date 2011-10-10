@@ -131,8 +131,10 @@ class Api::SystemsController < Api::ApiController
   end
   
   def upload_package_profile
-    raise HttpError::BadRequest, _("No package profile received for #{@system.name}") unless params.has_key?(:_json)
-    @system.upload_package_profile(params[:_json])
+    if AppConfig.app_name == "katello"
+      raise HttpError::BadRequest, _("No package profile received for #{@system.name}") unless params.has_key?(:_json)
+      @system.upload_package_profile(params[:_json])
+    end
     render :json => @system.to_json
   end
 
