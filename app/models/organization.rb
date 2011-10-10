@@ -20,6 +20,7 @@ class Organization < ActiveRecord::Base
   has_many :providers
   has_many :environments, :class_name => "KTEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
   has_one :locker, :class_name =>"KTEnvironment", :conditions => {:locker => true}, :dependent => :destroy
+  has_many :filters, :dependent => :destroy, :inverse_of => :organization
 
   attr_accessor :parent_id,:pools,:statistics
 
