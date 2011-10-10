@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.89
+Version:        0.1.90
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -236,6 +236,23 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Oct 07 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.90-1
+- fix for katello-reset-dbs - pgsql support for initdb
+- sms - introducing subscriptions controller
+- sms - refactoring subscription -> subscriptions path
+- sms - moving subscriptions list action into the backend
+- sms - moving unsubscribe action into the backend
+- dashboard - one last css vertical spacing issue fix
+- making css for navigation require a little space in the subnav if there are
+  no subnav elements
+- dashboard - fixing issue where user with no orgs would recieve an error upon
+  login
+- panel - minor update to escape special characters in id
+- dashboard - more dashboard css fixes
+- 741669 - fixing issue where user with no org could not access their own user
+  details page
+- dashboard - adding ui tweaks from uxd
+
 * Thu Oct 06 2011 Shannon Hughes <shughes@redhat.com> 0.1.89-1
 - adding reporting gems deps (shughes@redhat.com)
 

@@ -107,6 +107,7 @@ module Glue::Candlepin::Consumer
     def unsubscribe pool
       Rails.logger.info "Unsubscribing to pool '#{pool}' for : #{name}"
       ents = self.entitlements.collect {|ent| ent["id"] if ent["pool"]["id"] == pool}.compact
+      raise ArgumentError, "Not subscribed to the pool #{pool}" if ents.count < 1
       ents.each { |ent|
         Candlepin::Consumer.remove_entitlement self.uuid, ent        
       }
