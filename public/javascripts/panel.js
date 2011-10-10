@@ -208,7 +208,7 @@ KT.panel = (function($){
                 thisPanel.css({"z-index":"200"});
                 thisPanel.parent().css({"z-index":"1"});
                 thisPanel.animate({ left: (panelLeft) + "px", opacity: 1}, 200, function(){
-                    //$(this).css({"z-index":"200"});
+                    $(this).css({"z-index":"200"});
                 }).removeClass('closed').addClass('opened').attr('data-id', activeBlockId);
                 
                 activeBlock.addClass('active');
@@ -220,6 +220,8 @@ KT.panel = (function($){
                 closeSubPanel(subpanel); //close the subpanel if it is open
                 // Keep the thisPanel open if they click another block
                 // remove previous classes besides opened
+                thisPanel.css({"z-index":"200"});
+                thisPanel.parent().css({"z-index":"1"});
                 thisPanel.addClass('opened').attr('data-id', activeBlockId);
                 $("#" + previousBlockId).removeClass('active');
                 activeBlock.addClass('active');
@@ -299,7 +301,7 @@ KT.panel = (function($){
         closePanel = function(jPanel){
             var content = jPanel.find('.panel-content'),
             	position;
-            
+
 	        if(jPanel.hasClass("opened")){
                 $('.block.active').removeClass('active');
                 jPanel.animate({
@@ -444,7 +446,6 @@ KT.panel = (function($){
             }
         },
         hash_change = function(event) {
-        	console.log('test');
             var refresh = $.bbq.getState("panel");
             if(refresh){ 
                 select_item(refresh);
@@ -486,6 +487,7 @@ KT.panel = (function($){
         			element.find('section').fadeIn(function(){
         				$(window).trigger( 'hashchange' );
         			});
+        			console.log('ajax list content loaded');
         		});
         	});
         };
