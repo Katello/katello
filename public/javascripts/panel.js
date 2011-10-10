@@ -496,7 +496,6 @@ KT.panel = (function($){
         			element.find('section').fadeIn(function(){
         				$(window).trigger( 'hashchange' );
         			});
-        			console.log('ajax list content loaded');
         		});
         	});
         };
