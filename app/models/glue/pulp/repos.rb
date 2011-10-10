@@ -16,7 +16,6 @@ require 'resources/cdn'
 require 'openssl'
 
 module Glue::Pulp::Repos
-  SUPPORTED_ARCHS = %w[noarch i386 i686 ppc64 s390x x86_64]
 
   def self.included(base)
     base.send :include, InstanceMethods
@@ -304,11 +303,6 @@ module Glue::Pulp::Repos
         substitutions_with_paths.each do |(substitutions, path)|
           feed_url = repository_url(path)
           arch = substitutions["basearch"] || "noarch"
-          # temporary solution unless pulp supports another archs
-          unless SUPPORTED_ARCHS.include? arch
-            Rails.logger.error("Pulp does not support arch '#{arch}'")
-            next
-          end
           repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
           repo = Glue::Pulp::Repo.new(:id => repo_id(repo_name),
                                       :arch => arch,
@@ -322,7 +316,15 @@ module Glue::Pulp::Repos
                                       :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
                                       :preserve_metadata => orchestration_for == :import_from_cp #preserve repo metadata when importing from cp
                                       )
-          repo.create
+          begin
+            repo.create
+          rescue RestClient::InternalServerError => e
+            if e.message.include? "Architecture must be one of"
+              Rails.logger.error("Pulp does not support arch '#{arch}'")
+            else
+              raise e
+            end
+          end
         end
       end
     end
