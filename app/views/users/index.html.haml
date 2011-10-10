@@ -1,9 +1,8 @@
-= javascript :user, :edit, :form, :multiselect, :role
+.grid_16#main
+  = two_panel(@users, @panel_options)
+
+= javascript :user, :edit, :form, :multiselect
 
 = javascript do
   :javascript
     var current_username = '#{_(user.username)}';
-
-
-.grid_16#main
-  = two_panel(@users, @panel_options)
