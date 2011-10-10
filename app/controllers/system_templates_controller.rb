@@ -35,6 +35,7 @@ class SystemTemplatesController < ApplicationController
       :object => read_test,
       :promotion_details => read_test,
       :auto_complete_package => read_test,
+      :auto_complete_package_groups => read_test,
       :show => read_test,
       :edit => read_test,
       :download => read_test,
@@ -81,8 +82,9 @@ class SystemTemplatesController < ApplicationController
   def object
     pkgs = @template.packages.collect{|pkg| {:name=>pkg.package_name}}
     products = @template.products.collect{|prod| {:name=>prod.name, :id=>prod.id}}
+    groups = @template.package_groups.collect{|grp| {:name=>grp.name}}
     to_ret = {:id=> @template.id, :name=>@template.name, :description=>@template.description,
-              :packages=>pkgs, :products=>products, :package_groups=>[]}
+              :packages=>pkgs, :products=>products, :package_groups=>groups}
     render :json=>to_ret
   end
 
@@ -114,7 +116,10 @@ class SystemTemplatesController < ApplicationController
     @groups = []
     @product.repos(current_organization.locker).each{|repo|
       repo.package_groups.each{|grp|
-        @groups.push(grp[1]["name"])
+        Rails.logger.error("\n\n\n\n\n") if grp[1].nil?
+        Rails.logger.error(grp.inspect) if grp[1].nil?
+        Rails.logger.error("\n\n\n\n\n") if grp[1].nil?
+        @groups.push(grp["name"])
       }
     }
 
@@ -127,6 +132,7 @@ class SystemTemplatesController < ApplicationController
   def update_content
     pkgs = params[:packages]
     products = params[:products]
+    pkg_groups = params[:package_groups]
 
     @template.packages.delete_all
     pkgs.each{|pkg|
@@ -137,7 +143,12 @@ class SystemTemplatesController < ApplicationController
     products.each{|prod|
       @template.products << Product.readable(current_organization).find(prod[:id])
     }
-    
+
+    @template.package_groups = []
+    pkg_groups.each{|grp|
+      @template.add_package_group(grp[:name])
+    }
+
     @template.save!
     notice _("Template #{@template.name} has been updated successfully")
     object()
@@ -192,6 +203,11 @@ class SystemTemplatesController < ApplicationController
   def auto_complete_package
     name = params[:name]
     render :json=>Pulp::Package.name_search(name).sort.uniq[0..19]
+  end
+
+  def auto_complete_package_groups
+    name = params[:name]
+    current_organization.locker.package_groups
   end
 
   def create
