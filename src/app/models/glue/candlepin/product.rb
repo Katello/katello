@@ -144,7 +144,7 @@ module Glue::Candlepin::Product
           :contentUrl => path,
           :gpgUrl => "",
           :type => repo_type,
-          :label => "#{self.cp_id}_#{name}",
+          :label => self.repo_id(name),
           :vendor => "Custom"
         }
       })
@@ -178,19 +178,13 @@ module Glue::Candlepin::Product
     def update_content
       return true unless productContent_changed?
 
-      # can't use content id, as it will be nil for new content, content label is unique however, will use that
-      old_content = productContent_change[0].nil? ? [] : productContent_change[0].map {|pc| pc.content.label}
-      new_content = productContent_change[1].map {|pc| pc.content.label}
-
-      added_content   = new_content - old_content
-      deleted_content = old_content - new_content
-
-      self.productContent.select {|pc| deleted_content.include?(pc.content.label)}.each do |pc|
+      deleted_content.each do |pc|
         Rails.logger.debug "deleting content #{pc.content.id}"
+        Candlepin::Product.remove_content cp_id, pc.content.id
         Candlepin::Content.destroy(pc.content.id)
       end
 
-      self.productContent.select {|pc| added_content.include?(pc.content.label)}.each do |pc|
+      added_content.each do |pc|
         Rails.logger.debug "creating content #{pc.content.name}"
         new_content = Candlepin::Content.create pc.content
         pc.content.id = new_content[:id] # candlepin generates id for new content
@@ -246,6 +240,26 @@ module Glue::Candlepin::Product
       unless self.repos(self.locker, {:name => repo_name}).empty?
         raise Errors::ConflictException.new(_("There is already a repo with the name [ %s ] for product [ %s ]") % [repo_name, self.name])
       end
+    end
+
+    def added_content
+      old_content_ids = productContent_change[0].nil? ? [] : productContent_change[0].map {|pc| pc.content.label}
+      new_content_ids = productContent_change[1].map {|pc| pc.content.label}
+
+      added_content_ids = new_content_ids - old_content_ids
+
+      added_content = productContent_change[1].select {|pc| added_content_ids.include?(pc.content.label)}
+      added_content
+    end
+
+    def deleted_content
+      old_content_ids = productContent_change[0].nil? ? [] : productContent_change[0].map {|pc| pc.content.label}
+      new_content_ids = productContent_change[1].map {|pc| pc.content.label}
+
+      deleted_content_ids = old_content_ids - new_content_ids
+
+      deleted_content = productContent_change[0].select {|pc| deleted_content_ids.include?(pc.content.label)}
+      deleted_content
     end
 
   end

@@ -257,14 +257,9 @@ module Glue::Pulp::Repos
     end
 
     def delete_repo_by_id(repo_id)
-      self.productContent_will_change!
-      Pulp::Repository.destroy(repo_id)
-    end
-
-    def delete_repo(name, env)
-      #TODO: delete candlepin content as well
-      self.productContent_will_change!
-      Pulp::Repository.destroy(repo_id(name, env))
+      productContent_will_change!
+      self.productContent.delete_if { |pc| pc.content.label == repo_id }
+      save!
     end
 
     def add_repo(name, url)
@@ -332,18 +327,12 @@ module Glue::Pulp::Repos
     def update_repos
       return true unless productContent_changed?
 
-      old_content = productContent_change[0].nil? ? [] : productContent_change[0].map {|pc| pc.content.label}
-      new_content = productContent_change[1].map {|pc| pc.content.label}
-
-      added_content   = new_content - old_content
-      deleted_content = old_content - new_content
-
-      self.productContent.select {|pc| deleted_content.include?(pc.content.label)}.each do |pc|
-        Rails.logger.debug "deleting repository #{repo_id(pc.content.name)}"
-        Pulp::Repository.destroy(repo_id(pc.content.name))
+      deleted_content.each do |pc|
+        Rails.logger.debug "deleting repository #{pc.content.label}"
+        Pulp::Repository.destroy(pc.content.label)
       end
 
-      self.productContent.select {|pc| added_content.include?(pc.content.label)}.each do |pc|
+      added_content.each do |pc|
         if !(self.environments.map(&:name).any? {|name| pc.content.name.include?(name)}) || pc.content.name.include?('Locker')
         Rails.logger.debug "creating repository #{repo_id(pc.content.name)}"
           self.add_repo(pc.content.name, repository_url(pc.content.contentUrl))
