@@ -43,6 +43,16 @@ module Glue::Candlepin::Owner
       raise e
     end
 
+    def del_providers
+      Rails.logger.info "All providers for owner #{name} in candlepin"
+      self.providers.each do |provider|
+        provider.destroy
+      end
+    rescue => e
+      Rails.logger.error "Failed to delete all providers for owner #{name} in candlepin: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
     def save_owner_orchestration
       case self.orchestration_for
         when :create
@@ -51,6 +61,7 @@ module Glue::Candlepin::Owner
     end
 
     def destroy_owner_orchestration
+      queue.create(:name => "candlepin providers for organization: #{self.name}", :priority => 2, :action => [self, :del_providers])
       queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 3, :action => [self, :del_owner])
     end
 

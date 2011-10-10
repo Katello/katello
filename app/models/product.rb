@@ -105,6 +105,10 @@ class Product < ActiveRecord::Base
     provider.readable?
   end
 
+  def editable?
+    provider.editable?
+  end
+
   protected
 
   def self.authorized_items org, verbs, resource = :providers
