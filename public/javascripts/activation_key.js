@@ -18,245 +18,305 @@
 $(document).ready(function() {
 
     KT.panel.set_expand_cb(function() {
-        activation_key.reset_env_select();
+        KT.activation_key.initialize_edit();
     });
-
 
     $('#new_activation_key').live('submit', function(e) {
         e.preventDefault();
-        activation_key.create_key($(this));
+        KT.activation_key.create_key($(this));
     });
 
-    $('#remove_key').live('click', function(e) {
+    $('#save_key').live('submit', function(e) {
         e.preventDefault();
-        activation_key.delete_key($(this));
+        KT.activation_key.save_key($(this));
     });
 
-    $('.edit_env_setup').live('click', function(e) {
+    $('#cancel_key').live('click', function(e) {
         e.preventDefault();
-        activation_key.edit_environment_setup($(this));
+        KT.activation_key.cancel_key($(this));
     });
 
-    $('.select_env').live('click', function() {
-        activation_key.select_environment($(this));
-        activation_key.reset_env_select();
-        activation_key.get_system_templates($(this), true);
+    //Set the callback on the environment selector
+    env_select.click_callback = function(env_id) {
+        KT.activation_key.save_selected_environment(env_id);
+        KT.activation_key.get_system_templates();
+        KT.activation_key.get_products();
+    };
+
+    $('#activation_key_system_template_id').live('change', function() {
+        KT.activation_key.highlight_system_templates(false);
     });
 
-    $('#save_env').live('submit', function(e) {
+    $('#go_to_available_subscriptions').live('click', function(e) {
         e.preventDefault();
-        var button = $('input[id^=save_env]');
-        button.attr("disabled","disabled");
-
-        $(this).ajaxSubmit({
-         success: function(data) {
-             button.removeAttr('disabled');
-             activation_key.update_activation_key_pane();
-             // close dialog
-             activation_key.close_environment_dialog();
-
-         }, error: function(e) {
-             button.removeAttr('disabled');
-             // leave the dialog open
-         }});
+        KT.activation_key.go_to_available_subscriptions();
     });
 
-    $('#update_subscriptions').live('submit', function(e) {
-       e.preventDefault();
-       var button = $(this).find('input[type|="submit"]');
-       button.attr("disabled","disabled");
-       $(this).ajaxSubmit({
-         success: function(data) {
-               button.removeAttr('disabled');
-         }, error: function(e) {
-               button.removeAttr('disabled');
-         }});
+    $('.clickable.product_family').live('click', function() {
+        KT.activation_key.toggle_family($(this));
     });
 
-    // Initialize the environment edit dialog
-    $('#environment_edit_dialog').dialog({
-        resizable: false,
-        autoOpen: false,
-        height: 300,
-        width: 650,
-        modal: true,
-        title: i18n.edit_environment
+    // the parent (product family) was checked, so check all children
+    $('.family_checkbox').live('click', function() {
+        KT.activation_key.toggle_family_checkboxes($(this), this.checked);
     });
+
+    // a child was checked, so update the parent (product family), if needed
+    $('#subscription_form input[type="checkbox"]').live('click', function() {
+        KT.activation_key.toggle_parent_checkbox($(this));
+    });
+
+     $('input[id^=filter]').live('change, keyup', function(){
+         // if the user has cleared the filter box, locate all parents and if a parent is collapsed, hide the children
+         if ($.trim($(this).val()).length == 0) {
+             var parents = $('tr[data-family_begin]');
+             parents.each(function(){
+                 // if the parent is collapsed, hide the children
+                 var arrow = $(this).find('a img');
+                 if(arrow.attr("src").indexOf("collapsed") !== -1){
+                     var family = $(this).attr('data-family_begin');
+                     $('tr[data-in_family="'+family+'"]').slideToggle();
+                 }
+             });
+         }
+     });
 });
 
-var activation_key = (function() {
-    return {
-        reset_env_select: function() {
-          KT.env_select_scroll().bind();
-        },
-        create_key : function(data) {
-            var button = data.find('input[type|="submit"]');
-            button.attr("disabled","disabled");
-            data.ajaxSubmit({
-                success: function(data) {
-                    list.add(data);
-                    KT.panel.closePanel($('#panel'));
-                    KT.panel.select_item(list.last_child().attr("id"));
-                },
-                error: function(e) {
-                    button.removeAttr('disabled');
-                }
-            });                       
-        },
-        delete_key : function(data) {
-            var answer = confirm(data.attr('data-confirm-text'));
-            if (answer) {
-                $.ajax({
-                    type: "DELETE",
-                    url: data.attr('data-url'),
-                    cache: false,
-                    success: function() {
-                        KT.panel.closeSubPanel($('#subpanel'));
-                        KT.panel.closePanel($('#panel'));
-                        list.remove(data.attr("data-id").replace(/ /g, '_'));
+KT.activation_key = (function($) {
+    var subscription_setup = function(){
+        var subbutton = $('#subscription_submit_button');
+        var fakesubbutton = $('#fake_subscription_submit_button');
+        var subcheckboxes = $('#subscription_form input[type="checkbox"]');
+        var checked = 0;
+        subbutton.hide();
+
+        subcheckboxes.each(function(){
+            $(this).change(function(){
+                if($(this).is(":checked")){
+                    checked++;
+                    if(!(subbutton.is(":visible"))){
+                        fakesubbutton.fadeOut("fast", function(){subbutton.fadeIn()});
                     }
-                });
-            }
-        },
-        edit_environment_setup : function(data) {
-            // this function will retrieve the environment paths that the user may select an env from
-            // and display them for selection in a dialog
-            $.ajax({
-                type: "GET",
-                url: data.attr("data-env_url"),
-                cache: false,
-                success: function(response) {
-                    $('#environment_edit_dialog').html(response).dialog('open');
-                    activation_key.reset_env_select();
-                    // hide the system template select.  this select will only be shown if user selects an env
-                    $("#force_edit_system_template").hide();
-                },
-                error: function(data) {
+                }else{
+                    checked--;
+                    if((subbutton.is(":visible")) && checked == 0){
+                        subbutton.fadeOut("fast", function(){fakesubbutton.fadeIn()});
+                    }
                 }
             });
-        },
-        update_activation_key_pane : function() {
-            // this function will update the environment and system template details on the main pane
-            // using the values saved in the environment edit dialog
+        });
 
-            // update the environment
-            var env_id = $('#activation_key_environment_id').val();
-            // starting from the promotion paths
-            var paths = $('.promotion_paths');
-            // clear the previously selected env
-            var old_env = paths.find('.selected');
-            old_env.removeClass('selected crumb-editable-selected').addClass('crumb-editable');
-
-            // if the new env is on the same path as the old, highlight it.. otherwise, hide the current path,
-            // locate the new path, show it and highlight the new env on that path
-            var path = old_env.closest('.edit_env_setup');
-            var new_env = path.find("a[data-env_id='"+env_id+"']");
-            if (new_env.length < 1) {
-                // unable to locate the new env on the current path...
-                path.hide();
-                new_env = paths.find("a[data-env_id='"+env_id+"']");
-                path = new_env.closest('.edit_env_setup');
-                path.show();
+        subbutton.unbind('click').click(disableSubmit);
+    },
+    go_to_available_subscriptions = function() {
+        var url = $('#go_to_available_subscriptions').attr('href');
+        $.ajax({
+            cache: 'false',
+            type: 'GET',
+            url: url,
+            dataType: 'html',
+            success: function(data) {
+                $(".panel-content").html(data);
+                KT.panel.panelResize($('#panel_main'), false);
             }
-            // highlight the newly chosen environment
-            new_env.removeClass('crumb-editable').addClass('selected crumb-editable-selected');
-            // save the id of the env selected
-            $('#environment_id').attr('value', env_id);
+        });
+    },
+    initialize_edit = function() {
+        reset_env_select();
+        enable_buttons();
+        highlight_system_templates(false);
+    },
+    reset_env_select = function() {
+        $('#path-expanded').hide();
+        env_select.reset_hover();
+        env_select.recalc_scroll();
+    },
+    create_key = function(data) {
+        disable_buttons();
+        data.ajaxSubmit({
+            success: function(data) {
+                list.add(data);
+                KT.panel.closePanel($('#panel'));
+            },
+            error: function(e) {
+                enable_buttons();
+            }
+        });
+    },
+    save_key = function(data) {
+        disable_buttons();
 
-            // update the system template (name and options)
-            var system_template_name = $("select[name='activation_key[system_template_id]'] option:selected").html();
-            activation_key.reset_jeditable_select(system_template_name);
-        },
-        close_environment_dialog : function() {
-            $('#environment_edit_dialog').dialog('close');
-        },
-        get_system_templates : function(data, on_edit) {
-            // this function will retrieve the system templates associated with a given environment and
-            // update the page content, as appropriate
+        data.ajaxSubmit({
+         success: function(data) {
+             highlight_system_templates(false);
+             enable_buttons();
+         }, error: function(e) {
+             highlight_system_templates(false);
+             enable_buttons();
+         }});
+    },
+    cancel_key = function(data) {
+        var url = $('#cancel_key').attr('data-url');
+        if (url !== undefined) {
+            disable_buttons();
+
             $.ajax({
                 type: "GET",
-                url: data.attr("data-templates_url"),
+                url: url,
                 cache: false,
                 success: function(response) {
-                    // update the appropriate content on the page
-                    var options_json = '';
-                    var options = '';
-
-                    // create an html option list using the response
-                    options += '<option value="">' + i18n.noTemplate + '</option>';
-                    for (var i = 0; i < response.length; i++) {
-                        options += '<option value="' + response[i].id + '">' + response[i].name + '</option>';
-                    }
-
-                    // add the options to the system template select... this select exists on an insert form
-                    // or as part of the environment edit dialog
-                    $("#activation_key_system_template_id").html(options);
-
-                    if (on_edit) {
-                        // this request was for an activation key edit, so do edit-specific work...
-
-                        // show the select in the environment edit dialog
-                        $("#force_edit_system_template").show();
-
-                        // build list of options based on the response
-                        options_json = '{';
-                        // add an empty option
-                        options_json += '"":"' + i18n.noTemplate + '"';
-                        for (var i = 0; i < response.length; i++) {
-                            options_json += ',"' + response[i].id + '":"' + response[i].name + '"';
-                        }
-                        options_json += '}';
-
-                        // save the options in the hidden input field, for later use
-                        $("input[id^=system_templates_temp]").val(options_json);
-                    }
+                    $('.panel-content').html(response);
+                    initialize_edit();
                 },
                 error: function(data) {
+                    initialize_edit();
                 }
             });
-        },
-        reset_jeditable_select : function(system_template_name) {
-            // this function will reset the jeditable select used for system templates.  this is necessary
-            // whenever the environment is updated.  this will ensure that the system templates associated
-            // with the new environment are properly editable... this reset assumes that we have already retrieved
-            // the system templates and stored them at system_templates_temp
-            $(".edit_system_template").html(system_template_name);
-            $('.edit_system_template').each(function() {
-                $(this).editable('destroy');
-            })
-            $('.edit_system_template').each(function() {
-                $(this).editable($(this).attr('data-url'), {
-                    type        :  'select',
-                    width       :  440,
-                    method      :  'PUT',
-                    name        :  $(this).attr('name'),
-                    cancel      :  i18n.cancel,
-                    submit      :  i18n.save,
-                    indicator   :  i18n.saving,
-                    tooltip     :  i18n.tooltip,
-                    placeholder :  i18n.noTemplate,
-                    style       :  "inherit",
-                    data        :  $('input[id^=system_templates_temp]').attr("value"),
-                    onsuccess   :  function(data) {
-                        $(".edit_system_template").html(data);
-                    },
-                    onerror     :  function(settings, original, xhr) {
-                        original.reset();
-                        $("#notification").replaceWith(xhr.responseText);
-                    }
-                });
-            })
-        },
-        select_environment : function(data) {
-            var path = data.closest('.promotion_paths');
-
-            // clear any previous selected environments
-            path.find(".selected").removeClass('selected');
-            // highlight the selected environment
-            data.addClass('selected');
-            // save the id of the env selected
-            path.find("#activation_key_environment_id").attr('value', data.attr('data-env_id'));
         }
+    },
+    toggle_family = function(data) {
+        // user clicked a product family
+        var family = data.closest('tr').attr('data-family_begin');
+
+        // show/hide the elements that are part of the family
+        $('tr[data-in_family="'+family+'"]').slideToggle();
+
+        // toggle the expand/collapse arrow
+        var arrow = data.find('img');
+        if(arrow.attr("src").indexOf("collapsed") === -1){
+            arrow.attr("src", "images/icons/expander-collapsed.png");
+        } else {
+            arrow.attr("src", "images/icons/expander-expanded.png");
+        }
+    },
+    toggle_family_checkboxes = function(data, checked) {
+        var family = data.closest('tr'),
+            family_name = family.attr('data-family_begin');
+        family.siblings('tr[data-in_family="'+family_name+'"]').find('input:checkbox').attr('checked', checked);
+    },
+    toggle_parent_checkbox = function(data) {
+        // if all children are checked, the parent should be checked... otherwise, it should be unchecked...
+        // so toggle the parent checkbox, if needed...
+
+        // check to see if the child is evan part of a product family...
+        var sub = data.closest('tr'),
+            in_family = sub.attr('data-in_family');
+        if (in_family !== undefined) {
+            // locate the family
+            var family = sub.prevAll('tr[data-family_begin="'+in_family+'"]');
+            if (family !== undefined) {
+                // retrieve the checkboxes for the family and siblings
+                var family_cbx = family.find('input:checkbox'),
+                    sibling_cbxs = family.siblings('tr[data-in_family="'+in_family+'"]').find('input:checkbox'),
+                    total = sibling_cbxs.length,
+                    num_checked = 0;
+
+                sibling_cbxs.each( function() { if (this.checked) num_checked++; });
+                if (total == num_checked) {
+                    family_cbx.attr('checked', true);
+                }
+                else if (num_checked > 0) {
+                    family_cbx.attr('checked', false);
+                }
+                else {
+                    family_cbx.attr('checked', false);
+                }
+            }
+        }
+    },
+    get_system_templates = function() {
+        // this function will retrieve the system templates associated with a given environment and
+        // update the page content, as appropriate
+        var url = $('.path_link.active').attr('data-templates_url');
+
+        disable_buttons();
+        $.ajax({
+            type: "GET",
+            url: url,
+            cache: false,
+            success: function(response) {
+                // update the appropriate content on the page
+                var options = '';
+
+                // create an html option list using the response
+                options += '<option value="">' + i18n.noTemplate + '</option>';
+                for (var i = 0; i < response.length; i++) {
+                    options += '<option value="' + response[i].id + '">' + response[i].name + '</option>';
+                }
+
+                // add the options to the system template select... this select exists on an insert form
+                // or as part of the environment edit dialog
+                $("#activation_key_system_template_id").html(options);
+
+                highlight_system_templates(true);
+                enable_buttons();
+            },
+            error: function(data) {
+                enable_buttons();
+            }
+        });
+    },
+    get_products = function() {
+        // this function will retrieve the products associated with a given environment and
+        // update the products box with the results
+        var url = $('.path_link.active').attr('data-products_url');
+        if (url !== undefined) {
+            disable_buttons();
+            $.ajax({
+                type: "GET",
+                url: url,
+                cache: false,
+                success: function(response) {
+                    $('.productsbox').html(response);
+                    enable_buttons();
+                },
+                error: function(data) {
+                    enable_buttons();
+                }
+            });
+        }
+    },
+    save_selected_environment = function(env_id) {
+        // save the id of the env selected
+        $("#activation_key_environment_id").attr('value', env_id);
+    },
+    disable_buttons = function() {
+        $('#cancel_key').attr("disabled","disabled");
+        $('input[id^=save_key]').attr("disabled","disabled");
+    },
+    enable_buttons = function() {
+        $('#cancel_key').removeAttr('disabled');
+        $('input[id^=save_key]').removeAttr('disabled');
+    },
+    highlight_system_templates = function(add_highlight) {
+        var select_input = $('#activation_key_system_template_id');
+        if (add_highlight) {
+            if( !select_input.next('span').hasClass('highlight_input_text')) {
+                select_input.addClass('highlight_input');
+                select_input.after('<span class ="highlight_input_text">' + i18n.update_template + '</span>');
+            }
+        } else {
+            select_input.removeClass('highlight_input');
+            $('.highlight_input_text').remove();
+        }
+    };
+    return {
+        subscription_setup: subscription_setup,
+        go_to_available_subscriptions: go_to_available_subscriptions,
+        initialize_edit: initialize_edit,
+        reset_env_select: reset_env_select,
+        create_key: create_key,
+        save_key: save_key,
+        cancel_key: cancel_key,
+        toggle_family: toggle_family,
+        toggle_family_checkboxes: toggle_family_checkboxes,
+        toggle_parent_checkbox: toggle_parent_checkbox,
+        get_system_templates: get_system_templates,
+        get_products: get_products,
+        save_selected_environment: save_selected_environment,
+        disable_buttons: disable_buttons,
+        enable_buttons: enable_buttons,
+        highlight_system_templates: highlight_system_templates
     }
-})();
+}(jQuery));
 

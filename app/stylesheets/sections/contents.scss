@@ -43,9 +43,14 @@
   #remove_template_icon {
     @include action-icon($circle_x_icon_black);
   }
-
   #save_template_icon {
-    @include action-icon($gear_icon_black);
+    @include action-icon($gears_icon_black);
+  }
+  #download_template_icon {
+    @include action-icon($download_icon_grey);
+    &:hover {
+        @include action-icon($download_icon_black);
+    }
   }
 
 

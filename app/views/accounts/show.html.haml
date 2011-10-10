@@ -1,8 +1,8 @@
+= javascript :accounts
+
 .grid_16
   %h1
     User -
     = current_user.username
-  %p some user info goes here
 
-  = link_to _("Logout"), logout_path, :method=>"POST"
-
+  = render :partial=> "/users/edit_form", :locals=>{:editable=>true}
