@@ -45,13 +45,19 @@ class Api::RepositoriesController < Api::ApiController
   end
 
   def package_groups
-    r = @repository.package_groups
-    render :json => r
+    #translate group_id to id in search params (conflict with repo id used for routing)
+    search_attrs = params.slice(:name)
+    search_attrs[:id] = params[:group_id] if not params[:group_id].nil?
+
+    render :json => @repository.package_groups(search_attrs)
   end
 
   def package_group_categories
-    c = @repository.package_group_categories
-    render :json => c
+    #translate category_id to id in search params (conflict with repo id used for routing)
+    search_attrs = params.slice(:name)
+    search_attrs[:id] = params[:category_id] if not params[:category_id].nil?
+
+    render :json => @repository.package_group_categories(search_attrs)
   end
 
   def find_repository

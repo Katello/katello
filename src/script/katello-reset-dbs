@@ -14,6 +14,8 @@ echo '***********************************************************'
 echo -e "\n"
 echo "All data from all systems will be erased completely!"
 echo -e "\n"
+echo "This script only works with PostgreSQL database."
+echo -e "\n"
 echo "It is strongly recommended to back up databases:"
 echo " # mongodump --db pulp_database --out - > pulp_database.json"
 echo " # pg_dump -c candlepin > candlepin_db.sql"
@@ -67,6 +69,7 @@ rm -rf /var/lib/mongodb/pulp_database*
 $SRV mongod start
 
 echo "Initializing Pulp database"
+sleep 10s # let mongo initialize
 /usr/bin/pulp-migrate
 
 echo "Initializing Candlepin database"
@@ -80,6 +83,9 @@ start_unless_running tomcat6
 
 echo "Initializing Katello database"
 rm -f /var/lib/katello/initdb_done
+su - postgres -c 'dropdb katello; dropuser katello; createuser -dls katello --no-password'
+su - postgres -c "psql --command \"alter user katello with password 'katello'\""
+su - postgres -c "PGPASSWORD=katello createdb -U katello katello"
 $SRV katello initdb
 
 echo "Starting Katello instance"

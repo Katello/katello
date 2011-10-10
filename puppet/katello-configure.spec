@@ -1,5 +1,5 @@
 
-%global homedir %{_datarootdir}/katello/install/puppet/modules
+%global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
 Version:        0.1.4
@@ -27,10 +27,14 @@ Provides katello-configure script which configures Katello installation.
 %install
 rm -rf %{buildroot}
 #prepare dir structure
-install -d -m 0755 %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{_sbindir}
-cp -Rp modules/* %{buildroot}%{homedir}
 install -m 0755 bin/katello-configure %{buildroot}%{_sbindir}
+install -d -m 0755 %{buildroot}%{homedir}
+install -d -m 0755 %{buildroot}%{homedir}/puppet/modules
+cp -Rp modules/* %{buildroot}%{homedir}/puppet/modules
+install -d -m 0755 %{buildroot}%{homedir}/puppet/lib
+cp -Rp lib/* %{buildroot}%{homedir}/puppet/lib
+install -m 0755 default-answer-file %{buildroot}%{homedir}
 
 %clean
 rm -rf %{buildroot}

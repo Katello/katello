@@ -200,6 +200,18 @@ PRODUCTS = [
   }
 ]
 
+COMMON_ASYNC_RESULT_SUCCESS = [
+  {
+    "result": "{\"errors\":[null,null]}",
+    "created_at": None,
+    "uuid": "6d3d8711-cf28-11e0-b10e-f0def13c24e5",
+    "updated_at": None,
+    "finish_time": "2011-08-25T14:42:21Z",
+    "organization_id": None,
+    "state": "finished",
+    "start_time": "2011-08-25T14:42:16Z"
+  }
+]
 
 
 SYNC_RESULT_NOT_SYNCED = [
@@ -537,8 +549,7 @@ REPOS = [
     }
 ]
 
-PACKAGE_GROUPS = {
-"123":
+PACKAGE_GROUPS = [
 {"name": "katello",
   "conditional_package_names": {},
   "mandatory_package_names": [],
@@ -556,10 +567,9 @@ PACKAGE_GROUPS = {
   "description": "Katello related packages",
   "translated_name": {}
   }
-}
+]
 
-PACKAGE_GROUP_CATEGORIES = {
-"development":
+PACKAGE_GROUP_CATEGORIES = [
 {"name": "Development",
   "_id": "development",
   "id": "development",
@@ -570,7 +580,7 @@ PACKAGE_GROUP_CATEGORIES = {
   "description": "",
   "packagegroupids": ["123"],
   "translated_name": {}}
-}
+]
 
 
 TEMPLATES = [

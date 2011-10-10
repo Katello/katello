@@ -1,6 +1,7 @@
 #!/bin/bash
 
 require "repo"
+require "packagegroup"
 
 header "Template"
 
@@ -14,23 +15,26 @@ test_success "template update" template update --name="$TEMPLATE_NAME_2" --new_n
 
 test_success "template list" template list --org="$TEST_ORG" --environment="Locker"
 
-test_success "template update_content add product" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_product    --product="$FEWUPS_PRODUCT"
-test_success "template update_content add package" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_package    --package="cheetah"
-test_success "template update_content remove package" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package --package="cheetah"
-test_success "template update_content remove product" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_product --product="$FEWUPS_PRODUCT"
-test_success "template update_content add parameter" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_parameter    --parameter "attr" --value "X"
-test_success "template update_content remove parameter" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_parameter --parameter "attr"
+test_success "template update add product"                 template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_product="$FEWUPS_PRODUCT"
+test_success "template update add package"                 template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package="cheetah"
+test_success "template update add package group"           template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group="$PACKAGE_GROUP_NAME"
+test_success "template update add package group categrory" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group_category="$PACKAGE_GROUP_CATEGORY_NAME"
+test_success "template update add parameter"                 template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_parameter="attr" --value="X"
 
-test_failure "template update_content add unknown product" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_product    --product="this_product_does_not_exist"
-test_failure "template update_content add unknown package" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_package    --package="this_package_does_not_exist"
+test_success "template update remove parameter"              template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_parameter="attr"
+test_success "template update remove package group category" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package_group_category="$PACKAGE_GROUP_CATEGORY_NAME"
+test_success "template update remove package group"          template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package_group="$PACKAGE_GROUP_NAME"
+test_success "template update remove package"              template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package="cheetah"
+test_success "template update remove product"                template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_product="$FEWUPS_PRODUCT"
 
-REPO_ID=$(get_repo_id)
-PACKAGE_GROUP_ID=test
-PACKAGE_GROUP_CATEGORY_ID=test
-create_sample_package_groups
 
-test_success "template update_content add package group" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_package_group    --repo="$REPO_ID" --package_group "$PACKAGE_GROUP_ID"
-test_success "template update_content remove package group" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --remove_package_group    --repo="$REPO_ID" --package_group "$PACKAGE_GROUP_ID"
+test_failure "template update add unknown product" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_product="does_not_exist"
+test_failure "template update add unknown package" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package="does_not_exist"
+test_failure "template update add unknown product" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group="does_not_exist"
+test_failure "template update add unknown package" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group_category="does_not_exist"
 
-test_success "template update_content add package group categrory" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --add_package_group_category    --repo="$REPO_ID" --package_group_category "$PACKAGE_GROUP_CATEGORY_ID"
-test_success "template update_content remove package group" template update_content --name="$TEMPLATE_NAME" --org="$TEST_ORG"    --remove_package_group_category    --repo="$REPO_ID" --package_group_category "$PACKAGE_GROUP_CATEGORY_ID"
+
+
+
+
+

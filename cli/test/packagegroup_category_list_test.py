@@ -16,7 +16,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.assertRaises(Exception, self.action.process_options, ['category_list'])
 
     def test_no_error_if_required_options_provided(self):
-        self.action.process_options(['list', '--repoid=123'])
+        self.action.process_options(['list', '--repo_id=123'])
         self.assertEqual(len(self.action.optErrors), 0)
 
 
@@ -25,7 +25,7 @@ class PackageGroupCategoryListTest(CLIActionTestCase):
     REPO = test_data.REPOS[0]
 
     OPTIONS = {
-        'repoid': REPO['id'],
+        'repo_id': REPO['id'],
     }
 
     def setUp(self):
@@ -48,4 +48,4 @@ class PackageGroupCategoryListTest(CLIActionTestCase):
 
     def test_it_prints_package_groups(self):
         self.action.run()
-        self.action.printer.printItems.assert_called_once_with(test_data.PACKAGE_GROUP_CATEGORIES.values())
+        self.action.printer.printItems.assert_called_once_with(test_data.PACKAGE_GROUP_CATEGORIES)

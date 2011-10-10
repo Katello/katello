@@ -1,7 +1,7 @@
 = javascript :edit_helpers
 
 = content_for :title do
-  #{_("Edit Provider")}
+  #{@provider.name}
 
 = content_for :remove_item do
   - if @provider.deletable?
@@ -9,7 +9,7 @@
 
 
 = content_for :navigation do
-  = render_navigation(:expand_all => true, :level => 3)
+  = render_navigation(:expand_all => true, :level => 4)
   
 = content_for :content do
   #providers
@@ -26,16 +26,5 @@
           .grid_2.ra
             %label #{_("Description")}:
           .grid_5.la{:style => "word-wrap: break-word;", 'name' => 'provider[description]', 'data-url' => provider_path(@provider.id), :class=>("editable edit_panel_element" if editable)}<> #{@provider.description}
-  
-        %fieldset.fl.clear
-          .grid_2.ra
-            %label #{_("Type")}:
-          .grid_5.la #{@provider[:provider_type]}
-  
-        -if @provider.provider_type == Provider::REDHAT
-          %fieldset.fl.clear
-            .grid_2.ra
-              %label #{_("Repository Url")}:
-            .grid_5.la.editable.edit_textfield{'name' => 'provider[repository_url]', 'data-url' => provider_path(@provider.id)} #{@provider[:repository_url]}
 
 %input#provider_id{:name => @provider.id, :type => "hidden", :value => @provider.id, "data-ajax_url"=>url_for(:action=> 'update')}  
