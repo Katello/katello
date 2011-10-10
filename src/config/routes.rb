@@ -302,7 +302,6 @@ Src::Application.routes.draw do
       end
     end
 
-    #match '/organizations/:organization_id/locker/repos' => 'environments#repos', :via => :get
     resources :organizations do
       resources :products, :only => [:index] do
         get :repositories, :on => :member
@@ -319,7 +318,8 @@ Src::Application.routes.draw do
       resources :repositories, :only => [] do
         post :discovery, :on => :collection
       end
-      resource :uebercert , :only => [:create, :show]
+      resource :uebercert, :only => [:create, :show]
+      resources :filters, :only => [:index, :create, :destroy, :show]
     end
 
     resources :changesets, :only => [:show, :destroy] do
