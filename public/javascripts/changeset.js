@@ -15,6 +15,10 @@
 //must be outside of document ready
 KT.panel.control_bbq = false;
 
+(function(){
+	KT.panel.getListContent(KT.routes.items_changesets_path() + '?offset=0');
+})();
+
 $(document).ready(function() {
 
     //Set the callback on the environment selector
