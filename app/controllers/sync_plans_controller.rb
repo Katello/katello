@@ -59,6 +59,7 @@ class SyncPlansController < ApplicationController
                  :col => columns,
                  :create => _('Plan'),
                  :name => controller_display_name,
+                 :ajax_load => true,
                  :ajax_scroll => items_sync_plans_path(),
                  :enable_create => current_organization.syncable? } 
   end

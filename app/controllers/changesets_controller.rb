@@ -290,6 +290,7 @@ class ChangesetsController < ApplicationController
                  :enable_create => false,
                  :name => controller_display_name,
                  :accessor => :id,
+                 :ajax_load => true,
                  :ajax_scroll => items_changesets_path()}
   end
 
