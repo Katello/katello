@@ -6,4 +6,7 @@ require 'rake'
 
 include Rake::DSL
 
+task :default => [:spec]
+
 Src::Application.load_tasks
+

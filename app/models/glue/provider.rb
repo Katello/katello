@@ -143,12 +143,12 @@ module Glue::Provider
     end
 
     def del_products
-      Rails.logger.info "Deleting all products #{name} for provider: #{name}"
+      Rails.logger.info "Deleting all products for provider: #{name}"
       self.products.each do |p|
         p.destroy
       end
     rescue => e
-      Rails.logger.error "Failed to delete all products #{name} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
+      Rails.logger.error "Failed to delete all products for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 

@@ -1,6 +1,7 @@
 - if content_for?(:title)
   .head
-    %h2
+    - title_text = yield :title
+    %h2.pane_heading.one-line-ellipsis{:title => title_text}
       = yield :title
     = yield :remove_item  
 

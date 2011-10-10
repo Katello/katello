@@ -118,8 +118,11 @@ $(document).ready(function() {
             success: function(data) {
                 thisPanel.find(".panel-content").html(data);
                 KT.panel.panelResize($('#panel_main'), false);
+                KT.panel.get_expand_cb()();
+
             }
         });
+
         return false;
     });
 
@@ -172,6 +175,9 @@ var list = (function(){
                 success: function(data) {
                     notices.checkNotices();
                     jQid.html(data);
+
+                    // obtain the value from column_1 and place it in pane_heading
+                    $('.pane_heading').html(jQid.find('.column_1').html());
                     if (success_cb) {
                         success_cb();
                     }
@@ -195,7 +201,7 @@ KT.panel = (function($){
         switch_content_cb   = function() {},
 	
 		select_item = function(activeBlockId) {
-            var activeBlock = $('#' + activeBlockId),
+            var activeBlock = $('#' + KT.common.escapeId(activeBlockId)),
             	ajax_url = activeBlock.attr("data-ajax_url"),
             	previousBlockId = null;
             	
@@ -253,6 +259,9 @@ KT.panel = (function($){
                         panelResize($('#panel_main'), isSubpanel);
                     }
                     expand_cb(name);
+                    // Add a handler for ellipsis
+                    $(".one-line-ellipsis").ellipsis(true);
+
                 },
                 error: function (xhr, status, error) {
                     spinner.hide();
@@ -495,6 +504,7 @@ KT.panel = (function($){
     return {
         set_extended_cb         : function(callBack){ extended_cb = callBack; },
         set_expand_cb           : function(callBack){ expand_cb = callBack; },
+        get_expand_cb           : function(){ return expand_cb },
         set_contract_cb         : function(callBack){ contract_cb = callBack; },
         set_switch_content_cb	: function(callBack){ switch_content_cb = callBack; },
         select_item				: select_item,

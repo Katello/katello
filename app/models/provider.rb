@@ -35,10 +35,8 @@ class Provider < ActiveRecord::Base
 
   scoped_search :on => :name, :complete_value => true, :rename => :'provider.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'provider.description'
-  scoped_search :on => :repository_url, :complete_value => true, :rename => :'provider.url'
-  scoped_search :on => :provider_type, :complete_value => true, :rename => :'provider.type'
-  scoped_search :in => :products, :on => :name, :complete_value => true, :rename => :'custom_product.name'
-  scoped_search :in => :products, :on => :description, :complete_value => true, :rename => :'custom_product.description'
+  scoped_search :in => :products, :on => :name, :complete_value => true, :rename => :'product.name'
+  scoped_search :in => :products, :on => :description, :complete_value => true, :rename => :'product.description'
 
   validate :only_one_rhn_provider
   validate :valid_url, :if => :redhat_provider?

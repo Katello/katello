@@ -92,6 +92,7 @@ class ResourceType < ActiveRecord::Base
       :environments => {:model => KTEnvironment, :name => N_("Environments"), :global=>false},
       :activation_keys => { :model => ActivationKey, :name => N_("Activation Keys"), :global=>false},
       :providers => { :model => Provider, :name => N_("Providers"), :global=>false},
+      :filters => { :model => Filter, :name => N_("Filters"), :global => false},
       :users => { :model => User, :name => N_("Users"), :global=>true},
       :roles => { :model => Role, :name => N_("Roles"), :global=>true},
       :all => { :model => OpenStruct.new(:list_verbs =>{}, :list_tags=>[], :tags_for =>[], :tags => [], :no_tag_verbs =>[]), :name => N_("All"), :global => false}
