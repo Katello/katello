@@ -11,6 +11,9 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
+(function(){
+	KT.panel.getListContent(KT.routes.items_users_path() + '?offset=0');
+})();
 
 $(document).ready(function() {
    

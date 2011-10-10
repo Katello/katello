@@ -64,7 +64,7 @@ class RolesController < ApplicationController
   
   def items
     start = params[:offset]
-    @roles = Role.readable.search_for(params[:search]).order(:name).limit(current_user.page_size).offset(start)
+    @roles = Role.readable.search_for(params[:search]).non_self.order(:name).limit(current_user.page_size).offset(start)
     render_panel_items @roles, @panel_options
   end
   
@@ -73,6 +73,7 @@ class RolesController < ApplicationController
                  :col => ['name'],
                  :create => _('Role'),
                  :name => controller_display_name,
+                 :ajax_load  => true,
                  :ajax_scroll => items_roles_path(),
                  :enable_create=> Role.creatable?}
   end
