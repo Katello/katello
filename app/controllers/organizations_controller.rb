@@ -150,6 +150,7 @@ class OrganizationsController < ApplicationController
                :create => _('Organization'),
                :name => controller_display_name,
                :accessor => :cp_key,
+               :ajax_load  => true,
                :ajax_scroll => items_organizations_path(),
                :enable_create => Organization.creatable?}
   end
