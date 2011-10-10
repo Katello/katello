@@ -225,6 +225,7 @@ class ActivationKeysController < ApplicationController
       :col => ['name'],
       :create => _('Key'), 
       :name => controller_display_name,
+      :ajax_load  => true,
       :ajax_scroll => items_activation_keys_path(),
       :enable_create => ActivationKey.manageable?(current_organization)}
   end
