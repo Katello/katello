@@ -219,6 +219,7 @@ class ProvidersController < ApplicationController
                  :col => ['name'],
                  :create => _('Provider'),
                  :name => controller_display_name,
+                 :ajax_load => true,
                  :ajax_scroll=>items_providers_path(),
                  :enable_create=> Provider.creatable?(current_organization)}
         
