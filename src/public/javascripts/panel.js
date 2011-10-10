@@ -49,6 +49,10 @@ $(document).ready(function() {
     var original_top = Math.floor($('.left').position(top).top);
     var subpanel_top =  Math.floor($('.left').position(top).top + subpanelSpacing);
 
+    //create the initial selected count
+    KT.panel.updateResult(); 
+    KT.panel.registerDefaultActions();
+
     $('.block').live('click', function(event) {
         if( event.target.nodeName === "A" && event.target.className.match('content_add_remove') ){
             return false;
@@ -190,11 +194,11 @@ KT.panel = (function($){
 	    control_bbq 		= true,
 	    current_scroll 		= 0,
 	    panels_list			= [],
-	
 		extended_cb         = function() {}, //callback for post extended scroll
         expand_cb           = function() {}, //callback after a pane is loaded
         contract_cb         = function() {},
         switch_content_cb   = function() {},
+        action_list         = {},
 	
 		select_item = function(activeBlockId) {
             var activeBlock = $('#' + KT.common.escapeId(activeBlockId)),
@@ -336,8 +340,16 @@ KT.panel = (function($){
             return false;
         },
         updateResult = function(){
-            $('#select-result').html($('.block.active').length + " items selected.");
+            $('#select-result').html($('.block.active').length + i18n.items_selected);
         },
+        getSelected = function() {
+            var to_ret = [];
+            $('.block.active').each(function(){
+                var id = $(this).attr("id");
+                to_ret.push(id.split("_")[1]);
+            })
+            return to_ret;
+        }
         openSubPanel = function(url) {
             var thisPanel = $('#subpanel');
             
@@ -347,6 +359,9 @@ KT.panel = (function($){
             }).removeClass('closed').addClass('opened');
             
             panelAjax('', url, thisPanel, true);
+        },
+        get_scroll_url = function() {
+            return $('#list').attr("data-scroll_url");
         },
         scrollExpand = function() { //If we are scrolling past the bottom, we need to request more data
             var list = $('#list'),
@@ -473,6 +488,65 @@ KT.panel = (function($){
 			});
 
         	panels_list.push(new_panel);
+        },
+        registerDefaultActions = function() {
+            var actions = $(".panel_action");
+            actions.each(function(index){
+                var action = $(this);
+                var options = action.find(".options");
+                action.find("a").click(function() {
+                    options.show();
+                });
+                action.find(".cancel").click(function() {
+                    if ($(this).hasClass("disabled")){return}
+                    options.hide();
+                });
+                action.find(".trigger").click(function() {
+                    var params = action_list[action.attr("data-id")];
+                    var success = function() {
+                        options.hide();
+                        action.find("input").removeClass("disabled");
+                        if (params.success_cb){
+                            params.success_cb(getSelected());
+                        }
+                    };
+                    var error = function() {
+                      action.find("input").removeClass("disabled");
+                      if(params.error_cb) {
+                          params.error_cb(getSelected());
+                      }
+                    };
+                    
+                    if ($(this).hasClass("disabled")){return}
+                    action.find("input").addClass("disabled");
+
+                    if(params.ajax_cb) {
+                        params.ajax_cb(getSelected());
+                    }
+                    else {
+                        $.ajax({
+                            cache: 'false',
+                            type: params.method,
+                            url: params.url,
+                            data: {ids:getSelected()},
+                            success: success,
+                            error: error
+                        });
+                    }
+                });
+            });
+        },
+        registerAction = function(name, params) {
+            /**
+             * params:
+             *    success_cb(data, selected_ids)
+             *    error_cb(data, selected_ids)
+             *    url      //URL for ajax call
+             *    method   //METHOD for ajax call
+             *    ajax_cb(id_list, success_cb, error_cb)  //To manually do the ajax call yourself
+             *
+             */
+          action_list[name] = params;
         };
 	
     return {
@@ -488,13 +562,16 @@ KT.panel = (function($){
         scrollExpand			: scrollExpand,
         openSubPanel			: openSubPanel,
         updateResult			: updateResult,
+        getSelected             : getSelected,
         closeSubPanel			: closeSubPanel,
         closePanel				: closePanel,
         panelResize				: panelResize,
         adjustHeight			: adjustHeight,
         panelAjax				: panelAjax,
         control_bbq             : control_bbq,
-        registerPanel			: registerPanel
+        registerPanel			: registerPanel,
+        registerDefaultActions  : registerDefaultActions,
+        registerAction          : registerAction
     };
 
 })(jQuery);
