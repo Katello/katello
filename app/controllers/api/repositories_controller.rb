@@ -38,7 +38,7 @@ class Api::RepositoriesController < Api::ApiController
 
   def destroy
     @repository.product.delete_repo_by_id(params[:id])
-    render :text => "repo destroyed"
+    render :text => _("Deleted repository '#{params[:id]}'"), :status => 200
   end
 
   # proxy repository discovery call to pulp, so we don't have to create an async task to keep track of async task on pulp side
