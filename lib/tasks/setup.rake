@@ -1,4 +1,12 @@
-#task to perform steps required for katello to work
-task :setup => ["db:migrate:reset", "db:seed"] do
+desc "check if not running as root with sqlite3 in production mode (creates wrong permissions)"
+task :check_db_config => "db:load_config" do
+  raise 'SQLite3 is not supported in production mode! You can still run "rake setup" as katello user.' if Process.uid == 0 and
+    Rails.env == 'production' and
+    ActiveRecord::Base.configurations[Rails.env]['adapter'] == 'sqlite3' and
+    not ENV['FORCE_RAKE_SETUP']
+end
+
+desc "task to perform steps required for katello to work"
+task :setup => ["check_db_config", "db:migrate:reset", "db:seed"] do
   puts "Database sucessfully recreated in #{Rails.env}"
 end
