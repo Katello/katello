@@ -692,9 +692,9 @@ KT.package_group_actions = (function() {
         current_input = KT.auto_complete_box({
             values:       auto_complete_call,
             default_text: i18n.package_group_search_text,
-            input_id:     "add_group_input",
-            form_id:      "add_group_form",
-            add_btn_id:   "add_group",
+            input_id:     "add_package_group_input",
+            form_id:      "add_package_group_form",
+            add_btn_id:   "add_package_group",
             add_cb:       verify_add_group
         });
     },
@@ -720,9 +720,10 @@ KT.package_group_actions = (function() {
         }); */
     },
     auto_complete_call = function(req, response_cb) {
+        console.log("Called");
         $.ajax({
             type: "GET",
-            url: KT.common.rootURL() + '/system_templates/auto_complete_package_group',
+            url: KT.routes.auto_complete_package_groups_system_templates_path(),
             data: {name:req.term},
             cache: false,
             success: function(data){
@@ -858,7 +859,7 @@ KT.actions =  (function(){
             KT.common.customConfirm($(this).attr('data-confirm-text'), function(){
                 $.ajax({
                     type: "DELETE",
-                    url: KT.common.rootURL() + '/system_templates/' + options.current_template.id,
+                    url: KT.routes.system_template_path(options.current_template.id),
                     cache: false,
                     success: function(data){
                         KT.templates.remove_template(options.current_template.id);
@@ -878,12 +879,13 @@ KT.actions =  (function(){
             var current = KT.options.current_template;
             var data = {
                 packages: current.packages,
-                products: current.products
+                products: current.products,
+                package_groups: current.package_groups
             };
             $.ajax({
                 type: "PUT",
                 contentType:"application/json",
-                url: KT.common.rootURL() + '/system_templates/' + options.current_template.id + '/update_content/',
+                url: KT.routes.update_content_system_template_path(options.current_template.id),
                 data: JSON.stringify(data),
                 cache: false,
                 success: function(data){
