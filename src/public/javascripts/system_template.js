@@ -403,7 +403,7 @@ KT.template_renderer = function() {
     comps = function() {
         var html = "";
         if (KT.permissions.editable) {
-            html += '<ul ><li class="content_input_item"><form id="add_group_form">';
+            html += '<ul ><li class="content_input_item"><form id="add_package_group_form">';
             html += '<input id="add_package_group_input" type="text" size="33"><form>  ';
             html += '<a id="add_package_group" class="fr st_button ">' + i18n.add_plus + '</a>';
             html += ' </li></ul>';
@@ -690,7 +690,7 @@ KT.package_group_actions = (function() {
     //called everytime 'packages is loaded'
     var register_autocomplete = function() {
         current_input = KT.auto_complete_box({
-            values:       auto_complete_call,
+            values:       KT.package_groups,
             default_text: i18n.package_group_search_text,
             input_id:     "add_package_group_input",
             form_id:      "add_package_group_form",
@@ -699,31 +699,18 @@ KT.package_group_actions = (function() {
         });
     },
     verify_add_group = function(name, cleanup_cb){
-        KT.templates.add_package_group(name);
+        if ($.inArray(name, KT.package_groups) > -1) {
+            KT.templates.add_package_group(name);
+        }
+        else {
+            current_input.error();
+        }
         cleanup_cb();
-        /*
-        $.ajax({
-            type: "GET",
-            url: KT.common.rootURL() + '/system_templates/auto_complete_package_group',
-            data: {name:name},
-            cache: false,
-            success: function(data){
-                if ($.inArray(name, data) > -1) {
-                    KT.templates.add_package_group(name);
-                }
-                else {
-                    current_input.error();
-                }
-                cleanup_cb();
-            },
-            error: KT.templates.throw_error
-        }); */
     },
     auto_complete_call = function(req, response_cb) {
-        console.log("Called");
         $.ajax({
             type: "GET",
-            url: KT.routes.auto_complete_package_groups_system_templates_path(),
+            url: KT.common.rootURL() + '/system_templates/auto_complete_package_groups',
             data: {name:req.term},
             cache: false,
             success: function(data){
