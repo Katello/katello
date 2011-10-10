@@ -61,6 +61,21 @@ class RepoAction(Action):
         super(RepoAction, self).__init__()
         self.api = RepoAPI()
 
+    def get_repo(self):
+        repoId   = self.get_option('id')
+        repoName = self.get_option('name')
+        orgName  = self.get_option('org')
+        prodName = self.get_option('product')
+        envName  = self.get_option('env')
+
+        if repoId:
+            repo = self.api.repo(repoId)
+        else:
+            repo = get_repo(orgName, prodName, repoName, envName)
+            
+        return repo
+        
+
 # actions --------------------------------------------------------------------
 
 
@@ -244,18 +259,10 @@ class Status(RepoAction):
             self.require_option('product')
 
     def run(self):
-        repoId   = self.get_option('id')
-        repoName = self.get_option('name')
-        orgName  = self.get_option('org')
-        envName  = self.get_option('env')
-        prodName = self.get_option('product')
-
-        if repoId:
-            repo = self.api.repo(repoId)
-        else:
-            repo = get_repo(orgName, prodName, repoName, envName)
-            if repo == None:
-                return os.EX_DATAERR
+        
+        repo = self.get_repo()
+        if repo == None:
+            return os.EX_DATAERR
 
         task = AsyncTask(self.api.last_sync_status(repo['id']))
 
@@ -306,19 +313,11 @@ class Info(RepoAction):
             self.require_option('product')
 
     def run(self):
-        repoId   = self.get_option('id')
-        repoName = self.get_option('name')
-        orgName  = self.get_option('org')
-        envName  = self.get_option('env')
-        prodName = self.get_option('product')
 
-        if repoId:
-            repo = self.api.repo(repoId)
-        else:
-            repo = get_repo(orgName, prodName, repoName, envName)
-            if repo == None:
-                return os.EX_DATAERR
-
+        repo = self.get_repo()
+        if repo == None:
+            return os.EX_DATAERR
+                
         repo['url'] = repo['source']['url']
         repo['last_sync'] = format_sync_time(repo['last_sync'])
         repo['sync_state'] = format_sync_state(repo['sync_state'])
@@ -331,7 +330,7 @@ class Info(RepoAction):
         self.printer.addColumn('last_sync', show_in_grep=False)
         self.printer.addColumn('sync_state', name=_("Progress"), show_in_grep=False)
 
-        self.printer.setHeader(_("Information About Repo %s") % repoId)
+        self.printer.setHeader(_("Information About Repo %s") % repo['id'])
 
         self.printer.printItem(repo)
         return os.EX_OK
@@ -358,17 +357,10 @@ class Sync(RepoAction):
             self.require_option('product')
 
     def run(self):
-        repoId   = self.get_option('id')
-        repoName = self.get_option('name')
-        orgName  = self.get_option('org')
-        prodName = self.get_option('product')
 
-        if repoId:
-            repo = self.api.repo(repoId)
-        else:
-            repo = get_repo(orgName, prodName, repoName)
-            if repo == None:
-                return os.EX_DATAERR
+        repo = self.get_repo()
+        if repo == None:
+            return os.EX_DATAERR
 
         task = AsyncTask(self.api.sync(repo['id']))
         run_async_task_with_status(task, ProgressBar())
@@ -451,18 +443,10 @@ class Delete(RepoAction):
             self.require_option('product')
 
     def run(self):
-        repoId   = self.get_option('id')
-        repoName = self.get_option('name')
-        orgName  = self.get_option('org')
-        envName  = self.get_option('env')
-        prodName = self.get_option('product')
 
-        if repoId:
-            repo = self.api.repo(repoId)
-        else:
-            repo = get_repo(orgName, prodName, repoName, envName)
-            if repo == None:
-                return os.EX_DATAERR
+        repo = self.get_repo()
+        if repo == None:
+            return os.EX_DATAERR
 
         msg = self.api.delete(repo["id"])
         print msg
