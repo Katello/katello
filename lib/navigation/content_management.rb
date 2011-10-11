@@ -14,6 +14,9 @@ module Navigation
     def self.included(base)
       base.class_eval do
         helper_method :custom_provider_navigation
+        helper_method :promotion_packages_navigation
+        helper_method :promotion_errata_navigation
+        helper_method :promotion_distribution_navigation
       end
     end
 
@@ -40,7 +43,8 @@ module Navigation
        :name => N_("Content Management"),
         :url => :sub_level,
         :class=>'content',
-        :items=> [ menu_providers  ]
+        :if => lambda{current_organization},
+        :items=> [ menu_providers, menu_sync_management, menu_system_templates, menu_promotions, menu_changeset]
       }
     end
 
@@ -72,6 +76,132 @@ module Navigation
         :if => lambda{current_organization && Provider.any_readable?(current_organization())},
         :options => {:class=>"third_level"}
       }
+    end
+
+
+    def menu_sync_management
+      {:key => :sync_mgmt,
+       :name =>N_("Sync Management"),
+       :items => lambda{[menu_sync_status, menu_sync_plan, menu_sync_schedule]},
+       :if => lambda{current_organization.syncable?},
+      }
+
+    end
+
+    def menu_sync_status
+      {:key => :sync_status,
+        :name =>N_("Sync Status"),
+        :url => sync_management_index_path(),
+        :options => {:class=>"third_level"}
+      }
+    end
+
+
+    def menu_sync_plan
+      {:key => :sync_plans,
+        :name =>N_("Sync Plans"),
+        :url => sync_plans_path(),
+        :options => {:class=>"third_level"}
+      }
+    end
+
+    def menu_sync_schedule
+      {:key => :sync_schedule,
+        :name =>N_("Sync Schedule"),
+        :url => sync_schedules_index_path(),
+        :options => {:class=>"third_level"}
+      }
+    end
+
+    def menu_system_templates
+      {:key => :system_templates,
+       :name =>N_("System Templates"),
+        :url => system_templates_path,
+        :if => lambda{SystemTemplate.any_readable?(current_organization())}
+      }
+
+    end
+
+
+
+    def menu_promotions
+       {:key => :promotions,
+        :name => N_("Promotions"),
+        :url => promotions_path,
+        :options =>{:highlights_on =>/\/promotions.*/ ,:class => 'content'},
+        :if => lambda {KTEnvironment.any_viewable_for_promotions?(current_organization)}
+       }
+    end
+
+    def menu_changeset
+       {:key => :changeset,
+        :name => N_("Changeset History"),
+        :url => changesets_path,
+        :if => lambda {KTEnvironment.any_viewable_for_promotions?(current_organization)}
+       }
+    end
+
+    def promotion_packages_navigation
+      [
+        { :key => :details,
+          :name =>N_("Details"),
+          :url => lambda{package_path(@package.id)},
+          :if => lambda{@package},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :dependencies,
+          :name =>N_("Dependencies"),
+          :url => lambda{dependencies_package_path(@package.id)},
+          :if => lambda{@package},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :changelog,
+          :name =>N_("Changelog"),
+          :url => lambda{changelog_package_path(@package.id)},
+          :if => lambda{@package},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :filelist,
+          :name =>N_("Filelist"),
+          :url => lambda{filelist_package_path(@package.id)},
+          :if => lambda{@package},
+          :options => {:class=>"navigation_element"}
+        }
+      ]
+    end
+
+    def promotion_errata_navigation
+      [
+        { :key => :details,
+          :name =>N_("Details"),
+          :url => lambda{erratum_path(@errata.id)},
+          :if => lambda{@errata},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :packages,
+          :name =>N_("Packages"),
+          :url => lambda{packages_erratum_path(@errata.id)},
+          :if => lambda{@errata},
+          :options => {:class=>"navigation_element"}
+        }
+      ]
+    end
+
+    def promotion_distribution_navigation
+      [
+        { :key => :details,
+          :name =>N_("Details"),
+          :url => lambda{distribution_path(@distribution.id)},
+          :if => lambda{@distribution},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :filelist,
+          :name =>N_("Filelist"),
+          :url => lambda{filelist_distribution_path(@distribution.id)},
+          :if => lambda{@distribution},
+          :options => {:class=>"navigation_element"}
+        }
+      ]
     end
   end
 end
