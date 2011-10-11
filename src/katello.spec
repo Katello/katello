@@ -91,6 +91,7 @@ Provides a package for managing application life-cycle for Linux systems
 Summary:        A meta-package to pull in all components for Katello
 Requires:       katello
 Requires:       katello-configure
+Requires:       katello-cli
 Requires:       postgresql-server
 Requires:       postgresql
 Requires:       pulp
