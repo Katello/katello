@@ -50,9 +50,7 @@ KT.systems_page = (function() {
                success_cb: function(ids){
                     $.each(ids,function(index, item){
                         list.remove("system_" + item);
-
                     });
-                    setTimeout("KT.panel.updateResult()", 1000);
                }
             }
         );
