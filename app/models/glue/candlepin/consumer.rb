@@ -22,7 +22,13 @@ module Glue::Candlepin::Consumer
       before_save :save_candlepin_orchestration
       before_destroy :destroy_candlepin_orchestration
 
-      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :initializer => lambda { consumer_json = Candlepin::Consumer.get(uuid); convert_from_cp_fields(consumer_json) }
+      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created,
+        :initializer => lambda {
+                          if uuid
+                            consumer_json = Candlepin::Consumer.get(uuid)
+                            return convert_from_cp_fields(consumer_json)
+                          end
+                        }
       lazy_accessor :entitlements, :initializer => lambda { Candlepin::Consumer.entitlements(uuid) }
       lazy_accessor :pools, :initializer => lambda { entitlements.collect { |ent| Candlepin::Pool.get ent["pool"]["id"]} }
       lazy_accessor :available_pools, :initializer => lambda { Candlepin::Consumer.available_pools(uuid) }
@@ -45,7 +51,6 @@ module Glue::Candlepin::Consumer
         attrs_used_by_model = attrs.reject do |k, v|
           !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
         end
-
         super(attrs_used_by_model)
       end
     end
@@ -153,19 +158,40 @@ module Glue::Candlepin::Consumer
     def hostname
       facts["network.hostname"]
     end
-    
+
     def ip
       facts.keys().grep(/eth.*ipaddr/).collect { |k| facts[k]}.first
     end
-    
+
     def kernel
       facts["uname.release"]
     end
-    
+
     def arch
       facts["uname.machine"]
     end
-    
+
+    def arch=(arch)
+      facts["uname.machine"] = arch
+    end
+
+    def sockets
+      facts["cpu.cpu_socket(s)"]
+    end
+
+    def sockets=(sock)
+      facts["cpu.cpu_socket(s)"] = sock
+    end
+
+    def guest
+      facts["virt.is_guest"]
+    end
+
+    def guest=(val)
+      facts["virt.is_guest"] = val
+
+    end
+
     def distribution_name
       facts["distribution.name"]
     end

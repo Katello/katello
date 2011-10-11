@@ -26,12 +26,13 @@ class Api::SystemsController < Api::ApiController
 
   def rules
     index_systems = lambda { System.any_readable?(@organization) }
-    register_system = lambda { System.registrable?(@environment, @organization) }
+    register_system = lambda { System.registerable?(@environment, @organization) }
     edit_system = lambda { @system.editable? or User.consumer? }
     read_system = lambda { @system.readable? or User.consumer? }
     delete_system = lambda { @system.deletable? or User.consumer? }
 
     {
+      :new => register_system,
       :create => register_system,
       :regenerate_identity_certificates => edit_system,
       :update => edit_system,
