@@ -16,7 +16,8 @@
  */
 
 $(document).ready(function() {
-
+	var list = KT.panel.list;
+	
     $('.edit_datepicker').each(function() {
         $(this).editable($(this).attr('data-url'), {
             type        :  'datepicker',
@@ -60,7 +61,7 @@ $(document).ready(function() {
             onsuccess   :  function(result, status, xhr) {
                 var plan_time = $("#plan_time").text();
                 var current_plan = $("#current_plan").text();
-                if (plan_time != current_plan) {
+                if (plan_time !== current_plan) {
                     $("#current_plan").text(plan_date);
                 }
                 var id = $('#plan_id');
@@ -88,7 +89,7 @@ $(document).ready(function() {
             onsuccess   :  function(result, status, xhr) {
                 var plan_name = $("#plan_name").text();
                 var current_plan = $("#current_plan").text();
-                if (plan_name != current_plan) {
+                if (plan_name !== current_plan) {
                     $("#current_plan").text(plan_name);
                 }
                 var id = $('#plan_id');

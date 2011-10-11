@@ -126,18 +126,6 @@ KT.activation_key = (function($) {
         env_select.reset_hover();
         env_select.recalc_scroll();
     },
-    create_key = function(data) {
-        disable_buttons();
-        data.ajaxSubmit({
-            success: function(data) {
-                list.add(data);
-                KT.panel.closePanel($('#panel'));
-            },
-            error: function(e) {
-                enable_buttons();
-            }
-        });
-    },
     save_key = function(data) {
         disable_buttons();
 
@@ -300,7 +288,6 @@ KT.activation_key = (function($) {
         go_to_available_subscriptions: go_to_available_subscriptions,
         initialize_edit: initialize_edit,
         reset_env_select: reset_env_select,
-        create_key: create_key,
         save_key: save_key,
         cancel_key: cancel_key,
         toggle_family: toggle_family,
