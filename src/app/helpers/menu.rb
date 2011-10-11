@@ -23,7 +23,7 @@ module Menu
   end
   def render_menu(level)
     @menu_items ||=create_menu
-    render_navigation(:items=>@menu_items, :expand_all=>false, :level => level)
+    render_navigation(:items=>@menu_items, :expand_all=>true, :level => level)
   end
 
   def create_menu
@@ -32,11 +32,12 @@ module Menu
       if_eval_top = top_level.delete(:if)
       if (!if_eval_top) || if_eval_top == :sub_level || if_eval_top.call
         if top_level[:items]
-
+          top_level[:items] = top_level[:items].call if Proc === top_level[:items]
           top_level[:items].delete_if do |second_level|
             if_eval_second = second_level.delete(:if)
             if (!if_eval_second) || if_eval_second == :sub_level || if_eval_second.call
               if second_level[:items]
+                second_level[:items] = second_level[:items].call if Proc === second_level[:items]
                 second_level[:items].delete_if do |third_level|
                   if_eval = third_level.delete(:if)
                   if (!if_eval) || if_eval.call
