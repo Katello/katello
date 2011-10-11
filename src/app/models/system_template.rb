@@ -80,8 +80,8 @@ class SystemTemplate < ActiveRecord::Base
     self.save!
     json["products"].each {|p| self.add_product(p) } if json["products"]
     json["packages"].each {|p| self.add_package(p) } if json["packages"]
-    json["package_groups"].each {|pg| self.add_package_group(pg.symbolize_keys) } if json["package_groups"]
-    json["package_group_categories"].each {|pgc| self.add_pg_category(pgc.symbolize_keys) } if json["package_group_categories"]
+    json["package_groups"].each {|pg| self.add_package_group(pg) } if json["package_groups"]
+    json["package_group_categories"].each {|pgc| self.add_pg_category(pgc) } if json["package_group_categories"]
 
     json["parameters"].each_pair {|k,v| self.parameters[k] = v } if json["parameters"]
   end
@@ -91,7 +91,7 @@ class SystemTemplate < ActiveRecord::Base
     tpl = {
       :name => self.name,
       :revision => self.revision,
-      :packages => self.packages.map(&:package_name),
+      :packages => self.packages.map(&:nvrea),
       :products => self.products.map(&:name),
       :parameters => ActiveSupport::JSON.decode(self.parameters_json),
       :package_groups => self.package_groups.map(&:name),
