@@ -56,6 +56,8 @@ class KTEnvironment < ActiveRecord::Base
   include Authorization
   set_table_name "environments"
 
+  acts_as_reportable
+
   belongs_to :organization, :inverse_of => :environments
   has_many :activation_keys, :dependent => :destroy, :foreign_key => :environment_id
   has_and_belongs_to_many :priors, {:class_name => "KTEnvironment", :foreign_key => :environment_id,
