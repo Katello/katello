@@ -14,6 +14,7 @@ module Navigation
     def self.included(base)
       base.class_eval do
         helper_method :systems_navigation
+        helper_method :activation_keys_navigation
       end
     end
     def menu_systems
@@ -22,7 +23,7 @@ module Navigation
         :url => :sub_level,
         :options => {:class=>'systems'},
         :if => lambda{current_organization && System.any_readable?(current_organization)},
-        :items=> [ menu_systems_org_list, menu_systems_environments_list]
+        :items=> [ menu_systems_org_list, menu_systems_environments_list, menu_activation_keys]
       }
     end
 
@@ -39,7 +40,17 @@ module Navigation
       {:key => :env,
        :name => N_("By Environments"),
        :url => environments_systems_path()
+
       }
+    end
+
+
+    def menu_activation_keys
+       {:key => :activation_keys,
+        :name => N_("Activation Keys"),
+        :url => activation_keys_path,
+        :if => lambda {ActivationKey.readable?(current_organization())}
+       }
     end
 
     def systems_navigation
@@ -65,6 +76,29 @@ module Navigation
         { :key => :packages,
           :name =>N_("Packages"),
           :url => lambda{packages_system_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"navigation_element"}
+        }
+      ]
+    end
+
+    def activation_keys_navigation
+      [
+        { :key => :general,
+          :name =>N_("General"),
+          :url => lambda{edit_activation_key_path(@activation_key.id)},
+          :if => lambda{activation_key},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :applied_subscriptions,
+          :name =>N_("Applied Subscriptions"),
+          :url => lambda{applied_subscriptions_activation_key_path(@activation_key.id)},
+          :if =>lambda{activation_key},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :available_subscriptions,
+          :name =>N_("Available Subscriptions"),
+          :url => lambda{available_subscriptions_activation_key_path(@activation_key.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
         }
