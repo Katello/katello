@@ -154,6 +154,20 @@ describe Provider do
       @provider2.should_not be_valid
       @provider2.errors[:name].should_not be_empty
     end
+
+    context "Red Hat provider" do
+      subject { Provider.create(to_create_rh) }
+
+      it "should allow updating url" do
+        subject.repository_url = "https://another.example.com"
+        subject.should be_valid
+      end
+
+      it "should not allow updating name" do
+        subject.name = "another name"
+        subject.should_not be_valid
+      end
+    end
     
   end
 
