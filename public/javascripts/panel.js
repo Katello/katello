@@ -162,6 +162,7 @@ var list = (function(){
        remove : function(id){
            $('#' + id).fadeOut(function(){
                $(this).empty().remove();
+               KT.panel.updateResult();
            });
            return false;
        },
