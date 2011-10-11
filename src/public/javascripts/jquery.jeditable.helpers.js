@@ -71,7 +71,7 @@ $(document).ready(function() {
             name        :  $(this).attr('name'),
             onsuccess   :  function(result, status, xhr) {
                 var id = $('#panel_element_id');
-                list.refresh(id.attr('value'), id.attr('data-ajax_url'));
+                KT.panel.list.refresh(id.attr('value'), id.attr('data-ajax_url'));
             }
         };
         $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));

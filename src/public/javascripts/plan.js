@@ -84,17 +84,3 @@ $(document).ready(function() {
   });
 
 });
-
-var sync_plan = (function() {
-    return {
-      successCreate : function(data) {
-        //KT.panel.js calls
-        list.add(data);
-        KT.panel.closePanel($('#panel'));
-      },
-      errorCreate : function(data) {
-        $('#plan_save:submit').removeAttr("disabled");
-      }
-    }
-
-})();

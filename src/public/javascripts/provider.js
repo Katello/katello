@@ -66,16 +66,6 @@ $(document).ready(function() {
 
 var provider = (function() {
     return {
-        //custom successCreate - calls notices update and list/panel updates from KT.panel.js
-        successCreate : function(data) {
-            //KT.panel.js functions
-            list.add(data);
-            KT.panel.closePanel($('#panel'));
-        },
-        failCreate : function(data) {
-            // enable the form submit so that the user can resolve the error and retry
-            $('input[id^=provider_save]').removeAttr("disabled");
-        },
         toggleFields : function() {
           	var val = $('#provider_provider_type option:selected').val();
           	var fields = "#repository_url_field"; 
