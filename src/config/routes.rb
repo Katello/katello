@@ -121,7 +121,6 @@ Src::Application.routes.draw do
       get :auto_complete_search
       get :items
       get :auto_complete_package
-      get :auto_complete_package_groups
       get :product_packages
       get :product_comps
     end
