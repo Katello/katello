@@ -134,14 +134,21 @@ class SyncPlansController < ApplicationController
       sdate = params[:sync_plan].delete :plan_date
       stime = params[:sync_plan].delete :plan_time
       sync_event = sdate + ' ' + stime
+      
       begin
         params[:sync_plan][:sync_date] = DateTime.strptime(sync_event, "%m/%d/%Y %I:%M %P")
       rescue Exception => error
         params[:sync_plan][:sync_date] = nil
       end
+      
       @plan = SyncPlan.create! params[:sync_plan].merge({:organization => current_organization})
       notice N_("Sync Plan '#{@plan['name']}' was created.")
-      render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval'], :name=>controller_display_name}
+      
+      if SyncPlan.where(id = @plan.id).search_for(params[:search]).include?(@plan) 
+        render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval'], :name=>controller_display_name}
+      else
+        render :json => { :no_match => true }
+      end
     rescue Exception => error
       Rails.logger.error error.to_s
       errors error
