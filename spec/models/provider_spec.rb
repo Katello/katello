@@ -39,7 +39,7 @@ describe Provider do
     disable_product_orchestration
     @organization = Organization.new(:name =>"org10020", :cp_key => 'org10020')
     @organization.save!
-    @organization.redhat_provider.destroy
+    @organization.redhat_provider.delete
     @organization = Organization.last
   end
 
@@ -175,15 +175,15 @@ describe Provider do
 
   context "Delete a provider" do
 
-    it "should delete the RH provider" do
+    it "should not delete the RH provider" do
       @provider = Provider.create(to_create_rh)
       id = @provider.id
       @provider.destroy
-      lambda{Provider.find(id)}.should raise_error(ActiveRecord::RecordNotFound)
+      @provider.destroyed?.should be_false
     end
 
     it "should delete the Custom provider" do
-      @provider = Provider.create(to_create_rh)
+      @provider = Provider.create(to_create_custom)
       id = @provider.id
       @provider.destroy
       lambda{Provider.find(id)}.should raise_error(ActiveRecord::RecordNotFound)
