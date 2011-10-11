@@ -51,7 +51,7 @@ $(document).ready(function() {
 
     //create the initial selected count
     KT.panel.updateResult(); 
-    KT.panel.registerDefaultActions();
+    KT.panel.actions.registerDefaultActions();
 
     $('.block').live('click', function(event) {
         if( event.target.nodeName === "A" && event.target.className.match('content_add_remove') ){
@@ -494,65 +494,74 @@ KT.panel = (function($){
 
         	panels_list.push(new_panel);
         },
-        registerDefaultActions = function() {
-            var actions = $(".panel_action");
-            actions.each(function(index){
-                var action = $(this);
-                var options = action.find(".options");
-                action.find("a").click(function() {
-                    options.show();
-                });
-                action.find(".cancel").click(function() {
-                    if ($(this).hasClass("disabled")){return}
-                    options.hide();
-                });
-                action.find(".trigger").click(function() {
-                    var params = action_list[action.attr("data-id")];
-                    var success = function() {
-                        options.hide();
-                        action.find("input").removeClass("disabled");
-                        if (params.success_cb){
-                            params.success_cb(getSelected());
-                        }
-                    };
-                    var error = function() {
-                      action.find("input").removeClass("disabled");
-                      if(params.error_cb) {
-                          params.error_cb(getSelected());
-                      }
-                    };
-                    
-                    if ($(this).hasClass("disabled")){return}
-                    action.find("input").addClass("disabled");
+        actions = (function(){
+            var action_list = {};
 
-                    if(params.ajax_cb) {
-                        params.ajax_cb(getSelected());
-                    }
-                    else {
-                        $.ajax({
-                            cache: 'false',
-                            type: params.method,
-                            url: params.url,
-                            data: {ids:getSelected()},
-                            success: success,
-                            error: error
-                        });
-                    }
+            var registerDefaultActions = function() {
+                var actions = $(".panel_action");
+                actions.each(function(index){
+                    var action = $(this);
+                    var options = action.find(".options");
+                    action.find("a").click(function() {
+                        options.show();
+                    });
+                    action.find(".cancel").click(function() {
+                        if ($(this).hasClass("disabled")){return}
+                        options.hide();
+                    });
+                    action.find(".trigger").click(function() {
+                        var params = action_list[action.attr("data-id")];
+                        var success = function() {
+                            options.hide();
+                            action.find("input").removeClass("disabled");
+                            if (params.success_cb){
+                                params.success_cb(getSelected());
+                            }
+                        };
+                        var error = function() {
+                          action.find("input").removeClass("disabled");
+                          if(params.error_cb) {
+                              params.error_cb(getSelected());
+                          }
+                        };
+
+                        if ($(this).hasClass("disabled")){return}
+                        action.find("input").addClass("disabled");
+
+                        if(params.ajax_cb) {
+                            params.ajax_cb(getSelected());
+                        }
+                        else {
+                            $.ajax({
+                                cache: 'false',
+                                type: params.method,
+                                url: params.url,
+                                data: {ids:getSelected()},
+                                success: success,
+                                error: error
+                            });
+                        }
+                    });
                 });
-            });
-        },
-        registerAction = function(name, params) {
-            /**
-             * params:
-             *    success_cb(data, selected_ids)
-             *    error_cb(data, selected_ids)
-             *    url      //URL for ajax call
-             *    method   //METHOD for ajax call
-             *    ajax_cb(id_list, success_cb, error_cb)  //To manually do the ajax call yourself
-             *
-             */
-          action_list[name] = params;
-        };
+            },
+            registerAction = function(name, params) {
+                /**
+                 * params:
+                 *    success_cb(data, selected_ids)
+                 *    error_cb(data, selected_ids)
+                 *    url      //URL for ajax call
+                 *    method   //METHOD for ajax call
+                 *    ajax_cb(id_list, success_cb, error_cb)  //To manually do the ajax call yourself
+                 *
+                 */
+              action_list[name] = params;
+            };
+
+            return {
+                registerAction: registerAction,
+                registerDefaultActions: registerDefaultActions
+            }
+        })();
 	
     return {
         set_extended_cb         : function(callBack){ extended_cb = callBack; },
@@ -575,8 +584,7 @@ KT.panel = (function($){
         panelAjax				: panelAjax,
         control_bbq             : control_bbq,
         registerPanel			: registerPanel,
-        registerDefaultActions  : registerDefaultActions,
-        registerAction          : registerAction
+        actions                 : actions
     };
 
 })(jQuery);
