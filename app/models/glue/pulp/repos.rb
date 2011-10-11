@@ -273,6 +273,18 @@ module Glue::Pulp::Repos
       end
     end
 
+    def add_filters filter_ids
+      repos(locker).each do |r|
+        r.add_filters filter_ids
+      end
+    end
+
+    def remove_filters filter_ids
+      repos(locker).each do |r|
+        r.remove_filters filter_ids
+      end
+    end
+
     def set_repos
       self.productContent.collect do |pc|
         cert = self.certificate
