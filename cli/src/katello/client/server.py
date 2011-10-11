@@ -245,7 +245,7 @@ class KatelloServer(Server):
         return path
 
 
-    def _request(self, method, path, queries=(), body=None, multipart=False):
+    def _request(self, method, path, queries=(), body=None, multipart=False, customHeaders={}):
         # make a request to the server and return the response
         connection = self._connect()
         url = self._build_url(path, queries)
@@ -257,7 +257,7 @@ class KatelloServer(Server):
 
         self._log.debug('sending %s request to %s' % (method, url))
 
-        connection.request(method, url, body=body, headers=self.headers)
+        connection.request(method, url, body=body, headers=dict(self.headers.items() + customHeaders.items()))
         return self._process_response(connection.getresponse())
 
 
@@ -304,7 +304,7 @@ class KatelloServer(Server):
                 message, traceback = response_body.split('\n', 1)
                 raise ServerRequestError(response.status, message.strip(), traceback.strip())
             raise ServerRequestError(response.status, response_body, None)
-        return (response.status, response_body)
+        return (response.status, response_body, response.getheaders())
 
 
     def _flatten_to_multipart(self, key, data):
@@ -432,14 +432,14 @@ class KatelloServer(Server):
     def DELETE(self, path):
         return self._request('DELETE', path)
 
-    def GET(self, path, queries=()):
-        return self._request('GET', path, queries)
+    def GET(self, path, queries=(), customHeaders={}):
+        return self._request('GET', path, queries, customHeaders=customHeaders)
 
     def HEAD(self, path):
         return self._request('HEAD', path)
 
-    def POST(self, path, body=None, multipart=False):
-        return self._request('POST', path, body=body, multipart=multipart)
+    def POST(self, path, body=None, multipart=False, customHeaders={}):
+        return self._request('POST', path, body=body, multipart=multipart, customHeaders=customHeaders)
 
-    def PUT(self, path, body, multipart=False):
-        return self._request('PUT', path, body=body, multipart=multipart)
+    def PUT(self, path, body, multipart=False, customHeaders={}):
+        return self._request('PUT', path, body=body, multipart=multipart, customHeaders=customHeaders)

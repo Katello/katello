@@ -71,6 +71,7 @@ def setup_admin(admin):
     user_cmd.add_action('list', user.List())
     user_cmd.add_action('update', user.Update())
     user_cmd.add_action('delete', user.Delete())
+    user_cmd.add_action('report', user.Report())
     admin.add_command('user', user_cmd)
 
     admin.add_command('ping', ping.Status())
@@ -128,6 +129,7 @@ def setup_admin(admin):
     system_cmd.add_action('packages', system.InstalledPackages())
     system_cmd.add_action('facts', system.Facts())
     system_cmd.add_action('update', system.Update())
+    system_cmd.add_action('report', system.Report())
     admin.add_command('system', system_cmd)
 
     template_cmd = template.Template()
