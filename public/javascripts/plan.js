@@ -11,14 +11,11 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-$(document).ready(function() {
+(function(){
+	KT.panel.registerPage('sync_plans', { create : 'new_sync_plan' });
+})();
 
-  $('form[id^=new_sync_plan]').live('submit', function(e) {
-    //disable submit
-    $(':submit', this).attr('disabled', 'disabled');
-    e.preventDefault();
-    $(this).ajaxSubmit({success:sync_plan.successCreate, error:sync_plan.errorCreate});
-  });
+$(document).ready(function() {
 
   $.editable.addInputType( 'datepicker', {
 

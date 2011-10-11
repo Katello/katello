@@ -12,18 +12,10 @@
 */
 
 (function(){
-	KT.panel.getListContent('providers');
+	KT.panel.registerPage('providers', { create : 'new_provider' });
 })();
 
 $(document).ready(function() {
-
-  $('#new_provider').live('submit', function(e) {
-    // disable submit to avoid duplicate clicks
-    $('input[id^=provider_save]').attr("disabled", true);
-
-    e.preventDefault();
-    $(this).ajaxSubmit({success:provider.successCreate, error:provider.failCreate});
-  });
 
   $('#upload_manifest').live('submit', function(e) {
     // disable submit to avoid duplicate clicks

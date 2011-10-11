@@ -145,8 +145,12 @@ class ProvidersController < ApplicationController
       @provider = Provider.create! params[:provider].merge({:provider_type => Provider::CUSTOM,
                                                                     :organization => current_organization})
       notice _("Provider '#{@provider['name']}' was created.")
-      render :partial=>"common/list_item", :locals=>{:item=>@provider, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
-
+      
+      if Provider.where(id = @provider.id).search_for(params[:search]).include?(@provider) 
+        render :partial=>"common/list_item", :locals=>{:item=>@provider, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
+      else
+        render :json => { :no_match => true }
+      end
     rescue Exception => error
       Rails.logger.error error.to_s
       errors error
