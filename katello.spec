@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.91
+Version:        0.1.92
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -237,6 +237,16 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Oct 11 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.92-1
+- Installation does not pull in katello-cli
+- Revert "added ruport-related gems to Gemfile"
+- jslint - fix warnings reported during build
+- templates - fix in spec tests for exporting/importing
+- templates - fix for cloning to next environment - added nvres to export - fix
+  for importing package groups
+- added ruport-related gems to Gemfile
+- JsRoutes - Fix for rake task to generate javascript routes.
+
 * Mon Oct 10 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.91-1
 - scoped_search - Gemfile updates to support scoped_search 2.3.4
   (bbuckingham@redhat.com)
