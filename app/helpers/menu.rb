@@ -28,55 +28,52 @@ module Menu
 
   def create_menu
     ret = menu_main
-    ret.delete_if do |top_level|
-      if_eval_top = top_level.delete(:if)
-      if (!if_eval_top) || if_eval_top == :sub_level || if_eval_top.call
-        if top_level[:items]
-          top_level[:items] = top_level[:items].call if Proc === top_level[:items]
-          top_level[:items].delete_if do |second_level|
-            if_eval_second = second_level.delete(:if)
-            if (!if_eval_second) || if_eval_second == :sub_level || if_eval_second.call
-              if second_level[:items]
-                second_level[:items] = second_level[:items].call if Proc === second_level[:items]
-                second_level[:items].delete_if do |third_level|
-                  if_eval = third_level.delete(:if)
-                  if (!if_eval) || if_eval.call
-                    third_level[:url] =  third_level[:url].call if Proc===third_level[:url]
-                    false
-                  else
-                    true
-                  end
-                end
-                if (!second_level[:url] || second_level[:url] == :sub_level) && !second_level[:items].empty?
-                  second_level[:url] = second_level[:items][0][:url]
-                end
-                second_level[:url] =  second_level[:url].call if Proc===second_level[:url]
+    prune_menu ret
+    ret
+  end
 
-                second_level[:items].empty?
-              else
-                second_level[:url] =  second_level[:url].call if Proc===second_level[:url]
-                false
-              end
-            else
-              #second level if call was false
-              true
-            end
-          end
-          if (!top_level[:url] || top_level[:url] == :sub_level) && !top_level[:items].empty?
-            top_level[:url] = top_level[:items][0][:url]
-          end
-          top_level[:url] =  top_level[:url].call if Proc===top_level[:url]
-          top_level[:items].empty?
-        else
-          # top level has no items
-          top_level[:url] =  top_level[:url].call if Proc===top_level[:url]
-          false
-        end
+  private
+  def prune_menu menu_items
+    #have a list of menu items -> example [dashboard_hash, organizations_hash]
+    #we need to prune that list based on
+    #1. :if block wont pass (Permission issues  -> eg: user has no org access)   OR
+    #2. No accessible children (-> eg: none of the second level items under org work out for the user)
+    menu_items.delete_if do |menu|
+      # check the :if block
+      if_proc =  menu.delete(:if)
+      if (!if_proc) || if_proc == :sub_level || if_proc.call
+         # :if block worked out.
+         # Checking the children
+         if menu[:items]
+           menu[:items] = menu[:items].call if Proc === menu[:items]
+           # prune the sub menus
+           prune_menu(menu[:items]) if menu[:items]
+
+           # now that they have been pruned, set the default url.
+           # pick that from the first accessible child
+           if (!menu[:url] || menu[:url] == :sub_level) && !menu[:items].empty?
+             menu[:url] = menu[:items][0][:url]
+           end
+
+           menu[:url] =  menu[:url].call if Proc===menu[:url]
+
+           #we want this item to be pruned
+           # if there are no accessible children
+
+           menu[:items].empty?
+         else
+           # this is a leaf node
+           # and its condition has already been evaluated to true
+           # so keep it
+           menu[:url] =  menu[:url].call if Proc===menu[:url]
+           false
+         end
       else
-        #top level if call was false
+        # This node's condition has been evaluated to false
+        # so prune it.
         true
       end
     end
-    ret
   end
+
 end
