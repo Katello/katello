@@ -25,6 +25,8 @@ class System < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
 
+  acts_as_reportable
+
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :systems
   belongs_to :system_template
 
