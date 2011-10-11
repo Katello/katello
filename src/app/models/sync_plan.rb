@@ -32,8 +32,9 @@ class SyncPlan < ActiveRecord::Base
     :in => TYPES,
     :allow_blank => false
 
-  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
+  scope :readable, lambda { |org| where ("0 = 1") unless ::Provider.any_readable?(org)}
 
+  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
   scoped_search :on => :name, :complete_value => true
 
   def validate_sync_date
@@ -63,5 +64,4 @@ class SyncPlan < ActiveRecord::Base
   def plan_zone
     self.sync_date.strftime('%Z')
   end
-
 end
