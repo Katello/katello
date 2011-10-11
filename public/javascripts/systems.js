@@ -44,7 +44,7 @@ KT.systems_page = (function() {
 
     var registerActions= function() {
         var remove = $(".panel_action[data-id=remove_systems]");
-        KT.panel.registerAction("remove_systems",
+        KT.panel.actions.registerAction("remove_systems",
             {  url: remove.attr("data-url"),
                method: remove.attr("data-method"),
                success_cb: function(ids){
