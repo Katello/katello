@@ -29,6 +29,8 @@ class Provider < ActiveRecord::Base
     :in => TYPES,
     :allow_blank => false,
     :message => "Please select provider type from one of the following: #{TYPES.join(', ')}."
+  validate :constraint_redhat_update
+  before_destroy :prevent_redhat_deletion
   before_validation :sanitize_repository_url
 
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
@@ -50,14 +52,22 @@ class Provider < ActiveRecord::Base
     end
   end
 
-  before_destroy :prevent_redhat_deletion
-
   def prevent_redhat_deletion
-    if provider_type == REDHAT
+    if redhat_provider?
       errors.add(:base, _("Red Hat provider can not be deleted"))
       return false
     end
     true
+  end
+
+  def constraint_redhat_update
+    if !new_record? && redhat_provider?
+      allowed_changes = %w[repository_url]
+      not_allowed_changes = changes.keys - allowed_changes
+      unless not_allowed_changes.empty?
+        errors.add(:base, _("the following attributes can not be updated for the Red Hat provider: [ %s ]") % not_allowed_changes.join(", "))
+      end
+    end
   end
 
   def valid_url
