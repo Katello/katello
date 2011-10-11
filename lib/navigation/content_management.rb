@@ -42,7 +42,7 @@ module Navigation
       {:key => :content,
        :name => N_("Content Management"),
         :url => :sub_level,
-        :class=>'content',
+        :options => {:class=>'content'},
         :if => lambda{current_organization},
         :items=> [ menu_providers, menu_sync_management, menu_system_templates, menu_promotions, menu_changeset]
       }
@@ -53,9 +53,8 @@ module Navigation
       {:key => :providers,
        :name =>N_("Providers"),
        :url => :sub_level,
-       :options => {:highlights_on => /(\/organizations\/.*\/providers)|(\/providers\/.*\/(products|repos))/},
        :if => :sub_level,
-       :items => [menu_redhat_providers, menu_custom_providers]
+       :items => [menu_custom_providers, menu_redhat_providers]
       }
 
     end
