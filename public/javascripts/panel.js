@@ -487,7 +487,7 @@ KT.panel = (function($){
         	options = options || {};
         	
         	getListContent(resource_type);
-        	
+        			    		console.log(options);
         	if( options['create'] ){
 		    	$('#' + options['create']).live('submit', function(e) {
 		    		var button = $(this).find('input[type|="submit"]');
@@ -508,7 +508,7 @@ KT.panel = (function($){
 				                notices.checkNotices();
 				            }
 				      	}, 
-				      	error: function(e) {
+				      	error	: function(e) {
 				        	button.removeAttr('disabled');
 				            notices.checkNotices();
 				      	}

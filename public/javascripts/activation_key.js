@@ -12,18 +12,13 @@
 */
 
 (function(){
-	KT.panel.getListContent('activation_keys');
+	KT.panel.registerPage('activation_keys', { create : 'new_activation_key' });
 })();
 
 $(document).ready(function() {
 
     KT.panel.set_expand_cb(function() {
         KT.activation_key.initialize_edit();
-    });
-
-    $('#new_activation_key').live('submit', function(e) {
-        e.preventDefault();
-        KT.activation_key.create_key($(this));
     });
 
     $('#save_key').live('submit', function(e) {

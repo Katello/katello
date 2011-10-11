@@ -5,8 +5,8 @@
       = yield :title
     = yield :remove_item  
 
-- if content_for?(:navigation)
-  %nav.subnav.clear
+%nav.subnav.clear
+  - if content_for?(:navigation)
     = yield :navigation
 
 - if content_for?(:content)
