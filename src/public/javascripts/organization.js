@@ -48,26 +48,4 @@ $(document).ready(function() {
             error: function() {button.removeClass("disabled")}
         });
    });
-
-   /*$('#new_organization').live('submit', function(e) {
-      e.preventDefault();
-      var button = $(this).find('input[type|="submit"]');
-       button.attr("disabled","disabled");
-      $(this).ajaxSubmit({
-  			url	:  KT.routes.organizations_path() + KT.common.getSearchParams(),
-          success: function(data) {
-          		if( data['no_match'] ){
-	                KT.panel.closePanel($('#panel'));
-                	notices.checkNotices();
-               } else {
-	                list.add(data);
-	                KT.panel.closePanel($('#panel'));
-	                KT.panel.select_item(list.last_child().attr("id"));
-	                notices.checkNotices();
-                }
-          }, error: function(e) {
-                button.removeAttr('disabled');
-                notices.checkNotices();
-          }});
-   });*/
 });

@@ -96,14 +96,17 @@ class RolesController < ApplicationController
   end
 
   def create
-    begin
-      @role = Role.create!(params[:role])
-      notice _("Role '#{@role.name}' was created.")
+    @role = Role.create!(params[:role])
+    notice _("Role '#{@role.name}' was created.")
+    
+    if Role.where(id = @role.id).search_for(params[:search]).include?(@role)
       render :partial=>"common/list_item", :locals=>{:item=>@role, :accessor=>"id", :columns=>["name"], :name=>controller_display_name}
-    rescue Exception => error
-      errors error
-      render :json=>error.to_s, :status=>:bad_request
+    else
+      render :json => { :no_match => true }
     end
+  rescue Exception => error
+    errors error
+    render :json=>error.to_s, :status=>:bad_request
   end
 
   def update

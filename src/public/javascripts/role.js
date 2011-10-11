@@ -12,12 +12,12 @@
 */
 
 (function(){
-	KT.panel.getListContent('roles');
+	KT.panel.registerPage('roles', { create : 'new_role' });
 })();
 
 $(document).ready(function() {
 
-    $('#save_role_button').live('click',roles_page.create_new_role);
+    //$('#save_role_button').live('click',roles_page.create_new_role);
 
 });
 
