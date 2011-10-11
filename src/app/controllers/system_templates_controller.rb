@@ -133,6 +133,7 @@ class SystemTemplatesController < ApplicationController
 
 
   def update_content
+    
     pkgs = params[:packages]
     products = params[:products]
     pkg_groups = params[:package_groups]
@@ -146,7 +147,7 @@ class SystemTemplatesController < ApplicationController
     products.each{|prod|
       @template.products << Product.readable(current_organization).find(prod[:id])
     }
-
+    
     @template.package_groups = []
     pkg_groups.each{|grp|
       @template.add_package_group(grp[:name])
