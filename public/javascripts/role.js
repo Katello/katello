@@ -12,7 +12,7 @@
 */
 
 (function(){
-	KT.panel.getListContent(KT.routes.items_roles_path() + '?offset=0');
+	KT.panel.getListContent('roles');
 })();
 
 $(document).ready(function() {

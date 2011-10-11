@@ -12,5 +12,5 @@
 */
 
 (function(){
-	KT.panel.getListContent(KT.routes.items_sync_plans_path() + '?offset=0');
+	KT.panel.getListContent('sync_plans');
 })();

@@ -12,7 +12,7 @@
 */
 
 (function(){
-	KT.panel.getListContent(KT.routes.items_users_path() + '?offset=0');
+	KT.panel.getListContent('users');
 })();
 
 $(document).ready(function() {

@@ -18,7 +18,7 @@
  */
 
 (function(){
-	KT.panel.getListContent(KT.routes.items_systems_path() + '?offset=0');
+	KT.panel.getListContent('systems');
 })();
 
 $(document).ready(function() {

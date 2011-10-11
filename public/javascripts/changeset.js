@@ -16,7 +16,7 @@
 KT.panel.control_bbq = false;
 
 (function(){
-	KT.panel.getListContent(KT.routes.items_changesets_path() + '?offset=0');
+	KT.panel.getListContent('changesets');
 })();
 
 $(document).ready(function() {
