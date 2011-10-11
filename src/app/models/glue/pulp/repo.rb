@@ -270,6 +270,14 @@ class Glue::Pulp::Repo
     Glue::Pulp::Repo.new(Pulp::Repository.find(id))
   end
 
+  def add_filters filter_ids
+    ::Pulp::Repository.add_filters id, filter_ids
+  end
+
+  def remove_filters filter_ids
+    ::Pulp::Repository.remove_filters id, filter_ids
+  end
+
   # Convert array of Repo objects to Ruby Hash in the form of repo.id => repo_object for fast searches.
   #
   # @param array_to_hash array of Repo objects
