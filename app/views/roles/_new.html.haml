@@ -5,14 +5,17 @@
   / pretty
 
 = content_for :content do
-  #new_role
-    .grid_10#new_role
+  .grid_10
+    = form_tag roles_path, :method => "post", :id => "new_role" do
       %fieldset
-        .grid_1.ra
-          = label :role, :name, _("Name")
+        .grid_2.ra
+          %label #{_("Name")}:
         .grid_5.la
-          = text_field :role, :name, :id=>"role_name_field", :tabindex => auto_tab_index
-  
-      .grid_3.la.push_1
-        .button#save_role_button{'data-url' => roles_path, :tabindex => auto_tab_index}
-          #{_("Save Role")}
+          = text_field_tag 'role[name]', params[role[:name]], :tabindex => auto_tab_index
+      %fieldset
+        .grid_2.ra
+          %label #{_("Description")}:
+        .grid_5.la
+          = text_area_tag 'role[description]', params[role[:description]], :tabindex => auto_tab_index
+      .grid_5.la.push_2
+        = button_to _("Save"), {:action => "create", :controller => "roles"}, :method => :post, :id => :role_save, :tabindex => auto_tab_index        
