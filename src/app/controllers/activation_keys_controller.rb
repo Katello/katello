@@ -188,19 +188,21 @@ class ActivationKeysController < ApplicationController
   end
 
   def create
-    begin
-      @activation_key = ActivationKey.create!(params[:activation_key]) do |key|
-        key.organization = current_organization
-        key.user = current_user
-      end
-      notice _("Activation key '#{@activation_key['name']}' was created.")
-      render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
-
-    rescue Exception => error
-      Rails.logger.error error.to_s
-      errors error
-      render :text => error, :status => :bad_request
+    @activation_key = ActivationKey.create!(params[:activation_key]) do |key|
+      key.organization = current_organization
+      key.user = current_user
     end
+    notice _("Activation key '#{@activation_key['name']}' was created.")
+    
+    if ActivationKey.where(id = @activation_key.id).search_for(params[:search]).include?(@activation_key)
+      render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
+    else
+      render :json => { :no_match => true }
+    end
+  rescue Exception => error
+    Rails.logger.error error.to_s
+    errors error
+    render :text => error, :status => :bad_request
   end
 
   def update
