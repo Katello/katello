@@ -100,9 +100,9 @@ KT.templates = function() {
         };
         
     },
-    in_pkg_array = function(name) {
+    in_array =  function(name, array) {
         var to_ret = -1;
-        $.each(KT.options.current_template.packages, function(index, item) {
+        $.each(array, function(index, item) {
             if (item.name === name) {
                 to_ret = index;
                 return false;
@@ -111,7 +111,7 @@ KT.templates = function() {
         return to_ret;
     },
     has_package = function(name) {
-        return in_pkg_array(name) > -1;
+        return in_array(name, KT.options.current_template.packages) > -1;
     },
     add_package = function(name) {
       var pkgs = KT.options.current_template.packages;
@@ -121,17 +121,34 @@ KT.templates = function() {
       KT.options.current_template.modified = true;
       KT.options.template_tree.rerender_content();
     },
-    remove_package = function(name) {
-        var pkgs = KT.options.current_template.packages;
-        var loc = in_pkg_array(name);
+    generic_remove = function(name, array) {
+        var loc = in_array(name, array);
         if (loc > -1) {
-            pkgs.splice(loc, 1);
+            array.splice(loc, 1);
             KT.options.current_template.modified = true;
             change_content_toggle(name, false);
             KT.options.template_tree.rerender_content();
         }
     },
+    remove_package = function(name) {
+        generic_remove(name, KT.options.current_template.packages);
+    },
+    has_package_group = function(name) {
+        return in_array(name, KT.options.current_template.package_groups) > -1;
+    },
+    add_package_group = function(name) {
+      var grps = KT.options.current_template.package_groups;
+      if (!has_package_group(name)) {
+        grps.push({name:name});
+      }
+      KT.options.current_template.modified = true;
+      KT.options.template_tree.rerender_content();
+    },
+    remove_package_group = function(name) {
+        generic_remove(name, KT.options.current_template.package_groups);
+    },
     reset_page = function() {
+        
         if (KT.options.current_template === undefined || !KT.permissions.editable) {
             buttons.edit.addClass("disabled");
             buttons.remove.addClass("disabled");
@@ -151,13 +168,20 @@ KT.templates = function() {
                 buttons.save.addClass("disabled");
             }
 
-            //handle packages
-            $('.package_add_remove').not('.working').show().text(i18n.add_plus); //reset all add/remove to add
-            $.each(KT.options.current_template.packages, function(index, item){
-                var btn = $('a[data-name=' + item.name + '].package_add_remove').not('.working');
-                if (btn.length > 0) {
-                    btn.text(i18n.remove);
-                }
+
+            //handle packages & groups
+            $.each( [["package", KT.options.current_template.packages],
+                     ["package_group", KT.options.current_template.package_groups]], function(index, item) {
+                var type = item[0];
+                var array = item[1];
+                
+                $('.' + type + '_add_remove').not('.working').show().text(i18n.add_plus); //reset all add/remove to add
+                $.each(array, function(index, item){
+                    var btn = $('a[data-name="' + item.name + '"].' + type + '_add_remove').not('.working');
+                    if (btn.length > 0) {
+                        btn.text(i18n.remove);
+                    }
+                });
             });
 
             //handle products
@@ -191,7 +215,7 @@ KT.templates = function() {
         });
     },
     change_content_toggle = function(pkg_name, adding) {
-        var btn = $("a[data-name=" + pkg_name + "]");
+        var btn = $("a[data-name='" + pkg_name + "']");
         if (btn.length > 0) {
             if (adding) {
                 btn.text(i18n.remove);
@@ -246,7 +270,10 @@ KT.templates = function() {
         has_package: has_package,
         add_product: add_product,
         remove_product: remove_product,
-        has_product: has_product
+        has_product: has_product,
+        has_package_group: has_package_group,
+        add_package_group: add_package_group,
+        remove_package_group: remove_package_group
     };
 
 
@@ -297,6 +324,9 @@ KT.template_renderer = function() {
                 }
                 else if (node === "products") {
                     content = products();
+                }
+                else if (node === "comps") {
+                    content = comps();
                 }
                 else {
                     console.log("Can't render: " +  id);
@@ -372,9 +402,35 @@ KT.template_renderer = function() {
         });
         return html + "</ul>";
     },
+    comps = function() {
+        var html = "";
+        if (KT.permissions.editable) {
+            html += '<ul ><li class="content_input_item"><form id="add_package_group_form">';
+            html += '<input id="add_package_group_input" type="text" size="33"><form>  ';
+            html += '<a id="add_package_group" class="fr st_button ">' + i18n.add_plus + '</a>';
+            html += ' </li></ul>';
+        }
+
+        html +=  '<ul class="filterable">';
+        $.each(KT.options.current_template.package_groups, function(index, item) {
+            html += comps_item(item.name);
+
+        });
+        return html + "</ul>";
+    },
+    comps_item = function(pkg_name) {
+        var html = '<li class="">';
+        html += '<div class="simple_link" id=group_"' + pkg_name + '">';
+        html += '<span class="sort_attr">' + pkg_name + '</span>';
+        if (KT.permissions.editable) {
+            html += '<a id="" class="fr st_button remove_package_group">' + i18n.remove + '</a>';
+        }
+        html += "</div></li>";
+        return html ;
+    },
     details = function(t_id) {
         var html = "<ul>";
-        $.each([['products_', i18n.products], ['packages_', i18n.packages]], function(index, item_set) {
+        $.each([['products_', i18n.products], ['packages_', i18n.packages], ['comps_', i18n.package_groups]], function(index, item_set) {
             html += list_item(item_set[0] + t_id, item_set[1], true);
         });
         return html + "</ul>";
@@ -427,7 +483,8 @@ KT.auto_complete_box = function(params) {
     add_item_base = function(item, focus) {
         var input = $("#" + settings.input_id);
         var add_btn = $("#" + settings.add_btn_id);
-        
+
+        add_btn.addClass("working");
         add_btn.html("<img  src='images/spinner.gif'>");
         input.attr("disabled", "disabled");
         input.autocomplete('disable');
@@ -629,6 +686,72 @@ KT.package_actions = (function() {
 })();
 
 
+KT.package_group_actions = (function() {
+    var current_input = undefined;
+
+    //called everytime 'packages is loaded'
+    var register_autocomplete = function() {
+        current_input = KT.auto_complete_box({
+            values:       KT.package_groups,
+            default_text: i18n.package_group_search_text,
+            input_id:     "add_package_group_input",
+            form_id:      "add_package_group_form",
+            add_btn_id:   "add_package_group",
+            add_cb:       verify_add_group
+        });
+    },
+    verify_add_group = function(name, cleanup_cb){
+        if ($.inArray(name, KT.package_groups) > -1) {
+            KT.templates.add_package_group(name);
+        }
+        else {
+            current_input.error();
+        }
+        cleanup_cb();
+    },
+    auto_complete_call = function(req, response_cb) {
+        $.ajax({
+            type: "GET",
+            url: KT.common.rootURL() + '/system_templates/auto_complete_package_groups',
+            data: {name:req.term},
+            cache: false,
+            success: function(data){
+                response_cb(data.splice(0, 20)); //only show 20 packages at a time
+            },
+            error: KT.templates.throw_error
+        });
+    },
+    //called once on page load
+    register_events = function() {
+        $(".remove_package_group").live('click', function() {
+            var pkg = $(this).siblings("span").text();
+            if (pkg && pkg.length > 0) {
+                KT.templates.remove_package_group(pkg);
+            }
+        });
+
+        $(".package_group_add_remove").live('click', function(){
+            var btn = $(this);
+            var name = btn.attr("data-name");
+            if (KT.templates.has_package_group(name)) {
+                //need to remove
+                KT.templates.remove_package_group(name);
+            }
+            else {
+                //need to add
+                btn.html("<img  src='images/spinner.gif'>");
+                current_input.manually_add(name);
+            }
+        });
+
+    };
+    return {
+        register_events: register_events,
+        register_autocomplete: register_autocomplete
+    };
+})();
+
+
 //Actions related with templates (CRUD)
 KT.actions =  (function(){
     var options = KT.options;
@@ -725,7 +848,7 @@ KT.actions =  (function(){
             KT.common.customConfirm($(this).attr('data-confirm-text'), function(){
                 $.ajax({
                     type: "DELETE",
-                    url: KT.common.rootURL() + '/system_templates/' + options.current_template.id,
+                    url: KT.routes.system_template_path(options.current_template.id),
                     cache: false,
                     success: function(data){
                         KT.templates.remove_template(options.current_template.id);
@@ -745,12 +868,13 @@ KT.actions =  (function(){
             var current = KT.options.current_template;
             var data = {
                 packages: current.packages,
-                products: current.products
+                products: current.products,
+                package_groups: current.package_groups
             };
             $.ajax({
                 type: "PUT",
                 contentType:"application/json",
-                url: KT.common.rootURL() + '/system_templates/' + options.current_template.id + '/update_content/',
+                url: KT.routes.update_content_system_template_path(options.current_template.id),
                 data: JSON.stringify(data),
                 cache: false,
                 success: function(data){
@@ -834,6 +958,8 @@ $(document).ready(function() {
 
 
 
+    KT.panel.set_extended_cb(KT.templates.reset_page);
+
     KT.options.templates = KT.template_breadcrumb["templates"].templates;
 
     KT.options.content_tree = sliding_tree("content_tree", {
@@ -856,6 +982,7 @@ $(document).ready(function() {
                             tab_change_cb   :  function(hash) {
                                 KT.package_actions.register_autocomplete();
                                 KT.product_actions.register_autocomplete();
+                                KT.package_group_actions.register_autocomplete();
                                 KT.templates.reset_page();
                             },
                             enable_search   :  true,
@@ -868,6 +995,8 @@ $(document).ready(function() {
     KT.actions.register_events();
     KT.package_actions.register_events();
     KT.product_actions.register_events();
+    KT.package_group_actions.register_events();
+
 
 
     //Handle scrolling

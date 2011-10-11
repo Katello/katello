@@ -122,6 +122,7 @@ Src::Application.routes.draw do
       get :items
       get :auto_complete_package
       get :product_packages
+      get :product_comps
     end
     member do
       get :promotion_details

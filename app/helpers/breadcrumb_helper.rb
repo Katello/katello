@@ -308,12 +308,16 @@ module BreadcrumbHelper
      for prod in @products
        product_id = product_bc_id(prod)
        #top of this product, only need packages for now
-       #add_crumb_node!(bc, product_id, "",
-       #   prod.name, [products_crumb_id], {:cache=>true, :content=>render(:partial=>"product_detail", :locals=>{:product=>prod})})
+       add_crumb_node!(bc, product_id, "",
+          prod.name, [products_crumb_id], {:cache=>true, :content=>render(:partial=>"product_detail", :locals=>{:product=>prod})})
 
        #product,packages
        add_crumb_node!(bc, packages_bc_id(prod), product_packages_system_templates_path(:product_id=>prod.id),
-          prod.name + " " +  _("Packages"), [products_crumb_id], {:scrollable=>true})
+          prod.name + " " +  _("Packages"), [products_crumb_id, product_id], {:scrollable=>true})
+
+       #product,comps
+       add_crumb_node!(bc, comps_bc_id(prod), product_comps_system_templates_path(:product_id=>prod.id),
+          prod.name + " " +  _("Package Groups"), [products_crumb_id, product_id], {:scrollable=>true})
           
 
      end
@@ -335,6 +339,8 @@ module BreadcrumbHelper
 
         add_crumb_node!(bc, packages_bc_id(template), "", _("Packages"), [root_id, template_id], {:client_render => true})
         add_crumb_node!(bc, products_bc_id(template), "", _("Products"), [root_id, template_id], {:client_render => true})
+        add_crumb_node!(bc, comps_bc_id(template), "", _("Package Groups"), [root_id, template_id], {:client_render => true})
+
       }
 
       bc.to_json
@@ -347,6 +353,14 @@ module BreadcrumbHelper
 
     def packages_bc_id template
       "packages_#{template.id}"
+    end
+
+     def comps_bc_id template
+      "comps_#{template.id}"
+    end
+
+    def product_bc_id product
+      "product_#{product.id}"
     end
 
     def products_bc_id template
