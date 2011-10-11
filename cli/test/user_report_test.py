@@ -13,7 +13,8 @@ class UserReportTest(CLIActionTestCase):
     def setUp(self):
         self.set_action(Report())
         self.set_module(katello.client.core.user)
-        self.mock(self.action.api, 'report', '')
+        self.mock(self.action.api, 'report', ('', ''))
+        self.mock(katello.client.core.utils, 'save_report')        
  
     def tearDown(self):
         self.restore_mocks()
@@ -26,4 +27,9 @@ class UserReportTest(CLIActionTestCase):
         self.mock_options({'format': 'pdf'})        
         self.action.run()
         self.action.api.report.assert_called_once_with(convert_to_mime_type('pdf'))
+        
+    def test_it_saves_pdf_report(self):
+        self.mock_options({'format': 'pdf'})        
+        self.action.run()
+        katello.client.core.utils.save_report.assert_called_once()
  

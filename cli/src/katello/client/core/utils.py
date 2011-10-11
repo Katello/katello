@@ -584,10 +584,10 @@ def convert_to_mime_type(type, default=None):
     return availableMimeTypes.get(type, availableMimeTypes.get(default))
     
 def attachment_file_name(headers, default):
-    contentDisposition = filter(lambda h: h[1].lower() == 'content-disposition', headers)
-    
+    contentDisposition = filter(lambda h: h[0].lower() == 'content-disposition', headers)
+
     if len(contentDisposition) >  0:
-        filename = contentDisposition[1].split('filename=')
+        filename = contentDisposition[0][1].split('filename=')
         if len(filename) < 2:
             return default            
         if filename[1][0] == '"' or filename[1][0] == "'":
