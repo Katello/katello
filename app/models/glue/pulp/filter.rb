@@ -44,7 +44,7 @@ module Glue::Pulp::Filter
       raise e
     end
 
-    def delete_filter_orchestration
+    def destroy_filter_orchestration
       queue.create(:name => "delete pulp filter: #{self.pulp_id}", :priority => 3, :action => [self, :del_pulp_filter])
     end
 
