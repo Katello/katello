@@ -1,0 +1,32 @@
+= include_javascripts :edit
+
+= content_for :title do
+  #{_("New system")}
+
+= content_for :content do
+  #new_system
+    = form_tag({:action => "create", :method => "post"}, :id => "new_system_form") do |f|
+      .grid_10#new_system
+        %fieldset
+          .grid_2.ra
+            = label :system, :name, _("Name of Your System:")
+          .grid_5.la
+            = text_field :system, :name, :id=>"name_field", :tabindex => 1
+        %fieldset
+          .grid_2.ra
+            = label :system, :arch, _("Architecture:")
+          .grid_5.la
+            = architecture_select
+        %fieldset
+          .grid_2.ra
+            = label :system, :sockets, _("Number of Sockets or LPARs:")
+          .grid_5.la
+            = text_field :system, :sockets, :id=>"sockets_field", :tabindex => 3
+        %fieldset
+          .grid_2.ra
+            = label :system, :virtual, _("System Type:")
+          .grid_5.la
+            = virtual_buttons
+        .grid_5.la.prefix_2
+          = button_to _("Save"), "/systems", :method => :post, :id => :system_save
+

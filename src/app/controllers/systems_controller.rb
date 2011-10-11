@@ -14,10 +14,10 @@ class SystemsController < ApplicationController
   include AutoCompleteSearch
   include SystemsHelper
 
-  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items]
+  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :new, :create]
 
   skip_before_filter :authorize
-  before_filter :find_environment, :only => [:environments, :env_items]
+  before_filter :find_environment, :only => [:environments, :env_items, :new]
   before_filter :authorize
 
   before_filter :setup_options, :only => [:index, :items, :environments, :env_items]
@@ -31,9 +31,12 @@ class SystemsController < ApplicationController
     read_system = lambda{System.find(params[:id]).readable?}
     env_system = lambda{@environment.systems_readable?}
     any_readable = lambda{System.any_readable?(current_organization)}
+    register_system = lambda { System.registerable?(@environment, current_organization) }
 
     {
       :index => any_readable,
+      :create => register_system,
+      :new => register_system,
       :items => any_readable,
       :auto_complete_search => any_readable,
       :environments => env_system,
@@ -47,6 +50,40 @@ class SystemsController < ApplicationController
       :show => read_system,
       :facts => read_system
     }
+  end
+
+  def new
+    @system = System.new
+    @system.facts = {} #this is nil to begin with
+    render :partial=>"new", :layout => "tupane_layout", :locals=>{:system=>@system}
+  end
+
+  def create
+    begin
+      #{"method"=>"post", "system"=>{"name"=>"asdfsdf", "sockets"=>"asdfasdf", "arch"=>"asdfasdfasdf", "virtualized"=>"asdfasd"}, "authenticity_token"=>"n7hXf3d+YZZnvxqcjhQjPaD»
+      @system = System.new
+      @system.facts = {}
+      @system.arch = params["arch"]["arch_id"]
+      @system.sockets = params["system"]["sockets"]
+      @system.guest = (params["system_type"]["virtualized"] == 'virtual')
+      @system.name= params["system"]["name"]
+      @system.environment = current_organization.environments[0]
+      #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
+      saved = @system.save
+      #find the newly created system
+      if saved
+        notice _("Your system was created: ") + "'#{@system.name}'"
+      else
+        errors _("There was an error creating your system ")
+      end
+
+    rescue Exception => error
+      errors error.message[1]
+      Rails.logger.info error.backtrace.join("\n")
+      render :text=> error.message[1], :status=>:bad_request and return
+    end
+    render :partial=>"common/list_item", :locals=>{:item=>@system, :accessor=>"id", :name => controller_display_name,
+                                                   :columns=>['name' ]}
   end
 
   def index
@@ -176,10 +213,10 @@ class SystemsController < ApplicationController
     end
     render :partial=>"more_packages", :locals=>{:system=>@system, :packages => packages, :offset=> offset}
   end
-  
+
   def edit
      render :partial=>"edit", :layout=>"tupane_layout", :locals=>{:system=>@system, :editable=>@system.editable?, :name=>controller_display_name}
-  end  
+  end
 
   def update
     begin
@@ -191,12 +228,12 @@ class SystemsController < ApplicationController
         end
       end
       notice _("System updated.")
-      
+
       respond_to do |format|
         format.html { render :text=>params[:system].first[1] }
-        format.js  
+        format.js
       end
-      
+
     rescue Exception => e
       errors @system.errors
       respond_to do |format|
@@ -210,14 +247,14 @@ class SystemsController < ApplicationController
     system = System.find(params[:id])
     render :partial=>"systems/list_system_show", :locals=>{:item=>system, :accessor=>"id", :columns=> COLUMNS.keys, :noblock => 1}
   end
-  
+
   def section_id
     'systems'
   end
-  
+
   def facts
     render :partial => 'facts', :layout => "tupane_layout"
-  end    
+  end
 
   private
 
@@ -238,7 +275,7 @@ class SystemsController < ApplicationController
     @panel_options = { :title => _('Systems'),
                       :col => COLUMNS.keys,
                       :custom_rows => true,
-                      :enable_create => false,
+                      :enable_create => true,
                       :enable_sort => true,
                       :name => controller_display_name,
                       :list_partial => 'systems/list_systems',
@@ -246,7 +283,7 @@ class SystemsController < ApplicationController
   end
 
   def sys_consumed_pools
-    consumed_pools = @system.pools.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
+    consumed_pools = @system.pools.collect {|pool| OpenStruct.new(:poolId => pool["id"],
                             :poolName => pool["productName"],
                             :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
                             :consumed => pool["consumed"],
@@ -256,7 +293,7 @@ class SystemsController < ApplicationController
   end
 
   def sys_available_pools
-    avail_pools = @system.available_pools.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
+    avail_pools = @system.available_pools.collect {|pool| OpenStruct.new(:poolId => pool["id"],
                             :poolName => pool["productName"],
                             :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
                             :consumed => pool["consumed"],

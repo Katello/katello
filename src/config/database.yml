@@ -21,28 +21,3 @@ development:
   database: katello
   host: localhost
   encoding: UTF8
-
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
-test:
-  <%db = find_db(config, 'test')%>
-  <%if db %>
-<%=db%>
-  <%else%>
-  adapter: sqlite3
-  database: db/test.sqlite3
-  pool: 5
-  timeout: 5000
-  <%end%>
-
-production:
-  <%db = find_db(config, 'production')%>
-  <%if db %>
-<%=db%>
-  <%else%>
-  adapter: sqlite3
-  database: db/production.sqlite3
-  pool: 5
-  timeout: 5000
-  <%end%>
