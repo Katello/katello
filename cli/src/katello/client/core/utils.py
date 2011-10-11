@@ -194,6 +194,7 @@ class Printer:
             key = col['attr_name']
             widths[key] = len(self.u_str(col['name']))+1
             for item in items:
+                if not key in item: continue
                 value = self.u_str(item[key])
                 if ( key in item ) and ( widths[key] < len(value) ):
                     widths[key] = len(value)+1
