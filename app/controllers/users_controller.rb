@@ -75,15 +75,14 @@ class UsersController < ApplicationController
   end
 
   def create
-    begin
-      @user = User.new(params[:user])
-      @user.save!
-      notice @user.username + _(" created successfully.")
-      render :partial=>"common/list_item", :locals=>{:item=>@user, :accessor=>"id", :columns=>["username"], :name=>controller_display_name}
-    rescue Exception => error
-      errors error
-      render :json=>@user.errors, :status=>:bad_request
-    end
+    @user = User.new(params[:user])
+    @user.save!
+    notice @user.username + _(" created successfully.")
+    
+    render :partial=>"common/list_item", :locals=>{:item=>@user, :accessor=>"id", :columns=>["username"], :name=>controller_display_name}
+  rescue Exception => error
+    errors error
+    render :json=>@user.errors, :status=>:bad_request
   end
   
   def update
