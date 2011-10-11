@@ -57,6 +57,7 @@ Src::Application.routes.draw do
 
   resources :systems, :except => [:destroy] do
     member do
+      get :edit
       get :packages
       get :more_packages
       get :subscriptions
