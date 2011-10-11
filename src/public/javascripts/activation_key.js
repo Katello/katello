@@ -12,7 +12,7 @@
 */
 
 (function(){
-	KT.panel.getListContent(KT.routes.items_activation_keys_path() + '?offset=0');
+	KT.panel.getListContent('activation_keys');
 })();
 
 $(document).ready(function() {

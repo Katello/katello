@@ -287,6 +287,15 @@ KT.common = (function() {
             }
             return root_url;
         },
+        getSearchParams : function() {
+        	var search_string 	= window.location.href.split('search=');
+
+        	if( search_string.length === 2 ){
+        		return '?search=' + search_string[1];	
+        	} else {
+        		return '?';
+        	}
+        },
         thirdLevelNavSetup : function(){
             var children = $('.third_level:first-child');
 

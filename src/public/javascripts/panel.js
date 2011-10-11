@@ -483,9 +483,47 @@ KT.panel = (function($){
 
         	panels_list.push(new_panel);
         },
-        getListContent = function(url){
+        registerPage = function(resource_type, options){
+        	options = options || {};
+        	
+        	getListContent(resource_type);
+        	
+        	if( options['create'] ){
+		    	$('#' + options['create']).live('submit', function(e) {
+		    		var button = $(this).find('input[type|="submit"]');
+  					
+  					e.preventDefault();
+       				button.attr("disabled","disabled");
+		    	
+			    	$(this).ajaxSubmit({
+						url		:  KT.routes[resource_type + '_path']() + KT.common.getSearchParams(),
+				    	success : function(data) {
+				    		if( data['no_match'] ){
+				            	KT.panel.closePanel($('#panel'));
+				          		notices.checkNotices();
+				    		} else {
+				                list.add(data);
+				                KT.panel.closePanel($('#panel'));
+				                KT.panel.select_item(list.last_child().attr("id"));
+				                notices.checkNotices();
+				            }
+				      	}, 
+				      	error: function(e) {
+				        	button.removeAttr('disabled');
+				            notices.checkNotices();
+				      	}
+			      	});
+        		});
+        	}
+        },
+        getListContent = function(resource_type){
+        	var url = KT.routes['items_' + resource_type + '_path']() + KT.common.getSearchParams();
+
+        	url += '&offset=0';
+        	
         	KT.panel.control_bbq = false;
         	$(window).bind( 'hashchange', hash_change);
+        	
         	$.get(url, function(data){
         		left_list_content = data;
         		$(document).ready(function(){
@@ -517,7 +555,8 @@ KT.panel = (function($){
         panelAjax				: panelAjax,
         control_bbq             : control_bbq,
         registerPanel			: registerPanel,
-        getListContent			: getListContent
+        getListContent			: getListContent,
+        registerPage			: registerPage
     };
 
 })(jQuery);

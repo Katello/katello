@@ -12,7 +12,7 @@
 */
 
 (function(){
-	KT.panel.getListContent(KT.routes.items_organizations_path() + '?offset=0');
+	KT.panel.registerPage('organizations', { create : 'new_organization' });
 })();
 
 $(document).ready(function() {
@@ -49,19 +49,25 @@ $(document).ready(function() {
         });
    });
 
-   $('#new_organization').live('submit', function(e) {
+   /*$('#new_organization').live('submit', function(e) {
       e.preventDefault();
       var button = $(this).find('input[type|="submit"]');
        button.attr("disabled","disabled");
       $(this).ajaxSubmit({
+  			url	:  KT.routes.organizations_path() + KT.common.getSearchParams(),
           success: function(data) {
-                list.add(data);
-                KT.panel.closePanel($('#panel'));
-                KT.panel.select_item(list.last_child().attr("id"));
-                notices.checkNotices();
+          		if( data['no_match'] ){
+	                KT.panel.closePanel($('#panel'));
+                	notices.checkNotices();
+               } else {
+	                list.add(data);
+	                KT.panel.closePanel($('#panel'));
+	                KT.panel.select_item(list.last_child().attr("id"));
+	                notices.checkNotices();
+                }
           }, error: function(e) {
                 button.removeAttr('disabled');
                 notices.checkNotices();
           }});
-   });
+   });*/
 });

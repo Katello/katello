@@ -77,7 +77,12 @@ class OrganizationsController < ApplicationController
       Rails.logger.info error.backtrace.join("\n")
       render :text=> error.to_s, :status=>:bad_request and return
     end
-    render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
+    
+    if Organization.where(id = @organization.id).search_for(params[:search]).include?(@organization)
+      render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
+    else
+      render :json => { :no_match => true }
+    end
   end
 
   def edit
