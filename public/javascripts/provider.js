@@ -12,7 +12,7 @@
 */
 
 (function(){
-	KT.panel.getListContent(KT.routes.items_providers_path() + '?offset=0');
+	KT.panel.getListContent('providers');
 })();
 
 $(document).ready(function() {
