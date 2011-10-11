@@ -208,11 +208,6 @@ class SystemTemplatesController < ApplicationController
     render :json=>Pulp::Package.name_search(name).sort.uniq[0..19]
   end
 
-  #def auto_complete_package_groups
-  #  name = params[:name]
-  #
-  #end
-
   def create
     
     obj_params = params[:system_template]
