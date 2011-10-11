@@ -95,7 +95,7 @@ KT.user_page = function() {
                 cache: false,
                 success: function(data) {
                     button.removeClass('disabled');
-                    list.add(data);
+                    KT.panel.list.add(data);
                     KT.panel.closePanel($('#panel'));
                   },
                 error: function(){button.removeClass('disabled');}

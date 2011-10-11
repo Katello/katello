@@ -142,52 +142,6 @@ $(document).ready(function() {
 //end doc ready
 });
 
-var list = (function(){
-   return {
-       last_child : function() {
-         return $("#list").children().last();
-       },
-       add : function(html) {
-           $('#list').append($(html).hide().fadeIn(function(){
-               $(this).addClass("add", 250, function(){
-                   $(this).removeClass("add", 250);
-               });
-           }));
-           return false;
-       },
-       remove : function(id){
-           $('#' + id).fadeOut(function(){
-               $(this).empty().remove();
-           });
-           return false;
-       },
-       complete_refresh: function(url, success_cb) {
-        $('#list').html('<img src="images/spinner.gif">');
-        list.refresh("list", url, success_cb);
-       },
-       refresh : function(id, url, success_cb){
-           var jQid = $('#' + id);
-            $.ajax({
-                cache: 'false',
-                type: 'GET',
-                url: url,
-                dataType: 'html',
-                success: function(data) {
-                    notices.checkNotices();
-                    jQid.html(data);
-
-                    // obtain the value from column_1 and place it in pane_heading
-                    $('.pane_heading').html(jQid.find('.column_1').html());
-                    if (success_cb) {
-                        success_cb();
-                    }
-                }
-            });
-           return false;
-       }
-   };
-})();
-
 KT.panel = (function($){
 	var retrievingNewContent= false,
 	    control_bbq 		= true,
@@ -487,7 +441,7 @@ KT.panel = (function($){
         	options = options || {};
         	
         	getListContent(resource_type);
-        			    		console.log(options);
+
         	if( options['create'] ){
 		    	$('#' + options['create']).live('submit', function(e) {
 		    		var button = $(this).find('input[type|="submit"]');
@@ -499,12 +453,12 @@ KT.panel = (function($){
 						url		:  KT.routes[resource_type + '_path']() + KT.common.getSearchParams(),
 				    	success : function(data) {
 				    		if( data['no_match'] ){
-				            	KT.panel.closePanel($('#panel'));
+				            	closePanel($('#panel'));
 				          		notices.checkNotices();
 				    		} else {
-				                list.add(data);
-				                KT.panel.closePanel($('#panel'));
-				                KT.panel.select_item(list.last_child().attr("id"));
+				                KT.panel.list.add(data);
+				                closePanel($('#panel'));
+				                select_item(KT.panel.list.first_child().attr("id"));
 				                notices.checkNotices();
 				            }
 				      	}, 
@@ -560,3 +514,52 @@ KT.panel = (function($){
     };
 
 })(jQuery);
+
+KT.panel.list = (function(){
+   return {
+       last_child : function() {
+         return $("#list section").children().last();
+       },
+       first_child	: function(){
+       	 return $("#list section").children().first();
+       },
+       add : function(html) {
+           $('#list section').prepend($(html).hide().fadeIn(function(){
+               $(this).addClass("add", 250, function(){
+                   $(this).removeClass("add", 250);
+               });
+           }));
+           return false;
+       },
+       remove : function(id){
+           $('#' + id).fadeOut(function(){
+               $(this).empty().remove();
+           });
+           return false;
+       },
+       complete_refresh: function(url, success_cb) {
+        $('#list').html('<img src="images/spinner.gif">');
+        KT.panel.list.refresh("list", url, success_cb);
+       },
+       refresh : function(id, url, success_cb){
+           var jQid = $('#' + id);
+            $.ajax({
+                cache: 'false',
+                type: 'GET',
+                url: url,
+                dataType: 'html',
+                success: function(data) {
+                    notices.checkNotices();
+                    jQid.html(data);
+
+                    // obtain the value from column_1 and place it in pane_heading
+                    $('.pane_heading').html(jQid.children('div:first').html());
+                    if (success_cb) {
+                        success_cb();
+                    }
+                }
+            });
+           return false;
+       }
+   };
+})();
