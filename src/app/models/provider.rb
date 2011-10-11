@@ -50,6 +50,16 @@ class Provider < ActiveRecord::Base
     end
   end
 
+  before_destroy :prevent_redhat_deletion
+
+  def prevent_redhat_deletion
+    if provider_type == REDHAT
+      errors.add(:base, _("Red Hat provider can not be deleted"))
+      return false
+    end
+    true
+  end
+
   def valid_url
     errors.add(:repository_url, _("is invalid")) unless kurl_valid?(self.repository_url)
   end
