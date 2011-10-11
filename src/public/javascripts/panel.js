@@ -340,16 +340,20 @@ KT.panel = (function($){
             return false;
         },
         updateResult = function(){
-            $('#select-result').html($('.block.active').length + i18n.items_selected);
+            //calc the number of active tupane rows
+            var len = $('.block.active').length;
+            //update the select
+            $('#select-result').html(len + i18n.items_selected).effect("highlight", {}, 200);
+            return len;
         },
         getSelected = function() {
             var to_ret = [];
             $('.block.active').each(function(){
                 var id = $(this).attr("id");
                 to_ret.push(id.split("_")[1]);
-            })
+            });
             return to_ret;
-        }
+        },
         openSubPanel = function(url) {
             var thisPanel = $('#subpanel');
             

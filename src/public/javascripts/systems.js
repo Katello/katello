@@ -48,9 +48,11 @@ KT.systems_page = (function() {
             {  url: remove.attr("data-url"),
                method: remove.attr("data-method"),
                success_cb: function(ids){
-                $.each(ids,function(index, item){
-                    list.remove("system_" + item);
-                })
+                    $.each(ids,function(index, item){
+                        list.remove("system_" + item);
+
+                    });
+                    setTimeout("KT.panel.updateResult()", 1000);
                }
             }
         );
