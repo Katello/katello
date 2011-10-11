@@ -34,6 +34,10 @@ gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 # Use unicorn as the web server
 # gem 'unicorn'
 
+# reports
+gem 'ruport', '>=1.6.3'
+gem 'acts_as_reportable', '>=1.1.1'
+
 # @@@DEV_ONLY@@@
 # Everything bellow the line above will NOT be used in production.
 # Do not change the line contents, it's searched by sed during the build phase.
