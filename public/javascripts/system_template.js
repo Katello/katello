@@ -148,6 +148,7 @@ KT.templates = function() {
         generic_remove(name, KT.options.current_template.package_groups);
     },
     reset_page = function() {
+        
         if (KT.options.current_template === undefined || !KT.permissions.editable) {
             buttons.edit.addClass("disabled");
             buttons.remove.addClass("disabled");
@@ -270,6 +271,7 @@ KT.templates = function() {
         add_product: add_product,
         remove_product: remove_product,
         has_product: has_product,
+        has_package_group: has_package_group,
         add_package_group: add_package_group,
         remove_package_group: remove_package_group
     };
@@ -731,7 +733,7 @@ KT.package_group_actions = (function() {
         $(".package_group_add_remove").live('click', function(){
             var btn = $(this);
             var name = btn.attr("data-name");
-            if (KT.templates.remove_package_group(name)) {
+            if (KT.templates.has_package_group(name)) {
                 //need to remove
                 KT.templates.remove_package_group(name);
             }
@@ -955,6 +957,8 @@ $(document).ready(function() {
     $("#modified_dialog").dialog({modal: true, width: 400, autoOpen: false});
 
 
+
+    KT.panel.set_extended_cb(KT.templates.reset_page);
 
     KT.options.templates = KT.template_breadcrumb["templates"].templates;
 
