@@ -253,6 +253,15 @@ class SystemsController < ApplicationController
           sockets = attr["value"]
         end
       end
+
+      providedProducts = []
+      pool["providedProducts"].each do |cp_product|
+        product = Product.where(:cp_id => cp_product["productId"]).first
+        if product
+          providedProducts << product
+        end
+      end
+
       OpenStruct.new(:poolId => pool["id"],
                      :poolName => pool["productName"],
                      :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
@@ -260,7 +269,8 @@ class SystemsController < ApplicationController
                      :quantity => pool["quantity"],
                      :sla => sla,
                      :sockets => sockets,
-                     :guests => guests)
+                     :guests => guests,
+                     :providedProducts => providedProducts)
     }
     consumed_pools.sort! {|a,b| a.poolName <=> b.poolName}
     consumed_pools
@@ -278,6 +288,15 @@ class SystemsController < ApplicationController
           multiEntitlement = true
         end
       end
+
+      providedProducts = []
+      pool["providedProducts"].each do |cp_product|
+        product = Product.where(:cp_id => cp_product["productId"]).first
+        if product
+          providedProducts << product
+        end
+      end
+
       OpenStruct.new(:poolId => pool["id"],
                      :poolName => pool["productName"],
                      :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
@@ -285,7 +304,8 @@ class SystemsController < ApplicationController
                      :quantity => pool["quantity"],
                      :sockets => sockets,
                      :guests => guests,
-                     :multiEntitlement => multiEntitlement)
+                     :multiEntitlement => multiEntitlement,
+                     :providedProducts => providedProducts)
     }
     avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
     avail_pools
