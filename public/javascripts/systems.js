@@ -103,11 +103,9 @@ KT.subs = function() {
         // save the id of the env selected
         $("#system_environment_id").attr('value', env_id);
    },
-     initialize_edit = function() {
-        reset_env_select();
-        //enable_buttons();
-        //highlight_system_templates(false);
-    },
+   initialize_edit = function() {
+      reset_env_select();
+   },
     reset_env_select = function() {
         $('#path-expanded').hide();
         env_select.reset_hover();
