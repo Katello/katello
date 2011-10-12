@@ -16,7 +16,7 @@
 KT.panel.control_bbq = false;
 
 (function(){
-	KT.panel.getListContent('changesets');
+	KT.panel.registerPage('changesets');
 })();
 
 $(document).ready(function() {

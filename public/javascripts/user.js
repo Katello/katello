@@ -12,7 +12,7 @@
 */
 
 (function(){
-	KT.panel.getListContent('users');
+	KT.panel.registerPage('users');
 })();
 
 $(document).ready(function() {
