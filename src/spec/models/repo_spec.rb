@@ -215,7 +215,7 @@ describe Glue::Pulp::Repo do
 
     it "should be composed from various attributes to be uniqe" do
       cloned_repo_id = @repo.clone_id(@to_env)
-      cloned_repo_id.should == "#{RepoTestData::REPO_PRODUCT_CP_ID}-repo-Prod-Corp"
+      cloned_repo_id.should == "Corp-Prod-Ruby-repo"
     end
 
   end

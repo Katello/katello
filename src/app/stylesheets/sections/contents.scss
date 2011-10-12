@@ -163,12 +163,20 @@
     background: $rh_product_icon;
   }
   .progress {
-    position: relative;
+    position: absolute;
     display: block;
     height: 16px;
     display: block !important;
+    left: 0;
+    width: 100px;
+  }
+  .cancel {
+    position: absolute;
+    right: 0;
+    top: 2px;
   }
   .products {
+    position: relative;
     input[type="checkbox"],input[type="radio"] {
       margin: 3px;
       float: left;
@@ -176,21 +184,29 @@
     ul {
       margin: 0;
       padding: 0 !important;
+      position: relative;
       li {
         margin: 0;
         padding: 0 !important;
         clear: both;
+        position: relative;
+        min-height: 20px;
+        height: 20px;
         input[type="checkbox"], .products input[type="radio"] {
           margin-right: 23px;
         }
       }
+    }
+    div{
+        position: relative;
+        min-height: 20px;
     }
     .repo div{
       padding-top: 3px;
     }
     .max_width {
       word-wrap:break-word;
-      max-width: 100px;
+      max-width: 120px;
     }
   }
   #plans {

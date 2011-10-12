@@ -46,6 +46,10 @@ class RepoAPI(KatelloAPI):
         data = self.server.GET(path)[1]
         return data
 
+    def delete(self, repoId):
+        path = "/api/repositories/%s/" % repoId
+        return self.server.DELETE(path)[1]
+
     def sync(self, repo_id):
         path = "/api/repositories/%s/sync" % repo_id
         data = self.server.POST(path)[1]

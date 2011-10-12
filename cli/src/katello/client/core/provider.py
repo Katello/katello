@@ -16,6 +16,7 @@
 
 import os
 from gettext import gettext as _
+from urlparse import urlparse
 
 from katello.client.api.provider import ProviderAPI
 from katello.client.config import Config
@@ -161,9 +162,11 @@ class Update(ProviderAction):
 
         if self.has_option('url'):
             url = self.get_option('url')
-            # this does not work under Shell - disabling the check for now
-            if not (url.startswith('http://') or url.startswith('https://')):
+            url_parsed = urlparse(url)
+            if not url_parsed.scheme in ["http","https"]:
                 self.add_option_error(_('Option --url has to start with http:// or https://'))
+            elif not url_parsed.netloc:
+                self.add_option_error(_('Option --url is not in a valid format'))
 
 
     def create(self, name, orgName, description, provType, url):

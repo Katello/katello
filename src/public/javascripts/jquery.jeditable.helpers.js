@@ -81,7 +81,7 @@ $(document).ready(function() {
         var settings = {
             type        :  'password',
             width       :  270,
-            name        :  $(this).attr('name'),
+            name        :  $(this).attr('name')
         };
         $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
     });
@@ -90,7 +90,7 @@ $(document).ready(function() {
         var settings = {
             type        :  'text',
             width       :  270,                  
-            name        :  $(this).attr('name'),
+            name        :  $(this).attr('name')
         };
         $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
     });
