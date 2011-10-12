@@ -192,11 +192,11 @@ describe Product do
       end
 
       specify "format" do
-        @p.repo_id('123', 'root').should == "#{ProductTestData::ORG_ID}-root-#{ProductTestData::PRODUCT_NAME}-123"
+        @p.repo_id('123', 'root').should == "#{ProductTestData::ORG_ID}-root-#{ProductTestData::SIMPLE_PRODUCT[:name]}-123"
       end
 
       it "should be the same as content id for cloned repository" do
-        @p.repo_id("#{ProductTestData::ORG_ID}-root-#{ProductTestData::PRODUCT_NAME}-123").should == "#{ProductTestData::ORG_ID}-root-#{ProductTestData::PRODUCT_NAME}-123"
+        @p.repo_id("#{ProductTestData::ORG_ID}-root-#{ProductTestData::SIMPLE_PRODUCT[:name]}-123").should == "#{ProductTestData::ORG_ID}-root-#{ProductTestData::SIMPLE_PRODUCT[:name]}-123"
       end
     end
 
