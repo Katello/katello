@@ -267,11 +267,26 @@ class SystemsController < ApplicationController
   end
 
   def sys_available_pools
-    avail_pools = @system.available_pools.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
-                            :poolName => pool["productName"],
-                            :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
-                            :consumed => pool["consumed"],
-                            :quantity => pool["quantity"])}
+    avail_pools = @system.available_pools.collect {|pool|
+      sockets = "--"
+      guests = "--"
+      multiEntitlement = false
+      pool["productAttributes"].each do |attr|
+        if attr["name"] == "socket_limit"
+          sockets = attr["value"]
+        elsif attr["name"] == "multi-entitlement"
+          multiEntitlement = true
+        end
+      end
+      OpenStruct.new(:poolId => pool["id"],
+                     :poolName => pool["productName"],
+                     :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                     :consumed => pool["consumed"],
+                     :quantity => pool["quantity"],
+                     :sockets => sockets,
+                     :guests => guests,
+                     :multiEntitlement => multiEntitlement)
+    }
     avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
     avail_pools
   end
