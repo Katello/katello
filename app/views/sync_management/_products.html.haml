@@ -22,7 +22,7 @@
             sync_status[1] = '#{@repo_status[r.id][:sync_id]}';
             sync_status[2] = '#{p.id.to_s}';
             repo_status.push(sync_status);
-        %tr
+        %tr{:class=>cycle("", "alt")}
           %td{:class=>'product', 'data-id'=>p.id}
             / does user have sync permissions?
             - if @sproducts.include?(p)
@@ -65,7 +65,7 @@
                 %li{:id =>"#{'repo_sync_finish_' + r.id.to_s}", :class=>'repo'}
                   #{@repo_status[r.id][:duration]}
           %td
-            %div{:id =>"#{'prod_size_' + p.id.to_s}"}
+            %div{:id =>"#{'prod_size_' + p.id.to_s}", :class=>"productsize"}
               #{@product_size[p.id]}
             %ul
               -for r in p.repos(p.organization.locker)
@@ -74,7 +74,7 @@
                   #{'(' + @repo_status[r.id][:packages].to_s + ')'}
           %td{:id =>"#{'table_' + p.id.to_s}"}
             .productstatus
-              #{@product_status[p.id][:state]}
+              #{@product_status[p.id][:state]} &nbsp;
             %ul{:id =>"#{'prod_' + p.id.to_s}"}
               -for r in p.repos(p.organization.locker)
                 %li{:id =>"#{'repo_bar_' + r.id}"}

@@ -108,7 +108,7 @@ var content = (function(){
             updateField.html('');
             cancelButton = $('<a/>')
                 .attr("id", "cancel_"+repo)
-                .attr("class", "fr")
+                .attr("class", "cancel")
                 .attr("href", "#")
                 .text(i18n.cancel);
             progressBar = $('<div/>')
@@ -154,7 +154,7 @@ var content = (function(){
             });
             cancelButton.click(function(){
                 content.cancelSync(repo, sync, updateField, pu);
-            })
+            });
             return false;
         },
         updateProduct : function (prod_id, repo_id) {

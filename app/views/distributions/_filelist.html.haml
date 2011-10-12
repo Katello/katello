@@ -4,7 +4,7 @@
   #{@distribution.id}
 
 = content_for :navigation do
-  = render_navigation(:expand_all => true, :level => 3)
+  = render_navigation(:items => promotion_distribution_navigation, :expand_all => true, :level => 1)
 
 = content_for :content do
   = render :partial => "common/filter_table"
