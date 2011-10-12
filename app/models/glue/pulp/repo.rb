@@ -111,7 +111,7 @@ class Glue::Pulp::Repo
   end
 
   def clone_id(environment)
-    Glue::Pulp::Repo.repo_id(self.product.cp_id, self.name, environment.name,environment.organization.name)
+    Glue::Pulp::Repo.repo_id(self.product.name, self.name, environment.name,environment.organization.name)
   end
 
   #is the repo cloned in the specified environment
@@ -251,8 +251,8 @@ class Glue::Pulp::Repo
     Product.find_by_cp_id!(get_groupid_param 'product')
   end
 
-  def self.repo_id product_cp_id, repo_name, env_name, organization_name
-    [product_cp_id, repo_name, env_name, organization_name].compact.join("-").gsub(/[^-\w]/,"_")
+  def self.repo_id product_name, repo_name, env_name, organization_name
+    [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
   def self.find(id)
