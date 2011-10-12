@@ -5,6 +5,7 @@
       %thead
         %tr
           %th #{_("Subscription")}
+          %th #{_("SLA")}
           %th #{_("Sockets")}
           %th #{_("Guests")}
           %th #{_("Quantity")}
@@ -18,10 +19,10 @@
                   = check_box_tag "system[#{sub.poolId}]", value="#{sub.poolId}", false
                 &nbsp;
                 #{sub.poolName}
-              %td #{"--"}
-              %td #{"--"}
-              %td
-                = number_field_tag "spinner[#{sub.poolId}]", nil, :in => 1...sub.quantity, :step=>1, :value=>1, :class=>"ui-spinner"
+              %td #{sub.sla}
+              %td #{sub.sockets}
+              %td #{sub.guests}
+              %td #{sub.quantity} of #{sub.consumed}
               %td #{sub.expires}
         - else
           %tr
