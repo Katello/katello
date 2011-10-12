@@ -17,7 +17,11 @@ module Glue::Pulp::Repos
 
   def self.included(base)
     base.send :include, InstanceMethods
+    base.send :include, LazyAccessor
+
     base.class_eval do
+      lazy_accessor :filters, :initializer => lambda { r = repos(locker).first; r.nil? ? [] : r.filters }
+
       before_save :save_repos_orchestration
       before_destroy :destroy_repos_orchestration
     end
@@ -262,6 +266,16 @@ module Glue::Pulp::Repos
       repo.create
     end
 
+    def add_filters filter_ids
+      filters_will_change!
+      filters << package_ids
+    end
+
+    def remove_filters filter_ids
+      filters_will_change!
+      filters = filters - filter_ids
+    end
+
     def setup_sync_schedule
       if self.sync_plan_id_changed?
           self.productContent.each do |pc|
@@ -270,18 +284,6 @@ module Glue::Pulp::Repos
                 :sync_schedule => schedule
             })
           end
-      end
-    end
-
-    def add_filters filter_ids
-      repos(locker).each do |r|
-        r.add_filters filter_ids
-      end
-    end
-
-    def remove_filters filter_ids
-      repos(locker).each do |r|
-        r.remove_filters filter_ids
       end
     end
 
@@ -354,7 +356,6 @@ module Glue::Pulp::Repos
       #end
     end
 
-    # Empty method to allow rollbacks
     def del_repos
       if not self.productContent.nil?
         self.productContent.collect do |pc|
@@ -371,6 +372,7 @@ module Glue::Pulp::Repos
           queue.create(:name => "setting up pulp sync schedule for product: #{self.name}",
                               :priority => 7, :action => [self, :setup_sync_schedule]) if self.sync_plan_id_changed?
         when :update
+          enqueue_filter_updates if filters_changed?
           queue.create(:name => "update pulp repositories for product: #{self.name}", :priority => 6, :action => [self, :update_repos])
           queue.create(:name => "setting up pulp sync schedule for product: #{self.name}",
                               :priority => 7, :action => [self, :setup_sync_schedule]) if self.sync_plan_id_changed?
@@ -414,5 +416,32 @@ module Glue::Pulp::Repos
       async_tasks.flatten(1)
     end
 
+    def set_filters repo, package_ids
+      repo.add_filters package_ids
+    end
+
+    def del_filters repo, package_ids
+      repo.remove_filters package_ids
+    end
+
+    def enqueue_filter_updates
+      old_filters = filters_change[0].nil? ? [] : filters_change[0]
+      new_filters = filters_change[1]
+
+      deleted_filters = old_filters - new_filters
+      added_filters = new_filters - old_filters
+
+      self.repos(locker).each do |r|
+        queue.create(
+            :name => "add filters to repo: #{r.id}",
+            :priority => 4,
+            :action => [self, :set_filters, r, added_filters]) unless added_filters.empty?
+
+        queue.create(
+            :name => "remove filters from repo: #{r.id}",
+            :priority => 5,
+            :action => [self, :del_filters, r, added_filters]) unless deleted_filters.empty?
+      end
+    end
   end
 end
