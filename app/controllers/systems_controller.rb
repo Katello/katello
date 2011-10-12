@@ -239,11 +239,29 @@ class SystemsController < ApplicationController
   end
 
   def sys_consumed_pools
-    consumed_pools = @system.pools.collect {|pool| OpenStruct.new(:poolId => pool["id"], 
-                            :poolName => pool["productName"],
-                            :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
-                            :consumed => pool["consumed"],
-                            :quantity => pool["quantity"])}
+    consumed_pools = @system.pools.collect {|pool|
+      # TODO: SLA: support_type (Standard) or support_level (L3-only)?
+      # TODO: Guests: virt_limit (4) or variant (1-2 Sockets)?
+      # TODO: Sockets: socket_limit (2) or
+      sla = "--"
+      sockets = "--"
+      guests = "--"
+      pool["productAttributes"].each do |attr|
+        if attr["name"] == "support_type"
+          sla = attr["value"]
+        elsif attr["name"] == "socket_limit"
+          sockets = attr["value"]
+        end
+      end
+      OpenStruct.new(:poolId => pool["id"],
+                     :poolName => pool["productName"],
+                     :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                     :consumed => pool["consumed"],
+                     :quantity => pool["quantity"],
+                     :sla => sla,
+                     :sockets => sockets,
+                     :guests => guests)
+    }
     consumed_pools.sort! {|a,b| a.poolName <=> b.poolName}
     consumed_pools
   end
