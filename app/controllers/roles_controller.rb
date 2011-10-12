@@ -53,7 +53,7 @@ class RolesController < ApplicationController
     begin
       # retrieve only non-self roles... permissions on a self-role will be handled 
       # as part of the user
-      @roles = Role.readable.search_for(params[:search]).non_self.order(:name).limit(current_user.page_size)
+      @roles = Role.readable.search_for(params[:search]).non_self.order("roles.name").limit(current_user.page_size)
       retain_search_history
 
     rescue Exception => error

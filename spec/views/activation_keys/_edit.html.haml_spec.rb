@@ -40,7 +40,7 @@ describe "activation_keys/_edit.html.haml" do
     @system_template_labels = []
     @selected_template = "No Template"
     view.stub!(:environment_selector)
-
+    view.stub!(:activation_keys_navigation).and_return([])
     render :partial => "edit", :locals => {:accessible_envs => [@environment]}
   end
 
@@ -64,7 +64,7 @@ describe "activation_keys/_edit.html.haml" do
     end
 
     it "renders sub-navigation links" do
-      view.should_receive(:render_navigation).with(:expand_all => true, :level => 3).once
+      view.should_receive(:render_navigation).with(:items=> [],:expand_all => true, :level => 1).once
       render :partial => "edit", :locals => {:accessible_envs => [@environment]}
     end
   end

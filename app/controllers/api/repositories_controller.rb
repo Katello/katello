@@ -14,7 +14,7 @@ require 'resources/pulp'
 
 class Api::RepositoriesController < Api::ApiController
   respond_to :json
-  before_filter :find_repository, :only => [:show]
+  before_filter :find_repository, :only => [:show, :destroy]
   before_filter :find_product, :only => [:create]
   before_filter :find_organization, :only => [:discovery]
   before_filter :fake_find_repository, :only => [:package_groups, :package_group_categories]
@@ -34,6 +34,11 @@ class Api::RepositoriesController < Api::ApiController
 
   def show
     render :json => @repository.to_hash
+  end
+
+  def destroy
+    @repository.product.delete_repo_by_id(params[:id])
+    render :text => _("Deleted repository '#{params[:id]}'"), :status => 200
   end
 
   # proxy repository discovery call to pulp, so we don't have to create an async task to keep track of async task on pulp side

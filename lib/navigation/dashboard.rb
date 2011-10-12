@@ -9,19 +9,16 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+module Navigation
+  module DashboardMenu
 
-class PackGroupValidator < ActiveModel::Validator
-  def validate(record)
-    
-    if record.system_template.environment.package_groups({'name' => record.name}).length == 0
-      record.errors[:base] <<  _("Package group '#{record.name}' not found in the Locker environment")
+    def menu_dashboard
+      {:key => :dashboard,
+       :name => N_("Dashboard"),
+        :url => dashboard_index_path,
+        :options => {:class=>'dashboard'}
+      }
     end
+
   end
-end
-
-class SystemTemplatePackGroup < ActiveRecord::Base
-  belongs_to :system_template, :inverse_of => :package_groups
-  validates_with PackGroupValidator
-  validates_uniqueness_of [:name], :scope => :system_template_id, :message => _("is already in the template")
-
 end
