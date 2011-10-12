@@ -16,7 +16,7 @@ module ProductHelperMethods
   def new_test_product org, env, suffix=""
     disable_product_orchestration
     @provider = Provider.create!({:organization => org, :name => 'provider' + suffix, :repository_url => "https://something.url", :provider_type => Provider::CUSTOM})
-    @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge!({:name=>'product' + suffix, :environments => [env], :provider => @provider}))
+    @p = Product.create!(ProductTestData::SIMPLE_PRODUCT.merge({:name=>'product' + suffix, :environments => [env], :provider => @provider}))
     repo = Glue::Pulp::Repo.new(:name=>"FOOREPO", :id=>"anid")
     pkg = Glue::Pulp::Package.new(:name=>"Pkg", :id=>"234")
     repo.stub(:packages).and_return([pkg])
