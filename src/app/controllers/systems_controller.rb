@@ -83,9 +83,10 @@ class SystemsController < ApplicationController
       end
 
     rescue Exception => error
-      errors error.message[1]
+      errors error
       Rails.logger.info error.backtrace.join("\n")
-      render :index , :status=>:bad_request and return
+      render :text => error, :status => :bad_request
+     return
     end
     render :partial=>"common/list_item", :locals=>{:item=>@system, :accessor=>"id", :name => controller_display_name,
                                                    :columns=>['name' ]}
