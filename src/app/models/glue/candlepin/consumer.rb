@@ -26,7 +26,7 @@ module Glue::Candlepin::Consumer
         :initializer => lambda {
                           if uuid
                             consumer_json = Candlepin::Consumer.get(uuid)
-                            return convert_from_cp_fields(consumer_json)
+                            convert_from_cp_fields(consumer_json)
                           end
                         }
       lazy_accessor :entitlements, :initializer => lambda { Candlepin::Consumer.entitlements(uuid) }
@@ -190,6 +190,11 @@ module Glue::Candlepin::Consumer
     def guest=(val)
       facts["virt.is_guest"] = val
 
+    end
+
+    def name=(val)
+      super(val)
+      facts["network.hostname"] = val
     end
 
     def distribution_name
