@@ -25,6 +25,8 @@ class Notice < ActiveRecord::Base
   before_validation :set_default_notice_level
   before_save :add_to_all_users
 
+  scope :readable, lambda { |user| joins(:users).where('users.id' => user) }
+
   scoped_search :on => :level, :complete_value => true
   scoped_search :on => :text, :complete_value => true, :rename => :description
   scoped_search :on => :created_at, :complete_value => true, :rename => :created

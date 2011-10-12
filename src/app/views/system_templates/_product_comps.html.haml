@@ -1,0 +1,9 @@
+%ul.expand_list
+  -if @groups.empty?
+    #{_("No package groups available.")}
+  - @groups.each do |group|
+    %li
+      %a{:class => "fr package_group_add_remove st_button", "data-name"=> group, :id => "add_remove_group_#{group}"}= "+ #{_("Add")}"
+      .no_slide.simple_link
+        %span.block{"data-name"=>group}
+          = group

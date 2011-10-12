@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.4
+Version:        0.1.6
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -45,6 +45,20 @@ rm -rf %{buildroot}
 %{_sbindir}/katello-configure
 
 %changelog
+* Wed Oct 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.6-1
+- Add support for command line options and user answer file to katello-
+  configure
+- protect-pulp-repo - fix puppet configuration
+
+* Tue Oct 11 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.5-1
+- adding an auto-login ssh public key
+- Add support for answer files.
+- Make the oauth_secret dynamic
+- Move installation-related parts to */install.pp.
+- Upon the db:seed, we also have to db:migrate.
+- katello requires puppet 2.6.6+ (Fedora updates, EPEL)
+- puppet - make it possible to include just pulp
+
 * Mon Oct 03 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.4-1
 - added missing template required for commit:a37cdbe8
 - moved pulp config files into the pulp module, extracted values as varaibles

@@ -67,7 +67,7 @@ class Api::ProvidersController < Api::ApiController
     if @provider.destroyed?
       render :text => _("Deleted provider [ %s ]") % @provider.name , :status => 200
     else
-      raise HttpErrors::ApiError, _("Error while deleting provider [ %s ]") % @provider.name
+      raise HttpErrors::ApiError, _("Error while deleting provider [ %s ]: %s") % [@provider.name, @provider.errors.full_messages]
     end
   end
 

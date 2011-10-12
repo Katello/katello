@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.90
+Version:        0.1.92
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -91,6 +91,7 @@ Provides a package for managing application life-cycle for Linux systems
 Summary:        A meta-package to pull in all components for Katello
 Requires:       katello
 Requires:       katello-configure
+Requires:       katello-cli
 Requires:       postgresql-server
 Requires:       postgresql
 Requires:       pulp
@@ -236,6 +237,56 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Oct 11 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.92-1
+- Installation does not pull in katello-cli
+- Revert "added ruport-related gems to Gemfile"
+- jslint - fix warnings reported during build
+- templates - fix in spec tests for exporting/importing
+- templates - fix for cloning to next environment - added nvres to export - fix
+  for importing package groups
+- added ruport-related gems to Gemfile
+- JsRoutes - Fix for rake task to generate javascript routes.
+
+* Mon Oct 10 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.91-1
+- scoped_search - Gemfile updates to support scoped_search 2.3.4
+  (bbuckingham@redhat.com)
+- 741656 - roles - search - chgs for search by perm type and verbs
+  (bbuckingham@redhat.com)
+- Switch of arch and support level on subscriptions page. (jrist@redhat.com)
+- repo delete - cli for deleting single repos (tstrachota@redhat.com)
+- repo delete - api for deleting single repos (tstrachota@redhat.com)
+- Enable running rake task for production env from git repo (inecas@redhat.com)
+- Fix check on sqlite when setting up db under root for production
+  (inecas@redhat.com)
+- Remove failing check on sqlite for root (inecas@redhat.com)
+- users - fix user name on edit screen (bbuckingham@redhat.com)
+- Set default rake task (inecas@redhat.com)
+- Merge branch 'master' into bz731203 (bbuckingham@redhat.com)
+- fixed failing roles_controller_spec (dmitri@redhat.com)
+- Merge branch 'filters' (dmitri@redhat.com)
+- import-stage-manifest - remove hard-coded supported archs (inecas@redhat.com)
+- fix in log message (tstrachota@redhat.com)
+- org orchestration - deleting dependent providers moved to orchestration layer
+  Having it handled by :dependent => :destroy caused wrong order of deleting
+  the records. The organization in Candlepin was deleted before providers and
+  products. This led to record-not-found errors. (tstrachota@redhat.com)
+- products - delete all repos in all environments when deleting a product
+  (tstrachota@redhat.com)
+- products - route and api for deleting products (tstrachota@redhat.com)
+- Added the download icon to the system template page. (jrist@redhat.com)
+- 731203 - changes so that update to the object id are reflected in pane header
+  (bbuckingham@redhat.com)
+- 743646: fix sync due to bad rail route paths (shughes@redhat.com)
+- 731203 - update panes to use object name in header/title
+  (bbuckingham@redhat.com)
+- 731203 - updates to support ellipsis in header of tupane layout
+  (bbuckingham@redhat.com)
+- fields residing in pulp are now present in the output of index
+  (dmitri@redhat.com)
+- create/delete operations for filters are working now (dmitri@redhat.com)
+- first cut of filters used during promotion of content from Locker
+  (dmitri@redhat.com)
+
 * Fri Oct 07 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.90-1
 - fix for katello-reset-dbs - pgsql support for initdb
 - sms - introducing subscriptions controller

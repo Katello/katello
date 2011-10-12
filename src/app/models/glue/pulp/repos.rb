@@ -243,8 +243,8 @@ module Glue::Pulp::Repos
     end
 
     def repo_id(content_name, env_name = nil)
-      return content_name if content_name.include?(self.organization.name) && content_name.include?(self.cp_id.to_s)
-      Glue::Pulp::Repo.repo_id(self.cp_id.to_s, content_name.to_s, env_name, self.organization.name)
+      return content_name if content_name.include?(self.organization.name) && content_name.include?(self.name.to_s)
+      Glue::Pulp::Repo.repo_id(self.name.to_s, content_name.to_s, env_name, self.organization.name)
     end
 
     def repository_url(content_url)
@@ -277,7 +277,7 @@ module Glue::Pulp::Repos
       if self.sync_plan_id_changed?
           self.productContent.each do |pc|
             schedule = (self.sync_plan && self.sync_plan.schedule_format) || ""
-            Pulp::Repository.update(repo_id(pc.content.id), {
+            Pulp::Repository.update(repo_id(pc.content.name), {
                 :sync_schedule => schedule
             })
           end

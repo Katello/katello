@@ -191,20 +191,12 @@ describe Product do
         @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
       end
 
-      it "should start with product id" do
-        @p.repo_id('123').index("#{ProductTestData::PRODUCT_ID}").should == 0
-      end
-
-      it "should end with organization id" do
-        @p.repo_id('123').index("#{ProductTestData::ORG_ID}").should == @p.repo_id('123').length - "#{ProductTestData::ORG_ID}".length
-      end
-
-      it "should have environment name in it if one was specified" do
-        @p.repo_id('123', 'root').should == "#{ProductTestData::PRODUCT_ID}-123-root-#{ProductTestData::ORG_ID}"
+      specify "format" do
+        @p.repo_id('123', 'root').should == "#{ProductTestData::ORG_ID}-root-#{ProductTestData::SIMPLE_PRODUCT[:name]}-123"
       end
 
       it "should be the same as content id for cloned repository" do
-        @p.repo_id("#{ProductTestData::PRODUCT_ID}-123-root-#{ProductTestData::ORG_ID}").should == "#{ProductTestData::PRODUCT_ID}-123-root-#{ProductTestData::ORG_ID}"
+        @p.repo_id("#{ProductTestData::ORG_ID}-root-#{ProductTestData::SIMPLE_PRODUCT[:name]}-123").should == "#{ProductTestData::ORG_ID}-root-#{ProductTestData::SIMPLE_PRODUCT[:name]}-123"
       end
     end
 

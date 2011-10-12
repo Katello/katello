@@ -96,7 +96,10 @@ class SearchController < ApplicationController
       # checking for path validity.  This is required since the routes do not know of this prefix.
       path = path.split(ENV['RAILS_RELATIVE_URL_ROOT']).last
       path_details = Rails.application.routes.recognize_path(path)
-      eval(path_details[:controller].singularize.camelize).complete_for(query)
+
+      eval(path_details[:controller].singularize.camelize).readable(current_organization).complete_for(query,
+        {:organization_id => current_organization})
+
     rescue ScopedSearch::QueryNotSupported => error
       Rails.logger.error error.to_s
       errors _("Unable to save as favorite. '#{params[:favorite]}' is an invalid search.")

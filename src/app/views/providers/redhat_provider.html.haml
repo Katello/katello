@@ -4,7 +4,9 @@
 
 .grid_16
   = help_tip_button('subscriptions-help')
-  &nbsp;
+  = help_tip(_("Listed below are the subscriptions information." + |
+             " If you have a subscription manifest you may upload it below. " + |
+             "This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."), 'subscriptions-help') |
 
 #providers
   %input#panel_element_id{:name => @provider.id, :type => "hidden", :value => "#{@provider.name}_#{@provider.id}"}
@@ -17,11 +19,6 @@
 
 
 #subscriptions
-  .grid_16
-    = help_tip(_("Listed below are the subscriptions information." + |
-               " If you have a subscription manifest you may upload it below. " + |
-               "This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."), 'subscriptions-help') |
-
   .grid_16#subscription
     %h4 #{_("Current Subscriptions")}
     %table
