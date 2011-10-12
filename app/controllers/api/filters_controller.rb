@@ -14,6 +14,7 @@ class Api::FiltersController < Api::ApiController
 
   before_filter :find_organization, :only => [:index, :create]
   before_filter :find_filter, :only => [:show, :destroy]
+  before_filter :find_product, :only => [:list_product_filters, :update_product_filters]
   before_filter :authorize
 
   def rules
@@ -48,6 +49,22 @@ class Api::FiltersController < Api::ApiController
   def destroy
     @filter.destroy
     render :text => _("Deleted filter '#{params[:id]}'"), :status => 200
+  end
+
+  def list_product_filters
+    render :json => @product.filters.to_json
+  end
+
+  def update_product_filters
+    @products.filters_will_change!
+    @product.filters = params[:filters]
+
+    render :json => @products.filters.to_json
+  end
+
+  def find_product
+    @product = Product.find_by_cp_id(params[:id])
+    raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:product_id]}'") if @product.nil?
   end
 
   def find_filter
