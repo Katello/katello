@@ -28,11 +28,13 @@
                 %td #{sub.guests}
                 %td #{sub.quantity} of #{sub.consumed}
                 %td #{sub.expires}
-              %tr{:class => "child-of-#{sub.poolId}"}
-                %td
-                %td
-                  = "product.name"
-              = render :partial=>'subscription_details', :locals=>{:group=>sub.poolId}
+              - sub.providedProducts.each do |product|
+                %tr{:class => "child-of-#{sub.poolId}"}
+                  %td
+                  %td{:colspan=>5}
+                    = product.name
+                - product.productContent.each do |product_content|
+                  = render :partial=>'subscription_details', :locals=>{:group => sub.poolId, :product_content => product_content}
           - else
             %tr
               %td{:colspan=>5} #{_("The system is not currently consuming any subscriptions.")}
@@ -74,11 +76,13 @@
                     = label_tag "label[#{sub.poolId}]", "0 of #{sub.quantity - sub.consumed}", :class => "ui-nonspinner-label"
                     = hidden_field_tag "spinner[#{sub.poolId}]", 0, :class => "ui-nonspinner"
                 %td #{sub.expires}
-              %tr{:class => "child-of-#{sub.poolId}"}
-                %td
-                %td
-                  = "product.name"
-              = render :partial=>'subscription_details', :locals=>{:group=>sub.poolId}
+              - sub.providedProducts.each do |product|
+                %tr{:class => "child-of-#{sub.poolId}"}
+                  %td
+                  %td{:colspan=>5}
+                    = product.name
+                - product.productContent.each do |product_content|
+                  = render :partial=>'subscription_details', :locals=>{:group => sub.poolId, :product_content => product_content}
           - else
             %tr
               %td{:colspan=>5} #{_("There are no more subscriptions available.")}
