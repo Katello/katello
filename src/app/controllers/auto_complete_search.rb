@@ -28,7 +28,11 @@ module AutoCompleteSearch
       if !params[:filter].nil? and eval(controller_name.singularize.camelize).respond_to?('by_env')
         @items = eval(controller_name.singularize.camelize).readable(current_organization).by_env(params[:filter]).complete_for(params[:search], @filter)
       else
-        @items = eval(controller_name.singularize.camelize).readable(current_organization).complete_for(params[:search], @filter)
+        if (controller_name == "notices")
+          @items = eval(controller_name.singularize.camelize).readable(current_user).complete_for(params[:search], @filter)
+        else
+          @items = eval(controller_name.singularize.camelize).readable(current_organization).complete_for(params[:search], @filter)
+        end
       end
 
       @items = @items.map do |item|
