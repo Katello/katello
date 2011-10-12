@@ -72,7 +72,7 @@ module Navigation
       {:key => :custom_providers,
         :name =>N_("Custom"),
         :url => lambda{organization_providers_path(current_organization())},
-        :if => lambda{current_organization && Provider.any_readable?(current_organization())},
+        :if => lambda{current_organization && Provider.any_readable?(current_organization()) &&  AppConfig.app_name == "katello"},
         :options => {:class=>"third_level"}
       }
     end
@@ -82,7 +82,7 @@ module Navigation
       {:key => :sync_mgmt,
        :name =>N_("Sync Management"),
        :items => lambda{[menu_sync_status, menu_sync_plan, menu_sync_schedule]},
-       :if => lambda{current_organization.syncable?},
+       :if => lambda{current_organization.syncable? && AppConfig.app_name == "katello"},
       }
 
     end
@@ -116,7 +116,7 @@ module Navigation
       {:key => :system_templates,
        :name =>N_("System Templates"),
         :url => system_templates_path,
-        :if => lambda{SystemTemplate.any_readable?(current_organization())}
+        :if => lambda{SystemTemplate.any_readable?(current_organization()) && AppConfig.app_name == "katello"}
       }
 
     end
@@ -128,7 +128,7 @@ module Navigation
         :name => N_("Promotions"),
         :url => promotions_path,
         :options =>{:highlights_on =>/\/promotions.*/ ,:class => 'content'},
-        :if => lambda {KTEnvironment.any_viewable_for_promotions?(current_organization)}
+        :if => lambda {KTEnvironment.any_viewable_for_promotions?(current_organization) &&  AppConfig.app_name == "katello"}
        }
     end
 
@@ -136,7 +136,7 @@ module Navigation
        {:key => :changeset,
         :name => N_("Changeset History"),
         :url => changesets_path,
-        :if => lambda {KTEnvironment.any_viewable_for_promotions?(current_organization)}
+        :if => lambda {KTEnvironment.any_viewable_for_promotions?(current_organization) &&  AppConfig.app_name == "katello"}
        }
     end
 
