@@ -18,7 +18,7 @@
  */
 
 (function(){
-	KT.panel.getListContent('systems');
+	KT.panel.registerPage('systems');
 })();
 
 $(document).ready(function() {

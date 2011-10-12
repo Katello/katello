@@ -21,8 +21,9 @@ var count = 0;
 
 $(document).ready(function() {
     $('.left').resize(function(){
+    	var apanel = $('.panel');
+
         panelLeft = $(this).width();
-        var apanel = $('.panel');
         $('.block').width(panelLeft-17);
         apanel.width(940-panelLeft);
         $('.right').width(910-panelLeft);
@@ -36,8 +37,7 @@ $(document).ready(function() {
             fontsize = (fontsize > 100) ? 100 : fontsize;
             $('#systems .block').css({"font-size": parseInt(fontsize, 10) + "%"});
         }
-    });
-    $('.left').resize();
+    }).resize();
 
     //$('#list .block').linkHover({"timeout":200});
     thisPanel = $("#panel");
@@ -262,7 +262,8 @@ KT.panel = (function($){
 	            }
         },
         closePanel = function(jPanel){
-            var content = jPanel.find('.panel-content'),
+            var jPanel = jPanel || $('#panel'),
+            	content = jPanel.find('.panel-content'),
             	position;
 
 	        if(jPanel.hasClass("opened")){
@@ -441,6 +442,7 @@ KT.panel = (function($){
         	options = options || {};
         	
         	getListContent(resource_type);
+        	setupSearch(resource_type);
 
         	if( options['create'] ){
 		    	$('#' + options['create']).live('submit', function(e) {
@@ -470,10 +472,11 @@ KT.panel = (function($){
         		});
         	}
         },
-        getListContent = function(resource_type){
-        	var url = KT.routes['items_' + resource_type + '_path']() + KT.common.getSearchParams();
+        getListContent = function(resource_type, offset){
+        	var url 	= KT.routes['items_' + resource_type + '_path']() + KT.common.getSearchParams(),
+        		offset 	= offset || 0;
 
-        	url += '&offset=0';
+        	url += '&offset=' + offset;
         	
         	KT.panel.control_bbq = false;
         	$(window).bind( 'hashchange', hash_change);
@@ -488,8 +491,40 @@ KT.panel = (function($){
         			element.find('section').fadeIn(function(){
         				$(window).trigger( 'hashchange' );
         			});
+        			$('.left').resize();
         		});
         	});
+        },
+        setupSearch = function(resource_type){
+    		/*$('#search_form').live('submit', function(e){
+				var button = $('#search_button'),
+					element = $('#list'),
+					url 	= KT.routes['items_' + resource_type + '_path'](),
+	        		offset 	= offset || 0;
+				
+				e.preventDefault();
+				button.attr("disabled","disabled");
+				element.find('section').empty();
+				element.find('.spinner').show();
+				
+				url += '?' + $(this).serialize();
+        		url += '&offset=' + offset;	
+        	
+        		closePanel();
+				
+				$(this).ajaxSubmit({
+					url		:  url,
+			    	success : function(data) {
+			    		element.find('section').append(data);
+	        			element.find('.spinner').hide();
+    			    	button.removeAttr('disabled');
+	        			element.find('section').fadeIn();
+			      	}, 
+			      	error	: function(e) {
+			        	button.removeAttr('disabled');
+			      	}
+				})
+			});*/
         };
 	
     return {
