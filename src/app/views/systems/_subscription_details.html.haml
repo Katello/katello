@@ -1,0 +1,23 @@
+%tr{:class => "child-of-#{group}"}
+  %td
+  %td
+    %hr{:class => "child-of-#{group}", :width => "20"}
+  %td
+  %td
+  %td
+  %td
+  %td
+- [["GPG Key URL","content","gpgUrl"], |
+   ["Content Download URL","content","contentUrl"], |
+   ["Repo Type","content","type"], |
+   ["Enabled by Default","enabled"]].each do |x| |
+  %tr{:class => "child-of-#{group}"}
+    %td
+    %td{:class => "child-of-#{group} sub-subchild", :colspan => "5", :style => "padding-left: 45px;"}
+      %span{:class => "child-of-#{group}",:style => "width:150px;white-space: nowrap;float: left;"}
+        = x[0]
+      %span{:class => "child-of-#{group}", :style => "width: 50px; white-space: nowrap; float: left;"}
+        -#???? - link = (x.length == 2) ? pc.fetch(x[1]) : pc.fetch(x[1]).fetch(x[2])
+        - link = "foobar????"
+        %a{:href => "#{link}"}
+          = link
