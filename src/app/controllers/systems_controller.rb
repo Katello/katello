@@ -55,7 +55,11 @@ class SystemsController < ApplicationController
   def new
     @system = System.new
     @system.facts = {} #this is nil to begin with
-    render :partial=>"new", :layout => "tupane_layout", :locals=>{:system=>@system}
+    @organization = current_organization
+    accessible_envs = current_organization.environments
+    setup_environment_selector(current_organization, accessible_envs)
+    @environment = first_env_in_path(accessible_envs)
+    render :partial=>"new", :layout => "tupane_layout", :locals=>{:system=>@system, :accessible_envs => accessible_envs}
   end
 
   def create
@@ -67,9 +71,10 @@ class SystemsController < ApplicationController
       @system.sockets = params["system"]["sockets"]
       @system.guest = (params["system_type"]["virtualized"] == 'virtual')
       @system.name= params["system"]["name"]
-      @system.environment = current_organization.environments[0]
+      @system.cp_type = "system"
+      @system.environment = KTEnvironment.find(params["system"]["environment_id"])
       #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
-      saved = @system.save
+      saved = @system.save!
       #find the newly created system
       if saved
         notice _("Your system was created: ") + "'#{@system.name}'"
@@ -80,7 +85,7 @@ class SystemsController < ApplicationController
     rescue Exception => error
       errors error.message[1]
       Rails.logger.info error.backtrace.join("\n")
-      render :text=> error.message[1], :status=>:bad_request and return
+      render :index , :status=>:bad_request and return
     end
     render :partial=>"common/list_item", :locals=>{:item=>@system, :accessor=>"id", :name => controller_display_name,
                                                    :columns=>['name' ]}

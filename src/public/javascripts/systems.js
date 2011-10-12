@@ -31,10 +31,22 @@ $(document).ready(function() {
                notices.checkNotices();
          }});
   });
+  $('#new_system_form').live('submit', function(e) {
+      e.preventDefault();
+      systems_page.create_system($(this));
+  });
+  //Set the callback on the environment selector
+  env_select.click_callback = function(env_id) {
+    KT.subs.save_selected_environment(env_id);
+   };
   // check if we are viewing systems by environment 
   if (window.env_select !== undefined) {
     env_select.click_callback = systems_page.env_change;
   }
+
+  KT.panel.set_expand_cb(function() {
+    KT.subs.initialize_edit();
+  });
 
 });
 
@@ -43,7 +55,22 @@ var systems_page = (function() {
     env_change : function(env_id, element) {
       var url = element.attr("data-url");
       window.location = url;
-    }
+    },
+  create_system : function(data) {
+      var button = data.find('input[type|="submit"]');
+      button.attr("disabled","disabled");
+      data.ajaxSubmit({
+          success: function(data) {
+              list.add(data);
+              KT.panel.closePanel($('#panel'));
+              KT.panel.select_item(list.last_child().attr("id"));
+          },
+          error: function(e) {
+              button.removeAttr('disabled');
+          }
+      });
+  }
+
   }
 })();
 
@@ -71,7 +98,22 @@ KT.subs = function() {
                 }
             });
         });
-    }, subSetup = function(){
+    },
+    save_selected_environment = function(env_id) {
+        // save the id of the env selected
+        $("#system_environment_id").attr('value', env_id);
+   },
+     initialize_edit = function() {
+        reset_env_select();
+        //enable_buttons();
+        //highlight_system_templates(false);
+    },
+    reset_env_select = function() {
+        $('#path-expanded').hide();
+        env_select.reset_hover();
+        env_select.recalc_scroll();
+    },
+    subSetup = function(){
         var subform = $('#subscribe');
         var subbutton = $('#sub_submit');
         var fakesubbutton = $('#fake_sub_submit');
@@ -97,12 +139,17 @@ KT.subs = function() {
                 }
             });
         });
-    }, spinnerSetup = function(){
+    },
+    spinnerSetup = function(){
         setTimeout("$('.ui-spinner').spinner()",1000);
     };
     return {
         unsubSetup: unsubSetup,
         subSetup: subSetup,
-        spinnerSetup: spinnerSetup
+        spinnerSetup: spinnerSetup,
+        save_selected_environment: save_selected_environment,
+        initialize_edit: initialize_edit,
+        reset_env_select: reset_env_select
+
     }
 }();

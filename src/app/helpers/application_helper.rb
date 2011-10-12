@@ -191,4 +191,18 @@ module ApplicationHelper
   def generate_details_url(path, id, entity )
      path + "?search=id%3D#{id}#panel=#{entity}_#{id}"
   end
+
+  #returns a proc to generate a url for the env_selector
+  def url_templates_proc
+    lambda{|args|
+      system_templates_organization_environment_path(args[:organization].cp_key, args[:environment].id)
+    }
+  end
+
+  #returns a proc to generate a url for the env_selector
+  def url_products_proc
+    lambda{|args|
+      products_organization_environment_path(args[:organization].cp_key, args[:environment].id)
+    }
+  end
 end
