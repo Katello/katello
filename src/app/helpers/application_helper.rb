@@ -10,7 +10,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
+
 module ApplicationHelper
+
+  include LayoutHelper
+  include ScopedSearch::RailsHelper
+
+  #require 'navigation/main'
+
+  #include Navigation
+
+
+
   def current_url(extra_params={})
     url_for params.merge(extra_params)
   end
