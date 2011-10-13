@@ -1,42 +1,21 @@
-%tr{:class => "child-of-#{group}"}
-  %td
-  %td
-    %hr{:class => "child-of-#{group}", :width => "20"}
-  %td
-  %td
-  %td
-  %td
-  %td
-
-%tr{:class => "child-of-#{group}"}
-  %td
-  %td{:class => "child-of-#{group} sub-subchild", :colspan => "5", :style => "padding-left: 45px;"}
-    %span{:class => "child-of-#{group}",:style => "width:150px;white-space: nowrap;float: left;"}
-      = "GPG Key URL"
-    %span{:class => "child-of-#{group}", :style => "width: 50px; white-space: nowrap; float: left;"}
-      - link = product_content.content.gpgUrl
-      %a{:href => "#{link}"}
-        = link
-%tr{:class => "child-of-#{group}"}
-  %td
-  %td{:class => "child-of-#{group} sub-subchild", :colspan => "5", :style => "padding-left: 45px;"}
-    %span{:class => "child-of-#{group}",:style => "width:150px;white-space: nowrap;float: left;"}
-      = "Content Download URL"
-    %span{:class => "child-of-#{group}", :style => "width: 50px; white-space: nowrap; float: left;"}
-      - link = product_content.content.contentUrl
-      %a{:href => "#{link}"}
-        = link
-%tr{:class => "child-of-#{group}"}
-  %td
-  %td{:class => "child-of-#{group} sub-subchild", :colspan => "5", :style => "padding-left: 45px;"}
-    %span{:class => "child-of-#{group}",:style => "width:150px;white-space: nowrap;float: left;"}
-      = "Repo Type"
-    %span{:class => "child-of-#{group}", :style => "width: 50px; white-space: nowrap; float: left;"}
-      = product_content.content.type
-%tr{:class => "child-of-#{group}"}
-  %td
-  %td{:class => "child-of-#{group} sub-subchild", :colspan => "5", :style => "padding-left: 45px;"}
-    %span{:class => "child-of-#{group}",:style => "width:150px;white-space: nowrap;float: left;"}
-      = "Enabled by Default"
-    %span{:class => "child-of-#{group}", :style => "width: 50px; white-space: nowrap; float: left;"}
-      = product_content.enabled
+%li
+  %hr{:width=>"75%"}
+%li
+  - link = product_content.content.gpgUrl
+  = _('GPG Key URL: ')
+  - if link == 'http://'
+    = _("None")
+  - else
+    %a{:href => "#{link}"}
+      = link
+%li
+  - link = product_content.content.contentUrl
+  = _('Content Download URL: ')
+  %a{:href => "#{link}"}
+    = link
+%li
+  = _('Repo Type: ')
+  = product_content.content.type
+%li
+  = _('Enabled by Default: ')
+  = product_content.enabled
