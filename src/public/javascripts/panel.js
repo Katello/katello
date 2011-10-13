@@ -446,21 +446,28 @@ KT.panel = (function($){
 
         	if( options['create'] ){
 		    	$('#' + options['create']).live('submit', function(e) {
-		    		var button = $(this).find('input[type|="submit"]');
+		    		var button = $(this).find('input[type|="submit"]'),
+		    			data   = KT.common.getSearchParams() || {};
   					
   					e.preventDefault();
        				button.attr("disabled","disabled");
 		    	
 			    	$(this).ajaxSubmit({
-						url		:  KT.routes[resource_type + '_path']() + KT.common.getSearchParams(),
+						url		: KT.routes[resource_type + '_path'](),
+						data	: data,
 				    	success : function(data) {
+				    		var id;
+				    		
 				    		if( data['no_match'] ){
 				            	closePanel($('#panel'));
 				          		notices.checkNotices();
 				    		} else {
 				                KT.panel.list.add(data);
 				                closePanel($('#panel'));
-				                select_item(KT.panel.list.first_child().attr("id"));
+				    			
+				    			id = KT.panel.list.first_child().attr("id");
+				                $.bbq.pushState({ panel : id });
+				                select_item(id);
 				                notices.checkNotices();
 				            }
 				      	}, 
@@ -473,16 +480,21 @@ KT.panel = (function($){
         	}
         },
         getListContent = function(resource_type, offset){
-        	var url 	= KT.routes['items_' + resource_type + '_path']() + KT.common.getSearchParams(),
-        		offset 	= offset || 0;
-
-        	url += '&offset=' + offset;
+        	var url 	= KT.routes['items_' + resource_type + '_path'](),
+        		offset 	= offset || 0,
+        		params 	= KT.common.getSearchParams(),
+        		data 	= { 'offset' : offset };
+        	
+        	if( params ){
+        		$.extend(data, params);
+        	}
         	
         	KT.panel.control_bbq = false;
         	$(window).bind( 'hashchange', hash_change);
         	
-        	$.get(url, function(data){
+        	$.get(url, data, function(data){
         		left_list_content = data;
+        		
         		$(document).ready(function(){
         			var element = $('#list');
         			
@@ -492,11 +504,15 @@ KT.panel = (function($){
         				$(window).trigger( 'hashchange' );
         			});
         			$('.left').resize();
+        			
+        			if( params ){
+	        			$('#search_form').find('#search').val(params['search']);
+        			}
         		});
         	});
         },
         setupSearch = function(resource_type){
-    		/*$('#search_form').live('submit', function(e){
+    		$('#search_form').live('submit', function(e){
 				var button = $('#search_button'),
 					element = $('#list'),
 					url 	= KT.routes['items_' + resource_type + '_path'](),
@@ -507,8 +523,8 @@ KT.panel = (function($){
 				element.find('section').empty();
 				element.find('.spinner').show();
 				
-				url += '?' + $(this).serialize();
-        		url += '&offset=' + offset;	
+				$.bbq.pushState($(this).serialize());
+        		url += '?offset=' + offset;	
         	
         		closePanel();
 				
@@ -524,7 +540,7 @@ KT.panel = (function($){
 			        	button.removeAttr('disabled');
 			      	}
 				})
-			});*/
+			});
         };
 	
     return {
