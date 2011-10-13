@@ -46,7 +46,7 @@ class Api::ProductsController < Api::ApiController
   private
 
   def find_product
-    @product = Product.find_by_cp_id(params[:id])
+    @product = Product.find_by_cp_id(params[:id].to_s)
     raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:id]}'") if @product.nil?
   end
 

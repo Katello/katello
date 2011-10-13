@@ -27,7 +27,9 @@ class Api::FiltersController < Api::ApiController
       :create => create_filter,
       :index => index_filters,
       :show => read_filter,
-      :destroy => delete_filter
+      :destroy => delete_filter,
+      :list_product_filters => index_filters,
+      :update_product_filters => create_filter
     }
   end
 
@@ -56,14 +58,15 @@ class Api::FiltersController < Api::ApiController
   end
 
   def update_product_filters
-    @products.filters_will_change!
+    @product.filters_will_change!
     @product.filters = params[:filters]
+    @product.save!
 
-    render :json => @products.filters.to_json
+    render :json => @product.filters.to_json
   end
 
   def find_product
-    @product = Product.find_by_cp_id(params[:id])
+    @product = Product.find_by_cp_id(params[:product_id])
     raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:product_id]}'") if @product.nil?
   end
 
