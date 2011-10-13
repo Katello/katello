@@ -288,12 +288,12 @@ KT.common = (function() {
             return root_url;
         },
         getSearchParams : function() {
-        	var search_string 	= window.location.href.split('search=');
+        	var search_string = $.bbq.getState('search')
 
-        	if( search_string.length === 2 ){
-        		return '?search=' + search_string[1];	
+        	if( search_string ){
+        		return { 'search' : search_string };	
         	} else {
-        		return '?';
+        		return false;
         	}
         },
         thirdLevelNavSetup : function(){
