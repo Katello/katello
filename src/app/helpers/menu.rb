@@ -22,8 +22,8 @@ module Menu
     end
   end
   def render_menu(level)
-    @menu_items ||=create_menu
-    render_navigation(:items=>@menu_items, :expand_all=>true, :level => level)
+    @menu_items ||= create_menu
+    render_navigation(:items=>Support.deep_copy(@menu_items), :expand_all=>true, :level => level)
   end
 
   def create_menu

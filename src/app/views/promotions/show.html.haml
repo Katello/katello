@@ -92,12 +92,10 @@
         - if read_changesets
           %h2 #{@next_environment.name + _(" Changesets")}
           .breadcrumb_search.fl.clear.clickable
-  
             %form#search_form.search.clear
               %input{ :name => "s", :type => "input", :placeholder => "Filter...", :id=>"search_filter"}
               %button.action #{_("Search")}
               %br.clear
-  
             .search_button.fr.clickable
               #{_('Search')}
             .tree_breadcrumb
