@@ -30,11 +30,13 @@
                 %td #{sub.expires}
               - sub.providedProducts.each do |product|
                 %tr{:class => "child-of-#{sub.poolId}"}
-                  %td
-                  %td{:colspan=>5}
-                    = product.name
-                - product.productContent.each do |product_content|
-                  = render :partial=>'subscription_details', :locals=>{:group => sub.poolId, :product_content => product_content}
+                  %td{:colspan=>7}
+                    %ul
+                      %li
+                        = _("Product Name: ")
+                        = product.name
+                      - product.productContent.each do |product_content|
+                        = render :partial=>'subscription_details', :locals=>{:group => sub.poolId, :product_content => product_content}
           - else
             %tr
               %td{:colspan=>5} #{_("The system is not currently consuming any subscriptions.")}
@@ -78,11 +80,13 @@
                 %td #{sub.expires}
               - sub.providedProducts.each do |product|
                 %tr{:class => "child-of-#{sub.poolId}"}
-                  %td
-                  %td{:colspan=>5}
-                    = product.name
-                - product.productContent.each do |product_content|
-                  = render :partial=>'subscription_details', :locals=>{:group => sub.poolId, :product_content => product_content}
+                  %td{:colspan=>7}
+                    %ul
+                      %li
+                        = _("Product Name: ")
+                        = product.name
+                      - product.productContent.each do |product_content|
+                        = render :partial=>'subscription_details', :locals=>{:group => sub.poolId, :product_content => product_content}
           - else
             %tr
               %td{:colspan=>5} #{_("There are no more subscriptions available.")}
