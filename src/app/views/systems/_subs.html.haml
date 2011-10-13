@@ -75,7 +75,7 @@
                   - if sub.multiEntitlement
                     = number_field_tag "spinner[#{sub.poolId}]", nil, :in => 1...sub.quantity, :step=>1, :value=>0, :class=>"ui-spinner"
                   - else
-                    = label_tag "label[#{sub.poolId}]", "0 of #{sub.quantity - sub.consumed}", :class => "ui-nonspinner-label"
+                    %div{:class=>"ui-nonspinner-label"} 0 of #{sub.quantity - sub.consumed}
                     = hidden_field_tag "spinner[#{sub.poolId}]", 0, :class => "ui-nonspinner"
                 %td #{sub.expires}
               - sub.providedProducts.each do |product|
