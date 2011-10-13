@@ -37,15 +37,22 @@ RSpec.configure do |config|
   # config.mock_with :flexmock
   # config.mock_with :rr
   config.mock_with :rspec
-  
-#  config.include Rack::Test::Methods
+
+  #This line says add to these files all of the modules necessary to act as a controller spec
+  config.include RSpec::Rails::ControllerExampleGroup, :type => :controller, :example_group => {
+    :file_path => config.escaped_path(%w[spec common controllers])
+  }
+
+  config.include RSpec::Rails::ControllerExampleGroup, :type => :controller, :example_group => {
+    :file_path => config.escaped_path(["spec", AppConfig.app_name, "controllers"])
+  }
 
   config.include Warden::Test::Helpers
 
   config.after :all do
     Warden.test_reset!
   end
-  
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
