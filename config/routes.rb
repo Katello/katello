@@ -310,8 +310,8 @@ Src::Application.routes.draw do
         delete :index, :on => :collection, :action => :cancel
       end
       resources :filters, :only => [] do
-        get :index, :on => :member, :action => :list_product_filters
-        put :index, :on => :member, :action => :update_product_filters
+        get :index, :on => :collection, :action => :list_product_filters
+        put :index, :on => :collection, :action => :update_product_filters
       end
     end
 
