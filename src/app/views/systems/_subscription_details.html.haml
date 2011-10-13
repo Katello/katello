@@ -9,10 +9,12 @@
     %a{:href => "#{link}"}
       = link
 %li
+  -# TODO: This content url needs to get the source prefix (http:...) from somewhere
   - link = product_content.content.contentUrl
   = _('Content Download URL: ')
-  %a{:href => "#{link}"}
-    = link
+  -# %a{:href => "#{link}"}
+  -#  = link
+  = link
 %li
   = _('Repo Type: ')
   = product_content.content.type
