@@ -9,8 +9,7 @@
             %th
             %th #{_("Subscription")}
             %th #{_("SLA")}
-            %th #{_("Sockets")}
-            %th #{_("Guests")}
+            %th #{_("Contract")}
             %th #{_("Quantity")}
             %th #{_("Expires")}
         %tbody
@@ -24,9 +23,9 @@
                   &nbsp;
                   #{sub.poolName}
                 %td #{sub.sla}
-                %td #{sub.sockets}
-                %td #{sub.guests}
-                %td #{sub.quantity} of #{sub.consumed}
+                %td #{sub.contractNumber}
+                %td
+                  = sub.quantity < 0 ? 1 : sub.consumed
                 %td #{sub.expires}
               - sub.providedProducts.each do |product|
                 %tr{:class => "child-of-#{sub.poolId}"}
@@ -54,8 +53,8 @@
             %th
             %th #{_("Subscription")}
             %th #{_("Sockets")}
-            %th #{_("Guests")}
-            %th #{_("Quantity")}
+            %th #{_("Available")}
+            %th #{_("Total")}
             %th #{_("Expires")}
         %tbody
           - if avail_subs.length > 0
@@ -65,18 +64,21 @@
                 %td
                   %span.fl
                     = check_box_tag "system[#{sub.poolId}]", false
-                    -#/ put the product's id in the value field so we know what product is syncing
-                    -#=check_box_tag "repo[#{r.id}]", value="#{p.id}"
                   &nbsp;
                   #{sub.poolName}
                 %td #{sub.sockets}
-                %td #{sub.guests}
                 %td
                   - if sub.multiEntitlement
-                    = number_field_tag "spinner[#{sub.poolId}]", nil, :in => 1...sub.quantity, :step=>1, :value=>0, :class=>"ui-spinner"
+                    = number_field_tag "spinner[#{sub.poolId}]", nil, :in => 0...sub.quantity, :step=>1, :value=>0, :class=>"ui-spinner"
+                    = "of #{sub.quantity - sub.consumed}"
                   - else
-                    %div{:class=>"ui-nonspinner-label"} 0 of #{sub.quantity - sub.consumed}
+                    - if sub.quantity < 0
+                      = _("Unlimited")
+                    -else
+                      %div{:class=>"ui-nonspinner-label"} 0 of #{sub.quantity - sub.consumed}
                     = hidden_field_tag "spinner[#{sub.poolId}]", 0, :class => "ui-nonspinner"
+                %td
+                  = sub.quantity < 0 ? '' : sub.quantity
                 %td #{sub.expires}
               - sub.providedProducts.each do |product|
                 %tr{:class => "child-of-#{sub.poolId}"}
