@@ -20,7 +20,7 @@ end
 
 class System < ActiveRecord::Base
   include Glue::Candlepin::Consumer
-  include Glue::Pulp::Consumer if AppConfig.use_pulp && AppConfig.app_name == "katello"
+  include Glue::Pulp::Consumer if AppConfig.use_pulp && AppConfig.katello?
   include Glue
   include Authorization
   include AsyncOrchestration

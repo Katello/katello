@@ -220,7 +220,7 @@ class ProvidersController < ApplicationController
                  :create => _('Provider'),
                  :name => controller_display_name,
                  :ajax_scroll=>items_providers_path(),
-                 :enable_create=> Provider.creatable?(current_organization) && AppConfig.app_name == "katello"}
+                 :enable_create=> Provider.creatable?(current_organization) && AppConfig.katello?}
         
   end
 
