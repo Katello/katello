@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.92
+Version:        0.1.93
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -237,6 +237,75 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Oct 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.93-1
+- bump up scoped_search version to 2.3.4 (shughes@redhat.com)
+- 745315 -changing application controller to not include all helpers in all
+  controllers, this stops helper methods with the same name from overwriding
+  each other (jsherril@redhat.com)
+- 740969 - Fixed a bug where tab was being inserted. Tab is invalid for names
+  (paji@redhat.com)
+- 720432 - Moves the small x that closes the filter on sliding tree widgets to
+  be directly to the right of the filter. (ehelms@redhat.com)
+- 745279 - UI - fix deletion of repo (bbuckingham@redhat.com)
+- 739588-Made the systems update call raise the error message the correct way
+  (paji@redhat.com)
+- 735975 - Fix for user delete link showing up for self roles page
+  (paji@redhat.com)
+- Added code to fix a menu highlighting issue (paji@redhat.com)
+- 743415 - removing uneeded files (mmccune@redhat.com)
+- update to translations (shughes@redhat.com)
+- 744285 - bulletproof the spec test for repo_id (inecas@redhat.com)
+- Fix for accidentaly faling tests (inecas@redhat.com)
+- adding new zanata translation file (shughes@redhat.com)
+- search - fix system save and notices search (bbuckingham@redhat.com)
+- 744285 - Change format of repo id (inecas@redhat.com)
+- Fixed a bunch of unit tests (paji@redhat.com)
+- Fixed progress bar and spacing on sync management page. (jrist@redhat.com)
+- Updated the ordering on the content-management menu items (paji@redhat.com)
+- Refactored the create_menu method to allow navs of multiple levels
+  (paji@redhat.com)
+- Ported all the nav items across (paji@redhat.com)
+- Added a construct to automatically imply checking for a sub level if the top
+  level is missing (paji@redhat.com)
+- Just added spaces to every line to keep the tabbing loking right
+  (paji@redhat.com)
+- Added the systems tab. (paji@redhat.com)
+- Added dashboard menus and fixed a bunch of navs (paji@redhat.com)
+- Reorganized the navigation a bit (paji@redhat.com)
+- Modified the rendering structure to use independent nav items
+  (paji@redhat.com)
+- Moved menu rb to helpers since its a better fit there.. soon going to
+  reorganize the files there (paji@redhat.com)
+- Adding the new menu.rb to generate menu (paji@redhat.com)
+- Initial commit on getting a dynamic navigation (paji@redhat.com)
+- Merge branch 'comps' (jsherril@redhat.com)
+- system templates - fixing last issues with comps groups (jsherril@redhat.com)
+- removing z-index on helptip open icon so it does not hover over 3rd level
+  navigation menu (jsherril@redhat.com)
+- Moved the help tip on the redhat providers page show up at the right spot
+  (paji@redhat.com)
+- reduce number of sync threads (shughes@redhat.com)
+- search - several fixes for issues on auto-complete (bbuckingham@redhat.com)
+- tests - adding system template package group test for the ui controller
+  (jsherril@redhat.com)
+- 744191 - prevent some changes on red hat provider (inecas@redhat.com)
+- 744191 - Prevent deleting Red Hat provider (inecas@redhat.com)
+- system templates - removign uneeded route (jsherril@redhat.com)
+- system templates - package groups auto complete working (jsherril@redhat.com)
+- system templates - hooked up comps groups with backend with the exception of
+  auto complete (jsherril@redhat.com)
+- Merge branch 'master' into comps (jsherril@redhat.com)
+- system templates - adding  addition and removal of package groups in the web
+  ui, still does not save to server (jsherril@redhat.com)
+- system templates - properly listing package groups respecting page size
+  limits (jsherril@redhat.com)
+- system templates - adding real package groups to system templates page
+  (jsherril@redhat.com)
+- system templates - adding initial ui framework for package groups in system
+  templates (jsherril@redhat.com)
+- system templates - adding initial comps listing for products (with fake data)
+  (jsherril@redhat.com)
+
 * Tue Oct 11 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.92-1
 - Installation does not pull in katello-cli
 - Revert "added ruport-related gems to Gemfile"
