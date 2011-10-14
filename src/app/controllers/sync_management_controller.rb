@@ -40,7 +40,7 @@ class SyncManagementController < ApplicationController
 
   def rules
 
-    list_test = lambda{Provider.any_readable?(current_organization)}
+    list_test = lambda{Provider.any_readable?(current_organization) }
     sync_read_test = lambda{@provider.readable?}
     sync_test = lambda {current_organization.syncable?}
     
