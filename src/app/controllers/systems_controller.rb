@@ -241,16 +241,11 @@ class SystemsController < ApplicationController
   def sys_consumed_pools
     consumed_pools = @system.pools.collect {|pool|
       # TODO: SLA: support_type (Standard) or support_level (L3-only)?
-      # TODO: Guests: virt_limit (4) or variant (1-2 Sockets)?
-      # TODO: Sockets: socket_limit (2) or
-      sla = "--"
-      sockets = "--"
-      guests = "--"
+      sla = ""
       pool["productAttributes"].each do |attr|
         if attr["name"] == "support_type"
           sla = attr["value"]
-        elsif attr["name"] == "socket_limit"
-          sockets = attr["value"]
+          break
         end
       end
 
@@ -268,8 +263,7 @@ class SystemsController < ApplicationController
                      :consumed => pool["consumed"],
                      :quantity => pool["quantity"],
                      :sla => sla,
-                     :sockets => sockets,
-                     :guests => guests,
+                     :contractNumber => pool["contractNumber"],
                      :providedProducts => providedProducts)
     }
     consumed_pools.sort! {|a,b| a.poolName <=> b.poolName}
@@ -278,8 +272,7 @@ class SystemsController < ApplicationController
 
   def sys_available_pools
     avail_pools = @system.available_pools.collect {|pool|
-      sockets = "--"
-      guests = "--"
+      sockets = ""
       multiEntitlement = false
       pool["productAttributes"].each do |attr|
         if attr["name"] == "socket_limit"
@@ -303,7 +296,6 @@ class SystemsController < ApplicationController
                      :consumed => pool["consumed"],
                      :quantity => pool["quantity"],
                      :sockets => sockets,
-                     :guests => guests,
                      :multiEntitlement => multiEntitlement,
                      :providedProducts => providedProducts)
     }
