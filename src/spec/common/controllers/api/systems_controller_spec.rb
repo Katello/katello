@@ -203,11 +203,6 @@ describe Api::SystemsController do
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
 
-    it "successfully" do
-      Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
-      put :upload_package_profile, :id => uuid, :_json => package_profile
-      response.body.should == @sys.to_json
-    end
   end
   
   describe "view packages in a specific system" do
@@ -244,23 +239,8 @@ describe Api::SystemsController do
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
     
-    it "should change the name" do
-      Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true)
+    it "should change the name (without pulp)" do
       post :update, :id => uuid, :name => "foo_name"
-      response.body.should == @sys.to_json
-      response.should be_success
-    end
-    
-    it "should change the description" do
-      Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, "redkin is awesome.").and_return(true)
-      post :update, :id => uuid, :description => "redkin is awesome."
-      response.body.should == @sys.to_json
-      response.should be_success
-    end
-    
-    it "should change the location" do
-      Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true)
-      post :update, :id => uuid, :location => "never-neverland"
       response.body.should == @sys.to_json
       response.should be_success
     end
@@ -280,11 +260,6 @@ describe Api::SystemsController do
 
     it "should find System" do
       System.should_receive(:first).once.with(hash_including(:conditions => {:uuid => @system.uuid})).and_return(@system)
-      get :errata, :id => @system.uuid
-    end
-
-    it "should retrieve Consumer's errata from pulp" do
-      Pulp::Consumer.should_receive(:errata).once.with(uuid).and_return([])
       get :errata, :id => @system.uuid
     end
   end

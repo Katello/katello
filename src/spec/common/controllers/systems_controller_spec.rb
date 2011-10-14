@@ -183,12 +183,6 @@ describe SystemsController do
           response.should render_template("subscriptions")
         end
 
-        it "should show packages" do
-          get :packages, :id => @system.id
-          response.should be_success
-          response.should render_template("packages")
-        end
-
         it "should show systems by env" do
           @environment2 = KTEnvironment.new(:name => 'testenv', :prior => @organization.locker.id, :organization => @organization)
           @environment2.save!
@@ -206,6 +200,7 @@ describe SystemsController do
       end
 
       it "should update the system name" do
+        Candlepin::Consumer.stub!(:get).and_return({:uuid => @system.uuid, :owner => {:key => @system.uuid}})
         put :update, { :id => @system.id, :system => { :name=> "foo" }}
         response.should be_success
         assigns[:system].name.should == "foo"

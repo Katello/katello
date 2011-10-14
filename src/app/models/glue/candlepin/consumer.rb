@@ -164,6 +164,7 @@ module Glue::Candlepin::Consumer
     end
 
     def arch=(arch)
+      @facts = {} unless facts
       facts["uname.machine"] = arch
     end
 
@@ -172,6 +173,7 @@ module Glue::Candlepin::Consumer
     end
 
     def sockets=(sock)
+      @facts = {} unless facts
       facts["cpu.cpu_socket(s)"] = sock
     end
 
@@ -180,12 +182,14 @@ module Glue::Candlepin::Consumer
     end
 
     def guest=(val)
+      @facts = {} unless facts
       facts["virt.is_guest"] = val
 
     end
 
     def name=(val)
       super(val)
+      @facts = {} unless facts
       facts["network.hostname"] = val
     end
 
