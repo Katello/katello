@@ -92,8 +92,10 @@ KT.subs = function() {
                     }else{
                         $(this).parent().parent().parent().find(".ui-nonspinner").val(1);
                         spinner = $(this).parent().parent().parent().find(".ui-nonspinner-label")[0];
-                        of_string = "1" + spinner.innerHTML.substr(1);
-                        spinner.innerHTML = of_string;
+                        if(spinner) {
+                            of_string = "1" + spinner.innerHTML.substr(1);
+                            spinner.innerHTML = of_string;
+                        }
                     }
                     if(!(subbutton.is(":visible"))){
                         fakesubbutton.fadeOut("fast", function(){subbutton.fadeIn()});
@@ -106,8 +108,10 @@ KT.subs = function() {
                     }else{
                         $(this).parent().parent().parent().find(".ui-nonspinner").val(0);
                         spinner = $(this).parent().parent().parent().find(".ui-nonspinner-label")[0];
-                        of_string = "0" + spinner.innerHTML.substr(1);
-                        spinner.innerHTML = of_string;
+                        if(spinner) {
+                            of_string = "0" + spinner.innerHTML.substr(1);
+                            spinner.innerHTML = of_string;
+                        }
                     }
                     if((subbutton.is(":visible")) && checked == 0){
                         subbutton.fadeOut("fast", function(){fakesubbutton.fadeIn()});
