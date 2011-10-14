@@ -85,11 +85,13 @@ class Product < ActiveRecord::Base
     options = {} if options == nil
     hash = super(options.merge(:except => [:cp_id, :id]))
     hash = hash.merge(:sync_state => self.sync_state,
-                      :last_sync => self.last_sync,
                       :productContent => self.productContent,
                       :multiplier => self.multiplier,
                       :attributes => self.attrs,
                       :id => self.cp_id)
+    if AppConfig.katello?
+      hash.merge(:last_sync => self.last_sync)
+    end
     hash
   end
 

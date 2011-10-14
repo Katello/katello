@@ -2,7 +2,7 @@
 # are not available in all initializers starting with 'a' letter.
 require 'ostruct'
 require 'yaml'
- 
+
 module ApplicationConfiguration
 
 
@@ -11,15 +11,18 @@ module ApplicationConfiguration
 
     attr_reader :config_file
 
-    def initialize 
+    def initialize
       @config_file = "/etc/katello/katello.yml"
       @config_file = "#{Rails.root}/config/katello.yml" unless File.exists? @config_file
 
       config = YAML::load_file(@config_file) || {}
       @hash = config['common'] || {}
       @hash.update(config[Rails.env] || {})
+      app_name = (config['common']['app'] ? config['common']['app'] : "katello")
+      @hash["katello?"] = app_name == "katello"
+      @hash["headpin?"] = app_name == "headpin"
       @ostruct = hashes2ostruct(@hash)
-      @ostruct.app_name = (config['common']['app'] ? config['common']['app'] : "katello")
+      @ostruct.app_name = app_name
 
       # candlepin and pulp are turned on by default
       @ostruct.use_cp = true unless @ostruct.respond_to?(:use_cp)
