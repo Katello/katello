@@ -24,7 +24,7 @@ class Organization < ActiveRecord::Base
 
   attr_accessor :parent_id,:pools,:statistics
 
-  scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'organization.name'
+  scoped_search :on => :name, :complete_value => true, :rename => :'organization.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'organization.description'
   scoped_search :in => :environments, :on => :name, :complete_value => true, :rename => :'environment.name'
   scoped_search :in => :environments, :on => :description, :complete_value => true, :rename => :'environment.description'
