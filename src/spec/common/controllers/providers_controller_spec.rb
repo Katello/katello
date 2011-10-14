@@ -40,7 +40,7 @@ describe ProvidersController do
     end
 
     it "should update a provider subscription" do
-      test_export = File.new("#{Rails.root}/spec/controllers/export.zip")
+      test_export = File.new("#{Rails.root}/spec/common/controllers/export.zip")
       contents = {:contents => test_export}
       id = @org.redhat_provider.id.to_s
       post 'update_redhat_provider', {:id => id, :provider => contents}
