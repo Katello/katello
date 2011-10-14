@@ -17,7 +17,6 @@ class ErrataController < ApplicationController
   
   before_filter :lookup_errata
 
-
   def rules
     test = lambda{true}
     {
@@ -27,14 +26,12 @@ class ErrataController < ApplicationController
 
   end
 
-
   def show
     render :partial=>"show"
   end
 
-  
   def packages
-    render :partial=>"packages"      
+    render :partial=>"packages", :layout => "tupane_layout"
   end
   
   private
