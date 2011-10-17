@@ -1,18 +1,23 @@
 #!/bin/bash
 
 if [ "$(id -u)" != "0" ]; then
-   echo "This script must be run as root" 1>&2
-   exit 1
+  echo "This script must be run as root" 1>&2
+  exit 1
 fi
 
 SRV=/sbin/service
 
-if [ -f /etc/init.d/katello ]; then
-  . /etc/init.d/katello
+if [ -f /etc/sysconfig/katello ]; then
+  # load configuration values
+  . /etc/sysconfig/katello
 else
-   echo "Katello does not seem to be installed on this machine" 1>&2
-   exit 1
+  echo "Katello does not seem to be installed on this machine" 1>&2
+  exit 1
 fi
+
+# default configuration values (should be the same as in our sysv init script)
+KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
+KATELLO_ENV=${KATELLO_ENV:-production}
 
 echo -e "\n"
 echo '***********************************************************'
