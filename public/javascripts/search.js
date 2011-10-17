@@ -21,6 +21,9 @@ var favorite = (function() {
         //custom successCreate - calls notices update and list/panel updates from panel.js
         success : function(data) {
             $(".qdropdown").html(data);
+
+            // process the elements of the list and truncate any that are too long with ellipsis (...) (e.g. jquery.text-overflow.js)
+            $(".one-line-ellipsis").ellipsis();
         },
         error : function(data) {
         },

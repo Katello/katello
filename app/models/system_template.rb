@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'util/package_util'
+require 'active_support/builder' unless defined?(Builder)
 
 class ParentTemplateValidator < ActiveModel::Validator
   def validate(record)
@@ -46,6 +47,7 @@ class SystemTemplate < ActiveRecord::Base
   lazy_accessor :parameters, :initializer => lambda { init_parameters }, :unless => lambda { false }
 
   before_validation :attrs_to_json
+  after_initialize :save_content_state
   before_save :update_revision
   before_destroy :check_children
 
@@ -80,27 +82,64 @@ class SystemTemplate < ActiveRecord::Base
     self.save!
     json["products"].each {|p| self.add_product(p) } if json["products"]
     json["packages"].each {|p| self.add_package(p) } if json["packages"]
-    json["package_groups"].each {|pg| self.add_package_group(pg.symbolize_keys) } if json["package_groups"]
-    json["package_group_categories"].each {|pgc| self.add_pg_category(pgc.symbolize_keys) } if json["package_group_categories"]
+    json["package_groups"].each {|pg| self.add_package_group(pg) } if json["package_groups"]
+    json["package_group_categories"].each {|pgc| self.add_pg_category(pgc) } if json["package_group_categories"]
 
     json["parameters"].each_pair {|k,v| self.parameters[k] = v } if json["parameters"]
   end
 
-
-  def string_export
+  def export_as_json
     tpl = {
       :name => self.name,
       :revision => self.revision,
-      :packages => self.packages.map(&:package_name),
+      :packages => self.packages.map(&:nvrea),
       :products => self.products.map(&:name),
-      :parameters => ActiveSupport::JSON.decode(self.parameters_json),
-      :package_groups => self.package_groups.map(&:export_hash),
-      :package_group_categories => self.pg_categories.map(&:export_hash)
+      :parameters => ActiveSupport::JSON.decode(self.parameters_json || "{}"),
+      :package_groups => self.package_groups.map(&:name),
+      :package_group_categories => self.pg_categories.map(&:name),
     }
     tpl[:description] = self.description if not self.description.nil?
     tpl[:parent] = self.parent.name if not self.parent.nil?
+    tpl
+  end
 
-    tpl.to_json
+  def string_export
+    self.export_as_json.to_json
+  end
+
+
+  # Returns template in XML TDL format:
+  # https://github.com/aeolusproject/imagefactory/blob/master/Documentation/TDL.xsd
+  def export_as_tdl
+    xm = Builder::XmlMarkup.new
+    xm.instruct!
+    xm.template {
+      # mandatory tags
+      xm.name self.name
+      xm.os {
+        xm.name "Fedora"
+        xm.version "14"
+        xm.arch "x86_64"
+        xm.install("type" => "url") {
+          xm.url "http://repo.fedora.org/f14/os"
+        }
+      }
+      # optional tags
+      xm.description self.description unless self.description.nil?
+      xm.packages {
+        self.packages.each { |p| xm.package "name" => p.package_name }
+        # TODO package groups
+      }
+      xm.repositories {
+        self.products.each do |p|
+          pc = p.productContent.each do |pc|
+            xm.repository("name" => pc.content.name) {
+              xm.url p.repository_url(pc.content.contentUrl)
+            }
+          end
+        end
+      }
+    }
   end
 
 
@@ -115,49 +154,82 @@ class SystemTemplate < ActiveRecord::Base
 
 
   def remove_package package_name
-    package = self.packages.find(:first, :conditions => {:package_name => package_name})
-    package.destroy
+    if Katello::PackageUtils.is_nvr package_name
+      pack_attrs = Katello::PackageUtils.parse_nvre package_name
+      package = self.packages.find(:first, :conditions => {:package_name => pack_attrs[:name], :version => pack_attrs[:version], :release => pack_attrs[:release], :epoch => pack_attrs[:epoch]})
+    else
+      package = self.packages.find(:first, :conditions => {:package_name => package_name})
+    end
+    self.packages.delete(package)
   end
 
   def add_product product_name
     product = self.environment.products.find_by_name(product_name)
     if product == nil
       raise Errors::TemplateContentException.new("Product #{product_name} not found in this environment.")
+    elsif self.products.include? product
+      raise Errors::TemplateContentException.new("Product #{product_name} is already present in the template.")
     end
-    self.products = (self.products << product).uniq
+    self.products << product
   end
-
 
   def remove_product product_name
     product = self.environment.products.find_by_name(product_name)
     self.products.delete(product)
-    save!
   rescue ActiveRecord::RecordInvalid
     raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{product_name}.")
   end
 
-  def add_package_group pg_attrs
-      self.package_groups.create!(:repo_id => pg_attrs[:repo_id], :package_group_id => pg_attrs[:id])
+  def add_product_by_cpid cp_id
+    product = self.environment.products.find_by_cp_id(cp_id)
+    if product == nil
+      raise Errors::TemplateContentException.new("Product #{cp_id} not found in this environment.")
+    elsif self.products.include? product
+      raise Errors::TemplateContentException.new("Product #{cp_id} is already present in the template.")
+    end
+    self.products << product
   end
 
-  def remove_package_group pg_attrs
-    package_group = self.package_groups.where(:repo_id => pg_attrs[:repo_id], :package_group_id => pg_attrs[:id]).first
+  def remove_product_by_cpid cp_id
+    product = self.environment.products.find_by_cp_id(cp_id)
+    self.products.delete(product)
+  rescue ActiveRecord::RecordInvalid
+    raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{cp_id}.")
+  end
+
+  def set_parameter key, value
+    self.parameters[key] = value
+  end
+
+  def remove_parameter key
+    if not self.parameters.has_key? key
+      raise Errors::TemplateContentException.new("Parameter #{key} not found in the template.")
+    end
+    self.parameters.delete(key)
+  end
+
+  def add_package_group pg_name
+    self.package_groups.create!(:name => pg_name)
+  end
+
+  def remove_package_group pg_name
+    package_group = self.package_groups.where(:name => pg_name).first
     if package_group == nil
-      raise Errors::TemplateContentException.new(_("Package group '%s' not found in this template.") % pg_attrs[:repo_id])
+      raise Errors::TemplateContentException.new(_("Package group '%s' not found in this template.") % pg_name)
     end
-    package_group.delete
+    self.package_groups.delete(package_group)
   end
 
-  def add_pg_category pg_cat_attrs
-    self.pg_categories.create!(:repo_id => pg_cat_attrs[:repo_id], :pg_category_id => pg_cat_attrs[:id])
+  def add_pg_category pg_cat_name
+    self.pg_categories.create!(:name => pg_cat_name)
   end
 
-  def remove_pg_category pg_cat_attrs
-    pg_category = self.pg_categories.where(:repo_id => pg_cat_attrs[:repo_id], :pg_category_id => pg_cat_attrs[:id]).first
+  def remove_pg_category pg_cat_name
+    pg_category = self.pg_categories.where(:name => pg_cat_name).first
     if pg_category == nil
-      raise Errors::TemplateContentException.new(_("Package group category '%s' not found in this template.") % pg_cat_attrs[:id])
+      raise Errors::TemplateContentException.new(_("Package group category '%s' not found in this template.") % pg_cat_name)
     end
-    pg_category.delete
+    self.pg_categories.delete(pg_category)
   end
 
   def to_json(options={})
@@ -180,8 +252,7 @@ class SystemTemplate < ActiveRecord::Base
     else
       #if specified by name, ensure any package with this name is in the next env. If not, promote the latest.
       return [] if to_env.find_packages_by_name(tpl_pack.package_name).length > 0
-      latest = from_env.find_latest_package_by_name(tpl_pack.package_name)
-      from_env.find_packages_by_nvre(latest[:name], latest[:version], latest[:release], latest[:epoch])
+      from_env.find_latest_packages_by_name(tpl_pack.package_name)
     end
   end
 
@@ -195,6 +266,14 @@ class SystemTemplate < ActiveRecord::Base
 
     []
   end
+
+
+  def get_clones
+    Organization.find(self.environment.organization_id).environments.collect do |env|
+      env.system_templates.where(:name => self.name_was)
+    end.flatten(1)
+  end
+
 
   #### Permissions
   def self.list_verbs global = false
@@ -297,7 +376,7 @@ class SystemTemplate < ActiveRecord::Base
   def copy_to_env env
     new_tpl = SystemTemplate.new
     new_tpl.environment = env
-    new_tpl.string_import(self.string_export)
+    new_tpl.string_import(self.export_as_json)
     new_tpl.save!
   end
 
@@ -306,13 +385,31 @@ class SystemTemplate < ActiveRecord::Base
     self.parameters_json = self.parameters.to_json
   end
 
+  def get_content_state
+    content = self.export_as_json
+    content.delete(:name)
+    content.delete(:description)
+    content.delete(:revision)
+    content
+  end
+
+  def save_content_state
+    @old_content = self.get_content_state
+  end
+
+  def content_changed?
+    old_content_json     = @old_content.to_json
+    current_content_json = self.get_content_state.to_json
+    not (old_content_json.eql? current_content_json)
+  end
+
   def update_revision
     self.revision = 1 if self.revision.nil?
 
     #increase revision number only on content attribute change
-    if not self.new_record?
-      content_changes = @changed_attributes.select {|k, v| (k!=:name && k!=:description && k!=:revision) }
-      self.revision += 1 if not content_changes.empty?
+    if not self.new_record? and self.content_changed?
+      self.revision += 1
+      self.save_content_state
     end
   end
 

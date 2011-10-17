@@ -22,6 +22,15 @@ describe Product do
 
     @organization = Organization.create!(:name => ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
     @provider     = @organization.redhat_provider
+    @substitutor_mock = mock
+    @substitutor_mock.stub!(:substitute_vars).and_return do |path|
+      {{} =>  path}
+    end
+
+    CDN::CdnVarSubstitutor.stub(:new => @substitutor_mock)
+    CDN::CdnResource.stub(:ca_file => "#{Rails.root}/config/candlepin-ca.crt")
+    OpenSSL::X509::Certificate.stub(:new).and_return(&:to_s)
+    OpenSSL::PKey::RSA.stub(:new).and_return(&:to_s)
 
     ProductTestData::SIMPLE_PRODUCT.merge!({:provider => @provider, :environments => [@organization.locker]})
     ProductTestData::SIMPLE_PRODUCT_WITH_INVALID_NAME.merge!({:provider => @provider, :environments => [@organization.locker]})
@@ -182,20 +191,12 @@ describe Product do
         @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
       end
 
-      it "should start with product id" do
-        @p.repo_id('123').index("#{ProductTestData::PRODUCT_ID}").should == 0
-      end
-
-      it "should end with organization id" do
-        @p.repo_id('123').index("#{ProductTestData::ORG_ID}").should == @p.repo_id('123').length - "#{ProductTestData::ORG_ID}".length
-      end
-
-      it "should have environment name in it if one was specified" do
-        @p.repo_id('123', 'root').should == "#{ProductTestData::PRODUCT_ID}-123-root-#{ProductTestData::ORG_ID}"
+      specify "format" do
+        @p.repo_id('123', 'root').should == "#{ProductTestData::ORG_ID}-root-#{ProductTestData::SIMPLE_PRODUCT[:name]}-123"
       end
 
       it "should be the same as content id for cloned repository" do
-        @p.repo_id("#{ProductTestData::PRODUCT_ID}-123-root-#{ProductTestData::ORG_ID}").should == "#{ProductTestData::PRODUCT_ID}-123-root-#{ProductTestData::ORG_ID}"
+        @p.repo_id("#{ProductTestData::ORG_ID}-root-#{ProductTestData::SIMPLE_PRODUCT[:name]}-123").should == "#{ProductTestData::ORG_ID}-root-#{ProductTestData::SIMPLE_PRODUCT[:name]}-123"
       end
     end
 
@@ -232,36 +233,51 @@ describe Product do
         p.save!
       end
 
+      it "should set content type" do
+        Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:content_type => "yum"))
+        p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
+        p.orchestration_for = :import_from_cp
+        p.save!
+      end
+
       it "should clear the product name to be valid" do
         product = @provider.import_product_from_cp('name' => 'invalid (name)', :productContent => [] )
         product.name.should == 'invalid name'
       end
 
      it "prepares valid name for Pulp repo" do
-          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 noarch'))
+          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33'))
           p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
           p.orchestration_for = :import_from_cp
           p.save!
       end
 
      context "product has more archs" do
-        after do
-          p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
-          p.stub(:attrs => [{:name => 'arch', :value => 'x86_64,i386'}])
-          p.orchestration_for = :import_from_cp
-          p.save!
-        end
+       after do
+         @substitutor_mock.stub!(:substitute_vars).and_return do |path|
+           ret = {}
+           [{"releasever" => "6Server", "basearch" => "i386"},
+            {"releasever" => "6Server", "basearch" => "x86_64"}].each do |substitutions|
+             ret[substitutions] = substitutions.inject(path) {|new_path,(var,val)| new_path.gsub("$#{var}", val)}
+            end
+           ret
+         end
+         p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
+         p.stub(:attrs => [{:name => 'arch', :value => 'x86_64,i386'}])
+         p.orchestration_for = :import_from_cp
+         p.save!
+       end
 
-        it "should create repo for each arch" do
-          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 x86_64'))
-          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 i386'))
-        end
+       it "should create repo for each arch" do
+         Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 6Server x86_64'))
+         Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 6Server i386'))
+       end
 
-        it "should substitute $basearch in the contentUrl for the repo feed" do
-          expected_feed = "#{@provider.repository_url}/released-extra/RHEL-5-Server/$releasever/x86_64/os/ClusterStorage/"
-          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:feed => expected_feed)).and_return(@repo)
-        end
-      end
+       it "should substitute $basearch in the contentUrl for the repo feed" do
+         expected_feed = "#{@provider.repository_url}/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage/"
+         Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:feed => expected_feed)).and_return(@repo)
+       end
+     end
 
     end
   end

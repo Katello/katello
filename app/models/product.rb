@@ -42,6 +42,7 @@ class Product < ActiveRecord::Base
   validates :environments, :locker_presence => true
   validates :name, :presence => true, :katello_name_format => true
 
+  scope :completer_scope, lambda { |options| authorized_items(options[:organization_id], READ_PERM_VERBS)}
   scoped_search :on => :name, :complete_value => true
   scoped_search :on => :multiplier, :complete_value => true
 
@@ -94,7 +95,7 @@ class Product < ActiveRecord::Base
 
   #Permissions
 
-  scope :readable, lambda {|org| authorized_items(org, READ_PERM_VERBS)}
+  scope :readable, lambda {|org| ::Provider.readable(org).joins(:provider)}
   scope :syncable, lambda {|org| sync_items(org)}
 
   def self.any_readable?(org)
@@ -103,6 +104,10 @@ class Product < ActiveRecord::Base
 
   def readable?
     provider.readable?
+  end
+
+  def editable?
+    provider.editable?
   end
 
   protected

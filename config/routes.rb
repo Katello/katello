@@ -7,10 +7,11 @@ Src::Application.routes.draw do
       get :subscriptions
     end
     member do
-      get :subscriptions
-      get :edit_environment
+      get :applied_subscriptions
+      get :available_subscriptions
+      post :remove_subscriptions
+      post :add_subscriptions
       post :update
-      post :update_subscriptions
     end
   end
 
@@ -121,6 +122,7 @@ Src::Application.routes.draw do
       get :items
       get :auto_complete_package
       get :product_packages
+      get :product_comps
     end
     member do
       get :promotion_details
@@ -169,10 +171,14 @@ Src::Application.routes.draw do
   end
 
   match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
-  match '/organizations/:org_id/environments/:env_id/system_templates' => 'environments#system_templates', :via => :get, :as => 'system_templates_organization_environment'
 
   resources :organizations do
-    resources :environments
+    resources :environments do
+      member do
+        get :system_templates
+        get :products
+      end
+    end
     resources :providers do
       get 'auto_complete_search', :on => :collection
     end
@@ -257,8 +263,8 @@ Src::Application.routes.draw do
         get :packages, :action => :package_profile
         get :errata
       end
+      resources :subscriptions, :only => [:create, :index, :destroy]
     end
-    match '/systems/:id/subscription' => 'systems#subscribe', :via => :post
 
     resources :providers, :except => [:index] do
       resources :sync, :only => [:index, :create] do
@@ -273,10 +279,28 @@ Src::Application.routes.draw do
     end
 
     resources :templates do
-      post :promote, :on => :member
-      put :update_content, :on => :member
       post :import, :on => :collection
       get :export, :on => :member
+      resources :products, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_product
+        delete :destroy, :on => :member, :action => :remove_product
+      end
+      resources :packages, :controller => :templates_content, :constraints => { :id => /[0-9a-zA-Z\-_.]+/ } do
+        post   :index, :on => :collection, :action => :add_package
+        delete :destroy, :on => :member, :action => :remove_package
+      end
+      resources :parameters, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_parameter
+        delete :destroy, :on => :member, :action => :remove_parameter
+      end
+      resources :package_groups, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_package_group
+        delete :destroy, :on => :member, :action => :remove_package_group
+      end
+      resources :package_group_categories, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_package_group_category
+        delete :destroy, :on => :member, :action => :remove_package_group_category
+      end
     end
 
     resources :organizations do
@@ -304,7 +328,7 @@ Src::Application.routes.draw do
       post :promote, :on => :member, :action => :promote
     end
 
-    resources :products, :only => [:show] do
+    resources :products, :only => [:show, :destroy] do
       get :repositories, :on => :member
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
@@ -314,7 +338,7 @@ Src::Application.routes.draw do
     resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
-    resources :repositories, :only => [:index, :show, :create], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
+    resources :repositories, :only => [:index, :show, :create, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end

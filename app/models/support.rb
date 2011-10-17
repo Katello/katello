@@ -14,4 +14,10 @@ module Support
   def Support.deep_copy object
     Marshal::load(Marshal.dump(object))
   end
+
+  def Support.time
+    a = Time.now
+    yield
+    Time.now - a
+  end
 end

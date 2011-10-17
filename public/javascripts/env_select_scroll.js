@@ -20,7 +20,7 @@ KT.env_select_scroll = function(options) {
                 combined_width = 0,
                 anchors = trail.find("a"),
                 my_min_size_selected = min_size_selected;
-                
+
             anchors.unbind("mouseout").unbind("mouseover").width('auto');
             
             anchors.each(function() {
