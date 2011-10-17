@@ -93,6 +93,7 @@ module Glue::Candlepin::Product
       ar_safe_json.except('id')
     end
 
+
     def set_product
       Rails.logger.info "Creating a product in candlepin: #{name}"
       json = Candlepin::Product.create({
@@ -113,6 +114,7 @@ module Glue::Candlepin::Product
       Rails.logger.error "Failed to delete candlepin product #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
+
 
     def set_content
       self.productContent.each do |pc|
@@ -135,6 +137,7 @@ module Glue::Candlepin::Product
       Rails.logger.error "Failed to delete content for product #{name} in candlepin: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
+
 
     def add_new_content(name, path, repo_type)
       check_for_repo_conflicts(name)
@@ -175,6 +178,7 @@ module Glue::Candlepin::Product
       raise e
     end
 
+
     def update_content
       return true unless productContent_changed?
 
@@ -194,32 +198,39 @@ module Glue::Candlepin::Product
       end
     end
 
-    def create_unlimited_subscription
-      Rails.logger.info "Creating unlimited subscription for product #{name} in candlepin"
-      Candlepin::Product.create_unlimited_subscription self.organization.cp_key, self.cp_id
+
+    def set_unlimited_subscription
+      # we create unlimited subscriptions only for generic yum providers
+      if self.provider and self.provider.yum_repo?
+        Rails.logger.info "Creating unlimited subscription for product #{name} in candlepin"
+        Candlepin::Product.create_unlimited_subscription self.organization.cp_key, self.cp_id
+      end
     rescue => e
       Rails.logger.error "Failed to create unlimited subscription for product in candlepin #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
-    def delete_subscriptions
+    def del_unlimited_subscription
+      # we create unlimited subscriptions only for generic yum providers
+      if self.provider and self.provider.yum_repo?
+        self.del_subscriptions
+      end
+    end
+
+
+    def del_subscriptions
       Rails.logger.info "Deleting subscriptions for product #{name} in candlepin"
       Candlepin::Product.delete_subscriptions self.organization.cp_key, self.cp_id
     rescue => e
-      Rails.logger.error "Failed to delete unlimited subscription for product in candlepin #{name}: #{e}, #{e.backtrace.join("\n")}"
+      Rails.logger.error "Failed to delete subscription for product in candlepin #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
     def save_product_orchestration
       case self.orchestration_for
         when :create
-          queue.create(:name => "candlepin product: #{self.name}", :priority => 3, :action => [self, :set_product])
-          queue.create(:name => "candlepin content: #{self.name}", :priority => 4, :action => [self, :set_content])
-          queue.create(:name => "add content to product in candlepin: #{self.name}", :priority => 5, :action => [self, :add_content])
-          # we create unlimited subscriptions for generic yum providers
-          if self.provider and self.provider.yum_repo?
-            queue.create(:name => "create unlimited subscription for product in candlepin: #{self.name}", :priority => 7, :action => [self, :create_unlimited_subscription])
-          end
+          queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
+          queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
         when :update, :promote
           queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])
         when :import_from_cp
@@ -228,7 +239,7 @@ module Glue::Candlepin::Product
     end
 
     def destroy_product_orchestration
-      queue.create(:name => "delete subscriptions for product in candlepin: #{self.name}", :priority => 7, :action => [self, :delete_subscriptions])
+      queue.create(:name => "delete subscriptions for product in candlepin: #{self.name}", :priority => 7, :action => [self, :del_subscriptions])
       queue.create(:name => "candlepin content: #{self.name}", :priority => 8, :action => [self, :remove_content])
       queue.create(:name => "candlepin content: #{self.name}", :priority => 9, :action => [self, :del_content])
       queue.create(:name => "candlepin product: #{self.name}", :priority => 10, :action => [self, :del_product])
