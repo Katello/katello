@@ -317,7 +317,7 @@ KT.panel = (function($){
             	offset = list.find(".block").size(),
             	page_size = list.attr("data-page_size"),
                 url = list.attr("data-scroll_url"),
-                search = $.deparam($.param.querystring()).search,
+                search = KT.common.getSearchParams(),
                 params = {"offset":offset};
             
             if (list.hasClass("ajaxScroll") && !retrievingNewContent && 
@@ -329,14 +329,16 @@ KT.panel = (function($){
                     return; //If we have fewer items than the pagesize, don't try to fetch anything else
                 }
 
-                if (search)
-                    params.search = search;
+                if (search) {
+                	$.extend(params, search);
+                }
                 
                 $(".expand_list").append('<div class="list-spinner"> <img src="/katello/images/spinner.gif" class="ajax_scroll">  </div>');
 
                 $.ajax({
                     type: "GET",
-                    url: jQuery.param.querystring(url, params),
+                    url: url,
+                    data : params,
                     cache: false,
                     success: function(data) {
                         var expand_list = $('.expand_list').find('section');
@@ -493,12 +495,10 @@ KT.panel = (function($){
         	$(window).bind( 'hashchange', hash_change);
         	
         	$.get(url, data, function(data){
-        		left_list_content = data;
-        		
         		$(document).ready(function(){
         			var element = $('#list');
         			
-        			element.find('section').append(left_list_content);
+        			element.find('section').append(data);
         			element.find('.spinner').hide();
         			element.find('section').fadeIn(function(){
         				$(window).trigger( 'hashchange' );
