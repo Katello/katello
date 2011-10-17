@@ -58,9 +58,8 @@ describe System do
     specify { System.new(:name => system_name, :environment => @organization.locker, :cp_type => cp_type, :facts => facts).should_not be_valid }
   end
 
-  it "registers system in candlepin and pulp on create" do
+  it "registers system in candlepin on create" do
     Candlepin::Consumer.should_receive(:create).once.with(@organization.name, system_name, cp_type, facts).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}})
     @system.save!
   end
 
@@ -69,11 +68,11 @@ describe System do
       @system.save!
     }
 
-    it "should delete consumer in candlepin and pulp" do
+    it "should delete consumer in candlepin" do
       Candlepin::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
-      Pulp::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
       @system.destroy
     end
+
   end
 
   context "regenerate identity certificates" do
@@ -193,11 +192,4 @@ s  end
     end
   end
   
-  context "pulp attributes" do
-    it "should update package-profile" do
-      Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
-      @system.upload_package_profile(package_profile)
-    end
-  end
-
 end

@@ -54,32 +54,4 @@ describe User do
     specify { @user.pulp_oauth_header.should == {'pulp-user' => @user.username}}
   end
 
-  context "Pulp orchestration" do
-    before(:each) { disable_user_orchestration }
-
-    it "should call pulp user create api during user creation" do
-      Pulp::User.should_receive(:create).once.with(hash_including(:login => USERNAME, :name => USERNAME)).and_return({})
-      User.create!(to_create_simple)
-    end
-
-    it "should call pulp role api during user creation" do
-      Pulp::Roles.should_receive(:add).once.with("super-users", USERNAME).and_return(true)
-      User.create!(to_create_simple)
-    end
-
-    it "should call pulp user delete api during user deletion" do
-      u = User.create!(to_create_simple)
-
-      Pulp::User.should_receive(:destroy).once.with(USERNAME).and_return(200)
-      u.destroy
-    end
-
-    it "should call pulp role api during user deletion" do
-      u = User.create!(to_create_simple)
-
-      Pulp::Roles.should_receive(:remove).once.with("super-users", USERNAME).and_return(true)
-      u.destroy
-    end
-  end
-
 end

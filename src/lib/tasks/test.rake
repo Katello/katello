@@ -1,6 +1,5 @@
 require 'rspec/core'
 require 'rspec/core/rake_task'
-require 'spec_helper.rb'
 
 namespace "test" do
   ["katello", "headpin"].each do |app|
