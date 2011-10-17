@@ -145,8 +145,13 @@ module Pulp
   class Repository < PulpResource
     class << self
 
-      def clone_repo from_repo, to_repo, feed = "parent"  #clone is a built in method, hence redundant name
-        data = {:clone_id => to_repo.id, :feed =>feed, :clone_name => to_repo.name, :groupid=>to_repo.groupid, :relative_path => to_repo.relative_path }
+      def clone_repo from_repo, to_repo, feed = "parent", filters = []  #clone is a built in method, hence redundant name
+        data = { :clone_id => to_repo.id,
+                 :feed =>feed,
+                 :clone_name => to_repo.name,
+                 :groupid=>to_repo.groupid,
+                 :relative_path => to_repo.relative_path,
+                 :filters => filters }
         path = Repository.repository_path + from_repo.id + "/clone/"
         response = post(path, JSON.generate(data), self.default_headers)
         JSON.parse(response.body).with_indifferent_access
