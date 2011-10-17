@@ -278,6 +278,7 @@ describe Product do
       disable_filter_orchestration
 
       @environment1 = KTEnvironment.create!(:name => 'dev', :locker => false, :prior => @organization.locker, :organization => @organization)
+      @environment2 = KTEnvironment.create!(:name => 'prod', :locker => false, :prior => @environment1, :organization => @organization)
 
       @filter1 = Filter.create!(:pulp_id => FILTER1_ID, :package_list => PACKAGE_LIST_1, :organization => @organization)
       @filter2 = Filter.create!(:pulp_id => FILTER2_ID, :package_list => PACKAGE_LIST_2, :organization => @organization)
@@ -292,6 +293,8 @@ describe Product do
            :groupid => Glue::Pulp::Repos.groupid(@product, @product.locker)
       ))
       @repo.stub!(:is_cloned_in?).and_return(false)
+      @repo.stub!(:clone_id).and_return("cloned_repo")
+      Glue::Pulp::Repos.stub!(:clone_repo_path).and_return("cloned_path")
 
       @product.stub!(:repos).and_return([@repo])
     end
@@ -311,9 +314,23 @@ describe Product do
         @filter1.products.should include(@product)
         @filter2.products.should include(@product)
       end
+    end
+
+    context "to a product being promoted" do
+      before(:each) do
+        @product.filters << @filter1
+        @product.filters << @filter2
+        @product.save!
+      end
+
+      it "should result in filters applied during repositories cloning" do
+        Pulp::Repository.should_receive(:clone_repo).once.with(anything, anything, anything, @product.filters.collect(&:pulp_id)).and_return([])
+        @product.promote @organization.locker, @environment1
+      end
 
       it "filters should be applied to the first environment only" do
-
+        Pulp::Repository.should_receive(:clone_repo).once.with(anything, anything, anything, []).and_return([])
+        @product.promote @environment1, @environment2
       end
     end
 
