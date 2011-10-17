@@ -22,7 +22,12 @@ strong { font-weight: bold; }
 .wrap { overflow: hidden; margin-bottom: 2em; } /* wrapper around floating elements */
 .nomargin { margin: none; }
 .placeholder { margin-bottom: 2em; }
-.disabled { opacity: 0.4; cursor: default; }
+.disabled { opacity: 0.4; cursor: default;
+  a:hover {
+    text-decoration: none;
+    cursor: default;
+  }
+}
 .hidden { display: none; }
 .outlined { outline: 2px solid $kselected_color; }
 .alt { background-color: lighten($lightgrey_color, 35%) !important; }
@@ -946,6 +951,12 @@ fieldset {
 
   .panel_action {
 
+    .disabled {
+      &:hover {
+        text-decoration: none;
+        cursor: normal;
+      }
+    }
     .options {
       display: none;
     }
