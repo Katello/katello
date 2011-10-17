@@ -445,6 +445,7 @@ KT.panel = (function($){
         	
         	getListContent(resource_type);
         	setupSearch(resource_type);
+        	KT.search.enableAutoComplete(KT.routes['auto_complete_search_' + resource_type + '_path']());
 
         	if( options['create'] ){
 		    	$('#' + options['create']).live('submit', function(e) {

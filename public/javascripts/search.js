@@ -54,3 +54,67 @@ var favorite = (function() {
         }
     }
 })();
+
+KT.search = (function($){
+	var enableAutoComplete = function(url){
+		var request_issued = false,
+		
+			getAutoCompleteData = function(request, response){
+				if( !request_issued ){
+					request_issued = true;
+		
+					$.getJSON(url, { search	: request.term }, 
+						function(json){
+							request_issued = false;
+							response(json);
+						});
+				}
+			};
+		
+		$.widget( "custom.catcomplete", $.ui.autocomplete, {
+			_renderMenu: function( ul, items ) {
+		  		var self = this,
+		  			currentCategory = "";
+	
+		  		$.each( items, function( index, item ) {
+		    		if ( item.category != undefined && item.category != currentCategory ) {
+		      			ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+		      			currentCategory = item.category;
+		    		}
+					if ( item.error != undefined ) {
+					  	ul.append( "<li class='ui-autocomplete-error'>" + item.error + "</li>" );
+					}
+					if( item.completed != undefined ) {
+					  	$( "<li></li>" ).data( "item.autocomplete", item )
+							.append( "<a>" + "<strong class='ui-autocomplete-completed'>" + item.completed + "</strong>" + item.part + "</a>" )
+							.appendTo( ul );
+					    } else {
+					      	self._renderItem( ul, item );
+					    }
+				});
+			}
+		});
+		
+		$(document).ready(function(){
+			$("#search").catcomplete({
+				source	: getAutoCompleteData,
+				minLength: 0,
+				delay	: 200,
+				select	: function(event, ui) { $( this ).catcomplete( "search" , ui.item.value); },
+				search	: function(event, ui) { $(".auto_complete_clear").hide(); },
+				open	: function(event, ui) { $(".auto_complete_clear").show(); }
+			});
+			
+			$("#search").live( "focus", function( event ) {
+				if( $( this )[0].value == "" ) {
+					$( this ).catcomplete( "search" );
+				}
+			});
+		});
+	};
+	
+	return {
+		enableAutoComplete	: enableAutoComplete	
+	};
+
+})(jQuery);
