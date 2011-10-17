@@ -86,6 +86,7 @@ class SystemsController < ApplicationController
   def items
     start = params[:offset]
     @systems = System.readable(current_organization).search_for(params[:search])
+    @panel_options[:num_items] = @systems.count
     @systems = sort_order_limit(@systems)
     render_panel_items @systems, @panel_options
   end
