@@ -104,7 +104,7 @@ class SystemTemplate < ActiveRecord::Base
   end
 
   def string_export
-    self.hash_export.to_json
+    self.export_as_json.to_json
   end
 
 
@@ -386,7 +386,7 @@ class SystemTemplate < ActiveRecord::Base
   end
 
   def get_content_state
-    content = self.hash_export
+    content = self.export_as_json
     content.delete(:name)
     content.delete(:description)
     content.delete(:revision)
