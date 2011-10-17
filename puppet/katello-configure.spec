@@ -38,7 +38,7 @@ install -d -m 0755 %{buildroot}%{homedir}/puppet/modules
 cp -Rp modules/* %{buildroot}%{homedir}/puppet/modules
 install -d -m 0755 %{buildroot}%{homedir}/puppet/lib
 cp -Rp lib/* %{buildroot}%{homedir}/puppet/lib
-install -m 0755 default-answer-file %{buildroot}%{homedir}
+install -m 0644 default-answer-file %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/katello-configure.man1 %{buildroot}%{_mandir}/man1/katello-configure.1
 
