@@ -69,6 +69,8 @@ class KTEnvironment < ActiveRecord::Base
   has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"], :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
   has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
+  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
+
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
 
   validates :name, :presence => true, :katello_name_format => true
@@ -162,6 +164,22 @@ class KTEnvironment < ActiveRecord::Base
   end
 
 
+  def package_groups search_args = {}
+    groups = []
+    self.products.each do |prod|
+      groups << prod.package_groups(self, search_args)
+    end
+    groups.flatten(1)
+  end
+
+  def package_group_categories search_args = {}
+    categories = []
+    self.products.each do |prod|
+      categories << prod.package_group_categories(self, search_args)
+    end
+    categories.flatten(1)
+  end
+
   def find_packages_by_name name
     self.products.collect do |prod|
       prod.find_packages_by_name(self, name).collect do |p|
@@ -180,23 +198,16 @@ class KTEnvironment < ActiveRecord::Base
     end.flatten(1)
   end
 
-  def find_latest_package_by_name name
-    latest_pack = nil
+  def find_latest_packages_by_name name
 
-    self.products.collect do |prod|
-      pack = prod.find_latest_package_by_name self, name
-
-      next if pack.nil?
-
-      if (latest_pack.nil?) or
-         (pack[:epoch] > latest_pack[:epoch]) or
-         (pack[:epoch] == latest_pack[:epoch] and pack[:release] > latest_pack[:release]) or
-         (pack[:epoch] == latest_pack[:epoch] and pack[:release] == latest_pack[:release] and pack[:version] > latest_pack[:version])
-        latest_pack = pack
-        latest_pack[:product_id] = prod.cp_id
+    packs = self.products.collect do |prod|
+      prod.find_latest_packages_by_name(self, name).collect do |pack|
+        pack[:product_id] = prod.cp_id
+        pack
       end
-    end
-    latest_pack
+    end.flatten(1)
+
+    Katello::PackageUtils.find_latest_packages packs
   end
 
 

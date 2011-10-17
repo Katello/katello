@@ -14,7 +14,7 @@ require 'resources/pulp'
 
 class Api::RepositoriesController < Api::ApiController
   respond_to :json
-  before_filter :find_repository, :only => [:show]
+  before_filter :find_repository, :only => [:show, :destroy]
   before_filter :find_product, :only => [:create]
   before_filter :find_organization, :only => [:discovery]
   before_filter :fake_find_repository, :only => [:package_groups, :package_group_categories]
@@ -36,6 +36,11 @@ class Api::RepositoriesController < Api::ApiController
     render :json => @repository.to_hash
   end
 
+  def destroy
+    @repository.product.delete_repo_by_id(params[:id])
+    render :text => _("Deleted repository '#{params[:id]}'"), :status => 200
+  end
+
   # proxy repository discovery call to pulp, so we don't have to create an async task to keep track of async task on pulp side
   def discovery
     pulp_task = Pulp::Repository.start_discovery(params[:url], params[:type])
@@ -45,13 +50,19 @@ class Api::RepositoriesController < Api::ApiController
   end
 
   def package_groups
-    r = @repository.package_groups
-    render :json => r
+    #translate group_id to id in search params (conflict with repo id used for routing)
+    search_attrs = params.slice(:name)
+    search_attrs[:id] = params[:group_id] if not params[:group_id].nil?
+
+    render :json => @repository.package_groups(search_attrs)
   end
 
   def package_group_categories
-    c = @repository.package_group_categories
-    render :json => c
+    #translate category_id to id in search params (conflict with repo id used for routing)
+    search_attrs = params.slice(:name)
+    search_attrs[:id] = params[:category_id] if not params[:category_id].nil?
+
+    render :json => @repository.package_group_categories(search_attrs)
   end
 
   def find_repository

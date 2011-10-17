@@ -21,11 +21,11 @@ class Filter < ActiveRecord::Base
   belongs_to :organization
 
   def self.list_tags org_id
-    select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
+    select('id,pulp_id').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.pulp_id) }
   end
 
   def self.tags(ids)
-    select('id,name').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.name) }
+    select('id,pulp_id').where(:id => ids).collect { |m| VirtualTag.new(m.id, m.pulp_id) }
   end
 
   def self.list_verbs  global = false

@@ -17,7 +17,8 @@ require 'base64'
 
 class ApplicationController < ActionController::Base
   layout 'katello'
-  helper :all
+  clear_helpers
+    
   helper_method :current_organization
   before_filter :set_locale
   before_filter :require_user,:require_org
@@ -60,7 +61,7 @@ class ApplicationController < ActionController::Base
   # support for session (thread-local) variables must be the last filter (except authorize)in this class
   include Katello::ThreadSession::Controller
   include AuthorizationRules
-
+  include Menu
   def section_id
     'generic'
   end
@@ -122,7 +123,8 @@ class ApplicationController < ActionController::Base
 
       if persist
         # create & store notice... but mark as 'viewed'
-        new_notice = Notice.create(:text => notice_string, :details => details, :level => level, :global => global, :user_notices => [UserNotice.new(:user => current_user)])
+        new_notice = Notice.create(:text => notice_string, :details => details, :level => level, :global => global,
+                                   :request_type => requested_action, :user_notices => [UserNotice.new(:user => current_user)])
 
         unless new_notice.nil?
           user_notice = current_user.user_notices.where(:notice_id => new_notice.id).first
@@ -138,10 +140,11 @@ class ApplicationController < ActionController::Base
       # retrieved by the client on it's next polling interval.
       #
       # create & store notice... and mark as 'not viewed'
-      Notice.create!(:text => notice_string, :details => details, :level => level, :global => global, :user_notices => [UserNotice.new(:user => current_user, :viewed=>false)])
-
+      Notice.create!(:text => notice_string, :details => details, :level => level, :global => global,
+                     :request_type => requested_action, :user_notices => [UserNotice.new(:user => current_user, :viewed=>false)])
     end
   end
+
 
   # Generate an error notice:
   #
@@ -166,7 +169,6 @@ class ApplicationController < ActionController::Base
     notice summary, options
   end
 
-
   def flash_to_headers
     return if @_response.nil? or @_response.response_code == 302
     return if flash.blank?
@@ -175,6 +177,7 @@ class ApplicationController < ActionController::Base
         @enc = CGI::escape(flash[type].gsub("\n","<br \\>"))
         response.headers['X-Message'] = @enc
         response.headers['X-Message-Type'] = type.to_s
+        response.headers['X-Message-Request-Type'] = requested_action
         flash.delete(type)  # clear the flash
         return
       end
@@ -345,8 +348,14 @@ class ApplicationController < ActionController::Base
     elsif notice.kind_of? RuntimeError
       items["notices"].push(notice.message)
     else
-      Rails.logger.error("Recieved unrecognized notice: " + notice.inspect)
+      Rails.logger.error("Received unrecognized notice: " + notice.inspect)
       items["notices"].push(notice)
+    end
+  end
+
+  def requested_action
+    unless controller_name.nil? or action_name.nil?
+      controller_name + '___' + action_name
     end
   end
 
@@ -480,6 +489,14 @@ class ApplicationController < ActionController::Base
       logger.error line
       }
     end
+  end
+
+  # Parse the input provided and return the value of displayMessage. If displayMessage is not available, return "".
+  # (Note: this can be used to pull the displayMessage from a Candlepin exception.)
+  # This assumes that the input follows a syntax similar to:
+  #   "{\"displayMessage\":\"Import is older than existing data\"}"
+  def parse_display_message input
+    display_message = input.include?("displayMessage") ? input.split(":\"").last.split("\"").first : ""
   end
 end
 

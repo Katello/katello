@@ -17,24 +17,24 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
 
     def test_missing_id_generates_error(self):
         self.assertRaises(Exception, self.action.process_options,
-                          ['info', '--repoid=123'])
+                          ['info', '--repo_id=123'])
 
     def test_missing_repoid_generates_error(self):
         self.assertRaises(Exception, self.action.process_options,
                           ['info', '--id=123'])
 
     def test_no_error_if_required_options_provided(self):
-        self.action.process_options(['info', '--repoid=123','--id=123'])
+        self.action.process_options(['info', '--repo_id=123','--id=123'])
         self.assertEqual(len(self.action.optErrors), 0)
 
 
 class PackageGroupInfoTest(CLIActionTestCase):
 
     REPO = test_data.REPOS[0]
-    PACKAGE_GROUP = test_data.PACKAGE_GROUPS["123"]
+    PACKAGE_GROUP = test_data.PACKAGE_GROUPS[0]
 
     OPTIONS = {
-        'repoid': REPO['id'],
+        'repo_id': REPO['id'],
         'id': PACKAGE_GROUP['id'],
     }
 
@@ -45,15 +45,15 @@ class PackageGroupInfoTest(CLIActionTestCase):
         self.mock_options(self.OPTIONS)
         self.mock_printer()
 
-        self.mock(self.action.api, 'packagegroups', test_data.PACKAGE_GROUPS)
+        self.mock(self.action.api, 'packagegroup_by_id', self.PACKAGE_GROUP)
 
     def tearDown(self):
         self.restore_mocks()
 
-    def test_it_finds_package_groups_by_repo(self):
+    def test_it_finds_package_group_by_id(self):
         self.mock_options(self.OPTIONS)
         self.action.run()
-        self.action.api.packagegroups.assert_called_once_with(self.REPO['id'])
+        self.action.api.packagegroup_by_id.assert_called_once_with(self.REPO['id'], self.PACKAGE_GROUP['id'])
 
     def test_it_prints_package_groups(self):
         self.action.run()

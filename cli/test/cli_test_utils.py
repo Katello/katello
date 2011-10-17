@@ -2,6 +2,7 @@ import unittest
 import copy
 from mock import Mock
 
+import katello.client.core.utils
 
 class CLITestCase(unittest.TestCase):
 
@@ -76,3 +77,10 @@ class CLIActionTestCase(CLITestCase):
             return self._options[opt]
         except:
             return default
+            
+    def mock_spinner(self):
+        spinner = Mock()
+        self.mock(spinner, "start")
+        self.mock(spinner, "stop")
+        self.mock(spinner, "join")
+        self.mock(katello.client.core.utils, "Spinner", spinner)

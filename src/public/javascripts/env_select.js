@@ -10,46 +10,6 @@
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
-
-$(document).ready(function() {
-
-    $('#path-expanded').hide();
-    $('#path-collapsed').live('click', env_select.expand);
-    $('#path-expanded').live('click', env_select.close);
-    $('.path_link').live('click', env_select.env_selected);
-    $('.path_entry').live('click', env_select.path_selected);
-
-    //If we mouse over the entries box, deselect what is already selected
-    $('#path-entries').mouseover(env_select.disable_active);
-    $('#path-entries').mouseout(env_select.highlight_selected);
-
-
-    env_select.active_div = $(".active").parents(".path_entry");
-    env_select.highlight_selected();
-
-    //Close the drop down if the user clicks somewhere else
-    $('body').click(function(event){
-        if (!($(event.target).parents("#path-entries").size() > 0) && env_select.is_open()) {
-            env_select.close();
-          }
-    });
-
-    $('#path-widget').hoverIntent({
-        over:env_select.expand,
-        timeout:750,
-        interval: 200,
-        out:env_select.close
-    });
-
-
-    env_select.scroll_obj = KT.env_select_scroll({});
-    env_select.recalc_scroll();
-
-});
-
-
-
-
 var env_select =   {
     /* Click callback should be a function:
      *
@@ -70,12 +30,11 @@ var env_select =   {
         $('#path-expanded').show();
 
         $('#path-entries').show();
-
     },
     close: function() {
         $('#path-collapsed').show();
         $('#path-expanded').hide();
-        
+
         $('#path-entries').hide();
     },
     path_selected: function() {
@@ -105,8 +64,9 @@ var env_select =   {
         if (env_select.click_callback) {
           env_select.click_callback(id, $(this));
         }
-        
+
         env_select.recalc_scroll();
+
         return false;
     },
     disable_active: function() {
@@ -121,6 +81,40 @@ var env_select =   {
         $(".path_entry").removeClass("path_entry_selected");
         env_select.active_div.addClass("path_entry_selected");
         return false;
+    },
+    reset_hover: function() {
+        $('#path-widget').hoverIntent({
+            over:env_select.expand,
+            timeout:750,
+            interval: 200,
+            out:env_select.close
+        });
     }
-
 };
+
+$(function() {
+    $('#path-expanded').hide();
+    $('#path-collapsed').live('click', env_select.expand);
+    $('#path-expanded').live('click', env_select.close);
+    $('.path_link').live('click', env_select.env_selected);
+    $('.path_entry').live('click', env_select.path_selected);
+
+    //If we mouse over the entries box, deselect what is already selected
+    $('#path-entries').mouseover(env_select.disable_active);
+    $('#path-entries').mouseout(env_select.highlight_selected);
+
+    env_select.active_div = $(".path_link.active").parents(".path_entry");
+    env_select.highlight_selected();
+
+    //Close the drop down if the user clicks somewhere else
+    $('body').click(function(event){
+        if (!($(event.target).parents("#path-entries").size() > 0) && env_select.is_open()) {
+            env_select.close();
+          }
+    });
+
+    env_select.reset_hover();
+    env_select.scroll_obj = KT.env_select_scroll({});
+    env_select.recalc_scroll();
+});
+

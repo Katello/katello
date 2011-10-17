@@ -1,6 +1,6 @@
 #!/bin/bash
 
-require "template"
+require "repo"
 
 header "Changeset"
 
@@ -19,7 +19,7 @@ jobs_service=`service katello-jobs status > /dev/null ; echo $?`
 
 if ! jobs_running; then
     printf "${txtred}Warning: Jobs daemon is not running, the promotion will hang!${txtrst}\n"
-    printf "${txtred}Start 'rake jobs:work' to proceed.${txtrst}\n"
+    printf "${txtred}Run 'service katello-jobs start' or 'rake jobs:work' to proceed.${txtrst}\n"
 fi
 
 test_success "promote changeset with one product" changeset promote --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME"
@@ -29,7 +29,6 @@ test_success "changeset create" changeset create --org="$TEST_ORG" --environment
 test_success "changeset add package"  changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --from_product="$FEWUPS_PRODUCT" --add_package="cheetah"
 test_success "changeset add erratum"  changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --from_product="$FEWUPS_PRODUCT" --add_erratum="RHEA-2010:9984"
 test_success "changeset add repo"     changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --from_product="$FEWUPS_PRODUCT" --add_repo="$REPO_NAME"
-test_success "changeset add template" changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --add_template="$TEMPLATE_NAME"
 
 test_success "changeset promote" changeset promote --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2"
 
@@ -37,7 +36,6 @@ test_success "changeset remove product"  changeset update  --org="$TEST_ORG" --e
 test_success "changeset remove package"  changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --from_product="$FEWUPS_PRODUCT" --remove_package="cheetah"
 test_success "changeset remove erratum"  changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --from_product="$FEWUPS_PRODUCT" --remove_erratum="RHEA-2010:9984"
 test_success "changeset remove repo"     changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --from_product="$FEWUPS_PRODUCT" --remove_repo="$REPO_NAME"
-test_success "changeset remove template" changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --remove_template="$TEMPLATE_NAME"
 
 test_success "changeset list" changeset list --org="$TEST_ORG" --environment="$TEST_ENV"
 test_success "changeset info" changeset info --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME"
@@ -45,13 +43,15 @@ test_success "changeset info" changeset info --org="$TEST_ORG" --environment="$T
 #promote template with product and package
 PROM_TEMPLATE_NAME="promotion_test_tpl_$RAND"
 test_success "template create" template create --name="$PROM_TEMPLATE_NAME" --description="template description" --org="$TEST_ORG"
-test_success "template update_content add product" template update_content --name="$PROM_TEMPLATE_NAME" --org="$TEST_ORG" --add_product --product="$FEWUPS_PRODUCT"
-test_success "template update_content add package" template update_content --name="$PROM_TEMPLATE_NAME" --org="$TEST_ORG" --add_package --package="cheetah"
+test_success "template update add product" template update --name="$PROM_TEMPLATE_NAME" --org="$TEST_ORG" --add_product="$FEWUPS_PRODUCT"
+test_success "template update add package" template update --name="$PROM_TEMPLATE_NAME" --org="$TEST_ORG" --add_package="cheetah"
 
 test_success "changeset create" changeset create --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_3"
 test_success "changeset add template" changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_3" --add_template="$PROM_TEMPLATE_NAME"
 
 test_success "changeset promote" changeset promote --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_3"
+
+test_success "changeset remove template" changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_3" --remove_template="$PROM_TEMPLATE_NAME"
 
 
 

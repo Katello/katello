@@ -55,26 +55,26 @@ describe Api::TemplatesController do
       KTEnvironment.stub(:find).with(@locker.id).and_return(@locker)
       KTEnvironment.stub(:find).with(@environment2.id).and_return(@environment2)
 
-      @tpl_selection_mock = mock('where')
-      @tpl_selection_mock.stub(:where).and_return([@tpl])
     end
 
     it 'should get a list of templates from specified environment' do
-      @locker.should_receive(:system_templates).and_return(@tpl_selection_mock)
+      tpl_selection_mock = mock('where')
+      tpl_selection_mock.stub(:where).and_return([@tpl])
+      @locker.should_receive(:system_templates).and_return(tpl_selection_mock)
       get 'index', :environment_id => @locker.id
       response.should be_success
     end
 
     it 'should get a list of all templates' do
-      SystemTemplate.should_receive(:all).and_return(@tpl_selection_mock)
+      SystemTemplate.should_receive(:where).and_return([@tpl])
       get 'index'
       response.should be_success
     end
 
     it 'should not fail if no templates are found, but return an empty list' do
-      @tpl_selection_mock.stub(:where).and_return([])
-      @environment2.should_receive(:system_templates).and_return(@tpl_selection_mock)
-      @tpl_selection_mock.should_receive(:where).and_return([@tpl])
+      tpl_selection_mock = mock('where')
+      tpl_selection_mock.stub(:where).and_return([])
+      @environment2.should_receive(:system_templates).and_return(tpl_selection_mock)
 
       get 'index', :environment_id => @environment2.id
       response.should be_success
@@ -110,80 +110,39 @@ describe Api::TemplatesController do
 
 
   describe "update" do
-    it "should fail when updating in non-locker environment" do
-      @tpl.environment = @environment
-      put 'update_content', :id => TEMPLATE_ID
-      @tpl.should_not_receive(:update_attributes!)
-      response.should_not be_success
-    end
-
-    it 'should call update_attributes' do
-      @tpl.should_receive(:update_attributes!).once
-      put 'update', :id => TEMPLATE_ID, :template => {}
-    end
-  end
-
-
-  describe "update_content" do
+    let(:new_tpl_name) {"changed_"+TEMPLATE_NAME}
 
     it "should fail when updating in non-locker environment" do
       @tpl.environment = @environment
-      put 'update_content', :id => TEMPLATE_ID
+      @tpl.should_not_receive(:save!)
+
+      put 'update', :id => TEMPLATE_ID
+
       response.should_not be_success
     end
 
-    it 'should call add_product' do
-      @tpl.should_receive(:add_product).once
-      put 'update_content', :id => TEMPLATE_ID, :do => :add_product
+    it 'should update template in the Locker' do
+      @tpl.stub(:get_clones).and_return([])
+      @tpl.should_receive(:save!).once
+
+      put 'update', :id => TEMPLATE_ID, :template => {:name => new_tpl_name, :description => "new_description"}
+
+      response.should be_success
     end
 
-    it 'should call remove_product' do
-      @tpl.should_receive(:remove_product).once
-      put 'update_content', :id => TEMPLATE_ID, :do => :remove_product
+    it 'should change name of all template clones when updating template in the Locker' do
+      tpl_clone = SystemTemplate.new(:name => TEMPLATE_NAME, :environment => @environment)
+      tpl_clone.should_receive(:save!).once
+
+      @tpl.stub(:get_clones).and_return([tpl_clone])
+      @tpl.should_receive(:save!).once
+
+      put 'update', :id => TEMPLATE_ID, :template => {:name => new_tpl_name, :description => "new_description"}
+
+      tpl_clone.name.should == new_tpl_name
+      response.should be_success
     end
-
-    it 'should call add_package' do
-      @tpl.should_receive(:add_package).once
-      put 'update_content', :id => TEMPLATE_ID, :do => :add_package
-    end
-
-    it 'should call remove_package' do
-      @tpl.should_receive(:remove_package).once
-      put 'update_content', :id => TEMPLATE_ID, :do => :remove_package
-    end
-
-    describe "package groups assignment" do
-      let(:package_group) { {:repo_id => "repo-123", :id => "group-123"} }
-      let(:package_group_params) { {:repo => package_group[:repo_id], :package_group => package_group[:id]} }
-
-      it 'should call add_package_group' do
-        @tpl.should_receive(:add_package_group).once.with(package_group)
-        put 'update_content', { :id => TEMPLATE_ID, :do => :add_package_group }.merge(package_group_params)
-      end
-
-      it 'should call remove_package_group' do
-        @tpl.should_receive(:remove_package_group).once.with(package_group)
-        put 'update_content', { :id => TEMPLATE_ID, :do => :remove_package_group }.merge(package_group_params)
-      end
-    end
-
-    describe "package group categories assignment" do
-      let(:pg_category) { {:repo_id => "repo-123", :id => "cat-123"} }
-      let(:pg_category_params) { {:repo => pg_category[:repo_id], :package_group_category => pg_category[:id]} }
-
-      it 'should call add_pg_category' do
-        @tpl.should_receive(:add_pg_category).once.with(pg_category)
-        put 'update_content', { :id => TEMPLATE_ID, :do => :add_package_group_category }.merge(pg_category_params)
-      end
-
-      it 'should call remove_pg_category' do
-        @tpl.should_receive(:remove_pg_category).once.with(pg_category)
-        put 'update_content', { :id => TEMPLATE_ID, :do => :remove_package_group_category }.merge(pg_category_params)
-      end
-    end
-
   end
-
 
   describe "destroy" do
     it "should remove the specified template" do
@@ -222,23 +181,16 @@ describe Api::TemplatesController do
 
 
   describe "export" do
-    it "should call export" do
-      @tpl.should_receive(:string_export)
+    it "should call export_as_json" do
+      @tpl.should_receive(:export_as_json)
 
       get :export, :id => TEMPLATE_ID
     end
-  end
 
+    it "should call export_as_tdl" do
+      @tpl.should_receive(:export_as_tdl)
 
-  describe "promote" do
-    before(:each) do
-      @async_proxy = mock(AsyncOrchestration::AsyncOrchestrationProxy)
-    end
-
-    it "should call SystemTemplate#promote" do
-      @tpl.should_receive(:async).once.with(hash_including(:organization => @organization)).and_return(@async_proxy)
-      @async_proxy.should_receive(:promote).once.with(no_args())
-      post :promote, :id => TEMPLATE_ID
+      get :export, :id => TEMPLATE_ID, :format => 'tdl'
     end
   end
 

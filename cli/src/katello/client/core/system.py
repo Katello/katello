@@ -20,7 +20,7 @@ from gettext import gettext as _
 from katello.client.api.system import SystemAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record
+from katello.client.core.utils import is_valid_record, Printer
 
 Config()
 
@@ -319,6 +319,67 @@ class Subscribe(SystemAction):
             print _("Successfully subscribed System [ %s ]") % name
             return os.EX_OK
 
+class Subscriptions(SystemAction):
+
+    description = _('list subscriptions for a system')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                help=_("organization name (required)"))
+        self.parser.add_option('--name', dest='name',
+                help=_("system name (required)"))
+        self.parser.add_option('--serials', dest='serials',
+                action="store_true", default=False,
+                help=_("show certificate serial numbers"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+    def run(self):
+        name = self.get_option('name')
+        org = self.get_option('org')
+        serials = self.get_option('serials')
+        systems = self.api.systems_by_org(org, {'name': name})
+        if systems == None or len(systems) != 1:
+            print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
+            return os.EX_DATAERR
+        else:
+            result = self.api.subscriptions(systems[0]['uuid'])
+            if result == None or len(result) == 0:
+                print _("No subscriptions found for System [ %s ] in Org [ %s ]") % (name, org)
+                return os.EX_DATAERR
+            items = [] # list of subscriptions
+            certs = [] # list of serial numbers
+            for pool in result:
+                item = {}
+                item['pool'] = pool['pool']['id']
+                item['quantity'] = pool['quantity']
+                item['expiration'] = pool['endDate']
+                items.append(item)
+                for c in pool['certificates']:
+                    cert = {}
+                    cert['for pool'] = item['pool']
+                    cert['serial'] = c['serial']['id']
+                    cert['expiration'] = c['serial']['expiration']
+                    cert['revoked'] = c['serial']['revoked']
+                    certs.append(cert)
+            self.printer.setHeader(_("Active Subscribtions for System [ %s ]") % name)
+            self.printer.addColumn('pool')
+            self.printer.addColumn('quantity')
+            self.printer.addColumn('expiration')
+            self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
+            self.printer.printItems(items)
+            if serials:
+                self.printer = Printer(Printer.OUTPUT_FORCE_VERBOSE)
+                self.printer.setHeader(_("Certificate serials for System [ %s ]") % name)
+                self.printer.addColumn('for pool')
+                self.printer.addColumn('serial')
+                self.printer.addColumn('expiration')
+                self.printer.addColumn('revoked')
+                self.printer.printItems(certs)
+            return os.EX_OK
+
 class Unsubscribe(SystemAction):
 
     description = _('unsubscribe a system from certificate')
@@ -328,24 +389,24 @@ class Unsubscribe(SystemAction):
                        help=_("organization name (required)"))
         self.parser.add_option('--name', dest='name',
                                help=_("system name (required)"))
-        self.parser.add_option('--serial', dest='serial',
-                               help=_("certificate serial to unsubscribe (required)"))
+        self.parser.add_option('--pool', dest='pool',
+                               help=_("pool id to unsubscribe from (required)"))
 
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
-        self.require_option('serial')
+        self.require_option('pool')
 
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
-        serial = self.get_option('serial')
+        pool = self.get_option('pool')
         systems = self.api.systems_by_org(org, {'name': name})
         if systems == None or len(systems) != 1:
             print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
-            result = self.api.unsubscribe(systems[0]['uuid'], serial)
+            result = self.api.unsubscribe(systems[0]['uuid'], pool)
             print _("Successfully unsubscribed System [ %s ]") % name
             return os.EX_OK
 

@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.86
+Version:        0.1.94
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -47,11 +47,19 @@ Requires:       rubygem(gettext_i18n_rails)
 Requires:       rubygem(simple-navigation) >= 3.3.4
 Requires:       rubygem(sqlite3) 
 Requires:       rubygem(pg)
-Requires:       rubygem(scoped_search) >= 2.3.1
+Requires:       rubygem(scoped_search) >= 2.3.4
 Requires:       rubygem(delayed_job) >= 2.1.4
+Requires:       rubygem(acts_as_reportable) >= 1.1.1
+Requires:       rubygem(pdf-writer) >= 1.1.8
+Requires:       rubygem(ruport) >= 1.6.3
 Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
 Requires:       rubygem(thin)
+
+# bz 743816 temp fix until yum update makes to z stream
+%if 0%{?rhel} == 6
+Requires:       yum >= 3.2.29
+%endif
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
 # TODO - uncomment the statement once we push patched actionpack to our EL6 repo
@@ -83,6 +91,7 @@ Provides a package for managing application life-cycle for Linux systems
 Summary:        A meta-package to pull in all components for Katello
 Requires:       katello
 Requires:       katello-configure
+Requires:       katello-cli
 Requires:       postgresql-server
 Requires:       postgresql
 Requires:       pulp
@@ -180,13 +189,12 @@ rm %{buildroot}%{homedir}/lib/tasks/hudson.rake
 find %{buildroot}%{homedir} -type d -print0 | xargs -0 chmod 755
 find %{buildroot}%{homedir} -type f -print0 | xargs -0 chmod 644
 chmod +x %{buildroot}%{homedir}/script/*
+chmod a+r %{buildroot}%{homedir}/ca/redhat-uep.pem
 
 %clean
 rm -rf %{buildroot}
 
 %post
-%{homedir}/script/reset-oauth
-
 #Add /etc/rc*.d links for the script
 /sbin/chkconfig --add %{name}
 
@@ -229,6 +237,286 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Oct 17 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.94-1
+- adding db:truncate rake task
+- templates - spec tests for revisions
+- templates - fix for increasing revision numbers after update
+- fixes #745245 Filter on provider page fails with postgres error
+- Fixed a unit test
+- 740979 - Gave provider read access for users with org sync permission
+- 744067 - Promotions - Errata UI - clean up format on Packages tab
+- 741416 - organizations ui - list orgs using same sort order as on roles pg
+
+* Fri Oct 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.93-1
+- bump up scoped_search version to 2.3.4 (shughes@redhat.com)
+- 745315 -changing application controller to not include all helpers in all
+  controllers, this stops helper methods with the same name from overwriding
+  each other (jsherril@redhat.com)
+- 740969 - Fixed a bug where tab was being inserted. Tab is invalid for names
+  (paji@redhat.com)
+- 720432 - Moves the small x that closes the filter on sliding tree widgets to
+  be directly to the right of the filter. (ehelms@redhat.com)
+- 745279 - UI - fix deletion of repo (bbuckingham@redhat.com)
+- 739588-Made the systems update call raise the error message the correct way
+  (paji@redhat.com)
+- 735975 - Fix for user delete link showing up for self roles page
+  (paji@redhat.com)
+- Added code to fix a menu highlighting issue (paji@redhat.com)
+- 743415 - removing uneeded files (mmccune@redhat.com)
+- update to translations (shughes@redhat.com)
+- 744285 - bulletproof the spec test for repo_id (inecas@redhat.com)
+- Fix for accidentaly faling tests (inecas@redhat.com)
+- adding new zanata translation file (shughes@redhat.com)
+- search - fix system save and notices search (bbuckingham@redhat.com)
+- 744285 - Change format of repo id (inecas@redhat.com)
+- Fixed a bunch of unit tests (paji@redhat.com)
+- Fixed progress bar and spacing on sync management page. (jrist@redhat.com)
+- Updated the ordering on the content-management menu items (paji@redhat.com)
+- Refactored the create_menu method to allow navs of multiple levels
+  (paji@redhat.com)
+- Ported all the nav items across (paji@redhat.com)
+- Added a construct to automatically imply checking for a sub level if the top
+  level is missing (paji@redhat.com)
+- Just added spaces to every line to keep the tabbing loking right
+  (paji@redhat.com)
+- Added the systems tab. (paji@redhat.com)
+- Added dashboard menus and fixed a bunch of navs (paji@redhat.com)
+- Reorganized the navigation a bit (paji@redhat.com)
+- Modified the rendering structure to use independent nav items
+  (paji@redhat.com)
+- Moved menu rb to helpers since its a better fit there.. soon going to
+  reorganize the files there (paji@redhat.com)
+- Adding the new menu.rb to generate menu (paji@redhat.com)
+- Initial commit on getting a dynamic navigation (paji@redhat.com)
+- Merge branch 'comps' (jsherril@redhat.com)
+- system templates - fixing last issues with comps groups (jsherril@redhat.com)
+- removing z-index on helptip open icon so it does not hover over 3rd level
+  navigation menu (jsherril@redhat.com)
+- Moved the help tip on the redhat providers page show up at the right spot
+  (paji@redhat.com)
+- reduce number of sync threads (shughes@redhat.com)
+- search - several fixes for issues on auto-complete (bbuckingham@redhat.com)
+- tests - adding system template package group test for the ui controller
+  (jsherril@redhat.com)
+- 744191 - prevent some changes on red hat provider (inecas@redhat.com)
+- 744191 - Prevent deleting Red Hat provider (inecas@redhat.com)
+- system templates - removign uneeded route (jsherril@redhat.com)
+- system templates - package groups auto complete working (jsherril@redhat.com)
+- system templates - hooked up comps groups with backend with the exception of
+  auto complete (jsherril@redhat.com)
+- Merge branch 'master' into comps (jsherril@redhat.com)
+- system templates - adding  addition and removal of package groups in the web
+  ui, still does not save to server (jsherril@redhat.com)
+- system templates - properly listing package groups respecting page size
+  limits (jsherril@redhat.com)
+- system templates - adding real package groups to system templates page
+  (jsherril@redhat.com)
+- system templates - adding initial ui framework for package groups in system
+  templates (jsherril@redhat.com)
+- system templates - adding initial comps listing for products (with fake data)
+  (jsherril@redhat.com)
+
+* Tue Oct 11 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.92-1
+- Installation does not pull in katello-cli
+- Revert "added ruport-related gems to Gemfile"
+- jslint - fix warnings reported during build
+- templates - fix in spec tests for exporting/importing
+- templates - fix for cloning to next environment - added nvres to export - fix
+  for importing package groups
+- added ruport-related gems to Gemfile
+- JsRoutes - Fix for rake task to generate javascript routes.
+
+* Mon Oct 10 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.91-1
+- scoped_search - Gemfile updates to support scoped_search 2.3.4
+  (bbuckingham@redhat.com)
+- 741656 - roles - search - chgs for search by perm type and verbs
+  (bbuckingham@redhat.com)
+- Switch of arch and support level on subscriptions page. (jrist@redhat.com)
+- repo delete - cli for deleting single repos (tstrachota@redhat.com)
+- repo delete - api for deleting single repos (tstrachota@redhat.com)
+- Enable running rake task for production env from git repo (inecas@redhat.com)
+- Fix check on sqlite when setting up db under root for production
+  (inecas@redhat.com)
+- Remove failing check on sqlite for root (inecas@redhat.com)
+- users - fix user name on edit screen (bbuckingham@redhat.com)
+- Set default rake task (inecas@redhat.com)
+- Merge branch 'master' into bz731203 (bbuckingham@redhat.com)
+- fixed failing roles_controller_spec (dmitri@redhat.com)
+- Merge branch 'filters' (dmitri@redhat.com)
+- import-stage-manifest - remove hard-coded supported archs (inecas@redhat.com)
+- fix in log message (tstrachota@redhat.com)
+- org orchestration - deleting dependent providers moved to orchestration layer
+  Having it handled by :dependent => :destroy caused wrong order of deleting
+  the records. The organization in Candlepin was deleted before providers and
+  products. This led to record-not-found errors. (tstrachota@redhat.com)
+- products - delete all repos in all environments when deleting a product
+  (tstrachota@redhat.com)
+- products - route and api for deleting products (tstrachota@redhat.com)
+- Added the download icon to the system template page. (jrist@redhat.com)
+- 731203 - changes so that update to the object id are reflected in pane header
+  (bbuckingham@redhat.com)
+- 743646: fix sync due to bad rail route paths (shughes@redhat.com)
+- 731203 - update panes to use object name in header/title
+  (bbuckingham@redhat.com)
+- 731203 - updates to support ellipsis in header of tupane layout
+  (bbuckingham@redhat.com)
+- fields residing in pulp are now present in the output of index
+  (dmitri@redhat.com)
+- create/delete operations for filters are working now (dmitri@redhat.com)
+- first cut of filters used during promotion of content from Locker
+  (dmitri@redhat.com)
+
+* Fri Oct 07 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.90-1
+- fix for katello-reset-dbs - pgsql support for initdb
+- sms - introducing subscriptions controller
+- sms - refactoring subscription -> subscriptions path
+- sms - moving subscriptions list action into the backend
+- sms - moving unsubscribe action into the backend
+- dashboard - one last css vertical spacing issue fix
+- making css for navigation require a little space in the subnav if there are
+  no subnav elements
+- dashboard - fixing issue where user with no orgs would recieve an error upon
+  login
+- panel - minor update to escape special characters in id
+- dashboard - more dashboard css fixes
+- 741669 - fixing issue where user with no org could not access their own user
+  details page
+- dashboard - adding ui tweaks from uxd
+
+* Thu Oct 06 2011 Shannon Hughes <shughes@redhat.com> 0.1.89-1
+- adding reporting gems deps (shughes@redhat.com)
+
+* Thu Oct 06 2011 Shannon Hughes <shughes@redhat.com> 0.1.88-1
+- adding yum fix until 3.2.29 hits zstream/pulp (shughes@redhat.com)
+- provider - search changes resulting from split of Custom and Red Hat
+  providers (bbuckingham@redhat.com)
+- 715369 - use ellipsis on search favorites/history w/ long names
+  (bbuckingham@redhat.com)
+- repo - default value for content type when creating new repo
+  (tstrachota@redhat.com)
+- sms - useless comment (lzap+git@redhat.com)
+- templates - removed old way of promoting templates directly
+  (tstrachota@redhat.com)
+- import-stage-manifest - set content type for created repo (inecas@redhat.com)
+- dashboard - fixing issue where promotions ellipsis was not configured
+  correctly (jsherril@redhat.com)
+- dashboard - updating subscription status scss as per request
+  (jsherril@redhat.com)
+
+* Wed Oct 05 2011 Shannon Hughes <shughes@redhat.com> 0.1.87-1
+- adding redhat-uep.pem to katello ca (shughes@redhat.com)
+- dashboard - prevent a divide by zero (jsherril@redhat.com)
+- import-stage-manifest - fix relative path for imported repos
+  (inecas@redhat.com)
+- Do not call reset-oauth in %post, candlepin and pulp are not installed at
+  that time anyway. (jpazdziora@redhat.com)
+- 739680 - include candlepin error text in error notice on manifest upload
+  error (bbuckingham@redhat.com)
+- import-stage-manifest - use redhat-uep.pem as feed_ca (inecas@redhat.com)
+- import-stage-manifest - refactor certificate loading (inecas@redhat.com)
+- import-stage-manifest - fix failing spec tests (inecas@redhat.com)
+- import-stage-manifest - fix validations for options (inecas@redhat.com)
+- import-stage-manifest - fix ssl verification (inecas@redhat.com)
+- import-stage-manifest - small refactoring (inecas@redhat.com)
+- import-stage-manifest - short documentation (inecas@redhat.com)
+- import-stage-manifest - remove unused code (inecas@redhat.com)
+- import-stage-manifest - use CDN to substitute vars in content url
+  (inecas@redhat.com)
+- import-stage-manifest - class for loading variable values from CDN
+  (inecas@redhat.com)
+- import-stage-manifest - refactor (inecas@redhat.com)
+- import-stage-manifest - fix unit tests (inecas@redhat.com)
+- import-stage-manifest - substitute release ver (inecas@redhat.com)
+- packagegroups - cli changed to work with array returned from api instead of
+  hashes that were returned formerly (tstrachota@redhat.com)
+- templates - fixes in spec tests (tstrachota@redhat.com)
+- templates - validations for package groups and group categories
+  (tstrachota@redhat.com)
+- package groups - groups and group categories returned in an array instead of
+  in a hash (tstrachota@redhat.com)
+- templates api - removed old content update (tstrachota@redhat.com)
+- packages search - find latest returns array of all latest packages not only
+  the first latest package found (tstrachota@redhat.com)
+- templates - package groups and categories identified by name -repo ids and
+  category/group ids removed (tstrachota@redhat.com)
+- added index for system_template_id on system_template_packages
+  (tstrachota@redhat.com)
+- templates - update changes name of all environment clones
+  (tstrachota@redhat.com)
+- templates api - added new controller for updating templates
+  (tstrachota@redhat.com)
+- templates api - fix for failure in listing all templates in the system
+  (tstrachota@redhat.com)
+- Temporarily removing dashboard pull-down. (jrist@redhat.com)
+- 740340 - manifest upload - validate file input provided
+  (bbuckingham@redhat.com)
+- 740970 - adding detection if a password contains the username
+  (jsherril@redhat.com)
+- 741669 - adding a way for users to modify their own user details
+  (jsherril@redhat.com)
+- Fixed providers show  + edit page to not show provider type (paji@redhat.com)
+- Merge branch 'master' into notices (bbuckingham@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (bbuckingham@redhat.com)
+- dashboard - adding arrow to the right of the gear (jsherril@redhat.com)
+- a-keys - fix delete and behavior on create (bbuckingham@redhat.com)
+- Merge branch 'master' into akeys (bbuckingham@redhat.com)
+- a-keys - fix view specs (bbuckingham@redhat.com)
+- a-keys - fix controller specs (bbuckingham@redhat.com)
+- a-keys - mods to handle nil env on akey create (bbuckingham@redhat.com)
+- Alternating family rows in Activation Keys by way of Ruby's handy cycle
+  method. (jrist@redhat.com)
+- a-keys - (TO BE REVERTED) temporary commit to duplicate subscriptions
+  (bbuckingham@redhat.com)
+- a-keys - some refactor/cleanup of js to use KT namespace
+  (bbuckingham@redhat.com)
+- a-keys - js fix so that clearing filter does not leave children shown
+  (bbuckingham@redhat.com)
+- a-keys - css updates for subscriptions (bbuckingham@redhat.com)
+- a-keys - change the text used to request update to template
+  (bbuckingham@redhat.com)
+- a-keys - update scss to remove some of the table css used by akey
+  subscriptions (bbuckingham@redhat.com)
+- Merge branch 'master' into akeys (bbuckingham@redhat.com)
+- a-keys - init env_select when edit pane is initialized
+  (bbuckingham@redhat.com)
+- a-keys - add cancel button to general tab (bbuckingham@redhat.com)
+- a-keys - subscriptions - updates to support listing by product
+  (bbuckingham@redhat.com)
+- a-keys - update to disable the Add/Remove button after click
+  (bbuckingham@redhat.com)
+- a-keys - subscriptions - update to include type (virtual/physical)
+  (bbuckingham@redhat.com)
+- a-keys - applied subs - add link to add subs (bbuckingham@redhat.com)
+- a-keys - initial changes for applied subscriptions page
+  (bbuckingham@redhat.com)
+- a-keys - initial changes for available subscriptions page
+  (bbuckingham@redhat.com)
+- Merge branch 'master' into akeys (bbuckingham@redhat.com)
+- a-keys - new/edit - updates to highlight the need to change template, on env
+  change... (bbuckingham@redhat.com)
+- a-keys - edit - fix broken 'save' (bbuckingham@redhat.com)
+- a-keys - subscriptions - add applied/available placeholders for view and
+  controller (bbuckingham@redhat.com)
+- a-keys - add Applied and Available subscriptions to navigation
+  (bbuckingham@redhat.com)
+- a-keys - new/edit - disable save buttons while retrieving template/product
+  info (bbuckingham@redhat.com)
+- a-keys - new - update to set env to the first available
+  (bbuckingham@redhat.com)
+- a-keys - remove the edit_environment action (bbuckingham@redhat.com)
+- a-keys - edit - update to list products in the env selected
+  (bbuckingham@redhat.com)
+- a-keys - update new key ui to use environment selector
+  (bbuckingham@redhat.com)
+- a-keys - update setting of env and system template on general tab...
+  (bbuckingham@redhat.com)
+- notices - change to fix broken tests (bbuckingham@redhat.com)
+- notices - change to support closing previous failure notices on a success
+  (bbuckingham@redhat.com)
+- notices - adding controller_name and action_name to notices
+  (bbuckingham@redhat.com)
+
 * Tue Oct 04 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.86-1
 - Added some rendering on products and repos page to explicity differentiate
   the 2

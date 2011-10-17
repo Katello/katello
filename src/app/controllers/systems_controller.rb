@@ -183,22 +183,15 @@ class SystemsController < ApplicationController
 
   def update
     begin
-      unless @system.update_attributes(params[:system])
-        errors @system.errors
-        respond_to do |format|
-          format.html { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
-          format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
-        end
-      end
+      @system.update_attributes!(params[:system])
       notice _("System updated.")
-      
       respond_to do |format|
         format.html { render :text=>params[:system].first[1] }
         format.js  
       end
       
-    rescue Exception => e
-      errors @system.errors
+    rescue Exception => error
+      errors error.to_s, {:persist => false}
       respond_to do |format|
         format.html { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
         format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}

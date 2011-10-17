@@ -1,7 +1,7 @@
 = javascript :edit_helpers
 
 = content_for :title do
-  #{_("Edit Provider")}
+  #{@provider.name}
 
 = content_for :remove_item do
   - if @provider.deletable?
@@ -9,7 +9,7 @@
 
 
 = content_for :navigation do
-  = render_navigation(:expand_all => true, :level => 4)
+  = render_navigation(:items=>custom_provider_navigation, :level => 1)
   
 = content_for :content do
   #providers

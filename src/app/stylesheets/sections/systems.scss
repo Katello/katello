@@ -34,61 +34,18 @@
     .needs_attention { color: red; }
     
     .lower_content {
-      border: 1px solid #9C9C9C;
-      background: $white_color;
-      margin: 10px 20px 0 0;
-      padding: 5px 5px 20px 5px;
-    
       table {
-        border: none !important;
-        margin: 10px auto 20px auto;
-        
-        thead {
-          height: 35px;
-          border-left: 1px solid #9c9c9c;
-          border-right: 1px solid #9c9c9c;
-          
-          th {
-            border-top: 1px solid #9c9c9c;
-            border-bottom: 1px solid #9c9c9c; 
-            background: #A2A2A2;
-            border-right: none;       
-            color: #000;         
-            font-weight: 600;
-            text-transform: none;
-            height: 25px;
-            text-align: center;
-            font-size: 115%;
-          }
-          th:first-child { text-align: left; }
-          .buttonColumn { width: 65px; }
-        }
-        
         tbody {
-          tr { height: 32px }
-          tr:nth-child(even) {
-            background: #f5fbfb;
-            border-left: 1px solid #F5F5F5;
-            border-right: 1px solid #F5F5F5;
-          }
-          tr:nth-child(odd) {
-            background: #e8e8e8;
-            border-left: 1px solid #E8E8E8;
-            border-right: 1px solid #E8E8E8;
-          }
-          td {
-            vertical-align: middle;
-            text-align: center;
-          }
           td:first-child { text-align: left; text-indent: 2px; }
           td:last-child {
             font-weight: 500;
-            &:hover { 
+            &:hover {
               span { color: $kselected_color;}
               .remove_subscription_img { background: $circle_x_icon_black; }
-              .subscribe { background: $play_icon_black; } 
+              .subscribe { background: $play_icon_black; }
             }
           }
+          .subscription_row { margin-left: 19px; }
           .remove_subscription_img { background: $circle_x_icon_grey; overflow: hidden; margin-right: 2px; margin-top: 2px; }
           .subscribe { background: $play_icon_grey; overflow: hidden; margin-right: 2px; margin-top: 2px; }
           span { margin-top: 3px; display: block; float: left; color: #888; }
@@ -102,6 +59,10 @@
           }
         }
       }
+    }
+    .add_subs {
+      float: right;
+      padding-left: 25px;
     }
   }
   .subs {

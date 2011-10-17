@@ -17,12 +17,13 @@
 import os
 import itertools
 from gettext import gettext as _
+from optparse import OptionValueError
 
 from katello.client.api.template import TemplateAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, wait_for_async_task
-from katello.client.api.utils import get_locker, get_environment, get_template
+from katello.client.core.utils import is_valid_record, get_abs_path, run_spinner_in_bg, wait_for_async_task, system_exit
+from katello.client.api.utils import get_locker, get_environment, get_template, get_product
 
 try:
     import json
@@ -50,7 +51,7 @@ class TemplateAction(Action):
         parent = get_template(orgName, envName, parentName)
         if parent != None:
             return parent["id"]
-        return None
+        system_exit(os.EX_DATAERR)
 
 # ==============================================================================
 class List(TemplateAction):
@@ -119,8 +120,8 @@ class Info(TemplateAction):
         template["products"] = "\n".join([p["name"] for p in template["products"]])
         template["packages"] = "\n".join([self._build_nvrea(p) for p in template["packages"]])
         template["parameters"] = "\n".join([ key+":\t"+value for key, value in template["parameters"].iteritems() ])
-        template["package_groups"] = "\n".join(["{"+_("repo")+":\t"+pg["repo_id"]+", "+_("id")+":\t"+pg["package_group_id"]+"}" for pg in template["package_groups"] ])
-        template["package_group_categories"] = "\n".join(["{"+_("repo")+":\t"+pg["repo_id"]+", "+_("id")+":\t"+pg["pg_category_id"]+"}" for pg in template["pg_categories"] ])
+        template["package_groups"] = "\n".join([p["name"] for p in template["package_groups"]])
+        template["package_group_categories"] = "\n".join([p["name"] for p in template["pg_categories"]])
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
@@ -142,11 +143,11 @@ class Info(TemplateAction):
         
     def _build_nvrea(self, package):
         
-        if package['version'] <> None and package['release'] <> None:
+        if package['version'] != None and package['release'] != None:
             nvrea = '-'.join((package['package_name'], package['version'], package['release']))
-            if package['arch'] <> None:
+            if package['arch'] != None:
                 nvrea = nvrea +'.'+ package['arch']
-            if package['epoch'] <> None:
+            if package['epoch'] != None:
                 nvrea = package['epoch'] +':'+ nvrea
             return nvrea
         
@@ -250,6 +251,23 @@ class Update(TemplateAction):
 
     description = _('updates name and description of a template')
 
+    def __init__(self):
+        self.current_parameter = None
+        self.add_parameters = {}
+        super(Update, self).__init__()
+
+
+    def store_parameter_name(self, option, opt_str, value, parser):
+        self.current_parameter = value
+        self.add_parameters[value] = None
+
+    def store_parameter_value(self, option, opt_str, value, parser):
+        if self.current_parameter == None:
+            raise OptionValueError(_("each %s must be preceeded by %s") % (option, "--add_parameter") )
+
+        self.add_parameters[self.current_parameter] = value
+        self.current_parameter = None
+
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
                                help=_("template name (required)"))
@@ -261,10 +279,81 @@ class Update(TemplateAction):
                                help=_("new template name"))
         self.parser.add_option("--description", dest="description",
                                help=_("template description"))
+                               
+        self.parser.add_option('--add_product', dest='add_products',
+                                action="append",
+                                help=_("name of the product"))
+        self.parser.add_option('--remove_product', dest='remove_products',
+                                action="append",
+                                help=_("name of the product"))
+
+        self.parser.add_option('--add_package', dest='add_packages',
+                                action="append",
+                                help=_("name or nvre of the product (epoch:name-rel.eas-ver.sio.n)"))
+        self.parser.add_option('--remove_package', dest='remove_packages',
+                                action="append",
+                                help=_("name or nvre of the product (epoch:name-rel.eas-ver.sio.n)"))
+
+        self.parser.add_option('--add_parameter', dest='add_parameters',
+                                action="callback", callback=self.store_parameter_name, type="string",
+                                help=_("name of the parameter, %s must follow") % "--value")
+        self.parser.add_option('--value', dest='value',
+                                action="callback", callback=self.store_parameter_value, type="string",
+                                help=_("value of the parameter"))
+        self.parser.add_option('--remove_parameter', dest='remove_parameters',
+                                action="append",
+                                help=_("name of the parameter"))
+                               
+        self.parser.add_option('--add_package_group', dest='add_pgs',
+                                action="append",
+                                help=_("name of the package group"))
+        self.parser.add_option('--remove_package_group', dest='remove_pgs',
+                                action="append",
+                                help=_("name of the package group"))
+                                
+        self.parser.add_option('--add_package_group_category', dest='add_pg_categories',
+                                action="append",
+                                help=_("name of the package group category"))
+        self.parser.add_option('--remove_package_group_category', dest='remove_pg_categories',
+                                action="append",
+                                help=_("name of the package group category"))
+        self.resetParameters()
+
 
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
+        
+        #check for missing values
+        for k, v in self.add_parameters.iteritems():
+            if v == None:
+                self.add_option_error(_("missing value for parameter '%s'") % k)
+        
+    def resetParameters(self):
+        self.add_parameters = {}
+
+    def getContent(self):
+        orgName = self.get_option('org')
+        
+        content = {}
+        content['+products'] = self.get_option('add_products') or []
+        content['+products'] = self.productNamesToIds(orgName, content['+products'])
+        
+        content['-products'] = self.get_option('remove_products') or []
+        content['-products'] = self.productNamesToIds(orgName, content['-products'])
+        
+        content['+packages'] = self.get_option('add_packages') or []
+        content['-packages'] = self.get_option('remove_packages') or []
+        
+        content['+pgs'] = self.get_option('add_pgs') or []
+        content['-pgs'] = self.get_option('remove_pgs') or []
+        
+        content['+pg_categories'] = self.get_option('add_pg_categories') or []
+        content['-pg_categories'] = self.get_option('remove_pg_categories') or []
+        
+        content['+parameters'] = self.add_parameters.copy()
+        content['-parameters'] = self.get_option('remove_parameters') or []
+        return content
 
     def run(self):
         tplName = self.get_option('name')
@@ -272,6 +361,9 @@ class Update(TemplateAction):
         newName = self.get_option('new_name')
         desc    = self.get_option('description')
         parentName = self.get_option('parent')
+        content    = self.getContent()
+        #reset parameters for next call in shell mode
+        self.resetParameters()
 
         env = get_locker(orgName)
         if env == None:
@@ -283,88 +375,56 @@ class Update(TemplateAction):
                 parentId = self.get_parent_id(orgName, env["name"], parentName)
             else:
                 parentId = None
-            self.api.update(template["id"], newName, desc, parentId)
+                
+            run_spinner_in_bg(self.updateTemplate, [template["id"], newName, desc, parentId], _("Updating the template, please wait... "))
+            run_spinner_in_bg(self.updateContent,  [template["id"], content], _("Updating the template, please wait... "))
             print _("Successfully updated template [ %s ]") % template['name']
             return os.EX_OK
         else:
             return os.EX_DATAERR
+       
+       
+    def productNamesToIds(self, orgName, productNames):
+        ids = []
+        for prodName in productNames:
+            p = get_product(orgName, prodName)
+            if p != None:
+                ids.append(p['id'])
+            else:
+                system_exit(os.EX_DATAERR)
+        return ids
+        
+            
+    def updateTemplate(self, tplId, name, desc, parentId):
+        self.api.update(tplId, name, desc, parentId)
+    
+    
+    def updateContent(self, tplId, content):
 
+        for p in content['-products']:
+            self.api.remove_content(tplId, 'products', p)
+        for p in content['+products']:
+            self.api.add_content(tplId, 'products', {'id': p})
 
-# ==============================================================================
-class UpdateContent(TemplateAction):
+        for p in content['-packages']:
+            self.api.remove_content(tplId, 'packages', p)
+        for p in content['+packages']:
+            self.api.add_content(tplId, 'packages', {'name': p})
 
-    actions = {
-            'add_product':    [{'product': None}],
-            'remove_product': [{'product': None}],
-            'add_package':    [{'package': None}],
-            'remove_package': [{'package': None}],
-            'add_parameter':  [{'parameter': None}, {'value': None}],
-            'remove_parameter': [{'parameter': None}],
-            'add_package_group':    [{'package_group': _("Package group id")},{'repo': _("Repo id")}],
-            'remove_package_group':    [{'package_group': _("Package group id")},{'repo': _("Repo id")}],
-            'add_package_group_category':    [{'package_group_category': _("Package group category id")},{'repo': _("Repo id")}],
-            'remove_package_group_category':    [{'package_group_category': _("Package group category id")},{'repo': _("Repo id")}],
-    }
+        for p in content['-pgs']:
+            self.api.remove_content(tplId, 'package_groups', p)
+        for p in content['+pgs']:
+            self.api.add_content(tplId, 'package_groups', {'name': p})
 
-    description = _('updates content of a template')
+        for p in content['-pg_categories']:
+            self.api.remove_content(tplId, 'package_group_categories', p)
+        for p in content['+pg_categories']:
+            self.api.add_content(tplId, 'package_group_categories', {'name': p})
 
-
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
-                               help=_("template name (required)"))
-        self.parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
-
-        #add all actions
-        actionParams = set()
-        for action, params in self.actions.iteritems():
-            self.parser.add_option('--'+action, dest=action, action="store_true")
-
-        #add action parameters
-        for param_and_help in itertools.chain(*self.actions.values()):
-            param, help = param_and_help.keys()[0], param_and_help.values()[0]
-            if param in actionParams:
-                continue
-            self.parser.add_option('--'+param, dest=param)
-            actionParams.add(param)
-
-
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
-
-        self.selectedAction = None
-        for action, params in self.actions.iteritems():
-            if self.has_option(action):
-                self.selectedAction = action
-                for param_and_help in params:
-                    self.require_option(param_and_help.keys()[0])
-                return
-
-        self.add_option_error(_("No action was set!"))
-
-
-    def run(self):
-        tplName = self.get_option('name')
-        orgName = self.get_option('org')
-
-        env = get_locker(orgName)
-        if env == None:
-            return os.EX_DATAERR
-
-        template = get_template(orgName, env['name'], tplName)
-
-        if template != None:
-            updateParams = {}
-            for param_and_help in self.actions[self.selectedAction]:
-                paramName = param_and_help.keys()[0]
-                updateParams[paramName] = self.get_option(paramName)
-
-            msg = self.api.update_content(template["id"], self.selectedAction, updateParams)
-            print msg
-            return os.EX_OK
-        else:
-            return os.EX_DATAERR
+        for p in content['-parameters']:
+            self.api.remove_content(tplId, 'parameters', p)
+        for p, v in content['+parameters'].iteritems():
+            self.api.add_content(tplId, 'parameters', {'name': p, 'value': v})
 
 
 # ==============================================================================
@@ -395,45 +455,6 @@ class Delete(TemplateAction):
             print msg
             return os.EX_OK
         else:
-            return os.EX_DATAERR
-
-
-# ==============================================================================
-class Promote(TemplateAction):
-
-    description = _('promotes template content to a successor environment')
-
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
-                               help=_("template name (required)"))
-        self.parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
-        self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev"))
-
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
-        self.require_option('env', '--environment')
-
-    def run(self):
-        tplName = self.get_option('name')
-        orgName = self.get_option('org')
-        envName = self.get_option('env')
-
-        template = get_template(orgName, envName, tplName)
-        if template == None:
-            return os.EX_DATAERR
-
-        task = self.api.promote(template["id"])
-
-        result = run_spinner_in_bg(wait_for_async_task, [task])
-
-        if result['state'] == 'finished':
-            print _("Template [ %s ] promoted" % tplName)
-            return os.EX_OK
-        else:
-            print _("Template [ %s ] promotion failed: %s" % (tplName, json.loads(result["result"])['errors'][0]))
             return os.EX_DATAERR
 
 
