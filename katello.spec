@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.93
+Version:        0.1.94
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -237,6 +237,16 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Oct 17 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.94-1
+- adding db:truncate rake task
+- templates - spec tests for revisions
+- templates - fix for increasing revision numbers after update
+- fixes #745245 Filter on provider page fails with postgres error
+- Fixed a unit test
+- 740979 - Gave provider read access for users with org sync permission
+- 744067 - Promotions - Errata UI - clean up format on Packages tab
+- 741416 - organizations ui - list orgs using same sort order as on roles pg
+
 * Fri Oct 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.93-1
 - bump up scoped_search version to 2.3.4 (shughes@redhat.com)
 - 745315 -changing application controller to not include all helpers in all
