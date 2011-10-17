@@ -17,11 +17,7 @@ module Glue::Pulp::Repos
 
   def self.included(base)
     base.send :include, InstanceMethods
-    base.send :include, LazyAccessor
-
     base.class_eval do
-      lazy_accessor :filters, :initializer => lambda { r = repos(locker).first; r.nil? ? [] : r.filters }
-
       before_save :save_repos_orchestration
       before_destroy :destroy_repos_orchestration
     end
@@ -143,6 +139,10 @@ module Glue::Pulp::Repos
         return true if repo.has_erratum? id
       end
       false
+    end
+
+    def promoted_to? target_env
+      target_env.products.include? self
     end
 
     def sync
@@ -425,6 +425,8 @@ module Glue::Pulp::Repos
     end
 
     def enqueue_filter_updates
+      return true unless environments.size > 1 and promoted_to?(locker.successor)
+
       old_filters = filters_change[0].nil? ? [] : filters_change[0]
       new_filters = filters_change[1]
 
@@ -442,6 +444,15 @@ module Glue::Pulp::Repos
             :priority => 5,
             :action => [self, :del_filters, r, added_filters]) unless deleted_filters.empty?
       end
+    end
+
+    def filters_was
+      Product.find(id).filters
+    end
+
+    def filters_changed?
+      was = filters_was
+      (was - filters).size == 0 && (filters - was).size == 0
     end
   end
 end
