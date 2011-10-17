@@ -219,6 +219,33 @@ describe SystemsController do
       end
     end
 
-  end
+    describe 'creating a system' do
+      before (:each) do
+        @system = System.new(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+      end
 
+      it "should create a system with the supplied name" do
+        Candlepin::Consumer.stub!(:create).and_return({:uuid => @system.uuid, :owner => {:key => @system.uuid}})
+        post :create, { :id => @system.id,
+                        :system => { :name=> "foo", "sockets" => 32, "environment_id" => @environment.id},
+                        "arch" => {"arch_id" => "i386"},
+                        "system_type" => {"virtualized" => 'virtual'}
+                      }
+        response.should be_success
+        assigns[:system].name.should == "foo"
+        assigns[:system].guest.should == true
+        assigns[:system].arch.should == "i386"
+      end
+
+      it "should throw an error with bad parameters" do
+        invalid_name = " Foo   "
+        post :create, { :id => @system.id,
+                        :system => { :name=> "foo", "sockets" => 32, "environment_id" => @environment.id},
+                        "system_type" => {"virtualized" => 'virtual'}
+                      }
+        response.should_not be_success
+        System.where(:name=>invalid_name).should be_empty
+      end
+    end
+  end
 end

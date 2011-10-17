@@ -72,7 +72,6 @@ describe System do
       Candlepin::Consumer.should_receive(:destroy).once.with(uuid).and_return(true)
       @system.destroy
     end
-
   end
 
   context "regenerate identity certificates" do
