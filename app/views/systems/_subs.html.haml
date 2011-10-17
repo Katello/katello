@@ -15,20 +15,21 @@
         %tbody
           - if consumed_entitlements.length > 0
             - for entitlement in consumed_entitlements
-              %tr{:id => "#{entitlement.entitlementId}"}
-                %td
-                %td
+              - cycle_class = cycle("", "alt")
+              %tr{:id => "#{entitlement.entitlementId}", :class => cycle_class}
+                %td{:style => "padding-top:9px;"}
+                %td{:style => "padding-top:9px;"}
                   %span.fl
                     = check_box_tag "system[#{entitlement.entitlementId}]", value="#{entitlement.entitlementId}", false
                   &nbsp;
                   #{entitlement.poolName}
-                %td #{entitlement.sla}
-                %td #{entitlement.contractNumber}
-                %td
+                %td{:style => "padding-top:9px;"} #{entitlement.sla}
+                %td{:style => "padding-top:9px;"} #{entitlement.contractNumber}
+                %td{:style => "padding-top:9px;"}
                   = entitlement.quantity < 0 ? 1 : entitlement.quantity
                 %td #{entitlement.expires}
               - entitlement.providedProducts.each do |product|
-                %tr{:class => "child-of-#{entitlement.entitlementId}"}
+                %tr{:class => "child-of-#{entitlement.entitlementId} " + cycle_class}
                   %td{:colspan=>7}
                     %ul
                       %li
@@ -59,29 +60,31 @@
         %tbody
           - if avail_subs.length > 0
             - for sub in avail_subs
-              %tr{:id => "#{sub.poolId}"}
-                %td
-                %td
+              - cycle_class = cycle("", "alt")
+              %tr{:id => "#{sub.poolId}", :class => cycle_class}
+                %td{:style => "padding-top:9px;"}
+                %td{:style => "padding-top:9px;"}
                   %span.fl
                     = check_box_tag "system[#{sub.poolId}]", false
                   &nbsp;
                   #{sub.poolName}
-                %td #{sub.sockets}
-                %td
-                  - if sub.multiEntitlement
+                %td{:style => "padding-top:9px;"} #{sub.sockets}
+                - if sub.multiEntitlement
+                  %td
                     = number_field_tag "spinner[#{sub.poolId}]", nil, :in => 0..(sub.quantity-sub.consumed), :step=>1, :value=>0, :class=>"ui-spinner"
                     = "of #{sub.quantity - sub.consumed}"
-                  - else
+                - else
+                  %td{:style => "padding-top:9px;"}
                     - if sub.quantity < 0
                       = _("Unlimited")
                     -else
                       %div{:class=>"ui-nonspinner-label"} 0 of #{sub.quantity - sub.consumed}
                     = hidden_field_tag "spinner[#{sub.poolId}]", 0, :class => "ui-nonspinner"
-                %td
+                %td{:style => "padding-top:9px;"}
                   = sub.quantity < 0 ? '' : sub.quantity
                 %td #{sub.expires}
               - sub.providedProducts.each do |product|
-                %tr{:class => "child-of-#{sub.poolId}"}
+                %tr{:class => "child-of-#{sub.poolId} " + cycle_class}
                   %td{:colspan=>7}
                     %ul
                       %li
