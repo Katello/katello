@@ -1,4 +1,4 @@
-= include_javascripts :treetable, :system_subscriptions
+= include_javascripts :treetable
 .grid_8
   = form_tag update_subscriptions_system_path, :id=>"unsubscribe", :method=>"post", :remote=>true do
     %h5 #{_("System Current Subscription(s)")}
@@ -13,33 +13,33 @@
             %th #{_("Quantity")}
             %th #{_("Expires")}
         %tbody
-          - if consumed_subs.length > 0
-            - for sub in consumed_subs
-              %tr{:id => "#{sub.poolId}"}
+          - if consumed_entitlements.length > 0
+            - for entitlement in consumed_entitlements
+              %tr{:id => "#{entitlement.entitlementId}"}
                 %td
                 %td
                   %span.fl
-                    = check_box_tag "system[#{sub.poolId}]", value="#{sub.poolId}", false
+                    = check_box_tag "system[#{entitlement.entitlementId}]", value="#{entitlement.entitlementId}", false
                   &nbsp;
-                  #{sub.poolName}
-                %td #{sub.sla}
-                %td #{sub.contractNumber}
+                  #{entitlement.poolName}
+                %td #{entitlement.sla}
+                %td #{entitlement.contractNumber}
                 %td
-                  = sub.quantity < 0 ? 1 : sub.consumed
-                %td #{sub.expires}
-              - sub.providedProducts.each do |product|
-                %tr{:class => "child-of-#{sub.poolId}"}
+                  = entitlement.quantity < 0 ? 1 : entitlement.quantity
+                %td #{entitlement.expires}
+              - entitlement.providedProducts.each do |product|
+                %tr{:class => "child-of-#{entitlement.entitlementId}"}
                   %td{:colspan=>7}
                     %ul
                       %li
                         = _("Product Name: ")
                         = product.name
                       - product.productContent.each do |product_content|
-                        = render :partial=>'subscription_details', :locals=>{:group => sub.poolId, :product_content => product_content}
+                        = render :partial=>'subscription_details', :locals=>{:group => entitlement.entitlementId, :product_content => product_content}
           - else
             %tr
               %td{:colspan=>5} #{_("The system is not currently consuming any subscriptions.")}
-      - if editable && consumed_subs.length > 0
+      - if editable && consumed_entitlements.length > 0
         .actions
           %a{:class=>'dialogbutton button disabled', :id=>"fake_unsub_submit"} #{_('Unsubscribe')}
           = submit_tag _('Unsubscribe'), :class => 'submit dialogbutton', :id=>"unsub_submit"
@@ -69,7 +69,7 @@
                 %td #{sub.sockets}
                 %td
                   - if sub.multiEntitlement
-                    = number_field_tag "spinner[#{sub.poolId}]", nil, :in => 0...sub.quantity, :step=>1, :value=>0, :class=>"ui-spinner"
+                    = number_field_tag "spinner[#{sub.poolId}]", nil, :in => 0..(sub.quantity-sub.consumed), :step=>1, :value=>0, :class=>"ui-spinner"
                     = "of #{sub.quantity - sub.consumed}"
                   - else
                     - if sub.quantity < 0

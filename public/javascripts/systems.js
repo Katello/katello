@@ -104,7 +104,7 @@ KT.subs = function() {
                     checked--;
                     spinner = $(this).parent().parent().parent().find(".ui-spinner");
                     if(spinner.length > 0){
-                        spinner.spinner("decrement");
+                        spinner.spinner("value", 0);
                     }else{
                         $(this).parent().parent().parent().find(".ui-nonspinner").val(0);
                         spinner = $(this).parent().parent().parent().find(".ui-nonspinner-label")[0];
