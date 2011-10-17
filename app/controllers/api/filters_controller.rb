@@ -15,6 +15,7 @@ class Api::FiltersController < Api::ApiController
   before_filter :find_organization, :only => [:index, :create]
   before_filter :find_filter, :only => [:show, :destroy]
   before_filter :find_product, :only => [:list_product_filters, :update_product_filters]
+  before_filter :find_filters, :only => [:update_product_filters]
   before_filter :authorize
 
   def rules
@@ -58,8 +59,7 @@ class Api::FiltersController < Api::ApiController
   end
 
   def update_product_filters
-    @product.filters_will_change!
-    @product.filters = params[:filters]
+    @product.filters = @filters
     @product.save!
 
     render :json => @product.filters.to_json
@@ -74,6 +74,12 @@ class Api::FiltersController < Api::ApiController
     @filter = Filter.first(:conditions => {:pulp_id => params[:id]})
     raise HttpErrors::NotFound, _("Couldn't find filter '#{params[:id]}'") if @filter.nil?
     @filter
+  end
+
+  def find_filters
+    @filters = Filter.where(:pulp_id => params[:filters])
+    raise HttpErrors::NotFound, _("Couldn't find filter '#{params[:id]}'") if @filters.any? {|f| f.nil?}
+    @filters
   end
 
 end
