@@ -273,13 +273,14 @@ module Pulp
         JSON.parse(body)
       end
 
-      def errata repo_id
-        response = get(repository_path  + repo_id + "/errata/", self.default_headers)
+      def errata(repo_id, filter = {})
+        path = "#{repository_path}#{repo_id}/errata/?#{filter.to_param}"
+        response = get(path, self.default_headers)
         body = response.body
         JSON.parse(body)
       end
 
-      def distributions repo_id
+      def distributions(repo_id)
         response = get(repository_path + repo_id + "/distribution/", self.default_headers)
         body = response.body
         JSON.parse(body)
