@@ -274,6 +274,7 @@ module Glue::Pulp::Repos
     end
 
     def setup_sync_schedule
+      #PROD TODO: make sure it sets the plan for all repos
       if self.sync_plan_id_changed?
           self.productContent.each do |pc|
             schedule = (self.sync_plan && self.sync_plan.schedule_format) || ""
@@ -370,14 +371,16 @@ module Glue::Pulp::Repos
 
     def save_repos_orchestration
       case orchestration_for
-        when :create, :import_from_cp
-          queue.create(:name => "create pulp repositories for product: #{self.name}", :priority => 6, :action => [self, :set_repos])
-          queue.create(:name => "setting up pulp sync schedule for product: #{self.name}",
-                              :priority => 7, :action => [self, :setup_sync_schedule]) if self.sync_plan_id_changed?
+        when :create
+          # no repositories are added when a product is created
+        when :import_from_cp
+          #PROD TODO: solve orchestration after import
+          #queue.create(:name => "create pulp repositories for product: #{self.name}",      :priority => 3, :action => [self, :set_repos])
+          #queue.create(:name => "setting up pulp sync schedule for product: #{self.name}", :priority => 4, :action => [self, :setup_sync_schedule])
         when :update
-          queue.create(:name => "update pulp repositories for product: #{self.name}", :priority => 6, :action => [self, :update_repos])
-          queue.create(:name => "setting up pulp sync schedule for product: #{self.name}",
-                              :priority => 7, :action => [self, :setup_sync_schedule]) if self.sync_plan_id_changed?
+          #queue.create(:name => "update pulp repositories for product: #{self.name}", :priority => 6, :action => [self, :update_repos])
+          #queue.create(:name => "setting up pulp sync schedule for product: #{self.name}",
+          #                    :priority => 7, :action => [self, :setup_sync_schedule]) if self.sync_plan_id_changed?
         when :promote
           # do nothing, as repos have already been promoted (see promote_repos method)
       end
