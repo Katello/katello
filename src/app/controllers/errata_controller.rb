@@ -27,7 +27,7 @@ class ErrataController < ApplicationController
   end
 
   def show
-    render :partial=>"show"
+    render :partial=>"show", :layout => "tupane_layout"
   end
 
   def packages
