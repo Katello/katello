@@ -28,9 +28,9 @@ class SearchController < ApplicationController
     # retrieve the search history and favorites for the user... 
     # only return histories that are associated with the page the request is received on...
     path = retrieve_path
-
-    @search_histories = current_user.search_histories.where(:path => path).order("updated_at desc")
-    @search_favorites = current_user.search_favorites.where(:path => path).order("params asc")
+ 
+    @search_histories = current_user.search_histories.where("path LIKE ?", "%#{path}%").order("updated_at desc")
+    @search_favorites = current_user.search_favorites.where("path LIKE ?", "%#{path}%").order("params asc")
 
     render :partial => "common/search"
 

@@ -14,6 +14,14 @@
 $(document).ready(function() {
     $('#search_favorite_save').live("click", favorite.save);
     $('#search_favorite_destroy').live("click", favorite.destroy);
+    $('#search_clear').live("click", favorite.clear);
+    
+	$('.search_query').live('click', function(){
+		$('#search').val($(this).html());
+		$('#search_form').submit();
+		$('.qdropdown').hide();
+	});
+    
 });
 
 var favorite = (function() {
@@ -51,6 +59,11 @@ var favorite = (function() {
 
             // send a request to the server to save/create this favorite
             client_common.destroy(url, favorite.success, favorite.error);
+        },
+        clear : function(data){
+        	$('#search').val('');
+        	$('#search_form').submit();
+        	$('.qdropdown').hide();
         }
     }
 })();

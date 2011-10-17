@@ -62,6 +62,7 @@ class OrganizationsController < ApplicationController
     @panel_options[:num_items] = @organizations.count
     @organizations = @organizations.limit(current_user.page_size).offset(start)
     render_panel_items @organizations, @panel_options
+    retain_search_history
   end
 
 

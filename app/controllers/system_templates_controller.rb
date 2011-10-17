@@ -69,6 +69,7 @@ class SystemTemplatesController < ApplicationController
     start = params[:offset]
     @templates = SystemTemplate.readable(current_organization).search_for(params[:search]).limit(current_user.page_size).offset(start)
     render_panel_items @templates, @panel_options
+    retain_search_history
   end
   
   def setup_options

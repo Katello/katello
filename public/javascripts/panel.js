@@ -412,9 +412,17 @@ KT.panel = (function($){
             }
         },
         hash_change = function(event) {
-            var refresh = $.bbq.getState("panel");
+            var refresh 		= $.bbq.getState("panel"),
+            	search 			= $.bbq.getState("search"),
+            	search_element 	= $('#search');
+            	
             if(refresh){ 
                 select_item(refresh);
+            }
+            
+            if( search !== undefined && search_element.val() !== search ){
+				$('#search').val(search);
+				$('#search_form').submit();
             }
             return false;
         },
@@ -495,7 +503,15 @@ KT.panel = (function($){
         	KT.panel.control_bbq = false;
         	$(window).bind( 'hashchange', hash_change);
         	
-        	$.get(url, data, function(data){
+        	$(document).ready(function(){
+        		$(window).trigger( 'hashchange' );
+        		
+        		if( !$.bbq.getState("search") ){
+					$('#search_form').submit();
+        		}
+        	});
+        	
+        	/*$.get(url, data, function(data){
         		$(document).ready(function(){
         			var element = $('#list');
         			
@@ -510,7 +526,7 @@ KT.panel = (function($){
 	        			$('#search_form').find('#search').val(params['search']);
         			}
         		});
-        	});
+        	});*/
         },
         setupSearch = function(resource_type){
     		$('#search_form').live('submit', function(e){
@@ -523,7 +539,7 @@ KT.panel = (function($){
 				button.attr("disabled","disabled");
 				element.find('section').empty();
 				element.find('.spinner').show();
-				
+
 				$.bbq.pushState($(this).serialize());
         		url += '?offset=' + offset;	
         	
