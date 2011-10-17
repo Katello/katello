@@ -21,7 +21,8 @@ class Api::ErrataController < Api::ApiController
 
   def index
     repo = Glue::Pulp::Repo.find(params[:repository_id])
-    render :json => repo.errata
+    filter = params.slice(:type)
+    render :json => repo.errata(filter)
   end
 
   def show

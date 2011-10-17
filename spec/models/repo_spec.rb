@@ -63,7 +63,7 @@ describe Glue::Pulp::Repo do
 
     it "called for second time should use the cached values" do
       @repo.packages
-      Pulp::Repository.should_not_receive(:packages).with(RepoTestData::REPO_ID)
+      Pulp::Repository.should_not_receive(:packages).with(RepoTestData::REPO_ID, {})
       @repo.packages
     end
 
@@ -75,14 +75,20 @@ describe Glue::Pulp::Repo do
 
   context "Find errata" do
     it "should find all errata in the repo" do
-      Pulp::Repository.should_receive(:errata).once.with(RepoTestData::REPO_ID)
+      Pulp::Repository.should_receive(:errata).once.with(RepoTestData::REPO_ID, {})
       errata = @repo.errata
       errata.length.should == RepoTestData::REPO_ERRATA.length
     end
 
+    it "should be able to filter errata" do
+      filter = { :type => "security" }
+      Pulp::Repository.should_receive(:errata).once.with(RepoTestData::REPO_ID, filter)
+      @repo.errata(filter)
+    end
+
     it "called for second time should use the cached values" do
       @repo.errata
-      Pulp::Repository.should_not_receive(:errata).with(RepoTestData::REPO_ID)
+      Pulp::Repository.should_not_receive(:errata).with(RepoTestData::REPO_ID, {})
       @repo.errata
     end
 
@@ -302,7 +308,7 @@ def disable_repo_orchestration
   Pulp::Repository.stub(:sync_history).and_return([])
 
   Pulp::Repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
-  Pulp::Repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)
+  Pulp::Repository.stub(:errata).with(RepoTestData::REPO_ID, {}).and_return(RepoTestData::REPO_ERRATA)
   Pulp::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
   Pulp::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
   Pulp::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
