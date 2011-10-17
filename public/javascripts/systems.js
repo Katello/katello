@@ -88,7 +88,9 @@ KT.subs = function() {
                     checked++;
                     spinner = $(this).parent().parent().parent().find(".ui-spinner");
                     if(spinner.length > 0){
-                        spinner.spinner("increment");
+                        if(spinner.spinner("value") == "0") {
+                            spinner.spinner("increment");
+                        }
                     }else{
                         $(this).parent().parent().parent().find(".ui-nonspinner").val(1);
                         spinner = $(this).parent().parent().parent().find(".ui-nonspinner-label")[0];
