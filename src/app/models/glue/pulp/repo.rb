@@ -62,9 +62,9 @@ class Glue::Pulp::Repo
     @repo_packages
   end
 
-  def errata
+  def errata(filter = {})
     if @repo_errata.nil?
-       self.errata = Pulp::Repository.errata(id)
+       self.errata = Pulp::Repository.errata(id, filter)
     end
     @repo_errata
   end
