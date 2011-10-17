@@ -510,23 +510,6 @@ KT.panel = (function($){
 					$('#search_form').submit();
         		}
         	});
-        	
-        	/*$.get(url, data, function(data){
-        		$(document).ready(function(){
-        			var element = $('#list');
-        			
-        			element.find('section').append(data);
-        			element.find('.spinner').hide();
-        			element.find('section').fadeIn(function(){
-        				$(window).trigger( 'hashchange' );
-        			});
-        			$('.left').resize();
-        			
-        			if( params ){
-	        			$('#search_form').find('#search').val(params['search']);
-        			}
-        		});
-        	});*/
         },
         setupSearch = function(resource_type){
     		$('#search_form').live('submit', function(e){
@@ -552,6 +535,7 @@ KT.panel = (function($){
 	        			element.find('.spinner').hide();
     			    	button.removeAttr('disabled');
 	        			element.find('section').fadeIn();
+	        			$('.left').resize();
 			      	}, 
 			      	error	: function(e) {
 			        	button.removeAttr('disabled');

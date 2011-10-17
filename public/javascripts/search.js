@@ -80,6 +80,9 @@ KT.search = (function($){
 						function(json){
 							request_issued = false;
 							response(json);
+						})
+						.error(function(){
+							request_issued = false;
 						});
 				}
 			};
@@ -113,7 +116,6 @@ KT.search = (function($){
 				source	: getAutoCompleteData,
 				minLength: 0,
 				delay	: 200,
-				select	: function(event, ui) { $( this ).catcomplete( "search" , ui.item.value); },
 				search	: function(event, ui) { $(".auto_complete_clear").hide(); },
 				open	: function(event, ui) { $(".auto_complete_clear").show(); }
 			});
