@@ -16,14 +16,14 @@ class Api::TemplatesController < Api::ApiController
 
   before_filter :find_environment, :only => [:create, :import]
   before_filter :try_find_environment, :only => [:index]
-  before_filter :find_template, :only => [:show, :update, :update_content, :destroy, :promote, :export]
+  before_filter :find_template, :only => [:show, :update, :destroy, :promote, :export]
 
   # TODO: define authorization rules
   skip_before_filter :authorize
 
   def index
     if @environment.nil?
-      tpls = SystemTemplate.all.where(params.slice(:name))
+      tpls = SystemTemplate.where(params.slice(:name))
     else
       tpls = @environment.system_templates.where(params.slice(:name))
     end
@@ -47,76 +47,22 @@ class Api::TemplatesController < Api::ApiController
   def update
     raise HttpErrors::BadRequest, _("Templates can be updated only in a Locker environment") if not @template.environment.locker?
 
-    params[:template].delete(:products_json)
-    params[:template].delete(:packages_json)
-    params[:template].delete(:errata_json)
-    params[:template].delete(:parameters_json)
-    params[:template].delete(:host_group_json)
-
-    @template.update_attributes!(params[:template])
-    render :json => @template
-  end
-
-  def update_content
-    raise HttpErrors::BadRequest, _("Templates can be updated only in a Locker environment") if not @template.environment.locker?
-
-    case params[:do].to_s
-      when 'add_product'
-        @template.add_product(params[:product])
-        @template.save!
-        render :text => _("Added product '#{params[:product]}'"), :status => 200 and return
-
-      when 'remove_product'
-        @template.remove_product(params[:product])
-        @template.save!
-        render :text => _("Removed product '#{params[:product]}'"), :status => 200 and return
-
-      when 'add_package'
-        @template.add_package(params[:package])
-        @template.save!
-        render :text => _("Added package '#{params[:package]}'"), :status => 200 and return
-
-      when 'remove_package'
-        @template.remove_package(params[:package])
-        @template.save!
-        render :text => _("Removed package '#{params[:package]}'"), :status => 200 and return
-
-      when 'add_parameter'
-        @template.parameters[params[:parameter]] = params[:value]
-        @template.save!
-        render :text => _("Added kickstart attribute '#{params[:attribute]}': '#{params[:value]}'"), :status => 200 and return
-
-      when 'remove_parameter'
-        @template.parameters.delete(params[:parameter])
-        @template.save!
-        render :text => _("Removed kickstart attribute '#{params[:attribute]}'"), :status => 200 and return
-
-      when 'add_package_group'
-        @template.add_package_group(:id => params[:package_group], :repo_id => params[:repo])
-        @template.save!
-        render :text => _("Added package group '%s'") % params[:package_group]
-
-      when 'remove_package_group'
-        @template.remove_package_group(:id => params[:package_group], :repo_id => params[:repo])
-        @template.save!
-        render :text => _("Removed package group '%s'") % params[:package_group]
-
-      when 'add_package_group_category'
-        @template.add_pg_category(:id => params[:package_group_category], :repo_id => params[:repo])
-        @template.save!
-        render :text => _("Added package group category '%s'") % params[:package_group_category]
-
-      when 'remove_package_group_category'
-        @template.remove_pg_category(:id => params[:package_group_category], :repo_id => params[:repo])
-        @template.save!
-        render :text => _("Removed package group category '%s'") % params[:package_group_category]
+    clones = @template.get_clones
+    @template.attributes = params[:template].slice(:name, :parent_id, :description)
+    @template.save!
+    if params[:template].has_key?(:name)
+      clones.each do |tpl|
+        tpl.attributes = params[:template].slice(:name)
+        tpl.save!
+      end
     end
 
+    render :json => @template
   end
 
   def destroy
     @template.destroy
-    render :text => _("Deleted system template '#{params[:id]}'"), :status => 200
+    render :text => _("Deleted system template '#{@template.name}'"), :status => 200
   end
 
   def import
@@ -138,13 +84,10 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def export
-    json = @template.string_export
-    render :json => json
-  end
-
-  def promote
-    async_job = @template.async(:organization => @template.environment.organization).promote
-    render :json => async_job, :status => 202
+    respond_to do |format|
+      format.tdl { render(:text => @template.export_as_tdl, :content_type => Mime::TDL) and return }
+      format.json { render :json => @template.export_as_json }
+    end
   end
 
   def find_environment

@@ -12,6 +12,8 @@
 
 require 'http_resource'
 require 'resources/pulp'
+require 'resources/cdn'
+require 'openssl'
 
 module Glue::Pulp::Repos
 
@@ -24,7 +26,7 @@ module Glue::Pulp::Repos
   end
 
   def self.groupid(product, environment)
-      [self.product_groupid(product), self.env_groupid(environment), self.env_orgid(product.locker.organization)]
+      [self.product_groupid(product), self.env_groupid(environment), self.org_groupid(product.locker.organization)]
   end
 
   def self.clone_repo_path(repo, environment, for_cp = false)
@@ -45,7 +47,7 @@ module Glue::Pulp::Repos
   end
 
 
-  def self.env_orgid(org)
+  def self.org_groupid(org)
       "org:#{org.id}"
   end
 
@@ -90,6 +92,22 @@ module Glue::Pulp::Repos
       async_tasks
     end
 
+    def package_groups env, search_args = {}
+      groups = []
+      self.repos(env).each do |repo|
+        groups << repo.package_groups(search_args)
+      end
+      groups.flatten(1)
+    end
+
+    def package_group_categories env, search_args = {}
+      categories = []
+      self.repos(env).each do |repo|
+        categories << repo.package_group_categories(search_args)
+      end
+      categories.flatten(1)
+    end
+
     def has_package? id
       self.repos(env).each do |repo|
         return true if repo.has_package? id
@@ -115,23 +133,16 @@ module Glue::Pulp::Repos
       end.flatten(1)
     end
 
-    def find_latest_package_by_name env, name
-      latest_pack = nil
+    def find_latest_packages_by_name env, name
 
-      self.repos(env).each do |repo|
-        pack = repo.find_latest_package_by_name name
-
-        next if pack.nil?
-
-        if (latest_pack.nil?) or
-           (pack[:epoch] > latest_pack[:epoch]) or
-           (pack[:epoch] == latest_pack[:epoch] and pack[:release] > latest_pack[:release]) or
-           (pack[:epoch] == latest_pack[:epoch] and pack[:release] == latest_pack[:release] and pack[:version] > latest_pack[:version])
-          latest_pack = pack
-          latest_pack[:repo_id] = repo.id
+      packs = self.repos(env).collect do |repo|
+        repo.find_latest_packages_by_name(name).collect do |pack|
+          pack[:repo_id] = repo.id
+          pack
         end
-      end
-      latest_pack
+      end.flatten(1)
+
+      Katello::PackageUtils.find_latest_packages packs
     end
 
     def has_erratum? id
@@ -232,23 +243,23 @@ module Glue::Pulp::Repos
     end
 
     def repo_id(content_name, env_name = nil)
-      return content_name if content_name.include?(self.organization.name) && content_name.include?(self.cp_id.to_s)
-      Glue::Pulp::Repo.repo_id(self.cp_id.to_s, content_name.to_s, env_name, self.organization.name)
+      return content_name if content_name.include?(self.organization.name) && content_name.include?(self.name.to_s)
+      Glue::Pulp::Repo.repo_id(self.name.to_s, content_name.to_s, env_name, self.organization.name)
     end
 
-    def repository_url(content_url, substitutions = {})
+    def repository_url(content_url)
       if self.provider.provider_type == Provider::CUSTOM
         url = content_url.dup
       else
         url = self.provider[:repository_url] + content_url
       end
-      substitutions.each { |var, val| url.gsub!("$#{var}",val) }
       url
     end
 
-    def delete_repo(name)
-      #TODO: delete candlepin content as well
-      Pulp::Repository.destroy(repo_id(name))
+    def delete_repo_by_id(repo_id)
+      productContent_will_change!
+      self.productContent.delete_if { |pc| pc.content.label == repo_id }
+      save!
     end
 
     def add_repo(name, url)
@@ -266,7 +277,7 @@ module Glue::Pulp::Repos
       if self.sync_plan_id_changed?
           self.productContent.each do |pc|
             schedule = (self.sync_plan && self.sync_plan.schedule_format) || ""
-            Pulp::Repository.update(repo_id(pc.content.id), {
+            Pulp::Repository.update(repo_id(pc.content.name), {
                 :sync_schedule => schedule
             })
           end
@@ -289,27 +300,38 @@ module Glue::Pulp::Repos
       self.productContent.collect do |pc|
         cert = self.certificate
         key = self.key
-        ca = File.open("#{Rails.root}/config/candlepin-ca.crt", 'rb') { |f| f.read }
-        archs = self.arch.split(",")
-        archs.each do |arch|
-          # temporary solution unless pulp supports another archs
-          unless %w[noarch i386 i686 ppc64 s390x x86_64].include? arch
-            Rails.logger.error("Pulp does not support arch '#{arch}'")
-            next
-          end
-          repo_name = "#{pc.content.name} #{arch}".gsub(/[^a-z0-9\-_ ]/i,"")
+        ca = File.read(CDN::CdnResource.ca_file)
+
+        cdn_var_substitutor = CDN::CdnVarSubstitutor.new(self.provider[:repository_url],
+                                                         :ssl_client_cert => OpenSSL::X509::Certificate.new(cert),
+                                                         :ssl_client_key => OpenSSL::PKey::RSA.new(key))
+        substitutions_with_paths = cdn_var_substitutor.substitute_vars(pc.content.contentUrl)
+
+        substitutions_with_paths.each do |(substitutions, path)|
+          feed_url = repository_url(path)
+          arch = substitutions["basearch"] || "noarch"
+          repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
           repo = Glue::Pulp::Repo.new(:id => repo_id(repo_name),
                                       :arch => arch,
-                                      :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, pc.content.name),
+                                      :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, repo_name),
                                       :name => repo_name,
-                                      :feed => repository_url(pc.content.contentUrl, :basearch => arch),
+                                      :feed => feed_url,
                                       :feed_ca => ca,
                                       :feed_cert => cert,
                                       :feed_key => key,
+                                      :content_type => pc.content.type,
                                       :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
                                       :preserve_metadata => orchestration_for == :import_from_cp #preserve repo metadata when importing from cp
                                       )
-          repo.create
+          begin
+            repo.create
+          rescue RestClient::InternalServerError => e
+            if e.message.include? "Architecture must be one of"
+              Rails.logger.error("Pulp does not support arch '#{arch}'")
+            else
+              raise e
+            end
+          end
         end
       end
     end
@@ -317,18 +339,12 @@ module Glue::Pulp::Repos
     def update_repos
       return true unless productContent_changed?
 
-      old_content = productContent_change[0].nil? ? [] : productContent_change[0].map {|pc| pc.content.label}
-      new_content = productContent_change[1].map {|pc| pc.content.label}
-
-      added_content   = new_content - old_content
-      deleted_content = old_content - new_content
-
-      self.productContent.select {|pc| deleted_content.include?(pc.content.label)}.each do |pc|
-        Rails.logger.debug "deleting repository #{repo_id(pc.content.name)}"
-        Pulp::Repository.destroy(repo_id(pc.content.name))
+      deleted_content.each do |pc|
+        Rails.logger.debug "deleting repository #{pc.content.label}"
+        Pulp::Repository.destroy(pc.content.label)
       end
 
-      self.productContent.select {|pc| added_content.include?(pc.content.label)}.each do |pc|
+      added_content.each do |pc|
         if !(self.environments.map(&:name).any? {|name| pc.content.name.include?(name)}) || pc.content.name.include?('Locker')
         Rails.logger.debug "creating repository #{repo_id(pc.content.name)}"
           self.add_repo(pc.content.name, repository_url(pc.content.contentUrl))
@@ -354,11 +370,11 @@ module Glue::Pulp::Repos
       #end
     end
 
-    # Empty method to allow rollbacks
     def del_repos
-      if not self.productContent.nil?
-        self.productContent.collect do |pc|
-          Pulp::Repository.destroy(repo_id(pc.content.name))
+      #destroy all repos in all environmnents
+      self.environments.each do |env|
+        self.repos(env).each do |repo|
+          repo.destroy
         end
       end
       true

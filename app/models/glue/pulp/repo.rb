@@ -12,7 +12,7 @@
 
 class Glue::Pulp::Repo
   attr_accessor :id, :groupid, :arch, :name, :feed, :feed_cert, :feed_key, :feed_ca,
-                :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata
+                :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type
 
   def initialize(params = {})
     @params = params
@@ -39,7 +39,8 @@ class Glue::Pulp::Repo
         :feed => self.feed,
         :feed_cert_data => feed_cert_data,
         :groupid => self.groupid,
-        :preserve_metadata => self.preserve_metadata == true
+        :preserve_metadata => self.preserve_metadata == true,
+        :content_types => self.content_type || TYPE_YUM
     })
   end
 
@@ -96,7 +97,7 @@ class Glue::Pulp::Repo
         search_args.any?{ |attr,value| group_attrs[attr] != value }
       end
     end
-    groups
+    groups.values
   end
 
   def package_group_categories search_args = {}
@@ -106,11 +107,11 @@ class Glue::Pulp::Repo
         search_args.any?{ |attr,value| category_attrs[attr] != value }
       end
     end
-    categories
+    categories.values
   end
 
   def clone_id(environment)
-    Glue::Pulp::Repo.repo_id(self.product.cp_id, self.name, environment.name,environment.organization.name)
+    Glue::Pulp::Repo.repo_id(self.product.name, self.name, environment.name,environment.organization.name)
   end
 
   #is the repo cloned in the specified environment
@@ -141,20 +142,8 @@ class Glue::Pulp::Repo
     Pulp::Repository.packages_by_nvre id, name, version, release, epoch
   end
 
-  def find_latest_package_by_name name
-    latest_pack = nil
-
-    packages = Pulp::Repository.packages_by_name id, name
-    packages.each do |pack|
-      pack = pack.with_indifferent_access
-      if (latest_pack.nil?) or
-         (pack[:epoch] > latest_pack[:epoch]) or
-         (pack[:epoch] == latest_pack[:epoch] and pack[:release] > latest_pack[:release]) or
-         (pack[:epoch] == latest_pack[:epoch] and pack[:release] == latest_pack[:release] and pack[:version] > latest_pack[:version])
-        latest_pack = pack
-      end
-    end
-    latest_pack
+  def find_latest_packages_by_name name
+    Katello::PackageUtils.find_latest_packages(Pulp::Repository.packages_by_name(id, name))
   end
 
   def has_erratum? id
@@ -262,8 +251,8 @@ class Glue::Pulp::Repo
     Product.find_by_cp_id!(get_groupid_param 'product')
   end
 
-  def self.repo_id product_cp_id, repo_name, env_name, organization_name
-    [product_cp_id, repo_name, env_name, organization_name].compact.join("-").gsub(/[^-\w]/,"_")
+  def self.repo_id product_name, repo_name, env_name, organization_name
+    [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
   def self.find(id)

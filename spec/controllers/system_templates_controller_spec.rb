@@ -149,26 +149,35 @@ describe SystemTemplatesController do
 
         it "should return succesfully being blank" do
           controller.should_receive(:notice)
-          put :update_content, :id=>@system_template_1.id, :packages=>[], :products=>[]
+          put :update_content, :id=>@system_template_1.id, :packages=>[], :products=>[], :package_groups=>[]
           response.should be_success
         end
 
         it "should return succesfully with packages and products" do
           pkg1 = {:name=>"FOO"}
           prd1 = {:name=>"FOO", :id=>"3"}
+          pkg_grp1 = {:name=>"TestGroup"}
+
           prod = Product.new(:environment=>Organization.first.locker, :name=>"FOO")
           prod.stub(:save)
           prod.stub(:save!)
           Product.stub(:find).and_return(prod)
           Product.stub(:readable).and_return(Product)
+
           stp = SystemTemplatePackage.new(:system_template=>@system_template_1, :package_name=>"FOO")
           stp.stub(:valid?).and_return(true)
-
           SystemTemplatePackage.stub(:new).and_return(stp)
 
+          stpg = SystemTemplatePackGroup.new(:system_template=>@system_template_1, :name=>"TestGroup")
+          stpg.stub(:valid?).and_return(true)
+          SystemTemplatePackGroup.stub(:new).and_return(stpg)
+
           controller.should_receive(:notice)
-          put :update_content, :id=>@system_template_1.id, :packages=>[pkg1], :products=>[prd1]
+          put :update_content, :id=>@system_template_1.id, :packages=>[pkg1], :products=>[prd1], :package_groups=>[pkg_grp1]
           response.should be_success
+
+          SystemTemplate.find(@system_template_1.id).package_groups.length.should == 1
+          SystemTemplate.find(@system_template_1.id).packages.length.should == 1
         end
       end
     end

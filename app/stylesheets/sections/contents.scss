@@ -43,9 +43,14 @@
   #remove_template_icon {
     @include action-icon($circle_x_icon_black);
   }
-
   #save_template_icon {
-    @include action-icon($gear_icon_black);
+    @include action-icon($gears_icon_black);
+  }
+  #download_template_icon {
+    @include action-icon($download_icon_grey);
+    &:hover {
+        @include action-icon($download_icon_black);
+    }
   }
 
 
@@ -158,12 +163,20 @@
     background: $rh_product_icon;
   }
   .progress {
-    position: relative;
+    position: absolute;
     display: block;
     height: 16px;
     display: block !important;
+    left: 0;
+    width: 100px;
+  }
+  .cancel {
+    position: absolute;
+    right: 0;
+    top: 2px;
   }
   .products {
+    position: relative;
     input[type="checkbox"],input[type="radio"] {
       margin: 3px;
       float: left;
@@ -171,21 +184,29 @@
     ul {
       margin: 0;
       padding: 0 !important;
+      position: relative;
       li {
         margin: 0;
         padding: 0 !important;
         clear: both;
+        position: relative;
+        min-height: 20px;
+        height: 20px;
         input[type="checkbox"], .products input[type="radio"] {
           margin-right: 23px;
         }
       }
+    }
+    div{
+        position: relative;
+        min-height: 20px;
     }
     .repo div{
       padding-top: 3px;
     }
     .max_width {
       word-wrap:break-word;
-      max-width: 100px;
+      max-width: 120px;
     }
   }
   #plans {
