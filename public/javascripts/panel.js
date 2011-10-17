@@ -345,6 +345,7 @@ KT.panel = (function($){
             var len = $('.block.active').length;
             //update the select
             $('#select-result').html(len + i18n.items_selected).effect("highlight", {}, 200);
+            actions.resetActions(len);
             return len;
         },
         getSelected = function() {
@@ -503,7 +504,9 @@ KT.panel = (function($){
                     var action = $(this);
                     var options = action.find(".options");
                     action.find("a").click(function() {
-                        options.show();
+                        if (!action.hasClass("disabled")) {
+                            options.show();
+                        }
                     });
                     action.find(".cancel").click(function() {
                         if ($(this).hasClass("disabled")){return}
@@ -551,15 +554,35 @@ KT.panel = (function($){
                  *    error_cb(data, selected_ids)
                  *    url      //URL for ajax call
                  *    method   //METHOD for ajax call
+                 *    unselected_action // true if the action is 'doable' even if 
                  *    ajax_cb(id_list, success_cb, error_cb)  //To manually do the ajax call yourself
                  *
                  */
               action_list[name] = params;
+            },
+            resetActions = function(num) {
+              $.each(action_list, function(name, params){
+                  if(!params.unselected_action) {
+                    var div = $("[data-id=" + name + "]");
+                    if (num > 0) {
+                        console.log(name);
+                        console.log($("#" + name));
+                        div.removeClass("disabled");
+                    }
+                    else {
+                        console.log(name);
+                        console.log($("#" + name));
+                        div.addClass("disabled");
+                    }
+                  }
+              });
+
             };
 
             return {
                 registerAction: registerAction,
-                registerDefaultActions: registerDefaultActions
+                registerDefaultActions: registerDefaultActions,
+                resetActions: resetActions
             }
         })();
 	
