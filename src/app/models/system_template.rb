@@ -46,6 +46,7 @@ class SystemTemplate < ActiveRecord::Base
   lazy_accessor :parameters, :initializer => lambda { init_parameters }, :unless => lambda { false }
 
   before_validation :attrs_to_json
+  after_initialize :save_content_state
   before_save :update_revision
   before_destroy :check_children
 
@@ -86,21 +87,23 @@ class SystemTemplate < ActiveRecord::Base
     json["parameters"].each_pair {|k,v| self.parameters[k] = v } if json["parameters"]
   end
 
-
-  def string_export
+  def hash_export
     tpl = {
       :name => self.name,
       :revision => self.revision,
       :packages => self.packages.map(&:nvrea),
       :products => self.products.map(&:name),
-      :parameters => ActiveSupport::JSON.decode(self.parameters_json),
+      :parameters => ActiveSupport::JSON.decode(self.parameters_json || "{}"),
       :package_groups => self.package_groups.map(&:name),
       :package_group_categories => self.pg_categories.map(&:name),
     }
     tpl[:description] = self.description if not self.description.nil?
     tpl[:parent] = self.parent.name if not self.parent.nil?
+    tpl
+  end
 
-    tpl.to_json
+  def string_export
+    self.hash_export.to_json
   end
 
 
@@ -121,7 +124,7 @@ class SystemTemplate < ActiveRecord::Base
     else
       package = self.packages.find(:first, :conditions => {:package_name => package_name})
     end
-    package.destroy
+    self.packages.delete(package)
   end
 
   def add_product product_name
@@ -137,7 +140,6 @@ class SystemTemplate < ActiveRecord::Base
   def remove_product product_name
     product = self.environment.products.find_by_name(product_name)
     self.products.delete(product)
-    save!
   rescue ActiveRecord::RecordInvalid
     raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{product_name}.")
   end
@@ -155,7 +157,6 @@ class SystemTemplate < ActiveRecord::Base
   def remove_product_by_cpid cp_id
     product = self.environment.products.find_by_cp_id(cp_id)
     self.products.delete(product)
-    save!
   rescue ActiveRecord::RecordInvalid
     raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{cp_id}.")
   end
@@ -180,7 +181,7 @@ class SystemTemplate < ActiveRecord::Base
     if package_group == nil
       raise Errors::TemplateContentException.new(_("Package group '%s' not found in this template.") % pg_name)
     end
-    package_group.delete
+    self.package_groups.delete(package_group)
   end
 
   def add_pg_category pg_cat_name
@@ -192,7 +193,7 @@ class SystemTemplate < ActiveRecord::Base
     if pg_category == nil
       raise Errors::TemplateContentException.new(_("Package group category '%s' not found in this template.") % pg_cat_name)
     end
-    pg_category.delete
+    self.pg_categories.delete(pg_category)
   end
 
   def to_json(options={})
@@ -348,13 +349,31 @@ class SystemTemplate < ActiveRecord::Base
     self.parameters_json = self.parameters.to_json
   end
 
+  def get_content_state
+    content = self.hash_export
+    content.delete(:name)
+    content.delete(:description)
+    content.delete(:revision)
+    content
+  end
+
+  def save_content_state
+    @old_content = self.get_content_state
+  end
+
+  def content_changed?
+    old_content_json     = @old_content.to_json
+    current_content_json = self.get_content_state.to_json
+    not (old_content_json.eql? current_content_json)
+  end
+
   def update_revision
     self.revision = 1 if self.revision.nil?
 
     #increase revision number only on content attribute change
-    if not self.new_record?
-      content_changes = @changed_attributes.select {|k, v| (k!=:name && k!=:description && k!=:revision) }
-      self.revision += 1 if not content_changes.empty?
+    if not self.new_record? and self.content_changed?
+      self.revision += 1
+      self.save_content_state
     end
   end
 
