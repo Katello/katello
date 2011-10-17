@@ -393,7 +393,9 @@ module Glue::Pulp::Repos
           #repo is already cloned, so lets just re-sync it from its parent
           async_tasks << repo.get_clone(to_env).sync
         else
-          async_tasks << repo.promote(to_env, self)
+          to_env.prior == locker ?
+              async_tasks << repo.promote(to_env, self, filters.collect {|p| p.pulp_id}) :
+              async_tasks << repo.promote(to_env, self)
 
           new_repo_id = repo.clone_id(to_env)
           new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(repo)

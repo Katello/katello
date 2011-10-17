@@ -239,7 +239,7 @@ class Glue::Pulp::Repo
     sync_history_item['state'] == 'finished'
   end
 
-  def promote(to_environment, product)
+  def promote(to_environment, product, filters = [])
     cloned = Glue::Pulp::Repo.new
     cloned.id = self.clone_id(to_environment)
     cloned.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_environment)
@@ -247,7 +247,7 @@ class Glue::Pulp::Repo
     cloned.name = name
     cloned.feed = feed
     cloned.groupid = Glue::Pulp::Repos.groupid(product, to_environment)
-    [Pulp::Repository.clone_repo(self, cloned, "parent", product.filters.collect {|p| p.pulp_id})]
+    [Pulp::Repository.clone_repo(self, cloned, "parent", filters)]
   end
 
   def organization
