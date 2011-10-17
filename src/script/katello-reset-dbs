@@ -7,6 +7,13 @@ fi
 
 SRV=/sbin/service
 
+if [ -f /etc/init.d/katello ]; then
+  . /etc/init.d/katello
+else
+   echo "Katello does not seem to be installed on this machine" 1>&2
+   exit 1
+fi
+
 echo -e "\n"
 echo '***********************************************************'
 echo "THIS SCRIPT WILL ERASE KATELLO / CANDLEPIN / PULP DATABASES"
@@ -82,11 +89,10 @@ echo "Starting Candlepin instance"
 start_unless_running tomcat6
 
 echo "Initializing Katello database"
-rm -f /var/lib/katello/initdb_done
-su - postgres -c 'dropdb katello; dropuser katello; createuser -dls katello --no-password'
-su - postgres -c "psql --command \"alter user katello with password 'katello'\""
-su - postgres -c "PGPASSWORD=katello createdb -U katello katello"
-$SRV katello initdb
+# cannot use initdb for this (BZ 745542)
+pushd $KATELLO_HOME >/dev/null
+RAILS_ENV=$KATELLO_ENV rake db:truncate db:seed --trace 2>&1
+popd >/dev/null
 
 echo "Starting Katello instance"
 $SRV katello start
