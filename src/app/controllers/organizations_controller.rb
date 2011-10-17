@@ -47,7 +47,7 @@ class OrganizationsController < ApplicationController
 
   def index
     begin
-      @organizations = Organization.readable.search_for(params[:search]).limit(current_user.page_size)
+      @organizations = Organization.readable.search_for(params[:search]).order('lower(name)').limit(current_user.page_size)
       retain_search_history
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -58,7 +58,7 @@ class OrganizationsController < ApplicationController
 
   def items
     start = params[:offset]
-    @organizations = Organization.readable.search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @organizations = Organization.readable.search_for(params[:search]).order('lower(name)').limit(current_user.page_size).offset(start)
     render_panel_items @organizations, @panel_options
   end
 

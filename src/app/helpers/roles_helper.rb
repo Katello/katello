@@ -11,7 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module RolesHelper
-  include BreadcrumbHelper::RolesBreadcrumbs
+
+  include BreadcrumbHelper
+  include RolesBreadcrumbs
 
   def closed_id(f)
     "closed_#{perm_id(f)}"
