@@ -163,9 +163,9 @@ class Update(ProviderAction):
         if self.has_option('url'):
             url = self.get_option('url')
             url_parsed = urlparse(url)
-            if not url_parsed.scheme in ["http","https"]:
+            if not url_parsed.scheme in ["http","https"]:                       # pylint: disable=E1101
                 self.add_option_error(_('Option --url has to start with http:// or https://'))
-            elif not url_parsed.netloc:
+            elif not url_parsed.netloc:                                         # pylint: disable=E1101
                 self.add_option_error(_('Option --url is not in a valid format'))
 
 
