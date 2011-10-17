@@ -19,9 +19,12 @@ class ErrataAPI(KatelloAPI):
     """
     Connection class to access errata calls
     """
-    def errata_by_repo(self, repoId):
+    def errata_by_repo(self, repoId, type=None):
         path = "/api/repositories/%s/errata" % repoId
-        pack = self.server.GET(path)[1]
+        params = {}
+        if not type == None:
+            params['type'] = type
+        pack = self.server.GET(path, params)[1]
         return pack
 
     def errata(self, errata_id):

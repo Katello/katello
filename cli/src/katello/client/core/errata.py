@@ -52,6 +52,10 @@ class List(ErrataAction):
         self.parser.add_option('--product', dest='product',
                       help=_("product name eg: fedora-14"))
 
+
+        self.parser.add_option('--type', dest='type',
+                      help=_("filter errata by type eg: enhancements"))
+
     def check_options(self):
         if not self.has_option('repo_id'):
             self.require_option('repo')
@@ -75,7 +79,7 @@ class List(ErrataAction):
                 return os.EX_DATAERR
             repoId = repo["id"]
 
-        errata = self.api.errata_by_repo(repoId)
+        errata = self.api.errata_by_repo(repoId, type=self.get_option('type'))
 
         self.printer.setHeader(_("Errata List"))
         self.printer.printItems(errata)
