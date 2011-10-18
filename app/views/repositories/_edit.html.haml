@@ -15,7 +15,7 @@
   %fieldset
     .grid_2.ra
       %label #{_("Name")}:
-    .grid_5.la#repo_name{'name' => 'repo[name]', 'data-url' => provider_path(@provider.id), :class=>("edit_providername" if editable)} #{@repository[:name]}
+    .grid_5.la#repo_name{'name' => 'repo[name]', 'data-url' => provider_path(@provider.id), :class=>editable_class(editable)} #{@repository[:name]}
   
   %fieldset
     .grid_2.ra
