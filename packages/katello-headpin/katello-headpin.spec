@@ -28,6 +28,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       katello-common
 Requires:       katello-glue-candlepin
+Conflicts:      katello
 
 BuildArch: noarch
 
@@ -47,12 +48,11 @@ rm -rf src
 rm -rf %{buildroot}
 #prepare dir structure
 install -d -m0755 %{buildroot}%{homedir}
+install -d -m0755 %{buildroot}%{homedir}/config
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{katello_name}
-install -d -m0755 %{buildroot}%{_localstatedir}/log/%{katello_name}
 
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 644 config/%{katello_name}.yml %{buildroot}%{_sysconfdir}/%{katello_name}/%{katello_name}.yml
-install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{katello_name}/environment.rb
 
 #overwrite config files with symlinks to /etc/katello
 ln -svf %{_sysconfdir}/%{katello_name}/%{katello_name}.yml %{buildroot}%{homedir}/config/%{katello_name}.yml
@@ -66,11 +66,6 @@ rm -rf %{buildroot}%{homedir}/%{name}.spec
 rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
-
-#remove development tasks
-rm %{buildroot}%{homedir}/lib/tasks/rcov.rake
-rm %{buildroot}%{homedir}/lib/tasks/yard.rake
-rm %{buildroot}%{homedir}/lib/tasks/hudson.rake
 
 %clean
 rm -rf %{buildroot}
@@ -89,7 +84,6 @@ and then run katello-configure to configure everything.
 
 %files
 %defattr(-,root,root)
-%doc README LICENSE doc/
 %config(noreplace) %{_sysconfdir}/%{katello_name}/%{katello_name}.yml
 %{homedir}
 
