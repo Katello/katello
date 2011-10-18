@@ -39,4 +39,9 @@ module OrchestrationHelper
     Pulp::Roles.stub!(:remove).and_return(true)
   end
 
+  def disable_filter_orchestration
+    Pulp::Filter.stub!(:create).and_return({})
+    Pulp::Filter.stub!(:destroy).and_return(200)
+  end
+
 end
