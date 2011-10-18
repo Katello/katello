@@ -1,0 +1,48 @@
+
+=head1 NAME
+
+katello-configure - Katello project configurator
+
+=head1 SYNOPSIS
+
+    katello-configure
+        [ -h | --help ]
+	[ --only-show-config ]
+	CLI_OPTIONS
+
+=head1 DESCRIPTION
+
+The B<katello-configure> program will configure all aspects of the
+Katello project installation and its components. It can be run either
+with answer file which would contain the configuration values, or
+the configuration values can be specified as command line parameters
+on the command line. The values from user answer file override the
+default configuration values, and they are further overriden by
+options specified on the command line.
+
+=head1 COMMAND LINE PARAMETERS
+
+=over 4
+
+CLI_OPTIONS_LONG
+
+=item --only-show-config
+
+Only print the resulting configuration and exit, do not execute any of
+the configuration steps. The output is what would be stored in the
+C</etc/katello/katello-configure.conf> file, list of non-options
+collected from user answer files and command line options.
+
+=item --help, -h
+
+Display short summary of all options.
+
+=back
+
+=head1 VERSION
+
+THE_VERSION
+
+=head1 SEE ALSO
+
+katello(8), katello(1)

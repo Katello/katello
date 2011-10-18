@@ -101,6 +101,13 @@ module Glue::Candlepin::Consumer
       raise e
     end
 
+    def get_pool id
+      Candlepin::Pool.get id
+    rescue => e
+      Rails.logger.debug e.backtrace.join("\n\t")
+      raise e
+    end
+
     def subscribe pool, quantity = nil
       Rails.logger.info "Subscribing to pool '#{pool}' for : #{name}"
       Candlepin::Consumer.consume_entitlement self.uuid, pool, quantity
@@ -109,13 +116,14 @@ module Glue::Candlepin::Consumer
       raise e
     end
 
-    def unsubscribe pool
-      Rails.logger.info "Unsubscribing to pool '#{pool}' for : #{name}"
-      ents = self.entitlements.collect {|ent| ent["id"] if ent["pool"]["id"] == pool}.compact
-      raise ArgumentError, "Not subscribed to the pool #{pool}" if ents.count < 1
-      ents.each { |ent|
-        Candlepin::Consumer.remove_entitlement self.uuid, ent        
-      }
+    def unsubscribe entitlement
+      Rails.logger.info "Unsubscribing from entitlement '#{entitlement}' for : #{name}"
+      Candlepin::Consumer.remove_entitlement self.uuid, entitlement
+      #ents = self.entitlements.collect {|ent| ent["id"] if ent["pool"]["id"] == pool}.compact
+      #raise ArgumentError, "Not subscribed to the pool #{pool}" if ents.count < 1
+      #ents.each { |ent|
+      #  Candlepin::Consumer.remove_entitlement self.uuid, ent
+      #}
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e

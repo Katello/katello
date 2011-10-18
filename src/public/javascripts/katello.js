@@ -363,7 +363,7 @@ $(document).ready(function (){
     $(".helptip-close").live('click', KT.helptip.handle_open);
 
     // Add a handler for ellipsis
-	$(".one-line-ellipsis").ellipsis();
+	$(".one-line-ellipsis").ellipsis(true);
 
     KT.common.orgSwitcherSetup();
     KT.common.orgFilterSetup();

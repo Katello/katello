@@ -118,19 +118,43 @@ KT.subs = function() {
         var subcheckboxes = $('#subscribe input[type="checkbox"]');
         var total = subcheckboxes.length;
         var checked = 0;
+        var spinner;
+        var of_string;
         subbutton.hide();
 
         subcheckboxes.each(function(){
             $(this).change(function(){
                 if($(this).is(":checked")){
                     checked++;
-                    $(this).parent().parent().parent().find(".ui-spinner").spinner("increment");
+                    spinner = $(this).parent().parent().parent().find(".ui-spinner");
+                    if(spinner.length > 0){
+                        if(spinner.spinner("value") == "0") {
+                            spinner.spinner("increment");
+                        }
+                    }else{
+                        $(this).parent().parent().parent().find(".ui-nonspinner").val(1);
+                        spinner = $(this).parent().parent().parent().find(".ui-nonspinner-label")[0];
+                        if(spinner) {
+                            of_string = "1" + spinner.innerHTML.substr(1);
+                            spinner.innerHTML = of_string;
+                        }
+                    }
                     if(!(subbutton.is(":visible"))){
                         fakesubbutton.fadeOut("fast", function(){subbutton.fadeIn()});
                     }
                 }else{
                     checked--;
-                    $(this).parent().parent().parent().find(".ui-spinner").spinner("decrement");
+                    spinner = $(this).parent().parent().parent().find(".ui-spinner");
+                    if(spinner.length > 0){
+                        spinner.spinner("value", 0);
+                    }else{
+                        $(this).parent().parent().parent().find(".ui-nonspinner").val(0);
+                        spinner = $(this).parent().parent().parent().find(".ui-nonspinner-label")[0];
+                        if(spinner) {
+                            of_string = "0" + spinner.innerHTML.substr(1);
+                            spinner.innerHTML = of_string;
+                        }
+                    }
                     if((subbutton.is(":visible")) && checked == 0){
                         subbutton.fadeOut("fast", function(){fakesubbutton.fadeIn()});
                     }

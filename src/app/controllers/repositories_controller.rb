@@ -52,7 +52,7 @@ class RepositoriesController < ApplicationController
       # Bundle these into one call, perhaps move to Provider
       # Also fix the hard coded yum
       @product.add_new_content(repo_params[:name], repo_params[:feed], 'yum')
-      @product.save
+      @product.save!
 
     rescue Exception => error
       Rails.logger.error error.to_s
