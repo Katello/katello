@@ -47,7 +47,7 @@ module Glue::Candlepin::Product
     product.productContent_will_change!
     product.productContent = product.build_productContent(productContent_attrs)
     product.orchestration_for = :import_from_cp
-    product.save
+    product.save!
 
   rescue => e
     Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
@@ -246,7 +246,6 @@ module Glue::Candlepin::Product
         when :import_from_cp
           queue.create(:name => "delete imported content from locker environment: #{self.name}", :priority =>2, :action => [self, :remove_imported_content])
           #PROD TODO: delete content that has no repos assigned
-          #PROD TODO: delete not assigned products
       end
     end
 
