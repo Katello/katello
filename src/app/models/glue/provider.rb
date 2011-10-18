@@ -157,16 +157,29 @@ module Glue::Provider
     end
 
     def queue_import_manifest zip_file_path
-      queue.create(:name => "import manifest #{zip_file_path} for owner: #{self.organization.name}", :priority => 3, :action => [self, :owner_import, zip_file_path])
-      queue.create(:name => "import of products in manifest #{zip_file_path}", :priority => 5, :action => [self, :queue_pool_product_creation])
+      queue.create(:name => "import manifest #{zip_file_path} for owner: #{self.organization.name}",  :priority => 3, :action => [self, :owner_import, zip_file_path])
+      queue.create(:name => "import of products in manifest #{zip_file_path}",                        :priority => 5, :action => [self, :import_products_from_cp])
+      queue.create(:name => "delete imported products not assigned to any owner #{zip_file_path}",    :priority => 6, :action => [self, :delete_not_assigned_products])
+      #PROD TODO: delete content that has no repos assigned
     end
 
-    def queue_pool_product_creation
+    def import_products_from_cp
       added_products.each do |product_attrs|
         product = Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
           p.provider = self
           p.environments << self.organization.locker
         end
+      end
+    end
+
+    def delete_not_assigned_products
+      not_assigned_products.each do |product_attrs|
+
+        product_attrs['productContent'].each do |pc|
+          Candlepin::Product.remove_content product_attrs['id'], pc[:content][:id]
+        end unless product_attrs['productContent'].nil?
+
+        Candlepin::Product.destroy product_attrs['id']
       end
     end
 
@@ -186,7 +199,7 @@ module Glue::Provider
     end
 
     def not_assigned_products
-      all_product_existing_in_katello_ids = Products.all(:select => "cp_id").map(&:cp_id)
+      all_product_existing_in_katello_ids = Product.all(:select => "cp_id").map(&:cp_id)
       all_product_existing_in_cp_ids = get_all_product_ids
 
       product_ids = (all_product_existing_in_cp_ids - all_product_existing_in_katello_ids)
