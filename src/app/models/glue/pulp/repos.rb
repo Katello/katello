@@ -20,6 +20,8 @@ module Glue::Pulp::Repos
     base.class_eval do
       before_save :save_repos_orchestration
       before_destroy :destroy_repos_orchestration
+
+      has_and_belongs_to_many :filters, :uniq => true, :before_add => :add_filters_orchestration, :before_remove => :remove_filters_orchestration
     end
   end
 
@@ -266,16 +268,6 @@ module Glue::Pulp::Repos
       repo.create
     end
 
-    def add_filters filter_ids
-      filters_will_change!
-      filters << package_ids
-    end
-
-    def remove_filters filter_ids
-      filters_will_change!
-      filters = filters - filter_ids
-    end
-
     def setup_sync_schedule
       if self.sync_plan_id_changed?
           self.productContent.each do |pc|
@@ -372,7 +364,6 @@ module Glue::Pulp::Repos
           queue.create(:name => "setting up pulp sync schedule for product: #{self.name}",
                               :priority => 7, :action => [self, :setup_sync_schedule]) if self.sync_plan_id_changed?
         when :update
-          enqueue_filter_updates if filters_changed?
           queue.create(:name => "update pulp repositories for product: #{self.name}", :priority => 6, :action => [self, :update_repos])
           queue.create(:name => "setting up pulp sync schedule for product: #{self.name}",
                               :priority => 7, :action => [self, :setup_sync_schedule]) if self.sync_plan_id_changed?
@@ -383,6 +374,34 @@ module Glue::Pulp::Repos
 
     def destroy_repos_orchestration
       queue.create(:name => "delete pulp repositories for product: #{self.name}", :priority => 6, :action => [self, :del_repos])
+    end
+
+    def add_filters_orchestration(added_filter)
+      return true unless environments.size > 1 and promoted_to?(locker.successor)
+
+      self.repos(locker.successor).each do |r|
+        queue.create(
+            :name => "add filter '#{added_filter.pulp_id}' to repo: #{r.id}",
+            :priority => 5,
+            :action => [self, :set_filter, r, added_filter.pulp_id])
+      end
+
+      @orchestration_for = :add_filter
+      on_save
+    end
+
+    def remove_filters_orchestration(removed_filter)
+      return true unless environments.size > 1 and promoted_to?(locker.successor)
+
+      self.repos(locker.successor).each do |r|
+        queue.create(
+            :name => "remove filter '#{removed_filter.pulp_id}' from repo: #{r.id}",
+            :priority => 5,
+            :action => [self, :del_filter, r, removed_filter.pulp_id])
+      end
+
+      @orchestration_for = :remove_filter
+      on_save
     end
 
     protected
@@ -418,43 +437,12 @@ module Glue::Pulp::Repos
       async_tasks.flatten(1)
     end
 
-    def set_filters repo, package_ids
-      repo.add_filters package_ids
+    def set_filter repo, filter_id
+      repo.add_filters [filter_id]
     end
 
-    def del_filters repo, package_ids
-      repo.remove_filters package_ids
-    end
-
-    def enqueue_filter_updates
-      return true unless environments.size > 1 and promoted_to?(locker.successor)
-
-      old_filters = filters_change[0].nil? ? [] : filters_change[0]
-      new_filters = filters_change[1]
-
-      deleted_filters = old_filters - new_filters
-      added_filters = new_filters - old_filters
-
-      self.repos(locker).each do |r|
-        queue.create(
-            :name => "add filters to repo: #{r.id}",
-            :priority => 4,
-            :action => [self, :set_filters, r, added_filters]) unless added_filters.empty?
-
-        queue.create(
-            :name => "remove filters from repo: #{r.id}",
-            :priority => 5,
-            :action => [self, :del_filters, r, added_filters]) unless deleted_filters.empty?
-      end
-    end
-
-    def filters_was
-      Product.find(id).filters
-    end
-
-    def filters_changed?
-      was = filters_was
-      (was - filters).size == 0 && (filters - was).size == 0
+    def del_filter repo, filter_id
+      repo.remove_filters [filter_id]
     end
   end
 end

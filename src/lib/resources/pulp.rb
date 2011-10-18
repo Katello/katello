@@ -292,12 +292,12 @@ module Pulp
 
       def add_filters repo_id, filter_ids
         response =  post(repository_path + repo_id + "/add_filters/", {:filters => filter_ids}.to_json, self.default_headers)
-        JSON.parse(response.body)
+        response.body
       end
 
       def remove_filters repo_id, filter_ids
-        response =  post(repository_path + repo_id + "/remove_filters/", {:filters => filter_ids}, self.default_headers)
-        JSON.parse(response.body)
+        response =  post(repository_path + repo_id + "/remove_filters/", {:filters => filter_ids}.to_json, self.default_headers)
+        response.body
       end
     end
   end

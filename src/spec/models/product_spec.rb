@@ -297,32 +297,21 @@ describe Product do
       Glue::Pulp::Repos.stub!(:clone_repo_path).and_return("cloned_path")
 
       @product.stub!(:repos).and_return([@repo])
+
+      @product.filters += @filter1
+      @product.filters += @filter2
     end
 
-    context "to a product that hasn't been promoted" do
-      before(:each) do
-        @product.filters << @filter1
-        @product.filters << @filter2
-        @product.save!
-      end
+    it "should result in persisted filter-product association" do
+      p = Product.find(@product.id)
+      p.filters.should include(@filter1)
+      p.filters.should include(@filter2)
 
-      it "should result in persisted filter-product association" do
-        p = Product.find(@product.id)
-        p.filters.should include(@filter1)
-        p.filters.should include(@filter2)
-
-        @filter1.products.should include(@product)
-        @filter2.products.should include(@product)
-      end
+      @filter1.products.should include(@product)
+      @filter2.products.should include(@product)
     end
 
     context "to a product being promoted" do
-      before(:each) do
-        @product.filters << @filter1
-        @product.filters << @filter2
-        @product.save!
-      end
-
       it "should result in filters applied during repositories cloning" do
         Pulp::Repository.should_receive(:clone_repo).once.with(anything, anything, anything, @product.filters.collect(&:pulp_id)).and_return([])
         @product.promote @organization.locker, @environment1
@@ -335,15 +324,13 @@ describe Product do
     end
 
     context "to an already promoted product" do
-      it "should result in persisted filter-product association" do
-
+      before(:each) do
+        @product.stub!(:promoted_to?).and_return(true)
       end
 
       it "should result in filters being applied to the repositories" do
 
       end
-
-      it "should result in removal of filtered packages from the repositories"
     end
   end
 end
