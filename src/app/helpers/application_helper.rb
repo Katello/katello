@@ -203,4 +203,11 @@ module ApplicationHelper
   def generate_details_url(path, id, entity )
      path + "?search=id%3D#{id}#panel=#{entity}_#{id}"
   end
+
+  # used for jeditable fields
+  def editable_class(editable = false)
+    return "editable edit_panel_element multiline" if editable
+    "multiline"
+  end
+
 end
