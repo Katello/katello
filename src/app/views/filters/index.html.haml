@@ -1,0 +1,13 @@
+= javascript :edit, :form, :provider
+= include_common_i18n
+= include_editable_i18n
+
+
+.grid_16
+  = help_tip_button
+  = help_tip(_("Package Filters allow you to blacklist packages from being promoted into subsequent environments. " + |
+             "Simply create a filter and add either a package name or regular expression to the filter.  " + |
+             "You can associate the filter with products or individual repositories on the __ page.")) |
+
+.grid_16#main
+  = two_panel(@filters, @panel_options)
