@@ -362,7 +362,7 @@ Src::Application.routes.draw do
 
     resources :activation_keys, :only => [:show, :update, :destroy]
     resources :packages, :only => [:show]
-    resources :errata, :only => [:show]
+    resources :errata, :only => [:index, :show]
     resources :distributions, :only => [:show]
 
     resources :users

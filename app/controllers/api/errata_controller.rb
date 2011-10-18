@@ -20,9 +20,8 @@ class Api::ErrataController < Api::ApiController
   skip_before_filter :authorize
 
   def index
-    repo = Glue::Pulp::Repo.find(params[:repository_id])
-    filter = params.slice(:type)
-    render :json => repo.errata(filter)
+    filter = params.slice(:repoid, :type).symbolize_keys
+    render :json => Glue::Pulp::Errata.filter(filter)
   end
 
   def show

@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require_dependency "resources/pulp"
+require 'set'
 
 class Glue::Pulp::Errata
 
@@ -25,10 +26,22 @@ class Glue::Pulp::Errata
     params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
   end
 
-  def self.find id
+  def self.find(id)
     Glue::Pulp::Errata.new(Pulp::Errata.find(id))
   end
-    
+
+  def self.filter(filter)
+    errata = Pulp::Errata.filter(filter.except(:repoid))
+
+    if repoid = filter[:repoid]
+      repo = Glue::Pulp::Repo.new(:id => repoid)
+      repo_errata_ids = Set.new(repo.errata.map { |e| e.id })
+      errata = errata.find_all {|e| repo_errata_ids.include?(e[:id]) }
+    end
+
+    errata
+  end
+
 #   def self.find id
 #     case (id.to_i % 4).to_s 
 #     when "0"

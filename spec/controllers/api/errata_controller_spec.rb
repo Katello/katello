@@ -27,17 +27,17 @@ describe Api::ErrataController do
     end
 
     it "should call pulp find repo api" do
-      Glue::Pulp::Repo.should_receive(:find).once.with(1).and_return(@repo)
-      @repo.should_receive(:errata)
+      Glue::Pulp::Errata.should_receive(:filter).once.with(:repoid => 1).and_return([])
 
-      get 'index', :repository_id => 1
+      get 'index', :repoid => 1
     end
 
     it "should accept type as filter attribute" do
-      Glue::Pulp::Repo.should_receive(:find).once.with(1).and_return(@repo)
-      @repo.should_receive(:errata).with(hash_including(:type => 'security'))
+      Glue::Pulp::Errata.should_receive(:filter).once.with(:repoid => 1, :type => 'security').and_return([])
+      get 'index', :repoid => 1, :type => 'security'
 
-      get 'index', :repository_id => 1, :type => 'security'
+      Glue::Pulp::Errata.should_receive(:filter).once.with(:type => 'security').and_return([])
+      get 'index', :type => 'security'
     end
   end
 
