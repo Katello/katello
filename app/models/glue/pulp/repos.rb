@@ -22,6 +22,8 @@ module Glue::Pulp::Repos
     base.class_eval do
       before_save :save_repos_orchestration
       before_destroy :destroy_repos_orchestration
+
+      has_and_belongs_to_many :filters, :uniq => true, :before_add => :add_filters_orchestration, :before_remove => :remove_filters_orchestration
     end
   end
 
@@ -150,6 +152,10 @@ module Glue::Pulp::Repos
         return true if repo.has_erratum? id
       end
       false
+    end
+
+    def promoted_to? target_env
+      target_env.products.include? self
     end
 
     def sync
@@ -284,18 +290,6 @@ module Glue::Pulp::Repos
       end
     end
 
-    def add_filters filter_ids
-      repos(locker).each do |r|
-        r.add_filters filter_ids
-      end
-    end
-
-    def remove_filters filter_ids
-      repos(locker).each do |r|
-        r.remove_filters filter_ids
-      end
-    end
-
     def set_repos
       self.productContent.collect do |pc|
         cert = self.certificate
@@ -399,6 +393,34 @@ module Glue::Pulp::Repos
       queue.create(:name => "delete pulp repositories for product: #{self.name}", :priority => 6, :action => [self, :del_repos])
     end
 
+    def add_filters_orchestration(added_filter)
+      return true unless environments.size > 1 and promoted_to?(locker.successor)
+
+      self.repos(locker.successor).each do |r|
+        queue.create(
+            :name => "add filter '#{added_filter.pulp_id}' to repo: #{r.id}",
+            :priority => 5,
+            :action => [self, :set_filter, r, added_filter.pulp_id])
+      end
+
+      @orchestration_for = :add_filter
+      on_save
+    end
+
+    def remove_filters_orchestration(removed_filter)
+      return true unless environments.size > 1 and promoted_to?(locker.successor)
+
+      self.repos(locker.successor).each do |r|
+        queue.create(
+            :name => "remove filter '#{removed_filter.pulp_id}' from repo: #{r.id}",
+            :priority => 5,
+            :action => [self, :del_filter, r, removed_filter.pulp_id])
+      end
+
+      @orchestration_for = :remove_filter
+      on_save
+    end
+
     protected
     def promote_repos repos, to_env
       async_tasks = []
@@ -407,7 +429,9 @@ module Glue::Pulp::Repos
           #repo is already cloned, so lets just re-sync it from its parent
           async_tasks << repo.get_clone(to_env).sync
         else
-          async_tasks << repo.promote(to_env, self)
+          to_env.prior == locker ?
+              async_tasks << repo.promote(to_env, self, filters.collect {|p| p.pulp_id}) :
+              async_tasks << repo.promote(to_env, self)
 
           new_repo_id = repo.clone_id(to_env)
           new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(repo)
@@ -430,5 +454,12 @@ module Glue::Pulp::Repos
       async_tasks.flatten(1)
     end
 
+    def set_filter repo, filter_id
+      repo.add_filters [filter_id]
+    end
+
+    def del_filter repo, filter_id
+      repo.remove_filters [filter_id]
+    end
   end
 end
