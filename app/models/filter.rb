@@ -11,17 +11,37 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Filter < ActiveRecord::Base
+  
+  
   include Glue::Pulp::Filter if (AppConfig.use_cp and AppConfig.use_pulp)
   include Glue
   include Authorization
 
+
   validates :pulp_id, :presence => true
+  validates_presence_of :organization_id
   validates_uniqueness_of :pulp_id, :scope => :organization_id, :message => N_("pulp_id must be unique within one organization")
 
   belongs_to :organization
   has_and_belongs_to_many :products, :uniq => true
 
   scoped_search :on => :name, :complete_value => true, :rename => :'filter.pulp_id'
+  
+  scope :readable, lambda {|org| readable_items(org)}
+
+
+  READ_PERM_VERBS = [:read, :create, :delete]
+
+
+  def readable?
+    User.allowed_to?(READ_PERM_VERBS, :filters, self.id, self.organization)
+  end
+
+  def deletable?
+     User.allowed_to?([:delete, :create], :filters, self.id, self.organization)
+  end
+
+
 
   def self.list_tags org_id
     select('id,pulp_id').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.pulp_id) }
@@ -47,13 +67,19 @@ class Filter < ActiveRecord::Base
     User.allowed_to?(READ_PERM_VERBS, :filters, nil, org)
   end
 
-  def readable?
-    User.allowed_to?(READ_PERM_VERBS, :filters, self.id, self.organization)
+  def self.readable_items org
+    raise "scope requires an organization" if org.nil?
+    resource = :filters
+    verbs = READ_PERM_VERBS
+    if User.allowed_all_tags?(verbs, resource, org)
+       where(:organization_id => org)
+    else
+      where("filter.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+    end
   end
 
-  def deletable?
-     User.allowed_to?([:delete, :create], :filters, self.id, self.organization)
-  end
 
-  READ_PERM_VERBS = [:read, :create, :delete]
 end
+
+
+
