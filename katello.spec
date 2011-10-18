@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.94
+Version:        0.1.95
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -237,6 +237,15 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Oct 18 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.95-1
+- switching to XML vs JSON for template download
+- Errata - packages - list based on name-[epoch:]-version-release.arch
+- 745617 fix for product sync selection
+- tdl - modifying /export to return TDL format
+- tdl - refactoring export_string to export_as_json
+- reset dbs script now correctly load variables
+- 744067 - Promotions - Errata UI - clean up format on Details tab
+
 * Mon Oct 17 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.94-1
 - adding db:truncate rake task
 - templates - spec tests for revisions
