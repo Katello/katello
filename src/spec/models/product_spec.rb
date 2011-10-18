@@ -12,6 +12,7 @@
 
 require 'spec_helper'
 require 'helpers/product_test_data'
+require 'helpers/repo_test_data'
 
 include OrchestrationHelper
 
@@ -279,6 +280,73 @@ describe Product do
        end
      end
 
+    end
+  end
+
+  context "application of filters" do
+    FILTER1_ID = 'filter1'
+    FILTER2_ID = 'filter2'
+    PACKAGE_LIST_1 = ['pckg1', 'pckg2']
+    PACKAGE_LIST_2 = ['pckg3', 'pckg4', 'pckg5']
+
+    before(:each) do
+      disable_product_orchestration
+      disable_filter_orchestration
+
+      @environment1 = KTEnvironment.create!(:name => 'dev', :locker => false, :prior => @organization.locker, :organization => @organization)
+      @environment2 = KTEnvironment.create!(:name => 'prod', :locker => false, :prior => @environment1, :organization => @organization)
+
+      @filter1 = Filter.create!(:pulp_id => FILTER1_ID, :package_list => PACKAGE_LIST_1, :organization => @organization)
+      @filter2 = Filter.create!(:pulp_id => FILTER2_ID, :package_list => PACKAGE_LIST_2, :organization => @organization)
+
+      Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
+      Candlepin::Content.stub!(:create).and_return({:id => ProductTestData::PRODUCT_WITH_CONTENT[:productContent][0].content.id})
+
+      @product = Product.create!(ProductTestData::PRODUCT_WITH_CONTENT)
+
+      @repo = Glue::Pulp::Repo.new(RepoTestData::REPO_PROPERTIES.merge(
+           :clone_ids => [],
+           :groupid => Glue::Pulp::Repos.groupid(@product, @product.locker)
+      ))
+      @repo.stub!(:is_cloned_in?).and_return(false)
+      @repo.stub!(:clone_id).and_return("cloned_repo")
+      Glue::Pulp::Repos.stub!(:clone_repo_path).and_return("cloned_path")
+
+      @product.stub!(:repos).and_return([@repo])
+
+      @product.filters += @filter1
+      @product.filters += @filter2
+    end
+
+    it "should result in persisted filter-product association" do
+      p = Product.find(@product.id)
+      p.filters.should include(@filter1)
+      p.filters.should include(@filter2)
+
+      @filter1.products.should include(@product)
+      @filter2.products.should include(@product)
+    end
+
+    context "to a product being promoted" do
+      it "should result in filters applied during repositories cloning" do
+        Pulp::Repository.should_receive(:clone_repo).once.with(anything, anything, anything, @product.filters.collect(&:pulp_id)).and_return([])
+        @product.promote @organization.locker, @environment1
+      end
+
+      it "filters should be applied to the first environment only" do
+        Pulp::Repository.should_receive(:clone_repo).once.with(anything, anything, anything, []).and_return([])
+        @product.promote @environment1, @environment2
+      end
+    end
+
+    context "to an already promoted product" do
+      before(:each) do
+        @product.stub!(:promoted_to?).and_return(true)
+      end
+
+      it "should result in filters being applied to the repositories" do
+
+      end
     end
   end
 end

@@ -19,6 +19,7 @@ class Filter < ActiveRecord::Base
   validates_uniqueness_of :pulp_id, :scope => :organization_id, :message => N_("pulp_id must be unique within one organization")
 
   belongs_to :organization
+  has_and_belongs_to_many :products, :uniq => true
 
   def self.list_tags org_id
     select('id,pulp_id').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.pulp_id) }
