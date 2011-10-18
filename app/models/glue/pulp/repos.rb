@@ -262,13 +262,15 @@ module Glue::Pulp::Repos
       save!
     end
 
-    def add_repo(name, url)
+    def add_repo(name, url, repo_type)
+      check_for_repo_conflicts(name)
       repo = Glue::Pulp::Repo.new(:id => repo_id(name),
           :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
           :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, name),
           :arch => arch,
           :name => name,
-          :feed => url
+          :feed => url,
+          :content_type => repo_type
       )
       repo.create
     end
@@ -298,6 +300,7 @@ module Glue::Pulp::Repos
 
         substitutions_with_paths.each do |(substitutions, path)|
           feed_url = repository_url(path)
+          #noarch, i386, i686, ppc64, s390x, x86_64
           arch = substitutions["basearch"] || "noarch"
           repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
           repo = Glue::Pulp::Repo.new(:id => repo_id(repo_name),
@@ -336,7 +339,8 @@ module Glue::Pulp::Repos
       added_content.each do |pc|
         if !(self.environments.map(&:name).any? {|name| pc.content.name.include?(name)}) || pc.content.name.include?('Locker')
         Rails.logger.debug "creating repository #{repo_id(pc.content.name)}"
-          self.add_repo(pc.content.name, repository_url(pc.content.contentUrl))
+          #PROD TODO: check add_repo
+          self.add_repo(pc.content.name, repository_url(pc.content.contentUrl), pc.content.type)
         else
           raise "new content was added to environment other than Locker. use promotion instead."
         end
@@ -361,6 +365,7 @@ module Glue::Pulp::Repos
 
     def del_repos
       #destroy all repos in all environmnents
+      Rails.logger.debug "deleting all repositoris in product #{name}"
       self.environments.each do |env|
         self.repos(env).each do |repo|
           repo.destroy
@@ -374,13 +379,11 @@ module Glue::Pulp::Repos
         when :create
           # no repositories are added when a product is created
         when :import_from_cp
-          #PROD TODO: solve orchestration after import
-          #queue.create(:name => "create pulp repositories for product: #{self.name}",      :priority => 3, :action => [self, :set_repos])
-          #queue.create(:name => "setting up pulp sync schedule for product: #{self.name}", :priority => 4, :action => [self, :setup_sync_schedule])
+          queue.create(:name => "create pulp repositories for product: #{self.name}",      :priority => 1, :action => [self, :set_repos])
         when :update
-          #queue.create(:name => "update pulp repositories for product: #{self.name}", :priority => 6, :action => [self, :update_repos])
-          #queue.create(:name => "setting up pulp sync schedule for product: #{self.name}",
-          #                    :priority => 7, :action => [self, :setup_sync_schedule]) if self.sync_plan_id_changed?
+          #called when sync schedule changed, repo added, repo deleted
+          #queue.create(:name => "setting up pulp sync schedule for product: #{self.name}", :priority => 4, :action => [self, :setup_sync_schedule])
+          #PROD TODO: set sync schedules
         when :promote
           # do nothing, as repos have already been promoted (see promote_repos method)
       end
@@ -419,6 +422,12 @@ module Glue::Pulp::Repos
         end
       end
       async_tasks.flatten(1)
+    end
+
+    def check_for_repo_conflicts(repo_name)
+      unless self.repos(self.locker, {:name => repo_name}).empty?
+        raise Errors::ConflictException.new(_("There is already a repo with the name [ %s ] for product [ %s ]") % [repo_name, self.name])
+      end
     end
 
   end
