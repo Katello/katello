@@ -117,13 +117,19 @@ module Pulp
   class Errata < PulpResource
 
     class << self
-      def find errata_id
+      def find(errata_id)
         response = get(errata_path + errata_id + "/", self.default_headers)
         JSON.parse(response.body).with_indifferent_access
       end
 
       def errata_path
         "/pulp/api/errata/"
+      end
+
+      def filter(filter)
+        path = "#{errata_path}?#{filter.to_param}"
+        response = get(path, self.default_headers)
+        JSON.parse(response.body).map(&:with_indifferent_access)
       end
     end
   end

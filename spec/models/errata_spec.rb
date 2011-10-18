@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
+require 'helpers/repo_test_data'
 
 describe Glue::Pulp::Errata do
 
@@ -29,6 +30,23 @@ describe Glue::Pulp::Errata do
 
       Glue::Pulp::Errata.should_receive(:new)
       Glue::Pulp::Errata.find('1')
+    end
+  end
+
+  describe "Filter errata" do
+    it "should be able to search all errata of given type" do
+      filter = { :type => "security" }
+      Pulp::Errata.should_receive(:filter).once.with(filter).and_return(RepoTestData::ERRATA)
+      Glue::Pulp::Errata.filter(filter)
+    end
+
+    it "should be able to search all errata of given type and repo" do
+      filter = { :type => "security", :repoid => "repo-123" }
+      repo_mock = Glue::Pulp::Repo.new()
+      Glue::Pulp::Repo.should_receive(:new).and_return(repo_mock)
+      Pulp::Errata.should_receive(:filter).once.with(filter.slice(:type)).and_return(RepoTestData::ERRATA)
+      repo_mock.should_receive(:errata).and_return(RepoTestData::REPO_ERRATA.map{|e| Glue::Pulp::Errata.new(e)})
+      Glue::Pulp::Errata.filter(filter).should == [RepoTestData::ERRATA[1]]
     end
   end
   
