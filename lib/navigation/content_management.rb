@@ -54,7 +54,7 @@ module Navigation
        :name =>N_("Providers"),
        :url => :sub_level,
        :if => :sub_level,
-       :items => [menu_custom_providers, menu_redhat_providers]
+       :items => [menu_custom_providers, menu_redhat_providers, menu_filters]
       }
 
     end
@@ -139,6 +139,16 @@ module Navigation
         :if => lambda {KTEnvironment.any_viewable_for_promotions?(current_organization)}
        }
     end
+
+
+    def menu_filters
+       {:key => :filters,
+        :name => N_("Package Filters"),
+        :url => filters_path,
+        :if => lambda {Filter.any_readable?(current_organization)}
+       }
+    end
+
 
     def promotion_packages_navigation
       [

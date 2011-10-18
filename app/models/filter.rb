@@ -21,6 +21,8 @@ class Filter < ActiveRecord::Base
   belongs_to :organization
   has_and_belongs_to_many :products, :uniq => true
 
+  scoped_search :on => :name, :complete_value => true, :rename => :'filter.pulp_id'
+
   def self.list_tags org_id
     select('id,pulp_id').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.pulp_id) }
   end
