@@ -80,12 +80,6 @@ describe Glue::Pulp::Repo do
       errata.length.should == RepoTestData::REPO_ERRATA.length
     end
 
-    it "should be able to filter errata" do
-      filter = { :type => "security" }
-      Pulp::Repository.should_receive(:errata).once.with(RepoTestData::REPO_ID, filter)
-      @repo.errata(filter)
-    end
-
     it "called for second time should use the cached values" do
       @repo.errata
       Pulp::Repository.should_not_receive(:errata).with(RepoTestData::REPO_ID, {})

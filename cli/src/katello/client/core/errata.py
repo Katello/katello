@@ -57,29 +57,28 @@ class List(ErrataAction):
                       help=_("filter errata by type eg: enhancements"))
 
     def check_options(self):
-        if not self.has_option('repo_id'):
-            self.require_option('repo')
+        if self.has_option('repo'):
             self.require_option('org')
             self.require_option('product')
 
     def run(self):
-        repoId   = self.get_option('repo_id')
-        repoName = self.get_option('repo')
-        orgName  = self.get_option('org')
-        envName  = self.get_option('env')
-        prodName = self.get_option('product')
+        repo_id   = self.get_option('repo_id')
+        repo_name = self.get_option('repo')
+        org_name  = self.get_option('org')
+        env_name  = self.get_option('env')
+        prod_name = self.get_option('product')
 
         self.printer.addColumn('id')
         self.printer.addColumn('title')
         self.printer.addColumn('type')
 
-        if not repoId:
-            repo = get_repo(orgName, prodName, repoName, envName)
+        if not repo_id and repo_name:
+            repo = get_repo(org_name, prod_name, repo_name, env_name)
             if repo == None:
                 return os.EX_DATAERR
-            repoId = repo["id"]
+            repo_id = repo["id"]
 
-        errata = self.api.errata_by_repo(repoId, type=self.get_option('type'))
+        errata = self.api.errata_filter(repo_id=repo_id, type=self.get_option('type'))
 
         self.printer.setHeader(_("Errata List"))
         self.printer.printItems(errata)

@@ -16,21 +16,26 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.set_action(List())
         self.mock_options()
 
-    def test_missing_org_generates_error(self):
+    def test_repo_with_missing_org_generates_error(self):
         self.assertRaises(Exception, self.action.process_options, ['--repo=repo-123', '--product=product-123'])
 
-    def test_missing_product_generates_error(self):
+    def test_repo_with_missing_product_generates_error(self):
         self.assertRaises(Exception, self.action.process_options, ['--repo=repo-123', '--org=org-123'])
-
-    def test_missing_repo_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['--product=product-123', '--org=org-123'])
 
     def test_no_error_if_all_required_provided(self):
         self.action.process_options(['--repo=repo-123', '--product=product-123', '--org=org-123'])
         self.assertEqual(len(self.action.optErrors), 0)
 
+    def test_no_error_if_repo_id(self):
+        self.action.process_options(['--repo_id=repo-123'])
+        self.assertEqual(len(self.action.optErrors), 0)
+
+    def test_no_error_nothing_provided(self):
+        self.action.process_options([])
+        self.assertEqual(len(self.action.optErrors), 0)
+
     def test_accept_type_filter(self):
-        self.action.process_options(['--type=enhancements','--repo=repo-123', '--product=product-123', '--org=org-123'])
+        self.action.process_options(['--type=enhancements'])
         self.assertEqual(len(self.action.optErrors), 0)
 
 class ErrataListTest(CLIActionTestCase):
@@ -60,7 +65,7 @@ class ErrataListTest(CLIActionTestCase):
         self.mock_printer()
 
         self.mock(self.module, 'get_repo', self.REPO)
-        self.mock(self.action.api, 'errata_by_repo', test_data.ERRATA_BY_REPO)
+        self.mock(self.action.api, 'errata_filter', test_data.ERRATA_BY_REPO)
 
     def tearDown(self):
         self.restore_mocks()
@@ -73,4 +78,4 @@ class ErrataListTest(CLIActionTestCase):
     def test_it_supports_filters(self):
         self.mock_options(self.OPTIONS_BY_TYPE)
         self.action.run()
-        self.action.api.errata_by_repo.assert_called_once_with(self.REPO['id'],type=self.OPTIONS_BY_TYPE['type'])
+        self.action.api.errata_filter.assert_called_once_with(repo_id=self.REPO['id'], type=self.OPTIONS_BY_TYPE['type'])
