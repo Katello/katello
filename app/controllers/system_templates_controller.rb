@@ -189,10 +189,10 @@ class SystemTemplatesController < ApplicationController
   end
 
   def download
-    json = @template.string_export
-    send_data json,
-      :filename => "%s-export.json" % @template.name,
-      :type => "application/json"
+    xml = @template.export_as_tdl
+    send_data xml,
+      :filename => "%s-export.xml" % @template.name,
+      :type => "application/xml"
   end
 
   def new
