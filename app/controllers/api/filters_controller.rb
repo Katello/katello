@@ -59,8 +59,11 @@ class Api::FiltersController < Api::ApiController
   end
 
   def update_product_filters
-    @product.filters = @filters
-    @product.save!
+    deleted_filters = @product.filters - @filters
+    added_filters = @filters - @product.filters
+
+    @product.filters -= deleted_filters
+    @product.filters += added_filters
 
     render :json => @product.filters.to_json
   end
@@ -78,7 +81,7 @@ class Api::FiltersController < Api::ApiController
 
   def find_filters
     @filters = Filter.where(:pulp_id => params[:filters])
-    raise HttpErrors::NotFound, _("Couldn't find filter '#{params[:id]}'") if @filters.any? {|f| f.nil?}
+    raise HttpErrors::NotFound, _("Couldn't one of the filters in '#{params[:product_id]}'") if @filters.any? {|f| f.nil?}
     @filters
   end
 
