@@ -305,8 +305,13 @@ module Candlepin
 
   class Product < CandlepinResource
     class << self
+
+      def all
+        JSON.parse(Candlepin::CandlepinResource.get(path, self.default_headers).body)
+      end
+
       def create attr
-        JSON.parse(self.post(path(), attr.to_json, self.default_headers).body).with_indifferent_access
+        JSON.parse(self.post(path, attr.to_json, self.default_headers).body).with_indifferent_access
       end
 
       def get id=nil

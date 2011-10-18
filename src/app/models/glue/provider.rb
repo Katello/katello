@@ -152,39 +152,6 @@ module Glue::Provider
       raise e
     end
 
-    def set_product attrs
-      Rails.logger.info "Creating product #{attrs['name']} for provider: #{name}"
-      productContent_attrs = attrs.delete(:productContent) if attrs.has_key?(:productContent)
-      product = Product.new(attrs) do |p|
-        p.provider = self
-        p.environments << self.organization.locker
-        p.productContent = p.build_productContent(productContent_attrs)
-      end
-      product.save!
-    rescue => e
-      Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
-    def import_product_from_cp attrs
-      Rails.logger.info "Importing product #{attrs['name']} for provider: #{name}"
-      productContent_attrs = attrs.delete(:productContent) if attrs.has_key?(:productContent)
-      valid_name = attrs['name'].gsub(/[^a-z0-9\-_ ]/i,"")
-      attrs = attrs.merge('name' => valid_name)
-      product = Product.new(attrs) do |p|
-        p.provider = self
-        p.environments << self.organization.locker
-        p.productContent = p.build_productContent(productContent_attrs)
-      end
-      product.orchestration_for = :import_from_cp
-      product.save!
-      product
-    rescue => e
-      Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
-
     def owner_import zip_file_path
       Candlepin::Owner.import self.organization.cp_key, zip_file_path
     end
@@ -194,32 +161,51 @@ module Glue::Provider
       queue.create(:name => "import of products in manifest #{zip_file_path}", :priority => 5, :action => [self, :queue_pool_product_creation])
     end
 
-    def queue_import_product_from_cp attrs
-      queue.create(:name => "create product imported from candlepin: #{attrs['name']}", :priority => 4, :action => [self, :import_product_from_cp, attrs])
+    def queue_pool_product_creation
+      added_products.each do |product_attrs|
+        product = Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
+          p.provider = self
+          p.environments << self.organization.locker
+        end
+      end
     end
 
-    def queue_pool_product_creation
+    def destroy_products_orchestration
+      queue.create(:name => "delete custom product for provider: #{self.name}", :priority => 1, :action => [self, :del_products])
+    end
+
+
+    protected
+
+    def added_products
+      product_existing_in_katello_ids = self.organization.locker.products.all(:select => "cp_id").map(&:cp_id)
+      product_existing_in_cp_ids = get_pool_product_ids
+
+      new_product_ids = (product_existing_in_cp_ids - product_existing_in_katello_ids)
+      new_product_ids.collect {|id| (Candlepin::Product.get(id))[0] }
+    end
+
+    def not_assigned_products
+      all_product_existing_in_katello_ids = Products.all(:select => "cp_id").map(&:cp_id)
+      all_product_existing_in_cp_ids = get_all_product_ids
+
+      product_ids = (all_product_existing_in_cp_ids - all_product_existing_in_katello_ids)
+      product_ids.collect {|id| (Candlepin::Product.get(id))[0] }
+    end
+
+    def get_pool_product_ids
       pools = Candlepin::Owner.pools self.organization.cp_key
-      product_ids = pools.collect do |pool|
+      pools.collect do |pool|
         provided_products = pool[:providedProducts]
         pool_product_ids = []
         pool_product_ids = provided_products.collect {|provided| provided[:productId]} unless provided_products.nil?
         # Done with provided products, lets add the *actual* product
         pool_product_ids << pool[:productId]
       end.flatten.uniq
-
-      existing_product_ids = self.organization.locker.products.all(:select => "cp_id").map(&:cp_id)
-      products_to_create = (product_ids - existing_product_ids).collect {|id| (Candlepin::Product.get(id))[0] }
-
-      products_to_create.each do |p|
-        Rails.logger.info "product: "+p.to_json
-        queue_import_product_from_cp p
-      end
-      process queue
     end
 
-    def destroy_products_orchestration
-      queue.create(:name => "delete custom product for provider: #{self.name}", :priority => 1, :action => [self, :del_products])
+    def get_all_product_ids
+      Candlepin::Product.all.map{ |p| p['id'] }
     end
   end
 

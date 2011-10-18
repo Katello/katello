@@ -33,6 +33,27 @@ module Glue::Candlepin::Product
     end
   end
 
+  def self.import_from_cp(attrs=nil, &block)
+    if attrs.has_key?(:productContent)
+      productContent_attrs = attrs.delete(:productContent)
+    else
+      productContent_attrs = []
+    end
+
+    valid_name = attrs['name'].gsub(/[^a-z0-9\-_ ]/i,"")
+    attrs = attrs.merge('name' => valid_name)
+
+    product = Product.new(attrs, &block)
+    product.productContent_will_change!
+    product.productContent = product.build_productContent(productContent_attrs)
+    product.orchestration_for = :import_from_cp
+    product.save
+
+  rescue => e
+    Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
+    raise e
+  end
+
   module InstanceMethods
 
     def initialize(attrs = nil)
@@ -138,26 +159,6 @@ module Glue::Candlepin::Product
       raise e
     end
 
-
-    def add_new_content(name, path, repo_type)
-      check_for_repo_conflicts(name)
-      # create new content
-      pc = Glue::Candlepin::ProductContent.new({:content => {
-          :name => name,
-          :contentUrl => path,
-          :gpgUrl => "",
-          :type => repo_type,
-          :label => self.repo_id(name),
-          :vendor => "Custom"
-        }
-      })
-
-      self.productContent_will_change!
-      self.productContent << pc
-      save!
-      pc
-    end
-
     def add_content
       self.productContent.each do |pc|
         Rails.logger.info "Adding content to product '#{self.cp_id}' in candlepin: #{pc.content.name}"
@@ -198,6 +199,14 @@ module Glue::Candlepin::Product
       end
     end
 
+    def remove_imported_content
+      return true unless productContent_changed?
+
+      added_content.each do |pc|
+        Rails.logger.debug "deleting imported content #{pc.content.id} from Locker environment"
+        Candlepin::Product.remove_content cp_id, pc.content.id
+      end
+    end
 
     def set_unlimited_subscription
       # we create unlimited subscriptions only for generic yum providers
@@ -232,9 +241,12 @@ module Glue::Candlepin::Product
           queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
           queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
         when :update, :promote
-          queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])
+          #queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])
+          #PROD TODO: delete content that has no repos assigned
         when :import_from_cp
-          #do nothing
+          queue.create(:name => "delete imported content from locker environment: #{self.name}", :priority =>2, :action => [self, :remove_imported_content])
+          #PROD TODO: delete content that has no repos assigned
+          #PROD TODO: delete not assigned products
       end
     end
 
@@ -246,12 +258,6 @@ module Glue::Candlepin::Product
     end
 
     protected
-
-    def check_for_repo_conflicts(repo_name)
-      unless self.repos(self.locker, {:name => repo_name}).empty?
-        raise Errors::ConflictException.new(_("There is already a repo with the name [ %s ] for product [ %s ]") % [repo_name, self.name])
-      end
-    end
 
     def added_content
       old_content_ids = productContent_change[0].nil? ? [] : productContent_change[0].map {|pc| pc.content.label}
