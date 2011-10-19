@@ -51,7 +51,11 @@ var notices = (function() {
             if ((level === "error") || (level === "warning")) {
                 options["sticky"] = true;
                 options["fadeSpeed"] = 600;
-            } else {
+            } else if( level === "message" ) {
+                options["sticky"] = false;
+                options["delay"] = 4000;
+                options["fadeSpeed"] = 2000;        	
+        	} else {
                 options["sticky"] = false;
                 options["fadeSpeed"] = 600;
             }
