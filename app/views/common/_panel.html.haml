@@ -22,11 +22,13 @@
           %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => url_for(:action=> 'new')}
             #{_('+ New ')} #{create}
             .arrow-right
-      -#%div
-        -##{_("Viewing")}
-        -#%span#current_items_count
-        -##{_(" of ")}
-        -#%span#total_items_count
+      %div
+        #{_("Viewing")}
+        %span#current_items_count
+          = 0
+        #{_(" of ")}
+        %span#total_items_count
+          = 0
                 
       - if url.nil?
         %form#search_form.search{"data-url" => search_index_path()}

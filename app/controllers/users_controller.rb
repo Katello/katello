@@ -60,7 +60,9 @@ class UsersController < ApplicationController
   
   def items
     start = params[:offset]
-    @users = User.readable.search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @users = User.readable.search_for(params[:search])
+    @panel_options[:num_items] = @users.count
+    @users.limit(current_user.page_size).offset(start)
     render_panel_items @users, @panel_options
     retain_search_history
   end

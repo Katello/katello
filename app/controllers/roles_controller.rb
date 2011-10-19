@@ -64,7 +64,9 @@ class RolesController < ApplicationController
   
   def items
     start = params[:offset]
-    @roles = Role.readable.search_for(params[:search]).non_self.order(:name).limit(current_user.page_size).offset(start)
+    @roles = Role.readable.search_for(params[:search]).non_self.order(:name)
+    @panel_options[:num_items] = @roles.count
+    @roles = @roles.limit(current_user.page_size).offset(start)
     retain_search_history
     render_panel_items @roles, @panel_options
   end
