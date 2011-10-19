@@ -31,7 +31,7 @@ class Glue::Pulp::Errata
   end
 
   def self.filter(filter)
-    errata = Pulp::Errata.filter(filter.except(:repoid, :environment_id))
+    errata = []
     repo_errata_ids = Set.new
 
     if repoid = filter[:repoid]
@@ -40,8 +40,7 @@ class Glue::Pulp::Errata
       env = KTEnvironment.find(environment_id)
       repos = env.products.map {|p| p.repos(env) }.flatten
     end
-    repos.each {|repo| repo.errata.each { |e| repo_errata_ids << e.id } }
-    errata = errata.find_all {|e| repo_errata_ids.include?(e[:id]) }
+    repos.each {|repo| errata.concat(Pulp::Repository.errata(repo.id, filter.except(:environment_id, :repoid))) }
     errata
   end
 

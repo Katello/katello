@@ -21,7 +21,8 @@ describe Glue::Pulp::Errata do
     @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
     @locker = @organization.locker
 
-    @repo = Glue::Pulp::Repo.new()
+    @repo = Glue::Pulp::Repo.new(:id => "repo-123")
+    @repo2 = Glue::Pulp::Repo.new(:id => "repo-456")
     Glue::Pulp::Repo.stub(:new => @repo)
   end
   
@@ -42,22 +43,21 @@ describe Glue::Pulp::Errata do
   describe "Filter errata" do
     it "should be able to search all errata of given type for given environment" do
       env = KTEnvironment.create!(:name => "Dev", :prior => @organization.locker, :organization_id => @organization.id)
-      product_with_repo = mock(Product, :repos => [@repo])
-      env.stub(:products => [product_with_repo])
+      products_with_repo = [mock(Product, :repos => [@repo]), mock(Product, :repos => [@repo2])]
+      env.stub(:products => products_with_repo)
       KTEnvironment.stub(:find => env)
 
       filter = { :type => "security", :environment_id => env.id }
-      Pulp::Errata.should_receive(:filter).once.with(filter.except(:environment_id)).and_return(RepoTestData::ERRATA)
-      @repo.should_receive(:errata).and_return(RepoTestData::REPO_ERRATA.map{|e| Glue::Pulp::Errata.new(e)})
+      Pulp::Repository.should_receive(:errata).once.with(@repo.id, filter.except(:environment_id)).and_return(RepoTestData::REPO_ERRATA[0..0])
+      Pulp::Repository.should_receive(:errata).once.with(@repo2.id, filter.except(:environment_id)).and_return(RepoTestData::REPO_ERRATA[1..1])
 
-      Glue::Pulp::Errata.filter(filter).should == [RepoTestData::ERRATA[1]]
+      Glue::Pulp::Errata.filter(filter).should == RepoTestData::REPO_ERRATA
     end
 
     it "should be able to search all errata of given type and repo" do
       filter = { :type => "security", :repoid => "repo-123" }
-      Pulp::Errata.should_receive(:filter).once.with(filter.slice(:type)).and_return(RepoTestData::ERRATA)
-      @repo.should_receive(:errata).and_return(RepoTestData::REPO_ERRATA.map{|e| Glue::Pulp::Errata.new(e)})
-      Glue::Pulp::Errata.filter(filter).should == [RepoTestData::ERRATA[1]]
+      Pulp::Repository.should_receive(:errata).once.with(@repo.id, filter.except(:repoid)).and_return(RepoTestData::REPO_ERRATA[0..0])
+      Glue::Pulp::Errata.filter(filter).should == RepoTestData::REPO_ERRATA[0..0]
     end
   end
   
