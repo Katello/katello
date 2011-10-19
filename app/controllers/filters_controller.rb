@@ -4,7 +4,7 @@ class FiltersController < ApplicationController
 
   skip_before_filter :authorize
   before_filter :panel_options, :only=>[:index, :items]
-  before_filter :find_filter, :only=>[:show, :update, :destroy]
+  before_filter :find_filter, :only=>[:edit, :update, :destroy]
   before_filter :authorize
 
   def rules
@@ -12,13 +12,15 @@ class FiltersController < ApplicationController
     create = lambda{Filter.creatable?(current_organization)}
     index_test = lambda{Filter.any_readable?(current_organization)}
     readable = lambda{@filter.readable?}
+    editable = lambda{@filter.editable?}
     {
       :create => create,
       :new => create,
       :index => index_test,
       :items => index_test,
       :auto_complete_search => index_test,
-      :show => readable
+      :edit => readable,
+      :update=>editable
 
     }
   end
@@ -36,6 +38,28 @@ class FiltersController < ApplicationController
     render_panel_items @providers, @panel_options
   end
 
+  def update
+    options = params[:filter]
+    to_ret = ""
+    if options[:pulp_id]
+      @filter.pulp_id = options[:pulp_id]
+      to_ret =  @filter.pulp_id
+    elsif options[:description]
+      @filter.description = options[:description]
+      to_ret = @filter.description 
+    end
+    @filter.save!
+    notice _("Package Filter '#{@filter.pulp_id}' has been updated.")
+    render :text=>to_ret
+  rescue Exception=>e
+    errors e
+    render :text=>e, :status=>500
+  end
+
+  def edit
+    render :partial => "edit", :layout => "tupane_layout", :locals => {:filter => @filter, :editable=>@filter.editable?,
+                                                                       :name=>controller_display_name}
+  end
 
   def new
     @filter = Filter.new
