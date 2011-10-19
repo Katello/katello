@@ -391,10 +391,12 @@ class ApplicationController < ActionController::Base
     "#{exception.class}: #{exception.message}\n" << exception.backtrace.join("\n")
   end
 
-  def render_panel_items(items, options)
+  def render_panel_items(items, options, start)
     options[:accessor] ||= "id"
-    options[:collection] = items
     options[:columns] = options[:col]
+    
+    options[:num_items] = items.count
+    options[:collection] ||= items.limit(current_user.page_size).offset(start)
     
     if options[:list_partial]
       rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)

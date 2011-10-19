@@ -48,11 +48,8 @@ class SyncPlansController < ApplicationController
   end
   
   def items
-    start = params[:offset]
-    @sync_plans = SyncPlan.search_for(params[:search]).where(:organization_id => current_organization.id)
-    @panel_options[:num_items] = @sync_plans.count
-    @sync_plans = @sync_plans.limit(current_user.page_size).offset(start)
-    render_panel_items @sync_plans, @panel_options
+    sync_plans = SyncPlan.search_for(params[:search]).where(:organization_id => current_organization.id)
+    render_panel_items sync_plans, @panel_options, params[:offset]
     retain_search_history
   end
   
