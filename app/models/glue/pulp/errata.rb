@@ -31,14 +31,17 @@ class Glue::Pulp::Errata
   end
 
   def self.filter(filter)
-    errata = Pulp::Errata.filter(filter.except(:repoid))
+    errata = Pulp::Errata.filter(filter.except(:repoid, :environment_id))
+    repo_errata_ids = Set.new
 
     if repoid = filter[:repoid]
-      repo = Glue::Pulp::Repo.new(:id => repoid)
-      repo_errata_ids = Set.new(repo.errata.map { |e| e.id })
-      errata = errata.find_all {|e| repo_errata_ids.include?(e[:id]) }
+      repos = [Glue::Pulp::Repo.new(:id => repoid)]
+    elsif environment_id = filter[:environment_id]
+      env = KTEnvironment.find(environment_id)
+      repos = env.products.map {|p| p.repos(env) }.flatten
     end
-
+    repos.each {|repo| repo.errata.each { |e| repo_errata_ids << e.id } }
+    errata = errata.find_all {|e| repo_errata_ids.include?(e[:id]) }
     errata
   end
 
