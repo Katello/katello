@@ -52,13 +52,14 @@ module CDN
   #
   # values are loaded from CDN
     def substitute_vars(path_with_vars)
-      paths_with_vars = { {} => path_with_vars}
+      paths_with_vars    = { {} => path_with_vars}
       paths_without_vars = {}
 
-      while substitutions_and_path = paths_with_vars.shift
-        substitutions, path = substitutions_and_path
-        if path.include?("$")
-          substitute_next_var(substitutions, path) do |new_substitution, new_path|
+      while not paths_with_vars.empty?
+        substitutions, path = paths_with_vars.shift
+
+        if is_substituable path
+          for_each_substitute_of_next_var substitutions, path do |new_substitution, new_path|
             paths_with_vars[new_substitution] = new_path
           end
         else
@@ -69,14 +70,33 @@ module CDN
       return paths_without_vars
     end
 
-    def substitute_next_var(substitutions, path)
+    def is_substituable path
+      path.include?("$")
+    end
+
+    def is_substitute_of(substituted_url, original_url)
+      substitutions = self.substitute_vars(original_url).values
+      substitutions.include? substituted_url
+    end
+
+    protected
+
+    def for_each_substitute_of_next_var(substitutions, path)
       if path =~ /^(.*?)\$([^\/]*)/
         base_path, var = $1, $2
-        values = @resource.get(File.join(base_path,"listing")).split("\n")
-        values.each do |value|
-          yield substitutions.merge(var => value), path.sub("$#{var}",value)
+        get_substitutions_from(base_path).each do |value|
+
+          new_substitutions = substitutions.merge(var => value)
+          new_path = path.sub("$#{var}",value)
+
+          yield new_substitutions, new_path
         end
       end
     end
+
+    def get_substitutions_from(base_path)
+      @resource.get(File.join(base_path,"listing")).split("\n")
+    end
+
   end
 end
