@@ -25,7 +25,7 @@ class Filter < ActiveRecord::Base
   belongs_to :organization
   has_and_belongs_to_many :products, :uniq => true
 
-  scoped_search :on => :name, :complete_value => true, :rename => :'filter.pulp_id'
+  scoped_search :on => :pulp_id, :complete_value => true, :rename => :'filter.pulp_id'
   
   scope :readable, lambda {|org| readable_items(org)}
 
@@ -35,6 +35,10 @@ class Filter < ActiveRecord::Base
 
   def readable?
     User.allowed_to?(READ_PERM_VERBS, :filters, self.id, self.organization)
+  end
+
+  def editable?
+    User.allowed_to?([:update], :filters, self.id, self.organization)
   end
 
   def deletable?
@@ -53,9 +57,10 @@ class Filter < ActiveRecord::Base
 
   def self.list_verbs  global = false
     {
-       :create => N_("Create Filter"),
-       :read => N_("Access Filter"),
-       :delete => N_("Delete Filter"),
+       :create => N_("Create Package Filters"),
+       :read => N_("Access Package Filters"),
+       :delete => N_("Delete Package Filters"),
+       :update => N_("Edit Package Filters"),
     }.with_indifferent_access
   end
 
