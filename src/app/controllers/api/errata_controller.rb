@@ -20,7 +20,7 @@ class Api::ErrataController < Api::ApiController
   skip_before_filter :authorize
 
   def index
-    filter = params.slice(:repoid, :environment_id, :type).symbolize_keys
+    filter = params.slice(:repoid, :environment_id, :type, :severity).symbolize_keys
     unless filter[:repoid] or filter[:environment_id]
       raise HttpErrors::BadRequest.new(_("Repo id or environment must be provided"))
     end

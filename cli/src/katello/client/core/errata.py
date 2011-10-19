@@ -55,6 +55,8 @@ class List(ErrataAction):
 
         self.parser.add_option('--type', dest='type',
                       help=_("filter errata by type eg: enhancements"))
+        self.parser.add_option('--severity', dest='severity',
+                      help=_("filter errata by severity"))
 
     def check_options(self):
         if not self.has_option('repo_id'):
@@ -89,7 +91,7 @@ class List(ErrataAction):
 
 
 
-        errata = self.api.errata_filter(repo_id=repo_id, type=self.get_option('type'), environment_id=env_id)
+        errata = self.api.errata_filter(repo_id=repo_id, environment_id=env_id, type=self.get_option('type'), severity=self.get_option('severity'))
 
         self.printer.setHeader(_("Errata List"))
         self.printer.printItems(errata)

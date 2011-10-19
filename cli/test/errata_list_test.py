@@ -41,6 +41,8 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     def test_accept_type_filter(self):
         self.action.process_options(['--type=enhancements', '--org=org-123'])
         self.assertEqual(len(self.action.optErrors), 0)
+        self.action.process_options(['--severity=critical', '--org=org-123'])
+        self.assertEqual(len(self.action.optErrors), 0)
 
 class ErrataListTest(CLIActionTestCase):
 
@@ -69,6 +71,13 @@ class ErrataListTest(CLIActionTestCase):
     OPTIONS_BY_ENV = {
         'org': ORG['name'],
         'env': ENV['name'],
+    }
+
+    OPTIONS_BY_SEVERITY = {
+        'org': ORG['name'],
+        'product': PRODUCT['name'],
+        'repo': REPO['name'],
+        'severity': 'critical',
     }
 
 
@@ -100,7 +109,12 @@ class ErrataListTest(CLIActionTestCase):
         self.action.run()
         self.module.get_environment.assert_called_once_with(self.OPTIONS_BY_ENV['org'], self.OPTIONS_BY_ENV['env'])
 
-    def test_it_supports_filters(self):
+    def test_it_supports_filtering_by_type(self):
         self.mock_options(self.OPTIONS_BY_TYPE)
         self.action.run()
-        self.action.api.errata_filter.assert_called_once_with(repo_id=self.REPO['id'], type=self.OPTIONS_BY_TYPE['type'], environment_id=None)
+        self.action.api.errata_filter.assert_called_once_with(repo_id=self.REPO['id'], type=self.OPTIONS_BY_TYPE['type'], environment_id=None, severity=None)
+
+    def test_it_supports_filtering_by_severity(self):
+        self.mock_options(self.OPTIONS_BY_SEVERITY)
+        self.action.run()
+        self.action.api.errata_filter.assert_called_once_with(repo_id=self.REPO['id'], type=None, environment_id=None, severity=self.OPTIONS_BY_SEVERITY['severity'])
