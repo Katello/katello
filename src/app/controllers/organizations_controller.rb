@@ -81,7 +81,8 @@ class OrganizationsController < ApplicationController
       notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
       render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
     else
-      notice [_("Organization '#{@organization["name"]}' was created."), _("'#{@organization["name"]}' did not meet the current search criteria and is not being shown.")], { :level => 'message', :synchronous_request => false }
+      notice _("Organization '#{@organization["name"]}' was created.")
+      notice _("'#{@organization["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
       render :json => { :no_match => true }
     end
   end
