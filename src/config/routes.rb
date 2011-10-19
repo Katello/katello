@@ -123,7 +123,7 @@ Src::Application.routes.draw do
       get :items
     end
     member do
-
+      get :packages
       
     end
 
