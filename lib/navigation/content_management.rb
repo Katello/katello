@@ -17,6 +17,7 @@ module Navigation
         helper_method :promotion_packages_navigation
         helper_method :promotion_errata_navigation
         helper_method :promotion_distribution_navigation
+        helper_method :package_filter_navigation
       end
     end
 
@@ -212,5 +213,24 @@ module Navigation
         }
       ]
     end
+
+
+    def package_filter_navigation
+      [
+        { :key => :details,
+          :name =>N_("Details"),
+          :url => lambda{edit_filter_path(@filter.id)},
+          :if => lambda{@filter},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :packages,
+          :name =>N_("Packages"),
+          :url => lambda{packages_filter_path(@filter.id)},
+          :if => lambda{@filter},
+          :options => {:class=>"navigation_element"}
+        }
+      ]
+    end
+
   end
 end

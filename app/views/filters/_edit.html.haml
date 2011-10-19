@@ -1,7 +1,7 @@
 = javascript :edit_helpers
 
 = content_for :title do
-  #{@filter.pulp_id}
+  #{@filter.name}
 
 = content_for :remove_item do
   - if filter.deletable?
@@ -9,8 +9,7 @@
 
 
 = content_for :navigation do
-  / pretty
-  // = render_navigation(:items=>custom_provider_navigation, :level => 1)
+  = render_navigation(:items=>package_filter_navigation, :level => 1)
   
 = content_for :content do
   #package_filter
@@ -21,11 +20,11 @@
         %fieldset.fl.clear
           .grid_2.ra
             %label #{_("Name")}:
-          .grid_5.la#filter_name{'name' => 'filter[pulp_id]', 'data-url' => filter_path(@filter.id), :class=>("editable edit_panel_element" if editable)} #{@filter[:pulp_id]}
+          .grid_5.la#filter_name{'name' => 'filter[name]', 'data-url' => filter_path(@filter.id)} #{@filter.name}
   
         %fieldset.fl.clear
           .grid_2.ra
             %label #{_("Description")}:
-          .grid_5.la{:style => "word-wrap: break-word;", 'name' => 'filter[description]', 'data-url' => filter_path(@filter.id), :class=>("editable edit_panel_element" if editable)}<> #{@filter.description}
+          .grid_5.la{:style => "word-wrap: break-word;", 'name' => 'filter[description]', 'data-url' => filter_path(@filter.id), :class=>("editable edit_textarea" if editable)}<> #{@filter.description}
 
 -#%input#provider_id{:name => @filter.id, :type => "hidden", :value => @filter.id, "data-ajax_url"=>url_for(:action=> 'update')}

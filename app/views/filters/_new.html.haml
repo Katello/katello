@@ -12,7 +12,12 @@
         .grid_2.ra
           %label #{_("Name")}:
         .grid_4.la
-          = form.text_field :pulp_id
+          = form.text_field :name
+      %fieldset.fl.clear
+        .grid_2.ra
+          %label #{_("Description")}:
+        .grid_4.la
+          = form.text_area :description, :rows=>8
 
       .grid_4.la.prefix_2
         = button_to _("Save"), {:action => "create", :controller => "filters"}, :method => :post, :id => :filter_save
