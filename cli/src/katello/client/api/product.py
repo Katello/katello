@@ -64,3 +64,14 @@ class ProductAPI(KatelloAPI):
         path = "/api/products/%s/sync" % prodId
         data = self.server.GET(path)[1]
         return data
+        
+    def update_filters(self, prodId, filters):
+        path = "/api/products/%s/filters" % prodId
+        data = self.server.PUT(path, {"filters": filters})[1]
+        return data
+        
+    def filters(self, prodId):
+        path = "/api/products/%s/filters" % prodId
+        data = self.server.GET(path)[1]
+        return data
+        
