@@ -457,7 +457,7 @@ KT.panel = (function($){
         	options = options || {};
         	
         	getListContent(resource_type);
-        	setupSearch(resource_type);
+        	setupSearch(resource_type, options);
         	KT.search.enableAutoComplete(KT.routes['auto_complete_search_' + resource_type + '_path']());
 
         	if( options['create'] ){
@@ -520,12 +520,14 @@ KT.panel = (function($){
         		}
         	});
         },
-        setupSearch = function(resource_type){
+        setupSearch = function(resource_type, options){
     		$('#search_form').live('submit', function(e){
-				var button = $('#search_button'),
-					element = $('#list'),
-					url 	= KT.routes['items_' + resource_type + '_path'](),
-	        		offset 	= offset || 0;
+				var button 			= $('#search_button'),
+					element 		= $('#list'),
+					url 			= KT.routes['items_' + resource_type + '_path'](),
+	        		offset 			= offset || 0,
+	        		extra_params	= options['extra_params'],
+	        		data			= {};
 				
 				e.preventDefault();
 				button.attr("disabled","disabled");
@@ -533,12 +535,19 @@ KT.panel = (function($){
 				element.find('.spinner').show();
 
 				$.bbq.pushState($(this).serialize());
-        		url += '?offset=' + offset;	
+        		url += '?offset=' + offset;
+        		
+        		if( extra_params ){
+        			for(var i=0; i < extra_params.length; i += 1){
+        				data[extra_params[i]] = $.bbq.getState(extra_params[i]);
+        			}
+        		}
         	
         		closePanel();
 				
 				$(this).ajaxSubmit({
 					url		:  url,
+					data	:  data,
 			    	success : function(data) {
 			    		element.find('section').append(data['html']);
 	        			element.find('.spinner').hide();
@@ -549,6 +558,8 @@ KT.panel = (function($){
 	        			KT.panel.list.total_items = data['total_items'];
 	        			KT.panel.list.current_items = data['current_items'];
 	        			$('.left').resize();
+	        			$('.ui-autocomplete').hide();
+    					$('#list').addClass("ajaxScroll");
 			      	}, 
 			      	error	: function(e) {
 			        	button.removeAttr('disabled');

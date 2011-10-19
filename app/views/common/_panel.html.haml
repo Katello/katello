@@ -1,4 +1,4 @@
-= javascript :panel, :fancyqueries, :bbq
+= javascript :panel, :fancyqueries, :bbq, :form
 = stylesheet :fancyqueries
 
 #container
@@ -22,8 +22,8 @@
           %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => url_for(:action=> 'new')}
             #{_('+ New ')} #{create}
             .arrow-right
-      %div
-        #{_("Viewing")}
+      %div.fl.clear#items_count
+        #{_("viewing")}
         %span#current_items_count
           = 0
         #{_(" of ")}
