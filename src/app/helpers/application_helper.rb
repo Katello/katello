@@ -28,7 +28,7 @@ module ApplicationHelper
   end
 
   def project_name
-    _("Katello")
+    _(AppConfig.app_name.capitalize)
   end
   
   def default_title
