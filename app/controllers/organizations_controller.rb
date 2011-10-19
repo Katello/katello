@@ -74,8 +74,6 @@ class OrganizationsController < ApplicationController
     begin
       @organization = Organization.new(:name => params[:name], :description => params[:description], :cp_key => params[:name].tr(' ', '_'))
       @organization.save!
-      notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
-      # TODO: example - create permission for the organization
     rescue Exception => error
       errors error
       Rails.logger.info error.backtrace.join("\n")
@@ -83,8 +81,10 @@ class OrganizationsController < ApplicationController
     end
     
     if Organization.where(id = @organization.id).search_for(params[:search]).include?(@organization)
+      notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
       render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
     else
+      notice [_("Organization '#{@organization["name"]}' was created."), _("'#{@organization["name"]}' did not meet the current search criteria and is not being shown.")], { :level => 'message', :synchronous_request => false }
       render :json => { :no_match => true }
     end
   end
