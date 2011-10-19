@@ -39,7 +39,11 @@ class Api::FiltersController < Api::ApiController
   end
 
   def create
-    @filter = Filter.create!(params[:filter]) do |f|
+    @filter = Filter.create!(:pulp_id => params[:name],
+      :organization => @organization,
+      :description => params[:description],
+      :package_list => params[:package_list]
+    ) do |f|
       f.organization = @organization
     end
     render :json => @filter.to_json

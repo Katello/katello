@@ -21,6 +21,8 @@ class Filter < ActiveRecord::Base
   belongs_to :organization
   has_and_belongs_to_many :products, :uniq => true
 
+  alias_attribute :name, :pulp_id
+
   def self.list_tags org_id
     select('id,name').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.name) }
   end
@@ -51,6 +53,12 @@ class Filter < ActiveRecord::Base
 
   def deletable?
      User.allowed_to?([:delete, :create], :filters, self.id, self.organization)
+  end
+
+  def as_json(options)
+    options.nil? ?
+        super(:methods => [:name], :exclude => :pulp_id) :
+        super(options.merge(:methods => [:name], :exclude => :pulp_id) {|k, v1, v2| [v1, v2].flatten })
   end
 
   READ_PERM_VERBS = [:read, :create, :delete]
