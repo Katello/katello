@@ -80,6 +80,10 @@ module Glue::Pulp::Repos
       return env_repos
     end
 
+    def all_repos search_params = {}
+      Pulp::Repository.all [Glue::Pulp::Repos.product_groupid(self)], search_params
+    end
+
     def promote from_env, to_env
       @orchestration_for = :promote
 
@@ -276,14 +280,14 @@ module Glue::Pulp::Repos
     end
 
     def setup_sync_schedule
-      #PROD TODO: make sure it sets the plan for all repos
       if self.sync_plan_id_changed?
-          self.productContent.each do |pc|
-            schedule = (self.sync_plan && self.sync_plan.schedule_format) || ""
-            Pulp::Repository.update(repo_id(pc.content.name), {
-                :sync_schedule => schedule
-            })
-          end
+
+        self.all_repos.each do |repo|
+          schedule = (self.sync_plan && self.sync_plan.schedule_format) || ""
+          Pulp::Repository.update(repo['id'], {
+            :sync_schedule => schedule
+          })
+        end
       end
     end
 
@@ -382,8 +386,7 @@ module Glue::Pulp::Repos
           queue.create(:name => "create pulp repositories for product: #{self.name}",      :priority => 1, :action => [self, :set_repos])
         when :update
           #called when sync schedule changed, repo added, repo deleted
-          #queue.create(:name => "setting up pulp sync schedule for product: #{self.name}", :priority => 4, :action => [self, :setup_sync_schedule])
-          #PROD TODO: set sync schedules
+          queue.create(:name => "setting up pulp sync schedule for product: #{self.name}", :priority => 4, :action => [self, :setup_sync_schedule])
         when :promote
           # do nothing, as repos have already been promoted (see promote_repos method)
       end
