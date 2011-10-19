@@ -57,11 +57,8 @@ class OrganizationsController < ApplicationController
   end
 
   def items
-    start = params[:offset]
-    @organizations = Organization.readable.search_for(params[:search])
-    @panel_options[:num_items] = @organizations.count
-    @organizations = @organizations.limit(current_user.page_size).offset(start)
-    render_panel_items @organizations, @panel_options
+    organizations = Organization.readable.search_for(params[:search])
+    render_panel_items organizations, @panel_options, params[:offset]
     retain_search_history
   end
 
