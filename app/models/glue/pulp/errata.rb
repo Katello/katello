@@ -32,16 +32,28 @@ class Glue::Pulp::Errata
 
   def self.filter(filter)
     errata = []
-    repo_errata_ids = Set.new
+    filter_for_repo = filter.slice(:repoid, :environment_id, :product_id)
+    filter_for_errata = filter.except(*filter_for_repo.keys)
 
+    repos = repos_for_filter(filter_for_repo)
+    repos.each {|repo| errata.concat(Pulp::Repository.errata(repo.id, filter_for_errata)) }
+    errata
+  end
+
+  def self.repos_for_filter(filter)
     if repoid = filter[:repoid]
-      repos = [Glue::Pulp::Repo.new(:id => repoid)]
+      return [Glue::Pulp::Repo.new(:id => repoid)]
     elsif environment_id = filter[:environment_id]
       env = KTEnvironment.find(environment_id)
-      repos = env.products.map {|p| p.repos(env) }.flatten
+      if product_id = filter[:product_id]
+        products = [::Product.find_by_cp_id!(product_id)]
+      else
+        products = env.products
+      end
+      return products.map {|p| p.repos(env) }.flatten
+    else
+      raise "Not enough arguments for finding repos"
     end
-    repos.each {|repo| errata.concat(Pulp::Repository.errata(repo.id, filter.except(:environment_id, :repoid))) }
-    errata
   end
 
 #   def self.find id
