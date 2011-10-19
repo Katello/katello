@@ -54,7 +54,7 @@ module Navigation
     end
 
     def systems_navigation
-      [
+      a = [
         { :key => :general,
           :name =>N_("General"),
           :url => lambda{edit_system_path(@system.id)},
@@ -72,14 +72,15 @@ module Navigation
           :url => lambda{facts_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
-        },
-        { :key => :packages,
+        }
+      ]
+      a << { :key => :packages,
           :name =>N_("Packages"),
           :url => lambda{packages_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
-        }
-      ]
+        } if AppConfig.katello?
+      a
     end
 
     def activation_keys_navigation

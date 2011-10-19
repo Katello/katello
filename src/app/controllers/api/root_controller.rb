@@ -18,11 +18,6 @@ class Api::RootController < Api::ApiController
     all_routes = Rails.application.routes.routes
     api_root_routes = all_routes.select {|r| r.path =~ %r{^/api/[^/]+/:id\(\.:format\)$} }.collect {|r| r.path[0..-(":id(.:format)".length+1)]}.uniq
 
-    # Headpin does not support environments
-    if AppConfig.app_name == "headpin"
-      api_root_routes.delete "/api/environments/"
-    end
-
     render :json => api_root_routes.collect {|r| {:rel => r["/api/".size..-2], :href => r} }
   end
 
