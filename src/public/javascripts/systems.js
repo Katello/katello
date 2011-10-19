@@ -38,6 +38,7 @@ $(document).ready(function() {
 
   KT.systems_page.registerActions();
 
+  //end doc ready
 });
 
 KT.systems_page = (function() {

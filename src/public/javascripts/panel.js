@@ -25,7 +25,7 @@ $(document).ready(function() {
         var apanel = $('.panel');
         $('.block').width(panelLeft-17);
         apanel.width(940-panelLeft);
-        $('.right').width(910-panelLeft);
+        $('.right').width(898-panelLeft);
         if(apanel.hasClass('opened')){ apanel.css({"left":(panelLeft)}); }
         $('.left #new').css({"width":"10em"});
         $('.list-title').width(panelLeft);
@@ -61,14 +61,22 @@ $(document).ready(function() {
 	        ajax_url = activeBlock.attr("data-ajax_url");
 	        activeBlockId = activeBlock.attr('id');
 	
-	        if(event.ctrlKey && !thisPanel.hasClass('opened')) {
-	            if(activeBlock.hasClass('active')){activeBlock.removeClass('active');}
+	        if(event.ctrlKey && !thisPanel.hasClass('opened') && !(event.target.id == "new") && !activeBlock.hasClass('active')) {
+	            if(activeBlock.hasClass('active')){
+                    activeBlock.removeClass('active');
+                }
 	            else {
 	                activeBlock.addClass('active');
+                    activeBlock.find('.arrow-right').hide();
 	            }
-	        } else {
-	            if(activeBlock.hasClass('active')){ KT.panel.closePanel(thisPanel); }
-	            else { $.bbq.pushState({panel:activeBlockId}); }
+            } else {
+	            if(activeBlock.hasClass('active') && thisPanel.hasClass('opened')){
+                    KT.panel.closePanel(thisPanel);
+                }
+	            else {
+                    $.bbq.pushState({panel:activeBlockId});
+                    activeBlock.find('.arrow-right').show();
+                }
 	        }
 	        //update the selected count
 	        KT.panel.updateResult();
@@ -136,6 +144,14 @@ $(document).ready(function() {
                                     handles: 'e',
                                     autoHide: true
                                   });
+
+    KT.panel.actions.registerAction("select_none", {});
+    $('#select-none').mouseup(function(){
+        $('.block.active').removeClass('active');
+        KT.panel.updateResult();
+    });
+    KT.panel.updateResult();
+
     $('.search').fancyQueries();
 
     if (KT.panel.control_bbq) {
@@ -249,7 +265,7 @@ KT.panel = (function($){
                 success: function (data, status, xhr) {
                     var pc = panelContent.html(data);
 
-                    spinner.hide();
+                    spinner.fadeOut();
                     pc.fadeIn(function(){$(".panel-content :input:visible:enabled:first").focus();});
 
                     if( isSubpanel ){
@@ -260,7 +276,7 @@ KT.panel = (function($){
                     expand_cb(name);
                 },
                 error: function (xhr, status, error) {
-                    spinner.hide();
+                    spinner.fadeOut();
                     panelContent.html("<h2>Error</h2><p>There was an error retrieving that row: " + error + "</p>").fadeIn();
 
                 }
@@ -345,6 +361,7 @@ KT.panel = (function($){
             var len = $('.block.active').length;
             //update the select
             $('#select-result').html(len + i18n.items_selected).effect("highlight", {}, 200);
+            $('.numitems').html(len).effect("highlight", {}, 200);
             actions.resetActions(len);
             return len;
         },
@@ -505,17 +522,17 @@ KT.panel = (function($){
                     var options = action.find(".options");
                     action.find("a").click(function() {
                         if (!action.hasClass("disabled")) {
-                            options.show();
+                            options.slideDown('fast');
                         }
                     });
                     action.find(".cancel").click(function() {
                         if ($(this).hasClass("disabled")){return}
-                        options.hide();
+                        options.slideUp('fast');
                     });
                     action.find(".trigger").click(function() {
                         var params = action_list[action.attr("data-id")];
                         var success = function() {
-                            options.hide();
+                            options.slideUp('fast');
                             action.find("input").removeClass("disabled");
                             if (params.success_cb){
                                 params.success_cb(getSelected());
@@ -565,18 +582,22 @@ KT.panel = (function($){
                   if(!params.unselected_action) {
                     var div = $("[data-id=" + name + "]");
                     if (num > 0) {
-                        console.log(name);
-                        console.log($("#" + name));
+//                        console.log(name);
+//                        console.log($("#" + name));
                         div.removeClass("disabled");
                     }
                     else {
-                        console.log(name);
-                        console.log($("#" + name));
+//                        console.log(name);
+//                        console.log($("#" + name));
                         div.addClass("disabled");
                     }
                   }
               });
-
+              var actions = $(".panel_action");
+              actions.each(function(index){
+                var action = $(this);
+                action.find('.cancel').click();
+              });
             };
 
             return {

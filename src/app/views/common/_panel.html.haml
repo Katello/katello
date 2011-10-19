@@ -3,17 +3,12 @@
 
 #container
   .right
-    - if enable_create
-      %h4
-        #{_("Click New to create a new")} #{name}
-    %br
-    %br
-    %h4
-      #{_('List Actions')}:
-    %br
-    #select-result
     -if actions
       = render :partial=>actions
+    -else
+      .panel_action{'data-id'=>"select_none"}
+        #select-result
+        %a#select-none #{_("Select None")}
   = render :partial=>"common/tupane"
 
   %div.left{:class => left_panel_width ? left_panel_width : 'column_panel_' + columns.length.to_s }
