@@ -945,25 +945,49 @@ fieldset {
 }
 /* right side of 2 pane below the sliding pane */
 .right {
-  float:right;
-  width:460px;
-
-
-  .panel_action {
-
-    .disabled {
-      &:hover {
-        text-decoration: none;
-        cursor: normal;
-      }
+    float:right;
+    width:448px;
+    min-height: 300px;
+    height: 300px;
+    padding: 20px;
+    border: 1px solid $border_color;
+    @include border-right-radius(5px);
+    background-color: $lightergrey_color;
+    margin-top: 79px;
+    position: relative;
+    .panel_action {
+        .disabled {
+          &:hover {
+            text-decoration: none;
+            cursor: normal;
+          }
+        }
+        .options {
+          display: none;
+          @include border-radius(5px);
+          @include box-shadow(2px 2px 2px rgba(0,0,0,0.4));
+          background-color: white;
+          border: 1px solid $border_color;
+          padding: 15px;
+          margin: 4px auto;
+          width: 85%;
+          .actions {
+              float: right;
+          }
+        }
     }
-    .options {
-      display: none;
+    #select-result {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        font-size: 18px;
+        color: $lightgrey_color;
     }
-
-  }
-
-
+    #select-none {
+        position: absolute;
+        top: 36px;
+        right: 10px;
+    }
 }
 
 /* left side of 2 pane that has clickable links */
@@ -989,6 +1013,8 @@ fieldset {
         width: 10em;
         right: 0;
         height: 2em;
+        height: 21px;
+        font-size: 100% !important;
         &.block{
             &.active{
                 .arrow-right {
