@@ -247,7 +247,10 @@ class ProvidersController < ApplicationController
           end
         end
       else
-        @subscriptions << sub
+        product = Product.where(:cp_id => sub['productId']).first
+        if product and product.provider == @provider
+          @subscriptions << sub if !@subscriptions.include? sub
+        end
       end
     end
   end
