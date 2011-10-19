@@ -59,7 +59,13 @@ class SystemsController < ApplicationController
     accessible_envs = current_organization.environments
     setup_environment_selector(current_organization, accessible_envs)
     @environment = first_env_in_path(accessible_envs)
-    render :partial=>"new", :layout => "tupane_layout", :locals=>{:system=>@system, :accessible_envs => accessible_envs}
+    if !@environment
+      error = _("Organization '%s' has no environments to create new system in.") % @organization.name
+      errors error
+      render :text => error, :status => :bad_request
+    else
+      render :partial=>"new", :layout => "tupane_layout", :locals=>{:system=>@system, :accessible_envs => accessible_envs}
+    end
   end
 
   def create
