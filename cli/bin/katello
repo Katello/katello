@@ -82,6 +82,9 @@ def setup_admin(admin):
     prod_cmd.add_action('synchronize', product.Sync())
     prod_cmd.add_action('status', product.Status())
     prod_cmd.add_action('promote', product.Promote())
+    prod_cmd.add_action('list_filters', product.ListFilters())
+    prod_cmd.add_action('add_filter', product.AddFilter())
+    prod_cmd.add_action('delete_filter', product.DeleteFilter())
     admin.add_command('product', prod_cmd)
 
     repo_cmd = repo.Repo()
