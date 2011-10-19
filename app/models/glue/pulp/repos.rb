@@ -83,7 +83,7 @@ module Glue::Pulp::Repos
     def promote from_env, to_env
       @orchestration_for = :promote
 
-      async_tasks = promote_repos repos(from_env), to_env
+      async_tasks = promote_repos repos(from_env), from_env, to_env
       if !to_env.products.include? self
         self.environments << to_env
       end
@@ -299,8 +299,8 @@ module Glue::Pulp::Repos
         substitutions_with_paths = cdn_var_substitutor.substitute_vars(pc.content.contentUrl)
 
         substitutions_with_paths.each do |(substitutions, path)|
+
           feed_url = repository_url(path)
-          #noarch, i386, i686, ppc64, s390x, x86_64
           arch = substitutions["basearch"] || "noarch"
           repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
           repo = Glue::Pulp::Repo.new(:id => repo_id(repo_name),
@@ -394,35 +394,43 @@ module Glue::Pulp::Repos
     end
 
     protected
-    def promote_repos repos, to_env
+    def promote_repos repos, from_env, to_env
       async_tasks = []
       repos.each do |repo|
         if repo.is_cloned_in?(to_env)
           #repo is already cloned, so lets just re-sync it from its parent
           async_tasks << repo.get_clone(to_env).sync
         else
+          #repo is not in the next environment yet, we have to clone it there
           async_tasks << repo.promote(to_env, self)
 
-          new_repo_id = repo.clone_id(to_env)
           new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(repo)
 
-          pulp_uri = URI.parse(AppConfig.pulp.url)
-          new_productContent = Glue::Candlepin::ProductContent.new({:content => {
-              :name => repo.name,
-              :contentUrl => new_repo_path,
-              :gpgUrl => "",
-              :type => "yum",
-              :label => new_repo_id,
-              :vendor => "Custom"
-            }, :enabled => true
-          })
-
-          productContent_will_change!
-          productContent << new_productContent
+          if from_env.locker?
+            productContent_will_change!
+            productContent << self.create_content(repo.name, new_repo_path)
+          end
         end
       end
       async_tasks.flatten(1)
     end
+
+
+    def create_content name, path
+      content = Glue::Candlepin::ProductContent.new({
+        :content => {
+          :name => name,
+          :contentUrl => path,
+          :gpgUrl => "",
+          :type => "yum",
+          :label => name,
+          :vendor => "Custom"
+        },
+        :enabled => true
+      })
+      content
+    end
+
 
     def check_for_repo_conflicts(repo_name)
       unless self.repos(self.locker, {:name => repo_name}).empty?
