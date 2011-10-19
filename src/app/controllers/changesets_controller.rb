@@ -69,11 +69,8 @@ class ChangesetsController < ApplicationController
 
   #extended scroll for changeset_history
   def items
-    start = params[:offset]
-    @changesets = @environment.changeset_history.search_for(params[:search])
-    @panel_options[:num_items] = @changesets.count
-    @changesets = @changesets.limit(current_user.page_size).offset(start)
-    render_panel_items @changesets, @panel_options
+    changesets = @environment.changeset_history.search_for(params[:search])
+    render_panel_items changesets, @panel_options, params[:offset]
     retain_search_history
   end
 

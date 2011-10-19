@@ -66,11 +66,8 @@ class ActivationKeysController < ApplicationController
   end
 
   def items
-    start = params[:offset]
-    @activation_keys = ActivationKey.search_for(params[:search]).where(:organization_id => current_organization)
-    @panel_options[:num_items] = @activation_keys.count
-    @activation_keys = @activation_keys.limit(current_user.page_size).offset(start)
-    render_panel_items @activation_keys, @panel_options
+    activation_keys = ActivationKey.search_for(params[:search]).where(:organization_id => current_organization)
+    render_panel_items activation_keys, @panel_options, params[:offset]
     retain_search_history
   end
 
