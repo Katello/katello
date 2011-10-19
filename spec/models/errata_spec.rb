@@ -17,6 +17,12 @@ describe Glue::Pulp::Errata do
 
   before (:each) do
     disable_errata_orchestration
+    disable_org_orchestration
+    @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
+    @locker = @organization.locker
+
+    @repo = Glue::Pulp::Repo.new()
+    Glue::Pulp::Repo.stub(:new => @repo)
   end
   
   context "Find errata" do
@@ -34,18 +40,23 @@ describe Glue::Pulp::Errata do
   end
 
   describe "Filter errata" do
-    it "should be able to search all errata of given type" do
-      filter = { :type => "security" }
-      Pulp::Errata.should_receive(:filter).once.with(filter).and_return(RepoTestData::ERRATA)
-      Glue::Pulp::Errata.filter(filter)
+    it "should be able to search all errata of given type for given environment" do
+      env = KTEnvironment.create!(:name => "Dev", :prior => @organization.locker, :organization_id => @organization.id)
+      product_with_repo = mock(Product, :repos => [@repo])
+      env.stub(:products => [product_with_repo])
+      KTEnvironment.stub(:find => env)
+
+      filter = { :type => "security", :environment_id => env.id }
+      Pulp::Errata.should_receive(:filter).once.with(filter.except(:environment_id)).and_return(RepoTestData::ERRATA)
+      @repo.should_receive(:errata).and_return(RepoTestData::REPO_ERRATA.map{|e| Glue::Pulp::Errata.new(e)})
+
+      Glue::Pulp::Errata.filter(filter).should == [RepoTestData::ERRATA[1]]
     end
 
     it "should be able to search all errata of given type and repo" do
       filter = { :type => "security", :repoid => "repo-123" }
-      repo_mock = Glue::Pulp::Repo.new()
-      Glue::Pulp::Repo.should_receive(:new).and_return(repo_mock)
       Pulp::Errata.should_receive(:filter).once.with(filter.slice(:type)).and_return(RepoTestData::ERRATA)
-      repo_mock.should_receive(:errata).and_return(RepoTestData::REPO_ERRATA.map{|e| Glue::Pulp::Errata.new(e)})
+      @repo.should_receive(:errata).and_return(RepoTestData::REPO_ERRATA.map{|e| Glue::Pulp::Errata.new(e)})
       Glue::Pulp::Errata.filter(filter).should == [RepoTestData::ERRATA[1]]
     end
   end
