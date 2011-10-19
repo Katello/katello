@@ -13,6 +13,7 @@ class FiltersController < ApplicationController
     index_test = lambda{Filter.any_readable?(current_organization)}
     readable = lambda{@filter.readable?}
     editable = lambda{@filter.editable?}
+    deletable = lambda{@filter.deletable?}
     {
       :create => create,
       :new => create,
@@ -20,7 +21,8 @@ class FiltersController < ApplicationController
       :items => index_test,
       :auto_complete_search => index_test,
       :edit => readable,
-      :update=>editable
+      :update=>editable,
+      :destroy=>deletable
 
     }
   end
@@ -41,15 +43,15 @@ class FiltersController < ApplicationController
   def update
     options = params[:filter]
     to_ret = ""
-    if options[:pulp_id]
-      @filter.pulp_id = options[:pulp_id]
-      to_ret =  @filter.pulp_id
+    if options[:name]
+      @filter.name = options[:name]
+      to_ret =  @filter.name
     elsif options[:description]
       @filter.description = options[:description]
       to_ret = @filter.description 
     end
     @filter.save!
-    notice _("Package Filter '#{@filter.pulp_id}' has been updated.")
+    notice _("Package Filter '#{@filter.name}' has been updated.")
     render :text=>to_ret
   rescue Exception=>e
     errors e
@@ -68,10 +70,19 @@ class FiltersController < ApplicationController
 
   def create
     @filter = Filter.create!(params[:filter].merge({:organization_id=>current_organization.id}))
-    notice N_("Filter #{@filter.pulp_id} created successfully.")
-    render :partial=>"common/list_item", :locals=>{:item=>@filter, :accessor=>"id", :columns=>['pulp_id'], :name=>controller_display_name}
+    notice N_("Filter #{@filter.name} created successfully.")
+    render :partial=>"common/list_item", :locals=>{:item=>@filter, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
 
   rescue Exception=> e
+    errors e
+    render :text=>e, :status=>500
+  end
+
+
+  def destroy
+    @filter.destroy
+    render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
+  rescue Exception => e
     errors e
     render :text=>e, :status=>500
   end
@@ -85,7 +96,7 @@ class FiltersController < ApplicationController
   def panel_options
     @panel_options = {
         :title => _('Package Filters'),
-        :col => ['pulp_id'],
+        :col => ['name'],
         :create => _('Filter'),
         :name => controller_display_name,
         :ajax_scroll=>items_filters_path(),
