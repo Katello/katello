@@ -17,11 +17,13 @@ from katello.client.api.base import KatelloAPI
 
 class ErrataAPI(KatelloAPI):
     
-    def errata_filter(self, repo_id=None, type=None):
+    def errata_filter(self, repo_id=None, type=None, environment_id=None):
         path = "/api/errata"
         params = {}
         if not type == None:
             params['type'] = type
+        if not environment_id == None:
+            params['environment_id'] = environment_id
         if not repo_id == None:
             params['repoid'] = repo_id
         pack = self.server.GET(path, params)[1]

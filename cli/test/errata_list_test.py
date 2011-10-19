@@ -5,6 +5,7 @@ from mock import Mock
 from cli_test_utils import CLIOptionTestCase, CLIActionTestCase
 import test_data
 
+from katello.client.api import utils
 import katello.client.core.errata
 from katello.client.core.errata import List
 
@@ -22,6 +23,9 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     def test_repo_with_missing_product_generates_error(self):
         self.assertRaises(Exception, self.action.process_options, ['--repo=repo-123', '--org=org-123'])
 
+    def test_repo_id_neither_org_provided_generates_error(self):
+        self.assertRaises(Exception, self.action.process_options, [])
+
     def test_no_error_if_all_required_provided(self):
         self.action.process_options(['--repo=repo-123', '--product=product-123', '--org=org-123'])
         self.assertEqual(len(self.action.optErrors), 0)
@@ -30,12 +34,12 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.action.process_options(['--repo_id=repo-123'])
         self.assertEqual(len(self.action.optErrors), 0)
 
-    def test_no_error_nothing_provided(self):
-        self.action.process_options([])
+    def test_no_error_if_org_provided(self):
+        self.action.process_options(['--org=org-123'])
         self.assertEqual(len(self.action.optErrors), 0)
 
     def test_accept_type_filter(self):
-        self.action.process_options(['--type=enhancements'])
+        self.action.process_options(['--type=enhancements', '--org=org-123'])
         self.assertEqual(len(self.action.optErrors), 0)
 
 class ErrataListTest(CLIActionTestCase):
@@ -58,6 +62,16 @@ class ErrataListTest(CLIActionTestCase):
         'type': 'enhancements'
     }
 
+    OPTIONS_BY_ORG = {
+        'org': ORG['name'],
+    }
+
+    OPTIONS_BY_ENV = {
+        'org': ORG['name'],
+        'env': ENV['name'],
+    }
+
+
     def setUp(self):
         self.set_action(List())
         self.set_module(katello.client.core.errata)
@@ -66,6 +80,7 @@ class ErrataListTest(CLIActionTestCase):
 
         self.mock(self.module, 'get_repo', self.REPO)
         self.mock(self.action.api, 'errata_filter', test_data.ERRATA_BY_REPO)
+        self.mock(self.module, 'get_environment', self.ENV)
 
     def tearDown(self):
         self.restore_mocks()
@@ -75,7 +90,17 @@ class ErrataListTest(CLIActionTestCase):
         self.action.run()
         self.action.printer.printItems.assert_called_once_with(test_data.ERRATA_BY_REPO)
 
+    def test_it_uses_locker_when_no_env_is_specified(self):
+        self.mock_options(self.OPTIONS_BY_ORG)
+        self.action.run()
+        self.module.get_environment.assert_called_once_with(self.OPTIONS_BY_ORG['org'], None)
+
+    def test_it_searches_for_env_id_when_env_is_specified(self):
+        self.mock_options(self.OPTIONS_BY_ENV)
+        self.action.run()
+        self.module.get_environment.assert_called_once_with(self.OPTIONS_BY_ENV['org'], self.OPTIONS_BY_ENV['env'])
+
     def test_it_supports_filters(self):
         self.mock_options(self.OPTIONS_BY_TYPE)
         self.action.run()
-        self.action.api.errata_filter.assert_called_once_with(repo_id=self.REPO['id'], type=self.OPTIONS_BY_TYPE['type'])
+        self.action.api.errata_filter.assert_called_once_with(repo_id=self.REPO['id'], type=self.OPTIONS_BY_TYPE['type'], environment_id=None)

@@ -279,8 +279,8 @@ module Pulp
         JSON.parse(body)
       end
 
-      def errata(repo_id, filter = {})
-        path = "#{repository_path}#{repo_id}/errata/?#{filter.to_param}"
+      def errata(repo_id)
+        path = "#{repository_path}#{repo_id}/errata/"
         response = get(path, self.default_headers)
         body = response.body
         JSON.parse(body)

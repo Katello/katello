@@ -21,7 +21,7 @@ from katello.client.api.errata import ErrataAPI
 from katello.client.api.system import SystemAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.api.utils import get_repo
+from katello.client.api.utils import get_repo, get_environment
 
 Config()
 
@@ -57,8 +57,9 @@ class List(ErrataAction):
                       help=_("filter errata by type eg: enhancements"))
 
     def check_options(self):
-        if self.has_option('repo'):
+        if not self.has_option('repo_id'):
             self.require_option('org')
+        if self.has_option('repo'):
             self.require_option('product')
 
     def run(self):
@@ -66,19 +67,29 @@ class List(ErrataAction):
         repo_name = self.get_option('repo')
         org_name  = self.get_option('org')
         env_name  = self.get_option('env')
+        env_id = None
         prod_name = self.get_option('product')
 
         self.printer.addColumn('id')
         self.printer.addColumn('title')
         self.printer.addColumn('type')
 
-        if not repo_id and repo_name:
-            repo = get_repo(org_name, prod_name, repo_name, env_name)
-            if repo == None:
-                return os.EX_DATAERR
-            repo_id = repo["id"]
+        if not repo_id:
+            if repo_name:
+                repo = get_repo(org_name, prod_name, repo_name, env_name)
+                if repo == None:
+                    return os.EX_DATAERR
+                repo_id = repo["id"]
+            else:
+                env = get_environment(org_name, env_name)
+                if env == None:
+                    return os.EX_DATAERR
+                else:
+                    env_id = env["id"]
 
-        errata = self.api.errata_filter(repo_id=repo_id, type=self.get_option('type'))
+
+
+        errata = self.api.errata_filter(repo_id=repo_id, type=self.get_option('type'), environment_id=env_id)
 
         self.printer.setHeader(_("Errata List"))
         self.printer.printItems(errata)
