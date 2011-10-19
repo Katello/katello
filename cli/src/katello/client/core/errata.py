@@ -21,7 +21,7 @@ from katello.client.api.errata import ErrataAPI
 from katello.client.api.system import SystemAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.api.utils import get_repo, get_environment
+from katello.client.api.utils import get_repo, get_environment, get_product
 
 Config()
 
@@ -69,7 +69,7 @@ class List(ErrataAction):
         repo_name = self.get_option('repo')
         org_name  = self.get_option('org')
         env_name  = self.get_option('env')
-        env_id = None
+        env_id, prod_id = None, None
         prod_name = self.get_option('product')
 
         self.printer.addColumn('id')
@@ -88,10 +88,15 @@ class List(ErrataAction):
                     return os.EX_DATAERR
                 else:
                     env_id = env["id"]
+                if prod_name:
+                    product = get_product(org_name, prod_name)
+                    if product == None:
+                        return os.EX_DATAERR
+                    else:
+                        prod_id = product["id"]
 
 
-
-        errata = self.api.errata_filter(repo_id=repo_id, environment_id=env_id, type=self.get_option('type'), severity=self.get_option('severity'))
+        errata = self.api.errata_filter(repo_id=repo_id, environment_id=env_id, type=self.get_option('type'), severity=self.get_option('severity'),prod_id=prod_id)
 
         self.printer.setHeader(_("Errata List"))
         self.printer.printItems(errata)
