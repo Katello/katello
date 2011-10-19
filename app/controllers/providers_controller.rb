@@ -121,7 +121,9 @@ class ProvidersController < ApplicationController
 
   def items
     start = params[:offset]
-    @providers = Provider.readable(current_organization).custom.search_for(params[:search]).order('name').limit(current_user.page_size).offset(start)
+    @providers = Provider.readable(current_organization).custom.search_for(params[:search]).order('name')
+    @panel_options[:num_items] = @providers.count
+    @providers = @providers.limit(current_user.page_size).offset(start)
     render_panel_items @providers, @panel_options
     retain_search_history
   end

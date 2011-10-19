@@ -395,11 +395,16 @@ class ApplicationController < ActionController::Base
     options[:accessor] ||= "id"
     options[:collection] = items
     options[:columns] = options[:col]
+    
     if options[:list_partial]
-      render :partial=>options[:list_partial], :locals=>options
+      rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)
     else
-      render :partial=>"common/list_items", :locals=>options
+      rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options) 
     end
+    
+    render :json => {:html => rendered_html, 
+                      :total_items => options[:num_items],
+                      :current_items => options[:collection].length }
   end
 
   #produce a simple datastructure of a changeset for the browser
