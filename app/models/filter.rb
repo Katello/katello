@@ -25,13 +25,17 @@ class Filter < ActiveRecord::Base
   belongs_to :organization
   has_and_belongs_to_many :products, :uniq => true
 
+  alias_attribute :name, :pulp_id
+
   scoped_search :on => :pulp_id, :complete_value => true, :rename => :'filter.pulp_id'
   
   scope :readable, lambda {|org| readable_items(org)}
 
 
-  READ_PERM_VERBS = [:read, :create, :delete]
 
+
+
+  READ_PERM_VERBS = [:read, :create, :delete]
 
   def readable?
     User.allowed_to?(READ_PERM_VERBS, :filters, self.id, self.organization)
@@ -44,8 +48,6 @@ class Filter < ActiveRecord::Base
   def deletable?
      User.allowed_to?([:delete, :create], :filters, self.id, self.organization)
   end
-
-
 
   def self.list_tags org_id
     select('id,pulp_id').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.pulp_id) }
@@ -83,6 +85,13 @@ class Filter < ActiveRecord::Base
     end
   end
 
+
+
+  def as_json(options)
+    options.nil? ?
+        super(:methods => [:name], :exclude => :pulp_id) :
+        super(options.merge(:methods => [:name], :exclude => :pulp_id) {|k, v1, v2| [v1, v2].flatten })
+  end
 
 end
 
