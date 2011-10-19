@@ -341,15 +341,20 @@ KT.panel = (function($){
                     data : params,
                     cache: false,
                     success: function(data) {
-                        var expand_list = $('.expand_list').find('section');
+                        var expand_list 		= $('.expand_list').find('section'),
+                        	current_items_count = $('#current_items_count');
                         
                         retrievingNewContent = false;
-                        expand_list.append(data);
+                        expand_list.append(data['html']);
                         $('.list-spinner').remove();
                         
-                        if (data.length == 0) {
+                        if (data['current_items'] === 0) {
                             list.removeClass("ajaxScroll");
                         }
+                        
+                        KT.panel.list.current_items += data['current_items'];
+	        			current_items_count.html(KT.panel.list.current_items);
+                        
                         extended_cb();
                     },
                     error: function() {
@@ -480,6 +485,10 @@ KT.panel = (function($){
 				                $.bbq.pushState({ panel : id });
 				                select_item(id);
 				                notices.checkNotices();
+				                KT.panel.list.current_items += 1;
+				                KT.panel.list.total_items += 1; 
+				                $('#total_items_count').html(KT.panel.list.total_items);
+	        					$('#current_items_count').html(KT.panel.list.current_items);
 				            }
 				      	}, 
 				      	error	: function(e) {
@@ -531,10 +540,14 @@ KT.panel = (function($){
 				$(this).ajaxSubmit({
 					url		:  url,
 			    	success : function(data) {
-			    		element.find('section').append(data);
+			    		element.find('section').append(data['html']);
 	        			element.find('.spinner').hide();
     			    	button.removeAttr('disabled');
 	        			element.find('section').fadeIn();
+	        			$('#total_items_count').html(data['total_items']);
+	        			$('#current_items_count').html(data['current_items']);
+	        			KT.panel.list.total_items = data['total_items'];
+	        			KT.panel.list.current_items = data['current_items'];
 	        			$('.left').resize();
 			      	}, 
 			      	error	: function(e) {
@@ -569,6 +582,9 @@ KT.panel = (function($){
 
 KT.panel.list = (function(){
    return {
+   		total_items : 0,
+   		current_items : 0,
+   		
        last_child : function() {
          return $("#list section").children().last();
        },
