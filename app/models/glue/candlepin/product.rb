@@ -240,9 +240,10 @@ module Glue::Candlepin::Product
         when :create
           queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
           queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
-        when :update, :promote
-          #queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])
+        when :update
           #PROD TODO: delete content that has no repos assigned
+        when :promote
+          queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])
         when :import_from_cp
           queue.create(:name => "delete imported content from locker environment: #{self.name}", :priority =>2, :action => [self, :remove_imported_content])
           #PROD TODO: delete content that has no repos assigned
