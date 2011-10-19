@@ -257,8 +257,6 @@ class SystemsController < ApplicationController
     @panel_options = { :title => _('Systems'),
                       :col => COLUMNS.keys,
                       :custom_rows => true,
-                      :enable_create => true,
-                      :create => _('System'),
                       :enable_sort => true,
                       :name => controller_display_name,
                       :list_partial => 'systems/list_systems',
