@@ -42,6 +42,9 @@ describe Api::ErrataController do
 
       Glue::Pulp::Errata.should_receive(:filter).once.with(:severity => 'critical', :environment_id => '123').and_return([])
       get 'index', :severity => 'critical', :environment_id => "123"
+
+      Glue::Pulp::Errata.should_receive(:filter).once.with(:severity => 'critical', :product_id => 'product-123', :environment_id => '123').and_return([])
+      get 'index', :severity => 'critical', :product_id => 'product-123', :environment_id => "123"
     end
 
     it "should not accept a call without specifying envirovnemnt or repoid" do
