@@ -157,10 +157,10 @@ module Candlepin
 
   class Owner < CandlepinResource
     class << self
-      # Set the contentPrefic at creation time so that the client will get
+      # Set the contentPrefix at creation time so that the client will get
       # content only for the org it has been subscribed to
       def create key, description
-        attrs = {:key => key, :displayName => description, :contentPrefix => "/#{key}/$env/"}
+        attrs = {:key => key, :displayName => description, :contentPrefix => (AppConfig.katello? ? "/#{key}/$env/" : "/#{key}/")}
         owner_json = self.post(path(), attrs.to_json, self.default_headers).body
         JSON.parse(owner_json).with_indifferent_access
       end
