@@ -147,6 +147,7 @@ class SyncPlansController < ApplicationController
       if SyncPlan.where(id = @plan.id).search_for(params[:search]).include?(@plan) 
         render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval'], :name=>controller_display_name}
       else
+        notice _("'#{@plan["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
         render :json => { :no_match => true }
       end
     rescue Exception => error

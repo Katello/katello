@@ -149,6 +149,7 @@ class ProvidersController < ApplicationController
       if Provider.where(id = @provider.id).search_for(params[:search]).include?(@provider) 
         render :partial=>"common/list_item", :locals=>{:item=>@provider, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
       else
+        notice _("'#{@provider["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
         render :json => { :no_match => true }
       end
     rescue Exception => error

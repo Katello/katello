@@ -78,8 +78,13 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     @user.save!
     notice @user.username + _(" created successfully.")
-    
-    render :partial=>"common/list_item", :locals=>{:item=>@user, :accessor=>"id", :columns=>["username"], :name=>controller_display_name}
+   
+    if User.where(id = @user.id).search_for(params[:search]).include?(@user) 
+      render :partial=>"common/list_item", :locals=>{:item=>@user, :accessor=>"id", :columns=>["username"], :name=>controller_display_name}
+    else
+      notice _("'#{@user["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+      render :json => { :no_match => true }
+    end
   rescue Exception => error
     errors error
     render :json=>@user.errors, :status=>:bad_request

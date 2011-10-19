@@ -197,6 +197,7 @@ class ActivationKeysController < ApplicationController
     if ActivationKey.where(id = @activation_key.id).search_for(params[:search]).include?(@activation_key)
       render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
     else
+      notice _("'#{@activation_key["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
       render :json => { :no_match => true }
     end
   rescue Exception => error
