@@ -26,6 +26,17 @@ URL:            http://www.katello.org
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+Requires:        %{name}-common
+Requires:        %{name}-glue-pulp
+Requires:        %{name}-glue-foreman
+Requires:        %{name}-glue-candlepin
+Conflicts:       %{name}-headpin
+
+%description
+Provides a package for managing application life-cycle for Linux systems.
+
+%package common
+Summary:        Common bits for all Katello instances
 Requires:       httpd
 Requires:       mod_ssl
 Requires:       openssl
@@ -45,9 +56,9 @@ Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
 Requires:       rubygem(gettext_i18n_rails)
 Requires:       rubygem(simple-navigation) >= 3.3.4
-Requires:       rubygem(sqlite3) 
+Requires:       rubygem(sqlite3)
 Requires:       rubygem(pg)
-Requires:       rubygem(scoped_search) >= 2.3.4
+Requires:       rubygem(scoped_search) >= 2.3.1
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(acts_as_reportable) >= 1.1.1
 Requires:       rubygem(pdf-writer) >= 1.1.8
@@ -72,7 +83,7 @@ Requires(pre):  shadow-utils
 Requires(preun): chkconfig
 Requires(preun): initscripts
 Requires(post): chkconfig
-Requires(postun): initscripts 
+Requires(postun): initscripts
 
 BuildRequires:  coreutils findutils sed
 BuildRequires:  rubygems
@@ -84,14 +95,15 @@ BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 
 BuildArch: noarch
 
-%description
-Provides a package for managing application life-cycle for Linux systems
+%description common
+Common bits for all Katello instances
+
 
 %package all
 Summary:        A meta-package to pull in all components for Katello
-Requires:       katello
-Requires:       katello-configure
-Requires:       katello-cli
+Requires:       %{name}
+Requires:       %{name}-configure
+Requires:       %{name}-cli
 Requires:       postgresql-server
 Requires:       postgresql
 Requires:       pulp
@@ -101,6 +113,27 @@ Requires:       candlepin-tomcat6
 This is the Katello meta-package.  If you want to install Katello and all
 of its dependencies on a single machine, you should install this package
 and then run katello-configure to configure everything.
+
+%package glue-pulp
+Summary:         Katello connection classes for the Pulp backend
+Requires:        %{name}-common
+
+%description glue-pulp
+Katello connection classes for the Pulp backend
+
+%package glue-foreman
+Summary:         Katello connection classes for the Foreman backend
+Requires:        %{name}-common
+
+%description glue-foreman
+Katello connection classes for the Foreman backend
+
+%package glue-candlepin
+Summary:         Katello connection classes for the Candlepin backend
+Requires:        %{name}-common
+
+%description glue-candlepin
+Katello connection classes for the Candlepin backend
 
 %prep
 %setup -q
@@ -153,7 +186,7 @@ install -Dp -m0644 %{confdir}/%{name}.httpd.conf %{buildroot}%{_sysconfdir}/http
 install -Dp -m0644 %{confdir}/thin.yml %{buildroot}%{_sysconfdir}/%{name}/
 
 #overwrite config files with symlinks to /etc/katello
-ln -svf %{_sysconfdir}/%{name}/katello.yml %{buildroot}%{homedir}/config/katello.yml
+ln -svf %{_sysconfdir}/%{name}/%{name}.yml %{buildroot}%{homedir}/config/%{name}.yml
 #ln -svf %{_sysconfdir}/%{name}/database.yml %{buildroot}%{homedir}/config/database.yml
 ln -svf %{_sysconfdir}/%{name}/environment.rb %{buildroot}%{homedir}/config/environments/production.rb
 
@@ -194,43 +227,85 @@ chmod a+r %{buildroot}%{homedir}/ca/redhat-uep.pem
 %clean
 rm -rf %{buildroot}
 
-%post
+%post common
 #Add /etc/rc*.d links for the script
 /sbin/chkconfig --add %{name}
 
-%postun
+%postun common
 if [ "$1" -ge "1" ] ; then
     /sbin/service %{name} condrestart >/dev/null 2>&1 || :
 fi
 
 %files
+
+%files common
 %defattr(-,root,root)
 %doc README LICENSE doc/
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config %{_sysconfdir}/%{name}/thin.yml
-%config %{_sysconfdir}/httpd/conf.d/katello.conf
+%config %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
 %{_sysconfdir}/bash_completion.d/%{name}
-%{homedir}
+
+# Break apart the main bits
+%{homedir}/app/controllers
+%{homedir}/app/helpers
+%{homedir}/app/models/*.rb
+%{homedir}/app/stylesheets
+%{homedir}/app/views
+%{homedir}/autotest
+%{homedir}/ca
+%{homedir}/config
+%{homedir}/db
+%{homedir}/integration_spec
+%{homedir}/lib/*.rb
+%{homedir}/lib/navigation
+%{homedir}/lib/resources/cdn.rb
+%{homedir}/lib/tasks
+%{homedir}/lib/util
+%{homedir}/locale
+%{homedir}/log
+%{homedir}/public
+%{homedir}/script
+%{homedir}/spec
+%{homedir}/tmp
+%{homedir}/vendor
+%{homedir}/.bundle
+%{homedir}/config.ru
+%{homedir}/Gemfile
+%{homedir}/Gemfile.lock
+%{homedir}/Rakefile
 
 %defattr(-, katello, katello)
 %{_localstatedir}/log/%{name}
 %{datadir}
 
+%files glue-pulp
+%{homedir}/app/models/glue/pulp
+%{homedir}/lib/resources/pulp.rb
+
+%files glue-candlepin
+%{homedir}/app/models/glue/candlepin
+%{homedir}/app/models/glue/provider.rb
+%{homedir}/lib/resources/candlepin.rb
+
+%files glue-foreman
+%{homedir}/lib/resources/foreman.rb
+
 %files all
 
-%pre
+%pre common
 # Add the "katello" user and group
 getent group %{name} >/dev/null || groupadd -r %{name}
 getent passwd %{name} >/dev/null || \
     useradd -r -g %{name} -d %{homedir} -s /sbin/nologin -c "Katello" %{name}
 exit 0
 
-%preun
+%preun common
 if [ $1 -eq 0 ] ; then
     /sbin/service %{name} stop >/dev/null 2>&1
     /sbin/chkconfig --del %{name}
