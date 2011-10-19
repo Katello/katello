@@ -102,6 +102,7 @@ class RolesController < ApplicationController
     if Role.where(id = @role.id).search_for(params[:search]).include?(@role)
       render :partial=>"common/list_item", :locals=>{:item=>@role, :accessor=>"id", :columns=>["name"], :name=>controller_display_name}
     else
+      notice _("'#{@role["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
       render :json => { :no_match => true }
     end
   rescue Exception => error

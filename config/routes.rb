@@ -132,8 +132,8 @@ Src::Application.routes.draw do
     end
   end
 
-
   resources :providers do
+    get 'auto_complete_search', :on => :collection
     resources :products do
       resources :repositories
     end
@@ -178,9 +178,6 @@ Src::Application.routes.draw do
         get :system_templates
         get :products
       end
-    end
-    resources :providers do
-      get 'auto_complete_search', :on => :collection
     end
     resources :providers
     collection do
