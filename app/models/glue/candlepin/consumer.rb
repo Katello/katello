@@ -192,6 +192,39 @@ module Glue::Candlepin::Consumer
       Time.parse(item)
     end
 
+    def sys_available_pools
+      avail_pools = self.available_pools.collect {|pool|
+        sockets = ""
+        multiEntitlement = false
+        pool["productAttributes"].each do |attr|
+          if attr["name"] == "socket_limit"
+            sockets = attr["value"]
+          elsif attr["name"] == "multi-entitlement"
+            multiEntitlement = true
+          end
+        end
+
+        providedProducts = []
+        pool["providedProducts"].each do |cp_product|
+          product = Product.where(:cp_id => cp_product["productId"]).first
+          if product
+            providedProducts << product
+          end
+        end
+
+        OpenStruct.new(:poolId => pool["id"],
+                       :poolName => pool["productName"],
+                       :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                       :consumed => pool["consumed"],
+                       :quantity => pool["quantity"],
+                       :sockets => sockets,
+                       :multiEntitlement => multiEntitlement,
+                       :providedProducts => providedProducts)
+      }
+      avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
+      avail_pools
+    end
+
   end
 
 end
