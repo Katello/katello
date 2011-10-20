@@ -11,9 +11,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-(function(){
-	KT.panel.list.registerPage('activation_keys', { create : 'new_activation_key' });
-})();
+KT.panel.list.registerPage('activation_keys', { create : 'new_activation_key' });
 
 $(document).ready(function() {
 
