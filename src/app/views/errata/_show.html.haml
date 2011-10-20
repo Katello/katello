@@ -48,7 +48,7 @@
   %fieldset
     .grid_2.ra
       %label #{_("Associated Bugs")}:
-    .grid_5.la
+    .grid_8
       - if @errata.references.length > 0
         %table
           %thead
@@ -67,7 +67,7 @@
                   %td
                     - if reference[:href]
                       %a{:href => reference[:href]}
-                        = reference[:id].nil? ? _("none") : reference[:id]
+                        = reference[:id].nil? ? _("link") : reference[:id]
                     - else
                       = reference[:id].nil? ? _("none") : reference[:id]
                   %td
@@ -78,6 +78,6 @@
   %fieldset
     .grid_2.suffix_5.la
       %label #{_("Description")}:
-    .grid_7.prefix_0
+    .grid_8
       %pre
         = @errata.description
