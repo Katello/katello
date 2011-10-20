@@ -23,7 +23,7 @@
           %td
             #{'Add Packages'}
             %form{:id=>'add_package_form'}
-              %input{:type=>'text', :id=>'package_input', 'data-url'=>add_packages_filter_path(@filter)}
+              %input{:type=>'text', :id=>'package_input', :size=>'35', 'data-url'=>add_packages_filter_path(@filter)}
               %input.button{:type=>'submit', :id=>'add_package', :value=>_('Add')}
       - if @filter.package_list.empty?
         %tr
