@@ -17,9 +17,7 @@
  *
  */
 
-(function(){
-	KT.panel.list.registerPage('systems');
-})();
+KT.panel.list.registerPage('systems');
 
 $(document).ready(function() {
   $('#update_subscriptions').live('submit', function(e) {

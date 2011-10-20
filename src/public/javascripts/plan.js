@@ -11,9 +11,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-(function(){
-	KT.panel.list.registerPage('sync_plans', { create : 'new_sync_plan' });
-})();
+KT.panel.list.registerPage('sync_plans', { create : 'new_sync_plan' });
 
 $(document).ready(function() {
 
