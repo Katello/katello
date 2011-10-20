@@ -15,13 +15,17 @@
 
 
 development:
+  <%db = find_db(config, 'development')%>
+  <%if db %>
+<%=db%>
+  <%else%>
   adapter: postgresql
   username: katello
   password: katello
   database: katello
   host: localhost
   encoding: UTF8
-
+  <%end%>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -31,10 +35,12 @@ test:
   <%if db %>
 <%=db%>
   <%else%>
-  adapter: sqlite3
-  database: db/test.sqlite3
-  pool: 5
-  timeout: 5000
+  adapter: postgresql
+  username: katello
+  password: katello
+  database: katello_test
+  host: localhost
+  encoding: UTF8
   <%end%>
 
 production:
@@ -42,8 +48,10 @@ production:
   <%if db %>
 <%=db%>
   <%else%>
-  adapter: sqlite3
-  database: db/production.sqlite3
-  pool: 5
-  timeout: 5000
+  adapter: postgresql
+  username: katello
+  password: katello
+  database: katello_production
+  host: localhost
+  encoding: UTF8
   <%end%>

@@ -19,7 +19,7 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_environment, :only => [:create, :index]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
-                                        :unsubscribe, :subscriptions]
+                                        :unsubscribe, :subscriptions, :pools]
   before_filter :authorize, :except => :activate
 
   skip_before_filter :require_user, :only => [:activate]
@@ -45,6 +45,7 @@ class Api::SystemsController < Api::ApiController
       :subscribe => edit_system,
       :unsubscribe => edit_system,
       :subscriptions => read_system,
+      :pools => read_system,
     }
   end
 
@@ -123,6 +124,10 @@ class Api::SystemsController < Api::ApiController
     render :text => _("Deleted system '#{params[:id]}'"), :status => 204
   end
 
+  def pools
+    render :json => sys_available_pools
+  end
+
   def package_profile
     render :json => @system.package_profile.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
   end
@@ -191,6 +196,18 @@ class Api::SystemsController < Api::ApiController
       raise HttpErrors::BadRequest, _("At least one activation key must be provided")
     end
     activation_keys
+  end
+
+  private
+
+  def sys_available_pools
+    avail_pools = @system.available_pools.collect {|pool| OpenStruct.new(:poolId => pool["id"],
+                            :poolName => pool["productName"],
+                            :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                            :consumed => pool["consumed"],
+                            :quantity => pool["quantity"]).marshal_dump}
+    avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
+    avail_pools
   end
 
 end

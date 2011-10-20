@@ -19,15 +19,43 @@ module Glue::Candlepin::Pool
     base.send :include, InstanceMethods
 
     base.class_eval do
-      lazy_accessor :productName, :startDate,
-        :initializer => lambda { Candlepin::Pool.get(cp_id) }
+      lazy_accessor :productName, :startDate, :endDate, :consumed, :quantity, :attrs,
+        :initializer => lambda {
+          json = Candlepin::Pool.get(cp_id)
+          # symbol "attributes" is reserved by Rails and cannot be used
+          json['attrs'] = json['attributes']
+          json
+        }
+
+      alias_method :poolName, :productName
+      alias_method :expires, :endDate
+      alias_method :expires_as_datetime, :endDate_as_datetime
     end
   end
 
   module InstanceMethods
 
+    def initialize(attrs = nil)
+      if attrs.member? 'id'
+        # initializing from candlepin json
+        @productName = attrs["productName"]
+        @startDate = attrs["startDate"]
+        @endDate = attrs["endDate"]
+        @consumed = attrs["consumed"]
+        @quantity = attrs["quantity"]
+        @attrs = attrs["attributes"]
+        super(:cp_id => attrs['id'])
+      else
+        super
+      end
+    end
+
     def startDate_as_datetime
       DateTime.parse(startDate)
+    end
+
+    def endDate_as_datetime
+      DateTime.parse(endDate)
     end
 
   end

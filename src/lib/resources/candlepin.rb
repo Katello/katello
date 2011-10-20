@@ -183,10 +183,6 @@ module Candlepin
       def update key, organization
         owner = find key
         owner['displayName'] = organization.name
-        if organization.parent_id
-          owner['parentOwner'] ||= {}
-          owner['parentOwner']['id'] = organization.parent_id
-        end
         self.put(path(key), JSON.generate(owner), self.default_headers).body
       end
 
