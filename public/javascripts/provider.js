@@ -66,6 +66,9 @@ $(document).ready(function() {
       function() {button.removeClass("disabled")
     });
   });
+  //file field browse button fix
+  provider.fixUpload();
+  //end doc ready
 });
 
 var provider = (function() {
