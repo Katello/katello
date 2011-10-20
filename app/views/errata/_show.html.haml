@@ -1,5 +1,5 @@
 = content_for :title do
-  = @errata.title
+  = @errata.id
   
 = content_for :navigation do
   = render_navigation(:items => promotion_errata_navigation, :expand_all => true, :level => 1)
@@ -12,6 +12,12 @@
       %label #{_("Advisory")}:
     .grid_5.la
       = @errata.id
+
+  %fieldset
+    .grid_2.ra
+      %label #{_("Title")}:
+    .grid_5.la
+      = @errata.title
 
   %fieldset
     .grid_2.ra
