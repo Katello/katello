@@ -35,6 +35,21 @@ module Glue::Candlepin::Pool
 
   module InstanceMethods
 
+    def initialize(attrs = nil)
+      if attrs.member? 'id'
+        # initializing from candlepin json
+        @productName = attrs["productName"]
+        @startDate = attrs["startDate"]
+        @endDate = attrs["endDate"]
+        @consumed = attrs["consumed"]
+        @quantity = attrs["quantity"]
+        @attrs = attrs["attributes"]
+        super(:cp_id => attrs['id'])
+      else
+        super
+      end
+    end
+
     def startDate_as_datetime
       DateTime.parse(startDate)
     end
