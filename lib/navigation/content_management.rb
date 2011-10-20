@@ -217,15 +217,15 @@ module Navigation
 
     def package_filter_navigation
       [
-        { :key => :details,
-          :name =>N_("Details"),
-          :url => lambda{edit_filter_path(@filter.id)},
+        { :key => :packages,
+          :name =>N_("Filtered Packages"),
+          :url => lambda{packages_filter_path(@filter.id)},
           :if => lambda{@filter},
           :options => {:class=>"navigation_element"}
         },
-        { :key => :packages,
-          :name =>N_("Packages"),
-          :url => lambda{packages_filter_path(@filter.id)},
+        { :key => :details,
+          :name =>N_("Details"),
+          :url => lambda{edit_filter_path(@filter.id)},
           :if => lambda{@filter},
           :options => {:class=>"navigation_element"}
         }

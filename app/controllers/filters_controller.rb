@@ -4,7 +4,7 @@ class FiltersController < ApplicationController
 
   skip_before_filter :authorize
   before_filter :panel_options, :only=>[:index, :items]
-  before_filter :find_filter, :only=>[:edit, :update, :destroy]
+  before_filter :find_filter, :only=>[:edit, :update, :destroy, :packages, :add_packages, :remove_packages]
   before_filter :authorize
 
   def rules
@@ -22,8 +22,10 @@ class FiltersController < ApplicationController
       :auto_complete_search => index_test,
       :edit => readable,
       :update=>editable,
-      :destroy=>deletable
-
+      :destroy=>deletable,
+      :packages=>readable,
+      :add_packages=>editable,
+      :remove_packages=>editable
     }
   end
 
@@ -79,6 +81,25 @@ class FiltersController < ApplicationController
   end
 
 
+  def packages
+    
+    render :partial => "packages", :layout => "tupane_layout", :locals => {:filter => @filter, :editable=>@filter.editable?,
+                                                                       :name=>controller_display_name}
+  end
+
+  def add_packages
+    pkgs = params[:packages]
+    
+    render :json=>pkgs
+  end
+
+  def remove_packages
+    pkgs = params[:packages]
+
+    render :text=>""
+  end
+
+
   def destroy
     @filter.destroy
     render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
@@ -100,7 +121,8 @@ class FiltersController < ApplicationController
         :create => _('Filter'),
         :name => controller_display_name,
         :ajax_scroll=>items_filters_path(),
-        :enable_create=> Filter.creatable?(current_organization)
+        :enable_create=> Filter.creatable?(current_organization),
+        :initial_action=>:packages
     }
   end
 
