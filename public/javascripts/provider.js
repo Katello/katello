@@ -21,7 +21,7 @@ $(document).ready(function() {
     $(this).ajaxSubmit({success:provider.successCreate, error:provider.failCreate});
   });
 
-  $('#upload_manifest').live('submit', function(e) {
+  $('#upload_button').live('submit', function(e) {
     // disable submit to avoid duplicate clicks
     $('input[id^=provider_submit]').attr("disabled", true);
 
@@ -66,6 +66,7 @@ $(document).ready(function() {
       function() {button.removeClass("disabled")
     });
   });
+  //end doc ready
 });
 
 var provider = (function() {
