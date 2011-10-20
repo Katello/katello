@@ -17,7 +17,8 @@ require 'base64'
 
 class ApplicationController < ActionController::Base
   layout 'katello'
-  helper :all
+  clear_helpers
+    
   helper_method :current_organization
   before_filter :set_locale
   before_filter :require_user,:require_org
@@ -60,7 +61,7 @@ class ApplicationController < ActionController::Base
   # support for session (thread-local) variables must be the last filter (except authorize)in this class
   include Katello::ThreadSession::Controller
   include AuthorizationRules
-
+  include Menu
   def section_id
     'generic'
   end
@@ -143,6 +144,7 @@ class ApplicationController < ActionController::Base
                      :request_type => requested_action, :user_notices => [UserNotice.new(:user => current_user, :viewed=>false)])
     end
   end
+
 
   # Generate an error notice:
   #

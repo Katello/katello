@@ -41,6 +41,6 @@ var roles_page = (function($) {
 
 
     return {
-        create_new_role : create_new_role,
+        create_new_role : create_new_role
     }
 })(jQuery);

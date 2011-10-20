@@ -234,12 +234,12 @@ describe SystemTemplate do
     'attr2': 'val2'
   },
   'package_groups': [
-    {'id': 'pg-123', 'repo': 'repo-123'},
-    {'id': 'pg-456', 'repo': 'repo-123'}
+    'pg-123',
+    'pg-456'
   ],
   'package_group_categories': [
-    {'id': 'pgc-123', 'repo': 'repo-123'},
-    {'id': 'pgc-456', 'repo': 'repo-123'}
+    'pgc-123',
+    'pgc-456'
   ]
 }
 "
@@ -251,10 +251,10 @@ describe SystemTemplate do
       @import_tpl.should_receive(:add_product).once.with('prod_a1').and_return nil
       @import_tpl.should_receive(:add_product).once.with('prod_a2').and_return nil
       @import_tpl.should_receive(:add_package).once.with('walrus').and_return nil
-      @import_tpl.should_receive(:add_package_group).once.with({:id => 'pg-123', :repo => 'repo-123'}).and_return nil
-      @import_tpl.should_receive(:add_package_group).once.with({:id => 'pg-456', :repo => 'repo-123'}).and_return nil
-      @import_tpl.should_receive(:add_pg_category).once.with({:id => 'pgc-123', :repo => 'repo-123'}).and_return nil
-      @import_tpl.should_receive(:add_pg_category).once.with({:id => 'pgc-456', :repo => 'repo-123'}).and_return nil
+      @import_tpl.should_receive(:add_package_group).once.with('pg-123').and_return nil
+      @import_tpl.should_receive(:add_package_group).once.with('pg-456').and_return nil
+      @import_tpl.should_receive(:add_pg_category).once.with('pgc-123').and_return nil
+      @import_tpl.should_receive(:add_pg_category).once.with('pgc-456').and_return nil
 
 
       @import_tpl.string_import(@import)
@@ -269,12 +269,12 @@ describe SystemTemplate do
 
       @export_tpl = SystemTemplate.new(:name => "export_template", :environment => @organization.locker)
       @export_tpl.stub(:products).and_return [@prod1, @prod2]
-      @export_tpl.stub(:packages).and_return [mock({:package_name => 'xxx'})]
+      @export_tpl.stub(:packages).and_return [mock({:package_name => 'xxx', :nvrea => 'xxx'})]
       @export_tpl.stub(:parameters_json).and_return "{}"
       @export_tpl.stub(:package_groups).and_return [SystemTemplatePackGroup.new({:name => 'xxx'})]
       @export_tpl.stub(:pg_categories).and_return [SystemTemplatePgCategory.new({:name => 'xxx'})]
 
-      str = @export_tpl.string_export
+      str = @export_tpl.export_as_json.to_json
       json = ActiveSupport::JSON.decode(str)
       json['products'].size.should == 2
       json['packages'].size.should == 1

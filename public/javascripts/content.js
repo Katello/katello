@@ -95,7 +95,7 @@ $(document).ready(function() {
     }
 
   });
-
+  //end doc ready
 });
 
 
@@ -108,7 +108,7 @@ var content = (function(){
             updateField.html('');
             cancelButton = $('<a/>')
                 .attr("id", "cancel_"+repo)
-                .attr("class", "fr")
+                .attr("class", "cancel")
                 .attr("href", "#")
                 .text(i18n.cancel);
             progressBar = $('<div/>')
@@ -154,11 +154,11 @@ var content = (function(){
             });
             cancelButton.click(function(){
                 content.cancelSync(repo, sync, updateField, pu);
-            })
+            });
             return false;
         },
         updateProduct : function (prod_id, repo_id) {
-            var url = $('#sync_status_url').attr('data-url');
+            var url = KT.routes.sync_management_product_status_path();
             $.ajax({
               type: 'GET',
               url: url,

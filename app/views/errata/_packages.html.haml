@@ -1,16 +1,26 @@
+= javascript :filtertable
 
-%h2
-  = @errata.title
+= content_for :title do
+  #{@errata.title}
 
-%nav.subnav
-  = render_navigation(:expand_all => true, :level => 3)
+= content_for :navigation do
+  = render_navigation(:items => promotion_errata_navigation, :expand_all => true, :level => 1)
 
+= content_for :content do
+  - if @errata.pkglist.length > 0 and @errata.pkglist[0][:packages].length > 0
+    = render :partial => "common/filter_table"
+    %table.filter_table.errata.ajaxScroll
+      %thead
+        %th
+          #{_("Package")}
+      %tbody
+        -@errata.pkglist[0][:packages].each do |pkg|
+          %tr
+            %td
+              - if pkg[:epoch] == "0"
+                = pkg[:name] + "-" + pkg[:version] + '-' + pkg[:release] + "." + pkg[:arch]
+              - else
+                = pkg[:name] + "-" + pkg[:epoch] + ":" + pkg[:version] + '-' + pkg[:release] + "." + pkg[:arch]
 
-%h2
-  = _("Packages")
-.clear
-  &nbsp;
-  
-- @errata.pkglist.each do |pkg|
-  .li.grid_6
-    = pkg
+  - else
+    %p #{_("There are no packages to display.")}

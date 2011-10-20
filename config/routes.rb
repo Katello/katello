@@ -57,6 +57,7 @@ Src::Application.routes.draw do
 
   resources :systems, :except => [:destroy] do
     member do
+      get :edit
       get :packages
       get :more_packages
       get :subscriptions
@@ -122,6 +123,7 @@ Src::Application.routes.draw do
       get :items
       get :auto_complete_package
       get :product_packages
+      get :product_comps
     end
     member do
       get :promotion_details
@@ -261,9 +263,10 @@ Src::Application.routes.draw do
       member do
         get :packages, :action => :package_profile
         get :errata
+        get :pools
       end
+      resources :subscriptions, :only => [:create, :index, :destroy]
     end
-    match '/systems/:id/subscription' => 'systems#subscribe', :via => :post
 
     resources :providers, :except => [:index] do
       resources :sync, :only => [:index, :create] do
@@ -302,7 +305,6 @@ Src::Application.routes.draw do
       end
     end
 
-    #match '/organizations/:organization_id/locker/repos' => 'environments#repos', :via => :get
     resources :organizations do
       resources :products, :only => [:index] do
         get :repositories, :on => :member
@@ -319,7 +321,8 @@ Src::Application.routes.draw do
       resources :repositories, :only => [] do
         post :discovery, :on => :collection
       end
-      resource :uebercert , :only => [:create, :show]
+      resource :uebercert, :only => [:create, :show]
+      resources :filters, :only => [:index, :create, :destroy, :show]
     end
 
     resources :changesets, :only => [:show, :destroy] do
@@ -327,7 +330,7 @@ Src::Application.routes.draw do
       post :promote, :on => :member, :action => :promote
     end
 
-    resources :products, :only => [:show] do
+    resources :products, :only => [:show, :destroy] do
       get :repositories, :on => :member
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
@@ -337,7 +340,7 @@ Src::Application.routes.draw do
     resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
-    resources :repositories, :only => [:index, :show, :create], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
+    resources :repositories, :only => [:index, :show, :create, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end

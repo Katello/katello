@@ -16,12 +16,15 @@
     KT.content_breadcrumb = $.parseJSON('#{escape_javascript(template_content_breadcrumb())}');
     KT.template_breadcrumb = $.parseJSON('#{escape_javascript(generate_template_breadcrumb())}');
     KT.product_hash = $.parseJSON('#{escape_javascript(product_hash.to_json)}');
+    KT.package_groups = $.parseJSON('#{escape_javascript(package_groups.to_json)}');
+    
     localize({
       "add": '+ #{_('Add')}',
       "add_plus": '+ #{_('Add')}',
       "remove": '#{_('Remove')}',
       "products": '#{_('Products')}',
       "packages": '#{_('Packages')}',
+      "package_groups": '#{_("Package Groups")}',
       "edit_label": '#{_("Edit Details")}',
       "edit_close_label": '#{_("Close Edit")}',
       "add_label": '#{_("Add")}',
@@ -93,7 +96,7 @@
               %span.text
                 = _("Save")
             #download_template.cs_action
-              %span#save_template_icon.sprite
+              %span#download_template_icon.sprite
                 SPRITE
               %span.text
                 = _("Download") 

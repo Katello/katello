@@ -175,6 +175,9 @@ var list = (function(){
                 success: function(data) {
                     notices.checkNotices();
                     jQid.html(data);
+
+                    // obtain the value from column_1 and place it in pane_heading
+                    $('.pane_heading').html(jQid.find('.column_1').html());
                     if (success_cb) {
                         success_cb();
                     }
@@ -253,6 +256,9 @@ KT.panel = (function($){
                         panelResize($('#panel_main'), isSubpanel);
                     }
                     expand_cb(name);
+                    // Add a handler for ellipsis
+                    $(".one-line-ellipsis").ellipsis(true);
+
                 },
                 error: function (xhr, status, error) {
                     spinner.hide();
