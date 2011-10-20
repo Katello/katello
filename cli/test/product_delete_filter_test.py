@@ -6,35 +6,34 @@ from cli_test_utils import CLIOptionTestCase, CLIActionTestCase
 import test_data
 
 import katello.client.core.product
-from katello.client.core.product import AddFilter
+from katello.client.core.product import DeleteFilter
 
 
 
 class RequiredCLIOptionsTests(CLIOptionTestCase):
 
     def setUp(self):
-        self.set_action(AddFilter())
+        self.set_action(DeleteFilter())
         self.mock_options()
 
     def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_filters', '--name=product_1', '--filter=filter1'])
+        self.assertRaises(Exception, self.action.process_options, ['delete_filters', '--name=product_1', '--filter=filter1'])
 
     def test_missing_product_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_filters', '--org=ACME', '--filter=filter1'])
+        self.assertRaises(Exception, self.action.process_options, ['delete_filters', '--org=ACME', '--filter=filter1'])
         
     def test_missing_filter_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['add_filters', '--org=ACME', '--name=product_1'])
+        self.assertRaises(Exception, self.action.process_options, ['delete_filters', '--org=ACME', '--name=product_1'])
 
     def test_no_error_if_org_and_product_provided(self):
-        self.action.process_options(['add_filters', '--org=ACME', '--name=product_1', '--filter=filter1'])
+        self.action.process_options(['delete_filters', '--org=ACME', '--name=product_1', '--filter=filter1'])
         self.assertEqual(len(self.action.optErrors), 0)
 
 
-class AddProductFilterTest(CLIActionTestCase):
+class DeleteProductFilterTest(CLIActionTestCase):
 
     ORG = test_data.ORGS[0]
     PROD = test_data.PRODUCTS[0]
-    FILTER = 'filter'
     FILTER1 = 'filter_1'
     FILTER2 = 'filter_2'
     EXISTING_FILTERS = [{'name':FILTER1}, {'name':FILTER2}]
@@ -42,11 +41,11 @@ class AddProductFilterTest(CLIActionTestCase):
     OPTIONS = {
         'org': ORG['name'],
         'name': PROD['name'],
-        'filter': FILTER
+        'filter': FILTER1
     }
     
     def setUp(self):
-        self.set_action(AddFilter())
+        self.set_action(DeleteFilter())
         self.set_module(katello.client.core.product)
         self.mock_printer()
 
@@ -64,7 +63,7 @@ class AddProductFilterTest(CLIActionTestCase):
 
     def test_it_uses_filter_api_to_retrieve_filter_info(self):
         self.action.run()
-        self.action.filterAPI.info.assert_called_once_with(self.ORG['cp_key'], self.FILTER)
+        self.action.filterAPI.info.assert_called_once_with(self.ORG['cp_key'], self.FILTER1)
             
     def test_it_returns_with_error_if_filter_was_not_found(self):
         self.action.filterAPI.info.return_value =  None
@@ -77,5 +76,4 @@ class AddProductFilterTest(CLIActionTestCase):
                 
     def test_it_calls_update_filter_api(self):
         self.action.run()
-        self.action.api.update_filters.assert_called_once_with(self.PROD['id'], [self.FILTER1, self.FILTER2, self.FILTER])
-        
+        self.action.api.update_filters.assert_called_once_with(self.PROD['id'], [self.FILTER2])
