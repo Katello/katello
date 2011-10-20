@@ -617,7 +617,7 @@ KT.package_actions = (function() {
     //called everytime 'packages is loaded'
     var register_autocomplete = function() {
         current_input = KT.auto_complete_box({
-            values:       auto_complete_call,
+            values:       KT.routes.auto_complete_locker_packages_path(),
             default_text: i18n.package_search_text,
             input_id:     "add_package_input",
             form_id:      "add_package_form",
@@ -628,8 +628,8 @@ KT.package_actions = (function() {
     verify_add_package = function(name, cleanup_cb){
         $.ajax({
             type: "GET",
-            url: KT.common.rootURL() + '/system_templates/auto_complete_package',
-            data: {name:name},
+            url: KT.routes.auto_complete_locker_packages_path(),
+            data: {term:name},
             cache: false,
             success: function(data){
                 if ($.inArray(name, data) > -1) {
@@ -646,8 +646,8 @@ KT.package_actions = (function() {
     auto_complete_call = function(req, response_cb) {
         $.ajax({
             type: "GET",
-            url: KT.common.rootURL() + '/system_templates/auto_complete_package',
-            data: {name:req.term},
+            url: auto_complete_package,
+            data: {term:req.term},
             cache: false,
             success: function(data){
                 response_cb(data.splice(0, 20)); //only show 20 packages at a time
