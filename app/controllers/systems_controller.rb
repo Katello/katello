@@ -75,6 +75,7 @@ class SystemsController < ApplicationController
       @system.environment = KTEnvironment.find(params["system"]["environment_id"])
       #create it in candlepin, parse the JSON and create a new ruby object to pass to the view
       saved = @system.save!
+
       #find the newly created system
       if saved
         notice _("Your system was created: ") + "'#{@system.name}'"
@@ -88,8 +89,8 @@ class SystemsController < ApplicationController
       render :text => error, :status => :bad_request
      return
     end
-    render :partial=>"common/list_item", :locals=>{:item=>@system, :accessor=>"id", :name => controller_display_name,
-                                                   :columns=>['name' ]}
+    render :partial=>"systems/list_systems",
+            :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@system], :name=> controller_display_name}
   end
 
   def index
