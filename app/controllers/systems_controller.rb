@@ -101,7 +101,7 @@ class SystemsController < ApplicationController
   end
 
   def subscriptions
-    consumed_entitlements = sys_consumed_entitlements
+    consumed_entitlements = @system.sys_consumed_entitlements
     avail_pools = @system.available_pools_full
     facts = @system.facts.stringify_keys
     sockets = facts['cpu.cpu_socket(s)']
@@ -118,7 +118,7 @@ class SystemsController < ApplicationController
           @system.subscribe pool, params[:spinner][pool] if params[:commit].downcase == "subscribe"
           @system.unsubscribe pool if params[:commit].downcase == "unsubscribe"
         end
-        consumed_entitlements = sys_consumed_entitlements
+        consumed_entitlements = @system.sys_consumed_entitlements
         avail_pools = @system.available_pools_full
         render :partial=>"subs_update", :locals=>{:system=>@system, :avail_subs => avail_pools,
                                                     :consumed_subs => consumed_entitlements,
@@ -236,43 +236,6 @@ class SystemsController < ApplicationController
                       :name => controller_display_name,
                       :list_partial => 'systems/list_systems',
                       :ajax_scroll => items_systems_path()}
-  end
-
-  def sys_consumed_entitlements
-
-    consumed_entitlements = @system.entitlements.collect { |entitlement|
-
-      pool = @system.get_pool entitlement["pool"]["id"]
-
-      sla = ""
-      pool["productAttributes"].each do |attr|
-        if attr["name"] == "support_level"
-          sla = attr["value"]
-          break
-        end
-      end
-
-      providedProducts = []
-      pool["providedProducts"].each do |cp_product|
-        product = Product.where(:cp_id => cp_product["productId"]).first
-        if product
-          providedProducts << product
-        end
-      end
-
-      quantity = entitlement["quantity"] != nil ? entitlement["quantity"] : pool["quantity"]
-
-      OpenStruct.new(:entitlementId => entitlement["id"],
-                     :poolName => pool["productName"],
-                     :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
-                     :consumed => pool["consumed"],
-                     :quantity => quantity,
-                     :sla => sla,
-                     :contractNumber => pool["contractNumber"],
-                     :providedProducts => providedProducts)
-    }
-    consumed_entitlements.sort! {|a,b| a.poolName <=> b.poolName}
-    consumed_entitlements
   end
 
   def controller_display_name
