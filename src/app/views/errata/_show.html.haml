@@ -55,18 +55,23 @@
             %th
               #{_("Type")}
             %th
-              #{_("Id")}
+              #{_("Id / Link")}
             %th
               #{_("Title")}
           %tbody
             - @errata.references.each do |reference|
-              %tr
-                %td
-                  = reference[:type]
-                %td
-                  = reference[:id]
-                %td
-                  = reference[:title]
+              - if reference[:type] != "self"
+                %tr
+                  %td
+                    = reference[:type]
+                  %td
+                    - if reference[:href]
+                      %a{:href => reference[:href]}
+                        = reference[:id].nil? ? _("none") : reference[:id]
+                    - else
+                      = reference[:id].nil? ? _("none") : reference[:id]
+                  %td
+                    = reference[:title].nil? ? _('none') : reference[:title]
       - else
         #{_("None.")}
 
