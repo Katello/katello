@@ -247,14 +247,14 @@ class Glue::Pulp::Repo
     sync_history_item['state'] == 'finished'
   end
 
-  def promote(to_environment, product)
+  def promote(to_environment, content)
     cloned = Glue::Pulp::Repo.new
     cloned.id = self.clone_id(to_environment)
     cloned.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_environment)
     cloned.arch = arch
     cloned.name = name
     cloned.feed = feed
-    cloned.groupid = Glue::Pulp::Repos.groupid(product, to_environment)
+    cloned.groupid = Glue::Pulp::Repos.groupid(self.product, to_environment, content)
     [Pulp::Repository.clone_repo(self, cloned)]
   end
 
@@ -270,6 +270,10 @@ class Glue::Pulp::Repo
     get_groupid_param 'product'
   end
 
+  def content_id
+    get_groupid_param 'content'
+  end
+
   def organization
     Organization.find(self.organization_id)
   end
@@ -280,6 +284,12 @@ class Glue::Pulp::Repo
 
   def product
     Product.find_by_cp_id!(self.product_id)
+  end
+
+  def content
+    if not self.content_id.nil?
+      Candlepin::Content.get(self.content_id)
+    end
   end
 
   def self.repo_id product_name, repo_name, env_name, organization_name
@@ -303,7 +313,7 @@ class Glue::Pulp::Repo
   private
   def get_groupid_param name
     idx = self.groupid.index do |s| s.start_with? name+':' end
-    if idx >= 0
+    if not idx.nil?
       return self.groupid[idx].split(':')[1]
     else
       return nil
