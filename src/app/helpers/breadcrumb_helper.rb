@@ -107,7 +107,7 @@ module ContentBreadcrumbs
    templates_crumb_id = "templates"
 
    errata_crumb_id = "errata"
-   errata_filters = errata_bc_filters
+   errata_filters = errata_bc_filters(@environment.name)
 
    add_crumb_node!(bc, content_crumb_id, details_promotion_path(@environment.name) ,
        _("Content"), [], {:cache =>true, :content=>render(:partial=>"detail",
@@ -118,7 +118,7 @@ module ContentBreadcrumbs
        _("Errata"), [content_crumb_id], {:cache => true, :content => render(:partial => "errata_filters", :locals => {:errata_filters => errata_filters})})
 
    errata_filters.each do |filter|
-     add_crumb_node!(bc, filter[:id], errata_promotion_path(@environment.name),
+     add_crumb_node!(bc, filter[:id], filter[:path],
          filter[:label], [content_crumb_id, errata_crumb_id], {:scrollable=>true})
    end
 
@@ -131,7 +131,7 @@ module ContentBreadcrumbs
    for prod in @products
      product_id = product_bc_id(prod)
      errata_id = errata_bc_id(prod)
-     errata_filters = errata_bc_filters(prod)
+     errata_filters = errata_bc_filters(@environment.name, prod)
 
      #top of this product
      add_crumb_node!(bc, product_id, details_promotion_path(@environment.name, :product_id=>prod.id),
@@ -149,7 +149,7 @@ module ContentBreadcrumbs
          _("Errata"), [content_crumb_id, products_crumb_id, product_id], {:cache => true, :content => render(:partial => "errata_filters", :locals => {:errata_filters => errata_filters})})
 
      errata_filters.each do |filter|
-       add_crumb_node!(bc, filter[:id], errata_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
+       add_crumb_node!(bc, filter[:id], filter[:path],
            filter[:label], [content_crumb_id, products_crumb_id, product_id, errata_id], {:scrollable=>true})
      end
 
@@ -196,25 +196,29 @@ module ContentBreadcrumbs
 
   # Create an array of hash elements each containing an id and label for the supported errata filters.  This
   # may be used when building out the breadcrumb and rendering the errata filters.
-  def errata_bc_filters product = nil
+  def errata_bc_filters env_name, product = nil
     filters = []
     labels = [_("All"), _("Severity: Critical"), _("Severity: Important"), _("Severity: Moderate"),
               _("Severity: Low"), _("Type: Security"), _("Type: Bug Fix"), _("Type: Enhancement")]
 
     if product.nil?
-      filters = [{:id => "errata_all", :label => labels[0]}, {:id => "errata_critical", :label=> labels[1]},
-                 {:id => "errata_important", :label => labels[2]}, {:id => "errata_moderate", :label => labels[3]},
-                 {:id => "errata_low", :label => labels[4]}, {:id => "errata_security", :label => labels[5]},
-                 {:id => "errata_bugfix", :label => labels[6]}, {:id => "errata_enhancement", :label => labels[7]}]
+      filters = [{:id => "errata_all", :label => labels[0], :path => errata_promotion_path(env_name)},
+                 {:id => "errata_critical", :label=> labels[1], :path => errata_promotion_path(env_name, :severity => "critical")},
+                 {:id => "errata_important", :label => labels[2], :path => errata_promotion_path(env_name, :severity => "important")},
+                 {:id => "errata_moderate", :label => labels[3], :path => errata_promotion_path(env_name, :severity => "moderate")},
+                 {:id => "errata_low", :label => labels[4], :path => errata_promotion_path(env_name, :severity => "low")},
+                 {:id => "errata_security", :label => labels[5], :path => errata_promotion_path(env_name, :type => "security")},
+                 {:id => "errata_bugfix", :label => labels[6], :path => errata_promotion_path(env_name, :type => "bugfix")},
+                 {:id => "errata_enhancement", :label => labels[7], :path => errata_promotion_path(env_name, :type => "enhancement")}]
     else
-      filters = [{:id => errata_bc_id(product, "all"), :label => labels[0]},
-                 {:id => errata_bc_id(product, "critical"), :label => labels[1]},
-                 {:id => errata_bc_id(product, "important"), :label => labels[2]},
-                 {:id => errata_bc_id(product, "moderate"), :label => labels[3]},
-                 {:id => errata_bc_id(product, "low"), :label => labels[4]},
-                 {:id => errata_bc_id(product, "security"), :label => labels[5]},
-                 {:id => errata_bc_id(product, "bugfix"), :label => labels[6]},
-                 {:id => errata_bc_id(product, "enhancement"), :label => labels[7]}]
+      filters = [{:id => errata_bc_id(product, "all"), :label => labels[0], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset))},
+                 {:id => errata_bc_id(product, "critical"), :label => labels[1], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :severity => "critical")},
+                 {:id => errata_bc_id(product, "important"), :label => labels[2], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :severity => "important")},
+                 {:id => errata_bc_id(product, "moderate"), :label => labels[3], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :severity => "moderate")},
+                 {:id => errata_bc_id(product, "low"), :label => labels[4], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :severity => "low")},
+                 {:id => errata_bc_id(product, "security"), :label => labels[5], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :type => "security")},
+                 {:id => errata_bc_id(product, "bugfix"), :label => labels[6], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :type => "bugfix")},
+                 {:id => errata_bc_id(product, "enhancement"), :label => labels[7], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :type => "enhancement")}]
     end
   end
 end
