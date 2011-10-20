@@ -12,7 +12,7 @@
 */
 
 (function(){
-	KT.panel.registerPage('organizations', { create : 'new_organization' });
+	KT.panel.list.registerPage('organizations', { create : 'new_organization' });
 })();
 
 $(document).ready(function() {

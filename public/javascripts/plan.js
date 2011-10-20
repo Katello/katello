@@ -12,7 +12,7 @@
 */
 
 (function(){
-	KT.panel.registerPage('sync_plans', { create : 'new_sync_plan' });
+	KT.panel.list.registerPage('sync_plans', { create : 'new_sync_plan' });
 })();
 
 $(document).ready(function() {

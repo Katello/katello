@@ -391,11 +391,17 @@ class ApplicationController < ActionController::Base
     "#{exception.class}: #{exception.message}\n" << exception.backtrace.join("\n")
   end
 
-  def render_panel_items(items, options, start)
+  def render_panel_items(items, options, search, start)
     options[:accessor] ||= "id"
     options[:columns] = options[:col]
     
-    options[:num_items] = items.count
+    if start == "0"
+      options[:total_count] = items.count
+    end
+    
+    items = items.search_for(search)
+    
+    options[:total_results] = items.count
     options[:collection] ||= items.limit(current_user.page_size).offset(start)
     
     if options[:list_partial]
@@ -404,9 +410,12 @@ class ApplicationController < ActionController::Base
       rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options) 
     end
     
-    render :json => {:html => rendered_html, 
-                      :total_items => options[:num_items],
+    render :json => {:html => rendered_html,
+                      :results_count => options[:total_count],
+                      :total_items => options[:total_results],
                       :current_items => options[:collection].length }
+                      
+    retain_search_history
   end
 
   #produce a simple datastructure of a changeset for the browser
