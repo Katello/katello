@@ -11,9 +11,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-(function(){
-	KT.panel.list.registerPage('providers', { create : 'new_provider' });
-})();
+KT.panel.list.registerPage('providers', { create : 'new_provider' });
 
 $(document).ready(function() {
 

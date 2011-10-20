@@ -11,13 +11,8 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
+KT.panel.list.registerPage('changesets', { 'extra_params' : ['env_id'] });
 
-//must be outside of document ready
-KT.panel.control_bbq = false;
-
-(function(){
-	KT.panel.list.registerPage('changesets', { 'extra_params' : ['env_id'] });
-})();
 
 $(document).ready(function() {
 
