@@ -73,7 +73,9 @@ module Glue::Pulp::Repos
     end
 
     def all_repos search_params = {}
-      Pulp::Repository.all [Glue::Pulp::Repos.product_groupid(self)], search_params
+      self.get_all_cached_repos.delete_if do |repo|
+        search_params.any?{ |attr,value| repo.get_params[attr] != value }
+      end
     end
 
     def promote from_env, to_env
@@ -272,14 +274,11 @@ module Glue::Pulp::Repos
     end
 
     def setup_sync_schedule
-      if self.sync_plan_id_changed?
+      return if not self.sync_plan_id_changed?
 
-        self.all_repos.each do |repo|
-          schedule = (self.sync_plan && self.sync_plan.schedule_format) || ""
-          Pulp::Repository.update(repo['id'], {
-            :sync_schedule => schedule
-          })
-        end
+      schedule = (self.sync_plan && self.sync_plan.schedule_format) || ""
+      self.all_repos.each do |repo|
+        repo.set_sync_schedule(schedule)
       end
     end
 
