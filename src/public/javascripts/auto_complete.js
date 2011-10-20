@@ -97,7 +97,7 @@ KT.auto_complete_box = function(params) {
         source: settings.values
     });
 
-    add_btn.live('click', add_item_from_input);
+    add_btn.click( add_item_from_input);
     form.submit(add_item_from_input);
 
     return {
