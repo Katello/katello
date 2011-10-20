@@ -192,7 +192,7 @@ module Glue::Candlepin::Consumer
       Time.parse(item)
     end
 
-    def sys_available_pools
+    def available_pools_full
       avail_pools = self.available_pools.collect {|pool|
         sockets = ""
         multiEntitlement = false

@@ -102,7 +102,7 @@ class SystemsController < ApplicationController
 
   def subscriptions
     consumed_entitlements = sys_consumed_entitlements
-    avail_pools = @system.sys_available_pools
+    avail_pools = @system.available_pools_full
     facts = @system.facts.stringify_keys
     sockets = facts['cpu.cpu_socket(s)']
     render :partial=>"subscriptions", :layout => "tupane_layout",
@@ -119,7 +119,7 @@ class SystemsController < ApplicationController
           @system.unsubscribe pool if params[:commit].downcase == "unsubscribe"
         end
         consumed_entitlements = sys_consumed_entitlements
-        avail_pools = @system.sys_available_pools
+        avail_pools = @system.available_pools_full
         render :partial=>"subs_update", :locals=>{:system=>@system, :avail_subs => avail_pools,
                                                     :consumed_subs => consumed_entitlements,
                                                     :editable=>@system.editable?}
