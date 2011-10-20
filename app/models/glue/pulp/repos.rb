@@ -65,19 +65,11 @@ module Glue::Pulp::Repos
       return self.repos(locker).empty?
     end
 
-    def repos env, search_params = {}
-      @repos = {} if @repos.nil?
-      return @repos[env.id] if @repos[env.id]
 
-      # TODO: temporary hack until groupid AND groupid  querying is added to pulp
-      total_repos = Pulp::Repository.all [Glue::Pulp::Repos.env_groupid(env)], search_params
-      env_repos = []
-      total_repos.collect {|repo|
-         repo_obj = Glue::Pulp::Repo.new(repo)
-         env_repos << repo_obj if (repo_obj.groupid.include?(Glue::Pulp::Repos.product_groupid(self)) and repo_obj.groupid.include?(Glue::Pulp::Repos.env_groupid(env)))
-      }
-      @repos[env.id] = env_repos
-      return env_repos
+    def repos env, search_params = {}
+      self.get_cached_repos(env).delete_if do |repo|
+        search_params.any?{ |attr,value| repo.get_params[attr] != value }
+      end
     end
 
     def all_repos search_params = {}
@@ -439,6 +431,33 @@ module Glue::Pulp::Repos
       unless self.repos(self.locker, {:name => repo_name}).empty?
         raise Errors::ConflictException.new(_("There is already a repo with the name [ %s ] for product [ %s ]") % [repo_name, self.name])
       end
+    end
+
+    def cache_repos
+      @repos = {}
+
+      product_repos = Pulp::Repository.all [Glue::Pulp::Repos.product_groupid(self)]
+      product_repos.each do |repo_attr|
+        repo = Glue::Pulp::Repo.new(repo_attr)
+        @repos[repo.environment_id] ||= []
+        @repos[repo.environment_id] << repo
+      end
+    end
+
+    def get_cached_repos env
+      if @repos.nil?
+        self.cache_repos
+      end
+
+      return @repos[env.id] || []
+    end
+
+    def get_all_cached_repos
+      if @repos.nil?
+        self.cache_repos
+      end
+
+      return @repos.values.flatten(1)
     end
 
   end
