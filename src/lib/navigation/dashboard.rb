@@ -9,6 +9,16 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+module Navigation
+  module DashboardMenu
 
-module RepositoriesHelper
+    def menu_dashboard
+      {:key => :dashboard,
+       :name => N_("Dashboard"),
+        :url => dashboard_index_path,
+        :options => {:class=>'dashboard'}
+      }
+    end
+
+  end
 end

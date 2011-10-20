@@ -110,7 +110,7 @@ class ProvidersController < ApplicationController
 
   def index
     begin
-      @providers = Provider.readable(current_organization).custom.search_for(params[:search]).order('name').limit(current_user.page_size)
+      @providers = Provider.readable(current_organization).custom.search_for(params[:search]).order('providers.name').limit(current_user.page_size)
       retain_search_history
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -121,7 +121,7 @@ class ProvidersController < ApplicationController
 
   def items
     start = params[:offset]
-    @providers = Provider.readable(current_organization).custom.search_for(params[:search]).order('name').limit(current_user.page_size).offset(start)
+    @providers = Provider.readable(current_organization).custom.search_for(params[:search]).order('providers.name').limit(current_user.page_size).offset(start)
     render_panel_items @providers, @panel_options
   end
 
@@ -239,8 +239,15 @@ class ProvidersController < ApplicationController
     all_subs = Candlepin::Owner.pools @provider.organization.cp_key
     @subscriptions = []
     all_subs.each do |sub|
-      sub['providedProducts'].each do |cp_product|
-        product = Product.where(:cp_id =>cp_product["productId"]).first
+      if sub['providedProducts'].length > 0
+        sub['providedProducts'].each do |cp_product|
+          product = Product.where(:cp_id =>cp_product["productId"]).first
+          if product and product.provider == @provider
+            @subscriptions << sub if !@subscriptions.include? sub
+          end
+        end
+      else
+        product = Product.where(:cp_id => sub['productId']).first
         if product and product.provider == @provider
           @subscriptions << sub if !@subscriptions.include? sub
         end

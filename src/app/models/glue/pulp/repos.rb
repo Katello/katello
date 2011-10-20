@@ -16,7 +16,6 @@ require 'resources/cdn'
 require 'openssl'
 
 module Glue::Pulp::Repos
-  SUPPORTED_ARCHS = %w[noarch i386 i686 ppc64 s390x x86_64]
 
   def self.included(base)
     base.send :include, InstanceMethods
@@ -27,7 +26,7 @@ module Glue::Pulp::Repos
   end
 
   def self.groupid(product, environment)
-      [self.product_groupid(product), self.env_groupid(environment), self.env_orgid(product.locker.organization)]
+      [self.product_groupid(product), self.env_groupid(environment), self.org_groupid(product.locker.organization)]
   end
 
   def self.clone_repo_path(repo, environment, for_cp = false)
@@ -48,7 +47,7 @@ module Glue::Pulp::Repos
   end
 
 
-  def self.env_orgid(org)
+  def self.org_groupid(org)
       "org:#{org.id}"
   end
 
@@ -244,8 +243,8 @@ module Glue::Pulp::Repos
     end
 
     def repo_id(content_name, env_name = nil)
-      return content_name if content_name.include?(self.organization.name) && content_name.include?(self.cp_id.to_s)
-      Glue::Pulp::Repo.repo_id(self.cp_id.to_s, content_name.to_s, env_name, self.organization.name)
+      return content_name if content_name.include?(self.organization.name) && content_name.include?(self.name.to_s)
+      Glue::Pulp::Repo.repo_id(self.name.to_s, content_name.to_s, env_name, self.organization.name)
     end
 
     def repository_url(content_url)
@@ -257,9 +256,10 @@ module Glue::Pulp::Repos
       url
     end
 
-    def delete_repo(name)
-      #TODO: delete candlepin content as well
-      Pulp::Repository.destroy(repo_id(name))
+    def delete_repo_by_id(repo_id)
+      productContent_will_change!
+      self.productContent.delete_if { |pc| pc.content.label == repo_id }
+      save!
     end
 
     def add_repo(name, url)
@@ -277,7 +277,7 @@ module Glue::Pulp::Repos
       if self.sync_plan_id_changed?
           self.productContent.each do |pc|
             schedule = (self.sync_plan && self.sync_plan.schedule_format) || ""
-            Pulp::Repository.update(repo_id(pc.content.id), {
+            Pulp::Repository.update(repo_id(pc.content.name), {
                 :sync_schedule => schedule
             })
           end
@@ -298,11 +298,6 @@ module Glue::Pulp::Repos
         substitutions_with_paths.each do |(substitutions, path)|
           feed_url = repository_url(path)
           arch = substitutions["basearch"] || "noarch"
-          # temporary solution unless pulp supports another archs
-          unless SUPPORTED_ARCHS.include? arch
-            Rails.logger.error("Pulp does not support arch '#{arch}'")
-            next
-          end
           repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
           repo = Glue::Pulp::Repo.new(:id => repo_id(repo_name),
                                       :arch => arch,
@@ -316,7 +311,15 @@ module Glue::Pulp::Repos
                                       :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
                                       :preserve_metadata => orchestration_for == :import_from_cp #preserve repo metadata when importing from cp
                                       )
-          repo.create
+          begin
+            repo.create
+          rescue RestClient::InternalServerError => e
+            if e.message.include? "Architecture must be one of"
+              Rails.logger.error("Pulp does not support arch '#{arch}'")
+            else
+              raise e
+            end
+          end
         end
       end
     end
@@ -324,18 +327,12 @@ module Glue::Pulp::Repos
     def update_repos
       return true unless productContent_changed?
 
-      old_content = productContent_change[0].nil? ? [] : productContent_change[0].map {|pc| pc.content.label}
-      new_content = productContent_change[1].map {|pc| pc.content.label}
-
-      added_content   = new_content - old_content
-      deleted_content = old_content - new_content
-
-      self.productContent.select {|pc| deleted_content.include?(pc.content.label)}.each do |pc|
-        Rails.logger.debug "deleting repository #{repo_id(pc.content.name)}"
-        Pulp::Repository.destroy(repo_id(pc.content.name))
+      deleted_content.each do |pc|
+        Rails.logger.debug "deleting repository #{pc.content.label}"
+        Pulp::Repository.destroy(pc.content.label)
       end
 
-      self.productContent.select {|pc| added_content.include?(pc.content.label)}.each do |pc|
+      added_content.each do |pc|
         if !(self.environments.map(&:name).any? {|name| pc.content.name.include?(name)}) || pc.content.name.include?('Locker')
         Rails.logger.debug "creating repository #{repo_id(pc.content.name)}"
           self.add_repo(pc.content.name, repository_url(pc.content.contentUrl))
@@ -361,11 +358,11 @@ module Glue::Pulp::Repos
       #end
     end
 
-    # Empty method to allow rollbacks
     def del_repos
-      if not self.productContent.nil?
-        self.productContent.collect do |pc|
-          Pulp::Repository.destroy(repo_id(pc.content.name))
+      #destroy all repos in all environmnents
+      self.environments.each do |env|
+        self.repos(env).each do |repo|
+          repo.destroy
         end
       end
       true

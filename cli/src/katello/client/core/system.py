@@ -328,6 +328,12 @@ class Subscriptions(SystemAction):
                 help=_("organization name (required)"))
         self.parser.add_option('--name', dest='name',
                 help=_("system name (required)"))
+        self.parser.add_option('--serials', dest='serials',
+                action="store_true", default=False,
+                help=_("show certificate serial numbers"))
+        self.parser.add_option('--available', dest='available',
+                action="store_const", const=1, default=0,
+                help=_("show available subscription"))
 
     def check_options(self):
         self.require_option('org')
@@ -336,26 +342,52 @@ class Subscriptions(SystemAction):
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
+        serials = self.get_option('serials')
+        available = self.get_option('available')
         systems = self.api.systems_by_org(org, {'name': name})
+
+        if serials and available == 0:
+            print _("Serial parameter cannot be used with available")
+            return os.EX_DATAERR
+
         if systems == None or len(systems) != 1:
             print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
-            result = self.api.subscriptions(systems[0]['uuid'])
-            if result == None or len(result) == 0:
-                print _("No subscriptions found for System [ %s ] in Org [ %s ]") % (name, org)
-                return os.EX_DATAERR
-            subs = result[0]['certificates']
-            # preapare data for rendering
-            for s in subs:
-                s['expiration'] = s['serial']['expiration']
-                s['serial'] = s['serial']['serial']
-            self.printer.setHeader(_("Certificate List for System [ %s ]") % name)
-            self.printer.addColumn('id')
-            self.printer.addColumn('serial')
-            self.printer.addColumn('expiration')
             self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
-            self.printer.printItems(subs)
+            if available:
+                # listing available pools
+                result = self.api.available_pools(systems[0]['uuid'])
+                if result == None or len(result) == 0:
+                    print _("No Pools found for System [ %s ] in Org [ %s ]") % (name, org)
+                    return os.EX_DATAERR
+                self.printer.setHeader(_("Available Pools for System [ %s ]") % name)
+                self.printer.addColumn('poolId')
+                self.printer.addColumn('poolName')
+                self.printer.addColumn('expires')
+                self.printer.addColumn('consumed')
+                self.printer.addColumn('quantity')
+                self.printer.addColumn('sockets')
+                self.printer.addColumn('multiEntitlement')
+                self.printer.addColumn('providedProducts')
+                self.printer.printItems(result['pools'])
+            else:
+                # listing current subscriptions
+                result = self.api.subscriptions(systems[0]['uuid'])
+                if result == None or len(result) == 0:
+                    print _("No Subscriptions found for System [ %s ] in Org [ %s ]") % (name, org)
+                    return os.EX_DATAERR
+                self.printer.setHeader(_("Available Subscriptions for System [ %s ]") % name)
+                self.printer.addColumn('entitlementId')
+                self.printer.addColumn('poolName')
+                self.printer.addColumn('expires')
+                self.printer.addColumn('consumed')
+                self.printer.addColumn('quantity')
+                self.printer.addColumn('sla')
+                self.printer.addColumn('contractNumber')
+                self.printer.addColumn('providedProducts')
+                self.printer.printItems(result['entitlements'])
+
             return os.EX_OK
 
 class Unsubscribe(SystemAction):
@@ -367,24 +399,24 @@ class Unsubscribe(SystemAction):
                        help=_("organization name (required)"))
         self.parser.add_option('--name', dest='name',
                                help=_("system name (required)"))
-        self.parser.add_option('--serial', dest='serial',
-                               help=_("certificate serial to unsubscribe (required)"))
+        self.parser.add_option('--pool', dest='pool',
+                               help=_("pool id to unsubscribe from (required)"))
 
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
-        self.require_option('serial')
+        self.require_option('pool')
 
     def run(self):
         name = self.get_option('name')
         org = self.get_option('org')
-        serial = self.get_option('serial')
+        pool = self.get_option('pool')
         systems = self.api.systems_by_org(org, {'name': name})
         if systems == None or len(systems) != 1:
             print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
-            result = self.api.unsubscribe(systems[0]['uuid'], serial)
+            result = self.api.unsubscribe(systems[0]['uuid'], pool)
             print _("Successfully unsubscribed System [ %s ]") % name
             return os.EX_OK
 

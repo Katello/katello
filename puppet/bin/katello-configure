@@ -1,4 +1,180 @@
-#!/bin/bash
+#!/usr/bin/ruby
 
-echo include katello | puppet --modulepath /usr/share/katello/install/puppet/modules
+require 'optparse'
+require 'fcntl'
+
+default_path = '/usr/share/katello/install/default-answer-file'
+result_config_path = '/etc/katello/katello-configure.conf'
+puppet_cmd = 'puppet --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib'
+
+# Reading answer file, used both for the default answer file
+# and for user files. The structure of the answer file is
+#
+#	# The short description of the option.
+#	# Multiline synopsis of the option
+#	# with more details.
+#	option_name = option_value
+#
+def read_answer_file(filename)
+	file = File.new(filename, "r")
+	error = ''
+	data = {}
+	data_order = []
+	titles = {}
+	docs = {}
+	title = ''
+	synopsis = ''
+	while (line = file.gets)
+		if line =~ /^\s*#/
+			if title == ''
+				title = line.gsub(/^\s*#\s*/, '')
+			else
+				synopsis.concat(line.gsub(/^\s*#\s*/, ''))
+			end
+			next
+		end
+		line = line.gsub(/\s+$/, '')
+		if not line =~ /\S+/
+			title = ''
+			synopsis = ''
+			next
+		end
+		if line =~ /^\s*(\w+)\s*=\s*(.*)/
+			data[$1] = $2
+			docs[$1] = synopsis
+			data_order.push $1
+			titles[$1] = title.gsub(/\.\s*$/, '')
+		else
+			error.concat "Unsupported config line format [#{line}] in file [#{filename}]\n"
+		end
+		title = ''
+		synopsis = ''
+	end
+	file.close
+	return data, data_order, error, titles, docs
+end
+
+# We first parse the default answer file. The list of options
+# found in the default file also determines the command line
+# options that can be specified (that's why we parse the default
+# file first), as well as values that can be overwritten in user
+# answer file.
+default_options = {}
+default_options_order = []
+default_options_errors = ''
+titles = {}
+if File.file?(default_path)
+	default_options, default_options_order, default_options_errors, titles = read_answer_file(default_path)
+end
+
+# After having read the default option list, we parse the
+# command line options.
+options = {}
+option_parser = OptionParser.new
+answer_file = nil
+show_resulting_answer_file = false
+begin
+	option_parser.banner = "Usage: #{$0} [options]"
+
+	default_options_order.each do |key|
+		option_parser.on('--' + key.gsub(/_/, '-') + '=' + key.upcase, String, titles[key]) do |value|
+			options[key] = value
+		end
+	end
+
+	option_parser.on_tail.on('--only-show-config', 'Print the resulting configuration and exit') do
+		show_resulting_answer_file = true
+	end
+	option_parser.on_tail.on('-h', '--help', 'Show this short summary') do
+		puts option_parser
+		exit
+	end
+	option_parser.parse!
+rescue => e
+	$stderr.puts e.message
+	$stderr.puts option_parser
+	exit 1
+end
+
+# We only warn about possible errors in the default answer
+# file here, to make it possible to use for example --help,
+# even if there are errors in the default file.
+if default_options_errors != ''
+	$stderr.puts default_options_errors
+	exit 2
+end
+
+# If there was an answer file specified, we parse it.
+final_options = {}
+if options['answer_file'] != nil
+	if not File.file?(options['answer_file'])
+		$stderr.puts "Answer file [#{options['answer_file']}] does seem to exist"
+		exit 3
+	end
+	final_options, __unused, error = read_answer_file(options['answer_file'])
+	if error != ''
+		$stderr.puts error
+		exit 4
+	end
+
+	# The user answer file can only use (override) options that
+	# were already defined in the default answer file.
+	need_exit = false
+	final_options.keys.each do |key|
+		if not default_options.has_key?(key)
+			$stderr.puts "Unknown option [#{key}] in answer file [#{options['answer_file']}]"
+			need_exit = true
+		end
+	end
+	if need_exit
+		exit 5
+	end
+end
+
+# The command line options take precedence over the user
+# answer file values.
+final_options.update(options)
+final_options.delete('answer_file')
+
+# We will only keep values that are different from the default ones.
+final_options.each do |key, value|
+	if default_options[key] == value
+		final_options.delete(key)
+	end
+end
+
+if show_resulting_answer_file
+	default_options_order.each do |key|
+		if final_options.has_key?(key)
+			puts key + ' = ' + final_options[key]
+		end
+	end
+	exit
+end
+
+orig_umask = File.umask(077)
+begin
+	File.unlink(result_config_path)
+rescue
+end
+result_config = IO.open(IO::sysopen(result_config_path, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
+default_options_order.each do |key|
+	if final_options.has_key?(key)
+		result_config.syswrite(key + ' = ' + final_options[key] + "\n")
+	end
+end
+result_config.close
+File.umask(orig_umask)
+
+ENV['KATELLO_ANSWER_FILE'] = result_config_path
+
+begin
+	IO.popen(puppet_cmd, 'w') { |f|
+		f.puts "include katello"
+		f.close_write
+		puts f.gets
+	}
+rescue => e
+	$stderr.puts 'Error: ' + e.message
+end
 

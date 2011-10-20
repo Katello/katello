@@ -1,8 +1,8 @@
 class katello::params {
   # database settings
-  $db_user = "katello"
-  $db_name = "katello"
-  $db_pass = "katello"
+  $db_user = katello_config_value('db_user')
+  $db_name = katello_config_value('db_name')
+  $db_pass = katello_config_value('db_password')
 
   # system settings
   $user        = "katello"
