@@ -66,6 +66,7 @@ $(document).ready(function() {
       function() {button.removeClass("disabled")
     });
   });
+  //end doc ready
 });
 
 var provider = (function() {
