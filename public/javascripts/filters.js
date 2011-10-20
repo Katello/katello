@@ -22,25 +22,37 @@ $(document).ready(function() {
         $(this).ajaxSubmit({success:KT.filters.success_create , error:KT.filters.failure_create});
     });
 
-    //KT.panel.set_expand_cb(KT.filter_actions.register());
-
-    $("#container").delegate("#add_package_form", 'submit',  function(e){
-        e.preventDefault();
-        KT.filters.add_package();
-
-    });
+  
 
     $("#container").delegate("#remove_packages", 'click', function(e){
         KT.filters.remove_packages();
 
     });
 
+    KT.panel.set_expand_cb(function(){
+        KT.package_input.register_autocomplete();            
+    })
 
 });
 
+KT.package_input = (function() {
+    var current_input = undefined;
 
+    var register_autocomplete = function() {
+        current_input = KT.auto_complete_box({
+            values:       KT.routes.auto_complete_locker_packages_path(),
+            default_text: i18n.package_search_text,
+            input_id:     "package_input",
+            form_id:      "add_package_form",
+            add_btn_id:   "add_package",
+            add_cb:       KT.filters.add_package
+        });
+    };
 
-
+    return {
+        register_autocomplete:register_autocomplete
+    }
+})();
 
 KT.filters = (function(){
 
@@ -52,17 +64,15 @@ KT.filters = (function(){
         $('input[id^=filter_save]').attr("disabled", false);
 
     },
-    add_package = function(){
+    add_package = function(name, cleanup_cb){
         var input = $("#package_input");
-        var btn = $("#add_package");
-        var name = input.val();
+
+        //verify the package isn't already displayed
+        if ($(".package_select[value=" + name + "]").length !== 0){
+            cleanup_cb();
+            return;
+        }
         
-        if(input.hasClass("disabled")) {
-            return;
-        }
-        if (name === ""){
-            return;
-        }
         disable_package_inputs();
 
         $.ajax({
@@ -86,6 +96,7 @@ KT.filters = (function(){
                                     b_html.toUpperCase() ? 1 : -1;
                         }
                 });
+                cleanup_cb();
                 enable_package_inputs();
             }
         });

@@ -33,6 +33,7 @@ class FiltersController < ApplicationController
   def index
     @filters = Filter.readable(current_organization).search_for(params[:search]).order('pulp_id desc').
         limit(current_user.page_size)
+    render "index"
   end
 
   def items

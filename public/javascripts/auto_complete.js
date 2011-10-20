@@ -61,6 +61,7 @@ KT.auto_complete_box = function(params) {
         if (add_btn.text() === "") {
             add_btn.html(settings.add_text);
         }
+        input.val("");
         input.removeAttr('disabled');
         input.autocomplete('enable');
     },
