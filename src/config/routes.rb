@@ -262,6 +262,7 @@ Src::Application.routes.draw do
       member do
         get :packages, :action => :package_profile
         get :errata
+        get :pools
       end
       resources :subscriptions, :only => [:create, :index, :destroy]
     end
