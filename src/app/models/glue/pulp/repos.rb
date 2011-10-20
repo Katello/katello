@@ -25,8 +25,10 @@ module Glue::Pulp::Repos
     end
   end
 
-  def self.groupid(product, environment)
-      [self.product_groupid(product), self.env_groupid(environment), self.org_groupid(product.locker.organization)]
+  def self.groupid(product, environment, content = nil)
+      groups = [self.product_groupid(product), self.env_groupid(environment), self.org_groupid(product.locker.organization)]
+      groups << self.content_groupid(content) if not content.nil?
+      groups
   end
 
   def self.clone_repo_path(repo, environment, for_cp = false)
@@ -57,6 +59,10 @@ module Glue::Pulp::Repos
 
   def self.product_groupid(product)
       "product:#{product.cp_id}"
+  end
+
+  def self.content_groupid(product_content)
+      "content:#{product_content.content.id}"
   end
 
   module InstanceMethods
@@ -396,22 +402,28 @@ module Glue::Pulp::Repos
           async_tasks << repo.get_clone(to_env).sync
         else
           #repo is not in the next environment yet, we have to clone it there
-          async_tasks << repo.promote(to_env, self)
+          content = self.content_for_clone_of repo
+          async_tasks << repo.promote(to_env, content)
 
-          new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(repo)
-
-          if from_env.locker?
-            productContent_will_change!
-            productContent << self.create_content(repo.name, new_repo_path)
-          end
         end
       end
       async_tasks.flatten(1)
     end
 
 
+    def content_for_clone_of repo
+      return repo.content unless repo.content_id.nil?
+
+      new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(repo)
+      new_content = self.create_content(repo.name, new_repo_path)
+
+      self.add_content new_content
+      new_content
+    end
+
+
     def create_content name, path
-      content = Glue::Candlepin::ProductContent.new({
+      new_content = Glue::Candlepin::ProductContent.new({
         :content => {
           :name => name,
           :contentUrl => path,
@@ -422,9 +434,14 @@ module Glue::Pulp::Repos
         },
         :enabled => true
       })
-      content
+      new_content.create
+      new_content
     end
 
+    def add_content content
+      Candlepin::Product.add_content self.cp_id, content.content.id, true
+      self.productContent << content
+    end
 
     def check_for_repo_conflicts(repo_name)
       unless self.repos(self.locker, {:name => repo_name}).empty?
