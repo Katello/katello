@@ -140,6 +140,11 @@ class Glue::Pulp::Repo
     nil
   end
 
+  def set_sync_schedule schedule
+    Pulp::Repository.update(self.id, {
+      :sync_schedule => schedule
+    })
+  end
 
   def has_package? id
     self.packages.each {|pkg|
