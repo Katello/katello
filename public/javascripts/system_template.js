@@ -465,7 +465,7 @@ KT.auto_complete_box = function(params) {
         form_id: undefined,
         add_btn_id: undefined,
         add_text: i18n.add_plus,
-        add_cb: function(t, cb){}
+        add_cb: function(t, cb){cb();}
     };
     $.extend( settings, params );
     
