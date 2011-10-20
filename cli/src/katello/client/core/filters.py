@@ -32,7 +32,6 @@ class FilterAction(Action):
         super(FilterAction, self).__init__()
         self.api = FilterAPI()
 
-
 # actions ---------------------------------------------------------
 
 class List(FilterAction):
@@ -80,7 +79,7 @@ class Create(FilterAction):
         org = self.get_option('org')
         name = self.get_option('name')
         description = self.get_option('description')        
-        packages = [] if self.get_option('packages') == None else [p.strip() for p in self.get_option('packages').split(',')]
+        packages = self.parse_packages(self.get_option('packages'))
         
         new_filter = self.api.create(org, name, description, packages)
 
@@ -88,8 +87,11 @@ class Create(FilterAction):
             print _("Successfully created filter [ %s ]") % new_filter['name']
         else:
             print _("Could not create filter [ %s ]") % name
+            
         return os.EX_OK
-    
+        
+    def parse_packages(self, packages):
+        return ([] if packages == None else [p.strip() for p in packages.split(',')])
 
 class Delete(FilterAction):
     description = _('delete a filter')
@@ -128,7 +130,7 @@ class Info(FilterAction):
         name = self.get_option('name')
 
         filter_info = self.api.info(org, name)
-        filter_info['package_list'] = ", ".join(filter_info["package_list"])
+        filter_info['package_list'] = self.package_list_as_string(filter_info["package_list"])
 
         self.printer.addColumn('name')
         self.printer.addColumn('description')
@@ -137,6 +139,9 @@ class Info(FilterAction):
         self.printer.setHeader(_("Filter Information"))
         self.printer.printItem(filter_info)
         return os.EX_OK
+        
+    def package_list_as_string(self, package_list):
+        return ", ".join(package_list)
         
 class Filter(Command):
 

@@ -419,7 +419,8 @@ class DeleteFilter(ProductAction):
 
         if len(existingFilterNames) == 0:
             return os.EX_OK            
-            
+
+        existingFilterNames.remove(filterName)             
         self.api.update_filters(prod['id'], existingFilterNames)
 
         print _("Deleted filter [ %s ] from product [ %s ]" % (filterName, prodName))
