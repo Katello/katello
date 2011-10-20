@@ -1,0 +1,38 @@
+= javascript :provider
+
+= content_for :title do
+  #{@filter.name}
+
+= content_for :remove_item do
+  - if filter.deletable?
+    = link_to _("Remove Filter"), {:action => "destroy", :controller => "filters"}, :method => :delete, :confirm => _('Are you sure you want to delete this filster?'), :class => "remove_item", :remote=>true
+
+
+= content_for :navigation do
+  = render_navigation(:items=>package_filter_navigation, :level => 1)
+  
+= content_for :content do
+  #package_filter
+    %table
+      %thead
+        %tr.no_sort
+          %th
+            #{"Package Name"}
+      -if editable
+        %tr.no_sort
+          %td
+            #{'Add Packages'}
+            %form{:id=>'add_package_form'}
+              %input{:type=>'text', :id=>'package_input', 'data-url'=>add_packages_filter_path(@filter)}
+              %input.button{:type=>'submit', :id=>'add_package', :value=>_('Add')}
+      - if @filter.package_list.empty?
+        %tr
+          %td
+            #{"No packages currently exist."}
+      - for pkg in @filter.package_list
+        %tr
+          %td
+            %input.package_select{:type=>"checkbox", :name=>pkg, :value=>pkg}
+            = pkg
+    %input.fr.button{:type=>"button", :id=>"remove_packages", :value=>_("Remove Packages"), 'data-url'=> remove_packages_filter_path(@filter)}
+      
