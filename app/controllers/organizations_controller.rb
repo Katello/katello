@@ -21,6 +21,7 @@ class OrganizationsController < ApplicationController
   before_filter :find_organization, :only => [:edit, :update, :destroy]
   before_filter :authorize #call authorize after find_organization so we call auth based on the id instead of cp_id
   before_filter :setup_options, :only=>[:index, :items]
+  before_filter :search_filter, :only => [:auto_complete_search]
 
   def rules
     index_test = lambda{Organization.any_readable?}
@@ -46,7 +47,7 @@ class OrganizationsController < ApplicationController
 
   def index
     begin
-      @organizations = Organization.readable.search_for(params[:search]).limit(current_user.page_size)
+      @organizations = Organization.readable.search_for(params[:search]).order('lower(name)').limit(current_user.page_size)
       retain_search_history
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -57,7 +58,7 @@ class OrganizationsController < ApplicationController
 
   def items
     start = params[:offset]
-    @organizations = Organization.readable.search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @organizations = Organization.readable.search_for(params[:search]).order('lower(name)').limit(current_user.page_size).offset(start)
     render_panel_items @organizations, @panel_options
   end
 
@@ -152,6 +153,10 @@ class OrganizationsController < ApplicationController
                :accessor => :cp_key,
                :ajax_scroll => items_organizations_path(),
                :enable_create => Organization.creatable?}
+  end
+
+  def search_filter
+    @filter = {:organization_id => current_organization}
   end
 
   def controller_display_name

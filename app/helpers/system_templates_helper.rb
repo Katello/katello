@@ -13,9 +13,8 @@
 module SystemTemplatesHelper
   include ActionView::Helpers::JavaScriptHelper
 
-  include BreadcrumbHelper::TemplateContentBreadcrumb
-
-
+  include BreadcrumbHelper
+  include TemplateContentBreadcrumb
 
 end
 

@@ -29,9 +29,11 @@ class Provider < ActiveRecord::Base
     :in => TYPES,
     :allow_blank => false,
     :message => "Please select provider type from one of the following: #{TYPES.join(', ')}."
+  validate :constraint_redhat_update
+  before_destroy :prevent_redhat_deletion
   before_validation :sanitize_repository_url
 
-  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
+  scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id]) }
 
   scoped_search :on => :name, :complete_value => true, :rename => :'provider.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'provider.description'
@@ -47,6 +49,24 @@ class Provider < ActiveRecord::Base
     # validate only when new record is added (skip explicit valid? calls)
     if new_record? and provider_type == REDHAT and count_providers(REDHAT) != 0
       errors.add(:base, _("Only one Red Hat provider permitted for an Organization"))
+    end
+  end
+
+  def prevent_redhat_deletion
+    if redhat_provider?
+      errors.add(:base, _("Red Hat provider can not be deleted"))
+      return false
+    end
+    true
+  end
+
+  def constraint_redhat_update
+    if !new_record? && redhat_provider?
+      allowed_changes = %w[repository_url]
+      not_allowed_changes = changes.keys - allowed_changes
+      unless not_allowed_changes.empty?
+        errors.add(:base, _("the following attributes can not be updated for the Red Hat provider: [ %s ]") % not_allowed_changes.join(", "))
+      end
     end
   end
 
@@ -100,14 +120,14 @@ class Provider < ActiveRecord::Base
     [:create]
   end
 
-  scope :readable, lambda {|org| authorized_items(org, READ_PERM_VERBS)}
+  scope :readable, lambda {|org| readable_items(org)}
 
   def readable?
     User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || self.organization.syncable?
   end
 
   def self.any_readable? org
-    User.allowed_to?(READ_PERM_VERBS, :providers, nil, org) || org.syncable?
+    org.syncable? || User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
   end
 
   def self.creatable? org
@@ -142,9 +162,11 @@ class Provider < ActiveRecord::Base
      end
    end
 
-  def self.authorized_items org, verbs, resource = :providers
+  def self.readable_items org
     raise "scope requires an organization" if org.nil?
-    if User.allowed_all_tags?(verbs, resource, org)
+    resource = :providers
+    verbs = READ_PERM_VERBS
+    if org.syncable? ||  User.allowed_all_tags?(verbs, resource, org)
        where(:organization_id => org)
     else
       where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")

@@ -17,13 +17,14 @@ class Organization < ActiveRecord::Base
   include Authorization
 
   has_many :activation_keys, :dependent => :destroy
-  has_many :providers, :dependent => :destroy
+  has_many :providers
   has_many :environments, :class_name => "KTEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
   has_one :locker, :class_name =>"KTEnvironment", :conditions => {:locker => true}, :dependent => :destroy
-  
-  attr_accessor :parent_id,:pools,:statistics
+  has_many :filters, :dependent => :destroy, :inverse_of => :organization
 
-  scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'organization.name'
+  attr_accessor :statistics
+
+  scoped_search :on => :name, :complete_value => true, :rename => :'organization.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'organization.description'
   scoped_search :in => :environments, :on => :name, :complete_value => true, :rename => :'environment.name'
   scoped_search :in => :environments, :on => :description, :complete_value => true, :rename => :'environment.description'

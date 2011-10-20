@@ -84,8 +84,10 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def export
-    json = @template.string_export
-    render :json => json
+    respond_to do |format|
+      format.tdl { render(:text => @template.export_as_tdl, :content_type => Mime::TDL) and return }
+      format.json { render :json => @template.export_as_json }
+    end
   end
 
   def find_environment

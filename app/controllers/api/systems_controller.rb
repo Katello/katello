@@ -17,19 +17,22 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_organization, :only => [:create, :index, :activate]
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index]
-  before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :upload_package_profile, :errata, :package_profile, :subscribe]
+  before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
+                                        :upload_package_profile, :errata, :package_profile, :subscribe,
+                                        :unsubscribe, :subscriptions, :pools]
   before_filter :authorize, :except => :activate
 
   skip_before_filter :require_user, :only => [:activate]
 
   def rules
     index_systems = lambda { System.any_readable?(@organization) }
-    register_system = lambda { System.registrable?(@environment, @organization) }
+    register_system = lambda { System.registerable?(@environment, @organization) }
     edit_system = lambda { @system.editable? or User.consumer? }
     read_system = lambda { @system.readable? or User.consumer? }
     delete_system = lambda { @system.deletable? or User.consumer? }
 
     {
+      :new => register_system,
       :create => register_system,
       :regenerate_identity_certificates => edit_system,
       :update => edit_system,
@@ -40,6 +43,9 @@ class Api::SystemsController < Api::ApiController
       :errata => read_system,
       :upload_package_profile => edit_system,
       :subscribe => edit_system,
+      :unsubscribe => edit_system,
+      :subscriptions => read_system,
+      :pools => read_system,
     }
   end
 
@@ -60,10 +66,21 @@ class Api::SystemsController < Api::ApiController
     render :json => system.to_json
   end
 
+  def subscriptions
+    render :json => @system.entitlements
+  end
+
   def subscribe
     expected_params = params.with_indifferent_access.slice(:pool, :quantity)
     raise HttpErrors::BadRequest, _("Please provide pool and quantity") if expected_params.count != 2
     @system.subscribe(expected_params[:pool], expected_params[:quantity])
+    render :json => @system.to_json
+  end
+
+  def unsubscribe
+    expected_params = params.with_indifferent_access.slice(:pool)
+    raise HttpErrors::BadRequest, _("Please provide pool id") if expected_params.count != 1
+    @system.unsubscribe(expected_params[:serial_id])
     render :json => @system.to_json
   end
 
@@ -105,6 +122,10 @@ class Api::SystemsController < Api::ApiController
   def destroy
     @system.destroy
     render :text => _("Deleted system '#{params[:id]}'"), :status => 204
+  end
+
+  def pools
+    render :json => { :pools => @system.available_pools_full }
   end
 
   def package_profile
