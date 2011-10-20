@@ -69,9 +69,7 @@ class ChangesetsController < ApplicationController
 
   #extended scroll for changeset_history
   def items
-    changesets = @environment.changeset_history.search_for(params[:search])
-    render_panel_items changesets, @panel_options, params[:offset]
-    retain_search_history
+    render_panel_items(@environment.changeset_history, @panel_options, params[:search], params[:offset])
   end
 
   #similar to index, but only renders the actual list of the 2 pane

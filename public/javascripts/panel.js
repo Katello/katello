@@ -98,7 +98,7 @@ $(document).ready(function() {
     var container = $('#container');
     if(container.length > 0){
     	KT.panel.registerPanel($('#panel-frame'), 0);
-        $(window).scroll(KT.panel.scrollExpand);
+        $(window).scroll(KT.panel.list.extend);
     }
 
     // It is possible for the pane (e.g. right) of a panel to contain navigation
@@ -143,13 +143,11 @@ $(document).ready(function() {
 });
 
 KT.panel = (function($){
-	var retrievingNewContent= false,
-	    control_bbq 		= true,
+	var control_bbq 		= true,
 	    current_scroll 		= 0,
 	    panels_list			= [],
 	    left_list_content	= "",
 	
-		extended_cb         = function() {}, //callback for post extended scroll
         expand_cb           = function() {}, //callback after a pane is loaded
         contract_cb         = function() {},
         switch_content_cb   = function() {},
@@ -312,58 +310,6 @@ KT.panel = (function($){
             
             panelAjax('', url, thisPanel, true);
         },
-        scrollExpand = function() { //If we are scrolling past the bottom, we need to request more data
-            var list = $('#list'),
-            	offset = list.find(".block").size(),
-            	page_size = list.attr("data-page_size"),
-                url = list.attr("data-scroll_url"),
-                search = KT.common.getSearchParams(),
-                params = {"offset":offset};
-            
-            if (list.hasClass("ajaxScroll") && !retrievingNewContent && 
-            			$(window).scrollTop() >=  ($(document).height() - $(window).height()) - 700) {
-                
-                retrievingNewContent = true;
-
-                if (parseInt(page_size) > parseInt(offset)) {
-                    return; //If we have fewer items than the pagesize, don't try to fetch anything else
-                }
-
-                if (search) {
-                	$.extend(params, search);
-                }
-                
-                $(".expand_list").append('<div class="list-spinner"> <img src="/katello/images/spinner.gif" class="ajax_scroll">  </div>');
-
-                $.ajax({
-                    type: "GET",
-                    url: url,
-                    data : params,
-                    cache: false,
-                    success: function(data) {
-                        var expand_list 		= $('.expand_list').find('section'),
-                        	current_items_count = $('#current_items_count');
-                        
-                        retrievingNewContent = false;
-                        expand_list.append(data['html']);
-                        $('.list-spinner').remove();
-                        
-                        if (data['current_items'] === 0) {
-                            list.removeClass("ajaxScroll");
-                        }
-                        
-                        KT.panel.list.current_items += data['current_items'];
-	        			current_items_count.html(KT.panel.list.current_items);
-                        
-                        extended_cb();
-                    },
-                    error: function() {
-                        $('.list-spinner').remove();
-                        retrievingNewContent = false;
-                    }
-                });
-            }
-        },
         handleScroll = function(jQPanel, offset) {
             var scrollY 	= KT.common.scrollTop(),
                 scrollX 	= KT.common.scrollLeft(),
@@ -416,19 +362,42 @@ KT.panel = (function($){
                 }
             }
         },
-        hash_change = function(event) {
+        hash_change = function(event, page_load) {
             var refresh 		= $.bbq.getState("panel"),
             	search 			= $.bbq.getState("search"),
             	search_element 	= $('#search');
+            
+            if( search_element.val() !== search ){
+            	if( search !== undefined ){
+            		search_element.val(search);
+            	}
             	
-            if(refresh){ 
-                select_item(refresh);
+            	if( refresh ){
+            		$('#search_form').trigger('submit', [page_load, function(){ select_item(refresh); }]);
+            	} else {
+            		$('#search_form').trigger('submit', [page_load]);	
+            	}
+            } else if( refresh ){
+            	select_item(refresh);
+            } else if( !refresh ){
+            	closePanel();
             }
             
-            if( search !== undefined && search_element.val() !== search ){
-				$('#search').val(search);
-				$('#search_form').submit();
-            }
+            /*
+            if( page_load ){
+            	if( refresh ){
+            		$('#search_form').trigger('submit', [page_load, function(){ select_item(refresh); }]);            		
+            	} else {
+            		$('#search_form').trigger('submit', [page_load]);
+            	}
+            } else if( search ){
+            	if( refresh ){
+            		$('#search_form').trigger('submit', [page_load, function(){ select_item(refresh); }]);            		
+            	} else {
+            		$('#search_form').trigger('submit', [page_load]);
+            	}
+            }*/
+            
             return false;
         },
         registerPanel = function(jQPanel, offset){
@@ -452,131 +421,15 @@ KT.panel = (function($){
 			});
 
         	panels_list.push(new_panel);
-        },
-        registerPage = function(resource_type, options){
-        	options = options || {};
-        	
-        	getListContent(resource_type);
-        	setupSearch(resource_type, options);
-        	KT.search.enableAutoComplete(KT.routes['auto_complete_search_' + resource_type + '_path']());
-
-        	if( options['create'] ){
-		    	$('#' + options['create']).live('submit', function(e) {
-		    		var button = $(this).find('input[type|="submit"]'),
-		    			data   = KT.common.getSearchParams() || {};
-  					
-  					e.preventDefault();
-       				button.attr("disabled","disabled");
-		    	
-			    	$(this).ajaxSubmit({
-						url		: KT.routes[resource_type + '_path'](),
-						data	: data,
-				    	success : function(data) {
-				    		var id;
-				    		
-				    		if( data['no_match'] ){
-				            	closePanel($('#panel'));
-				          		notices.checkNotices();
-				    		} else {
-				                KT.panel.list.add(data);
-				                closePanel($('#panel'));
-				    			
-				    			id = KT.panel.list.first_child().attr("id");
-				                $.bbq.pushState({ panel : id });
-				                select_item(id);
-				                notices.checkNotices();
-				                KT.panel.list.current_items += 1;
-				                KT.panel.list.total_items += 1; 
-				                $('#total_items_count').html(KT.panel.list.total_items);
-	        					$('#current_items_count').html(KT.panel.list.current_items);
-				            }
-				      	}, 
-				      	error	: function(e) {
-				        	button.removeAttr('disabled');
-				            notices.checkNotices();
-				      	}
-			      	});
-        		});
-        	}
-        },
-        getListContent = function(resource_type, offset){
-        	var url 	= KT.routes['items_' + resource_type + '_path'](),
-        		offset 	= offset || 0,
-        		params 	= KT.common.getSearchParams(),
-        		data 	= { 'offset' : offset };
-        	
-        	if( params ){
-        		$.extend(data, params);
-        	}
-        	
-        	KT.panel.control_bbq = false;
-        	$(window).bind( 'hashchange', hash_change);
-        	
-        	$(document).ready(function(){
-        		$(window).trigger( 'hashchange' );
-        		
-        		if( !$.bbq.getState("search") ){
-					$('#search_form').submit();
-        		}
-        	});
-        },
-        setupSearch = function(resource_type, options){
-    		$('#search_form').live('submit', function(e){
-				var button 			= $('#search_button'),
-					element 		= $('#list'),
-					url 			= KT.routes['items_' + resource_type + '_path'](),
-	        		offset 			= offset || 0,
-	        		extra_params	= options['extra_params'],
-	        		data			= {};
-				
-				e.preventDefault();
-				button.attr("disabled","disabled");
-				element.find('section').empty();
-				element.find('.spinner').show();
-
-				$.bbq.pushState($(this).serialize());
-        		url += '?offset=' + offset;
-        		
-        		if( extra_params ){
-        			for(var i=0; i < extra_params.length; i += 1){
-        				data[extra_params[i]] = $.bbq.getState(extra_params[i]);
-        			}
-        		}
-        	
-        		closePanel();
-				
-				$(this).ajaxSubmit({
-					url		:  url,
-					data	:  data,
-			    	success : function(data) {
-			    		element.find('section').append(data['html']);
-	        			element.find('.spinner').hide();
-    			    	button.removeAttr('disabled');
-	        			element.find('section').fadeIn();
-	        			$('#total_items_count').html(data['total_items']);
-	        			$('#current_items_count').html(data['current_items']);
-	        			KT.panel.list.total_items = data['total_items'];
-	        			KT.panel.list.current_items = data['current_items'];
-	        			$('.left').resize();
-	        			$('.ui-autocomplete').hide();
-    					$('#list').addClass("ajaxScroll");
-			      	}, 
-			      	error	: function(e) {
-			        	button.removeAttr('disabled');
-			      	}
-				})
-			});
         };
 	
     return {
-        set_extended_cb         : function(callBack){ extended_cb = callBack; },
         set_expand_cb           : function(callBack){ expand_cb = callBack; },
         get_expand_cb           : function(){ return expand_cb },
         set_contract_cb         : function(callBack){ contract_cb = callBack; },
         set_switch_content_cb	: function(callBack){ switch_content_cb = callBack; },
         select_item				: select_item,
         hash_change				: hash_change,
-        scrollExpand			: scrollExpand,
         openSubPanel			: openSubPanel,
         updateResult			: updateResult,
         closeSubPanel			: closeSubPanel,
@@ -584,44 +437,61 @@ KT.panel = (function($){
         panelResize				: panelResize,
         panelAjax				: panelAjax,
         control_bbq             : control_bbq,
-        registerPanel			: registerPanel,
-        getListContent			: getListContent,
-        registerPage			: registerPage
+        registerPanel			: registerPanel
     };
 
 })(jQuery);
 
 KT.panel.list = (function(){
-   return {
-   		total_items : 0,
-   		current_items : 0,
+   	var total_items_count	= 0,
+		current_items_count	= 0,
+		results_items_count	= 0,
+		retrievingNewContent= false,
+		extended_cb	        = function() {},
    		
-       last_child : function() {
-         return $("#list section").children().last();
-       },
-       first_child	: function(){
-       	 return $("#list section").children().first();
-       },
-       add : function(html) {
-           $('#list section').prepend($(html).hide().fadeIn(function(){
-               $(this).addClass("add", 250, function(){
-                   $(this).removeClass("add", 250);
-               });
-           }));
-           return false;
-       },
-       remove : function(id){
-           $('#' + id).fadeOut(function(){
-               $(this).empty().remove();
-           });
-           return false;
-       },
-       complete_refresh: function(url, success_cb) {
-        $('#list').html('<img src="images/spinner.gif">');
-        KT.panel.list.refresh("list", url, success_cb);
-       },
-       refresh : function(id, url, success_cb){
-           var jQid = $('#' + id);
+   		update_counts = function(current, total, results, clear){
+   			if( clear ){
+   				current_items_count = current;
+   				total_items_count = total;
+   				results_items_count = results;
+   			} else {
+   				current_items_count += current;
+   				total_items_count += total;
+   				results_items_count = results;
+   			}
+   			
+            $('#total_items_count').html(total_items_count);
+			$('#current_items_count').html(current_items_count);
+			$('#total_results_count').html(results_items_count);
+   		},
+    	last_child = function() {
+        	return $("#list section").children().last();
+       	},
+       	first_child	= function(){
+       		return $("#list section").children().first();
+       	},
+       	add = function(html) {
+        	$('#list section').prepend($(html).hide().fadeIn(function(){
+            	$(this).addClass("add", 250, function(){
+                	$(this).removeClass("add", 250);
+               	});
+           	}));
+           	return false;
+       	},
+       	remove = function(id){
+        	$('#' + id).fadeOut(function(){
+            	$(this).empty().remove();
+				update_counts(-1, -1, -1);
+           	});
+           	return false;
+       	},
+       	complete_refresh = function(url, success_cb) {
+        	$('#list').html('<img src="images/spinner.gif">');
+        	refresh("list", url, success_cb);
+       	},
+       	refresh = function(id, url, success_cb){
+        	var jQid = $('#' + id);
+            
             $.ajax({
                 cache: 'false',
                 type: 'GET',
@@ -637,8 +507,171 @@ KT.panel.list = (function(){
                         success_cb();
                     }
                 }
-            });
+        	});
            return false;
-       }
-   };
+       	},
+        extend = function() { //If we are scrolling past the bottom, we need to request more data
+            var list 		= $('#list'),
+            	offset 		= list.find(".block").size(),
+            	page_size	= list.attr("data-page_size"),
+                url 		= list.attr("data-scroll_url"),
+                search 		= KT.common.getSearchParams(),
+                params 		= {"offset":offset};
+            
+            if (list.hasClass("ajaxScroll") && !retrievingNewContent && 
+            			$(window).scrollTop() >=  ($(document).height() - $(window).height()) - 700) {
+                
+                retrievingNewContent = true;
+
+                if (parseInt(page_size) > parseInt(offset)) {
+                    return; //If we have fewer items than the pagesize, don't try to fetch anything else
+                }
+
+                if (search) {
+                	$.extend(params, search);
+                }
+                
+                $(".expand_list").append('<div class="list-spinner"> <img src="/katello/images/spinner.gif" class="ajax_scroll">  </div>');
+
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    data : params,
+                    cache: false,
+                    success: function(data) {
+                        var expand_list = $('.expand_list').find('section');
+                        
+                        retrievingNewContent = false;
+                        expand_list.append(data['html']);
+                        $('.list-spinner').remove();
+                        
+                        if (data['current_items'] === 0) {
+                            list.removeClass("ajaxScroll");
+                        }
+                        
+                        update_counts(data['current_items'], 0);
+                        
+                        extended_cb();
+                    },
+                    error: function() {
+                        $('.list-spinner').remove();
+                        retrievingNewContent = false;
+                    }
+                });
+            }
+        },
+        registerPage = function(resource_type, options){
+        	options = options || {};
+        	
+        	setupSearch(resource_type, options);
+        	KT.search.enableAutoComplete(KT.routes['auto_complete_search_' + resource_type + '_path']());
+        	KT.panel.control_bbq = false;
+        	$(window).bind( 'hashchange', KT.panel.hash_change);
+        	
+        	$(document).ready(function(){
+        		$(window).trigger('hashchange', [true]);
+        	});
+        	
+        	if( options['create'] ){
+		    	$('#' + options['create']).live('submit', function(e) {
+		    		var button = $(this).find('input[type|="submit"]'),
+		    			data   = KT.common.getSearchParams() || {};
+  					
+  					e.preventDefault();
+       				button.attr("disabled","disabled");
+		    	
+			    	$(this).ajaxSubmit({
+						url		: KT.routes[resource_type + '_path'](),
+						data	: data,
+				    	success : function(data) {
+				    		var id;
+				    		
+				    		if( data['no_match'] ){
+				            	KT.panel.closePanel($('#panel'));
+				          		notices.checkNotices();
+				          		
+				          		update_counts(0, 0, 1);
+				    		} else {
+				                add(data);
+				                KT.panel.closePanel($('#panel'));
+				    			
+				    			id = first_child().attr("id");
+				                $.bbq.pushState({ panel : id });
+				                KT.panel.select_item(id);
+				                notices.checkNotices();
+				                
+				                update_counts(1, 1, 1);
+
+				            }
+				      	}, 
+				      	error	: function(e) {
+				        	button.removeAttr('disabled');
+				            notices.checkNotices();
+				      	}
+			      	});
+        		});
+        	}
+        },
+        setupSearch = function(resource_type, options){
+    		$('#search_form').live('submit', function(e, page_load, search_cb){
+				var button 			= $('#search_button'),
+					element 		= $('#list'),
+					url 			= KT.routes['items_' + resource_type + '_path'](),
+	        		offset 			= offset || 0,
+	        		extra_params	= options['extra_params'],
+	        		data			= {},
+	        		page_load		= page_load || false,
+	        		search_cb		= search_cb || function(){};
+				
+				e.preventDefault();
+				button.attr("disabled","disabled");
+				element.find('section').empty();
+				element.find('.spinner').show();
+
+				if( $(this).serialize() !== 'search=' ){
+					$.bbq.pushState($(this).serialize());	
+				}
+        		url += '?offset=' + offset;
+        		
+        		if( extra_params ){
+        			for(var i=0; i < extra_params.length; i += 1){
+        				data[extra_params[i]] = $.bbq.getState(extra_params[i]);
+        			}
+        		}
+        	
+        		if( !page_load ){
+        			KT.panel.closePanel();
+        		}
+				
+				$(this).ajaxSubmit({
+					url		:  url,
+					data	:  data,
+			    	success : function(data) {
+			    		element.find('section').append(data['html']);
+	        			element.find('.spinner').hide();
+    			    	button.removeAttr('disabled');
+	        			element.find('section').fadeIn();
+	        			update_counts(data['current_items'], data['total_items'], data['results_count'], true);
+	        			$('.left').resize();
+	        			$('.ui-autocomplete').hide();
+    					$('#list').addClass("ajaxScroll");
+    					
+    					search_cb();
+			      	}, 
+			      	error	: function(e) {
+			        	button.removeAttr('disabled');
+			      	}
+				})
+			});
+        };
+       	
+	return {
+		set_extended_cb         : function(callBack){ extended_cb = callBack; },
+		extend					: extend,
+		registerPage			: registerPage,
+		remove					: remove,
+		refresh					: refresh,
+		add						: add
+	};
+   
 })();

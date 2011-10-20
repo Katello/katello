@@ -84,10 +84,7 @@ class SystemsController < ApplicationController
   end
 
   def items
-    systems = System.readable(current_organization).search_for(params[:search])
-    @panel_options[:collection] = sort_order_limit(systems)
-    render_panel_items systems, @panel_options, params[:offset]
-    retain_search_history
+    render_panel_items(System.readable(current_organization), @panel_options, params[:search], params[:offset])
   end
 
   def env_items

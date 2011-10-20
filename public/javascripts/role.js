@@ -12,5 +12,5 @@
 */
 
 (function(){
-	KT.panel.registerPage('roles', { create : 'new_role' });
+	KT.panel.list.registerPage('roles', { create : 'new_role' });
 })();

@@ -59,9 +59,7 @@ class UsersController < ApplicationController
   end
   
   def items
-    users = User.readable.search_for(params[:search])
-    render_panel_items users, @panel_options, params[:offset]
-    retain_search_history
+    render_panel_items(User.readable, @panel_options, params[:search], params[:offset])
   end
 
   

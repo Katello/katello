@@ -66,9 +66,7 @@ class ActivationKeysController < ApplicationController
   end
 
   def items
-    activation_keys = ActivationKey.search_for(params[:search]).where(:organization_id => current_organization)
-    render_panel_items activation_keys, @panel_options, params[:offset]
-    retain_search_history
+    render_panel_items(ActivationKey.where(:organization_id => current_organization), @panel_options, params[:search], params[:offset])
   end
 
   def show
