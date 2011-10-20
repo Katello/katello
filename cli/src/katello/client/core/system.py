@@ -369,8 +369,11 @@ class Subscriptions(SystemAction):
                 self.printer.addColumn('expires')
                 self.printer.addColumn('consumed')
                 self.printer.addColumn('quantity')
+                self.printer.addColumn('sla')
+                self.printer.addColumn('contractNumber')
+                self.printer.addColumn('providedProducts')
                 self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
-                self.printer.printItems(result)
+                self.printer.printItems(result['pools'])
             else:
                 # listing current subscriptions
                 result = self.api.subscriptions(systems[0]['uuid'])
