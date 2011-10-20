@@ -79,6 +79,9 @@ Src::Application.routes.draw do
       get :filelist
       get :dependencies
     end
+    collection do
+      get :auto_complete_locker
+    end
   end
 
   resources :errata, :only => [:show] do
@@ -135,7 +138,6 @@ Src::Application.routes.draw do
     collection do
       get :auto_complete_search
       get :items
-      get :auto_complete_package
       get :product_packages
       get :product_comps
     end

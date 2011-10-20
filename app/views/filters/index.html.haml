@@ -3,6 +3,14 @@
 = include_editable_i18n
 
 
+= javascript do
+  :javascript
+
+    localize({
+      "package_search_text": '#{_("Search available package names...")}',
+      "product_search_text": '#{_("Search available product names...")}',
+      });
+
 .grid_16
   = help_tip_button
   = help_tip(_("Package Filters allow you to blacklist packages from being promoted into subsequent environments. " + |
