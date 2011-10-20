@@ -124,6 +124,8 @@ Src::Application.routes.draw do
     end
     member do
       get :packages
+      post :add_packages
+      post :remove_packages
       
     end
 
