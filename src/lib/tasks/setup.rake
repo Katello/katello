@@ -1,9 +1,7 @@
 desc "check if not running as root with sqlite3 in production mode (creates wrong permissions)"
+require 'util/db_setup_check'
 task :check_db_config => "db:load_config" do
-  raise 'SQLite3 is not supported in production mode! You can still run "rake setup" as katello user.' if Process.uid == 0 and
-    Rails.env == 'production' and
-    ActiveRecord::Base.configurations[Rails.env]['adapter'] == 'sqlite3' and
-    not ENV['FORCE_RAKE_SETUP']
+  Katello::DbSetupCheck.check!
 end
 
 desc "task to perform steps required for katello to work"
