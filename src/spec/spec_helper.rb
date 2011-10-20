@@ -49,7 +49,7 @@ RSpec.configure do |config|
     }
 
     config.include x[0], :type => x[1], :example_group => {
-      :file_path => config.escaped_path(["spec", AppConfig.app_name, x[1].to_s.pluralize])
+      :file_path => config.escaped_path(["spec", AppConfig.app_name.downcase, x[1].to_s.pluralize])
     }
   end
 

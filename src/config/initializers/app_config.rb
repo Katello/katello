@@ -18,11 +18,19 @@ module ApplicationConfiguration
       config = YAML::load_file(@config_file) || {}
       @hash = config['common'] || {}
       @hash.update(config[Rails.env] || {})
-      app_name = (config['common']['app'] ? config['common']['app'] : "katello")
-      @hash["katello?"] = app_name == "katello"
-      @hash["headpin?"] = app_name == "headpin"
+
+      if ENV['RAILS_RELATIVE_ROOT_URL'] == '/katello'
+        @hash["app_name"] = 'Katello'
+        @hash["katello?"] = true
+        @hash["headpin?"] = false
+      else
+        @hash["app_name"] = 'Headpin'
+        @hash["katello?"] = false
+        @hash["headpin?"] = true
+      end
+      #@ostruct.app_name = app_name
+
       @ostruct = hashes2ostruct(@hash)
-      @ostruct.app_name = app_name
 
       # candlepin and pulp are turned on by default
       @ostruct.use_cp = true unless @ostruct.respond_to?(:use_cp)

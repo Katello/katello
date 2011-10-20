@@ -28,7 +28,7 @@ module ApplicationHelper
   end
 
   def project_name
-    _(AppConfig.app_name.capitalize)
+    AppConfig.app_name
   end
   
   def default_title
