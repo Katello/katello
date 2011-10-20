@@ -63,9 +63,7 @@ class RolesController < ApplicationController
   end
   
   def items
-    roles = Role.readable.search_for(params[:search]).non_self.order(:name)
-    render_panel_items roles, @panel_options, params[:offset]
-    retain_search_history
+    render_panel_items(Role.readable.non_self, @panel_options, params[:search], params[:offset])
   end
   
   def setup_options

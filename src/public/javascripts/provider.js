@@ -12,7 +12,7 @@
 */
 
 (function(){
-	KT.panel.registerPage('providers', { create : 'new_provider' });
+	KT.panel.list.registerPage('providers', { create : 'new_provider' });
 })();
 
 $(document).ready(function() {

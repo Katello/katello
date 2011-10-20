@@ -12,7 +12,7 @@
 */
 
 (function(){
-	KT.panel.registerPage('users', { create : 'new_user' });
+	KT.panel.list.registerPage('users', { create : 'new_user' });
 })();
 
 $(document).ready(function() {

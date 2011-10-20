@@ -958,7 +958,7 @@ $(document).ready(function() {
 
 
 
-    KT.panel.set_extended_cb(KT.templates.reset_page);
+    KT.panel.list.set_extended_cb(KT.templates.reset_page);
 
     KT.options.templates = KT.template_breadcrumb["templates"].templates;
 

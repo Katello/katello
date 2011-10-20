@@ -120,9 +120,7 @@ class ProvidersController < ApplicationController
   end
 
   def items
-    providers = Provider.readable(current_organization).custom.search_for(params[:search]).order('name')
-    render_panel_items providers, @panel_options, params[:offset]
-    retain_search_history
+    render_panel_items(Provider.readable(current_organization).custom, @panel_options, params[:search], params[:offset])
   end
 
   def show

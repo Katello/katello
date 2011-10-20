@@ -16,7 +16,7 @@
 KT.panel.control_bbq = false;
 
 (function(){
-	KT.panel.registerPage('changesets', { 'extra_params' : ['env_id'] });
+	KT.panel.list.registerPage('changesets', { 'extra_params' : ['env_id'] });
 })();
 
 $(document).ready(function() {
@@ -26,8 +26,6 @@ $(document).ready(function() {
     //Set the callback on the environment selector
     env_select.click_callback = function(env_id) {
         $.bbq.pushState({env_id : env_id});
-        $('#search').val($.bbq.getState("search"));
-		$('#search_form').submit();
     };
     
 });

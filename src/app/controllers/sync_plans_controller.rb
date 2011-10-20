@@ -48,9 +48,7 @@ class SyncPlansController < ApplicationController
   end
   
   def items
-    sync_plans = SyncPlan.search_for(params[:search]).where(:organization_id => current_organization.id)
-    render_panel_items sync_plans, @panel_options, params[:offset]
-    retain_search_history
+    render_panel_items(SyncPlan.where(:organization_id => current_organization.id), @panel_options, params[:search], params[:offset])
   end
   
   def setup_options

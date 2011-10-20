@@ -57,9 +57,7 @@ class OrganizationsController < ApplicationController
   end
 
   def items
-    organizations = Organization.readable.search_for(params[:search])
-    render_panel_items organizations, @panel_options, params[:offset]
-    retain_search_history
+    render_panel_items(Organization.readable, @panel_options, params[:search], params[:offset])
   end
 
 

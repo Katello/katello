@@ -26,9 +26,14 @@
         #{_("viewing")}
         %span#current_items_count
           = 0
-        #{_(" of ")}
+        #{_(" of  ")}
         %span#total_items_count
           = 0
+        %span
+          #{_(" results ")} (
+          %span#total_results_count
+            = 0
+          #{_(" Total ")} #{title} )
                 
       - if url.nil?
         %form#search_form.search{"data-url" => search_index_path()}
