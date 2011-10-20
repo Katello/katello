@@ -101,7 +101,7 @@ class SystemsController < ApplicationController
   end
 
   def subscriptions
-    consumed_entitlements = @system.sys_consumed_entitlements
+    consumed_entitlements = @system.consumed_entitlements
     avail_pools = @system.available_pools_full
     facts = @system.facts.stringify_keys
     sockets = facts['cpu.cpu_socket(s)']
@@ -118,7 +118,7 @@ class SystemsController < ApplicationController
           @system.subscribe pool, params[:spinner][pool] if params[:commit].downcase == "subscribe"
           @system.unsubscribe pool if params[:commit].downcase == "unsubscribe"
         end
-        consumed_entitlements = @system.sys_consumed_entitlements
+        consumed_entitlements = @system.consumed_entitlements
         avail_pools = @system.available_pools_full
         render :partial=>"subs_update", :locals=>{:system=>@system, :avail_subs => avail_pools,
                                                     :consumed_subs => consumed_entitlements,

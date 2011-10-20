@@ -225,7 +225,7 @@ module Glue::Candlepin::Consumer
       avail_pools
     end
 
-    def sys_consumed_entitlements
+    def consumed_entitlements
       consumed_entitlements = self.entitlements.collect { |entitlement|
         pool = self.get_pool entitlement["pool"]["id"]
 
