@@ -225,6 +225,41 @@ module Glue::Candlepin::Consumer
       avail_pools
     end
 
+    def sys_consumed_entitlements
+      consumed_entitlements = self.entitlements.collect { |entitlement|
+        pool = self.get_pool entitlement["pool"]["id"]
+
+        sla = ""
+        pool["productAttributes"].each do |attr|
+          if attr["name"] == "support_level"
+            sla = attr["value"]
+            break
+          end
+        end
+
+        providedProducts = []
+        pool["providedProducts"].each do |cp_product|
+          product = Product.where(:cp_id => cp_product["productId"]).first
+          if product
+            providedProducts << product
+          end
+        end
+
+        quantity = entitlement["quantity"] != nil ? entitlement["quantity"] : pool["quantity"]
+
+        OpenStruct.new(:entitlementId => entitlement["id"],
+                       :poolName => pool["productName"],
+                       :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                       :consumed => pool["consumed"],
+                       :quantity => quantity,
+                       :sla => sla,
+                       :contractNumber => pool["contractNumber"],
+                       :providedProducts => providedProducts)
+      }
+      consumed_entitlements.sort! {|a,b| a.poolName <=> b.poolName}
+      consumed_entitlements
+    end
+
   end
 
 end
