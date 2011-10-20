@@ -58,6 +58,10 @@ class Glue::Pulp::Repo
     end
   end
 
+  def get_params
+    return @params.clone
+  end
+
   def packages
     if @repo_packages.nil?
       self.packages = Pulp::Repository.packages(id)
@@ -249,16 +253,28 @@ class Glue::Pulp::Repo
     [Pulp::Repository.clone_repo(self, cloned)]
   end
 
+  def organization_id
+    (get_groupid_param 'org').to_i
+  end
+
+  def environment_id
+    (get_groupid_param 'env').to_i
+  end
+
+  def product_id
+    get_groupid_param 'product'
+  end
+
   def organization
-    Organization.find((get_groupid_param 'org').to_i)
+    Organization.find(self.organization_id)
   end
 
   def environment
-    KTEnvironment.find((get_groupid_param 'env').to_i)
+    KTEnvironment.find(self.environment_id)
   end
 
   def product
-    Product.find_by_cp_id!(get_groupid_param 'product')
+    Product.find_by_cp_id!(self.product_id)
   end
 
   def self.repo_id product_name, repo_name, env_name, organization_name
