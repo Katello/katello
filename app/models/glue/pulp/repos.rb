@@ -261,8 +261,8 @@ module Glue::Pulp::Repos
     end
 
     def delete_repo_by_id(repo_id)
-      productContent_will_change!
-      self.productContent.delete_if { |pc| pc.content.label == repo_id }
+      repo = Glue::Pulp::Repo.find(repo_id)
+      repo.destroy
       save!
     end
 
@@ -280,7 +280,7 @@ module Glue::Pulp::Repos
     end
 
     def setup_sync_schedule
-      return if not self.sync_plan_id_changed?
+      return true if not self.sync_plan_id_changed?
 
       schedule = (self.sync_plan && self.sync_plan.schedule_format) || ""
       self.all_repos.each do |repo|
@@ -383,7 +383,7 @@ module Glue::Pulp::Repos
           queue.create(:name => "create pulp repositories for product: #{self.name}",      :priority => 1, :action => [self, :set_repos])
         when :update
           #called when sync schedule changed, repo added, repo deleted
-          queue.create(:name => "setting up pulp sync schedule for product: #{self.name}", :priority => 4, :action => [self, :setup_sync_schedule])
+          queue.create(:name => "setting up pulp sync schedule for product: #{self.name}", :priority => 2, :action => [self, :setup_sync_schedule])
         when :promote
           # do nothing, as repos have already been promoted (see promote_repos method)
       end
@@ -436,11 +436,6 @@ module Glue::Pulp::Repos
       })
       new_content.create
       new_content
-    end
-
-    def add_content content
-      Candlepin::Product.add_content self.cp_id, content.content.id, true
-      self.productContent << content
     end
 
     def check_for_repo_conflicts(repo_name)
