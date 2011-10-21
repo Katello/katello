@@ -11,8 +11,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'pp'
-
 class OrganizationsController < ApplicationController
   navigation :organizations
   include AutoCompleteSearch
@@ -55,8 +53,14 @@ class OrganizationsController < ApplicationController
 
   def create
     begin
+      @new_env = KTEnvironment.new(:name => params[:envname], :description => params[:envdescription])
       @organization = Organization.new(:name => params[:name], :description => params[:description], :cp_key => params[:name].tr(' ', '_'))
       @organization.save!
+      @new_env.organization = @organization
+      @new_env.prior = @organization.locker
+      @new_env.save!
+      notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
+      # TODO: example - create permission for the organization
     rescue Exception => error
       errors error
       Rails.logger.info error.backtrace.join("\n")
