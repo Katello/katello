@@ -24,9 +24,12 @@ describe Api::ActivationKeysController do
   before(:each) do
     login_user_api
     @request.env["HTTP_ACCEPT"] = "application/json"
+    disable_org_orchestration
 
-    @organization = Organization.new do |o|
+    @organization = Organization.create! do |o|
       o.id = 1234
+      o.name = "org-1234"
+      o.cp_key = "org-1234"
     end
 
     @environment = KTEnvironment.new(:organization => @organization)
@@ -147,6 +150,45 @@ describe Api::ActivationKeysController do
     it "should update activation key" do
       @activation_key.should_receive(:update_attributes!).once.with(hash_including(:name => 'blah')).and_return(@activation_key)
       put :update, :id => 123, :activation_key => {:name => 'blah'}
+    end
+
+    it "should return updated key" do
+      put :update, :id => 123, :activation_key => {:name => 'blah'}
+      response.body.should == @activation_key.to_json
+    end
+  end
+
+  context "pools in an activation key" do
+    before(:each) do
+      @environment = KTEnvironment.create!(:organization => @organization, :name => "Dev", :prior => @organization.locker)
+      @activation_key.organization = @organization
+      @activation_key.environment = @environment
+      @activation_key.save!
+      @pool_in_activation_key = KTPool.create!(:cp_id => "pool-123")
+      @pool_not_in_activation_key = KTPool.create!(:cp_id => "pool-456")
+      KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => @pool_in_activation_key.id, :allocated => 1)
+      ActivationKey.stub!(:find).and_return(@activation_key)
+      KTPool.stub(:find_by_organization_and_id => @pool_not_in_activation_key)
+    end
+
+    let(:action) {:add_pool }
+    let(:req) { post :add_pool, :id => 123, :poolid => "pool-456" }
+    let(:authorized_user) { user_with_manage_permissions }
+    let(:unauthorized_user) { user_without_manage_permissions }
+    it_should_behave_like "protected action"
+
+    it "should add pool to the activation key" do
+      req
+      @activation_key.pools.should include(@pool_in_activation_key)
+      @activation_key.pools.should include(@pool_not_in_activation_key)
+      @activation_key.pools.should have(2).pools
+    end
+
+    it "should not add a pool that is already in the activation key" do
+      KTPool.stub(:find_by_organization_and_id => @pool_in_activation_key)
+      req
+      @activation_key.pools.should include(@pool_in_activation_key)
+      @activation_key.pools.should have(1).pool
     end
 
     it "should return updated key" do

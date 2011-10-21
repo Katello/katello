@@ -16,7 +16,8 @@ class Api::ActivationKeysController < Api::ApiController
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :find_environment, :only => [:index, :create]
   before_filter :find_organization, :only => [:index]
-  before_filter :find_activation_key, :only => [:show, :update, :destroy]
+  before_filter :find_activation_key, :only => [:show, :update, :destroy, :add_pool]
+  before_filter :find_pool, :only => [:add_pool]
   before_filter :authorize
 
   def rules
@@ -27,6 +28,7 @@ class Api::ActivationKeysController < Api::ApiController
       :show => read_test,
       :create => manage_test,
       :update => manage_test,
+      :add_pool => manage_test,
       :destroy => manage_test
     }
   end
@@ -56,6 +58,11 @@ class Api::ActivationKeysController < Api::ApiController
     render :json => ActivationKey.find(@activation_key.id)
   end
 
+  def add_pool
+    @activation_key.pools << @pool unless @activation_key.pools.include?(@pool)
+    render :json => @activation_key.id
+  end
+
   def destroy
     @activation_key.destroy
    render :text => _("Deleted activation key '#{params[:id]}'"), :status => 204
@@ -81,6 +88,10 @@ class Api::ActivationKeysController < Api::ApiController
     @activation_key = ActivationKey.find(params[:id])
     raise HttpErrors::NotFound, _("Couldn't find activation_key '#{params[:id]}'") if @activation_key.nil?
     @activation_key
+  end
+
+  def find_pool
+    @pool = KTPool.find_by_organization_and_id(@activation_key.organization, params[:poolid])
   end
 
   def verify_presence_of_organization_or_environment
