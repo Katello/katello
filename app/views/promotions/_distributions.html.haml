@@ -4,7 +4,7 @@
 
   - @distributions.each do |distribution|
     %li.no_slide.block{:id => distribution.id, "data-ajax_url" => distribution_path(distribution.id)}
+      %a{:class => "fr content_add_remove remove_distro st_button","data-display_name"=> distribution.id, "data-id" => distribution.id, "data-type" => "distro", "data-product_id" => @product.id, :id => "add_remove_distribution_#{distribution.id}"}
       .simple_link
         %span
           = distribution.id
-          %a{:class => "fr content_add_remove remove_distribution st_button","data-display_name"=> distribution.id, "data-id" => distribution.id, "data-type" => "distribution", "data-product_id" => @product.id, :id => "add_remove_distribution_#{distribution.id}"}
