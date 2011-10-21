@@ -20,7 +20,7 @@ class Glue::Pulp::Errata
   ENHANCEMENT = "enhancement"
 
 
-  attr_accessor :id, :title, :description, :version, :release, :type, :status, :updated,  :issued, :from_str, :reboot_suggested, :references, :pkglist
+  attr_accessor :id, :title, :description, :version, :release, :type, :status, :updated,  :issued, :from_str, :reboot_suggested, :references, :pkglist, :severity
 
   def initialize(params = {})
     params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
