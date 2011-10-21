@@ -44,6 +44,26 @@ module Glue::Pulp::Filter
       raise e
     end
 
+    def update_pulp_filter
+      return true unless package_list_changed?
+
+      Rails.logger.info "updating pulp filter '#{self.pulp_id}'"
+      old_content = package_list_change[0].nil? ? [] : package_list_change[0]
+      new_content = package_list_change[1]
+
+      added_filters = (new_content - old_content).uniq
+      removed_filters = old_content - new_content
+
+      Pulp::Filter.add_packages pulp_id, added_filters unless added_filters.empty?
+      Pulp::Filter.remove_packages pulp_id, removed_filters unless removed_filters.empty?
+
+      true
+      # rollback ?
+    rescue => e
+      Rails.logger.error "Failed to delete pulp filter #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
     def destroy_filter_orchestration
       queue.create(:name => "delete pulp filter: #{self.pulp_id}", :priority => 3, :action => [self, :del_pulp_filter])
     end
@@ -52,6 +72,8 @@ module Glue::Pulp::Filter
       case orchestration_for
         when :create
           queue.create(:name => "create pulp filter: #{self.pulp_id}", :priority => 3, :action => [self, :set_pulp_filter])
+        when :update
+          queue.create(:name => "update pulp filter: #{self.pulp_id}", :priority => 3, :action => [self, :update_pulp_filter])
       end
     end
 

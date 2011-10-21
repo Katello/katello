@@ -175,6 +175,8 @@ def setup_admin(admin):
     filter_cmd.add_action('list', filters.List())
     filter_cmd.add_action('info', filters.Info())
     filter_cmd.add_action('delete', filters.Delete())
+    filter_cmd.add_action('add_package', filters.AddPackage())
+    filter_cmd.add_action('remove_package', filters.RemovePackage())
     admin.add_command('filter', filter_cmd)
 
 if __name__ == "__main__":
