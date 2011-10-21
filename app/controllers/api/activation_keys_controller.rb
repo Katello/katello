@@ -16,8 +16,8 @@ class Api::ActivationKeysController < Api::ApiController
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :find_environment, :only => [:index, :create]
   before_filter :find_organization, :only => [:index]
-  before_filter :find_activation_key, :only => [:show, :update, :destroy, :add_pool]
-  before_filter :find_pool, :only => [:add_pool]
+  before_filter :find_activation_key, :only => [:show, :update, :destroy, :add_pool, :remove_pool]
+  before_filter :find_pool, :only => [:add_pool, :remove_pool]
   before_filter :authorize
 
   def rules
@@ -29,6 +29,7 @@ class Api::ActivationKeysController < Api::ApiController
       :create => manage_test,
       :update => manage_test,
       :add_pool => manage_test,
+      :remove_pool => manage_test,
       :destroy => manage_test
     }
   end
@@ -60,7 +61,15 @@ class Api::ActivationKeysController < Api::ApiController
 
   def add_pool
     @activation_key.pools << @pool unless @activation_key.pools.include?(@pool)
-    render :json => @activation_key.id
+    render :json => @activation_key
+  end
+
+  def remove_pool
+    unless @activation_key.pools.include?(@pool)
+      raise HttpErrors::NotFound, _("Couldn't find pool '%s' in activation_key '%s'") % [@pool.cp_id, @activation_key.name]
+    end
+    @activation_key.pools.delete(@pool)
+    render :json => @activation_key
   end
 
   def destroy
