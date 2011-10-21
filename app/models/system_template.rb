@@ -88,7 +88,7 @@ class SystemTemplate < ActiveRecord::Base
     json["parameters"].each_pair {|k,v| self.parameters[k] = v } if json["parameters"]
   end
 
-  def export_as_json
+  def export_as_hash
     tpl = {
       :name => self.name,
       :revision => self.revision,
@@ -103,8 +103,8 @@ class SystemTemplate < ActiveRecord::Base
     tpl
   end
 
-  def string_export
-    self.export_as_json.to_json
+  def export_as_json
+    self.export_as_hash.to_json
   end
 
 
@@ -386,7 +386,7 @@ class SystemTemplate < ActiveRecord::Base
   end
 
   def get_content_state
-    content = self.export_as_json
+    content = self.export_as_hash
     content.delete(:name)
     content.delete(:description)
     content.delete(:revision)
