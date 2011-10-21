@@ -33,8 +33,11 @@ class Product < ActiveRecord::Base
 
   validates_with ProductNameUniquenessValidator
 
+
   has_and_belongs_to_many :environments, { :class_name => "KTEnvironment", :uniq => true }
   has_and_belongs_to_many :changesets
+  has_many :repositories, :inverse_of => :product
+
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products
 
