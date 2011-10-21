@@ -15,23 +15,24 @@ require 'spec_helper'
 describe KTPool do
 
   context "Find pool by organization and id" do
+    let(:pool_id) { ProductTestData::POOLS[:id] }
+    before do
+      Candlepin::Pool.should_receive(:get).with(pool_id).and_return(ProductTestData::POOLS)
+    end
     it "should return pool that is in the organization" do
-      @pool_id = ProductTestData::POOLS[:id]
-      disable_org_orchestration
-      cp_owner = ProductTestData::POOLS[:owner]
-      @organization = Organization.create!(:name => cp_owner[:displayName], :cp_key => cp_owner[:key])
-      Candlepin::Pool.should_receive(:get).with(@pool_id).and_return(ProductTestData::POOLS)
-      KTPool.find_by_organization_and_id(@organization, @pool_id).cp_id.should == ProductTestData::POOLS[:id]
+      create_org_from_cp_owner(ProductTestData::POOLS[:owner])
+      KTPool.find_by_organization_and_id(@organization, pool_id).cp_id.should == ProductTestData::POOLS[:id]
     end
 
     it "should return nil if the pool doesn't belong to the organization" do
-      @pool_id = ProductTestData::POOLS[:id]
-      disable_org_orchestration
-      cp_owner = { :displayName => "Another Org", :key => "another_org" }
-      @organization = Organization.create!(:name => cp_owner[:displayName], :cp_key => cp_owner[:key])
-      Candlepin::Pool.should_receive(:get).with(@pool_id).and_return(ProductTestData::POOLS)
-      KTPool.find_by_organization_and_id(@organization, @pool_id).should be_nil
+      create_org_from_cp_owner(:displayName => "Another Org", :key => "another_org")
+      KTPool.find_by_organization_and_id(@organization, pool_id).should be_nil
     end
+  end
+
+  def create_org_from_cp_owner(cp_owner)
+    disable_org_orchestration
+    @organization = Organization.create!(:name => cp_owner[:displayName], :cp_key => cp_owner[:key])
   end
 
 end

@@ -162,11 +162,10 @@ describe Api::ActivationKeysController do
 
     before(:each) do
       @environment = KTEnvironment.create!(:organization => @organization, :name => "Dev", :prior => @organization.locker)
-      @activation_key.organization = @organization
-      @activation_key.environment = @environment
-      @activation_key.save!
+      @activation_key = ActivationKey.create!(:name => 'activation key', :organization => @organization, :environment => @environment)
       @pool_in_activation_key = KTPool.create!(:cp_id => "pool-123")
       @pool_not_in_activation_key = KTPool.create!(:cp_id => "pool-456")
+
       KeyPool.create!(:activation_key_id => @activation_key.id, :pool_id => @pool_in_activation_key.id, :allocated => 1)
       ActivationKey.stub!(:find).and_return(@activation_key)
       KTPool.stub(:find_by_organization_and_id).and_return do |org,poolid|
@@ -181,7 +180,7 @@ describe Api::ActivationKeysController do
     describe "adding a pool" do
 
       let(:action) {:add_pool }
-      let(:req) { post :add_pool, :id => 123, :poolid => "pool-456" }
+      let(:req) { post :add_pool, :id => 123, :poolid => @pool_not_in_activation_key.cp_id }
       let(:authorized_user) { user_with_manage_permissions }
       let(:unauthorized_user) { user_without_manage_permissions }
       it_should_behave_like "protected action"
@@ -221,8 +220,7 @@ describe Api::ActivationKeysController do
       end
 
       it "should return 404 if pool in not in the activation key" do
-        KTPool.stub(:find_by_organization_and_id => @pool_not_in_activation_key)
-        req
+        delete :remove_pool, :id => 123, :poolid => @pool_not_in_activation_key.cp_id
         response.code.should == "404"
       end
 
