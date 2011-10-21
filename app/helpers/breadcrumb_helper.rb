@@ -203,18 +203,18 @@ module ContentBreadcrumbs
 
     if product.nil?
       filters = [{:id => "errata_all", :label => labels[0], :path => errata_promotion_path(env_name)},
-                 {:id => "errata_critical", :label=> labels[1], :path => errata_promotion_path(env_name, :severity => "critical")},
-                 {:id => "errata_important", :label => labels[2], :path => errata_promotion_path(env_name, :severity => "important")},
-                 {:id => "errata_moderate", :label => labels[3], :path => errata_promotion_path(env_name, :severity => "moderate")},
+                 {:id => "errata_critical", :label=> labels[1], :path => errata_promotion_path(env_name, :severity => "Critical")},
+                 {:id => "errata_important", :label => labels[2], :path => errata_promotion_path(env_name, :severity => "Important")},
+                 {:id => "errata_moderate", :label => labels[3], :path => errata_promotion_path(env_name, :severity => "Moderate")},
                  {:id => "errata_low", :label => labels[4], :path => errata_promotion_path(env_name, :severity => "low")},
                  {:id => "errata_security", :label => labels[5], :path => errata_promotion_path(env_name, :type => "security")},
                  {:id => "errata_bugfix", :label => labels[6], :path => errata_promotion_path(env_name, :type => "bugfix")},
                  {:id => "errata_enhancement", :label => labels[7], :path => errata_promotion_path(env_name, :type => "enhancement")}]
     else
       filters = [{:id => errata_bc_id(product, "all"), :label => labels[0], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset))},
-                 {:id => errata_bc_id(product, "critical"), :label => labels[1], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :severity => "critical")},
-                 {:id => errata_bc_id(product, "important"), :label => labels[2], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :severity => "important")},
-                 {:id => errata_bc_id(product, "moderate"), :label => labels[3], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :severity => "moderate")},
+                 {:id => errata_bc_id(product, "critical"), :label => labels[1], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :severity => "Critical")},
+                 {:id => errata_bc_id(product, "important"), :label => labels[2], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :severity => "Important")},
+                 {:id => errata_bc_id(product, "moderate"), :label => labels[3], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :severity => "Moderate")},
                  {:id => errata_bc_id(product, "low"), :label => labels[4], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :severity => "low")},
                  {:id => errata_bc_id(product, "security"), :label => labels[5], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :type => "security")},
                  {:id => errata_bc_id(product, "bugfix"), :label => labels[6], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :type => "bugfix")},
