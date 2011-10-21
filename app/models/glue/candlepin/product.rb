@@ -114,6 +114,14 @@ module Glue::Candlepin::Product
       ar_safe_json.except('id')
     end
 
+    def add_content content
+      Candlepin::Product.add_content self.cp_id, content.content.id, true
+      self.productContent << content
+    end
+
+    def remove_content content
+      Candlepin::Product.remove_content self.cp_id, content.content.id
+    end
 
     def set_product
       Rails.logger.info "Creating a product in candlepin: #{name}"
@@ -159,20 +167,10 @@ module Glue::Candlepin::Product
       raise e
     end
 
-    def add_content
-      self.productContent.each do |pc|
-        Rails.logger.info "Adding content to product '#{self.cp_id}' in candlepin: #{pc.content.name}"
-        Candlepin::Product.add_content cp_id, pc.content.id, pc.enabled
-      end
-    rescue => e
-      Rails.logger.error "Failed to add content to a product in candlepin #{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
-    def remove_content
+    def remove_all_content
       self.productContent.each do |pc|
         Rails.logger.info "Removing content from product '#{self.cp_id}' in candlepin: #{pc.content.name}"
-        Candlepin::Product.remove_content cp_id, pc.content.id
+        self.remove_content pc
       end
     rescue => e
       Rails.logger.error "Failed to remove content form a product in candlepin #{name}: #{e}, #{e.backtrace.join("\n")}"
@@ -226,6 +224,15 @@ module Glue::Candlepin::Product
       end
     end
 
+    def del_unused_content
+      self.productContent.each do |pc|
+        content_repos = Pulp::Repository.all [Glue::Pulp::Repos.content_groupid(pc)]
+        if content_repos.empty?
+          self.remove_content pc
+          pc.destroy
+        end
+      end
+    end
 
     def del_subscriptions
       Rails.logger.info "Deleting subscriptions for product #{name} in candlepin"
@@ -241,7 +248,7 @@ module Glue::Candlepin::Product
           queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
           queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
         when :update
-          #PROD TODO: delete content that has no repos assigned
+          queue.create(:name => "delete unused content in candlein: #{self.name}", :priority => 1, :action => [self, :del_unused_content])
         when :promote
           #queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])
         when :import_from_cp
@@ -252,7 +259,7 @@ module Glue::Candlepin::Product
 
     def destroy_product_orchestration
       queue.create(:name => "delete subscriptions for product in candlepin: #{self.name}", :priority => 7, :action => [self, :del_subscriptions])
-      queue.create(:name => "candlepin content: #{self.name}", :priority => 8, :action => [self, :remove_content])
+      queue.create(:name => "candlepin content: #{self.name}", :priority => 8, :action => [self, :remove_all_content])
       queue.create(:name => "candlepin content: #{self.name}", :priority => 9, :action => [self, :del_content])
       queue.create(:name => "candlepin product: #{self.name}", :priority => 10, :action => [self, :del_product])
     end

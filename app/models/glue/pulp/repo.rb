@@ -283,7 +283,7 @@ class Glue::Pulp::Repo
   end
 
   def product
-    Product.find_by_cp_id!(self.product_id)
+    Product.find_by_cp_id(self.product_id)
   end
 
   def content
