@@ -194,6 +194,9 @@ class Update(ActivationKeyAction):
 
         self.parser.add_option('--add_subscription', dest='add_poolid', action='append',
                                help=_("add a pool to the activation key"))
+        self.parser.add_option('--remove_subscription', dest='remove_poolid', action='append',
+                               help=_("remove a pool from the activation key"))
+
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
@@ -206,6 +209,7 @@ class Update(ActivationKeyAction):
         keyDescription = self.get_option('description')
         templateName = self.get_option('template')
         add_poolids = self.get_option('add_poolid') or []
+        remove_poolids = self.get_option('remove_poolid') or []
 
         organization = get_organization(orgName)
         if not organization: return os.EX_DATAERR
@@ -230,6 +234,8 @@ class Update(ActivationKeyAction):
 
         for poolid in add_poolids:
             self.api.add_pool(key['id'], poolid)
+        for poolid in remove_poolids:
+            self.api.remove_pool(key['id'], poolid)
 
         if key != None:
             print _("Successfully updated activation key [ %s ]") % key['name']
