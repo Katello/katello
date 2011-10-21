@@ -41,13 +41,16 @@ module Pulp
   end
 
   class PulpResource < HttpResource
-    cfg = AppConfig.pulp
-    url = cfg.url
-    self.prefix = URI.parse(url).path
-    self.site = url.gsub(self.prefix, "")
-    self.consumer_secret = cfg.oauth_secret
-    self.consumer_key = cfg.oauth_key
-    self.ca_cert_file = cfg.ca_cert_file
+    if AppConfig.pulp
+      cfg = AppConfig.pulp
+      url = cfg.url
+      self.prefix = URI.parse(url).path
+      self.site = url.gsub(self.prefix, "")
+      self.consumer_secret = cfg.oauth_secret
+      self.consumer_key = cfg.oauth_key
+      self.ca_cert_file = cfg.ca_cert_file
+    end
+
 
     def self.default_headers
       {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(::User.current.pulp_oauth_header)
@@ -166,7 +169,7 @@ module Pulp
       def all groupids=nil, search_params = {}
         custom = self.repository_path
         if groupids
-            search_params = search_params.merge(:groupid => groupids.join(","))
+          search_params = search_params.merge(:groupid => groupids.join(","))
         end
 
         custom += "?#{search_params.to_query}" unless search_params.empty?
