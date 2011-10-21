@@ -78,4 +78,12 @@ class ActivationKey < ActiveRecord::Base
   def self.manageable? org
     User.allowed_to?([:manage_all], :activation_keys, nil, org)
   end
+
+  def as_json(*args)
+    ret = super(*args)
+    ret[:pools] = pools.map do |pool|
+      pool.as_json
+    end
+    ret
+  end
 end
