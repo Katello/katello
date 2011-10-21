@@ -13,7 +13,7 @@
 class Api::FiltersController < Api::ApiController
 
   before_filter :find_organization, :only => [:index, :create]
-  before_filter :find_filter, :only => [:show, :destroy]
+  before_filter :find_filter, :only => [:show, :destroy, :update]
   before_filter :find_product, :only => [:list_product_filters, :update_product_filters]
   before_filter :find_filters, :only => [:update_product_filters]
   before_filter :authorize
@@ -21,6 +21,7 @@ class Api::FiltersController < Api::ApiController
   def rules
     index_filters = lambda { Filter.any_readable?(@organization) }
     create_filter = lambda { Filter.creatable?(@organization) }
+    update_filter = lambda { Filter.updatable?(@organization)}
     read_filter = lambda { @filter.readable? }
     delete_filter = lambda { @filter.deletable? }
 
@@ -28,6 +29,7 @@ class Api::FiltersController < Api::ApiController
       :create => create_filter,
       :index => index_filters,
       :show => read_filter,
+      :update => update_filter,
       :destroy => delete_filter,
       :list_product_filters => index_filters,
       :update_product_filters => create_filter
@@ -46,6 +48,13 @@ class Api::FiltersController < Api::ApiController
     ) do |f|
       f.organization = @organization
     end
+    render :json => @filter.to_json
+  end
+
+  def update
+    @filter.package_list = params[:packages] unless params[:packages].nil?
+    @filter.save!
+
     render :json => @filter.to_json
   end
 

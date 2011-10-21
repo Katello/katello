@@ -36,11 +36,16 @@ class Filter < ActiveRecord::Base
        :create => N_("Create Filter"),
        :read => N_("Access Filter"),
        :delete => N_("Delete Filter"),
+       :update => N_("Update Filter")
     }.with_indifferent_access
   end
 
   def self.creatable? org
     User.allowed_to?([:create], :filters, nil, org)
+  end
+
+  def self.updatable? org
+    User.allowed_to?([:read, :update], :filters, nil, org)
   end
 
   def self.any_readable?(org)
