@@ -157,10 +157,10 @@ module Glue::Provider
     end
 
     def queue_import_manifest zip_file_path
-      queue.create(:name => "import manifest #{zip_file_path} for owner: #{self.organization.name}",  :priority => 3, :action => [self, :owner_import, zip_file_path])
-      queue.create(:name => "import of products in manifest #{zip_file_path}",                        :priority => 5, :action => [self, :import_products_from_cp])
-      queue.create(:name => "delete imported products not assigned to any owner #{zip_file_path}",    :priority => 6, :action => [self, :delete_not_assigned_products])
-      #PROD TODO: delete content that has no repos assigned
+      queue.create(:name => "import manifest #{zip_file_path} for owner: #{self.organization.name}", :priority => 3, :action => [self, :owner_import, zip_file_path])
+      queue.create(:name => "import of products in manifest #{zip_file_path}",                       :priority => 5, :action => [self, :import_products_from_cp])
+      queue.create(:name => "delete imported products not assigned to any owner #{zip_file_path}",   :priority => 6, :action => [self, :delete_not_assigned_products])
+      queue.create(:name => "delete imported content that have no repos #{zip_file_path}",           :priority => 6, :action => [self, :delete_not_assigned_content])
     end
 
     def import_products_from_cp
@@ -175,16 +175,25 @@ module Glue::Provider
     def delete_not_assigned_products
       not_assigned_products.each do |product_attrs|
 
-        product_attrs['productContent'].each do |pc|
-          Candlepin::Product.remove_content product_attrs['id'], pc[:content][:id]
-        end unless product_attrs['productContent'].nil?
+        unless product_attrs['productContent'].nil?
+          product_attrs['productContent'].each do |pc|
+            Candlepin::Product.remove_content product_attrs['id'], pc[:content][:id]
+          end
+        end
 
         Candlepin::Product.destroy product_attrs['id']
       end
     end
 
+    def delete_not_assigned_content
+
+      not_assigned_content_ids.each do |content_id|
+        Candlepin::Content.destroy(content_id)
+      end
+    end
+
     def destroy_products_orchestration
-      queue.create(:name => "delete custom product for provider: #{self.name}", :priority => 1, :action => [self, :del_products])
+      queue.create(:name => "delete products for provider: #{self.name}", :priority => 1, :action => [self, :del_products])
     end
 
 
@@ -206,6 +215,10 @@ module Glue::Provider
       product_ids.collect {|id| (Candlepin::Product.get(id))[0] }
     end
 
+    def not_assigned_content_ids
+      (get_all_content_ids - get_assigned_content_ids)
+    end
+
     def get_pool_product_ids
       pools = Candlepin::Owner.pools self.organization.cp_key
       pools.collect do |pool|
@@ -219,6 +232,16 @@ module Glue::Provider
 
     def get_all_product_ids
       Candlepin::Product.all.map{ |p| p['id'] }
+    end
+
+    def get_assigned_content_ids
+      ids = Candlepin::Product.all.collect{ |p| p['productContent'] }.flatten(1).collect{ |content| content['content']['id'] }
+      ids
+    end
+
+    def get_all_content_ids
+      ids = Candlepin::Content.all.map{ |c| c['id'] }
+      ids
     end
   end
 

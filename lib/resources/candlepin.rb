@@ -253,9 +253,14 @@ module Candlepin
         JSON.parse(self.post(path(), JSON.generate(attrs), self.default_headers).body).with_indifferent_access
       end
 
-      def get id=nil
+      def get id
         content_json = super(path(id), self.default_headers).body
         JSON.parse(content_json).with_indifferent_access
+      end
+
+      def all
+        content_json = Candlepin::CandlepinResource.get(path(), self.default_headers).body
+        JSON.parse(content_json)
       end
 
       def destroy id
