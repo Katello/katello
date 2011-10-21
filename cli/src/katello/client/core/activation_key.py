@@ -115,12 +115,15 @@ class Info(ActivationKeyAction):
         keys = self.api.activation_keys_by_organization(organization['cp_key'], keyName)
         if len(keys) == 0:
             return os.EX_DATAERR
+        for akey in keys:
+            akey["pools"] = "[ "+ ", ".join([pool["cp_id"] for pool in akey["pools"]]) +" ]"
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('description', multiline=True)
         self.printer.addColumn('environment_id')
         self.printer.addColumn('system_template_id')
+        self.printer.addColumn('pools', multiline=True, show_in_grep=False)
 
         self.printer.setHeader(_("Activation Key Info"))
         self.printer.printItem(keys[0])
