@@ -263,14 +263,13 @@ module Glue::Pulp::Repos
     end
 
     def add_repo(name, url)
-      repo = Glue::Pulp::Repo.new(:id => repo_id(name),
+      repo = Repository.create!(:product=> self, :pulp_id => repo_id(name),
           :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
           :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, name),
           :arch => arch,
           :name => name,
           :feed => url
       )
-      repo.create
     end
 
     def setup_sync_schedule
@@ -299,20 +298,20 @@ module Glue::Pulp::Repos
           feed_url = repository_url(path)
           arch = substitutions["basearch"] || "noarch"
           repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
-          repo = Glue::Pulp::Repo.new(:id => repo_id(repo_name),
-                                      :arch => arch,
-                                      :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, repo_name),
-                                      :name => repo_name,
-                                      :feed => feed_url,
-                                      :feed_ca => ca,
-                                      :feed_cert => cert,
-                                      :feed_key => key,
-                                      :content_type => pc.content.type,
-                                      :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
-                                      :preserve_metadata => orchestration_for == :import_from_cp #preserve repo metadata when importing from cp
-                                      )
           begin
-            repo.create
+            repo = Repository.create!(:product=> self, :pulp_id => repo_id(repo_name),
+                                        :arch => arch,
+                                        :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, repo_name),
+                                        :name => repo_name,
+                                        :feed => feed_url,
+                                        :feed_ca => ca,
+                                        :feed_cert => cert,
+                                        :feed_key => key,
+                                        :content_type => pc.content.type,
+                                        :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
+                                        :preserve_metadata => orchestration_for == :import_from_cp #preserve repo metadata when importing from cp
+                                        )
+
           rescue RestClient::InternalServerError => e
             if e.message.include? "Architecture must be one of"
               Rails.logger.error("Pulp does not support arch '#{arch}'")
