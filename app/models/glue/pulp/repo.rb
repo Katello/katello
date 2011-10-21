@@ -10,14 +10,59 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Glue::Pulp::Repo
-  attr_accessor :id, :groupid, :arch, :name, :feed, :feed_cert, :feed_key, :feed_ca,
-                :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type
+module Glue::Pulp::Repo
+  def self.included(base)
+    base.send :include, LazyAccessor
+    base.send :include, InstanceMethods
 
-  def initialize(params = {})
-    @params = params
-    params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
+    base.class_eval do
+      before_save :save_repo_orchestration
+      before_destroy :destroy_candlepin_orchestration
+      lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca,
+                :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type,
+                :initializer => lambda {
+                  debugger
+                  if pulp_id
+                    Glue::Pulp::Repo.find(pulp_id)
+                  end
+                }
+    end
   end
+
+  def self.repo_id product_name, repo_name, env_name, organization_name
+    [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
+  end
+
+  def self.find(id)
+    Glue::Pulp::Repo.new(Pulp::Repository.find(id))
+  end
+
+
+
+  module InstanceMethods
+    def save_repo_orchestration
+      case orchestration_for
+        when :create
+          queue.create(:name => "create pulp repo: #{self.name}", :priority => 2, :action => [self, :create_pulp_repo])
+      end
+    end
+
+    def initialize(attrs = nil)
+      if attrs.nil?
+        super
+      elsif
+        type_key = attrs.has_key?('type') ? 'type' : :type
+        #rename "type" to "cp_type" (activerecord and candlepin variable name conflict)
+        #if attrs.has_key?(type_key) && !(attrs.has_key?(:cp_type) || attrs.has_key?('cp_type'))
+        #  attrs[:cp_type] = attrs[type_key]
+        #end
+
+        attrs_used_by_model = attrs.reject do |k, v|
+          !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+        end
+        super(attrs_used_by_model)
+      end
+    end
 
   def to_hash
     @params.merge(:sync_state => self.sync_state)
@@ -26,13 +71,13 @@ class Glue::Pulp::Repo
   TYPE_YUM = "yum"
   TYPE_LOCAL = "local"
 
-  def create
+  def create_pulp_repo
     feed_cert_data = {:ca => self.feed_ca,
         :cert => self.feed_cert,
         :key => self.feed_key
     }
     Pulp::Repository.create({
-        :id => self.id,
+        :id => self.pulp_id,
         :name => self.name,
         :relative_path => self.relative_path,
         :arch => self.arch,
@@ -45,12 +90,12 @@ class Glue::Pulp::Repo
   end
 
   def destroy
-    Pulp::Repository.destroy(id)
+    Pulp::Repository.destroy(self.pulp_id)
   end
 
   def packages
     if @repo_packages.nil?
-      self.packages = Pulp::Repository.packages(id)
+      self.packages = Pulp::Repository.packages(self.pulp_id)
     end
     @repo_packages
   end
@@ -64,7 +109,7 @@ class Glue::Pulp::Repo
 
   def errata
     if @repo_errata.nil?
-       self.errata = Pulp::Repository.errata(id)
+       self.errata = Pulp::Repository.errata(self.pulp_id)
     end
     @repo_errata
   end
@@ -78,7 +123,7 @@ class Glue::Pulp::Repo
 
   def distributions
     if @repo_distributions.nil?
-      self.distributions = Pulp::Repository.distributions(id)
+      self.distributions = Pulp::Repository.distributions(self.pulp_id)
     end
     @repo_distributions
   end
@@ -154,7 +199,7 @@ class Glue::Pulp::Repo
   end
 
   def sync
-    [Pulp::Repository.sync(id)]
+    [Pulp::Repository.sync(self.pulp_id)]
   end
 
   #get last sync status of all repositories in this product
@@ -193,11 +238,11 @@ class Glue::Pulp::Repo
   end
 
   def add_packages pkg_id_list
-    Pulp::Repository.add_packages self.id,  pkg_id_list
+    Pulp::Repository.add_packages self.pulp_id,  pkg_id_list
   end
 
   def add_errata errata_id_list
-    Pulp::Repository.add_errata self.id,  errata_id_list
+    Pulp::Repository.add_errata self.pulp_id,  errata_id_list
   end
 
   def sync_finish
@@ -214,13 +259,13 @@ class Glue::Pulp::Repo
 
 
   def _get_most_recent_sync_status()
-    history = Pulp::Repository.sync_history(@id)
+    history = Pulp::Repository.sync_history(pulp_id)
     return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED) if (history.nil? or history.empty?)
     ::PulpSyncStatus.using_pulp_task(history[0])
   end
 
   def synced?
-    sync_history = Pulp::Repository.sync_history @id
+    sync_history = Pulp::Repository.sync_history pulp_id
     !sync_history.nil? && !sync_history.empty? && successful_sync?(sync_history[0])
   end
 
@@ -251,14 +296,6 @@ class Glue::Pulp::Repo
     Product.find_by_cp_id!(get_groupid_param 'product')
   end
 
-  def self.repo_id product_name, repo_name, env_name, organization_name
-    [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
-  end
-
-  def self.find(id)
-    Glue::Pulp::Repo.new(Pulp::Repository.find(id))
-  end
-
   # Convert array of Repo objects to Ruby Hash in the form of repo.id => repo_object for fast searches.
   #
   # @param array_to_hash array of Repo objects
@@ -277,6 +314,7 @@ class Glue::Pulp::Repo
     else
       return nil
     end
+  end
   end
 
 end
