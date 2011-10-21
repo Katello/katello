@@ -192,6 +192,11 @@ describe Api::ActivationKeysController do
         @activation_key.pools.should have(2).pools
       end
 
+      it "should set amount of allocate subscriptions to 1" do
+        req
+        @activation_key.key_pools.where(:pool_id => @pool_not_in_activation_key.id).first.allocated.should == 1
+      end
+
       it "should not add a pool that is already in the activation key" do
         KTPool.stub(:find_by_organization_and_id => @pool_in_activation_key)
         req
