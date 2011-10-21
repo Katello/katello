@@ -354,60 +354,40 @@ class Subscriptions(SystemAction):
             print _("Could not find System [ %s ] in Org [ %s ]") % (name, org)
             return os.EX_DATAERR
         else:
-
+            self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
             if available:
-                # listing available subscriptions
+                # listing available pools
                 result = self.api.available_pools(systems[0]['uuid'])
-
                 if result == None or len(result) == 0:
-                    print _("No subscriptions found for System [ %s ] in Org [ %s ]") % (name, org)
+                    print _("No Pools found for System [ %s ] in Org [ %s ]") % (name, org)
                     return os.EX_DATAERR
-
                 self.printer.setHeader(_("Available Pools for System [ %s ]") % name)
                 self.printer.addColumn('poolId')
                 self.printer.addColumn('poolName')
                 self.printer.addColumn('expires')
                 self.printer.addColumn('consumed')
                 self.printer.addColumn('quantity')
-                self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
-                self.printer.printItems(result)
+                self.printer.addColumn('sockets')
+                self.printer.addColumn('multiEntitlement')
+                self.printer.addColumn('providedProducts')
+                self.printer.printItems(result['pools'])
             else:
                 # listing current subscriptions
                 result = self.api.subscriptions(systems[0]['uuid'])
-
                 if result == None or len(result) == 0:
-                    print _("No subscriptions found for System [ %s ] in Org [ %s ]") % (name, org)
+                    print _("No Subscriptions found for System [ %s ] in Org [ %s ]") % (name, org)
                     return os.EX_DATAERR
-
-                items = [] # list of subscriptions
-                certs = [] # list of serial numbers
-                for pool in result:
-                    item = {}
-                    item['pool'] = pool['pool']['id']
-                    item['quantity'] = pool['quantity']
-                    item['expiration'] = pool['endDate']
-                    items.append(item)
-                    for c in pool['certificates']:
-                        cert = {}
-                        cert['for pool'] = item['pool']
-                        cert['serial'] = c['serial']['id']
-                        cert['expiration'] = c['serial']['expiration']
-                        cert['revoked'] = c['serial']['revoked']
-                        certs.append(cert)
-                self.printer.setHeader(_("Active Subscribtions for System [ %s ]") % name)
-                self.printer.addColumn('pool')
+                self.printer.setHeader(_("Available Subscriptions for System [ %s ]") % name)
+                self.printer.addColumn('entitlementId')
+                self.printer.addColumn('poolName')
+                self.printer.addColumn('expires')
+                self.printer.addColumn('consumed')
                 self.printer.addColumn('quantity')
-                self.printer.addColumn('expiration')
-                self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
-                self.printer.printItems(items)
-                if serials:
-                    self.printer = Printer(Printer.OUTPUT_FORCE_VERBOSE)
-                    self.printer.setHeader(_("Certificate serials for System [ %s ]") % name)
-                    self.printer.addColumn('for pool')
-                    self.printer.addColumn('serial')
-                    self.printer.addColumn('expiration')
-                    self.printer.addColumn('revoked')
-                    self.printer.printItems(certs)
+                self.printer.addColumn('sla')
+                self.printer.addColumn('contractNumber')
+                self.printer.addColumn('providedProducts')
+                self.printer.printItems(result['entitlements'])
+
             return os.EX_OK
 
 class Unsubscribe(SystemAction):

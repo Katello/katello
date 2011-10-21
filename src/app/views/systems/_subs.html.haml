@@ -27,7 +27,7 @@
                 %td{:style => "padding-top:9px;"} #{entitlement.contractNumber}
                 %td{:style => "padding-top:9px;"}
                   = entitlement.quantity < 0 ? 1 : entitlement.quantity
-                %td #{entitlement.expires}
+                %td{:style => "padding-top:9px;"} #{entitlement.expires}
               - entitlement.providedProducts.each do |product|
                 %tr{:class => "child-of-#{entitlement.entitlementId} " + cycle_class}
                   %td{:colspan=>7}
@@ -53,9 +53,10 @@
           %tr
             %th
             %th #{_("Subscription")}
+            %th #{_("SLA")}
             %th #{_("Sockets")}
-            %th #{_("Available")}
-            %th #{_("Total")}
+            %th #{_("Quantity")}
+            -# %th #{_("Total")}
             %th #{_("Expires")}
         %tbody
           - if avail_subs.length > 0
@@ -68,6 +69,7 @@
                     = check_box_tag "system[#{sub.poolId}]", false
                   &nbsp;
                   #{sub.poolName}
+                %td{:style => "padding-top:9px;"} #{sub.sla}
                 %td{:style => "padding-top:9px;"} #{sub.sockets}
                 - if sub.multiEntitlement
                   %td
@@ -80,9 +82,9 @@
                     -else
                       %div{:class=>"ui-nonspinner-label"} 0 of #{sub.quantity - sub.consumed}
                     = hidden_field_tag "spinner[#{sub.poolId}]", 0, :class => "ui-nonspinner"
-                %td{:style => "padding-top:9px;"}
-                  = sub.quantity < 0 ? '' : sub.quantity
-                %td #{sub.expires}
+                -# %td{:style => "padding-top:9px;"}
+                -#   = sub.quantity < 0 ? '' : sub.quantity
+                %td{:style => "padding-top:9px;"} #{sub.expires}
               - sub.providedProducts.each do |product|
                 %tr{:class => "child-of-#{sub.poolId} " + cycle_class}
                   %td{:colspan=>7}

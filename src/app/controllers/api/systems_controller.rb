@@ -125,7 +125,7 @@ class Api::SystemsController < Api::ApiController
   end
 
   def pools
-    render :json => sys_available_pools
+    render :json => { :pools => @system.available_pools_full }
   end
 
   def package_profile
@@ -196,18 +196,6 @@ class Api::SystemsController < Api::ApiController
       raise HttpErrors::BadRequest, _("At least one activation key must be provided")
     end
     activation_keys
-  end
-
-  private
-
-  def sys_available_pools
-    avail_pools = @system.available_pools.collect {|pool| OpenStruct.new(:poolId => pool["id"],
-                            :poolName => pool["productName"],
-                            :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
-                            :consumed => pool["consumed"],
-                            :quantity => pool["quantity"]).marshal_dump}
-    avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
-    avail_pools
   end
 
 end

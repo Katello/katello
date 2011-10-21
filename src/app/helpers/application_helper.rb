@@ -223,5 +223,4 @@ module ApplicationHelper
       products_organization_environment_path(args[:organization].cp_key, args[:environment].id)
     }
   end
-
 end

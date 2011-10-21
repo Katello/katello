@@ -172,7 +172,7 @@ module Glue::Candlepin::Consumer
     end
 
     def arch=(arch)
-      @facts = {} unless facts
+      @facts ||= {}
       facts["uname.machine"] = arch
     end
 
@@ -181,7 +181,7 @@ module Glue::Candlepin::Consumer
     end
 
     def sockets=(sock)
-      @facts = {} unless facts
+      @facts ||= {}
       facts["cpu.cpu_socket(s)"] = sock
     end
 
@@ -190,14 +190,14 @@ module Glue::Candlepin::Consumer
     end
 
     def guest=(val)
-      @facts = {} unless facts
+      @facts ||= {}
       facts["virt.is_guest"] = val
 
     end
 
     def name=(val)
       super(val)
-      @facts = {} unless facts
+      @facts ||= {}
       facts["network.hostname"] = val
     end
 
@@ -225,6 +225,74 @@ module Glue::Candlepin::Consumer
 
     def convert_time(item)
       Time.parse(item)
+    end
+
+    def available_pools_full
+      avail_pools = self.available_pools.collect {|pool|
+        sockets = ""
+        multiEntitlement = false
+        pool["productAttributes"].each do |attr|
+          if attr["name"] == "socket_limit"
+            sockets = attr["value"]
+          elsif attr["name"] == "multi-entitlement"
+            multiEntitlement = true
+          end
+        end
+
+        providedProducts = []
+        pool["providedProducts"].each do |cp_product|
+          product = Product.where(:cp_id => cp_product["productId"]).first
+          if product
+            providedProducts << product
+          end
+        end
+
+        OpenStruct.new(:poolId => pool["id"],
+                       :poolName => pool["productName"],
+                       :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                       :consumed => pool["consumed"],
+                       :quantity => pool["quantity"],
+                       :sockets => sockets,
+                       :multiEntitlement => multiEntitlement,
+                       :providedProducts => providedProducts)
+      }
+      avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
+      avail_pools
+    end
+
+    def consumed_entitlements
+      consumed_entitlements = self.entitlements.collect { |entitlement|
+        pool = self.get_pool entitlement["pool"]["id"]
+
+        sla = ""
+        pool["productAttributes"].each do |attr|
+          if attr["name"] == "support_level"
+            sla = attr["value"]
+            break
+          end
+        end
+
+        providedProducts = []
+        pool["providedProducts"].each do |cp_product|
+          product = Product.where(:cp_id => cp_product["productId"]).first
+          if product
+            providedProducts << product
+          end
+        end
+
+        quantity = entitlement["quantity"] != nil ? entitlement["quantity"] : pool["quantity"]
+
+        OpenStruct.new(:entitlementId => entitlement["id"],
+                       :poolName => pool["productName"],
+                       :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                       :consumed => pool["consumed"],
+                       :quantity => quantity,
+                       :sla => sla,
+                       :contractNumber => pool["contractNumber"],
+                       :providedProducts => providedProducts)
+      }
+      consumed_entitlements.sort! {|a,b| a.poolName <=> b.poolName}
+      consumed_entitlements
     end
 
   end
