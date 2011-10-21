@@ -104,7 +104,7 @@ class ApplicationController < ActionController::Base
       details = options[:details] unless options[:details].nil?
     end
 
-    notice_dialog = build_notice notice, options[:list_items]
+    notice_dialog = build_notice(notice, options[:list_items], options[:include_class_name])
 
     notice_string = notice_dialog["notices"].join("<br />")
     if notice_dialog.has_key?("validation_errors")
@@ -320,7 +320,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def build_notice notice, list_items
+  def build_notice notice, list_items, error_class_name = nil
     items = { "notices" => [] }
 
     if notice.kind_of? Array
@@ -333,14 +333,20 @@ class ApplicationController < ActionController::Base
       end
       items["notices"].push(notice)
     else
-      handle_notice_type notice, items
+      handle_notice_type notice, items, error_class_name
     end
     return items
   end
 
-  def handle_notice_type notice, items
+  def handle_notice_type notice, items, error_class_name = nil
     if notice.kind_of? ActiveRecord::RecordInvalid
-      items["validation_errors"] = notice.record.errors.full_messages.to_a
+      items["validation_errors"] = notice.record.errors.full_messages.to_a.map do |er|
+        if error_class_name
+          error_class_name + " " + er
+        else
+          er
+        end
+      end
       return items
     elsif notice.kind_of? RestClient::InternalServerError
       items["notices"].push(notice.response)
