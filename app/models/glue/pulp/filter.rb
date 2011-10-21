@@ -44,23 +44,19 @@ module Glue::Pulp::Filter
       raise e
     end
 
-    def update_pulp_filter
-      return true unless package_list_changed?
-
-      Rails.logger.info "updating pulp filter '#{self.pulp_id}'"
-      old_content = package_list_change[0].nil? ? [] : package_list_change[0]
-      new_content = package_list_change[1]
-
-      added_filters = (new_content - old_content).uniq
-      removed_filters = old_content - new_content
-
-      Pulp::Filter.add_packages pulp_id, added_filters unless added_filters.empty?
-      Pulp::Filter.remove_packages pulp_id, removed_filters unless removed_filters.empty?
-
-      true
-      # rollback ?
+    def set_packages package_list
+      Rails.logger.info "adding packages to pulp filter '#{self.pulp_id}'"
+      Pulp::Filter.add_packages pulp_id, package_list
     rescue => e
-      Rails.logger.error "Failed to delete pulp filter #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
+      Rails.logger.error "Failed to add packages to pulp filter #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
+    def del_packages package_list
+      Rails.logger.info "removing packages to pulp filter '#{self.pulp_id}'"
+      Pulp::Filter.remove_packages pulp_id, package_list
+    rescue => e
+      Rails.logger.error "Failed to remove packages from pulp filter #{self.pulp_id}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
 
@@ -73,7 +69,17 @@ module Glue::Pulp::Filter
         when :create
           queue.create(:name => "create pulp filter: #{self.pulp_id}", :priority => 3, :action => [self, :set_pulp_filter])
         when :update
-          queue.create(:name => "update pulp filter: #{self.pulp_id}", :priority => 3, :action => [self, :update_pulp_filter])
+          if package_list_changed?
+
+            old_packages = package_list_change[0].nil? ? [] : package_list_change[0]
+            new_packages = package_list_change[1]
+
+            added_filters = (new_packages - old_packages).uniq
+            removed_filters = old_packages - new_packages
+
+            queue.create(:name => "adding packages to filter: #{self.pulp_id}", :priority => 3, :action => [self, :set_packages, added_filters]) unless added_filters.empty?
+            queue.create(:name => "removing packages from filter: #{self.pulp_id}", :priority => 4, :action => [self, :del_packages, removed_filters]) unless removed_filters.empty?
+          end
       end
     end
 
@@ -82,6 +88,5 @@ module Glue::Pulp::Filter
           super(:methods => [:description, :package_list]) :
           super(options.merge(:methods => [:description, :package_list]) {|k, v1, v2| [v1, v2].flatten })
     end
-
   end
 end
