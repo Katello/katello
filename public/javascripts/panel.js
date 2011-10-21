@@ -335,7 +335,8 @@ KT.panel = (function($){
                     opacity: 0
                 }, 400, function(){
                     $(this).css({"z-index":"-1"});
-                }).removeClass('opened').addClass('closed');
+                    $(this).removeClass('opened').addClass('closed');
+                });
                 updateResult();
             }
             
@@ -350,7 +351,8 @@ KT.panel = (function($){
             thisPanel.animate({ left: panelLeft + "px", opacity: 1}, 200, function(){
                 $(this).css({"z-index":"204"});
                 $(this).parent().css({"z-index":"2"});
-            }).removeClass('closed').addClass('opened');
+                $(this).removeClass('closed').addClass('opened');
+            });
             
             panelAjax('', url, thisPanel, true);
         },
