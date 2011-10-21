@@ -62,8 +62,13 @@ class OrganizationsController < ApplicationController
       notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
       # TODO: example - create permission for the organization
     rescue Exception => error
-      errors error
+      errors(error, {:include_class_name => KTEnvironment::ERROR_CLASS_NAME})
       Rails.logger.info error.backtrace.join("\n")
+      #rollback creation of the org if the org creation passed but the environment was not created
+      if @organization && @organization.id #it is saved to the db
+        @organization.destroy
+      end
+
       render :text=> error.to_s, :status=>:bad_request and return
     end
     

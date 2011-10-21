@@ -22,7 +22,10 @@ class PriorValidator < ActiveModel::Validator
     #environment already does not have a successor
     #this is because in v1.0 we want
     # prior to have only one child (unless its the Locker)
-    has_no_prior = record.organization.environments.reject{|env| env == record || env.prior != record.prior || env.prior == env.organization.locker}.empty?
+    has_no_prior = true
+    if record.organization
+      has_no_prior = record.organization.environments.reject{|env| env == record || env.prior != record.prior || env.prior == env.organization.locker}.empty?
+    end
     record.errors[:prior] << _("environment cannot be a prior to a different environment") unless has_no_prior
 
     # only Locker can have prior=nil
@@ -85,6 +88,10 @@ class KTEnvironment < ActiveRecord::Base
   validates :description, :katello_description_format => true
   validates_with PriorValidator
   validates_with PathDescendentsValidator
+
+
+   ERROR_CLASS_NAME = "Environment"
+
 
   def locker?
     self.locker
