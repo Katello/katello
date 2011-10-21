@@ -452,6 +452,16 @@ module Pulp
         JSON.parse(response.body).with_indifferent_access
       end
 
+      def add_packages id, packages
+        response = self.post path(id) + "add_packages/", {:packages => packages}.to_json, self.default_headers
+        return response.body
+      end
+
+      def remove_packages id, packages
+        response = self.post path(id) + "remove_packages/", {:packages => packages}.to_json, self.default_headers
+        return response.body
+      end
+
       def path(id=nil)
         filters = self.path_with_prefix("/filters/")
         id.nil? ? filters : filters + "#{id}/"
