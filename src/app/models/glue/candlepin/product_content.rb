@@ -24,6 +24,10 @@ module Glue::Candlepin
       @content.id = created[:id]
     end
 
+    def destroy
+      Candlepin::Content.destroy(@content.id)
+    end
+
   end
 
   class Content
