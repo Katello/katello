@@ -258,10 +258,10 @@ module Glue::Candlepin::Product
     end
 
     def destroy_product_orchestration
-      queue.create(:name => "delete subscriptions for product in candlepin: #{self.name}", :priority => 7, :action => [self, :del_subscriptions])
-      queue.create(:name => "candlepin content: #{self.name}", :priority => 8, :action => [self, :remove_all_content])
-      queue.create(:name => "candlepin content: #{self.name}", :priority => 9, :action => [self, :del_content])
-      queue.create(:name => "candlepin product: #{self.name}", :priority => 10, :action => [self, :del_product])
+      queue.create(:name => "delete subscriptions for product in candlepin: #{self.name}", :priority => 7,  :action => [self, :del_subscriptions])
+      queue.create(:name => "remove candlepin content from a product: #{self.name}",       :priority => 8,  :action => [self, :remove_all_content])
+      queue.create(:name => "delete unused content in candlein: #{self.name}",             :priority => 9,  :action => [self, :del_unused_content])
+      queue.create(:name => "candlepin product: #{self.name}",                             :priority => 10, :action => [self, :del_product])
     end
 
     protected
