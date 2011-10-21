@@ -66,6 +66,7 @@ $(document).ready(function() {
       function() {button.removeClass("disabled")
     });
   });
+  $('#provider_contents').attr('size', '18');
   //end doc ready
 });
 
