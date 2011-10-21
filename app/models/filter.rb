@@ -62,12 +62,16 @@ class Filter < ActiveRecord::Base
        :create => N_("Create Package Filters"),
        :read => N_("Access Package Filters"),
        :delete => N_("Delete Package Filters"),
-       :update => N_("Edit Package Filters"),
+       :update => N_("Edit Package Filters")
     }.with_indifferent_access
   end
 
   def self.creatable? org
     User.allowed_to?([:create], :filters, nil, org)
+  end
+
+  def self.updatable? org
+    User.allowed_to?([:read, :update], :filters, nil, org)
   end
 
   def self.any_readable?(org)
