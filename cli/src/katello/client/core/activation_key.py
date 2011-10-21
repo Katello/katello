@@ -192,6 +192,8 @@ class Update(ActivationKeyAction):
         self.parser.add_option('--template', dest='template',
                                help=_("new template name eg: servers"))
 
+        self.parser.add_option('--add_subscription', dest='add_poolid', action='append',
+                               help=_("add a pool to the activation key"))
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
@@ -203,6 +205,7 @@ class Update(ActivationKeyAction):
         newKeyName = self.get_option('new_name')
         keyDescription = self.get_option('description')
         templateName = self.get_option('template')
+        add_poolids = self.get_option('add_poolid') or []
 
         organization = get_organization(orgName)
         if not organization: return os.EX_DATAERR
@@ -216,13 +219,18 @@ class Update(ActivationKeyAction):
         keys = self.api.activation_keys_by_organization(organization['cp_key'], keyName)
         if len(keys) == 0:
             return os.EX_DATAERR
+        key = keys[0]
 
         try:
-            templateId = self.get_template_id(keys[0]['environment_id'], templateName)
+            templateId = self.get_template_id(key['environment_id'], templateName)
         except OptionException:
             print _("Could not find template [ %s ]") % (templateName)
             return os.EX_DATAERR
-        key = self.api.update(keys[0]['id'], environment['id'] if environment != None else None, newKeyName, keyDescription, templateId)
+        key = self.api.update(key['id'], environment['id'] if environment != None else None, newKeyName, keyDescription, templateId)
+
+        for poolid in add_poolids:
+            self.api.add_pool(key['id'], poolid)
+
         if key != None:
             print _("Successfully updated activation key [ %s ]") % key['name']
             return os.EX_OK
