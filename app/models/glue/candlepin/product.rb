@@ -237,7 +237,7 @@ module Glue::Candlepin::Product
     protected
 
     def check_for_repo_conflicts(repo_name)
-      unless self.repos(self.locker, {:name => repo_name}).empty?
+      unless self.repos(self.locker, {"repositories.name" => repo_name}).empty?
         raise Errors::ConflictException.new(_("There is already a repo with the name [ %s ] for product [ %s ]") % [repo_name, self.name])
       end
     end

@@ -1,12 +1,12 @@
 class EnvironmentsProducts < ActiveRecord::Migration
   def self.up
-    create_table :kt_environments_products, :id => false do |t|
-       t.integer :kt_environment_id
-       t.integer :product_id
+    create_table :environment_products do |t|
+       t.references :environment, :null =>false
+       t.references :product, :null =>false
     end
   end
 
   def self.down
-    drop_table :kt_environments_products
+    drop_table :kt_environment_products
   end
 end
