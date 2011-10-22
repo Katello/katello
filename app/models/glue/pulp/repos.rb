@@ -65,6 +65,7 @@ module Glue::Pulp::Repos
       return self.repos(locker).empty?
     end
 
+=begin
     def repos env, search_params = {}
       @repos = {} if @repos.nil?
       return @repos[env.id] if @repos[env.id]
@@ -79,6 +80,14 @@ module Glue::Pulp::Repos
       @repos[env.id] = env_repos
       return env_repos
     end
+=end
+    def repos env, search_params = {}
+      repositories = Repository.joins(:environment_product).where(
+            "environment_products.product_id" => self.id, "environment_products.environment_id"=> env)
+      repositories =  repositories.where(search_params) unless search_params.empty?
+      repositories
+    end
+
 
     def promote from_env, to_env
       @orchestration_for = :promote
@@ -263,7 +272,8 @@ module Glue::Pulp::Repos
     end
 
     def add_repo(name, url)
-      repo = Repository.create!(:product=> self, :pulp_id => repo_id(name),
+      key = EnvironmentProduct.find_or_create(self.organization.locker, self)
+      repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(name),
           :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
           :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, name),
           :arch => arch,
@@ -299,7 +309,8 @@ module Glue::Pulp::Repos
           arch = substitutions["basearch"] || "noarch"
           repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
           begin
-            repo = Repository.create!(:product=> self, :pulp_id => repo_id(repo_name),
+            env_prod = KtEnvironmentProduct.find_or_create(self.organization.locker, self)
+            repo = Repository.create!(:environment_product=> env_prod, :pulp_id => repo_id(repo_name),
                                         :arch => arch,
                                         :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, repo_name),
                                         :name => repo_name,
