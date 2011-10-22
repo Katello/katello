@@ -15,5 +15,5 @@ class Repository < ActiveRecord::Base
   include Glue if AppConfig.use_cp
   include Authorization
   include AsyncOrchestration
-  belongs_to :product, :inverse_of => :repositories
+  belongs_to :environment_product, :inverse_of => :repositories
 end

@@ -62,8 +62,10 @@ class KTEnvironment < ActiveRecord::Base
     :join_table => "environment_priors", :association_foreign_key => "prior_id", :uniq => true}
   has_and_belongs_to_many :successors, {:class_name => "KTEnvironment", :foreign_key => "prior_id",
     :join_table => "environment_priors", :association_foreign_key => :environment_id, :readonly => true}
-  has_and_belongs_to_many :products, { :uniq=>true }
   has_many :system_templates, :class_name => "SystemTemplate", :foreign_key => :environment_id
+
+  has_many :environment_products, :class_name => "EnvironmentProduct", :dependent => :destroy, :uniq=>true
+  has_many :products, :through => :environment_products
 
   has_many :systems, :inverse_of => :environment, :foreign_key => :environment_id
   has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"], :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
