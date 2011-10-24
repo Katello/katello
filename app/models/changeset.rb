@@ -409,16 +409,25 @@ class Changeset < ActiveRecord::Base
     async_tasks.flatten(1)
   end
 
+  def not_included_packages
+    self.packages.delete_if do |pack|
+      (products.uniq! or []).include? pack.product
+    end
+  end
+
+  def not_included_errata
+    self.errata.delete_if do |err|
+      (products.uniq! or []).include? err.product
+    end
+  end
+
 
   def promote_packages from_env, to_env
     #repo->list of pkg_ids
     pkgs_promote = {}
 
-    for pkg in self.packages
+    self.not_included_packages.each do |pkg|
       product = pkg.product
-
-      #skip packages that have already been promoted with the products
-      next if (products.uniq! or []).include? product
 
       product.repos(from_env).each do |repo|
         clone = repo.get_clone to_env
@@ -440,11 +449,8 @@ class Changeset < ActiveRecord::Base
     #repo->list of errata_ids
     errata_promote = {}
 
-    for err in self.errata
+    self.not_included_errata.each do |err|
       product = err.product
-
-      #skip errata that have already been promoted with the products
-      next if (products.uniq! or []).include? product
 
       product.repos(from_env).each do |repo|
         clone = repo.get_clone to_env
