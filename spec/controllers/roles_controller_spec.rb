@@ -118,6 +118,8 @@ describe RolesController do
   end
   
   describe "viewing roles" do
+    render_views
+    
     before (:each) do
       150.times{|a| Role.create!(:name=>"bar%05d" % [a])}
     end
@@ -135,8 +137,8 @@ describe RolesController do
       get :items, :offset=>25
       response.should be_success
       response.should render_template("list_items")
-      assigns[:roles].should include Role.find_by_name("bar%05d" % 30)
-      assigns[:roles].should_not include Role.find_by_name("bar%05d" % 8)
+      response.body.should include Role.find_by_name("bar%05d" % 30).name
+      response.body.should_not include Role.find_by_name("bar%05d" % 8).name
     end
     
   end
