@@ -95,6 +95,11 @@ class UsersController < ApplicationController
       notice _("User updated successfully.")
       attr = params[:user].first.last if params[:user].first
       attr ||= ""
+      
+      if not User.where(id = @user.id).search_for(params[:search]).include?(@user)
+        notice _("'#{@user["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+      end
+      
       render :text => attr and return
     end
     errors "", {:list_items => @user.errors.to_a}
@@ -109,6 +114,11 @@ class UsersController < ApplicationController
 
     if  @user.update_attributes(params[:user])
       notice _("User updated successfully.")
+      
+      if not User.where(id = @user.id).search_for(params[:search]).include?(@user)
+        notice _("'#{@user["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+      end
+      
       render :nothing => true and return
     end
     errors "", {:list_items => @user.errors.to_a}

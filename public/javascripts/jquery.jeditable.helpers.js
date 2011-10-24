@@ -23,10 +23,11 @@ $(document).ready(function() {
             indicator       :  i18n.saving,
             tooltip         :  i18n.clickToEdit,
             placeholder     :  i18n.clickToEdit,
-            submitdata      :  {authenticity_token: AUTH_TOKEN},
+            submitdata      :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
             onerror         :  function(settings, original, xhr) {
                 original.reset();
                 $("#notification").replaceWith(xhr.responseText);
+                notices.checkNotices();
             }
         };
 

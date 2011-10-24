@@ -117,7 +117,7 @@ class ApplicationController < ActionController::Base
       if !details.nil?
         notice_dialog["notices"].push( _("#{self.class.helpers.link_to('Click here', notices_path)} for more details."))
       end
-
+      
       flash[level] = notice_dialog.to_json
 
       if persist

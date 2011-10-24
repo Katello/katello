@@ -92,6 +92,10 @@ class SyncPlansController < ApplicationController
       updated_plan.save!
       notice N_("Sync Plan '#{updated_plan.name}' was updated.")
 
+      if not SyncPlan.where(id = updated_plan.id).search_for(params[:search]).include?(updated_plan)
+        notice _("'#{updated_plan["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+      end
+
       respond_to do |format|
         format.html { render :text => escape_html(result) }
       end
