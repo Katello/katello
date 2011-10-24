@@ -423,4 +423,22 @@ describe SystemTemplate do
     end
   end
 
+  describe "TDL export" do
+
+    subject { Nokogiri.parse(@tpl1.export_as_tdl) }
+
+    describe "repositories" do
+      before do
+        disable_repo_orchestration
+        @prod1.stub(:repos => [Glue::Pulp::Repo.new(RepoTestData::REPO_PROPERTIES)])
+        @tpl1.products << @prod1
+      end
+
+      it "should contain repos referencing to pulp repositories" do
+        repo_uri = subject.xpath("/template/repositories/repository").text
+        repo_uri.should == "https://localhost/pulp/repos/ACME_Corporation/Locker/zoo/base"
+      end
+    end
+  end
+
 end
