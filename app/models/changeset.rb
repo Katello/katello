@@ -365,7 +365,7 @@ class Changeset < ActiveRecord::Base
     #repo->list of pkg_ids
     pkgs_promote = {}
 
-    not_included_packages.each do |pkg|
+    (not_included_packages + dependencies).each do |pkg|
       product = pkg.product
 
       product.repos(from_env).each do |repo|
