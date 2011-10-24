@@ -291,7 +291,7 @@ var promotion_page = (function($){
                     }
                     else {
                       var product = changeset.getProducts()[product_id];
-                      if( !product.errata.length && !product['package'].length && !product.repo.length ){
+                      if( !product.errata.length && !product['package'].length && !product.repo.length && !product.distribution.length){
                           delete changeset.getProducts()[product_id];
                           changeset_tree.render_content('changeset_' + changeset.id);
                       } else {
@@ -1123,6 +1123,9 @@ var promotionsRenderer = (function(){
             else if (key === 'repo-cs'){
                 return templateLibrary.listItems(changeset.getProducts(), "repo", product_id, !inReviewPhase);
             }
+            else if (key === 'distribution-cs'){
+                return templateLibrary.listItems(changeset.getProducts(), "distribution", product_id, !inReviewPhase);
+            }
             else if (key === 'deps-cs'){
                 return templateLibrary.dependencyItems(changeset.getProducts(), product_id);
             }
@@ -1217,7 +1220,7 @@ var templateLibrary = (function(){
             var html = '<ul class="filterable">';
             var items = products[product_id][type];
             if (items.length === 0) {
-                return i18n["no_" + type]; //no_errata no_package no_repo
+                return i18n["no_" + type]; //no_errata no_package no_repo no_distribution
             }
             $.each(items, function(index, item) {
                //for item names that mach item.name from search hash
