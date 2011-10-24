@@ -13,8 +13,8 @@
 
 
 var promotion_page = (function($){
-    var types =             ["errata", "product", "package", "repo", "template", "distro"],
-        subtypes =          ["errata", "package", "repo", "distro"],
+    var types =             ["errata", "product", "package", "repo", "template", "distribution"],
+        subtypes =          ["errata", "package", "repo", "distribution"],
         changeset_queue =   [],
         changeset_data =    {},
         interval_id,
@@ -590,7 +590,7 @@ var promotion_page = (function($){
                 trail: ['changesets', changesetBC, productBC],
                 url: ''
             };
-            changeset_breadcrumb['distro-cs_' + changeset_id + '_' + product_id] = {
+            changeset_breadcrumb['distribution-cs_' + changeset_id + '_' + product_id] = {
                 cache: null,
                 client_render: true,
                 name: "Distributions",
@@ -762,12 +762,12 @@ var changeset_obj = function(data_struct) {
         },
         add_item:function (type, id, display_name, product_id, product_name) {
             if( type === 'product' ){
-                products[id] = {'name': display_name, 'id': id, 'package':[], 'errata':[], 'repo':[], 'distro':[], 'all': true};
+                products[id] = {'name': display_name, 'id': id, 'package':[], 'errata':[], 'repo':[], 'distribution':[], 'all': true};
             } else if (type === 'template') {
                 templates[id] = {'name': display_name, 'id': id};
             } else { 
                 if ( products[product_id] === undefined ) {
-                    products[product_id] = {'name': product_name, 'id': product_id, 'package':[], 'errata':[], 'repo':[], 'distro':[]};
+                    products[product_id] = {'name': product_name, 'id': product_id, 'package':[], 'errata':[], 'repo':[], 'distribution':[]};
                 }
                 products[product_id][type].push({name:display_name, id:id});
             } 
