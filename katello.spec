@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.95
+Version:        0.1.96
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -312,6 +312,101 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Oct 24 2011 Shannon Hughes <shughes@redhat.com> 0.1.96-1
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (bkearney@redhat.com)
+- Allow headpin and katello-common to install together (bkearney@redhat.com)
+- Small fix for browse/upload overlap. (jrist@redhat.com)
+- pools - one more unit test (lzap+git@redhat.com)
+- pools - list of available unit test (lzap+git@redhat.com)
+- tdl-repos-references - validate TDL in unit tests against xsd
+  (inecas@redhat.com)
+- tdl-repos-references - tdl repos references direct to pulp repo
+  (inecas@redhat.com)
+- templates - fix for cloning to an environment (tstrachota@redhat.com)
+- Systems - minor change to view to address warning during render...
+  (bbuckingham@redhat.com)
+- Promotions - distributions - make list in ui consistent w/ products list
+  (bbuckingham@redhat.com)
+- Minor fix for potential overlap of Upload button on Redhat Provider page.
+  (jrist@redhat.com)
+- cli-akeys-pools - show pools in activation key details (inecas@redhat.com)
+- cli-akeys-pools - set allocated to 1 (inecas@redhat.com)
+- cli-akeys-pools - refactor spec tests (inecas@redhat.com)
+- cli-akeys-pools - remove subscriptions from a activation kay
+  (inecas@redhat.com)
+- cli-akeys-pools - add subscription to a key through CLI (inecas@redhat.com)
+- 747805 - Fix for not being able to create an environment when subpanel div
+  was "in the way" via z-index and layering. (jrist@redhat.com)
+- Fixing tests for System create (tsmart@redhat.com)
+- Rendering the proper lsit item for a system once it has been created
+  (tsmart@redhat.com)
+- Minor changes to new page for systems.  Using systems_path with
+  action=>create automatically defaults to post.  Doing so was because of the
+  server prefix.  Also fixed the scrollbar at the bottom of the page to be
+  grid_8 for the surrounding page. (jrist@redhat.com)
+- If you do not have an environment selected, then we tell you to go set a
+  default (tsmart@redhat.com)
+- Fixing System create error validation return (tsmart@redhat.com)
+- Adding environment selector to the System Create page (tsmart@redhat.com)
+- Cherry picking first System CRUD commit (tsmart@redhat.com)
+- Tweaks to System/Subscriptions based on feedback:    + Fix date CSS padding
+  + "Available" to "Quantity" in Available table    + Remove "Total" column in
+  Available table    + Add "SLA" to Available table (thomasmckay@redhat.com)
+- pools - adding multi entitlement flag to the list (cli) (lzap+git@redhat.com)
+- pools - making use of system.available_pools_full (lzap+git@redhat.com)
+- pools - rename sys_consumed_entitlements as consumed_entitlements
+  (lzap+git@redhat.com)
+- pools - moving sys_consumed_entitlements into glue (lzap+git@redhat.com)
+- pools - rename sys_available_pools as available_pools_full
+  (lzap+git@redhat.com)
+- pools - moving sys_available_pools into glue (lzap+git@redhat.com)
+- pools - listing of available pools (lzap+git@redhat.com)
+- refactoring - extending pool glue class (lzap+git@redhat.com)
+- refactoring - extending pool glue class (lzap+git@redhat.com)
+- removing unused code (lzap+git@redhat.com)
+- Prevent from using sqlite as the database engine (inecas@redhat.com)
+- Wrapping up today's git mess. (jrist@redhat.com)
+- Revert "Revert "Red Hat Provider layout refactor" - upload is not working
+  now..." (jrist@redhat.com)
+- Revert "Fix for provider.js upload file." (jrist@redhat.com)
+- Revert "Merge branch 'upload_fix'" (jrist@redhat.com)
+- Merge branch 'upload_fix' (jrist@redhat.com)
+- Fix for provider.js upload file. (jrist@redhat.com)
+- Revert "Red Hat Provider layout refactor" - upload is not working now...
+  (jrist@redhat.com)
+- Red Hat Provider layout refactor (jrist@redhat.com)
+- Removed jeditable classes off repo pages since attributes there are not
+  editable anymore (paji@redhat.com)
+- Break up the katello rpms into component parts (bkearney@redhat.com)
+- Very minor padding issue on .dash (jrist@redhat.com)
+- Fix for flot/canvas on IE. (jrist@redhat.com)
+- BZ#747343 https://bugzilla.redhat.com/show_bug.cgi?id=747343 In fix to show
+  subscriptions w/o products, the provider was not being checked.
+  (thomasmckay@redhat.com)
+- Based on jrist feedback: + add padding to rows to account for fatter spinner
+  + don't increment spinner value if non-zero on checkbox click + alternate row
+  coloring (maintain color on exanding rows) (thomasmckay@redhat.com)
+- Unsubscribe now unsubscribes from individual entitlements, not the entire
+  pool. (Only useful for multi-entitlement subscriptions where the user may
+  have subscribed to multiple quantities.) (thomasmckay@redhat.com)
+- adjusted tables for custom provider product, updated columns
+  (thomasmckay@redhat.com)
+- handle comma-separated gpgUrl values. change display of subscription from
+  label to div to clean up display style (thomasmckay@redhat.com)
+- subscription content url is needs the content source prefix before it is a
+  clickable link (thomasmckay@redhat.com)
+- changed subscription details to a list instead of a table; much cleaner
+  looking (thomasmckay@redhat.com)
+- data added to expanding subscription tree (thomasmckay@redhat.com)
+- first cut of expander for subscription details (data fake)
+  (thomasmckay@redhat.com)
+- updated table info for available, including removing spinner for non-multi
+  (thomasmckay@redhat.com)
+- updated table info for currently subscribed (thomasmckay@redhat.com)
+- 737678 - Made the provider left panes and other left panes use ellipsis
+  (paji@redhat.com)
+
 * Tue Oct 18 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.95-1
 - switching to XML vs JSON for template download
 - Errata - packages - list based on name-[epoch:]-version-release.arch
