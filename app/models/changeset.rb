@@ -25,7 +25,7 @@ class Changeset < ActiveRecord::Base
   PROMOTED = 'promoted'
   PROMOTING = 'promoting'
   STATES = [NEW, REVIEW, PROMOTING, PROMOTED]
-  
+
 
   validates_inclusion_of :state,
     :in => STATES,
@@ -82,7 +82,22 @@ class Changeset < ActiveRecord::Base
     to_ret.uniq
   end
 
-  def calc_dependencies to_save = false
+
+
+  def calc_and_save_dependencies
+    product_hash = self.calc_dependencies
+
+    product_hash.each{|prod_id, pkg_array|
+      pkg_array.each{|pkg|
+        self.dependencies << ChangesetDependency.new(:package_id => pkg.id, :display_name => pkg.nvrea,
+                                                     :product_id => prod_id, :changeset => self)
+      }
+    }
+    self.save()
+
+  end
+
+  def calc_dependencies
 
     from_env = self.environment.prior
     to_env   = self.environment
@@ -139,16 +154,6 @@ class Changeset < ActiveRecord::Base
       #now we have a list of package hashes (with id and name) for the product (product_hash[prod.id])
       }
     }
-
-    if to_save
-      product_hash.each{|prod_id, pkg_array|
-        pkg_array.each{|pkg|
-          self.dependencies << ChangesetDependency.new(:package_id => pkg.id, :display_name => pkg.nvrea,
-                                                       :product_id => prod_id, :changeset => self)
-        }
-      }
-      self.save()
-    end
 
     product_hash
   end
@@ -346,7 +351,7 @@ class Changeset < ActiveRecord::Base
 
   def promote_content
     update_progress! '0'
-    self.calc_dependencies(true)
+    self.calc_and_save_dependencies
 
     update_progress! '10'
 
