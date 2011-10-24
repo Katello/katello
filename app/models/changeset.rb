@@ -76,9 +76,10 @@ class Changeset < ActiveRecord::Base
 
   def partial_products
     to_ret = []
-    to_ret =  to_ret + self.packages.collect{|pkg| pkg.product}
-    to_ret =  to_ret + self.errata.collect{|pkg| pkg.product}
-    to_ret =  to_ret + self.repos.collect{|pkg| pkg.product}
+    to_ret = to_ret + self.packages.collect{|pkg| pkg.product}
+    to_ret = to_ret + self.errata.collect{|pkg| pkg.product}
+    to_ret = to_ret + self.repos.collect{|pkg| pkg.product}
+    to_ret = to_ret + self.distributions.collect{|distro| distro.product}
     to_ret.uniq
   end
 
