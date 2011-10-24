@@ -160,32 +160,34 @@ KT.panel = (function($){
             thisPanel = $("#panel");
             subpanel = $('#subpanel');
 
-            if(!thisPanel.hasClass('opened') && thisPanel.attr("data-id") !== activeBlockId){
-                $('.block.active').removeClass('active');
-                // Open the Panel                           /4
-                thisPanel.css({"z-index":"200"});
-                thisPanel.parent().css({"z-index":"1"});
-                thisPanel.animate({ left: (panelLeft) + "px", opacity: 1}, 200, function(){
-                    $(this).css({"z-index":"200"});
-                }).removeClass('closed').addClass('opened').attr('data-id', activeBlockId);
-                
-                activeBlock.addClass('active');
-                previousBlockId = activeBlockId;
-                panelAjax(activeBlockId, ajax_url, thisPanel, false);
-            } else if (thisPanel.hasClass('opened') && thisPanel.attr("data-id") !== activeBlockId){
-                switch_content_cb();
-                $('.block.active').removeClass('active');
-                closeSubPanel(subpanel); //close the subpanel if it is open
-                // Keep the thisPanel open if they click another block
-                // remove previous classes besides opened
-                thisPanel.css({"z-index":"200"});
-                thisPanel.parent().css({"z-index":"1"});
-                thisPanel.addClass('opened').attr('data-id', activeBlockId);
-                $("#" + previousBlockId).removeClass('active');
-                activeBlock.addClass('active');
-                previousBlockId = activeBlockId;
-                thisPanel.removeClass('closed');
-                panelAjax(activeBlockId, ajax_url, thisPanel, false);
+			if( activeBlock.length ){
+		        if(!thisPanel.hasClass('opened') && thisPanel.attr("data-id") !== activeBlockId){
+		            $('.block.active').removeClass('active');
+		            // Open the Panel                           /4
+		            thisPanel.css({"z-index":"200"});
+		            thisPanel.parent().css({"z-index":"1"});
+		            thisPanel.animate({ left: (panelLeft) + "px", opacity: 1}, 200, function(){
+		                $(this).css({"z-index":"200"});
+		            }).removeClass('closed').addClass('opened').attr('data-id', activeBlockId);
+		            
+		            activeBlock.addClass('active');
+		            previousBlockId = activeBlockId;
+		            panelAjax(activeBlockId, ajax_url, thisPanel, false);
+		        } else if (thisPanel.hasClass('opened') && thisPanel.attr("data-id") !== activeBlockId){
+		            switch_content_cb();
+		            $('.block.active').removeClass('active');
+		            closeSubPanel(subpanel); //close the subpanel if it is open
+		            // Keep the thisPanel open if they click another block
+		            // remove previous classes besides opened
+		            thisPanel.css({"z-index":"200"});
+		            thisPanel.parent().css({"z-index":"1"});
+		            thisPanel.addClass('opened').attr('data-id', activeBlockId);
+		            $("#" + previousBlockId).removeClass('active');
+		            activeBlock.addClass('active');
+		            previousBlockId = activeBlockId;
+		            thisPanel.removeClass('closed');
+		            panelAjax(activeBlockId, ajax_url, thisPanel, false);
+            	}
             }
         },
         panelAjax = function(name, ajax_url, thisPanel, isSubpanel) {
@@ -367,36 +369,28 @@ KT.panel = (function($){
             	search 			= $.bbq.getState("search"),
             	search_element 	= $('#search');
             
-            if( search_element.val() !== search ){
-            	if( search !== undefined ){
-            		search_element.val(search);
-            	}
-            	
-            	if( refresh ){
-            		$('#search_form').trigger('submit', [page_load, function(){ select_item(refresh); }]);
-            	} else {
-            		$('#search_form').trigger('submit', [page_load]);	
-            	}
-            } else if( refresh ){
-            	select_item(refresh);
-            } else if( !refresh ){
-            	closePanel();
-            }
-            
-            /*
             if( page_load ){
-            	if( refresh ){
-            		$('#search_form').trigger('submit', [page_load, function(){ select_item(refresh); }]);            		
+            	if( refresh && search ){
+            		search_element.val(search);
+            		$('#search_form').trigger('submit', [page_load, function(){ select_item(refresh); }]);
+            	} else if( refresh && !search ){
+            		$('#search_form').trigger('submit', [page_load, function(){ select_item(refresh); }]);
+            	} else if( search && !refresh ){
+            		search_element.val(search);
+            		$('#search_form').trigger('submit', [page_load]);
             	} else {
             		$('#search_form').trigger('submit', [page_load]);
             	}
-            } else if( search ){
-            	if( refresh ){
-            		$('#search_form').trigger('submit', [page_load, function(){ select_item(refresh); }]);            		
-            	} else {
-            		$('#search_form').trigger('submit', [page_load]);
-            	}
-            }*/
+            } else {
+	            if( search_element.val() !== search && search !== undefined ){
+            		search_element.val(search);
+	            	$('#search_form').trigger('submit', [page_load]);	
+	            } else if( refresh ){
+	            	select_item(refresh);
+	            } else if( !refresh ){
+	            	closePanel();
+	            }
+            }
             
             return false;
         },

@@ -149,12 +149,22 @@ class ChangesetsController < ApplicationController
     if params[:name]
       @changeset.name = params[:name]
       @changeset.save!
+      
+      if not Changeset.where(id = @changeset.id).search_for(params[:search]).include?(@changeset)
+        notice _("'#{@changeset["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+      end
+      
       render :json=>{:name=> params[:name], :timestamp => @changeset.updated_at.to_i.to_s} and return
     end
 
     if params[:description]
       @changeset.description = params[:description]
       @changeset.save!
+      
+      if not Changeset.where(id = @changeset.id).search_for(params[:search]).include?(@changeset)
+        notice _("'#{@changeset["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+      end
+      
       render :json=>{:description=> params[:description], :timestamp => @changeset.updated_at.to_i.to_s} and return
     end
 
