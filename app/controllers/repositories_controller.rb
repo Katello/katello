@@ -96,7 +96,7 @@ class RepositoriesController < ApplicationController
 
   def find_repository
     begin
-      @repository = Pulp::Repository.find @product.repo_id(params[:id])
+      @repository = Repository.find(params[:id])
     rescue Exception => error
       errors _("Couldn't find repository with ID=#{params[:id]}")
       execute_after_filters
