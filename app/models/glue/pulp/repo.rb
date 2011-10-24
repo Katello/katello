@@ -93,6 +93,16 @@ module Glue::Pulp::Repo
     Pulp::Repository.destroy(self.pulp_id)
   end
 
+  # TODO: remove after pulp >= 0.0.401 get's released. There is this attribute
+  # directly in the repo API
+  def uri
+    if repo_base_path = AppConfig.pulp.url[/^(.*)api$/,1]
+      return "#{repo_base_path}repos/#{self.relative_path}"
+    else
+      raise "We expect #{AppConfig.pulp.url} to end with 'api' suffix"
+    end
+  end
+
   def packages
     if @repo_packages.nil?
       self.packages = Pulp::Repository.packages(self.pulp_id)
