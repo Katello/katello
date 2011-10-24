@@ -45,9 +45,7 @@ class Api::FiltersController < Api::ApiController
       :organization => @organization,
       :description => params[:description],
       :package_list => params[:package_list]
-    ) do |f|
-      f.organization = @organization
-    end
+    )
     render :json => @filter.to_json
   end
 
