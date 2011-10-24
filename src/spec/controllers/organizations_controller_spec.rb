@@ -120,6 +120,7 @@ describe OrganizationsController do
     before (:each) do
      new_test_org
     end
+    
     it 'should call katello organization find api' do
       get 'index'
       assigns(:organizations).should eq([@organization])
@@ -128,7 +129,7 @@ describe OrganizationsController do
 
     it 'should allow for an offset' do
       get 'items', :offset=>5
-      assigns(:organizations).should eq([])
+      response.body.should include '"html":""'
       response.should be_success
     end
   end
