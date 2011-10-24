@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'resources/pulp'
+
 module Glue::Pulp::Repo
   def self.included(base)
     base.send :include, LazyAccessor
@@ -17,13 +19,18 @@ module Glue::Pulp::Repo
 
     base.class_eval do
       before_save :save_repo_orchestration
-      before_destroy :destroy_candlepin_orchestration
-      lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca,
+      before_destroy :destroy_repo_orchestration
+      lazy_accessor :pulp_repo_facts,
+                    :initializer => lambda {
+                      if pulp_id
+                        Glue::Pulp::Repo.find(pulp_id)
+                      end
+                    }
+      lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca, :source,
                 :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type,
                 :initializer => lambda {
-                  debugger
                   if pulp_id
-                    Glue::Pulp::Repo.find(pulp_id)
+                      pulp_repo_facts
                   end
                 }
     end
@@ -34,7 +41,7 @@ module Glue::Pulp::Repo
   end
 
   def self.find(id)
-    Glue::Pulp::Repo.new(Pulp::Repository.find(id))
+    Pulp::Repository.find(id)
   end
 
 
@@ -89,8 +96,12 @@ module Glue::Pulp::Repo
     })
   end
 
-  def destroy
+  def destroy_repo
     Pulp::Repository.destroy(self.pulp_id)
+  end
+
+  def destroy_repo_orchestration
+    queue.create(:name => "delete pulp repo : #{self.name}", :priority => 6, :action => [self, :destroy_repo])
   end
 
   # TODO: remove after pulp >= 0.0.401 get's released. There is this attribute
