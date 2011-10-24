@@ -7,6 +7,6 @@ class EnvironmentsProducts < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :kt_environment_products
+    drop_table :environment_products
   end
 end
