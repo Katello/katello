@@ -363,6 +363,8 @@ class Changeset < ActiveRecord::Base
     promote_packages from_env, to_env
     update_progress! '90'
     promote_errata   from_env, to_env
+    update_progress! '95'
+    promote_distributions from_env, to_env
     update_progress! '100'
     self.promotion_date = Time.now
     self.state = Changeset::PROMOTED
@@ -458,10 +460,36 @@ class Changeset < ActiveRecord::Base
   end
 
 
+  def promote_distributions from_env, to_env
+    #repo->list of distribution_ids
+    distribution_promote = {}
+
+    for distro in self.distributions
+      product = distro.product
+
+      #skip distributions that have already been promoted with the products
+      next if (products.uniq! or []).include? product
+
+      product.repos(from_env).each do |repo|
+        clone = repo.get_clone to_env
+
+        if (repo.has_distribution? distro.distribution_id) and (!clone.has_distribution? distro.distribution_id)
+          distribution_promote[clone] = distro.distribution_id
+        end
+      end
+    end
+
+    distribution_promote.each_pair do |repo, distro|
+      repo.add_distribution(distro)
+    end
+
+  end
+
+
   def uniquify_artifacts
     system_templates.uniq! unless self.system_templates.nil?
     products.uniq! unless self.products.nil?
-    [[:packages,:package_id],[:errata, :errata_id],[:repos, :repo_id]].each do |items, item_id|
+    [[:packages,:package_id],[:errata, :errata_id],[:repos, :repo_id],[:distributions, :distribution_id]].each do |items, item_id|
       unless self.send(items).nil?
         s = Set.new
         # for some reason uniq! with a closure didn''t work
