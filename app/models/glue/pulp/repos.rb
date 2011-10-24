@@ -250,8 +250,9 @@ module Glue::Pulp::Repos
     end
 
     def delete_repo_by_id(repo_id)
+      repo = Repository.find(repo_id)
       productContent_will_change!
-      self.productContent.delete_if { |pc| pc.content.label == repo_id }
+      self.productContent.delete_if { |pc| pc.content.label == repo.pulp_id }
       save!
     end
 
@@ -323,7 +324,7 @@ module Glue::Pulp::Repos
 
       deleted_content.each do |pc|
         Rails.logger.debug "deleting repository #{pc.content.label}"
-        Pulp::Repository.destroy(pc.content.label)
+        Repository.where(:pulp_id => repo_id(pc.content.name)).destroy
       end
 
       added_content.each do |pc|
