@@ -16,7 +16,7 @@ module Navigation
       {:key => :organizations,
        :name => N_("Organizations"),
         :url => :sub_level,
-        :options => {:class=>'organizations'},
+        :options => {:class=>'organizations toplevel'},
         :if => lambda{current_organization() && Organization.any_readable?},
         :items=> [ menu_org_list, menu_org_subscriptions]
       }
@@ -31,7 +31,7 @@ module Navigation
     end
 
     def menu_org_subscriptions
-      {:key => :roles,
+      {:key => :subscriptions,
        :name => N_("Subscriptions"),
        :url => subscriptions_path()
       }

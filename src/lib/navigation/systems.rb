@@ -21,7 +21,7 @@ module Navigation
       {:key => :systems,
        :name => N_("Systems"),
         :url => :sub_level,
-        :options => {:class=>'systems'},
+        :options => {:class=>'systems toplevel'},
         :if => lambda{current_organization && System.any_readable?(current_organization)},
         :items=> [ menu_systems_org_list, menu_systems_environments_list, menu_activation_keys]
       }

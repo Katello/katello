@@ -42,7 +42,7 @@ module Navigation
       {:key => :content,
        :name => N_("Content Management"),
         :url => :sub_level,
-        :options => {:class=>'content'},
+        :options => {:class=>'content toplevel'},
         :if => lambda{current_organization},
         :items=> [ menu_providers, menu_sync_management, menu_system_templates, menu_promotions, menu_changeset]
       }
