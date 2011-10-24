@@ -19,7 +19,7 @@ Summary:       Client package for managing a katello-headpin installation
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.10
+Version:       0.1.11
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -40,14 +40,9 @@ for Linux systems
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_bindir}/
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/%{command_name}/
-install -pm 0644 bin/%{base_name} $RPM_BUILD_ROOT%{_bindir}/%{command_name}
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/%{base_name}/
+install -pm 0644 bin/%{command_name} $RPM_BUILD_ROOT%{_bindir}/%{command_name}
 install -pm 0644 etc/client.conf $RPM_BUILD_ROOT%{_sysconfdir}/%{base_name}/client.conf
-install -pm 0644 src/%{base_name}/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/
-install -pm 0644 src/%{base_name}/client/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/
-install -pm 0644 src/%{base_name}/client/api/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/api/
-install -pm 0644 src/%{base_name}/client/cli/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/cli/
-install -pm 0644 src/%{base_name}/client/core/*.py $RPM_BUILD_ROOT%{python_sitelib}/%{base_name}/client/core/
 
 
 %clean
@@ -62,4 +57,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Oct 24 2011 Bryan Kearney <bkearney@redhat.com> 0.1.11-1
+- new package built with tito
+
 
