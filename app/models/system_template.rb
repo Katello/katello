@@ -132,9 +132,9 @@ class SystemTemplate < ActiveRecord::Base
       }
       xm.repositories {
         self.products.each do |p|
-          pc = p.productContent.each do |pc|
-            xm.repository("name" => pc.content.name) {
-              xm.url p.repository_url(pc.content.contentUrl)
+          pc = p.repos(self.environment).each do |repo|
+            xm.repository("name" => repo.id) {
+              xm.url repo.uri
             }
           end
         end
