@@ -64,7 +64,7 @@ class KTEnvironment < ActiveRecord::Base
     :join_table => "environment_priors", :association_foreign_key => :environment_id, :readonly => true}
   has_many :system_templates, :class_name => "SystemTemplate", :foreign_key => :environment_id
 
-  has_many :environment_products, :class_name => "EnvironmentProduct", :dependent => :destroy, :uniq=>true
+  has_many :environment_products, :class_name => "EnvironmentProduct", :foreign_key => "environment_id", :dependent => :destroy, :uniq=>true
   has_many :products, :through => :environment_products
 
   has_many :systems, :inverse_of => :environment, :foreign_key => :environment_id
