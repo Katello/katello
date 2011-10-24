@@ -40,9 +40,9 @@ for Linux systems
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_bindir}/
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/%{base_name}/
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/%{command_name}/
 install -pm 0644 bin/%{command_name} $RPM_BUILD_ROOT%{_bindir}/%{command_name}
-install -pm 0644 etc/client.conf $RPM_BUILD_ROOT%{_sysconfdir}/%{base_name}/client.conf
+install -pm 0644 etc/client.conf $RPM_BUILD_ROOT%{_sysconfdir}/%{command_name}/client.conf
 
 
 %clean
@@ -50,7 +50,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files 
 %attr(755,root,root) %{_bindir}/%{command_name}
-#%config(noreplace) %attr(644,root,root) %{_sysconfdir}/%{base_name}/client.conf
+%config(noreplace) %attr(644,root,root) %{_sysconfdir}/%{command_name}/client.conf
 %doc README LICENSE
 #%{_mandir}/man8/%{command_name}.8*
 

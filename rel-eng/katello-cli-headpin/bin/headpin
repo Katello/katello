@@ -16,6 +16,15 @@
 #
 
 import sys
+import os
+
+# Set up the new locations for the config files
+from katello.client.config import Config
+Config.FILE = 'client.conf'
+Config.PATH = os.path.join('/etc/headpin', Config.FILE)
+Config.USER = os.path.expanduser(os.path.join('~/.headpin', Config.FILE))
+Config.USER_OPTIONS = os.path.expanduser(os.path.join('~/.headpin', 'client-options.conf'))
+
 from katello.client.cli.admin import AdminCLI
 from katello.client.shell import KatelloShell
 from katello.client.core import (
