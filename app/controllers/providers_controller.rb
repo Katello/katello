@@ -105,6 +105,21 @@ class ProvidersController < ApplicationController
       Rails.logger.error error.backtrace.join("\n")
       render :template =>"providers/redhat_provider", :status => :bad_request and return
     end
+
+    begin
+      @statuses = @provider.owner_imports
+    rescue Exception => error
+      @statuses = []
+      display_message = parse_display_message(error.response)
+      error_text = _("Unable to retrieve subscription history for provider '%{name}." % {:name => @provider.name})
+      error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
+      errors error_text, {:synchronous_request => false}
+      Rails.logger.error "Error fetching subscription history from Candlepin"
+      Rails.logger.error error
+      Rails.logger.error error.backtrace.join("\n")
+      render :template =>"providers/redhat_provider", :status => :bad_request and return
+    end
+
     render :template =>"providers/redhat_provider"
   end
 
