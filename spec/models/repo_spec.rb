@@ -298,16 +298,6 @@ describe Glue::Pulp::Repo do
 end
 
 
-def disable_repo_orchestration
-  Pulp::Repository.stub(:sync_history).and_return([])
-
-  Pulp::Repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
-  Pulp::Repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)
-  Pulp::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
-  Pulp::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
-  Pulp::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
-end
-
 def stub_reference_objects
   @org = mock(Organization, {:id => RepoTestData::REPO_ORG_ID, :name => "Corp"})
   Organization.stub(:find).with(RepoTestData::REPO_ORG_ID).and_return(@org)
