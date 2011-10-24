@@ -29,7 +29,7 @@ $(document).ready(function() {
             indicator   :  i18n.saving,
             tooltip     :  i18n.clickToEdit,
             placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
+            submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
             onsuccess   :  function(result, status, xhr) {
                 var plan_date = $("#plan_date").text();
                 var current_plan = $("#current_plan").text();
@@ -57,7 +57,7 @@ $(document).ready(function() {
             indicator   :  i18n.saving,
             tooltip     :  i18n.clickToEdit,
             placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
+            submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
             onsuccess   :  function(result, status, xhr) {
                 var plan_time = $("#plan_time").text();
                 var current_plan = $("#current_plan").text();
@@ -85,7 +85,7 @@ $(document).ready(function() {
             indicator   :  i18n.saving,
             tooltip     :  i18n.clickToEdit,
             placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
+            submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
             onsuccess   :  function(result, status, xhr) {
                 var plan_name = $("#plan_name").text();
                 var current_plan = $("#current_plan").text();
@@ -113,7 +113,7 @@ $(document).ready(function() {
             indicator   :  i18n.saving,
             tooltip     :  i18n.clickToEdit,
             placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
+            submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
             data        :  "{'none': 'None','hourly':'Hourly','daily':'Daily', 'weekly':'Weekly'}",
             onsuccess   :  function(result, status, xhr) {
                 var id = $('#plan_id');

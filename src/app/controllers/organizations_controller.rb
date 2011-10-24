@@ -99,11 +99,9 @@ class OrganizationsController < ApplicationController
 
       @organization.update_attributes!(params[:organization])
       notice _("Organization '#{@organization["name"]}' was updated.")
-
-      respond_to do |format|
-        format.html { render :text => escape_html(result) }
-        format.js
-      end
+      
+      render :text => escape_html(result)
+      
     rescue Exception => error
       errors error
 

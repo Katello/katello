@@ -191,6 +191,10 @@ class ProvidersController < ApplicationController
       updated_provider.save!
       notice _("Provider '#{updated_provider.name}' was updated.")
 
+      if not Provider.where(id = updated_provider.id).search_for(params[:search]).include?(updated_provider)
+        notice _("'#{updated_provider["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+      end
+
       respond_to do |format|
         format.html { render :text => escape_html(result) }
       end
