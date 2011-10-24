@@ -90,6 +90,13 @@ class Glue::Pulp::Repo
     @repo_distributions
   end
 
+  def has_distribution? id
+    self.distributions.each {|distro|
+      return true if distro.id == id
+    }
+    return false
+  end
+
   def package_groups search_args = {}
     groups = ::Pulp::PackageGroup.all @id
     unless search_args.empty?
@@ -198,6 +205,10 @@ class Glue::Pulp::Repo
 
   def add_errata errata_id_list
     Pulp::Repository.add_errata self.id,  errata_id_list
+  end
+
+  def add_distribution distribution_id
+    Pulp::Repository.add_distribution self.id,  distribution_id
   end
 
   def sync_finish
