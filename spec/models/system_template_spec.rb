@@ -438,6 +438,8 @@ describe SystemTemplate do
         repo_uri = subject.xpath("/template/repositories/repository").text
         repo_uri.should == "https://localhost/pulp/repos/ACME_Corporation/Locker/zoo/base"
       end
+
+      it_should_behave_like "valid tdl"
     end
   end
 
