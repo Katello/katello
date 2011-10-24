@@ -289,6 +289,9 @@ KT.common = (function() {
         setRootUrl : function(){
         	KT.routes.options.prefix = $('#root_url').attr('data-url');
         },
+        spinner_path : function() {
+          KT.common.rootURL() + "/images/spinner.gif"
+        },
         thirdLevelNavSetup : function(){
             var children = $('.third_level:first-child');
 

@@ -241,7 +241,7 @@ module Glue::Candlepin::Consumer
 
         providedProducts = []
         pool["providedProducts"].each do |cp_product|
-          product = Product.where(:cp_id => cp_product["productId"]).first
+          product = ::Product.where(:cp_id => cp_product["productId"]).first
           if product
             providedProducts << product
           end
@@ -274,7 +274,7 @@ module Glue::Candlepin::Consumer
 
         providedProducts = []
         pool["providedProducts"].each do |cp_product|
-          product = Product.where(:cp_id => cp_product["productId"]).first
+          product = ::Product.where(:cp_id => cp_product["productId"]).first
           if product
             providedProducts << product
           end
