@@ -31,7 +31,7 @@ FILE = ' @ %(filename)s'
 LINE = ':%(lineno)d'
 MSG = ' - %(message)s'
 
-if sys.version_info < (2,5):
+if sys.version_info < (2, 5):
     FUNCTION = ''
 
 FMT = \
