@@ -82,27 +82,20 @@ class Changeset < ActiveRecord::Base
     to_ret.uniq
   end
 
+
   def calc_dependencies
-    product_hash = {}
-    not_included_products.each do |prod|
-      dependent_pacakges = calc_dependencies_for_product prod
-      product_hash[prod.id] = dependent_pacakges if not dependent_pacakges.empty?
+    all_dependencies = []
+    not_included_products.each do |product|
+      dependencies = calc_dependencies_for_product product
+      all_dependencies += build_dependencies(product, dependencies)
     end
-    product_hash
+    all_dependencies
   end
 
   def calc_and_save_dependencies
-    product_hash = self.calc_dependencies
-
-    product_hash.each{|prod_id, pkg_array|
-      pkg_array.each{|pkg|
-        self.dependencies << ChangesetDependency.new(:package_id => pkg.id, :display_name => pkg.nvrea,
-                                                     :product_id => prod_id, :changeset => self)
-      }
-    }
+    self.dependencies = self.calc_dependencies
     self.save()
   end
-
 
   # returns list of virtual permission tags for the current user
   def self.list_tags
@@ -478,15 +471,29 @@ class Changeset < ActiveRecord::Base
     from_env = self.environment.prior
     to_env   = self.environment
 
-    package_names = packages_for_dep_calc(product).map{ |p| p.name }#.uniq!
+    package_names = packages_for_dep_calc(product).map{ |p| p.name }.uniq
     return [] if package_names.empty?
 
     from_repos = not_included_repos(product, from_env)
 
     dependencies = Pulp::Package.dep_solve(package_names, from_repos)
-    dependent_pacakges = dependencies.values.flatten(1)
     #TODO: filter out packages that have already been promoted
-    dependent_pacakges
+    dependencies
+  end
+
+  def build_dependencies product, dependencies
+    new_dependencies = []
+
+    dependencies.each_pair do |package_name, dep_packages|
+      dep_packages.each do |dep_package|
+        new_dependencies << ChangesetDependency.new(:package_id => dep_package.id,
+                                                    :display_name => dep_package.nvrea,
+                                                    :product_id => product.id,
+                                                    :dependency_of => package_name,
+                                                    :changeset => self)
+      end
+    end
+    new_dependencies
   end
 
 end
