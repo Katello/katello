@@ -123,13 +123,15 @@ Src::Application.routes.draw do
   resources :filters do
     collection do
       get :auto_complete_search
+      get :auto_complete_products_repos
       get :items
     end
     member do
-      get :packages
+      get  :packages
       post :add_packages
       post :remove_packages
-      
+      get  :products
+      post :update_products
     end
 
   end

@@ -29,9 +29,25 @@ $(document).ready(function() {
 
     });
 
+    $(".toggle").live('click', function(){
+       var btn = $(this);
+       if (btn.hasClass("collapsed")){
+        btn.addClass("expanded").removeClass("collapsed");
+       }
+       else {
+        btn.removeClass("expanded").addClass("collapsed");
+       }
+       btn.parent().find(".options").toggle();
+
+    });
+
     KT.panel.set_expand_cb(function(){
-        KT.package_input.register_autocomplete();            
-    })
+        KT.package_input.register_autocomplete();
+        KT.product_input.register();
+        KT.filter_renderer.render_products_repos();
+    });
+
+    
 
 });
 
@@ -51,11 +67,156 @@ KT.package_input = (function() {
 
     return {
         register_autocomplete:register_autocomplete
-    }
+    };
 })();
 
-KT.filters = (function(){
+KT.product_input = (function(){
 
+    
+    var register = function() {
+
+        var select = $('#product_select');
+        var form = $("#add_product_form");
+
+        
+        select.html(KT.filter_renderer.product_select_template());
+        select.chosen({
+            custom_compare:function(search, name, value){
+                if (name.toUpperCase().indexOf(search.toUpperCase()) > -1){
+                 return true;
+                }
+                else if(value.indexOf("PROD-") === 0)  {
+                    var prod_id = value.split("-")[1];
+                    var prod = KT.products[prod_id];
+                    if(prod && prod.name === name){
+                        var match = false;
+                        $.each(prod.repos, function(index, item){
+                             if (item.name.toUpperCase().indexOf(search.toUpperCase()) > -1){
+                                 match = true;
+                                 return false;
+                             }
+                        });
+                        return match;
+                    }
+                }
+            }
+        });
+
+        form.submit(function(e){
+           var value;
+           e.preventDefault();
+           value = select.val();
+           if (value.indexOf("PROD-") === 0){
+             value = value.substring(5);
+             KT.filters.add_product(value);
+           }
+           else if(value.indexOf("REPO-") === 0){
+            value = value.substring(5);
+            KT.filters.add_repo(value, KT.filters.lookup_repo_product(value));
+           }
+
+        });
+    };
+    
+    return {
+        register:register
+    };
+})();
+
+
+KT.filter_renderer = (function(){
+    var render_products_repos =  function(){
+        var div = $("#product_list");
+        div.html(products_template());
+    },
+    product_select_template = function() {
+        var html = "";
+        $.each(KT.products, function(id, prod){
+            html += '<option value="PROD-' + prod.id+'">' + prod.name +'</option>';
+            if (prod.repos.length > 0){
+                $.each(prod.repos, function(index, repo){
+                    html += '<option value="REPO-' + repo.id +'"> - ' + repo.name + " </option>";
+                });
+            }
+        });
+        return html;
+    },
+    product_template = function(id, name, is_full, repos){
+        var html = '<tr><td><div class="product_entry">';
+        html += '<div class="small_col"><input type="checkbox" data-type="product" value="' + id + '"/></div>';
+        html += '<div  class="small_col toggle collapsed"></div>';
+        html += '<div class="large_col">';
+            html += '<span>' + name + "</span>";
+            html += product_options(id, name, is_full, repos);
+        html += '</div>';
+        html += "</div></td></tr>";
+        return html;
+    },
+    product_options = function(id, name, is_full, repos) {
+        var all_checked = is_full ? 'checked' : '';
+        var repos_checked = !is_full ? 'checked' : '';
+        var html = '<div class="options"><div>';
+            html += '<input type="radio" ' +all_checked + ' name="PROD-' +id+ '" value="all"/>' + i18n.all_repos;
+            html += '<input type="radio" '+ repos_checked + ' name="PROD-' +id+ '"  value="select"/>' + i18n.select_repos +'</div>';
+            $.each(repos, function(index, repo_id){
+                html += repo(id, repo_id);
+            });
+            html += '</div>';
+        return html;
+    },
+    repo = function(prod_id, repo_id) {
+        var name;
+        var html = '';
+        $.each(KT.products[prod_id].repos, function(index, repo){
+            if(repo.id === repo_id){
+                name = repo.name;
+                return false;
+            }
+        });
+        html += '<div><input type="checkbox" data-type="repo" value="' + repo_id + '"/>';
+        html += name;
+        html += '</div>';
+        return html;
+    },
+    products_template = function(){
+      var html = "";
+      var filter = KT.filters.get_current_filter();
+      if (!filter){return ""}
+      if (Object.keys(filter.repos).length === 0 && filter.products.length === 0){
+          html += "<tr><td>" + i18n.no_products_repos  +"</td></tr>"
+      }
+      else{
+
+          var all_products = filter.products.concat(Object.keys(filter.repos));
+          console.log(all_products);
+
+          $.each(all_products , function(index, id){
+            console.log(filter.products);
+              console.log(id);
+            var repos = [];
+            if (filter.products.indexOf(id) > -1){
+                html += product_template(id, KT.products[id].name, true, repos);
+            }
+            else {
+                repos = filter.repos[id];
+                html += product_template(id, KT.products[id].name, false, repos);
+            }
+          });
+      }
+        return html;
+    };
+
+    return {
+        render_products_repos:render_products_repos,
+        product_select_template: product_select_template
+    }
+
+})();
+
+
+KT.filters = (function(){
+    var current_filter;
+    
     var success_create  = function(data){
         list.add(data);
         KT.panel.closePanel($('#panel'));        
@@ -135,6 +296,52 @@ KT.filters = (function(){
     },
     enable_package_inputs = function(){
         $("#package_filter").find("input").removeClass("disabled");
+    },
+    get_current_filter = function(){
+        return current_filter;
+    },
+    set_current_filter = function(filter_in) {
+        current_filter = filter_in
+    },
+    update_product_repos = function() {
+        var repos = [];
+        $.ajax({
+            type: "POST",
+            url: KT.routes.update_products_filter_path(current_filter.id),
+            data: {products:current_filter.products, repos:repos},
+            cache: false,
+            success: function(){
+                KT.filter_renderer.render_products_repos();
+            }
+        });
+    },
+    add_product = function(prod_id){
+        if ($.inArray( parseInt(prod_id), current_filter.products) === -1){
+            current_filter.products.push(parseInt(prod_id));
+            update_product_repos();
+        }
+    },
+    add_repo = function(repo_id, prod_id){
+        if ($.inArray( parseInt(prod_id), current_filter.products) > -1){
+            current_filter.products.pop(parseInt(prod_id));
+        }
+        if (current_filter.repos[prod_id] === undefined){
+            current_filter.repos[prod_id] = [];
+        }
+        current_filter.repos[prod_id].push(repo_id);
+        update_product_repos();
+    },
+    lookup_repo_product = function(repo_id){
+      var found = undefined;
+      $.each(KT.products, function(index, prod){
+        $.each(prod.repos, function(index, repo){
+           if (repo.id === repo_id){
+               found = prod.id;
+               return false;
+           }
+        });
+      });
+      return found;
     };
     
 
@@ -143,7 +350,11 @@ KT.filters = (function(){
         success_create: success_create,
         failure_create: failure_create,
         add_package: add_package,
-        remove_packages: remove_packages
-
+        remove_packages: remove_packages,
+        get_current_filter: get_current_filter,
+        set_current_filter: set_current_filter,
+        add_repo: add_repo,
+        add_product: add_product,
+        lookup_repo_product: lookup_repo_product
     };
 })();
