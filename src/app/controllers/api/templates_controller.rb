@@ -86,7 +86,7 @@ class Api::TemplatesController < Api::ApiController
   def export
     respond_to do |format|
       format.tdl { render(:text => @template.export_as_tdl, :content_type => Mime::TDL) and return }
-      format.json { render :json => @template.export_as_json }
+      format.json { render :text => @template.export_as_json }
     end
   end
 

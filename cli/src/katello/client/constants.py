@@ -29,7 +29,7 @@ STATUS_DETAIL_FAIL = """
 STATUS_INFO = """
 Status             \t%-25s"""
 
-SELECTION_QUERY="""
+SELECTION_QUERY = """
   'a'   \t : select all
   'x:y' \t : select a range eg:1:3
   <sel> \t : select value in range (1-%s) to toggle selection
