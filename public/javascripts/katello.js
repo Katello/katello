@@ -289,6 +289,9 @@ KT.common = (function() {
         setRootUrl : function(){
         	KT.routes.options.prefix = $('#root_url').attr('data-url');
         },
+        spinner_path : function() {
+          KT.common.rootURL() + "/images/spinner.gif"
+        },
         thirdLevelNavSetup : function(){
             var children = $('.third_level:first-child');
 
@@ -363,7 +366,7 @@ $(document).ready(function (){
     $(".helptip-close").live('click', KT.helptip.handle_open);
 
     // Add a handler for ellipsis
-	$(".one-line-ellipsis").ellipsis();
+	$(".one-line-ellipsis").ellipsis(true);
 
     KT.common.orgSwitcherSetup();
     KT.common.orgFilterSetup();
