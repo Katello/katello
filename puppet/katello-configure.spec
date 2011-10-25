@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.6
+Version:        0.1.7
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -52,6 +52,17 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Tue Oct 25 2011 Shannon Hughes <shughes@redhat.com> 0.1.7-1
+- 734517 - puppet - set pulp.conf server_name to fqdn (inecas@redhat.com)
+- Hello, (jpazdziora@redhat.com)
+- switching to info level of logging.  our logfiles grow to 1G+ quickly
+  (mmccune@redhat.com)
+- Fixing permissions to 0644 on the default-answer-file.
+  (jpazdziora@redhat.com)
+- Adding the man page for katello-configure. (jpazdziora@redhat.com)
+- Pulp.conf remove_old_packages renamed to remove_old_versions
+  (inecas@redhat.com)
+
 * Wed Oct 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.6-1
 - Add support for command line options and user answer file to katello-
   configure
