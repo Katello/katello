@@ -47,7 +47,7 @@ class OrganizationsController < ApplicationController
 
   def index
     begin
-      @organizations = Organization.readable.search_for(params[:search]).limit(current_user.page_size)
+      @organizations = Organization.readable.search_for(params[:search]).order('lower(name)').limit(current_user.page_size)
       retain_search_history
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -57,9 +57,8 @@ class OrganizationsController < ApplicationController
   end
 
   def items
-    render_panel_items(Organization.readable, @panel_options, params[:search], params[:offset])
+    render_panel_items(Organization.readable.order('lower(name)'), @panel_options, params[:search], params[:offset])
   end
-
 
   def new
     render :partial=>"new", :layout => "tupane_layout"

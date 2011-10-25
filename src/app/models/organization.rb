@@ -22,9 +22,9 @@ class Organization < ActiveRecord::Base
   has_one :locker, :class_name =>"KTEnvironment", :conditions => {:locker => true}, :dependent => :destroy
   has_many :filters, :dependent => :destroy, :inverse_of => :organization
 
-  attr_accessor :parent_id,:pools,:statistics
+  attr_accessor :statistics
 
-  scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'organization.name'
+  scoped_search :on => :name, :complete_value => true, :rename => :'organization.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'organization.description'
   scoped_search :in => :environments, :on => :name, :complete_value => true, :rename => :'environment.name'
   scoped_search :in => :environments, :on => :description, :complete_value => true, :rename => :'environment.description'

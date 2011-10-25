@@ -120,14 +120,14 @@ class Provider < ActiveRecord::Base
     [:create]
   end
 
-  scope :readable, lambda {|org| authorized_items(org, READ_PERM_VERBS)}
+  scope :readable, lambda {|org| readable_items(org)}
 
   def readable?
     User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || self.organization.syncable?
   end
 
   def self.any_readable? org
-    User.allowed_to?(READ_PERM_VERBS, :providers, nil, org) || org.syncable?
+    org.syncable? || User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
   end
 
   def self.creatable? org
@@ -162,9 +162,11 @@ class Provider < ActiveRecord::Base
      end
    end
 
-  def self.authorized_items org, verbs, resource = :providers
+  def self.readable_items org
     raise "scope requires an organization" if org.nil?
-    if User.allowed_all_tags?(verbs, resource, org)
+    resource = :providers
+    verbs = READ_PERM_VERBS
+    if org.syncable? ||  User.allowed_all_tags?(verbs, resource, org)
        where(:organization_id => org)
     else
       where("providers.id in (#{User.allowed_tags_sql(verbs, resource, org)})")

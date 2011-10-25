@@ -15,7 +15,7 @@ KT.panel.list.registerPage('providers', { create : 'new_provider' });
 
 $(document).ready(function() {
 
-  $('#upload_manifest').live('submit', function(e) {
+  $('#upload_button').live('submit', function(e) {
     // disable submit to avoid duplicate clicks
     $('input[id^=provider_submit]').attr("disabled", true);
 
@@ -60,6 +60,8 @@ $(document).ready(function() {
       function() {button.removeClass("disabled")
     });
   });
+  $('#provider_contents').attr('size', '17');
+  //end doc ready
 });
 
 var provider = (function() {

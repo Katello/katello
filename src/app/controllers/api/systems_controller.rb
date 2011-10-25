@@ -19,19 +19,20 @@ class Api::SystemsController < Api::ApiController
   before_filter :find_environment, :only => [:create, :index]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
-                                        :unsubscribe, :subscriptions]
+                                        :unsubscribe, :subscriptions, :pools]
   before_filter :authorize, :except => :activate
 
   skip_before_filter :require_user, :only => [:activate]
 
   def rules
     index_systems = lambda { System.any_readable?(@organization) }
-    register_system = lambda { System.registrable?(@environment, @organization) }
+    register_system = lambda { System.registerable?(@environment, @organization) }
     edit_system = lambda { @system.editable? or User.consumer? }
     read_system = lambda { @system.readable? or User.consumer? }
     delete_system = lambda { @system.deletable? or User.consumer? }
 
     {
+      :new => register_system,
       :create => register_system,
       :regenerate_identity_certificates => edit_system,
       :update => edit_system,
@@ -44,6 +45,7 @@ class Api::SystemsController < Api::ApiController
       :subscribe => edit_system,
       :unsubscribe => edit_system,
       :subscriptions => read_system,
+      :pools => read_system,
     }
   end
 
@@ -120,6 +122,10 @@ class Api::SystemsController < Api::ApiController
   def destroy
     @system.destroy
     render :text => _("Deleted system '#{params[:id]}'"), :status => 204
+  end
+
+  def pools
+    render :json => { :pools => @system.available_pools_full }
   end
 
   def package_profile

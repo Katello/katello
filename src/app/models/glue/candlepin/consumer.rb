@@ -22,7 +22,13 @@ module Glue::Candlepin::Consumer
       before_save :save_candlepin_orchestration
       before_destroy :destroy_candlepin_orchestration
 
-      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :initializer => lambda { consumer_json = Candlepin::Consumer.get(uuid); convert_from_cp_fields(consumer_json) }
+      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created,
+        :initializer => lambda {
+                          if uuid
+                            consumer_json = Candlepin::Consumer.get(uuid)
+                            convert_from_cp_fields(consumer_json)
+                          end
+                        }
       lazy_accessor :entitlements, :initializer => lambda { Candlepin::Consumer.entitlements(uuid) }
       lazy_accessor :pools, :initializer => lambda { entitlements.collect { |ent| Candlepin::Pool.get ent["pool"]["id"]} }
       lazy_accessor :available_pools, :initializer => lambda { Candlepin::Consumer.available_pools(uuid) }
@@ -45,7 +51,6 @@ module Glue::Candlepin::Consumer
         attrs_used_by_model = attrs.reject do |k, v|
           !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
         end
-
         super(attrs_used_by_model)
       end
     end
@@ -96,6 +101,13 @@ module Glue::Candlepin::Consumer
       raise e
     end
 
+    def get_pool id
+      Candlepin::Pool.get id
+    rescue => e
+      Rails.logger.debug e.backtrace.join("\n\t")
+      raise e
+    end
+
     def subscribe pool, quantity = nil
       Rails.logger.info "Subscribing to pool '#{pool}' for : #{name}"
       Candlepin::Consumer.consume_entitlement self.uuid, pool, quantity
@@ -104,13 +116,14 @@ module Glue::Candlepin::Consumer
       raise e
     end
 
-    def unsubscribe pool
-      Rails.logger.info "Unsubscribing to pool '#{pool}' for : #{name}"
-      ents = self.entitlements.collect {|ent| ent["id"] if ent["pool"]["id"] == pool}.compact
-      raise ArgumentError, "Not subscribed to the pool #{pool}" if ents.count < 1
-      ents.each { |ent|
-        Candlepin::Consumer.remove_entitlement self.uuid, ent        
-      }
+    def unsubscribe entitlement
+      Rails.logger.info "Unsubscribing from entitlement '#{entitlement}' for : #{name}"
+      Candlepin::Consumer.remove_entitlement self.uuid, entitlement
+      #ents = self.entitlements.collect {|ent| ent["id"] if ent["pool"]["id"] == pool}.compact
+      #raise ArgumentError, "Not subscribed to the pool #{pool}" if ents.count < 1
+      #ents.each { |ent|
+      #  Candlepin::Consumer.remove_entitlement self.uuid, ent
+      #}
     rescue => e
       Rails.logger.debug e.backtrace.join("\n\t")
       raise e
@@ -145,19 +158,49 @@ module Glue::Candlepin::Consumer
     def hostname
       facts["network.hostname"]
     end
-    
+
     def ip
       facts.keys().grep(/eth.*ipaddr/).collect { |k| facts[k]}.first
     end
-    
+
     def kernel
       facts["uname.release"]
     end
-    
+
     def arch
       facts["uname.machine"]
     end
-    
+
+    def arch=(arch)
+      @facts ||= {}
+      facts["uname.machine"] = arch
+    end
+
+    def sockets
+      facts["cpu.cpu_socket(s)"]
+    end
+
+    def sockets=(sock)
+      @facts ||= {}
+      facts["cpu.cpu_socket(s)"] = sock
+    end
+
+    def guest
+      facts["virt.is_guest"]
+    end
+
+    def guest=(val)
+      @facts ||= {}
+      facts["virt.is_guest"] = val
+
+    end
+
+    def name=(val)
+      super(val)
+      @facts ||= {}
+      facts["network.hostname"] = val
+    end
+
     def distribution_name
       facts["distribution.name"]
     end
@@ -182,6 +225,74 @@ module Glue::Candlepin::Consumer
 
     def convert_time(item)
       Time.parse(item)
+    end
+
+    def available_pools_full
+      avail_pools = self.available_pools.collect {|pool|
+        sockets = ""
+        multiEntitlement = false
+        pool["productAttributes"].each do |attr|
+          if attr["name"] == "socket_limit"
+            sockets = attr["value"]
+          elsif attr["name"] == "multi-entitlement"
+            multiEntitlement = true
+          end
+        end
+
+        providedProducts = []
+        pool["providedProducts"].each do |cp_product|
+          product = ::Product.where(:cp_id => cp_product["productId"]).first
+          if product
+            providedProducts << product
+          end
+        end
+
+        OpenStruct.new(:poolId => pool["id"],
+                       :poolName => pool["productName"],
+                       :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                       :consumed => pool["consumed"],
+                       :quantity => pool["quantity"],
+                       :sockets => sockets,
+                       :multiEntitlement => multiEntitlement,
+                       :providedProducts => providedProducts)
+      }
+      avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
+      avail_pools
+    end
+
+    def consumed_entitlements
+      consumed_entitlements = self.entitlements.collect { |entitlement|
+        pool = self.get_pool entitlement["pool"]["id"]
+
+        sla = ""
+        pool["productAttributes"].each do |attr|
+          if attr["name"] == "support_level"
+            sla = attr["value"]
+            break
+          end
+        end
+
+        providedProducts = []
+        pool["providedProducts"].each do |cp_product|
+          product = ::Product.where(:cp_id => cp_product["productId"]).first
+          if product
+            providedProducts << product
+          end
+        end
+
+        quantity = entitlement["quantity"] != nil ? entitlement["quantity"] : pool["quantity"]
+
+        OpenStruct.new(:entitlementId => entitlement["id"],
+                       :poolName => pool["productName"],
+                       :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                       :consumed => pool["consumed"],
+                       :quantity => quantity,
+                       :sla => sla,
+                       :contractNumber => pool["contractNumber"],
+                       :providedProducts => providedProducts)
+      }
+      consumed_entitlements.sort! {|a,b| a.poolName <=> b.poolName}
+      consumed_entitlements
     end
 
   end

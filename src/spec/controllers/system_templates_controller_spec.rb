@@ -157,7 +157,7 @@ describe SystemTemplatesController do
           pkg1 = {:name=>"FOO"}
           prd1 = {:name=>"FOO", :id=>"3"}
           pkg_grp1 = {:name=>"TestGroup"}
-          
+
           prod = Product.new(:environment=>Organization.first.locker, :name=>"FOO")
           prod.stub(:save)
           prod.stub(:save!)
@@ -176,9 +176,8 @@ describe SystemTemplatesController do
           put :update_content, :id=>@system_template_1.id, :packages=>[pkg1], :products=>[prd1], :package_groups=>[pkg_grp1]
           response.should be_success
 
-          @system_template_1.package_groups.length.should == 1
-          @system_template_1.packages.length.should == 1
-
+          SystemTemplate.find(@system_template_1.id).package_groups.length.should == 1
+          SystemTemplate.find(@system_template_1.id).packages.length.should == 1
         end
       end
     end

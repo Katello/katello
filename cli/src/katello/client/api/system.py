@@ -56,6 +56,10 @@ class SystemAPI(KatelloAPI):
         path = "/api/systems/%s/subscriptions" % system_id
         return self.server.GET(path)[1]
 
+    def available_pools(self, system_id):
+        path = "/api/systems/%s/pools" % system_id
+        return self.server.GET(path)[1]
+
     def unsubscribe(self, system_id, pool):
         path = "/api/systems/%s/subscriptions/%s" % (system_id, pool)
         return self.server.DELETE(path)[1]

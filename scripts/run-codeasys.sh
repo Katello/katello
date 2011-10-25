@@ -13,9 +13,14 @@ echo Checking for pylint
 which pylint >/dev/null || yum -y install pylint
 
 #check python syntax and stop on errors only
-PYTHONPATH=cli/src/ pylint katello -f html -d C0103,C0111,C0301,E1101,E1103 >reports/pylint-cli.html
+PYLINT_IGNORE=C0103,C0111,C0301,E1101,E1103
+# run in text
+PYTHONPATH=cli/src/ pylint katello -d $PYLINT_IGNORE
+echo Pylint text return code: $RESCODE
+# run with HTML output
+PYTHONPATH=cli/src/ pylint katello -f html -d $PYLINT_IGNORE >reports/pylint-cli.html
 RESCODE=$?
-echo Pylint return code: $RESCODE
+echo Pylint html return code: $RESCODE
 [ $(($RESCODE & 3)) -ne 0 ] && echo Pylint errors! && exit 1
 
 #check ruby syntax of all .rb files

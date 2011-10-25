@@ -1,11 +1,23 @@
 #!/bin/bash
 
 if [ "$(id -u)" != "0" ]; then
-   echo "This script must be run as root" 1>&2
-   exit 1
+  echo "This script must be run as root" 1>&2
+  exit 1
 fi
 
 SRV=/sbin/service
+
+if [ -f /etc/sysconfig/katello ]; then
+  # load configuration values
+  . /etc/sysconfig/katello
+else
+  echo "Katello does not seem to be installed on this machine" 1>&2
+  exit 1
+fi
+
+# default configuration values (should be the same as in our sysv init script)
+KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
+KATELLO_ENV=${KATELLO_ENV:-production}
 
 echo -e "\n"
 echo '***********************************************************'
@@ -82,11 +94,10 @@ echo "Starting Candlepin instance"
 start_unless_running tomcat6
 
 echo "Initializing Katello database"
-rm -f /var/lib/katello/initdb_done
-su - postgres -c 'dropdb katello; dropuser katello; createuser -dls katello --no-password'
-su - postgres -c "psql --command \"alter user katello with password 'katello'\""
-su - postgres -c "PGPASSWORD=katello createdb -U katello katello"
-$SRV katello initdb
+# cannot use initdb for this (BZ 745542)
+pushd $KATELLO_HOME >/dev/null
+RAILS_ENV=$KATELLO_ENV rake db:truncate db:seed --trace 2>&1
+popd >/dev/null
 
 echo "Starting Katello instance"
 $SRV katello start

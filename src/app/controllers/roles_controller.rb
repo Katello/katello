@@ -20,7 +20,7 @@ class RolesController < ApplicationController
 
   include AutoCompleteSearch
   include BreadcrumbHelper
-  include BreadcrumbHelper::RolesBreadcrumbs
+  include RolesBreadcrumbs
   
   def rules
     create_check = lambda{Role.creatable?}
