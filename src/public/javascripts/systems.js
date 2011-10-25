@@ -17,7 +17,7 @@
  *
  */
 
-KT.panel.list.registerPage('systems');
+KT.panel.list.registerPage('systems', { create : 'new_system' });
 
 $(document).ready(function() {
   $('#update_subscriptions').live('submit', function(e) {
@@ -33,10 +33,10 @@ $(document).ready(function() {
                notices.checkNotices();
          }});
   });
-  $('#new_system_form').live('submit', function(e) {
+  /*$('#new_system_form').live('submit', function(e) {
       e.preventDefault();
       systems_page.create_system($(this));
-  });
+  });*/
   //Set the callback on the environment selector
   env_select.click_callback = function(env_id) {
     KT.subs.save_selected_environment(env_id);
