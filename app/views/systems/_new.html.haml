@@ -12,7 +12,7 @@
     #{_("New system")}
     = content_for :content do
       #new_system
-        = form_tag({:action => "create"}, :id => "new_system_form") do |f|
+        = form_tag({:action => "create"}, :id => "new_system_form") do
           = hidden_field_tag 'system[environment_id]', @environment.id
           .grid_8#new_system
             %fieldset

@@ -289,4 +289,28 @@ describe Api::SystemsController do
     end
   end
 
+  describe "list available pools" do
+    before(:each) do
+      @system = System.create(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
+      System.stub!(:first).and_return(@system)
+    end
+
+    let(:action) { :pools}
+    let(:req) { get :pools, :id => @system.uuid }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
+    it "should find System" do
+      System.should_receive(:first).once.with(hash_including(:conditions => {:uuid => @system.uuid})).and_return(@system)
+      get :pools, :id => @system.uuid
+    end
+
+    it "should retrieve avaiable pools from Candlepin" do
+      #@system.should_receive(:available_pools_full).once.and_return([])
+      Candlepin::Consumer.should_receive(:available_pools).once.with(uuid).and_return([])
+      get :pools, :id => @system.uuid
+    end
+  end
+
 end
