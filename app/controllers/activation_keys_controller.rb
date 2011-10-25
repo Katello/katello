@@ -334,6 +334,7 @@ class ActivationKeysController < ApplicationController
   def retrieve_all_pools
     all_pools = {}
 
+    # TODO: should be current_organization.pools (see pool.rb for attributes)
     cp_pools = Candlepin::Owner.pools current_organization.cp_key
     cp_pools.each do |pool|
       p = OpenStruct.new
@@ -342,6 +343,7 @@ class ActivationKeysController < ApplicationController
       p.startDate = Date.parse(pool['startDate']).strftime("%m/%d/%Y")
       p.endDate = Date.parse(pool['endDate']).strftime("%m/%d/%Y")
 
+      # TODO: this could be moved into the pool.rb
       p.poolType = _('Physical')
       if pool.has_key? :attributes
         pool[:attributes].each do |attribute|

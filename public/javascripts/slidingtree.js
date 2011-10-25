@@ -216,7 +216,7 @@ var sliding_tree = function(tree_id, options) {
             }
         },
         setupSearch = function(){
-             var bcs = null,
+             var bcs,
                  bcs_height = 0,
                  search_form = $('#search_form'),
                  search_filter = $('#search_filter');
@@ -231,10 +231,10 @@ var sliding_tree = function(tree_id, options) {
                      bcs = $('.breadcrumb_search');
                      bcs_height = bcs.height();
                      bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
-                     search_filter.css("margin-left", 0);
+                     search_filter.css("margin-left", '4px');
                      search_form.css("opacity", "0").show();
                      search_form.animate({"opacity":"1"}, { duration: 200, queue: false });
-                     search_filter.animate({"width":"420px", "opacity":"1"}, { duration: 200, queue: false });
+                     search_filter.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
                      $(this).css({backgroundPosition: "-32px -16px"});
                      
                      if( $('.remove_item').length ){

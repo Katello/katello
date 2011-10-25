@@ -15,14 +15,9 @@
   %fieldset
     .grid_2.ra
       %label #{_("Name")}:
-    .grid_5.la#repo_name{'name' => 'repo[name]', 'data-url' => provider_path(@provider.id), :class=>("edit_providername" if editable)} #{@repository[:name]}
+    .grid_5.la.multiline#repo_name{'name' => 'repo[name]', 'data-url' => provider_path(@provider.id)} #{@repository[:name]}
   
   %fieldset
     .grid_2.ra
       %label #{_("URL")}:
-    .grid_5.la{'name' => 'repo[feed]', 'data-url' => provider_path(@provider.id), :class=>("edit_textarea" if editable)} #{@repository[:source][:url]}
-  
-  %fieldset
-    .grid_2.ra
-      %label #{_("Type")}:
-    .grid_5.la #{@provider[:provider_type]}
+    .grid_5.la{'name' => 'repo[feed]', 'data-url' => provider_path(@provider.id)} #{@repository[:source][:url]}

@@ -18,7 +18,21 @@
  */
 
 $(document).ready(function() {
-    KT.subs.unsubSetup();
-    KT.subs.subSetup();
-    KT.subs.spinnerSetup();
+  KT.subs.unsubSetup();
+  KT.subs.subSetup();
+  KT.subs.spinnerSetup();
+
+  $("#unsubscribeTable").treeTable({
+    expandable: true,
+    initialState: "collapsed",
+    clickableNodeNames: true,
+    onNodeShow: function(){$.sparkline_display_visible()}
+  });
+
+  $("#subscribeTable").treeTable({
+    expandable: true,
+    initialState: "collapsed",
+    clickableNodeNames: true,
+    onNodeShow: function(){$.sparkline_display_visible()}
+  });
 });

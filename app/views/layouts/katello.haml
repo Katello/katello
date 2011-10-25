@@ -14,6 +14,10 @@
     
     = include_javascripts  :common
     = render :partial => '/common/config'
+
+    / [if lt IE 9]
+      = include_javascripts  :html5
+
     = render :partial => '/layouts/ajax_notices'
     = render :partial => '/layouts/notification'
     = render :partial => "/common/common_i18n"
@@ -21,9 +25,6 @@
     
     = csrf_meta_tag
     = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery?
-
-    / [if lt IE 9]
-      = include_javascripts  :html5
 
   - if controller.respond_to?(:section_id)
     - section_id = controller.section_id

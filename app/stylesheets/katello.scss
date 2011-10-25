@@ -10,6 +10,7 @@
 
 html {}
 body { background:  $body_background_img; }
+pre  { text-indent: 18px; }
 
 strong { font-weight: bold; }
 .clear { clear: both; }
@@ -36,6 +37,8 @@ hr { color: $border_color; }
 .fr { float: right; } /* float  right */
 .fl { float: left; } /* float left */
 .fc { display: inline-block; margin: 0 auto; } /* "float", center */
+.multiline{word-wrap: break-word;}
+
 
 .twocolumn {
   @include column-count(2);
@@ -925,11 +928,6 @@ footer {
   }
 }
 
-fieldset {
-  div {
-    padding: 4px 0;
-  }
-}
 /* end editable icon for in place editing*/
 
 /* 2 pane css */
@@ -1216,11 +1214,16 @@ fieldset {
   border-top: 1px solid #D1D1D2;
   position: absolute;
   top: 35px;
-  
   h2 {
     font-size: 100%;
     margin: 0; 
     padding: 10px 0 0 20px;
+  }
+  &.closed {
+    display: none;
+  }
+  &.open {
+    display: block;
   }
 }
 #subpanel-frame {
@@ -1711,29 +1714,37 @@ fieldset {
     word-wrap: break-word;
     border: 1px solid $tree-border_color;
     border-bottom: none;
+    
     #search_form {
         display: none;
         margin-right: 4px;
+        float: left;
     }
     .search {
         position: relative;
         clear: both;
         display: inline-block;
         margin: 5px auto;
+    
         input[type="input"] {
-          //float: right; /* webkit adds an extra padding and makes the widget narrower */
+          float: left;
           border: 3px solid $tree-search-border_color;
           background: $white_color;
           padding-right: 0px;
+          width: 380px;
+          margin-left: 4px;
         }
         button {
+          position: absolute;
           background: $search_icon_black;
           top: 15px;
+          right: 10px;
         }
     }
     .search_button {
         margin-top: 12px;
         background: $search_icon_black;
+        margin-right: 10px;
     }
     .tree_breadcrumb {
         display: inline-block;

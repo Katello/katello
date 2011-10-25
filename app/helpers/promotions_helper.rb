@@ -12,8 +12,10 @@
 
 module PromotionsHelper 
   include ActionView::Helpers::JavaScriptHelper
-  include BreadcrumbHelper::ChangesetBreadcrumbs
-  include BreadcrumbHelper::ContentBreadcrumbs
+
+  include BreadcrumbHelper
+  include ChangesetBreadcrumbs
+  include ContentBreadcrumbs
 
 
   #returns a proc to generate a url for the env_selector

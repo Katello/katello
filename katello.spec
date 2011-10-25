@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.92
+Version:        0.1.96
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -26,6 +26,17 @@ URL:            http://www.katello.org
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+Requires:        %{name}-common
+Requires:        %{name}-glue-pulp
+Requires:        %{name}-glue-foreman
+Requires:        %{name}-glue-candlepin
+Conflicts:       %{name}-headpin
+
+%description
+Provides a package for managing application life-cycle for Linux systems.
+
+%package common
+Summary:        Common bits for all Katello instances
 Requires:       httpd
 Requires:       mod_ssl
 Requires:       openssl
@@ -45,7 +56,7 @@ Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
 Requires:       rubygem(gettext_i18n_rails)
 Requires:       rubygem(simple-navigation) >= 3.3.4
-Requires:       rubygem(sqlite3) 
+Requires:       rubygem(sqlite3)
 Requires:       rubygem(pg)
 Requires:       rubygem(scoped_search) >= 2.3.1
 Requires:       rubygem(delayed_job) >= 2.1.4
@@ -72,7 +83,7 @@ Requires(pre):  shadow-utils
 Requires(preun): chkconfig
 Requires(preun): initscripts
 Requires(post): chkconfig
-Requires(postun): initscripts 
+Requires(postun): initscripts
 
 BuildRequires:  coreutils findutils sed
 BuildRequires:  rubygems
@@ -84,14 +95,15 @@ BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 
 BuildArch: noarch
 
-%description
-Provides a package for managing application life-cycle for Linux systems
+%description common
+Common bits for all Katello instances
+
 
 %package all
 Summary:        A meta-package to pull in all components for Katello
-Requires:       katello
-Requires:       katello-configure
-Requires:       katello-cli
+Requires:       %{name}
+Requires:       %{name}-configure
+Requires:       %{name}-cli
 Requires:       postgresql-server
 Requires:       postgresql
 Requires:       pulp
@@ -101,6 +113,27 @@ Requires:       candlepin-tomcat6
 This is the Katello meta-package.  If you want to install Katello and all
 of its dependencies on a single machine, you should install this package
 and then run katello-configure to configure everything.
+
+%package glue-pulp
+Summary:         Katello connection classes for the Pulp backend
+Requires:        %{name}-common
+
+%description glue-pulp
+Katello connection classes for the Pulp backend
+
+%package glue-foreman
+Summary:         Katello connection classes for the Foreman backend
+Requires:        %{name}-common
+
+%description glue-foreman
+Katello connection classes for the Foreman backend
+
+%package glue-candlepin
+Summary:         Katello connection classes for the Candlepin backend
+Requires:        %{name}-common
+
+%description glue-candlepin
+Katello connection classes for the Candlepin backend
 
 %prep
 %setup -q
@@ -153,7 +186,7 @@ install -Dp -m0644 %{confdir}/%{name}.httpd.conf %{buildroot}%{_sysconfdir}/http
 install -Dp -m0644 %{confdir}/thin.yml %{buildroot}%{_sysconfdir}/%{name}/
 
 #overwrite config files with symlinks to /etc/katello
-ln -svf %{_sysconfdir}/%{name}/katello.yml %{buildroot}%{homedir}/config/katello.yml
+ln -svf %{_sysconfdir}/%{name}/%{name}.yml %{buildroot}%{homedir}/config/%{name}.yml
 #ln -svf %{_sysconfdir}/%{name}/database.yml %{buildroot}%{homedir}/config/database.yml
 ln -svf %{_sysconfdir}/%{name}/environment.rb %{buildroot}%{homedir}/config/environments/production.rb
 
@@ -194,49 +227,274 @@ chmod a+r %{buildroot}%{homedir}/ca/redhat-uep.pem
 %clean
 rm -rf %{buildroot}
 
-%post
+%post common
 #Add /etc/rc*.d links for the script
 /sbin/chkconfig --add %{name}
 
-%postun
+%postun common
 if [ "$1" -ge "1" ] ; then
     /sbin/service %{name} condrestart >/dev/null 2>&1 || :
 fi
 
 %files
+%config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
+
+%files common
 %defattr(-,root,root)
 %doc README LICENSE doc/
-%config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config %{_sysconfdir}/%{name}/thin.yml
-%config %{_sysconfdir}/httpd/conf.d/katello.conf
+%config %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
 %{_sysconfdir}/bash_completion.d/%{name}
-%{homedir}
+
+# Break apart the main bits
+%{homedir}/app/controllers
+%{homedir}/app/helpers
+%{homedir}/app/models/*.rb
+%{homedir}/app/stylesheets
+%{homedir}/app/views
+%{homedir}/autotest
+%{homedir}/ca
+%{homedir}/config
+%{homedir}/db
+%{homedir}/integration_spec
+%{homedir}/lib/*.rb
+%{homedir}/lib/navigation
+%{homedir}/lib/resources/cdn.rb
+%{homedir}/lib/tasks
+%{homedir}/lib/util
+%{homedir}/locale
+%{homedir}/log
+%{homedir}/public
+%{homedir}/script
+%{homedir}/spec
+%{homedir}/tmp
+%{homedir}/vendor
+%{homedir}/.bundle
+%{homedir}/config.ru
+%{homedir}/Gemfile
+%{homedir}/Gemfile.lock
+%{homedir}/Rakefile
 
 %defattr(-, katello, katello)
 %{_localstatedir}/log/%{name}
 %{datadir}
 
+%files glue-pulp
+%{homedir}/app/models/glue/pulp
+%{homedir}/lib/resources/pulp.rb
+
+%files glue-candlepin
+%{homedir}/app/models/glue/candlepin
+%{homedir}/app/models/glue/provider.rb
+%{homedir}/lib/resources/candlepin.rb
+
+%files glue-foreman
+%{homedir}/lib/resources/foreman.rb
+
 %files all
 
-%pre
+%pre common
 # Add the "katello" user and group
 getent group %{name} >/dev/null || groupadd -r %{name}
 getent passwd %{name} >/dev/null || \
     useradd -r -g %{name} -d %{homedir} -s /sbin/nologin -c "Katello" %{name}
 exit 0
 
-%preun
+%preun common
 if [ $1 -eq 0 ] ; then
     /sbin/service %{name} stop >/dev/null 2>&1
     /sbin/chkconfig --del %{name}
 fi
 
 %changelog
+* Mon Oct 24 2011 Shannon Hughes <shughes@redhat.com> 0.1.96-1
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (bkearney@redhat.com)
+- Allow headpin and katello-common to install together (bkearney@redhat.com)
+- Small fix for browse/upload overlap. (jrist@redhat.com)
+- pools - one more unit test (lzap+git@redhat.com)
+- pools - list of available unit test (lzap+git@redhat.com)
+- tdl-repos-references - validate TDL in unit tests against xsd
+  (inecas@redhat.com)
+- tdl-repos-references - tdl repos references direct to pulp repo
+  (inecas@redhat.com)
+- templates - fix for cloning to an environment (tstrachota@redhat.com)
+- Systems - minor change to view to address warning during render...
+  (bbuckingham@redhat.com)
+- Promotions - distributions - make list in ui consistent w/ products list
+  (bbuckingham@redhat.com)
+- Minor fix for potential overlap of Upload button on Redhat Provider page.
+  (jrist@redhat.com)
+- cli-akeys-pools - show pools in activation key details (inecas@redhat.com)
+- cli-akeys-pools - set allocated to 1 (inecas@redhat.com)
+- cli-akeys-pools - refactor spec tests (inecas@redhat.com)
+- cli-akeys-pools - remove subscriptions from a activation kay
+  (inecas@redhat.com)
+- cli-akeys-pools - add subscription to a key through CLI (inecas@redhat.com)
+- 747805 - Fix for not being able to create an environment when subpanel div
+  was "in the way" via z-index and layering. (jrist@redhat.com)
+- Fixing tests for System create (tsmart@redhat.com)
+- Rendering the proper lsit item for a system once it has been created
+  (tsmart@redhat.com)
+- Minor changes to new page for systems.  Using systems_path with
+  action=>create automatically defaults to post.  Doing so was because of the
+  server prefix.  Also fixed the scrollbar at the bottom of the page to be
+  grid_8 for the surrounding page. (jrist@redhat.com)
+- If you do not have an environment selected, then we tell you to go set a
+  default (tsmart@redhat.com)
+- Fixing System create error validation return (tsmart@redhat.com)
+- Adding environment selector to the System Create page (tsmart@redhat.com)
+- Cherry picking first System CRUD commit (tsmart@redhat.com)
+- Tweaks to System/Subscriptions based on feedback:    + Fix date CSS padding
+  + "Available" to "Quantity" in Available table    + Remove "Total" column in
+  Available table    + Add "SLA" to Available table (thomasmckay@redhat.com)
+- pools - adding multi entitlement flag to the list (cli) (lzap+git@redhat.com)
+- pools - making use of system.available_pools_full (lzap+git@redhat.com)
+- pools - rename sys_consumed_entitlements as consumed_entitlements
+  (lzap+git@redhat.com)
+- pools - moving sys_consumed_entitlements into glue (lzap+git@redhat.com)
+- pools - rename sys_available_pools as available_pools_full
+  (lzap+git@redhat.com)
+- pools - moving sys_available_pools into glue (lzap+git@redhat.com)
+- pools - listing of available pools (lzap+git@redhat.com)
+- refactoring - extending pool glue class (lzap+git@redhat.com)
+- refactoring - extending pool glue class (lzap+git@redhat.com)
+- removing unused code (lzap+git@redhat.com)
+- Prevent from using sqlite as the database engine (inecas@redhat.com)
+- Wrapping up today's git mess. (jrist@redhat.com)
+- Revert "Revert "Red Hat Provider layout refactor" - upload is not working
+  now..." (jrist@redhat.com)
+- Revert "Fix for provider.js upload file." (jrist@redhat.com)
+- Revert "Merge branch 'upload_fix'" (jrist@redhat.com)
+- Merge branch 'upload_fix' (jrist@redhat.com)
+- Fix for provider.js upload file. (jrist@redhat.com)
+- Revert "Red Hat Provider layout refactor" - upload is not working now...
+  (jrist@redhat.com)
+- Red Hat Provider layout refactor (jrist@redhat.com)
+- Removed jeditable classes off repo pages since attributes there are not
+  editable anymore (paji@redhat.com)
+- Break up the katello rpms into component parts (bkearney@redhat.com)
+- Very minor padding issue on .dash (jrist@redhat.com)
+- Fix for flot/canvas on IE. (jrist@redhat.com)
+- BZ#747343 https://bugzilla.redhat.com/show_bug.cgi?id=747343 In fix to show
+  subscriptions w/o products, the provider was not being checked.
+  (thomasmckay@redhat.com)
+- Based on jrist feedback: + add padding to rows to account for fatter spinner
+  + don't increment spinner value if non-zero on checkbox click + alternate row
+  coloring (maintain color on exanding rows) (thomasmckay@redhat.com)
+- Unsubscribe now unsubscribes from individual entitlements, not the entire
+  pool. (Only useful for multi-entitlement subscriptions where the user may
+  have subscribed to multiple quantities.) (thomasmckay@redhat.com)
+- adjusted tables for custom provider product, updated columns
+  (thomasmckay@redhat.com)
+- handle comma-separated gpgUrl values. change display of subscription from
+  label to div to clean up display style (thomasmckay@redhat.com)
+- subscription content url is needs the content source prefix before it is a
+  clickable link (thomasmckay@redhat.com)
+- changed subscription details to a list instead of a table; much cleaner
+  looking (thomasmckay@redhat.com)
+- data added to expanding subscription tree (thomasmckay@redhat.com)
+- first cut of expander for subscription details (data fake)
+  (thomasmckay@redhat.com)
+- updated table info for available, including removing spinner for non-multi
+  (thomasmckay@redhat.com)
+- updated table info for currently subscribed (thomasmckay@redhat.com)
+- 737678 - Made the provider left panes and other left panes use ellipsis
+  (paji@redhat.com)
+
+* Tue Oct 18 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.95-1
+- switching to XML vs JSON for template download
+- Errata - packages - list based on name-[epoch:]-version-release.arch
+- 745617 fix for product sync selection
+- tdl - modifying /export to return TDL format
+- tdl - refactoring export_string to export_as_json
+- reset dbs script now correctly load variables
+- 744067 - Promotions - Errata UI - clean up format on Details tab
+
+* Mon Oct 17 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.94-1
+- adding db:truncate rake task
+- templates - spec tests for revisions
+- templates - fix for increasing revision numbers after update
+- fixes #745245 Filter on provider page fails with postgres error
+- Fixed a unit test
+- 740979 - Gave provider read access for users with org sync permission
+- 744067 - Promotions - Errata UI - clean up format on Packages tab
+- 741416 - organizations ui - list orgs using same sort order as on roles pg
+
+* Fri Oct 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.93-1
+- bump up scoped_search version to 2.3.4 (shughes@redhat.com)
+- 745315 -changing application controller to not include all helpers in all
+  controllers, this stops helper methods with the same name from overwriding
+  each other (jsherril@redhat.com)
+- 740969 - Fixed a bug where tab was being inserted. Tab is invalid for names
+  (paji@redhat.com)
+- 720432 - Moves the small x that closes the filter on sliding tree widgets to
+  be directly to the right of the filter. (ehelms@redhat.com)
+- 745279 - UI - fix deletion of repo (bbuckingham@redhat.com)
+- 739588-Made the systems update call raise the error message the correct way
+  (paji@redhat.com)
+- 735975 - Fix for user delete link showing up for self roles page
+  (paji@redhat.com)
+- Added code to fix a menu highlighting issue (paji@redhat.com)
+- 743415 - removing uneeded files (mmccune@redhat.com)
+- update to translations (shughes@redhat.com)
+- 744285 - bulletproof the spec test for repo_id (inecas@redhat.com)
+- Fix for accidentaly faling tests (inecas@redhat.com)
+- adding new zanata translation file (shughes@redhat.com)
+- search - fix system save and notices search (bbuckingham@redhat.com)
+- 744285 - Change format of repo id (inecas@redhat.com)
+- Fixed a bunch of unit tests (paji@redhat.com)
+- Fixed progress bar and spacing on sync management page. (jrist@redhat.com)
+- Updated the ordering on the content-management menu items (paji@redhat.com)
+- Refactored the create_menu method to allow navs of multiple levels
+  (paji@redhat.com)
+- Ported all the nav items across (paji@redhat.com)
+- Added a construct to automatically imply checking for a sub level if the top
+  level is missing (paji@redhat.com)
+- Just added spaces to every line to keep the tabbing loking right
+  (paji@redhat.com)
+- Added the systems tab. (paji@redhat.com)
+- Added dashboard menus and fixed a bunch of navs (paji@redhat.com)
+- Reorganized the navigation a bit (paji@redhat.com)
+- Modified the rendering structure to use independent nav items
+  (paji@redhat.com)
+- Moved menu rb to helpers since its a better fit there.. soon going to
+  reorganize the files there (paji@redhat.com)
+- Adding the new menu.rb to generate menu (paji@redhat.com)
+- Initial commit on getting a dynamic navigation (paji@redhat.com)
+- Merge branch 'comps' (jsherril@redhat.com)
+- system templates - fixing last issues with comps groups (jsherril@redhat.com)
+- removing z-index on helptip open icon so it does not hover over 3rd level
+  navigation menu (jsherril@redhat.com)
+- Moved the help tip on the redhat providers page show up at the right spot
+  (paji@redhat.com)
+- reduce number of sync threads (shughes@redhat.com)
+- search - several fixes for issues on auto-complete (bbuckingham@redhat.com)
+- tests - adding system template package group test for the ui controller
+  (jsherril@redhat.com)
+- 744191 - prevent some changes on red hat provider (inecas@redhat.com)
+- 744191 - Prevent deleting Red Hat provider (inecas@redhat.com)
+- system templates - removign uneeded route (jsherril@redhat.com)
+- system templates - package groups auto complete working (jsherril@redhat.com)
+- system templates - hooked up comps groups with backend with the exception of
+  auto complete (jsherril@redhat.com)
+- Merge branch 'master' into comps (jsherril@redhat.com)
+- system templates - adding  addition and removal of package groups in the web
+  ui, still does not save to server (jsherril@redhat.com)
+- system templates - properly listing package groups respecting page size
+  limits (jsherril@redhat.com)
+- system templates - adding real package groups to system templates page
+  (jsherril@redhat.com)
+- system templates - adding initial ui framework for package groups in system
+  templates (jsherril@redhat.com)
+- system templates - adding initial comps listing for products (with fake data)
+  (jsherril@redhat.com)
+
 * Tue Oct 11 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.92-1
 - Installation does not pull in katello-cli
 - Revert "added ruport-related gems to Gemfile"
