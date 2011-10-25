@@ -23,56 +23,66 @@ describe Katello::PackageUtils do
       end
     end
 
+    shared_examples_for "nvrea_nvre parsable string" do
+      it "can be parsed" do
+        Katello::PackageUtils.parse_nvrea_nvre(subject).should == expected
+      end
+    end
+
     context "full nvrea with rpm" do
-      subject { "1:name-ver.si.on-relea.se.arch.rpm" }
+      subject { "1:name-ver.si.on-relea.se.x86_64.rpm" }
       let(:expected) do
         { :epoch => "1",
           :name  => "name",
           :version => "ver.si.on",
           :release => "relea.se",
-          :arch => "arch",
+          :arch => "x86_64",
           :suffix => "rpm" }
       end
 
       it_should_behave_like "nvrea parsable string"
+      it_should_behave_like "nvrea_nvre parsable string"
     end
 
     context "full nvrea without rpm" do
-      subject { "1:name-ver.si.on-relea.se.arch" }
+      subject { "1:name-ver.si.on-relea.se.x86_64" }
       let(:expected) do
         { :epoch => "1",
           :name  => "name",
           :version => "ver.si.on",
           :release => "relea.se",
-          :arch => "arch", }
+          :arch => "x86_64", }
       end
 
       it_should_behave_like "nvrea parsable string"
+      it_should_behave_like "nvrea_nvre parsable string"
     end
 
     context "nvrea with rpm without epoch" do
-      subject { "name-ver.si.on-relea.se.arch.rpm" }
+      subject { "name-ver.si.on-relea.se.x86_64.rpm" }
       let(:expected) do
         { :name  => "name",
           :version => "ver.si.on",
           :release => "relea.se",
-          :arch => "arch",
+          :arch => "x86_64",
           :suffix => "rpm" }
       end
 
       it_should_behave_like "nvrea parsable string"
+      it_should_behave_like "nvrea_nvre parsable string"
     end
 
     context "nvrea without rpm and epoch" do
-      subject { "name-ver.si.on-relea.se.arch" }
+      subject { "name-ver.si.on-relea.se.x86_64" }
       let(:expected) do
         { :name  => "name",
           :version => "ver.si.on",
           :release => "relea.se",
-          :arch => "arch" }
+          :arch => "x86_64" }
       end
 
       it_should_behave_like "nvrea parsable string"
+      it_should_behave_like "nvrea_nvre parsable string"
     end
   end
 
@@ -98,6 +108,7 @@ describe Katello::PackageUtils do
       end
 
       it_should_behave_like "nvre parsable string"
+      it_should_behave_like "nvrea_nvre parsable string"
     end
 
     context "nvre without epoch" do
@@ -110,6 +121,7 @@ describe Katello::PackageUtils do
       end
 
       it_should_behave_like "nvre parsable string"
+      it_should_behave_like "nvrea_nvre parsable string"
     end
   end
 end
