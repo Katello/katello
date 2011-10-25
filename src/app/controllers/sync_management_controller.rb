@@ -175,7 +175,7 @@ private
       begin
         resp = Pulp::Repository.sync(id, data)
       rescue RestClient::Conflict => e
-        r = Glue::Pulp::Repo.find(id)
+        r = Repository.first(:conditions => {:pulp_id => id})
         errors N_("There is already an active sync process for the '#{r.name}' repository. Please try again later")
         next
       end
