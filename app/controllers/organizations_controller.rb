@@ -99,6 +99,10 @@ class OrganizationsController < ApplicationController
       @organization.update_attributes!(params[:organization])
       notice _("Organization '#{@organization["name"]}' was updated.")
       
+      if not Organization.where(:id => @organization.id).search_for(params[:search]).include?(@organization)
+        notice _("'#{@organization["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
+      end
+      
       render :text => escape_html(result)
       
     rescue Exception => error

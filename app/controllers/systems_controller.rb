@@ -78,19 +78,22 @@ class SystemsController < ApplicationController
 
       #find the newly created system
       if saved
-        notice _("Your system was created: ") + "'#{@system.name}'"
-      else
-        errors _("There was an error creating your system ")
+        notice _("System '#{@system['name']}' was created.")
+
+        if System.where(:id => @system.id).search_for(params[:search]).include?(@system)
+          render :partial=>"systems/list_systems",
+            :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@system], :name=> controller_display_name}
+        else
+          notice _("'#{@system["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+          render :json => { :no_match => true }
+        end
       end
 
     rescue Exception => error
       errors error
       Rails.logger.info error.backtrace.join("\n")
       render :text => error, :status => :bad_request
-     return
     end
-    render :partial=>"systems/list_systems",
-            :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@system], :name=> controller_display_name}
   end
 
   def index
@@ -225,7 +228,12 @@ class SystemsController < ApplicationController
   def update
     begin
       @system.update_attributes!(params[:system])
-      notice _("System updated.")
+      notice _("System '#{@system["name"]}' was updated.")
+      
+      if not System.where(:id => @system.id).search_for(params[:search]).include?(@system)
+        notice _("'#{@system["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
+      end
+      
       respond_to do |format|
         format.html { render :text=>params[:system].first[1] }
         format.js
