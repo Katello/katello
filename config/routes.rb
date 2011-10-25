@@ -57,6 +57,7 @@ Src::Application.routes.draw do
 
   resources :systems, :except => [:destroy] do
     member do
+      get :edit
       get :packages
       get :more_packages
       get :subscriptions
@@ -262,6 +263,7 @@ Src::Application.routes.draw do
       member do
         get :packages, :action => :package_profile
         get :errata
+        get :pools
       end
       resources :subscriptions, :only => [:create, :index, :destroy]
     end
@@ -360,7 +362,11 @@ Src::Application.routes.draw do
       resources :templates, :only => [:index]
     end
 
-    resources :activation_keys, :only => [:show, :update, :destroy]
+    resources :activation_keys do
+      post :pools, :action => :add_pool, :on => :member
+      delete "pools/:poolid", :action => :remove_pool, :on => :member
+    end
+
     resources :packages, :only => [:show]
     resources :errata, :only => [:index, :show]
     resources :distributions, :only => [:show]

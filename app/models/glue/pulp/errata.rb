@@ -73,4 +73,16 @@ class Glue::Pulp::Errata
 #     end
 #   end
   
+  def included_packages
+    packages = []
+
+    self.pkglist.each do |pack_list|
+      packages += pack_list['packages'].collect do |err_pack|
+        Glue::Pulp::Package.new(err_pack)
+      end
+    end
+
+    packages
+  end
+
 end
