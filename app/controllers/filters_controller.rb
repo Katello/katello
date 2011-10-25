@@ -4,7 +4,9 @@ class FiltersController < ApplicationController
 
   skip_before_filter :authorize
   before_filter :panel_options, :only=>[:index, :items]
-  before_filter :find_filter, :only=>[:edit, :update, :destroy, :packages, :add_packages, :remove_packages]
+  before_filter :find_filter, :only=>[:edit, :update, :destroy,
+                                      :packages, :add_packages, :remove_packages,
+                                      :products, :update_products]
   before_filter :authorize
 
   def rules
@@ -25,12 +27,26 @@ class FiltersController < ApplicationController
       :destroy=>deletable,
       :packages=>readable,
       :add_packages=>editable,
-      :remove_packages=>editable
+      :remove_packages=>editable,
+      :products=>readable,
+      :update_products=>editable,
+      :auto_complete_products_repos=>index_test
     }
   end
 
 
   def index
+    products = Product.readable(current_organization)
+    products.sort!{|a,b| a.name <=> b.name}
+
+    @product_hash = {}
+    products.each{|prod|
+      repos = []
+      prod.repos(current_organization.locker).sort{|a,b| a.name <=> b.name}.each{|repo|
+        repos << {:name=>repo.name, :id=>repo.id}
+      }
+      @product_hash[prod.id] = {:name=>prod.name, :repos=>repos, :id=>prod.id}
+    }
     @filters = Filter.readable(current_organization).search_for(params[:search]).order('pulp_id desc').
         limit(current_user.page_size)
     render "index"
@@ -42,6 +58,27 @@ class FiltersController < ApplicationController
         limit(current_user.page_size).offset(start)
     render_panel_items @providers, @panel_options
   end
+
+  def auto_complete_products_repos
+    name = params[:term]
+    products = Product.search_for(name).readable(current_organization)
+
+    to_ret = []
+    products.each{|prod|
+      to_ret << {:label=>prod.name, :value=>prod.name, :type=>"product", :id=>prod.id}
+    }
+
+    Product.readable(current_organization).each{|prod|
+      prod.repos(current_organization.locker).each{|repo|
+        if repo.name.upcase.include? name.upcase
+          to_ret << {:label=>repo.name, :value=>repo.name, :type=>"repo", :id=>repo.id, :product_id=>prod.id}
+        end
+      }
+    }
+    
+    render :json=>to_ret
+  end
+
 
   def update
     options = params[:filter]
@@ -81,9 +118,21 @@ class FiltersController < ApplicationController
     render :text=>e, :status=>500
   end
 
+  def products
+    render :partial => "products", :layout => "tupane_layout", :locals => {:filter => @filter, :editable=>@filter.editable?,
+                                                                       :name=>controller_display_name}
+    
+  end
+
+  def update_products
+    pkgs = params[:products]
+
+    render :text=>''
+  end
+
+
 
   def packages
-    
     render :partial => "packages", :layout => "tupane_layout", :locals => {:filter => @filter, :editable=>@filter.editable?,
                                                                        :name=>controller_display_name}
   end
@@ -109,6 +158,10 @@ class FiltersController < ApplicationController
     render :text=>e, :status=>500
   end
 
+  def section_id
+    'contents'
+  end
+
   private
 
   def find_filter
@@ -123,7 +176,7 @@ class FiltersController < ApplicationController
         :name => controller_display_name,
         :ajax_scroll=>items_filters_path(),
         :enable_create=> Filter.creatable?(current_organization),
-        :initial_action=>:packages
+        :initial_action=>:products
     }
   end
 

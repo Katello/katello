@@ -28,11 +28,10 @@
       - if @filter.package_list.empty?
         %tr
           %td
-            #{"No packages currently exist."}
+            #{"No packages are currently filtered."}
       - for pkg in @filter.package_list
         %tr
           %td
             %input.package_select{:type=>"checkbox", :name=>pkg, :value=>pkg}
             = pkg
     %input.fr.button{:type=>"button", :id=>"remove_packages", :value=>_("Remove Packages"), 'data-url'=> remove_packages_filter_path(@filter)}
-      
