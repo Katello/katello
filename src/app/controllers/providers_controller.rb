@@ -239,8 +239,15 @@ class ProvidersController < ApplicationController
     all_subs = Candlepin::Owner.pools @provider.organization.cp_key
     @subscriptions = []
     all_subs.each do |sub|
-      sub['providedProducts'].each do |cp_product|
-        product = Product.where(:cp_id =>cp_product["productId"]).first
+      if sub['providedProducts'].length > 0
+        sub['providedProducts'].each do |cp_product|
+          product = Product.where(:cp_id =>cp_product["productId"]).first
+          if product and product.provider == @provider
+            @subscriptions << sub if !@subscriptions.include? sub
+          end
+        end
+      else
+        product = Product.where(:cp_id => sub['productId']).first
         if product and product.provider == @provider
           @subscriptions << sub if !@subscriptions.include? sub
         end

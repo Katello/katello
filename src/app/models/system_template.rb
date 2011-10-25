@@ -88,7 +88,7 @@ class SystemTemplate < ActiveRecord::Base
     json["parameters"].each_pair {|k,v| self.parameters[k] = v } if json["parameters"]
   end
 
-  def export_as_json
+  def export_as_hash
     tpl = {
       :name => self.name,
       :revision => self.revision,
@@ -103,8 +103,8 @@ class SystemTemplate < ActiveRecord::Base
     tpl
   end
 
-  def string_export
-    self.export_as_json.to_json
+  def export_as_json
+    self.export_as_hash.to_json
   end
 
 
@@ -132,9 +132,9 @@ class SystemTemplate < ActiveRecord::Base
       }
       xm.repositories {
         self.products.each do |p|
-          pc = p.productContent.each do |pc|
-            xm.repository("name" => pc.content.name) {
-              xm.url p.repository_url(pc.content.contentUrl)
+          pc = p.repos(self.environment).each do |repo|
+            xm.repository("name" => repo.id) {
+              xm.url repo.uri
             }
           end
         end
@@ -386,7 +386,7 @@ class SystemTemplate < ActiveRecord::Base
   end
 
   def get_content_state
-    content = self.export_as_json
+    content = self.export_as_hash
     content.delete(:name)
     content.delete(:description)
     content.delete(:revision)

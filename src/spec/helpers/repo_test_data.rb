@@ -27,6 +27,7 @@ module RepoTestData
     :id => REPO_ID,
     :name => REPO_NAME,
     :arch => 'architecture',
+    :relative_path => "ACME_Corporation/Locker/zoo/base",
     :feed => 'url',
     "groupid" => [
       "product:"+REPO_PRODUCT_CP_ID.to_s,
@@ -42,6 +43,7 @@ module RepoTestData
     :id => CLONED_REPO_ID,
     :name => REPO_NAME,
     :arch => 'architecture',
+    :relative_path => "ACME_Corporation/Dev/zoo/base",
     :feed => 'url',
     "groupid" => [
       "product:"+REPO_PRODUCT_CP_ID.to_s,

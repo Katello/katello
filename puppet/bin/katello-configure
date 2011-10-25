@@ -2,10 +2,14 @@
 
 require 'optparse'
 require 'fcntl'
+require 'fileutils'
+
+$stdout.sync = true
 
 default_path = '/usr/share/katello/install/default-answer-file'
 result_config_path = '/etc/katello/katello-configure.conf'
-puppet_cmd = 'puppet --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib'
+puppet_cmd = 'puppet --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib -v -d'
+log_parent_directory = '/var/log/katello'
 
 # Reading answer file, used both for the default answer file
 # and for user files. The structure of the answer file is
@@ -52,6 +56,33 @@ def read_answer_file(filename)
 	end
 	file.close
 	return data, data_order, error, titles, docs
+end
+
+$expected_progress_width = ENV['COLUMNS']
+if $expected_progress_width == nil
+	$expected_progress_width = 80
+end
+$expected_progress_width -= 20
+$expected_progress_width = 5 if $expected_progress_width < 0
+$previous_progress = 0
+def progress_clear
+	$previous_progress = 0
+end
+def progress_bar(filename, expected_total)
+	current_total = File.size(filename)
+	width = $expected_progress_width * current_total / expected_total
+	width = $expected_progress_width if width > $expected_progress_width
+	while $previous_progress < width - 1 do
+		$previous_progress += 1
+		print '#'
+	end
+end
+def progress_final
+	while $previous_progress < $expected_progress_width do
+		$previous_progress += 1
+		print '#'
+	end
+	$previous_progress = 0
 end
 
 # We first parse the default answer file. The list of options
@@ -152,6 +183,8 @@ if show_resulting_answer_file
 	exit
 end
 
+puts 'Starting Katello configuration'
+
 orig_umask = File.umask(077)
 begin
 	File.unlink(result_config_path)
@@ -166,15 +199,78 @@ end
 result_config.close
 File.umask(orig_umask)
 
+now = Time.now.strftime("%Y%m%d-%H%M%S")
+log_directory = log_parent_directory + '/katello-configure-' + now
+log_directory_link = log_parent_directory + '/katello-configure'
+if File.symlink?(log_directory_link)
+	begin
+		File.unlink(log_directory_link)
+	rescue
+	end
+end
+if File.directory?(log_directory_link)
+	File.rename(log_directory_link, log_directory_link + '-backup-' + now)
+end
+
+FileUtils.mkdir_p(log_directory, :mode => 0700)
+FileUtils.ln_sf('katello-configure-' + now, log_directory_link)
+
 ENV['KATELLO_ANSWER_FILE'] = result_config_path
 
+commands_by_logfiles = {
+	'/var/log/katello/katello-configure/cpsetup.log' => [ 'Candlepin setup', 276 ],
+	'/var/log/katello/katello-configure/db_seed.log' => [ 'Populating Katello database schema', 21929 ],
+	'/var/log/katello/katello-configure/create-postgresql-candlepin-user.log' => [ 'Creating Candlepin database user', 12 ],
+	'/var/log/katello/katello-configure/create-postgresql-candlepin-database.log' => [ 'Creating Candlepin database', 16 ],
+	'/var/log/katello/katello-configure/create-postgresql-katello-user.log' => [ 'Creating Katello database user', 12 ],
+	'/var/log/katello/katello-configure/create-postgresql-katello-database.log' => [ 'Creating Katello database', 16 ],
+}
+
+puppet_logfile_filename = log_directory + '/main.log'
+puppet_logfile = IO.open(IO::sysopen(puppet_logfile_filename, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
+puts "The top-level log file is [#{puppet_logfile_filename}]"
 begin
-	IO.popen(puppet_cmd, 'w') { |f|
+	IO.popen(puppet_cmd, 'w+') do |f|
 		f.puts "include katello"
 		f.close_write
-		puts f.gets
-	}
+		processing_logfile = nil
+		t = nil
+		while line = f.gets do
+			puppet_logfile.syswrite(line)
+			puts "Got " + line if ENV['KATELLO_CONFIGURE_DEBUG']
+			if processing_logfile != nil
+				message = nil
+				if line =~ /notice:.*executed successfully/
+					t.kill
+					progress_final()
+					puts " ... OK"
+					processing_logfile = nil
+				elsif line =~ /err:/
+					t.kill
+					puts "\n  Failed, please check [#{processing_logfile}]"
+					processing_logfile = nil
+				end
+			end
+			if line =~ /\]: Executing \'(.+)/
+				line_rest = $1
+				commands_by_logfiles.keys.each do |logfile|
+					if line_rest.index(logfile) != nil
+						processing_logfile = logfile
+						puts commands_by_logfiles[logfile][0]
+						progress_clear()
+						t = Thread.new do
+							while true do
+								sleep 1
+								progress_bar(logfile, commands_by_logfiles[logfile][1])
+							end
+						end
+						break
+					end
+				end
+			end
+		end
+	end
 rescue => e
 	$stderr.puts 'Error: ' + e.message
 end
-
+puppet_logfile.close

@@ -35,15 +35,17 @@
               %a.clickable{ :href => "#", :onclick => ""}
                 = image_tag('icons/expander-collapsed.png', :alt => _('Expand'))
             .grid_6.la.editable.subpanel_element{"data-url"=>edit_provider_product_path(@provider.id, product.id)}
-              %label #{_("Product")}:
-              &nbsp;#{product.name}
+              .multiline
+                %label #{_("Product")}:
+                &nbsp;#{product.name}
   
             %ul.fl.clear{:style => "display:none;", :class=>cssclass}
               -product.repos(product.organization.locker).each do |repo|
                 %li{:class=>'repo'}
-                  .grid_6.prefix_1.la.editable.subpanel_element{"data-url"=>edit_provider_product_repository_path(@provider.id, product.id, repo.name)}
-                    %label #{_("Repository")}:
-                    &nbsp;#{repo.name}
+                  .grid_6.prefix_1.la.editable.subpanel_element{"data-url"=>edit_provider_product_repository_path(@provider.id, product.id, repo.id)}
+                    .multiline
+                      %label #{_("Repository")}:
+                      &nbsp;#{repo.name}
               .prefix_1
                 - if editable
                   .button.subpanel_element{"data-url"=>new_provider_product_repository_path(@provider.id, product.id)}
