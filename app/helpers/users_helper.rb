@@ -11,10 +11,17 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module UsersHelper
-	
+
   def mask_password user
-   return "" if user.password.nil?
-	 user.password.gsub(/./, "&#9679;")
+    return "" if user.password.nil?
+    user.password.gsub(/./, "&#9679;")
   end
-	
+
+  def organization_select
+    select(:org_id, "org_id",
+           Organization.all.map {|a| [a.name, a.id]},
+           {:prompt => _('Select Organization'), :id=>"org_field",
+           :selected => current_organization.id})
+  end
+
 end
