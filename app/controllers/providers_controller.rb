@@ -144,7 +144,7 @@ class ProvidersController < ApplicationController
                                                                     :organization => current_organization})
       notice _("Provider '#{@provider['name']}' was created.")
       
-      if Provider.where(id = @provider.id).search_for(params[:search]).include?(@provider) 
+      if Provider.where(:id => @provider.id).search_for(params[:search]).include?(@provider) 
         render :partial=>"common/list_item", :locals=>{:item=>@provider, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
       else
         notice _("'#{@provider["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
@@ -191,7 +191,7 @@ class ProvidersController < ApplicationController
       updated_provider.save!
       notice _("Provider '#{updated_provider.name}' was updated.")
 
-      if not Provider.where(id = updated_provider.id).search_for(params[:search]).include?(updated_provider)
+      if not Provider.where(:id => updated_provider.id).search_for(params[:search]).include?(updated_provider)
         notice _("'#{updated_provider["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
       end
 

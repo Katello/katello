@@ -150,7 +150,7 @@ class ChangesetsController < ApplicationController
       @changeset.name = params[:name]
       @changeset.save!
       
-      if not Changeset.where(id = @changeset.id).search_for(params[:search]).include?(@changeset)
+      if not Changeset.where(:id => @changeset.id).search_for(params[:search]).include?(@changeset)
         notice _("'#{@changeset["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
       end
       
@@ -161,7 +161,7 @@ class ChangesetsController < ApplicationController
       @changeset.description = params[:description]
       @changeset.save!
       
-      if not Changeset.where(id = @changeset.id).search_for(params[:search]).include?(@changeset)
+      if not Changeset.where(:id => @changeset.id).search_for(params[:search]).include?(@changeset)
         notice _("'#{@changeset["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
       end
       

@@ -192,7 +192,7 @@ class ActivationKeysController < ApplicationController
     end
     notice _("Activation key '#{@activation_key['name']}' was created.")
     
-    if ActivationKey.where(id = @activation_key.id).search_for(params[:search]).include?(@activation_key)
+    if ActivationKey.where(:id => @activation_key.id).search_for(params[:search]).include?(@activation_key)
       render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
     else
       notice _("'#{@activation_key["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
@@ -224,6 +224,10 @@ class ActivationKeysController < ApplicationController
         # template is being updated.. so return template name vs id...
         system_template = SystemTemplate.find(@activation_key.system_template_id)
         result = system_template.name
+      end
+
+      if not ActivationKey.where(:id => @activation_key.id).search_for(params[:search]).include?(@activation_key)
+        notice _("'#{@activation_key["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
       end
 
       render :text => escape_html(result)

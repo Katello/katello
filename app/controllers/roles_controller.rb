@@ -97,7 +97,7 @@ class RolesController < ApplicationController
     @role = Role.create!(params[:role])
     notice _("Role '#{@role.name}' was created.")
     
-    if Role.where(id = @role.id).search_for(params[:search]).include?(@role)
+    if Role.where(:id => @role.id).search_for(params[:search]).include?(@role)
       render :partial=>"common/list_item", :locals=>{:item=>@role, :accessor=>"id", :columns=>["name"], :name=>controller_display_name}
     else
       notice _("'#{@role["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
@@ -125,7 +125,7 @@ class RolesController < ApplicationController
         @role.update_attributes!(params[:role])
         notice _("Role '#{@role.name}' was updated.")
         
-        if not Role.where(id = @role.id).search_for(params[:search]).include?(@role)
+        if not Role.where(:id => @role.id).search_for(params[:search]).include?(@role)
           notice _("'#{@role["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
         end
         
