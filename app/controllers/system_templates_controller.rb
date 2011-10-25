@@ -83,17 +83,20 @@ class SystemTemplatesController < ApplicationController
   end
 
   def object
+
     pkgs = @template.packages.collect{|pkg| {:name=>pkg.package_name}}
     products = @template.products.collect{|prod| {:name=>prod.name, :id=>prod.id}}
+    environments = @template.products.collect{|env| {:name=>env.name, :id=>env.id}}
     groups = @template.package_groups.collect{|grp| {:name=>grp.name}}
     to_ret = {:id=> @template.id, :name=>@template.name, :description=>@template.description,
-              :packages=>pkgs, :products=>products, :package_groups=>groups}
+              :packages=>pkgs, :products=>products, :package_groups=>groups, :environments => environments}
     render :json=>to_ret
   end
 
   def edit
     render :partial => "edit", :layout => "tupane_layout",
-           :locals => {:template=>@template, :editable=> SystemTemplate.manageable?(current_organization)}
+           :locals => {:template=>@template,
+                       :editable=> SystemTemplate.manageable?(current_organization)}
   end
 
 
