@@ -74,7 +74,7 @@ class OrganizationsController < ApplicationController
       render :text=> error.to_s, :status=>:bad_request and return
     end
     
-    if Organization.where(id = @organization.id).search_for(params[:search]).include?(@organization)
+    if Organization.where(:id => @organization.id).search_for(params[:search]).include?(@organization)
       notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
       render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
     else

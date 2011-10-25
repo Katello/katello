@@ -77,7 +77,7 @@ class UsersController < ApplicationController
     @user.save!
     notice @user.username + _(" created successfully.")
    
-    if User.where(id = @user.id).search_for(params[:search]).include?(@user) 
+    if User.where(:id => @user.id).search_for(params[:search]).include?(@user) 
       render :partial=>"common/list_item", :locals=>{:item=>@user, :accessor=>"id", :columns=>["username"], :name=>controller_display_name}
     else
       notice _("'#{@user["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
@@ -96,7 +96,7 @@ class UsersController < ApplicationController
       attr = params[:user].first.last if params[:user].first
       attr ||= ""
       
-      if not User.where(id = @user.id).search_for(params[:search]).include?(@user)
+      if not User.where(:id => @user.id).search_for(params[:search]).include?(@user)
         notice _("'#{@user["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
       end
       
@@ -115,7 +115,7 @@ class UsersController < ApplicationController
     if  @user.update_attributes(params[:user])
       notice _("User updated successfully.")
       
-      if not User.where(id = @user.id).search_for(params[:search]).include?(@user)
+      if not User.where(:id => @user.id).search_for(params[:search]).include?(@user)
         notice _("'#{@user["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
       end
       
