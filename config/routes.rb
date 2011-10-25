@@ -362,7 +362,11 @@ Src::Application.routes.draw do
       resources :templates, :only => [:index]
     end
 
-    resources :activation_keys, :only => [:show, :update, :destroy]
+    resources :activation_keys do
+      post :pools, :action => :add_pool, :on => :member
+      delete "pools/:poolid", :action => :remove_pool, :on => :member
+    end
+
     resources :packages, :only => [:show]
     resources :errata, :only => [:show]
     resources :distributions, :only => [:show]

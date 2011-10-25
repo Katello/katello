@@ -10,15 +10,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class KTPool < ActiveRecord::Base
-  include Glue::Candlepin::Pool if AppConfig.use_cp
-  include Authorization
 
-  set_table_name "pools"
-  has_many :key_pools, :foreign_key => "pool_id"
-  has_many :activation_keys, :through => :key_pools
+shared_examples_for "valid tdl" do
 
-  def as_json(*args)
-    {:cp_id => self.cp_id}
+  let(:xsd_schema_file) { File.expand_path("../TDL.xsd",__FILE__) }
+  let(:xsd_schema) { Nokogiri::XML::Schema(File.read(xsd_schema_file)) }
+
+  it "should be valid TDL document" do
+    xsd_schema.validate(subject).should == []
   end
 end
+
+

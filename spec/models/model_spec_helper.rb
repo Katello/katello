@@ -39,4 +39,15 @@ module OrchestrationHelper
     Pulp::Roles.stub!(:remove).and_return(true)
   end
 
+  def disable_repo_orchestration
+    Pulp::Repository.stub(:sync_history).and_return([])
+
+    Pulp::Repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
+    Pulp::Repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)
+    Pulp::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
+    Pulp::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
+    Pulp::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
+  end
+
+
 end
