@@ -474,10 +474,9 @@ class Changeset < ActiveRecord::Base
     package_names = packages_for_dep_calc(product).map{ |p| p.name }.uniq
     return [] if package_names.empty?
 
-    from_repos = not_included_repos(product, from_env)
+    from_repos = not_included_repos(product, from_env).map{ |r| r.id }
 
     dependencies = Pulp::Package.dep_solve(package_names, from_repos)
-    #TODO: filter out packages that have already been promoted
     dependencies
   end
 
@@ -486,8 +485,8 @@ class Changeset < ActiveRecord::Base
 
     dependencies.each_pair do |package_name, dep_packages|
       dep_packages.each do |dep_package|
-        new_dependencies << ChangesetDependency.new(:package_id => dep_package.id,
-                                                    :display_name => dep_package.nvrea,
+        new_dependencies << ChangesetDependency.new(:package_id => dep_package['id'],
+                                                    :display_name => dep_package['name'],
                                                     :product_id => product.id,
                                                     :dependency_of => package_name,
                                                     :changeset => self)
