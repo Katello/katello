@@ -779,7 +779,27 @@ KT.actions =  (function(){
         return {};
     },
     toggle_download = function(is_opening) {
+        var text = i18n.edit_close_label;
+        if (is_opening.opening) {
+            var curr = KT.options.current_template;
+            var options = '';
 
+            // create an html option list
+            envs = curr.environments
+            if (envs.length == 0) {
+                // TODO: Localize this
+                options += '<option value="">' + 'i18n.noEnvironments' + '</option>';
+            }
+            else{
+                for (var i = 0; i < envs.length; i++) {
+                    options += '<option value="' + envs[i].id + '">' + envs[i].name + '</option>';
+                }
+            }
+            // add the options to the system template select... this select exists on an insert form
+            // or as part of the environment edit dialog
+            $("#system_template_environment_id").html(options);
+        }
+        return {};
     },
     close_modified_dialog = function() {
         $("#modified_dialog").dialog('close');
@@ -809,12 +829,14 @@ KT.actions =  (function(){
     toggle_list = {
 
             'template_edit': { container 	: 'edit_template_container',
-                                setup_fn: toggle_edit
+                            button		: 'edit_template',
+                            setup_fn	: toggle_edit
+
             },
             'template_download': { container 	: 'download_template_container',
-                                setup_fn: toggle_edit
+                                button		: 'download_template',
+                                setup_fn: toggle_download
             }
-
     },
 
     register_events = function() {
@@ -844,7 +866,7 @@ KT.actions =  (function(){
             // e.preventDefault();  //stop the browser from following
             // url = KT.common.rootURL() + '/system_templates/' + options.current_template.id + '/download',
             // window.location.href = url;
-            options.action_bar.toggle('template_download');
+            // options.action_bar.toggle('template_download');
             return false;
         });
         buttons.remove.click(function(){
@@ -899,6 +921,26 @@ KT.actions =  (function(){
     };
 })();
 
+KT.template_download = {
+    setup_environment_names : function(id, success) {
+        alert("in setup");
+        // update the appropriate content on the page
+        var options = '';
+
+        // create an html option list using the response
+        options += '<option value="">' + i18n.noTemplate + '</option>';
+        for (var i = 0; i < response.length; i++) {
+            options += '<option value="' + response[i].id + '">' + response[i].name + '</option>';
+        }
+
+        // add the options to the system template select... this select exists on an insert form
+        // or as part of the environment edit dialog
+        $("#activation_key_system_template_id").html(options);
+
+
+     }
+
+};
 
 
 
@@ -1002,8 +1044,6 @@ $(document).ready(function() {
     KT.package_actions.register_events();
     KT.product_actions.register_events();
     KT.package_group_actions.register_events();
-
-
 
     //Handle scrolling
     KT.panel.registerPanel($('#template_tree'), $('#template_tree').width() + 50);
