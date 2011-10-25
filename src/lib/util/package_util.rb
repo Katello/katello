@@ -17,10 +17,7 @@ module Katello
     EPOCH_RE = /([0-9]+):/
     NVR_RE = /^([^-]+)-([^-]+)-(.+)$/
     NVREA_RE = /^(?:([0-9]+):)?([^-]+)-([^-]+)-(.+)[.]([^.]+)?$/
-
-    def self.supported_archs
-      []
-    end
+    SUPPORTED_ARCHS = %w[noarch i386 i686 ppc64 s390x x86_64 ia64]
 
     #parses package nvrea and stores it in a hash
     #epoch:name-ve.rs.ion-rel.e.ase.arch.rpm
@@ -54,6 +51,17 @@ module Katello
       package
     end
 
+    # is able to take both nvre and nvrea and parse it correctly
+    def self.parse_nvrea_nvre(name)
+      package = self.parse_nvrea(name)
+      if SUPPORTED_ARCHS.include?(package[:arch])
+        return package
+      else
+        return self.parse_nvre(name)
+      end
+
+    end
+
     def self.extract_suffix(name)
       return name.split(SUFFIX_RE)
     end
@@ -69,11 +77,6 @@ module Katello
     def self.is_nvr(name)
       name = name.sub(SUFFIX_RE, "")
       name =~ NVR_RE
-    end
-
-    def self.is_nvre(name)
-      name = name.sub(SUFFIX_RE, "")
-      name =~ NVR_RE and name =~ EPOCH_RE
     end
 
     def self.find_latest_packages(packages)
