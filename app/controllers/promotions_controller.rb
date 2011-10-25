@@ -159,6 +159,16 @@ class PromotionsController < ApplicationController
         end
       end
     end
+
+    @next_env_distros = []
+    if @next_environment
+      @product.repos(@next_environment).each{|repo|
+         repo.distributions.each{|distro|
+           @next_env_distros << distro.id
+         }
+       }
+    end
+
     render :partial=>"distributions"
   end
 
