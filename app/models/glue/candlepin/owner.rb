@@ -68,6 +68,15 @@ module Glue::Candlepin::Owner
     def owner_info
       Glue::Candlepin::OwnerInfo.new(self)
     end
+
+    def pools consumer_uuid = nil
+      if consumer_uuid
+        pools = Candlepin::Owner.pools self.cp_key, { :consumer => consumer_uuid }
+      else
+        pools = Candlepin::Owner.pools self.cp_key
+      end
+      pools.collect { |p| KTPool.new p }
+    end
   end
 
 end

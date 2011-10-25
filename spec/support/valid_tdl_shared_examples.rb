@@ -10,5 +10,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module RepositoriesHelper
+
+shared_examples_for "valid tdl" do
+
+  let(:xsd_schema_file) { File.expand_path("../TDL.xsd",__FILE__) }
+  let(:xsd_schema) { Nokogiri::XML::Schema(File.read(xsd_schema_file)) }
+
+  it "should be valid TDL document" do
+    xsd_schema.validate(subject).should == []
+  end
 end
+
+

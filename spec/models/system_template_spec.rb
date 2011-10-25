@@ -274,7 +274,7 @@ describe SystemTemplate do
       @export_tpl.stub(:package_groups).and_return [SystemTemplatePackGroup.new({:name => 'xxx'})]
       @export_tpl.stub(:pg_categories).and_return [SystemTemplatePgCategory.new({:name => 'xxx'})]
 
-      str = @export_tpl.string_export
+      str = @export_tpl.export_as_json
       json = ActiveSupport::JSON.decode(str)
       json['products'].size.should == 2
       json['packages'].size.should == 1
@@ -420,6 +420,26 @@ describe SystemTemplate do
       it "should raise exception if package group is missing" do
         lambda { @tpl1.remove_pg_category(missing_pg_category_name) }.should raise_error(Errors::TemplateContentException)
       end
+    end
+  end
+
+  describe "TDL export" do
+
+    subject { Nokogiri.parse(@tpl1.export_as_tdl) }
+
+    describe "repositories" do
+      before do
+        disable_repo_orchestration
+        @prod1.stub(:repos => [Glue::Pulp::Repo.new(RepoTestData::REPO_PROPERTIES)])
+        @tpl1.products << @prod1
+      end
+
+      it "should contain repos referencing to pulp repositories" do
+        repo_uri = subject.xpath("/template/repositories/repository").text
+        repo_uri.should == "https://localhost/pulp/repos/ACME_Corporation/Locker/zoo/base"
+      end
+
+      it_should_behave_like "valid tdl"
     end
   end
 

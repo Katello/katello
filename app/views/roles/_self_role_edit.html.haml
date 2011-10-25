@@ -4,7 +4,7 @@
   #{@user.username}
 
 = content_for :remove_item do
-  - if editable
+  -if @user.deletable?
     = link_to _("Remove User"), { :controller => "users", :action => "destroy", :id => @user.id }, :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
 
 = content_for :navigation do

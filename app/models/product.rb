@@ -95,7 +95,7 @@ class Product < ActiveRecord::Base
 
   #Permissions
 
-  scope :readable, lambda {|org| authorized_items(org, READ_PERM_VERBS)}
+  scope :readable, lambda {|org| ::Provider.readable(org).joins(:provider)}
   scope :syncable, lambda {|org| sync_items(org)}
 
   def self.any_readable?(org)

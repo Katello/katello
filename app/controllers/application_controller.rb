@@ -17,7 +17,8 @@ require 'base64'
 
 class ApplicationController < ActionController::Base
   layout 'katello'
-  helper :all
+  clear_helpers
+    
   helper_method :current_organization
   before_filter :set_locale
   before_filter :require_user,:require_org

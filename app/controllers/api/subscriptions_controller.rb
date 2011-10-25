@@ -28,7 +28,7 @@ class Api::SubscriptionsController < Api::ApiController
   end
 
   def index
-    render :json => @system.entitlements
+    render :json => { :entitlements => @system.consumed_entitlements }
   end
 
   def create
