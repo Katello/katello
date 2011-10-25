@@ -46,7 +46,7 @@ module Glue::Candlepin::Pool
   module InstanceMethods
 
     def initialize(attrs = nil)
-      if attrs.member? 'id'
+      if not attrs.nil? and attrs.member? 'id'
         # initializing from candlepin json
         @productName = attrs["productName"]
         @startDate = attrs["startDate"]
