@@ -63,15 +63,27 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(params[:user])
-    @user.save!
-    notice @user.username + _(" created successfully.")
-   
-    if User.where(:id => @user.id).search_for(params[:search]).include?(@user) 
-      render :partial=>"common/list_item", :locals=>{:item=>@user, :accessor=>"id", :columns=>["username"], :name=>controller_display_name}
-    else
-      notice _("'#{@user["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
-      render :json => { :no_match => true }
+    begin
+      @user = User.new(params[:user])
+      @organization = Organization.find(params[:user]['org_id'])
+      @user.save!
+      Permission.create! :role => @user.own_role,
+                         :resource_type=> ResourceType.find_or_create_by_name("organizations"),
+                         :verbs=>[Verb.find_or_create_by_verb("register_systems")],
+                         :name=>"default systems reg permission",
+                         :organization=> @organization
+
+      notice @user.username + _(" created successfully.")
+      if User.where(:id => @user.id).search_for(params[:search]).include?(@user)
+        render :partial=>"common/list_item", :locals=>{:item=>@user, :accessor=>"id", :columns=>["username"], :name=>controller_display_name}
+      else
+        notice _("'#{@user["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+        render :json => { :no_match => true }
+    rescue Exception => error
+      errors error
+      #transaction, if something goes wrong with the creation of the permission, we will need to delete the user
+      @user.destroy if @user.id
+      render :json=>@user.errors, :status=>:bad_request
     end
   rescue Exception => error
     errors error

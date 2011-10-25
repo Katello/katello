@@ -29,6 +29,11 @@
         .grid_2.ra
         .grid_5.la
           #password_conflict
+      %fieldset.fl.clear
+        .grid_2.ra
+          = label :user, :org, _("Default Organization:")
+        .grid_5.la
+          = organization_select
         
     .grid_5.la.prefix_2
       #save_user.verify_password.button{'data-url' => users_path, :tabindex => auto_tab_index}

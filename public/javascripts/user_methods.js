@@ -88,10 +88,11 @@ KT.user_page = function() {
             button.addClass('disabled');
             var username = $('#username_field').val();
             var password = $('#password_field').val();
+            var org_id = $('#org_id_org_idorg_id').val();
             $.ajax({
                 type: "POST",
                 url: button.attr('data-url'),
-                data: { "user":{"username":username, "password":password}},
+                data: { "user":{"username":username, "password":password, "org_id":org_id }},
                 cache: false,
                 success: function(data) {
                     button.removeClass('disabled');
