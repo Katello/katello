@@ -282,7 +282,7 @@ describe Changeset do
         @environment.prior.stub(:products).and_return([@prod])
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
         @changeset.stub(:wait_for_tasks).and_return(nil)
-
+        @changeset.stub(:calc_dependencies).and_return([])
       end
 
       it "should fail if the product is not in the review phase" do
