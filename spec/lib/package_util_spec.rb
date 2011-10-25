@@ -29,6 +29,14 @@ describe Katello::PackageUtils do
       end
     end
 
+    context "name not in nvrea format" do
+      subject { "this-is-not-nvrea" }
+
+      it "can not be parsed by nvrea" do
+        Katello::PackageUtils.parse_nvrea(subject).should be_nil
+      end
+    end
+
     context "full nvrea with rpm" do
       subject { "1:name-ver.si.on-relea.se.x86_64.rpm" }
       let(:expected) do
