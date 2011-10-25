@@ -324,7 +324,7 @@ module Glue::Pulp::Repos
 
       deleted_content.each do |pc|
         Rails.logger.debug "deleting repository #{pc.content.label}"
-        Repository.where(:pulp_id => repo_id(pc.content.name)).destroy
+        Repository.destroy_all(:pulp_id => repo_id(pc.content.name))
       end
 
       added_content.each do |pc|
