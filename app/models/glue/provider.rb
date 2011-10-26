@@ -26,7 +26,7 @@ module Glue::Provider
     def import_manifest zip_file_path
       Rails.logger.info "Importing manifest for provider #{name}"
       queue_import_manifest zip_file_path
-      process queue
+      self.save!
     end
 
     def sync
@@ -160,7 +160,7 @@ module Glue::Provider
       queue.create(:name => "import manifest #{zip_file_path} for owner: #{self.organization.name}", :priority => 3, :action => [self, :owner_import, zip_file_path])
       queue.create(:name => "import of products in manifest #{zip_file_path}",                       :priority => 5, :action => [self, :import_products_from_cp])
       queue.create(:name => "delete imported products not assigned to any owner #{zip_file_path}",   :priority => 6, :action => [self, :delete_not_assigned_products])
-      queue.create(:name => "delete imported content that have no repos #{zip_file_path}",           :priority => 6, :action => [self, :delete_not_assigned_content])
+      queue.create(:name => "delete imported content that have no repos #{zip_file_path}",           :priority => 7, :action => [self, :delete_not_assigned_content])
     end
 
     def import_products_from_cp
