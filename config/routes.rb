@@ -312,7 +312,9 @@ Src::Application.routes.draw do
       end
       resources :tasks, :only => [:index]
       resources :providers, :only => [:index]
-      resources :systems, :only => [:index]
+      resources :systems, :only => [:index] do
+        get :report, :on => :collection
+      end
       match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :activation_keys, :only => [:index]
       resources :repositories, :only => [] do
@@ -351,7 +353,9 @@ Src::Application.routes.draw do
     end
 
     resources :environments, :only => [:show, :update, :destroy] do
-      resources :systems, :only => [:create, :index]
+      resources :systems, :only => [:create, :index] do
+        get :report, :on => :collection
+      end
       resources :products, :only => [:index] do
         get :repositories, :on => :member
       end
@@ -368,7 +372,9 @@ Src::Application.routes.draw do
     resources :errata, :only => [:show]
     resources :distributions, :only => [:show]
 
-    resources :users
+    resources :users do
+      get :report, :on => :collection
+    end
 
     resources :tasks, :only => [:show]
 

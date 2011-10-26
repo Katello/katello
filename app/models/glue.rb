@@ -94,7 +94,7 @@ module Glue
         # if we have failures, we don't want to process any more tasks
         next unless q.failed.empty?
         task.status = "running"
-          task.status = execute({:action => task.action}) ? "completed" : "failed"
+        task.status = execute({:action => task.action}) ? "completed" : "failed"
       end
 
       # if we have no failures - we are done

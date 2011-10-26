@@ -17,7 +17,7 @@ describe ProvidersController do
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
-  
+
   before(:each) do
     login_user
     set_default_locale
@@ -35,15 +35,23 @@ describe ProvidersController do
 
   describe "update a provider subscriptions" do
     before(:each) do
-      Candlepin::Owner.should_receive(:import).once.and_return("")
+      @organization = new_test_org
+
+      provider = @organization.redhat_provider
+      provider.should_receive(:import_manifest).and_return(true)
+      provider.stub(:name).and_return("RH_Provider")
+
+      @organization.stub(:redhat_provider).and_return(provider)
+      controller.stub!(:current_organization).and_return(@organization)
+
       Candlepin::Owner.stub!(:pools).and_return({})
     end
 
     it "should update a provider subscription" do
       test_export = File.new("#{Rails.root}/spec/controllers/export.zip")
       contents = {:contents => test_export}
-      id = @org.redhat_provider.id.to_s
-      post 'update_redhat_provider', {:id => id, :provider => contents}
+
+      post 'update_redhat_provider', {:provider => contents}
       response.should be_success
     end
   end

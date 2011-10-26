@@ -13,69 +13,60 @@
 module Katello
   module PackageUtils
 
-    SUFFIX_RE = /[.](rpm)$/
+    SUFFIX_RE = /\.(rpm)$/
     EPOCH_RE = /([0-9]+):/
-    NVRA_RE = /^([^-]+)-([^-]+)-(.+)[.]([^.]+)$/
-    NVR_RE = /^([^-]+)-([^-]+)-(.+)$/
+    NVREA_RE = /^(?:([0-9]+):)?([^-]+)-([^-]+)-(.+)[.]([^.]+)?$/
+    SUPPORTED_ARCHS = %w[noarch i386 i686 ppc64 s390x x86_64 ia64]
 
-    def PackageUtils.parse_nvrea name
-      #parses package nvrea and stores it in a hash
-      #epoch:name-ve.rs.ion-rel.e.ase.arch.rpm
-      package = {}
+    #parses package nvrea and stores it in a hash
+    #epoch:name-ve.rs.ion-rel.e.ase.arch.rpm
+    def self.parse_nvrea(name)
+      name, suffix = extract_suffix(name)
+      package = {:suffix => suffix}
 
-      suffix_re = SUFFIX_RE
-      if name =~ suffix_re
-        package[:suffix] = suffix_re.match(name).captures[0]
-        name = name.sub(suffix_re, '')
+      if match = NVREA_RE.match(name)
+        package.merge!(:epoch => match[1],
+         :name => match[2],
+         :version => match[3],
+         :release => match[4],
+         :arch => match[5])
+        return package.delete_if{|k,v| v.nil?}
+      else
+        return
       end
 
-      epoch_re = EPOCH_RE
-      if name =~ epoch_re
-        package[:epoch] = epoch_re.match(name).captures[0]
-        name = name.sub(epoch_re, '')
+    end
+
+    #parses package nvre and stores it in a hash
+    #epoch:name-ve.rs.ion-rel.e.ase.arch.rpm
+    def self.parse_nvre(name)
+      package = parse_nvrea(name)
+      return unless package
+
+      if package[:arch]
+        package[:release] << ".#{package[:arch]}"
+        package.delete(:arch)
       end
 
-      nvra_re = NVRA_RE
-      if name =~ nvra_re
-        parts = nvra_re.match(name).captures
-        package[:name] = parts[0]
-        package[:version] = parts[1]
-        package[:release] = parts[2]
-        package[:arch] = parts[3]
-      end
       package
     end
 
-
-    def PackageUtils.parse_nvre name
-      #parses package nvre and stores it in a hash
-      #epoch:name-ve.rs.ion-rel.e.ase.arch.rpm
-      package = {}
-
-      suffix_re = SUFFIX_RE
-      if name =~ suffix_re
-        package[:suffix] = suffix_re.match(name).captures[0]
-        name = name.sub(suffix_re, '')
+    # is able to take both nvre and nvrea and parse it correctly
+    def self.parse_nvrea_nvre(name)
+      package = self.parse_nvrea(name)
+      if package && SUPPORTED_ARCHS.include?(package[:arch])
+        return package
+      else
+        return self.parse_nvre(name)
       end
 
-      epoch_re = EPOCH_RE
-      if name =~ epoch_re
-        package[:epoch] = epoch_re.match(name).captures[0]
-        name = name.sub(epoch_re, '')
-      end
-
-      nvra_re = NVR_RE
-      if name =~ nvra_re
-        parts = nvra_re.match(name).captures
-        package[:name] = parts[0]
-        package[:version] = parts[1]
-        package[:release] = parts[2]
-      end
-      package
     end
 
+    def self.extract_suffix(name)
+      return name.split(SUFFIX_RE)
+    end
 
-    def PackageUtils.build_nvrea package
+    def self.build_nvrea(package)
       nvrea = package[:name] +'-'+ package[:version] +'-'+ package[:release]
       nvrea = nvrea +'.'+ package[:arch] if not package[:arch].nil?
       nvrea = nvrea +'.'+ package[:suffix] if not package[:suffix].nil?
@@ -83,20 +74,7 @@ module Katello
       nvrea
     end
 
-
-    def PackageUtils.is_nvr name
-      name = name.sub(SUFFIX_RE, "")
-      name =~ NVR_RE
-    end
-
-
-    def PackageUtils.is_nvre name
-      name = name.sub(SUFFIX_RE, "")
-      name =~ NVR_RE and name =~ EPOCH_RE
-    end
-
-
-    def PackageUtils.find_latest_packages packages
+    def self.find_latest_packages(packages)
       latest_pack = nil
       selected_packs = []
 

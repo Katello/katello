@@ -51,7 +51,7 @@ describe RepositoriesController do
 
       @org = new_test_org
       @product = new_test_product(@org, @org.locker)
-      @product.stub!(:add_new_content)
+      @product.stub!(:add_repo)
       controller.stub!(:current_organization).and_return(@org)
     end
       let(:invalidrepo) do

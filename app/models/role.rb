@@ -12,6 +12,9 @@
 
 class Role < ActiveRecord::Base
   include Authorization
+
+  acts_as_reportable
+
   has_many :roles_users
   has_many :users, :through => :roles_users
   has_many :permissions, :dependent => :destroy,:inverse_of =>:role, :class_name=>"Permission"
