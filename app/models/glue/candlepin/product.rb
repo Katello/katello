@@ -137,7 +137,7 @@ module Glue::Candlepin::Product
     end
 
     def add_new_content(name, path, repo_type)
-      check_for_repo_conflicts(name)
+    check_for_repo_conflicts(name)
       # create new content
       pc = Glue::Candlepin::ProductContent.new({:content => {
           :name => name,
@@ -237,7 +237,9 @@ module Glue::Candlepin::Product
     protected
 
     def check_for_repo_conflicts(repo_name)
-      unless self.repos(self.locker, {"repositories.name" => repo_name}).empty?
+       is_dupe =  Repository.joins(:environment_product).where( :name=> repo_name,
+              "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.locker.id).count > 0
+      if is_dupe
         raise Errors::ConflictException.new(_("There is already a repo with the name [ %s ] for product [ %s ]") % [repo_name, self.name])
       end
     end
