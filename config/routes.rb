@@ -320,6 +320,10 @@ Src::Application.routes.draw do
         post   :index, :on => :collection, :action => :add_package_group_category
         delete :destroy, :on => :member, :action => :remove_package_group_category
       end
+      resources :distributions, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_distribution
+        delete :destroy, :on => :member, :action => :remove_distribution
+      end
     end
 
     resources :organizations do

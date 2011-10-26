@@ -79,6 +79,18 @@ class Api::TemplatesContentController < Api::ApiController
     render :text => _("Removed package group category '#{params[:id]}'")
   end
 
+  def add_distribution
+    @template.add_distribution(params[:id])
+    @template.save!
+    render :text => _("Added distribution '#{params[:id]}'")
+  end
+
+  def remove_distribution
+    @template.remove_distribution(params[:id])
+    @template.save!
+    render :text => _("Removed distribution '#{params[:id]}'")
+  end
+
   private
 
   def find_template
