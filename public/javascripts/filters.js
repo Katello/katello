@@ -143,13 +143,13 @@ KT.product_input = (function(){
     },
     post_render_register = function() {
         $(".product_radio").change(function(){
-            var radio = $(this);
-            var value = radio.val();
-            var parent = radio.parents(".product_entry");
-            var prod_id = parseInt(parent.attr("data-id"));
-            var list = parent.find(".repos_list");
-            var filter = KT.filters.get_current_filter();
-            var repos;
+            var radio = $(this),
+                value = radio.val(),
+                parent = radio.parents(".product_entry"),
+                prod_id = parseInt(parent.attr("data-id")),
+                list = parent.find(".repos_list"),
+                filter = KT.filters.get_current_filter(),
+                repos;
 
             //if 'all was selected'
             if (value === "all"){
@@ -167,14 +167,16 @@ KT.product_input = (function(){
             }
             else { //else 'select repos' was selected
                 list.show(); //show list and rerender message
-                KT.filter_renderer.render_product_message(prod_id, false, KT.filters.get_current_filter().repos[prod_id]);
-                filter.products.pop(prod_id);
+                KT.filters.pop_product(prod_id);
+
                 filter.repos[prod_id] = [];
                 repos = KT.filters.get_repo_cache()[prod_id];
                 if (repos && repos.length > 0){
                     filter.repos[prod_id] =  repos
                     delete KT.filters.get_repo_cache()[prod_id];
                 }
+                KT.filter_renderer.render_product_message(prod_id, false, KT.filters.get_current_filter().repos[prod_id]);
+
             }
         });
 
@@ -189,13 +191,13 @@ KT.product_input = (function(){
         });
 
         $(".remove_repo").click(function(){
-            var repo = $(this).parent();
-            var repo_id = repo.attr("data-id");
-            var parent = repo.parents('.product_entry');
-            var prod_id = parseInt(parent.attr("data-id"));
-            var filter = KT.filters.get_current_filter();
+            var repo = $(this).parent(),
+                repo_id = repo.attr("data-id"),
+                parent = repo.parents('.product_entry'),
+                prod_id = parseInt(parent.attr("data-id")),
+                filter = KT.filters.get_current_filter();
 
-            filter.repos[prod_id].pop(repo_id);
+            KT.filters.pop_repo(prod_id, repo_id);
             repo.remove();
             KT.filter_renderer.render_product_message(prod_id, false, filter.repos[prod_id]);
 
@@ -205,10 +207,9 @@ KT.product_input = (function(){
             var parent = $(this).parents('.product_entry');
             var prod_id = parseInt(parent.attr("data-id"));
             var filter = KT.filters.get_current_filter();
-            filter.products.pop(prod_id);
+            KT.filters.pop_product(prod_id);
             delete filter.repos[prod_id];
-            KT.filters.collapse_product(prod_id);
-            parent.addClass("disabled");
+            parent.remove();
         });
     };
     
@@ -387,8 +388,8 @@ KT.filters = (function(){
                 var table = $("#package_filter").find("table");
                 $.each(data, function(index, item){
                     var html = "<tr><td>";
-                    html+= '<input type="checkbox" class="package_select" value="' + item + '">';
-                    html += item + '</td></tr>';
+                    html+= '<input type="checkbox" id="' + item + '" class="package_select" value="' + item + '">';
+                    html += '<label for="' + item + '">' + item + '</label></td></tr>';
                     table.append(html);
                 });
                 table.find("tr").not(".no_sort").sortElements(function(a,b){
@@ -405,9 +406,9 @@ KT.filters = (function(){
         });
     },
     remove_packages = function() {
-        var btn = $("#remove_packages");
-        var pkgs = [];
-        var checked = $(".package_select:checked");
+        var btn = $("#remove_packages"),
+        pkgs = [],
+        checked = $(".package_select:checked");
 
         if (btn.hasClass("disabled")){
             return;
@@ -468,10 +469,26 @@ KT.filters = (function(){
             expand_product(prod_id);
         }
     },
+    pop_product = function(prod_id){
+      var index = current_filter.products.indexOf(parseInt(prod_id));
+        if (index > -1) {
+            current_filter.products.splice(index, 1);
+        }
+
+    },
+    pop_repo = function(prod_id, repo_id){
+        var repos = current_filter.repos[parseInt(prod_id)],
+        index;
+        if(repos) {
+            index = repos.indexOf(parseInt(repo_id));
+            repos.splice(index, 1);
+        }
+
+    },
     add_repo = function(repo_id, prod_id){
         prod_id = parseInt(prod_id);
         if ($.inArray( prod_id, current_filter.products) > -1){
-            current_filter.products.pop(prod_id);
+            KT.filters.pop_product(prod_id);
         }
         if (repo_cache[prod_id] !== undefined){
             current_filter.repos[prod_id] = repo_cache[prod_id];
@@ -515,7 +532,9 @@ KT.filters = (function(){
         get_current_filter: get_current_filter,
         set_current_filter: set_current_filter,
         add_repo        : add_repo,
+        pop_repo        : pop_repo,
         add_product     : add_product,
+        pop_product     : pop_product,
         lookup_repo_product: lookup_repo_product,
         expand_product  : expand_product,
         collapse_product: collapse_product,
