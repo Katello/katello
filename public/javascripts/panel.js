@@ -565,6 +565,12 @@ KT.panel.list = (function(){
         	$(window).bind( 'hashchange', KT.panel.hash_change);
         	
         	$(document).ready(function(){
+        		if( options['extra_params'] ){
+        			for(var i=0; i < options['extra_params'].length; i += 1){
+        				options['extra_params'][i]['init_func']();
+        			}
+
+        		}
         		$(window).trigger('hashchange', [true]);
         	});
         	
@@ -631,7 +637,7 @@ KT.panel.list = (function(){
         		
         		if( extra_params ){
         			for(var i=0; i < extra_params.length; i += 1){
-        				data[extra_params[i]] = $.bbq.getState(extra_params[i]);
+        				data[extra_params[i]['hash_id']] = $.bbq.getState(extra_params[i]['hash_id']);
         			}
         		}
         	

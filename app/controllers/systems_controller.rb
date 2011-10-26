@@ -96,17 +96,9 @@ class SystemsController < ApplicationController
     end
   end
 
-  def index
-      @systems = System.readable(current_organization).search_for(params[:search])
-      retain_search_history
-      @systems = sort_order_limit(@systems)
-
-  end
-
   def environments
     accesible_envs = KTEnvironment.systems_readable(current_organization)
 
-    @panel_options[:ajax_scroll] = env_items_systems_path(:env_id=>@environment.id)
     begin
 
       @systems = []
@@ -122,6 +114,7 @@ class SystemsController < ApplicationController
         @systems = sort_order_limit(@systems)
 
       end
+      
       render :index, :locals=>{:envsys => 'true', :accessible_envs=> accesible_envs}
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -131,16 +124,11 @@ class SystemsController < ApplicationController
   end
 
   def items
-    render_panel_items(System.readable(current_organization), @panel_options, params[:search], params[:offset])
-  end
-
-  def env_items
-    @systems = System.readable(current_organization).search_for(params[:search]).where(:environment_id => @environment.id)
-    @systems = sort_order_limit(@systems)
-    if @systems.empty?
-      render :text=>""
+    if params[:env_id]
+      find_environment
+      render_panel_items(System.readable(current_organization).where(:environment_id => @environment.id), @panel_options, params[:search], params[:offset])
     else
-      render_panel_items @systems, @panel_options
+      render_panel_items(System.readable(current_organization), @panel_options, params[:search], params[:offset])
     end
   end
 

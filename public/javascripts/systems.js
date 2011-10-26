@@ -16,8 +16,33 @@
  * A small javascript file needed to load system subscription related stuff
  *
  */
+(function(){
+	var options = { create : 'new_system' };
+	
+	if (window.env_select !== undefined) {
+    	env_select.click_callback = function(env_id) {
+        	$.bbq.pushState({env_id : env_id});
+        	$('#search_form').trigger('submit');
+    	};
+    	
+		$.extend(options, { 'extra_params' : 
+					[ { hash_id 	: 'env_id', 
+						init_func 	: function(){
+							var state = $.bbq.getState('env_id'); 
+							
+							if( state ){ 
+								env_select.set_selected(state); 
+							} else {
+								$.bbq.pushState({ env_id : env_select.get_selected_env() });
+							}
+						}
+				  	} 
+				]});
+  	}
+  	console.log(options);
+  	KT.panel.list.registerPage('systems', options);
+}());
 
-KT.panel.list.registerPage('systems', { create : 'new_system' });
 
 $(document).ready(function() {
   $('#update_subscriptions').live('submit', function(e) {
@@ -33,18 +58,25 @@ $(document).ready(function() {
                notices.checkNotices();
          }});
   });
-  /*$('#new_system_form').live('submit', function(e) {
-      e.preventDefault();
-      systems_page.create_system($(this));
-  });*/
+
   //Set the callback on the environment selector
-  env_select.click_callback = function(env_id) {
+  /*env_select.click_callback = function(env_id) {
     KT.subs.save_selected_environment(env_id);
-   };
-  // check if we are viewing systems by environment 
+   };*/
+  // check if we are viewing systems by environment
+  
+  	/*var selected = $.bbq.getState("env_id");
+	if(selected !== undefined) {
+		env_select.set_selected(selected);
+	}
+   
   if (window.env_select !== undefined) {
-    env_select.click_callback = systems_page.env_change;
-  }
+    //env_select.click_callback = systems_page.env_change;
+    $.bbq.pushState({env_id : env_select.get_selected_env()});
+    env_select.click_callback = function(env_id) {
+        $.bbq.pushState({env_id : env_id});
+    };
+  }*/
 
   KT.panel.set_expand_cb(function() {
     KT.subs.initialize_edit();
