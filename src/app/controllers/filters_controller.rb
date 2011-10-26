@@ -149,13 +149,13 @@ class FiltersController < ApplicationController
 
   def add_packages
     pkgs = params[:packages]
-    
+    @filter.set_packages(pkgs)
     render :json=>pkgs
   end
 
   def remove_packages
     pkgs = params[:packages]
-
+    @filter.del_packages(pkgs)
     render :text=>""
   end
 
