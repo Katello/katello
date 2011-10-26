@@ -32,6 +32,7 @@
       - for pkg in @filter.package_list
         %tr
           %td
-            %input.package_select{:type=>"checkbox", :name=>pkg, :value=>pkg}
-            = pkg
+            %input.package_select{:type=>"checkbox", :id=>pkg, :name=>pkg, :value=>pkg}
+            %label{:for=>pkg}
+              = pkg
     %input.fr.button{:type=>"button", :id=>"remove_packages", :value=>_("Remove Packages"), 'data-url'=> remove_packages_filter_path(@filter)}
