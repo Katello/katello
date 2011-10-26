@@ -40,8 +40,8 @@ describe SystemsController do
       [:environment, :organization].each do |resource|
 
         describe "GET index with #{perm} on #{resource} " do
-          let(:action) {:index}
-          let(:req) { get :index}
+          let(:action) {:items}
+          let(:req) { get :items}
           let(:authorized_user) do
             @run_auth_action.call(resource, perm)
           end
@@ -49,7 +49,7 @@ describe SystemsController do
             user_without_permissions
           end
           let(:on_success) do
-            assigns[:systems].should include @system
+            assigns[:items].should include @system
           end
           it_should_behave_like "protected action"
         end
@@ -60,8 +60,8 @@ describe SystemsController do
             @environment = KTEnvironment.new(:name => 'test2', :prior => @organization.locker.id, :organization => @organization)
             @system2 = System.create!(:name=>"bar2", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
           end
-          let(:action) {:index}
-          let(:req) { get :index}
+          let(:action) {:items}
+          let(:req) { get :items}
           let(:authorized_user) do
             @run_auth_action.call(resource, perm)
           end
@@ -69,8 +69,8 @@ describe SystemsController do
             user_without_permissions
           end
           let(:on_success) do
-            assigns[:systems].should include @system2
-            assigns[:systems].should_not include @system
+            assigns[:items].should include @system2
+            assigns[:items].should_not include @system
           end
           it_should_behave_like "protected action"
         end
@@ -146,23 +146,27 @@ describe SystemsController do
         get :index
         response.should be_success
         response.should render_template("index")
-        assigns[:systems].collect{|sys| sys.id}.should == @systems[0..24]
+      end
+
+      it "should render the first 25 systems" do
+        get :items
+        response.should be_success
+        response.should render_template("list_systems")
+        assigns[:items_offset].collect{|sys| sys.id}.should == @systems[0..24]
       end
 
       describe 'with an offset' do
-        render_views
-        
         pending "should return a portion of systems" do
           get :items, :offset=>25
           response.should be_success
           response.should render_template("list_systems")
-          response.body.should include System.find(35).name
+          assigns[:items_offset].should include System.where(:name => "bar35")
         end
       end
 
       it "should throw an exception when the search parameters are invalid" do
         controller.should_receive(:errors)
-        get :index, :search => 1
+        get :items, :search => 1
         response.should_not be_success
       end
 

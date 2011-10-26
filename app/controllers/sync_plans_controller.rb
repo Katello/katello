@@ -36,16 +36,6 @@ class SyncPlansController < ApplicationController
       :create => manage_test,
     }
   end
-
-  def index
-    begin
-      @plans = SyncPlan.search_for(params[:search]).where(:organization_id => current_organization.id).limit(current_user.page_size)
-      retain_search_history
-    rescue Exception => e
-      errors e.to_s, {:level => :message, :persist => false}
-      @plans = SyncPlan.search_for ''
-    end
-  end
   
   def items
     render_panel_items(SyncPlan.where(:organization_id => current_organization.id), @panel_options, params[:search], params[:offset])

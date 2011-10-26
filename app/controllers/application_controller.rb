@@ -393,17 +393,20 @@ class ApplicationController < ActionController::Base
   end
 
   def render_panel_items(items, options, search, start)
+    @items = items
+    
     options[:accessor] ||= "id"
     options[:columns] = options[:col]
     
     if start == "0"
-      options[:total_count] = items.count
+      options[:total_count] = @items.count
     end
     
-    items = items.search_for(search)
+    @items_searched = @items.search_for(search)
+    @items_offset = @items_searched.limit(current_user.page_size).offset(start)
     
-    options[:total_results] = items.count
-    options[:collection] ||= items.limit(current_user.page_size).offset(start)
+    options[:total_results] = @items_searched.count
+    options[:collection] ||= @items_offset
     
     if options[:list_partial]
       rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)

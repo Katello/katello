@@ -64,8 +64,8 @@ describe ProvidersController do
       @provider2 = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo2", :organization=>@organization)
     end
     describe "GET index" do
-      let(:action) {:index}
-      let(:req) { get 'index' }
+      let(:action) {:items}
+      let(:req) { get :items }
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:read, :providers, @provider.id, @organization) }
       end
@@ -73,8 +73,8 @@ describe ProvidersController do
         user_without_permissions
       end
       let(:on_success) do
-        assigns(:providers).should_not include @provider2
-        assigns(:providers).should include @provider
+        assigns(:items).should_not include @provider2
+        assigns(:items).should include @provider
       end
 
       it_should_behave_like "protected action"

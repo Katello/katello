@@ -29,8 +29,8 @@ describe OrganizationsController do
       @organization = new_test_org
     end
     describe "GET index" do
-      let(:action) {:index}
-      let(:req) { get 'index' }
+      let(:action) {:items}
+      let(:req) { get :items }
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:read, :organizations,nil, @organization) }
       end
@@ -38,8 +38,8 @@ describe OrganizationsController do
         user_without_permissions
       end
       let(:on_success) do
-        assigns(:organizations).should_not include @org1
-        assigns(:organizations).should include @organization
+        assigns(:items).should_not include @org1
+        assigns(:items).should include @organization
       end
 
       it_should_behave_like "protected action"
@@ -122,15 +122,15 @@ describe OrganizationsController do
     end
     
     it 'should call katello organization find api' do
-      get 'index'
-      assigns(:organizations).should eq([@organization])
+      get :index
       response.should be_success
+      response.should render_template("index")
     end
 
     it 'should allow for an offset' do
       get 'items', :offset=>5
-      response.body.should include '"html":""'
       response.should be_success
+      assigns[:items_offset].should_not include @organization
     end
   end
   
