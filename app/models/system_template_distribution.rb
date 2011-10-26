@@ -12,5 +12,35 @@
 
 class SystemTemplateDistribution < ActiveRecord::Base
   belongs_to :system_template, :inverse_of => :distributions
-  validates_uniqueness_of [:distribution_cp_id], :scope => :system_template_id, :message => _("is already in the template")
+  validates_uniqueness_of [:distribution_pulp_id], :scope => :system_template_id, :message => _("is already in the template")
+
+  def load_backend_attributes
+    @distribution_glue ||= Glue::Pulp::Distribution.new(Pulp::Distribution.find(self.distribution_pulp_id)
+    raise Errors::TemplateContentException.new(_("Distribution '%s' was not found in Pulp.") % distribution_pulp_id) if @distribution_glue.nil?
+  end
+
+  def description
+    load_backend_attributes
+    @distribution_glue.description
+  end
+
+  def files
+    load_backend_attributes
+    @distribution_glue.files
+  end
+
+  def family
+    load_backend_attributes
+    @distribution_glue.family
+  end
+
+  def variant
+    load_backend_attributes
+    @distribution_glue.variant
+  end
+
+  def version
+    load_backend_attributes
+    @distribution_glue.version
+  end
 end

@@ -243,6 +243,16 @@ class SystemTemplate < ActiveRecord::Base
     self.pg_categories.delete(pg_category)
   end
 
+  def add_distribution pulp_id
+    self.distributions.create!(:distribution_pulp_id => pulp_id)
+  end
+
+  def remove_distribution pulp_id
+    distro = self.distributions.where(:distribution_pulp_id => pulp_id).first
+    raise Errors::TemplateContentException.new(_("Distribution '%s' not found in this template.") % pulp_id) if distro.nil?
+    self.distributions.delete(pulp_id)
+  end
+
   def to_json(options={})
      super(options.merge({
         :methods => [:products,
