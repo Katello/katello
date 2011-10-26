@@ -59,7 +59,13 @@ class SystemsController < ApplicationController
     accessible_envs = current_organization.environments
     setup_environment_selector(current_organization, accessible_envs)
     @environment = first_env_in_path(accessible_envs)
-    render :partial=>"new", :layout => "tupane_layout", :locals=>{:system=>@system, :accessible_envs => accessible_envs}
+    if !@environment
+      error = _("Organization '%s' has no environments to create new system in.") % @organization.name
+      errors error
+      render :text => error, :status => :bad_request
+    else
+      render :partial=>"new", :layout => "tupane_layout", :locals=>{:system=>@system, :accessible_envs => accessible_envs}
+    end
   end
 
   def create
@@ -89,8 +95,8 @@ class SystemsController < ApplicationController
       render :text => error, :status => :bad_request
       return
     end
-    render :partial=>"common/list_item", :locals=>{:item=>@system, :accessor=>"id", :name => controller_display_name,
-                                                   :columns=>['name' ]}
+    render :partial=>"systems/list_systems",
+            :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@system], :name=> controller_display_name}
   end
 
   def index
@@ -145,8 +151,8 @@ class SystemsController < ApplicationController
   end
 
   def subscriptions
-    consumed_entitlements = sys_consumed_entitlements
-    avail_pools = sys_available_pools
+    consumed_entitlements = @system.consumed_entitlements
+    avail_pools = @system.available_pools_full
     facts = @system.facts.stringify_keys
     sockets = facts['cpu.cpu_socket(s)']
     render :partial=>"subscriptions", :layout => "tupane_layout",
@@ -162,8 +168,8 @@ class SystemsController < ApplicationController
           @system.subscribe pool, params[:spinner][pool] if params[:commit].downcase == "subscribe"
           @system.unsubscribe pool if params[:commit].downcase == "unsubscribe"
         end
-        consumed_entitlements = sys_consumed_entitlements
-        avail_pools = sys_available_pools
+        consumed_entitlements = @system.consumed_entitlements
+        avail_pools = @system.available_pools_full
         render :partial=>"subs_update", :locals=>{:system=>@system, :avail_subs => avail_pools,
                                                     :consumed_subs => consumed_entitlements,
                                                     :editable=>@system.editable?}
@@ -281,72 +287,22 @@ class SystemsController < ApplicationController
                       :ajax_scroll => items_systems_path()}
   end
 
-  def sys_consumed_entitlements
-
-    consumed_entitlements = @system.entitlements.collect { |entitlement|
-
-      pool = @system.get_pool entitlement["pool"]["id"]
-
-      sla = ""
-      pool["productAttributes"].each do |attr|
-        if attr["name"] == "support_level"
-          sla = attr["value"]
-          break
-        end
-      end
-
-      providedProducts = []
-      pool["providedProducts"].each do |cp_product|
-        product = Product.where(:cp_id => cp_product["productId"]).first
-        if product
-          providedProducts << product
-        end
-      end
-
-      quantity = entitlement["quantity"] != nil ? entitlement["quantity"] : pool["quantity"]
-
-      OpenStruct.new(:entitlementId => entitlement["id"],
-                     :poolName => pool["productName"],
-                     :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
-                     :consumed => pool["consumed"],
-                     :quantity => quantity,
-                     :sla => sla,
-                     :contractNumber => pool["contractNumber"],
-                     :providedProducts => providedProducts)
-    }
-    consumed_entitlements.sort! {|a,b| a.poolName <=> b.poolName}
-    consumed_entitlements
+  def sys_consumed_pools
+    consumed_pools = @system.pools.collect {|pool| OpenStruct.new(:poolId => pool["id"],
+                            :poolName => pool["productName"],
+                            :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                            :consumed => pool["consumed"],
+                            :quantity => pool["quantity"])}
+    consumed_pools.sort! {|a,b| a.poolName <=> b.poolName}
+    consumed_pools
   end
 
   def sys_available_pools
-    avail_pools = @system.available_pools.collect {|pool|
-      sockets = ""
-      multiEntitlement = false
-      pool["productAttributes"].each do |attr|
-        if attr["name"] == "socket_limit"
-          sockets = attr["value"]
-        elsif attr["name"] == "multi-entitlement"
-          multiEntitlement = true
-        end
-      end
-
-      providedProducts = []
-      pool["providedProducts"].each do |cp_product|
-        product = Product.where(:cp_id => cp_product["productId"]).first
-        if product
-          providedProducts << product
-        end
-      end
-
-      OpenStruct.new(:poolId => pool["id"],
-                     :poolName => pool["productName"],
-                     :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
-                     :consumed => pool["consumed"],
-                     :quantity => pool["quantity"],
-                     :sockets => sockets,
-                     :multiEntitlement => multiEntitlement,
-                     :providedProducts => providedProducts)
-    }
+    avail_pools = @system.available_pools.collect {|pool| OpenStruct.new(:poolId => pool["id"],
+                            :poolName => pool["productName"],
+                            :expires => Date.parse(pool["endDate"]).strftime("%m/%d/%Y"),
+                            :consumed => pool["consumed"],
+                            :quantity => pool["quantity"])}
     avail_pools.sort! {|a,b| a.poolName <=> b.poolName}
     avail_pools
   end

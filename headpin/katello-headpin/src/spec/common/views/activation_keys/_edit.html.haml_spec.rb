@@ -87,7 +87,7 @@ describe "activation_keys/_edit.html.haml" do
     end
 
     it "renders a box to display the products in the environment" do
-      view.content_for(:content).should have_selector("div.productsbox", :count => 1)
+      view.content_for(:content).should have_selector("div.productsbox", :count => 1) if AppConfig.katello?
     end
 
     it "renders a save and cancel button for environment and system template editing" do
