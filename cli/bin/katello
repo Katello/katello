@@ -63,6 +63,7 @@ def setup_admin(admin):
     org_cmd.add_action('delete', organization.Delete())
     org_cmd.add_action('generate_uebercert', organization.GenerateDebugCert())
     org_cmd.add_action('uebercert_info', organization.ShowDebugCert())
+    org_cmd.add_action('subscriptions', organization.ShowSubscriptions())
     admin.add_command('org', org_cmd)
 
     user_cmd = user.User()

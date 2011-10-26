@@ -18,6 +18,7 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.organization import OrganizationAPI
+from katello.client.api.product import ProductAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record
@@ -197,6 +198,38 @@ class ShowDebugCert(OrganizationAction):
         self.printer.addColumn('cert')
         self.printer.setHeader(_("Organization Uebercert"))
         self.printer.printItem(uebercert)
+        
+        return os.EX_OK
+        
+class ShowSubscriptions(OrganizationAction):
+    
+    description = _('show subscriptions')
+    
+    def __init__(self):
+        super(ShowSubscriptions, self).__init__()
+        self.productApi = ProductAPI()
+    
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("organization name eg: foo.example.com (required)"))
+
+    def check_options(self):
+        self.require_option('name')
+
+    def run(self):
+        name = self.get_option('name')
+        pools = self.api.pools(name)
+
+        [dict(list(p.items()) + list({'sla':self.productApi.products_by_org(name, p['productId'])}.items())) for p in pools]
+        
+        self.printer.addColumn('productName')
+        self.printer.addColumn('consumed')
+        self.printer.addColumn('contractNumber')
+        self.printer.addColumn('sla')        
+        self.printer.addColumn('startDate')
+        self.printer.addColumn('endDate')
+        self.printer.setHeader(_("Organization's Subscriptions"))
+        self.printer.printItems(pools)
         
         return os.EX_OK
 
