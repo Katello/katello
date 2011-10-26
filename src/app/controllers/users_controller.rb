@@ -48,16 +48,6 @@ class UsersController < ApplicationController
      }
   end
   
-  def index
-    begin
-      @users = User.readable.search_for(params[:search]).limit(current_user.page_size)
-      retain_search_history
-    rescue Exception => error
-      errors error.to_s, {:level => :message, :persist => false}
-      @users = User.search_for ''
-    end
-  end
-  
   def items
     render_panel_items(User.readable, @panel_options, params[:search], params[:offset])
   end

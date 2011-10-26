@@ -62,8 +62,6 @@ class ChangesetsController < ApplicationController
   def index
     accessible_envs = KTEnvironment.changesets_readable(current_organization)
     setup_environment_selector(current_organization, accessible_envs)
-    @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size)
-    retain_search_history
     render :index, :locals=>{:accessible_envs => accessible_envs}
   end
 
