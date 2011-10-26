@@ -212,6 +212,7 @@ module Glue::Candlepin::Product
         Rails.logger.info "Creating unlimited subscription for product #{name} in candlepin"
         Candlepin::Product.create_unlimited_subscription self.organization.cp_key, self.cp_id
       end
+      true
     rescue => e
       Rails.logger.error "Failed to create unlimited subscription for product in candlepin #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -248,12 +249,12 @@ module Glue::Candlepin::Product
           queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
           queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
         when :update
+          #called when sync schedule changed, repo added, repo deleted
           queue.create(:name => "delete unused content in candlein: #{self.name}", :priority => 1, :action => [self, :del_unused_content])
         when :promote
           #queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])
         when :import_from_cp
           queue.create(:name => "delete imported content from locker environment: #{self.name}", :priority =>2, :action => [self, :remove_imported_content])
-          #PROD TODO: delete content that has no repos assigned
       end
     end
 
