@@ -1,5 +1,5 @@
 class katello::config {
-
+    
   postgres::createuser { $katello::params::db_user:
     passwd => $katello::params::db_pass,
     logfile  => '/var/log/katello/katello-configure/create-postgresql-katello-user.log',
@@ -45,14 +45,18 @@ class katello::config {
     command     => "/usr/bin/env rake db:migrate >> ${katello::params::seed_log} 2>&1 && /usr/bin/env rake db:seed >> ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/initdb_done",
     creates => "/var/lib/katello/initdb_done",
     before  => Class["katello::service"],
-    require => [ Exec["katello_db_migrate"], Class["candlepin::service"], Class["pulp::service"] ],
+    require => $deployment ? {
+                'katello' => [ Exec["katello_db_migrate"], Class["candlepin::service"], Class["pulp::service"] ],
+                'headpin' => [ Exec["katello_db_migrate"], Class["candlepin::service"] ],
+                default => [],
+    },
   }
 
   define config_file($source = "", $template = "") {
     file {$name:
       content => $template ? {
         "" => undef,
-          default =>  template($template)
+        default =>  template($template)
       },
       source => $source ? {
         "" => undef,
@@ -60,8 +64,14 @@ class katello::config {
       },
     }
   }
-
-  Class["candlepin::config"] -> File["/etc/pulp/pulp.conf"]
-  Class["candlepin::config"] -> File["/etc/pulp/repo_auth.conf"]
-  Class["candlepin::config"] -> File["/etc/pki/content/pulp-global-repo.ca"]
+  
+  # Headpin does not care about pulp
+  case $deployment {
+      'katello': {
+          Class["candlepin::config"] -> File["/etc/pulp/pulp.conf"]
+          Class["candlepin::config"] -> File["/etc/pulp/repo_auth.conf"]
+          Class["candlepin::config"] -> File["/etc/pki/content/pulp-global-repo.ca"]
+      }
+      default : {}
+  }
 }
