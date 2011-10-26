@@ -65,11 +65,9 @@ module Glue::Pulp::Repos
       return self.repos(locker).empty?
     end
 
-    def repos env, search_params = {}
-      repositories = Repository.joins(:environment_product).where(
+    def repos env
+      Repository.joins(:environment_product).where(
             "environment_products.product_id" => self.id, "environment_products.environment_id"=> env)
-      repositories =  repositories.where(search_params) unless search_params.empty?
-      repositories
     end
 
 

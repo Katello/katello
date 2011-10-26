@@ -16,4 +16,7 @@ class Repository < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
   belongs_to :environment_product, :inverse_of => :repositories
+  validates_uniqueness_of :name, :scope => :environment_product_id, :message => N_("must be unique within an organization and product")
+  validates :pulp_id, :presence => true, :uniqueness => true
+  validates :name, :presence => true
 end
