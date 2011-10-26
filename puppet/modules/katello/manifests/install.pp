@@ -1,10 +1,19 @@
 class katello::install {
   include katello
-  include pulp::install
+
   include candlepin::install
   include postgres::install
   include apache2::install
-  include qpid::install
+  
+  # Headpin does not care about pulp
+  case $deployemnt {
+      'katello': {
+            include pulp::install
+            include qpid::install
+      }
+      default : {}
+  }  
+  
 
   $os_type = $operatingsystem ? {
     "Fedora" => "fedora-${operatingsystemrelease}",
@@ -25,8 +34,16 @@ class katello::install {
   }
 
 	package{["katello", "katello-cli"]:
-    require => [Yumrepo["fedora-katello"],Class["pulp::install"],Class["candlepin::install"]],
-    before  => [Class["candlepin::config"], Class["pulp::config"] ], #avoid some funny post rpm scripts
+    require => $deployment ? {
+                'katello' => [Yumrepo["fedora-katello"],Class["pulp::install"],Class["candlepin::install"]],
+                'headpin' => [Yumrepo["fedora-katello"],Class["candlepin::install"]],
+                default => []
+    },
+    before  => $deployment ? {
+                'katello' =>  [Class["candlepin::config"], Class["pulp::config"] ], #avoid some funny post rpm scripts
+                'headpin' =>  [Class["candlepin::config"]], #avoid some funny post rpm scripts
+                default => []                
+    },
     ensure  => installed
   }
   Class["katello::install"] -> File["/var/log/katello"]
