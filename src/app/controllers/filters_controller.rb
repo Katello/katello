@@ -125,9 +125,19 @@ class FiltersController < ApplicationController
   end
 
   def update_products
-    pkgs = params[:products]
 
+    @filter.products = []
+    params[:products].each{|p|
+      @filter.products << Product.find(p)
+    }
+
+    @filter.save!
+    
+    notice N_("Sucessfully updated '#{@filter.name}' package filter.")
     render :text=>''
+  rescue Exception => e
+    errors e
+    render :text=>'', :status=>500
   end
 
 
