@@ -296,6 +296,9 @@ KT.common = (function() {
         		return false;
         	}
         },
+        spinner_path : function() {
+          KT.common.rootURL() + "/images/spinner.gif"
+        },
         thirdLevelNavSetup : function(){
             var children = $('.third_level:first-child');
 
