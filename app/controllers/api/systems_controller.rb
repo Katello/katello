@@ -15,7 +15,7 @@ class Api::SystemsController < Api::ApiController
 
   before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index, :activate]
   before_filter :find_organization, :only => [:create, :index, :activate, :report]
-  before_filter :find_environment, :only => [:create, :index, :report]
+  before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index, :report]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
