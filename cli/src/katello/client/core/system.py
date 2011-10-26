@@ -20,7 +20,7 @@ from gettext import gettext as _
 from katello.client.api.system import SystemAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, Printer
+from katello.client.core.utils import is_valid_record, Printer, convert_to_mime_type, attachment_file_name, save_report
 
 Config()
 
@@ -473,6 +473,39 @@ class Update(SystemAction):
         else:
             print _("Could not update system [ %s ]") % systems[0]['name']
 
+        return os.EX_OK
+        
+class Report(SystemAction):
+
+     description = _('systems report')
+ 
+     def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                    help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--environment', dest='environment',
+                    help=_("environment name eg: development"))
+        self.parser.add_option('--format', dest='format',
+             help=_("report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"))
+ 
+     def check_options(self):
+        self.require_option('org')
+ 
+     def run(self):
+        orgId = self.get_option('org')
+        envName = self.get_option('environment')
+        format = self.get_option('format')
+
+        if envName is None:
+            report = self.api.report_by_org(orgId, convert_to_mime_type(format, 'text'))
+        else:
+            report = self.api.report_by_env(orgId, envName, convert_to_mime_type(format, 'text'))
+
+        
+        if format == 'pdf':
+            save_report(report[0], attachment_file_name(report[1], 'katello_systems_report.pdf'))
+        else:
+            print report[0]
+            
         return os.EX_OK
 
 
