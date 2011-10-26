@@ -31,6 +31,11 @@ $(document).ready(function() {
 
     $(".toggle").live('click', function(){
        var btn = $(this);
+       var parent = btn.parents(".product_entry");
+       if(parent.hasClass("disabled")){
+           return;
+       }
+
        if (btn.hasClass("collapsed")){
         btn.addClass("expanded").removeClass("collapsed");
        }
@@ -103,31 +108,122 @@ KT.product_input = (function(){
         });
 
         form.submit(function(e){
-           var value;
-           e.preventDefault();
-           value = select.val();
-           if (value.indexOf("PROD-") === 0){
-             value = value.substring(5);
-             KT.filters.add_product(value);
-           }
-           else if(value.indexOf("REPO-") === 0){
-            value = value.substring(5);
-            KT.filters.add_repo(value, KT.filters.lookup_repo_product(value));
-           }
+            var value;
+            var add_btn = $("add_product");
+            e.preventDefault();
+            if (add_btn.hasClass("disabled")){
+                return;
+            }
+            add_btn.addClass("disabled");
 
+            value = select.val();
+            if (value.indexOf("PROD-") === 0){
+                value = value.substring(5);
+                KT.filters.add_product(value);
+            }
+            else if(value.indexOf("REPO-") === 0){
+                value = value.substring(5);
+                KT.filters.add_repo(value, KT.filters.lookup_repo_product(value));
+            }
+
+        });
+
+        $(".add_repo").live("click", function(){
+            var select,id;
+            select = $(this).siblings("select");
+            var repo_id = select.val();
+            var prod_id = select.attr("data-prod_id");
+            KT.filters.add_repo(repo_id, prod_id);
+        });
+
+    },
+    post_render_register = function() {
+        $(".product_radio").change(function(){
+            var radio = $(this);
+            var value = radio.val();
+            var parent = radio.parents(".product_entry");
+            var prod_id = parseInt(parent.attr("data-id"));
+            var list = parent.find(".repos_list");
+            var filter = KT.filters.get_current_filter();
+            var repos;
+
+            //if 'all was selected'
+            if (value === "all"){
+                list.hide(); //hide list and re-render message
+                KT.filter_renderer.render_product_message(prod_id, true);
+                if (filter.products.indexOf(prod_id) === -1){
+                    filter.products.push(prod_id); //add product to filter
+                }
+                //remove product from repos and cache it
+                repos = filter.repos[prod_id];
+                delete filter.repos[prod_id];
+                if (repos){
+                    KT.filters.get_repo_cache()[prod_id] = repos;
+                }
+            }
+            else { //else 'select repos' was selected
+                list.show(); //show list and rerender message
+                KT.filter_renderer.render_product_message(prod_id, false, KT.filters.get_current_filter().repos[prod_id]);
+                filter.products.pop(prod_id);
+                filter.repos[prod_id] = [];
+                repos = KT.filters.get_repo_cache()[prod_id];
+                if (repos && repos.length > 0){
+                    filter.repos[prod_id] =  repos
+                    delete KT.filters.get_repo_cache()[prod_id];
+                }
+            }
+        });
+
+        $('.repo_select').chosen();
+
+        $(".remove_repo").click(function(){
+            var repo = $(this).parent();
+            var repo_id = repo.attr("data-id");
+            var parent = repo.parents('.product_entry');
+            var prod_id = parseInt(parent.attr("data-id"));
+            var filter = KT.filters.get_current_filter();
+
+            filter.repos[prod_id].pop(repo_id);
+            repo.remove();
+            KT.filter_renderer.render_product_message(prod_id, false, filter.repos[prod_id]);
+
+        });
+
+        $(".remove_product").click(function(){
+            var parent = $(this).parents('.product_entry');
+            var prod_id = parseInt(parent.attr("data-id"));
+            var filter = KT.filters.get_current_filter();
+            filter.products.pop(prod_id);
+            delete filter.repos[prod_id];
+            KT.filters.collapse_product(prod_id);
+            parent.addClass("disabled");
         });
     };
     
     return {
-        register:register
+        register:register,
+        post_render_register: post_render_register
     };
 })();
 
 
 KT.filter_renderer = (function(){
     var render_products_repos =  function(){
-        var div = $("#product_list");
+        var div = $("#product_list"),
+        expanded = []; //save the expanded options so we can re-expand after re-render
+        $(".product_entry").find('.toggle.expanded').each(function(index, item){
+            expanded.push($(item).attr("data-id"));
+        });
+
         div.html(products_template());
+        $.each(expanded, function(index, item){
+            KT.filters.expand_product(item);
+        });
+        KT.product_input.post_render_register();
+    },
+    render_product_message = function(prod_id, is_full) {
+        var msg = product_message(prod_id, is_full, [])
+        $(".product_entry[data-id=" + prod_id + "]").find(".prod_message").text(msg);
     },
     product_select_template = function() {
         var html = "";
@@ -142,27 +238,49 @@ KT.filter_renderer = (function(){
         return html;
     },
     product_template = function(id, name, is_full, repos){
-        var html = '<tr><td><div class="product_entry">';
-        html += '<div class="small_col"><input type="checkbox" data-type="product" value="' + id + '"/></div>';
-        html += '<div  class="small_col toggle collapsed"></div>';
+        var html = '<tr><td><div data-id="' + id + '" class="product_entry">';
+        html += '<div  class="small_col toggle collapsed" data-id="' + id +'"></div>';
         html += '<div class="large_col">';
-            html += '<span>' + name + "</span>";
+            html += '<span>' + name + " <span class='prod_message'>" + product_message(id, is_full, repos) + '</span>';
+            html += '<a class="remove_product">&nbsp;' + i18n.remove + '</a>';
+            html += '</span>';
             html += product_options(id, name, is_full, repos);
         html += '</div>';
         html += "</div></td></tr>";
         return html;
     },
     product_options = function(id, name, is_full, repos) {
-        var all_checked = is_full ? 'checked' : '';
-        var repos_checked = !is_full ? 'checked' : '';
+        var style = is_full ? 'style="display:none;"' : '';
+        var html_name = "PROD-" + id;
         var html = '<div class="options"><div>';
-            html += '<input type="radio" ' +all_checked + ' name="PROD-' +id+ '" value="all"/>' + i18n.all_repos;
-            html += '<input type="radio" '+ repos_checked + ' name="PROD-' +id+ '"  value="select"/>' + i18n.select_repos +'</div>';
+                html += product_radio('all' + html_name, html_name, i18n.all_repos, is_full, 'all');
+                html += "&nbsp;";
+                html += product_radio('sel' + html_name, html_name, i18n.select_repos, !is_full, 'sel');
+            html += '</div>';
+            html += '<div ' + style + 'class="repos_list">';
             $.each(repos, function(index, repo_id){
                 html += repo(id, repo_id);
             });
-            html += '</div>';
+            html += repo_search(id);
+        html += '</div></div>';
         return html;
+    },
+    product_radio = function(id, name, label, is_checked, value){
+      var checked = is_checked ? "checked" : "";
+      var html = "";
+      html += '<input type="radio" ' + checked + ' id="'+ id +'" name="' +name+ '" value="' + value + '" class="product_radio"/>';
+      html += '<label for="' + id + '">' + label + '</label>';
+      return html;
+    },
+    product_message = function(prod_id, is_full, repos){
+        if(repos=== undefined){
+            repos = [];
+        }
+        var message = i18n.entire_selected;
+        if (!is_full){
+            message = i18n.x_of_y_repos(repos.length, KT.products[prod_id].repos.length);
+        }
+        return message;
     },
     repo = function(prod_id, repo_id) {
         var name;
@@ -173,9 +291,19 @@ KT.filter_renderer = (function(){
                 return false;
             }
         });
-        html += '<div><input type="checkbox" data-type="repo" value="' + repo_id + '"/>';
+        html += '<div class="repo" data-id="'  + repo_id + '">';
         html += name;
+        html += '<a class="remove_repo"> &nbsp;' + i18n.remove + '</a>';
         html += '</div>';
+        return html;
+    },
+    repo_search = function(prod_id){
+        var html = '<select style="width: 250px;" class="repo_select" data-prod_id="' + prod_id + '">';
+        $.each(KT.products[prod_id].repos, function(index, item){
+            html+= '<option value="' + item.id + '">' + item.name + '</option>';
+        });
+        html += '</select>'
+        html += '<a class="add_repo"> &nbsp;' + i18n.add_plus + '</a>';
         return html;
     },
     products_template = function(){
@@ -186,15 +314,15 @@ KT.filter_renderer = (function(){
           html += "<tr><td>" + i18n.no_products_repos  +"</td></tr>"
       }
       else{
-
           var all_products = filter.products.concat(Object.keys(filter.repos));
-          console.log(all_products);
-
           $.each(all_products , function(index, id){
-            console.log(filter.products);
-              console.log(id);
+
             var repos = [];
             if (filter.products.indexOf(id) > -1){
+                //render the cached repos if we want to
+                if (KT.filters.get_repo_cache()[id]){
+                    repos = KT.filters.get_repo_cache()[id];
+                }
                 html += product_template(id, KT.products[id].name, true, repos);
             }
             else {
@@ -208,7 +336,8 @@ KT.filter_renderer = (function(){
 
     return {
         render_products_repos:render_products_repos,
-        product_select_template: product_select_template
+        product_select_template: product_select_template,
+        render_product_message: render_product_message
     }
 
 })();
@@ -216,6 +345,7 @@ KT.filter_renderer = (function(){
 
 KT.filters = (function(){
     var current_filter;
+    var repo_cache = {};
     
     var success_create  = function(data){
         list.add(data);
@@ -311,25 +441,35 @@ KT.filters = (function(){
             data: {products:current_filter.products, repos:repos},
             cache: false,
             success: function(){
+                repo_cache = []; //clear repo cache
                 KT.filter_renderer.render_products_repos();
             }
         });
     },
     add_product = function(prod_id){
-        if ($.inArray( parseInt(prod_id), current_filter.products) === -1){
+        if ($.inArray( parseInt(prod_id), current_filter.products) === -1
+            && current_filter.repos[prod_id] === undefined){
             current_filter.products.push(parseInt(prod_id));
-            update_product_repos();
+            KT.filter_renderer.render_products_repos();
+            expand_product(prod_id);
         }
     },
     add_repo = function(repo_id, prod_id){
-        if ($.inArray( parseInt(prod_id), current_filter.products) > -1){
-            current_filter.products.pop(parseInt(prod_id));
+        prod_id = parseInt(prod_id);
+        if ($.inArray( prod_id, current_filter.products) > -1){
+            current_filter.products.pop(prod_id);
+        }
+        if (repo_cache[prod_id] !== undefined){
+            current_filter.repos[prod_id] = repo_cache[prod_id];
         }
         if (current_filter.repos[prod_id] === undefined){
             current_filter.repos[prod_id] = [];
         }
-        current_filter.repos[prod_id].push(repo_id);
-        update_product_repos();
+        if (current_filter.repos[prod_id].indexOf(repo_id) === -1) {
+            current_filter.repos[prod_id].push(repo_id);
+            KT.filter_renderer.render_products_repos();
+        }
+        expand_product(prod_id);
     },
     lookup_repo_product = function(repo_id){
       var found = undefined;
@@ -342,10 +482,17 @@ KT.filters = (function(){
         });
       });
       return found;
+    },
+    expand_product = function(id){
+        $(".product_entry").find('.collapsed.toggle[data-id='  + id + ']').click();
+    },
+    collapse_product = function(id){
+        $(".product_entry").find('.expanded.toggle[data-id='  + id + ']').click();
+    },
+    get_repo_cache = function(){
+        return repo_cache;
     };
     
-
-
     return {
         success_create: success_create,
         failure_create: failure_create,
@@ -355,6 +502,10 @@ KT.filters = (function(){
         set_current_filter: set_current_filter,
         add_repo: add_repo,
         add_product: add_product,
-        lookup_repo_product: lookup_repo_product
+        lookup_repo_product: lookup_repo_product,
+        expand_product: expand_product,
+        collapse_product: collapse_product,
+        get_repo_cache: get_repo_cache
+
     };
 })();
