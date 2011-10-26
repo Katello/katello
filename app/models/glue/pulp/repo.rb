@@ -18,6 +18,7 @@ module Glue::Pulp::Repo
     base.send :include, InstanceMethods
 
     base.class_eval do
+    before_validation :setup_repo_clone
       before_save :save_repo_orchestration
       before_destroy :destroy_repo_orchestration
       lazy_accessor :pulp_repo_facts,
@@ -33,6 +34,7 @@ module Glue::Pulp::Repo
                       pulp_repo_facts
                   end
                 }
+      attr_accessor :clone_from, :clone_response
     end
   end
 
@@ -45,7 +47,7 @@ module Glue::Pulp::Repo
     def save_repo_orchestration
       case orchestration_for
         when :create
-          queue.create(:name => "create pulp repo: #{self.name}", :priority => 2, :action => [self, :create_pulp_repo])
+          queue.create(:name => "create pulp repo: #{self.name}", :priority => 2, :action => [self, :clone_or_create_repo])
       end
     end
 
@@ -73,6 +75,16 @@ module Glue::Pulp::Repo
   TYPE_YUM = "yum"
   TYPE_LOCAL = "local"
 
+
+
+  def clone_or_create_repo
+    if clone_from
+      clone_repo
+    else
+      create_pulp_repo
+    end
+  end
+
   def create_pulp_repo
     feed_cert_data = {:ca => self.feed_ca,
         :cert => self.feed_cert,
@@ -90,6 +102,29 @@ module Glue::Pulp::Repo
         :content_types => self.content_type || TYPE_YUM
     })
   end
+
+  def promote(to_environment, product)
+    key = EnvironmentProduct.find_or_create(to_environment, product)
+    Repository.create!(:environment_product => key, :clone_from => self)
+  end
+
+
+  def setup_repo_clone
+    if clone_from
+      self.pulp_id = clone_from.clone_id(environment_product.environment)
+      self.relative_path = Glue::Pulp::Repos.clone_repo_path(clone_from, environment_product.environment)
+      self.arch = clone_from.arch
+      self.name = clone_from.name
+      self.feed = clone_from.feed
+      self.groupid = Glue::Pulp::Repos.groupid(environment_product.product, environment_product.environment)
+    end
+  end
+
+  def clone_repo
+    self.clone_response = [Pulp::Repository.clone_repo(clone_from, self)]
+    x = self.clone_response
+  end
+
 
   def destroy_repo
     Pulp::Repository.destroy(self.pulp_id)
@@ -182,7 +217,7 @@ module Glue::Pulp::Repo
   end
 
   def get_clone env
-    Glue::Pulp::Repo.find(self.clone_id(env))
+    Repository.find_by_pulp_id(self.clone_id(env))
   rescue
     nil
   end
@@ -287,17 +322,6 @@ module Glue::Pulp::Repo
 
   def successful_sync?(sync_history_item)
     sync_history_item['state'] == 'finished'
-  end
-
-  def promote(to_environment, product)
-    cloned = Glue::Pulp::Repo.new
-    cloned.id = self.clone_id(to_environment)
-    cloned.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_environment)
-    cloned.arch = arch
-    cloned.name = name
-    cloned.feed = feed
-    cloned.groupid = Glue::Pulp::Repos.groupid(product, to_environment)
-    [Pulp::Repository.clone_repo(self, cloned)]
   end
 
   def organization
