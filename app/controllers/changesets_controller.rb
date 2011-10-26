@@ -99,17 +99,12 @@ class ChangesetsController < ApplicationController
   ####
 
   def dependencies
-    product_map = @changeset.calc_dependencies
     to_ret = {}
+    @changeset.calc_dependencies.each do |dependency|
+      to_ret[dependency.product_id] ||= []
+      to_ret[dependency.product_id] << {:name=>dependency.display_name, :dep_of=>dependency.dependency_of}
+    end
 
-    #temporarily transform product_map from id=>name  to id=>{:name, :dep_of} with a fake dep_of
-    product_map.keys.each{|pid|
-      to_ret[pid] = []
-      product_map[pid].each{|pkg|
-        to_ret[pid] << {:name=>pkg.nvrea, :dep_of=>"Foo-1.2.3"}
-      }
-
-    }
     render :json=>to_ret
   end
 
@@ -242,12 +237,12 @@ class ChangesetsController < ApplicationController
     begin
       @changeset.promote
       # remove user edit tracking for this changeset
-      ChangesetUser.destroy_all(:changeset_id => @changeset.id) 
+      ChangesetUser.destroy_all(:changeset_id => @changeset.id)
       notice _("Started promotion of '#{@changeset.name}' to #{@environment.name} environment")
     rescue Exception => e
         errors  "Failed to promote: #{e.to_s}"
         render :text=>e.to_s, :status=>500
-        return 
+        return
     end
 
     render :text=>url_for(:controller=>"promotions", :action => "show",
@@ -259,7 +254,7 @@ class ChangesetsController < ApplicationController
     to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'progress' => progress.to_i}
     render :json=>to_ret
   end
-  
+
 
   private
 
