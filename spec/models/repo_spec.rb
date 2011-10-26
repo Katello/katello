@@ -43,11 +43,11 @@ describe Glue::Pulp::Repo do
   context "Finding a repo" do
     it "should call Pulp's find api'" do
       Pulp::Repository.should_receive(:find).with(RepoTestData::REPO_ID)
-      Glue::Pulp::Repo.find(RepoTestData::REPO_ID)
+      Repository.find_by_pulp_id(RepoTestData::REPO_ID)
     end
 
     it "should return new instance with correct properties" do
-      repo = Glue::Pulp::Repo.find(RepoTestData::REPO_ID)
+      repo = Repository.find_by_pulp_id(RepoTestData::REPO_ID)
       repo.id.should == RepoTestData::REPO_PROPERTIES[:id]
       repo.name.should == RepoTestData::REPO_PROPERTIES[:name]
       repo.groupid.should == RepoTestData::REPO_PROPERTIES[:groupid]

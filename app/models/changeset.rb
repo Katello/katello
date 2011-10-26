@@ -334,7 +334,7 @@ class Changeset < ActiveRecord::Base
 
     for r in self.repos
       product = r.product
-      repo    = Glue::Pulp::Repo.find(r.repo_id)
+      repo    = Repository.find_by_pulp_id(r.repo_id)
 
       next if (products.uniq! or []).include? product
 
