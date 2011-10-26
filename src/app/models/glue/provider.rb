@@ -147,6 +147,7 @@ module Glue::Provider
       self.products.each do |p|
         p.destroy
       end
+      true
     rescue => e
       Rails.logger.error "Failed to delete all products for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
