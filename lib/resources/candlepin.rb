@@ -385,13 +385,19 @@ module Candlepin
 
       def delete_subscriptions owner_key, product_id
         subscriptions = Candlepin::Subscription.get_for_owner owner_key
-        subscriptions.collect {|s|
-          Rails.logger.info "subsc: "+s.to_json
-          if s['product']['id'] == product_id
-            Candlepin::Subscription.destroy s['id']
+        subscriptions.collect do |s|
+
+          products = ([s['product']] + s['providedProducts'])
+          products.each do |p|
+            if p['id'] == product_id
+              Rails.logger.info "Deleting subscription: "+s.to_json
+              Candlepin::Subscription.destroy s['id']
+              break
+            end
           end
+
           Candlepin::Subscription.refresh_for_owner owner_key
-        }
+        end
       end
 
       def path(id=nil)

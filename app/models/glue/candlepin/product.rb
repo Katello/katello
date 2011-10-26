@@ -139,6 +139,7 @@ module Glue::Candlepin::Product
     def del_product
       Rails.logger.info "Deleting product in candlepin: #{name}"
       Candlepin::Product.destroy self.cp_id
+      true
     rescue => e
       Rails.logger.error "Failed to delete candlepin product #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -172,6 +173,7 @@ module Glue::Candlepin::Product
         Rails.logger.info "Removing content from product '#{self.cp_id}' in candlepin: #{pc.content.name}"
         self.remove_content pc
       end
+      true
     rescue => e
       Rails.logger.error "Failed to remove content form a product in candlepin #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -233,11 +235,13 @@ module Glue::Candlepin::Product
           pc.destroy
         end
       end
+      true
     end
 
     def del_subscriptions
       Rails.logger.info "Deleting subscriptions for product #{name} in candlepin"
       Candlepin::Product.delete_subscriptions self.organization.cp_key, self.cp_id
+      true
     rescue => e
       Rails.logger.error "Failed to delete subscription for product in candlepin #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
