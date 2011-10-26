@@ -244,13 +244,17 @@ class SystemTemplate < ActiveRecord::Base
   end
 
   def add_distribution pulp_id
+    distro = Glue::Pulp::Distribution.find(pulp_id)
+    raise Errors::TemplateContentException.new(_("Distribution '%s' not found in this template.") % pulp_id) if distro.nil?
     self.distributions.create!(:distribution_pulp_id => pulp_id)
+  rescue Exception => e
+    raise Errors::TemplateContentException.new(_("Distribution '%s' cannot be added: %s") % [pulp_id, e])
   end
 
   def remove_distribution pulp_id
     distro = self.distributions.where(:distribution_pulp_id => pulp_id).first
     raise Errors::TemplateContentException.new(_("Distribution '%s' not found in this template.") % pulp_id) if distro.nil?
-    self.distributions.delete(pulp_id)
+    self.distributions.delete(distro)
   end
 
   def to_json(options={})

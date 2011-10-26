@@ -15,8 +15,8 @@ class SystemTemplateDistribution < ActiveRecord::Base
   validates_uniqueness_of [:distribution_pulp_id], :scope => :system_template_id, :message => _("is already in the template")
 
   def load_backend_attributes
-    @distribution_glue ||= Glue::Pulp::Distribution.new(Pulp::Distribution.find(self.distribution_pulp_id)
-    raise Errors::TemplateContentException.new(_("Distribution '%s' was not found in Pulp.") % distribution_pulp_id) if @distribution_glue.nil?
+    @distribution_glue ||= Glue::Pulp::Distribution.new(Pulp::Distribution.find(self.distribution_pulp_id))
+    raise Errors::NotFound.new(_("Distribution '%s' was not found in Pulp.") % distribution_pulp_id) if @distribution_glue.nil?
   end
 
   def description
