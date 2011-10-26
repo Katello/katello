@@ -17,7 +17,7 @@
 %global confdir deploy/common
 
 Name:           katello-headpin
-Version:        0.1.98
+Version:        0.1.99
 Release:        1%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
@@ -90,6 +90,9 @@ and then run katello-configure to configure everything.
 %files all
 
 %changelog
+* Wed Oct 26 2011 Bryan Kearney <bkearney@redhat.com> 0.1.99-1
+- Move the headpin packaegs to a new location (bkearney@redhat.com)
+
 * Wed Oct 19 2011 Mike McCune <mmccune@redhat.com> 0.1.98-1
 - moving the headpin generated source and specfile into rel-eng
   (mmccune@redhat.com)
