@@ -48,19 +48,6 @@ class RolesController < ApplicationController
   def section_id
      'operations'
    end
-
-  def index
-    begin
-      # retrieve only non-self roles... permissions on a self-role will be handled 
-      # as part of the user
-      @roles = Role.readable.search_for(params[:search]).non_self.order("roles.name").limit(current_user.page_size)
-      retain_search_history
-
-    rescue Exception => error
-      errors error.to_s, {:level => :message, :persist => false}
-      @roles = Role.search_for ''
-    end
-  end
   
   def items
     render_panel_items(Role.readable.non_self, @panel_options, params[:search], params[:offset])

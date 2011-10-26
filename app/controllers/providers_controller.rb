@@ -108,17 +108,6 @@ class ProvidersController < ApplicationController
     render :template =>"providers/redhat_provider"
   end
 
-  def index
-    begin
-      @providers = Provider.readable(current_organization).custom.search_for(params[:search]).order('providers.name').limit(current_user.page_size)
-      retain_search_history
-    rescue Exception => error
-      errors error.to_s, {:level => :message, :persist => false}
-      @providers = Provider.search_for ''
-    end
-
-  end
-
   def items
     render_panel_items(Provider.readable(current_organization).custom.order('providers.name'), @panel_options, params[:search], params[:offset])
   end
