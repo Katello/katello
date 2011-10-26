@@ -66,7 +66,7 @@ class Api::RepositoriesController < Api::ApiController
   end
 
   def find_repository
-    @repository = Glue::Pulp::Repo.find params[:id]
+    @repository = Repository.find_by_pulp_id params[:id]
     raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:id]}'") if @repository.nil?
     @repository
   end

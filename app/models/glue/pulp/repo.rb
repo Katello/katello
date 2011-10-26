@@ -23,7 +23,7 @@ module Glue::Pulp::Repo
       lazy_accessor :pulp_repo_facts,
                     :initializer => lambda {
                       if pulp_id
-                        Glue::Pulp::Repo.find(pulp_id)
+                        Pulp::Repository.find(pulp_id)
                       end
                     }
       lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca, :source,
@@ -39,11 +39,6 @@ module Glue::Pulp::Repo
   def self.repo_id product_name, repo_name, env_name, organization_name
     [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
   end
-
-  def self.find(id)
-    Pulp::Repository.find(id)
-  end
-
 
 
   module InstanceMethods
