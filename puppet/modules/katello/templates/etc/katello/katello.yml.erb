@@ -15,7 +15,7 @@ common:
 
   warden: database
   use_cp: true
-  use_pulp: true
+  use_pulp: <%= scope.lookupvar("katello::params::deployment") == 'katello' %>
   rest_client_timeout: 30
 
 #setup how often you want 
