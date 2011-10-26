@@ -128,12 +128,16 @@ KT.product_input = (function(){
 
         });
 
-        $(".add_repo").live("click", function(){
-            var select,id;
-            select = $(this).siblings("select");
-            var repo_id = select.val();
-            var prod_id = select.attr("data-prod_id");
-            KT.filters.add_repo(repo_id, prod_id);
+
+        $("#update_products").click(function(){
+            var btn = $(this);
+            if(btn.hasClass("disabled")){
+                return;
+            }
+            btn.addClass("disabled");
+            KT.filters.update_product_repos();
+
+
         });
 
     },
@@ -175,6 +179,14 @@ KT.product_input = (function(){
         });
 
         $('.repo_select').chosen();
+
+        $(".add_repo").click(function(){
+            var select,id;
+            select = $(this).siblings("select");
+            var repo_id = select.val();
+            var prod_id = select.attr("data-prod_id");
+            KT.filters.add_repo(repo_id, prod_id);
+        });
 
         $(".remove_repo").click(function(){
             var repo = $(this).parent();
@@ -437,11 +449,13 @@ KT.filters = (function(){
         var repos = [];
         $.ajax({
             type: "POST",
+            contentType: "application/json",
             url: KT.routes.update_products_filter_path(current_filter.id),
-            data: {products:current_filter.products, repos:repos},
+            data: JSON.stringify({products:current_filter.products, repos:repos}),
             cache: false,
             success: function(){
                 repo_cache = []; //clear repo cache
+                $("#update_products").removeClass("disabled");
                 KT.filter_renderer.render_products_repos();
             }
         });
@@ -494,18 +508,19 @@ KT.filters = (function(){
     };
     
     return {
-        success_create: success_create,
-        failure_create: failure_create,
-        add_package: add_package,
-        remove_packages: remove_packages,
+        success_create  : success_create,
+        failure_create  : failure_create,
+        add_package     : add_package,
+        remove_packages : remove_packages,
         get_current_filter: get_current_filter,
         set_current_filter: set_current_filter,
-        add_repo: add_repo,
-        add_product: add_product,
+        add_repo        : add_repo,
+        add_product     : add_product,
         lookup_repo_product: lookup_repo_product,
-        expand_product: expand_product,
+        expand_product  : expand_product,
         collapse_product: collapse_product,
-        get_repo_cache: get_repo_cache
+        get_repo_cache  : get_repo_cache,
+        update_product_repos: update_product_repos
 
     };
 })();
