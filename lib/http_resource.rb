@@ -55,6 +55,7 @@ class HttpResource
 
     def process_response(resp)
       Rails.logger.debug "Processing response: #{resp.code}"
+      Rails.logger.debug resp.body if AppConfig.debug_rest
       return resp unless resp.code.to_i >= 400
       parsed = {}
       message = "Rest exception while processing the call"
@@ -76,8 +77,16 @@ class HttpResource
       raise RestClientException,{:message => message, :service_code => service_code, :code => status_code}, caller
     end
 
+    def print_debug_info(a_path, headers={}, payload={})
+      Rails.logger.debug "Headers: #{headers.to_json}"
+      Rails.logger.debug "Body: #{payload.to_json}"
+    rescue RestClient::Exception => e
+      Rails.logger.warn "Unable to print debug information"
+    end
+
     def get(a_path, headers={})
       Rails.logger.debug "Resource GET request: #{a_path}"
+      print_debug_info(a_path, headers) if AppConfig.debug_rest
       resource_permissions.before_get_callback(a_path, headers)
       client = rest_client(Net::HTTP::Get, :get, a_path)
       result = process_response(client.get(headers))
@@ -89,6 +98,7 @@ class HttpResource
 
     def post(a_path, payload={}, headers={})
       Rails.logger.debug "Resource POST request: #{a_path}, #{payload}"
+      print_debug_info(a_path, headers, payload) if AppConfig.debug_rest
       resource_permissions.before_post_callback(a_path, payload, headers)
       client = rest_client(Net::HTTP::Post, :post, a_path)
       result = process_response(client.post(payload, headers))
@@ -100,6 +110,7 @@ class HttpResource
 
     def put(a_path, payload={}, headers={})
       Rails.logger.debug "Resource PUT request: #{a_path}, #{payload}"
+      print_debug_info(a_path, headers, payload) if AppConfig.debug_rest
       resource_permissions.before_put_callback(a_path, payload, headers)
       client = rest_client(Net::HTTP::Put, :put, a_path)
       result = process_response(client.put(payload, headers))
@@ -111,7 +122,7 @@ class HttpResource
 
     def delete(a_path=nil, headers={})
       Rails.logger.debug "Resource DELETE request: #{a_path}"
-      Rails.logger.debug "Headers: #{headers.to_json}"
+      print_debug_info(a_path, headers) if AppConfig.debug_rest
       resource_permissions.before_delete_callback(a_path, headers)
       client = rest_client(Net::HTTP::Delete, :delete, a_path)
       result = process_response(client.delete(headers))
