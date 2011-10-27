@@ -224,7 +224,7 @@ module Navigation
           :options => {:class=>"navigation_element"}
         },
         { :key => :products,
-          :name =>N_("Products and Repos"),
+          :name =>N_("Products and Repositories"),
           :url => lambda{products_filter_path(@filter.id)},
           :if => lambda{@filter},
           :options => {:class=>"navigation_element"}
