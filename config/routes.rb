@@ -369,7 +369,7 @@ Src::Application.routes.draw do
     end
 
     resources :packages, :only => [:show]
-    resources :errata, :only => [:show]
+    resources :errata, :only => [:index, :show]
     resources :distributions, :only => [:show]
 
     resources :users do
