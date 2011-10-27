@@ -75,11 +75,38 @@ nav {
       display: block;
       min-height: 35px;
       height: 35px;
+      .third_level {
+        background: white;
+        background-image: none;
+        height: auto;
+        border-left: 1px solid $border_color;
+        border-right: 1px solid $border_color;
+        border-bottom: 1px solid $border_color;
+        width: 153px;
+        margin-top: 1px;
+      }
       li {
         display: inline-block;
         margin: 0;
         padding: 0;
-
+        .third_level {
+            display: block;
+            width: 153px;
+            height: auto;
+            clear: both;
+            border-bottom: 1px transparent;
+            a{
+              width: 120px;
+              &:hover {
+                background: lighten($kprimary_color, 45%);
+                color: lighten($kprimary_color, 10%);
+                border-top: 1px solid lighten($kprimary_color, 10%);
+                border-bottom: 1px solid lighten($kprimary_color, 10%);
+                padding-top: 7px;
+                padding-bottom: 5px;
+              }
+            }
+        }
         a {
           cursor: pointer;
           text-transform: none;
