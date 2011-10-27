@@ -73,15 +73,15 @@ module Glue::Pulp::Repos
 
 
     def repos env, search_params = {}
-      self.get_cached_repos(env).delete_if do |repo|
-        search_params.any?{ |attr,value| repo.get_params[attr] != value }
+      if search_params.empty?
+        self.get_cached_repos(env)
+      else
+        self.get_repos(env, search_params)
       end
     end
 
     def all_repos search_params = {}
-      self.get_all_cached_repos.delete_if do |repo|
-        search_params.any?{ |attr,value| repo.get_params[attr] != value }
-      end
+      self.get_repos(nil, search_params)
     end
 
     def promote from_env, to_env
@@ -339,8 +339,7 @@ module Glue::Pulp::Repos
 
       added_content.each do |pc|
         if !(self.environments.map(&:name).any? {|name| pc.content.name.include?(name)}) || pc.content.name.include?('Locker')
-        Rails.logger.debug "creating repository #{repo_id(pc.content.name)}"
-          #PROD TODO: check add_repo
+          Rails.logger.debug "creating repository #{repo_id(pc.content.name)}"
           self.add_repo(pc.content.name, repository_url(pc.content.contentUrl), pc.content.type)
         else
           raise "new content was added to environment other than Locker. use promotion instead."
@@ -444,31 +443,27 @@ module Glue::Pulp::Repos
       end
     end
 
-    def cache_repos
-      @repos = {}
+    def cache_repos env
+      @repos ||= {}
+      @repos[env.id] = []
 
-      product_repos = Pulp::Repository.all [Glue::Pulp::Repos.product_groupid(self)]
+      product_repos = Pulp::Repository.all [Glue::Pulp::Repos.product_groupid(self), Glue::Pulp::Repos.env_groupid(env)]
       product_repos.each do |repo_attr|
-        repo = Glue::Pulp::Repo.new(repo_attr)
-        @repos[repo.environment_id] ||= []
-        @repos[repo.environment_id] << repo
+        @repos[env.id] << Glue::Pulp::Repo.new(repo_attr)
       end
     end
 
     def get_cached_repos env
-      if @repos.nil?
-        self.cache_repos
+      @repos ||= {}
+      if not @repos.has_key?(env.id)
+        self.cache_repos env
       end
 
       return @repos[env.id] || []
     end
 
-    def get_all_cached_repos
-      if @repos.nil?
-        self.cache_repos
-      end
-
-      return @repos.values.flatten(1)
+    def get_repos env, search_params = {}
+      Pulp::Repository.all [Glue::Pulp::Repos.product_groupid(self), Glue::Pulp::Repos.env_groupid(env)], search_params
     end
 
   end
