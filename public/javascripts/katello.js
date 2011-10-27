@@ -282,12 +282,19 @@ KT.common = (function() {
         },
         rootURL : function() {
             if (root_url === undefined) {
-                root_url = $('#root_url').attr('data-url');
+                //root_url = $('#root_url').attr('data-url');
+                root_url = KT.config['root_url'];
             }
             return root_url;
         },
-        setRootUrl : function(){
-        	KT.routes.options.prefix = $('#root_url').attr('data-url');
+        getSearchParams : function() {
+        	var search_string = $.bbq.getState('search')
+
+        	if( search_string ){
+        		return { 'search' : search_string };	
+        	} else {
+        		return false;
+        	}
         },
         spinner_path : function() {
           KT.common.rootURL() + "/images/spinner.gif"
@@ -372,7 +379,6 @@ $(document).ready(function (){
     KT.common.orgFilterSetup();
     KT.common.thirdLevelNavSetup();
     
-    KT.common.setRootUrl();
 });
 
 /**

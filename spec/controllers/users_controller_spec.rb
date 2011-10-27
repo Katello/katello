@@ -150,8 +150,8 @@ describe UsersController do
       @testuser = User.create!(:username=>"TestUser", :password=>"foobar")
     end
     describe "GET index" do
-      let(:action) {:index}
-      let(:req) { get 'index' }
+      let(:action) {:items}
+      let(:req) { get :items }
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:read, :users, nil, nil) }
       end
@@ -159,7 +159,7 @@ describe UsersController do
         user_without_permissions
       end
       let(:on_success) do
-        assigns(:users).should include @testuser
+        assigns(:items).should include @testuser
       end
 
       it_should_behave_like "protected action"

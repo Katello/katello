@@ -14,7 +14,7 @@ describe Api::RepositoriesController do
   describe "create a repository" do
     it 'should call pulp and candlepin layer' do
       Product.should_receive(:find_by_cp_id).with('product_1').and_return(@product)
-      @product.should_receive(:add_new_content).and_return({})
+      @product.should_receive(:add_repo).and_return({})
 
       post 'create', :name => 'repo_1', :url => 'http://www.repo.org', :product_id => 'product_1'
     end
@@ -22,7 +22,7 @@ describe Api::RepositoriesController do
     context 'there is already a repo for the product with the same name' do
       before do
         Product.stub(:find_by_cp_id => @product)
-        @product.stub(:add_new_content).and_return { raise Errors::ConflictException }
+        @product.stub(:add_repo).and_return { raise Errors::ConflictException }
       end
 
       it "should notify about conflict" do
