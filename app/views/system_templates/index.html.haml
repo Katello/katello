@@ -78,6 +78,9 @@
         #edit_template_container.slide_up_container
           %h2= _("Edit System Template")
           = render :partial=>"edit", :locals=>{:editable=>true}
+        #download_template_container.slide_up_container
+          %h2= _("Download System Template")
+          = render :partial=>"download", :locals=>{:editable=>true}
         - if editable
           #sliding_tree_actionbar.clickable
             #edit_template.cs_action

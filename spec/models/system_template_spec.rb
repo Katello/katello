@@ -310,6 +310,65 @@ describe SystemTemplate do
 
   end
 
+  describe "packages" do
+
+    let(:nvrea) { "name-ver.si.on-relea.se.x86_64.rpm" }
+    let(:nvrea_package_params) do
+      { :package_name  => "name", :version => "ver.si.on", :release => "relea.se", :epoch => nil, :arch => "x86_64"}
+    end
+
+    let(:nvre) { "name-ver.si.on-relea.se" }
+    let(:nvre_package_params) do
+      { :package_name  => "name", :version => "ver.si.on", :release => "relea.se", :epoch => nil, :arch => nil }
+    end
+
+    let(:plain_name) { "name" }
+    let(:plain_name_package_params) do
+      { :package_name  => "name" }
+    end
+
+    describe "#add_package" do
+      it "should accept nvrea name" do
+        @tpl1.packages.should_receive(:create!).with(nvrea_package_params)
+        @tpl1.add_package(nvrea)
+      end
+
+      it "should accept nvre name" do
+        @tpl1.packages.should_receive(:create!).with(nvre_package_params)
+        @tpl1.add_package(nvre)
+      end
+
+      it "should accept plain name" do
+        @tpl1.packages.should_receive(:create!).with(plain_name_package_params)
+        @tpl1.add_package(plain_name)
+      end
+    end
+
+    describe "#remove_package" do
+      before { @tpl1.packages.stub(:delete) }
+      it "should accept nvrea name" do
+        @tpl1.packages.should_receive(:find).with(:first, :conditions => nvrea_package_params)
+        @tpl1.remove_package(nvrea)
+      end
+
+      it "should accept nvre name" do
+        @tpl1.packages.should_receive(:find).with(:first, :conditions => nvre_package_params)
+        @tpl1.remove_package(nvre)
+      end
+
+      it "should accept plain name" do
+        @tpl1.packages.should_receive(:find).with(:first, :conditions => plain_name_package_params)
+        @tpl1.remove_package(plain_name)
+      end
+
+      it "should delete found package from template" do
+        pack = mock(SystemTemplatePackage)
+        @tpl1.packages.stub(:find => pack)
+        @tpl1.packages.should_receive(:delete).with(pack)
+        @tpl1.remove_package(plain_name)
+      end
+    end
+  end
 
   describe "package groups" do
 
@@ -328,7 +387,6 @@ describe SystemTemplate do
       Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups)
       Pulp::Repository.stub(:all => [repo])
     end
-
 
     describe "#add_package_group" do
 

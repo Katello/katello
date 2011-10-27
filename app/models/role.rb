@@ -12,6 +12,9 @@
 
 class Role < ActiveRecord::Base
   include Authorization
+
+  acts_as_reportable
+
   has_many :roles_users
   has_many :users, :through => :roles_users
   has_many :permissions, :dependent => :destroy,:inverse_of =>:role, :class_name=>"Permission"
@@ -24,6 +27,7 @@ class Role < ActiveRecord::Base
   scope :non_self, joins("left outer join users on users.own_role_id = roles.id").where('users.own_role_id'=>nil).order('roles.name')
 
   validates :name, :uniqueness => true, :katello_name_format => true, :presence => true
+  validates :description, :katello_description_format => true
   #validates_associated :permissions
   accepts_nested_attributes_for :permissions, :allow_destroy => true
 

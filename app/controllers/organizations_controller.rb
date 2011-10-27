@@ -45,23 +45,9 @@ class OrganizationsController < ApplicationController
     'orgs'
   end
 
-  def index
-    begin
-      @organizations = Organization.readable.search_for(params[:search]).order('lower(name)').limit(current_user.page_size)
-      retain_search_history
-    rescue Exception => error
-      errors error.to_s, {:level => :message, :persist => false}
-      @organizations = Organization.search_for ''
-      render :index, :status => :bad_request and return
-    end
-  end
-
   def items
-    start = params[:offset]
-    @organizations = Organization.readable.search_for(params[:search]).order('lower(name)').limit(current_user.page_size).offset(start)
-    render_panel_items @organizations, @panel_options
+    render_panel_items(Organization.readable.order('lower(name)'), @panel_options, params[:search], params[:offset])
   end
-
 
   def new
     render :partial=>"new", :layout => "tupane_layout"
@@ -71,14 +57,20 @@ class OrganizationsController < ApplicationController
     begin
       @organization = Organization.new(:name => params[:name], :description => params[:description], :cp_key => params[:name].tr(' ', '_'))
       @organization.save!
-      notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
-      # TODO: example - create permission for the organization
     rescue Exception => error
       errors error
       Rails.logger.info error.backtrace.join("\n")
       render :text=> error.to_s, :status=>:bad_request and return
     end
-    render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
+    
+    if Organization.where(:id => @organization.id).search_for(params[:search]).include?(@organization)
+      notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
+      render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
+    else
+      notice _("Organization '#{@organization["name"]}' was created.")
+      notice _("'#{@organization["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+      render :json => { :no_match => true }
+    end
   end
 
   def edit
@@ -95,11 +87,13 @@ class OrganizationsController < ApplicationController
 
       @organization.update_attributes!(params[:organization])
       notice _("Organization '#{@organization["name"]}' was updated.")
-
-      respond_to do |format|
-        format.html { render :text => escape_html(result) }
-        format.js
+      
+      if not Organization.where(:id => @organization.id).search_for(params[:search]).include?(@organization)
+        notice _("'#{@organization["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
       end
+      
+      render :text => escape_html(result)
+      
     rescue Exception => error
       errors error
 
@@ -151,6 +145,7 @@ class OrganizationsController < ApplicationController
                :create => _('Organization'),
                :name => controller_display_name,
                :accessor => :cp_key,
+               :ajax_load  => true,
                :ajax_scroll => items_organizations_path(),
                :enable_create => Organization.creatable?}
   end
