@@ -23,6 +23,7 @@
  */
 $(document).ready(function (){
   KT.menu.menuSetup();
+  KT.menu.thirdLevelNavSetup();
 });
 
 KT.menu = (function(){
@@ -87,6 +88,25 @@ KT.menu = (function(){
           }).hoverIntent(hoverSettings);
 
       });
+    },
+    thirdLevelNavSetup : function(){
+        var children = $('.third_level:first-child');
+
+        $.each(children, function(i, item) {
+            var child = $(item);
+            var li = child.parent().parent();
+            var  ul = child.parent();
+
+            li.prepend($('<div class="arrow_icon_menu"></div>'));
+            li.hover(
+                function(){
+                    ul.slideDown('fast');
+                },
+                function(){
+                    ul.slideUp('fast');
+            });
+        });
+
     }
   };
 })();
