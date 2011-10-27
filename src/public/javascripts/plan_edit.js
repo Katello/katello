@@ -16,7 +16,8 @@
  */
 
 $(document).ready(function() {
-
+	var list = KT.panel.list;
+	
     $('.edit_datepicker').each(function() {
         $(this).editable($(this).attr('data-url'), {
             type        :  'datepicker',
@@ -28,7 +29,7 @@ $(document).ready(function() {
             indicator   :  i18n.saving,
             tooltip     :  i18n.clickToEdit,
             placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
+            submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
             onsuccess   :  function(result, status, xhr) {
                 var plan_date = $("#plan_date").text();
                 var current_plan = $("#current_plan").text();
@@ -56,11 +57,11 @@ $(document).ready(function() {
             indicator   :  i18n.saving,
             tooltip     :  i18n.clickToEdit,
             placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
+            submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
             onsuccess   :  function(result, status, xhr) {
                 var plan_time = $("#plan_time").text();
                 var current_plan = $("#current_plan").text();
-                if (plan_time != current_plan) {
+                if (plan_time !== current_plan) {
                     $("#current_plan").text(plan_date);
                 }
                 var id = $('#plan_id');
@@ -84,11 +85,11 @@ $(document).ready(function() {
             indicator   :  i18n.saving,
             tooltip     :  i18n.clickToEdit,
             placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
+            submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
             onsuccess   :  function(result, status, xhr) {
                 var plan_name = $("#plan_name").text();
                 var current_plan = $("#current_plan").text();
-                if (plan_name != current_plan) {
+                if (plan_name !== current_plan) {
                     $("#current_plan").text(plan_name);
                 }
                 var id = $('#plan_id');
@@ -112,7 +113,7 @@ $(document).ready(function() {
             indicator   :  i18n.saving,
             tooltip     :  i18n.clickToEdit,
             placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
+            submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
             data        :  "{'none': 'None','hourly':'Hourly','daily':'Daily', 'weekly':'Weekly'}",
             onsuccess   :  function(result, status, xhr) {
                 var id = $('#plan_id');

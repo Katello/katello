@@ -31,6 +31,10 @@ gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
+# reports
+gem 'ruport', '>=1.6.3'
+gem 'acts_as_reportable', '>=1.1.1'
+
 # Use unicorn as the web server
 # gem 'unicorn'
 

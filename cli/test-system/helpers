@@ -5,6 +5,10 @@ function get_repo_id() {
     echo `$CMD repo list --org="$TEST_ORG" -g | grep $FEWUPS_REPO | awk '{print $1}'`
 }
 
+function get_repo_name() {
+    echo `$CMD repo list --org="$TEST_ORG" -g | grep $FEWUPS_REPO | awk '{print $2}'`
+}
+
 function valid_id() {
     if [ -z "$1" ]; then
         return 0

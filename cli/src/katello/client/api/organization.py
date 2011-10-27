@@ -55,3 +55,6 @@ class OrganizationAPI(KatelloAPI):
         path = "/api/organizations/%s/uebercert" % str(name)
         return self.server.GET(path)[1]
 
+    def pools(self, name):
+        path = "/api/owners/%s/pools" % str(name)
+        return self.server.GET(path)[1]
