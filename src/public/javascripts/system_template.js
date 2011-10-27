@@ -862,13 +862,6 @@ KT.actions =  (function(){
                     }
             });
         });
-        buttons.download.click(function(e){
-            // e.preventDefault();  //stop the browser from following
-            // url = KT.common.rootURL() + '/system_templates/' + options.current_template.id + '/download',
-            // window.location.href = url;
-            // options.action_bar.toggle('template_download');
-            return false;
-        });
         buttons.remove.click(function(){
             if ( $(this).hasClass('disabled') || !KT.options.current_template ){
                 return false;
@@ -886,7 +879,16 @@ KT.actions =  (function(){
             });
             return false;
         });
-
+        $('#download_key').live('click', function(e){
+            e.preventDefault();  //stop the browser from following
+            environment_id = $("#system_template_environment_id").attr('value');
+            url = KT.common.rootURL() + '/system_templates/' +
+                        options.current_template.id +
+                        '/download?environment_id=' +
+                        environment_id;
+            window.location.href = url;
+            return false;
+        });
         $('#save_template').live('click', function(){
             if ($(this).hasClass("disabled")) {
                 return false;
