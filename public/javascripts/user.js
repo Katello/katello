@@ -9,17 +9,78 @@
  NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-*/
+ */
 
 KT.panel.list.registerPage('users', { create : 'new_user' });
 
 $(document).ready(function() {
-   
+
     KT.user_page.registerEdits();
+
+    ratings =
+        [{'minScore': 0,
+            'className': 'meterFail',
+            'text': i18n.very_weak
+        },
+            {'minScore': 25,
+                'className': 'meterWarn',
+                'text': i18n.weak
+            },
+            {'minScore': 50,
+                'className': 'meterGood',
+                'text': i18n.good
+            },
+            {'minScore': 75,
+                'className': 'meterExcel',
+                'text': i18n.strong
+            }];
 
     KT.panel.set_expand_cb(function() {
         //taken out of user_edit, so it can be resused on accounts
         $(".multiselect").multiselect({"dividerLocation":0.5, "sortable":false});
+
+        //new code
+            $('#org_id_org_id').change(function(event) {
+        //var button = $('#save_user');
+        //button.addClass("disabled");
+
+        //event.preventDefault();
+       var refill = $('#env_box');
+       refill.hide();
+//        var form = $(this).closest("form");
+//        var url = form.attr('action');
+//        var dataToSend = form.serialize();
+//        $.ajax({
+//            type: "POST",
+//            url: url,
+//            data: dataToSend,
+//            cache: false,
+//            success: function() {
+//                KT.panel.panelAjax('', button.attr("data-url") ,$('#panel'));
+//                KT.panel.closeSubPanel($('#subpanel'));
+//           },
+//            error: function() {button.removeClass("disabled")}
+//        });
+   });
+
+        $('#password_field').simplePassMeter({
+            'container': '#password_meter',
+            'offset': 10,
+            'showOnFocus':false,
+            'requirements': {
+                'noUsernameMatch': {
+                    value: "#match",
+                    message: i18n.usernameMatch,
+                    callback: function(password, value) {
+                        return password.indexOf($("#username").text().trim()) === -1;
+                    }
+                }
+            },
+            'defaultText':i18n.meterText,
+            'ratings':ratings});
+
+        //from user.js
+        $('#helptips_enabled').bind('change', KT.user_page.checkboxChanged);
     })
 
 });
