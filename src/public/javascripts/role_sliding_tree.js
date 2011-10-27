@@ -563,7 +563,7 @@ var roleActions = (function($){
                             indicator   :  i18n.saving,
                             tooltip     :  i18n.clickToEdit,
                             placeholder :  i18n.clickToEdit,
-                            submitdata  :  {authenticity_token: AUTH_TOKEN},
+                            submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
                             onerror     :  function(settings, original, xhr) {
                                 original.reset();
                             }
@@ -580,6 +580,7 @@ var roleActions = (function($){
                                       $('#list #role_' + $('#role_id').val() + ' .column_1').html(parsed.name);
                                       $('.edit_name_text').html(parsed.name);
                                       $('#roles').html(parsed.name + " \u2002\u00BB\u2002");
+                                      notices.checkNotices();
                                 }
                         };
                         $(this).editable( url, $.extend(settings, common));
@@ -594,6 +595,7 @@ var roleActions = (function($){
                                 onsuccess   :  function(data) {
                                       var parsed = $.parseJSON(data);
                                       $('.edit_description').html(parsed.description);
+                                      notices.checkNotices();
                                 }
                         };
                         $(this).editable( url, $.extend(settings, common));

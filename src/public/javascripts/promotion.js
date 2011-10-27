@@ -1496,7 +1496,7 @@ $(document).ready(function() {
                                     }));
 
     //need to reset page during the extended scroll
-    KT.panel.set_extended_cb(promotion_page.reset_page);
+    KT.panel.list.set_extended_cb(promotion_page.reset_page);
 
     //when loading the new panel item, if its new, we need to add a form submit handler
     KT.panel.set_expand_cb(function(id) {

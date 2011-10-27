@@ -1,14 +1,3 @@
-= javascript :env_select, :edit, :form, :activation_key
-= include_common_i18n
-= include_editable_i18n
-
-= javascript do
-  :javascript
-    localize({
-      "noTemplate": '#{no_template}',
-      "update_template": '#{_('Select a System Template')}'
-    });
-
 .grid_16
   = help_tip_button
   = help_tip(_("Activation Keys provide a set of characteristics that may be applied to a system " + |
@@ -19,3 +8,14 @@
 .grid_16#main
   = two_panel(@activation_keys, @panel_options)
   %div#environment_edit_dialog
+
+= javascript :env_select, :edit, :activation_key
+= include_common_i18n
+= include_editable_i18n
+
+= javascript do
+  :javascript
+    localize({
+      "noTemplate": '#{no_template}',
+      "update_template": '#{_('Select a System Template')}'
+    });

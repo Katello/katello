@@ -18,9 +18,12 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.organization import OrganizationAPI
+from katello.client.api.product import ProductAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record
+from katello.client.core.utils import is_valid_record, format_date
+from time import strftime
+from datetime import timedelta, datetime
 
 Config()
 
@@ -199,6 +202,58 @@ class ShowDebugCert(OrganizationAction):
         self.printer.printItem(uebercert)
         
         return os.EX_OK
+        
+class ShowSubscriptions(OrganizationAction):
+    
+    description = _('show subscriptions')
+    
+    def __init__(self):
+        super(ShowSubscriptions, self).__init__()
+        self.productApi = ProductAPI()
+    
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("organization name eg: foo.example.com (required)"))
+
+    def check_options(self):
+        self.require_option('name')
+
+    def run(self):
+        name = self.get_option('name')
+        pools = self.api.pools(name)
+
+        updated_pool_info = [self.displayable_pool(pool) for pool in pools]
+        
+        self.printer.addColumn('productName')
+        self.printer.addColumn('consumed')
+        self.printer.addColumn('contractNumber')
+        self.printer.addColumn('sla')        
+        self.printer.addColumn('startDate')
+        self.printer.addColumn('endDate')
+        self.printer.setHeader(_("Organization's Subscriptions"))
+        self.printer.printItems(updated_pool_info)
+        
+        return os.EX_OK
+
+    def sla(self, pool):
+        return {'sla': self.extract_sla_from_product(self.productApi.show(pool['productId']))}
+
+    def convert_timestamp(self, timestamp_field):
+        offset = int(timestamp_field[-5:])
+        delta = timedelta(hours = offset / 100)
+        t = datetime.strptime(timestamp_field[:-9], "%Y-%m-%dT%H:%M:%S") - delta
+        return datetime.strftime(t, "%Y/%m/%d %H:%M:%S")
+    
+    def extract_sla_from_product(self, p):
+        sla_attr = [attr.get("value", "") for attr in p["attributes"] if attr.get("name", "") == "sla"]
+        return sla_attr[0] if len(sla_attr) > 0 else ""
+
+    def displayable_pool(self, pool):
+        p = dict(list(pool.items()) + list(self.sla(pool).items()))
+        p['startDate'] = self.convert_timestamp(pool['startDate'])
+        p['endDate'] = self.convert_timestamp(pool['endDate'])
+
+        return p
 
 # organization command ------------------------------------------------------------
 
