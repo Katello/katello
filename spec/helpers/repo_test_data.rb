@@ -18,7 +18,7 @@ module RepoTestData
   CLONED_2_REPO_ID = 'cloned_2_repository_id'
 
   REPO_PRODUCT_ID = 1313597888827
-  REPO_PRODUCT_CP_ID = 4312314881818
+  REPO_PRODUCT_CP_ID = "4312314881818"
   REPO_ENV_ID = 3
   REPO_ORG_ID = 2
   CLONED_REPO_ENV_ID = 4
@@ -154,7 +154,7 @@ module RepoTestData
 
   def self.repo_package_group_categories
     {
-      "development" => 
+      "development" =>
       {"name" => "Development",
        "_id" => "development",
        "id" => "development",

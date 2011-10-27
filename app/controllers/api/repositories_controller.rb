@@ -23,7 +23,7 @@ class Api::RepositoriesController < Api::ApiController
   skip_before_filter :authorize
 
   def create
-    content = @product.add_new_content(params[:name], params[:url], 'yum')
+    content = @product.add_repo(params[:name], params[:url], 'yum')
     render :json => content
   end
 
