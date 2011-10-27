@@ -6,6 +6,9 @@
   = content_for :remove_item do
     = link_to _("Remove Organization"), {:controller=>"organizations", :action=>"destroy"}, :confirm => _('Are you sure you want to remove this organization?'), :method => :delete, :class=>"remove_item", :remote=>true
 
+= content_for :navigation do
+  /pretty
+
 = content_for :content do
   = form_for @organization, :url => {:action => "update",  :controller => "organizations"}, :method => "put", :remote => true do |f|
   
