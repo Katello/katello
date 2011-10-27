@@ -48,20 +48,8 @@ class UsersController < ApplicationController
      }
   end
   
-  def index
-    begin
-      @users = User.readable.search_for(params[:search]).limit(current_user.page_size)
-      retain_search_history
-    rescue Exception => error
-      errors error.to_s, {:level => :message, :persist => false}
-      @users = User.search_for ''
-    end
-  end
-  
   def items
-    start = params[:offset]
-    @users = User.readable.search_for(params[:search]).limit(current_user.page_size).offset(start)
-    render_panel_items @users, @panel_options
+    render_panel_items(User.readable, @panel_options, params[:search], params[:offset])
   end
 
   
@@ -75,15 +63,19 @@ class UsersController < ApplicationController
   end
 
   def create
-    begin
-      @user = User.new(params[:user])
-      @user.save!
-      notice @user.username + _(" created successfully.")
+    @user = User.new(params[:user])
+    @user.save!
+    notice @user.username + _(" created successfully.")
+   
+    if User.where(:id => @user.id).search_for(params[:search]).include?(@user) 
       render :partial=>"common/list_item", :locals=>{:item=>@user, :accessor=>"id", :columns=>["username"], :name=>controller_display_name}
-    rescue Exception => error
-      errors error
-      render :json=>@user.errors, :status=>:bad_request
+    else
+      notice _("'#{@user["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+      render :json => { :no_match => true }
     end
+  rescue Exception => error
+    errors error
+    render :json=>@user.errors, :status=>:bad_request
   end
   
   def update
@@ -93,6 +85,11 @@ class UsersController < ApplicationController
       notice _("User updated successfully.")
       attr = params[:user].first.last if params[:user].first
       attr ||= ""
+      
+      if not User.where(:id => @user.id).search_for(params[:search]).include?(@user)
+        notice _("'#{@user["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+      end
+      
       render :text => attr and return
     end
     errors "", {:list_items => @user.errors.to_a}
@@ -107,6 +104,11 @@ class UsersController < ApplicationController
 
     if  @user.update_attributes(params[:user])
       notice _("User updated successfully.")
+      
+      if not User.where(:id => @user.id).search_for(params[:search]).include?(@user)
+        notice _("'#{@user["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+      end
+      
       render :nothing => true and return
     end
     errors "", {:list_items => @user.errors.to_a}
@@ -164,6 +166,7 @@ class UsersController < ApplicationController
                  :col => ['username'],
                  :create => _('User'),
                  :name => controller_display_name,
+                 :ajax_load  => true,
                  :ajax_scroll => items_users_path(),
                  :enable_create => User.creatable? }
   end

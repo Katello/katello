@@ -34,6 +34,7 @@ class Api::UsersController < Api::ApiController
        :update => edit_test,
        :destroy => delete_test,
        :list_owners => list_owners_test,
+       :report => index_test
      }
   end
 
@@ -61,6 +62,19 @@ class Api::UsersController < Api::ApiController
   def destroy
     @user.destroy
     render :text => _("Deleted user '#{params[:id]}'"), :status => 200
+  end
+
+  def report
+    users_report = User.report_table(:all,
+        :only => [:username, :created_at, :updated_at],
+        :include => { :roles => { :only => [:name]}})
+
+    respond_to do |format|
+      format.html { render :text => users_report.as(:html), :type => :html and return }
+      format.text { render :text => users_report.as(:text, :ignore_table_width => true) }
+      format.csv { render :text => users_report.as(:csv) }
+      format.pdf { send_data(users_report.as(:pdf), :filename => "katello_users_report.pdf", :type => "application/pdf") }
+    end
   end
 
   def find_user

@@ -78,32 +78,27 @@ class SystemsController < ApplicationController
 
       #find the newly created system
       if saved
-        notice _("Your system was created: ") + "'#{@system.name}'"
-      else
-        errors _("There was an error creating your system ")
+        notice _("System '#{@system['name']}' was created.")
+
+        if System.where(:id => @system.id).search_for(params[:search]).include?(@system)
+          render :partial=>"systems/list_systems",
+            :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@system], :name=> controller_display_name}
+        else
+          notice _("'#{@system["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+          render :json => { :no_match => true }
+        end
       end
 
     rescue Exception => error
       errors error
       Rails.logger.info error.backtrace.join("\n")
       render :text => error, :status => :bad_request
-     return
     end
-    render :partial=>"systems/list_systems",
-            :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@system], :name=> controller_display_name}
-  end
-
-  def index
-      @systems = System.readable(current_organization).search_for(params[:search])
-      retain_search_history
-      @systems = sort_order_limit(@systems)
-
   end
 
   def environments
     accesible_envs = KTEnvironment.systems_readable(current_organization)
 
-    @panel_options[:ajax_scroll] = env_items_systems_path(:env_id=>@environment.id)
     begin
 
       @systems = []
@@ -119,6 +114,7 @@ class SystemsController < ApplicationController
         @systems = sort_order_limit(@systems)
 
       end
+      
       render :index, :locals=>{:envsys => 'true', :accessible_envs=> accesible_envs}
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -128,19 +124,11 @@ class SystemsController < ApplicationController
   end
 
   def items
-    start = params[:offset]
-    @systems = System.readable(current_organization).search_for(params[:search])
-    @systems = sort_order_limit(@systems)
-    render_panel_items @systems, @panel_options
-  end
-
-  def env_items
-    @systems = System.readable(current_organization).search_for(params[:search]).where(:environment_id => @environment.id)
-    @systems = sort_order_limit(@systems)
-    if @systems.empty?
-      render :text=>""
+    if params[:env_id]
+      find_environment
+      render_panel_items(System.readable(current_organization).where(:environment_id => @environment.id), @panel_options, params[:search], params[:offset])
     else
-      render_panel_items @systems, @panel_options
+      render_panel_items(System.readable(current_organization), @panel_options, params[:search], params[:offset])
     end
   end
 
@@ -228,7 +216,12 @@ class SystemsController < ApplicationController
   def update
     begin
       @system.update_attributes!(params[:system])
-      notice _("System updated.")
+      notice _("System '#{@system["name"]}' was updated.")
+      
+      if not System.where(:id => @system.id).search_for(params[:search]).include?(@system)
+        notice _("'#{@system["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
+      end
+      
       respond_to do |format|
         format.html { render :text=>params[:system].first[1] }
         format.js
@@ -278,6 +271,7 @@ class SystemsController < ApplicationController
                       :enable_sort => true,
                       :name => controller_display_name,
                       :list_partial => 'systems/list_systems',
+                      :ajax_load  => true,
                       :ajax_scroll => items_systems_path()}
   end
 
