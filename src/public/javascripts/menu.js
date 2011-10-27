@@ -71,7 +71,7 @@ KT.menu = (function(){
         var tabType = topLevelTab.attr('data-menu');
         var currentSubnav = subnav.find('.' + tabType + '.second_level').parent();
         var enter = function(){topLevelTab.trigger("mouseenter");};
-        var leave = function(){setTimeout(topLevelTab.trigger("mouseout"), 200)};
+        var leave = function(){topLevelTab.delay("300").trigger("mouseout")};
         currentSubnav.hover(function(){enter()},function(){leave()});
         
         topLevelTab.bind("open", function(){
@@ -104,15 +104,15 @@ KT.menu = (function(){
             var child = $(item);
             var li = child.parent().parent();
             var  ul = child.parent();
-
             li.prepend($('<div class="arrow_icon_menu"></div>'));
             li.hover(
                 function(){
-                    ul.slideDown('fast');
+                  ul.addClass("third_level").slideDown('fast');
                 },
                 function(){
-                    ul.slideUp('fast');
+                  ul.slideUp('fast').removeClass("third_level");
             });
+            li.mouseenter().mouseleave();
         });
 
     }
