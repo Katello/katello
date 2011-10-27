@@ -26,7 +26,7 @@ module Glue::Provider
     def import_manifest zip_file_path
       Rails.logger.info "Importing manifest for provider #{name}"
       queue_import_manifest zip_file_path
-      process queue
+      self.save!
     end
 
     def sync
@@ -147,43 +147,11 @@ module Glue::Provider
       self.products.each do |p|
         p.destroy
       end
+      true
     rescue => e
       Rails.logger.error "Failed to delete all products for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
-
-    def set_product attrs
-      Rails.logger.info "Creating product #{attrs['name']} for provider: #{name}"
-      productContent_attrs = attrs.delete(:productContent) if attrs.has_key?(:productContent)
-      product = Product.new(attrs) do |p|
-        p.provider = self
-        p.environments << self.organization.locker
-        p.productContent = p.build_productContent(productContent_attrs)
-      end
-      product.save!
-    rescue => e
-      Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
-    def import_product_from_cp attrs
-      Rails.logger.info "Importing product #{attrs['name']} for provider: #{name}"
-      productContent_attrs = attrs.delete(:productContent) if attrs.has_key?(:productContent)
-      valid_name = attrs['name'].gsub(/[^a-z0-9\-_ ]/i,"")
-      attrs = attrs.merge('name' => valid_name)
-      product = Product.new(attrs) do |p|
-        p.provider = self
-        p.environments << self.organization.locker
-        p.productContent = p.build_productContent(productContent_attrs)
-      end
-      product.orchestration_for = :import_from_cp
-      product.save!
-      product
-    rescue => e
-      Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
-    end
-
 
     def owner_import zip_file_path
       Candlepin::Owner.import self.organization.cp_key, zip_file_path
@@ -191,35 +159,90 @@ module Glue::Provider
 
     def queue_import_manifest zip_file_path
       queue.create(:name => "import manifest #{zip_file_path} for owner: #{self.organization.name}", :priority => 3, :action => [self, :owner_import, zip_file_path])
-      queue.create(:name => "import of products in manifest #{zip_file_path}", :priority => 5, :action => [self, :queue_pool_product_creation])
+      queue.create(:name => "import of products in manifest #{zip_file_path}",                       :priority => 5, :action => [self, :import_products_from_cp])
+      queue.create(:name => "delete imported products not assigned to any owner #{zip_file_path}",   :priority => 6, :action => [self, :delete_not_assigned_products])
+      queue.create(:name => "delete imported content that have no repos #{zip_file_path}",           :priority => 7, :action => [self, :delete_not_assigned_content])
     end
 
-    def queue_import_product_from_cp attrs
-      queue.create(:name => "create product imported from candlepin: #{attrs['name']}", :priority => 4, :action => [self, :import_product_from_cp, attrs])
+    def import_products_from_cp
+      added_products.each do |product_attrs|
+        product = Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
+          p.provider = self
+          p.environments << self.organization.locker
+        end
+      end
     end
 
-    def queue_pool_product_creation
+    def delete_not_assigned_products
+      not_assigned_products.each do |product_attrs|
+
+        unless product_attrs['productContent'].nil?
+          product_attrs['productContent'].each do |pc|
+            Candlepin::Product.remove_content product_attrs['id'], pc[:content][:id]
+          end
+        end
+
+        Candlepin::Product.destroy product_attrs['id']
+      end
+    end
+
+    def delete_not_assigned_content
+
+      not_assigned_content_ids.each do |content_id|
+        Candlepin::Content.destroy(content_id)
+      end
+    end
+
+    def destroy_products_orchestration
+      queue.create(:name => "delete products for provider: #{self.name}", :priority => 1, :action => [self, :del_products])
+    end
+
+
+    protected
+
+    def added_products
+      product_existing_in_katello_ids = self.organization.locker.products.all(:select => "cp_id").map(&:cp_id)
+      product_existing_in_cp_ids = get_pool_product_ids
+
+      new_product_ids = (product_existing_in_cp_ids - product_existing_in_katello_ids)
+      new_product_ids.collect {|id| (Candlepin::Product.get(id))[0] }
+    end
+
+    def not_assigned_products
+      all_product_existing_in_katello_ids = Product.all(:select => "cp_id").map(&:cp_id)
+      all_product_existing_in_cp_ids = get_all_product_ids
+
+      product_ids = (all_product_existing_in_cp_ids - all_product_existing_in_katello_ids)
+      product_ids.collect {|id| (Candlepin::Product.get(id))[0] }
+    end
+
+    def not_assigned_content_ids
+      (get_all_content_ids - get_assigned_content_ids)
+    end
+
+    def get_pool_product_ids
       pools = Candlepin::Owner.pools self.organization.cp_key
-      product_ids = pools.collect do |pool|
+      pools.collect do |pool|
         provided_products = pool[:providedProducts]
         pool_product_ids = []
         pool_product_ids = provided_products.collect {|provided| provided[:productId]} unless provided_products.nil?
         # Done with provided products, lets add the *actual* product
         pool_product_ids << pool[:productId]
       end.flatten.uniq
-
-      existing_product_ids = self.organization.locker.products.all(:select => "cp_id").map(&:cp_id)
-      products_to_create = (product_ids - existing_product_ids).collect {|id| (Candlepin::Product.get(id))[0] }
-
-      products_to_create.each do |p|
-        Rails.logger.info "product: "+p.to_json
-        queue_import_product_from_cp p
-      end
-      process queue
     end
 
-    def destroy_products_orchestration
-      queue.create(:name => "delete custom product for provider: #{self.name}", :priority => 1, :action => [self, :del_products])
+    def get_all_product_ids
+      Candlepin::Product.all.map{ |p| p['id'] }
+    end
+
+    def get_assigned_content_ids
+      ids = Candlepin::Product.all.collect{ |p| p['productContent'] }.flatten(1).collect{ |content| content['content']['id'] }
+      ids
+    end
+
+    def get_all_content_ids
+      ids = Candlepin::Content.all.map{ |c| c['id'] }
+      ids
     end
   end
 

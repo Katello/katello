@@ -11,15 +11,9 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
+KT.panel.list.registerPage('providers', { create : 'new_provider' });
+
 $(document).ready(function() {
-
-  $('#new_provider').live('submit', function(e) {
-    // disable submit to avoid duplicate clicks
-    $('input[id^=provider_save]').attr("disabled", true);
-
-    e.preventDefault();
-    $(this).ajaxSubmit({success:provider.successCreate, error:provider.failCreate});
-  });
 
   $('#upload_button').live('submit', function(e) {
     // disable submit to avoid duplicate clicks
@@ -72,16 +66,6 @@ $(document).ready(function() {
 
 var provider = (function() {
     return {
-        //custom successCreate - calls notices update and list/panel updates from KT.panel.js
-        successCreate : function(data) {
-            //KT.panel.js functions
-            list.add(data);
-            KT.panel.closePanel($('#panel'));
-        },
-        failCreate : function(data) {
-            // enable the form submit so that the user can resolve the error and retry
-            $('input[id^=provider_save]').removeAttr("disabled");
-        },
         toggleFields : function() {
           	var val = $('#provider_provider_type option:selected').val();
           	var fields = "#repository_url_field"; 

@@ -6,7 +6,3 @@
   %fieldset.fl.clear
     %label.grid_2 #{_("Description")}:
     .grid_4.la#edit_template_description{'name' => 'system_template[description]', :class=>("editable edit_template_description" if editable)} "FOO "
-  - if editable && !@template.nil?
-    %fieldset.fl.clear
-      %label.grid_2 #{_("Download")}:
-      .grid_4.la=link_to _("Save As"), { :controller => "system_templates", :action => "download", :id => @template.id }, :method => :get

@@ -1,4 +1,5 @@
 @charset "UTF-8";
+@import "colors";
 
 /* GENERIC TEXT ENTRIES */
 input, textarea {
@@ -148,11 +149,13 @@ input, textarea {
           background-color: #E6E6E6;
           color: #000000;
         }
-        a {
+        span {
           width: 300px;
           display: block;
           padding: 4px 10px 4px 24px;
           white-space: nowrap; 
+          color: $linkfg_color;
+          
           &:hover {
             cursor: pointer !important;
             text-decoration: none;
