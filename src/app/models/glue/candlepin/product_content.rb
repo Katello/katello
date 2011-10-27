@@ -11,15 +11,25 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module Glue::Candlepin
-  
+
   class ProductContent
     attr_accessor :content, :enabled
-    def initialize(params = {})      
+    def initialize(params = {})
       @enabled = params[:enabled] || params["enabled"]
       @content = Content.new(params[:content] || params["content"])
     end
+
+    def create
+      created = Candlepin::Content.create @content
+      @content.id = created[:id]
+    end
+
+    def destroy
+      Candlepin::Content.destroy(@content.id)
+    end
+
   end
-  
+
   class Content
     attr_accessor :name, :id, :type, :label, :vendor, :contentUrl, :gpgUrl
     def initialize(params = {})

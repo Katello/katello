@@ -62,17 +62,12 @@ class ChangesetsController < ApplicationController
   def index
     accessible_envs = KTEnvironment.changesets_readable(current_organization)
     setup_environment_selector(current_organization, accessible_envs)
-    @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size)
-    retain_search_history
     render :index, :locals=>{:accessible_envs => accessible_envs}
   end
 
   #extended scroll for changeset_history
   def items
-    start = params[:offset]
-    @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size).offset(start)
-    render_panel_items @changesets, @panel_options
-    retain_search_history
+    render_panel_items(@environment.changeset_history, @panel_options, params[:search], params[:offset])
   end
 
   #similar to index, but only renders the actual list of the 2 pane
@@ -147,12 +142,22 @@ class ChangesetsController < ApplicationController
     if params[:name]
       @changeset.name = params[:name]
       @changeset.save!
+      
+      if not Changeset.where(:id => @changeset.id).search_for(params[:search]).include?(@changeset)
+        notice _("'#{@changeset["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+      end
+      
       render :json=>{:name=> params[:name], :timestamp => @changeset.updated_at.to_i.to_s} and return
     end
 
     if params[:description]
       @changeset.description = params[:description]
       @changeset.save!
+      
+      if not Changeset.where(:id => @changeset.id).search_for(params[:search]).include?(@changeset)
+        notice _("'#{@changeset["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+      end
+      
       render :json=>{:description=> params[:description], :timestamp => @changeset.updated_at.to_i.to_s} and return
     end
 
@@ -285,6 +290,7 @@ class ChangesetsController < ApplicationController
                  :enable_create => false,
                  :name => controller_display_name,
                  :accessor => :id,
+                 :ajax_load => true,
                  :ajax_scroll => items_changesets_path()}
   end
 

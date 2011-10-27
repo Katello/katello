@@ -23,14 +23,7 @@ Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires:      python-iniparse
-Requires:      python-simplejson
-Requires:      m2crypto
-Requires:      python-kerberos
-
-BuildRequires: python2-devel
-BuildRequires: gettext
-
+Requires:      %{base_name}-cli-common
 BuildArch:     noarch
 
 
@@ -38,13 +31,25 @@ BuildArch:     noarch
 Provides a client package for managing application life-cycle
 for Linux systems
 
+%package common
+Summary:       Common Katello client bits
+Group:         Applications/System
+License:       GPLv2
+Requires:      python-iniparse
+Requires:      python-simplejson
+Requires:      m2crypto
+Requires:      python-kerberos
+BuildRequires: python2-devel
+BuildRequires: gettext
+BuildArch:     noarch
+
+%description common
+Common classes for katello clients
 
 %prep
 %setup -q
 
-
 %build
-
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -67,14 +72,15 @@ install -pm 0644 src/%{base_name}/client/core/*.py $RPM_BUILD_ROOT%{python_sitel
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-
-%files
-%defattr(-,root,root)
-%doc README LICENSE
-%{python_sitelib}/%{base_name}/
+%files 
 %attr(755,root,root) %{_bindir}/%{base_name}
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/%{base_name}/client.conf
+%doc README LICENSE
 #%{_mandir}/man8/%{base_name}.8*
+
+%files common
+%defattr(-,root,root)
+%{python_sitelib}/%{base_name}/
 
 
 %changelog

@@ -63,7 +63,7 @@ describe Glue::Pulp::Repo do
 
     it "called for second time should use the cached values" do
       @repo.packages
-      Pulp::Repository.should_not_receive(:packages).with(RepoTestData::REPO_ID)
+      Pulp::Repository.should_not_receive(:packages).with(RepoTestData::REPO_ID, {})
       @repo.packages
     end
 
@@ -251,7 +251,7 @@ describe Glue::Pulp::Repo do
         cloned.feed.should == RepoTestData::CLONED_PROPERTIES[:feed]
         true
       end
-      @repo.promote(@to_env, @product)
+      @repo.promote(@to_env, nil)
     end
 
     it "should return correct is_cloned_in? status" do
@@ -269,7 +269,7 @@ describe Glue::Pulp::Repo do
         cloned.relative_path.should == "Corp/Prod/Ruby/repo"
         true
       end
-      @repo.promote(@to_env, @product)
+      @repo.promote(@to_env, nil)
     end
   end
 
@@ -313,4 +313,5 @@ def stub_reference_objects
   @product.stub(:organization => @org)
   Product.stub(:find).with(RepoTestData::REPO_PRODUCT_ID).and_return(@product)
   Product.stub("find_by_cp_id!").with(RepoTestData::REPO_PRODUCT_CP_ID.to_s).and_return(@product)
+  Product.stub("find_by_cp_id").with(RepoTestData::REPO_PRODUCT_CP_ID.to_s).and_return(@product)
 end
