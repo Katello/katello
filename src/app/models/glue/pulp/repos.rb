@@ -139,6 +139,12 @@ module Glue::Pulp::Repos
       end.flatten(1)
     end
 
+    def get_distribution env, id
+      self.repos(env).map do |repo|
+        repo.distributions.find_all {|d| d.id == id }
+      end.flatten(1)
+    end
+
     def find_latest_packages_by_name env, name
 
       packs = self.repos(env).collect do |repo|
