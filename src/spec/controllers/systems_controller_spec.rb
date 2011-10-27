@@ -191,7 +191,7 @@ describe SystemsController do
           response.should render_template("subscriptions")
         end
 
-        it "should show packages" do
+        it "should show packages", :katello => true do
           get :packages, :id => @system.id
           response.should be_success
           response.should render_template("packages")

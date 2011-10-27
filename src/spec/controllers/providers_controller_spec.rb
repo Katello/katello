@@ -57,7 +57,7 @@ describe ProvidersController do
   end
 
 
-  describe "rules" do
+  describe "rules", :katello => true do
     before (:each) do
       @organization = new_test_org
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
