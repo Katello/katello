@@ -99,6 +99,7 @@ class SystemTemplate < ActiveRecord::Base
       :parameters => ActiveSupport::JSON.decode(self.parameters_json || "{}"),
       :package_groups => self.package_groups.map(&:name),
       :package_group_categories => self.pg_categories.map(&:name),
+      :distributions => self.distributions.map(&:distribution_pulp_id),
     }
     tpl[:description] = self.description if not self.description.nil?
     tpl[:parent] = self.parent.name if not self.parent.nil?
