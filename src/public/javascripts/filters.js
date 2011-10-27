@@ -83,7 +83,6 @@ KT.product_input = (function(){
         var select = $('#product_select');
         var form = $("#add_product_form");
 
-        
         select.html(KT.filter_renderer.product_select_template());
         select.chosen({
             custom_compare:function(search, name, value){
@@ -138,6 +137,10 @@ KT.product_input = (function(){
             KT.filters.update_product_repos();
 
 
+        });
+
+        $("#revert_products").click(function(){
+            KT.filters.revert_products();
         });
 
     },
@@ -241,6 +244,8 @@ KT.filter_renderer = (function(){
         prod_id = parseInt(prod_id);
         $('.product_entry[data-id=' + prod_id + ']').remove();
         $("#product_list").prepend(single_product(prod_id));
+        $('.product_entry[data-id=' + prod_id + ']').hide();
+        $('.product_entry[data-id=' + prod_id + ']').fadeIn(500);
         KT.product_input.post_render_register();
     },
     render_single_repo = function(prod_id, repo_id){
@@ -267,17 +272,17 @@ KT.filter_renderer = (function(){
     product_options = function(id, name, is_full, repos) {
         var style = is_full ? 'style="display:none;"' : '';
         var html_name = "PROD-" + id;
-        var html = '<div class="options"><div>';
+        var html = '<div class="options"><span>';
                 html += product_radio('all' + html_name, html_name, i18n.all_repos, is_full, 'all');
-                html += "&nbsp;";
+                html += "<br>";
                 html += product_radio('sel' + html_name, html_name, i18n.select_repos, !is_full, 'sel');
-            html += '</div>';
-            html += '<div ' + style + 'class="repos_list">';
+            html += '</span>';
+            html += '<span ' + style + 'class="repos_list">';
             html += repo_search(id);
             $.each(repos, function(index, repo_id){
                 html += repo_template(id, repo_id);
             });
-        html += '</div></div>';
+        html += '</span></div>';
         return html;
     },
     product_radio = function(id, name, label, is_checked, value){
@@ -337,7 +342,7 @@ KT.filter_renderer = (function(){
         }
     },
     product_template = function(id, name, is_full, repos){
-        var html = '<tr><td><div data-id="' + id + '" class="product_entry">';
+        var html = '<tr><td class="no_padding"><div data-id="' + id + '" class="product_entry">';
         html += '<div  class="small_col toggle collapsed" data-id="' + id +'"></div>';
         html += '<div class="large_col">';
             html += '<span class="text">' + name + " <span class='prod_message'>" + product_message(id, is_full, repos) + '</span>';
@@ -376,8 +381,9 @@ KT.filter_renderer = (function(){
 
 
 KT.filters = (function(){
-    var current_filter;
-    var repo_cache = {};
+    var current_filter,
+    saved_filter,
+    repo_cache = {};
     
     var success_create  = function(data){
         list.add(data);
@@ -464,6 +470,11 @@ KT.filters = (function(){
     },
     set_current_filter = function(filter_in) {
         current_filter = filter_in
+        saved_filter = $.parseJSON(JSON.stringify(filter_in));
+    },
+    revert_products = function() {
+      current_filter =   $.parseJSON(JSON.stringify(saved_filter));
+      KT.filter_renderer.render_products_repos();
     },
     update_product_repos = function() {
         var repos = [];
@@ -568,7 +579,8 @@ KT.filters = (function(){
         expand_product  : expand_product,
         collapse_product: collapse_product,
         get_repo_cache  : get_repo_cache,
-        update_product_repos: update_product_repos
+        update_product_repos: update_product_repos,
+        revert_products : revert_products
 
     };
 })();
