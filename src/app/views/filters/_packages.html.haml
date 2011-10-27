@@ -29,7 +29,7 @@
         %tr
           %td
             #{"No packages are currently filtered."}
-      - for pkg in @filter.package_list
+      - for pkg in @filter.package_list.sort
         %tr
           %td
             %input.package_select{:type=>"checkbox", :id=>pkg, :name=>pkg, :value=>pkg}
