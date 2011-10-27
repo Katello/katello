@@ -32,12 +32,15 @@ KT.menu = (function(){
       var topLevel = $('nav.tab_nav li.top_level');
       var secondLevel = $('nav.tab_nav .second_level').parent();
       var subnav = $('#subnav');
-      var selected = topLevel.filter('.selected:visible');
+
+      //TODO: this doesn't seem like the best selector...
+      var activeTab = topLevel.filter('.selected:visible');
 
       //hide the secondlevel before prepending it to subnav
       secondLevel.hide();
       //set the current tab to active so we can check it later
-      selected.addClass('active');
+      activeTab.addClass('active');
+      activeTab = topLevel.filter('.active');
       //move (prepend) the second level nav items to subnav
       secondLevel.prependTo(subnav);
 
@@ -45,7 +48,7 @@ KT.menu = (function(){
       var hoverSettings = {
         sensitivity: 4,
         interval: 75,
-        timeout: 500,
+        timeout: 250,
         over: function(){
           $(this).trigger("open");
         },
@@ -66,7 +69,7 @@ KT.menu = (function(){
             //make the tab "highlight" on hover
             $(this).addClass('selected');
             //show the current subnav and trigger it to stay open
-            currentSubnav.show('fast');
+            currentSubnav.slideDown('fast');
             topLevelTab.trigger("hovering");
           }).bind("hovering", function(){
             currentSubnav.show();
@@ -74,11 +77,10 @@ KT.menu = (function(){
           .bind("close", function(){
             //take away tab highlight
             $(this).removeClass('selected');
+            activeTab.addClass('selected');
             if(!$(this).hasClass('active')) {
               //the stuff to do to if it's not the current tab
-              currentSubnav.hide('fast');
-            } else {
-              selected.addClass('selected');
+              currentSubnav.slideUp('fast');
             }
           }).hoverIntent(hoverSettings);
 
