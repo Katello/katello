@@ -43,7 +43,14 @@ KT.menu = (function(){
       activeTab.addClass('active');
       activeTab = topLevel.filter('.active');
       //move (prepend) the second level nav items to subnav
-      secondLevel.prependTo(subnav);
+
+      secondLevel.each(function(){
+      	if( activeTab.attr('id') !== $(this).parent().attr('id') ){
+      		$(this).prependTo(subnav);
+      	} else {
+      		$(this).remove();
+      	}
+      });
 
       //some settings for the hoverable top level tabs
       var hoverSettings = {
@@ -66,6 +73,7 @@ KT.menu = (function(){
         var enter = function(){topLevelTab.trigger("mouseenter");};
         var leave = function(){setTimeout(topLevelTab.trigger("mouseout"), 200)};
         currentSubnav.hover(function(){enter()},function(){leave()});
+        
         topLevelTab.bind("open", function(){
             //make the tab "highlight" on hover
             $(this).addClass('selected');
