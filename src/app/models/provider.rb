@@ -108,12 +108,19 @@ class Provider < ActiveRecord::Base
   end
 
   def self.list_verbs  global = false
-    {
-       :create => N_("Create Provider"),
-       :read => N_("Access Provider"),
-       :update => N_("Manage Provider and Products"),
-       :delete => N_("Delete Provider"),
-    }.with_indifferent_access
+    if AppConfig.katello?
+      {
+         :create => N_("Create Provider"),
+         :read => N_("Access Provider"),
+         :update => N_("Manage Provider and Products"),
+         :delete => N_("Delete Provider"),
+      }.with_indifferent_access
+    else
+      {
+         :read => N_("Access Provider"),
+         :update => N_("Manage Provider and Products"),
+      }.with_indifferent_access
+    end
   end
 
   def self.no_tag_verbs

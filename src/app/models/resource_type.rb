@@ -86,17 +86,29 @@ class ResourceType < ActiveRecord::Base
     raise ResourceTypeNotFound.new(resource_type, TYPES.keys) unless TYPES.has_key? resource_type
   end
 
-  TYPES = {
-      :organizations => {:model => Organization, :name => N_("Organizations"), :global=>false},
-      :system_templates => {:model=>SystemTemplate, :name=>N_("System Templates"), :global=>false},
-      :environments => {:model => KTEnvironment, :name => N_("Environments"), :global=>false},
-      :activation_keys => { :model => ActivationKey, :name => N_("Activation Keys"), :global=>false},
-      :providers => { :model => Provider, :name => N_("Providers"), :global=>false},
-      :filters => { :model => Filter, :name => N_("Filters"), :global => false},
-      :users => { :model => User, :name => N_("Users"), :global=>true},
-      :roles => { :model => Role, :name => N_("Roles"), :global=>true},
-      :all => { :model => OpenStruct.new(:list_verbs =>{}, :list_tags=>[], :tags_for =>[], :tags => [], :no_tag_verbs =>[]), :name => N_("All"), :global => false}
-  }.with_indifferent_access
+  if AppConfig.katello?
+    TYPES = {
+        :organizations => {:model => Organization, :name => N_("Organizations"), :global=>false},
+        :system_templates => {:model=>SystemTemplate, :name=>N_("System Templates"), :global=>false},
+        :environments => {:model => KTEnvironment, :name => N_("Environments"), :global=>false},
+        :activation_keys => { :model => ActivationKey, :name => N_("Activation Keys"), :global=>false},
+        :providers => { :model => Provider, :name => N_("Providers"), :global=>false},
+        :filters => { :model => Filter, :name => N_("Filters"), :global => false},
+        :users => { :model => User, :name => N_("Users"), :global=>true},
+        :roles => { :model => Role, :name => N_("Roles"), :global=>true},
+        :all => { :model => OpenStruct.new(:list_verbs =>{}, :list_tags=>[], :tags_for =>[], :tags => [], :no_tag_verbs =>[]), :name => N_("All"), :global => false}
+    }.with_indifferent_access
+  else
+    TYPES = {
+        :organizations => {:model => Organization, :name => N_("Organizations"), :global=>false},
+        :environments => {:model => KTEnvironment, :name => N_("Environments"), :global=>false},
+        :activation_keys => { :model => ActivationKey, :name => N_("Activation Keys"), :global=>false},
+        :providers => { :model => Provider, :name => N_("Providers"), :global=>false},
+        :users => { :model => User, :name => N_("Users"), :global=>true},
+        :roles => { :model => Role, :name => N_("Roles"), :global=>true},
+        :all => { :model => OpenStruct.new(:list_verbs =>{}, :list_tags=>[], :tags_for =>[], :tags => [], :no_tag_verbs =>[]), :name => N_("All"), :global => false}
+    }.with_indifferent_access
+  end
 
 end
 

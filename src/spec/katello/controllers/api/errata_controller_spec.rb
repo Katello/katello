@@ -43,4 +43,3 @@ describe Api::ErrataController do
   end
 
 end
-

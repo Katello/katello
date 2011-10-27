@@ -136,7 +136,7 @@ describe ChangesetsController do
       response.should_not be_success
     end
 
-    
+
 
   end
 

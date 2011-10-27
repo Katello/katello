@@ -84,7 +84,7 @@ describe Permission do
 
   context "super_admin" do
     it { @god.allowed_to?('create', 'organizations').should be_true }
-    it { @god.allowed_to?('create', 'providers').should be_true }
+    it { @god.allowed_to?('create', 'providers').should be_true } if AppConfig.katello?
   end
 
   context "some_role" do
@@ -242,22 +242,24 @@ describe Permission do
     end
 
 
-    describe "no_tag_verbs" do
-      before do
-        @foo_tag = 0022
-        @res_type_name = :providers
-        @res_type = ResourceType.find_or_create_by_name(@res_type_name)
-        @no_tag_verbs = Provider.no_tag_verbs
-        @verb_name = @no_tag_verbs.first
-        @verb = Verb.find_or_create_by_verb(@verb_name)
-        @magic_perm = Permission.create!(:name => 'test1000', :role => @some_role, :verbs => [@verb],
-                                      :resource_type=> @res_type, :organization => @organization)
-      end
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,nil, @organization).should be_true}
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,@foo_tag, @organization).should be_true}
+    if AppConfig.katello?
+      describe "no_tag_verbs" do
+        before do
+          @foo_tag = 0022
+          @res_type_name = :providers
+          @res_type = ResourceType.find_or_create_by_name(@res_type_name)
+          @no_tag_verbs = Provider.no_tag_verbs
+          @verb_name = @no_tag_verbs.first
+          @verb = Verb.find_or_create_by_verb(@verb_name)
+          @magic_perm = Permission.create!(:name => 'test1000', :role => @some_role, :verbs => [@verb],
+                                        :resource_type=> @res_type, :organization => @organization)
+        end
+        specify{@admin.allowed_to?(@verb_name, @res_type_name,nil, @organization).should be_true}
+        specify{@admin.allowed_to?(@verb_name, @res_type_name,@foo_tag, @organization).should be_true}
 
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,nil,nil).should be_false}
-      specify{@admin.allowed_to?(@verb_name, @res_type_name,@foo_tag, nil).should be_false}
+        specify{@admin.allowed_to?(@verb_name, @res_type_name,nil,nil).should be_false}
+        specify{@admin.allowed_to?(@verb_name, @res_type_name,@foo_tag, nil).should be_false}
+      end
     end
 
   end

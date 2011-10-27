@@ -17,7 +17,7 @@ describe ProvidersController do
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
-  
+
   before(:each) do
     login_user
     set_default_locale

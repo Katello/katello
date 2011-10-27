@@ -31,7 +31,7 @@ describe PromotionsController do
       @org = new_test_org
       controller.stub(:current_organization).and_return(@org)
       @env = @org.locker
-      
+
     end
 
     it "should be successful with locker and no next environment" do
@@ -148,7 +148,7 @@ describe "rules" do
       end
       it_should_behave_like "protected action"
     end
-    
+
 
 end
 

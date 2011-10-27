@@ -65,7 +65,7 @@ describe Api::ProductsController do
     @provider = Provider.new
     @provider.organization = @organization
     @product.provider = @provider
-    
+
     Organization.stub!(:first).and_return(@organization)
     KTEnvironment.stub!(:first).and_return(@environment)
 

@@ -161,4 +161,3 @@ describe Api::SyncController do
   end
 
 end
-

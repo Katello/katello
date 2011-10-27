@@ -96,15 +96,26 @@ class Organization < ActiveRecord::Base
   end
 
   def self.list_verbs global = false
-    org_verbs = {
-      :update => N_("Manage Organization and Environments"),
-      :read => N_("Access Organization"),
-      :read_systems => N_("Access Systems"),
-      :register_systems =>N_("Register Systems"),
-      :update_systems => N_("Manage Systems"),
-      :delete_systems => N_("Delete Systems"),
-      :sync => N_("Sync Products")
-   }
+    if AppConfig.katello?
+      org_verbs = {
+        :update => N_("Manage Organization and Environments"),
+        :read => N_("Access Organization"),
+        :read_systems => N_("Access Systems"),
+        :register_systems =>N_("Register Systems"),
+        :update_systems => N_("Manage Systems"),
+        :delete_systems => N_("Delete Systems"),
+        :sync => N_("Sync Products")
+     }
+    else
+      org_verbs = {
+        :update => N_("Manage Organization and Environments"),
+        :read => N_("Access Organization"),
+        :read_systems => N_("Access Systems"),
+        :register_systems =>N_("Register Systems"),
+        :update_systems => N_("Manage Systems"),
+        :delete_systems => N_("Delete Systems"),
+     }
+    end
     org_verbs.merge!({
     :create => N_("Create Organization"),
     :delete => N_("Delete Organization")

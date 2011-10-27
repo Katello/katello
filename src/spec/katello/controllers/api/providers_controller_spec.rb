@@ -101,7 +101,7 @@ describe Api::ProvidersController do
     it "should call Provider#update_attributes" do
       Provider.should_receive(:find).with(provider_id).and_return(@provider)
       @provider.should_receive(:update_attributes!).once
-      
+
       req
     end
   end
@@ -116,13 +116,13 @@ describe Api::ProvidersController do
 
     it "should call Provider.first" do
       Provider.should_receive(:find).with(provider_id).and_return(@provider)
-      
+
       req
     end
   end
 
   describe "delete a provider" do
- 
+
     let(:action) { :destroy }
     let(:req) { delete :destroy, :id => provider_id }
     let(:authorized_user) { user_with_write_permissions }
@@ -151,7 +151,7 @@ describe Api::ProvidersController do
       req
     end
   end
-  
+
   describe "import manifest" do
 
     let(:action) { :import_manifest }
@@ -166,10 +166,10 @@ describe Api::ProvidersController do
       @temp_file.stub(:close)
       @temp_file.stub(:write)
       @temp_file.stub(:path).and_return("/a/b/c")
-      
+
       File.stub(:new).and_return(@temp_file)
     end
-      
+
     it "should call Provider#import_manifest" do
       Provider.should_receive(:find).with(provider_id).and_return(@provider)
       @provider.should_receive(:import_manifest).once
