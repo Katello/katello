@@ -2,12 +2,13 @@ require 'rspec/core'
 require 'rspec/core/rake_task'
 
 namespace "test" do
-  ["katello", "headpin"].each do |app|
+  ["headpin"].each do |app|
     desc "Invoke #{app} RSpec tests"
-    task "#{app}_tests" do
+    task "#{app}" do
       spec_prereq = Rails.configuration.generators.options[:rails][:orm] == :active_record ?  "db:test:prepare" : :noop
-      t =RSpec::Core::RakeTask.new(spec_prereq).instance_eval do |i|
-        self.pattern = ["./spec/common/**/*_spec.rb","./spec/#{app}/**/*_spec.rb"]
+      t = RSpec::Core::RakeTask.new(spec_prereq).instance_eval do |i|
+        self.pattern = ["./spec/**/*_spec.rb"]
+        self.rspec_opts = "--tag ~katello"
         task "#{app}_spec" do
           RakeFileUtils.send(:verbose, verbose) do
             if files_to_run.empty?

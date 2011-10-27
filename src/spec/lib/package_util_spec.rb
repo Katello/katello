@@ -13,81 +13,123 @@
 require 'spec_helper'
 require 'util/package_util'
 
-describe Katello::PackageUtils do
+describe Katello::PackageUtils, :katello => true do
 
-  let(:nvrea1) { "1:name-ver.si.on-relea.se.arch.rpm" }
-  let(:nvrea1_hash) {
-    { :epoch => "1",
-      :name  => "name",
-      :version => "ver.si.on",
-      :release => "relea.se",
-      :arch => "arch",
-      :suffix => "rpm"
-    }
-  }
+  describe "nvrea" do
 
-  let(:nvrea2) { "1:name-ver.si.on-relea.se.arch" }
-  let(:nvrea2_hash) {
-    { :epoch => "1",
-      :name  => "name",
-      :version => "ver.si.on",
-      :release => "relea.se",
-      :arch => "arch",
-    }
-  }
+    shared_examples_for "nvrea parsable string" do
+      it "can be parsed" do
+        Katello::PackageUtils.parse_nvrea(subject).should == expected
+      end
+    end
 
-  let(:nvrea3) { "name-ver.si.on-relea.se.arch.rpm" }
-  let(:nvrea3_hash) {
-    { :name  => "name",
-      :version => "ver.si.on",
-      :release => "relea.se",
-      :arch => "arch",
-      :suffix => "rpm"
-    }
-  }
+    shared_examples_for "nvrea_nvre parsable string" do
+      it "can be parsed" do
+        Katello::PackageUtils.parse_nvrea_nvre(subject).should == expected
+      end
+    end
 
-  let(:nvrea4) { "name-ver.si.on-relea.se.arch" }
-  let(:nvrea4_hash) {
-    { :name  => "name",
-      :version => "ver.si.on",
-      :release => "relea.se",
-      :arch => "arch"
-    }
-  }
+    context "name not in nvrea format" do
+      subject { "this-is-not-nvrea" }
 
-  let(:nvre1) { "1:name-ver.si.on-relea.se" }
-  let(:nvre1_hash) {
-    { :epoch => "1",
-      :name  => "name",
-      :version => "ver.si.on",
-      :release => "relea.se"
-    }
-  }
+      it "can not be parsed by nvrea" do
+        Katello::PackageUtils.parse_nvrea(subject).should be_nil
+      end
+    end
 
-  let(:nvre2) { "name-ver.si.on-relea.se" }
-  let(:nvre2_hash) {
-    { :name  => "name",
-      :version => "ver.si.on",
-      :release => "relea.se"
-    }
-  }
+    context "full nvrea with rpm" do
+      subject { "1:name-ver.si.on-relea.se.x86_64.rpm" }
+      let(:expected) do
+        { :epoch => "1",
+          :name  => "name",
+          :version => "ver.si.on",
+          :release => "relea.se",
+          :arch => "x86_64",
+          :suffix => "rpm" }
+      end
 
+      it_should_behave_like "nvrea parsable string"
+      it_should_behave_like "nvrea_nvre parsable string"
+    end
 
-  it "should parse nvre" do
-    Katello::PackageUtils.parse_nvre(nvre1).should == nvre1_hash
-    Katello::PackageUtils.parse_nvre(nvre2).should == nvre2_hash
+    context "full nvrea without rpm" do
+      subject { "1:name-ver.si.on-relea.se.x86_64" }
+      let(:expected) do
+        { :epoch => "1",
+          :name  => "name",
+          :version => "ver.si.on",
+          :release => "relea.se",
+          :arch => "x86_64", }
+      end
+
+      it_should_behave_like "nvrea parsable string"
+      it_should_behave_like "nvrea_nvre parsable string"
+    end
+
+    context "nvrea with rpm without epoch" do
+      subject { "name-ver.si.on-relea.se.x86_64.rpm" }
+      let(:expected) do
+        { :name  => "name",
+          :version => "ver.si.on",
+          :release => "relea.se",
+          :arch => "x86_64",
+          :suffix => "rpm" }
+      end
+
+      it_should_behave_like "nvrea parsable string"
+      it_should_behave_like "nvrea_nvre parsable string"
+    end
+
+    context "nvrea without rpm and epoch" do
+      subject { "name-ver.si.on-relea.se.x86_64" }
+      let(:expected) do
+        { :name  => "name",
+          :version => "ver.si.on",
+          :release => "relea.se",
+          :arch => "x86_64" }
+      end
+
+      it_should_behave_like "nvrea parsable string"
+      it_should_behave_like "nvrea_nvre parsable string"
+    end
   end
 
-  it "should parse nvrea" do
-    Katello::PackageUtils.parse_nvrea(nvrea1).should == nvrea1_hash
-    Katello::PackageUtils.parse_nvrea(nvrea2).should == nvrea2_hash
-    Katello::PackageUtils.parse_nvrea(nvrea3).should == nvrea3_hash
-    Katello::PackageUtils.parse_nvrea(nvrea4).should == nvrea4_hash
-  end
+  describe "nvre" do
 
-  it "should build nvre" do
-    Katello::PackageUtils.build_nvrea(nvre1_hash).should == nvre1
-    Katello::PackageUtils.build_nvrea(nvre2_hash).should == nvre2
-  end
+    shared_examples_for "nvre parsable string" do
+      it "can be parsed" do
+        Katello::PackageUtils.parse_nvre(subject).should == expected
+      end
 
+      it "can be build" do
+        Katello::PackageUtils.build_nvrea(expected).should == subject
+      end
+    end
+
+    context "full nvre" do
+      subject { "1:name-ver.si.on-relea.se" }
+      let(:expected) do
+        { :epoch => "1",
+          :name  => "name",
+          :version => "ver.si.on",
+          :release => "relea.se" }
+      end
+
+      it_should_behave_like "nvre parsable string"
+      it_should_behave_like "nvrea_nvre parsable string"
+    end
+
+    context "nvre without epoch" do
+      subject { "name-ver.si.on-relea.se" }
+      let(:expected) do
+        { :name  => "name",
+          :version => "ver.si.on",
+          :release => "relea.se"
+        }
+      end
+
+      it_should_behave_like "nvre parsable string"
+      it_should_behave_like "nvrea_nvre parsable string"
+    end
+  end
 end
