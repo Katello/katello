@@ -220,7 +220,7 @@ class ShowSubscriptions(OrganizationAction):
         name = self.get_option('name')
         pools = self.api.pools(name)
 
-        [dict(list(p.items()) + list({'sla':self.productApi.products_by_org(name, p['productId'])}.items())) for p in pools]
+        pools_with_sla = self.add_sla(name, pools)
         
         self.printer.addColumn('productName')
         self.printer.addColumn('consumed')
@@ -229,9 +229,16 @@ class ShowSubscriptions(OrganizationAction):
         self.printer.addColumn('startDate')
         self.printer.addColumn('endDate')
         self.printer.setHeader(_("Organization's Subscriptions"))
-        self.printer.printItems(pools)
+        self.printer.printItems(pools_with_sla)
         
         return os.EX_OK
+
+    def add_sla(self, org, pools):
+        return [dict(list(p.items()) + list({'sla':self.extract_sla_from_product(self.productApi.product_by_name(org, p['productId']))}.items())) for p in pools]
+    
+    def extract_sla_from_product(self, p):
+            sla_attr = [attr.get("value", "") for attr in p["attributes"] if attr.get("name", "") == "sla"]
+            return sla_attr[0] if len(sla_attr) > 0 else ""
 
 # organization command ------------------------------------------------------------
 
