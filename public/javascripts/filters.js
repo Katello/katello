@@ -397,7 +397,7 @@ KT.filters = (function(){
         var input = $("#package_input");
 
         //verify the package isn't already displayed
-        if ($(".package_select[value=" + name + "]").length !== 0){
+        if ($(".package_select[value=" + KT.common.escapeId(name) + "]").length !== 0){
             cleanup_cb();
             return;
         }
@@ -414,7 +414,7 @@ KT.filters = (function(){
                 $.each(data, function(index, item){
                     var html = "<tr><td>";
                     html+= '<input type="checkbox" id="' + item + '" class="package_select" value="' + item + '">';
-                    html += '<label for="' + item + '">' + item + '</label></td></tr>';
+                    html += '&nbsp;<label for="' + item + '">' + item + '</label></td></tr>';
                     table.append(html);
                 });
                 table.find("tr").not(".no_sort").sortElements(function(a,b){
