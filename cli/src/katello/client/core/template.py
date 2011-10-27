@@ -199,6 +199,63 @@ class Import(TemplateAction):
     def open_file(self, path):
         return open(get_abs_path(path))
 
+# ==============================================================================
+class Export(TemplateAction):
+
+    description = _('export the template into the file')
+
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("template name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+        self.parser.add_option('--environment', dest='env',
+                               help=_("environment name eg: dev (Locker by default)"))
+        self.parser.add_option("--file", dest="file",
+                               help=_("path to the template file (required)"))
+        self.parser.add_option("--format", dest="format",
+                               help=_("format of the export, possible values: %s, default: json") % self.supported_formats())
+
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+        self.require_option('file')
+
+    def supported_formats(self):
+        return ['json', 'tdl']
+
+    def run(self):
+        tplName = self.get_option('name')
+        orgName = self.get_option('org')
+        envName = self.get_option('env')
+        format  = self.get_option('format') or "json"
+        tplPath = self.get_option('file')
+
+        if not format in self.supported_formats():
+            print _("Format must be one of %s") % self.supported_formats()
+            return os.EX_IOERR
+
+        template = get_template(orgName, envName, tplName)
+        if not template:
+            return os.EX_DATAERR
+
+        try:
+            f = self.open_file(tplPath)
+        except:
+            print _("Could not create file %s") % tplPath
+            return os.EX_IOERR
+
+        response = run_spinner_in_bg(self.api.export_tpl, (template["id"], format), message=_("Exporting template, please wait... "))
+        f.write(response)
+        f.close()
+        print _("Template was exported successfully to file %s") % tplPath
+        return os.EX_OK
+
+    def open_file(self, path):
+        return open(get_abs_path(path),"w")
+
 
 # ==============================================================================
 class Create(TemplateAction):

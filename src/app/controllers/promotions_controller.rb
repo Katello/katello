@@ -119,24 +119,13 @@ class PromotionsController < ApplicationController
   end
 
   def errata
-    errata_hash = {}
+    filter = params.slice(:type, :severity).symbolize_keys
+    filter[:environment_id] = @environment.id
+    filter[:product_id] = @product.cp_id unless @product.nil?
 
-    if (@product)
-      products = [@product]
-    else
-      products = @environment.products
-    end
+    @errata = Glue::Pulp::Errata.filter(filter)
+    @errata.sort! {|a,b| a['title'] <=> b['title']}
 
-    products.each{|product|
-        product.repos(@environment).each{|repo|
-          repo.errata.each {|erratum|
-            errata_hash[erratum.id] = erratum if errata_hash[erratum.id].nil?
-          }
-        }
-    }
-
-    @errata = errata_hash.values
-    @errata.sort! {|a,b| a.title <=> b.title}
     offset = params[:offset]
     if offset
       offset = offset.to_i

@@ -21,7 +21,7 @@ from katello.client.api.errata import ErrataAPI
 from katello.client.api.system import SystemAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.api.utils import get_repo
+from katello.client.api.utils import get_repo, get_environment, get_product
 
 Config()
 
@@ -52,30 +52,51 @@ class List(ErrataAction):
         self.parser.add_option('--product', dest='product',
                       help=_("product name eg: fedora-14"))
 
+
+        self.parser.add_option('--type', dest='type',
+                      help=_("filter errata by type eg: enhancements"))
+        self.parser.add_option('--severity', dest='severity',
+                      help=_("filter errata by severity"))
+
     def check_options(self):
         if not self.has_option('repo_id'):
-            self.require_option('repo')
             self.require_option('org')
+        if self.has_option('repo'):
             self.require_option('product')
 
     def run(self):
-        repoId   = self.get_option('repo_id')
-        repoName = self.get_option('repo')
-        orgName  = self.get_option('org')
-        envName  = self.get_option('env')
-        prodName = self.get_option('product')
+        repo_id   = self.get_option('repo_id')
+        repo_name = self.get_option('repo')
+        org_name  = self.get_option('org')
+        env_name  = self.get_option('env')
+        env_id, prod_id = None, None
+        prod_name = self.get_option('product')
 
         self.printer.addColumn('id')
         self.printer.addColumn('title')
         self.printer.addColumn('type')
 
-        if not repoId:
-            repo = get_repo(orgName, prodName, repoName, envName)
-            if repo == None:
-                return os.EX_DATAERR
-            repoId = repo["id"]
+        if not repo_id:
+            if repo_name:
+                repo = get_repo(org_name, prod_name, repo_name, env_name)
+                if repo == None:
+                    return os.EX_DATAERR
+                repo_id = repo["id"]
+            else:
+                env = get_environment(org_name, env_name)
+                if env == None:
+                    return os.EX_DATAERR
+                else:
+                    env_id = env["id"]
+                if prod_name:
+                    product = get_product(org_name, prod_name)
+                    if product == None:
+                        return os.EX_DATAERR
+                    else:
+                        prod_id = product["id"]
 
-        errata = self.api.errata_by_repo(repoId)
+
+        errata = self.api.errata_filter(repo_id=repo_id, environment_id=env_id, type=self.get_option('type'), severity=self.get_option('severity'),prod_id=prod_id)
 
         self.printer.setHeader(_("Errata List"))
         self.printer.printItems(errata)

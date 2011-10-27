@@ -331,8 +331,7 @@ module Glue::Pulp::Repos
 
       added_content.each do |pc|
         if !(self.environments.map(&:name).any? {|name| pc.content.name.include?(name)}) || pc.content.name.include?('Locker')
-        Rails.logger.debug "creating repository #{repo_id(pc.content.name)}"
-          #PROD TODO: check add_repo
+          Rails.logger.debug "creating repository #{repo_id(pc.content.name)}"
           self.add_repo(pc.content.name, repository_url(pc.content.contentUrl), pc.content.type)
         else
           raise "new content was added to environment other than Locker. use promotion instead."

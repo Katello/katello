@@ -63,7 +63,7 @@ describe Glue::Pulp::Repo do
 
     it "called for second time should use the cached values" do
       @repo.packages
-      Pulp::Repository.should_not_receive(:packages).with(RepoTestData::REPO_ID)
+      Pulp::Repository.should_not_receive(:packages).with(RepoTestData::REPO_ID, {})
       @repo.packages
     end
 
