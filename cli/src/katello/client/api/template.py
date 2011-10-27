@@ -15,6 +15,11 @@
 
 from katello.client.api.base import KatelloAPI
 
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 class TemplateAPI(KatelloAPI):
 
     def templates(self, envId):
@@ -50,6 +55,15 @@ class TemplateAPI(KatelloAPI):
 
         path = "/api/templates/import"
         return self.server.POST(path, tplData, multipart=True)[1]
+
+    def export_tpl(self, tplId, format):
+        format_content_type = {'json': 'application/json', 'tdl':'application/tdl-xml'}
+        customHeaders = {'Accept': format_content_type[format]}
+        path = "/api/templates/%s/export" % tplId
+        response = self.server.GET(path, customHeaders=customHeaders)[1]
+        if isinstance(response, dict):
+            response = json.dumps(response)
+        return response
 
 
     def create(self, envId, name, description, parentId):
