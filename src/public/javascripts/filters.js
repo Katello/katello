@@ -81,7 +81,6 @@ KT.product_input = (function(){
     var register = function() {
 
         var select = $('#product_select');
-        var form = $("#add_product_form");
 
         select.html(KT.filter_renderer.product_select_template());
         select.chosen({
@@ -106,7 +105,7 @@ KT.product_input = (function(){
             }
         });
 
-        form.submit(function(e){
+        $("#add_product").click(function(e){
             var value;
             var add_btn = $("add_product");
             e.preventDefault();
@@ -252,6 +251,7 @@ KT.filter_renderer = (function(){
         var list = $('.product_entry[data-id=' + prod_id + ']').find(".repos_list");
         list.append(repo_template(prod_id, repo_id));
         KT.product_input.post_render_register();
+        render_product_message(prod_id, false);
     },
     render_product_message = function(prod_id, is_full) {
         var msg = product_message(prod_id, is_full, []);
