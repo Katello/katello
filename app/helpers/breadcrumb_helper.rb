@@ -113,21 +113,33 @@ module ContentBreadcrumbs
    products_crumb_id = "products"
    templates_crumb_id = "templates"
 
+   errata_crumb_id = "errata"
+   errata_filters = errata_bc_filters(@environment.name)
+
    add_crumb_node!(bc, content_crumb_id, details_promotion_path(@environment.name) ,
        _("Content"), [], {:cache =>true, :content=>render(:partial=>"detail",
                                  :locals=>{:environment_name => @environment.name,
                                            :read_contents => @environment.contents_readable?})})
-   add_crumb_node!(bc, "all_errata", errata_promotion_path(@environment.name),
-       _("All Errata"), [content_crumb_id], {:scrollable=>true})
+
+   add_crumb_node!(bc, errata_crumb_id, nil,
+       _("Errata"), [content_crumb_id], {:cache => true, :content => render(:partial => "errata_filters", :locals => {:errata_filters => errata_filters})})
+
+   errata_filters.each do |filter|
+     add_crumb_node!(bc, filter[:id], filter[:path],
+         filter[:label], [content_crumb_id, errata_crumb_id], {:scrollable=>true})
+   end
 
    add_crumb_node!(bc, products_crumb_id, products_promotion_path(@environment.name),
        _("Products"), [content_crumb_id], {:cache=>true, :content=>render(:partial=>"products", :locals=>{:products=>@products, :changeset=>@changeset})})
 
-
    add_crumb_node!(bc, templates_crumb_id, system_templates_promotion_path(@environment.name),
                             _("System Templates"), [content_crumb_id])
+
    for prod in @products
      product_id = product_bc_id(prod)
+     errata_id = errata_bc_id(prod)
+     errata_filters = errata_bc_filters(@environment.name, prod)
+
      #top of this product
      add_crumb_node!(bc, product_id, details_promotion_path(@environment.name, :product_id=>prod.id),
         prod.name, [content_crumb_id,products_crumb_id], {:cache=>true,
@@ -135,22 +147,26 @@ module ContentBreadcrumbs
                                  :locals=>{:product=>prod, :environment_name => @environment.name,
                                            :read_contents => @environment.contents_readable?})})
 
-     #product,packages
+     #product_packages
      add_crumb_node!(bc, packages_bc_id(prod), packages_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
         _("Packages"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
 
      #product_errata
-     add_crumb_node!(bc, errata_bc_id(prod), errata_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
-        _("Errata"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
+     add_crumb_node!(bc, errata_id, nil,
+         _("Errata"), [content_crumb_id, products_crumb_id, product_id], {:cache => true, :content => render(:partial => "errata_filters", :locals => {:errata_filters => errata_filters})})
+
+     errata_filters.each do |filter|
+       add_crumb_node!(bc, filter[:id], filter[:path],
+           filter[:label], [content_crumb_id, products_crumb_id, product_id, errata_id], {:scrollable=>true})
+     end
 
      #product_repos
      add_crumb_node!(bc, repo_bc_id(prod), repos_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
                      _("Repos"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
 
-   #product_distributions
-   add_crumb_node!(bc, distribution_bc_id(prod), distributions_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
-                   _("Distributions"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
-
+     #product_distributions
+     add_crumb_node!(bc, distribution_bc_id(prod), distributions_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
+                     _("Distributions"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
    end
 
    bc.to_json
@@ -165,8 +181,12 @@ module ContentBreadcrumbs
     "packages_#{product.id}"
   end
 
-  def errata_bc_id product
-    "errata_#{product.id}"
+  def errata_bc_id product, filter=nil
+    if filter.nil?
+      "errata_#{product.id}"
+    else
+      "errata_#{filter}_#{product.id}"
+    end
   end
 
   def repo_bc_id product
@@ -181,6 +201,33 @@ module ContentBreadcrumbs
     "distribution_#{product.id}"
   end
 
+  # Create an array of hash elements each containing an id and label for the supported errata filters.  This
+  # may be used when building out the breadcrumb and rendering the errata filters.
+  def errata_bc_filters env_name, product = nil
+    filters = []
+    labels = [_("All"), _("Severity: Critical"), _("Severity: Important"), _("Severity: Moderate"),
+              _("Severity: Low"), _("Type: Security"), _("Type: Bug Fix"), _("Type: Enhancement")]
+
+    if product.nil?
+      filters = [{:id => "errata_all", :label => labels[0], :path => errata_promotion_path(env_name)},
+                 {:id => "errata_critical", :label=> labels[1], :path => errata_promotion_path(env_name, :severity => "Critical")},
+                 {:id => "errata_important", :label => labels[2], :path => errata_promotion_path(env_name, :severity => "Important")},
+                 {:id => "errata_moderate", :label => labels[3], :path => errata_promotion_path(env_name, :severity => "Moderate")},
+                 {:id => "errata_low", :label => labels[4], :path => errata_promotion_path(env_name, :severity => "Low")},
+                 {:id => "errata_security", :label => labels[5], :path => errata_promotion_path(env_name, :type => "security")},
+                 {:id => "errata_bugfix", :label => labels[6], :path => errata_promotion_path(env_name, :type => "bugfix")},
+                 {:id => "errata_enhancement", :label => labels[7], :path => errata_promotion_path(env_name, :type => "enhancement")}]
+    else
+      filters = [{:id => errata_bc_id(product, "all"), :label => labels[0], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset))},
+                 {:id => errata_bc_id(product, "critical"), :label => labels[1], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :severity => "Critical")},
+                 {:id => errata_bc_id(product, "important"), :label => labels[2], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :severity => "Important")},
+                 {:id => errata_bc_id(product, "moderate"), :label => labels[3], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :severity => "Moderate")},
+                 {:id => errata_bc_id(product, "low"), :label => labels[4], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :severity => "Low")},
+                 {:id => errata_bc_id(product, "security"), :label => labels[5], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :type => "security")},
+                 {:id => errata_bc_id(product, "bugfix"), :label => labels[6], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :type => "bugfix")},
+                 {:id => errata_bc_id(product, "enhancement"), :label => labels[7], :path => errata_promotion_path(env_name, :product_id=>product.id, :changeset_id=>changeset_id(@changeset), :type => "enhancement")}]
+    end
+  end
 end
   
 module RolesBreadcrumbs
