@@ -104,7 +104,7 @@ PROVIDERS = [
   }
 ]
 
-
+SLA_VALUE = "1"
 
 PRODUCTS = [
   {
@@ -135,7 +135,7 @@ PRODUCTS = [
     "attributes": [
       {
         "name": "sla",
-        "value": "1"
+        "value": SLA_VALUE
       }
     ],
     "multiplier": 1,

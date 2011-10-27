@@ -38,7 +38,7 @@ class SubscriptionsListTest(CLIActionTestCase):
         self.mock_printer()
 
         self.mock(self.action.api, 'pools', [test_data.POOL])
-        self.mock(self.action.productApi, 'product_by_name', test_data.PRODUCTS[0])
+        self.mock(self.action.productApi, 'show', test_data.PRODUCTS[0])
 
     def tearDown(self):
         self.restore_mocks()
@@ -47,23 +47,15 @@ class SubscriptionsListTest(CLIActionTestCase):
         self.action.run()
         self.action.api.pools.assert_called_once_with(self.ORGANIZATION)
 
-    def test_it_calls_add_sla(self):
-        self.mock(self.action, 'add_sla', [])
-        self.action.run()
-        self.action.add_sla.assert_called_once_with(self.ORGANIZATION, [test_data.POOL])
+    def test_extract_sla_from_product(self):
+        self.assertEqual(test_data.SLA_VALUE, self.action.extract_sla_from_product(test_data.PRODUCTS[0]))
 
-    def test_add_sla_adds_sla_field_if_it_exists(self):
-        pools_with_sla = self.action.add_sla(self.ORGANIZATION, [test_data.POOL])
+    def test_extract_sla_from_product_with_no_sla(self):
+        self.assertEqual("", self.action.extract_sla_from_product(test_data.PRODUCTS[1]))
 
-        self.assertEqual(1, len(pools_with_sla))
-        self.assertEqual(test_data.PRODUCTS[0]['attributes'][0]['value'], pools_with_sla[0]['sla'])
-
-    def test_add_an_empty_sla_field_if_it_is_not_present(self):
-        self.mock(self.action.productApi, 'product_by_name', test_data.PRODUCTS[1])
-        pools_with_sla = self.action.add_sla(self.ORGANIZATION, [test_data.POOL])
-
-        self.assertEqual(1, len(pools_with_sla))
-        self.assertEqual("", pools_with_sla[0]['sla'])
+    def test_displayable_pool(self):
+        pool_with_sla = self.action.displayable_pool(test_data.POOL)
+        self.assertEqual(test_data.SLA_VALUE, pool_with_sla['sla'])
 
 
     

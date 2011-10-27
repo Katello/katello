@@ -21,7 +21,9 @@ from katello.client.api.organization import OrganizationAPI
 from katello.client.api.product import ProductAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record
+from katello.client.core.utils import is_valid_record, format_date
+from time import strftime
+from datetime import timedelta, datetime
 
 Config()
 
@@ -220,7 +222,7 @@ class ShowSubscriptions(OrganizationAction):
         name = self.get_option('name')
         pools = self.api.pools(name)
 
-        pools_with_sla = self.add_sla(name, pools)
+        updated_pool_info = [self.displayable_pool(pool) for pool in pools]
         
         self.printer.addColumn('productName')
         self.printer.addColumn('consumed')
@@ -229,16 +231,29 @@ class ShowSubscriptions(OrganizationAction):
         self.printer.addColumn('startDate')
         self.printer.addColumn('endDate')
         self.printer.setHeader(_("Organization's Subscriptions"))
-        self.printer.printItems(pools_with_sla)
+        self.printer.printItems(updated_pool_info)
         
         return os.EX_OK
 
-    def add_sla(self, org, pools):
-        return [dict(list(p.items()) + list({'sla':self.extract_sla_from_product(self.productApi.product_by_name(org, p['productId']))}.items())) for p in pools]
+    def sla(self, pool):
+        return {'sla': self.extract_sla_from_product(self.productApi.show(pool['productId']))}
+
+    def convert_timestamp(self, timestamp_field):
+        offset = int(timestamp_field[-5:])
+        delta = timedelta(hours = offset / 100)
+        t = datetime.strptime(timestamp_field[:-9], "%Y-%m-%dT%H:%M:%S") - delta
+        return datetime.strftime(t, "%Y/%m/%d %H:%M:%S")
     
     def extract_sla_from_product(self, p):
-            sla_attr = [attr.get("value", "") for attr in p["attributes"] if attr.get("name", "") == "sla"]
-            return sla_attr[0] if len(sla_attr) > 0 else ""
+        sla_attr = [attr.get("value", "") for attr in p["attributes"] if attr.get("name", "") == "sla"]
+        return sla_attr[0] if len(sla_attr) > 0 else ""
+
+    def displayable_pool(self, pool):
+        p = dict(list(pool.items()) + list(self.sla(pool).items()))
+        p['startDate'] = self.convert_timestamp(pool['startDate'])
+        p['endDate'] = self.convert_timestamp(pool['endDate'])
+
+        return p
 
 # organization command ------------------------------------------------------------
 
