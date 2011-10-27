@@ -17,6 +17,7 @@ test_success "template list" template list --org="$TEST_ORG" --environment="Lock
 
 test_success "template update add product"                 template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_product="$FEWUPS_PRODUCT"
 test_success "template update add package"                 template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package="cheetah"
+test_success "template update add package using nvrea"                 template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package="lion-0.3-0.8.noarch.rpm"
 test_success "template update add package group"           template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group="$PACKAGE_GROUP_NAME"
 test_success "template update add package group categrory" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group_category="$PACKAGE_GROUP_CATEGORY_NAME"
 test_success "template update add parameter"                 template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_parameter="attr" --value="X"
@@ -25,6 +26,7 @@ test_success "template update remove parameter"              template update --n
 test_success "template update remove package group category" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package_group_category="$PACKAGE_GROUP_CATEGORY_NAME"
 test_success "template update remove package group"          template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package_group="$PACKAGE_GROUP_NAME"
 test_success "template update remove package"              template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package="cheetah"
+test_success "template update remove package using nvrea"              template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_package="lion-0.3-0.8.noarch.rpm"
 test_success "template update remove product"                template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --remove_product="$FEWUPS_PRODUCT"
 
 

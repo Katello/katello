@@ -144,6 +144,10 @@ module Glue::Pulp::Repo
     end
   end
 
+  def get_params
+    return @params.clone
+  end
+
   def packages
     if @repo_packages.nil?
       self.packages = Pulp::Repository.packages(self.pulp_id)
@@ -222,6 +226,11 @@ module Glue::Pulp::Repo
     nil
   end
 
+  def set_sync_schedule schedule
+    Pulp::Repository.update(self.id, {
+      :sync_schedule => schedule
+    })
+  end
 
   def has_package? id
     self.packages.each {|pkg|
@@ -324,16 +333,37 @@ module Glue::Pulp::Repo
     sync_history_item['state'] == 'finished'
   end
 
+  def organization_id
+    (get_groupid_param 'org').to_i
+  end
+
+  def environment_id
+    (get_groupid_param 'env').to_i
+  end
+
+  def product_id
+    get_groupid_param 'product'
+  end
+
+  def content_id
+    get_groupid_param 'content'
+  end
   def organization
-    Organization.find((get_groupid_param 'org').to_i)
+    Organization.find(self.organization_id)
   end
 
   def environment
-    KTEnvironment.find((get_groupid_param 'env').to_i)
+    KTEnvironment.find(self.environment_id)
   end
 
   def product
-    Product.find_by_cp_id!(get_groupid_param 'product')
+    Product.find_by_cp_id(self.product_id)
+  end
+
+  def content
+    if not self.content_id.nil?
+      Candlepin::Content.get(self.content_id)
+    end
   end
 
   # Convert array of Repo objects to Ruby Hash in the form of repo.id => repo_object for fast searches.
@@ -349,7 +379,7 @@ module Glue::Pulp::Repo
   private
   def get_groupid_param name
     idx = self.groupid.index do |s| s.start_with? name+':' end
-    if idx >= 0
+    if not idx.nil?
       return self.groupid[idx].split(':')[1]
     else
       return nil
