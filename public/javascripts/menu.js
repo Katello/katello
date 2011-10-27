@@ -30,10 +30,10 @@ KT.menu = (function(){
     menuSetup: function(){
       //set some useful vars
       var topLevel = $('nav.tab_nav li.top_level');
+      var activeSubnav = $('nav.tab_nav .second_level').filter(".selected").parent();
       var secondLevel = $('nav.tab_nav .second_level').parent();
       var subnav = $('#subnav');
 
-      //TODO: this doesn't seem like the best selector...
       var activeTab = topLevel.filter('.selected:visible');
 
       //hide the secondlevel before prepending it to subnav
@@ -47,8 +47,8 @@ KT.menu = (function(){
       //some settings for the hoverable top level tabs
       var hoverSettings = {
         sensitivity: 4,
-        interval: 75,
-        timeout: 250,
+        interval: 50,
+        timeout: 100,
         over: function(){
           $(this).trigger("open");
         },
@@ -63,11 +63,12 @@ KT.menu = (function(){
         var tabType = topLevelTab.attr('data-menu');
         var currentSubnav = subnav.find('.' + tabType + '.second_level').parent();
         var enter = function(){topLevelTab.trigger("mouseenter");};
-        var leave = function(){topLevelTab.trigger("mouseout");};
+        var leave = function(){setTimeout(topLevelTab.trigger("mouseout"), 200)};
         currentSubnav.hover(function(){enter()},function(){leave()});
         topLevelTab.bind("open", function(){
             //make the tab "highlight" on hover
             $(this).addClass('selected');
+            activeSubnav.hide();
             //show the current subnav and trigger it to stay open
             currentSubnav.slideDown('fast');
             topLevelTab.trigger("hovering");
@@ -78,6 +79,7 @@ KT.menu = (function(){
             //take away tab highlight
             $(this).removeClass('selected');
             activeTab.addClass('selected');
+            activeSubnav.show();
             if(!$(this).hasClass('active')) {
               //the stuff to do to if it's not the current tab
               currentSubnav.slideUp('fast');
