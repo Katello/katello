@@ -20,8 +20,12 @@ class Api::ErrataController < Api::ApiController
   skip_before_filter :authorize
 
   def index
-    repo = Repository.find_by_pulp_id(params[:repository_id])
-    render :json => repo.errata
+    filter = params.slice(:repoid, :product_id, :environment_id, :type, :severity).symbolize_keys
+    unless filter[:repoid] or filter[:environment_id]
+      raise HttpErrors::BadRequest.new(_("Repo id or environment must be provided"))
+    end
+    render :json => Glue::Pulp::Errata.filter(filter)
+
   end
 
   def show
