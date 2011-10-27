@@ -202,6 +202,7 @@ KT.product_input = (function(){
 
             KT.filters.pop_repo(prod_id, repo_id);
             repo.remove();
+            KT.filter_renderer.rerender_repo_select(prod_id);
             KT.filter_renderer.render_product_message(prod_id, false, filter.repos[prod_id]);
 
         });
@@ -252,10 +253,16 @@ KT.filter_renderer = (function(){
         list.append(repo_template(prod_id, repo_id));
         KT.product_input.post_render_register();
         render_product_message(prod_id, false);
+        rerender_repo_select(prod_id);
     },
     render_product_message = function(prod_id, is_full) {
-        var msg = product_message(prod_id, is_full, []);
+        var msg = product_message(prod_id, is_full, KT.filters.get_current_filter().repos[prod_id]);
         $(".product_entry[data-id=" + prod_id + "]").find(".prod_message").text(msg);
+    },
+    rerender_repo_select = function(prod_id){
+        var select = $('.product_entry[data-id=' + prod_id + ']').find("select");
+        select.html(repo_search_items(prod_id));
+        select.trigger("liszt:updated"); //update the chosen select
     },
     product_select_template = function() {
         var html = "";
@@ -319,13 +326,22 @@ KT.filter_renderer = (function(){
     },
     repo_search = function(prod_id){
         var html = '<select style="width: 250px;" class="repo_select" data-prod_id="' + prod_id + '">';
-        $.each(KT.products[prod_id].repos, function(index, item){
-            html+= '<option value="' + item.id + '">' + item.name + '</option>';
-        });
+        html += repo_search_items(prod_id);
         html += '</select>';
         html += '<a class="add_repo"> &nbsp;' + i18n.add_plus + '</a>';
         return html;
     },
+    repo_search_items = function(prod_id){
+        var html = "";
+        $.each(KT.products[prod_id].repos, function(index, item){
+            var used = KT.filters.get_current_filter().repos[prod_id] || [];
+            console.log(used);
+            if (used.indexOf(item.id) === -1) {
+                html+= '<option value="' + item.id + '">' + item.name + '</option>';
+            }
+        });
+        return html;
+    }
     single_product = function(prod_id) {
         var filter = KT.filters.get_current_filter();
         var repos = [];
@@ -374,7 +390,8 @@ KT.filter_renderer = (function(){
         product_select_template: product_select_template,
         render_product_message: render_product_message,
         render_single_product : render_single_product,
-        render_single_repo : render_single_repo
+        render_single_repo : render_single_repo,
+        rerender_repo_select: rerender_repo_select
     }
 
 })();
