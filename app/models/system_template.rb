@@ -85,6 +85,7 @@ class SystemTemplate < ActiveRecord::Base
     json["packages"].each {|p| self.add_package(p) } if json["packages"]
     json["package_groups"].each {|pg| self.add_package_group(pg) } if json["package_groups"]
     json["package_group_categories"].each {|pgc| self.add_pg_category(pgc) } if json["package_group_categories"]
+    json["distributions"].each {|d| self.add_distribution(d) } if json["distributions"]
     json["parameters"].each_pair {|k,v| self.parameters[k] = v } if json["parameters"]
 
     self.save_content_state
