@@ -254,7 +254,7 @@ module Glue::Pulp::Repos
     end
 
     def delete_repo_by_id(repo_id)
-      Repository.destroy_all(repo_id)
+      Repository.destroy_all(:id=>repo_id)
     end
 
     def add_repo(name, url, repo_type)
