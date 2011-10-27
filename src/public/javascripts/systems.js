@@ -39,7 +39,6 @@
 				  	} 
 				]});
   	}
-  	console.log(options);
   	KT.panel.list.registerPage('systems', options);
 }());
 
