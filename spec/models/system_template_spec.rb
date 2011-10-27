@@ -254,6 +254,9 @@ describe SystemTemplate do
   'package_group_categories': [
     'pgc-123',
     'pgc-456'
+  ],
+  'distributions': [
+    'ks-distro'
   ]
 }
 "
@@ -269,6 +272,7 @@ describe SystemTemplate do
       @import_tpl.should_receive(:add_package_group).once.with('pg-456').and_return nil
       @import_tpl.should_receive(:add_pg_category).once.with('pgc-123').and_return nil
       @import_tpl.should_receive(:add_pg_category).once.with('pgc-456').and_return nil
+      @import_tpl.should_receive(:add_distribution).once.with('ks-distro').and_return nil
 
 
       @import_tpl.string_import(@import)
@@ -287,6 +291,7 @@ describe SystemTemplate do
       @export_tpl.stub(:parameters_json).and_return "{}"
       @export_tpl.stub(:package_groups).and_return [SystemTemplatePackGroup.new({:name => 'xxx'})]
       @export_tpl.stub(:pg_categories).and_return [SystemTemplatePgCategory.new({:name => 'xxx'})]
+      @export_tpl.stub(:distributions).and_return [SystemTemplateDistribution.new({:distribution_pulp_id=> 'xxx'})]
 
       str = @export_tpl.export_as_json
       json = ActiveSupport::JSON.decode(str)
@@ -294,6 +299,7 @@ describe SystemTemplate do
       json['packages'].size.should == 1
       json['package_groups'].size.should == 1
       json['package_group_categories'].size.should == 1
+      json['distributions'].size.should == 1
     end
 
   end
