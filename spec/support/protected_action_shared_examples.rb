@@ -26,16 +26,16 @@ shared_examples_for "protected action" do
   context "I have sufficient rights" do
     it "should let me to it" do
       unless defined? on_success
-        @controller.stub(action)
-        @controller.stub(:render)
+        controller.stub(action)
+        controller.stub(:render)
       end
       login_user_by_described_class(authorized_user) if defined?  authorized_user
       before_success if defined?(before_success)
 
-      if @controller.kind_of? Api::ApiController
-        @controller.should_not_receive(:render_exception).with { |status, e| status.should == 403 }
+      if controller.kind_of? Api::ApiController
+        controller.should_not_receive(:render_exception).with { |status, e| status.should == 403 }
       else
-        @controller.should_not_receive(:render_403)
+        controller.should_not_receive(:render_403)
       end
 
       req

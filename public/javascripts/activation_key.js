@@ -11,15 +11,12 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
+KT.panel.list.registerPage('activation_keys', { create : 'new_activation_key' });
+
 $(document).ready(function() {
 
     KT.panel.set_expand_cb(function() {
         KT.activation_key.initialize_edit();
-    });
-
-    $('#new_activation_key').live('submit', function(e) {
-        e.preventDefault();
-        KT.activation_key.create_key($(this));
     });
 
     $('#save_key').live('submit', function(e) {
@@ -126,18 +123,6 @@ KT.activation_key = (function($) {
         $('#path-expanded').hide();
         env_select.reset_hover();
         env_select.recalc_scroll();
-    },
-    create_key = function(data) {
-        disable_buttons();
-        data.ajaxSubmit({
-            success: function(data) {
-                list.add(data);
-                KT.panel.closePanel($('#panel'));
-            },
-            error: function(e) {
-                enable_buttons();
-            }
-        });
     },
     save_key = function(data) {
         disable_buttons();
@@ -301,7 +286,6 @@ KT.activation_key = (function($) {
         go_to_available_subscriptions: go_to_available_subscriptions,
         initialize_edit: initialize_edit,
         reset_env_select: reset_env_select,
-        create_key: create_key,
         save_key: save_key,
         cancel_key: cancel_key,
         toggle_family: toggle_family,
