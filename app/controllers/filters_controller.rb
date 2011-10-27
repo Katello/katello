@@ -186,7 +186,7 @@ class FiltersController < ApplicationController
         :name => controller_display_name,
         :ajax_scroll=>items_filters_path(),
         :enable_create=> Filter.creatable?(current_organization),
-        :initial_action=>:products
+        :initial_action=>:packages
     }
   end
 
