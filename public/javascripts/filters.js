@@ -335,7 +335,6 @@ KT.filter_renderer = (function(){
         var html = "";
         $.each(KT.products[prod_id].repos, function(index, item){
             var used = KT.filters.get_current_filter().repos[prod_id] || [];
-            console.log(used);
             if (used.indexOf(item.id) === -1) {
                 html+= '<option value="' + item.id + '">' + item.name + '</option>';
             }
