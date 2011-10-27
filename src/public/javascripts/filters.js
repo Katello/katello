@@ -123,7 +123,7 @@ KT.product_input = (function(){
             }
             else if(value.indexOf("REPO-") === 0){
                 value = value.substring(5);
-                KT.filters.add_repo(value, KT.filters.lookup_repo_product(value));
+                KT.filters.add_repo(value, KT.filters.lookup_repo_product(value), true);
             }
 
         });
@@ -142,7 +142,8 @@ KT.product_input = (function(){
 
     },
     post_render_register = function() {
-        $(".product_radio").change(function(){
+        
+        $(".product_radio").unbind().change(function(){
             var radio = $(this),
                 value = radio.val(),
                 parent = radio.parents(".product_entry"),
@@ -182,15 +183,15 @@ KT.product_input = (function(){
 
         $('.repo_select').chosen();
 
-        $(".add_repo").click(function(){
-            var select,id;
+        $(".add_repo").unbind().click(function(){
+            var select,id, repo_id, prod_id;
             select = $(this).siblings("select");
-            var repo_id = select.val();
-            var prod_id = select.attr("data-prod_id");
+            repo_id = select.val();
+            prod_id = select.attr("data-prod_id");
             KT.filters.add_repo(repo_id, prod_id);
         });
 
-        $(".remove_repo").click(function(){
+        $(".remove_repo").unbind().click(function(){
             var repo = $(this).parent(),
                 repo_id = repo.attr("data-id"),
                 parent = repo.parents('.product_entry'),
@@ -203,7 +204,7 @@ KT.product_input = (function(){
 
         });
 
-        $(".remove_product").click(function(){
+        $(".remove_product").unbind().click(function(){
             var parent = $(this).parents('.product_entry');
             var prod_id = parseInt(parent.attr("data-id"));
             var filter = KT.filters.get_current_filter();
@@ -222,20 +223,33 @@ KT.product_input = (function(){
 
 KT.filter_renderer = (function(){
     var render_products_repos =  function(){
-        var div = $("#product_list"),
-        expanded = []; //save the expanded options so we can re-expand after re-render
-        $(".product_entry").find('.toggle.expanded').each(function(index, item){
-            expanded.push($(item).attr("data-id"));
+        var div = $("#product_list");
+        div.html(products_template());
+        KT.product_input.post_render_register();
+
+        div.find("tr").not(".no_sort").sortElements(function(a,b){
+                var a_html = $.trim($(a).find('text').text());
+                var b_html = $.trim($(b).find('text').text());
+                if (a_html && b_html ) {
+                    return  a_html.toUpperCase() >
+                            b_html.toUpperCase() ? 1 : -1;
+                }
         });
 
-        div.html(products_template());
-        $.each(expanded, function(index, item){
-            KT.filters.expand_product(item);
-        });
+    },
+    render_single_product = function(prod_id){
+        prod_id = parseInt(prod_id);
+        $('.product_entry[data-id=' + prod_id + ']').remove();
+        $("#product_list").prepend(single_product(prod_id));
+        KT.product_input.post_render_register();
+    },
+    render_single_repo = function(prod_id, repo_id){
+        var list = $('.product_entry[data-id=' + prod_id + ']').find(".repos_list");
+        list.append(repo_template(prod_id, repo_id));
         KT.product_input.post_render_register();
     },
     render_product_message = function(prod_id, is_full) {
-        var msg = product_message(prod_id, is_full, [])
+        var msg = product_message(prod_id, is_full, []);
         $(".product_entry[data-id=" + prod_id + "]").find(".prod_message").text(msg);
     },
     product_select_template = function() {
@@ -250,18 +264,6 @@ KT.filter_renderer = (function(){
         });
         return html;
     },
-    product_template = function(id, name, is_full, repos){
-        var html = '<tr><td><div data-id="' + id + '" class="product_entry">';
-        html += '<div  class="small_col toggle collapsed" data-id="' + id +'"></div>';
-        html += '<div class="large_col">';
-            html += '<span>' + name + " <span class='prod_message'>" + product_message(id, is_full, repos) + '</span>';
-            html += '<a class="remove_product">&nbsp;' + i18n.remove + '</a>';
-            html += '</span>';
-            html += product_options(id, name, is_full, repos);
-        html += '</div>';
-        html += "</div></td></tr>";
-        return html;
-    },
     product_options = function(id, name, is_full, repos) {
         var style = is_full ? 'style="display:none;"' : '';
         var html_name = "PROD-" + id;
@@ -271,10 +273,10 @@ KT.filter_renderer = (function(){
                 html += product_radio('sel' + html_name, html_name, i18n.select_repos, !is_full, 'sel');
             html += '</div>';
             html += '<div ' + style + 'class="repos_list">';
-            $.each(repos, function(index, repo_id){
-                html += repo(id, repo_id);
-            });
             html += repo_search(id);
+            $.each(repos, function(index, repo_id){
+                html += repo_template(id, repo_id);
+            });
         html += '</div></div>';
         return html;
     },
@@ -295,7 +297,7 @@ KT.filter_renderer = (function(){
         }
         return message;
     },
-    repo = function(prod_id, repo_id) {
+    repo_template = function(prod_id, repo_id) {
         var name;
         var html = '';
         $.each(KT.products[prod_id].repos, function(index, repo){
@@ -315,8 +317,35 @@ KT.filter_renderer = (function(){
         $.each(KT.products[prod_id].repos, function(index, item){
             html+= '<option value="' + item.id + '">' + item.name + '</option>';
         });
-        html += '</select>'
+        html += '</select>';
         html += '<a class="add_repo"> &nbsp;' + i18n.add_plus + '</a>';
+        return html;
+    },
+    single_product = function(prod_id) {
+        var filter = KT.filters.get_current_filter();
+        var repos = [];
+        if (filter.products.indexOf(prod_id) > -1){
+            //render the cached repos if we want to
+            if (KT.filters.get_repo_cache()[prod_id]){
+                repos = KT.filters.get_repo_cache()[prod_id];
+            }
+            return product_template(prod_id, KT.products[prod_id].name, true, repos);
+        }
+        else {
+            repos = filter.repos[prod_id];
+            return product_template(prod_id, KT.products[prod_id].name, false, repos);
+        }
+    },
+    product_template = function(id, name, is_full, repos){
+        var html = '<tr><td><div data-id="' + id + '" class="product_entry">';
+        html += '<div  class="small_col toggle collapsed" data-id="' + id +'"></div>';
+        html += '<div class="large_col">';
+            html += '<span class="text">' + name + " <span class='prod_message'>" + product_message(id, is_full, repos) + '</span>';
+            html += '<a class="remove_product">&nbsp;' + i18n.remove + '</a>';
+            html += '</span>';
+            html += product_options(id, name, is_full, repos);
+        html += '</div>';
+        html += "</div></td></tr>";
         return html;
     },
     products_template = function(){
@@ -329,19 +358,7 @@ KT.filter_renderer = (function(){
       else{
           var all_products = filter.products.concat(Object.keys(filter.repos));
           $.each(all_products , function(index, id){
-
-            var repos = [];
-            if (filter.products.indexOf(id) > -1){
-                //render the cached repos if we want to
-                if (KT.filters.get_repo_cache()[id]){
-                    repos = KT.filters.get_repo_cache()[id];
-                }
-                html += product_template(id, KT.products[id].name, true, repos);
-            }
-            else {
-                repos = filter.repos[id];
-                html += product_template(id, KT.products[id].name, false, repos);
-            }
+            html += single_product(id);
           });
       }
         return html;
@@ -350,7 +367,9 @@ KT.filter_renderer = (function(){
     return {
         render_products_repos:render_products_repos,
         product_select_template: product_select_template,
-        render_product_message: render_product_message
+        render_product_message: render_product_message,
+        render_single_product : render_single_product,
+        render_single_repo : render_single_repo
     }
 
 })();
@@ -462,10 +481,12 @@ KT.filters = (function(){
         });
     },
     add_product = function(prod_id){
-        if ($.inArray( parseInt(prod_id), current_filter.products) === -1
+        prod_id = parseInt(prod_id);
+        if ($.inArray( prod_id, current_filter.products) === -1
             && current_filter.repos[prod_id] === undefined){
-            current_filter.products.push(parseInt(prod_id));
-            KT.filter_renderer.render_products_repos();
+            repo_cache[prod_id] = [];
+            current_filter.products.push(prod_id);
+            KT.filter_renderer.render_single_product(prod_id);
             expand_product(prod_id);
         }
     },
@@ -485,20 +506,28 @@ KT.filters = (function(){
         }
 
     },
-    add_repo = function(repo_id, prod_id){
+    add_repo = function(repo_id, prod_id, bump_up){
         prod_id = parseInt(prod_id);
         if ($.inArray( prod_id, current_filter.products) > -1){
             KT.filters.pop_product(prod_id);
         }
+
+        //clear the repo cache
         if (repo_cache[prod_id] !== undefined){
-            current_filter.repos[prod_id] = repo_cache[prod_id];
+            repo_cache[prod_id] = [];
         }
         if (current_filter.repos[prod_id] === undefined){
             current_filter.repos[prod_id] = [];
         }
+
         if (current_filter.repos[prod_id].indexOf(repo_id) === -1) {
             current_filter.repos[prod_id].push(repo_id);
-            KT.filter_renderer.render_products_repos();
+            if (bump_up){
+                KT.filter_renderer.render_single_product(prod_id);
+            }
+            else {
+                KT.filter_renderer.render_single_repo(prod_id, repo_id);
+            }                      
         }
         expand_product(prod_id);
     },
