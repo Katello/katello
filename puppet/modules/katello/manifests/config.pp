@@ -15,6 +15,8 @@ class katello::config {
       template => "katello/${katello::params::config_dir}/thin.yml.erb";
     "${katello::params::config_dir}/katello.yml":
       template => "katello/${katello::params::config_dir}/katello.yml.erb";
+    "/etc/sysconfig/katello":
+      template => "katello/etc/sysconfig/katello.erb";      
     "/etc/httpd/conf.d/katello.conf":
       template => "katello/etc/httpd/conf.d/katello.conf.erb",
       notify   => Exec["reload-apache2"];
