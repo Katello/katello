@@ -111,9 +111,10 @@ class FiltersController < ApplicationController
   def create
     @filter = Filter.create!(params[:filter].merge({:organization_id=>current_organization.id}))
     notice N_("Filter #{@filter.name} created successfully.")
-    render :partial=>"common/list_item", :locals=>{:item=>@filter, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
+    render :partial=>"common/list_item", :locals=>{:item=>@filter, :initial_action=>"packages", :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
 
   rescue Exception=> e
+    debugger
     errors e
     render :text=>e, :status=>500
   end

@@ -442,6 +442,7 @@ KT.filters = (function(){
             cache: false,
             success: function(data) {
                 var table = $("#package_filter").find("table");
+                $(".empty_message").remove();
                 $.each(data, function(index, item){
                     var html = "<tr><td>";
                     html+= '<input type="checkbox" id="' + item + '" class="package_select" value="' + item + '">';
@@ -484,7 +485,11 @@ KT.filters = (function(){
             data: {packages:pkgs},
             cache: false,
             success: function(data) {
+                var html = '<tr class="empty_message"><td>' + i18n.no_packages + '</td></tr>';
                 checked.parents("tr").remove();
+                if ($("#package_filter").find("tr").not(".no_sort").length === 0){
+                    $("#package_filter").find("table").append(html);
+                }
                 enable_package_inputs();
             }
         });
@@ -519,6 +524,7 @@ KT.filters = (function(){
                 repo_cache = []; //clear repo cache
                 $("#update_products").removeClass("disabled");
                 KT.filter_renderer.render_products_repos();
+                saved_filter = $.parseJSON(JSON.stringify(current_filter));
             }
         });
     },
