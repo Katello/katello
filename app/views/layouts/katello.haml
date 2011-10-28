@@ -41,9 +41,9 @@
     - else
       #subheader.container_16
         %nav.tab_nav
-          = render_menu(1)
+          = render_menu(1..3)
       #maincontent.container_16
-        %nav.subnav.container_16
+        %nav.subnav#subnav.container_16
           = render_menu(2..3)
         .inner.container_16
           = yield

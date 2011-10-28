@@ -14,23 +14,19 @@
 
 $(document).ready(function() {
 
-
     $('#accordion').accordion({});
 
     $(".clickable").click(function(){
 
         $(this).parents(".content_group").children(".cs_content").slideToggle();
     
-        var arrow = $(this).parent().find('a').find('img');
+        var arrow = $(this).parent().find('img');
         if(arrow.attr("src").indexOf("collapsed") === -1){
-          arrow.attr("src", "../images/icons/expander-collapsed.png");
+          arrow.attr("src", "images/icons/expander-collapsed.png");
         } else {
-          arrow.attr("src", "../images/icons/expander-expanded.png");
+          arrow.attr("src", "images/icons/expander-expanded.png");
         }
     });
-
-
-
 
     $('.edit_textfield').each(function() {
         $(this).editable($(this).attr('data-url'), {
@@ -55,7 +51,6 @@ $(document).ready(function() {
             }
         });
     });
-
 
     $('.edit_description').each(function() {
         $(this).editable($(this).attr('data-url'), {

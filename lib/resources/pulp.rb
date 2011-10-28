@@ -211,6 +211,10 @@ module Pulp
         body = post(Repository.repository_path + repo_id +"/add_errata/", {:errataid=>errata_id_list}.to_json, self.default_headers).body
       end
 
+      def add_distribution repo_id, distribution_id
+        body = post(Repository.repository_path + repo_id +"/add_distribution/", {:distributionid=>distribution_id}.to_json, self.default_headers).body
+      end
+
       def destroy repo_id
         raise ArgumentError, "repo id has to be specified" unless repo_id
         self.delete(repository_path  + repo_id + "/", self.default_headers).code.to_i
