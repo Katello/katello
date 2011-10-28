@@ -20,10 +20,12 @@ end
 
 class System < ActiveRecord::Base
   include Glue::Candlepin::Consumer
-  include Glue::Pulp::Consumer if AppConfig.use_pulp && AppConfig.katello?
+  include Glue::Pulp::Consumer if AppConfig.katello?
   include Glue
   include Authorization
   include AsyncOrchestration
+
+  acts_as_reportable
 
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :systems
   belongs_to :system_template

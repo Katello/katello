@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Copyright 2011 Red Hat, Inc.
 #
@@ -14,7 +15,8 @@ class SystemsController < ApplicationController
   include AutoCompleteSearch
   include SystemsHelper
 
-  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :new, :create]
+  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :bulk_destroy, :new, :create]
+  before_filter :find_systems, :only=>[:bulk_destroy]
 
   skip_before_filter :authorize
   before_filter :find_environment, :only => [:environments, :env_items, :new]
@@ -31,6 +33,7 @@ class SystemsController < ApplicationController
     read_system = lambda{System.find(params[:id]).readable?}
     env_system = lambda{@environment.systems_readable?}
     any_readable = lambda{System.any_readable?(current_organization)}
+    delete_systems = lambda{true}
     register_system = lambda { System.registerable?(@environment, current_organization) }
 
     {
@@ -48,7 +51,8 @@ class SystemsController < ApplicationController
       :update => edit_system,
       :edit => read_system,
       :show => read_system,
-      :facts => read_system
+      :facts => read_system,
+      :bulk_destroy => delete_systems
     }
   end
 
@@ -83,9 +87,15 @@ class SystemsController < ApplicationController
       saved = @system.save!
       #find the newly created system
       if saved
-        notice _("Your system was created: ") + "'#{@system.name}'"
-      else
-        errors _("There was an error creating your system ")
+        notice _("System '#{@system['name']}' was created.")
+
+        if System.where(:id => @system.id).search_for(params[:search]).include?(@system)
+          render :partial=>"systems/list_systems",
+            :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@system], :name=> controller_display_name}
+        else
+          notice _("'#{@system["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+          render :json => { :no_match => true }
+        end
       end
 
     rescue Exception => error
@@ -93,23 +103,12 @@ class SystemsController < ApplicationController
       Rails.logger.info error.message
       Rails.logger.info error.backtrace.join("\n")
       render :text => error, :status => :bad_request
-      return
     end
-    render :partial=>"systems/list_systems",
-            :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@system], :name=> controller_display_name}
-  end
-
-  def index
-      @systems = System.readable(current_organization).search_for(params[:search])
-      retain_search_history
-      @systems = sort_order_limit(@systems)
-
   end
 
   def environments
     accesible_envs = KTEnvironment.systems_readable(current_organization)
 
-    @panel_options[:ajax_scroll] = env_items_systems_path(:env_id=>@environment.id)
     begin
 
       @systems = []
@@ -125,6 +124,7 @@ class SystemsController < ApplicationController
         @systems = sort_order_limit(@systems)
 
       end
+      
       render :index, :locals=>{:envsys => 'true', :accessible_envs=> accesible_envs}
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
@@ -134,19 +134,11 @@ class SystemsController < ApplicationController
   end
 
   def items
-    start = params[:offset]
-    @systems = System.readable(current_organization).search_for(params[:search])
-    @systems = sort_order_limit(@systems)
-    render_panel_items @systems, @panel_options
-  end
-
-  def env_items
-    @systems = System.readable(current_organization).search_for(params[:search]).where(:environment_id => @environment.id)
-    @systems = sort_order_limit(@systems)
-    if @systems.empty?
-      render :text=>""
+    if params[:env_id]
+      find_environment
+      render_panel_items(System.readable(current_organization).where(:environment_id => @environment.id), @panel_options, params[:search], params[:offset])
     else
-      render_panel_items @systems, @panel_options
+      render_panel_items(System.readable(current_organization), @panel_options, params[:search], params[:offset])
     end
   end
 
@@ -234,7 +226,12 @@ class SystemsController < ApplicationController
   def update
     begin
       @system.update_attributes!(params[:system])
-      notice _("System updated.")
+      notice _("System '#{@system["name"]}' was updated.")
+      
+      if not System.where(:id => @system.id).search_for(params[:search]).include?(@system)
+        notice _("'#{@system["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
+      end
+      
       respond_to do |format|
         format.html { render :text=>params[:system].first[1] }
         format.js
@@ -261,6 +258,18 @@ class SystemsController < ApplicationController
     render :partial => 'facts', :layout => "tupane_layout"
   end
 
+  def bulk_destroy
+    @systems.each{|sys|
+      sys.destroy
+    }
+    notice _("#{@systems.length} Systems Removed Successfully")
+    render :text=>""
+  rescue Exception => e
+    errors e
+    render :text=>e, :status=>500
+  end
+
+
   private
 
   include SortColumnList
@@ -276,15 +285,23 @@ class SystemsController < ApplicationController
     @system = System.find(params[:id])
   end
 
+  def find_systems
+    @systems = System.find(params[:ids])
+  end
+
   def setup_options
     @panel_options = { :title => _('Systems'),
                       :col => COLUMNS.keys,
                       :custom_rows => true,
                       :enable_create => true,
+                      :create => "System",
                       :enable_sort => true,
                       :name => controller_display_name,
                       :list_partial => 'systems/list_systems',
-                      :ajax_scroll => items_systems_path()}
+                      :ajax_load  => true,
+                      :ajax_scroll => items_systems_path(),
+                      :actions => 'actions'
+                      }
   end
 
   def sys_consumed_pools

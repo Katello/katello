@@ -108,21 +108,8 @@ class ProvidersController < ApplicationController
     render :template =>"providers/redhat_provider"
   end
 
-  def index
-    begin
-      @providers = Provider.readable(current_organization).custom.search_for(params[:search]).order('providers.name').limit(current_user.page_size)
-      retain_search_history
-    rescue Exception => error
-      errors error.to_s, {:level => :message, :persist => false}
-      @providers = Provider.search_for ''
-    end
-
-  end
-
   def items
-    start = params[:offset]
-    @providers = Provider.readable(current_organization).custom.search_for(params[:search]).order('providers.name').limit(current_user.page_size).offset(start)
-    render_panel_items @providers, @panel_options
+    render_panel_items(Provider.readable(current_organization).custom.order('providers.name'), @panel_options, params[:search], params[:offset])
   end
 
   def show
@@ -145,8 +132,13 @@ class ProvidersController < ApplicationController
       @provider = Provider.create! params[:provider].merge({:provider_type => Provider::CUSTOM,
                                                                     :organization => current_organization})
       notice _("Provider '#{@provider['name']}' was created.")
-      render :partial=>"common/list_item", :locals=>{:item=>@provider, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
-
+      
+      if Provider.where(:id => @provider.id).search_for(params[:search]).include?(@provider) 
+        render :partial=>"common/list_item", :locals=>{:item=>@provider, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
+      else
+        notice _("'#{@provider["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+        render :json => { :no_match => true }
+      end
     rescue Exception => error
       Rails.logger.error error.to_s
       errors error
@@ -188,6 +180,10 @@ class ProvidersController < ApplicationController
       updated_provider.save!
       notice _("Provider '#{updated_provider.name}' was updated.")
 
+      if not Provider.where(:id => updated_provider.id).search_for(params[:search]).include?(updated_provider)
+        notice _("'#{updated_provider["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+      end
+
       respond_to do |format|
         format.html { render :text => escape_html(result) }
       end
@@ -219,6 +215,7 @@ class ProvidersController < ApplicationController
                  :col => ['name'],
                  :create => _('Provider'),
                  :name => controller_display_name,
+                 :ajax_load => true,
                  :ajax_scroll=>items_providers_path(),
                  :enable_create=> Provider.creatable?(current_organization) && AppConfig.katello?}
         

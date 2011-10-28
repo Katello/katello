@@ -1,9 +1,6 @@
 = content_for :title do
   #{_("New Activation Key")}
 
-= content_for :navigation do
-  / pretty
-
 = content_for :content do
   .grid_10#new_key
     = form_tag activation_keys_path, :method => "post", :id => "new_activation_key" do
@@ -42,4 +39,3 @@
 
       .grid_9.ra
         = button_to _("Save"), {:action => "create", :controller => "activation_keys"}, :method => :post, :id => :save_key, :tabindex => auto_tab_index
-
