@@ -69,6 +69,7 @@ Src::Application.routes.draw do
       get :items
       get :env_items
       get :environments
+      delete :bulk_destroy
     end
   end
   resources :operations, :only => [:index]  do

@@ -328,9 +328,6 @@ KT.template_renderer = function() {
                 else if (node === "comps") {
                     content = comps();
                 }
-                else {
-                    console.log("Can't render: " +  id);
-                }
                 render_cb(content);
             });
         };
