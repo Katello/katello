@@ -22,7 +22,7 @@ $(document).ready(function () {
         panelLeft = $(this).width();
         $('.block').width(panelLeft - 17);
         apanel.width(940 - panelLeft);
-        $('.right').width(910 - panelLeft);
+        $('.right').width(898 - panelLeft);
         if (apanel.hasClass('opened')) {
             apanel.css({
                 "left": (panelLeft)
@@ -818,6 +818,7 @@ KT.panel.list = (function () {
         set_extended_cb: function (callBack) {
             extended_cb = callBack;
         },
+        actions: actions,
         extend: extend,
         registerPage: registerPage,
         remove: remove,
