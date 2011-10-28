@@ -232,6 +232,21 @@ describe SystemsController do
       end
     end
 
+
+    describe 'bulk deleting a system' do
+      before (:each) do
+        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+        System.stub(:find).and_return [@system]
+      end
+      it "should delete the system" do
+        @system.should_receive(:destroy)
+        delete :bulk_destroy, { :ids => [@system.id]}
+        response.should be_success
+      end
+
+      
+    end
+
   end
 
 end

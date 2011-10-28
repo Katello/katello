@@ -21,7 +21,7 @@ module Navigation
       {:key => :systems,
        :name => N_("Systems"),
         :url => :sub_level,
-        :options => {:class=>'systems'},
+        :options => {:class=>'systems top_level', "data-menu"=>"systems"},
         :if => lambda{current_organization && System.any_readable?(current_organization)},
         :items=> [ menu_systems_org_list, menu_systems_environments_list, menu_activation_keys]
       }
@@ -32,15 +32,15 @@ module Navigation
       {:key => :registered,
        :name => N_("All"),
        :url => systems_path,
-
+       :options => {:class=>'systems second_level', "data-menu"=>"systems"}
       }
     end
 
     def menu_systems_environments_list
       {:key => :env,
        :name => N_("By Environments"),
-       :url => environments_systems_path()
-
+       :url => environments_systems_path(),
+       :options => {:class=>'systems second_level', "data-menu"=>"systems"}
       }
     end
 
@@ -49,7 +49,8 @@ module Navigation
        {:key => :activation_keys,
         :name => N_("Activation Keys"),
         :url => activation_keys_path,
-        :if => lambda {ActivationKey.readable?(current_organization())}
+        :if => lambda {ActivationKey.readable?(current_organization())},
+        :options => {:class=>'systems second_level', "data-menu"=>"systems"}
        }
     end
 

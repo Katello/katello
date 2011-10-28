@@ -21,7 +21,7 @@ class ActivationKey < ActiveRecord::Base
   has_many :key_pools
   has_many :pools, :class_name => "KTPool", :through => :key_pools
 
-  scope :readable, lambda {|org| where ("0 = 1") unless ActivationKey.readable?(org)}
+  scope :readable, lambda {|org| ActivationKey.readable?(org) ? where(:organization_id=>org.id) : where("0 = 1")}
 
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
   scoped_search :on => :name, :complete_value => true, :default_order => true, :rename => :'key.name'

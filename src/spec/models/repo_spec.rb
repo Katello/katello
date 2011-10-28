@@ -104,6 +104,11 @@ describe Glue::Pulp::Repo, :katello => true do
       Pulp::Repository.should_not_receive(:distributions).with(RepoTestData::REPO_ID)
       @repo.distributions
     end
+
+    it "should return correct values for has_distribution?" do
+      @repo.has_distribution?(RepoTestData::REPO_DISTRIBUTIONS[0][:id]).should == true
+      @repo.has_distribution?("some-invalid-distro-id").should == false
+    end
   end
 
   context "Synchronization" do
@@ -234,7 +239,6 @@ describe Glue::Pulp::Repo, :katello => true do
 
       @repo.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_REPO_ID)
       @clone.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_2_REPO_ID)
-
     end
 
     it "should clone the repo" do
@@ -250,12 +254,12 @@ describe Glue::Pulp::Repo, :katello => true do
       @repo.promote(@to_env, nil)
     end
 
-    it "should retrurn correct is_cloned_in? status" do
+    it "should return correct is_cloned_in? status" do
       @clone.is_cloned_in?(@to_env).should == false
       @repo.is_cloned_in?(@to_env).should == true
     end
 
-    it "should be able to retrurn the clone" do
+    it "should be able to return the clone" do
       clone = @repo.get_clone(@to_env)
       clone.id.should == RepoTestData::CLONED_PROPERTIES[:id]
     end

@@ -86,10 +86,12 @@ describe Changeset do
         @repo = mock('Repo', {:id => 1, :name => 'repo'})
         @distribution = mock('Distribution', {:id=> 'some-distro-id'})
         @repo.stub(:distributions).and_return([@distribution])
+        @repo.stub_chain(:distributions, :index).and_return([@distribution])
         @repo.stub(:packages).and_return([@pack])
         @repo.stub(:errata).and_return([@err])
         @repo.stub(:has_package?).with(1).and_return(true)
         @repo.stub(:has_erratum?).with('err').and_return(true)
+        @repo.stub(:has_distribution?).with('some-distro-id').and_return(true)
         @repo.stub(:clone_ids).and_return([])
 
         @prod.stub(:repos).and_return([@repo])
@@ -115,6 +117,10 @@ describe Changeset do
 
         it "should fail on add repo" do
           lambda {@changeset.add_repo("repo")}.should raise_error
+        end
+
+        it "should fail on add distribution" do
+          lambda {@changeset.add_distribution("some_distro_id")}.should raise_error
         end
       end
 
@@ -167,6 +173,11 @@ describe Changeset do
           @changeset.repos.length.should == 1
         end
 
+        it "should add distribution" do
+          @changeset.add_distribution("some-distro_id", "prod")
+          @changeset.distributions.length.should == 1
+        end
+
       end
     end
 
@@ -191,7 +202,6 @@ describe Changeset do
         @repo.stub(:packages).and_return([@pack])
         @repo.stub(:errata).and_return([@err])
         @repo.stub(:clone_ids).and_return([])
-
 
         @prod.stub(:repos).and_return([@repo])
 
@@ -224,7 +234,6 @@ describe Changeset do
       it "should remove distribution" do
         ChangesetDistribution.should_receive(:destroy_all).with(:distribution_id => 'some-distro-id', :changeset_id => @changeset.id, :product_id => @prod.id).and_return(true)
         @changeset.remove_distribution('some-distro-id', "prod")
-
       end
 
     end
@@ -244,14 +253,19 @@ describe Changeset do
 
         @pack = mock('Pack', {:id => 1, :name => 'pack'})
         @err  = mock('Err', {:id => 'err', :name => 'err'})
+        @distribution = mock('Distribution', {:id=> 'some-distro-id'})
 
         @repo = mock('Repo', {:id => 1, :name => 'repo'})
+        @repo.stub(:distributions).and_return([@distribution])
+        @repo.stub_chain(:distributions, :index).and_return([@distribution])
         @repo.stub(:packages).and_return([@pack])
         @repo.stub(:errata).and_return([@err])
         @repo.stub(:promote).and_return([])
         @repo.stub(:sync).and_return([])
         @repo.stub(:has_package?).and_return(true)
         @repo.stub(:has_erratum?).and_return(true)
+        @repo.stub(:has_distribution?).with('some-distro-id').and_return(true)
+
         @repo.stub(:is_cloned_in?).and_return(true)
         @repo.stub(:clone_ids).and_return([])
         Glue::Pulp::Repo.stub(:find).and_return(@repo)
@@ -259,6 +273,7 @@ describe Changeset do
         @clone = mock('Repo', {:id => 2, :name => 'repo_clone'})
         @clone.stub(:has_package?).and_return(false)
         @clone.stub(:has_erratum?).and_return(false)
+        @clone.stub(:has_distribution?).and_return(false)
         @repo.stub(:clone_ids).and_return([])
         @repo.stub(:get_clone).and_return(@clone)
         @repo.stub(:get_cloned_in).and_return(nil)
@@ -330,11 +345,16 @@ describe Changeset do
         @changeset.promote(false)
       end
 
+      it "should promote distributions" do
+        @prod.environments << @environment
+        @changeset.distributions << ChangesetDistribution.new(:distribution_id => @distribution.id, :display_name => @distribution.id, :product_id => @prod.id, :changeset => @changeset)
+        @changeset.state = Changeset::REVIEW
+
+        @clone.should_receive(:add_distribution).once.with(@distribution.id)
+
+        @changeset.promote(false)
+      end
+
     end
-
-
-
-
   end
-
 end

@@ -493,11 +493,20 @@ describe SystemTemplate, :katello => true do
       end
 
       it "should contain repos referencing to pulp repositories" do
-        repo_uri = subject.xpath("/template/repositories/repository").text
-        repo_uri.should == "https://localhost/pulp/repos/ACME_Corporation/Locker/zoo/base"
+        repo_uri = subject.xpath("/template/repositories/repository/url").text
+        repo_uri.should =~ /repos\/ACME_Corporation\/Locker\/zoo\/base$/
       end
 
-      it_should_behave_like "valid tdl"
+      it "should contain 'persisted' tag" do
+        subject.xpath("/template/repositories/repository/persisted").text.should == "No"
+      end
+
+      it "should contain 'clientcert' and 'clientkey' tags" do
+        subject.xpath("/template/repositories/repository/clientcert").text.should_not == nil
+        subject.xpath("/template/repositories/repository/clientkey").text.should_not == nil
+      end
+
+      pending #it_should_behave_like "valid tdl"
     end
   end
 
