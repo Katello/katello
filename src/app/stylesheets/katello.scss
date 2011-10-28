@@ -26,7 +26,12 @@ strong { font-weight: bold; }
 .wrap { overflow: hidden; margin-bottom: 2em; } /* wrapper around floating elements */
 .nomargin { margin: none; }
 .placeholder { margin-bottom: 2em; }
-.disabled { opacity: 0.4; cursor: default; }
+.disabled { opacity: 0.4; cursor: default;
+  a:hover {
+    text-decoration: none;
+    cursor: default;
+  }
+}
 .hidden { display: none; }
 .outlined { outline: 2px solid $kselected_color; }
 .alt { background-color: lighten($lightgrey_color, 35%) !important; }
@@ -459,173 +464,12 @@ table {
   }
 }
 
-nav {
-  &.tab_nav { /* main tabs navigation */
-    display: block;
-    font-weight: bold;
-    font-family: $headlinefont;
-    font-size: 125%;
-  
-    &>ul {
-      display: block;
-      position: absolute;
-      bottom: 0;
-  
-      &>li {
-        display: inline-block;
-        margin: 0 4px 0 0;
-        padding: 0;
-        color: #888;
-        background-color: #ddd;
-        background: -moz-linear-gradient(top, $white_color, #ddd 2px, #ddd 70%, lighten($stroke_color, 10%));
-        background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(lighten($stroke_color,10%)), color-stop(.01, #ddd), color-stop(.7,#ddd));
-        border: 1px solid $stroke_color;
-  
-        &.selected {
-          background: $white_color;
-          padding-bottom: 1px;
-          border-bottom: none;
-  
-          &>a {
-            color: $tabon_color;
-            @include no-text-shadow();
-          }
-        }
-        &>a {
-          display: block;
-          padding: 9px 18px;
-          text-decoration: none;
-          color: $taboff_color;
-          @include text-shadow($white_color,0,1px,0);
-          
-          &:hover {
-            color: lighten($kselected_color,10%);
-          }
-        }
-      }
-    }
-  }
-  &.subnav { /* subnavigation */
-    position: relative;
-    display: block;
-    background: $subnav_shadow_img;
-    font-family: $headlinefont;
-    font-size: 115%;
-    padding-bottom: 9px;
-    min-height: 15px;
-    border-left: 1px solid $stroke_color;
-    border-right: 1px solid $stroke_color;
-
-    .arrow_icon_menu {
-      height: 11px;
-      width: 13px;
-      background: $arrow_icon_menu;
-      float: right;
-      margin: 13px 10px 0 -13px;
-      &:hover {
-        background: $arrow_icon_menu_hover;
-      }
-    }
-    &>ul {
-      display: block;
-      min-height: 35px;
-      height: 35px;
-      li {
-        display: inline-block;
-        margin: 0;
-        padding: 0;
-    
-        a {
-          cursor: pointer;
-          text-transform: none;
-          text-decoration: none;
-          @include text-shadow($white_color,0,1px,0);
-          display: block;
-          margin: 0;
-          padding: 8px 16px 6px;
-          color: $taboff_color;
-          float: left;
-          &.selected {
-            color: $tabon_color;
-            font-weight: bold;
-            border-bottom: 3px solid $kselected_color;
-            padding-bottom: 3px;
-          }
-    
-          &:hover { color: lighten($kselected_color,10%); }
-        }
-        &>ul {
-          position: absolute;
-          display: none;
-          background: $subnav_shadow_img;
-          background-position: 0 14px;
-          background-color: $white_color;
-          @include box-shadow(2px, 2px, 2px, rgba(0,0,0,0.4));
-          z-index: 101;
-          top: 35px;
-          height: 35px;
-          @include border-bottom-lr-radius(3px);
-          li {
-            a {
-              &.selected {
-                border-bottom: 3px solid lighten($kselected_color,10%);
-              }
-            }
-          }
-        }
-        &.selected {
-            &:first-child .arrow_icon_menu {
-              background: $arrow_icon_menu_hover;
-            }
-        }
-      }
-    }
-  }
-  &.subsubnav { /* in page tabs */
-    @include border-radius(16px);
-    position: static;
-    overflow: hidden;
-    bottom: inherit;
-    left: inherit;
-    right: inherit;
-    margin-bottom: .5em;
-    border: none;
-    
-    &>ul {
-      display: inline-block;
-      height: 3.5em;
-      background-color: lighten($kselected_color, 65%);
-      @include border-radius(5px);
-    
-      li {
-        display: block;
-        float: left;
-        margin: 5px;
-    
-        a {
-          cursor: pointer;
-          font-family: $screenfont;
-          text-transform: none;
-          font-weight: normal;
-          color: black;
-          display: block;
-          padding: 6px 12px; margin-right: 10px;
-    
-          &.selected {
-            background-color: $kselected_color;
-            @include border-radius(5px);
-            color: $white_color;
-          }
-        }
-      }
-    }
-  }
-} /*end nav*/
-
 #maincontent {
   background: $center_background_img;
   overflow: hidden;
   min-height: 200px;
+  position: relative;
+  
   .inner {
     margin-top: 4px;
     min-height: 325px;
@@ -941,8 +785,49 @@ footer {
 }
 /* right side of 2 pane below the sliding pane */
 .right {
-  float:right;
-  width:460px;
+    float:right;
+    width:448px;
+    min-height: 300px;
+    height: 300px;
+    padding: 20px;
+    border: 1px solid $border_color;
+    @include border-right-radius(5px);
+    background-color: $lightergrey_color;
+    margin-top: 79px;
+    position: relative;
+    .panel_action {
+        .disabled {
+          &:hover {
+            text-decoration: none;
+            cursor: normal;
+          }
+        }
+        .options {
+          display: none;
+          @include border-radius(5px);
+          @include box-shadow(rgba(0,0,0,0.4), 2px, 2px, 2px);
+          background-color: white;
+          border: 1px solid $border_color;
+          padding: 15px;
+          margin: 4px auto;
+          width: 85%;
+          .actions {
+              float: right;
+          }
+        }
+    }
+    #select-result {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        font-size: 18px;
+        color: $lightgrey_color;
+    }
+    #select-none {
+        position: absolute;
+        top: 36px;
+        right: 10px;
+    }
 }
 
 /* left side of 2 pane that has clickable links */
@@ -968,6 +853,8 @@ footer {
         width: 10em;
         right: 0;
         height: 2em;
+        height: 21px;
+        font-size: 100% !important;
         &.block{
             &.active{
                 .arrow-right {
@@ -1139,7 +1026,7 @@ footer {
     margin-bottom: 10px;
     margin-left: 10px;
     margin-right: 10px;
-    
+    height: auto;
     &>ul {
       min-height: 0px;
       

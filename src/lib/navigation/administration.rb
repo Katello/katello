@@ -38,7 +38,7 @@ module Navigation
       {:key => :admin,
        :name => N_("Administration"),
         :url => :sub_level,
-        :options => {:class=>'operations'},
+        :options => {:class=>'operations top_level', "data-menu"=>"operations"},
         :if => :sub_level,
         :items=> [ menu_users, menu_roles]
       }
@@ -49,7 +49,8 @@ module Navigation
       {:key => :users,
        :name => N_("Users"),
        :url => users_path,
-       :if =>lambda {User.any_readable?}
+       :if =>lambda {User.any_readable?},
+       :options => {:class=>'operations second_level', "data-menu"=>"operations"}
       }
     end
 
@@ -57,7 +58,8 @@ module Navigation
       {:key => :roles,
        :name => N_("Roles"),
        :url => roles_path,
-       :if =>lambda {Role.any_readable?}
+       :if =>lambda {Role.any_readable?},
+       :options => {:class=>'operations second_level', "data-menu"=>"operations"}
       }
     end
 

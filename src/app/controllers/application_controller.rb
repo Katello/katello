@@ -432,14 +432,15 @@ class ApplicationController < ActionController::Base
     end
 
     cs.involved_products.each{|product|
-      to_ret[:products][product.id] = {:id=> product.id, :name=>product.name, :provider=>product.provider.provider_type, 'package'=>[], 'errata'=>[], 'repo'=>[]}
+      to_ret[:products][product.id] = {:id=> product.id, :name=>product.name, :provider=>product.provider.provider_type,
+                                       'package'=>[], 'errata'=>[], 'repo'=>[], 'distribution'=>[]}
     }
 
     cs.products.each {|product|
       to_ret[:products][product.id][:all] =  true
     }
 
-    ['repo', 'errata', 'package'].each{ |type|
+    ['repo', 'errata', 'package', 'distribution'].each{ |type|
       cs.send(type.pluralize).each{|item|
         p item
         pid = item.product_id
