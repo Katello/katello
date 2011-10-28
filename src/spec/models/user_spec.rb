@@ -54,7 +54,7 @@ describe User do
     specify { @user.pulp_oauth_header.should == {'pulp-user' => @user.username}}
   end
 
-  context "Pulp orchestration" do
+  context "Pulp orchestration", :katello => true do
     before(:each) { disable_user_orchestration }
 
     it "should call pulp user create api during user creation" do
