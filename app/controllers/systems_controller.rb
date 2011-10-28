@@ -14,7 +14,7 @@ class SystemsController < ApplicationController
   include AutoCompleteSearch
   include SystemsHelper
 
-  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :bulkd_destroy, :new, :create]
+  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :bulk_destroy, :new, :create]
   before_filter :find_systems, :only=>[:bulk_destroy]
 
   skip_before_filter :authorize
@@ -292,8 +292,9 @@ class SystemsController < ApplicationController
                       :name => controller_display_name,
                       :list_partial => 'systems/list_systems',
                       :ajax_load  => true,
-                      :ajax_scroll => items_systems_path()}
-
+                      :ajax_scroll => items_systems_path(),
+                      :actions => 'actions'
+                      }
   end
 
   def sys_consumed_pools
