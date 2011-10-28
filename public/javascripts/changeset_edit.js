@@ -20,7 +20,7 @@ $(document).ready(function() {
 
         $(this).parents(".content_group").children(".cs_content").slideToggle();
     
-        var arrow = $(this).parent().find('a').find('img');
+        var arrow = $(this).parent().find('img');
         if(arrow.attr("src").indexOf("collapsed") === -1){
           arrow.attr("src", "images/icons/expander-collapsed.png");
         } else {
