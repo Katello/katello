@@ -30,6 +30,7 @@ module OrchestrationHelper
     Candlepin::Owner.stub!(:create).and_return({})
     Candlepin::Owner.stub!(:create_user).and_return(true)
     Candlepin::Owner.stub!(:destroy)
+    Candlepin::Owner.stub!(:get_ueber_cert).and_return({ :cert => "", :key => "" })
   end
 
   def disable_user_orchestration
