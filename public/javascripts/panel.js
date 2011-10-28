@@ -50,6 +50,12 @@ $(document).ready(function () {
     var ajax_url = null;
     var original_top = Math.floor($('.left').position(top).top);
     var subpanel_top = Math.floor($('.left').position(top).top + subpanelSpacing);
+
+    //create the initial selected count
+    KT.panel.updateResult();
+    KT.panel.actions.registerDefaultActions();
+    KT.panel.updateResult();
+
     $('.block').live('click', function (event) {
         if (event.target.nodeName === "A" && event.target.className.match('content_add_remove')) {
             return false;
