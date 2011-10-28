@@ -17,6 +17,7 @@ class OrganizationsController < ApplicationController
   respond_to :html, :js
   skip_before_filter :authorize
   before_filter :find_organization, :only => [:edit, :update, :destroy]
+  before_filter :find_organization_by_id, :only => [:environments_partial]
   before_filter :authorize #call authorize after find_organization so we call auth based on the id instead of cp_id
   before_filter :setup_options, :only=>[:index, :items]
   before_filter :search_filter, :only => [:auto_complete_search]
@@ -29,13 +30,14 @@ class OrganizationsController < ApplicationController
     delete_test = lambda{@organization.deletable?}
 
     {:index =>  index_test,
-      :items => index_test,
-      :auto_complete_search => index_test,
-      :new => create_test,
-      :create => create_test,
-      :edit => read_test,
-      :update => edit_test,
-      :destroy => delete_test,
+     :items => index_test,
+     :auto_complete_search => index_test,
+     :new => create_test,
+     :create => create_test,
+     :edit => read_test,
+     :update => edit_test,
+     :destroy => delete_test,
+     :environments_partial => read_test,
     }
   end
 
@@ -60,7 +62,7 @@ class OrganizationsController < ApplicationController
       @new_env.prior = @organization.locker
       @new_env.save!
       notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
-      # TODO: example - create permission for the organization
+        # TODO: example - create permission for the organization
     rescue Exception => error
       errors(error, {:include_class_name => KTEnvironment::ERROR_CLASS_NAME})
       Rails.logger.info error.backtrace.join("\n")
@@ -130,9 +132,17 @@ class OrganizationsController < ApplicationController
       render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
     else
       errors [_("Could not delete organization '#{params[:id]}'."),  _("At least one organization must exist.")]
-      
+
       render :text => "At least one organization must exist.", :status=>:bad_request and return
     end
+  end
+
+  def environments_partial
+    @organization = Organization.find(params[:id])
+    accessible_envs = @organization.environments
+    setup_environment_selector(@organization, accessible_envs)
+    @environment = first_env_in_path(accessible_envs)
+    render :partial=>"environments", :locals=>{:accessible_envs => accessible_envs}
   end
 
   protected
@@ -140,6 +150,17 @@ class OrganizationsController < ApplicationController
   def find_organization
     begin
       @organization = Organization.first(:conditions => {:cp_key => params[:id]})
+      raise if @organization.nil?
+    rescue Exception => error
+      errors _("Couldn't find organization with ID=#{params[:id]}")
+      execute_after_filters
+      render :text => error, :status => :bad_request
+    end
+  end
+
+  def find_organization_by_id
+    begin
+      @organization = Organization.find(params[:id])
       raise if @organization.nil?
     rescue Exception => error
       errors _("Couldn't find organization with ID=#{params[:id]}")

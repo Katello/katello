@@ -207,6 +207,7 @@ Src::Application.routes.draw do
     end
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
+  match '/organizations/:id/environments_partial' => 'organizations#environments_partial', :via => :get
 
   resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :show, :destroy, :auto_complete_search] do
     member do

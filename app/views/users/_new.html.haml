@@ -32,7 +32,8 @@
           = label :user, :org, _("Default Organization:")
         .grid_5.la
           = organization_select
-      %fieldset.fl.clear#env_box
+      %fieldset.fl.clear
+
       .promotion_paths
         = hidden_field_tag 'user[environment_id]', @environment.id unless @environment.nil?
         .grid_2.ra
@@ -41,8 +42,9 @@
           - if @environment.nil?
             #{_("No environments are currently available in this organization.  Please add some to be able to create activation keys.")}
           - else
-            = environment_selector(:path_widget_class=>"grid_5", :path_entries_class=>"grid_5", :locker_clickable=>false,
-              :accessible_envs=>accessible_envs, :url_templates_proc=>url_templates_proc)
+            #env_box
+              = environment_selector(:path_widget_class=>"grid_5", :path_entries_class=>"grid_5", :locker_clickable=>false,
+                :accessible_envs=>accessible_envs, :url_templates_proc=>url_templates_proc)
 
         .clear
           &nbsp;
