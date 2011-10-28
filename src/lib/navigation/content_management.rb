@@ -42,7 +42,7 @@ module Navigation
       {:key => :content,
        :name => N_("Content Management"),
         :url => :sub_level,
-        :options => {:class=>'content'},
+        :options => {:class=>'content top_level', "data-menu"=>"content"},
         :if => lambda{current_organization},
         :items=> [ menu_providers, menu_sync_management, menu_system_templates, menu_promotions, menu_changeset]
       }
@@ -54,6 +54,7 @@ module Navigation
        :name =>N_("Providers"),
        :url => :sub_level,
        :if => :sub_level,
+       :options => {:class=>'content second_level', "data-menu"=>"content"},
        :items => [menu_custom_providers, menu_redhat_providers]
       }
 
@@ -83,6 +84,7 @@ module Navigation
        :name =>N_("Sync Management"),
        :items => lambda{[menu_sync_status, menu_sync_plan, menu_sync_schedule]},
        :if => lambda{current_organization.syncable?},
+       :options => {:class=>'content second_level', "data-menu"=>"content"}
       }
 
     end
@@ -116,7 +118,8 @@ module Navigation
       {:key => :system_templates,
        :name =>N_("System Templates"),
         :url => system_templates_path,
-        :if => lambda{SystemTemplate.any_readable?(current_organization())}
+        :if => lambda{SystemTemplate.any_readable?(current_organization())},
+        :options => {:class=>'content second_level', "data-menu"=>"content"}
       }
 
     end
@@ -128,7 +131,8 @@ module Navigation
         :name => N_("Promotions"),
         :url => promotions_path,
         :options =>{:highlights_on =>/\/promotions.*/ ,:class => 'content'},
-        :if => lambda {KTEnvironment.any_viewable_for_promotions?(current_organization)}
+        :if => lambda {KTEnvironment.any_viewable_for_promotions?(current_organization)},
+        :options => {:class=>'content second_level', "data-menu"=>"content"}
        }
     end
 
@@ -136,7 +140,8 @@ module Navigation
        {:key => :changeset,
         :name => N_("Changeset History"),
         :url => changesets_path,
-        :if => lambda {KTEnvironment.any_viewable_for_promotions?(current_organization)}
+        :if => lambda {KTEnvironment.any_viewable_for_promotions?(current_organization)},
+        :options => {:class=>'content second_level', "data-menu"=>"content"}
        }
     end
 

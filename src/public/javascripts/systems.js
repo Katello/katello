@@ -39,7 +39,6 @@
 				  	} 
 				]});
   	}
-  	console.log(options);
   	KT.panel.list.registerPage('systems', options);
 }());
 
@@ -71,6 +70,8 @@ $(document).ready(function() {
 	}
    
   if (window.env_select !== undefined) {
+    env_select.click_callback = KT.systems_page.env_change;
+  }
     //env_select.click_callback = systems_page.env_change;
     $.bbq.pushState({env_id : env_select.get_selected_env()});
     env_select.click_callback = function(env_id) {
@@ -82,29 +83,44 @@ $(document).ready(function() {
     KT.subs.initialize_edit();
   });
 
+  KT.systems_page.registerActions();
+
+  //end doc ready
 });
 
-var systems_page = (function() {
+KT.systems_page = (function() {
   return {
     env_change : function(env_id, element) {
       var url = element.attr("data-url");
       window.location = url;
     },
-  create_system : function(data) {
-      var button = data.find('input[type|="submit"]');
-      button.attr("disabled","disabled");
-      data.ajaxSubmit({
-          success: function(data) {
-              list.add(data);
-              KT.panel.closePanel($('#panel'));
-              KT.panel.select_item(list.last_child().attr("id"));
-          },
-          error: function(e) {
-              button.removeAttr('disabled');
-          }
-      });
-  }
-
+    create_system : function(data) {
+        var button = data.find('input[type|="submit"]');
+        button.attr("disabled","disabled");
+        data.ajaxSubmit({
+            success: function(data) {
+                list.add(data);
+                KT.panel.closePanel($('#panel'));
+                KT.panel.select_item(list.last_child().attr("id"));
+            },
+            error: function(e) {
+                button.removeAttr('disabled');
+            }
+        });
+    },
+    registerActions : function() {
+        var remove = $(".panel_action[data-id=remove_systems]");
+        KT.panel.actions.registerAction("remove_systems",
+            {  url: remove.attr("data-url"),
+               method: remove.attr("data-method"),
+               success_cb: function(ids){
+                    $.each(ids,function(index, item){
+                        list.remove("system_" + item);
+                    });
+               }
+            }
+        );
+    }
   }
 })();
 
@@ -136,10 +152,10 @@ KT.subs = function() {
     save_selected_environment = function(env_id) {
         // save the id of the env selected
         $("#system_environment_id").attr('value', env_id);
-   },
-   initialize_edit = function() {
-      reset_env_select();
-   },
+    },
+    initialize_edit = function() {
+       reset_env_select();
+    },
     reset_env_select = function() {
         $('#path-expanded').hide();
         env_select.reset_hover();
@@ -199,6 +215,7 @@ KT.subs = function() {
     spinnerSetup = function(){
         setTimeout("$('.ui-spinner').spinner()",1000);
     };
+    
     return {
         unsubSetup: unsubSetup,
         subSetup: subSetup,
@@ -206,6 +223,5 @@ KT.subs = function() {
         save_selected_environment: save_selected_environment,
         initialize_edit: initialize_edit,
         reset_env_select: reset_env_select
-
     }
 }();
