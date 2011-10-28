@@ -126,13 +126,13 @@ module Candlepin
         response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'entitlements'), self.default_headers).body
         JSON.parse(response).collect { |e| e.with_indifferent_access }
       end
-      
+
       def consume_entitlement uuid, pool, quantity = nil
         uri = join_path(path(uuid), 'entitlements') + "?pool=#{pool}"
         uri += "&quantity=#{quantity}" if quantity
         self.post(uri, "", self.default_headers).body
       end
-      
+
       def remove_entitlement uuid, ent_id
         uri = join_path(path(uuid), 'entitlements') + "/#{ent_id}"
         self.delete(uri, self.default_headers).code.to_i
@@ -147,7 +147,7 @@ module Candlepin
           owner_json = self.get(path(key), {'accept' => 'application/json'}.merge(User.current.cp_oauth_header)).body
           JSON.parse(owner_json).with_indifferent_access
       end
-      
+
       def path(id=nil)
         "/candlepin/owners/#{url_encode id}/info"
       end
@@ -183,10 +183,6 @@ module Candlepin
       def update key, organization
         owner = find key
         owner['displayName'] = organization.name
-        if organization.parent_id
-          owner['parentOwner'] ||= {}
-          owner['parentOwner']['id'] = organization.parent_id
-        end
         self.put(path(key), JSON.generate(owner), self.default_headers).body
       end
 
@@ -244,7 +240,7 @@ module Candlepin
         pool_json = super(path(pool_id), self.default_headers).body
         JSON.parse(pool_json).with_indifferent_access
       end
-      
+
       def path(id=nil)
         "/candlepin/pools/#{url_encode id}"
       end
@@ -257,9 +253,14 @@ module Candlepin
         JSON.parse(self.post(path(), JSON.generate(attrs), self.default_headers).body).with_indifferent_access
       end
 
-      def get id=nil
+      def get id
         content_json = super(path(id), self.default_headers).body
         JSON.parse(content_json).with_indifferent_access
+      end
+
+      def all
+        content_json = Candlepin::CandlepinResource.get(path(), self.default_headers).body
+        JSON.parse(content_json)
       end
 
       def destroy id
@@ -309,8 +310,13 @@ module Candlepin
 
   class Product < CandlepinResource
     class << self
+
+      def all
+        JSON.parse(Candlepin::CandlepinResource.get(path, self.default_headers).body)
+      end
+
       def create attr
-        JSON.parse(self.post(path(), attr.to_json, self.default_headers).body).with_indifferent_access
+        JSON.parse(self.post(path, attr.to_json, self.default_headers).body).with_indifferent_access
       end
 
       def get id=nil
@@ -320,16 +326,16 @@ module Candlepin
         products.collect {|p| p.with_indifferent_access }
       end
 
-      
+
       def _certificate_and_key id
         subscriptions_json = Candlepin::CandlepinResource.get('/candlepin/subscriptions', self.default_headers).body
         subscriptions = JSON.parse(subscriptions_json)
-        
+
         for sub in subscriptions
           if sub["product"]["id"] == id
             return sub["certificate"]
           end
-          
+
           for provProds in sub["providedProducts"]
             if provProds["id"] == id
               return sub["certificate"]
@@ -356,6 +362,10 @@ module Candlepin
         self.post(join_path(path(product_id), "content/#{url_encode content_id}?enabled=#{enabled}"), nil, self.default_headers).code.to_i
       end
 
+      def remove_content product_id, content_id
+        self.delete(join_path(path(product_id), "content/#{url_encode content_id}"), self.default_headers).code.to_i
+      end
+
       def create_unlimited_subscription owner_key, product_id
         start_date ||= Date.today
         # End it 100 years from now
@@ -375,13 +385,19 @@ module Candlepin
 
       def delete_subscriptions owner_key, product_id
         subscriptions = Candlepin::Subscription.get_for_owner owner_key
-        subscriptions.collect {|s|
-          Rails.logger.info "subsc: "+s.to_json
-          if s['product']['id'] == product_id
-            Candlepin::Subscription.destroy s['id']
+        subscriptions.collect do |s|
+
+          products = ([s['product']] + s['providedProducts'])
+          products.each do |p|
+            if p['id'] == product_id
+              Rails.logger.info "Deleting subscription: "+s.to_json
+              Candlepin::Subscription.destroy s['id']
+              break
+            end
           end
+
           Candlepin::Subscription.refresh_for_owner owner_key
-        }
+        end
       end
 
       def path(id=nil)

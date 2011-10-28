@@ -151,7 +151,7 @@ class Printer:
             value = item[col['attr_name']]
             if not col['multiline']:
                 output = format_date(value) if col['time_format'] else value
-                print ("{0:<" + str(colWidth + 1) + "} {1}").format(col['name'] + ":", output)
+                print (unicode("{0:<" + str(colWidth + 1) + "} {1}")).format(self.u_str(col['name']) + ":", output)
                 # +1 to account for the : after the column name
             else:
                 print indent+col['name']+":"
@@ -183,7 +183,7 @@ class Printer:
                 continue
             if col['multiline']:
                 value = text_to_line(value)
-            print str(value).ljust(width),
+            print self.u_str(value).ljust(width),
             print self._delim,
 
 
@@ -192,18 +192,29 @@ class Printer:
         #return widths
         for col in self._columns:
             key = col['attr_name']
-            widths[key] = len(str(col['name']))+1
+            widths[key] = len(self.u_str(col['name']))+1
             for item in items:
-                if ( key in item ) and ( widths[key] < len(str(item[key])) ):
-                    widths[key] = len(str(item[key]))+1
+                if not key in item: continue
+                value = self.u_str(item[key])
+                if widths[key] < len(value):
+                    widths[key] = len(value)+1
 
         return widths
 
+    def u_str(self, value):
+        """
+        Casts value to string unless it's unicode.
+        There is a problem using str on unicode values.
+        """
+        if not isinstance(value, unicode):
+            return str(value)
+        else:
+            return value
 
     def _minColumnWidth(self):
         width = 0
         for col in self._columns:
-            width = len(str(col['name'])) if (len(str(col['name'])) > width) else width
+            width = len(self.u_str(col['name'])) if (len(self.u_str(col['name'])) > width) else width
 
         return width
 
@@ -561,3 +572,35 @@ def progress(left, total):
     sizeLeft = float(left)
     sizeTotal = float(total)
     return 0.0 if total == 0 else (sizeTotal - sizeLeft) / sizeTotal
+    
+    
+def convert_to_mime_type(type, default=None):
+    availableMimeTypes = {
+        'text': 'text/plain',
+        'csv':  'text/csv',
+        'html': 'text/html',
+        'pdf':  'application/pdf'
+    }
+    
+    return availableMimeTypes.get(type, availableMimeTypes.get(default))
+    
+def attachment_file_name(headers, default):
+    contentDisposition = filter(lambda h: h[0].lower() == 'content-disposition', headers)
+
+    if len(contentDisposition) >  0:
+        filename = contentDisposition[0][1].split('filename=')
+        if len(filename) < 2:
+            return default            
+        if filename[1][0] == '"' or filename[1][0] == "'":
+            return filename[1][1:-1]
+        return filename
+        
+    return default
+    
+def save_report(report, filename):
+    f = open(filename, 'w')
+    f.write(report)
+    f.close()
+    
+    
+            

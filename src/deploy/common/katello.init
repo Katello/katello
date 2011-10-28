@@ -166,9 +166,9 @@ case "$1" in
         fi
         # stop if it is running
         condstop
+        # rake setup is run under root (no support of sqlite3)
         pushd $KATELLO_HOME >/dev/null
-        su $KATELLO_USER -s /bin/bash -c "RAILS_ENV=$KATELLO_ENV rake setup --trace" \
-          2>&1 | tee /var/log/katello/initdb.log
+        RAILS_ENV=$KATELLO_ENV rake setup --trace 2>&1 | tee /var/log/katello/initdb.log
         popd >/dev/null
         touch $KATELLO_DATA_DIR/initdb_done
         ;;

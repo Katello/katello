@@ -55,7 +55,7 @@ describe SystemTemplatesController do
     describe "GET download" do
       describe "with valid template id" do
         it "sends json export of template" do
-          get :download, :id => @system_template_1.id
+          get :download, :id => @system_template_1.id, :environment_id => @organization.locker.id
           response.should be_success
         end
       end
@@ -63,7 +63,7 @@ describe SystemTemplatesController do
       describe "with invalid template id" do
         it "should generate an error notice" do
           controller.should_receive(:errors)
-          get :download, :id => 9999
+          get :download, :id => -1, :environment_id => -1
           response.should_not be_success
         end
       end
@@ -149,26 +149,35 @@ describe SystemTemplatesController do
 
         it "should return succesfully being blank" do
           controller.should_receive(:notice)
-          put :update_content, :id=>@system_template_1.id, :packages=>[], :products=>[]
+          put :update_content, :id=>@system_template_1.id, :packages=>[], :products=>[], :package_groups=>[]
           response.should be_success
         end
 
         it "should return succesfully with packages and products" do
           pkg1 = {:name=>"FOO"}
           prd1 = {:name=>"FOO", :id=>"3"}
+          pkg_grp1 = {:name=>"TestGroup"}
+
           prod = Product.new(:environment=>Organization.first.locker, :name=>"FOO")
           prod.stub(:save)
           prod.stub(:save!)
           Product.stub(:find).and_return(prod)
           Product.stub(:readable).and_return(Product)
+
           stp = SystemTemplatePackage.new(:system_template=>@system_template_1, :package_name=>"FOO")
           stp.stub(:valid?).and_return(true)
-
           SystemTemplatePackage.stub(:new).and_return(stp)
 
+          stpg = SystemTemplatePackGroup.new(:system_template=>@system_template_1, :name=>"TestGroup")
+          stpg.stub(:valid?).and_return(true)
+          SystemTemplatePackGroup.stub(:new).and_return(stpg)
+
           controller.should_receive(:notice)
-          put :update_content, :id=>@system_template_1.id, :packages=>[pkg1], :products=>[prd1]
+          put :update_content, :id=>@system_template_1.id, :packages=>[pkg1], :products=>[prd1], :package_groups=>[pkg_grp1]
           response.should be_success
+
+          SystemTemplate.find(@system_template_1.id).package_groups.length.should == 1
+          SystemTemplate.find(@system_template_1.id).packages.length.should == 1
         end
       end
     end

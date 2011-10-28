@@ -63,7 +63,7 @@ describe Glue::Pulp::Repo do
 
     it "called for second time should use the cached values" do
       @repo.packages
-      Pulp::Repository.should_not_receive(:packages).with(RepoTestData::REPO_ID)
+      Pulp::Repository.should_not_receive(:packages).with(RepoTestData::REPO_ID, {})
       @repo.packages
     end
 
@@ -215,7 +215,7 @@ describe Glue::Pulp::Repo do
 
     it "should be composed from various attributes to be uniqe" do
       cloned_repo_id = @repo.clone_id(@to_env)
-      cloned_repo_id.should == "#{RepoTestData::REPO_PRODUCT_CP_ID}-repo-Prod-Corp"
+      cloned_repo_id.should == "Corp-Prod-Ruby-repo"
     end
 
   end
@@ -247,7 +247,7 @@ describe Glue::Pulp::Repo do
         cloned.feed.should == RepoTestData::CLONED_PROPERTIES[:feed]
         true
       end
-      @repo.promote(@to_env, @product)
+      @repo.promote(@to_env, nil)
     end
 
     it "should retrurn correct is_cloned_in? status" do
@@ -265,7 +265,7 @@ describe Glue::Pulp::Repo do
         cloned.relative_path.should == "Corp/Prod/Ruby/repo"
         true
       end
-      @repo.promote(@to_env, @product)
+      @repo.promote(@to_env, nil)
     end
   end
 
@@ -298,16 +298,6 @@ describe Glue::Pulp::Repo do
 end
 
 
-def disable_repo_orchestration
-  Pulp::Repository.stub(:sync_history).and_return([])
-
-  Pulp::Repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
-  Pulp::Repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)
-  Pulp::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
-  Pulp::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
-  Pulp::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
-end
-
 def stub_reference_objects
   @org = mock(Organization, {:id => RepoTestData::REPO_ORG_ID, :name => "Corp"})
   Organization.stub(:find).with(RepoTestData::REPO_ORG_ID).and_return(@org)
@@ -319,4 +309,5 @@ def stub_reference_objects
   @product.stub(:organization => @org)
   Product.stub(:find).with(RepoTestData::REPO_PRODUCT_ID).and_return(@product)
   Product.stub("find_by_cp_id!").with(RepoTestData::REPO_PRODUCT_CP_ID.to_s).and_return(@product)
+  Product.stub("find_by_cp_id").with(RepoTestData::REPO_PRODUCT_CP_ID.to_s).and_return(@product)
 end

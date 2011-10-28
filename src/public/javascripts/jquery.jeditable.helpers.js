@@ -23,10 +23,11 @@ $(document).ready(function() {
             indicator       :  i18n.saving,
             tooltip         :  i18n.clickToEdit,
             placeholder     :  i18n.clickToEdit,
-            submitdata      :  {authenticity_token: AUTH_TOKEN},
+            submitdata      :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
             onerror         :  function(settings, original, xhr) {
                 original.reset();
                 $("#notification").replaceWith(xhr.responseText);
+                notices.checkNotices();
             }
         };
 
@@ -71,7 +72,7 @@ $(document).ready(function() {
             name        :  $(this).attr('name'),
             onsuccess   :  function(result, status, xhr) {
                 var id = $('#panel_element_id');
-                list.refresh(id.attr('value'), id.attr('data-ajax_url'));
+                KT.panel.list.refresh(id.attr('value'), id.attr('data-ajax_url'));
             }
         };
         $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
@@ -81,7 +82,7 @@ $(document).ready(function() {
         var settings = {
             type        :  'password',
             width       :  270,
-            name        :  $(this).attr('name'),
+            name        :  $(this).attr('name')
         };
         $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
     });
@@ -90,7 +91,7 @@ $(document).ready(function() {
         var settings = {
             type        :  'text',
             width       :  270,                  
-            name        :  $(this).attr('name'),
+            name        :  $(this).attr('name')
         };
         $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
     });

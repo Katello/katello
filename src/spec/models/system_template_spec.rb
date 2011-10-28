@@ -234,12 +234,12 @@ describe SystemTemplate do
     'attr2': 'val2'
   },
   'package_groups': [
-    {'id': 'pg-123', 'repo': 'repo-123'},
-    {'id': 'pg-456', 'repo': 'repo-123'}
+    'pg-123',
+    'pg-456'
   ],
   'package_group_categories': [
-    {'id': 'pgc-123', 'repo': 'repo-123'},
-    {'id': 'pgc-456', 'repo': 'repo-123'}
+    'pgc-123',
+    'pgc-456'
   ]
 }
 "
@@ -251,10 +251,10 @@ describe SystemTemplate do
       @import_tpl.should_receive(:add_product).once.with('prod_a1').and_return nil
       @import_tpl.should_receive(:add_product).once.with('prod_a2').and_return nil
       @import_tpl.should_receive(:add_package).once.with('walrus').and_return nil
-      @import_tpl.should_receive(:add_package_group).once.with({:id => 'pg-123', :repo => 'repo-123'}).and_return nil
-      @import_tpl.should_receive(:add_package_group).once.with({:id => 'pg-456', :repo => 'repo-123'}).and_return nil
-      @import_tpl.should_receive(:add_pg_category).once.with({:id => 'pgc-123', :repo => 'repo-123'}).and_return nil
-      @import_tpl.should_receive(:add_pg_category).once.with({:id => 'pgc-456', :repo => 'repo-123'}).and_return nil
+      @import_tpl.should_receive(:add_package_group).once.with('pg-123').and_return nil
+      @import_tpl.should_receive(:add_package_group).once.with('pg-456').and_return nil
+      @import_tpl.should_receive(:add_pg_category).once.with('pgc-123').and_return nil
+      @import_tpl.should_receive(:add_pg_category).once.with('pgc-456').and_return nil
 
 
       @import_tpl.string_import(@import)
@@ -269,12 +269,12 @@ describe SystemTemplate do
 
       @export_tpl = SystemTemplate.new(:name => "export_template", :environment => @organization.locker)
       @export_tpl.stub(:products).and_return [@prod1, @prod2]
-      @export_tpl.stub(:packages).and_return [mock({:package_name => 'xxx'})]
+      @export_tpl.stub(:packages).and_return [mock({:package_name => 'xxx', :nvrea => 'xxx'})]
       @export_tpl.stub(:parameters_json).and_return "{}"
       @export_tpl.stub(:package_groups).and_return [SystemTemplatePackGroup.new({:name => 'xxx'})]
       @export_tpl.stub(:pg_categories).and_return [SystemTemplatePgCategory.new({:name => 'xxx'})]
 
-      str = @export_tpl.string_export
+      str = @export_tpl.export_as_json
       json = ActiveSupport::JSON.decode(str)
       json['products'].size.should == 2
       json['packages'].size.should == 1
@@ -310,6 +310,65 @@ describe SystemTemplate do
 
   end
 
+  describe "packages" do
+
+    let(:nvrea) { "name-ver.si.on-relea.se.x86_64.rpm" }
+    let(:nvrea_package_params) do
+      { :package_name  => "name", :version => "ver.si.on", :release => "relea.se", :epoch => nil, :arch => "x86_64"}
+    end
+
+    let(:nvre) { "name-ver.si.on-relea.se" }
+    let(:nvre_package_params) do
+      { :package_name  => "name", :version => "ver.si.on", :release => "relea.se", :epoch => nil, :arch => nil }
+    end
+
+    let(:plain_name) { "name" }
+    let(:plain_name_package_params) do
+      { :package_name  => "name" }
+    end
+
+    describe "#add_package" do
+      it "should accept nvrea name" do
+        @tpl1.packages.should_receive(:create!).with(nvrea_package_params)
+        @tpl1.add_package(nvrea)
+      end
+
+      it "should accept nvre name" do
+        @tpl1.packages.should_receive(:create!).with(nvre_package_params)
+        @tpl1.add_package(nvre)
+      end
+
+      it "should accept plain name" do
+        @tpl1.packages.should_receive(:create!).with(plain_name_package_params)
+        @tpl1.add_package(plain_name)
+      end
+    end
+
+    describe "#remove_package" do
+      before { @tpl1.packages.stub(:delete) }
+      it "should accept nvrea name" do
+        @tpl1.packages.should_receive(:find).with(:first, :conditions => nvrea_package_params)
+        @tpl1.remove_package(nvrea)
+      end
+
+      it "should accept nvre name" do
+        @tpl1.packages.should_receive(:find).with(:first, :conditions => nvre_package_params)
+        @tpl1.remove_package(nvre)
+      end
+
+      it "should accept plain name" do
+        @tpl1.packages.should_receive(:find).with(:first, :conditions => plain_name_package_params)
+        @tpl1.remove_package(plain_name)
+      end
+
+      it "should delete found package from template" do
+        pack = mock(SystemTemplatePackage)
+        @tpl1.packages.stub(:find => pack)
+        @tpl1.packages.should_receive(:delete).with(pack)
+        @tpl1.remove_package(plain_name)
+      end
+    end
+  end
 
   describe "package groups" do
 
@@ -328,7 +387,6 @@ describe SystemTemplate do
       Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups)
       Pulp::Repository.stub(:all => [repo])
     end
-
 
     describe "#add_package_group" do
 
@@ -420,6 +478,26 @@ describe SystemTemplate do
       it "should raise exception if package group is missing" do
         lambda { @tpl1.remove_pg_category(missing_pg_category_name) }.should raise_error(Errors::TemplateContentException)
       end
+    end
+  end
+
+  describe "TDL export" do
+
+    subject { Nokogiri.parse(@tpl1.export_as_tdl) }
+
+    describe "repositories" do
+      before do
+        disable_repo_orchestration
+        @prod1.stub(:repos => [Glue::Pulp::Repo.new(RepoTestData::REPO_PROPERTIES)])
+        @tpl1.products << @prod1
+      end
+
+      it "should contain repos referencing to pulp repositories" do
+        repo_uri = subject.xpath("/template/repositories/repository").text
+        repo_uri.should == "https://localhost/pulp/repos/ACME_Corporation/Locker/zoo/base"
+      end
+
+      it_should_behave_like "valid tdl"
     end
   end
 

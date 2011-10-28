@@ -45,7 +45,7 @@ class SystemAPI(KatelloAPI):
         return self.server.DELETE(path)[1]
 
     def subscribe(self, system_id, pool, quantity):
-        path = "/api/systems/" + str(system_id) + "/subscription"
+        path = "/api/systems/%s/subscriptions" % system_id
         data = {
                 "pool": pool,
                 "quantity": quantity
@@ -53,12 +53,15 @@ class SystemAPI(KatelloAPI):
         return self.server.POST(path, data)[1]
 
     def subscriptions(self, system_id):
-        path = "/api/consumers/%s/entitlements" % str(system_id)
-        return self.server.GET(path)[1] # candlepin json
+        path = "/api/systems/%s/subscriptions" % system_id
+        return self.server.GET(path)[1]
 
-    def unsubscribe(self, system_id, serial_id):
-        path = "/api/consumers/" + str(system_id) + \
-                "/certificates/" + str(serial_id)
+    def available_pools(self, system_id):
+        path = "/api/systems/%s/pools" % system_id
+        return self.server.GET(path)[1]
+
+    def unsubscribe(self, system_id, pool):
+        path = "/api/systems/%s/subscriptions/%s" % (system_id, pool)
         return self.server.DELETE(path)[1]
 
     def system(self, system_id):
@@ -88,3 +91,18 @@ class SystemAPI(KatelloAPI):
     def errata(self, system_id):
         path = "/api/systems/%s/errata" % system_id
         return self.server.GET(path)[1]
+                
+    def report_by_org(self, orgId, format):
+        path = "/api/organizations/%s/systems/report" % orgId
+        to_return = self.server.GET(path, customHeaders={"Accept": format})
+        return (to_return[1], to_return[2])
+
+    def report_by_env(self, orgId, envName, format):
+        environment = get_environment(orgId, envName)
+        if environment is None:
+            return None
+        
+        path = "/api/environments/%s/systems/report" % environment['id']
+        to_return = self.server.GET(path, customHeaders={"Accept": format})
+        return (to_return[1], to_return[2])
+        

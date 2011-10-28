@@ -104,7 +104,7 @@ PROVIDERS = [
   }
 ]
 
-
+SLA_VALUE = "1"
 
 PRODUCTS = [
   {
@@ -133,7 +133,10 @@ PRODUCTS = [
     "provider_id": 3,
     "multiplier": 1,
     "attributes": [
-
+      {
+        "name": "sla",
+        "value": SLA_VALUE
+      }
     ],
     "multiplier": 1,
     "updated_at": "2011-08-25T11:50:59Z",
@@ -549,6 +552,17 @@ REPOS = [
     }
 ]
 
+ERRATA_BY_REPO = [
+    {"title": "Zoo package enhancements",
+      "_id": "RHEA-2010:9983",
+      "id": "RHEA-2010:9983",
+      "type": "enhancements"},
+    {"title": "Zoo package enhancements",
+      "_id": "RHEA-2010:9984",
+      "id": "RHEA-2010:9984",
+      "type": "enhancements"}
+]
+
 PACKAGE_GROUPS = [
 {"name": "katello",
   "conditional_package_names": {},
@@ -677,3 +691,37 @@ TEMPLATES = [
   "pg_categories": [],
 }
 ]
+
+POOL = {
+  "href": "/pools/40288ae9333fe87201334033dd21001b",
+  "sourceEntitlement": None,
+  "productId": "1319632099512",
+  "accountNumber": "",
+  "quantity": -1,
+  "restrictedToUsername": None,
+  "attributes": [
+
+  ],
+  "subscriptionId": "40288ae9333fe87201334033da7e001a",
+  "startDate": "2011-10-26T00:00:00.000+0000",
+  "id": "40288ae9333fe87201334033dd21001b",
+  "productAttributes": [
+
+  ],
+  "productName": "first",
+  "activeSubscription": True,
+  "updated": "2011-10-26T12:28:20.641+0000",
+  "contractNumber": "",
+  "endDate": "2041-10-18T00:00:00.000+0000",
+  "providedProducts": [
+
+  ],
+  "created": "2011-10-26T12:28:20.641+0000",
+  "consumed": 0,
+  "owner": {
+    "href": "/owners/ACME_Corporation",
+    "displayName": "ACME_Corporation",
+    "id": "40288ae9333fe87201333fe956790018",
+    "key": "ACME_Corporation"
+  }
+}

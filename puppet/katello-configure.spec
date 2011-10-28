@@ -1,8 +1,8 @@
 
-%global homedir %{_datarootdir}/katello/install/puppet/modules
+%global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.4
+Version:        0.1.7
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -13,6 +13,7 @@ Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       puppet >= 2.6.6
+BuildRequires:  /usr/bin/pod2man
 
 BuildArch: noarch
 
@@ -24,13 +25,22 @@ Provides katello-configure script which configures Katello installation.
 
 %build
 
+THE_VERSION=%version perl -000 -ne 'if ($X) { s/^THE_VERSION/$ENV{THE_VERSION}/; s/\s+CLI_OPTIONS/$C/; s/^CLI_OPTIONS_LONG/$X/; print; next } ($t, $l, $v, $d) = /^#\s*(.+?\n)(.+\n)?(\S+)\s*=\s*(.*?)\n+$/s; $l =~ s/^#\s*//gm; $l = $t if not $l; ($o = $v) =~ s/_/-/g; $x .= qq/=item --$o=<\U$v\E>\n\n$l\nThe default value is "$d".\n\n/; $C .= "\n        [ --$o=<\U$v\E> ]"; $X = $x if eof' default-answer-file man/katello-configure.pod \
+	| /usr/bin/pod2man --name=%{name} --official --section=1 --release=%{version} - man/katello-configure.man1
+
 %install
 rm -rf %{buildroot}
 #prepare dir structure
-install -d -m 0755 %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{_sbindir}
-cp -Rp modules/* %{buildroot}%{homedir}
 install -m 0755 bin/katello-configure %{buildroot}%{_sbindir}
+install -d -m 0755 %{buildroot}%{homedir}
+install -d -m 0755 %{buildroot}%{homedir}/puppet/modules
+cp -Rp modules/* %{buildroot}%{homedir}/puppet/modules
+install -d -m 0755 %{buildroot}%{homedir}/puppet/lib
+cp -Rp lib/* %{buildroot}%{homedir}/puppet/lib
+install -m 0644 default-answer-file %{buildroot}%{homedir}
+install -d -m 0755 %{buildroot}%{_mandir}/man1
+install -m 0644 man/katello-configure.man1 %{buildroot}%{_mandir}/man1/katello-configure.1
 
 %clean
 rm -rf %{buildroot}
@@ -39,8 +49,34 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %{homedir}
 %{_sbindir}/katello-configure
+%{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Tue Oct 25 2011 Shannon Hughes <shughes@redhat.com> 0.1.7-1
+- 734517 - puppet - set pulp.conf server_name to fqdn (inecas@redhat.com)
+- Hello, (jpazdziora@redhat.com)
+- switching to info level of logging.  our logfiles grow to 1G+ quickly
+  (mmccune@redhat.com)
+- Fixing permissions to 0644 on the default-answer-file.
+  (jpazdziora@redhat.com)
+- Adding the man page for katello-configure. (jpazdziora@redhat.com)
+- Pulp.conf remove_old_packages renamed to remove_old_versions
+  (inecas@redhat.com)
+
+* Wed Oct 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.6-1
+- Add support for command line options and user answer file to katello-
+  configure
+- protect-pulp-repo - fix puppet configuration
+
+* Tue Oct 11 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.5-1
+- adding an auto-login ssh public key
+- Add support for answer files.
+- Make the oauth_secret dynamic
+- Move installation-related parts to */install.pp.
+- Upon the db:seed, we also have to db:migrate.
+- katello requires puppet 2.6.6+ (Fedora updates, EPEL)
+- puppet - make it possible to include just pulp
+
 * Mon Oct 03 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.4-1
 - added missing template required for commit:a37cdbe8
 - moved pulp config files into the pulp module, extracted values as varaibles

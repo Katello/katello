@@ -48,6 +48,20 @@ class Glue::Pulp::Repo
     Pulp::Repository.destroy(id)
   end
 
+  # TODO: remove after pulp >= 0.0.401 get's released. There is this attribute
+  # directly in the repo API
+  def uri
+    if repo_base_path = AppConfig.pulp.url[/^(.*)api$/,1]
+      return "#{repo_base_path}repos/#{self.relative_path}"
+    else
+      raise "We expect #{AppConfig.pulp.url} to end with 'api' suffix"
+    end
+  end
+
+  def get_params
+    return @params.clone
+  end
+
   def packages
     if @repo_packages.nil?
       self.packages = Pulp::Repository.packages(id)
@@ -111,7 +125,7 @@ class Glue::Pulp::Repo
   end
 
   def clone_id(environment)
-    Glue::Pulp::Repo.repo_id(self.product.cp_id, self.name, environment.name,environment.organization.name)
+    Glue::Pulp::Repo.repo_id(self.product.name, self.name, environment.name,environment.organization.name)
   end
 
   #is the repo cloned in the specified environment
@@ -126,6 +140,11 @@ class Glue::Pulp::Repo
     nil
   end
 
+  def set_sync_schedule schedule
+    Pulp::Repository.update(self.id, {
+      :sync_schedule => schedule
+    })
+  end
 
   def has_package? id
     self.packages.each {|pkg|
@@ -228,31 +247,53 @@ class Glue::Pulp::Repo
     sync_history_item['state'] == 'finished'
   end
 
-  def promote(to_environment, product)
+  def promote(to_environment, content)
     cloned = Glue::Pulp::Repo.new
     cloned.id = self.clone_id(to_environment)
     cloned.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_environment)
     cloned.arch = arch
     cloned.name = name
     cloned.feed = feed
-    cloned.groupid = Glue::Pulp::Repos.groupid(product, to_environment)
+    cloned.groupid = Glue::Pulp::Repos.groupid(self.product, to_environment, content)
     [Pulp::Repository.clone_repo(self, cloned)]
   end
 
+  def organization_id
+    (get_groupid_param 'org').to_i
+  end
+
+  def environment_id
+    (get_groupid_param 'env').to_i
+  end
+
+  def product_id
+    get_groupid_param 'product'
+  end
+
+  def content_id
+    get_groupid_param 'content'
+  end
+
   def organization
-    Organization.find((get_groupid_param 'org').to_i)
+    Organization.find(self.organization_id)
   end
 
   def environment
-    KTEnvironment.find((get_groupid_param 'env').to_i)
+    KTEnvironment.find(self.environment_id)
   end
 
   def product
-    Product.find_by_cp_id!(get_groupid_param 'product')
+    Product.find_by_cp_id(self.product_id)
   end
 
-  def self.repo_id product_cp_id, repo_name, env_name, organization_name
-    [product_cp_id, repo_name, env_name, organization_name].compact.join("-").gsub(/[^-\w]/,"_")
+  def content
+    if not self.content_id.nil?
+      Candlepin::Content.get(self.content_id)
+    end
+  end
+
+  def self.repo_id product_name, repo_name, env_name, organization_name
+    [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
   def self.find(id)
@@ -272,7 +313,7 @@ class Glue::Pulp::Repo
   private
   def get_groupid_param name
     idx = self.groupid.index do |s| s.start_with? name+':' end
-    if idx >= 0
+    if not idx.nil?
       return self.groupid[idx].split(':')[1]
     else
       return nil

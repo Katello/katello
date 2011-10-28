@@ -34,6 +34,7 @@ PRINT_ALL=0
 SHELL_MODE=0
 TEST_ALL=0
 NO_BASE=0
+NO_CLEANUP=0
 RUN_DISABLED=0
 for param in $*; do
     case "$param" in
@@ -43,6 +44,7 @@ for param in $*; do
             printf " -h, --help      prints this help\n"
             printf " -v,--verbose    verbose mode, prints full command output\n"
             printf " -b,--nobase     no base tests\n"
+            printf " -c,--nocleanup  no base cleanup tests\n"
             printf " -d,--disabled   run disabled tests as well\n"
             printf " -s, --shell     runs tests in the shell mode\n"
             printf " -p, --ping      checks whether the server is ready\n"
@@ -67,6 +69,9 @@ for param in $*; do
             ;;
         "-b"|"--nobase")
             NO_BASE=1
+            ;;
+        "-c"|"--nocleanup")
+            NO_CLEANUP=1
             ;;
         "-d"|"--disabled")
             RUN_DISABLED=1
@@ -235,6 +240,6 @@ function header() {
 for t in $required_tests; do
     run_rest_suite $t
 done
-[ $NO_BASE -eq 0 ] && . $TEST_DIR/_base_cleanup.sh
+[ $NO_BASE -eq 0 ] && [ $NO_CLEANUP -eq 0 ] && . $TEST_DIR/_base_cleanup.sh
 
 summarize

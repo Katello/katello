@@ -16,12 +16,15 @@
     KT.content_breadcrumb = $.parseJSON('#{escape_javascript(template_content_breadcrumb())}');
     KT.template_breadcrumb = $.parseJSON('#{escape_javascript(generate_template_breadcrumb())}');
     KT.product_hash = $.parseJSON('#{escape_javascript(product_hash.to_json)}');
+    KT.package_groups = $.parseJSON('#{escape_javascript(package_groups.to_json)}');
+    
     localize({
       "add": '+ #{_('Add')}',
       "add_plus": '+ #{_('Add')}',
       "remove": '#{_('Remove')}',
       "products": '#{_('Products')}',
       "packages": '#{_('Packages')}',
+      "package_groups": '#{_("Package Groups")}',
       "edit_label": '#{_("Edit Details")}',
       "edit_close_label": '#{_("Close Edit")}',
       "add_label": '#{_("Add")}',
@@ -75,6 +78,9 @@
         #edit_template_container.slide_up_container
           %h2= _("Edit System Template")
           = render :partial=>"edit", :locals=>{:editable=>true}
+        #download_template_container.slide_up_container
+          %h2= _("Download System Template")
+          = render :partial=>"download", :locals=>{:editable=>true}
         - if editable
           #sliding_tree_actionbar.clickable
             #edit_template.cs_action
@@ -93,7 +99,7 @@
               %span.text
                 = _("Save")
             #download_template.cs_action
-              %span#save_template_icon.sprite
+              %span#download_template_icon.sprite
                 SPRITE
               %span.text
                 = _("Download") 

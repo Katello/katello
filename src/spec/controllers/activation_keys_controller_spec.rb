@@ -46,8 +46,8 @@ describe ActivationKeysController do
 
 
   describe "rules" do
-    let(:action) {:index }
-    let(:req) { get :index }
+    let(:action) {:items }
+    let(:req) { get :items }
     let(:authorized_user) do
       user_with_permissions { |u| u.can(:read_all, :activation_keys) }
     end
@@ -58,20 +58,15 @@ describe ActivationKeysController do
   end
 
   describe "GET index" do
-    it "requests activation keys using search criteria" do
-      ActivationKey.should_receive(:search_for) {ActivationKey}
-      ActivationKey.stub_chain(:where, :limit)
-      get :index
-    end
 
     it "attempts to retain request in search history" do
       controller.should_receive(:retain_search_history)
-      get :index
+      get :items
     end
 
     it "returns activation keys" do
-      get :index
-      assigns[:activation_keys].should include ActivationKey.find(@a_key.id)
+      get :items
+      assigns[:items].should include ActivationKey.find(@a_key.id)
     end
 
     it "renders the index for 2 pane" do

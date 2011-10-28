@@ -286,6 +286,33 @@ class Create(ProductAction):
 
         return os.EX_OK
 
+# ------------------------------------------------------------------------------
+class Delete(ProductAction):
+
+    description = _('delete a product and its content')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                               help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                               help=_("product name (required)"))
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+    def run(self):
+        orgName     = self.get_option('org')
+        prodName    = self.get_option('name')
+
+        product = get_product(orgName, prodName)
+        if product == None:
+            return os.EX_DATAERR
+
+        msg = self.api.delete(product["id"])
+        print msg
+        return os.EX_OK
+
 # product command ------------------------------------------------------------
 
 class Product(Command):
