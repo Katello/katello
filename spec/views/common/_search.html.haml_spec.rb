@@ -33,21 +33,21 @@ describe "common/_search.html.haml" do
         view.should_receive(:history_entries).at_least(:once).and_return(2)
 
         render
-        assert_select 'a.recent', {:count => 2}
-        assert_select 'a.recent', {:count => 1, :text => @history_1}
-        assert_select 'a.recent', {:count => 1, :text => @history_2}
+        assert_select 'span.recent', {:count => 2}
+        assert_select 'span.recent', {:count => 1, :text => @history_1}
+        assert_select 'span.recent', {:count => 1, :text => @history_2}
       end
 
       it "sets URL and display text using search path received" do
         render
-        assert_select 'a.recent[href=?]', @history_1_path, {:text => @history_1}
-        assert_select 'a.recent[href=?]', @history_2_path, {:text => @history_2}
+        assert_select 'span.recent', {:text => @history_1}
+        assert_select 'span.recent', {:text => @history_2}
       end
     end
 
     it "does not render when it does not exist" do
       render
-      assert_select 'a.recent', {:count => 0}
+      assert_select 'span.recent', {:count => 0}
     end
   end
 
@@ -70,15 +70,15 @@ describe "common/_search.html.haml" do
         view.should_receive(:favorite_entries).at_least(:once).and_return(2)
 
         render
-        assert_select 'a.favorite', {:count => 2}
-        assert_select 'a.favorite', {:count => 1, :text => @favorite_1}
-        assert_select 'a.favorite', {:count => 1, :text => @favorite_2}
+        assert_select 'span.favorite', {:count => 2}
+        assert_select 'span.favorite', {:count => 1, :text => @favorite_1}
+        assert_select 'span.favorite', {:count => 1, :text => @favorite_2}
       end
 
       it "sets URL and display text using search path received" do
         render
-        assert_select 'a.favorite[href=?]', @favorite_1_path, {:text => @favorite_1}
-        assert_select 'a.favorite[href=?]', @favorite_2_path, {:text => @favorite_2}
+        assert_select 'span.favorite', {:text => @favorite_1}
+        assert_select 'span.favorite', {:text => @favorite_2}
       end
 
       it "provides a delete option for each favorite" do
@@ -89,18 +89,18 @@ describe "common/_search.html.haml" do
 
     it "does not render when it does not exist" do
       render
-      assert_select 'a.favorite', {:count => 0}
+      assert_select 'span.favorite', {:count => 0}
     end
   end
 
   it "renders link to save a favorite" do
     render
-    assert_select 'a.add', {:text => 'Save as Favorite'}
+    assert_select 'span.add', {:text => 'Save as Favorite'}
   end
 
   it "renders link to clear the search" do
     render
-    assert_select 'a.clear[href=?]', "?search=", {:text => 'Clear the Search'}
+    assert_select 'span.clear', {:text => 'Clear the Search'}
   end
 
 end

@@ -18,7 +18,7 @@ module RepoTestData
   CLONED_2_REPO_ID = 'cloned_2_repository_id'
 
   REPO_PRODUCT_ID = 1313597888827
-  REPO_PRODUCT_CP_ID = 4312314881818
+  REPO_PRODUCT_CP_ID = "4312314881818"
   REPO_ENV_ID = 3
   REPO_ORG_ID = 2
   CLONED_REPO_ENV_ID = 4
@@ -27,6 +27,7 @@ module RepoTestData
     :id => REPO_ID,
     :name => REPO_NAME,
     :arch => 'architecture',
+    :relative_path => "ACME_Corporation/Locker/zoo/base",
     :feed => 'url',
     "groupid" => [
       "product:"+REPO_PRODUCT_CP_ID.to_s,
@@ -42,6 +43,7 @@ module RepoTestData
     :id => CLONED_REPO_ID,
     :name => REPO_NAME,
     :arch => 'architecture',
+    :relative_path => "ACME_Corporation/Dev/zoo/base",
     :feed => 'url',
     "groupid" => [
       "product:"+REPO_PRODUCT_CP_ID.to_s,
@@ -113,18 +115,104 @@ module RepoTestData
 
   REPO_ERRATA = [
     {
-      "_id" => "RHEA-2010 =>9983",
+      "_id" => "RHEA-2010:9984",
       "type" => "enhancements",
-      "id" => "RHEA-2010 =>9983",
+      "id" => "RHEA-2010:9984",
       "title" => "Zoo package enhancements"
-    }.with_indifferent_access,
-    {
-      "_id" => "RHEA-2010 =>9984",
-      "type" => "enhancements",
-      "id" => "RHEA-2010 =>9984",
-      "title" => "Zoo package enhancements"
-    }.with_indifferent_access
-  ]
+    }
+  ].map(&:with_indifferent_access)
+
+  ERRATA = [
+    {"reboot_suggested"=>false,
+     "title"=>"Zoo package enhancements",
+     "issued"=>"2010-11-12 00:00:00",
+     "rights"=>"",
+     "pushcount"=>1,
+     "_id"=>"RHEA-2010:9983",
+     "_ns"=>"errata",
+     "id"=>"RHEA-2010:9983",
+     "immutable"=>true,
+     "type"=>"enhancements",
+     "version"=>"1",
+     "solution"=>"",
+     "summary"=>"",
+     "from_str"=>"enhancements@redhat.com",
+     "repo_defined"=>true,
+     "description"=>nil,
+     "release"=>"",
+     "updated"=>"2010-11-13 00:00:00",
+     "status"=>"final",
+     "severity"=>"",
+     "pkglist"=>
+     [{"name"=>"F14 Savanna Animals",
+       "packages"=>
+     [{"epoch"=>"0",
+       "sum"=>["md5", "0118ab5d4188121737cbc28ffda8783d"],
+       "name"=>"cheetah",
+       "arch"=>"noarch",
+       "src"=>"cheetah-0.3-0.8.noarch.rpm",
+       "version"=>"0.3",
+       "filename"=>"cheetah-0.3-0.8.noarch.rpm",
+       "release"=>"0.8"},
+       {"epoch"=>"0",
+        "sum"=>["md5", "b029ffa74171d1f60d58ad25a4822db2"],
+        "name"=>"elephant",
+        "arch"=>"noarch",
+        "src"=>"elephant-0.3-0.8.noarch.rpm",
+        "version"=>"0.3",
+        "filename"=>"elephant-0.3-0.8.noarch.rpm",
+        "release"=>"0.8"},
+        {"epoch"=>"0",
+         "sum"=>["md5", "38721d7eb537d3f1d39bfc7222dbf95d"],
+         "name"=>"giraffe",
+         "arch"=>"noarch",
+         "src"=>"giraffe-0.3-0.8.noarch.rpm",
+         "version"=>"0.3",
+         "filename"=>"giraffe-0.3-0.8.noarch.rpm",
+         "release"=>"0.8"}],
+         "short"=>"F14SavA"}],
+         "references"=>[]},
+         {"reboot_suggested"=>false,
+          "title"=>"Zoo package enhancements",
+          "issued"=>"2010-11-12 00:00:00",
+          "rights"=>"",
+          "pushcount"=>1,
+          "_id"=>"RHEA-2010:9984",
+          "_ns"=>"errata",
+          "id"=>"RHEA-2010:9984",
+          "immutable"=>true,
+          "type"=>"enhancements",
+          "version"=>"1",
+          "solution"=>"",
+          "summary"=>"",
+          "from_str"=>"enhancements@redhat.com",
+          "repo_defined"=>true,
+          "description"=>nil,
+          "release"=>"",
+          "updated"=>"2010-11-13 00:00:00",
+          "status"=>"final",
+          "severity"=>"",
+          "pkglist"=>
+     [{"name"=>"F14 Sea Animals",
+       "packages"=>
+     [{"epoch"=>"0",
+       "sum"=>["md5", "e3c3350f8a443e41aaecd9e9fbb4a711"],
+       "name"=>"walrus",
+       "arch"=>"noarch",
+       "src"=>"walrus-0.3-0.8.noarch.rpm",
+       "version"=>"0.3",
+       "filename"=>"walrus-0.3-0.8.noarch.rpm",
+       "release"=>"0.8"},
+       {"epoch"=>"0",
+        "sum"=>["md5", "a1cb40b5a3a4cdd5bf48573753ff1851"],
+        "name"=>"penguin",
+        "arch"=>"noarch",
+        "src"=>"penguin-0.3-0.8.noarch.rpm",
+        "version"=>"0.3",
+        "filename"=>"penguin-0.3-0.8.noarch.rpm",
+        "release"=>"0.8"}],
+        "short"=>"F14SeaA"}],
+        "references"=>[]}].map(&:with_indifferent_access)
 
   # using methods instead of constants due to immutability
   def self.repo_package_groups
@@ -152,7 +240,7 @@ module RepoTestData
 
   def self.repo_package_group_categories
     {
-      "development" => 
+      "development" =>
       {"name" => "Development",
        "_id" => "development",
        "id" => "development",

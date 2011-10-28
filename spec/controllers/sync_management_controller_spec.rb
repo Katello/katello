@@ -32,6 +32,7 @@ describe SyncManagementController do
       @locker = KTEnvironment.new
       @mock_org.stub!(:locker).and_return(@locker)
       @locker.stub!(:products).and_return(OpenStruct.new(:readable => [], :syncable=>[]))
+      Provider.stub!(:any_readable?).and_return(true)
     end
 
 

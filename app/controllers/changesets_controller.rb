@@ -13,7 +13,7 @@
 class ChangesetsController < ApplicationController
   include AutoCompleteSearch
   include BreadcrumbHelper
-  include BreadcrumbHelper::ChangesetBreadcrumbs
+  include ChangesetBreadcrumbs
 
   skip_before_filter :authorize # want to load environment if we can
   before_filter :find_changeset, :except => [:index, :items, :list, :create, :new, :auto_complete_search]
@@ -62,17 +62,12 @@ class ChangesetsController < ApplicationController
   def index
     accessible_envs = KTEnvironment.changesets_readable(current_organization)
     setup_environment_selector(current_organization, accessible_envs)
-    @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size)
-    retain_search_history
     render :index, :locals=>{:accessible_envs => accessible_envs}
   end
 
   #extended scroll for changeset_history
   def items
-    start = params[:offset]
-    @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size).offset(start)
-    render_panel_items @changesets, @panel_options
-    retain_search_history
+    render_panel_items(@environment.changeset_history, @panel_options, params[:search], params[:offset])
   end
 
   #similar to index, but only renders the actual list of the 2 pane
@@ -102,17 +97,12 @@ class ChangesetsController < ApplicationController
   ####
 
   def dependencies
-    product_map = @changeset.calc_dependencies
     to_ret = {}
+    @changeset.calc_dependencies.each do |dependency|
+      to_ret[dependency.product_id] ||= []
+      to_ret[dependency.product_id] << {:name=>dependency.display_name, :dep_of=>dependency.dependency_of}
+    end
 
-    #temporarily transform product_map from id=>name  to id=>{:name, :dep_of} with a fake dep_of
-    product_map.keys.each{|pid|
-      to_ret[pid] = []
-      product_map[pid].each{|pkg|
-        to_ret[pid] << {:name=>pkg.nvrea, :dep_of=>"Foo-1.2.3"}
-      }
-
-    }
     render :json=>to_ret
   end
 
@@ -152,12 +142,22 @@ class ChangesetsController < ApplicationController
     if params[:name]
       @changeset.name = params[:name]
       @changeset.save!
+      
+      if not Changeset.where(:id => @changeset.id).search_for(params[:search]).include?(@changeset)
+        notice _("'#{@changeset["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+      end
+      
       render :json=>{:name=> params[:name], :timestamp => @changeset.updated_at.to_i.to_s} and return
     end
 
     if params[:description]
       @changeset.description = params[:description]
       @changeset.save!
+      
+      if not Changeset.where(:id => @changeset.id).search_for(params[:search]).include?(@changeset)
+        notice _("'#{@changeset["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+      end
+      
       render :json=>{:description=> params[:description], :timestamp => @changeset.updated_at.to_i.to_s} and return
     end
 
@@ -235,12 +235,12 @@ class ChangesetsController < ApplicationController
     begin
       @changeset.promote
       # remove user edit tracking for this changeset
-      ChangesetUser.destroy_all(:changeset_id => @changeset.id) 
+      ChangesetUser.destroy_all(:changeset_id => @changeset.id)
       notice _("Started promotion of '#{@changeset.name}' to #{@environment.name} environment")
     rescue Exception => e
         errors  "Failed to promote: #{e.to_s}"
         render :text=>e.to_s, :status=>500
-        return 
+        return
     end
 
     render :text=>url_for(:controller=>"promotions", :action => "show",
@@ -252,7 +252,7 @@ class ChangesetsController < ApplicationController
     to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'progress' => progress.to_i}
     render :json=>to_ret
   end
-  
+
 
   private
 
@@ -290,6 +290,7 @@ class ChangesetsController < ApplicationController
                  :enable_create => false,
                  :name => controller_display_name,
                  :accessor => :id,
+                 :ajax_load => true,
                  :ajax_scroll => items_changesets_path()}
   end
 

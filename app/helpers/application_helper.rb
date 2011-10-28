@@ -10,7 +10,19 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
+
 module ApplicationHelper
+
+  include LayoutHelper
+  include ScopedSearch::RailsHelper
+
+  #require 'navigation/main'
+
+  #include Navigation
+
+
+
   def current_url(extra_params={})
     url_for params.merge(extra_params)
   end
@@ -79,6 +91,7 @@ module ApplicationHelper
   def two_panel(collection, options)
     options[:accessor] ||= "id"
     options[:left_panel_width] ||= nil
+    options[:ajax_load] ||= false
     enable_create = options[:enable_create]
     enable_create = true if enable_create.nil?
     enable_sort = options[:enable_sort] ? options[:enable_sort] : false
@@ -95,6 +108,7 @@ module ApplicationHelper
              :accessor=>options[:accessor],
              :url=>options[:url], 
              :left_panel_width=>options[:left_panel_width],
+             :ajax_load => options[:ajax_load],
              :ajax_scroll =>options[:ajax_scroll],
              :search_env =>options[:search_env],
              :actions=>options[:actions]}
@@ -191,5 +205,25 @@ module ApplicationHelper
 
   def generate_details_url(path, id, entity )
      path + "?search=id%3D#{id}#panel=#{entity}_#{id}"
+  end
+
+  # used for jeditable fields
+  def editable_class(editable = false)
+    return "editable edit_panel_element multiline" if editable
+    "multiline"
+  end
+
+  #returns a proc to generate a url for the env_selector
+  def url_templates_proc
+    lambda{|args|
+      system_templates_organization_environment_path(args[:organization].cp_key, args[:environment].id)
+    }
+  end
+
+  #returns a proc to generate a url for the env_selector
+  def url_products_proc
+    lambda{|args|
+      products_organization_environment_path(args[:organization].cp_key, args[:environment].id)
+    }
   end
 end

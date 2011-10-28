@@ -1,7 +1,10 @@
-#check if not running as root in production mode (creates wrong permissions)
-raise 'You cannot run "rake setup" as root in production mode' if Process.uid == 0 and Rails.env == 'production' and not ENV['FORCE_RAKE_SETUP']
+desc "check if not running as root with sqlite3 in production mode (creates wrong permissions)"
+require 'util/db_setup_check'
+task :check_db_config => "db:load_config" do
+  Katello::DbSetupCheck.check!
+end
 
-#task to perform steps required for katello to work
-task :setup => ["db:migrate:reset", "db:seed"] do
+desc "task to perform steps required for katello to work"
+task :setup => ["check_db_config", "db:migrate:reset", "db:seed"] do
   puts "Database sucessfully recreated in #{Rails.env}"
 end

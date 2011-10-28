@@ -21,6 +21,7 @@ describe "distributions/_show.html.haml" do
     @distribution = Glue::Pulp::Distribution.new()
     @distribution.stub!(:id).and_return(@id)
     @distribution.stub!(:description).and_return(@description)
+    view.stub(:promotion_distribution_navigation).and_return([])
   end
 
   it "content_for :title is included" do
@@ -35,7 +36,7 @@ describe "distributions/_show.html.haml" do
     end
 
     it "renders sub-navigation links" do
-      view.should_receive(:render_navigation).with(:expand_all => true, :level => 3).once
+      view.should_receive(:render_navigation).with(:items => [], :expand_all => true, :level => 1).once
       render
     end
   end

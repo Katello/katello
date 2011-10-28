@@ -17,7 +17,8 @@ require 'base64'
 
 class ApplicationController < ActionController::Base
   layout 'katello'
-  helper :all
+  clear_helpers
+    
   helper_method :current_organization
   before_filter :set_locale
   before_filter :require_user,:require_org
@@ -60,7 +61,7 @@ class ApplicationController < ActionController::Base
   # support for session (thread-local) variables must be the last filter (except authorize)in this class
   include Katello::ThreadSession::Controller
   include AuthorizationRules
-
+  include Menu
   def section_id
     'generic'
   end
@@ -117,7 +118,7 @@ class ApplicationController < ActionController::Base
       if !details.nil?
         notice_dialog["notices"].push( _("#{self.class.helpers.link_to('Click here', notices_path)} for more details."))
       end
-
+      
       flash[level] = notice_dialog.to_json
 
       if persist
@@ -143,6 +144,7 @@ class ApplicationController < ActionController::Base
                      :request_type => requested_action, :user_notices => [UserNotice.new(:user => current_user, :viewed=>false)])
     end
   end
+
 
   # Generate an error notice:
   #
@@ -390,15 +392,34 @@ class ApplicationController < ActionController::Base
     "#{exception.class}: #{exception.message}\n" << exception.backtrace.join("\n")
   end
 
-  def render_panel_items(items, options)
+  def render_panel_items(items, options, search, start)
+    @items = items
+    
     options[:accessor] ||= "id"
-    options[:collection] = items
     options[:columns] = options[:col]
-    if options[:list_partial]
-      render :partial=>options[:list_partial], :locals=>options
-    else
-      render :partial=>"common/list_items", :locals=>options
+    
+    if start == "0"
+      options[:total_count] = @items.count
     end
+    
+    @items_searched = @items.search_for(search)
+    @items_offset = @items_searched.limit(current_user.page_size).offset(start)
+    
+    options[:total_results] = @items_searched.count
+    options[:collection] ||= @items_offset
+    
+    if options[:list_partial]
+      rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)
+    else
+      rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options) 
+    end
+    
+    render :json => {:html => rendered_html,
+                      :results_count => options[:total_count],
+                      :total_items => options[:total_results],
+                      :current_items => options[:collection].length }
+                      
+    retain_search_history
   end
 
   #produce a simple datastructure of a changeset for the browser

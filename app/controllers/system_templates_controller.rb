@@ -35,10 +35,12 @@ class SystemTemplatesController < ApplicationController
       :object => read_test,
       :promotion_details => read_test,
       :auto_complete_package => read_test,
+      :auto_complete_package_groups => read_test,
       :show => read_test,
       :edit => read_test,
       :download => read_test,
       :product_packages => read_test,
+      :product_comps => read_test,
       :update => manage_test,
       :update_content => manage_test,
       :destroy => manage_test,
@@ -56,14 +58,20 @@ class SystemTemplatesController < ApplicationController
     product_hash = {}
     @products.each{|prd|  product_hash[prd.name] = prd.id}
 
+    package_groups = current_organization.locker.package_groups.collect{|grp| grp[:name]}.sort
+
     retain_search_history
-    render :index, :locals=>{:editable=>SystemTemplate.manageable?(current_organization), :product_hash => product_hash}
+    render :index, :locals=>{:editable=>SystemTemplate.manageable?(current_organization),
+                             :product_hash => product_hash, :package_groups => package_groups}
   end
   
   def items
     start = params[:offset]
-    @templates = SystemTemplate.readable(current_organization).search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @templates = SystemTemplate.readable(current_organization).search_for(params[:search])
+    @panel_options[:num_items] = @templates.count
+    @templates = @templates.limit(current_user.page_size).offset(start)
     render_panel_items @templates, @panel_options
+    retain_search_history
   end
   
   def setup_options
@@ -80,14 +88,21 @@ class SystemTemplatesController < ApplicationController
   def object
     pkgs = @template.packages.collect{|pkg| {:name=>pkg.package_name}}
     products = @template.products.collect{|prod| {:name=>prod.name, :id=>prod.id}}
+
+    # Collect up the environments for all templates with this name
+    # TODO: Figure out user perms on templates, not sure why we dont have org on template
+    @templates = SystemTemplate.where(:name => @template.name)
+    environments = @templates.collect{|template| {:name=>template.environment.name, :id=>template.environment.id}}
+    groups = @template.package_groups.collect{|grp| {:name=>grp.name}}
     to_ret = {:id=> @template.id, :name=>@template.name, :description=>@template.description,
-              :packages=>pkgs, :products=>products}
+              :packages=>pkgs, :products=>products, :package_groups=>groups, :environments => environments}
     render :json=>to_ret
   end
 
   def edit
     render :partial => "edit", :layout => "tupane_layout",
-           :locals => {:template=>@template, :editable=> SystemTemplate.manageable?(current_organization)}
+           :locals => {:template=>@template,
+                       :editable=> SystemTemplate.manageable?(current_organization)}
   end
 
 
@@ -101,23 +116,36 @@ class SystemTemplatesController < ApplicationController
       }
 
 
-    @packages.sort!.uniq!
-    offset = params[:offset].to_i if params[:offset]
-
-    if offset
-      @packages = @packages[offset..offset+current_user.page_size]
-      render :text=>"" and return if @packages.empty?
-    else
-      @packages = @packages[0..current_user.page_size]
-    end
+    @packages = trim @packages
 
     render :partial=>"product_packages"
 
   end
 
+  def product_comps
+    @product = Product.readable(current_organization).find(params[:product_id])
+    
+    @groups = []
+    @product.repos(current_organization.locker).each{|repo|
+      repo.package_groups.each{|grp|
+        Rails.logger.error("\n\n\n\n\n") if grp[1].nil?
+        Rails.logger.error(grp.inspect) if grp[1].nil?
+        Rails.logger.error("\n\n\n\n\n") if grp[1].nil?
+        @groups.push(grp["name"])
+      }
+    }
+
+    @groups = trim @groups
+
+    render :partial=>"product_comps"
+  end
+
+
   def update_content
+    
     pkgs = params[:packages]
     products = params[:products]
+    pkg_groups = params[:package_groups]
 
     @template.packages.delete_all
     pkgs.each{|pkg|
@@ -129,6 +157,11 @@ class SystemTemplatesController < ApplicationController
       @template.products << Product.readable(current_organization).find(prod[:id])
     }
     
+    @template.package_groups = []
+    pkg_groups.each{|grp|
+      @template.add_package_group(grp[:name])
+    }
+
     @template.save!
     notice _("Template #{@template.name} has been updated successfully")
     object()
@@ -165,10 +198,15 @@ class SystemTemplatesController < ApplicationController
   end
 
   def download
-    json = @template.string_export
-    send_data json,
-      :filename => "%s-export.json" % @template.name,
-      :type => "application/json"
+    # Grab the locker template so we can lookup name
+    env_template = SystemTemplate.where(:name => @template.name, :environment_id => params[:environment_id]).first
+    # Grab the env based on the ID passed in
+    environment = KTEnvironment.where(:id=>params[:environment_id]).where(:organization_id=>current_organization.id).first
+    # Translate to XML
+    xml = env_template.export_as_tdl
+    send_data xml,
+      :filename => "#{@template.name}-#{environment.name}-export.xml",
+      :type => "application/xml"
   end
 
   def new
@@ -211,6 +249,20 @@ class SystemTemplatesController < ApplicationController
   rescue Exception => e
     errors e
     render :text=>e, :status=>400 and return false
+  end
+
+
+  def trim list
+    list.sort!.uniq!
+    offset = params[:offset].to_i if params[:offset]
+
+    if offset
+      list = list[offset..offset+current_user.page_size]
+      render :text=>"" and return if list.empty?
+    else
+      list = list[0..current_user.page_size]
+    end
+    list
   end
 
 end

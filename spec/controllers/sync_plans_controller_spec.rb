@@ -15,8 +15,8 @@ describe SyncPlansController do
       before do
         @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       end
-      let(:action) {:index}
-      let(:req) { get :index}
+      let(:action) {:items}
+      let(:req) { get :items}
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:read, :providers, @provider.id, @organization) }
       end
@@ -61,8 +61,9 @@ describe SyncPlansController do
 
     describe "GET 'index'" do
       it "should be successful" do
-        get 'index'
+        get :index
         response.should be_success
+        response.should render_template("index")
       end
     end
 

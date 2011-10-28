@@ -25,6 +25,8 @@ class System < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
 
+  acts_as_reportable
+
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :systems
   belongs_to :system_template
 
@@ -44,6 +46,17 @@ class System < ActiveRecord::Base
   scoped_search :on => :location, :complete_value => true
   scoped_search :on => :uuid, :complete_value => true
   scoped_search :on => :id, :complete_value => true
+
+  class << self
+    def architectures
+      { 'x86' => :'i386', 'Itanium' => :'ia64', 'x86_64' => :x86_64, 'PowerPC' => :ppc,
+      'IBM S/390' => :s390, 'IBM System z' => :s390x,  'SPARC Solaris' => :'sparc64' }
+    end
+
+    def virtualized
+      { "physical" => N_("Physical"), "virtualized" => N_("Virtual") }
+    end
+  end
 
   def organization
     environment.organization
@@ -103,7 +116,7 @@ class System < ActiveRecord::Base
     environment.systems_deletable?
   end
 
-  def self.registrable? env, org
+  def self.registerable? env, org
     org ||= env.organization if env
     ret = false
     ret ||= User.allowed_to?([:register_systems], :organizations, nil, org) if org

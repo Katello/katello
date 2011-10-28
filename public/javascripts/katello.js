@@ -282,31 +282,22 @@ KT.common = (function() {
         },
         rootURL : function() {
             if (root_url === undefined) {
-                root_url = $('#root_url').attr('data-url');
+                //root_url = $('#root_url').attr('data-url');
+                root_url = KT.config['root_url'];
             }
             return root_url;
         },
-        setRootUrl : function(){
-        	KT.routes.options.prefix = $('#root_url').attr('data-url');
+        getSearchParams : function() {
+        	var search_string = $.bbq.getState('search')
+
+        	if( search_string ){
+        		return { 'search' : search_string };	
+        	} else {
+        		return false;
+        	}
         },
-        thirdLevelNavSetup : function(){
-            var children = $('.third_level:first-child');
-
-            $.each(children, function(i, item) {
-                var child = $(item);
-                var li = child.parent().parent();
-                var  ul = child.parent();
-
-                li.prepend($('<div class="arrow_icon_menu"></div>'));
-                li.hover(
-                    function(){
-                        ul.fadeIn('fast');
-                    },
-                    function(){
-                        ul.fadeOut('fast');
-                });
-            });
-
+        spinner_path : function() {
+          return KT.common.rootURL() + "/images/spinner.gif";
         },
         jscroll_init: function(element) {
             element.jScrollPane({ hideFocus: true });
@@ -319,7 +310,6 @@ KT.common = (function() {
                 }
             });
         }
-
     };
 })();
 
@@ -358,18 +348,15 @@ $(document).ready(function (){
 		onInputField = false;
 	});
 
-    //Add a handler for helptips
-    $(".helptip-open").live('click', KT.helptip.handle_close);
-    $(".helptip-close").live('click', KT.helptip.handle_open);
+  //Add a handler for helptips
+  $(".helptip-open").live('click', KT.helptip.handle_close);
+  $(".helptip-close").live('click', KT.helptip.handle_open);
 
-    // Add a handler for ellipsis
-	$(".one-line-ellipsis").ellipsis();
+  // Add a handler for ellipsis
+  $(".one-line-ellipsis").ellipsis(true);
 
-    KT.common.orgSwitcherSetup();
-    KT.common.orgFilterSetup();
-    KT.common.thirdLevelNavSetup();
-    
-    KT.common.setRootUrl();
+  KT.common.orgSwitcherSetup();
+  KT.common.orgFilterSetup();
 });
 
 /**

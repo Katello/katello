@@ -78,34 +78,6 @@ describe Product do
         end
       end
 
-      context "with content" do
-        it "should create product in katello" do
-          expected_content = ProductTestData::PRODUCT_WITH_CONTENT[:productContent][0].content
-
-          Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
-          Candlepin::Content.should_receive(:create)                \
-              .once.with(an_instance_of(Glue::Candlepin::Content))  \
-              .and_return({:id => ProductTestData::PRODUCT_WITH_CONTENT[:productContent][0].content.id})
-                # don't know how to verify equality
-              #c.name == 'aa' #expected_content[:name]
-              #c.id = expected_content[:id]
-              #c.type = expected_content[:type]
-              #c.label = expected_content[:label]
-              #c.vendor = expected_content[:vendor]
-              #c.contentUrl = expected_content[:contentUrl]
-              #c.gpgUrl = expected_content[:gpgUrl]
-          Candlepin::Product.
-              should_receive(:add_content).once.
-              with(
-                ProductTestData::PRODUCT_ID,
-                ProductTestData::PRODUCT_WITH_CONTENT[:productContent][0].content.id,
-                ProductTestData::PRODUCT_WITH_CONTENT[:productContent][0].enabled
-              ).and_return({})
-
-          p = Product.create!(ProductTestData::PRODUCT_WITH_CONTENT)
-        end
-      end
-
     end
   end
 
@@ -191,20 +163,12 @@ describe Product do
         @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
       end
 
-      it "should start with product id" do
-        @p.repo_id('123').index("#{ProductTestData::PRODUCT_ID}").should == 0
-      end
-
-      it "should end with organization id" do
-        @p.repo_id('123').index("#{ProductTestData::ORG_ID}").should == @p.repo_id('123').length - "#{ProductTestData::ORG_ID}".length
-      end
-
-      it "should have environment name in it if one was specified" do
-        @p.repo_id('123', 'root').should == "#{ProductTestData::PRODUCT_ID}-123-root-#{ProductTestData::ORG_ID}"
+      specify "format" do
+        @p.repo_id('123', 'root').should == "#{ProductTestData::ORG_ID}-root-#{ProductTestData::SIMPLE_PRODUCT[:name]}-123"
       end
 
       it "should be the same as content id for cloned repository" do
-        @p.repo_id("#{ProductTestData::PRODUCT_ID}-123-root-#{ProductTestData::ORG_ID}").should == "#{ProductTestData::PRODUCT_ID}-123-root-#{ProductTestData::ORG_ID}"
+        @p.repo_id("#{ProductTestData::ORG_ID}-root-#{ProductTestData::SIMPLE_PRODUCT[:name]}-123").should == "#{ProductTestData::ORG_ID}-root-#{ProductTestData::SIMPLE_PRODUCT[:name]}-123"
       end
     end
 
@@ -221,7 +185,7 @@ describe Product do
 
         it "should raise conflict error" do
           @p.should_receive(:repos).with(@p.locker, {:name => "repo"}).and_return([Glue::Pulp::Repo.new(:id => "123")])
-          lambda { @p.add_new_content("repo", "http://test/repo","yum") }.should raise_error(Errors::ConflictException)
+          lambda { @p.add_repo("repo", "http://test/repo","yum") }.should raise_error(Errors::ConflictException)
         end
       end
     end
@@ -229,6 +193,7 @@ describe Product do
     context "when importing product from candlepin" do
       before do
         Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
+        Candlepin::Product.stub!(:remove_content).and_return({})
         Candlepin::Content.stub!(:create).and_return({:id => "123"})
         @repo = Glue::Pulp::Repo.new(:id => '123')
         Glue::Pulp::Repo.stub(:new).and_return(@repo)
@@ -246,11 +211,6 @@ describe Product do
         p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
         p.orchestration_for = :import_from_cp
         p.save!
-      end
-
-      it "should clear the product name to be valid" do
-        product = @provider.import_product_from_cp('name' => 'invalid (name)', :productContent => [] )
-        product.name.should == 'invalid name'
       end
 
      it "prepares valid name for Pulp repo" do

@@ -29,8 +29,8 @@ class SearchController < ApplicationController
     # only return histories that are associated with the page the request is received on...
     path = retrieve_path
 
-    @search_histories = current_user.search_histories.where(:path => path).order("updated_at desc")
-    @search_favorites = current_user.search_favorites.where(:path => path).order("params asc")
+    @search_histories = current_user.search_histories.where("path LIKE ?", "%#{path}%").order("updated_at desc")
+    @search_favorites = current_user.search_favorites.where("path LIKE ?", "%#{path}%").order("params asc")
 
     render :partial => "common/search"
 
@@ -96,7 +96,10 @@ class SearchController < ApplicationController
       # checking for path validity.  This is required since the routes do not know of this prefix.
       path = path.split(ENV['RAILS_RELATIVE_URL_ROOT']).last
       path_details = Rails.application.routes.recognize_path(path)
-      eval(path_details[:controller].singularize.camelize).complete_for(query)
+
+      eval(path_details[:controller].singularize.camelize).readable(current_organization).complete_for(query,
+        {:organization_id => current_organization})
+
     rescue ScopedSearch::QueryNotSupported => error
       Rails.logger.error error.to_s
       errors _("Unable to save as favorite. '#{params[:favorite]}' is an invalid search.")
