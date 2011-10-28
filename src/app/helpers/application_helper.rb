@@ -32,7 +32,7 @@ module ApplicationHelper
   end
   
   def default_title
-    _("Open Source Systems Management")
+    AppConfig.katello? ? _("Open Source Systems Management") : _("Open Source Entitlement Management")
   end
     
   def link_to_authorized(*args, &block)
