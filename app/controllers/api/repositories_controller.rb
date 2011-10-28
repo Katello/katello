@@ -73,7 +73,7 @@ class Api::RepositoriesController < Api::ApiController
 
   # Doesn't call Pulp really - used for loading asslociated resources
   def fake_find_repository
-    @repository = Glue::Pulp::Repo.new :id => params[:id]
+    @repository = Repository.new :pulp_id => params[:id]
   end
 
   def find_product

@@ -48,6 +48,7 @@ module Glue::Candlepin::Product
     product.productContent = product.build_productContent(productContent_attrs)
     product.orchestration_for = :import_from_cp
     product.save!
+    product.setup_repos
 
   rescue => e
     Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
@@ -257,8 +258,6 @@ module Glue::Candlepin::Product
           queue.create(:name => "delete unused content in candlein: #{self.name}", :priority => 1, :action => [self, :del_unused_content])
         when :promote
           #queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])
-        when :import_from_cp
-          queue.create(:name => "delete imported content from locker environment: #{self.name}", :priority =>2, :action => [self, :remove_imported_content])
       end
     end
 
