@@ -268,6 +268,7 @@ class SystemsController < ApplicationController
                       :col => COLUMNS.keys,
                       :custom_rows => true,
                       :enable_create => true,
+                      :create => "System",
                       :enable_sort => true,
                       :name => controller_display_name,
                       :list_partial => 'systems/list_systems',
