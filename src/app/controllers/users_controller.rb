@@ -59,7 +59,11 @@ class UsersController < ApplicationController
   
   def new
     @user = User.new
-    render :partial=>"new", :layout => "tupane_layout", :locals=>{:user=>@user}
+    @organization = current_organization
+    accessible_envs = current_organization.environments
+    setup_environment_selector(current_organization, accessible_envs)
+    @environment = first_env_in_path(accessible_envs)
+    render :partial=>"new", :layout => "tupane_layout", :locals=>{:user=>@user, :accessible_envs => accessible_envs}
   end
 
   def create
