@@ -21,6 +21,8 @@ module Glue::Pulp::Repos
     base.send :include, InstanceMethods
     base.class_eval do
       before_save :save_repos_orchestration
+      after_save :import_repos_orchestration
+
       before_destroy :destroy_repos_orchestration
     end
   end
@@ -279,7 +281,7 @@ module Glue::Pulp::Repos
       end
     end
 
-    def set_repos
+    def setup_repos
       self.productContent.collect do |pc|
         cert = self.certificate
         key = self.key
@@ -291,12 +293,11 @@ module Glue::Pulp::Repos
         substitutions_with_paths = cdn_var_substitutor.substitute_vars(pc.content.contentUrl)
 
         substitutions_with_paths.each do |(substitutions, path)|
-
           feed_url = repository_url(path)
           arch = substitutions["basearch"] || "noarch"
           repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
           begin
-            env_prod = KtEnvironmentProduct.find_or_create(self.organization.locker, self)
+            env_prod = EnvironmentProduct.find_or_create(self.organization.locker, self)
             repo = Repository.create!(:environment_product=> env_prod, :pulp_id => repo_id(repo_name),
                                         :arch => arch,
                                         :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, repo_name),
@@ -370,13 +371,19 @@ module Glue::Pulp::Repos
       case orchestration_for
         when :create
           # no repositories are added when a product is created
-        when :import_from_cp
-          queue.create(:name => "create pulp repositories for product: #{self.name}",      :priority => 1, :action => [self, :set_repos])
         when :update
           #called when sync schedule changed, repo added, repo deleted
           queue.create(:name => "setting up pulp sync schedule for product: #{self.name}", :priority => 2, :action => [self, :setup_sync_schedule])
         when :promote
           # do nothing, as repos have already been promoted (see promote_repos method)
+      end
+    end
+
+
+    def import_repos_orchestration
+      case orchestration_for
+        when :import_from_cp
+          queue.create(:name => "create pulp repositories for product: #{self.name}", :priority => 1, :action => [self, :set_repos])
       end
     end
 
