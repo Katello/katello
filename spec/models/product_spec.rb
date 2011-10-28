@@ -181,10 +181,10 @@ describe Product do
       context "when there is a repo with the same name for the product" do
         before do
           @repo_name = "repo"
+          @p.add_repo(@repo_name, "http://test/repo","yum" )
         end
 
         it "should raise conflict error" do
-          @p.should_receive(:repos).with(@p.locker, {:name => "repo"}).and_return([Glue::Pulp::Repo.new(:id => "123")])
           lambda { @p.add_repo("repo", "http://test/repo","yum") }.should raise_error(Errors::ConflictException)
         end
       end
@@ -195,13 +195,16 @@ describe Product do
         Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
         Candlepin::Product.stub!(:remove_content).and_return({})
         Candlepin::Content.stub!(:create).and_return({:id => "123"})
-        @repo = Glue::Pulp::Repo.new(:id => '123')
-        Glue::Pulp::Repo.stub(:new).and_return(@repo)
+
+        #@p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
+        #@key = EnvironmentProduct.find_or_create(@organization.locker, @p)
+        #@repo = Repository.create!(:pulp_id => '123' , :environment_product => key)
       end
 
       it "should preserve repository metadata" do
-        Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:preserve_metadata => true))
+        Repository.should_receive(:create!).once.with(hash_including(:preserve_metadata => true))
         p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
+        p.should_receive(:set_repos).once
         p.orchestration_for = :import_from_cp
         p.save!
       end
