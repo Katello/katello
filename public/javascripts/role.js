@@ -11,36 +11,4 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-
-
-
-$(document).ready(function() {
-
-    $('#save_role_button').live('click',roles_page.create_new_role);
-
-});
-
-var roles_page = (function($) {
-    var create_new_role = function (){
-        var button = $(this);
-        if (button.hasClass("disabled")) {return false;}
-        button.addClass("disabled");
-
-        $.ajax({
-            type: "POST",
-            url: button.attr('data-url'),
-            data: { "role":{"name":$('#role_name_field').val()}},
-            cache: false,
-            success: function(data) {
-                  list.add(data);
-                  KT.panel.closePanel($('#panel'));
-                },
-            error: function(){button.removeClass("disabled");}
-        });
-    };
-
-
-    return {
-        create_new_role : create_new_role,
-    }
-})(jQuery);
+KT.panel.list.registerPage('roles', { create : 'new_role' });

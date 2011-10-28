@@ -12,9 +12,11 @@
 
 module PromotionsHelper 
   include ActionView::Helpers::JavaScriptHelper
-  include BreadcrumbHelper::ChangesetBreadcrumbs
-  include BreadcrumbHelper::ContentBreadcrumbs
 
+  include BreadcrumbHelper
+  include ChangesetBreadcrumbs
+  include ContentBreadcrumbs
+  include ErrataHelper
 
   #returns a proc to generate a url for the env_selector
   def breadcrumb_url_proc
@@ -23,6 +25,5 @@ module PromotionsHelper
             :next_env_id=>(args[:next_environment].id if args[:next_environment] and args[:environment].locker?))
     }
   end
-
 end
 

@@ -11,6 +11,8 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
+KT.panel.list.registerPage('organizations', { create : 'new_organization' });
+
 $(document).ready(function() {
 
     var env_scroll = KT.env_select_scroll({});
@@ -43,21 +45,5 @@ $(document).ready(function() {
            },
             error: function() {button.removeClass("disabled")}
         });
-   });
-
-   $('#new_organization').live('submit', function(e) {
-      e.preventDefault();
-      var button = $(this).find('input[type|="submit"]');
-       button.attr("disabled","disabled");
-      $(this).ajaxSubmit({
-          success: function(data) {
-                list.add(data);
-                KT.panel.closePanel($('#panel'));
-                KT.panel.select_item(list.last_child().attr("id"));
-                notices.checkNotices();
-          }, error: function(e) {
-                button.removeAttr('disabled');
-                notices.checkNotices();
-          }});
    });
 });

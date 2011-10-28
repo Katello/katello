@@ -14,22 +14,25 @@ class Api::SystemsController < Api::ApiController
   respond_to :json
 
   before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index, :activate]
-  before_filter :find_organization, :only => [:create, :index, :activate]
+  before_filter :find_organization, :only => [:create, :index, :activate, :report]
   before_filter :find_only_environment, :only => [:create]
-  before_filter :find_environment, :only => [:create, :index]
-  before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates, :upload_package_profile, :errata, :package_profile, :subscribe]
+  before_filter :find_environment, :only => [:create, :index, :report]
+  before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
+                                        :upload_package_profile, :errata, :package_profile, :subscribe,
+                                        :unsubscribe, :subscriptions, :pools]
   before_filter :authorize, :except => :activate
 
   skip_before_filter :require_user, :only => [:activate]
 
   def rules
     index_systems = lambda { System.any_readable?(@organization) }
-    register_system = lambda { System.registrable?(@environment, @organization) }
+    register_system = lambda { System.registerable?(@environment, @organization) }
     edit_system = lambda { @system.editable? or User.consumer? }
     read_system = lambda { @system.readable? or User.consumer? }
     delete_system = lambda { @system.deletable? or User.consumer? }
 
     {
+      :new => register_system,
       :create => register_system,
       :regenerate_identity_certificates => edit_system,
       :update => edit_system,
@@ -39,7 +42,11 @@ class Api::SystemsController < Api::ApiController
       :package_profile => read_system,
       :errata => read_system,
       :upload_package_profile => edit_system,
+      :report => index_systems,
       :subscribe => edit_system,
+      :unsubscribe => edit_system,
+      :subscriptions => read_system,
+      :pools => read_system,
     }
   end
 
@@ -60,10 +67,21 @@ class Api::SystemsController < Api::ApiController
     render :json => system.to_json
   end
 
+  def subscriptions
+    render :json => @system.entitlements
+  end
+
   def subscribe
     expected_params = params.with_indifferent_access.slice(:pool, :quantity)
     raise HttpErrors::BadRequest, _("Please provide pool and quantity") if expected_params.count != 2
     @system.subscribe(expected_params[:pool], expected_params[:quantity])
+    render :json => @system.to_json
+  end
+
+  def unsubscribe
+    expected_params = params.with_indifferent_access.slice(:pool)
+    raise HttpErrors::BadRequest, _("Please provide pool id") if expected_params.count != 1
+    @system.unsubscribe(expected_params[:serial_id])
     render :json => @system.to_json
   end
 
@@ -107,6 +125,10 @@ class Api::SystemsController < Api::ApiController
     render :text => _("Deleted system '#{params[:id]}'"), :status => 204
   end
 
+  def pools
+    render :json => { :pools => @system.available_pools_full }
+  end
+
   def package_profile
     render :json => @system.package_profile.sort {|a,b| a["name"].downcase <=> b["name"].downcase}.to_json
   end
@@ -119,6 +141,28 @@ class Api::SystemsController < Api::ApiController
     raise HttpError::BadRequest, _("No package profile received for #{@system.name}") unless params.has_key?(:_json)
     @system.upload_package_profile(params[:_json])
     render :json => @system.to_json
+  end
+
+  def report
+    data = @environment.nil? ? @organization.systems.readable(@organization) : @environment.systems.readable(@organization)
+
+    data = data.flatten.map do |r|
+      r.reportable_data(:only => [:uuid, :name, :location, :created_at, :updated_at],
+        :include => { :environment => { :only => [:name] }},
+        :methods => [ :organization ])
+    end.flatten!
+
+    system_report = Ruport::Data::Table.new(:data => data,
+        :column_names => ["name", "uuid", "location", "environment.name", "organization", "created_at", "updated_at"],
+        :record_class => Ruport::Data::Record,
+        :transforms => lambda {|r| r.organization = r.organization.name })
+
+    respond_to do |format|
+      format.html { render :text => system_report.as(:html), :type => :html and return }
+      format.text { render :text => system_report.as(:text, :ignore_table_width => true) }
+      format.csv { render :text => system_report.as(:csv) }
+      format.pdf { send_data(system_report.as(:pdf), :filename => "katello_systems_report.pdf", :type => "application/pdf") }
+    end
   end
 
   def find_organization

@@ -17,17 +17,60 @@ module Glue::Candlepin::Pool
   def self.included(base)
     base.send :include, LazyAccessor
     base.send :include, InstanceMethods
+    base.send :extend, ClassMethods
 
     base.class_eval do
-      lazy_accessor :productName, :startDate,
-        :initializer => lambda { Candlepin::Pool.get(cp_id) }
+      lazy_accessor :productName, :startDate, :endDate, :consumed, :quantity, :attrs, :owner,
+        :initializer => lambda {
+          json = Candlepin::Pool.get(cp_id)
+          # symbol "attributes" is reserved by Rails and cannot be used
+          json['attrs'] = json['attributes']
+          json
+        }
+
+      alias_method :poolName, :productName
+      alias_method :expires, :endDate
+      alias_method :expires_as_datetime, :endDate_as_datetime
+    end
+  end
+
+  module ClassMethods
+    def find_by_organization_and_id(organization, pool_id)
+      pool = KTPool.find_by_cp_id(pool_id) || KTPool.new(Candlepin::Pool.get(pool_id))
+      if pool.organization == organization
+        return pool
+      end
     end
   end
 
   module InstanceMethods
 
+    def initialize(attrs = nil)
+      if not attrs.nil? and attrs.member? 'id'
+        # initializing from candlepin json
+        @productName = attrs["productName"]
+        @startDate = attrs["startDate"]
+        @endDate = attrs["endDate"]
+        @consumed = attrs["consumed"]
+        @quantity = attrs["quantity"]
+        @attrs = attrs["attributes"]
+        @owner = attrs["owner"]
+        super(:cp_id => attrs['id'])
+      else
+        super
+      end
+    end
+
     def startDate_as_datetime
       DateTime.parse(startDate)
+    end
+
+    def endDate_as_datetime
+      DateTime.parse(endDate)
+    end
+
+    def organization
+      Organization.find_by_name(owner["key"])
     end
 
   end

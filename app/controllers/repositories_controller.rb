@@ -16,10 +16,10 @@ class RepositoriesController < ApplicationController
 
   respond_to :html, :js
 
-  before_filter :find_provider, :only => [:edit, :update, :destroy, :new, :create]
+  before_filter :find_provider, :only => [:new, :create, :edit, :destroy]
   before_filter :authorize
-  before_filter :find_product, :only => [:edit, :update, :destroy, :new, :create]
-  before_filter :find_repository, :only => [:edit, :update, :destroy]
+  before_filter :find_product, :only => [:new, :create, :edit, :destroy]
+  before_filter :find_repository, :only => [:edit, :destroy]
 
   def rules
     read_test = lambda{@provider.readable?}
@@ -32,8 +32,6 @@ class RepositoriesController < ApplicationController
       :destroy => edit_test,
     }
   end
-
-  
 
   def section_id
     'contents'
@@ -53,12 +51,12 @@ class RepositoriesController < ApplicationController
       raise _('Invalid Url') if !kurl_valid?(repo_params[:feed])
       # Bundle these into one call, perhaps move to Provider
       # Also fix the hard coded yum
-      @product.add_new_content(repo_params[:name], repo_params[:feed], 'yum')
+      @product.add_repo(repo_params[:name], repo_params[:feed], 'yum')
       @product.save
 
     rescue Exception => error
       Rails.logger.error error.to_s
-      errors error 
+      errors error
       render :text=> error.to_s, :status=>:bad_request and return
     end
     notice _("Repository '#{repo_params[:name]}' created.")
@@ -69,7 +67,7 @@ class RepositoriesController < ApplicationController
   end
 
   def destroy
-    @product.delete_repo(params[:id])
+    @product.delete_repo_by_id(@repository[:id])
     notice _("Repository '#{params[:id]}' removed.")
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@provider.id)}
   end

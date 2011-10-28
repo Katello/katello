@@ -13,16 +13,20 @@
 class Api::ProductsController < Api::ApiController
   respond_to :json
   before_filter :find_organization, :only => [:index]
-  before_filter :find_product, :only => [:repositories, :show]
+  before_filter :find_product, :only => [:repositories, :show, :destroy]
   before_filter :find_environment, :only => [:index, :repositories]
   before_filter :verify_presence_of_organization_or_environment, :only => [:index]
   before_filter :authorize
 
   def rules
-    read_test = lambda { Product.any_readable?(@organization) }
+    index_test = lambda { Product.any_readable?(@organization) }
+    read_test = lambda { @product.readable? }
+    edit_test = lambda { @product.editable? }
     repo_test = lambda { @product.readable? }
     {
-      :index => read_test,
+      :index => index_test,
+      :show => read_test,
+      :destroy => edit_test,
       :repositories => repo_test,
     }
   end
@@ -37,6 +41,11 @@ class Api::ProductsController < Api::ApiController
 
     render :json => Product.readable(@organization).select("products.*, providers.name AS provider_name").joins(:provider).where(query_params) if @environment == nil
     render :json => @environment.products.readable(@organization).select("products.*, providers.name AS provider_name").joins(:provider).where(query_params).all if @environment != nil
+  end
+
+  def destroy
+    @product.destroy
+    render :text => _("Deleted product '#{params[:id]}'"), :status => 200
   end
 
   def repositories

@@ -23,13 +23,17 @@ gem 'haml-rails'
 gem 'compass', '>= 0.11.5'
 gem 'compass-960-plugin', '>= 0.10.4'
 gem 'simple-navigation', '3.3.4'
-gem 'scoped_search', '>= 2.3.3'
+gem 'scoped_search', '>= 2.3.4'
 # Stuff for i18n
 gem 'gettext_i18n_rails'
 gem 'i18n_data', '>= 0.2.6', :require => 'i18n_data'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
+
+# reports
+gem 'ruport', '>=1.6.3'
+gem 'acts_as_reportable', '>=1.1.1'
 
 # Use unicorn as the web server
 # gem 'unicorn'

@@ -15,7 +15,7 @@ require 'spec_helper'
 describe "distributions/_filelist.html.haml" do
   before(:each) do
     view.stub(:render_navigation)
-
+    view.stub(:promotion_distribution_navigation).and_return([])
     @filename = "/path/to/file/in/distribution"
     @distribution = Glue::Pulp::Distribution.new()
     @distribution.stub!(:files).and_return([@filename])
@@ -33,7 +33,7 @@ describe "distributions/_filelist.html.haml" do
     end
 
     it "renders sub-navigation links" do
-      view.should_receive(:render_navigation).with(:expand_all => true, :level => 3).once
+      view.should_receive(:render_navigation).with(:items => [], :expand_all => true, :level => 1).once
       render
     end
   end

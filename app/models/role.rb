@@ -12,6 +12,9 @@
 
 class Role < ActiveRecord::Base
   include Authorization
+
+  acts_as_reportable
+
   has_many :roles_users
   has_many :users, :through => :roles_users
   has_many :permissions, :dependent => :destroy,:inverse_of =>:role, :class_name=>"Permission"
@@ -21,9 +24,10 @@ class Role < ActiveRecord::Base
   has_many :resource_types, :through => :permissions
 
   # scope to facilitate retrieving roles that are 'non-self' roles... group() so that unique roles are returned
-  scope :non_self, joins("left outer join users on users.own_role_id = roles.id").where('users.own_role_id'=>nil).order('name')
+  scope :non_self, joins("left outer join users on users.own_role_id = roles.id").where('users.own_role_id'=>nil).order('roles.name')
 
   validates :name, :uniqueness => true, :katello_name_format => true, :presence => true
+  validates :description, :katello_description_format => true
   #validates_associated :permissions
   accepts_nested_attributes_for :permissions, :allow_destroy => true
 
@@ -31,20 +35,18 @@ class Role < ActiveRecord::Base
   scope :completer_scope, lambda {self.readable.non_self}
 
   scoped_search :on => :name, :complete_value => true, :rename => :'role.name'
-  scoped_search :in => :resource_types, :on => :name, :complete_value => true, :rename => :'permission.type'
+  scoped_search :in => :resource_types, :on => :name, :complete_value => true, :ext_method => :search_by_type, :only_explicit => true, :rename => :'permission.type'
   scoped_search :in => :search_verbs, :on => :verb, :complete_value => true, :ext_method => :search_by_verb, :only_explicit => true, :rename => :'permission.verb'
-  scoped_search :in => :search_tags, :on => :name, :complete_value => true, :ext_method => :search_by_tag, :rename => :'permission.scope', :only_explicit => true
 
-  def self.search_by_tag(key, operator, value)
-    permissions = Permission.all(:conditions => "tags.name #{operator} '#{value_to_sql(operator, value)}'", :include => :tags)
+  def self.search_by_verb(key, operator, value)
+    permissions = Permission.all(:conditions => "verbs.verb #{operator} '#{value_to_sql(operator, value)}'", :include => :verbs)
     roles = permissions.map(&:role)
     opts  = roles.empty? ? "= 'nil'" : "IN (#{roles.map(&:id).join(',')})"
 
     return {:conditions => " roles.id #{opts} " }
   end
 
-
-  def self.search_by_verb(key, operator, value)
+  def self.search_by_type(key, operator, value)
     permissions = Permission.all(:conditions => "verbs.verb #{operator} '#{value_to_sql(operator, value)}'", :include => :verbs)
     roles = permissions.map(&:role)
     opts  = roles.empty? ? "= 'nil'" : "IN (#{roles.map(&:id).join(',')})"

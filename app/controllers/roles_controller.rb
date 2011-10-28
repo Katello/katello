@@ -20,7 +20,7 @@ class RolesController < ApplicationController
 
   include AutoCompleteSearch
   include BreadcrumbHelper
-  include BreadcrumbHelper::RolesBreadcrumbs
+  include RolesBreadcrumbs
   
   def rules
     create_check = lambda{Role.creatable?}
@@ -48,24 +48,9 @@ class RolesController < ApplicationController
   def section_id
      'operations'
    end
-
-  def index
-    begin
-      # retrieve only non-self roles... permissions on a self-role will be handled 
-      # as part of the user
-      @roles = Role.readable.search_for(params[:search]).non_self.order(:name).limit(current_user.page_size)
-      retain_search_history
-
-    rescue Exception => error
-      errors error.to_s, {:level => :message, :persist => false}
-      @roles = Role.search_for ''
-    end
-  end
   
   def items
-    start = params[:offset]
-    @roles = Role.readable.search_for(params[:search]).order(:name).limit(current_user.page_size).offset(start)
-    render_panel_items @roles, @panel_options
+    render_panel_items(Role.readable.non_self, @panel_options, params[:search], params[:offset])
   end
   
   def setup_options
@@ -73,6 +58,7 @@ class RolesController < ApplicationController
                  :col => ['name'],
                  :create => _('Role'),
                  :name => controller_display_name,
+                 :ajax_load  => true,
                  :ajax_scroll => items_roles_path(),
                  :enable_create=> Role.creatable?}
   end
@@ -95,14 +81,18 @@ class RolesController < ApplicationController
   end
 
   def create
-    begin
-      @role = Role.create!(params[:role])
-      notice _("Role '#{@role.name}' was created.")
+    @role = Role.create!(params[:role])
+    notice _("Role '#{@role.name}' was created.")
+    
+    if Role.where(:id => @role.id).search_for(params[:search]).include?(@role)
       render :partial=>"common/list_item", :locals=>{:item=>@role, :accessor=>"id", :columns=>["name"], :name=>controller_display_name}
-    rescue Exception => error
-      errors error
-      render :json=>error.to_s, :status=>:bad_request
+    else
+      notice _("'#{@role["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+      render :json => { :no_match => true }
     end
+  rescue Exception => error
+    errors error
+    render :json=>error.to_s, :status=>:bad_request
   end
 
   def update
@@ -121,6 +111,11 @@ class RolesController < ApplicationController
       else 
         @role.update_attributes!(params[:role])
         notice _("Role '#{@role.name}' was updated.")
+        
+        if not Role.where(:id => @role.id).search_for(params[:search]).include?(@role)
+          notice _("'#{@role["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
+        end
+        
         render :json=>params[:role]
       end
     rescue Exception => error

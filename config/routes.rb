@@ -57,6 +57,7 @@ Src::Application.routes.draw do
 
   resources :systems, :except => [:destroy] do
     member do
+      get :edit
       get :packages
       get :more_packages
       get :subscriptions
@@ -123,6 +124,7 @@ Src::Application.routes.draw do
       get :items
       get :auto_complete_package
       get :product_packages
+      get :product_comps
     end
     member do
       get :promotion_details
@@ -132,8 +134,8 @@ Src::Application.routes.draw do
     end
   end
 
-
   resources :providers do
+    get 'auto_complete_search', :on => :collection
     resources :products do
       resources :repositories
     end
@@ -178,9 +180,6 @@ Src::Application.routes.draw do
         get :system_templates
         get :products
       end
-    end
-    resources :providers do
-      get 'auto_complete_search', :on => :collection
     end
     resources :providers
     collection do
@@ -262,9 +261,10 @@ Src::Application.routes.draw do
       member do
         get :packages, :action => :package_profile
         get :errata
+        get :pools
       end
+      resources :subscriptions, :only => [:create, :index, :destroy]
     end
-    match '/systems/:id/subscription' => 'systems#subscribe', :via => :post
 
     resources :providers, :except => [:index] do
       resources :sync, :only => [:index, :create] do
@@ -303,7 +303,6 @@ Src::Application.routes.draw do
       end
     end
 
-    #match '/organizations/:organization_id/locker/repos' => 'environments#repos', :via => :get
     resources :organizations do
       resources :products, :only => [:index] do
         get :repositories, :on => :member
@@ -314,13 +313,16 @@ Src::Application.routes.draw do
       end
       resources :tasks, :only => [:index]
       resources :providers, :only => [:index]
-      resources :systems, :only => [:index]
+      resources :systems, :only => [:index] do
+        get :report, :on => :collection
+      end
       match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :activation_keys, :only => [:index]
       resources :repositories, :only => [] do
         post :discovery, :on => :collection
       end
-      resource :uebercert , :only => [:create, :show]
+      resource :uebercert, :only => [:create, :show]
+      resources :filters, :only => [:index, :create, :destroy, :show]
     end
 
     resources :changesets, :only => [:show, :destroy] do
@@ -328,7 +330,7 @@ Src::Application.routes.draw do
       post :promote, :on => :member, :action => :promote
     end
 
-    resources :products, :only => [:show] do
+    resources :products, :only => [:show, :destroy] do
       get :repositories, :on => :member
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
@@ -338,7 +340,7 @@ Src::Application.routes.draw do
     resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
-    resources :repositories, :only => [:index, :show, :create], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
+    resources :repositories, :only => [:index, :show, :create, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end
@@ -352,7 +354,9 @@ Src::Application.routes.draw do
     end
 
     resources :environments, :only => [:show, :update, :destroy] do
-      resources :systems, :only => [:create, :index]
+      resources :systems, :only => [:create, :index] do
+        get :report, :on => :collection
+      end
       resources :products, :only => [:index] do
         get :repositories, :on => :member
       end
@@ -360,12 +364,18 @@ Src::Application.routes.draw do
       resources :templates, :only => [:index]
     end
 
-    resources :activation_keys, :only => [:show, :update, :destroy]
+    resources :activation_keys do
+      post :pools, :action => :add_pool, :on => :member
+      delete "pools/:poolid", :action => :remove_pool, :on => :member
+    end
+
     resources :packages, :only => [:show]
-    resources :errata, :only => [:show]
+    resources :errata, :only => [:index, :show]
     resources :distributions, :only => [:show]
 
-    resources :users
+    resources :users do
+      get :report, :on => :collection
+    end
 
     resources :tasks, :only => [:show]
 

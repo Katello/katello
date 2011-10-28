@@ -118,6 +118,8 @@ describe RolesController do
   end
   
   describe "viewing roles" do
+    render_views
+    
     before (:each) do
       150.times{|a| Role.create!(:name=>"bar%05d" % [a])}
     end
@@ -126,17 +128,15 @@ describe RolesController do
       get :index
       response.should be_success
       response.should render_template("index")
-      assigns[:roles].should include Role.find_by_name("bar%05d" % 8)
-      assigns[:roles].length.should == 25
-      assigns[:roles].should_not include Role.find_by_name("bar%05d" % 30)
     end
-
-    it "should return a portion of roles" do
-      get :items, :offset=>25
+   
+    it "should render list of roles" do
+      get :items
       response.should be_success
       response.should render_template("list_items")
-      assigns[:roles].should include Role.find_by_name("bar%05d" % 30)
-      assigns[:roles].should_not include Role.find_by_name("bar%05d" % 8)
+      assigns[:items].should include Role.find_by_name("bar%05d" % 8)
+      assigns[:items_offset].length.should == 25
+      assigns[:items_offset].should_not include Role.find_by_name("bar%05d" % 30)
     end
     
   end
@@ -148,8 +148,8 @@ describe RolesController do
       @role = Role.create!(:name=>"TestRole")
     end
     describe "GET index" do
-      let(:action) {:index}
-      let(:req) { get 'index' }
+      let(:action) {:items}
+      let(:req) { get :items }
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:read, :roles, nil, nil) }
       end
@@ -157,7 +157,7 @@ describe RolesController do
         user_without_permissions
       end
       let(:on_success) do
-        assigns(:roles).should include @role
+        assigns(:items).should include @role
       end
 
       it_should_behave_like "protected action"
