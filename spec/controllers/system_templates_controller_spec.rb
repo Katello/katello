@@ -54,7 +54,9 @@ describe SystemTemplatesController do
 
     describe "GET download" do
       describe "with valid template id" do
-        it "sends json export of template" do
+        before { ::Candlepin::Owner.stub!(:get_ueber_cert).and_return({ :cert => "", :key => "" }) }
+
+        it "sends xml export of template" do
           get :download, :id => @system_template_1.id, :environment_id => @organization.locker.id
           response.should be_success
         end
