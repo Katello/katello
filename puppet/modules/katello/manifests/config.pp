@@ -15,6 +15,8 @@ class katello::config {
       template => "katello/${katello::params::config_dir}/thin.yml.erb";
     "${katello::params::config_dir}/katello.yml":
       template => "katello/${katello::params::config_dir}/katello.yml.erb";
+    "/etc/sysconfig/katello":
+      template => "katello/etc/sysconfig/katello.erb";      
     "/etc/httpd/conf.d/katello.conf":
       template => "katello/etc/httpd/conf.d/katello.conf.erb",
       notify   => Exec["reload-apache2"];
@@ -66,11 +68,7 @@ class katello::config {
   }
   
   # Headpin does not care about pulp
-<<<<<<< HEAD
   case $katello::params::deployment {
-=======
-  case $deployment {
->>>>>>> 5b5d735243e2f7fd197e3d7a0e1af6ed1b1c7ad8
       'katello': {
           Class["candlepin::config"] -> File["/etc/pulp/pulp.conf"]
           Class["candlepin::config"] -> File["/etc/pulp/repo_auth.conf"]
