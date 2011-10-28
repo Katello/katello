@@ -26,7 +26,7 @@ end
 
 class Product < ActiveRecord::Base
   include Glue::Candlepin::Product if AppConfig.use_cp
-  include Glue::Pulp::Repos if (AppConfig.use_cp and AppConfig.use_pulp)
+  include Glue::Pulp::Repos if AppConfig.katello?
   include Glue if AppConfig.use_cp
   include Authorization
   include AsyncOrchestration

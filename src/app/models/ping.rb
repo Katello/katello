@@ -13,7 +13,7 @@
 #:nocov:
 
 require 'rest_client'
-require 'resources/pulp'
+require 'resources/pulp' if AppConfig.katello?
 require 'resources/candlepin'
 
 class Ping

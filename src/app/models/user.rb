@@ -15,7 +15,7 @@ require 'util/threadsession'
 require 'util/password'
 
 class User < ActiveRecord::Base
-  include Glue::Pulp::User if (AppConfig.use_cp and AppConfig.use_pulp)
+  include Glue::Pulp::User if AppConfig.katello?
   include Glue if AppConfig.use_cp
 
   acts_as_reportable

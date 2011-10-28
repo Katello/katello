@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe Api::PuppetclassesController do
+describe Api::PuppetclassesController, :katello => true do
   include LoginHelperMethods
 
   before(:each) do
