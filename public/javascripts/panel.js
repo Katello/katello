@@ -145,7 +145,6 @@ $(document).ready(function () {
     }
     //end doc ready
 });
-//<<<<<<< HEAD
 
 var list = (function(){
    return {
@@ -498,7 +497,97 @@ KT.panel = (function ($) {
                 handleScroll(jQPanel, offset);
             });
             panels_list.push(new_panel);
-        };
+        },
+        actions = (function(){
+            var action_list = {};
+
+            var registerDefaultActions = function() {
+                var actions = $(".panel_action");
+                actions.each(function(index){
+                    var action = $(this);
+                    var options = action.find(".options");
+                    action.find("a").click(function() {
+                        if (!action.hasClass("disabled")) {
+                            options.slideDown('fast');
+                        }
+                    });
+                    action.find(".cancel").click(function() {
+                        if ($(this).hasClass("disabled")){return}
+                        options.slideUp('fast');
+                    });
+                    action.find(".trigger").click(function() {
+                        var params = action_list[action.attr("data-id")];
+                        var success = function() {
+                            options.slideUp('fast');
+                            action.find("input").removeClass("disabled");
+                            if (params.success_cb){
+                                params.success_cb(getSelected());
+                            }
+                        };
+                        var error = function() {
+                          action.find("input").removeClass("disabled");
+                          if(params.error_cb) {
+                              params.error_cb(getSelected());
+                          }
+                        };
+
+                        if ($(this).hasClass("disabled")){return}
+                        action.find("input").addClass("disabled");
+
+                        if(params.ajax_cb) {
+                            params.ajax_cb(getSelected());
+                        }
+                        else {
+                            $.ajax({
+                                cache: 'false',
+                                type: params.method,
+                                url: params.url,
+                                data: {ids:getSelected()},
+                                success: success,
+                                error: error
+                            });
+                        }
+                    });
+                });
+            },
+            registerAction = function(name, params) {
+                /**
+                 * params:
+                 *    success_cb(data, selected_ids)
+                 *    error_cb(data, selected_ids)
+                 *    url      //URL for ajax call
+                 *    method   //METHOD for ajax call
+                 *    unselected_action // true if the action is 'doable' even if
+                 *    ajax_cb(id_list, success_cb, error_cb)  //To manually do the ajax call yourself
+                 *
+                 */
+              action_list[name] = params;
+            },
+            resetActions = function(num) {
+              $.each(action_list, function(name, params){
+                  if(!params.unselected_action) {
+                    var div = $("[data-id=" + name + "]");
+                    if (num > 0) {
+                        div.removeClass("disabled");
+                    }
+                    else {
+                        div.addClass("disabled");
+                    }
+                  }
+              });
+              var actions = $(".panel_action");
+              actions.each(function(index){
+                var action = $(this);
+                action.find('.cancel').click();
+              });
+            };
+
+            return {
+                registerAction: registerAction,
+                registerDefaultActions: registerDefaultActions,
+                resetActions: resetActions
+            }
+        })();
     return {
         set_expand_cb: function (callBack) {
             expand_cb = callBack;
@@ -521,7 +610,8 @@ KT.panel = (function ($) {
         panelResize: panelResize,
         panelAjax: panelAjax,
         control_bbq: control_bbq,
-        registerPanel: registerPanel
+        registerPanel: registerPanel,
+        actions: actions
     };
 })(jQuery);
 
@@ -723,102 +813,11 @@ KT.panel.list = (function () {
                     }
                 })
             });
-        },
-        actions = (function(){
-            var action_list = {};
-
-            var registerDefaultActions = function() {
-                var actions = $(".panel_action");
-                actions.each(function(index){
-                    var action = $(this);
-                    var options = action.find(".options");
-                    action.find("a").click(function() {
-                        if (!action.hasClass("disabled")) {
-                            options.slideDown('fast');
-                        }
-                    });
-                    action.find(".cancel").click(function() {
-                        if ($(this).hasClass("disabled")){return}
-                        options.slideUp('fast');
-                    });
-                    action.find(".trigger").click(function() {
-                        var params = action_list[action.attr("data-id")];
-                        var success = function() {
-                            options.slideUp('fast');
-                            action.find("input").removeClass("disabled");
-                            if (params.success_cb){
-                                params.success_cb(getSelected());
-                            }
-                        };
-                        var error = function() {
-                          action.find("input").removeClass("disabled");
-                          if(params.error_cb) {
-                              params.error_cb(getSelected());
-                          }
-                        };
-
-                        if ($(this).hasClass("disabled")){return}
-                        action.find("input").addClass("disabled");
-
-                        if(params.ajax_cb) {
-                            params.ajax_cb(getSelected());
-                        }
-                        else {
-                            $.ajax({
-                                cache: 'false',
-                                type: params.method,
-                                url: params.url,
-                                data: {ids:getSelected()},
-                                success: success,
-                                error: error
-                            });
-                        }
-                    });
-                });
-            },
-            registerAction = function(name, params) {
-                /**
-                 * params:
-                 *    success_cb(data, selected_ids)
-                 *    error_cb(data, selected_ids)
-                 *    url      //URL for ajax call
-                 *    method   //METHOD for ajax call
-                 *    unselected_action // true if the action is 'doable' even if 
-                 *    ajax_cb(id_list, success_cb, error_cb)  //To manually do the ajax call yourself
-                 *
-                 */
-              action_list[name] = params;
-            },
-            resetActions = function(num) {
-              $.each(action_list, function(name, params){
-                  if(!params.unselected_action) {
-                    var div = $("[data-id=" + name + "]");
-                    if (num > 0) {
-                        div.removeClass("disabled");
-                    }
-                    else {
-                        div.addClass("disabled");
-                    }
-                  }
-              });
-              var actions = $(".panel_action");
-              actions.each(function(index){
-                var action = $(this);
-                action.find('.cancel').click();
-              });
-            };
-
-            return {
-                registerAction: registerAction,
-                registerDefaultActions: registerDefaultActions,
-                resetActions: resetActions
-            }
-        })();
+        };
     return {
         set_extended_cb: function (callBack) {
             extended_cb = callBack;
         },
-        actions: actions,
         extend: extend,
         registerPage: registerPage,
         remove: remove,
