@@ -40,27 +40,32 @@ $(document).ready(function() {
         $(".multiselect").multiselect({"dividerLocation":0.5, "sortable":false});
 
         //new code
-            $('#org_id_org_id').change(function(event) {
+        var org_selector = $('#org_id_org_id');
+        org_selector.change(function(event) {
         //var button = $('#save_user');
         //button.addClass("disabled");
 
         //event.preventDefault();
        var refill = $('#env_box');
        refill.hide();
-//        var form = $(this).closest("form");
-//        var url = form.attr('action');
+       //refill.show();
+       var selected_org_id = org_selector.val();
+
+       //        var form = $(this).closest("form");
+       var url = '/organizations/' + selected_org_id +  '/environments_partial';
 //        var dataToSend = form.serialize();
-//        $.ajax({
-//            type: "POST",
-//            url: url,
+        $.ajax({
+            type: "GET",
+            url: url,
 //            data: dataToSend,
 //            cache: false,
-//            success: function() {
+            success: function() {
+                  alert('Success!');
 //                KT.panel.panelAjax('', button.attr("data-url") ,$('#panel'));
 //                KT.panel.closeSubPanel($('#subpanel'));
-//           },
-//            error: function() {button.removeClass("disabled")}
-//        });
+           },
+            error: function() {alert('Error');}
+        });
    });
 
         $('#password_field').simplePassMeter({
