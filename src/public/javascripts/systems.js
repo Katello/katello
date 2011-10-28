@@ -157,9 +157,11 @@ KT.subs = function() {
        reset_env_select();
     },
     reset_env_select = function() {
-        $('#path-expanded').hide();
-        env_select.reset_hover();
-        env_select.recalc_scroll();
+    	if (window.env_select !== undefined) {
+	        $('#path-expanded').hide();
+	        env_select.reset_hover();
+	        env_select.recalc_scroll();
+       }
     },
     subSetup = function(){
         var subform = $('#subscribe');
