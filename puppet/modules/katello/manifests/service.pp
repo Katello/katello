@@ -1,7 +1,7 @@
 class katello::service {
   service {["katello", "katello-jobs"]:
     ensure  => running, enable => true, hasstatus => true, hasrestart => true,
-    require => $deployment ? {
+    require => $katello::params::deployment ? {
                 'katello' =>  [Class["katello::config"],Class["candlepin::service"], Class["pulp::service"], Class["apache2::config"]],
                 'headpin' =>  [Class["katello::config"],Class["candlepin::service"], Class["apache2::config"]],
                 default => []

@@ -45,7 +45,7 @@ class katello::config {
     command     => "/usr/bin/env rake db:migrate >> ${katello::params::seed_log} 2>&1 && /usr/bin/env rake db:seed >> ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/initdb_done",
     creates => "/var/lib/katello/initdb_done",
     before  => Class["katello::service"],
-    require => $deployment ? {
+    require => $katello::params::deployment ? {
                 'katello' => [ Exec["katello_db_migrate"], Class["candlepin::service"], Class["pulp::service"] ],
                 'headpin' => [ Exec["katello_db_migrate"], Class["candlepin::service"] ],
                 default => [],
@@ -66,7 +66,7 @@ class katello::config {
   }
   
   # Headpin does not care about pulp
-  case $deployment {
+  case $katello::params::deployment {
       'katello': {
           Class["candlepin::config"] -> File["/etc/pulp/pulp.conf"]
           Class["candlepin::config"] -> File["/etc/pulp/repo_auth.conf"]
