@@ -51,6 +51,9 @@ install -d -m0755 %{buildroot}%{homedir}
 install -d -m0755 %{buildroot}%{homedir}/config
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{katello_name}
 
+#copy the application to the target directory
+cp -R * %{buildroot}%{homedir}
+
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 644 config/%{katello_name}.yml %{buildroot}%{_sysconfdir}/%{katello_name}/%{katello_name}.yml
 
