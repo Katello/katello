@@ -60,7 +60,9 @@ module ChangesetBreadcrumbs
         add_crumb_node!(bc, deps_cs_bc_id(cs, product), "",  _("Dependencies"),
                         ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true})
 
-
+        #distributions
+        add_crumb_node!(bc, distributions_cs_bc_id(cs, product), "",  _("Distributions"),
+                        ['changesets', changeset_bc_id(cs), product_cs_bc_id(cs, product)], {:client_render => true})
       }
     } if @changesets
     bc.to_json
@@ -89,6 +91,11 @@ module ChangesetBreadcrumbs
   def deps_cs_bc_id cs, product
     "deps-cs_#{cs.id}_#{product.id}" if cs
   end
+
+  def distributions_cs_bc_id cs, product
+    "distribution-cs_#{cs.id}_#{product.id}" if cs
+  end
+
 end
   
 module ContentBreadcrumbs
