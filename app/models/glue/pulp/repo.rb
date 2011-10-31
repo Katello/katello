@@ -258,8 +258,9 @@ class Glue::Pulp::Repo
     sync_history_item['state'] == 'finished'
   end
 
+  def promote(to_environment, filters = [])
+    content = self.content_for_clone
 
-  def promote(to_environment, content, filters = [])
     cloned = Glue::Pulp::Repo.new
     cloned.id = self.clone_id(to_environment)
     cloned.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_environment)
@@ -330,7 +331,38 @@ class Glue::Pulp::Repo
     }.flatten]
   end
 
+  protected
+
+  def content_for_clone
+    return self.content unless self.content_id.nil?
+
+    new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(self)
+    new_content = self.create_content(new_repo_path)
+
+    self.product.add_content new_content
+    new_content
+  end
+
+
+  def create_content path
+    new_content = Glue::Candlepin::ProductContent.new({
+      :content => {
+        :name => self.name,
+        :contentUrl => path,
+        :gpgUrl => "",
+        :type => "yum",
+        :label => self.name,
+        :vendor => "Custom"
+      },
+      :enabled => true
+    })
+    new_content.create
+    new_content
+  end
+
   private
+
+
   def get_groupid_param name
     idx = self.groupid.index do |s| s.start_with? name+':' end
     if not idx.nil?

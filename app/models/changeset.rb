@@ -345,7 +345,7 @@ class Changeset < ActiveRecord::Base
       if cloned
         async_tasks << cloned.sync
       else
-        async_tasks << repo.promote(to_env, product)
+        async_tasks << repo.promote(to_env)
       end
     end
     async_tasks.flatten(1)

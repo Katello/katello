@@ -441,10 +441,12 @@ module Glue::Pulp::Repos
           async_tasks << repo.get_clone(to_env).sync
         else
           #repo is not in the next environment yet, we have to clone it there
+
           content = self.content_for_clone_of repo
           to_env.prior == locker ?
-              async_tasks << repo.promote(to_env, content, filters.collect {|p| p.pulp_id}) :
-              async_tasks << repo.promote(to_env, content)
+              async_tasks << repo.promote(to_env, filters.collect {|p| p.pulp_id}) :
+              async_tasks << repo.promote(to_env)
+
         end
       end
       async_tasks.flatten(1)
