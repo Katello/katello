@@ -111,6 +111,10 @@ class SystemTemplate < ActiveRecord::Base
     self.export_as_hash.to_json
   end
 
+  def validate_for_tdl
+    raise Errors::TemplateExportException.new(_("Template '%s' is missing distribution") % self.name) if self.distributions.count < 1
+    raise Errors::TemplateExportException.new(_("Template '%s' contains more than one distribution") % self.name) if self.distributions.count > 1
+  end
 
   # Returns template in XML TDL format:
   # https://github.com/aeolusproject/imagefactory/blob/master/Documentation/TDL.xsd
@@ -123,17 +127,23 @@ class SystemTemplate < ActiveRecord::Base
       Rails.logger.info "Uebercert for #{environment.organization.name} has not been generated. Using empty cert and key fields."
     end
 
+    validate_for_tdl
+
     xm = Builder::XmlMarkup.new
     xm.instruct!
     xm.template {
       # mandatory tags
       xm.name self.name
       xm.os {
-        xm.name "Fedora"
-        xm.version "14"
-        xm.arch "x86_64"
+        distro = self.distributions.first
+        # TODO this will probably need a "mapping" table (Pulp->Aeolus Family-Version)
+        xm.name distro.family
+        xm.version distro.version
+        # TODO distro.arch is nil until resolved 750265 - RFE: Separate "arch" field for distribution
+        #xm.arch distro.arch
+        xm.arch "x86-64"
         xm.install("type" => "url") {
-          xm.url "http://repo.fedora.org/f14/os"
+          xm.url distro.url
         }
       }
       # optional tags
