@@ -63,7 +63,7 @@ describe Glue::Pulp::Repo do
 
     it "called for second time should use the cached values" do
       @repo.packages
-      Pulp::Repository.should_not_receive(:packages).with(RepoTestData::REPO_ID)
+      Pulp::Repository.should_not_receive(:packages).with(RepoTestData::REPO_ID, {})
       @repo.packages
     end
 
@@ -103,6 +103,11 @@ describe Glue::Pulp::Repo do
       @repo.distributions
       Pulp::Repository.should_not_receive(:distributions).with(RepoTestData::REPO_ID)
       @repo.distributions
+    end
+
+    it "should return correct values for has_distribution?" do
+      @repo.has_distribution?(RepoTestData::REPO_DISTRIBUTIONS[0][:id]).should == true
+      @repo.has_distribution?("some-invalid-distro-id").should == false
     end
   end
 
@@ -234,7 +239,6 @@ describe Glue::Pulp::Repo do
 
       @repo.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_REPO_ID)
       @clone.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_2_REPO_ID)
-
     end
 
     it "should clone the repo" do
@@ -247,15 +251,15 @@ describe Glue::Pulp::Repo do
         cloned.feed.should == RepoTestData::CLONED_PROPERTIES[:feed]
         true
       end
-      @repo.promote(@to_env, @product)
+      @repo.promote(@to_env, nil)
     end
 
-    it "should retrurn correct is_cloned_in? status" do
+    it "should return correct is_cloned_in? status" do
       @clone.is_cloned_in?(@to_env).should == false
       @repo.is_cloned_in?(@to_env).should == true
     end
 
-    it "should be able to retrurn the clone" do
+    it "should be able to return the clone" do
       clone = @repo.get_clone(@to_env)
       clone.id.should == RepoTestData::CLONED_PROPERTIES[:id]
     end
@@ -265,7 +269,7 @@ describe Glue::Pulp::Repo do
         cloned.relative_path.should == "Corp/Prod/Ruby/repo"
         true
       end
-      @repo.promote(@to_env, @product)
+      @repo.promote(@to_env, nil)
     end
   end
 
@@ -298,16 +302,6 @@ describe Glue::Pulp::Repo do
 end
 
 
-def disable_repo_orchestration
-  Pulp::Repository.stub(:sync_history).and_return([])
-
-  Pulp::Repository.stub(:packages).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PACKAGES)
-  Pulp::Repository.stub(:errata).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_ERRATA)
-  Pulp::Repository.stub(:distributions).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_DISTRIBUTIONS)
-  Pulp::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
-  Pulp::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
-end
-
 def stub_reference_objects
   @org = mock(Organization, {:id => RepoTestData::REPO_ORG_ID, :name => "Corp"})
   Organization.stub(:find).with(RepoTestData::REPO_ORG_ID).and_return(@org)
@@ -319,4 +313,5 @@ def stub_reference_objects
   @product.stub(:organization => @org)
   Product.stub(:find).with(RepoTestData::REPO_PRODUCT_ID).and_return(@product)
   Product.stub("find_by_cp_id!").with(RepoTestData::REPO_PRODUCT_CP_ID.to_s).and_return(@product)
+  Product.stub("find_by_cp_id").with(RepoTestData::REPO_PRODUCT_CP_ID.to_s).and_return(@product)
 end

@@ -51,12 +51,12 @@ class RepositoriesController < ApplicationController
       raise _('Invalid Url') if !kurl_valid?(repo_params[:feed])
       # Bundle these into one call, perhaps move to Provider
       # Also fix the hard coded yum
-      @product.add_new_content(repo_params[:name], repo_params[:feed], 'yum')
+      @product.add_repo(repo_params[:name], repo_params[:feed], 'yum')
       @product.save
 
     rescue Exception => error
       Rails.logger.error error.to_s
-      errors error 
+      errors error
       render :text=> error.to_s, :status=>:bad_request and return
     end
     notice _("Repository '#{repo_params[:name]}' created.")

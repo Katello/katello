@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.94
+Version:        0.1.97
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -26,6 +26,17 @@ URL:            http://www.katello.org
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+Requires:        %{name}-common
+Requires:        %{name}-glue-pulp
+Requires:        %{name}-glue-foreman
+Requires:        %{name}-glue-candlepin
+Conflicts:       %{name}-headpin
+
+%description
+Provides a package for managing application life-cycle for Linux systems.
+
+%package common
+Summary:        Common bits for all Katello instances
 Requires:       httpd
 Requires:       mod_ssl
 Requires:       openssl
@@ -45,9 +56,9 @@ Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
 Requires:       rubygem(gettext_i18n_rails)
 Requires:       rubygem(simple-navigation) >= 3.3.4
-Requires:       rubygem(sqlite3) 
+Requires:       rubygem(sqlite3)
 Requires:       rubygem(pg)
-Requires:       rubygem(scoped_search) >= 2.3.4
+Requires:       rubygem(scoped_search) >= 2.3.1
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(acts_as_reportable) >= 1.1.1
 Requires:       rubygem(pdf-writer) >= 1.1.8
@@ -72,7 +83,7 @@ Requires(pre):  shadow-utils
 Requires(preun): chkconfig
 Requires(preun): initscripts
 Requires(post): chkconfig
-Requires(postun): initscripts 
+Requires(postun): initscripts
 
 BuildRequires:  coreutils findutils sed
 BuildRequires:  rubygems
@@ -84,14 +95,15 @@ BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 
 BuildArch: noarch
 
-%description
-Provides a package for managing application life-cycle for Linux systems
+%description common
+Common bits for all Katello instances
+
 
 %package all
 Summary:        A meta-package to pull in all components for Katello
-Requires:       katello
-Requires:       katello-configure
-Requires:       katello-cli
+Requires:       %{name}
+Requires:       %{name}-configure
+Requires:       %{name}-cli
 Requires:       postgresql-server
 Requires:       postgresql
 Requires:       pulp
@@ -101,6 +113,27 @@ Requires:       candlepin-tomcat6
 This is the Katello meta-package.  If you want to install Katello and all
 of its dependencies on a single machine, you should install this package
 and then run katello-configure to configure everything.
+
+%package glue-pulp
+Summary:         Katello connection classes for the Pulp backend
+Requires:        %{name}-common
+
+%description glue-pulp
+Katello connection classes for the Pulp backend
+
+%package glue-foreman
+Summary:         Katello connection classes for the Foreman backend
+Requires:        %{name}-common
+
+%description glue-foreman
+Katello connection classes for the Foreman backend
+
+%package glue-candlepin
+Summary:         Katello connection classes for the Candlepin backend
+Requires:        %{name}-common
+
+%description glue-candlepin
+Katello connection classes for the Candlepin backend
 
 %prep
 %setup -q
@@ -153,7 +186,7 @@ install -Dp -m0644 %{confdir}/%{name}.httpd.conf %{buildroot}%{_sysconfdir}/http
 install -Dp -m0644 %{confdir}/thin.yml %{buildroot}%{_sysconfdir}/%{name}/
 
 #overwrite config files with symlinks to /etc/katello
-ln -svf %{_sysconfdir}/%{name}/katello.yml %{buildroot}%{homedir}/config/katello.yml
+ln -svf %{_sysconfdir}/%{name}/%{name}.yml %{buildroot}%{homedir}/config/%{name}.yml
 #ln -svf %{_sysconfdir}/%{name}/database.yml %{buildroot}%{homedir}/config/database.yml
 ln -svf %{_sysconfdir}/%{name}/environment.rb %{buildroot}%{homedir}/config/environments/production.rb
 
@@ -194,49 +227,445 @@ chmod a+r %{buildroot}%{homedir}/ca/redhat-uep.pem
 %clean
 rm -rf %{buildroot}
 
-%post
+%post common
 #Add /etc/rc*.d links for the script
 /sbin/chkconfig --add %{name}
 
-%postun
+%postun common
 if [ "$1" -ge "1" ] ; then
     /sbin/service %{name} condrestart >/dev/null 2>&1 || :
 fi
 
 %files
+%config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
+
+%files common
 %defattr(-,root,root)
 %doc README LICENSE doc/
-%config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 %config %{_sysconfdir}/%{name}/thin.yml
-%config %{_sysconfdir}/httpd/conf.d/katello.conf
+%config %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
 %{_sysconfdir}/bash_completion.d/%{name}
-%{homedir}
+
+# Break apart the main bits
+%{homedir}/app/controllers
+%{homedir}/app/helpers
+%{homedir}/app/models/*.rb
+%{homedir}/app/stylesheets
+%{homedir}/app/views
+%{homedir}/autotest
+%{homedir}/ca
+%{homedir}/config
+%{homedir}/db
+%{homedir}/integration_spec
+%{homedir}/lib/*.rb
+%{homedir}/lib/navigation
+%{homedir}/lib/resources/cdn.rb
+%{homedir}/lib/tasks
+%{homedir}/lib/util
+%{homedir}/locale
+%{homedir}/log
+%{homedir}/public
+%{homedir}/script
+%{homedir}/spec
+%{homedir}/tmp
+%{homedir}/vendor
+%{homedir}/.bundle
+%{homedir}/config.ru
+%{homedir}/Gemfile
+%{homedir}/Gemfile.lock
+%{homedir}/Rakefile
 
 %defattr(-, katello, katello)
 %{_localstatedir}/log/%{name}
 %{datadir}
 
+%files glue-pulp
+%{homedir}/app/models/glue/pulp
+%{homedir}/lib/resources/pulp.rb
+
+%files glue-candlepin
+%{homedir}/app/models/glue/candlepin
+%{homedir}/app/models/glue/provider.rb
+%{homedir}/lib/resources/candlepin.rb
+
+%files glue-foreman
+%{homedir}/lib/resources/foreman.rb
+
 %files all
 
-%pre
+%pre common
 # Add the "katello" user and group
 getent group %{name} >/dev/null || groupadd -r %{name}
 getent passwd %{name} >/dev/null || \
     useradd -r -g %{name} -d %{homedir} -s /sbin/nologin -c "Katello" %{name}
 exit 0
 
-%preun
+%preun common
 if [ $1 -eq 0 ] ; then
     /sbin/service %{name} stop >/dev/null 2>&1
     /sbin/chkconfig --del %{name}
 fi
 
 %changelog
+* Fri Oct 28 2011 Shannon Hughes <shughes@redhat.com> 0.1.97-1
+- Fixed an activation key error were all activation keys across musltiple orgs
+  were deemed readable if Activationkeys in one org was accessible
+  (paji@redhat.com)
+- Fix for systems page javascript error when no env_select on the page.
+  (ehelms@redhat.com)
+- Merge branch 'master' into distros (bbuckingham@redhat.com)
+- Merge branch 'master' into tupane-actions (jrist@redhat.com)
+- Fixed the actions thing. (jrist@redhat.com)
+- temporarily commenting out test that verifies validity of system template TDL
+  export generated by katello (waiting for an updated schema from aeolus team)
+  (dmitri@redhat.com)
+- Small fix for actions. (jrist@redhat.com)
+- Promotions - update to only allow promotion of distro, if repo has been
+  promoted (bbuckingham@redhat.com)
+- Changeset history - fix expand/collapse arrow (bbuckingham@redhat.com)
+- Fixing right actions area post merge. (jrist@redhat.com)
+- Merge branch 'master' into tupane-actions (jrist@redhat.com)
+- fixed failing tests (dmitri@redhat.com)
+- template export in tdl now has clientcert, clientkey, and persisted fields
+  (dmitri@redhat.com)
+- New system on create for systems page.  Fixed offset/position bug on panel
+  due to container now being relative for menu. (jrist@redhat.com)
+- Minor fix for the margin-top on third_level nav. (jrist@redhat.com)
+- Third_level nav working well. (jrist@redhat.com)
+- Menu - Fixes issue with third level nav hover not being displayed properly.
+  (ehelms@redhat.com)
+- Moved thirdLevelNavSetup to menu.js. (jrist@redhat.com)
+- Tweaked the experience of the tabs to be a bit snappier. (jrist@redhat.com)
+- Another change to the menu to make it behave a bit better. (jrist@redhat.com)
+- Hover on subnav working with a few quirks that I need to work out.
+  (jrist@redhat.com)
+- Menu.scss. (jrist@redhat.com)
+- Initial pass at menu. (jrist@redhat.com)
+- removing another console.log (mmccune@redhat.com)
+- remove console log output that was breaking FF 3.6 (mmccune@redhat.com)
+- Fixes for broken scss files when compass attempts to compile them for builds.
+  (ehelms@redhat.com)
+- Merge branch 'master' into distros (bbuckingham@redhat.com)
+- Merge branch 'master' into errata_filter (bbuckingham@redhat.com)
+- errata_filter - ui - update the severity value for low severity
+  (bbuckingham@redhat.com)
+- errata_filter - ui - update the severity value for low severity
+  (bbuckingham@redhat.com)
+- repo querying - simple repo cache changed to work with new pulp api
+  (tstrachota@redhat.com)
+- repo querying - hack to enable queries with multiple groupids when using
+  oauth temporary solution until it gets fixed in pulp (tstrachota@redhat.com)
+- adding env_id to unit tests (mmccune@redhat.com)
+- Merge branch 'master' into tdl-download (mmccune@redhat.com)
+- adding dialog and download buttons for template download from env
+  (mmccune@redhat.com)
+- Moves some widget css into separate scss files. (ehelms@redhat.com)
+- Merge branch 'master' into tupane (ehelms@redhat.com)
+- Tupane - Fixes for spec tests. (ehelms@redhat.com)
+- errata_filter - add stub to resolve error w/ test in promotions controller
+  (bbuckingham@redhat.com)
+- delayed-job - log errors backtrace in log file (inecas@redhat.com)
+- Merge branch 'master' into tupane (ehelms@redhat.com)
+- Tupane - Env Select - Adds ajax environment search to systems by environment
+  page. (ehelms@redhat.com)
+- nvrea-optional - adding pack to template accepts both nvre and nvrea
+  (inecas@redhat.com)
+- nvrea-options - remove unused code (inecas@redhat.com)
+- nvrea-optional - parse_nvrea_nvre for parsing both formats together
+  (inecas@redhat.com)
+- nvrea-optional - refactor spec test and lib (inecas@redhat.com)
+- prod orch - fix for deleting subscriptions of provided products
+  (tstrachota@redhat.com)
+- updated Gemfile.lock (dmitri+git@redhat.com)
+- fixed failing tests (dmitri@redhat.com)
+- added ruport-related gems to Gemfile (dmitri@redhat.com)
+- Merge branch 'reports' (dmitri@redhat.com)
+- prod orch - fix in rh provider import test (ui controller)
+  (tstrachota@redhat.com)
+- prod orch - fixes in spec tests (tstrachota@redhat.com)
+- prod orch - deleting content from provider after manifest import
+  (tstrachota@redhat.com)
+- prod orch - fix for deleting prducts (tstrachota@redhat.com)
+- prod orch - fix for deleting repositories - CP content is deleted upon
+  deletion of the first repo associated with it (tstrachota@redhat.com)
+- prod orch - added content id to repo groupids (tstrachota@redhat.com)
+- prod orch - saving sync schedules refactored (tstrachota@redhat.com)
+- prod orch - fix for getting repos for a product It was caching repositories
+  filtered by search params -> second call with different search parameters
+  would return wrong results. (tstrachota@redhat.com)
+- prod orch - saving sync schedule in all repos on product update
+  (tstrachota@redhat.com)
+- prod orch - creating product content upon first promotion
+  (tstrachota@redhat.com)
+- prod orch - method for checking if one cdn path is substitute of the other in
+  CdnVarSubstitutor (tstrachota@redhat.com)
+- prod orch - deleting unused products after manifest import - deleting
+  products that were in the manifest but don't belong to the owner
+  (tstrachota@redhat.com)
+- prod orch - new orchestration for product creation and manifest import
+  (tstrachota@redhat.com)
+- products - no content in CP when a product is created (tstrachota@redhat.com)
+- Merge branch 'master' into tdl-download (mmccune@redhat.com)
+- moving download to a pop-up pane so you can select env + distro
+  (mmccune@redhat.com)
+- Merge branch 'master' into distros (bbuckingham@redhat.com)
+- Merge branch 'master' into errata_filter (bbuckingham@redhat.com)
+- Tupane - Systems - Fixing search for creation and editing for System CRUD.
+  (ehelms@redhat.com)
+- Promotions - mark distributions as promoted, if they have already been
+  (bbuckingham@redhat.com)
+- Tupane - Fixes for unit tests after merging in master. (ehelms@redhat.com)
+- Promotions - add distributions to changeset history... fix expander/collapse
+  image in js (bbuckingham@redhat.com)
+- fixing nil bug found on the code review - fix (lzap+git@redhat.com)
+- Merge branch 'master' into tupane (ehelms@redhat.com)
+- fixing nil bug found on the code review (lzap+git@redhat.com)
+- dep calc - fixes in displaying the dependencies (tstrachota@redhat.com)
+- dep calc - disabling dep. calc. in promotion tests (tstrachota@redhat.com)
+- dep calc - promoting dependencies (tstrachota@redhat.com)
+- dep calc - returning dependencies with dependency_of (tstrachota@redhat.com)
+- dep calc - new column dependency_of in changeset dependencies
+  (tstrachota@redhat.com)
+- dep calc - refactoring and performance improvement - not calculating
+  dependencies for packages that are included in any product or repository in
+  the changeset (tstrachota@redhat.com)
+- calc dep - methods for listing not included errata and packages
+  (tstrachota@redhat.com)
+- calc dep - calc_dependencies(bool) split into two methods
+  (tstrachota@redhat.com)
+- Fixed an accidental remove in katello.js from commit
+  ec6ce7a262af3b9c349fb98c1d58ad774206dffb (paji@redhat.com)
+- Promotions - distributions - spec test updates (bbuckingham@redhat.com)
+- Promotions - distributions - changes to allow for promotion
+  (bbuckingham@redhat.com)
+- Tupane - Search - Spec test fixes for ajaxification of search.
+  (ehelms@redhat.com)
+- referenced proper ::Product class... again (thomasmckay@redhat.com)
+- referenced proper ::Product class (thomasmckay@redhat.com)
+- Promotions - distributions - additional changes to properly support changeset
+  operations (bbuckingham@redhat.com)
+- Tupane - Adds notice on edit when edited item no longer meets search
+  criteria. (ehelms@redhat.com)
+- Promotions - distributions - add/remove/view on changeset
+  (bbuckingham@redhat.com)
+- Promotions - distros - ui chg to allow adding to changeset
+  (bbuckingham@redhat.com)
+- Errata - update so that 'severity' will have an accessor
+  (bbuckingham@redhat.com)
+- Errata - filter - fix the severity values (bbuckingham@redhat.com)
+- Tupane - Removes unnecessary anonymous function from list initialization.
+  (ehelms@redhat.com)
+- Tupane - Search - Refactors items function to be uniform across controllers.
+  Adds total items and total results items counts. Refactors panel
+  functionality to separate list and panel functions. (ehelms@redhat.com)
+- Promotions - errata - some cleanup based on ui review discussion
+  (bbuckingham@redhat.com)
+- Promotions - system templates - make list in ui consistent w/ others in
+  breadcrumb (bbuckingham@redhat.com)
+- Merge branch 'master' into tdl-download (mmccune@redhat.com)
+- Promotions - errata - update show to omit 'self' and include available links
+  provided in errata (bbuckingham@redhat.com)
+- Promotions - errata - update format of title for breadcrumb and errata
+  details (bbuckingham@redhat.com)
+- Errata Filters - UI - updates to integrate w/ backend errata filters
+  (bbuckingham@redhat.com)
+- Tupane - Search - Adds special notification if newly created object does not
+  meet search criteria. (ehelms@redhat.com)
+- Tupane - Refactors items controller function to be less repetitive.
+  (ehelms@redhat.com)
+- Tupane - Fixes changeset history page that requires extra attribute when
+  searching for environment. (ehelms@redhat.com)
+- errata-filters - filter all errata for a product (inecas@redhat.com)
+- errata-filters - use only Pulp::Repo.errata for filtering (inecas@redhat.com)
+- Tupane - Adds number of total items and current items in list to left side
+  list in UI. (ehelms@redhat.com)
+- Tupane - Adds message specific settings to notices and adds special notice to
+  organization creation for new objects that don't meet search criteria.
+  (ehelms@redhat.com)
+- errata-filters - update failing tests (inecas@redhat.com)
+- errata-filters - API and CLI support for filtering on severity
+  (inecas@redhat.com)
+- errata-filters - API and CLI restrict filtering errata on an environment
+  (inecas@redhat.com)
+- errata-filters - API and CLI allow errata filtering on multiple repos
+  (inecas@redhat.com)
+- errata-filters - API and CLI support for filtering errata by type
+  (inecas@redhat.com)
+- Removing the 'new' for systems_controller since it isn't quite there yet.
+  (jrist@redhat.com)
+- Various tupane fixes, enhancements, and modifications to styling.  More...
+  - Stylize the options dialog in actions   - Remove the arrows on multi-select
+  - Fix the .new to be fixed height all the time.   -  Fix the "2 items
+  selected to be less space   - Move the box down, yo.   - Add Select None
+  (jrist@redhat.com)
+- Errata Filters - ui - initial changes to promotions breadcrumb
+  (bbuckingham@redhat.com)
+- Tupane - Search - Fixes for autocomplete drop down and left list not sizing
+  properly on search. (ehelms@redhat.com)
+- Tupane - Search - Converts fancyqueries to use new ajax search.
+  (ehelms@redhat.com)
+- Tupane - Search - Removes scoped search standard jquery autocompletion widget
+  and replaces it with similar one fitted for Katello's needs.
+  (ehelms@redhat.com)
+- tupane - adding support for actions to be disabled if nothing is selected
+  (jsherril@redhat.com)
+- Tupane - Search - Re-factors extended scroll to use new search parameters.
+  (ehelms@redhat.com)
+- Search - Converts search to an ajax operation to refresh and update left side
+  list. (ehelms@redhat.com)
+- Fixes issue with navigationg graphic showing up on roles page tupanel.
+  (ehelms@redhat.com)
+- Merge branch 'master' into tupane (ehelms@redhat.com)
+- Tupane - Changes pages to use new action to register with panel in
+  javascript. (ehelms@redhat.com)
+- Tupane - Moves list javascript object to new namespace. Moves newly created
+  objects to top of the left hand list. (ehelms@redhat.com)
+- Tupane - Converts the rest of ajax loading left hand list object creations to
+  new style that respects search parameters. (ehelms@redhat.com)
+- adding bulk delete system spec test (jsherril@redhat.com)
+- tupane actions - adding icon to system bulk remove (jsherril@redhat.com)
+- tupane actions - moving KT.panel action functions to KT.panel.actions
+  (jsherril@redhat.com)
+- Fixed the refresh of the number of items to happen automatically without
+  being called. (jrist@redhat.com)
+- System removal refresh of items number.. (jrist@redhat.com)
+- Tupane - ActivationKeys - Changes Activation Keys to use creation format that
+  respects search filters. (ehelms@redhat.com)
+- Tupane - Role - Cleanup of role creation with addition of description field.
+  Moves role creation in UI to new form to respect search parameters.
+  (ehelms@redhat.com)
+- Tupane - Modifies left hand list to obey search parameters and adds the
+  ability to specify a create action on the page for automatic handling of
+  creation of new objects with respect to the search parameters.
+  (ehelms@redhat.com)
+- re-created reports functionality after botched merge (dmitri@redhat.com)
+- two pane system actions - adding remove action for bulk systems
+  (jsherril@redhat.com)
+- Tupane - Converts Content Management tab to use left list ajax loading.
+  (ehelms@redhat.com)
+- Tupane - Converts Organizations tab to ajax list loading. (ehelms@redhat.com)
+- Tupane - Converts Administration tab to ajax list loading.
+  (ehelms@redhat.com)
+- Merge branch 'master' into tupane (ehelms@redhat.com)
+- Tupane - Converts systems tab items to use new ajax loading in left hand
+  list. (ehelms@redhat.com)
+- Merge branch 'master' into tdl-download (mmccune@redhat.com)
+- first hack to try and get the sub-edit panel to pop up (mmccune@redhat.com)
+- Tupane - Initial commit of changes to loading of left hand list on tupane
+  pages via ajax. (ehelms@redhat.com)
+- Tupanel - Updates to tupanel slide out for smoother sliding up and down
+  elongated lists.  Fix for extended scroll causing slide out panel to overrun
+  footer. (ehelms@redhat.com)
+
+* Mon Oct 24 2011 Shannon Hughes <shughes@redhat.com> 0.1.96-1
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (bkearney@redhat.com)
+- Allow headpin and katello-common to install together (bkearney@redhat.com)
+- Small fix for browse/upload overlap. (jrist@redhat.com)
+- pools - one more unit test (lzap+git@redhat.com)
+- pools - list of available unit test (lzap+git@redhat.com)
+- tdl-repos-references - validate TDL in unit tests against xsd
+  (inecas@redhat.com)
+- tdl-repos-references - tdl repos references direct to pulp repo
+  (inecas@redhat.com)
+- templates - fix for cloning to an environment (tstrachota@redhat.com)
+- Systems - minor change to view to address warning during render...
+  (bbuckingham@redhat.com)
+- Promotions - distributions - make list in ui consistent w/ products list
+  (bbuckingham@redhat.com)
+- Minor fix for potential overlap of Upload button on Redhat Provider page.
+  (jrist@redhat.com)
+- cli-akeys-pools - show pools in activation key details (inecas@redhat.com)
+- cli-akeys-pools - set allocated to 1 (inecas@redhat.com)
+- cli-akeys-pools - refactor spec tests (inecas@redhat.com)
+- cli-akeys-pools - remove subscriptions from a activation kay
+  (inecas@redhat.com)
+- cli-akeys-pools - add subscription to a key through CLI (inecas@redhat.com)
+- 747805 - Fix for not being able to create an environment when subpanel div
+  was "in the way" via z-index and layering. (jrist@redhat.com)
+- Fixing tests for System create (tsmart@redhat.com)
+- Rendering the proper lsit item for a system once it has been created
+  (tsmart@redhat.com)
+- Minor changes to new page for systems.  Using systems_path with
+  action=>create automatically defaults to post.  Doing so was because of the
+  server prefix.  Also fixed the scrollbar at the bottom of the page to be
+  grid_8 for the surrounding page. (jrist@redhat.com)
+- If you do not have an environment selected, then we tell you to go set a
+  default (tsmart@redhat.com)
+- Fixing System create error validation return (tsmart@redhat.com)
+- Adding environment selector to the System Create page (tsmart@redhat.com)
+- Cherry picking first System CRUD commit (tsmart@redhat.com)
+- Tweaks to System/Subscriptions based on feedback:    + Fix date CSS padding
+  + "Available" to "Quantity" in Available table    + Remove "Total" column in
+  Available table    + Add "SLA" to Available table (thomasmckay@redhat.com)
+- pools - adding multi entitlement flag to the list (cli) (lzap+git@redhat.com)
+- pools - making use of system.available_pools_full (lzap+git@redhat.com)
+- pools - rename sys_consumed_entitlements as consumed_entitlements
+  (lzap+git@redhat.com)
+- pools - moving sys_consumed_entitlements into glue (lzap+git@redhat.com)
+- pools - rename sys_available_pools as available_pools_full
+  (lzap+git@redhat.com)
+- pools - moving sys_available_pools into glue (lzap+git@redhat.com)
+- pools - listing of available pools (lzap+git@redhat.com)
+- refactoring - extending pool glue class (lzap+git@redhat.com)
+- refactoring - extending pool glue class (lzap+git@redhat.com)
+- removing unused code (lzap+git@redhat.com)
+- Prevent from using sqlite as the database engine (inecas@redhat.com)
+- Wrapping up today's git mess. (jrist@redhat.com)
+- Revert "Revert "Red Hat Provider layout refactor" - upload is not working
+  now..." (jrist@redhat.com)
+- Revert "Fix for provider.js upload file." (jrist@redhat.com)
+- Revert "Merge branch 'upload_fix'" (jrist@redhat.com)
+- Merge branch 'upload_fix' (jrist@redhat.com)
+- Fix for provider.js upload file. (jrist@redhat.com)
+- Revert "Red Hat Provider layout refactor" - upload is not working now...
+  (jrist@redhat.com)
+- Red Hat Provider layout refactor (jrist@redhat.com)
+- Removed jeditable classes off repo pages since attributes there are not
+  editable anymore (paji@redhat.com)
+- Break up the katello rpms into component parts (bkearney@redhat.com)
+- Very minor padding issue on .dash (jrist@redhat.com)
+- Fix for flot/canvas on IE. (jrist@redhat.com)
+- BZ#747343 https://bugzilla.redhat.com/show_bug.cgi?id=747343 In fix to show
+  subscriptions w/o products, the provider was not being checked.
+  (thomasmckay@redhat.com)
+- Based on jrist feedback: + add padding to rows to account for fatter spinner
+  + don't increment spinner value if non-zero on checkbox click + alternate row
+  coloring (maintain color on exanding rows) (thomasmckay@redhat.com)
+- Unsubscribe now unsubscribes from individual entitlements, not the entire
+  pool. (Only useful for multi-entitlement subscriptions where the user may
+  have subscribed to multiple quantities.) (thomasmckay@redhat.com)
+- adjusted tables for custom provider product, updated columns
+  (thomasmckay@redhat.com)
+- handle comma-separated gpgUrl values. change display of subscription from
+  label to div to clean up display style (thomasmckay@redhat.com)
+- subscription content url is needs the content source prefix before it is a
+  clickable link (thomasmckay@redhat.com)
+- changed subscription details to a list instead of a table; much cleaner
+  looking (thomasmckay@redhat.com)
+- data added to expanding subscription tree (thomasmckay@redhat.com)
+- first cut of expander for subscription details (data fake)
+  (thomasmckay@redhat.com)
+- updated table info for available, including removing spinner for non-multi
+  (thomasmckay@redhat.com)
+- updated table info for currently subscribed (thomasmckay@redhat.com)
+- 737678 - Made the provider left panes and other left panes use ellipsis
+  (paji@redhat.com)
+
+* Tue Oct 18 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.95-1
+- switching to XML vs JSON for template download
+- Errata - packages - list based on name-[epoch:]-version-release.arch
+- 745617 fix for product sync selection
+- tdl - modifying /export to return TDL format
+- tdl - refactoring export_string to export_as_json
+- reset dbs script now correctly load variables
+- 744067 - Promotions - Errata UI - clean up format on Details tab
+
 * Mon Oct 17 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.94-1
 - adding db:truncate rake task
 - templates - spec tests for revisions

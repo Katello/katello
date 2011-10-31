@@ -24,14 +24,32 @@ describe Api::ErrataController do
 
     before(:each) do
       @repo = mock(Glue::Pulp::Repo)
+      Glue::Pulp::Errata.stub(:filter => [])
     end
 
     it "should call pulp find repo api" do
+      Glue::Pulp::Errata.should_receive(:filter).once.with(:repoid => 1).and_return([])
 
-      Glue::Pulp::Repo.should_receive(:find).once.with(1).and_return(@repo)
-      @repo.should_receive(:errata)
+      get 'index', :repoid => 1
+    end
 
-      get 'index', :repository_id => 1
+    it "should accept type as filter attribute" do
+      Glue::Pulp::Errata.should_receive(:filter).once.with(:repoid => 1, :type => 'security').and_return([])
+      get 'index', :repoid => 1, :type => 'security'
+
+      Glue::Pulp::Errata.should_receive(:filter).once.with(:type => 'security', :environment_id => '123').and_return([])
+      get 'index', :type => 'security', :environment_id => "123"
+
+      Glue::Pulp::Errata.should_receive(:filter).once.with(:severity => 'critical', :environment_id => '123').and_return([])
+      get 'index', :severity => 'critical', :environment_id => "123"
+
+      Glue::Pulp::Errata.should_receive(:filter).once.with(:severity => 'critical', :product_id => 'product-123', :environment_id => '123').and_return([])
+      get 'index', :severity => 'critical', :product_id => 'product-123', :environment_id => "123"
+    end
+
+    it "should not accept a call without specifying envirovnemnt or repoid" do
+      get 'index', :type => 'security'
+      response.response_code.should == 400
     end
   end
 

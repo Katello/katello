@@ -161,8 +161,15 @@ class HttpResource
       consumer = OAuth::Consumer.new(self.consumer_key,
                           self.consumer_secret,
                           params)
+
+      # TODO: this is a temporary hack!
+      # Python implementation of OAuth in Pulp don't support multiple query parameters with the same name.
+      # It uses only the first of the parameters and ignores the rest for basestring construction.
+      # Workaround: The basestring we sign is different from the url that we actually request from candlepin.
+      aouth_url = get_oauth_url(url)
       # The type is passed in, GET/POST/PUT/DELETE
-      request = http_type.new(url)
+      request = http_type.new(aouth_url)
+
       # Sign the request with OAuth
       consumer.sign!(request)
       # Extract the header and add it to the RestClient
@@ -188,5 +195,36 @@ class HttpResource
         so_far << "#{current[0].to_s}=#{url_encode(current[1])}"
       end
     end
+
+    private
+
+    def get_oauth_query_hash(query)
+      query_hash = {}
+
+      query_parts = query.split("&")
+      query_parts.each do |qp|
+        qp_parts = qp.split("=")
+        key   = qp_parts[0]
+        value = qp_parts[1]
+
+        query_hash[key] = value if not query_hash.has_key?(key)
+      end
+
+      query_hash
+    end
+
+    def get_oauth_url(url)
+      parts = url.split("?")
+      if parts.length > 1
+
+        base  = parts[0]
+        query = parts[1]
+
+        return base +"?"+ get_oauth_query_hash(query).to_query
+      else
+        return url
+      end
+    end
+
   end
 end

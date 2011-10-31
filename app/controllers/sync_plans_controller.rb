@@ -36,21 +36,9 @@ class SyncPlansController < ApplicationController
       :create => manage_test,
     }
   end
-
-  def index
-    begin
-      @plans = SyncPlan.search_for(params[:search]).where(:organization_id => current_organization.id).limit(current_user.page_size)
-      retain_search_history
-    rescue Exception => e
-      errors e.to_s, {:level => :message, :persist => false}
-      @plans = SyncPlan.search_for ''
-    end
-  end
   
   def items
-    start = params[:offset]
-    @sync_plans = SyncPlan.search_for(params[:search]).where(:organization_id => current_organization.id).limit(current_user.page_size).offset(start)
-    render_panel_items @sync_plans, @panel_options
+    render_panel_items(SyncPlan.where(:organization_id => current_organization.id), @panel_options, params[:search], params[:offset])
   end
   
   def setup_options
@@ -59,6 +47,7 @@ class SyncPlansController < ApplicationController
                  :col => columns,
                  :create => _('Plan'),
                  :name => controller_display_name,
+                 :ajax_load => true,
                  :ajax_scroll => items_sync_plans_path(),
                  :enable_create => current_organization.syncable? } 
   end
@@ -92,6 +81,10 @@ class SyncPlansController < ApplicationController
 
       updated_plan.save!
       notice N_("Sync Plan '#{updated_plan.name}' was updated.")
+
+      if not SyncPlan.where(:id => updated_plan.id).search_for(params[:search]).include?(updated_plan)
+        notice _("'#{updated_plan["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
+      end
 
       respond_to do |format|
         format.html { render :text => escape_html(result) }
@@ -133,14 +126,22 @@ class SyncPlansController < ApplicationController
       sdate = params[:sync_plan].delete :plan_date
       stime = params[:sync_plan].delete :plan_time
       sync_event = sdate + ' ' + stime
+      
       begin
         params[:sync_plan][:sync_date] = DateTime.strptime(sync_event, "%m/%d/%Y %I:%M %P")
       rescue Exception => error
         params[:sync_plan][:sync_date] = nil
       end
+      
       @plan = SyncPlan.create! params[:sync_plan].merge({:organization => current_organization})
       notice N_("Sync Plan '#{@plan['name']}' was created.")
-      render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval'], :name=>controller_display_name}
+      
+      if SyncPlan.where(:id => @plan.id).search_for(params[:search]).include?(@plan) 
+        render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval'], :name=>controller_display_name}
+      else
+        notice _("'#{@plan["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+        render :json => { :no_match => true }
+      end
     rescue Exception => error
       Rails.logger.error error.to_s
       errors error

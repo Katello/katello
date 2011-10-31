@@ -29,6 +29,8 @@ GEM
       activemodel (= 3.0.10)
       activesupport (= 3.0.10)
     activesupport (3.0.10)
+    acts_as_reportable (1.1.1)
+      ruport (>= 1.6.0)
     arel (2.0.9)
     autotest-rails (4.1.0)
       ZenTest
@@ -37,6 +39,7 @@ GEM
     ci_reporter (1.6.4)
       builder (>= 2.1.2)
     closure-compiler (0.3.3)
+    color (1.4.1)
     columnize (0.3.2)
     compass (0.11.5)
       chunky_png (~> 1.2)
@@ -53,6 +56,7 @@ GEM
       abstract (>= 1.0.0)
     eventmachine (0.12.10)
     fast_gettext (0.5.10)
+    fastercsv (1.5.4)
     fssm (0.2.7)
     gettext (2.1.0)
       locale (>= 2.0.5)
@@ -64,6 +68,8 @@ GEM
       activesupport (~> 3.0)
       haml (~> 3.0)
       railties (~> 3.0)
+    hoe (2.12.3)
+      rake (~> 0.8)
     i18n (0.5.0)
     i18n_data (0.2.7)
       activesupport
@@ -84,6 +90,9 @@ GEM
     newrelic_rpm (3.1.1)
     nokogiri (1.5.0)
     oauth (0.4.4)
+    pdf-writer (1.1.8)
+      color (>= 1.4.0)
+      transaction-simple (~> 1.3)
     pg (0.10.1)
     polyglot (0.3.1)
     rack (1.3.0)
@@ -134,6 +143,9 @@ GEM
       linecache (>= 0.3)
     ruby_parser (2.0.6)
       sexp_processor (~> 3.0)
+    ruport (1.6.3)
+      fastercsv
+      pdf-writer (= 1.1.8)
     sass (3.1.4)
     scoped_search (2.3.4)
       activerecord (>= 2.1.0)
@@ -146,6 +158,8 @@ GEM
       eventmachine (>= 0.12.6)
       rack (>= 1.0.0)
     thor (0.14.6)
+    transaction-simple (1.4.0)
+      hoe (>= 1.1.7)
     treetop (1.4.9)
       polyglot (>= 0.2.5)
     tzinfo (0.3.26)
@@ -164,6 +178,7 @@ PLATFORMS
 
 DEPENDENCIES
   ZenTest (>= 4.4.0)
+  acts_as_reportable (>= 1.1.1)
   autotest-rails (>= 4.1.0)
   ci_reporter (>= 1.6.3)
   compass (>= 0.11.5)
@@ -190,6 +205,7 @@ DEPENDENCIES
   rspec-rails (>= 2.0.0)
   ruby-debug
   ruby_parser
+  ruport (>= 1.6.3)
   scoped_search (>= 2.3.4)
   simple-navigation (= 3.3.4)
   sqlite3
