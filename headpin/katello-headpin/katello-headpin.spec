@@ -72,6 +72,9 @@ rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 
+#remove development tasks
+rm %{buildroot}%{homedir}/lib/tasks/test.rake
+
 %clean
 rm -rf %{buildroot}
 
