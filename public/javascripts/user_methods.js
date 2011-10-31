@@ -88,11 +88,11 @@ KT.user_page = function() {
             button.addClass('disabled');
             var username = $('#username_field').val();
             var password = $('#password_field').val();
-            var org_id = $('#org_id_org_idorg_id').val();
+            var env_id = $(".path_link, active").attr('data-env_id');
             $.ajax({
                 type: "POST",
                 url: button.attr('data-url'),
-                data: { "user":{"username":username, "password":password, "org_id":org_id }},
+                data: { "user":{"username":username, "password":password, "env_id":env_id }},
                 cache: false,
                 success: function(data) {
                     button.removeClass('disabled');
@@ -122,6 +122,26 @@ KT.user_page = function() {
             }
         });
     },
+    updateUser = function() {
+        var button = $(this);
+        var url = button.attr("data-url");
+        var password = $('#password_field').val();
+        var env_id = $(".path_link, active").attr('data-env_id');
+        button.addClass("disabled");
+        $.ajax({
+            type: "PUT",
+            url: url,
+            data: {"env_id":{"env_id":env_id}},
+            cache: false,
+            success: function() {
+                button.removeClass("disabled");
+                $('#environment').find('a').click();
+            },
+            error: function(e) {
+                button.removeClass('disabled');
+            }
+        });
+    },
     updateRoles = function(e) {
         e.preventDefault();
         var button = $(this).find('input[type|="submit"]');
@@ -141,12 +161,14 @@ KT.user_page = function() {
         $('#save_user').live('click', createNewUser);
         $('#clear_helptips').live('click',clearHelptips);
         $('#save_password').live('click',changePassword);
+        $('#update_user').live('click',updateUser);
         $('#update_roles').live('submit', updateRoles);
     };
 
     return {
         createNewUser: createNewUser,
         verifyPassword: verifyPassword,
+        updateUser: updateUser,
         changePassword: changePassword,
         checkboxChanged: checkboxChanged,
         clearHelptips: clearHelptips,

@@ -46,11 +46,8 @@
           = label :user, :username, _("Confirm")
         .grid_5.la
           = text_field :user, :username, :id=>"confirm_field", :value=>"", :type=>"password"
-      .grid_5.la.prefix_3
-        #save_password.verify_password.button{'data-url'=>user_path(@user.id)}
-          #{_("Save")}
       .grid_5.la.prefix_2
         #password_conflict
-
-
-= javascript :user_edit
+      .grid_5.la.prefix_3
+        #change_password.verify_password.button{'data-url'=>user_path(@user.id)}
+          #{_("Save")}

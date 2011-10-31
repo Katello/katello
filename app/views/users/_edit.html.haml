@@ -9,4 +9,4 @@
   = render_navigation(:items=>user_navigation, :expand_all => true, :level => 1)
 
 = content_for :content do
-  = render :partial => "edit_form", :locals=>{:editable=>editable}
+  = render :partial => "edit_form", :locals=>{:editable=>editable, :accessible_envs => accessible_envs}
