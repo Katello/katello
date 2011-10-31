@@ -27,6 +27,13 @@ class katello::config {
     mode    => 644,
     recurse => true;
   }
+  
+  augeas {"temp_disable_selinux":
+    context => "/files/etc/sysconfig/selinux",
+    changes => ["set SELINUX permissive"],
+    notify   => Exec["reload-apache2"]
+  }
+  
 
   exec {"katello_db_migrate":
     cwd         => $katello::params::katello_dir,
