@@ -141,7 +141,7 @@ class SystemTemplate < ActiveRecord::Base
         xm.version distro.version
         # TODO distro.arch is nil until resolved 750265 - RFE: Separate "arch" field for distribution
         #xm.arch distro.arch
-        xm.arch "x86-64"
+        xm.arch "x86_64"
         xm.install("type" => "url") {
           xm.url distro.url
         }
