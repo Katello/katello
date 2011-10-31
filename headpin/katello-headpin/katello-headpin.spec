@@ -96,6 +96,8 @@ and then run katello-configure to configure everything.
 
 %post
 # This overlays headpin onto katello
+echo %{homedir}
+echo  %{katello_dir}
 cp -Rf %{homedir} %{katello_dir}
 
 %changelog
