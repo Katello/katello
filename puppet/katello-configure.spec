@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.7
+Version:        0.1.8
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -52,6 +52,10 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Mon Oct 31 2011 Clifford Perry <cperry@redhat.com> 0.1.8-1
+- fixes BZ-745652 bug - Installation will configure itself to use 1 thin
+  process if only one processor (ohadlevy@redhat.com)
+
 * Tue Oct 25 2011 Shannon Hughes <shughes@redhat.com> 0.1.7-1
 - 734517 - puppet - set pulp.conf server_name to fqdn (inecas@redhat.com)
 - Hello, (jpazdziora@redhat.com)
