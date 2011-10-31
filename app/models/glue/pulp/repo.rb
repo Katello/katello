@@ -12,7 +12,7 @@
 
 class Glue::Pulp::Repo
   attr_accessor :id, :groupid, :arch, :name, :feed, :feed_cert, :feed_key, :feed_ca,
-                :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type
+                :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type, :filters
 
   def initialize(params = {})
     @params = params
@@ -258,7 +258,8 @@ class Glue::Pulp::Repo
     sync_history_item['state'] == 'finished'
   end
 
-  def promote(to_environment, content)
+
+  def promote(to_environment, content, filters = [])
     cloned = Glue::Pulp::Repo.new
     cloned.id = self.clone_id(to_environment)
     cloned.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_environment)
@@ -266,7 +267,7 @@ class Glue::Pulp::Repo
     cloned.name = name
     cloned.feed = feed
     cloned.groupid = Glue::Pulp::Repos.groupid(self.product, to_environment, content)
-    [Pulp::Repository.clone_repo(self, cloned)]
+    [Pulp::Repository.clone_repo(self, cloned, "parent", filters)]
   end
 
   def organization_id
@@ -309,6 +310,14 @@ class Glue::Pulp::Repo
 
   def self.find(id)
     Glue::Pulp::Repo.new(Pulp::Repository.find(id))
+  end
+
+  def add_filters filter_ids
+    ::Pulp::Repository.add_filters id, filter_ids
+  end
+
+  def remove_filters filter_ids
+    ::Pulp::Repository.remove_filters id, filter_ids
   end
 
   # Convert array of Repo objects to Ruby Hash in the form of repo.id => repo_object for fast searches.

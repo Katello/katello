@@ -317,6 +317,63 @@
   }
 
 
+  #package_filter {
+    table {
+      margin-bottom: 20px;
+    }
+
+    label {
+      color: $text_color;
+      font-weight: normal;
+    }
+    
+    #product_list {
+
+      max-height: 200px;
+      overflow: scroll;
+      border: 0 solid black !important;
+      margin-bottom: 10px;
+
+      .product_list {
+        width: 100%;
+      }
+
+      .no_padding {
+        padding-right: 0;
+        padding-left: 0;
+
+      }
+
+      .product_entry {
+        .small_col {
+          width: 20px;
+          height: 16px;
+          margin-left: auto;
+          margin-right: auto;
+          display: inline-block;
+          position: relative;
+          vertical-align: top;
+        }
+        .large_col {
+          display: inline-block;
+        }
+        .options {
+          display: none;
+        }
+        .collapsed {
+          background: $arrow_min_img;
+          margin-right: 4px;
+        }
+        .expanded {
+          margin-right: 4px;
+          background: $arrow_max_img;
+        }
+      }
+
+
+    }
+  }
+
 }
 
 .cs_content {
