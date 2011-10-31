@@ -11,7 +11,7 @@ export TESTDIR=$script_dir
 
 . $script_dir/helpers
 
-RAND=$(date | md5sum | cut -c1-6)
+RAND=$(date | openssl md5 | cut -c1-6)
 USER='admin'
 PASSWORD='admin'
 CMD_NOUSER="$script_dir/../../cli/bin/katello"

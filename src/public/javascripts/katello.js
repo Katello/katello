@@ -172,7 +172,7 @@ KT.common = (function() {
             return decoded.replace(/\+/g, " ");
         },
         escapeId: function(myid) {
-            return myid.replace(/(:|\.)/g,'\\$1');
+            return myid.replace(/([ #;&,.%+*~\':"!^$[\]()=>|\/])/g,'\\$1')
         },
         customConfirm : function (message, callback) {
           var html = "<div style='margin:20px;'><span class='status_confirm_icon'/><div style='margin-left: 24px; display:table;height:1%;'>" + message + "</div></div>";
