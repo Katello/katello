@@ -15,40 +15,63 @@ require 'helpers/repo_test_data'
 
 describe Glue::Pulp::Repo do
 
+    let(:to_create_custom) do
+    {
+      :name => "some name",
+      :description => "a description",
+      :repository_url => "https://some.url/path",
+      :provider_type => Provider::CUSTOM
+    }
+    end
+
+
+
   before :each do
     disable_repo_orchestration
+    disable_org_orchestration
+    disable_product_orchestration
 
-    @repo = Glue::Pulp::Repo.new(RepoTestData::REPO_PROPERTIES)
+    @organization = Organization.create!(:name => ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
+
+    @provider = Provider.create(to_create_custom) do |p|
+      p.organization = @organization
+    end
+
+    @product1 = Product.create!({:cp_id => "product1_id", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.locker]})
+    ep = EnvironmentProduct.find_or_create(@organization.locker, @product1)
+    RepoTestData::REPO_PROPERTIES.merge!(:environment_product => ep)
+
+    @repo = Repository.create!(RepoTestData::REPO_PROPERTIES)
   end
 
   context "Create & destroy a repo" do
     it "should create the repo with correct properties" do
       Pulp::Repository.should_receive(:create).with do |props|
-        props[:id].should == RepoTestData::REPO_PROPERTIES[:id]
+        props[:id].should == RepoTestData::REPO_PROPERTIES[:pulp_id]
         props[:name].should == RepoTestData::REPO_PROPERTIES[:name]
         props[:groupid].should == RepoTestData::REPO_PROPERTIES[:groupid]
         props[:arch].should == RepoTestData::REPO_PROPERTIES[:arch]
         props[:feed].should == RepoTestData::REPO_PROPERTIES[:feed]
         true
       end
-      @repo.create
+      @repo.create_pulp_repo
     end
 
     it "should call the Pulp's delete api on destroy" do
       Pulp::Repository.should_receive(:destroy).with(RepoTestData::REPO_ID)
-      @repo.destroy
+      @repo.destroy_repo
     end
   end
 
   context "Finding a repo" do
     it "should call Pulp's find api'" do
       Pulp::Repository.should_receive(:find).with(RepoTestData::REPO_ID)
-      Repository.find_by_pulp_id(RepoTestData::REPO_ID)
+      Repository.find_by_pulp_id(RepoTestData::REPO_ID).feed
     end
 
     it "should return new instance with correct properties" do
       repo = Repository.find_by_pulp_id(RepoTestData::REPO_ID)
-      repo.id.should == RepoTestData::REPO_PROPERTIES[:id]
+      repo.pulp_id.should == RepoTestData::REPO_PROPERTIES[:pulp_id]
       repo.name.should == RepoTestData::REPO_PROPERTIES[:name]
       repo.groupid.should == RepoTestData::REPO_PROPERTIES[:groupid]
     end
@@ -228,23 +251,16 @@ describe Glue::Pulp::Repo do
   context "Repo promote" do
 
     before :each do
-      stub_reference_objects
-      @locker = mock(KTEnvironment, {:id => RepoTestData::REPO_ENV_ID, :name => 'Locker'})
-      @locker.stub(:organization).and_return(@org)
-      @to_env = mock(KTEnvironment, {:id => RepoTestData::CLONED_REPO_ENV_ID, :name => 'Prod'})
-      @to_env.stub(:organization).and_return(@org)
-      @product.stub(:locker).and_return(@locker)
+      @to_env = KTEnvironment.create!(:organization =>@organization, :name=>"Prod", :prior=>@organization.locker)
+      #ep = EnvironmentProduct.find_or_create(@to_env, @product1)
+      #RepoTestData::CLONED_PROPERTIES.merge!(:environment_product => ep)
 
-      @clone = Glue::Pulp::Repo.new(RepoTestData::CLONED_PROPERTIES)
-
-      @repo.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_REPO_ID)
-      @clone.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_2_REPO_ID)
     end
 
     it "should clone the repo" do
       Pulp::Repository.should_receive(:clone_repo).with do |repo, cloned|
         repo.should == @repo
-        cloned.id.should == RepoTestData::CLONED_PROPERTIES[:id]
+        cloned.id.should == RepoTestData::CLONED_PROPERTIES[:pulp_id]
         cloned.name.should == RepoTestData::CLONED_PROPERTIES[:name]
         cloned.groupid.should == RepoTestData::CLONED_PROPERTIES[:groupid]
         cloned.arch.should == RepoTestData::CLONED_PROPERTIES[:arch]
@@ -261,7 +277,7 @@ describe Glue::Pulp::Repo do
 
     it "should be able to return the clone" do
       clone = @repo.get_clone(@to_env)
-      clone.id.should == RepoTestData::CLONED_PROPERTIES[:id]
+      clone.id.should == RepoTestData::CLONED_PROPERTIES[:pulp_id]
     end
 
     it "should set relative path correctly" do
@@ -276,7 +292,7 @@ describe Glue::Pulp::Repo do
   describe "#package_groups" do
     before { Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups) }
     it "should call pulp layer" do
-      Pulp::PackageGroup.should_receive(:all).with(RepoTestData::REPO_PROPERTIES[:id])
+      Pulp::PackageGroup.should_receive(:all).with(RepoTestData::REPO_PROPERTIES[:pulp_id])
       @repo.package_groups
     end
 
@@ -289,7 +305,7 @@ describe Glue::Pulp::Repo do
   describe "#package_group_categories" do
     before { Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories) }
     it "should call pulp layer" do
-      Pulp::PackageGroupCategory.should_receive(:all).with(RepoTestData::REPO_PROPERTIES[:id])
+      Pulp::PackageGroupCategory.should_receive(:all).with(RepoTestData::REPO_PROPERTIES[:pulp_id])
       @repo.package_group_categories
     end
 
