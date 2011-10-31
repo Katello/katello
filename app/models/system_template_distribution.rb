@@ -54,4 +54,14 @@ class SystemTemplateDistribution < ActiveRecord::Base
     load_backend_attributes
     @distribution_glue.version
   end
+
+  def url
+    load_backend_attributes
+    @distribution_glue.url
+  end
+
+  def arch
+    load_backend_attributes
+    @distribution_glue.arch
+  end
 end

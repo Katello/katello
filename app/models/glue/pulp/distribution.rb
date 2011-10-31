@@ -13,7 +13,7 @@
 require_dependency "resources/pulp"
 
 class Glue::Pulp::Distribution
-  attr_accessor :id, :description, :files, :family, :variant, :version
+  attr_accessor :id, :description, :files, :family, :variant, :version, :url, :arch
 
   def initialize(attrs = {})
     
