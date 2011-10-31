@@ -12,7 +12,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 %global katello_name katello
-%global homedir %{_datarootdir}/%{katello_name}
+%global headpin_name headpin
+%global homedir %{_datarootdir}/%{headpin_name}
+%global katello_dir %{_datarootdir}/%{katello_name}
 %global datadir %{_sharedstatedir}/%{katello_name}
 %global confdir deploy/common
 
@@ -48,7 +50,7 @@ rm -rf src
 rm -rf %{buildroot}
 #prepare dir structure
 install -d -m0755 %{buildroot}%{homedir}
-install -d -m0755 %{buildroot}%{homedir}/config
+install -d -m0755 %{buildroot}%{katello_dir}/config
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{katello_name}
 
 #copy the application to the target directory
@@ -91,6 +93,10 @@ and then run katello-configure to configure everything.
 %{homedir}
 
 %files all
+
+%post
+# This overlays headpin onto katello
+cp -R %{homedir} %{katello_dir}
 
 %changelog
 * Wed Oct 26 2011 Bryan Kearney <bkearney@redhat.com> 0.1.99-1
