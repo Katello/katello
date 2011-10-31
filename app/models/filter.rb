@@ -87,7 +87,7 @@ class Filter < ActiveRecord::Base
     if User.allowed_all_tags?(verbs, resource, org)
        where(:organization_id => org)
     else
-      where("filter.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+      where("filters.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
     end
   end
 
