@@ -46,17 +46,12 @@ class FiltersController < ApplicationController
       @product_hash[prod.id] = {:name=>prod.name, :repos=>repos, :id=>prod.id}
     }
     
-    @filters = Filter.readable(current_organization).search_for(params[:search]).order('pulp_id desc').
-        limit(current_user.page_size)
-
     render "index"
   end
 
   def items
-    start = params[:offset]
-    @filters = Filter.readable(current_organization).search_for(params[:search]).order('pulp_id desc').
-        limit(current_user.page_size).offset(start)
-    render_panel_items @providers, @panel_options
+    render_panel_items(Filter.readable(current_organization).order('lower(pulp_id)'), @panel_options,
+                       params[:search], params[:offset])
   end
 
   def auto_complete_products_repos
@@ -92,6 +87,11 @@ class FiltersController < ApplicationController
     end
     @filter.save!
     notice _("Package Filter '#{@filter.name}' has been updated.")
+
+    if not Filter.where(:id => @filter.id).search_for(params[:search]).include?(@filter)
+      notice _("'#{@filter["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
+    end
+
     render :text=>to_ret
   rescue Exception=>e
     errors e
@@ -111,8 +111,16 @@ class FiltersController < ApplicationController
   def create
     @filter = Filter.create!(params[:filter].merge({:organization_id=>current_organization.id}))
     notice N_("Filter #{@filter.name} created successfully.")
-    render :partial=>"common/list_item", :locals=>{:item=>@filter, :initial_action=>"packages", :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
+    if !Filter.where(:id => @filter.id).search_for(params[:search]).include?(@filter)
 
+      notice _("'#{@filter.name}' did not meet the current search criteria and is not being shown."),
+             { :level => 'message', :synchronous_request => false }
+      render :json => { :no_match => true }
+    else
+      render :partial=>"common/list_item", :locals=>{:item=>@filter, :initial_action=>"packages", :accessor=>"id",
+                                                     :columns=>['name'], :name=>controller_display_name}
+    end
+    
   rescue Exception=> e
     errors e
     render :text=>e, :status=>500
@@ -189,7 +197,8 @@ class FiltersController < ApplicationController
         :name => controller_display_name,
         :ajax_scroll=>items_filters_path(),
         :enable_create=> Filter.creatable?(current_organization),
-        :initial_action=>:packages
+        :initial_action=>:packages,
+        :ajax_load=>true
     }
   end
 
