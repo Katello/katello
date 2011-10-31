@@ -213,7 +213,7 @@ describe FiltersController do
       let(:action) {:items}
       let(:req) {get 'items' }
       let(:authorized_user) do
-        user_with_permissions { |u| u.can(:read, :filters, nil, @organization) }
+        user_with_permissions { |u| u.can(:read, :filters, [@filter.id], @organization) }
       end
       let(:unauthorized_user) do
         user_without_permissions
