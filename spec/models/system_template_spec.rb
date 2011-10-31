@@ -547,11 +547,17 @@ describe SystemTemplate do
 
     subject { Nokogiri.parse(@tpl1.export_as_tdl) }
 
-    describe "repositories" do
+    let(:distribution) { RepoTestData.repo_distributions["id"] }
+
+    describe "repositories and distributions" do
       before do
         disable_repo_orchestration
+        Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
+        Pulp::Distribution.stub(:find => RepoTestData.repo_distributions)
+        Pulp::Repository.stub(:all => [RepoTestData::REPO_PROPERTIES])
         @prod1.stub(:repos => [Glue::Pulp::Repo.new(RepoTestData::REPO_PROPERTIES)])
         @tpl1.products << @prod1
+        @tpl1.add_distribution(distribution)
       end
 
       it "should contain repos referencing to pulp repositories" do
@@ -566,6 +572,16 @@ describe SystemTemplate do
       it "should contain 'clientcert' and 'clientkey' tags" do
         subject.xpath("/template/repositories/repository/clientcert").text.should_not == nil
         subject.xpath("/template/repositories/repository/clientkey").text.should_not == nil
+      end
+
+      it "name, version, arch should not be nil" do
+        subject.xpath("/template/os/name").text.should_not == nil
+        subject.xpath("/template/os/version").text.should_not == nil
+        subject.xpath("/template/os/arch").text.should_not == nil
+      end
+
+      it "url should be set" do
+        subject.xpath("/template/os/install/url").text.should == RepoTestData.repo_distributions['url']
       end
 
       it_should_behave_like "valid tdl"
