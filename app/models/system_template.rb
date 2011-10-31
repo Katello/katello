@@ -111,10 +111,11 @@ class SystemTemplate < ActiveRecord::Base
   # Returns template in XML TDL format:
   # https://github.com/aeolusproject/imagefactory/blob/master/Documentation/TDL.xsd
   def export_as_tdl
-    uebercert = { :cert => "", :key => "" }
+
     begin
       uebercert = Candlepin::Owner.get_ueber_cert(environment.organization.cp_key)
     rescue RestClient::ResourceNotFound => e
+      uebercert = nil
       Rails.logger.info "Uebercert for #{environment.organization.name} has not been generated. Using empty cert and key fields."
     end
 
@@ -143,8 +144,8 @@ class SystemTemplate < ActiveRecord::Base
             xm.repository("name" => repo.id) {
               xm.url repo.uri
               xm.persisted "No"
-              xm.clientcert uebercert[:cert]
-              xm.clientkey uebercert[:key]
+              xm.clientcert uebercert[:cert] unless uebercert.nil?
+              xm.clientkey uebercert[:key] unless uebercert.nil?
             }
           end
         end
