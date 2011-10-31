@@ -251,7 +251,8 @@ describe Glue::Pulp::Repo do
         cloned.feed.should == RepoTestData::CLONED_PROPERTIES[:feed]
         true
       end
-      @repo.promote(@to_env, nil)
+      @repo.should_receive(:content_for_clone).and_return(nil)
+      @repo.promote(@to_env)
     end
 
     it "should return correct is_cloned_in? status" do
@@ -269,7 +270,8 @@ describe Glue::Pulp::Repo do
         cloned.relative_path.should == "Corp/Prod/Ruby/repo"
         true
       end
-      @repo.promote(@to_env, nil)
+      @repo.should_receive(:content_for_clone).and_return(nil)
+      @repo.promote(@to_env)
     end
   end
 
