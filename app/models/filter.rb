@@ -27,9 +27,11 @@ class Filter < ActiveRecord::Base
 
   alias_attribute :name, :pulp_id
 
-  scoped_search :on => :pulp_id, :complete_value => true, :rename => :'filter.pulp_id'
+  scoped_search :on => :pulp_id, :complete_value => true
   
-  scope :readable, lambda {|org| readable_items(org)}
+  scope :readable, lambda {|org|
+    readable_items(org)
+  }
 
 
 

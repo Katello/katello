@@ -24,6 +24,7 @@ module OrchestrationHelper
     Candlepin::Product.stub!(:certificate).and_return("")
     Candlepin::Product.stub!(:key).and_return("")
     Pulp::Repository.stub!(:create).and_return([])
+    Pulp::Repository.stub!(:all).and_return([])
   end
 
   def disable_org_orchestration
@@ -42,6 +43,7 @@ module OrchestrationHelper
   def disable_filter_orchestration
     Pulp::Filter.stub!(:create).and_return({})
     Pulp::Filter.stub!(:destroy).and_return(200)
+    Pulp::Filter.stub(:find).and_return({})
   end
 
 end

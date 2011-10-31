@@ -21,7 +21,6 @@ class FiltersController < ApplicationController
       :new => create,
       :index => index_test,
       :items => index_test,
-      :auto_complete_search => index_test,
       :edit => readable,
       :update=>editable,
       :destroy=>deletable,
@@ -38,7 +37,6 @@ class FiltersController < ApplicationController
   def index
     products = Product.readable(current_organization)
     products.sort!{|a,b| a.name <=> b.name}
-
     @product_hash = {}
     products.each{|prod|
       repos = []
@@ -47,8 +45,10 @@ class FiltersController < ApplicationController
       }
       @product_hash[prod.id] = {:name=>prod.name, :repos=>repos, :id=>prod.id}
     }
+    
     @filters = Filter.readable(current_organization).search_for(params[:search]).order('pulp_id desc').
         limit(current_user.page_size)
+
     render "index"
   end
 
@@ -88,7 +88,7 @@ class FiltersController < ApplicationController
       to_ret =  @filter.name
     elsif options[:description]
       @filter.description = options[:description]
-      to_ret = @filter.description 
+      to_ret = @filter.description
     end
     @filter.save!
     notice _("Package Filter '#{@filter.name}' has been updated.")
@@ -114,7 +114,6 @@ class FiltersController < ApplicationController
     render :partial=>"common/list_item", :locals=>{:item=>@filter, :initial_action=>"packages", :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
 
   rescue Exception=> e
-    debugger
     errors e
     render :text=>e, :status=>500
   end
@@ -122,11 +121,10 @@ class FiltersController < ApplicationController
   def products
     render :partial => "products", :layout => "tupane_layout", :locals => {:filter => @filter, :editable=>@filter.editable?,
                                                                        :name=>controller_display_name}
-    
+
   end
 
   def update_products
-
     @filter.products = []
     params[:products].each{|p|
       @filter.products << Product.find(p)
@@ -163,6 +161,7 @@ class FiltersController < ApplicationController
 
   def destroy
     @filter.destroy
+    notice _("Package Filter #{@filter.name} deleted.")
     render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
   rescue Exception => e
     errors e
@@ -177,6 +176,9 @@ class FiltersController < ApplicationController
 
   def find_filter
     @filter = Filter.find(params[:id])
+  rescue => e
+    errors e
+    render :text=>e, :status=>500 and return false
   end
 
   def panel_options
