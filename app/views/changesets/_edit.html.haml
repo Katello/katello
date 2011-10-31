@@ -1,7 +1,6 @@
 //Edit/view page as seen on the 2 pane changeset history list
 = javascript :changeset_edit
 
-
 = content_for :title do
   = _("Details")
 
@@ -16,9 +15,6 @@
       .grid_2.ra
         %label #{_("Description:")}
       .grid_7.la{:name=>"description", :class=>("editable edit_description" if editable), "data-id"=>@changeset.id,"data-url"=>changeset_path(@changeset.id)} #{@changeset.description}
-
-
-
 
     .fieldset
       .grid_2.ra
@@ -59,6 +55,8 @@
                                                               :type_string=>_("Errata")}
                 = render :partial=>"content_type", :locals=>{:items=>@changeset.repos.where(:product_id=>prod.id).collect{|i| i.display_name},
                                                               :type_string=>_("Repositories")}
+                = render :partial=>"content_type", :locals=>{:items=>@changeset.distributions.where(:product_id=>prod.id).collect{|i| i.display_name},
+                                                              :type_string=>_("Distributions")}
 
 
 

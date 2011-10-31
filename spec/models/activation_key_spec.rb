@@ -89,18 +89,28 @@ describe ActivationKey do
     end
   end
 
-  it "should map 2way pool to keys" do
-    s = KTPool.create!(:cp_id  => 'abc123')
-    @akey.pools = [s]
-    @akey.pools.first.cp_id.should == 'abc123'
-    s.activation_keys.first.name.should == aname
-  end
+  describe "pools in a activation key" do
 
-  it "should assign multiple pools to keys" do
-    s = KTPool.create!(:cp_id  => 'abc123')
-    s2 = KTPool.create!(:cp_id  => 'def123')
-    @akey.pools = [s,s2]
-    @akey.pools.last.cp_id.should == 'def123'
+    it "should map 2way pool to keys" do
+      s = KTPool.create!(:cp_id  => 'abc123')
+      @akey.pools = [s]
+      @akey.pools.first.cp_id.should == 'abc123'
+      s.activation_keys.first.name.should == aname
+    end
+
+    it "should assign multiple pools to keys" do
+      s = KTPool.create!(:cp_id  => 'abc123')
+      s2 = KTPool.create!(:cp_id  => 'def123')
+      @akey.pools = [s,s2]
+      @akey.pools.last.cp_id.should == 'def123'
+    end
+
+    it "should include pools details in json output" do
+      pool = KTPool.create!(:cp_id  => 'abc123')
+      @akey.pools << pool
+      pool.reload
+      @akey.as_json[:pools].should == [ { :cp_id => pool.cp_id } ]
+    end
   end
 
   describe "#apply_to_system" do

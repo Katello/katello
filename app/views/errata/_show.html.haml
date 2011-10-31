@@ -1,5 +1,5 @@
 = content_for :title do
-  = @errata.title
+  = @errata.id
   
 = content_for :navigation do
   = render_navigation(:items => promotion_errata_navigation, :expand_all => true, :level => 1)
@@ -13,6 +13,13 @@
     .grid_5.la
       = @errata.id
 
+  %fieldset
+    .grid_2.ra
+      %label #{_("Title")}:
+    .grid_5.la
+      = @errata.title
+
+  %fieldset
     .grid_2.ra
       %label #{_("Type")}:
     .grid_5.la
@@ -41,31 +48,36 @@
   %fieldset
     .grid_2.ra
       %label #{_("Associated Bugs")}:
-    .grid_5.la
+    .grid_8
       - if @errata.references.length > 0
         %table
           %thead
             %th
               #{_("Type")}
             %th
-              #{_("Id")}
+              #{_("Id / Link")}
             %th
               #{_("Title")}
           %tbody
             - @errata.references.each do |reference|
-              %tr
-                %td
-                  = reference[:type]
-                %td
-                  = reference[:id]
-                %td
-                  = reference[:title]
+              - if reference[:type] != "self"
+                %tr
+                  %td
+                    = reference[:type]
+                  %td
+                    - if reference[:href]
+                      %a{:href => reference[:href]}
+                        = reference[:id].nil? ? _("link") : reference[:id]
+                    - else
+                      = reference[:id].nil? ? _("none") : reference[:id]
+                  %td
+                    = reference[:title].nil? ? _('none') : reference[:title]
       - else
         #{_("None.")}
 
   %fieldset
     .grid_2.suffix_5.la
       %label #{_("Description")}:
-    .grid_7.prefix_0
+    .grid_8
       %pre
         = @errata.description

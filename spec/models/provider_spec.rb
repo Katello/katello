@@ -56,38 +56,13 @@ describe Provider do
       })
       @provider.save!
 
-      @provider.set_product({:name=> "prod", :productContent => []})
-      @product = Product.first(:conditions => {:cp_id => "product_id" })
+      @product = Product.create!({:cp_id => "product_id", :name=> "prod", :productContent => [], :provider => @provider, :environments => [@organization.locker]})
     end
 
     specify { @product.should_not be_nil }
     specify { @product.provider.should == @provider }
     specify { @product.environments.should include(@organization.locker) }
     specify { @organization.locker.products.should include(@product) }
-  end
-
-  context "queue_pool_product_creation" do
-    before(:each) do
-      @provider = Provider.new(:organization => @organization)
-      @product_to_return = {}
-    end
-
-    it "should make correct calls" do
-      Candlepin::Owner.should_receive(:pools).once.and_return([
-        { :productId => "1",  :providedProducts => [{ :productId => "3" }, { :productId => "4" }] },
-        { :productId => "2" }
-      ])
-
-      Candlepin::Product.should_receive(:get).once.with("1").and_return([@product_to_return])
-      Candlepin::Product.should_receive(:get).once.with("2").and_return([@product_to_return])
-      Candlepin::Product.should_receive(:get).once.with("3").and_return([@product_to_return])
-      Candlepin::Product.should_receive(:get).once.with("4").and_return([@product_to_return])
-
-      @provider.should_receive(:queue_import_product_from_cp).exactly(4).times.with(@product_to_return)
-      @provider.should_receive(:process).once
-
-      @provider.queue_pool_product_creation
-    end
   end
 
   context "import manifest via RED HAT provider" do
@@ -97,8 +72,10 @@ describe Provider do
     end
 
     it "should make correct calls" do
-      Candlepin::Owner.should_receive(:import).once.with(@organization.cp_key, "path_to_manifest").and_return(true)
-      @provider.should_receive(:queue_pool_product_creation).once.and_return(true)
+      @provider.should_receive(:owner_import).once.and_return(true)
+      @provider.should_receive(:import_products_from_cp).once.and_return(true)
+      @provider.should_receive(:delete_not_assigned_products).once.and_return(true)
+      @provider.should_receive(:delete_not_assigned_content).once.and_return(true)
 
       @provider.import_manifest "path_to_manifest"
     end
@@ -109,8 +86,9 @@ describe Provider do
       @provider = Provider.create(to_create_custom) do |p|
         p.organization = @organization
       end
-      @provider.set_product({ :name => "product1", :id => "product1_id", :productContent => [] })
-      @provider.set_product({ :name => "product2", :id => "product2_id", :productContent => [] })
+
+      @product1 = Product.create!({:cp_id => "product1_id", :name=> "product1", :productContent => [], :provider => @provider, :environments => [@organization.locker]})
+      @product2 = Product.create!({:cp_id => "product2_id", :name=> "product2", :productContent => [], :provider => @provider, :environments => [@organization.locker]})
     end
 
     it "should create sync for all it's products" do
@@ -168,7 +146,7 @@ describe Provider do
         subject.should_not be_valid
       end
     end
-    
+
   end
 
   context "Provider in valid state" do
@@ -202,11 +180,11 @@ describe Provider do
       @provider.destroy
       lambda{Provider.find(id)}.should raise_error(ActiveRecord::RecordNotFound)
     end
-    
+
   end
-  
+
   context "RH provider URL validation" do
-    
+
     before(:each) do
       @provider = Provider.new
       @provider.name = "url test"
@@ -214,80 +192,80 @@ describe Provider do
       @default_url = "http://boo.com"
       AppConfig.stub!(:REDHAT_REPOSITORY_URL).and_return(@default_url)
     end
-    
+
     context "should accept" do
-      
+
       it "'https://www.redhat.com'" do
         @provider.repository_url = "https://redhat.com"
         @provider.should be_valid
       end
-      
+
       it "'https://normallength.url/with/sub/directory/'" do
         @provider.repository_url = "https://normallength.url/with/sub/directory/"
         @provider.should be_valid
       end
-      
+
       it "'https://ltl.url/'" do
         @provider.repository_url = "https://ltl.url/"
-        @provider.should be_valid 
+        @provider.should be_valid
       end
-      
+
       it "'https://reallyreallyreallyreallyreallyextremelylongurl.com/with/lots/of/sub/directories/'" do
         @provider.repository_url = "https://reallyreallyreallyreallyreallyextremelylongurl.com/with/lots/of/sub/directories/over/kill/"
         @provider.should be_valid
       end
-      
+
       it "'http://repo.fedoraproject.org'" do
         @provider.repository_url = "http://repo.fedoraproject.org"
         @provider.should be_valid
       end
-      
+
       it "'http://lzap.fedorapeople.org/fakerepos/fewupdates/'" do
         @provider.repository_url = "http://lzap.fedorapeople.org/fakerepos/fewupdates/"
         @provider.should be_valid
       end
-      
+
       it "'https://dr.pepper.yum:123/nutrition/facts/'" do
         @provider.repository_url = "https://dr.pepper.yum:123/nutrition/facts/"
         @provider.should be_valid
       end
-      
+
     end
-    
+
     context "should refuse" do
-    
+
       it "blank url" do
         @provider.should be_valid
         @provider.repository_url = @default_url
       end
-      
+
       it "'notavalidurl'" do
         @provider.repository_url = "notavalidurl"
         @provider.should_not be_valid
       end
-      
+
       it "'https://'" do
         @provider.repository_url = "https://"
         @provider.should_not be_valid
       end
-    
+
       it "'https://.bogus'" do
         @provider.repository_url = "https://.bogus"
-        @provider.should_not be_valid 
+        @provider.should_not be_valid
       end
-      
+
       it "'https://something'" do
         @provider.repository_url = "https://something"
         @provider.should_not be_valid
       end
-      
+
       it "'repo.fedorahosted.org/reposity'" do
         @provider.repository_url = "repo.fedorahosted.org/reposity"
         @provider.should_not be_valid
       end
-        
+
     end
-    
+
   end
 
   context "URL with Trailing Space" do
@@ -300,19 +278,19 @@ describe Provider do
       @provider.repository_url.should eq("https://thisurlhasatrailingspacethatshould.com/be/trimmed/")
     end
   end
-  
+
   context "Custom provider URL validation" do
     before(:each) do
       @provider = Provider.new
       @provider.name = "url test"
       @provider.provider_type = Provider::CUSTOM
     end
-    
+
     it "shouldn't care about invalid url" do
       @provider.repository_url = "notavalidurl"
       @provider.should be_valid
     end
-    
+
   end
 
 end

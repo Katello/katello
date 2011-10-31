@@ -14,23 +14,19 @@
 
 $(document).ready(function() {
 
-
     $('#accordion').accordion({});
 
     $(".clickable").click(function(){
 
         $(this).parents(".content_group").children(".cs_content").slideToggle();
     
-        var arrow = $(this).parent().find('a').find('img');
+        var arrow = $(this).parent().find('img');
         if(arrow.attr("src").indexOf("collapsed") === -1){
-          arrow.attr("src", "../images/icons/expander-collapsed.png");
+          arrow.attr("src", "images/icons/expander-collapsed.png");
         } else {
-          arrow.attr("src", "../images/icons/expander-expanded.png");
+          arrow.attr("src", "images/icons/expander-expanded.png");
         }
     });
-
-
-
 
     $('.edit_textfield').each(function() {
         $(this).editable($(this).attr('data-url'), {
@@ -43,19 +39,18 @@ $(document).ready(function() {
             indicator   :  i18n.saving,
             tooltip     :  i18n.clickToEdit,
             placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
+            submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
             onsuccess   :  function(data) {
                var parsed = $.parseJSON(data);
                $(this).html(parsed.name);
                changeset_page.signal_rename($(this).attr("data-id"));
-
+			   notices.checkNotices();
             },
             onerror     :  function(settings, original, xhr) {
                              original.reset();
             }
         });
     });
-
 
     $('.edit_description').each(function() {
         $(this).editable($(this).attr('data-url'), {
@@ -67,12 +62,13 @@ $(document).ready(function() {
             indicator   :  i18n.saving,
             tooltip     :  i18n.clickToEdit,
             placeholder :  i18n.clickToEdit,
-            submitdata  :  {authenticity_token: AUTH_TOKEN},
+            submitdata  :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
             rows        :  10,
             cols        :  30,
             onsuccess   :  function(data) {
                   var parsed = $.parseJSON(data);
                   $(this).html(parsed.description);
+                  notices.checkNotices();
             },
             onerror     :  function(settings, original, xhr) {
                 original.reset();

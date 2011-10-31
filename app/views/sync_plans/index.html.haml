@@ -1,11 +1,10 @@
-= stylesheet :plan
-= javascript :edit, :form, :plan
-= include_common_i18n
-= include_editable_i18n
-
-
 #main.grid_16
   /%nav.subsubnav
   /  = render_navigation(:expand_all => true, :level => 3)
 .grid_16
   = two_panel(@plans, @panel_options)
+  
+= stylesheet :plan
+= javascript :edit, :plan
+= include_common_i18n
+= include_editable_i18n
