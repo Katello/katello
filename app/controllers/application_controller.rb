@@ -397,6 +397,7 @@ class ApplicationController < ActionController::Base
     
     options[:accessor] ||= "id"
     options[:columns] = options[:col]
+    options[:initial_action] ||= :edit
     
     if start == "0"
       options[:total_count] = @items.count
