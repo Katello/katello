@@ -501,6 +501,48 @@ describe SystemTemplate do
     end
   end
 
+  describe "distributions" do
+
+    let(:distribution) { RepoTestData.repo_distributions["id"] }
+    let(:repo) {{
+      :name => 'foo repo',
+      :id => 'foo repo',
+    }}
+
+    before :each do
+      Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
+      Pulp::Repository.stub(:all => [repo])
+    end
+
+    describe "#add_distribution" do
+
+      it "should make a record to the database about the assignment" do
+        @tpl1.add_distribution(distribution)
+        d = @tpl1.distributions(true).last
+        d.should_not be_new_record
+        d.distribution_pulp_id.should == distribution
+      end
+
+      it "should prevent from adding the same package group twice" do
+        @tpl1.add_distribution(distribution)
+        lambda { @tpl1.add_distribution(distribution) }.should raise_error(ActiveRecord::RecordInvalid)
+        @tpl1.distributions.count.should == 1
+      end
+    end
+
+    describe "#remove_distribution" do
+      before do
+        @tpl1.distributions.create!(:distribution_pulp_id=> distribution)
+      end
+
+      it "should remove a record from the database about the assignment" do
+        @tpl1.remove_distribution(distribution)
+        d = @tpl1.distributions(true).last
+        d.should be_nil
+      end
+    end
+  end
+
   describe "TDL export" do
 
     subject { Nokogiri.parse(@tpl1.export_as_tdl) }

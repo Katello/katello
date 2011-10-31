@@ -254,6 +254,26 @@ module RepoTestData
     }.with_indifferent_access
   end
 
+
+  def self.repo_distributions
+    {
+      "files" => ["/var/lib/pulp/repos/ACME_Corporation/Locker/isos/images/boot.iso",
+        "/var/lib/pulp/repos/ACME_Corporation/Locker/isos/images/efiboot.img",
+        "/var/lib/pulp/repos/ACME_Corporation/Locker/isos/images/efidisk.img",
+        "/var/lib/pulp/repos/ACME_Corporation/Locker/isos/images/pxeboot/vmlinuz",
+        "/var/lib/pulp/repos/ACME_Corporation/Locker/isos/images/pxeboot/initrd.img"],
+        "description" => "desc",
+        "family" => "Fedora",
+        "relativepath" => "",
+        "variant" => "Fedora",
+        "version" => "15",
+        "_ns" => "distribution",
+        "_id" => "distro-id",
+        "id" => "distro-id",
+        "url" => "https://localhost/pulp/ks/ACME_Corporation/Locker/isos/xxx/"
+    }.with_indifferent_access
+  end
+
   REPO_DISTRIBUTIONS = [
     {
     }
