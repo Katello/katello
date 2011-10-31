@@ -40,7 +40,7 @@
           %label #{_("Environment")}:
         .grid_5.la
           - if @environment.nil?
-            #{_("No environments are currently available in this organization.  Please add some to be able to create activation keys.")}
+            #{_("No environments are currently available in this organization.  Please add some to be able to create users.")}
           - else
             #env_box
               = environment_selector(:path_widget_class=>"grid_5", :path_entries_class=>"grid_5", :locker_clickable=>false,

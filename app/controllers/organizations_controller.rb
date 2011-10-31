@@ -37,7 +37,7 @@ class OrganizationsController < ApplicationController
      :edit => read_test,
      :update => edit_test,
      :destroy => delete_test,
-     :environments_partial => read_test,
+     :environments_partial => index_test,
     }
   end
 
@@ -141,7 +141,7 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find(params[:id])
     accessible_envs = @organization.environments
     setup_environment_selector(@organization, accessible_envs)
-    @environment = first_env_in_path(accessible_envs)
+    @environment = first_env_in_path(accessible_envs, false, @organization)
     render :partial=>"environments", :locals=>{:accessible_envs => accessible_envs}
   end
 

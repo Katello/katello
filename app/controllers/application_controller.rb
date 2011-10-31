@@ -450,9 +450,9 @@ class ApplicationController < ActionController::Base
     flash_to_headers
   end
 
-  def first_env_in_path accessible_envs, include_locker=false
+  def first_env_in_path accessible_envs, include_locker=false, organization = current_organization
     return current_organization.locker if include_locker && accessible_envs.member?(current_organization.locker)
-    current_organization.promotion_paths.each{|path|
+    organization.promotion_paths.each{|path|
       path.each{|env|
         if accessible_envs.member?(env)
           return env
