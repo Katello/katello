@@ -28,11 +28,19 @@ class katello::config {
     recurse => true;
   }
   
+  # disable SELinux  
   augeas {"temp_disable_selinux":
     context => "/files/etc/sysconfig/selinux",
     changes => ["set SELINUX permissive"],
     notify   => Exec["reload-apache2"]
   }
+  
+  exec {"temp_setenforce":
+    command => "setenforce 0",
+    path    => "/usr/sbin:/bin",
+    unless  => "getenforce |egrep -iq 'disable|Permissive'",
+  }
+  
   
 
   exec {"katello_db_migrate":
