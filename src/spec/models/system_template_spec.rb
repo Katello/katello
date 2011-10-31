@@ -506,7 +506,7 @@ describe SystemTemplate do
         subject.xpath("/template/repositories/repository/clientkey").text.should_not == nil
       end
 
-      pending #it_should_behave_like "valid tdl"
+      it_should_behave_like "valid tdl"
     end
   end
 
