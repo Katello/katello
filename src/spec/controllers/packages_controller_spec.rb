@@ -13,7 +13,18 @@
 require 'spec_helper'
 
 describe PackagesController do
+  include LoginHelperMethods
+  include LocaleHelperMethods
+  include OrganizationHelperMethods
+  include AuthorizationHelperMethods
+  include OrchestrationHelper
 
+
+    before (:each) do
+      set_default_locale
+      login_user
+
+    end
 
     describe "get auto_complete_package" do
       before (:each) do
@@ -21,7 +32,7 @@ describe PackagesController do
       end
 
       it 'should call pulp' do
-        get :auto_complete_package, :name => "a"
+        get :auto_complete_locker, :name => "a"
         response.should be_success
       end
     end
