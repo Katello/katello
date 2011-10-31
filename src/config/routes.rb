@@ -118,6 +118,8 @@ Src::Application.routes.draw do
     member do
       post :clear_helptips
       put :update_roles
+      get :edit_environment
+      put :update_environment
     end
   end
 

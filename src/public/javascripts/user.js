@@ -39,32 +39,18 @@ $(document).ready(function() {
         //taken out of user_edit, so it can be resused on accounts
         $(".multiselect").multiselect({"dividerLocation":0.5, "sortable":false});
 
-        //new code
         var org_selector = $('#org_id_org_id');
         org_selector.change(function(event) {
-        //var button = $('#save_user');
-        //button.addClass("disabled");
-
-        //event.preventDefault();
-       var refill = $('#env_box');
-       refill.hide();
-       //refill.show();
-       var selected_org_id = org_selector.val();
-
-       //        var form = $(this).closest("form");
-       var url = '/organizations/' + selected_org_id +  '/environments_partial';
-//        var dataToSend = form.serialize();
+        var refill = $('#env_box');
+        var selected_org_id = org_selector.val();
+        var url = '/organizations/' + selected_org_id +  '/environments_partial';
         $.ajax({
             type: "GET",
             url: url,
-//            data: dataToSend,
-//            cache: false,
-            success: function() {
-                  alert('Success!');
-//                KT.panel.panelAjax('', button.attr("data-url") ,$('#panel'));
-//                KT.panel.closeSubPanel($('#subpanel'));
-           },
-            error: function() {alert('Error');}
+            success: function(data) {
+                  refill.html(data);
+                  refill.show();
+           }
         });
    });
 
