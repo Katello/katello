@@ -38,8 +38,10 @@ describe FiltersController do
 
     describe "GET items" do
       it "requests filters using search criteria" do
+
         get :items
         response.should be_success
+        assigns(:items)
       end
     end
 
@@ -191,7 +193,7 @@ describe FiltersController do
       @organization = new_test_org
       @testuser = User.create!(:username=>"TestUser", :password=>"foobar")
       @filter = Filter.create!(:name => 'filter1', :organization => @organization)
-
+      @filter2 = Filter.create!(:name=>'filter2', :organization => @organization)
     end
     describe "GET index" do
       let(:action) {:index}
@@ -205,6 +207,27 @@ describe FiltersController do
 
       it_should_behave_like "protected action"
     end
+
+
+    describe "GET items" do
+      let(:action) {:items}
+      let(:req) {get 'items' }
+      let(:authorized_user) do
+        user_with_permissions { |u| u.can(:read, :filters, nil, @organization) }
+      end
+      let(:unauthorized_user) do
+        user_without_permissions
+      end
+      let(:on_success) do
+        assigns(:items).should_not include @filter2
+        assigns(:items).should include @filter
+      end
+
+      
+      it_should_behave_like "protected action"
+    end
+
+
 
     describe "PUT update" do
       let(:action) {:update}

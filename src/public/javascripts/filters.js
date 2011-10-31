@@ -11,18 +11,10 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
+
+KT.panel.list.registerPage('filters', { create : 'new_filter' });
+
 $(document).ready(function() {
-
-
-    $('#new_filter').live('submit', function(e) {
-        // disable submit to avoid duplicate clicks
-        $('input[id^=filter_save]').attr("disabled", true);
-
-        e.preventDefault();
-        $(this).ajaxSubmit({success:KT.filters.success_create , error:KT.filters.failure_create});
-    });
-
-  
 
     $("#container").delegate("#remove_packages", 'click', function(e){
         KT.filters.remove_packages();
