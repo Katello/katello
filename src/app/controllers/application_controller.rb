@@ -118,7 +118,7 @@ class ApplicationController < ActionController::Base
       if !details.nil?
         notice_dialog["notices"].push( _("#{self.class.helpers.link_to('Click here', notices_path)} for more details."))
       end
-
+      
       flash[level] = notice_dialog.to_json
 
       if persist
@@ -392,15 +392,34 @@ class ApplicationController < ActionController::Base
     "#{exception.class}: #{exception.message}\n" << exception.backtrace.join("\n")
   end
 
-  def render_panel_items(items, options)
+  def render_panel_items(items, options, search, start)
+    @items = items
+    
     options[:accessor] ||= "id"
-    options[:collection] = items
     options[:columns] = options[:col]
-    if options[:list_partial]
-      render :partial=>options[:list_partial], :locals=>options
-    else
-      render :partial=>"common/list_items", :locals=>options
+    
+    if start == "0"
+      options[:total_count] = @items.count
     end
+    
+    @items_searched = @items.search_for(search)
+    @items_offset = @items_searched.limit(current_user.page_size).offset(start)
+    
+    options[:total_results] = @items_searched.count
+    options[:collection] ||= @items_offset
+    
+    if options[:list_partial]
+      rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)
+    else
+      rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options) 
+    end
+    
+    render :json => {:html => rendered_html,
+                      :results_count => options[:total_count],
+                      :total_items => options[:total_results],
+                      :current_items => options[:collection].length }
+                      
+    retain_search_history
   end
 
   #produce a simple datastructure of a changeset for the browser
@@ -413,14 +432,15 @@ class ApplicationController < ActionController::Base
     end
 
     cs.involved_products.each{|product|
-      to_ret[:products][product.id] = {:id=> product.id, :name=>product.name, :provider=>product.provider.provider_type, 'package'=>[], 'errata'=>[], 'repo'=>[]}
+      to_ret[:products][product.id] = {:id=> product.id, :name=>product.name, :provider=>product.provider.provider_type,
+                                       'package'=>[], 'errata'=>[], 'repo'=>[], 'distribution'=>[]}
     }
 
     cs.products.each {|product|
       to_ret[:products][product.id][:all] =  true
     }
 
-    ['repo', 'errata', 'package'].each{ |type|
+    ['repo', 'errata', 'package', 'distribution'].each{ |type|
       cs.send(type.pluralize).each{|item|
         p item
         pid = item.product_id

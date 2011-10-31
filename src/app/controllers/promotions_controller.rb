@@ -119,24 +119,13 @@ class PromotionsController < ApplicationController
   end
 
   def errata
-    errata_hash = {}
+    filter = params.slice(:type, :severity).symbolize_keys
+    filter[:environment_id] = @environment.id
+    filter[:product_id] = @product.cp_id unless @product.nil?
 
-    if (@product)
-      products = [@product]
-    else
-      products = @environment.products
-    end
+    @errata = Glue::Pulp::Errata.filter(filter)
+    @errata.sort! {|a,b| a['title'] <=> b['title']}
 
-    products.each{|product|
-        product.repos(@environment).each{|repo|
-          repo.errata.each {|erratum|
-            errata_hash[erratum.id] = erratum if errata_hash[erratum.id].nil?
-          }
-        }
-    }
-
-    @errata = errata_hash.values
-    @errata.sort! {|a,b| a.title <=> b.title}
     offset = params[:offset]
     if offset
       offset = offset.to_i
@@ -151,16 +140,34 @@ class PromotionsController < ApplicationController
 
   def distributions
     # render the list of distributions
-    @distributions = []
+
+    @distributions = {}
     unless @product.nil?
       @product.repos(@environment).each do |repo|
         unless repo.distributions.nil?
-          @distributions += repo.distributions
+          repo.distributions.each{|distro|
+            @distributions[distro] = repo
+          }
         end
       end
     end
+    # sort the results by distro id.  this will order the distros when rendered...
+    @distributions.sort_by {|distro, repo| distro.id}
+
+    @next_env_distros = []
+    @next_env_repos = []
+    if @next_environment
+      @product.repos(@next_environment).each{|repo|
+        @next_env_repos << repo.id
+        repo.distributions.each{|distro|
+          @next_env_distros << distro.id
+        }
+      }
+    end
+
     render :partial=>"distributions"
   end
+  
 
   def system_templates
     # render the list of system_templates

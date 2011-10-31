@@ -1,7 +1,7 @@
 = javascript :filtertable
 
 = content_for :title do
-  #{@errata.title}
+  = @errata.id
 
 = content_for :navigation do
   = render_navigation(:items => promotion_errata_navigation, :expand_all => true, :level => 1)
@@ -17,7 +17,10 @@
         -@errata.pkglist[0][:packages].each do |pkg|
           %tr
             %td
-              = pkg[:filename]
+              - if pkg[:epoch] == "0"
+                = pkg[:name] + "-" + pkg[:version] + '-' + pkg[:release] + "." + pkg[:arch]
+              - else
+                = pkg[:name] + "-" + pkg[:epoch] + ":" + pkg[:version] + '-' + pkg[:release] + "." + pkg[:arch]
 
   - else
     %p #{_("There are no packages to display.")}

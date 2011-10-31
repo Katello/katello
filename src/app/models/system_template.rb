@@ -88,7 +88,7 @@ class SystemTemplate < ActiveRecord::Base
     json["parameters"].each_pair {|k,v| self.parameters[k] = v } if json["parameters"]
   end
 
-  def export_as_json
+  def export_as_hash
     tpl = {
       :name => self.name,
       :revision => self.revision,
@@ -103,14 +103,22 @@ class SystemTemplate < ActiveRecord::Base
     tpl
   end
 
-  def string_export
-    self.export_as_json.to_json
+  def export_as_json
+    self.export_as_hash.to_json
   end
 
 
   # Returns template in XML TDL format:
   # https://github.com/aeolusproject/imagefactory/blob/master/Documentation/TDL.xsd
   def export_as_tdl
+
+    begin
+      uebercert = Candlepin::Owner.get_ueber_cert(environment.organization.cp_key)
+    rescue RestClient::ResourceNotFound => e
+      uebercert = nil
+      Rails.logger.info "Uebercert for #{environment.organization.name} has not been generated. Using empty cert and key fields."
+    end
+
     xm = Builder::XmlMarkup.new
     xm.instruct!
     xm.template {
@@ -132,9 +140,12 @@ class SystemTemplate < ActiveRecord::Base
       }
       xm.repositories {
         self.products.each do |p|
-          pc = p.productContent.each do |pc|
-            xm.repository("name" => pc.content.name) {
-              xm.url p.repository_url(pc.content.contentUrl)
+          pc = p.repos(self.environment).each do |repo|
+            xm.repository("name" => repo.id) {
+              xm.url repo.uri
+              xm.persisted "No"
+              xm.clientcert uebercert[:cert] unless uebercert.nil?
+              xm.clientkey uebercert[:key] unless uebercert.nil?
             }
           end
         end
@@ -144,9 +155,8 @@ class SystemTemplate < ActiveRecord::Base
 
 
   def add_package package_name
-    if Katello::PackageUtils.is_nvr package_name
-      pack_attrs = Katello::PackageUtils.parse_nvre package_name
-      self.packages.create!(:package_name => pack_attrs[:name], :version => pack_attrs[:version], :release => pack_attrs[:release], :epoch => pack_attrs[:epoch])
+    if pack_attrs = Katello::PackageUtils.parse_nvrea_nvre(package_name)
+      self.packages.create!(:package_name => pack_attrs[:name], :version => pack_attrs[:version], :release => pack_attrs[:release], :epoch => pack_attrs[:epoch], :arch => pack_attrs[:arch])
     else
       self.packages.create!(:package_name => package_name)
     end
@@ -154,9 +164,8 @@ class SystemTemplate < ActiveRecord::Base
 
 
   def remove_package package_name
-    if Katello::PackageUtils.is_nvr package_name
-      pack_attrs = Katello::PackageUtils.parse_nvre package_name
-      package = self.packages.find(:first, :conditions => {:package_name => pack_attrs[:name], :version => pack_attrs[:version], :release => pack_attrs[:release], :epoch => pack_attrs[:epoch]})
+    if pack_attrs = Katello::PackageUtils.parse_nvrea_nvre(package_name)
+      package = self.packages.find(:first, :conditions => {:package_name => pack_attrs[:name], :version => pack_attrs[:version], :release => pack_attrs[:release], :epoch => pack_attrs[:epoch], :arch => pack_attrs[:arch]})
     else
       package = self.packages.find(:first, :conditions => {:package_name => package_name})
     end
@@ -386,7 +395,7 @@ class SystemTemplate < ActiveRecord::Base
   end
 
   def get_content_state
-    content = self.export_as_json
+    content = self.export_as_hash
     content.delete(:name)
     content.delete(:description)
     content.delete(:revision)

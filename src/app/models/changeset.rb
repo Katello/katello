@@ -25,7 +25,7 @@ class Changeset < ActiveRecord::Base
   PROMOTED = 'promoted'
   PROMOTING = 'promoting'
   STATES = [NEW, REVIEW, PROMOTING, PROMOTED]
-  
+
 
   validates_inclusion_of :state,
     :in => STATES,
@@ -76,81 +76,26 @@ class Changeset < ActiveRecord::Base
 
   def partial_products
     to_ret = []
-    to_ret =  to_ret + self.packages.collect{|pkg| pkg.product}
-    to_ret =  to_ret + self.errata.collect{|pkg| pkg.product}
-    to_ret =  to_ret + self.repos.collect{|pkg| pkg.product}
+    to_ret = to_ret + self.packages.collect{|pkg| pkg.product}
+    to_ret = to_ret + self.errata.collect{|pkg| pkg.product}
+    to_ret = to_ret + self.repos.collect{|pkg| pkg.product}
+    to_ret = to_ret + self.distributions.collect{|distro| distro.product}
     to_ret.uniq
   end
 
-  def calc_dependencies to_save = false
 
-    from_env = self.environment.prior
-    to_env   = self.environment
-
-    product_hash = {}
-
-    from_env.products.each{|prod|
-      cs_pkgs = ChangesetPackage.where({:changeset_id=>self.id, :product_id=>prod.id})
-      cs_errata = ChangesetErratum.where({:changeset_id=>self.id, :product_id=>prod.id})
-
-      #all the pkgIds to add to this product, use a hash so we can add errata pkgs
-      direct_pkgs = cs_pkgs.collect{|pkg| {:name=>pkg.display_name, :id=>pkg.package_id}}
-      #TODO get errata packages
-
-      # mapping of repo in from_env to its repo in to_env
-      repo_map = {} # {from_env => to_env}
-
-      prod.repos(from_env).each{|repo|
-        cloned = repo.get_clone to_env
-        repo_map[repo] = cloned if cloned
-      }
-
-      #get all the pkgs names
-      pkg_names = []
-
-      direct_pkgs.each{|pkg|
-        repo_map.keys.each{ |from_repo|
-          pkg_names << pkg[:name] if from_repo.has_package?(pkg[:id])
-        }
-      }
-
-      next if pkg_names.empty?
-
-      deps = Pulp::Package.dep_solve(pkg_names, repo_map.keys.collect{|repo| repo.id})
-      all_pkgs = Array.new
-      for package_name in deps.keys
-        for package in deps[package_name]
-          all_pkgs << Glue::Pulp::Package.new(package)
-        end
-      end
-
-      product_hash[prod.id] = []
-
-      #if the from_repo does have the dependency
-      # and the to_repo doesn't already have it (and its not already in the list), add it
-      repo_map.keys.each{|from_repo|
-        all_pkgs.each{|pkg|
-          if from_repo.has_package?(pkg.id) and !repo_map[from_repo].has_package?(pkg.id) and
-              !product_hash[prod.id].index(pkg)
-            product_hash[prod.id] << pkg
-          end
-        }
-
-      #now we have a list of package hashes (with id and name) for the product (product_hash[prod.id])
-      }
-    }
-
-    if to_save
-      product_hash.each{|prod_id, pkg_array|
-        pkg_array.each{|pkg|
-          self.dependencies << ChangesetDependency.new(:package_id => pkg.id, :display_name => pkg.nvrea,
-                                                       :product_id => prod_id, :changeset => self)
-        }
-      }
-      self.save()
+  def calc_dependencies
+    all_dependencies = []
+    not_included_products.each do |product|
+      dependencies = calc_dependencies_for_product product
+      all_dependencies += build_dependencies(product, dependencies)
     end
+    all_dependencies
+  end
 
-    product_hash
+  def calc_and_save_dependencies
+    self.dependencies = self.calc_dependencies
+    self.save()
   end
 
   # returns list of virtual permission tags for the current user
@@ -346,7 +291,7 @@ class Changeset < ActiveRecord::Base
 
   def promote_content
     update_progress! '0'
-    self.calc_dependencies(true)
+    self.calc_and_save_dependencies
 
     update_progress! '10'
 
@@ -362,6 +307,8 @@ class Changeset < ActiveRecord::Base
     promote_packages from_env, to_env
     update_progress! '90'
     promote_errata   from_env, to_env
+    update_progress! '95'
+    promote_distributions from_env, to_env
     update_progress! '100'
     self.promotion_date = Time.now
     self.state = Changeset::PROMOTED
@@ -404,16 +351,25 @@ class Changeset < ActiveRecord::Base
     async_tasks.flatten(1)
   end
 
+  def not_included_packages
+    self.packages.delete_if do |pack|
+      (products.uniq! or []).include? pack.product
+    end
+  end
+
+  def not_included_errata
+    self.errata.delete_if do |err|
+      (products.uniq! or []).include? err.product
+    end
+  end
+
 
   def promote_packages from_env, to_env
     #repo->list of pkg_ids
     pkgs_promote = {}
 
-    for pkg in self.packages
+    (not_included_packages + dependencies).each do |pkg|
       product = pkg.product
-
-      #skip packages that have already been promoted with the products
-      next if (products.uniq! or []).include? product
 
       product.repos(from_env).each do |repo|
         clone = repo.get_clone to_env
@@ -435,11 +391,8 @@ class Changeset < ActiveRecord::Base
     #repo->list of errata_ids
     errata_promote = {}
 
-    for err in self.errata
+    not_included_errata.each do |err|
       product = err.product
-
-      #skip errata that have already been promoted with the products
-      next if (products.uniq! or []).include? product
 
       product.repos(from_env).each do |repo|
         clone = repo.get_clone to_env
@@ -457,10 +410,36 @@ class Changeset < ActiveRecord::Base
   end
 
 
+  def promote_distributions from_env, to_env
+    #repo->list of distribution_ids
+    distribution_promote = {}
+
+    for distro in self.distributions
+      product = distro.product
+
+      #skip distributions that have already been promoted with the products
+      next if (products.uniq! or []).include? product
+
+      product.repos(from_env).each do |repo|
+        clone = repo.get_clone to_env
+
+        if (repo.has_distribution? distro.distribution_id) and (!clone.has_distribution? distro.distribution_id)
+          distribution_promote[clone] = distro.distribution_id
+        end
+      end
+    end
+
+    distribution_promote.each_pair do |repo, distro|
+      repo.add_distribution(distro)
+    end
+
+  end
+
+
   def uniquify_artifacts
     system_templates.uniq! unless self.system_templates.nil?
     products.uniq! unless self.products.nil?
-    [[:packages,:package_id],[:errata, :errata_id],[:repos, :repo_id]].each do |items, item_id|
+    [[:packages,:package_id],[:errata, :errata_id],[:repos, :repo_id],[:distributions, :distribution_id]].each do |items, item_id|
       unless self.send(items).nil?
         s = Set.new
         # for some reason uniq! with a closure didn''t work
@@ -472,6 +451,77 @@ class Changeset < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def not_included_products
+    products_ids = []
+    products_ids += self.packages.map { |p| p.product.cp_id }
+    products_ids += self.errata.map { |e| e.product.cp_id }
+    products_ids -= self.products.collect{ |p| p.cp_id }
+    products_ids.uniq.collect do |product_cp_id|
+      Product.find_by_cp_id(product_cp_id)
+    end
+  end
+
+  def not_included_repos product, environment
+    product_repos = product.repos(environment)
+    product_repos.delete_if do |product_repo|
+      not repos.index{ |cs_repo| cs_repo.repo_id == product_repo.id }.nil?
+    end
+    product_repos
+  end
+
+
+  def errata_for_dep_calc product
+    cs_errata = ChangesetErratum.where({:changeset_id=>self.id, :product_id=>product.id})
+    cs_errata.collect do |err|
+      Glue::Pulp::Errata.find(err.errata_id)
+    end
+  end
+
+
+  def packages_for_dep_calc product
+    packages = []
+
+    cs_pacakges = ChangesetPackage.where({:changeset_id=>self.id, :product_id=>product.id})
+    packages += cs_pacakges.collect do |pack|
+      Glue::Pulp::Package.find(pack.package_id)
+    end
+
+    packages += errata_for_dep_calc(product).collect do |err|
+      err.included_packages
+    end.flatten(1)
+
+    packages
+  end
+
+
+  def calc_dependencies_for_product product
+    from_env = self.environment.prior
+    to_env   = self.environment
+
+    package_names = packages_for_dep_calc(product).map{ |p| p.name }.uniq
+    return [] if package_names.empty?
+
+    from_repos = not_included_repos(product, from_env).map{ |r| r.id }
+
+    dependencies = Pulp::Package.dep_solve(package_names, from_repos)
+    dependencies
+  end
+
+  def build_dependencies product, dependencies
+    new_dependencies = []
+
+    dependencies.each_pair do |package_name, dep_packages|
+      dep_packages.each do |dep_package|
+        new_dependencies << ChangesetDependency.new(:package_id => dep_package['id'],
+                                                    :display_name => dep_package['name'],
+                                                    :product_id => product.id,
+                                                    :dependency_of => package_name,
+                                                    :changeset => self)
+      end
+    end
+    new_dependencies
   end
 
 end

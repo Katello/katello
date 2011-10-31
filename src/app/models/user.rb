@@ -18,6 +18,8 @@ class User < ActiveRecord::Base
   include Glue::Pulp::User if (AppConfig.use_cp and AppConfig.use_pulp)
   include Glue if AppConfig.use_cp
 
+  acts_as_reportable
+
   has_many :roles_users
   has_many :roles, :through => :roles_users
   belongs_to :own_role, :class_name => 'Role'

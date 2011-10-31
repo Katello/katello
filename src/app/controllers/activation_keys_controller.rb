@@ -54,21 +54,8 @@ class ActivationKeysController < ApplicationController
     }
   end
 
-  def index
-    begin
-      @activation_keys = ActivationKey.search_for(params[:search]).where(:organization_id => current_organization).limit(current_user.page_size)
-      retain_search_history
-    rescue Exception => error
-      errors error.to_s, {:level => :message, :persist => false}
-      @activation_keys = ActivationKey.search_for('')
-      render :index, :status => :bad_request and return
-    end
-  end
-
   def items
-    start = params[:offset]
-    @activation_keys = ActivationKey.search_for(params[:search]).where(:organization_id => current_organization).limit(current_user.page_size).offset(start)
-    render_panel_items @activation_keys, @panel_options
+    render_panel_items(ActivationKey.where(:organization_id => current_organization), @panel_options, params[:search], params[:offset])
   end
 
   def show
@@ -188,19 +175,22 @@ class ActivationKeysController < ApplicationController
   end
 
   def create
-    begin
-      @activation_key = ActivationKey.create!(params[:activation_key]) do |key|
-        key.organization = current_organization
-        key.user = current_user
-      end
-      notice _("Activation key '#{@activation_key['name']}' was created.")
-      render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
-
-    rescue Exception => error
-      Rails.logger.error error.to_s
-      errors error
-      render :text => error, :status => :bad_request
+    @activation_key = ActivationKey.create!(params[:activation_key]) do |key|
+      key.organization = current_organization
+      key.user = current_user
     end
+    notice _("Activation key '#{@activation_key['name']}' was created.")
+    
+    if ActivationKey.where(:id => @activation_key.id).search_for(params[:search]).include?(@activation_key)
+      render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
+    else
+      notice _("'#{@activation_key["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+      render :json => { :no_match => true }
+    end
+  rescue Exception => error
+    Rails.logger.error error.to_s
+    errors error
+    render :text => error, :status => :bad_request
   end
 
   def update
@@ -223,6 +213,10 @@ class ActivationKeysController < ApplicationController
         # template is being updated.. so return template name vs id...
         system_template = SystemTemplate.find(@activation_key.system_template_id)
         result = system_template.name
+      end
+
+      if not ActivationKey.where(:id => @activation_key.id).search_for(params[:search]).include?(@activation_key)
+        notice _("'#{@activation_key["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
       end
 
       render :text => escape_html(result)
@@ -278,6 +272,7 @@ class ActivationKeysController < ApplicationController
       :col => ['name'],
       :create => _('Key'), 
       :name => controller_display_name,
+      :ajax_load  => true,
       :ajax_scroll => items_activation_keys_path(),
       :enable_create => ActivationKey.manageable?(current_organization)}
   end
@@ -332,6 +327,7 @@ class ActivationKeysController < ApplicationController
   def retrieve_all_pools
     all_pools = {}
 
+    # TODO: should be current_organization.pools (see pool.rb for attributes)
     cp_pools = Candlepin::Owner.pools current_organization.cp_key
     cp_pools.each do |pool|
       p = OpenStruct.new
@@ -340,6 +336,7 @@ class ActivationKeysController < ApplicationController
       p.startDate = Date.parse(pool['startDate']).strftime("%m/%d/%Y")
       p.endDate = Date.parse(pool['endDate']).strftime("%m/%d/%Y")
 
+      # TODO: this could be moved into the pool.rb
       p.poolType = _('Physical')
       if pool.has_key? :attributes
         pool[:attributes].each do |attribute|

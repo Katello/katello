@@ -51,6 +51,15 @@ class ActivationKeyAPI(KatelloAPI):
         path = "/api/activation_keys/%s/" % keyId
         return self.server.PUT(path, {'activation_key': keyData})[1]
 
+    def add_pool(self, keyId, poolid):
+        path = "/api/activation_keys/%s/pools" % keyId
+        attrs = { "poolid": poolid }
+        return self.server.POST(path, attrs)[1]
+
+    def remove_pool(self, keyId, poolid):
+        path = "/api/activation_keys/%s/pools/%s" % (keyId, poolid)
+        return self.server.DELETE(path)[1]
+
     def delete(self, keyId):
         path = "/api/activation_keys/%s/" % keyId
         return self.server.DELETE(path)[1]

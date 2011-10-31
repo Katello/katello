@@ -67,8 +67,11 @@ class SystemTemplatesController < ApplicationController
   
   def items
     start = params[:offset]
-    @templates = SystemTemplate.readable(current_organization).search_for(params[:search]).limit(current_user.page_size).offset(start)
+    @templates = SystemTemplate.readable(current_organization).search_for(params[:search])
+    @panel_options[:num_items] = @templates.count
+    @templates = @templates.limit(current_user.page_size).offset(start)
     render_panel_items @templates, @panel_options
+    retain_search_history
   end
   
   def setup_options
@@ -85,15 +88,21 @@ class SystemTemplatesController < ApplicationController
   def object
     pkgs = @template.packages.collect{|pkg| {:name=>pkg.package_name}}
     products = @template.products.collect{|prod| {:name=>prod.name, :id=>prod.id}}
+
+    # Collect up the environments for all templates with this name
+    # TODO: Figure out user perms on templates, not sure why we dont have org on template
+    @templates = SystemTemplate.where(:name => @template.name)
+    environments = @templates.collect{|template| {:name=>template.environment.name, :id=>template.environment.id}}
     groups = @template.package_groups.collect{|grp| {:name=>grp.name}}
     to_ret = {:id=> @template.id, :name=>@template.name, :description=>@template.description,
-              :packages=>pkgs, :products=>products, :package_groups=>groups}
+              :packages=>pkgs, :products=>products, :package_groups=>groups, :environments => environments}
     render :json=>to_ret
   end
 
   def edit
     render :partial => "edit", :layout => "tupane_layout",
-           :locals => {:template=>@template, :editable=> SystemTemplate.manageable?(current_organization)}
+           :locals => {:template=>@template,
+                       :editable=> SystemTemplate.manageable?(current_organization)}
   end
 
 
@@ -189,10 +198,15 @@ class SystemTemplatesController < ApplicationController
   end
 
   def download
-    json = @template.string_export
-    send_data json,
-      :filename => "%s-export.json" % @template.name,
-      :type => "application/json"
+    # Grab the locker template so we can lookup name
+    env_template = SystemTemplate.where(:name => @template.name, :environment_id => params[:environment_id]).first
+    # Grab the env based on the ID passed in
+    environment = KTEnvironment.where(:id=>params[:environment_id]).where(:organization_id=>current_organization.id).first
+    # Translate to XML
+    xml = env_template.export_as_tdl
+    send_data xml,
+      :filename => "#{@template.name}-#{environment.name}-export.xml",
+      :type => "application/xml"
   end
 
   def new

@@ -117,13 +117,19 @@ module Pulp
   class Errata < PulpResource
 
     class << self
-      def find errata_id
+      def find(errata_id)
         response = get(errata_path + errata_id + "/", self.default_headers)
         JSON.parse(response.body).with_indifferent_access
       end
 
       def errata_path
         "/pulp/api/errata/"
+      end
+
+      def filter(filter)
+        path = "#{errata_path}?#{filter.to_param}"
+        response = get(path, self.default_headers)
+        JSON.parse(response.body).map(&:with_indifferent_access)
       end
     end
   end
@@ -169,15 +175,11 @@ module Pulp
       # Get all the Repositories known by Pulp
       # currently filtering against only one groupid is supported in PULP
       def all groupids=nil, search_params = {}
-        custom = self.repository_path
-        if groupids
-            search_params = search_params.merge(:groupid => groupids.join(","))
-        end
 
-        custom += "?#{search_params.to_query}" unless search_params.empty?
-        response = get(custom , self.default_headers)
-        body = response.body
-        JSON.parse(body)
+        search_query = get_repo_search_query(groupids, search_params)
+
+        response = get(self.repository_path + search_query , self.default_headers)
+        JSON.parse(response.body)
       rescue RestClientException => e
         return nil if e.code.to_i == 404 && !yell_on_404
         raise e
@@ -212,6 +214,10 @@ module Pulp
 
       def add_errata repo_id, errata_id_list
         body = post(Repository.repository_path + repo_id +"/add_errata/", {:errataid=>errata_id_list}.to_json, self.default_headers).body
+      end
+
+      def add_distribution repo_id, distribution_id
+        body = post(Repository.repository_path + repo_id +"/add_distribution/", {:distributionid=>distribution_id}.to_json, self.default_headers).body
       end
 
       def destroy repo_id
@@ -278,13 +284,14 @@ module Pulp
         JSON.parse(body)
       end
 
-      def errata repo_id
-        response = get(repository_path  + repo_id + "/errata/", self.default_headers)
+      def errata(repo_id, filter = {})
+        path = "#{repository_path}#{repo_id}/errata/?#{filter.to_param}"
+        response = get(path, self.default_headers)
         body = response.body
         JSON.parse(body)
       end
 
-      def distributions repo_id
+      def distributions(repo_id)
         response = get(repository_path + repo_id + "/distribution/", self.default_headers)
         body = response.body
         JSON.parse(body)
@@ -298,6 +305,27 @@ module Pulp
       def remove_filters repo_id, filter_ids
         response =  post(repository_path + repo_id + "/remove_filters/", {:filters => filter_ids}.to_json, self.default_headers)
         response.body
+      end
+
+      private
+      def get_repo_search_query groupids=nil, search_params = {}
+        search_query = ""
+
+        if not groupids.nil?
+          search_query = "?_intersect=groupid&" + groupids.collect do |gid|
+            "groupid="+gid
+          end.join("&")
+        end
+
+        if not search_params.empty?
+          if search_query.length == 0
+            search_query = "?" + search_params.to_query
+          else
+            search_query += "&" + search_params.to_query
+          end
+        end
+
+        search_query
       end
     end
   end

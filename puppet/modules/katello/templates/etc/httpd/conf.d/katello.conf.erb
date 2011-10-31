@@ -3,7 +3,7 @@ NameVirtualHost *:443
 
   ErrorLog /etc/httpd/logs/ssl_kt_error_log
   TransferLog /etc/httpd/logs/ssl_kt_access_log
-  LogLevel debug
+  LogLevel info
 
   ProxyRequests Off
   SSLEngine On
@@ -17,7 +17,7 @@ NameVirtualHost *:443
   ProxyTimeout 5400
 
   <Proxy balancer://thinservers>
-  <%- (processorcount +1).to_i.times do |i| -%>
+  <%- (processorcount.to_i + 1).times do |i| -%>
     <%= "BalancerMember http://127.0.0.1:#{scope.lookupvar('katello::params::thin_start_port').to_i + i}/katello" %>
   <%- end -%>
   </Proxy>

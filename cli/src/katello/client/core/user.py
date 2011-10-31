@@ -20,7 +20,7 @@ from gettext import gettext as _
 from katello.client.api.user import UserAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record
+from katello.client.core.utils import is_valid_record, convert_to_mime_type, attachment_file_name, save_report
 
 Config()
 
@@ -169,6 +169,25 @@ class Update(UserAction):
         print _("Successfully updated user [ %s ]") % username
         return os.EX_OK
 
+class Report(UserAction):
+    
+    description = _('user report')
+    
+    def setup_parser(self):
+        self.parser.add_option('--format', dest='format',
+                help=_("report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"))
+        
+    def run(self):
+        format = self.get_option('format')
+        report = self.api.report(convert_to_mime_type(format, 'text'))
+        
+        if format == 'pdf':
+            save_report(report[0], attachment_file_name(report[1], 'katello_users_report.pdf'))
+        else:
+            print report[0]
+
+        return os.EX_OK        
+        
 
 # user command ------------------------------------------------------------
 

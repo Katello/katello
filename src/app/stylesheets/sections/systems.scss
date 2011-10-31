@@ -5,17 +5,18 @@
     margin-bottom: 4px;
   }
   .tall {
-    .block{
-      @extend .block;
-      height: 70px;
-  
-      li {
-        padding: 0;
-        height: 1.2em;
-      }
-      .column_3 {
-        height: 35px;
-      }
+    @extend .block;
+    height: 70px;
+
+    li {
+      padding: 0;
+      height: 1.2em;
+    }
+    .column_3 {
+      height: 35px;
+    }
+    #new {
+        height: 25px;
     }
   }
 
@@ -129,5 +130,12 @@
             content: " ▼"
         }
     }
+  }
+  .delete_icon {
+    display: inline;
+    background: $circle_x_icon_black;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
   }
 }
