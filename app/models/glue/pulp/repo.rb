@@ -352,7 +352,7 @@ class Glue::Pulp::Repo
         :gpgUrl => "",
         :type => "yum",
         :label => self.name,
-        :vendor => "Custom"
+        :vendor => self.product.provider.provider_type
       },
       :enabled => true
     })
