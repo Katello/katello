@@ -96,7 +96,7 @@ and then run katello-configure to configure everything.
 
 %post
 # This overlays headpin onto katello
-cp -R %{homedir} %{katello_dir}
+cp -Rf %{homedir} %{katello_dir}
 
 %changelog
 * Mon Oct 31 2011 Bryan Kearney <bkearney@redhat.com> 0.1.100-1
