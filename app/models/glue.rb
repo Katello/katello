@@ -30,7 +30,7 @@ module Glue
 
     def on_save
       process queue
-      yield
+      yield if block_given?
       @orchestration_for = nil
     end
 
@@ -38,7 +38,7 @@ module Glue
       return false unless errors.empty?
 
       process(queue)
-      yield
+      yield if block_given?
       @orchestration_for = nil
     end
 

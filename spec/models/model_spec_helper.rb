@@ -91,6 +91,7 @@ EOKEY
     Candlepin::Product.stub!(:certificate).and_return("")
     Candlepin::Product.stub!(:key).and_return("")
     Pulp::Repository.stub!(:create).and_return([])
+    Pulp::Repository.stub!(:all).and_return([])
   end
 
   def disable_org_orchestration
@@ -107,6 +108,12 @@ EOKEY
     Pulp::Roles.stub!(:remove).and_return(true)
   end
 
+  def disable_filter_orchestration
+    Pulp::Filter.stub!(:create).and_return({})
+    Pulp::Filter.stub!(:destroy).and_return(200)
+    Pulp::Filter.stub(:find).and_return({})
+  end
+
   def disable_repo_orchestration
     Pulp::Repository.stub(:sync_history).and_return([])
 
@@ -116,6 +123,5 @@ EOKEY
     Pulp::Repository.stub(:find).with(RepoTestData::REPO_ID).and_return(RepoTestData::REPO_PROPERTIES)
     Pulp::Repository.stub(:find).with(RepoTestData::CLONED_REPO_ID).and_return(RepoTestData::CLONED_PROPERTIES)
   end
-
 
 end

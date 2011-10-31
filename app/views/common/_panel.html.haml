@@ -59,5 +59,6 @@
           = render_rows(:collection=>collection, :columns=>columns, :accessor=>accessor, :name=>name)
       - else
         %section
-          = render :partial=>"common/list_item", :collection=>collection, :as=>:item, :locals=>{:accessor=>accessor, :columns=>columns, :name=>name}
+          = render :partial=>"common/list_item", :collection=>collection, :as=>:item, :locals=>{:accessor=>accessor, :columns=>columns, :name=>name, :initial_action=>initial_action}
+
     %br.clear
