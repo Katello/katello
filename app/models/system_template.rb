@@ -103,7 +103,6 @@ class SystemTemplate < ActiveRecord::Base
       :distributions => self.distributions.map(&:distribution_pulp_id),
     }
     tpl[:description] = self.description if not self.description.nil?
-    tpl[:parent] = self.parent.name if not self.parent.nil?
     tpl
   end
 
@@ -292,6 +291,7 @@ class SystemTemplate < ActiveRecord::Base
 
   def promote from_env, to_env
     #TODO: promote parent templates recursively
+    self.parent.promote(from_env, to_env) unless self.parent.nil?
 
     promote_products from_env, to_env
     promote_packages from_env, to_env
@@ -344,7 +344,10 @@ class SystemTemplate < ActiveRecord::Base
     #clone the template
     tpl_copy = to_env.system_templates.find_by_name(self.name)
     tpl_copy.delete if not tpl_copy.nil?
-    self.copy_to_env to_env
+
+    new_tpl_copy = self.copy_to_env to_env
+    new_tpl_copy.parent = to_env.system_templates.find_by_name(self.parent.name) if self.parent
+    new_tpl_copy.save!
   end
 
   def promote_products from_env, to_env
@@ -411,6 +414,7 @@ class SystemTemplate < ActiveRecord::Base
     new_tpl.environment = env
     new_tpl.string_import(self.export_as_json)
     new_tpl.save!
+    new_tpl
   end
 
   #TODO: to be deleted after we switch to save parameters in foreman
