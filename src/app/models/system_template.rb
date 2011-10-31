@@ -150,7 +150,8 @@ class SystemTemplate < ActiveRecord::Base
       xm.description self.description unless self.description.nil?
       xm.packages {
         self.packages.each { |p| xm.package "name" => p.package_name }
-        # TODO package groups
+        self.package_groups.each { |p| xm.package "name" => "@#{p.name}" }
+        # TODO package groups categories ("unwrap" them here or pass them to IF?)
       }
       xm.repositories {
         self.products.each do |p|
