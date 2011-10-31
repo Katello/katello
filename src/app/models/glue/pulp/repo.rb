@@ -198,7 +198,7 @@ module Glue::Pulp::Repo
   end
 
   def package_groups search_args = {}
-    groups = ::Pulp::PackageGroup.all @id
+    groups = ::Pulp::PackageGroup.all self.pulp_id
     unless search_args.empty?
       groups.delete_if do |group_id, group_attrs|
         search_args.any?{ |attr,value| group_attrs[attr] != value }
@@ -208,7 +208,7 @@ module Glue::Pulp::Repo
   end
 
   def package_group_categories search_args = {}
-    categories = ::Pulp::PackageGroupCategory.all @id
+    categories = ::Pulp::PackageGroupCategory.all self.pulp_id
     unless search_args.empty?
       categories.delete_if do |category_id, category_attrs|
         search_args.any?{ |attr,value| category_attrs[attr] != value }
@@ -297,11 +297,11 @@ module Glue::Pulp::Repo
   end
 
   def cancel_sync
-    Rails.logger.info "Cancelling synchronization of repository #{@id}"
-    history = Pulp::Repository.sync_history(@id)
+    Rails.logger.info "Cancelling synchronization of repository #{self.pulp_id}"
+    history = Pulp::Repository.sync_history(self.pulp_id)
     return if (history.nil? or history.empty?)
 
-    Pulp::Repository.cancel(@id.to_s, history[0][:id])
+    Pulp::Repository.cancel(self.pulp_id, history[0][:id])
   end
 
   def add_packages pkg_id_list

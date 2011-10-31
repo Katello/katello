@@ -42,7 +42,6 @@ module Glue::Candlepin::Product
 
     valid_name = attrs['name'].gsub(/[^a-z0-9\-_ ]/i,"")
     attrs = attrs.merge('name' => valid_name)
-
     product = Product.new(attrs, &block)
     product.productContent_will_change!
     product.productContent = product.build_productContent(productContent_attrs)
@@ -57,23 +56,23 @@ module Glue::Candlepin::Product
 
   module InstanceMethods
 
-    def initialize(attrs = nil)
-      unless attrs.nil?
-        attributes_key = attrs.has_key?(:attributes) ? :attributes : 'attributes'
-        if attrs.has_key?(attributes_key)
-          attrs[:attrs] = attrs[attributes_key]
-          attrs.delete(attributes_key)
+    def initialize(attribs = nil)
+      unless attribs.nil?
+        attributes_key = attribs.has_key?(:attributes) ? :attributes : 'attributes'
+        if attribs.has_key?(attributes_key)
+          attribs[:attrs] = attribs[attributes_key]
+          attribs.delete(attributes_key)
         end
 
-        @productContent = [] unless attrs.has_key?(:productContent)
+        @productContent = [] unless attribs.has_key?(:productContent)
 
         # ugh. hack-ish. otherwise we have to modify code every time things change on cp side
-        attrs = attrs.reject do |k, v|
+        attribs = attribs.reject do |k, v|
           !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
         end
       end
 
-      super(attrs)
+      super(attribs)
     end
 
     def build_productContent(attrs)
@@ -112,6 +111,7 @@ module Glue::Candlepin::Product
     def convert_from_cp_fields(cp_json)
       ar_safe_json = cp_json.has_key?(:attributes) ? cp_json.merge(:attrs => cp_json.delete(:attributes)) : cp_json
       ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| Glue::Candlepin::ProductContent.new pc }
+      ar_safe_json[:attrs] ||=[]
       ar_safe_json.except('id')
     end
 
