@@ -31,9 +31,9 @@ describe Api::ProductsController do
   let(:product_id) { '1234' }
   let(:repositories) do
     [
-        { :id => "1" },
-        { :id => "2" }
-    ].map {|repo_attrs| Glue::Pulp::Repo.new(repo_attrs)}
+        { :pulp_id => "1", :id => 1 },
+        { :pulp_id => "2", :id => 2  }
+    ].map {|repo_attrs| Repository.new(repo_attrs)}
   end
 
   before (:each) do

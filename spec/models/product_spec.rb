@@ -36,6 +36,7 @@ describe Product do
     ProductTestData::SIMPLE_PRODUCT_WITH_INVALID_NAME.merge!({:provider => @provider, :environments => [@organization.locker]})
     ProductTestData::PRODUCT_WITH_ATTRS.merge!({:provider => @provider, :environments => [@organization.locker]})
     ProductTestData::PRODUCT_WITH_CONTENT.merge!({:provider => @provider, :environments => [@organization.locker]})
+    ProductTestData::PRODUCT_WITH_CP_CONTENT.merge!({:provider => @provider, :environments => [@organization.locker]})
   end
 
   describe "create product" do
@@ -202,25 +203,8 @@ describe Product do
       end
 
       it "should preserve repository metadata" do
-        Repository.should_receive(:create!).once.with(hash_including(:preserve_metadata => true))
-        p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
-        p.should_receive(:set_repos).once
-        p.orchestration_for = :import_from_cp
-        p.save!
-      end
-
-      it "should set content type" do
-        Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:content_type => "yum"))
-        p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
-        p.orchestration_for = :import_from_cp
-        p.save!
-      end
-
-     it "prepares valid name for Pulp repo" do
-          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33'))
-          p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
-          p.orchestration_for = :import_from_cp
-          p.save!
+        Repository.should_receive(:create!).once.with(hash_including(:name => 'some-name33', :preserve_metadata => true, :content_type => "yum"))
+        Glue::Candlepin::Product.import_from_cp(ProductTestData::PRODUCT_WITH_CP_CONTENT)
       end
 
      context "product has more archs" do
@@ -233,20 +217,18 @@ describe Product do
             end
            ret
          end
+
          p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
          p.stub(:attrs => [{:name => 'arch', :value => 'x86_64,i386'}])
          p.orchestration_for = :import_from_cp
          p.save!
+         p.setup_repos
        end
 
        it "should create repo for each arch" do
-         Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 6Server x86_64'))
-         Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 6Server i386'))
-       end
-
-       it "should substitute $basearch in the contentUrl for the repo feed" do
-         expected_feed = "#{@provider.repository_url}/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage/"
-         Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:feed => expected_feed)).and_return(@repo)
+        expected_feed = "#{@provider.repository_url}/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage/"
+        Repository.should_receive(:create!).once.with(hash_including(:feed => expected_feed, :name => 'some-name33 6Server x86_64'))
+        Repository.should_receive(:create!).once.with(hash_including(:name => 'some-name33 6Server i386'))
        end
      end
 
