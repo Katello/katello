@@ -212,6 +212,20 @@ describe SystemTemplate do
       @tpl1.promote(@organization.locker, @environment)
     end
 
+    it "should keep the content of the cloned template" do
+
+      @prod1.environments << @to_env
+      @tpl1.products << @prod1
+      @tpl1.revision = 83
+
+      @tpl1.stub(:promote_products)
+      @tpl1.stub(:promote_packages)
+
+      @tpl1.promote(@from_env, @to_env)
+      cloned_tpl = @to_env.system_templates.first
+      cloned_tpl.export_as_json.should == @tpl1.export_as_json
+    end
+
   end
 
 
