@@ -134,12 +134,13 @@ describe SystemTemplate do
       @tpl1.stub(:copy_to_env)
       @tpl1.stub(:get_promotable_packages).and_return([package_1])
 
-      repo = Glue::Pulp::Repo.new(repo_1)
-      clone = Glue::Pulp::Repo.new(repo_2)
+      repo = Repository.new(repo_1)
+      clone = Repository.new(repo_2)
       repo.stub(:is_cloned_in?).and_return(true)
       repo.stub(:get_clone).and_return(clone)
 
-      Glue::Pulp::Repo.stub(:find).with(package_1[:repo_id]).and_return(repo)
+      Repository.stub(:find).with(package_1[:repo_id]).and_return(repo)
+      Repository.stub(:find_by_pulp_id).with(package_1[:repo_id]).and_return(repo)
       clone.should_receive(:add_packages).with([package_1[:id]])
 
       @tpl1.promote(@from_env, @to_env)
@@ -151,10 +152,11 @@ describe SystemTemplate do
       @tpl1.stub(:copy_to_env)
       @tpl1.stub(:get_promotable_packages).and_return([package_1])
 
-      repo = Glue::Pulp::Repo.new(repo_1)
+      repo = Repository.new(repo_1)
       repo.stub(:is_cloned_in?).and_return(false)
 
-      Glue::Pulp::Repo.stub(:find).with(package_1[:repo_id]).and_return(repo)
+      Repository.stub(:find).with(package_1[:repo_id]).and_return(repo)
+      Repository.stub(:find_by_pulp_id).with(package_1[:repo_id]).and_return(repo)
       Product.stub(:find_by_cp_id).with(package_1[:product_id]).and_return(@prod1)
 
       @prod1.should_receive(:promote).with(@from_env, @to_env).and_return([])
@@ -427,7 +429,6 @@ describe SystemTemplate do
 
 
   describe "package group categories" do
-
     let(:pg_category_name) { RepoTestData.repo_package_group_categories.values[0]["name"] }
     let(:missing_pg_category_name) { "missing_pgc" }
     let(:repo) {{
@@ -488,7 +489,7 @@ describe SystemTemplate do
     describe "repositories" do
       before do
         disable_repo_orchestration
-        @prod1.stub(:repos => [Glue::Pulp::Repo.new(RepoTestData::REPO_PROPERTIES)])
+        @prod1.stub(:repos => [Repository.new(RepoTestData::REPO_PROPERTIES)])
         @tpl1.products << @prod1
       end
 
