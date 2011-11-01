@@ -1,0 +1,31 @@
+
+.grid_16
+  = help_tip_button
+  = help_tip(_("Package Filters allow you to blacklist packages from being promoted into subsequent environments. " + |
+             "Simply create a filter and add either a package name or regular expression to the filter.  " + |
+             "You can associate the filter with entire products or individual repositories within any product.")) |
+
+.grid_16#main
+  = two_panel(@filters, @panel_options)
+
+= javascript :edit, :form, :filters
+= include_common_i18n
+= include_editable_i18n
+
+
+= javascript do
+  :javascript
+
+    KT.products = $.parseJSON('#{escape_javascript(@product_hash.to_json)}');
+    localize({
+      "package_search_text": '#{_("Search available package names...")}',
+      "product_search_text": '#{_("Search available product names...")}',
+      "no_products_repos"  : '#{_("No products or repositories are currently associated.")}',
+      "all_repos" : '#{_("All Repositories")}',
+      "select_repos" : '#{_("Select Repositories: ")}',
+      "x_of_y_repos" : function(x,y){ return '#{_("(%X of %Y repositories selected)")}'.replace("%X", x).replace("%Y", y); },
+      "entire_selected" : '#{_("(Entire product selected)")}',
+      "no_packages" : '#{_("No packages are currently filtered.")}'
+
+      });
+

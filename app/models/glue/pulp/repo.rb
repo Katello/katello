@@ -9,7 +9,6 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-
 require 'resources/pulp'
 
 module Glue::Pulp::Repo
@@ -27,14 +26,14 @@ module Glue::Pulp::Repo
                         Pulp::Repository.find(pulp_id)
                       end
                     }
-      lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca, :source,
+      lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca, :source, :filters,
                 :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type,
                 :initializer => lambda {
                   if pulp_id
                       pulp_repo_facts
                   end
                 }
-      attr_accessor :clone_from, :clone_response
+      attr_accessor :clone_from, :clone_response, :clone_filters, :clone_content
     end
   end
 
@@ -103,11 +102,11 @@ module Glue::Pulp::Repo
     })
   end
 
-  def promote(to_environment, product)
-    key = EnvironmentProduct.find_or_create(to_environment, product)
-    Repository.create!(:environment_product => key, :clone_from => self)
+  def promote(to_environment, clone_content, filters = [])
+    key = EnvironmentProduct.find_or_create(to_environment, self.product)
+    Repository.create!(:environment_product => key, :clone_from => self,
+                            :clone_content => clone_content, :clone_filters => filters)
   end
-
 
   def setup_repo_clone
     if clone_from
@@ -116,12 +115,12 @@ module Glue::Pulp::Repo
       self.arch = clone_from.arch
       self.name = clone_from.name
       self.feed = clone_from.feed
-      self.groupid = Glue::Pulp::Repos.groupid(environment_product.product, environment_product.environment)
+      self.groupid = Glue::Pulp::Repos.groupid(environment_product.product, environment_product.environment, clone_content)
     end
   end
 
   def clone_repo
-    self.clone_response = [Pulp::Repository.clone_repo(clone_from, self)]
+    self.clone_response = [Pulp::Repository.clone_repo(clone_from, self, "parent", clone_filters)]
     x = self.clone_response
   end
 
@@ -363,19 +362,24 @@ module Glue::Pulp::Repo
     Organization.find(self.organization_id)
   end
 
-  def environment
-    KTEnvironment.find(self.environment_id)
-  end
-
-  def product
-    Product.find_by_cp_id(self.product_id)
-  end
-
   def content
     if not self.content_id.nil?
       Candlepin::Content.get(self.content_id)
     end
   end
+
+  def self.repo_id product_name, repo_name, env_name, organization_name
+    [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
+  end
+
+  def add_filters filter_ids
+    ::Pulp::Repository.add_filters self.pulp_id, filter_ids
+  end
+
+  def remove_filters filter_ids
+    ::Pulp::Repository.remove_filters self.pulp_id, filter_ids
+  end
+
 
   # Convert array of Repo objects to Ruby Hash in the form of repo.id => repo_object for fast searches.
   #

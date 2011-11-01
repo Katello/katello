@@ -19,4 +19,12 @@ class Repository < ActiveRecord::Base
   validates_uniqueness_of :name, :scope => :environment_product_id, :message => N_("must be unique within an organization and product")
   validates :pulp_id, :presence => true, :uniqueness => true
   validates :name, :presence => true
+
+  def product
+    self.environment_product.product
+  end
+
+  def environment
+    self.environment_product.environment
+  end
 end
