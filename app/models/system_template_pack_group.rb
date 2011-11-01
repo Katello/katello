@@ -13,8 +13,9 @@
 class PackGroupValidator < ActiveModel::Validator
   def validate(record)
     
-    if record.system_template.environment.package_groups({'name' => record.name}).length == 0
-      record.errors[:base] <<  _("Package group '#{record.name}' not found in the Locker environment")
+    env = record.system_template.environment
+    if env.package_groups({'name' => record.name}).length == 0
+      record.errors[:base] <<  _("Package group '#{record.name}' not found in the #{env.name} environment")
     end
   end
 end
