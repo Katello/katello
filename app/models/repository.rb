@@ -26,4 +26,8 @@ class Repository < ActiveRecord::Base
   def environment
     self.environment_product.environment
   end
+
+  def organization
+    self.environment.organization
+  end
 end
