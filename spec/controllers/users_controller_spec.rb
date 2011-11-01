@@ -19,12 +19,11 @@ describe UsersController do
   include AuthorizationHelperMethods
   include OrchestrationHelper
 
-    before(:each) do
-      disable_user_orchestration
-      login_user
-      set_default_locale
-    end
-
+  before(:each) do
+    disable_user_orchestration
+    login_user
+    set_default_locale
+  end
 
   describe "create a user" do
 
@@ -35,22 +34,35 @@ describe UsersController do
 
     it "should create a user correctly" do
       name = "foo-user"
-      post 'create', {:user => {:username=>name, :password=>"password1234"}}
+      post 'create', {:user => {:username=>name, :password=>"password1234", :email=>"#{name}@somewhere.com"}}
       response.should be_success
       User.where(:username=>name).should_not be_empty
     end
     
     it "should error if no username " do
-      post 'create', {:user => {:username=>"", :password=>"password1234"}}
+      post 'create', {:user => {:username=>"", :password=>"password1234", :email=> "user@somewhere.com"}}
       response.should_not be_success
       
-      post 'create', {:user => { :password=>"password1234"}}
+      post 'create', {:user => { :password=>"password1234", :email=> "user@somewhere.com"}}
       response.should_not be_success
-      
     end
-    
+
+    it "should error if no password " do
+      post 'create', {:user => {:username=>"testuser", :password=>"", :email=> "user@somewhere.com"}}
+      response.should_not be_success
+      
+      post 'create', {:user => {:username=>"testuser", :email=> "user@somewhere.com"}}
+      response.should_not be_success
+    end
+
+    it "should error if no email address " do
+      post 'create', {:user => {:username=>"testuser", :password=>"password1234", :email=>""}}
+      response.should_not be_success
+      
+      post 'create', {:user => {:username=>"testuser", :password=>"password1234"}}
+      response.should_not be_success
+    end
   end
-  
   
   describe "edit a user" do
     
@@ -62,6 +74,7 @@ describe UsersController do
       @user = User.new
       @user.username = "foo-user"
       @user.password = "password"
+      @user.email = "foo-user@somewhere.com"
       @user.save 
       allow 'Test', ["create", "read","delete"], "product", ["RHEL-4", "RHEL-5","Cluster","ClusterStorage","Fedora"]
     end    
@@ -72,6 +85,13 @@ describe UsersController do
        User.authenticate!(@user.username, "password1234").should be_true
     end
     
+    it "should be allowed to change the email address" do 
+       new_email = "foo-user@somewhere-new.com"
+       put 'update', {:id => @user.id, :user => {:email=>new_email}}
+       response.should be_success
+       assert !User.where(:id => @user.id, :email => new_email).empty?
+    end
+
     it "should not change the username" do 
        put 'update', {:id => @user.id, :user => {:username=>"FOO"}}
        response.should be_success
@@ -89,9 +109,7 @@ describe UsersController do
        response.should be_success
        #should still have self role
        assert User.find(@user.id).roles.size == 1
-
     end
-
   end  
   
   describe "set helptips" do
@@ -100,6 +118,7 @@ describe UsersController do
       @user = User.new
       @user.username = "foo-user"
       @user.password = "password"
+      @user.email = "foo-user@somewhere.com"
       @user.helptips_enabled = true
       @user.save!
       @user.stub(:allowed_to?).and_return true
@@ -136,18 +155,13 @@ describe UsersController do
       post 'enable_helptip', {:key=>"apples"}  
       user = User.find(@user.id)
       assert user.help_tips.size == 1          
-      
     end
-        
-  
-    
   end  
-
 
   describe "rules" do
     before (:each) do
       @organization = new_test_org
-      @testuser = User.create!(:username=>"TestUser", :password=>"foobar")
+      @testuser = User.create!(:username=>"TestUser", :password=>"foobar", :email=>"TestUser@somewhere.com")
     end
     describe "GET index" do
       let(:action) {:items}
@@ -166,7 +180,6 @@ describe UsersController do
     end
 
     describe "update user put" do
-
       let(:action) {:update}
       let(:req) do
         put 'update', :id => @testuser.id, :password=>"barfoo"
@@ -180,7 +193,4 @@ describe UsersController do
       it_should_behave_like "protected action"
     end
   end
-
-
-
 end
