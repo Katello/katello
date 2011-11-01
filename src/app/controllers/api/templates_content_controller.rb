@@ -79,12 +79,25 @@ class Api::TemplatesContentController < Api::ApiController
     render :text => _("Removed package group category '#{params[:id]}'")
   end
 
+  def add_distribution
+    @template.add_distribution(params[:id])
+    @template.save!
+    render :text => _("Added distribution '#{params[:id]}'")
+  end
+
+  def remove_distribution
+    @template.remove_distribution(params[:id])
+    @template.save!
+    render :text => _("Removed distribution '#{params[:id]}'")
+  end
+
+  private
+
   def find_template
     @template = SystemTemplate.find(params[:template_id])
     raise HttpErrors::NotFound, _("Couldn't find template '#{params[:template_id]}'") if @template.nil?
     raise HttpErrors::BadRequest, _("Templates can be updated only in a Locker environment") if not @template.environment.locker?
     @template
   end
-
 
 end

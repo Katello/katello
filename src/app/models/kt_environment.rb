@@ -214,6 +214,11 @@ class KTEnvironment < ActiveRecord::Base
     Katello::PackageUtils.find_latest_packages packs
   end
 
+  def get_distribution id
+    self.products.collect do |prod|
+      prod.get_distribution(self, id)
+    end.flatten(1)
+  end
 
   #Permissions
   scope :changesets_readable, lambda {|org| authorized_items(org, [:promote_changesets, :manage_changesets, :read_changesets])}

@@ -20,6 +20,8 @@ module Errors
 
   class TemplateContentException < StandardError; end
 
+  class TemplateExportException < StandardError; end
+
   class ChangesetContentException < StandardError; end
 
   class ConflictException < StandardError; end
