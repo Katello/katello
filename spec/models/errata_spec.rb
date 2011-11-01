@@ -21,10 +21,9 @@ describe Glue::Pulp::Errata do
     @organization = Organization.create!(:name => 'test_organization', :cp_key => 'test_organization')
     @locker = @organization.locker
 
-    @repo = Glue::Pulp::Repo.new(:id => "repo-123")
-    @repo2 = Glue::Pulp::Repo.new(:id => "repo-456")
+    @repo = Repository.new(:pulp_id => "repo-123")
+    @repo2 = Repository.new(:pulp_id => "repo-456")
     @env = KTEnvironment.create!(:name => "Dev", :prior => @organization.locker, :organization_id => @organization.id)
-    Glue::Pulp::Repo.stub(:new => @repo)
   end
   
   context "Find errata" do
@@ -57,6 +56,7 @@ describe Glue::Pulp::Errata do
     it "should be able to search all errata of given type and repo" do
       filter = { :type => "security", :repoid => "repo-123" }
       Pulp::Repository.should_receive(:errata).once.with(@repo.id, filter.except(:repoid)).and_return(RepoTestData::REPO_ERRATA[0..0])
+      Repository.should_receive(:find_by_pulp_id).once.with(@repo.pulp_id).and_return(@repo)
       Glue::Pulp::Errata.filter(filter).should == RepoTestData::REPO_ERRATA[0..0]
     end
 
