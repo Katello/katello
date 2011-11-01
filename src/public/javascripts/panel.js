@@ -707,6 +707,9 @@ KT.panel.list = (function () {
                     cache: false,
                     success: function (data) {
                         var expand_list = $('.expand_list').find('section');
+                        if (expand_list.length == 0) {
+                            expand_list = $('.expand_list');
+                        }
                         retrievingNewContent = false;
                         expand_list.append(data['html']);
                         $('.list-spinner').remove();

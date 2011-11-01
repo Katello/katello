@@ -34,8 +34,6 @@ class PromotionsController < ApplicationController
     }
   end
 
-
-
   def section_id
     'contents'
   end
@@ -45,7 +43,6 @@ class PromotionsController < ApplicationController
     setup_environment_selector(current_organization, access_envs)
     @products = @environment.products.readable(current_organization)
     @products = @products.reject{|p| p.repos(@environment).empty?}.sort{|a,b| a.name <=> b.name}
-    
 
     @changesets = @next_environment.working_changesets if (@next_environment && @next_environment.changesets_readable?)
     @changeset_product_ids = @changeset.products.collect { |p| p.cp_id } if @changeset
@@ -62,60 +59,62 @@ class PromotionsController < ApplicationController
   end
 
 
-
-
   # AJAX Calls
 
   def packages
-      package_hash = {}
-      @product.repos(@environment).each{|repo|
+    package_hash = {}
+    @product.repos(@environment).each{|repo|
+      repo.packages.each{|pkg|
+        package_hash[pkg.id] = pkg if package_hash[pkg.id].nil?
+      }
+    }
+
+    @next_env_pkgs = []
+    if @next_environment
+      @product.repos(@next_environment).each{|repo|
         repo.packages.each{|pkg|
-          package_hash[pkg.id] = pkg if package_hash[pkg.id].nil?
+          @next_env_pkgs << pkg.id
         }
       }
+    end
 
-     @next_env_pkgs = []
-     if @next_environment
-       @product.repos(@next_environment).each{|repo|
-          repo.packages.each{|pkg|
-            @next_env_pkgs << pkg.id
-          }
-        }
-     end
+    @packages = package_hash.values
+    @packages.sort! {|a,b| a.nvrea <=> b.nvrea}
+    offset = params[:offset]
+    if offset
+      render :text=>"" and return if @packages.empty?
 
-      @packages = package_hash.values
-      @packages.sort! {|a,b| a.nvrea <=> b.nvrea}
-      offset = params[:offset]
-      offset = offset.to_i if offset
-      if offset
-        @packages = @packages[offset..offset+current_user.page_size] || []
-        render :text=>"" and return if @packages.empty?
-        render :partial=>"package_items" and return
-      else
-        @packages = @packages[0..current_user.page_size]
-      end
-
-      render :partial=>"packages"
+      options = {:list_partial => 'promotions/package_items'}
+      render_panel_items(@packages, options, nil, offset)
+    else
+      @packages = @packages[0..current_user.page_size]
+      render :partial=>"packages", :locals=>{:collection => @packages}
+    end
   end
 
 
   def repos
     @repos = @product.repos(@environment)
-    offset = params[:offset]
-    if offset
-      @repos = @repos[offset..offset+current_user.page_size]
-      render :text=>"" and return if @repos.empty?
-    else
-      @repos = @repos[0..current_user.page_size]
-    end
+    @repos.sort! {|a,b| a.name <=> b.name}
 
     @next_env_repos = []
-     if @next_environment
-       @product.repos(@next_environment).each{|repo|
-          @next_env_repos << repo.id
-        }
-     end
-    render :partial=>"repos"
+    if @next_environment
+      @product.repos(@next_environment).each{|repo|
+        @next_env_repos << repo.id
+      }
+    end
+
+    offset = params[:offset]
+    if offset
+      render :text=>"" and return if @repos.empty?
+
+      options = {:list_partial => 'promotions/repo_items'}
+      render_panel_items(@repos, options, nil, offset)
+    else
+      @repos = @repos[0..current_user.page_size]
+      render :partial=>"repos", :locals=>{:collection => @repos}
+    end
+
   end
 
   def errata
@@ -128,14 +127,14 @@ class PromotionsController < ApplicationController
 
     offset = params[:offset]
     if offset
-      offset = offset.to_i
-      @errata = @errata[offset..offset+current_user.page_size]
       render :text=>"" and return if @errata.empty?
-      render :partial=>"errata_items" and return 
+
+      options = {:list_partial => 'promotions/errata_items'}
+      render_panel_items(@errata, options, nil, offset)
     else
       @errata = @errata[0..current_user.page_size]
+      render :partial=>"errata", :locals=>{:collection => @errata}
     end
-    render :partial=>"errata"
   end
 
   def distributions
