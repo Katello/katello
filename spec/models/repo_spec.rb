@@ -215,35 +215,27 @@ describe Glue::Pulp::Repo do
 
 
   context "Get referenced objects" do
-
-    before :each do
-      stub_reference_objects
-    end
-
     it "should return correct environment" do
-      @repo.environment.should == @env
+      @repo.environment.should == @organization.locker
     end
 
     it "should return correct organization" do
-      @repo.organization.should == @org
+      @repo.organization.should == @organization
     end
 
     it "should return correct product" do
-      @repo.product.should == @product
+      @repo.product.should == @product1
     end
 
   end
 
   describe "Cloned repo id" do
     before do
-      stub_reference_objects
-      @to_env = mock(KTEnvironment, {:id => RepoTestData::CLONED_REPO_ENV_ID, :name => 'Prod', :organization => @org})
-      #@repo.stub(:product => @product)
+      @to_env = KTEnvironment.create!(:name=>"Prod", :organization => @organization, :prior => @organization.locker)
     end
-
     it "should be composed from various attributes to be uniqe" do
       cloned_repo_id = @repo.clone_id(@to_env)
-      cloned_repo_id.should == "Corp-Prod-Ruby-repo"
+      cloned_repo_id.should == "#{@repo.organization.name}-#{@to_env.name}-#{@repo.product.name}-repo"
     end
 
   end
@@ -252,17 +244,26 @@ describe Glue::Pulp::Repo do
 
     before :each do
       @to_env = KTEnvironment.create!(:organization =>@organization, :name=>"Prod", :prior=>@organization.locker)
-      #ep = EnvironmentProduct.find_or_create(@to_env, @product1)
-      #RepoTestData::CLONED_PROPERTIES.merge!(:environment_product => ep)
+
+
+      ep = EnvironmentProduct.find_or_create(@to_env, @product1)
+      RepoTestData::CLONED_PROPERTIES.merge!(:environment_product => ep)
+      @repo.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_REPO_ID)
 
     end
 
     it "should clone the repo" do
       Pulp::Repository.should_receive(:clone_repo).with do |repo, cloned|
         repo.should == @repo
-        cloned.id.should == RepoTestData::CLONED_PROPERTIES[:pulp_id]
+        cloned.pulp_id.should == RepoTestData::CLONED_PROPERTIES[:pulp_id]
         cloned.name.should == RepoTestData::CLONED_PROPERTIES[:name]
-        cloned.groupid.should == RepoTestData::CLONED_PROPERTIES[:groupid]
+
+        group_id = [
+          "product:"+@repo.product.cp_id.to_s,
+          "env:"+@to_env.id.to_s,
+          "org:"+ @to_env.organization.id.to_s
+        ]
+        cloned.groupid.should == group_id
         cloned.arch.should == RepoTestData::CLONED_PROPERTIES[:arch]
         cloned.feed.should == RepoTestData::CLONED_PROPERTIES[:feed]
         true
@@ -272,18 +273,22 @@ describe Glue::Pulp::Repo do
     end
 
     it "should return correct is_cloned_in? status" do
+      @clone = Repository.create!(RepoTestData::CLONED_PROPERTIES)
+      @clone.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_2_REPO_ID)
       @clone.is_cloned_in?(@to_env).should == false
       @repo.is_cloned_in?(@to_env).should == true
     end
 
     it "should be able to return the clone" do
+      @clone = Repository.create!(RepoTestData::CLONED_PROPERTIES)
+      @repo.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_REPO_ID)
       clone = @repo.get_clone(@to_env)
-      clone.id.should == RepoTestData::CLONED_PROPERTIES[:pulp_id]
+      clone.pulp_id.should == RepoTestData::CLONED_PROPERTIES[:pulp_id]
     end
 
     it "should set relative path correctly" do
       Pulp::Repository.should_receive(:clone_repo).with do |repo, cloned|
-        cloned.relative_path.should == "Corp/Prod/Ruby/repo"
+        cloned.relative_path.should == "#{@repo.organization.name}/#{@to_env.name}/#{@repo.product.name}/repo"
         true
       end
       @repo.should_receive(:content_for_clone).and_return(nil)
@@ -317,19 +322,4 @@ describe Glue::Pulp::Repo do
     end
   end
 
-end
-
-
-def stub_reference_objects
-  @org = mock(Organization, {:id => RepoTestData::REPO_ORG_ID, :name => "Corp"})
-  Organization.stub(:find).with(RepoTestData::REPO_ORG_ID).and_return(@org)
-
-  @env = mock(KTEnvironment, {:id => RepoTestData::REPO_ENV_ID, :name => "Dev"})
-  KTEnvironment.stub(:find).with(RepoTestData::REPO_ENV_ID).and_return(@env)
-
-  @product = Product.new({:id => RepoTestData::REPO_PRODUCT_ID, :cp_id => RepoTestData::REPO_PRODUCT_CP_ID, :name => "Ruby"})
-  @product.stub(:organization => @org)
-  Product.stub(:find).with(RepoTestData::REPO_PRODUCT_ID).and_return(@product)
-  Product.stub("find_by_cp_id!").with(RepoTestData::REPO_PRODUCT_CP_ID.to_s).and_return(@product)
-  Product.stub("find_by_cp_id").with(RepoTestData::REPO_PRODUCT_CP_ID.to_s).and_return(@product)
 end

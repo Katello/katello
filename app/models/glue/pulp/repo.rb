@@ -122,7 +122,6 @@ module Glue::Pulp::Repo
 
   def clone_repo
     self.clone_response = [Pulp::Repository.clone_repo(clone_from, self, "parent", cloned_filters)]
-    x = self.clone_response
   end
 
 
@@ -217,8 +216,8 @@ module Glue::Pulp::Repo
     categories.values
   end
 
-  def clone_id(environment)
-    Glue::Pulp::Repo.repo_id(self.product.name, self.name, environment.name,environment.organization.name)
+  def clone_id(env)
+    Glue::Pulp::Repo.repo_id(self.product.name, self.name, env.name,env.organization.name)
   end
 
   #is the repo cloned in the specified environment
