@@ -15,6 +15,8 @@ class katello::config {
       template => "katello/${katello::params::config_dir}/thin.yml.erb";
     "${katello::params::config_dir}/katello.yml":
       template => "katello/${katello::params::config_dir}/katello.yml.erb";
+    "/etc/sysconfig/katello":
+      template => "katello/etc/sysconfig/katello.erb";
     "/etc/httpd/conf.d/katello.conf":
       template => "katello/etc/httpd/conf.d/katello.conf.erb",
       notify   => Exec["reload-apache2"];
@@ -25,6 +27,21 @@ class katello::config {
     mode    => 644,
     recurse => true;
   }
+
+  # disable SELinux
+  augeas {"temp_disable_selinux":
+    context => "/files/etc/sysconfig/selinux",
+    changes => ["set SELINUX permissive"],
+    notify   => Exec["reload-apache2"]
+  }
+
+  exec {"temp_setenforce":
+    command => "setenforce 0",
+    path    => "/usr/sbin:/bin",
+    unless  => "getenforce |egrep -iq 'disable|Permissive'",
+  }
+
+
 
   exec {"katello_db_migrate":
     cwd         => $katello::params::katello_dir,
@@ -45,14 +62,18 @@ class katello::config {
     command     => "/usr/bin/env rake db:migrate >> ${katello::params::seed_log} 2>&1 && /usr/bin/env rake db:seed >> ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/initdb_done",
     creates => "/var/lib/katello/initdb_done",
     before  => Class["katello::service"],
-    require => [ Exec["katello_db_migrate"], Class["candlepin::service"], Class["pulp::service"] ],
+    require => $katello::params::deployment ? {
+                'katello' => [ Exec["katello_db_migrate"], Class["candlepin::service"], Class["pulp::service"] ],
+                'headpin' => [ Exec["katello_db_migrate"], Class["candlepin::service"] ],
+                default => [],
+    },
   }
 
   define config_file($source = "", $template = "") {
     file {$name:
       content => $template ? {
         "" => undef,
-          default =>  template($template)
+        default =>  template($template)
       },
       source => $source ? {
         "" => undef,
@@ -61,7 +82,13 @@ class katello::config {
     }
   }
 
-  Class["candlepin::config"] -> File["/etc/pulp/pulp.conf"]
-  Class["candlepin::config"] -> File["/etc/pulp/repo_auth.conf"]
-  Class["candlepin::config"] -> File["/etc/pki/content/pulp-global-repo.ca"]
+  # Headpin does not care about pulp
+  case $katello::params::deployment {
+      'katello': {
+          Class["candlepin::config"] -> File["/etc/pulp/pulp.conf"]
+          Class["candlepin::config"] -> File["/etc/pulp/repo_auth.conf"]
+          Class["candlepin::config"] -> File["/etc/pki/content/pulp-global-repo.ca"]
+      }
+      default : {}
+  }
 }
