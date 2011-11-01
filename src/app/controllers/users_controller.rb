@@ -89,7 +89,7 @@ class UsersController < ApplicationController
       if not User.where(:id => @user.id).search_for(params[:search]).include?(@user)
         notice _("'#{@user["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
       end
-      
+
       render :text => attr and return
     end
     errors "", {:list_items => @user.errors.to_a}

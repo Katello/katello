@@ -34,6 +34,7 @@ describe UserSessionsController do
       @user = User.new
       @user.username = "shaggy"
       @user.password = "norville"
+      @user.email = 'shaggy@somewhere.com'
       @user.save 
 
       controller.stub!(:current_user).and_return(@user)

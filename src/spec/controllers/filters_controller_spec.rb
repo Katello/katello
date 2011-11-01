@@ -191,7 +191,7 @@ describe FiltersController do
       disable_user_orchestration
 
       @organization = new_test_org
-      @testuser = User.create!(:username=>"TestUser", :password=>"foobar")
+      @testuser = User.create!(:username=>"TestUser", :password=>"foobar", :email=>"TestUser@somewhere.com")
       @filter = Filter.create!(:name => 'filter1', :organization => @organization)
       @filter2 = Filter.create!(:name=>'filter2', :organization => @organization)
     end
