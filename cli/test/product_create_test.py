@@ -34,6 +34,7 @@ class CreateTest(unittest.TestCase):
     URL = 'http://localhost'
     DISCOVERED_REPOS = ['url1', 'url2']
     ASSUMEYES = True
+    NODISC = False
 
     def setUp(self):
         self.original_get_provider = katello.client.core.product.get_provider
@@ -59,28 +60,29 @@ class CreateTest(unittest.TestCase):
         katello.client.core.product.get_provider = self.original_get_provider
 
     def test_finds_provider(self):
-        self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES)
+        self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES, self.NODISC)
         katello.client.core.product.get_provider.assert_called_once_with(self.ORGANIZATION, self.PROVIDER)
 
     def test_creates_product(self):
-        self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES)
+        self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES, self.NODISC)
         self.create_action.api.create.assert_called_once_with(self.PROVIDER_ID, self.PRODUCT, self.DESCRIPTION)
 
     def test_discovers_repos(self):
-        self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES)
+        self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES, self.NODISC)
         self.create_action.discoverRepos.discover_repositories.assert_called_once_with(self.ORGANIZATION, self.URL)
 
     def test_creates_product_without_repositories_if_url_was_not_specified(self):
-        self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, None, self.ASSUMEYES)
+        self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, None, self.ASSUMEYES, self.NODISC)
 
         self.assertFalse(self.create_action.discoverRepos.discover_repositories.called)
         self.assertFalse(self.create_action.discoverRepos.select_repositories.called)
         self.assertFalse(self.create_action.discoverRepos.create_repositories.called)
 
     def test_selects_repos(self):
-        self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES)
-        self.create_action.discoverRepos.select_repositories.assert_called_once_with(self.DISCOVERED_REPOS, self.ASSUMEYES)
+        self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES, self.NODISC)
+        self.create_action.discoverRepos.select_repositories.assert_called_once_with(self.DISCOVERED_REPOS,
+                self.ASSUMEYES, self.NODISC)
 
     def test_create_repos(self):
-        self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES)
+        self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES, self.NODISC)
         self.create_action.discoverRepos.create_repositories.assert_called_once_with(self.PRODUCT_ID, self.PRODUCT, self.DISCOVERED_REPOS)
