@@ -431,35 +431,6 @@ class ApplicationController < ActionController::Base
     retain_search_history
   end
 
-  #produce a simple datastructure of a changeset for the browser
-  def simplify_changeset cs
-
-    to_ret = {:id=>cs.id.to_s, :name=>cs.name, :description=>cs.description, :timestamp =>cs.updated_at.to_i.to_s,
-                          :system_templates => {},:products=>{}, :is_new => cs.state == Changeset::NEW}
-    cs.system_templates.each do |temp|
-      to_ret[:system_templates][temp.id] = {:id=> temp.id, :name=>temp.name}
-    end
-
-    cs.involved_products.each{|product|
-      to_ret[:products][product.id] = {:id=> product.id, :name=>product.name, :provider=>product.provider.provider_type,
-                                       'package'=>[], 'errata'=>[], 'repo'=>[], 'distribution'=>[]}
-    }
-
-    cs.products.each {|product|
-      to_ret[:products][product.id][:all] =  true
-    }
-
-    ['repo', 'errata', 'package', 'distribution'].each{ |type|
-      cs.send(type.pluralize).each{|item|
-        p item
-        pid = item.product_id
-        cs_product = to_ret[:products][pid]
-        cs_product[type] << {:id=>item.send("#{type}_id"), :name=>item.display_name}
-      }
-    }
-    to_ret
-  end
-
   # for use with:   around_filter :catch_exceptions
   def catch_exceptions
     yield
