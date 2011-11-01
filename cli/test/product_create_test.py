@@ -80,8 +80,7 @@ class CreateTest(unittest.TestCase):
 
     def test_selects_repos(self):
         self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES, self.NODISC)
-        self.create_action.discoverRepos.select_repositories.assert_called_once_with(self.DISCOVERED_REPOS,
-                self.ASSUMEYES, self.NODISC)
+        self.create_action.discoverRepos.select_repositories.assert_called_once_with(self.DISCOVERED_REPOS, self.ASSUMEYES)
 
     def test_create_repos(self):
         self.create_action.create_product_with_repos(self.PROVIDER, self.ORGANIZATION, self.PRODUCT, self.DESCRIPTION, self.URL, self.ASSUMEYES, self.NODISC)
