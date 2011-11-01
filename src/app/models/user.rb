@@ -29,8 +29,8 @@ class User < ActiveRecord::Base
   has_many :search_favorites, :dependent => :destroy
   has_many :search_histories, :dependent => :destroy
 
-
   validates :username, :uniqueness => true, :presence => true, :username => true
+  validates_presence_of :email
   validate :own_role_included_in_roles
 
   # check if the role does not already exist for new username
@@ -39,7 +39,6 @@ class User < ActiveRecord::Base
       model.errors.add(:username, "role with the same name '#{value}' already exists")
     end
   end
-
 
   scoped_search :on => :username, :complete_value => true, :rename => :name
   scoped_search :in => :roles, :on => :name, :complete_value => true, :rename => :role
