@@ -12,21 +12,10 @@
 
 
 
-class Glue::Candlepin::ProductContent
-  attr_accessor :content, :enabled
+class Glue::Candlepin::Content
+  attr_accessor :name, :id, :type, :label, :vendor, :contentUrl, :gpgUrl
   def initialize(params = {})
-    @enabled = params[:enabled] || params["enabled"]
-    @content = Glue::Candlepin::Content.new(params[:content] || params["content"])
+    params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
   end
-
-  def create
-    created = Candlepin::Content.create @content
-    @content.id = created[:id]
-  end
-
-  def destroy
-    Candlepin::Content.destroy(@content.id)
-  end
-
 end
 
