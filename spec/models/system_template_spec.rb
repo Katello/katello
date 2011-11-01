@@ -400,18 +400,18 @@ describe SystemTemplate do
 
     let(:pg_name) { RepoTestData.repo_package_groups.values[0]["name"] }
     let(:missing_pg_name) { "missing_pg" }
-    let(:repo) {{
+    let(:repo) {Repository.new({
       :name => 'foo repo',
       :groupid => [
         "product:"+@prod1.cp_id.to_s,
         "env:"+@organization.locker.id.to_s,
         "org:"+@organization.name.to_s
       ]
-    }}
+    })}
 
     before :each do
       Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups)
-      Pulp::Repository.stub(:all => [repo])
+      Repository.stub_chain(:joins, :where).and_return( [repo])
     end
 
     describe "#add_package_group" do
@@ -455,18 +455,18 @@ describe SystemTemplate do
   describe "package group categories" do
     let(:pg_category_name) { RepoTestData.repo_package_group_categories.values[0]["name"] }
     let(:missing_pg_category_name) { "missing_pgc" }
-    let(:repo) {{
+    let(:repo) {Repository.new({
       :name => 'foo repo',
       :groupid => [
         "product:"+@prod1.cp_id.to_s,
         "env:"+@organization.locker.id.to_s,
         "org:"+@organization.name.to_s
       ]
-    }}
+    })}
 
     before :each do
       Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories)
-      Pulp::Repository.stub(:all => [repo])
+      Repository.stub_chain(:joins, :where).and_return( [repo])
     end
 
     describe "#add_pg_category" do
@@ -509,14 +509,15 @@ describe SystemTemplate do
   describe "distributions" do
 
     let(:distribution) { RepoTestData.repo_distributions["id"] }
-    let(:repo) {{
+    let(:repo) {Repository.new({
       :name => 'foo repo',
+      :pulp_id => 'foo repo',
       :id => 'foo repo',
-    }}
+    })}
 
     before :each do
       Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
-      Pulp::Repository.stub(:all => [repo])
+      Repository.stub_chain(:joins, :where).and_return( [repo])
     end
 
     describe "#add_distribution" do
@@ -559,7 +560,7 @@ describe SystemTemplate do
         disable_repo_orchestration
         Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
         Pulp::Distribution.stub(:find => RepoTestData.repo_distributions)
-        Pulp::Repository.stub(:all => [RepoTestData::REPO_PROPERTIES])
+        Repository.stub_chain(:joins, :where).and_return([Repository.new(RepoTestData::REPO_PROPERTIES)])
         @prod1.stub(:repos => [Repository.new(RepoTestData::REPO_PROPERTIES)])
 
         @tpl1.products << @prod1
