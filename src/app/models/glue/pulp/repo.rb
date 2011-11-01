@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+require 'glue/candlepin/product_content'
+
 class Glue::Pulp::Repo
   attr_accessor :id, :groupid, :arch, :name, :feed, :feed_cert, :feed_key, :feed_ca,
                 :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type, :filters
@@ -301,7 +303,7 @@ class Glue::Pulp::Repo
 
   def content
     if not self.content_id.nil?
-      Candlepin::Content.get(self.content_id)
+      Glue::Candlepin::Content.new(Candlepin::Content.get(self.content_id))
     end
   end
 
@@ -340,7 +342,7 @@ class Glue::Pulp::Repo
     new_content = self.create_content(new_repo_path)
 
     self.product.add_content new_content
-    new_content
+    new_content.content
   end
 
 
