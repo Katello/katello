@@ -2757,7 +2757,7 @@ fi
   key (adprice@redhat.com)
 
 * Thu Jun 16 2011 Justin Sherrill <jsherril@redhat.com> 0.1.47-1
-- initial public build 
+- initial public build
 
 * Tue Jun 14 2011 Mike McCune <mmccune@redhat.com> 0.1.46-1
 - initial changelog
