@@ -65,8 +65,8 @@ module Glue::Pulp::Repos
       "product:#{product.cp_id}"
   end
 
-  def self.content_groupid(product_content)
-      "content:#{product_content.content.id}"
+  def self.content_groupid(content)
+      "content:#{content.id}"
   end
 
   module InstanceMethods
@@ -440,12 +440,11 @@ module Glue::Pulp::Repos
           async_tasks << repo.get_clone(to_env).sync
         else
           #repo is not in the next environment yet, we have to clone it there
-          content = self.content_for_clone_of repo
           if to_env.prior == locker
-            new_repo = repo.promote(to_env, content, filters.collect {|p| p.pulp_id})
+            new_repo = repo.promote(to_env, filters.collect {|p| p.pulp_id})
             async_tasks << new_repo.clone_response
           else
-            new_repo = repo.promote(to_env, content)
+            new_repo = repo.promote(to_env)
             async_tasks << new_repo.clone_response
           end
         end
@@ -460,34 +459,6 @@ module Glue::Pulp::Repos
 
     def del_filter repo, filter_id
       repo.remove_filters [filter_id]
-    end
-
-
-    def content_for_clone_of repo
-      return repo.content unless repo.content_id.nil?
-
-      new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(repo)
-      new_content = self.create_content(repo.name, new_repo_path)
-
-      self.add_content new_content
-      new_content
-    end
-
-
-    def create_content name, path
-      new_content = Glue::Candlepin::ProductContent.new({
-        :content => {
-          :name => name,
-          :contentUrl => path,
-          :gpgUrl => "",
-          :type => "yum",
-          :label => name,
-          :vendor => "Custom"
-        },
-        :enabled => true
-      })
-      new_content.create
-      new_content
     end
 
     def check_for_repo_conflicts(repo_name)

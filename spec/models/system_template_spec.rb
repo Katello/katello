@@ -27,6 +27,10 @@ describe SystemTemplate do
 
     @tpl1 = SystemTemplate.create!(:name => "template_1", :environment => @organization.locker)
 
+    @tpl1_clone = mock(SystemTemplate)
+    @tpl1_clone.stub(:save!)
+    @tpl1_clone.stub(:save)
+
     @prod1 = Product.create!(:cp_id => "123456", :name => "prod1", :environments => [@organization.locker], :provider => @provider)
     @prod2 = Product.create!(:cp_id => "789123", :name => "prod2", :environments => [@organization.locker], :provider => @provider)
 
@@ -116,7 +120,6 @@ describe SystemTemplate do
       @prod1.environments << @to_env
       @tpl1.products << @prod1
       @tpl1.products << @prod2
-      @tpl1.stub(:copy_to_env)
 
       @prod1.stub(:promote).and_return([])
       @prod2.stub(:promote).and_return([])
@@ -124,6 +127,7 @@ describe SystemTemplate do
       @prod1.should_not_receive(:promote)
       @prod2.should_receive(:promote)
 
+      @tpl1.stub(:copy_to_env).and_return(@tpl1_clone)
       @tpl1.promote(@from_env, @to_env)
     end
 
@@ -131,7 +135,6 @@ describe SystemTemplate do
 
       @tpl1.environment.stub(:find_packages_by_name).and_return([package_1])
       @tpl1.packages << SystemTemplatePackage.new(:package_name => 'foo', :system_template => @tpl1)
-      @tpl1.stub(:copy_to_env)
       @tpl1.stub(:get_promotable_packages).and_return([package_1])
 
       repo = Repository.new(repo_1)
@@ -143,13 +146,13 @@ describe SystemTemplate do
       Repository.stub(:find_by_pulp_id).with(package_1[:repo_id]).and_return(repo)
       clone.should_receive(:add_packages).with([package_1[:id]])
 
+      @tpl1.stub(:copy_to_env).and_return(@tpl1_clone)
       @tpl1.promote(@from_env, @to_env)
     end
 
     it "should promote products that are required by packages and haven't been promoted yet" do
       @tpl1.environment.stub(:find_packages_by_name).and_return([package_1])
       @tpl1.packages << SystemTemplatePackage.new(:package_name => 'foo', :system_template => @tpl1)
-      @tpl1.stub(:copy_to_env)
       @tpl1.stub(:get_promotable_packages).and_return([package_1])
 
       repo = Repository.new(repo_1)
@@ -162,6 +165,7 @@ describe SystemTemplate do
       @prod1.should_receive(:promote).with(@from_env, @to_env).and_return([])
       clone.should_not_receive(:add_packages)
 
+      @tpl1.stub(:copy_to_env).and_return(@tpl1_clone)
       @tpl1.promote(@from_env, @to_env)
     end
 
@@ -209,7 +213,7 @@ describe SystemTemplate do
 
 
     it "should clone the template to the next environment" do
-      @tpl1.should_receive(:copy_to_env).with(@environment)
+      @tpl1.should_receive(:copy_to_env).with(@environment).and_return(@tpl1_clone)
 
       @tpl1.promote(@organization.locker, @environment)
     end
