@@ -38,4 +38,8 @@ class FailedAuthenticationController < ActionController::Base
     head :status => 401 and return false
   end
 
+  # In case Warden would fail this returns some reasonable output too
+  def unauthenticated
+    unauthenticated_api
+  end
 end

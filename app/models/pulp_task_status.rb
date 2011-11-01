@@ -22,11 +22,13 @@ class PulpTaskStatus < TaskStatus
       any_running = false
       for t in async_tasks
         t.refresh
+        sleep 0.5 # do not overload backend engines
         if ((t.state == TaskStatus::Status::WAITING.to_s) or (t.state == TaskStatus::Status::RUNNING.to_s))
           any_running = true
           break
         end
       end
+      sleep 1
     end
     async_tasks
   end

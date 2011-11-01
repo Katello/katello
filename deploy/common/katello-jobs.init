@@ -20,7 +20,7 @@ KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
 KATELLO_DATA_DIR=${KATELLO_DATA_DIR:-/var/lib/katello}
 KATELLO_ENV=${KATELLO_ENV:-production}
 KATELLO_JOB_WORKERS=${KATELLO_JOB_WORKERS:-1}
-KATELLO_JOB_PARAMS=${KATELLO_JOB_PARAMS:--m -p katello}
+KATELLO_JOB_PARAMS=${KATELLO_JOB_PARAMS:--p katello}
 KATELLO_PID=$KATELLO_HOME/tmp/pids/delayed_job*monitor.pid
 KATELLO_PIDS_ALL=$KATELLO_HOME/tmp/pids/delayed_job*.pid
 export RAILS_ENV=$KATELLO_ENV
@@ -67,7 +67,7 @@ start() {
         rm -f $KATELLO_DATA_DIR/Gemfile.lock
         # start jobs
         rm -f /var/log/katello/jobs-startup.log
-        su katello -s /bin/bash -c "bundle exec script/delayed_job $KATELLO_JOB_PARAMS -n $KATELLO_JOB_WORKERS start >/var/log/katello/jobs-startup.log 2>&1"
+        su katello -s /bin/bash -c "bundle exec script/delayed_job $KATELLO_JOB_PARAMS -m -n $KATELLO_JOB_WORKERS start >/var/log/katello/jobs-startup.log 2>&1"
         RETVAL=$?
         if [ $RETVAL = 0 ]; then
             echo_success
