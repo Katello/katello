@@ -81,6 +81,9 @@ Src::Application.routes.draw do
       get :filelist
       get :dependencies
     end
+    collection do
+      get :auto_complete_locker
+    end
   end
 
   resources :errata, :only => [:show] do
@@ -118,11 +121,27 @@ Src::Application.routes.draw do
     end
   end
 
+
+  resources :filters do
+    collection do
+      get :auto_complete_search
+      get :auto_complete_products_repos
+      get :items
+    end
+    member do
+      get  :packages
+      post :add_packages
+      post :remove_packages
+      get  :products
+      post :update_products
+    end
+
+  end
+
   resources :system_templates do
     collection do
       get :auto_complete_search
       get :items
-      get :auto_complete_package
       get :product_packages
       get :product_comps
     end
@@ -301,6 +320,10 @@ Src::Application.routes.draw do
         post   :index, :on => :collection, :action => :add_package_group_category
         delete :destroy, :on => :member, :action => :remove_package_group_category
       end
+      resources :distributions, :controller => :templates_content do
+        post   :index, :on => :collection, :action => :add_distribution
+        delete :destroy, :on => :member, :action => :remove_distribution
+      end
     end
 
     resources :organizations do
@@ -322,7 +345,7 @@ Src::Application.routes.draw do
         post :discovery, :on => :collection
       end
       resource :uebercert, :only => [:create, :show]
-      resources :filters, :only => [:index, :create, :destroy, :show]
+      resources :filters, :only => [:index, :create, :destroy, :show, :update]
     end
 
     resources :changesets, :only => [:show, :destroy] do
@@ -334,6 +357,10 @@ Src::Application.routes.draw do
       get :repositories, :on => :member
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
+      end
+      resources :filters, :only => [] do
+        get :index, :on => :collection, :action => :list_product_filters
+        put :index, :on => :collection, :action => :update_product_filters
       end
     end
 

@@ -111,6 +111,7 @@ module ApplicationHelper
              :ajax_load => options[:ajax_load],
              :ajax_scroll =>options[:ajax_scroll],
              :search_env =>options[:search_env],
+             :initial_action=>options[:initial_action] || :edit,
              :actions=>options[:actions]}
   end
 
