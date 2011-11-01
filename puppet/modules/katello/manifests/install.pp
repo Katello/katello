@@ -4,7 +4,7 @@ class katello::install {
   include candlepin::install
   include postgres::install
   include apache2::install
-  
+
   # Headpin does not care about pulp
   case $katello::params::deployment {
       'katello': {
@@ -12,8 +12,8 @@ class katello::install {
             include qpid::install
       }
       default : {}
-  }  
-  
+  }
+
 
   $os_type = $operatingsystem ? {
     "Fedora" => "fedora-${operatingsystemrelease}",
@@ -42,7 +42,7 @@ class katello::install {
     before  => $katello::params::deployment ? {
                 'katello' =>  [Class["candlepin::config"], Class["pulp::config"] ], #avoid some funny post rpm scripts
                 'headpin' =>  [Class["candlepin::config"]], #avoid some funny post rpm scripts
-                default => []                
+                default => []
     },
     ensure  => installed
   }

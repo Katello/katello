@@ -1,5 +1,5 @@
 class katello::config {
-    
+
   postgres::createuser { $katello::params::db_user:
     passwd => $katello::params::db_pass,
     logfile  => '/var/log/katello/katello-configure/create-postgresql-katello-user.log',
@@ -16,7 +16,7 @@ class katello::config {
     "${katello::params::config_dir}/katello.yml":
       template => "katello/${katello::params::config_dir}/katello.yml.erb";
     "/etc/sysconfig/katello":
-      template => "katello/etc/sysconfig/katello.erb";      
+      template => "katello/etc/sysconfig/katello.erb";
     "/etc/httpd/conf.d/katello.conf":
       template => "katello/etc/httpd/conf.d/katello.conf.erb",
       notify   => Exec["reload-apache2"];
@@ -27,21 +27,21 @@ class katello::config {
     mode    => 644,
     recurse => true;
   }
-  
-  # disable SELinux  
+
+  # disable SELinux
   augeas {"temp_disable_selinux":
     context => "/files/etc/sysconfig/selinux",
     changes => ["set SELINUX permissive"],
     notify   => Exec["reload-apache2"]
   }
-  
+
   exec {"temp_setenforce":
     command => "setenforce 0",
     path    => "/usr/sbin:/bin",
     unless  => "getenforce |egrep -iq 'disable|Permissive'",
   }
-  
-  
+
+
 
   exec {"katello_db_migrate":
     cwd         => $katello::params::katello_dir,
@@ -81,7 +81,7 @@ class katello::config {
       },
     }
   }
-  
+
   # Headpin does not care about pulp
   case $katello::params::deployment {
       'katello': {
