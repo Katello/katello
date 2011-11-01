@@ -40,7 +40,7 @@ describe SystemTemplate do
 
   describe "update template" do
 
-    let(:repo) {Repository.new ({
+    let(:repo) {Repository.new({
       :name => 'foo repo',
       :groupid => [
        "product:"+@prod1.cp_id.to_s,
