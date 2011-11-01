@@ -12,8 +12,9 @@
 
 class PgCategoryValidator < ActiveModel::Validator
   def validate(record)
-    if record.system_template.environment.package_group_categories({'name' => record.name}).length == 0
-      record.errors[:base] <<  _("Package group category '#{record.name}' not found in the Locker environment")
+    env = record.system_template.environment
+    if env.package_group_categories({'name' => record.name}).length == 0
+      record.errors[:base] <<  _("Package group category '#{record.name}' not found in the #{env.name} environment")
     end
   end
 end

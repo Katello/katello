@@ -1,4 +1,5 @@
 %ul.expand_list
-  -if @errata.empty?
+  -if collection.empty?
     #{_("No errata available.")}
-  = render :partial=>"errata_items"
+  -else
+    = render :partial=>"errata_items", :locals=>{:collection=>collection}

@@ -69,7 +69,7 @@ class SystemAPI(KatelloAPI):
         return self.server.GET(path)[1]
 
     def packages(self, system_id):
-        path="/api/systems/%s/packages" % system_id
+        path = "/api/systems/%s/packages" % system_id
         return self.server.GET(path)[1]
 
     def update(self, system_id, params = {}):

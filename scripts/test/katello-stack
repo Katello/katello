@@ -28,6 +28,7 @@
 
 SERVICES_START=(mongod pulp-server postgresql tomcat6)
 SERVICES_STOP=(tomcat6 pulp-server mongod postgresql)
+YUM_PARAMS="--disableplugin=subscription-manager,pulp-profile-update,katello"
 
 print_usage()
 {
@@ -47,14 +48,14 @@ post_update()
 
 update_system()
 {
-  yum update pulp candlepin-tomcat6
+  yum -y $YUM_PARAMS update pulp candlepin-tomcat6
   post_update
 }
 
 update_disabled()
 {
-  yum --enablerepo=fedora-pulp --enablerepo=fedora-candlepin makecache
-  yum --enablerepo=fedora-pulp --enablerepo=fedora-candlepin \
+  yum $YUM_PARAMS --enablerepo=fedora-pulp --enablerepo=fedora-candlepin makecache
+  yum -y $YUM_PARAMS --enablerepo=fedora-pulp --enablerepo=fedora-candlepin \
     update pulp candlepin-tomcat6
   post_update
 }

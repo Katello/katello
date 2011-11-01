@@ -249,6 +249,8 @@ class Create(ProductAction):
                                help=_("product description"))
         self.parser.add_option("--url", dest="url",
                                help=_("repository url eg: http://download.fedoraproject.org/pub/fedora/linux/releases/"))
+        self.parser.add_option("--nodisc", action="store_true", dest="nodiscovery",
+                               help=_("skip repository discovery"))
         self.parser.add_option("--assumeyes", action="store_true", dest="assumeyes",
                                help=_("assume yes; automatically create candidate repositories for discovered urls (optional)"))
 
@@ -265,11 +267,12 @@ class Create(ProductAction):
         description = self.get_option('description')
         url         = self.get_option('url')
         assumeyes   = self.get_option('assumeyes')
+        nodiscovery = self.get_option('nodiscovery')
 
-        return self.create_product_with_repos(provName, orgName, name, description, url, assumeyes)
+        return self.create_product_with_repos(provName, orgName, name, description, url, assumeyes, nodiscovery)
 
 
-    def create_product_with_repos(self, provName, orgName, name, description, url, assumeyes):
+    def create_product_with_repos(self, provName, orgName, name, description, url, assumeyes, nodiscovery):
         prov = get_provider(orgName, provName)
         if prov == None:
             return os.EX_DATAERR
@@ -280,10 +283,11 @@ class Create(ProductAction):
         if url == None:
             return os.EX_OK
 
-        repourls = self.discoverRepos.discover_repositories(orgName, url)
-        self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
-        selectedurls = self.discoverRepos.select_repositories(repourls, assumeyes)
-        self.discoverRepos.create_repositories(prod["id"], prod["name"], selectedurls)
+        if not nodiscovery:
+            repourls = self.discoverRepos.discover_repositories(orgName, url)
+            self.printer.setHeader(_("Repository Urls discovered @ [%s]" % url))
+            selectedurls = self.discoverRepos.select_repositories(repourls, assumeyes)
+            self.discoverRepos.create_repositories(prod["id"], prod["name"], selectedurls)
 
         return os.EX_OK
 

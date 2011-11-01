@@ -33,7 +33,7 @@ module Glue::Pulp::Repo
                       pulp_repo_facts
                   end
                 }
-      attr_accessor :clone_from, :clone_response, :clone_filters, :clone_content
+      attr_accessor :clone_from, :clone_response, :cloned_filters, :cloned_content
     end
   end
 
@@ -102,10 +102,11 @@ module Glue::Pulp::Repo
     })
   end
 
-  def promote(to_environment, clone_content, filters = [])
+  def promote(to_environment, filters = [])
+
     key = EnvironmentProduct.find_or_create(to_environment, self.product)
     Repository.create!(:environment_product => key, :clone_from => self,
-                            :clone_content => clone_content, :clone_filters => filters)
+                            :cloned_content => self.content_for_clone, :cloned_filters => filters)
   end
 
   def setup_repo_clone
@@ -115,12 +116,12 @@ module Glue::Pulp::Repo
       self.arch = clone_from.arch
       self.name = clone_from.name
       self.feed = clone_from.feed
-      self.groupid = Glue::Pulp::Repos.groupid(environment_product.product, environment_product.environment, clone_content)
+      self.groupid = Glue::Pulp::Repos.groupid(environment_product.product, environment_product.environment, cloned_content)
     end
   end
 
   def clone_repo
-    self.clone_response = [Pulp::Repository.clone_repo(clone_from, self, "parent", clone_filters)]
+    self.clone_response = [Pulp::Repository.clone_repo(clone_from, self, "parent", cloned_filters)]
     x = self.clone_response
   end
 
@@ -364,7 +365,7 @@ module Glue::Pulp::Repo
 
   def content
     if not self.content_id.nil?
-      Candlepin::Content.get(self.content_id)
+      Glue::Candlepin::Content.new(::Candlepin::Content.get(self.content_id))
     end
   end
 
@@ -391,7 +392,45 @@ module Glue::Pulp::Repo
     }.flatten]
   end
 
+  protected
+
+  def content_for_clone
+    return self.content unless self.content_id.nil?
+    return self.clone_content unless self.clone_ids.empty?
+
+    new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(self)
+    new_content = self.create_content(new_repo_path)
+
+    self.product.add_content new_content
+    new_content.content
+  end
+
+
+  def clone_content
+    return nil if self.clone_ids.empty?
+    clone = Repository.find_by_pulp_id(self.clone_ids[0])
+    clone.content
+  end
+
+  def create_content path
+    new_content = Glue::Candlepin::ProductContent.new({
+      :content => {
+        :name => self.name,
+        :contentUrl => path,
+        :gpgUrl => "",
+        :type => "yum",
+        :label => self.name,
+        :vendor => self.product.provider.provider_type
+      },
+      :enabled => true
+    })
+    new_content.create
+    new_content
+  end
+
   private
+
+
   def get_groupid_param name
     idx = self.groupid.index do |s| s.start_with? name+':' end
     if not idx.nil?
