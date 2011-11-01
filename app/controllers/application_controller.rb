@@ -401,10 +401,18 @@ class ApplicationController < ActionController::Base
     if start == "0"
       options[:total_count] = @items.count
     end
-    
-    @items_searched = @items.search_for(search)
-    @items_offset = @items_searched.limit(current_user.page_size).offset(start)
-    
+
+    # the caller may provide items either based on active record or a list within an array... in the case of an
+    # array, it is assumed to be based upon results from a pulp/candlepin request, in which case search is
+    # not currently supported
+    if @items.kind_of? ActiveRecord::Relation
+      @items_searched = @items.search_for(search)
+      @items_offset = @items_searched.limit(current_user.page_size).offset(start)
+    else
+      @items_searched = @items
+      @items_offset = @items_searched[start.to_i..start.to_i+current_user.page_size]
+    end
+
     options[:total_results] = @items_searched.count
     options[:collection] ||= @items_offset
     
