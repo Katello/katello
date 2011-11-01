@@ -257,7 +257,10 @@ describe Product do
 
       @product = Product.create!(ProductTestData::PRODUCT_WITH_CONTENT)
 
-      @repo = Glue::Pulp::Repo.new(RepoTestData::REPO_PROPERTIES.merge(
+      ep = EnvironmentProduct.find_or_create(@environment1, @product)
+
+      @repo = Repository.create!(RepoTestData::REPO_PROPERTIES.merge(
+           :environment_product => ep,
            :clone_ids => [],
            :groupid => Glue::Pulp::Repos.groupid(@product, @product.locker)
       ))
