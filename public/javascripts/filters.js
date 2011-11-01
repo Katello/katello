@@ -547,6 +547,7 @@ KT.filters = (function(){
 
     },
     add_repo = function(repo_id, prod_id, bump_up){
+        if(repo_id === null || repo_id === undefined) return;
         prod_id = parseInt(prod_id);
         if ($.inArray( prod_id, current_filter.products) > -1){
             KT.filters.pop_product(prod_id);
