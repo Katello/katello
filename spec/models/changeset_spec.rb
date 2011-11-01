@@ -255,7 +255,7 @@ describe Changeset do
         @err  = mock('Err', {:id => 'err', :name => 'err'})
         @distribution = mock('Distribution', {:id=> 'some-distro-id'})
 
-        @repo = mock('Repo', {:id => 1, :name => 'repo'})
+        @repo = mock('Repo', {:id => '1', :name => 'repo'})
         @repo.stub(:distributions).and_return([@distribution])
         @repo.stub_chain(:distributions, :index).and_return([@distribution])
         @repo.stub(:packages).and_return([@pack])
@@ -268,7 +268,7 @@ describe Changeset do
 
         @repo.stub(:is_cloned_in?).and_return(true)
         @repo.stub(:clone_ids).and_return([])
-        Glue::Pulp::Repo.stub(:find).and_return(@repo)
+        Repository.stub(:find_by_pulp_id).and_return(@repo)
 
         @clone = mock('Repo', {:id => 2, :name => 'repo_clone'})
         @clone.stub(:has_package?).and_return(false)
