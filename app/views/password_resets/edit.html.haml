@@ -30,9 +30,9 @@
       = text_field :user, :username, :id=>"confirm_field", :value=>"", :type=>"password"
 
   .grid_5.la.prefix_3
-    #save_password.verify_password.button{'data-url'=>user_path(@user.id)}
+    #save_password.verify_password.button{'data-url'=>password_reset_path(@user.password_reset_token)}
       #{_("Save")}
-  .grid_5.la.prefix_2
+  .grid_5.la.prefix_3
     #password_conflict
 
-= javascript :user_edit
+= javascript :password
