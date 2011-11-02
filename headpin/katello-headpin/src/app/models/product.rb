@@ -35,6 +35,7 @@ class Product < ActiveRecord::Base
 
   has_and_belongs_to_many :environments, { :class_name => "KTEnvironment", :uniq => true }
   has_and_belongs_to_many :changesets
+
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products
 

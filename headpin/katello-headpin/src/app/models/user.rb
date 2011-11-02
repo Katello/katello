@@ -70,12 +70,15 @@ class User < ActiveRecord::Base
   # THIS CHECK MUST BE THE FIRST before_destroy
   # check if this is not the last superuser
   before_destroy do |u|
+    if u.id == User.current.id
+      u.errors.add(:base, _("Cannot delete currently logged user"))
+      false
+    end
     unless u.can_be_deleted?
       u.errors.add(:base, "cannot delete last admin user")
       false
-    else
-      true
     end
+    true
   end
 
   # destroy own role for user

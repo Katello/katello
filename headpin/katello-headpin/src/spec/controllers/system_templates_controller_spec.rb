@@ -261,16 +261,7 @@ describe SystemTemplatesController, :katello => true do
       end
     end
 
-    describe "get auto_complete_package" do
-      before (:each) do
-        Pulp::Package.should_receive(:name_search).once.and_return(["a", "aa"])
-      end
 
-      it 'should call pulp' do
-        get :auto_complete_package, :name => "a"
-        response.should be_success
-      end
-    end
   end
 
   describe "rules" do
