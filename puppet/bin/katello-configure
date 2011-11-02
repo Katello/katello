@@ -215,6 +215,8 @@ end
 FileUtils.mkdir_p(log_directory, :mode => 0700)
 FileUtils.ln_sf('katello-configure-' + now, log_directory_link)
 
+FileUtils.cp result_config_path, log_directory
+
 ENV['KATELLO_ANSWER_FILE'] = result_config_path
 
 commands_by_logfiles = {
