@@ -182,6 +182,7 @@ install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
 install -Dp -m0755 %{confdir}/%{name}-jobs.init %{buildroot}%{_initddir}/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.completion.sh %{buildroot}%{_sysconfdir}/bash_completion.d/%{name}
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+install -Dp -m0644 %{confdir}/%{name}-jobs.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 install -Dp -m0644 %{confdir}/thin.yml %{buildroot}%{_sysconfdir}/%{name}/
 
@@ -246,6 +247,7 @@ fi
 %config %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
+%config %{_sysconfdir}/logrotate.d/%{name}-jobs
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %{_initddir}/%{name}
 %{_initddir}/%{name}-jobs

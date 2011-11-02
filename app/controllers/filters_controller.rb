@@ -36,6 +36,7 @@ class FiltersController < ApplicationController
 
   def index
     products = Product.readable(current_organization)
+    editable_products = Product.editable(current_organization)
     products.sort!{|a,b| a.name <=> b.name}
     @product_hash = {}
     products.each{|prod|
@@ -43,7 +44,8 @@ class FiltersController < ApplicationController
       prod.repos(current_organization.locker).sort{|a,b| a.name <=> b.name}.each{|repo|
         repos << {:name=>repo.name, :id=>repo.id}
       }
-      @product_hash[prod.id] = {:name=>prod.name, :repos=>repos, :id=>prod.id}
+      @product_hash[prod.id] = {:name=>prod.name, :repos=>repos, :id=>prod.id,
+                                :editable=>editable_products.include?(prod)}
     }
     
     render "index"
@@ -133,13 +135,20 @@ class FiltersController < ApplicationController
   end
 
   def update_products
-    @filter.products = []
-    params[:products].each{|p|
-      @filter.products << Product.find(p)
-    }
 
+    existing_readable = @filter.products.readable(current_organization)
+    new_readable = Product.readable(current_organization).where(:id=>params[:products])
+
+    #remove unneeded ones
+    (existing_readable - new_readable).each{|prod|
+      @filter.products.delete(prod)
+    }
+    #add new ones
+    (new_readable - existing_readable).each{|prod|
+      @filter.products << prod
+    }
     @filter.save!
-    
+
     notice N_("Sucessfully updated '#{@filter.name}' package filter.")
     render :text=>''
   rescue Exception => e
