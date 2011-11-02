@@ -81,6 +81,8 @@ rm -rf %{buildroot}
 %package all
 Summary:        A meta-package to pull in all components for katello-headpin
 Requires:       katello-headpin
+Requires:       katello-configure
+Requires:       katello-cli-headpin
 Requires:       postgresql-server
 Requires:       postgresql
 Requires:       candlepin-tomcat6
