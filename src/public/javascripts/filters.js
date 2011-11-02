@@ -148,12 +148,14 @@ KT.product_input = (function(){
                 parent = radio.parents(".product_entry"),
                 prod_id = parseInt(parent.attr("data-id")),
                 list = parent.find(".repos_list"),
+                search = parent.find(".repos_search"),
                 filter = KT.filters.get_current_filter(),
                 repos;
 
             //if 'all was selected'
             if (value === "all"){
                 list.hide(); //hide list and re-render message
+                search.hide();
                 KT.filter_renderer.render_product_message(prod_id, true);
                 if (filter.products.indexOf(prod_id) === -1){
                     filter.products.push(prod_id); //add product to filter
@@ -167,6 +169,7 @@ KT.product_input = (function(){
             }
             else { //else 'select repos' was selected
                 list.show(); //show list and rerender message
+                search.show();
                 KT.filters.pop_product(prod_id);
 
                 filter.repos[prod_id] = [];
@@ -229,8 +232,8 @@ KT.filter_renderer = (function(){
         KT.product_input.post_render_register();
 
         div.find("tr").not(".no_sort").sortElements(function(a,b){
-                var a_html = $.trim($(a).find('text').text());
-                var b_html = $.trim($(b).find('text').text());
+                var a_html = $.trim($(a).find('.text').text());
+                var b_html = $.trim($(b).find('.text').text());
                 if (a_html && b_html ) {
                     return  a_html.toUpperCase() >
                             b_html.toUpperCase() ? 1 : -1;
@@ -250,7 +253,7 @@ KT.filter_renderer = (function(){
     },
     render_single_repo = function(prod_id, repo_id){
         var list = $('.product_entry[data-id=' + prod_id + ']').find(".repos_list");
-        list.append(repo_template(prod_id, repo_id));
+        list.append(repo_template(prod_id, repo_id, true));
         KT.product_input.post_render_register();
         render_product_message(prod_id, false);
         rerender_repo_select(prod_id);
@@ -267,7 +270,7 @@ KT.filter_renderer = (function(){
     },
     product_select_template = function() {
         var html = "";
-        $.each(KT.products, function(id, prod){
+        $.each(KT.editable_products, function(id, prod){
             html += '<option value="PROD-' + prod.id+'">' + prod.name +'</option>';
             if (prod.repos.length > 0){
                 $.each(prod.repos, function(index, repo){
@@ -277,26 +280,28 @@ KT.filter_renderer = (function(){
         });
         return html;
     },
-    product_options = function(id, name, is_full, repos) {
+    product_options = function(id, name, editable, is_full, repos) {
         var style = is_full ? 'style="display:none;"' : '';
         var html_name = "PROD-" + id;
-        var html = '<div class="options"><span>';
-                html += product_radio('all' + html_name, html_name, i18n.all_repos, is_full, 'all');
-                html += "<br>";
-                html += product_radio('sel' + html_name, html_name, i18n.select_repos, !is_full, 'sel');
-            html += '</span>';
-            html += '<span ' + style + 'class="repos_list">';
-            html += repo_search(id);
+        var search_box = editable ? repo_search(id) : "";
+        var html = '<div class="options">';
+            html += '<div>' + product_radio('all' + html_name, html_name, i18n.all_repos, editable, is_full, 'all') + '</div>';
+            html += '<div>' + product_radio('sel' + html_name, html_name, i18n.select_repos, editable, !is_full, 'sel') +
+                        '<span ' + style + 'class="repos_search">' + search_box +  '</span>' +
+                    '</div>';
+            html += '<div class="repos_list">';
             $.each(repos, function(index, repo_id){
-                html += repo_template(id, repo_id);
+                html += repo_template(id, repo_id, editable);
             });
-        html += '</span></div>';
+            html += '</div></div>';
         return html;
     },
-    product_radio = function(id, name, label, is_checked, value){
+    product_radio = function(id, name, label, editable, is_checked, value){
       var checked = is_checked ? "checked" : "";
+      var disabled = editable ? "" : "disabled=disabled" ;
       var html = "";
-      html += '<input type="radio" ' + checked + ' id="'+ id +'" name="' +name+ '" value="' + value + '" class="product_radio"/>';
+      html += '<input type="radio" ' + disabled + " " + checked + ' id="'+ id +'" name="' +name+ '" ' +
+          'value="' + value + '" class="product_radio"/>';
       html += '<label for="' + id + '">' + label + '</label>';
       return html;
     },
@@ -310,7 +315,7 @@ KT.filter_renderer = (function(){
         }
         return message;
     },
-    repo_template = function(prod_id, repo_id) {
+    repo_template = function(prod_id, repo_id, editable) {
         var name;
         var html = '';
         $.each(KT.products[prod_id].repos, function(index, repo){
@@ -321,7 +326,9 @@ KT.filter_renderer = (function(){
         });
         html += '<div class="repo" data-id="'  + repo_id + '">';
         html += name;
-        html += '<a class="remove_repo"> &nbsp;' + i18n.remove + '</a>';
+        if (editable){
+            html += '<a class="remove_repo"> &nbsp;' + i18n.remove + '</a>';
+        }
         html += '</div>';
         return html;
     },
@@ -341,30 +348,33 @@ KT.filter_renderer = (function(){
             }
         });
         return html;
-    }
+    },
     single_product = function(prod_id) {
         var filter = KT.filters.get_current_filter();
         var repos = [];
+        var editable = Object.keys(KT.editable_products).indexOf(prod_id + "") > -1;
         if (filter.products.indexOf(prod_id) > -1){
             //render the cached repos if we want to
             if (KT.filters.get_repo_cache()[prod_id]){
                 repos = KT.filters.get_repo_cache()[prod_id];
             }
-            return product_template(prod_id, KT.products[prod_id].name, true, repos);
+            return product_template(prod_id, KT.products[prod_id].name, editable,  true, repos);
         }
         else {
             repos = filter.repos[prod_id];
-            return product_template(prod_id, KT.products[prod_id].name, false, repos);
+            return product_template(prod_id, KT.products[prod_id].name, editable, false, repos);
         }
     },
-    product_template = function(id, name, is_full, repos){
+    product_template = function(id, name, editable, is_full, repos){
         var html = '<tr><td class="no_padding"><div data-id="' + id + '" class="product_entry">';
         html += '<div  class="small_col toggle collapsed" data-id="' + id +'"></div>';
         html += '<div class="large_col">';
             html += '<span class="text">' + name + " <span class='prod_message'>" + product_message(id, is_full, repos) + '</span>';
-            html += '<a class="remove_product">&nbsp;' + i18n.remove + '</a>';
+            if (editable){
+                html += '<a class="remove_product">&nbsp;' + i18n.remove + '</a>';
+            }
             html += '</span>';
-            html += product_options(id, name, is_full, repos);
+            html += product_options(id, name, editable, is_full, repos);
         html += '</div>';
         html += "</div></td></tr>";
         return html;
