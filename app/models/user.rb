@@ -50,7 +50,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  # hash the password before creating or updateing the record
+  # hash the password before creating or updating the record
   before_save do |u|
     u.password = Password::update(u.password) if u.password.length != 192
   end
@@ -348,6 +348,15 @@ class User < ActiveRecord::Base
     User.allowed_to?([:delete], :users, nil)
   end
 
+  def send_password_reset
+    # generate a random password reset token that will be valid for only a configurable period of time
+    generate_token(:password_reset_token)
+    self.password_reset_sent_at = Time.zone.now
+    save!
+
+    UserMailer.password_reset(self).deliver
+  end
+
   protected
 
   def can_be_deleted?
@@ -381,6 +390,13 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  # generate a random token, that is unique within the User table for the column provided
+  def generate_token(column)
+    begin
+      self[column] = SecureRandom.hex(32)
+    end while User.exists?(column => self[column])
+  end
 
   def allowed_tags_query(verbs, resource_type,  org = nil, allowed_to_check = true)
     ResourceType.check resource_type, verbs
