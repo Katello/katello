@@ -13,7 +13,7 @@
 require 'spec_helper.rb'
 include OrchestrationHelper
 
-describe Api::FiltersController do
+describe Api::FiltersController, :katello => true do
   include LoginHelperMethods
   include LocaleHelperMethods
   include AuthorizationHelperMethods

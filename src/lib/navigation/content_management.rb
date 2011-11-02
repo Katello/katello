@@ -56,7 +56,7 @@ module Navigation
        :url => :sub_level,
        :if => :sub_level,
        :options => {:class=>'content second_level', "data-menu"=>"content"},
-       :items => [menu_custom_providers, menu_redhat_providers, menu_filters]
+       :items => AppConfig.katello? ? [menu_custom_providers, menu_redhat_providers, menu_filters] : [menu_custom_providers, menu_redhat_providers]
       }
 
     end

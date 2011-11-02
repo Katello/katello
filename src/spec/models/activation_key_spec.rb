@@ -24,10 +24,12 @@ describe ActivationKey do
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
     @environment_1 = KTEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
     @environment_2 = KTEnvironment.create!(:name => 'test', :prior => @environment_1.id, :organization => @organization)
-    @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1)
-    @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1)
+    @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @environment_1) if AppConfig.katello?
+    @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @environment_1) if AppConfig.katello?
     @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization,
-                                  :environment_id => @environment_1.id, :system_template_id => @system_template_1.id)
+                                  :environment_id => @environment_1.id, :system_template_id => @system_template_1.id) if AppConfig.katello?
+    @akey = ActivationKey.create!(:name => aname, :description => adesc, :organization => @organization,
+                                  :environment_id => @environment_1.id) unless AppConfig.katello?
   end
 
   context "in invalid state" do
@@ -81,7 +83,7 @@ describe ActivationKey do
       b.environment.should == @environment_2
     end
 
-    it "system template" do
+    it "system template", :katello => true do
       a = ActivationKey.find_by_name(aname)
       a.should_not be_nil
       b = ActivationKey.update(a.id, {:system_template_id => @system_template_2.id})
@@ -126,7 +128,7 @@ describe ActivationKey do
       @system.environment.should == @akey.environment
     end
 
-    it "assignes template to the system" do
+    it "assignes template to the system", :katello => true do
       @akey.apply_to_system(@system)
       @system.system_template.should == @akey.system_template
     end
