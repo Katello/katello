@@ -12,10 +12,10 @@
   #providers
     %input#panel_element_id{:name => @provider.id, :type => "hidden", :value => "#{@provider.name}_#{@provider.id}"}
     #provider
-      %h4 #{_("Provider Details")}
+      %h4 #{_("Red Hat Provider Details")}
       %fieldset.fl.clear
         .grid_5
-          %label #{_("Redhat Repository Url")}:
+          %label #{_("Repository Url")}:
         .grid_5.la.editable.edit_textfield{'name' => 'provider[repository_url]', 'data-url' => provider_path(@provider.id)} #{@provider[:repository_url]}
   %br.clearfloat
   #subscription_manifest
@@ -28,52 +28,49 @@
         = f.submit _("Upload")
 
 .grid_10
-  #subscriptions
-    #subscription
-      %script{:type => "text/javascript"}
-        //<![CDATA[]
-        $(function() {
-        $("#tabs").tabs();
-        });
-        //]]>
-      #tabs
-        %ul
-          %li
-            %a{:href => "#tabs-1"}
-              = _("Current Subscriptions")
-          %li
-            %a{:href => "#tabs-2"}
-              = _("Import History")
-        #tabs-1
-          %h4 #{_("Current Subscriptions")}
-          %table
-            %thead
-              %th #{_("Name")}
-              %th #{_("Consumed Subscriptions")}
-              %th #{_("Quantity Available")}
-            %tbody
-            - @subscriptions.each do |sub|
-              %tr{:class => cycle(nil, 'alt')}
-                %td
-                  = sub["productName"]
-                %td
-                  = sub["consumed"]
-                %td
-                  = sub["quantity"]
-        #tabs-2
-          %h4 #{_("Recent Imports")}
-          %table
-            %thead
-              %th #{_("Message")}
-              %th #{_("Status")}
-              %th #{_("Import Time")}
-            %tbody
-            - if @statuses
-              - @statuses.each do |status|
-                %tr{:class => cycle(nil, 'alt')}
-                  %td
-                    = status["statusMessage"]
-                  %td
-                    = status["status"]
-                  %td
-                    = _("%s ago") % time_ago_in_words(status["created"])
+  %script{:type => "text/javascript"}
+    //<![CDATA[]
+    $(function() {
+    $("#tabs").tabs();
+    });
+    //]]>
+  #tabs
+    %nav.tab_details
+      %ul
+        %li
+          %a{:href => "#tabs-1"}
+            = _("Current Subscriptions")
+        %li
+          %a{:href => "#tabs-2"}
+            = _("Import History")
+    #tabs-1
+      %table
+        %thead
+          %th #{_("Name")}
+          %th #{_("Consumed Subscriptions")}
+          %th #{_("Quantity Available")}
+        %tbody
+        - @subscriptions.each do |sub|
+          %tr{:class => cycle(nil, 'alt')}
+            %td
+              = sub["productName"]
+            %td
+              = sub["consumed"]
+            %td
+              = sub["quantity"]
+    #tabs-2
+      %table
+        %thead
+          %th #{_("Message")}
+          %th #{_("Status")}
+          %th #{_("Import Time")}
+        %tbody
+        - if @statuses
+          - @statuses.each do |status|
+            %tr{:class => cycle(nil, 'alt')}
+              %td
+                = status["statusMessage"]
+              %td
+                = status["status"]
+              %td
+                = _("%s ago") % time_ago_in_words(status["created"])
