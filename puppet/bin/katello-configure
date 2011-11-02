@@ -254,6 +254,9 @@ begin
 					processing_logfile = nil
 					seen_err = true
 				end
+			elsif line =~ /err:/
+				print line
+				seen_err = true
 			end
 			if line =~ /\]: Executing \'(.+)/
 				line_rest = $1
