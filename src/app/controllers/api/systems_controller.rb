@@ -47,6 +47,7 @@ class Api::SystemsController < Api::ApiController
       :unsubscribe => edit_system,
       :subscriptions => read_system,
       :pools => read_system,
+      :activate => register_system
     }
   end
 
@@ -193,8 +194,14 @@ class Api::SystemsController < Api::ApiController
   end
 
   def verify_presence_of_organization_or_environment
+    # This has to grab the first default org associated with this user AND
+    # the environment that goes with him.
     return if params.has_key?(:organization_id) or params.has_key?(:owner) or params.has_key?(:environment_id)
-    raise HttpErrors::BadRequest, _("Either organization id or environment id needs to be specified")
+
+    #At this point we know that they didn't supply an org or environment, so we can look up the default
+    @environment = current_user.default_environment
+    @organization = @environment.organization
+    #raise HttpErrors::BadRequest, _("Either organization id or environment id needs to be specified")
   end
 
   def find_system
