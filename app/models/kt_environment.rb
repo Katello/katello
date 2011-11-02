@@ -67,7 +67,11 @@ class KTEnvironment < ActiveRecord::Base
   has_many :system_templates, :class_name => "SystemTemplate", :foreign_key => :environment_id
 
   has_many :environment_products, :class_name => "EnvironmentProduct", :foreign_key => "environment_id", :dependent => :destroy, :uniq=>true
-  has_many :products, :through => :environment_products
+  has_many :products, :uniq => true, :through => :environment_products  do
+    def <<(*items)
+      super( items - proxy_owner.environment_products.collect{|ep| ep.product} )
+    end
+  end
 
   has_many :systems, :inverse_of => :environment, :foreign_key => :environment_id
   has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"], :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
@@ -76,7 +80,7 @@ class KTEnvironment < ActiveRecord::Base
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
 
   validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
-
+  validates_presence_of :organization
   validates :name, :presence => true, :katello_name_format => true
   validates :description, :katello_description_format => true
   validates_with PriorValidator
@@ -301,5 +305,4 @@ class KTEnvironment < ActiveRecord::Base
       :promote_changesets => N_("Promote Changesets in Environment")
     }.with_indifferent_access
   end
-
 end
