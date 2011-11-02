@@ -20,7 +20,10 @@ class Notice < ActiveRecord::Base
 
   validates_inclusion_of :level, :in => TYPES + TYPES.collect{|type| type.to_s}
   validates_presence_of :text
+  validates_length_of :text, :maximum => 1024
   validates_length_of :user_notices, :minimum => 1
+  validates_length_of :level, :maximum => 255
+  validates_length_of :request_type, :maximum => 255
 
   before_validation :set_default_notice_level
   before_save :add_to_all_users

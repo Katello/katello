@@ -12,6 +12,7 @@
 
 class Verb < ActiveRecord::Base
   has_and_belongs_to_many :permission
+  validates_length_of :verb, :maximum => 255
 
   # alias for verb attribute
   def name

@@ -45,6 +45,7 @@ end
 
 class ResourceType < ActiveRecord::Base
   belongs_to :permission
+  validates :name, :length => { :maximum => 255 }
 
   def display_name
     ResourceType::TYPES[name][:name]

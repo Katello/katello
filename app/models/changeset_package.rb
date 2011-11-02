@@ -42,6 +42,7 @@ class ChangesetPackage < ActiveRecord::Base
 
   belongs_to :changeset, :inverse_of=>:packages
   belongs_to :product
+  validates :display_name, :length => { :maximum => 255 }
   validates_with ChangesetPackageValidator
 
   # returns list of virtual permission tags for the current user

@@ -12,4 +12,6 @@
 #
 class SearchHistory < ActiveRecord::Base
   belongs_to :user
+  validates :params, :length => { :maximum => 255 }
+  validates :path, :length => { :maximum => 255 }
 end
