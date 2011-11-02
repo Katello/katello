@@ -22,6 +22,7 @@ class katello::params {
   # apache settings
   $thin_start_port = "5000"
   $thin_log        = "/var/log/katello/thin-log.log"
+  $process_count   = katello_process_count
 
   # LDAP settings
   $ldap_server = "localhost"

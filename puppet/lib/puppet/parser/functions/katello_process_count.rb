@@ -1,5 +1,5 @@
 module Puppet::Parser::Functions
-  newfunction(:katello_process_count) do |args|
+  newfunction(:katello_process_count, :type => :rvalue) do |args|
     begin
       cpu_count = scope.lookupvar('::processorcount')
       consumes = 230_000_000 # for each thin process
