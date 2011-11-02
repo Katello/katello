@@ -25,10 +25,13 @@
         %tr
           %td
             %form{:id=>'add_product_form'}
-              #{'Add '}
-              %select{:id=>'product_select', :style=>'width:350px;', 'data-placeholder'=>_("Choose a product..")}
-              %a{:id=>'add_product'}
-                #{_('+ Add')}
+              %div
+                #{'Add Products and Repositories:'}
+              #select_container{}
+                %select{:id=>'product_select', :style=>'width:350px;', 'data-placeholder'=>_("Choose a product..")}
+                .centered
+                  %a{:id=>'add_product'}
+                    #{_('+ Add')}
 
       %tr
         %td.no_padding

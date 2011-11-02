@@ -17,6 +17,7 @@
   :javascript
 
     KT.products = $.parseJSON('#{escape_javascript(@product_hash.to_json)}');
+    KT.editable_products = $.parseJSON('#{escape_javascript(@product_hash.reject{|key,val|!val[:editable]}.to_json)}');
     localize({
       "package_search_text": '#{_("Search available package names...")}',
       "product_search_text": '#{_("Search available product names...")}',
