@@ -33,6 +33,7 @@ class ChangesetRepo < ActiveRecord::Base
 
   belongs_to :changeset, :inverse_of=>:repos
   belongs_to :product
+  validates :display_name, :length => { :maximum => 255 }
   validates_with ChangesetRepoValidator
 
 end

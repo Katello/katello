@@ -71,6 +71,7 @@ class Provider < ActiveRecord::Base
   end
 
   def valid_url
+    errors.add(:repository_url, _("is too long")) if self.repository_url.length > 255
     errors.add(:repository_url, _("is invalid")) unless kurl_valid?(self.repository_url)
   end
 

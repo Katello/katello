@@ -215,6 +215,8 @@ end
 FileUtils.mkdir_p(log_directory, :mode => 0700)
 FileUtils.ln_sf('katello-configure-' + now, log_directory_link)
 
+FileUtils.cp result_config_path, log_directory
+
 ENV['KATELLO_ANSWER_FILE'] = result_config_path
 
 commands_by_logfiles = {
@@ -229,6 +231,7 @@ commands_by_logfiles = {
 puppet_logfile_filename = log_directory + '/main.log'
 puppet_logfile = IO.open(IO::sysopen(puppet_logfile_filename, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
 puts "The top-level log file is [#{puppet_logfile_filename}]"
+seen_err = false
 begin
 	IO.popen(puppet_cmd, 'w+') do |f|
 		f.puts "include katello"
@@ -249,7 +252,11 @@ begin
 					t.kill
 					puts "\n  Failed, please check [#{processing_logfile}]"
 					processing_logfile = nil
+					seen_err = true
 				end
+			elsif line =~ /err:/
+				print line
+				seen_err = true
 			end
 			if line =~ /\]: Executing \'(.+)/
 				line_rest = $1
@@ -272,5 +279,12 @@ begin
 	end
 rescue => e
 	$stderr.puts 'Error: ' + e.message
+	seen_err = true
 end
 puppet_logfile.close
+
+if seen_err
+	exit 6
+end
+
+exit
