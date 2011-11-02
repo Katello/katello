@@ -13,12 +13,15 @@
 class Api::FiltersController < Api::ApiController
 
   before_filter :find_organization, :only => [:index, :create]
-  before_filter :find_filter, :only => [:show, :destroy]
+  before_filter :find_filter, :only => [:show, :destroy, :update]
+  before_filter :find_product, :only => [:list_product_filters, :update_product_filters]
+  before_filter :find_filters, :only => [:update_product_filters]
   before_filter :authorize
 
   def rules
     index_filters = lambda { Filter.any_readable?(@organization) }
     create_filter = lambda { Filter.creatable?(@organization) }
+    update_filter = lambda { Filter.updatable?(@organization)}
     read_filter = lambda { @filter.readable? }
     delete_filter = lambda { @filter.deletable? }
 
@@ -26,7 +29,10 @@ class Api::FiltersController < Api::ApiController
       :create => create_filter,
       :index => index_filters,
       :show => read_filter,
-      :destroy => delete_filter
+      :update => update_filter,
+      :destroy => delete_filter,
+      :list_product_filters => index_filters,
+      :update_product_filters => create_filter
     }
   end
 
@@ -35,9 +41,18 @@ class Api::FiltersController < Api::ApiController
   end
 
   def create
-    @filter = Filter.create!(params[:filter]) do |f|
-      f.organization = @organization
-    end
+    @filter = Filter.create!(:pulp_id => params[:name],
+      :organization => @organization,
+      :description => params[:description],
+      :package_list => params[:package_list]
+    )
+    render :json => @filter.to_json
+  end
+
+  def update
+    @filter.package_list = params[:packages] unless params[:packages].nil?
+    @filter.save!
+
     render :json => @filter.to_json
   end
 
@@ -50,10 +65,35 @@ class Api::FiltersController < Api::ApiController
     render :text => _("Deleted filter '#{params[:id]}'"), :status => 200
   end
 
+  def list_product_filters
+    render :json => @product.filters.to_json
+  end
+
+  def update_product_filters
+    deleted_filters = @product.filters - @filters
+    added_filters = @filters - @product.filters
+
+    @product.filters -= deleted_filters
+    @product.filters += added_filters
+
+    render :json => @product.filters.to_json
+  end
+
+  def find_product
+    @product = Product.find_by_cp_id(params[:product_id])
+    raise HttpErrors::NotFound, _("Couldn't find product with id '#{params[:product_id]}'") if @product.nil?
+  end
+
   def find_filter
     @filter = Filter.first(:conditions => {:pulp_id => params[:id]})
     raise HttpErrors::NotFound, _("Couldn't find filter '#{params[:id]}'") if @filter.nil?
     @filter
+  end
+
+  def find_filters
+    @filters = Filter.where(:pulp_id => params[:filters])
+    raise HttpErrors::NotFound, _("Couldn't one of the filters in '#{params[:product_id]}'") if @filters.any? {|f| f.nil?}
+    @filters
   end
 
 end

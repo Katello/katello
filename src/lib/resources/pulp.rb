@@ -154,8 +154,13 @@ module Pulp
   class Repository < PulpResource
     class << self
 
-      def clone_repo from_repo, to_repo, feed = "parent"  #clone is a built in method, hence redundant name
-        data = {:clone_id => to_repo.id, :feed =>feed, :clone_name => to_repo.name, :groupid=>to_repo.groupid, :relative_path => to_repo.relative_path }
+      def clone_repo from_repo, to_repo, feed = "parent", filters = []  #clone is a built in method, hence redundant name
+        data = { :clone_id => to_repo.id,
+                 :feed =>feed,
+                 :clone_name => to_repo.name,
+                 :groupid=>to_repo.groupid,
+                 :relative_path => to_repo.relative_path,
+                 :filters => filters }
         path = Repository.repository_path + from_repo.id + "/clone/"
         response = post(path, JSON.generate(data), self.default_headers)
         JSON.parse(response.body).with_indifferent_access
@@ -295,6 +300,16 @@ module Pulp
         JSON.parse(body)
       end
 
+      def add_filters repo_id, filter_ids
+        response =  post(repository_path + repo_id + "/add_filters/", {:filters => filter_ids}.to_json, self.default_headers)
+        response.body
+      end
+
+      def remove_filters repo_id, filter_ids
+        response =  post(repository_path + repo_id + "/remove_filters/", {:filters => filter_ids}.to_json, self.default_headers)
+        response.body
+      end
+
       private
       def get_repo_search_query groupids=nil, search_params = {}
         search_query = ""
@@ -315,7 +330,6 @@ module Pulp
 
         search_query
       end
-
     end
   end
 
@@ -461,12 +475,22 @@ module Pulp
       end
 
       def destroy id
-        self.delete(path(id), self.default_headers).code.to_i
+        self.post(path(id) + "delete_filter/", self.default_headers).code.to_i
       end
 
       def find id
         response = self.get path(id), self.default_headers
         JSON.parse(response.body).with_indifferent_access
+      end
+
+      def add_packages id, packages
+        response = self.post path(id) + "add_packages/", {:packages => packages}.to_json, self.default_headers
+        return response.body
+      end
+
+      def remove_packages id, packages
+        response = self.post path(id) + "remove_packages/", {:packages => packages}.to_json, self.default_headers
+        return response.body
       end
 
       def path(id=nil)

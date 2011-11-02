@@ -35,7 +35,8 @@ from katello.client.core import (
   shell_command,
   template,
   changeset,
-  client
+  client,
+  filters
 )
 
 def setup_admin(admin):
@@ -84,6 +85,9 @@ def setup_admin(admin):
     prod_cmd.add_action('synchronize', product.Sync())
     prod_cmd.add_action('status', product.Status())
     prod_cmd.add_action('promote', product.Promote())
+    prod_cmd.add_action('list_filters', product.ListFilters())
+    prod_cmd.add_action('add_filter', product.AddFilter())
+    prod_cmd.add_action('delete_filter', product.DeleteFilter())
     admin.add_command('product', prod_cmd)
 
     repo_cmd = repo.Repo()
@@ -170,6 +174,15 @@ def setup_admin(admin):
     client_cmd.add_action('forget', client.Forget())
     client_cmd.add_action('saved_options', client.SavedOptions())
     admin.add_command('client', client_cmd)
+    
+    filter_cmd = filters.Filter()
+    filter_cmd.add_action('create', filters.Create())
+    filter_cmd.add_action('list', filters.List())
+    filter_cmd.add_action('info', filters.Info())
+    filter_cmd.add_action('delete', filters.Delete())
+    filter_cmd.add_action('add_package', filters.AddPackage())
+    filter_cmd.add_action('remove_package', filters.RemovePackage())
+    admin.add_command('filter', filter_cmd)
 
 if __name__ == "__main__":
     admin = AdminCLI()

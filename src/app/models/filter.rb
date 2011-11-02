@@ -15,10 +15,39 @@ class Filter < ActiveRecord::Base
   include Glue
   include Authorization
 
+
   validates :pulp_id, :presence => true
+  validates_presence_of :organization_id
   validates_uniqueness_of :pulp_id, :scope => :organization_id, :message => N_("pulp_id must be unique within one organization")
 
   belongs_to :organization
+  has_and_belongs_to_many :products, :uniq => true
+
+  alias_attribute :name, :pulp_id
+
+  scoped_search :on => :pulp_id, :complete_value => true
+  
+  scope :readable, lambda {|org|
+    readable_items(org)
+  }
+
+
+
+
+
+  READ_PERM_VERBS = [:read, :create, :delete]
+
+  def readable?
+    User.allowed_to?(READ_PERM_VERBS, :filters, self.id, self.organization)
+  end
+
+  def editable?
+    User.allowed_to?([:update], :filters, self.id, self.organization)
+  end
+
+  def deletable?
+     User.allowed_to?([:delete, :create], :filters, self.id, self.organization)
+  end
 
   def self.list_tags org_id
     select('id,pulp_id').where(:organization_id=>org_id).collect { |m| VirtualTag.new(m.id, m.pulp_id) }
@@ -30,9 +59,10 @@ class Filter < ActiveRecord::Base
 
   def self.list_verbs  global = false
     {
-       :create => N_("Create Filter"),
-       :read => N_("Access Filter"),
-       :delete => N_("Delete Filter"),
+       :create => N_("Create Package Filters"),
+       :read => N_("Access Package Filters"),
+       :delete => N_("Delete Package Filters"),
+       :update => N_("Edit Package Filters")
     }.with_indifferent_access
   end
 
@@ -40,17 +70,34 @@ class Filter < ActiveRecord::Base
     User.allowed_to?([:create], :filters, nil, org)
   end
 
+  def self.updatable? org
+    User.allowed_to?([:read, :update], :filters, nil, org)
+  end
+
   def self.any_readable?(org)
     User.allowed_to?(READ_PERM_VERBS, :filters, nil, org)
   end
 
-  def readable?
-    User.allowed_to?(READ_PERM_VERBS, :filters, self.id, self.organization)
+  def self.readable_items org
+    raise "scope requires an organization" if org.nil?
+    resource = :filters
+    verbs = READ_PERM_VERBS
+    if User.allowed_all_tags?(verbs, resource, org)
+       where(:organization_id => org)
+    else
+      where("filters.id in (#{User.allowed_tags_sql(verbs, resource, org)})")
+    end
   end
 
-  def deletable?
-     User.allowed_to?([:delete, :create], :filters, self.id, self.organization)
+
+
+  def as_json(options)
+    options.nil? ?
+        super(:methods => [:name], :exclude => :pulp_id) :
+        super(options.merge(:methods => [:name], :exclude => :pulp_id) {|k, v1, v2| [v1, v2].flatten })
   end
 
-  READ_PERM_VERBS = [:read, :create, :delete]
 end
+
+
+

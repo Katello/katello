@@ -397,14 +397,23 @@ class ApplicationController < ActionController::Base
     
     options[:accessor] ||= "id"
     options[:columns] = options[:col]
+    options[:initial_action] ||= :edit
     
     if start == "0"
       options[:total_count] = @items.count
     end
-    
-    @items_searched = @items.search_for(search)
-    @items_offset = @items_searched.limit(current_user.page_size).offset(start)
-    
+
+    # the caller may provide items either based on active record or a list within an array... in the case of an
+    # array, it is assumed to be based upon results from a pulp/candlepin request, in which case search is
+    # not currently supported
+    if @items.kind_of? ActiveRecord::Relation
+      @items_searched = @items.search_for(search)
+      @items_offset = @items_searched.limit(current_user.page_size).offset(start)
+    else
+      @items_searched = @items
+      @items_offset = @items_searched[start.to_i..start.to_i+current_user.page_size]
+    end
+
     options[:total_results] = @items_searched.count
     options[:collection] ||= @items_offset
     
@@ -420,35 +429,6 @@ class ApplicationController < ActionController::Base
                       :current_items => options[:collection].length }
                       
     retain_search_history
-  end
-
-  #produce a simple datastructure of a changeset for the browser
-  def simplify_changeset cs
-
-    to_ret = {:id=>cs.id.to_s, :name=>cs.name, :description=>cs.description, :timestamp =>cs.updated_at.to_i.to_s,
-                          :system_templates => {},:products=>{}, :is_new => cs.state == Changeset::NEW}
-    cs.system_templates.each do |temp|
-      to_ret[:system_templates][temp.id] = {:id=> temp.id, :name=>temp.name}
-    end
-
-    cs.involved_products.each{|product|
-      to_ret[:products][product.id] = {:id=> product.id, :name=>product.name, :provider=>product.provider.provider_type,
-                                       'package'=>[], 'errata'=>[], 'repo'=>[], 'distribution'=>[]}
-    }
-
-    cs.products.each {|product|
-      to_ret[:products][product.id][:all] =  true
-    }
-
-    ['repo', 'errata', 'package', 'distribution'].each{ |type|
-      cs.send(type.pluralize).each{|item|
-        p item
-        pid = item.product_id
-        cs_product = to_ret[:products][pid]
-        cs_product[type] << {:id=>item.send("#{type}_id"), :name=>item.display_name}
-      }
-    }
-    to_ret
   end
 
   # for use with:   around_filter :catch_exceptions

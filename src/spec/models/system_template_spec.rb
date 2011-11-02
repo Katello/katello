@@ -27,6 +27,10 @@ describe SystemTemplate, :katello => true do
 
     @tpl1 = SystemTemplate.create!(:name => "template_1", :environment => @organization.locker)
 
+    @tpl1_clone = mock(SystemTemplate)
+    @tpl1_clone.stub(:save!)
+    @tpl1_clone.stub(:save)
+
     @prod1 = Product.create!(:cp_id => "123456", :name => "prod1", :environments => [@organization.locker], :provider => @provider)
     @prod2 = Product.create!(:cp_id => "789123", :name => "prod2", :environments => [@organization.locker], :provider => @provider)
 
@@ -116,7 +120,6 @@ describe SystemTemplate, :katello => true do
       @prod1.environments << @to_env
       @tpl1.products << @prod1
       @tpl1.products << @prod2
-      @tpl1.stub(:copy_to_env)
 
       @prod1.stub(:promote).and_return([])
       @prod2.stub(:promote).and_return([])
@@ -124,6 +127,7 @@ describe SystemTemplate, :katello => true do
       @prod1.should_not_receive(:promote)
       @prod2.should_receive(:promote)
 
+      @tpl1.stub(:copy_to_env).and_return(@tpl1_clone)
       @tpl1.promote(@from_env, @to_env)
     end
 
@@ -131,7 +135,6 @@ describe SystemTemplate, :katello => true do
 
       @tpl1.environment.stub(:find_packages_by_name).and_return([package_1])
       @tpl1.packages << SystemTemplatePackage.new(:package_name => 'foo', :system_template => @tpl1)
-      @tpl1.stub(:copy_to_env)
       @tpl1.stub(:get_promotable_packages).and_return([package_1])
 
       repo = Glue::Pulp::Repo.new(repo_1)
@@ -142,13 +145,13 @@ describe SystemTemplate, :katello => true do
       Glue::Pulp::Repo.stub(:find).with(package_1[:repo_id]).and_return(repo)
       clone.should_receive(:add_packages).with([package_1[:id]])
 
+      @tpl1.stub(:copy_to_env).and_return(@tpl1_clone)
       @tpl1.promote(@from_env, @to_env)
     end
 
     it "should promote products that are required by packages and haven't been promoted yet" do
       @tpl1.environment.stub(:find_packages_by_name).and_return([package_1])
       @tpl1.packages << SystemTemplatePackage.new(:package_name => 'foo', :system_template => @tpl1)
-      @tpl1.stub(:copy_to_env)
       @tpl1.stub(:get_promotable_packages).and_return([package_1])
 
       repo = Glue::Pulp::Repo.new(repo_1)
@@ -160,6 +163,7 @@ describe SystemTemplate, :katello => true do
       @prod1.should_receive(:promote).with(@from_env, @to_env).and_return([])
       clone.should_not_receive(:add_packages)
 
+      @tpl1.stub(:copy_to_env).and_return(@tpl1_clone)
       @tpl1.promote(@from_env, @to_env)
     end
 
@@ -207,9 +211,23 @@ describe SystemTemplate, :katello => true do
 
 
     it "should clone the template to the next environment" do
-      @tpl1.should_receive(:copy_to_env).with(@environment)
+      @tpl1.should_receive(:copy_to_env).with(@environment).and_return(@tpl1_clone)
 
       @tpl1.promote(@organization.locker, @environment)
+    end
+
+    it "should keep the content of the cloned template" do
+
+      @prod1.environments << @to_env
+      @tpl1.products << @prod1
+      @tpl1.revision = 83
+
+      @tpl1.stub(:promote_products)
+      @tpl1.stub(:promote_packages)
+
+      @tpl1.promote(@from_env, @to_env)
+      cloned_tpl = @to_env.system_templates.first
+      cloned_tpl.export_as_json.should == @tpl1.export_as_json
     end
 
   end
@@ -240,6 +258,9 @@ describe SystemTemplate, :katello => true do
   'package_group_categories': [
     'pgc-123',
     'pgc-456'
+  ],
+  'distributions': [
+    'ks-distro'
   ]
 }
 "
@@ -255,6 +276,7 @@ describe SystemTemplate, :katello => true do
       @import_tpl.should_receive(:add_package_group).once.with('pg-456').and_return nil
       @import_tpl.should_receive(:add_pg_category).once.with('pgc-123').and_return nil
       @import_tpl.should_receive(:add_pg_category).once.with('pgc-456').and_return nil
+      @import_tpl.should_receive(:add_distribution).once.with('ks-distro').and_return nil
 
 
       @import_tpl.string_import(@import)
@@ -273,6 +295,7 @@ describe SystemTemplate, :katello => true do
       @export_tpl.stub(:parameters_json).and_return "{}"
       @export_tpl.stub(:package_groups).and_return [SystemTemplatePackGroup.new({:name => 'xxx'})]
       @export_tpl.stub(:pg_categories).and_return [SystemTemplatePgCategory.new({:name => 'xxx'})]
+      @export_tpl.stub(:distributions).and_return [SystemTemplateDistribution.new({:distribution_pulp_id=> 'xxx'})]
 
       str = @export_tpl.export_as_json
       json = ActiveSupport::JSON.decode(str)
@@ -280,6 +303,7 @@ describe SystemTemplate, :katello => true do
       json['packages'].size.should == 1
       json['package_groups'].size.should == 1
       json['package_group_categories'].size.should == 1
+      json['distributions'].size.should == 1
     end
 
   end
@@ -481,15 +505,63 @@ describe SystemTemplate, :katello => true do
     end
   end
 
+  describe "distributions" do
+
+    let(:distribution) { RepoTestData.repo_distributions["id"] }
+    let(:repo) {{
+      :name => 'foo repo',
+      :id => 'foo repo',
+    }}
+
+    before :each do
+      Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
+      Pulp::Repository.stub(:all => [repo])
+    end
+
+    describe "#add_distribution" do
+
+      it "should make a record to the database about the assignment" do
+        @tpl1.add_distribution(distribution)
+        d = @tpl1.distributions(true).last
+        d.should_not be_new_record
+        d.distribution_pulp_id.should == distribution
+      end
+
+      it "should prevent from adding the same package group twice" do
+        @tpl1.add_distribution(distribution)
+        lambda { @tpl1.add_distribution(distribution) }.should raise_error(ActiveRecord::RecordInvalid)
+        @tpl1.distributions.count.should == 1
+      end
+    end
+
+    describe "#remove_distribution" do
+      before do
+        @tpl1.distributions.create!(:distribution_pulp_id=> distribution)
+      end
+
+      it "should remove a record from the database about the assignment" do
+        @tpl1.remove_distribution(distribution)
+        d = @tpl1.distributions(true).last
+        d.should be_nil
+      end
+    end
+  end
+
   describe "TDL export" do
 
     subject { Nokogiri.parse(@tpl1.export_as_tdl) }
 
-    describe "repositories", :katello => true do
+    let(:distribution) { RepoTestData.repo_distributions["id"] }
+
+    describe "repositories and distributions", :katello => true do
       before do
         disable_repo_orchestration
+        Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
+        Pulp::Distribution.stub(:find => RepoTestData.repo_distributions)
+        Pulp::Repository.stub(:all => [RepoTestData::REPO_PROPERTIES])
         @prod1.stub(:repos => [Glue::Pulp::Repo.new(RepoTestData::REPO_PROPERTIES)])
         @tpl1.products << @prod1
+        @tpl1.add_distribution(distribution)
       end
 
       it "should contain repos referencing to pulp repositories" do
@@ -506,7 +578,17 @@ describe SystemTemplate, :katello => true do
         subject.xpath("/template/repositories/repository/clientkey").text.should_not == nil
       end
 
-      pending #it_should_behave_like "valid tdl"
+      it "name, version, arch should not be nil" do
+        subject.xpath("/template/os/name").text.should_not == nil
+        subject.xpath("/template/os/version").text.should_not == nil
+        subject.xpath("/template/os/arch").text.should_not == nil
+      end
+
+      it "url should be set" do
+        subject.xpath("/template/os/install/url").text.should == RepoTestData.repo_distributions['url']
+      end
+
+      it_should_behave_like "valid tdl"
     end
   end
 

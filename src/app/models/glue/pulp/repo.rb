@@ -10,9 +10,10 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
 class Glue::Pulp::Repo
   attr_accessor :id, :groupid, :arch, :name, :feed, :feed_cert, :feed_key, :feed_ca,
-                :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type
+                :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type, :filters
 
   def initialize(params = {})
     @params = params
@@ -258,7 +259,9 @@ class Glue::Pulp::Repo
     sync_history_item['state'] == 'finished'
   end
 
-  def promote(to_environment, content)
+  def promote(to_environment, filters = [])
+    content = self.content_for_clone
+
     cloned = Glue::Pulp::Repo.new
     cloned.id = self.clone_id(to_environment)
     cloned.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_environment)
@@ -266,7 +269,7 @@ class Glue::Pulp::Repo
     cloned.name = name
     cloned.feed = feed
     cloned.groupid = Glue::Pulp::Repos.groupid(self.product, to_environment, content)
-    [Pulp::Repository.clone_repo(self, cloned)]
+    [Pulp::Repository.clone_repo(self, cloned, "parent", filters)]
   end
 
   def organization_id
@@ -299,7 +302,7 @@ class Glue::Pulp::Repo
 
   def content
     if not self.content_id.nil?
-      Candlepin::Content.get(self.content_id)
+      Glue::Candlepin::Content.new(::Candlepin::Content.get(self.content_id))
     end
   end
 
@@ -309,6 +312,14 @@ class Glue::Pulp::Repo
 
   def self.find(id)
     Glue::Pulp::Repo.new(Pulp::Repository.find(id))
+  end
+
+  def add_filters filter_ids
+    ::Pulp::Repository.add_filters id, filter_ids
+  end
+
+  def remove_filters filter_ids
+    ::Pulp::Repository.remove_filters id, filter_ids
   end
 
   # Convert array of Repo objects to Ruby Hash in the form of repo.id => repo_object for fast searches.
@@ -321,7 +332,46 @@ class Glue::Pulp::Repo
     }.flatten]
   end
 
+  protected
+
+  def content_for_clone
+    return self.content unless self.content_id.nil?
+    return self.clone_content unless self.clone_ids.empty?
+
+    new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(self)
+    new_content = self.create_content(new_repo_path)
+
+    self.product.add_content new_content
+    new_content.content
+  end
+
+
+  def clone_content
+    return nil if self.clone_ids.empty?
+
+    clone = Glue::Pulp::Repo.find(self.clone_ids[0])
+    clone.content
+  end
+
+  def create_content path
+    new_content = Glue::Candlepin::ProductContent.new({
+      :content => {
+        :name => self.name,
+        :contentUrl => path,
+        :gpgUrl => "",
+        :type => "yum",
+        :label => self.name,
+        :vendor => self.product.provider.provider_type
+      },
+      :enabled => true
+    })
+    new_content.create
+    new_content
+  end
+
   private
+
+
   def get_groupid_param name
     idx = self.groupid.index do |s| s.start_with? name+':' end
     if not idx.nil?

@@ -17,6 +17,7 @@ module Navigation
         helper_method :promotion_packages_navigation
         helper_method :promotion_errata_navigation
         helper_method :promotion_distribution_navigation
+        helper_method :package_filter_navigation
       end
     end
 
@@ -55,7 +56,7 @@ module Navigation
        :url => :sub_level,
        :if => :sub_level,
        :options => {:class=>'content second_level', "data-menu"=>"content"},
-       :items => [menu_custom_providers, menu_redhat_providers]
+       :items => [menu_custom_providers, menu_redhat_providers, menu_filters]
       }
 
     end
@@ -145,6 +146,16 @@ module Navigation
        }
     end
 
+
+    def menu_filters
+       {:key => :filters,
+        :name => N_("Package Filters"),
+        :url => filters_path,
+        :if => lambda {Filter.any_readable?(current_organization)}
+       }
+    end
+
+
     def promotion_packages_navigation
       [
         { :key => :details,
@@ -207,5 +218,30 @@ module Navigation
         }
       ]
     end
+
+
+    def package_filter_navigation
+      [
+        { :key => :packages,
+          :name =>N_("Filtered Packages"),
+          :url => lambda{packages_filter_path(@filter.id)},
+          :if => lambda{@filter},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :products,
+          :name =>N_("Products and Repositories"),
+          :url => lambda{products_filter_path(@filter.id)},
+          :if => lambda{@filter},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :details,
+          :name =>N_("Details"),
+          :url => lambda{edit_filter_path(@filter.id)},
+          :if => lambda{@filter},
+          :options => {:class=>"navigation_element"}
+        }
+      ]
+    end
+
   end
 end

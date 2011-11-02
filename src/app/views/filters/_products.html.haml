@@ -1,0 +1,45 @@
+
+= javascript do
+  :javascript
+    KT.filters.set_current_filter($.parseJSON('#{escape_javascript(objectify(@filter).to_json)}'));
+
+= content_for :title do
+  #{@filter.name}
+
+= content_for :remove_item do
+  - if filter.deletable?
+    = link_to _("Remove Filter"), {:action => "destroy", :controller => "filters"}, :method => :delete, :confirm => _('Are you sure you want to delete this filster?'), :class => "remove_item", :remote=>true
+
+
+= content_for :navigation do
+  = render_navigation(:items=>package_filter_navigation, :level => 1)
+  
+= content_for :content do
+  #package_filter
+    %table
+      %thead
+        %tr
+          %th
+            #{"Product"}
+      -if editable
+        %tr
+          %td
+            %form{:id=>'add_product_form'}
+              #{'Add '}
+              %select{:id=>'product_select', :style=>'width:350px;', 'data-placeholder'=>_("Choose a product..")}
+              %a{:id=>'add_product'}
+                #{_('+ Add')}
+
+      %tr
+        %td.no_padding
+          %table#product_list
+
+
+    %input.fr.button{:id=>'revert_products', :type=>'button', :value=>_("Revert Filter")}
+    %input.fr.button{:id=>'update_products', :type=>'button', :value=>_("Save Filter")}
+
+
+
+
+
+

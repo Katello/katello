@@ -42,6 +42,7 @@ class SystemTemplate < ActiveRecord::Base
   has_many :packages, :class_name => "SystemTemplatePackage", :inverse_of => :system_template, :dependent => :destroy
   has_many :package_groups, :class_name => "SystemTemplatePackGroup", :inverse_of => :system_template, :dependent => :destroy
   has_many :pg_categories, :class_name => "SystemTemplatePgCategory", :inverse_of => :system_template, :dependent => :destroy
+  has_many :distributions, :class_name => "SystemTemplateDistribution", :inverse_of => :system_template, :dependent => :destroy
 
   attr_accessor :host_group
   lazy_accessor :parameters, :initializer => lambda { init_parameters }, :unless => lambda { false }
@@ -84,8 +85,10 @@ class SystemTemplate < ActiveRecord::Base
     json["packages"].each {|p| self.add_package(p) } if json["packages"]
     json["package_groups"].each {|pg| self.add_package_group(pg) } if json["package_groups"]
     json["package_group_categories"].each {|pgc| self.add_pg_category(pgc) } if json["package_group_categories"]
-
+    json["distributions"].each {|d| self.add_distribution(d) } if json["distributions"]
     json["parameters"].each_pair {|k,v| self.parameters[k] = v } if json["parameters"]
+
+    self.save_content_state
   end
 
   def export_as_hash
@@ -97,9 +100,9 @@ class SystemTemplate < ActiveRecord::Base
       :parameters => ActiveSupport::JSON.decode(self.parameters_json || "{}"),
       :package_groups => self.package_groups.map(&:name),
       :package_group_categories => self.pg_categories.map(&:name),
+      :distributions => self.distributions.map(&:distribution_pulp_id),
     }
     tpl[:description] = self.description if not self.description.nil?
-    tpl[:parent] = self.parent.name if not self.parent.nil?
     tpl
   end
 
@@ -107,14 +110,14 @@ class SystemTemplate < ActiveRecord::Base
     self.export_as_hash.to_json
   end
 
-
   # Returns template in XML TDL format:
   # https://github.com/aeolusproject/imagefactory/blob/master/Documentation/TDL.xsd
   def export_as_tdl
-    uebercert = { :cert => "", :key => "" }
+
     begin
       uebercert = Candlepin::Owner.get_ueber_cert(environment.organization.cp_key)
     rescue RestClient::ResourceNotFound => e
+      uebercert = nil
       Rails.logger.info "Uebercert for #{environment.organization.name} has not been generated. Using empty cert and key fields."
     end
 
@@ -123,19 +126,30 @@ class SystemTemplate < ActiveRecord::Base
     xm.template {
       # mandatory tags
       xm.name self.name
-      xm.os {
-        xm.name "Fedora"
-        xm.version "14"
-        xm.arch "x86_64"
-        xm.install("type" => "url") {
-          xm.url "http://repo.fedora.org/f14/os"
+      if self.distributions.count == 1
+        xm.os {
+          distro = self.distributions.first
+          # TODO this will probably need a "mapping" table (Pulp->Aeolus Family-Version)
+          xm.name distro.family
+          xm.version distro.version
+          # TODO distro.arch is nil until resolved 750265 - RFE: Separate "arch" field for distribution
+          #xm.arch distro.arch
+          xm.arch "x86_64"
+          xm.install("type" => "url") {
+            xm.url distro.url
+          }
         }
-      }
+      elsif self.distributions.count < 1
+        Rails.logger.info "Template '%s' is missing distribution" % self.name
+      else
+        Rails.logger.info "Template '%s' contains more than one distribution" % self.name
+      end
       # optional tags
       xm.description self.description unless self.description.nil?
       xm.packages {
         self.packages.each { |p| xm.package "name" => p.package_name }
-        # TODO package groups
+        self.package_groups.each { |p| xm.package "name" => "@#{p.name}" }
+        # TODO package groups categories ("unwrap" them here or pass them to IF?)
       }
       xm.repositories {
         self.products.each do |p|
@@ -143,8 +157,8 @@ class SystemTemplate < ActiveRecord::Base
             xm.repository("name" => repo.id) {
               xm.url repo.uri
               xm.persisted "No"
-              xm.clientcert uebercert[:cert]
-              xm.clientkey uebercert[:key]
+              xm.clientcert uebercert[:cert] unless uebercert.nil?
+              xm.clientkey uebercert[:key] unless uebercert.nil?
             }
           end
         end
@@ -240,6 +254,16 @@ class SystemTemplate < ActiveRecord::Base
     self.pg_categories.delete(pg_category)
   end
 
+  def add_distribution pulp_id
+    self.distributions.create!(:distribution_pulp_id => pulp_id)
+  end
+
+  def remove_distribution pulp_id
+    distro = self.distributions.where(:distribution_pulp_id => pulp_id).first
+    raise Errors::TemplateContentException.new(_("Distribution '%s' not found in this template.") % pulp_id) if distro.nil?
+    self.distributions.delete(distro)
+  end
+
   def to_json(options={})
      super(options.merge({
         :methods => [:products,
@@ -267,6 +291,7 @@ class SystemTemplate < ActiveRecord::Base
 
   def promote from_env, to_env
     #TODO: promote parent templates recursively
+    self.parent.promote(from_env, to_env) unless self.parent.nil?
 
     promote_products from_env, to_env
     promote_packages from_env, to_env
@@ -319,7 +344,10 @@ class SystemTemplate < ActiveRecord::Base
     #clone the template
     tpl_copy = to_env.system_templates.find_by_name(self.name)
     tpl_copy.delete if not tpl_copy.nil?
-    self.copy_to_env to_env
+
+    new_tpl_copy = self.copy_to_env to_env
+    new_tpl_copy.parent = to_env.system_templates.find_by_name(self.parent.name) if self.parent
+    new_tpl_copy.save!
   end
 
   def promote_products from_env, to_env
@@ -386,6 +414,7 @@ class SystemTemplate < ActiveRecord::Base
     new_tpl.environment = env
     new_tpl.string_import(self.export_as_json)
     new_tpl.save!
+    new_tpl
   end
 
   #TODO: to be deleted after we switch to save parameters in foreman

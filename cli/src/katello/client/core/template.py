@@ -374,6 +374,13 @@ class Update(TemplateAction):
         self.parser.add_option('--remove_package_group_category', dest='remove_pg_categories',
                                 action="append",
                                 help=_("name of the package group category"))
+
+        self.parser.add_option('--add_distribution', dest='add_distributions',
+                                action="append",
+                                help=_("distribution id"))
+        self.parser.add_option('--remove_distribution', dest='remove_distributions',
+                                action="append",
+                                help=_("distribution id"))
         self.resetParameters()
 
 
@@ -410,6 +417,9 @@ class Update(TemplateAction):
         
         content['+parameters'] = self.add_parameters.copy()
         content['-parameters'] = self.get_option('remove_parameters') or []
+
+        content['+distros'] = self.get_option('add_distributions') or []
+        content['-distros'] = self.get_option('remove_distributions') or []
         return content
 
     def run(self):
@@ -482,6 +492,12 @@ class Update(TemplateAction):
             self.api.remove_content(tplId, 'parameters', p)
         for p, v in content['+parameters'].iteritems():
             self.api.add_content(tplId, 'parameters', {'name': p, 'value': v})
+
+        for p in content['-distros']:
+            self.api.remove_content(tplId, 'distributions', p)
+        for p in content['+distros']:
+            self.api.add_content(tplId, 'distributions', {'id': p})
+
 
 
 # ==============================================================================

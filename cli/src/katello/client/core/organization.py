@@ -21,7 +21,7 @@ from katello.client.api.organization import OrganizationAPI
 from katello.client.api.product import ProductAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, format_date
+from katello.client.core.utils import is_valid_record, format_date, Printer
 from time import strftime
 from datetime import timedelta, datetime
 
@@ -224,10 +224,12 @@ class ShowSubscriptions(OrganizationAction):
 
         updated_pool_info = [self.displayable_pool(pool) for pool in pools]
         
+        self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
         self.printer.addColumn('productName')
         self.printer.addColumn('consumed')
         self.printer.addColumn('contractNumber')
-        self.printer.addColumn('sla')        
+        self.printer.addColumn('sla')
+        self.printer.addColumn('id')
         self.printer.addColumn('startDate')
         self.printer.addColumn('endDate')
         self.printer.setHeader(_("Organization's Subscriptions"))

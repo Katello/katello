@@ -104,6 +104,9 @@ class Info(DistributionAction):
 
         self.printer.addColumn('id')
         self.printer.addColumn('description')
+        self.printer.addColumn('family')
+        self.printer.addColumn('variant')
+        self.printer.addColumn('version')
         self.printer.addColumn('files', multiline=True, show_in_grep=False)
 
         self.printer.setHeader(_("Distribution Information"))

@@ -136,6 +136,9 @@
             <xs:all>
               <xs:element ref="url"/>
               <xs:element minOccurs="0" ref="signed"/>
+              <xs:element ref="persisted"/>
+              <xs:element minOccurs="0" ref="clientcert"/>
+              <xs:element minOccurs="0" ref="clientkey"/>
             </xs:all>
             <xs:attribute name="name" use="required"/>
           </xs:complexType>
@@ -144,6 +147,9 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="url" type="xs:string"/>
+  <xs:element name="persisted" type="bool"/>
+  <xs:element name="clientkey" type="key"/>
+  <xs:element name="clientcert" type="cert"/>
   <xs:element name="signed" type="bool"/>
   <xs:attributeGroup name="url">
     <xs:attribute name="type" use="required">
@@ -220,6 +226,17 @@
   <xs:simpleType name="base64type">
     <xs:restriction base="base64"/>
   </xs:simpleType>
+  <xs:simpleType name="cert">
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="preserve"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="key">
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="preserve"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:attributeGroup name="base64type">
     <xs:attribute name="type" use="required">
       <xs:simpleType>
