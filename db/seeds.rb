@@ -24,7 +24,8 @@ reader_role = Role.find_or_create_by_name(
 User.current = user_admin = User.new(
   :roles => [ superadmin_role ],
   :username => 'admin',
-  :password => 'admin')
+  :password => 'admin',
+  :email => 'root@localhost')
 user_admin.save!
 
 # "nobody" user (do not change his name 'anonymous')
@@ -32,6 +33,7 @@ user_anonymous = User.find_or_create_by_username(
   :roles => [ anonymous_role ],
   :username => 'anonymous',
   :password => Password.generate_random_string(16),
+  :email => 'root@localhost',
   :disabled => true)
 
 # create the default org = "admin" if none exist
