@@ -36,6 +36,7 @@ class System < ActiveRecord::Base
   validates :environment, :presence => true, :non_locker_environment => true
   validates :name, :presence => true, :no_trailing_space => true, :uniqueness => true
   validates :description, :katello_description_format => true
+  validates_length_of :location, :maximum => 255
   before_create  :fill_defaults
 
   scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
