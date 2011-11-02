@@ -1,0 +1,8 @@
+= javascript :accounts
+
+.grid_16
+  %h1
+    User -
+    = current_user.username
+
+  = render :partial=> "/users/edit_form", :locals=>{:editable=>true}

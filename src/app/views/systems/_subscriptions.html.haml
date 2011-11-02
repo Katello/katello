@@ -1,0 +1,28 @@
+= javascript :system_subscriptions
+
+= content_for :title do
+  #{@system.name}
+
+= content_for :navigation do
+  = render_navigation(:items => systems_navigation, :expand_all => true, :level => 1)
+
+= content_for :content do
+  .grid_8.subs
+    .subs_top
+      .subs_icon
+      .fl
+        = image_tag("boxshadow.png")
+      .subs_text.fl #{_("Entitlements Subscriptions are Current")}
+    .subs_left.ca
+      #{_("Socket Requirement")}
+      %br
+      .subs_num
+        = image_tag("icons/check_icon.png")
+        #{sockets}
+    .subs_right.ca
+      #{_("Guests Requirement")}
+      %br
+      .subs_num #{"--"}
+  #subs_data
+    = render :partial=>"subs", :locals=>{:system=>@system, :avail_subs => avail_subs, :consumed_entitlements => consumed_entitlements, :editable=>editable}
+  %br.clear

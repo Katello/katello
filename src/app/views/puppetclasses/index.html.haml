@@ -1,0 +1,9 @@
+%table
+  %th Module
+  %th Classes
+  - @klasses.sort.each do |pmodule, pclasses|
+    %tr
+      %td
+        = pmodule
+      %td
+        = pclasses.collect{|klass| name_without_module klass}.sort.join(", ")

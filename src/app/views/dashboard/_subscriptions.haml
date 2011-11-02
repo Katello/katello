@@ -1,0 +1,46 @@
+- owner_info = current_organization.owner_info
+
+
+:javascript
+  KT.subscription_data = [{data:442, color:"#e13831"},      //red
+                          {data:300, color:"#f0e960"},   //yellow
+                          {data:2978, color:"#9ccc50"}]; //green
+
+#dashboard_subscriptions.big_widget
+  .left
+    .line
+    .stats
+      %hr
+      %ul
+        %li
+          %span
+            .icon.red_icon.fl
+            %h5
+              #{_("Invalid Subscriptions")}
+          .sub_count.fr
+            442
+        %li
+          %span
+            .icon.yellow_icon.fl
+            %h5
+              #{_("Insufficient Entitlements")}
+          .sub_count.fr
+            131
+        %li
+          %span
+            .icon.green_icon.fl
+            %h5
+              #{_("Current Subscriptions")}
+          .sub_count.fr
+            2,978
+      %hr
+        .sys_count.fr
+          #{owner_info.total_consumers}
+          
+        %h4.fr
+          #{_("Total Systems")}
+
+
+  .right
+    #overlay
+    #sub_graph

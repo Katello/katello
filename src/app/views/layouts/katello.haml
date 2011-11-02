@@ -1,0 +1,51 @@
+!!!
+%html
+  %head
+    %meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
+    = favicon_link_tag 'favicon.png'
+    %title
+      = project_name
+      = "-"
+      = content_for?(:title) ? yield(:title) : default_title
+
+    = include_stylesheets  :common
+    = include_stylesheets  controller.section_id
+    = yield :stylesheets
+    
+    = include_javascripts  :common
+    = render :partial => '/common/config'
+
+    / [if lt IE 9]
+      = include_javascripts  :html5
+
+    = render :partial => '/layouts/ajax_notices'
+    = render :partial => '/layouts/notification'
+    = render :partial => "/common/common_i18n"
+    = yield :javascripts
+    
+    = csrf_meta_tag
+    = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery?
+
+  - if controller.respond_to?(:section_id)
+    - section_id = controller.section_id
+  - else
+    - section_id = "generic"
+  %body{:id => controller.section_id}
+    %div#head.container_16
+      %header
+        = render :partial => '/layouts/header'
+    - if not current_user
+      #maincontent.container_16
+        #formwindow
+          = yield
+    - else
+      #subheader.container_16
+        %nav.tab_nav
+          = render_menu(1..3)
+      #maincontent.container_16
+        %nav.subnav#subnav.container_16
+          = render_menu(2..3)
+        .inner.container_16
+          = yield
+    %footer
+      = render :partial => "layouts/footer"

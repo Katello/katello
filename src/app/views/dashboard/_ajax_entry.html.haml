@@ -1,0 +1,14 @@
+.dash
+  .dashhead.ajax_widget
+    %h2.fl  #{name}
+    -#.dropbutton.button.fr
+    -#  %span
+  .fl.clear
+    %div{:class=>class_wrap}
+      .loading{"data-url"=>url, "data-id"=>identifier}
+        .text
+          = _("Loading ") + image_tag("/images/spinner.gif")
+
+
+
+  %br.clearfloat

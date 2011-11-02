@@ -1,0 +1,178 @@
+= javascript :bbq, :panel, :env_select, :edit, :promotion
+= include_editable_i18n
+
+
+= javascript do
+  :javascript
+    var permissions = {
+      manage_changesets: #{manage_changesets},
+      promote_changesets: #{promote_changesets},
+      read_changesets: #{read_changesets},
+    };
+    var content_breadcrumb = $.parseJSON('#{escape_javascript(generate_content_breadcrumb())}');
+    var changeset_breadcrumb = $.parseJSON('#{escape_javascript(generate_cs_breadcrumb())}');
+    localize({
+      "add": '+ #{_('Add')}',
+      "added": '#{_('Added:')}',
+      "removed": '#{_('Removed:')}',
+      "remove": '#{_('Remove')}',
+      "loading": "#{_('Loading Changeset')}",
+      "no_products":"#{_('No products exist in the changeset.')}",
+      "no_errata": "#{_('No errata exist in this changeset.')}",
+      "no_package": "#{_('No packages exist in this changeset.')}",
+      "no_repo": "#{_('No repositories exist in this changeset.')}",
+      "no_distribution": "#{_('No distributions exist in this changeset.')}",
+      "no_system_templates":"#{_('No system templates exist in the changeset.')}",
+      "errata": "#{_("Errata")}",
+      "package": "#{_("Packages")}",
+      "repo": "#{_("Repositories")}",
+      "distribution": "#{_('Distributions')}",
+      "system_templates": "#{_('system templates')}",
+      "templates": '#{_("System Templates")}',
+      "viewing": '#{_('currently editing this changeset')}',
+      "review": '#{_("Review")}',
+      "cancel_review": '#{_("Cancel Review")}',
+      "promote": "#{_('Promote to ') + (@next_environment.nil? ? '' : @next_environment.name)}",
+      "promote_confirm": '#{_("promote_confirm")}',
+      "package_singular": '#{_("Package")}',
+      "package_plural": '#{_("Packages")}',
+      "product_singular": '#{_("Product")}',
+      "product_plural": '#{_("Products")}',
+      "errata_singular": '#{_("Erratum")}',
+      "errata_plural": '#{_("Errata")}',
+      "repo_singular": '#{_("Repository")}',
+      "repo_plural": '#{_("Repositories")}',
+      "distribution_singular": "#{_('Distribution')}",
+      "distribution_plural": "#{_('Distributions')}",
+      "system_template_singular": "#{_('System Template')}",
+      "system_template_plural": "#{_('System Templates')}",
+      "changeset_empty": '#{_("Changeset is empty.")}',
+      "summary": '#{_("Summary:")}',
+      "loading_deps": '#{_("Loading dependencies.")}',
+      "dep_of": '#{_("Dependency of ")}',
+      "deps": "#{_("Dependencies")}",
+      "full_product": '#{_("Full Products")}',
+      "partial_product": '#{_("Partial Products")}',
+      "edit_details": '#{_("Edit Details")}',
+      'close_details': '#{_("Close Details")}',
+      "leave_page": '#{_('Some changeset modifications have not finished processing, are you sure you want to leave the page?  By leaving you may lose some modifications.')}',
+      "changeset_progress": '#{_("This changeset is currently being promoted.")}',
+      "promoting": '#{_("Promoting...")}',
+      "promoted": '#{_("Promoted")}',
+    });
+
+#error_dialog{:style=>"display: none"}
+  = _("An error has occured when communicating with the server, please refresh the page to retrieve the current changeset.")
+
+#wait_dialog{:style=>"display: none"}
+  = _("Processing changeset modifications, please wait.")
+  = image_tag ("spinner.gif")
+
+
+
+
+
+//Div for dep. content 
+#dialog_content{:style => "word-wrap: break-word;", :title=>"#{_('Package Dependencies')}"}
+
+= help_tip_button
+.grid_16
+  = help_tip(_('Promotions allow you to promote content from one environment to the next along ' + |
+                'a promotion path. Once you have created a changeset, clicking "Add" next to  '+ |
+                'one or more products will add them to the change set. If products already '    + |
+                'exist in the next environment, you may promote other types of content. Once ' + |
+                'you have created a change set, click the "Promote" button to commit it to the next environment.'))   |
+.grid_16
+  = environment_selector(:url_proc=>breadcrumb_url_proc,  :accessible_envs=>accessible_envs)
+
+.grid_16
+  #container
+    .right_tree.sliding_tree
+      #changeset_tree
+        - if read_changesets
+          %h2 #{@next_environment.name + _(" Changesets")}
+          .breadcrumb_search.fl.clear.clickable
+            %form#search_form.search.clear
+              %input{ :name => "s", :type => "input", :placeholder => "Filter...", :id=>"search_filter"}
+              %button.action #{_("Search")}
+              %br.clear
+            .search_button.fr.clickable
+              #{_('Search')}
+            .tree_breadcrumb
+          .sliding_container
+            #cslist.list.sliding_list{"data-page_size"=>current_user.page_size}
+              #tree_loading.slider.tree_loading
+                .text
+                  = _("Loading Changeset")
+                  = image_tag ("spinner.gif")
+              .slider_one.has_content.slider.will_have_content
+              .slider_two.no_content.slider
+          #changeset_edit.slide_up_container
+            %h2
+              &nbsp; #{_("Changeset Details")}
+            .fieldset
+              .grid_2.ra
+                %label #{_("Name:")}
+              .grid_4.la.editable.edit_name_text{'name' => 'name'}
+              .grid_2.ra
+                %label #{_("Description:")}
+              .grid_4.la.editable.edit_description{'name' => 'description'}
+              
+          #changeset_status
+          - if manage_changesets || promote_changesets
+            #sliding_tree_actionbar.clickable
+              #delete_changeset.cs_action{"data-url"=>changesets_path, "data-confirm-text"=>_('Are you sure?')}
+                %span#delete_changeset_icon.sprite
+                  SPRITE
+                %span.text
+                  = _("Remove")
+              #edit_changeset.cs_action
+                %span#edit_changeset_icon.sprite
+                  SPRITE
+                %span.text
+                  = _('Edit Details')
+              #review_changeset.cs_action
+                %span#review_changeset_icon.sprite
+                  SPRITE
+                %span.text
+                  = _('Review')
+              #promote_changeset.cs_action
+                %span#promote_changeset_icon.sprite
+                %span.text
+                  = _('Promote')
+          #changeset_users
+        - elsif @next_environment
+          %h2 #{_("Changesets")}
+          = _("You do not have permissions to view changesets for #{@next_environment.name}. Please contact your administrator to gain access.")
+        - else
+          %h2 #{_("Changesets")}
+          = _("An environment does not exist to promote content to.  If you would like to manage changesets and content, please create a new environment.")
+
+
+
+    = render :partial=>"common/tupane"
+  
+    #content_tree.left.sliding_tree
+      - if manage_changesets
+        %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@next_environment.id}"}
+          #{_('+ New Changeset')}
+          .arrow-right
+      - elsif @environment.organization.environments_manageable? 
+        %a.fr{:href => "#", :id => "new", :class => "block", "data-ajax_url" => "#{url_for(:controller=>'changesets', :action=> 'new')}?env_id=#{@environment.id}"}
+          #{_('+ New Changeset')}
+          .arrow-right
+      %h2 #{@environment.name + _(" Content")}
+      .tree_breadcrumb.clickable.clear
+      .sliding_container
+        #list.list.sliding_list{"data-page_size"=>current_user.page_size}
+          .slider_one.has_content.slider
+          .slider_two.no_content.slider
+
+
+#conflict-dialog{:style=>"display: none"}
+  %div
+    = _("Your update has applied successfully, but during that time another user has also made an update.")
+    %a#conflict-details #{_("More details")}
+    %input#conflict_close.button.fr{:type => "button", :value=>"#{('Close')}"}
+  .clear
+  #conflict-accordion{:style=>"display: none"}

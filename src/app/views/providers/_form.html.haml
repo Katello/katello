@@ -1,0 +1,17 @@
+-# parameters: form
+- raise ArgumentError, "Provider form requires :form be passed in :locals" unless local_assigns[:form]
+
+%fieldset.fl.clear
+  .grid_2.ra
+    %label #{_("Name")}:
+  .grid_4.la
+    = form.text_field :name
+
+%fieldset.fl.clear
+  .grid_2.ra
+    %label #{_("Description")}:
+  .grid_4.la
+    = form.text_field :description
+
+.grid_4.la.prefix_2
+  = button_to _("Save"), {:action => "create", :controller => "providers"}, :method => :post, :id => :provider_save

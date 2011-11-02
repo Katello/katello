@@ -1,0 +1,17 @@
+%ul#search_list
+  - unless @search_histories.nil?
+    - for i in (0..history_entries-1)
+      %li.item
+        %span.search_query.recent.one-line-ellipsis{:title => @search_histories[i].params} #{@search_histories[i].params}
+
+  - unless @search_favorites.nil?
+    - for i in (0..favorite_entries-1)
+      %li.item
+        %span.search_query.favorite.one-line-ellipsis{:title => @search_favorites[i].params} #{@search_favorites[i].params}
+        .delete#search_favorite_destroy{"data-id" => @search_favorites[i].id, "data-url" => destroy_favorite_search_index_path(@search_favorites[i].id)}
+
+%ul
+  %li
+    %span.add#search_favorite_save{"data-url" => url_for(favorite_search_index_path())} #{_("Save as Favorite")}
+  %li
+    %span.clear#search_clear #{_("Clear the Search")}
