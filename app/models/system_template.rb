@@ -35,7 +35,10 @@ class SystemTemplate < ActiveRecord::Base
 
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :environment_id
+  validates_length_of :name, :maximum => 255
   validates_with ParentTemplateValidator
+  validates_length_of :description, :maximum => 255
+  validates_length_of :parameters_json, :maximum => 255
 
   belongs_to :parent, :class_name => "SystemTemplate"
   has_and_belongs_to_many :products, :uniq => true
