@@ -186,7 +186,7 @@ class Status(ProductAction):
 # ------------------------------------------------------------------------------
 class Promote(ProductAction):
 
-    description = _('promote a product to an environment')
+    description = _('promote a product to an environment\n(creates a temporary changeset with the product and promotes it)')
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
