@@ -125,8 +125,10 @@ class UsersController < ApplicationController
   end
 
   def edit_environment
-    @old_perm = Permission.find_all_by_role_id(@user.own_role.id)[0]
-    @old_env = KTEnvironment.find(@old_perm.tags[0].tag_id)
+    if @user.has_default_env?
+      @old_perm = Permission.find_all_by_role_id(@user.own_role.id)[0]
+      @old_env = @user.default_environment
+    end
     @organization = current_organization
     accessible_envs = current_organization.environments
     setup_environment_selector(current_organization, accessible_envs)
@@ -140,13 +142,15 @@ class UsersController < ApplicationController
 
   def update_environment
     begin
-      old_perm = Permission.find_all_by_role_id(@user.own_role.id)[0]
-      old_env = old_perm.tags[0].tag_id
-      new_env =  params["env_id"]["env_id"].to_i
 
-      if old_env != new_env
+      new_env =  params["env_id"]["env_id"].to_i
+      if @user.has_default_env?
+        old_perm = Permission.find_all_by_role_id(@user.own_role.id)[0]
+        old_env = old_perm.tags[0].tag_id
+      end
+      if (old_perm.nil? || (old_env != new_env))
         #First delete the old role if it is not equal to the old one
-        old_perm.destroy
+        old_perm.destroy if @user.has_default_env?
 
         @environment = KTEnvironment.find(new_env)
         @organization = @environment.organization
