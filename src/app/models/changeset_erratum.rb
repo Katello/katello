@@ -43,6 +43,7 @@ class ChangesetErratum < ActiveRecord::Base
 
   belongs_to :changeset, :inverse_of=>:errata
   belongs_to :product
+  validates :display_name, :length => { :maximum => 255 }
   validates_with ChangesetErratumValidator
 
   # returns list of virtual permission tags for the current user
