@@ -11,7 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class PasswordResetsController < ApplicationController
-  before_filter :find_user_by_email, :only => [:create]
+  before_filter :find_user_by_user_and_email, :only => [:create]
+  before_filter :find_users_by_email, :only => [:email_logins]
   before_filter :find_user_by_token, :only => [:edit, :update]
 
   before_filter :require_no_user, :only => [:new, :create, :edit, :update]
@@ -48,15 +49,28 @@ class PasswordResetsController < ApplicationController
     end
   end
 
-  def get_logins
+  def email_logins
     # request to have the usernames associated with the email address provided, sent (in email) to that address
+    UserMailer.logins(params[:email], @users).deliver
+    flash[:success] = {"notices" => [_("Email sent with valid login for '%{s}'." % {:s => params[:email]})]}.to_json
+    render :text => ""
   end
 
   protected
 
-  def find_user_by_email
+  def find_user_by_user_and_email
     begin
       @user = User.find_by_username_and_email(params[:username], params[:email])
+    rescue Exception => error
+      flash[:error] = {"notices" => error.to_s}.to_json
+      execute_after_filters
+      redirect_to root_url
+    end
+  end
+
+  def find_users_by_email
+    begin
+      @users = User.where(:email => params[:email])
     rescue Exception => error
       flash[:error] = {"notices" => error.to_s}.to_json
       execute_after_filters
