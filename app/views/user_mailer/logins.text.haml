@@ -1,0 +1,6 @@
+#{_("A request has been received to retrieve the Katello logins for email '%s'. The following is a list of those logins:") % @email}
+
+- @users.each do |user|
+  = user.username
+
+

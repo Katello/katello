@@ -15,4 +15,10 @@ class UserMailer < ActionMailer::Base
     @user = user
     mail :to => user.email, :subject => _("Katello User '%s' Password Reset") % user.username
   end
+
+  def logins(email, users)
+    @email = email
+    @users = users
+    mail :to => email, :subject => _("Katello Logins")
+  end
 end
