@@ -1,5 +1,5 @@
 = javascript :edit, :edit_helpers, :tabs
-= stylesheet :tabs
+= stylesheet :tabs, :dashboard
 = include_common_i18n
 = include_editable_i18n
 
@@ -54,15 +54,14 @@
       %table
         %thead
           %th #{_("Message")}
-          %th #{_("Status")}
           %th #{_("Import Time")}
         %tbody
         - if @statuses
           - @statuses.each do |status|
             %tr{:class => cycle(nil, 'alt')}
-              %td
+              %td{:style => "width: 80%;"}
+                %span.icon_wrap.fl
+                  %span.fl{:class => (status["status"] == "FAILURE" ? "failure_icon" : "success_icon")}
                 = status["statusMessage"]
-              %td
-                = status["status"]
               %td
                 = _("%s ago") % time_ago_in_words(status["created"])
