@@ -29,8 +29,8 @@ class PasswordResetsController < ApplicationController
 
   def create
     @user.send_password_reset if @user
-    flash[:success] = {"notices" => [_("Email sent with password reset instructions.")]}.to_json
-    redirect_to root_url
+    flash[:success] = {"notices" => [_("Email sent to '%{e}' with password reset instructions." % {:e => @user.email})]}.to_json
+    render :text => ""
   end
 
   def edit
@@ -39,10 +39,10 @@ class PasswordResetsController < ApplicationController
   def update
     # TODO : make the timeframe configurable
     if @user.password_reset_sent_at < 2.hours.ago
-      flash[:error] = {"notices" => [_("Password reset has expired.")]}.to_json
+      flash[:error] = {"notices" => [_("Password reset token has expired for user '%{s}'." % {:s => @user.username})]}.to_json
       redirect_to new_password_reset_path
     elsif @user.update_attributes(params[:user])
-      flash[:success] = {"notices" => [_("Password has been reset.")]}.to_json
+      flash[:success] = {"notices" => [_("Password has been reset for user '%{s}'." % {:s => @user.username})]}.to_json
       redirect_to root_url
     else
       render :edit
@@ -52,7 +52,7 @@ class PasswordResetsController < ApplicationController
   def email_logins
     # request to have the usernames associated with the email address provided, sent (in email) to that address
     UserMailer.logins(params[:email], @users).deliver
-    flash[:success] = {"notices" => [_("Email sent with valid login for '%{s}'." % {:s => params[:email]})]}.to_json
+    flash[:success] = {"notices" => [_("Email sent to '%{e}' with valid login user names." % {:e => params[:email]})]}.to_json
     render :text => ""
   end
 
@@ -62,9 +62,9 @@ class PasswordResetsController < ApplicationController
     begin
       @user = User.find_by_username_and_email(params[:username], params[:email])
     rescue Exception => error
-      flash[:error] = {"notices" => error.to_s}.to_json
-      execute_after_filters
+      flash[:error] = {"notices" => [error.to_s]}.to_json
       redirect_to root_url
+      execute_after_filters
     end
   end
 
@@ -72,9 +72,9 @@ class PasswordResetsController < ApplicationController
     begin
       @users = User.where(:email => params[:email])
     rescue Exception => error
-      flash[:error] = {"notices" => error.to_s}.to_json
-      execute_after_filters
+      flash[:error] = {"notices" => [error.to_s]}.to_json
       redirect_to root_url
+      execute_after_filters
     end
   end
 
@@ -82,9 +82,9 @@ class PasswordResetsController < ApplicationController
     begin
       @user = User.find_by_password_reset_token!(params[:id])
     rescue Exception => error
-      flash[:error] = {"notices" => error.to_s}.to_json
-      execute_after_filters
+      flash[:error] = {"notices" => [_("Request received has either an invalid or expired token.  Token: '%{t}'" % {:t => params[:id]})]}.to_json
       redirect_to root_url
+      execute_after_filters
     end
   end
 end

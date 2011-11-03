@@ -5,7 +5,7 @@
   %h3 #{_('Password Unknown')}
   .katello_form
     %p #{_('If you do not know your password, enter your login and email address below and instructions on resetting your password will be sent to you.')}
-    = form_tag password_resets_path, :method => :post do
+    = form_tag password_resets_path, :method => :post, :id => :request_password_reset do
       %fieldset
         = label_tag :username, _('Username:')
         = text_field_tag :username, params[:username]
@@ -18,7 +18,7 @@
   %h3 #{_('Login Unknown')}
   .katello_form
     %p #{_("If you do not know your login, please enter your email address below and your login will be sent to you.")}
-    = form_tag email_logins_password_resets_path, :method => :get, :id => :get_logins do
+    = form_tag email_logins_password_resets_path, :method => :get, :id => :request_logins do
       %fieldset
         = label_tag :email, _('Email Address:')
         = text_field_tag :email, params[:email]
