@@ -65,16 +65,24 @@ KT.user_page = function() {
             return false;
         }
         else {
-            $("#password_conflict").text("");
-            $(match_button).removeClass("disabled");
+            //this is to say, if there is an environment available from which to select, then
+            //allow the creation of a user
+            if ($('#no_env_box').length == 0)
+            {
+                $("#password_conflict").text("");
+                $(match_button).removeClass("disabled");
 
-            //reset the edit user button
-            $('#save_password').die('click');
-            $('#save_password').live('click',changePassword);
-            //reset the new user button
-            $('#save_user').die('click');
-            $('#save_user').live('click',createNewUser);
-            return true;
+                //reset the edit user button
+                $('#save_password').die('click');
+                $('#save_password').live('click',changePassword);
+                //reset the new user button
+                $('#save_user').die('click');
+                $('#save_user').live('click',createNewUser);
+                return true;
+            }
+            else {
+                return false;
+            }
         }
 
     },
