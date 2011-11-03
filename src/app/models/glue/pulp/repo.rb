@@ -68,7 +68,7 @@ module Glue::Pulp::Repo
     end
 
   def to_hash
-    @params.merge(:sync_state => self.sync_state)
+    pulp_repo_facts.merge(as_json).merge(:sync_state=> sync_state)
   end
 
   TYPE_YUM = "yum"

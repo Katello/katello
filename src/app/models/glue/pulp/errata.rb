@@ -42,7 +42,7 @@ class Glue::Pulp::Errata
 
   def self.repos_for_filter(filter)
     if repoid = filter[:repoid]
-      return [Repository.find_by_pulp_id(repoid)]
+      return [Repository.find(repoid)]
     elsif environment_id = filter[:environment_id]
       env = KTEnvironment.find(environment_id)
       if product_id = filter[:product_id]
