@@ -36,7 +36,7 @@ class Glue::Pulp::Errata
     filter_for_errata = filter.except(*filter_for_repo.keys)
 
     repos = repos_for_filter(filter_for_repo)
-    repos.each {|repo| errata.concat(Pulp::Repository.errata(repo.id, filter_for_errata)) }
+    repos.each {|repo| errata.concat(Pulp::Repository.errata(repo.pulp_id, filter_for_errata)) }
     errata
   end
 
