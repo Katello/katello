@@ -47,4 +47,27 @@
 
     &:hover { color: lighten($kselected_color,10%); }
   }
+
+  .icon_wrap {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    width: 16px;
+    height: 16px;
+    //overflow: none;
+    margin-right: 15px;
+
+  }
+  .success_icon {
+    width: 16px;
+    height: 16px;
+    @include action-icon($check_icon_black);
+    margin-left: 0px;
+  }
+
+  .failure_icon {
+    width: 16px;
+    height: 16px;
+    @include action-icon($error_icon_black);
+    margin-left: 0px;
+  }
 }
