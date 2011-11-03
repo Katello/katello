@@ -61,7 +61,7 @@ class OrganizationsController < ApplicationController
       @new_env.organization = @organization
       @new_env.prior = @organization.locker
       @new_env.save!
-      notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
+      notice [_("Organization '#{@organization["name"]}' was created.")]
         # TODO: example - create permission for the organization
     rescue Exception => error
       errors(error, {:include_class_name => KTEnvironment::ERROR_CLASS_NAME})
