@@ -233,7 +233,7 @@ module Pulp
 
       def sync_history repo_id
         begin
-          response = get(Repository.repository_path + repo_id + "/sync/", self.default_headers)
+          response = get(Repository.repository_path + repo_id + "/history/sync/", self.default_headers)
           json_history = JSON.parse(response.body)
           json_history.collect {|jh| jh.with_indifferent_access }
         rescue RestClient::ResourceNotFound => error
