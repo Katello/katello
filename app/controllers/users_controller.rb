@@ -166,7 +166,7 @@ class UsersController < ApplicationController
         notice _("User environment updated successfully.")
         #attr = params[:user].first.last if params[:user].first
         #attr ||= ""
-        render :text => "" and return
+        render :json => {:org => @organization.name, :env => @environment.name} and return
       else
         err_msg = N_("The default you supplied was the same as the old default.")
         errors err_msg

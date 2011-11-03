@@ -141,9 +141,10 @@ KT.user_page = function() {
             url: url,
             data: {"env_id":{"env_id":env_id}},
             cache: false,
-            success: function() {
+            success: function(data) {
+                $('#env_name').html(data.env);
+                $('#org_name').html(data.org);
                 button.removeClass("disabled");
-                $('#environment').find('a').click();
             },
             error: function(e) {
                 button.removeClass('disabled');
