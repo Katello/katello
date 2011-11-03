@@ -40,6 +40,7 @@
           %label #{_("Environment")}:
         .grid_5.la
           - if @environment.nil?
+            #no_env_box
             #{_("No environments are currently available in this organization.  Please add some to be able to create users.")}
           - else
             #env_box
