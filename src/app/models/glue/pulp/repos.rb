@@ -77,8 +77,13 @@ module Glue::Pulp::Repos
 
 
     def repos env
-      Repository.joins(:environment_product).where(
+      @repo_cache = {} if @repo_cache.nil?
+      #cache repos so we can cache lazy_accessors
+      if @repo_cache[env.id].nil?
+        @repo_cache[env.id] = Repository.joins(:environment_product).where(
             "environment_products.product_id" => self.id, "environment_products.environment_id"=> env)
+      end
+      @repo_cache[env.id]
     end
 
     def promote from_env, to_env

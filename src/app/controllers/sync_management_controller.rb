@@ -56,18 +56,30 @@ class SyncManagementController < ApplicationController
   def index
     # TODO: We need to switch to using an Org's ID vs the display name.  See BZ 701406
     @organization = current_organization
-    rproducts = @organization.locker.products.readable(@organization).reject { |p| p.repos(p.organization.locker).empty? }
-    @products = rproducts.sort { |p1,p2| p1.name.upcase() <=> p2.name.upcase() }
+    @products = @organization.locker.products.readable(@organization).reject { |p| p.repos(p.organization.locker).empty? }
+    @products.sort! { |p1,p2| p1.name.upcase() <=> p2.name.upcase() }
     # syncable products
-    @sproducts = @organization.locker.products.syncable(@organization)
+    @sproducts = @products.reject{|prod| !prod.syncable?}
     @product_status = Hash.new
     @product_size = Hash.new
     @repo_status = Hash.new
+
+    @product_repos = {}
+
+    full_repos = Pulp::Repository.all
+    for p in @products
+      for r in p.repos(p.organization.locker)
+        r.populate_from(full_repos)
+      end
+    end
+
     for p in @products
       pstatus = p.sync_status
+      @product_repos[p.id] =  []
       @product_status[p.id] = format_sync_progress(pstatus)
       @product_size[p.id] = number_to_human_size(p.sync_size)
       for r in p.repos(p.organization.locker)
+        @product_repos[p.id] << r
         repo_status = r.sync_status
         @repo_status[r.pulp_id] = format_sync_progress(repo_status)
       end
