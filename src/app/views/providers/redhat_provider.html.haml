@@ -1,4 +1,5 @@
-= javascript :edit, :edit_helpers
+= javascript :edit, :edit_helpers, :tabs
+= stylesheet :tabs
 = include_common_i18n
 = include_editable_i18n
 
@@ -28,12 +29,6 @@
         = f.submit _("Upload")
 
 .grid_10
-  %script{:type => "text/javascript"}
-    //<![CDATA[]
-    $(function() {
-    $("#tabs").tabs();
-    });
-    //]]>
   #tabs
     %nav.tab_details
       %ul
@@ -46,18 +41,15 @@
     #tabs-1
       %table
         %thead
-          %th #{_("Name")}
-          %th #{_("Consumed Subscriptions")}
-          %th #{_("Quantity Available")}
+          %th{:style => "width: 80%"} #{_("Name")}
+          %th #{_("Consumed")}
         %tbody
         - @subscriptions.each do |sub|
           %tr{:class => cycle(nil, 'alt')}
             %td
               = sub["productName"]
             %td
-              = sub["consumed"]
-            %td
-              = sub["quantity"]
+              = "#{sub["consumed"]} of #{sub["quantity"]}"
     #tabs-2
       %table
         %thead
