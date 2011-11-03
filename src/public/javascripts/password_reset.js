@@ -10,23 +10,28 @@
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
-$(document).ready(function() {
-    KT.password_reset.registerEvents();
-});
-
 KT.password_reset = function() {
     var getLogins = function(data) {
         data.ajaxSubmit();
     },
+    submitPasswordResetRequest = function (data) {
+        data.ajaxSubmit();
+    },
     registerEvents = function() {
-        $('#get_logins').live('submit', function(e) {
+        $('#request_logins').live('submit', function(e) {
             e.preventDefault();
             getLogins($(this));
         });
+        $('#request_password_reset').live('submit', function (e) {
+            e.preventDefault();
+            submitPasswordResetRequest($(this));
+        })
     };
-
     return {
-        getLogins: getLogins,
         registerEvents: registerEvents
     }
 }(jQuery);
+
+$(document).ready(function() {
+    KT.password_reset.registerEvents();
+});

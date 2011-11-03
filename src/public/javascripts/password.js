@@ -11,6 +11,7 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 KT.password = function() {
+    var resetPassword = false;
     var verifyPassword = function() {
         var match_button = $('.verify_password');
         var a = $('#password_field').val();
@@ -43,8 +44,12 @@ KT.password = function() {
             url: url,
             data: { "user":{"password":password}},
             cache: false,
-            success: function() {
+            success: function(data) {
                 button.removeClass("disabled");
+                if (resetPassword) {
+                    // this is a password reset, so we'll redirect the user to the login page
+                    window.location.href = data.redirectToUrl;
+                }
             },
             error: function(e) {
                 button.removeClass('disabled');
@@ -55,17 +60,22 @@ KT.password = function() {
         $('#password_field').live('keyup.katello', verifyPassword);
         $('#confirm_field').live('keyup.katello',verifyPassword);
         $('#save_password').live('click',changePassword);
+    },
+    resettingPassword = function(resetValue) {
+        resetPassword = resetValue;
     };
 
     return {
         verifyPassword: verifyPassword,
         changePassword: changePassword,
-        registerEvents: registerEvents
+        registerEvents: registerEvents,
+        resettingPassword: resettingPassword
     }
 }();
 
 $(document).ready(function() {
    KT.password.registerEvents();
+   KT.password.resettingPassword(true);
 
    ratings =
       [{'minScore': 0,
