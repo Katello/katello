@@ -114,6 +114,10 @@ class Product < ActiveRecord::Base
     provider.readable?
   end
 
+  def syncable?
+    provider.organization.syncable?
+  end
+
   def editable?
     provider.editable?
   end

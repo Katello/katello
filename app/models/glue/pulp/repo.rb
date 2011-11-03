@@ -124,6 +124,12 @@ module Glue::Pulp::Repo
     self.clone_response = [Pulp::Repository.clone_repo(clone_from, self, "parent", cloned_filters)]
   end
 
+  def populate_from list
+    found = list.find{|repo|
+      repo["id"] == self.pulp_id}
+    prepopulate(found) if found
+    !found.nil?
+  end
 
   def destroy_repo
     Pulp::Repository.destroy(self.pulp_id)
@@ -274,7 +280,8 @@ module Glue::Pulp::Repo
   end
 
   def sync_status
-    self._get_most_recent_sync_status()
+    @sync_status = self._get_most_recent_sync_status if @sync_status.nil?
+    @sync_status
   end
 
   def sync_state
