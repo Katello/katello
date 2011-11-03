@@ -8,11 +8,11 @@
   %fieldset.fl.clear
     .grid_3.ra
       = label :user, :org, _("Default Organization:")
-    .grid_5.la
+    .grid_5.la#org_name
       = @old_env ? @old_env.organization.name : _("No default set for this user.")
     .grid_3.ra
       = label :user, :env, _("Default Environment:")
-    .grid_5.la
+    .grid_5.la#env_name
       = @old_env ? @old_env.name : _("No default set for this user.")
   %fieldset.fl.clear
     .grid_3.ra
