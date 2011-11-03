@@ -307,6 +307,7 @@ module Glue::Pulp::Repos
         substitutions_with_paths.each do |(substitutions, path)|
           feed_url = repository_url(path)
           arch = substitutions["basearch"] || "noarch"
+          release_version = substitutions["releasever"]
           repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
           begin
             env_prod = EnvironmentProduct.find_or_create(self.organization.locker, self)
@@ -320,7 +321,8 @@ module Glue::Pulp::Repos
                                         :feed_key => key,
                                         :content_type => pc.content.type,
                                         :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
-                                        :preserve_metadata => true #preserve repo metadata when importing from cp
+                                        :preserve_metadata => true, #preserve repo metadata when importing from cp
+                                        :release=>release_version
                                         )
 
           rescue RestClient::InternalServerError => e
