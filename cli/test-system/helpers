@@ -5,6 +5,11 @@ function get_repo_id() {
     echo `$CMD repo list --org="$TEST_ORG" -g | grep $FEWUPS_REPO | awk '{print $1}'`
 }
 
+function get_pulp_repo_id() {
+    echo `curl -k -s -u admin:admin -H "Content-Type: application/json" -H "Accept: application/json" \
+    https://localhost:3000/api/repositories/$REPO_ID/ | json_reformat | grep "pulp_id" | awk '{print $2}' | sed -e 's/[,"]//g'`
+}
+
 function get_repo_name() {
     echo `$CMD repo list --org="$TEST_ORG" -g | grep $FEWUPS_REPO | awk '{print $2}'`
 }
@@ -26,17 +31,19 @@ function valid_id() {
 # create sample package group and category
 # requires $REPO_ID, $PACKAGE_GROUP_ID, $PACKAGE_GROUP_CATEGORY_ID
 function create_sample_package_groups() {
+    PULP_REPO_ID=`get_pulp_repo_id`
+    
     curl -k -u admin:admin  -H "Content-Type: application/json" -H "Accept: application/json" -X POST -d \
         "{\"groupid\":\"$PACKAGE_GROUP_ID\",\"groupname\":\"$PACKAGE_GROUP_NAME\",\"description\":\"test description\"}" -s \
-        https://localhost/pulp/api/repositories/$REPO_ID/create_packagegroup/ > /dev/null
+        https://localhost/pulp/api/repositories/$PULP_REPO_ID/create_packagegroup/ > /dev/null
 
     curl  -k -u admin:admin -H "Content-Type: application/json" -H "Accept: application/json" -X POST -d \
         "{\"categoryid\":\"$PACKAGE_GROUP_CATEGORY_ID\",\"categoryname\":\"$PACKAGE_GROUP_CATEGORY_NAME\",\"description\":\"test description\"}" -s \
-        https://localhost/pulp/api/repositories/$REPO_ID/create_packagegroupcategory/ > /dev/null
+        https://localhost/pulp/api/repositories/$PULP_REPO_ID/create_packagegroupcategory/ > /dev/null
 
     curl -k -u admin:admin -H "Content-Type: application/json" -H "Accept: application/json" -X POST -d \
         "{\"categoryid\":\"$PACKAGE_GROUP_CATEGORY_ID\",\"groupid\":\"$PACKAGE_GROUP_ID\"}" -s  \
-        https://localhost/pulp/api/repositories/$REPO_ID/add_packagegroup_to_category/ > /dev/null
+        https://localhost/pulp/api/repositories/$PULP_REPO_ID/add_packagegroup_to_category/ > /dev/null
 }
 
 function jobs_running() {
