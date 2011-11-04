@@ -90,14 +90,16 @@ class SyncManagementController < ApplicationController
     status_obj = []
     @product_repos.each{|pid, repos|
       repos.each{|repo|
-        status_obj << {:id=>repo.id, :product_id=>pid, :sync_id=>@repo_status[repo.id][:sync_id]}
+        if [ PulpSyncStatus::Status::FINISHED.to_s,  PulpSyncStatus::Status::ERROR.to_s].include?(@repo_status[repo.id][:state])
+          status_obj << {:id=>repo.id, :product_id=>pid, :sync_id=>@repo_status[repo.id][:sync_id]}
+        end
       }
     }
     render :index, :locals=>{:status_obj=>status_obj}
   end
 
   def sync
-    ids = sync_repos(params[:repo]) || {}
+    ids = sync_repos(params[:repos]) || {}
     respond_with (ids) do |format|
       format.js { render :json => ids.to_json, :status => :ok }
     end
@@ -149,9 +151,9 @@ private
 
   def find_providers
     @providers = []
-    params[:repo].each{|repo_id, prod_id|
-      prod = Product.find(prod_id)
-      @providers << prod.provider if !@providers.member?(prod.provider)
+    params[:repos].each{|repo_id|
+      repo = Repository.find(repo_id)
+      @providers << repo.product.provider
     }
   end
 
@@ -192,21 +194,18 @@ private
 
   # loop through checkbox list of products and sync
   def sync_repos(repos)
-   
-    data = {} # sync throttle data
-    data[:limit] = AppConfig.pulp.sync_KBlimit if AppConfig.pulp.sync_KBlimit # set bandwidth limit
-    data[:threads] = AppConfig.pulp.sync_threads if AppConfig.pulp.sync_threads # set threads per sync
-    repos.keys.inject([]) do |collected,id|
-      product_id = repos[id]
+    collected = []
+    repos.each do |id|
       begin
-        resp = Pulp::Repository.sync(id, data)
+        resp = Repository.find(id).sync().first
       rescue RestClient::Conflict => e
-        r = Repository.find_by_pulp_id(id)
+        r = Repository.find(id)
         errors N_("There is already an active sync process for the '#{r.name}' repository. Please try again later")
         next
       end
-      collected.push({:repo_id => id, :sync_id => resp[:id], :state => resp[:state], :product_id => product_id})
+      collected.push({:repo_id => id, :sync_id => resp[:id], :state => resp[:state]})
     end
+    collected
   end
 
   # calculate the % complete of ongoing sync from pulp

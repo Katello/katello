@@ -2,7 +2,7 @@
 %tr{:id=>product_id(pid)}
   -#%td{:class=>'product', 'data-id'=>prod.id}
   %td
-    = check_box_tag "product[#{pid}]", :disabled=>!@sproducts.include?(prod)
+    -#= check_box_tag "product[#{pid}]", '', '', :disabled=>!@sproducts.include?(prod)
     #{prod[:name]}
   %td.max_width
     %div.max_width{:id =>"prod_sync_start_#{pid}"}
