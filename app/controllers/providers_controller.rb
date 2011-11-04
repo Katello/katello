@@ -252,15 +252,15 @@ class ProvidersController < ApplicationController
         sub['providedProducts'].each do |cp_product|
           product = Product.where(:cp_id =>cp_product["productId"]).first
           if product and product.provider == @provider
-            @grouped_subscriptions[product['name']] ||= []
-            @grouped_subscriptions[product['name']] << sub if !@grouped_subscriptions[product['name']].include? sub
+            @grouped_subscriptions[sub['productId']] ||= []
+            @grouped_subscriptions[sub['productId']] << sub if !@grouped_subscriptions[sub['productId']].include? sub
           end
         end
       else
         product = Product.where(:cp_id => sub['productId']).first
         if product and product.provider == @provider
-          @grouped_subscriptions[product['name']] ||= []
-          @grouped_subscriptions[product['name']] << sub if !@grouped_subscriptions[product['name']].include? sub
+          @grouped_subscriptions[sub['productId']] ||= []
+          @grouped_subscriptions[sub['productId']] << sub if !@grouped_subscriptions[sub['productId']].include? sub
         end
       end
     end
