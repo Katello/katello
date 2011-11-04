@@ -81,9 +81,19 @@ class SyncManagementController < ApplicationController
       for r in p.repos(p.organization.locker)
         @product_repos[p.id] << r
         repo_status = r.sync_status
-        @repo_status[r.pulp_id] = format_sync_progress(repo_status)
+        @repo_status[r.id] = format_sync_progress(repo_status)
       end
     end
+
+    @product_map = collect_repos(@products)
+    
+    status_obj = []
+    @product_repos.each{|pid, repos|
+      repos.each{|repo|
+        status_obj << {:id=>repo.id, :product_id=>pid, :sync_id=>@repo_status[repo.id][:sync_id]}
+      }
+    }
+    render :index, :locals=>{:status_obj=>status_obj}
   end
 
   def sync
@@ -127,6 +137,9 @@ class SyncManagementController < ApplicationController
     end
   end
 
+
+
+
 private
 
   def find_provider
@@ -144,16 +157,17 @@ private
 
 
   def format_sync_progress(sync_status)
-    progress = {:progress => calc_progress(sync_status)}
-    progress[:sync_id] = sync_status.uuid
-    progress[:state] = format_state(sync_status.state)
-    progress[:raw_state] = sync_status.state
-    progress[:start_time] = format_date(sync_status.start_time)
-    progress[:finish_time] = format_date(sync_status.finish_time)
-    progress[:duration] = format_duration(sync_status.finish_time, sync_status.start_time)
-    progress[:packages] = sync_status.progress.total_count
-    progress[:size] = number_to_human_size(sync_status.progress.total_size)
-    progress
+    {
+        :progress   => calc_progress(sync_status),
+        :sync_id    => sync_status.uuid,
+        :state      => format_state(sync_status.state),
+        :raw_state  => format_state(sync_status.state),
+        :start_time => format_date(sync_status.start_time),
+        :finish_time=> format_date(sync_status.finish_time),
+        :duration   => format_duration(sync_status.finish_time, sync_status.start_time),
+        :packages  => sync_status.progress.total_count,
+        :size       => number_to_human_size(sync_status.progress.total_size)
+    }
   end
 
   def format_state(state)
@@ -210,11 +224,11 @@ private
 
   def send_notification(product, status)
     if status.error_details.size > 0 then
-      notice product.name + ' ' + _("product was synced successfully with errors. See log for details"),
+      notice _("#{product.name} product was synced successfully with errors. See log for details"),
                                   {:details => status.error_details.join("\n"),:synchronous_request => false}
       status.error_details.each { |d| Rails.logger.error("Sync error:" +  d[:error]) }
     else
-      notice product.name + ' ' + _("product was synced successfully")
+      notice _("#{product.name} product was synced successfully")
     end
   end
 
@@ -222,5 +236,73 @@ private
     errors product.name + ' ' + _("sync did not complete successfully"), {:synchronous_request => false}
     Rails.logger.error product.name + " sync did not complete successfully"
   end
+
+
+  def collect_repos products
+    list = []
+    products.each{|prod|
+      majors = []
+      collect_majors(prod).each{|major, major_repos|
+        minors = []
+        collect_release(major_repos).each{|minor, minor_repos|
+          
+          arches = []
+          collect_arches(minor_repos).each{|arch, arch_repos|
+            arches << {:name=>arch, :id=>arch, :type=>"arch", :children=>[], :repos=>arch_repos}
+          }
+          minors << {:name=>minor, :id=>minor, :type=>"minor", :children=>arches, :repos=>[]}
+        }
+        majors << {:name=>major, :id=>major, :type=>"major", :children=>minors, :repos=>[]}
+      }
+      list << {:name=>prod.name, :id=>prod.id, :type=>"product",  :repos=>[], :children=>majors}
+    }
+    list
+  end
+
+
+  def collect_majors prod
+    majors = {}
+    prod.repos(current_organization.locker).each{|r|
+      majors[r.major_version] ||= []
+      majors[r.major_version] << r
+    }
+    majors
+  end
+
+  def collect_release repos
+    release = {}
+    repos.each{|r|
+      release[r.release] ||= []
+      release[r.release] << r
+    }
+    release
+  end
+
+  def collect_arches repos
+    arches = {}
+    repos.each{|r|
+      arches[r.arch] ||= [ ]
+      arches[r.arch] << r
+    }
+    arches
+  end
+
+
+  def pprint_collection coll
+    coll.each{|prod|
+      Rails.logger.error prod[:name]
+      prod[:children].each{|major|
+        Rails.logger.error major[:name]
+        major[:children].each{|minor|
+          Rails.logger.error minor[:name]
+          minor[:children].each{|arch|
+            Rails.logger.error arch[:repos].length
+          }
+        }
+      }
+    }
+    
+  end
+
 
 end
