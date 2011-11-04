@@ -69,7 +69,6 @@ class ProvidersController < ApplicationController
         temp_file.close
         @provider.import_manifest File.expand_path(temp_file.path)
         notice _("Subscription manifest uploaded successfully for provider '%{name}'." % {:name => @provider.name}), {:synchronous_request => false}
-
       rescue Exception => error
         display_message = parse_display_message(error.response)
         error_text = _("Subscription manifest upload for provider '%{name}' failed." % {:name => @provider.name})
@@ -78,8 +77,7 @@ class ProvidersController < ApplicationController
         Rails.logger.error "error uploading subscriptions."
         Rails.logger.error error
         Rails.logger.error error.backtrace.join("\n")
-        setup_subs
-        render :template =>"providers/redhat_provider", :status => :bad_request and return
+        # Fall-through even on error so that the import history is refreshed
       end
       redhat_provider
     else
@@ -105,6 +103,21 @@ class ProvidersController < ApplicationController
       Rails.logger.error error.backtrace.join("\n")
       render :template =>"providers/redhat_provider", :status => :bad_request and return
     end
+
+    begin
+      @statuses = @provider.owner_imports
+    rescue Exception => error
+      @statuses = []
+      display_message = parse_display_message(error.response)
+      error_text = _("Unable to retrieve subscription history for provider '%{name}." % {:name => @provider.name})
+      error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
+      errors error_text, {:synchronous_request => false}
+      Rails.logger.error "Error fetching subscription history from Candlepin"
+      Rails.logger.error error
+      Rails.logger.error error.backtrace.join("\n")
+      render :template =>"providers/redhat_provider", :status => :bad_request and return
+    end
+
     render :template =>"providers/redhat_provider"
   end
 

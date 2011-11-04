@@ -43,7 +43,8 @@ module Katello
             Thread.current[:user] = o
           end
 
-          # Executes given block on behalf of a different user. Example:
+          # Executes given block on behalf of a different user. Mostly for debuggin purposes since
+          # the username is hardcoded in the codebase! Example:
           #
           # User.as :admin do
           #   ...
@@ -56,6 +57,7 @@ module Katello
           def self.as(username, &do_block)
             old_user = current
             self.current = User.find_by_username(username)
+            raise(ArgumentError, "Cannot find user #{username}") if self.current.nil?
             do_block.call
             self.current = old_user
           end
