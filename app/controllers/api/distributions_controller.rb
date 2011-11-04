@@ -19,7 +19,7 @@ class Api::DistributionsController < Api::ApiController
   skip_before_filter :authorize
 
   def index
-    repo = Repository.find_by_pulp_id(params[:repository_id])
+    repo = Repository.find(params[:repository_id])
     render :json => repo.distributions
   end
 
@@ -27,5 +27,5 @@ class Api::DistributionsController < Api::ApiController
     dist = Glue::Pulp::Distribution.find(params[:id])
     render :json => dist
   end
-  
+
 end
