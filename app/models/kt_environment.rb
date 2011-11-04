@@ -241,6 +241,7 @@ class KTEnvironment < ActiveRecord::Base
       authorized_items(org, SYSTEMS_READABLE)
     end
   }
+  scope :systems_registerable, lambda{|org|  authorized_items(org, [:register_systems]) }
 
   def self.any_viewable_for_promotions? org
     User.allowed_to?(CHANGE_SETS_READABLE + CONTENTS_READABLE, :environments, org.environment_ids, org, true)
@@ -288,6 +289,11 @@ class KTEnvironment < ActiveRecord::Base
   def systems_deletable?
     User.allowed_to?([:delete_systems], :organizations, nil, self.organization) ||
         User.allowed_to?([:delete_systems], :environments, self.id, self.organization)
+  end
+
+  def systems_registerable?
+    User.allowed_to?([:register_systems], :organizations, nil, self.organization) ||
+        User.allowed_to?([:register_systems], :environments, self.id, self.organization)
   end
 
 

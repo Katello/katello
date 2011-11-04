@@ -49,7 +49,6 @@ $(document).ready(function() {
             url: url,
             success: function(data) {
                   refill.html(data);
-                  refill.show();
            }
         });
    });
