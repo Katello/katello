@@ -11,14 +11,32 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class UserMailer < ActionMailer::Base
+  include AsyncOrchestration
+
+  def send_password_reset(user)
+    # TODO: temporarily hardcoding org to the first org... this will be changed to use the user's default org, once
+    # that logic is merged in
+    org = Organization.find(1)
+    User.current = user
+    UserMailer.async(:organization => org).password_reset(user)
+  end
+
+  def send_logins(users)
+    # TODO: temporarily hardcoding org to the first org... this will be changed to use the user's default org, once
+    # that logic is merged in
+    org = Organization.find(1)
+    User.current = users.first
+    UserMailer.async(:organization => org).logins(users)
+  end
+
   def password_reset(user)
     @user = user
     mail :to => user.email, :subject => _("Katello User '%s' Password Reset") % user.username
   end
 
-  def logins(email, users)
-    @email = email
+  def logins(users)
+    @email = users.first.email
     @users = users
-    mail :to => email, :subject => _("Katello Logins")
+    mail :to => @email, :subject => _("Katello Logins")
   end
 end

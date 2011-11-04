@@ -51,7 +51,7 @@ class PasswordResetsController < ApplicationController
 
   def email_logins
     # request to have the usernames associated with the email address provided, sent (in email) to that address
-    UserMailer.logins(params[:email], @users).deliver
+    UserMailer.send_logins(@users)
     flash[:success] = {"notices" => [_("Email sent to '%{e}' with valid login user names." % {:e => params[:email]})]}.to_json
     render :text => ""
   end
