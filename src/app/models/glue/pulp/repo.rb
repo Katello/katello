@@ -246,15 +246,15 @@ module Glue::Pulp::Repo
   end
 
   def find_packages_by_name name
-    Pulp::Repository.packages_by_name id, name
+    Pulp::Repository.packages_by_name self.pulp_id, name
   end
 
   def find_packages_by_nvre name, version, release, epoch
-    Pulp::Repository.packages_by_nvre id, name, version, release, epoch
+    Pulp::Repository.packages_by_nvre self.pulp_id, name, version, release, epoch
   end
 
   def find_latest_packages_by_name name
-    Katello::PackageUtils.find_latest_packages(Pulp::Repository.packages_by_name(id, name))
+    Katello::PackageUtils.find_latest_packages(Pulp::Repository.packages_by_name(self.pulp_id, name))
   end
 
   def has_erratum? id
@@ -312,7 +312,7 @@ module Glue::Pulp::Repo
   end
 
   def add_distribution distribution_id
-    Pulp::Repository.add_distribution self.id,  distribution_id
+    Pulp::Repository.add_distribution self.pulp_id,  distribution_id
   end
 
   def sync_finish
