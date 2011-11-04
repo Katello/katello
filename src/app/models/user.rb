@@ -371,7 +371,12 @@ class User < ActiveRecord::Base
   end
 
   def default_environment
-    KTEnvironment.find(Permission.find_all_by_role_id(self.own_role.id)[0].tags[0].tag_id)
+    sr = self.own_role
+    perm = Permission.find_all_by_role_id(self.own_role.id)
+    if sr && !perm.empty? && perm[0].tags
+      return KTEnvironment.find(perm[0].tags[0].tag_id)
+    end
+    nil
   end
 
   protected
