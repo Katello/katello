@@ -22,9 +22,9 @@
 
 
 
-= render :partial=>"children", :locals=>{:children=>prod[:children], :parent_set=>[pid]}
+= render :partial=>"children", :locals=>{:children=>prod[:children], :parent_set=>[pid]} if !prod[:children].empty?
 
-= render :partial=>"repo", :collection=>prod[:repos], :as=>:repo, :locals=>{:parent_set=>[pid]}
+= render :partial=>"repo", :collection=>prod[:repos], :as=>:repo, :locals=>{:parent_set=>[pid]} if !prod[:repos].empty?
 
 
 
