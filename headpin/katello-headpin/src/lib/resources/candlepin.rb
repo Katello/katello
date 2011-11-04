@@ -192,6 +192,11 @@ module Candlepin
                              self.default_headers)
       end
 
+      def imports organization_name
+        imports_json = self.get(join_path(path(organization_name), 'imports'), self.default_headers)
+        JSON.parse(imports_json).collect {|s| s.with_indifferent_access}
+      end
+
       def pools key, filter = {}
         if key
           jsonStr = self.get(join_path(path(key), 'pools') + hash_to_query(filter), self.default_headers).body

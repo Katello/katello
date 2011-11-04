@@ -71,6 +71,7 @@ class Provider < ActiveRecord::Base
   end
 
   def valid_url
+    errors.add(:repository_url, _("is too long")) if self.repository_url.length > 255
     errors.add(:repository_url, _("is invalid")) unless kurl_valid?(self.repository_url)
   end
 
@@ -127,11 +128,13 @@ class Provider < ActiveRecord::Base
     [:create]
   end
 
-  scope :readable, lambda {|org| readable_items(org)}
+  scope :readable, lambda {|org| items(org, READ_PERM_VERBS)}
+  scope :editable, lambda {|org| items(org, EDIT_PERM_VERBS)}
 
   def readable?
     User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || self.organization.syncable?
   end
+
 
   def self.any_readable? org
     org.syncable? || User.allowed_to?(READ_PERM_VERBS, :providers, nil, org)
@@ -169,10 +172,9 @@ class Provider < ActiveRecord::Base
      end
    end
 
-  def self.readable_items org
+  def self.items org, verbs
     raise "scope requires an organization" if org.nil?
     resource = :providers
-    verbs = READ_PERM_VERBS
     if org.syncable? ||  User.allowed_all_tags?(verbs, resource, org)
        where(:organization_id => org)
     else
@@ -181,5 +183,6 @@ class Provider < ActiveRecord::Base
   end
 
   READ_PERM_VERBS = [:read, :create, :update, :delete]
+  EDIT_PERM_VERBS = [:create, :update]
 end
 

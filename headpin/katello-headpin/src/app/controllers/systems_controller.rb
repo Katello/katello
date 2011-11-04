@@ -104,6 +104,18 @@ class SystemsController < ApplicationController
       Rails.logger.info error.backtrace.join("\n")
       render :text => error, :status => :bad_request
     end
+
+    render :partial=>"systems/list_systems",
+            :locals=>{:accessor=>"id",
+                      :columns=>['name', 'lastCheckin','created' ],
+                      :collection=>[@system],
+                      :name=> controller_display_name}
+  end
+
+  def index
+      @systems = System.readable(current_organization).search_for(params[:search])
+      retain_search_history
+      @systems = sort_order_limit(@systems)
   end
 
   def environments
