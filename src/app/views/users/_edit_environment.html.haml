@@ -29,7 +29,8 @@
       %label #{_("New Default Environment")}:
     .grid_5.la
       - if @environment.nil?
-        #{_("No environments are currently available in this organization.  Please add some to be able to create users.")}
+        #env_box
+          #{_("No environments are currently available in this organization.  Please add some to be able to create users.")}
       - else
         #env_box
           = environment_selector(:path_widget_class=>"grid_5", :path_entries_class=>"grid_5", :locker_clickable=>false,
@@ -37,5 +38,9 @@
     .clear
       &nbsp;
     .grid_5.la.prefix_3
-      #update_user.verify_password.button{'data-url'=>update_environment_user_path(@user.id)}
-        #{_("Save")}
+      - if @environment.nil?
+        #update_user.verify_password.button.disabled{'data-url'=>update_environment_user_path(@user.id)}
+          #{_("Save")}
+      -else
+        #update_user.verify_password.button{'data-url'=>update_environment_user_path(@user.id)}
+          #{_("Save")}
