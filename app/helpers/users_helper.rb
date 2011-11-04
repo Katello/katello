@@ -19,7 +19,7 @@ module UsersHelper
 
   def organization_select
     select(:org_id, "org_id",
-           Organization.all.map {|a| [a.name, a.id]},
+           current_user.allowed_organizations.map {|a| [a.name, a.id]},
            {:prompt => _('Select Organization'), :id=>"org_field",
            :selected => current_organization.id})
   end
