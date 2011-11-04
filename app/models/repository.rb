@@ -30,4 +30,10 @@ class Repository < ActiveRecord::Base
   def organization
     self.environment.organization
   end
+
+  #temporary major version
+  def major_version
+    return nil if release.nil?
+    release.to_i
+  end
 end

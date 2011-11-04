@@ -30,13 +30,16 @@ function fadeUpdate(fieldName, text) {
 $(document).ready(function() {
 
   // Setup initial state
-  for (var i = 0; i < repo_status.length; i++) {
-      var rs = repo_status[i];
+  $.each(KT.repo_status, function(repo_id, rs){
       // If we have a sync_id for this repo, lets start the prog bar
-      if (rs[1] !== "") {
-          content.statusChecker(rs[0], rs[1], rs[2]);
+      if (rs.sync_id) {
+          content.statusChecker(rs.id, rs.sync_id, rs.product_id);
       }
-  }
+  });
+
+    $("#products_table").treeTable();
+
+  
 
   // check box collections
   $('#select_all').click(function(){$('.products input:checkbox').attr('checked',true); return false;});
