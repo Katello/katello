@@ -354,7 +354,7 @@ class User < ActiveRecord::Base
     self.password_reset_sent_at = Time.zone.now
     save!
 
-    UserMailer.password_reset(self).deliver
+    UserMailer.send_password_reset(self)
   end
 
   protected
