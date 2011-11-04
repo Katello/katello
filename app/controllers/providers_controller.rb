@@ -90,7 +90,7 @@ class ProvidersController < ApplicationController
   def redhat_provider
     @provider = current_organization.redhat_provider
     # We default to none imported until we can properly poll Candlepin for status of the import
-    @subscriptions = [{'productName' => _("None Imported"), "consumed" => "0", "available" => "0"}]
+    @subscriptions = []
     begin
       setup_subs
     rescue Exception => error
