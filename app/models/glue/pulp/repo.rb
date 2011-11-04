@@ -270,7 +270,7 @@ module Glue::Pulp::Repo
     return false
   end
 
-  def sync
+  def sync 
     [Pulp::Repository.sync(self.pulp_id)]
   end
 

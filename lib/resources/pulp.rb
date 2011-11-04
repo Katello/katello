@@ -226,6 +226,8 @@ module Pulp
       end
 
       def sync (repo_id, data = {})
+        data[:limit] ||= AppConfig.pulp.sync_KBlimit if AppConfig.pulp.sync_KBlimit # set bandwidth limit
+        data[:threads] ||= AppConfig.pulp.sync_threads if AppConfig.pulp.sync_threads # set threads per sync
         path = Repository.repository_path + repo_id + "/sync/"
         response = post(path, JSON.generate(data), self.default_headers)
         JSON.parse(response.body).with_indifferent_access

@@ -37,14 +37,17 @@ $(document).ready(function() {
       }
   });
 
-    $("#products_table").treeTable();
+    $("#products_table").treeTable({
+        //clickableNodeNames: true,
+        indent: 15
+    });
 
   
 
   // check box collections
   $('#select_all').click(function(){$('.products input:checkbox').attr('checked',true); return false;});
   $('#select_none').click(function(){$('.products input:checkbox').attr('checked',false); return false;});
-  $('#toggle_all').click(function(){$('.clickable').click(); return false;});
+  $('#toggle_all').click(function(){$('tr').show(); });
 
   // start polling sync status after succesfully sync call
   $('#sync_product_form')
@@ -100,6 +103,20 @@ $(document).ready(function() {
   });
   //end doc ready
 });
+
+
+
+KT.content_actions = (function(){
+
+
+    return {
+
+
+    };
+});
+
+
+
 
 
 var content = (function(){
