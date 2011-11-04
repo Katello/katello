@@ -248,19 +248,31 @@ class ProvidersController < ApplicationController
     # We default to none imported until we can properly poll Candlepin for status of the import
     @grouped_subscriptions = {}
     all_subs.each do |sub|
+      # Subscriptions with the same 'stack_id' attribute are grouped together. Not all have this
+      # attribute so the 'id' is used as a default since it will be unique between
+      # subscriptions.
+      #
+      group_id = sub['id']
+      sub['productAttributes'].each do |attr|
+        if attr['name'] == 'stacking_id'
+          group_id = attr['value']
+          break
+        end
+      end
+
       if sub['providedProducts'].length > 0
         sub['providedProducts'].each do |cp_product|
-          product = Product.where(:cp_id =>cp_product["productId"]).first
+          product = Product.where(:cp_id =>cp_product['productId']).first
           if product and product.provider == @provider
-            @grouped_subscriptions[sub['productId']] ||= []
-            @grouped_subscriptions[sub['productId']] << sub if !@grouped_subscriptions[sub['productId']].include? sub
+            @grouped_subscriptions[group_id] ||= []
+            @grouped_subscriptions[group_id] << sub if !@grouped_subscriptions[group_id].include? sub
           end
         end
       else
         product = Product.where(:cp_id => sub['productId']).first
         if product and product.provider == @provider
-          @grouped_subscriptions[sub['productId']] ||= []
-          @grouped_subscriptions[sub['productId']] << sub if !@grouped_subscriptions[sub['productId']].include? sub
+          @grouped_subscriptions[group_id] ||= []
+          @grouped_subscriptions[group_id] << sub if !@grouped_subscriptions[group_id].include? sub
         end
       end
     end
