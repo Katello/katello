@@ -47,28 +47,38 @@
             %th{:style => "width: 80%"} #{_("Name")}
             %th #{_("Consumed")}
           %tbody
-            - if @subscriptions.length > 0
-              - @subscriptions.each do |sub|
+            - if @grouped_subscriptions.length > 0
+              - @grouped_subscriptions.each do |group_name, sub_group|
                 - cycle_class = cycle("", "alt")
-                %tr{:id => "#{sub["subscriptionId"]}", :class => cycle_class}
-                  %td
-                  %td
-                    = sub["productName"]
-                  %td
-                    = "#{sub["consumed"]} of #{sub["quantity"]}"
-                - if sub["providedProducts"].length > 0
-                  %tr{:class => "child-of-#{sub["subscriptionId"]} " + cycle_class}
-                    %td{:colspan=>7}
-                      = _("Bundled Products:")
-                - sub["providedProducts"].each do |product|
-                  %tr{:class => "child-of-#{sub["subscriptionId"]} " + cycle_class}
-                    %td{:colspan=>7}
-                      %ul
-                        %li
-                          &nbsp;&nbsp;
-                          = product["productName"]
-                        -# - product.productContent.each do |product_content|
-                        -#   = render :partial=>'subscription_details', :locals=>{:group => sub["subscriptionId"], :product_content => product_content}
+                - if sub_group.length > 1
+                  %tr{:id => "#{group_name}", :class => cycle_class}
+                    %td
+                    %td
+                      = group_name
+                    %td
+                  - sub_class = "child-of-#{group_name}"
+                - else
+                  - sub_class = "#{group_name}"
+                - sub_group.each do |sub|
+                  %tr{:id => "#{sub["subscriptionId"]}", :class => "#{sub_class} #{cycle_class}"}
+                    %td
+                    %td
+                      = sub["productName"]
+                    %td
+                      = "#{sub["consumed"]} of #{sub["quantity"]}"
+                  - if sub["providedProducts"].length > 0
+                    %tr{:class => "child-of-#{sub["subscriptionId"]} #{cycle_class}"}
+                      %td{:colspan=>7}
+                        = _("Bundled Products:")
+                  - sub["providedProducts"].each do |product|
+                    %tr{:class => "child-of-#{sub["subscriptionId"]} #{cycle_class}"}
+                      %td{:colspan=>7}
+                        %ul
+                          %li
+                            &nbsp;&nbsp;
+                            = product["productName"]
+                          -# - product.productContent.each do |product_content|
+                          -#   = render :partial=>'subscription_details', :locals=>{:group => sub["subscriptionId"], :product_content => product_content}
             - else
               %tr
                 %td{:colspan=>5} #{_("No subscriptions have been imported.")}

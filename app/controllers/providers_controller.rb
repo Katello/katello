@@ -90,7 +90,7 @@ class ProvidersController < ApplicationController
   def redhat_provider
     @provider = current_organization.redhat_provider
     # We default to none imported until we can properly poll Candlepin for status of the import
-    @subscriptions = []
+    @grouped_subscriptions = []
     begin
       setup_subs
     rescue Exception => error
@@ -244,22 +244,23 @@ class ProvidersController < ApplicationController
 
   def setup_subs
     @provider = current_organization.redhat_provider
-    # We default to none imported until we can properly poll Candlepin for status of the import
-    @subscriptions = [{'productName' => _("None Imported"), "consumed" => "0", "available" => "0"}]
     all_subs = Candlepin::Owner.pools @provider.organization.cp_key
-    @subscriptions = []
+    # We default to none imported until we can properly poll Candlepin for status of the import
+    @grouped_subscriptions = {}
     all_subs.each do |sub|
       if sub['providedProducts'].length > 0
         sub['providedProducts'].each do |cp_product|
           product = Product.where(:cp_id =>cp_product["productId"]).first
           if product and product.provider == @provider
-            @subscriptions << sub if !@subscriptions.include? sub
+            @grouped_subscriptions[product['name']] ||= []
+            @grouped_subscriptions[product['name']] << sub if !@grouped_subscriptions[product['name']].include? sub
           end
         end
       else
         product = Product.where(:cp_id => sub['productId']).first
         if product and product.provider == @provider
-          @subscriptions << sub if !@subscriptions.include? sub
+          @grouped_subscriptions[product['name']] ||= []
+          @grouped_subscriptions[product['name']] << sub if !@grouped_subscriptions[product['name']].include? sub
         end
       end
     end
