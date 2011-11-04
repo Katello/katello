@@ -200,8 +200,11 @@ class Api::SystemsController < Api::ApiController
 
     #At this point we know that they didn't supply an org or environment, so we can look up the default
     @environment = current_user.default_environment
-    @organization = @environment.organization
-    #raise HttpErrors::BadRequest, _("Either organization id or environment id needs to be specified")
+    if @environment
+      @organization = @environment.organization
+    else
+      raise _("You have not set a default organization and environment on the user #{@name}.")
+    end
   end
 
   def find_system
