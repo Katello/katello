@@ -60,6 +60,7 @@ class katello::config {
     user        => $katello::params::user,
     environment => "RAILS_ENV=${katello::params::environment}",
     command     => "/usr/bin/env rake db:migrate >> ${katello::params::seed_log} 2>&1 && /usr/bin/env rake db:seed >> ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/initdb_done",
+    command     => "/bin/env >> ${katello::params::seed_log} 2>&1 && /bin/echo \" Starting Migrate \" >> ${katello::params::seed_log} 2>&1 && /usr/bin/env rake db:migrate --trace --verbose >> ${katello::params::seed_log} 2>&1 && /bin/echo \" Starting Seed \" >> ${katello::params::seed_log} 2>&1 && /usr/bin/env rake db:seed --trace --verbose >> ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/initdb_done",
     creates => "/var/lib/katello/initdb_done",
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
