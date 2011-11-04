@@ -40,6 +40,7 @@ describe ProvidersController do
       provider = @organization.redhat_provider
       provider.should_receive(:import_manifest).and_return(true)
       provider.stub(:name).and_return("RH_Provider")
+      provider.stub(:owner_imports).and_return([])
 
       @organization.stub(:redhat_provider).and_return(provider)
       controller.stub!(:current_organization).and_return(@organization)

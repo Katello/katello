@@ -15,6 +15,8 @@ class SearchFavorite < ActiveRecord::Base
 
   belongs_to :user
   validate :max_favorites
+  validates :params, :length => { :maximum => 255 }
+  validates :path, :length => { :maximum => 255 }
 
   def max_favorites
     if new_record?

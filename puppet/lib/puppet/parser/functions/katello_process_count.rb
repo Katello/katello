@@ -1,10 +1,10 @@
 module Puppet::Parser::Functions
-  newfunction(:katello_process_count) do |args|
+  newfunction(:katello_process_count, :type => :rvalue) do |args|
     begin
-      cpu_count = scope.lookupvar('::processorcount')
+      cpu_count = lookupvar('::processorcount').to_i
       consumes = 230_000_000 # for each thin process
       reserve = 500_000_000 # for the OS
-      mem,unit = scope.lookupvar('::memorysize').split 
+      mem,unit = lookupvar('::memorysize').split
 
       # convert total memory into bytes
       total_mem = mem.to_f 
@@ -16,16 +16,25 @@ module Puppet::Parser::Functions
         when 'TB': total_mem *= (1<<40) 
       end
 
+      notice("CPU count: #{cpu_count}")
+      no_processes = cpu_count + 1
+      notice("Thin processes recommendation: #{no_processes}")
+
       # calculate number of processes
-      no_processes = (((total_mem - reserve) / (cpu_count * consumes))).floor
+      notice("Total memory: #{total_mem}")
+      notice("Thin consumes: #{consumes}")
+      notice("Reserve: #{reserve}")
+      max_processes = (((total_mem - reserve) / consumes)).floor
+      notice("Maximum processes: #{max_processes}")
 
-      # safeguard not to return bigger number then cpu count + 1
-      no_processes = cpu_count + 1 if no_processes > cpu_count * 2
+      # safeguard not to have more processes than max
+      no_processes = max_processes if no_processes > max_processes
 
-      no_processes
+      notice("Thin processes: #{no_processes}")
+      no_processes.to_s
     rescue Exception => e
       # when anything goes wrong return a decent constant
-      2
+      '2'
     end
   end
 end

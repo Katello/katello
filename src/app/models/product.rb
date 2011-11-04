@@ -99,6 +99,7 @@ class Product < ActiveRecord::Base
   #Permissions
 
   scope :readable, lambda {|org| ::Provider.readable(org).joins(:provider)}
+  scope :editable, lambda {|org| ::Provider.editable(org).joins(:provider)}
   scope :syncable, lambda {|org| sync_items(org)}
 
   def self.any_readable?(org)

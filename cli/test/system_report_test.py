@@ -37,7 +37,7 @@ class UserReportTest(CLIActionTestCase):
         self.set_module(katello.client.core.system)
         self.mock(self.action.api, 'report_by_org', ('', ''))
         self.mock(self.action.api, 'report_by_env', ('', ''))
-        self.mock(katello.client.core.utils, 'save_report')        
+        self.mock(self.module, 'save_report')
  
     def tearDown(self):
         self.restore_mocks()
@@ -55,7 +55,7 @@ class UserReportTest(CLIActionTestCase):
     def test_it_saves_pdf_report(self):
         self.mock_options({'org': self.ORG_ID, 'format': 'pdf'})        
         self.action.run()
-        katello.client.core.utils.save_report.assert_called_once()
+        self.module.save_report.assert_called_once()
 
     def test_it_calls_report_by_env_api(self):
         self.mock_options({'org': self.ORG_ID, 'environment': self.ENV_NAME})
