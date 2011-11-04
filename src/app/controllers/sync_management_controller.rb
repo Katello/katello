@@ -242,10 +242,10 @@ private
     list = []
     products.each{|prod|
       majors = []
-      collect_majors(prod).each{|major, major_repos|
+      major_map, non_found_repos = collect_majors(prod)
+      major_map.each{|major, major_repos|
         minors = []
         collect_release(major_repos).each{|minor, minor_repos|
-          
           arches = []
           collect_arches(minor_repos).each{|arch, arch_repos|
             arches << {:name=>arch, :id=>arch, :type=>"arch", :children=>[], :repos=>arch_repos}
@@ -254,19 +254,26 @@ private
         }
         majors << {:name=>major, :id=>major, :type=>"major", :children=>minors, :repos=>[]}
       }
-      list << {:name=>prod.name, :id=>prod.id, :type=>"product",  :repos=>[], :children=>majors}
+      list << {:name=>prod.name, :id=>prod.id, :type=>"product",  :repos=>non_found_repos, :children=>majors}
     }
+    pprint_collection list
     list
   end
 
 
   def collect_majors prod
     majors = {}
+    non_major = [] #list of repos that don't have a major version
     prod.repos(current_organization.locker).each{|r|
-      majors[r.major_version] ||= []
-      majors[r.major_version] << r
+      if r.major_version
+        majors[r.major_version] ||= []
+        majors[r.major_version] << r
+      else
+        non_major << r
+      end
+
     }
-    majors
+    [majors, non_major]
   end
 
   def collect_release repos
@@ -301,7 +308,6 @@ private
         }
       }
     }
-    
   end
 
 

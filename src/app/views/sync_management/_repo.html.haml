@@ -1,7 +1,7 @@
 -# repo,  parent_set
 %tr{:class=>parent_set_class(parent_set), :id=>repo_id(repo)}
   %td
-    =check_box_tag "repo[#{repo.id}]", value="#{repo.product.id}"
+    =check_box_tag "repo[#{repo.id}]", :value=>"#{repo.product.id}"
     #{repo.name}
   %td
     #{@repo_status[repo.id][:start_time]}
@@ -9,6 +9,6 @@
     #{@repo_status[repo.id][:duration]}
   %td
     #{@repo_status[repo.id][:size]}
-    #{'(#{@repo_status[repo.id][:packages]})'}
+    (#{@repo_status[repo.id][:packages]})
   %td
     #{@repo_status[repo.id][:state]}
