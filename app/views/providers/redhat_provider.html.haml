@@ -1,4 +1,5 @@
-= javascript :edit, :edit_helpers, :tabs
+= javascript :edit, :edit_helpers, :tabs, :provider_redhat
+= include_javascripts :treetable
 = stylesheet :tabs, :dashboard
 = include_common_i18n
 = include_editable_i18n
@@ -34,22 +35,43 @@
       %ul
         %li
           %a{:href => "#tabs-1"}
-            = _("Current Subscriptions")
+            = _("Subscription")
         %li
           %a{:href => "#tabs-2"}
             = _("Import History")
     #tabs-1
-      %table
-        %thead
-          %th{:style => "width: 80%"} #{_("Name")}
-          %th #{_("Consumed")}
-        %tbody
-        - @subscriptions.each do |sub|
-          %tr{:class => cycle(nil, 'alt')}
-            %td
-              = sub["productName"]
-            %td
-              = "#{sub["consumed"]} of #{sub["quantity"]}"
+      .tree
+        %table#redhatSubscriptionTable
+          %thead
+            %th
+            %th{:style => "width: 80%"} #{_("Name")}
+            %th #{_("Consumed")}
+          %tbody
+            - if @subscriptions.length > 0
+              - @subscriptions.each do |sub|
+                - cycle_class = cycle("", "alt")
+                %tr{:id => "#{sub["subscriptionId"]}", :class => cycle_class}
+                  %td
+                  %td
+                    = sub["productName"]
+                  %td
+                    = "#{sub["consumed"]} of #{sub["quantity"]}"
+                - if sub["providedProducts"].length > 0
+                  %tr{:class => "child-of-#{sub["subscriptionId"]} " + cycle_class}
+                    %td{:colspan=>7}
+                      = _("Bundled Products:")
+                - sub["providedProducts"].each do |product|
+                  %tr{:class => "child-of-#{sub["subscriptionId"]} " + cycle_class}
+                    %td{:colspan=>7}
+                      %ul
+                        %li
+                          &nbsp;&nbsp;
+                          = product["productName"]
+                        -# - product.productContent.each do |product_content|
+                        -#   = render :partial=>'subscription_details', :locals=>{:group => sub["subscriptionId"], :product_content => product_content}
+            - else
+              %tr
+                %td{:colspan=>5} #{_("No subscriptions have been imported.")}
     #tabs-2
       %table
         %thead
@@ -59,7 +81,7 @@
         - if @statuses
           - @statuses.each do |status|
             %tr{:class => cycle(nil, 'alt')}
-              %td{:style => "width: 80%;"}
+              %td{:style => "width: 70%;"}
                 %span.icon_wrap.fl
                   %span.fl{:class => (status["status"] == "FAILURE" ? "failure_icon" : "success_icon")}
                 = status["statusMessage"]
