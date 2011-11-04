@@ -19,7 +19,7 @@
 %global confdir deploy/common
 
 Name:           katello-headpin
-Version:        0.1.100
+Version:        0.1.101
 Release:        1%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
@@ -104,6 +104,17 @@ and then run katello-configure to configure everything.
 cp -Rf %{homedir}/* %{katello_dir}
 
 %changelog
+* Fri Nov 04 2011 Tom McKay <thomasmckay@redhat.com> 0.1.101-1
+- gen_changes.sh run (thomasmckay@redhat.com)
+- Add in requirements for katello-configure and the headpin cli
+  (bkearney@redhat.com)
+- gen_changes.sh run (thomasmckay@redhat.com)
+- Remove test.rake which requires rspec/core (bkearney@redhat.com)
+- Force a good copy (bkearney@redhat.com)
+- debug (bkearney@redhat.com)
+- Force the copy (bkearney@redhat.com)
+- missed some files (bkearney@redhat.com)
+
 * Mon Oct 31 2011 Bryan Kearney <bkearney@redhat.com> 0.1.100-1
 - Overwrite the katello files with the headpin files (bkearney@redhat.com)
 - Did not actually copy the files. Whoops (bkearney@redhat.com)
