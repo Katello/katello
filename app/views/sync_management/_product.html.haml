@@ -1,0 +1,31 @@
+- pid = prod[:id]
+%tr{:id=>product_id(pid)}
+  -#%td{:class=>'product', 'data-id'=>prod.id}
+  %td
+    = check_box_tag "product[#{pid}]", :disabled=>!@sproducts.include?(prod)
+    #{prod[:name]}
+  %td.max_width
+    %div.max_width{:id =>"prod_sync_start_#{pid}"}
+      #{@product_status[pid][:start_time]}
+
+  %td.max_width
+    %div.max_width{:id =>"prod_sync_finish_#{pid}"}
+      #{@product_status[pid][:duration]}
+
+  %td
+    %div{:id =>"prod_size_#{pid}", :class=>"productsize"}
+      #{@product_size[pid]}
+
+  %td{:id =>'table_#{pid}'}
+    .productstatus
+      #{@product_status[pid][:state]} &nbsp;
+
+
+
+= render :partial=>"children", :locals=>{:children=>prod[:children], :parent_set=>[pid]}
+
+= render :partial=>"repo", :collection=>prod[:repos], :as=>:repo, :locals=>{:parent_set=>[pid]}
+
+
+
+  

@@ -8,7 +8,35 @@
       "complete": '#{_('Sync complete.')}',
     });
 
+    KT.repo_status = $.parseJSON('#{escape_javascript(status_obj.to_json)}');
+
 #main.grid_16
-  /%nav.subsubnav
-  /  = render_navigation(:expand_all => true, :level => 3)
-  = render "products"
+
+  %h2 #{_("Sync Status - Last Sync") }
+  = form_tag("sync", :method => :post, :remote => true, :id => 'sync_product_form') do
+    = hidden_field_tag 'sync_status_url', nil, 'data-url' => sync_management_sync_status_path
+    %table#products_table
+      %thead
+        %th #{_("Product")}
+        %th.max_width #{_("Start Time")}
+        %th.max_width  #{_("Duration")}
+        %th #{_("Size (Packages)")}
+        %th #{_("Result")}
+      %tbody
+        = render :partial=>"product", :collection=>@product_map, :as=>:prod
+
+
+
+    .actions
+      - if @sproducts.length > 0
+        .grid_2
+          %a{ :href => "#", :id=>"select_none", :class=>"fl" }
+            #{_("Select None")}
+        .grid_2
+          %a{ :href => "#", :id=>"select_all", :class=>"fl" }
+            #{_("Select All")}
+      .grid_3
+        %a{ :href => "#", :id=>"toggle_all", :class=>"fl" }
+          #{_("Expand/Contract All")}
+      - if @sproducts.length > 0
+        = submit_tag _('Synchronize Now'), :class => 'dialogbutton fr', :id => 'sync_button'

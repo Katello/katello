@@ -11,4 +11,26 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module SyncManagementHelper
+
+  def product_id(prod_id)
+    "product-#{prod_id}".gsub(".", "_") #jquery treetable doesn't support periods
+
+  end
+
+  def product_child(prod_id)
+    "child-of-#{product_id(prod_id)}"
+  end
+
+  def set_id(sets)
+    product_id(sets.join("-"))
+  end
+
+  def parent_set_class(sets)
+    product_child(sets.join("-"))
+  end
+
+  def repo_id(repo)
+    "repo-#{repo.id}"
+  end
+
 end
