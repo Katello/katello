@@ -105,8 +105,9 @@ module Glue::Pulp::Repo
   def promote(to_environment, filters = [])
 
     key = EnvironmentProduct.find_or_create(to_environment, self.product)
-    Repository.create!(:environment_product => key, :clone_from => self,
+    repo = Repository.create!(:environment_product => key, :clone_from => self,
                             :cloned_content => self.content_for_clone, :cloned_filters => filters)
+    repo.clone_response
   end
 
   def setup_repo_clone
