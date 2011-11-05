@@ -16,8 +16,10 @@ class Repository < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
   belongs_to :environment_product, :inverse_of => :repositories
+  has_and_belongs_to_many :changesets
   validates :pulp_id, :presence => true, :uniqueness => true
   validates :name, :presence => true
+
 
   def product
     self.environment_product.product
