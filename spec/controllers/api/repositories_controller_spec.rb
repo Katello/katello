@@ -63,7 +63,11 @@ describe Api::RepositoriesController do
 
   describe "get list of repository package groups" do
     subject { get :package_groups, :id => "123" }
-    before { Pulp::PackageGroup.stub(:all => {}) }
+    before do
+        @repo = Repository.new(:pulp_id=>"123", :id=>"123")
+        Repository.stub(:find).and_return(@repo)
+        Pulp::PackageGroup.stub(:all => {})
+    end
     it "should call Pulp layer" do
       Pulp::PackageGroup.should_receive(:all).with("123")
       subject
@@ -73,7 +77,12 @@ describe Api::RepositoriesController do
 
   describe "get list of repository package categories" do
     subject { get :package_group_categories, :id => "123" }
-    before { Pulp::PackageGroupCategory.stub(:all => {}) }
+
+    before do
+        @repo = Repository.new(:pulp_id=>"123", :id=>"123")
+        Repository.stub(:find).and_return(@repo)
+        Pulp::PackageGroupCategory.stub(:all => {})
+    end
     it "should call Pulp layer" do
       Pulp::PackageGroupCategory.should_receive(:all).with("123")
       subject
