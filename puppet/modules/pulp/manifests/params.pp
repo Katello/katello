@@ -17,4 +17,6 @@ class pulp::params {
   $oauth_key = $katello::params::oauth_key
   $oauth_secret = $katello::params::oauth_secret
 
+  $pulp_user_name = $katello::params::user_name
+  $pulp_user_pass = $katello::params::user_pass
 }
