@@ -66,12 +66,7 @@ class SyncManagementController < ApplicationController
 
     @product_repos = {}
 
-    full_repos = Pulp::Repository.all
-    for p in @products
-      for r in p.repos(p.organization.locker)
-        r.populate_from(full_repos)
-      end
-    end
+    Glue::Pulp::Repos.prepopulate! @products, current_organization.locker
 
     for p in @products
       pstatus = p.sync_status
@@ -255,7 +250,6 @@ private
       }
       list << {:name=>prod.name, :id=>prod.id, :type=>"product",  :repos=>non_found_repos, :children=>majors}
     }
-    pprint_collection list
     list
   end
 
@@ -293,7 +287,7 @@ private
     arches
   end
 
-
+  #Used for debugging collect_repos output
   def pprint_collection coll
     coll.each{|prod|
       Rails.logger.error prod[:name]
