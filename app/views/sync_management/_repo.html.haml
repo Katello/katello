@@ -3,12 +3,12 @@
   %td.one-line-ellipsis
     =check_box_tag "repos", repo.id, false
     #{repo.name}
-  %td
+  %td.start_time
     #{@repo_status[repo.id][:start_time]}
-  %td
+  %td.duration
     #{@repo_status[repo.id][:duration]}
-  %td
+  %td.size
     #{@repo_status[repo.id][:size]}
     (#{@repo_status[repo.id][:packages]})
-  %td
+  %td.result
     #{@repo_status[repo.id][:state]}
