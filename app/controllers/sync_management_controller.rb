@@ -101,13 +101,21 @@ class SyncManagementController < ApplicationController
   end
  
   def sync_status
-    sync_status = Repository.find_by_pulp_id(params[:repo_id]).sync_status
-    progress = format_sync_progress(sync_status)
-    progress[:repo_id] = params['repo_id']
-
-    respond_with (progress) do |format|
-      format.js { render :json => progress.to_json, :status => :ok }
+    collected = []
+    params[:repoids].each do |id|
+      begin
+        sync_status = Repository.find_by_pulp_id(id).sync_status
+        progress = format_sync_progress(sync_status)
+        progress[:repo_id] = id
+        collected.push(progress)
+      rescue Exception => e
+        errors e.to_s # debugging and skip for now
+        next 
+      end
     end
+
+    respond_with (collected) do |format|
+      format.js { render :json => collected.to_json, :status => :ok }
   end
 
   def product_status
