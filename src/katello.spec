@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.98
+Version:        0.1.99
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -56,7 +56,6 @@ Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
 Requires:       rubygem(gettext_i18n_rails)
 Requires:       rubygem(simple-navigation) >= 3.3.4
-Requires:       rubygem(sqlite3)
 Requires:       rubygem(pg)
 Requires:       rubygem(scoped_search) >= 2.3.1
 Requires:       rubygem(delayed_job) >= 2.1.4
@@ -66,6 +65,9 @@ Requires:       rubygem(ruport) >= 1.6.3
 Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
 Requires:       rubygem(thin)
+Requires:       rubygem(fssm)
+Requires:       rubygem(sass)
+Requires:       rubygem(chunky_png)
 
 # bz 743816 temp fix until yum update makes to z stream
 %if 0%{?rhel} == 6
@@ -91,6 +93,7 @@ BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
 BuildRequires:  rubygem(jammit)
 BuildRequires:  rubygem(chunky_png)
+BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 
@@ -138,6 +141,12 @@ Katello connection classes for the Candlepin backend
 
 %prep
 %setup -q
+# branding 
+if [ -d branding ] ; then
+  cp -r branding/* .
+  rm -rf branding
+fi
+
 
 %build
 #configure Bundler
@@ -315,6 +324,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Nov 07 2011 Mike McCune <mmccune@redhat.com> 0.1.99-1
+- misc rel-eng updates based on new RPMs from Fedora (mmccune@redhat.com)
 * Wed Nov 02 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.98-1
 - 702052 - db fields length limit review
 - unit test fix
