@@ -28,7 +28,7 @@ class ActivationKey < ActiveRecord::Base
   scoped_search :on => :description, :complete_value => true, :rename => :'key.description'
   scoped_search :in => :environment, :on => :name, :complete_value => true, :rename => :'environment.name'
 
-  validates :name, :presence => true, :katello_name_format => true
+  validates :name, :presence => true, :katello_name_format => true, :length => { :maximum => 255 }
   validates_uniqueness_of :name, :scope => :organization_id
   validates :description, :katello_description_format => true
   validates :environment, :presence => true
