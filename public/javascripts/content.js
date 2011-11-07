@@ -25,7 +25,7 @@ $(document).ready(function() {
     $.each(KT.repo_status, function(repo_id, rs){
       // If we have a sync_id for this repo, lets start the prog bar
       if (rs.sync_id) {
-          KT.content_actions.addSyncing(repo_id);
+          KT.content_actions.addSyncing(repo_id, true);
           KT.content.draw_syncing(repo_id, rs.progress);
       }
     });
@@ -91,14 +91,14 @@ $(document).ready(function() {
 KT.content_actions = (function(){
     var syncing = [],
     updater = undefined,
-    addSyncing = function(repo_id){
+    addSyncing = function(repo_id, ignore_start){
         //nothing in the list before adding and updater already exists
         var start = syncing.length === 0 && updater;
         syncing.push(repo_id + "");
-        if (!updater){
+        if (!updater && !ignore_start){
             startUpdater();
         }
-        if (start){
+        if (start && !ignore_start){
             updater.restart();
         }
     },
@@ -175,9 +175,9 @@ KT.content_actions = (function(){
 KT.content = (function(){
 
      var draw_syncing = function(repo_id, progress){
-            var element = $("#repo-" + repo_id).find(".result");
-            var cancelButton = $('<a/>').attr("class", "cancel_sync").text(i18n.cancel);
-            var progressBar = $('<div/>').attr('class', 'progress').text(" ");
+            var element = $("#repo-" + repo_id).find(".result"),
+                cancelButton = $('<a/>').attr("class", "cancel_sync").text(i18n.cancel),
+                progressBar = $('<div/>').attr('class', 'progress').text(" ");
             progress = progress ? progress : 0;
             progressBar.progressbar({
                 value: progress
