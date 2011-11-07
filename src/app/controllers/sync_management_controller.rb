@@ -127,7 +127,7 @@ class SyncManagementController < ApplicationController
   end
 
   def destroy
-    retval = Pulp::Repository.cancel(params['repo_id'], params[:id])
+    retval = Pulp::Repository.cancel(params[:id], params[:id])
     cancel =  {:sync_id => retval[:id], :state => retval[:state] }
     respond_with (cancel) do |format|
       format.js { render :json => cancel.to_json, :status => :ok }
