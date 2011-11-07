@@ -15,10 +15,10 @@ common:
 
   warden: database
   use_cp: true
-  use_pulp: true
+  use_pulp: <%= scope.lookupvar("katello::params::deployment") == 'katello' %>
   rest_client_timeout: 30
 
-#setup how often you want 
+#setup how often you want
 #your notifications to be checked
 #for you to receive the right notifications
 #default value = 45 seconds
@@ -27,9 +27,9 @@ common:
     polling_seconds: 120
 
 # Setup your UI search configuration.
-# max_history (default=5): specifies the number of search history elements 
+# max_history (default=5): specifies the number of search history elements
 #   that will be retained for users
-# max_favorites (default=5): specifies the number of search favorites that 
+# max_favorites (default=5): specifies the number of search favorites that
 #   a user may store per search box
   search:
     max_history: 5
@@ -45,11 +45,11 @@ common:
 # ca_cert_file: refers to the candlepin-ca.crt location that is needed
 #   to connect to candlepin over https.This is not necessary
 #   if the candlepin server is running on the same machine as katello
-#   but required if the server is on a different machine. 
-#   In the different machine case the katello host needs to have a 
-#   copy of /etc/candlepin/certs/candlepin-ca.crt copied from 
+#   but required if the server is on a different machine.
+#   In the different machine case the katello host needs to have a
+#   copy of /etc/candlepin/certs/candlepin-ca.crt copied from
 #   the candlepin host and the location of the copied file needs to be
-#   specified here.. 
+#   specified here..
   candlepin:
     url: <%= scope.lookupvar("katello::params::candlepin_url") %>
     oauth_key: <%= scope.lookupvar("katello::params::oauth_key") %>
@@ -60,7 +60,7 @@ common:
 #     example https://localhost/pulp/api
 # oauth_key and oauth_secre :Specify your oauth key and secret
 #   used to authenticate between Katello and Pulp
-# ca_cert_file: refers to the apache certificate 
+# ca_cert_file: refers to the apache certificate
 #   (typically /etc/pki/tls/certs/localhost.crt) location that is needed
 #   to connect to pulp over https.
   pulp:

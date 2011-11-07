@@ -17,6 +17,7 @@ class ChangesetDependency < ActiveRecord::Base
   belongs_to :changeset, :inverse_of=>:dependencies
   belongs_to :product
 
+  validates :display_name, :length => { :maximum => 255 }
 
   # returns list of virtual permission tags for the current user
   def self.list_tags

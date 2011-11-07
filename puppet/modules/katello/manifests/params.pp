@@ -1,8 +1,14 @@
 class katello::params {
+  # First User and Org settings
+  $user_name = katello_config_value('user_name')
+  $user_pass = katello_config_value('user_pass')
+  $org_name  = katello_config_value('org_name')
+
   # database settings
   $db_user = katello_config_value('db_user')
   $db_name = katello_config_value('db_name')
   $db_pass = katello_config_value('db_password')
+  $deployment = katello_config_value('deployment')
 
   # system settings
   $user        = "katello"
@@ -21,6 +27,7 @@ class katello::params {
   # apache settings
   $thin_start_port = "5000"
   $thin_log        = "/var/log/katello/thin-log.log"
+  $process_count   = katello_process_count()
 
   # LDAP settings
   $ldap_server = "localhost"

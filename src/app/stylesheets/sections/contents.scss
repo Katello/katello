@@ -326,7 +326,20 @@
       color: $text_color;
       font-weight: normal;
     }
-    
+
+    #select_container {
+
+
+      .centered {
+        display:inline;
+       height: 19px;
+       vertical-align:centered;
+      }
+    }
+    .chzn-container {
+      margin-right: 4px;
+    }
+
     #product_list {
 
       max-height: 200px;
@@ -338,12 +351,15 @@
         width: 100%;
       }
 
+      .repos_list {
+        display: inline-block;
+      }
       .no_padding {
         padding-right: 0;
         padding-left: 0;
 
       }
-
+      
       .product_entry {
         .small_col {
           width: 20px;
@@ -353,6 +369,12 @@
           display: inline-block;
           position: relative;
           vertical-align: top;
+        }
+        input, select {
+          margin: 2px;
+        }
+        .repo {
+          padding-left: 20px;
         }
         .large_col {
           display: inline-block;

@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.8
+Version:        0.1.10
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -52,6 +52,42 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Fri Nov 04 2011 Clifford Perry <cperry@redhat.com> 0.1.10-1
+- Adding support to katello-configure for initial user/pass & org
+  (cperry@redhat.com)
+- 751132 - More logging for db seed step during installation.
+  (cperry@redhat.com)
+- 749495 - fix for the total memory calculation (lzap+git@redhat.com)
+
+* Wed Nov 02 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.9-1
+- PATCH: katello-configure: If unexpected error is seen, report it as well.
+- PATCH: katello-configure: Exit with nonzero status if error was seen in
+  puppet execution.
+- Make a copy of katello-configure.conf in the log directory as well.
+- 749495 - installation script process count - fix
+- 749495 - installation script process count - fix
+- 749495 - installation script process count
+- Merge branch 'breakup-puppet'
+- tweak a change
+- Merge
+- Remove trailing spaces
+- Final selinux tweaks
+- Disable selinux and get the endpoints correct
+- Copy over the syscnf file
+- Pull the prefix off of the deployment type
+- Fully qualify the deployment variable
+- First cut at making puppet be katello/headpin aware
+- Final selinux tweaks
+- Disable selinux and get the endpoints correct
+- Copy over the syscnf file
+- merge
+- Pull the prefix off of the deployment type
+- Merge branch 'bp' into breakup-puppet
+- Fully qualify the deployment variable
+- First cut at making puppet be katello/headpin aware
+- First cut at making puppet be katello/headpin aware
+- First cut at making puppet be katello/headpin aware
+
 * Mon Oct 31 2011 Clifford Perry <cperry@redhat.com> 0.1.8-1
 - fixes BZ-745652 bug - Installation will configure itself to use 1 thin
   process if only one processor (ohadlevy@redhat.com)

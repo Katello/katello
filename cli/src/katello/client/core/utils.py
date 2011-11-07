@@ -268,16 +268,15 @@ class Printer:
 def is_valid_record(rec):
     """
     Checks if record returned from server has been saved.
-    @type rec: Hash
+    @type rec: Object
     @param rec: record returned from server
     @return True if record contains created_at field with value.
     """
-    if 'created_at' in rec:
+    if type(rec)==type(dict()) and 'created_at' in rec:
         return (rec['created_at'] != None)
 
-    elif 'created' in rec:
+    elif type(rec)==type(dict()) and 'created' in rec:
         return (rec['created'] != None)
-
     else:
         return False
 

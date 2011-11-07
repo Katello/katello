@@ -29,8 +29,9 @@ class User < ActiveRecord::Base
   has_many :search_favorites, :dependent => :destroy
   has_many :search_histories, :dependent => :destroy
 
-  validates :username, :uniqueness => true, :presence => true, :username => true
+  validates :username, :uniqueness => true, :presence => true, :username => true, :length => { :maximum => 255 }
   validates_presence_of :email
+
   validate :own_role_included_in_roles
 
   # check if the role does not already exist for new username
@@ -69,12 +70,15 @@ class User < ActiveRecord::Base
   # THIS CHECK MUST BE THE FIRST before_destroy
   # check if this is not the last superuser
   before_destroy do |u|
+    if u.id == User.current.id
+      u.errors.add(:base, _("Cannot delete currently logged user"))
+      false
+    end
     unless u.can_be_deleted?
       u.errors.add(:base, "cannot delete last admin user")
       false
-    else
-      true
     end
+    true
   end
 
   # destroy own role for user

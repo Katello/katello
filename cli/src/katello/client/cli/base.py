@@ -76,8 +76,18 @@ class KatelloCLI(object):
         lines = [self.usage_line,
                  'Supported Commands:']
         for name, command in sorted(self._commands.items()):
-            lines.append('\t%-14s %-25s' % (name, command.description))
+            lines += self.__build_command_usage_lines(command)
         return '\n'.join(lines)
+
+    def __build_command_usage_lines(self, command):
+        lines = []
+        desc_lines = command.description.split("\n")
+
+        lines.append('\t%-14s %s' % (command.name, desc_lines.pop(0)) )
+        for l in desc_lines:
+            lines.append('\t%-14s %s' % (" ", l) )
+            
+        return lines
 
     def add_command(self, name, command):
         """

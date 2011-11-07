@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.97
+Version:        0.1.98
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -90,6 +90,7 @@ BuildRequires:  rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
 BuildRequires:  rubygem(jammit)
+BuildRequires:  rubygem(chunky_png)
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 
@@ -182,6 +183,7 @@ install -Dp -m0755 %{confdir}/%{name}.init %{buildroot}%{_initddir}/%{name}
 install -Dp -m0755 %{confdir}/%{name}-jobs.init %{buildroot}%{_initddir}/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.completion.sh %{buildroot}%{_sysconfdir}/bash_completion.d/%{name}
 install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+install -Dp -m0644 %{confdir}/%{name}-jobs.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 install -Dp -m0644 %{confdir}/thin.yml %{buildroot}%{_sysconfdir}/%{name}/
 
@@ -246,6 +248,7 @@ fi
 %config %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
+%config %{_sysconfdir}/logrotate.d/%{name}-jobs
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
@@ -312,6 +315,110 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Nov 02 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.98-1
+- 702052 - db fields length limit review
+- unit test fix
+- filters - some styling improvements, as well as some permission fixes
+- adding katello-job logrotate script
+- moving simplify_changeset out of application controller
+- Merge branch 'breakup-puppet'
+- Remove trailing spaces
+- filter - fixing issue where you could add a repo even if one wasnt selected
+- improving package filter chosen styling
+- converting chosen css to scss
+- filters - fixing javascript load issue
+- fixing initial_action for panel after merge
+- improving error reporting for the API calls
+- 731670 - improving error reporting when deleting users
+- 750246 - promote content of product to different environments
+- repo promotion - fix for failure when promoting a repo for second time
+- Promotions - fix ajax scrolling for promotions, errata and pkgs
+- repo promotion - fix for creating content (after wrong rebase)
+- repo promotion - fix in spec tests
+- cp content - content type taken from the provider's type
+- fix for promoting repos - changeset was passing wrong parameters - repo
+  promotion refactored, removed parameter for content (it is now created inside
+  the repo object)
+- better error messages for template validations
+- adding some delays in the PulpTaskStatus
+- parameter -m no longer an option in katello-jobs
+- adding migration to the reset-dbs script
+- templates - spec test fix
+- templates - promoting parent templates
+- distros - removing tdl validation
+- distros - adding distribution tdl unit tests
+- distros - adding package groups to TDL
+- distros - adding name-version-url-arch to TDL export
+- distros - adding distributions unit tests
+- distros - adding import/export unit tests
+- distros - adding importing
+- distros - adding exporting
+- distros - adding templ. distribution validator
+- adding new configuration value debug_rest
+- distros - adding cli portion for adding/removing distros
+- distros - marking find_template as private method
+- distros - adding system template handling code
+- distros - adding system_template_distribution table
+- distros - adding family, variant, version in CLI
+- Merge branch 'filters-ui'
+- filters - unit test fix and addition
+- filters - adapting for  new panel ajax code
+- fxiing merge conflict
+- templates - spec test for checking revision numbers after promotion
+- templates - fix for increased revision numbers after promotion
+- filters - adding spec test for ui controller
+- updated TDL schema + corresponding changes in template export & tests
+- filters - fixing a few issues, such as empty package list message not going
+  away/coming back
+- filters - fixing empty message not appearing and dissappearing as needed
+- filters - a couple more filters fixes
+- filters - removing repos from select repos select box when they are selected
+- filters - a few ui related fixes
+- filters - package imporovements
+- filters - some page changes as well as adding revert filter to products and
+  repos
+- filters - making products and repos add incrementally instead of re-rendering
+  the entire product list
+- filters - hooking up add/remove packages to the backend, as well as a few
+  javascript fixes
+- Merge branch 'filters' into filters-ui
+- filters - hooking up product and repos to backend
+- filters - improving adding removing of products and repos
+- package filters - adding javascript product and repository adding
+- added filters controller spec
+- filters controller spec
+- merge conflict
+- adding/removal of packages from filters supports rollbacks now
+- added support for updating of package lists of filters
+- filters - a few package auto complete fixes
+- filters - adding auto complete for packages, and moving locker package search
+  to central place from system templates controller
+- moving some javascript i18n to a common area for autocomplete
+- spliting out the auto complete javascript object to its own file for reuse
+- filters - adding the ui part of package adding and removing, not hooked up to
+  the backend since it doesnt work yet
+- tupane - adding support for expanding to actions other than :edit
+- filters - making filters use name instead of pulp_id, and adding remove
+- merge conflict
+- filters - adding initial edit code
+- fixing issue where provider description was marked with the incorrect class
+- forgot to commit migration for filter-product join table
+- added support for filter create/list/show/delete operations in katello cli
+- filters - adding creation of package filters in the ui
+- more filter-related tests
+- filters - initial package filtering ui
+- merge conflict
+- support for addition/removal of filters to already promoted products
+- fixing gemfile url
+- Merge branch 'master' into filters-ui
+- fixed a few issues in filters controller
+- application of filters during promotion
+- tests around persisting of filter-product association
+- fixed a few issues around association of filters with repos
+- added support for associating of filters with products
+- fixed a misspelled method name
+- applying filters to products step 1
+
 * Fri Oct 28 2011 Shannon Hughes <shughes@redhat.com> 0.1.97-1
 - Fixed an activation key error were all activation keys across musltiple orgs
   were deemed readable if Activationkeys in one org was accessible
@@ -2757,7 +2864,7 @@ fi
   key (adprice@redhat.com)
 
 * Thu Jun 16 2011 Justin Sherrill <jsherril@redhat.com> 0.1.47-1
-- initial public build 
+- initial public build
 
 * Tue Jun 14 2011 Mike McCune <mmccune@redhat.com> 0.1.46-1
 - initial changelog
