@@ -17,11 +17,11 @@ module UsersHelper
     user.password.gsub(/./, "&#9679;")
   end
 
-  def organization_select
+  def organization_select(org_id=nil)
     select(:org_id, "org_id",
            current_user.allowed_organizations.map {|a| [a.name, a.id]},
            {:prompt => _('Select Organization'), :id=>"org_field",
-           :selected => current_organization.id})
+           :selected => (org_id ||= current_organization.id)})
   end
 
 end

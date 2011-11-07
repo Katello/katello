@@ -196,6 +196,13 @@ Src::Application.routes.draw do
   match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
 
   resources :organizations do
+    collection do
+      get :auto_complete_search
+      get :items
+    end
+    member do
+      get :environments_partial
+    end
     resources :environments do
       member do
         get :system_templates
@@ -203,13 +210,9 @@ Src::Application.routes.draw do
       end
     end
     resources :providers
-    collection do
-      get :auto_complete_search
-      get :items
-    end
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
-  match '/organizations/:id/environments_partial' => 'organizations#environments_partial', :via => :get
+  #match '/organizations/:id/environments_partial' => 'organizations#environments_partial', :via => :get
 
   resources :changesets, :only => [:update, :index, :show, :create, :new, :edit, :show, :destroy, :auto_complete_search] do
     member do

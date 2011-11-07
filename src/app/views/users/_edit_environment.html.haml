@@ -21,7 +21,7 @@
     .grid_3.ra
       = label :user, :org, _("New Default Organization:")
     .grid_5.la
-      = organization_select
+      = organization_select @organization.id
   %fieldset.fl.clear
   .promotion_paths
     = hidden_field_tag 'user[environment_id]', @environment.id unless @environment.nil?

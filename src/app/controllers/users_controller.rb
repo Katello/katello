@@ -87,7 +87,7 @@ class UsersController < ApplicationController
                          :verbs=>[Verb.find_or_create_by_verb("register_systems")],
                          :name=>"default systems reg permission",
                          :organization=> @organization
-      PermissionTag.create! (:permission_id => perm.id, :tag_id => @environment.id )
+      PermissionTag.create!(:permission_id => perm.id, :tag_id => @environment.id)
 
       notice @user.username + _(" created successfully.")
       if User.where(:id => @user.id).search_for(params[:search]).include?(@user)
@@ -128,9 +128,10 @@ class UsersController < ApplicationController
     if @user.has_default_env?
       @old_perm = Permission.find_all_by_role_id(@user.own_role.id)[0]
       @old_env = @user.default_environment
+      @organization = Organization.find(@old_env.attributes['organization_id'])
+    else
+      @organization = current_organization
     end
-    @organization = current_organization
-    @organization = Organization.find(params[:id])
     accessible_envs = KTEnvironment.systems_registerable(@organization)
     setup_environment_selector(@organization, accessible_envs)
     @environment = first_env_in_path(accessible_envs, false, @organization)
@@ -165,7 +166,7 @@ class UsersController < ApplicationController
                      :verbs=>[Verb.find_or_create_by_verb("register_systems")],
                      :name=>"default systems reg permission",
                      :organization=> @organization
-        PermissionTag.create! (:permission_id => perm.id, :tag_id => new_env )
+        PermissionTag.create!(:permission_id => perm.id, :tag_id => new_env)
 
         notice _("User environment updated successfully.")
         #attr = params[:user].first.last if params[:user].first
