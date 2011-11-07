@@ -41,7 +41,37 @@ class katello::config {
     unless  => "getenforce |egrep -iq 'disable|Permissive'",
   }
 
+  common::simple_replace { "org_name":
+      file => "/usr/share/katello/db/seeds.rb",
+      pattern => "ACME_Corporation",
+      replacement => "$katello::params::org_name",
+      before => Exec["katello_seed_db"],
+      require => [ Class["candlepin::service"], Class["pulp::service"] ],
+  }
+ 
+  common::simple_replace { "org_description":
+      file => "/usr/share/katello/db/seeds.rb",
+      pattern => "ACME Corporation Organization",
+      replacement => "$katello::params::org_name Organization",
+      before => Exec["katello_seed_db"],
+      require => [ Class["candlepin::service"], Class["pulp::service"] ],
+  }
+ 
+  common::simple_replace { "primary_user_pass":
+      file => "/usr/share/katello/db/seeds.rb",
+      pattern => "password => 'admin'",
+      replacement => "password => '$katello::params::user_pass'",
+      before => Exec["katello_seed_db"],
+      require => [ Class["candlepin::service"], Class["pulp::service"] ],
+  }
 
+  common::simple_replace { "primary_user_name":
+      file => "/usr/share/katello/db/seeds.rb",
+      pattern => "username => 'admin'",
+      replacement => "username => '$katello::params::user_name'",
+      before => Exec["katello_seed_db"],
+      require => [ Class["candlepin::service"], Class["pulp::service"] ],
+  }
 
   exec {"katello_db_migrate":
     cwd         => $katello::params::katello_dir,

@@ -1,4 +1,9 @@
 class katello::params {
+  # First User and Org settings
+  $user_name = katello_config_value('user_name')
+  $user_pass = katello_config_value('user_pass')
+  $org_name  = katello_config_value('org_name')
+
   # database settings
   $db_user = katello_config_value('db_user')
   $db_name = katello_config_value('db_name')
