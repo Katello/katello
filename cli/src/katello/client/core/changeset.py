@@ -112,7 +112,7 @@ class Info(ChangesetAction):
         cset["errata"]   = "\n".join([e["display_name"] for e in cset["errata"]])
         cset["products"] = "\n".join([p["name"] for p in cset["products"]])
         cset["packages"] = "\n".join([p["display_name"] for p in cset["packages"]])
-        cset["repositories"] = "\n".join([r["display_name"] for r in cset["repos"]])
+        cset["repositories"] = "\n".join([r["name"] for r in cset["repos"]])
         cset["system_templates"] = "\n".join([t["name"] for t in cset["system_templates"]])
 
         self.printer.addColumn('id')
