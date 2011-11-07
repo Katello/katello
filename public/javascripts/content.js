@@ -21,37 +21,44 @@ function getProductId(field) {
 
 $(document).ready(function() {
 
-  // Setup initial state
-  $.each(KT.repo_status, function(repo_id, rs){
+    // Setup initial state
+    $.each(KT.repo_status, function(repo_id, rs){
       // If we have a sync_id for this repo, lets start the prog bar
       if (rs.sync_id) {
-          KT.content.statusChecker(rs.id, rs.sync_id, rs.product_id);
+          KT.content_actions.addSyncing(repo_id);
+          KT.content.draw_syncing(repo_id, rs.progress);
       }
-  });
+    });
+
+    KT.content_actions.startUpdater();
 
     $("#products_table").treeTable({
         clickableNodeNames: true,
         indent: 15
     });
 
-  
+
+    $('#select_all').click(KT.content.select_all);
+    $('#select_none').click(KT.content.select_none);
+    //$('#toggle_all').click(function(){$('tr').show(); });
 
 
-  $('#select_all').click(KT.content.select_all);
-  $('#select_none').click(KT.content.select_none);
-  //$('#toggle_all').click(function(){$('tr').show(); });
+    $("#products_table").delegate(".cancel_sync", "click", function(){
+    var repo_id = $(this).parents("tr").attr("data-id");
+    KT.actions.cancelSync(repo_id, $(this));
+    });
 
-  // start polling sync status after succesfully sync call
-  $('#sync_product_form').bind("ajax:success",
+    $('#sync_product_form').bind("ajax:success",
       function(evt, data, status, xhr){
        var syncs = $.parseJSON(data);
-       $.each(syncs, function(){
-           KT.content.statusChecker(this.repo_id, this.sync_id, this.product_id);
+       $.each(syncs, function(index, item){
+          KT.content_actions.addSyncing(item);
+          KT.content.draw_syncing(item, 0);
        })
-   }).bind("ajax:error", function(evt, xhr, status, error){});
-  
-  
 
+    });
+  
+  
   // if parent is checked then all children should be selected
 //  $('.product input:checkbox').click(function() {
 //    $(this).siblings().find('input:checkbox').attr('checked', this.checked);
@@ -77,128 +84,139 @@ $(document).ready(function() {
 
   });
 
-
-  //end doc ready
 });
 
 
 
 KT.content_actions = (function(){
-
+    var syncing = [],
+    updater = undefined,
+    addSyncing = function(repo_id){
+        var start = syncing.length === 0;
+        syncing.push(repo_id + "");
+        if (!updater){
+            startUpdater();
+        }
+        if (start){
+            updater.start();
+        }
+    },
+    removeSyncing = function(repo_id){
+      syncing.splice($.inArray(repo_id + "", syncing), 1);
+      if (syncing.length === 0 && updater){
+          updater.stop();
+      }
+    },
+    getSyncing = function(){
+        return syncing;
+    },
+    cancelSync = function(repo_id, btn){
+        btn.addClass("disabled");
+        
+        $.ajax({
+          type: 'DELETE',
+          url: KT.routes.sync_management_path(repo_id),
+          dataType: 'json',
+          success: function(data) {
+            KT.content.cancelRepo(repo_id);
+          },
+          error: function(data) {
+            btn.removeClass("disabled");
+          }
+        });
+    },
+    startUpdater = function(){
+        if (syncing.length ===0){
+            return;
+        }
+        updater = $.PeriodicalUpdater(KT.routes.sync_management_sync_status_path(), {
+              data: function(){return {repoids:getSyncing()}},
+              method: 'get',
+              type: 'json',
+              global: false
+            },
+            function(data,success) {
+               console.log(success);
+               if (success == "notmodified") {
+                 return;
+               }
+               $.each(data, function(index, repo){
+                   // Only stop when we reach 100% and the finish_time is done sometimes they are not both complete
+                   if (data.raw_state == 'canceled' || (data.progress.progress === 100 && data.finish_time)) {
+                        removeSyncing(repo.id);
+                   }
+                   else {
+                    KT.content.updateRepo(  repo.id,
+                                            repo.start_time,
+                                            repo.duration,
+                                            repo.progress.progress,
+                                            repo.size,
+                                            repo.packages);
+                   }
+               });
+            },
+            function(){
+                updater.stop();
+            }
+            );
+            
+    };
 
     return {
-
-
+        cancelSync: cancelSync,
+        addSyncing: addSyncing,
+        startUpdater: startUpdater
+        
     };
-});
-
-
-
+})();
 
 
 KT.content = (function(){
 
-     var   statusChecker = function(repo, sync, product_id){
-            fadeUpdate("#prod_sync_start_" + product_id, ' ');
-            var updateField = $('#' + KT.common.escapeId("repo_bar_" + repo));
-            updateField.fadeOut('fast');
-            updateField.html('');
-            cancelButton = $('<a/>')
-                .attr("id", "cancel_"+repo)
-                .attr("class", "cancel")
-                .attr("href", "#")
-                .text(i18n.cancel);
-            progressBar = $('<div/>')
-                .attr('class', 'progress')
-                .attr('id', "progress_" + repo)
-                .text(" ");
+     var draw_syncing = function(repo_id, progress){
+            var element = $("#repo-" + repo_id).find(".result");
+            var cancelButton = $('<a/>').attr("class", "cancel_sync").text(i18n.cancel);
+            var progressBar = $('<div/>').attr('class', 'progress').text(" ");
+            progress = progress ? progress : 0;
             progressBar.progressbar({
-                value: 0
+                value: progress
             });
-            progressBar.appendTo(updateField);
-            cancelButton.appendTo(updateField);
-            updateField.fadeIn('fast');
-            var url = $('#sync_status_url').attr('data-url');
-            var pu = $.PeriodicalUpdater(url, {
-              data: {repo_id:repo, sync_id:sync},
-              method: 'get',
-              type: 'json',
-              global: false
-            }, function(data,success) {
-               if (success == "notmodified") {
-                 return;
-               }
-               var pb = $('#progress_' + data.repo_id);
-               var prod_id = getProductId(updateField);
-               $("#repo_sync_start_" + data.repo_id).text(data.start_time);
-               // Only stop when we reach 100% and the finish_time is done
-               // sometimes they arent both complete
-               if (data.raw_state == 'canceled' || (data.progress.progress == 100 && data.finish_time != null)) {
-                 pu.stop();
-                 updateField.html(data.state);
-                 fadeUpdate("#repo_sync_finish_" + data.repo_id, data.duration);
-                 fadeUpdate("#repo_sync_size_" + data.repo_id,
-                             data.size + ' (' + data.packages + ')');
-                 updateProduct(prod_id, data.repo_id);
-               } else if (data.progress.progress < 0) {
-                 pu.stop();
-                 updateField.html(i18n.error);
-                 updateProduct(prod_id, data.repo_id);
-               } else {
-                 pb.progressbar({ value : data.progress.progress});
-                 fadeUpdate("#repo_sync_size_" + data.repo_id, data.size + ' (' + data.packages + ')');
-               }
-            });
-            cancelButton.click(function(){
-                cancelSync(repo, sync, updateField, pu);
-            });
-            return false;
+            element.text("").append(progressBar).append(cancelButton);
         },
         updateRepo = function(repo_id, starttime, duration, progress, size, packages){
             var repo = $("#repo-" + repo_id);
-            fadeUpdate(repo.find(".start_time"), starttime);
-            fadeUpdate(repo.find(".duration"), duration);
-            fadeUpdate(repo.find(".size"), size + ' (' + packages + ')');
-            fadeUpdate(repo.find(".result"), "");
+            update_item(repo, starttime, duration, progress, size, packages );
+        },
+        cancelRepo = function(repo_id){
+            //TODO handle product
+            fadeUpdate($("#repo-" + repo_id).find(".result"), i18n.cancelled);
+        },
+        update_item = function(element, starttime, duration, progress, size, packages) {
+            fadeUpdate(element.find(".start_time"), starttime);
+            fadeUpdate(element.find(".duration"), duration);
+            fadeUpdate(element.find(".size"), size + ' (' + packages + ')');
+            element.find(".progress").progressbar({ value : progress});
+            fadeUpdate(element.find(".result"), "");
         },
         updateProduct = function (prod_id, repo_id) {
-            var url = KT.routes.sync_management_product_status_path();
-            $.ajax({
-              type: 'GET',
-              url: url,
-              data: { product_id: prod_id, repo_id: repo_id},
-              dataType: 'json',
-              success: function(data) {
-                $('#table_' + prod_id).find('div.productstatus').html(data.state);
-                fadeUpdate("#prod_sync_finish_" + data.product_id, data.duration);
-                fadeUpdate("#prod_sync_start_" + data.product_id, data.start_time);
-                fadeUpdate("#prod_size_" + data.product_id, data.size);
-              },
-              error: function(data) {
-                fadeUpdate("#prod_sync_finish_" + data.product_id, data.duration);
-                fadeUpdate("#prod_sync_start_" + data.product_id, data.start_time);
-                fadeUpdate("#prod_size_" + data.product_id, data.size);
-              }
-            });
-        },
-        cancelSync = function(repoid, syncid, updateField, pu){
-            var btn = $('#' + KT.common.escapeId("cancel_" + repoid)),
-                prod_id = getProductId(updateField);
-            btn.addClass("disabled");
-            pu.stop();
-            $.ajax({
-              type: 'DELETE',
-              url: KT.common.rootURL() + 'sync_management/' + syncid,
-              data: { repo_id: repoid, product_id: prod_id },
-              dataType: 'json',
-              success: function(data) {
-                updateProduct(prod_id, repoid);
-                updateField.html('Sync Canceled.');
-              },
-              error: function(data) {
-                btn.removeClass("disabled");
-              }
-            });
+//            var url = KT.routes.sync_management_product_status_path();
+//            $.ajax({
+//              type: 'GET',
+//              url: url,
+//              data: { product_id: prod_id, repo_id: repo_id},
+//              dataType: 'json',
+//              success: function(data) {
+//                $('#table_' + prod_id).find('div.productstatus').html(data.state);
+//                fadeUpdate("#prod_sync_finish_" + data.product_id, data.duration);
+//                fadeUpdate("#prod_sync_start_" + data.product_id, data.start_time);
+//                fadeUpdate("#prod_size_" + data.product_id, data.size);
+//              },
+//              error: function(data) {
+//                fadeUpdate("#prod_sync_finish_" + data.product_id, data.duration);
+//                fadeUpdate("#prod_sync_start_" + data.product_id, data.start_time);
+//                fadeUpdate("#prod_size_" + data.product_id, data.size);
+//              }
+//            });
         },
         fadeUpdate = function(updateField, text) {
             updateField.fadeOut('fast').text(text).fadeIn('fast');
@@ -211,10 +229,11 @@ KT.content = (function(){
         };
     
     return {
-        cancelSync: cancelSync,
+        cancelRepo: cancelRepo,
         updateProduct: updateProduct,
-        statusChecker: statusChecker,
+        updateRepo: updateRepo,
         select_all : select_all,
-        select_none: select_none
+        select_none: select_none,
+        draw_syncing: draw_syncing
     }
 })();
