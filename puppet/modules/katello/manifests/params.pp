@@ -2,6 +2,7 @@ class katello::params {
   # First User and Org settings
   $user_name = katello_config_value('user_name')
   $user_pass = katello_config_value('user_pass')
+  $user_email = katello_config_value('user_email')
   $org_name  = katello_config_value('org_name')
 
   # database settings
@@ -11,6 +12,7 @@ class katello::params {
   $deployment = katello_config_value('deployment')
 
   # system settings
+  $host        = katello_config_value('host')
   $user        = "katello"
   $group       = "katello"
   $config_dir  = "/etc/katello"
