@@ -7,7 +7,7 @@ function get_repo_id() {
 
 function get_pulp_repo_id() {
     echo `curl -k -s -u admin:admin -H "Content-Type: application/json" -H "Accept: application/json" \
-    https://localhost:3000/api/repositories/$REPO_ID/ | json_reformat | grep "pulp_id" | awk '{print $2}' | sed -e 's/[,"]//g'`
+    http://localhost:3000/katello/api/repositories/$REPO_ID/ | json_reformat | grep "pulp_id" | awk '{print $2}' | sed -e 's/[,"]//g'`
 }
 
 function get_repo_name() {
@@ -32,7 +32,6 @@ function valid_id() {
 # requires $REPO_ID, $PACKAGE_GROUP_ID, $PACKAGE_GROUP_CATEGORY_ID
 function create_sample_package_groups() {
     PULP_REPO_ID=`get_pulp_repo_id`
-    
     curl -k -u admin:admin  -H "Content-Type: application/json" -H "Accept: application/json" -X POST -d \
         "{\"groupid\":\"$PACKAGE_GROUP_ID\",\"groupname\":\"$PACKAGE_GROUP_NAME\",\"description\":\"test description\"}" -s \
         https://localhost/pulp/api/repositories/$PULP_REPO_ID/create_packagegroup/ > /dev/null
