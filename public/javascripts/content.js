@@ -92,13 +92,14 @@ KT.content_actions = (function(){
     var syncing = [],
     updater = undefined,
     addSyncing = function(repo_id){
-        var start = syncing.length === 0;
+        //nothing in the list before adding and updater already exists
+        var start = syncing.length === 0 && updater;
         syncing.push(repo_id + "");
         if (!updater){
             startUpdater();
         }
         if (start){
-            updater.start();
+            updater.restart();
         }
     },
     removeSyncing = function(repo_id){
