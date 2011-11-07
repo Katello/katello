@@ -161,9 +161,8 @@ describe FiltersController do
       end
 
       it "should not allow for updating of products for an invalid product" do
-        controller.should_receive(:errors)
         post :update_products, :id=>@filter.id, :products=>[-1]
-        response.should_not be_success
+        response.should be_success  #invalid products are ignored
         assert Filter.find(@filter.id).products.empty?
       end
 

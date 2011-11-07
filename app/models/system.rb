@@ -36,6 +36,7 @@ class System < ActiveRecord::Base
   validates :environment, :presence => true, :non_locker_environment => true
   validates :name, :presence => true, :no_trailing_space => true, :uniqueness => true
   validates :description, :katello_description_format => true
+  validates_length_of :location, :maximum => 255
   before_create  :fill_defaults
 
   scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
@@ -87,6 +88,7 @@ class System < ActiveRecord::Base
   def as_json(options)
     json = super(options)
     json['environment'] = environment.as_json unless environment.nil?
+    json['activation_key'] = activation_keys.as_json unless activation_keys.nil?
     json
   end
 

@@ -63,8 +63,8 @@ module Glue::Pulp::Repos
       "product:#{product.cp_id}"
   end
 
-  def self.content_groupid(product_content)
-      "content:#{product_content.content.id}"
+  def self.content_groupid(content)
+      "content:#{content.id}"
   end
 
   module InstanceMethods
