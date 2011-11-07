@@ -69,7 +69,6 @@ class ProvidersController < ApplicationController
         temp_file.close
         @provider.import_manifest File.expand_path(temp_file.path)
         notice _("Subscription manifest uploaded successfully for provider '%{name}'." % {:name => @provider.name}), {:synchronous_request => false}
-
       rescue Exception => error
         display_message = parse_display_message(error.response)
         error_text = _("Subscription manifest upload for provider '%{name}' failed." % {:name => @provider.name})
@@ -78,8 +77,7 @@ class ProvidersController < ApplicationController
         Rails.logger.error "error uploading subscriptions."
         Rails.logger.error error
         Rails.logger.error error.backtrace.join("\n")
-        setup_subs
-        render :template =>"providers/redhat_provider", :status => :bad_request and return
+        # Fall-through even on error so that the import history is refreshed
       end
       redhat_provider
     else
@@ -92,7 +90,7 @@ class ProvidersController < ApplicationController
   def redhat_provider
     @provider = current_organization.redhat_provider
     # We default to none imported until we can properly poll Candlepin for status of the import
-    @subscriptions = [{'productName' => _("None Imported"), "consumed" => "0", "available" => "0"}]
+    @grouped_subscriptions = []
     begin
       setup_subs
     rescue Exception => error
@@ -105,6 +103,21 @@ class ProvidersController < ApplicationController
       Rails.logger.error error.backtrace.join("\n")
       render :template =>"providers/redhat_provider", :status => :bad_request and return
     end
+
+    begin
+      @statuses = @provider.owner_imports
+    rescue Exception => error
+      @statuses = []
+      display_message = parse_display_message(error.response)
+      error_text = _("Unable to retrieve subscription history for provider '%{name}." % {:name => @provider.name})
+      error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
+      errors error_text, {:synchronous_request => false}
+      Rails.logger.error "Error fetching subscription history from Candlepin"
+      Rails.logger.error error
+      Rails.logger.error error.backtrace.join("\n")
+      render :template =>"providers/redhat_provider", :status => :bad_request and return
+    end
+
     render :template =>"providers/redhat_provider"
   end
 
@@ -231,24 +244,44 @@ class ProvidersController < ApplicationController
 
   def setup_subs
     @provider = current_organization.redhat_provider
-    # We default to none imported until we can properly poll Candlepin for status of the import
-    @subscriptions = [{'productName' => _("None Imported"), "consumed" => "0", "available" => "0"}]
     all_subs = Candlepin::Owner.pools @provider.organization.cp_key
-    @subscriptions = []
+    # We default to none imported until we can properly poll Candlepin for status of the import
+    @grouped_subscriptions = {}
     all_subs.each do |sub|
+      # Subscriptions with the same 'stack_id' attribute are grouped together. Not all have this
+      # attribute so the 'id' is used as a default since it will be unique between
+      # subscriptions.
+      #
+      group_id = sub['id']
+      sub['productAttributes'].each do |attr|
+        if attr['name'] == 'stacking_id'
+          group_id = attr['value']
+          break
+        end
+      end
+
+      product = Product.where(:cp_id => sub['productId']).first
+      if product and product.provider == @provider
+        @grouped_subscriptions[group_id] ||= []
+        @grouped_subscriptions[group_id] << sub if !@grouped_subscriptions[group_id].include? sub
+      end
+=begin TODO: Should the bundled products be displayed too?
       if sub['providedProducts'].length > 0
         sub['providedProducts'].each do |cp_product|
-          product = Product.where(:cp_id =>cp_product["productId"]).first
+          product = Product.where(:cp_id => cp_product['productId']).first
           if product and product.provider == @provider
-            @subscriptions << sub if !@subscriptions.include? sub
+            @grouped_subscriptions[group_id] ||= []
+            @grouped_subscriptions[group_id] << sub if !@grouped_subscriptions[group_id].include? sub
           end
         end
       else
         product = Product.where(:cp_id => sub['productId']).first
         if product and product.provider == @provider
-          @subscriptions << sub if !@subscriptions.include? sub
+          @grouped_subscriptions[group_id] ||= []
+          @grouped_subscriptions[group_id] << sub if !@grouped_subscriptions[group_id].include? sub
         end
       end
+=end
     end
   end
 end

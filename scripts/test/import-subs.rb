@@ -1,4 +1,4 @@
 User.current = User.first
-provider = Provider.where(:name=>"red hat").first
-imported = provider.import_manifest("../scripts/test/export-manifest.zip")
+provider = Provider.where(:name=>"Red Hat").first
+imported = provider.import_manifest("../cli/test-system/fake-manifest.zip")
 puts "Imported? #{imported}"

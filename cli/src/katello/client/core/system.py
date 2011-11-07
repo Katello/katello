@@ -257,7 +257,7 @@ class Register(SystemAction):
         if is_valid_record(system):
             print _("Successfully registered system [ %s ]") % system['name']
         else:
-            print _("Could not register system [ %s ]") % system['name']
+            print _("Could not register system [ %s ]") % name
         return os.EX_OK
 
 class Unregister(SystemAction):
