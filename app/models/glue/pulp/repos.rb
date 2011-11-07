@@ -69,6 +69,18 @@ module Glue::Pulp::Repos
       "content:#{content.id}"
   end
 
+  def self.prepopulate! products, environment, repos=[]
+    full_repos = Pulp::Repository.all
+    products.each{|prod|
+      prod.repos(environment).each{|repo|
+        repo.populate_from(full_repos)
+      }
+    }
+    repos.each{|repo|
+      repo.populate_from(full_repos)
+    }
+  end
+
   module InstanceMethods
 
     def empty?
