@@ -11,6 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class PasswordResetsController < ApplicationController
+  include PasswordResetsHelper
+
   before_filter :find_user_by_user_and_email, :only => [:create]
   before_filter :find_users_by_email, :only => [:email_logins]
   before_filter :find_user_by_token, :only => [:edit, :update]
@@ -29,30 +31,44 @@ class PasswordResetsController < ApplicationController
 
   def create
     @user.send_password_reset if @user
-    flash[:success] = {"notices" => [_("Email sent to '%{e}' with password reset instructions." % {:e => @user.email})]}.to_json
+
+    # note: we provide a success notice regardless of whether or not there are any users associated with the email
+    # address provided... this is done on purpose for security
+    notice _("Email sent to '%{e}' with password reset instructions." % {:e => params[:email]}), {:persist => false}
     render :text => ""
   end
 
   def edit
+    if @user.password_reset_sent_at < password_reset_expiration.minutes.ago
+      errors _("Password reset token has expired for user '%{s}'." % {:s => @user.username}), {:persist => false}
+      redirect_to new_password_reset_path
+    end
   end
 
   def update
-    # TODO : make the timeframe configurable
-    if @user.password_reset_sent_at < 2.hours.ago
-      flash[:error] = {"notices" => [_("Password reset token has expired for user '%{s}'." % {:s => @user.username})]}.to_json
-      redirect_to new_password_reset_path
-    elsif @user.update_attributes(params[:user])
-      flash[:success] = {"notices" => [_("Password has been reset for user '%{s}'." % {:s => @user.username})]}.to_json
+    if @user.password_reset_sent_at < password_reset_expiration.minutes.ago
+      errors _("Password reset token has expired for user '%{s}'." % {:s => @user.username}), {:persist => false}
+      redirect_to new_password_reset_path and return
+    end
+
+    begin
+      @user.update_attributes!(params[:user])
+      notice _("Password has been reset for user '%{s}'." % {:s => @user.username}), {:persist => false}
       redirect_to root_url
-    else
-      render :edit
+
+    rescue Exception => e
+      errors e.to_s, {:persist => false}
+      render :text => e.to_s, :status => :bad_request
     end
   end
 
   def email_logins
     # request to have the usernames associated with the email address provided, sent (in email) to that address
-    UserMailer.send_logins(@users)
-    flash[:success] = {"notices" => [_("Email sent to '%{e}' with valid login user names." % {:e => params[:email]})]}.to_json
+    UserMailer.send_logins(@users) if !@users.empty?
+
+    # note: we provide a success notice regardless of whether or not there are any users associated with the email
+    # address provided... this is done on purpose for security
+    notice _("Email sent to '%{e}' with valid login user names." % {:e => params[:email]}), {:persist => false}
     render :text => ""
   end
 
@@ -62,7 +78,7 @@ class PasswordResetsController < ApplicationController
     begin
       @user = User.find_by_username_and_email(params[:username], params[:email])
     rescue Exception => error
-      flash[:error] = {"notices" => [error.to_s]}.to_json
+      errors error.to_s, {:persist => false}
       redirect_to root_url
       execute_after_filters
     end
@@ -72,7 +88,7 @@ class PasswordResetsController < ApplicationController
     begin
       @users = User.where(:email => params[:email])
     rescue Exception => error
-      flash[:error] = {"notices" => [error.to_s]}.to_json
+      errors error.to_s, {:persist => false}
       redirect_to root_url
       execute_after_filters
     end
@@ -82,7 +98,7 @@ class PasswordResetsController < ApplicationController
     begin
       @user = User.find_by_password_reset_token!(params[:id])
     rescue Exception => error
-      flash[:error] = {"notices" => [_("Request received has either an invalid or expired token.  Token: '%{t}'" % {:t => params[:id]})]}.to_json
+      errors _("Request received has either an invalid or expired token.  Token: '%{t}'" % {:t => params[:id]}), {:persist => false}
       redirect_to root_url
       execute_after_filters
     end
