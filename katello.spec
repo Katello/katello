@@ -141,6 +141,12 @@ Katello connection classes for the Candlepin backend
 
 %prep
 %setup -q
+# branding 
+if [ -d branding ] ; then
+  cp -r branding/* .
+  rm -rf branding
+fi
+
 
 %build
 #configure Bundler
