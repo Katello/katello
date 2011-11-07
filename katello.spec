@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.98
+Version:        0.1.99
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -318,6 +318,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Nov 07 2011 Mike McCune <mmccune@redhat.com> 0.1.99-1
+- misc rel-eng updates based on new RPMs from Fedora (mmccune@redhat.com)
 * Wed Nov 02 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.98-1
 - 702052 - db fields length limit review
 - unit test fix
