@@ -43,7 +43,7 @@ $(document).ready(function() {
         org_selector.change(function(event) {
         var refill = $('#env_box');
         var selected_org_id = org_selector.val();
-        var url = '/organizations/' + selected_org_id +  '/environments_partial';
+        var url = KT.common.rootURL() + 'organizations/' + selected_org_id +  '/environments_partial';
         $.ajax({
             type: "GET",
             url: url,
