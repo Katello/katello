@@ -44,9 +44,9 @@ KT.password = function() {
             url: url,
             data: { "user":{"password":password}},
             cache: false,
-            success: function(data) {
+            success: function(data, textStatus, xhr) {
                 button.removeClass("disabled");
-                if (resetPassword) {
+                if (resetPassword && xhr.status < 400) {
                     // this is a password reset, so we'll redirect the user to the login page
                     window.location.href = data.redirectToUrl;
                 }
