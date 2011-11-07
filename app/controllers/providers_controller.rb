@@ -260,9 +260,15 @@ class ProvidersController < ApplicationController
         end
       end
 
+      product = Product.where(:cp_id => sub['productId']).first
+      if product and product.provider == @provider
+        @grouped_subscriptions[group_id] ||= []
+        @grouped_subscriptions[group_id] << sub if !@grouped_subscriptions[group_id].include? sub
+      end
+=begin TODO: Should the bundled products be displayed too?
       if sub['providedProducts'].length > 0
         sub['providedProducts'].each do |cp_product|
-          product = Product.where(:cp_id =>cp_product['productId']).first
+          product = Product.where(:cp_id => cp_product['productId']).first
           if product and product.provider == @provider
             @grouped_subscriptions[group_id] ||= []
             @grouped_subscriptions[group_id] << sub if !@grouped_subscriptions[group_id].include? sub
@@ -275,6 +281,7 @@ class ProvidersController < ApplicationController
           @grouped_subscriptions[group_id] << sub if !@grouped_subscriptions[group_id].include? sub
         end
       end
+=end
     end
   end
 end
