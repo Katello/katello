@@ -154,6 +154,13 @@ KT.content = (function(){
             });
             return false;
         },
+        updateRepo = function(repo_id, starttime, duration, progress, size, packages){
+            var repo = $("#repo-" + repo_id);
+            fadeUpdate(repo.find(".start_time"), starttime);
+            fadeUpdate(repo.find(".duration"), duration);
+            fadeUpdate(repo.find(".size"), size + ' (' + packages + ')');
+            fadeUpdate(repo.find(".result"), "");
+        },
         updateProduct = function (prod_id, repo_id) {
             var url = KT.routes.sync_management_product_status_path();
             $.ajax({
@@ -193,11 +200,8 @@ KT.content = (function(){
               }
             });
         },
-        fadeUpdate = function(fieldName, text) {
-            var updateField = $(fieldName);
-            updateField.fadeOut('fast');
-            updateField.text(text);
-            updateField.fadeIn('fast');
+        fadeUpdate = function(updateField, text) {
+            updateField.fadeOut('fast').text(text).fadeIn('fast');
         },
         select_all = function(){
             $("#products_table").find("input[type=checkbox]").attr('checked',true);

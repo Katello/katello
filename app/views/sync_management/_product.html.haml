@@ -4,21 +4,17 @@
   %td
     -#= check_box_tag "product[#{pid}]", '', '', :disabled=>!@sproducts.include?(prod)
     #{prod[:name]}
-  %td.max_width
-    %div.max_width{:id =>"prod_sync_start_#{pid}"}
-      #{@product_status[pid][:start_time]}
+  %td.max_width.start_time
+    #{@product_status[pid][:start_time]}
 
-  %td.max_width
-    %div.max_width{:id =>"prod_sync_finish_#{pid}"}
-      #{@product_status[pid][:duration]}
+  %td.max_width.duration
+    #{@product_status[pid][:duration]}
 
-  %td
-    %div{:id =>"prod_size_#{pid}", :class=>"productsize"}
-      #{@product_size[pid]}
+  %td.size
+    #{@product_size[pid]}
 
-  %td{:id =>'table_#{pid}'}
-    .productstatus
-      #{@product_status[pid][:state]} &nbsp;
+  %td.result{:id =>'table_#{pid}'}
+    #{@product_status[pid][:state]} &nbsp;
 
 
 
