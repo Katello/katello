@@ -42,7 +42,7 @@ class Changeset < ActiveRecord::Base
   has_many :users, :class_name=>"ChangesetUser", :inverse_of=>:changeset
   has_and_belongs_to_many :system_templates
   has_many :errata, :class_name=>"ChangesetErratum", :inverse_of=>:changeset
-  has_and_belongs_to_many :repos, :class_name=>"Repository"
+  has_and_belongs_to_many :repos, :class_name=>"Repository", :uniq => true
   has_many :distributions, :class_name=>"ChangesetDistribution", :inverse_of => :changeset
   has_many :dependencies, :class_name=>"ChangesetDependency", :inverse_of =>:changeset
   belongs_to :environment, :class_name=>"KTEnvironment"
@@ -242,7 +242,7 @@ class Changeset < ActiveRecord::Base
     repos.join(:environment_product).where("environment_products.environment_id" => environment.id,
                                                   "environment_products.product_id" =>product.id)
   end
-  
+
 
   def remove_distribution distribution_id, product_name
     product = find_product(product_name)
