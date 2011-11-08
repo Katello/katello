@@ -80,8 +80,8 @@ class HttpResource
     def print_debug_info(a_path, headers={}, payload={})
       Rails.logger.debug "Headers: #{headers.to_json}"
       Rails.logger.debug "Body: #{payload.to_json}"
-    rescue RestClient::Exception => e
-      Rails.logger.warn "Unable to print debug information"
+    rescue Exception => e
+      Rails.logger.debug "Unable to print debug information"
     end
 
     def get(a_path, headers={})
