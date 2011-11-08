@@ -12,10 +12,6 @@ superadmin_role = Role.find_or_create_by_name(
 
 Permission.create!(:name=> "super-admin-perm", :role => superadmin_role, :all_types => true)
 
-
-anonymous_role = Role.find_or_create_by_name(
-  :name => 'Anonymous',
-  :description => 'Used when user is not logged in. No permissions except reading notifications. Not to be used by regular users.')
 reader_role = Role.find_or_create_by_name(
   :name => 'Read Everything',
   :description => 'Permissions to read everything.')
@@ -26,13 +22,6 @@ User.current = user_admin = User.new(
   :username => 'admin',
   :password => 'admin')
 user_admin.save!
-
-# "nobody" user (do not change his name 'anonymous')
-user_anonymous = User.find_or_create_by_username(
-  :roles => [ anonymous_role ],
-  :username => 'anonymous',
-  :password => Password.generate_random_string(16),
-  :disabled => true)
 
 # create the default org = "admin" if none exist
 first_org = Organization.find_or_create_by_name(:name => "ACME_Corporation", :description => "ACME Corporation Organization", :cp_key => 'ACME_Corporation')
