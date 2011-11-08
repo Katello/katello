@@ -20,7 +20,7 @@ class PasswordResetsController < ApplicationController
   skip_before_filter :require_user, :require_org, :authorize
 
   def section_id
-    "passwordreset"
+    "loginpage"
   end
 
   def new
