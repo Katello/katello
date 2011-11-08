@@ -88,7 +88,7 @@ module Glue::Pulp::Repos
     end
 
 
-    def repos env, include_disabled = false
+    def repos env, include_disabled = true
       @repo_cache = {} if @repo_cache.nil?
       #cache repos so we can cache lazy_accessors
       if @repo_cache[env.id].nil?
