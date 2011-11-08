@@ -251,10 +251,12 @@ module Pulp
         JSON.parse(response.body).with_indifferent_access
       end
 
-      def sync_status(repo_id, sync_id)
-        path = Repository.repository_path + repo_id + "/sync/" + sync_id + "/"
+      def sync_status(repo_id)
+        path = Repository.repository_path + repo_id + "/sync/"
         response = get(path, self.default_headers)
-        JSON.parse(response.body).with_indifferent_access
+        parsed = JSON.parse(response.body)
+        return parsed if parsed.empty?
+        return parsed.first.with_indifferent_access
       end
 
       def destroy repo_id

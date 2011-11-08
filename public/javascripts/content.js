@@ -22,15 +22,15 @@ function getProductId(field) {
 $(document).ready(function() {
 
     // Setup initial state
-    $.each(KT.repo_status, function(repo_id, rs){
-      // If we have a sync_id for this repo, lets start the prog bar
-      if (rs.sync_id) {
-          KT.content_actions.addSyncing(repo_id, true);
-          KT.content.draw_syncing(repo_id, rs.progress);
+    var ids = [];
+    $.each(KT.repo_status, function(repo_id, status){
+      if (status.is_running) {
+          ids.push(repo_id);
+          KT.content.draw_syncing(repo_id, status.progress.progress);
       }
     });
+    KT.content_actions.addSyncing(ids);
 
-    KT.content_actions.startUpdater();
 
     $("#products_table").treeTable({
         clickableNodeNames: true,
@@ -51,10 +51,12 @@ $(document).ready(function() {
     $('#sync_product_form').bind("ajax:success",
       function(evt, data, status, xhr){
        var syncs = $.parseJSON(data);
+       var ids = [];
        $.each(syncs, function(index, item){
-          KT.content_actions.addSyncing(item.id);
+          ids.push(item.id);
           KT.content.draw_syncing(item, 0);
-       })
+       });
+       KT.content_actions.addSyncing(ids);
 
     });
   
@@ -91,14 +93,19 @@ $(document).ready(function() {
 KT.content_actions = (function(){
     var syncing = [],
     updater = undefined,
-    addSyncing = function(repo_id, ignore_start){
+    addSyncing = function(repo_ids){
+        if (repo_ids.length === 0){
+            return;
+        }
         //nothing in the list before adding and updater already exists
         var start = syncing.length === 0 && updater;
-        syncing.push(repo_id + "");
-        if (!updater && !ignore_start){
+        $.each(repo_ids, function(index, id){
+            syncing.push(id + "");
+        });
+        if (!updater){
             startUpdater();
         }
-        if (start && !ignore_start){
+        else if (start){
             updater.restart();
         }
     },
@@ -143,7 +150,9 @@ KT.content_actions = (function(){
                }
                $.each(data, function(index, repo){
                    // Only stop when we reach 100% and the finish_time is done sometimes they are not both complete
-                   if (repo.raw_state == 'canceled' || (repo.progress.progress === 100 && repo.finish_time)) {
+                   if (!repo.is_running) {
+                       console.log("REMOVING");
+                       console.log(repo);
                         removeSyncing(repo.id);
                    }
                    else {
@@ -166,7 +175,8 @@ KT.content_actions = (function(){
     return {
         cancelSync: cancelSync,
         addSyncing: addSyncing,
-        startUpdater: startUpdater
+        startUpdater: startUpdater,
+        getSyncing: function(){return syncing}
         
     };
 })();
@@ -219,8 +229,9 @@ KT.content = (function(){
 //              }
 //            });
         },
-        fadeUpdate = function(updateField, text) {
-            updateField.fadeOut('fast').text(text).fadeIn('fast');
+        fadeUpdate = function(element, text) {
+            element.fadeOut('fast').text(text);
+            element.fadeIn('fast');
         },
         select_all = function(){
             $("#products_table").find("input[type=checkbox]").attr('checked',true);
