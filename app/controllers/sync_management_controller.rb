@@ -67,18 +67,16 @@ class SyncManagementController < ApplicationController
     @product_status = Hash.new
     @product_size = Hash.new
     @repo_status = Hash.new
-    @product_repos = {}
+
 
     Glue::Pulp::Repos.prepopulate! @products, org.locker
 
     for p in @products
       pstatus = p.sync_status
-      @product_repos[p.id] =  []
-      @product_status[p.id] = format_sync_progress(pstatus)
+      @product_status[p.id] = format_sync_progress(pstatus, p.id)
       @product_size[p.id] = number_to_human_size(p.sync_size)
       for r in p.repos(p.organization.locker)
-        @product_repos[p.id] << r
-        @repo_status[r.id] = format_sync_progress(r.sync_status)
+        @repo_status[r.id] = format_sync_progress(r.sync_status, r.id)
       end
     end
 
@@ -99,8 +97,7 @@ class SyncManagementController < ApplicationController
     params[:repoids].each do |id|
       begin
         sync_status = Repository.find(id).sync_status
-        progress = format_sync_progress(sync_status)
-        progress[:repo_id] = id
+        progress = format_sync_progress(sync_status, id)
         collected.push(progress)
       rescue Exception => e
         errors e.to_s # debugging and skip for now
@@ -157,11 +154,11 @@ private
   end
 
 
-  def format_sync_progress(sync_status)
+  def format_sync_progress(sync_status, repo_id)
     not_running_states = [PulpSyncStatus::Status::FINISHED,
                           PulpSyncStatus::Status::ERROR,
                           PulpSyncStatus::Status::CANCELED]
-    { 
+    {   :id         => repo_id,
         :progress   => calc_progress(sync_status),
         :sync_id    => sync_status.uuid,
         :state      => format_state(sync_status.state),
