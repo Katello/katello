@@ -37,6 +37,7 @@ describe Product do
     ProductTestData::SIMPLE_PRODUCT_WITH_INVALID_NAME.merge!({:provider => @provider, :environments => [@organization.locker]})
     ProductTestData::PRODUCT_WITH_ATTRS.merge!({:provider => @provider, :environments => [@organization.locker]})
     ProductTestData::PRODUCT_WITH_CONTENT.merge!({:provider => @provider, :environments => [@organization.locker]})
+    ProductTestData::PRODUCT_WITH_CP_CONTENT.merge!({:provider => @provider, :environments => [@organization.locker]})
   end
 
   describe "create product" do
@@ -182,10 +183,10 @@ describe Product do
       context "when there is a repo with the same name for the product" do
         before do
           @repo_name = "repo"
+          @p.add_repo(@repo_name, "http://test/repo","yum" )
         end
 
         it "should raise conflict error" do
-          @p.should_receive(:repos).with(@p.locker, {:name => "repo"}).and_return([Glue::Pulp::Repo.new(:id => "123")])
           lambda { @p.add_repo("repo", "http://test/repo","yum") }.should raise_error(Errors::ConflictException)
         end
       end
@@ -196,29 +197,15 @@ describe Product do
         Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
         Candlepin::Product.stub!(:remove_content).and_return({})
         Candlepin::Content.stub!(:create).and_return({:id => "123"})
-        @repo = Glue::Pulp::Repo.new(:id => '123')
-        Glue::Pulp::Repo.stub(:new).and_return(@repo)
+
+        #@p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
+        #@key = EnvironmentProduct.find_or_create(@organization.locker, @p)
+        #@repo = Repository.create!(:pulp_id => '123' , :environment_product => key)
       end
 
       it "should preserve repository metadata" do
-        Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:preserve_metadata => true))
-        p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
-        p.orchestration_for = :import_from_cp
-        p.save!
-      end
-
-      it "should set content type" do
-        Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:content_type => "yum"))
-        p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
-        p.orchestration_for = :import_from_cp
-        p.save!
-      end
-
-     it "prepares valid name for Pulp repo" do
-          Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33'))
-          p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
-          p.orchestration_for = :import_from_cp
-          p.save!
+        Repository.should_receive(:create!).once.with(hash_including(:name => 'some-name33', :preserve_metadata => true, :content_type => "yum"))
+        Glue::Candlepin::Product.import_from_cp(ProductTestData::PRODUCT_WITH_CP_CONTENT)
       end
 
      context "product has more archs" do
@@ -231,20 +218,18 @@ describe Product do
             end
            ret
          end
+
          p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
          p.stub(:attrs => [{:name => 'arch', :value => 'x86_64,i386'}])
          p.orchestration_for = :import_from_cp
          p.save!
+         p.setup_repos
        end
 
        it "should create repo for each arch" do
-         Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 6Server x86_64'))
-         Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:name => 'some-name33 6Server i386'))
-       end
-
-       it "should substitute $basearch in the contentUrl for the repo feed" do
-         expected_feed = "#{@provider.repository_url}/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage/"
-         Glue::Pulp::Repo.should_receive(:new).once.with(hash_including(:feed => expected_feed)).and_return(@repo)
+        expected_feed = "#{@provider.repository_url}/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage/"
+        Repository.should_receive(:create!).once.with(hash_including(:feed => expected_feed, :name => 'some-name33 6Server x86_64'))
+        Repository.should_receive(:create!).once.with(hash_including(:name => 'some-name33 6Server i386'))
        end
      end
 
@@ -272,7 +257,10 @@ describe Product do
 
       @product = Product.create!(ProductTestData::PRODUCT_WITH_CONTENT)
 
-      @repo = Glue::Pulp::Repo.new(RepoTestData::REPO_PROPERTIES.merge(
+      ep = EnvironmentProduct.find_or_create(@environment1, @product)
+
+      @repo = Repository.create!(RepoTestData::REPO_PROPERTIES.merge(
+           :environment_product => ep,
            :clone_ids => [],
            :groupid => Glue::Pulp::Repos.groupid(@product, @product.locker)
       ))

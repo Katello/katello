@@ -67,8 +67,10 @@ class RepositoriesController < ApplicationController
   end
 
   def destroy
+    r = Repository.find(@repository[:id])
+    name = r.name
     @product.delete_repo_by_id(@repository[:id])
-    notice _("Repository '#{params[:id]}' removed.")
+    notice _("Repository '#{name}' removed.")
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@provider.id)}
   end
 
@@ -96,7 +98,7 @@ class RepositoriesController < ApplicationController
 
   def find_repository
     begin
-      @repository = Pulp::Repository.find @product.repo_id(params[:id])
+      @repository = Repository.find(params[:id])
     rescue Exception => error
       errors _("Couldn't find repository with ID=#{params[:id]}")
       execute_after_filters

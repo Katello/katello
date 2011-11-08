@@ -31,9 +31,9 @@ describe Api::ProductsController do
   let(:product_id) { '1234' }
   let(:repositories) do
     [
-        { :id => "1" },
-        { :id => "2" }
-    ].map {|repo_attrs| Glue::Pulp::Repo.new(repo_attrs)}
+        { :pulp_id => "1", :id => 1 },
+        { :pulp_id => "2", :id => 2  }
+    ].map {|repo_attrs| Repository.new(repo_attrs)}
   end
 
   before (:each) do
@@ -47,6 +47,7 @@ describe Api::ProductsController do
     @organization.environments << @environment
 
     products.stub(:where).and_return(products)
+    repositories.stub(:where).and_return(repositories)
 
     @product = products[0]
     Product.stub!(:find_by_cp_id).and_return(@product)
@@ -65,7 +66,7 @@ describe Api::ProductsController do
     @provider = Provider.new
     @provider.organization = @organization
     @product.provider = @provider
-    
+
     Organization.stub!(:first).and_return(@organization)
     KTEnvironment.stub!(:first).and_return(@environment)
 

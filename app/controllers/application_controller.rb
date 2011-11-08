@@ -345,7 +345,7 @@ class ApplicationController < ActionController::Base
     elsif notice.kind_of? RestClient::InternalServerError
       items["notices"].push(notice.response)
       return items
-    elsif notice.kind_of? RuntimeError
+    elsif notice.kind_of?(RuntimeError) || notice.kind_of?(StandardError)
       items["notices"].push(notice.message)
     else
       Rails.logger.error("Received unrecognized notice: " + notice.inspect)

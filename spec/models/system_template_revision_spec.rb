@@ -40,14 +40,14 @@ describe SystemTemplate do
 
   describe "update template" do
 
-    let(:repo) {{
+    let(:repo) {Repository.new({
       :name => 'foo repo',
       :groupid => [
        "product:"+@prod1.cp_id.to_s,
         "env:"+@organization.locker.id.to_s,
         "org:"+@organization.name.to_s
       ]
-    }}
+    })}
     let(:pack1) {{
       :name => 'package 1'
     }}
@@ -74,7 +74,7 @@ describe SystemTemplate do
 
     before :each do
 
-      Pulp::Repository.stub(:all => [repo])
+      Repository.stub_chain(:joins, :where).and_return( [repo])
       Pulp::Repository.stub(:packages_by_name => [pack1])
       Pulp::PackageGroup.stub(:all => pack_groups.clone)
       Pulp::PackageGroupCategory.stub(:all => pack_group_categories.clone)
