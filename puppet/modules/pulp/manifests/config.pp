@@ -20,7 +20,6 @@ class pulp::config {
     path        => "/bin:/usr/bin",
     before      => Class["pulp::service"],
     require     => [Class["mongodb::service"], File["/etc/pulp/pulp.conf"]],
-    notify   => Exec["restart-apache2"];
   }
 
   # disable SELinux
