@@ -225,14 +225,22 @@ KT.content = (function(){
         },
         updateProduct = function (prod_id, done, percent) {
             var element = $("#product-" + prod_id).find(".result");
+            var oldpg = element.find('.progress');
             if(done){
                 element.html(i18n.complete);
             }
             else{
                 var progressBar = $('<div/>').attr('class', 'progress').text(" ");
                 element.html(progressBar);
-                progressBar.progressbar({value: percent});
-
+                if(percent === 100) {
+                  var past = oldpg ? oldpg.progressbar("option", "value") : 0;  
+                  progressBar.progressbar({value: past});
+                  progressBar.find(".ui-progressbar-value").animate({'width': 99 },{ queue:false,
+                                               duration:"slow", easing:"easeInSine" });
+                }
+                else {
+                  progressBar.progressbar({value: percent});
+                }
             }
         },
         fadeUpdate = function(element, text) {
