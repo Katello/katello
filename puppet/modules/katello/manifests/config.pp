@@ -46,23 +46,35 @@ class katello::config {
       pattern => "ACME_Corporation",
       replacement => "$katello::params::org_name",
       before => Exec["katello_seed_db"],
-      require => [ Class["candlepin::service"], Class["pulp::service"] ],
+      require => $katello::params::deployment ? {
+                'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
+                'headpin' => [ Class["candlepin::service"] ],
+                default => [],
+    },
   }
- 
+
   common::simple_replace { "org_description":
       file => "/usr/share/katello/db/seeds.rb",
       pattern => "ACME Corporation Organization",
       replacement => "$katello::params::org_name Organization",
       before => Exec["katello_seed_db"],
-      require => [ Class["candlepin::service"], Class["pulp::service"] ],
+      require => $katello::params::deployment ? {
+                'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
+                'headpin' => [ Class["candlepin::service"] ],
+                default => [],
+    },
   }
- 
+
   common::simple_replace { "primary_user_pass":
       file => "/usr/share/katello/db/seeds.rb",
       pattern => "password => 'admin'",
       replacement => "password => '$katello::params::user_pass'",
       before => Exec["katello_seed_db"],
-      require => [ Class["candlepin::service"], Class["pulp::service"] ],
+      require => $katello::params::deployment ? {
+                'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
+                'headpin' => [ Class["candlepin::service"] ],
+                default => [],
+    },
   }
 
   common::simple_replace { "primary_user_name":
@@ -70,7 +82,11 @@ class katello::config {
       pattern => "username => 'admin'",
       replacement => "username => '$katello::params::user_name'",
       before => Exec["katello_seed_db"],
-      require => [ Class["candlepin::service"], Class["pulp::service"] ],
+      require => $katello::params::deployment ? {
+                'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
+                'headpin' => [ Class["candlepin::service"] ],
+                default => [],
+    },
   }
 
   common::simple_replace { "primary_user_email":
