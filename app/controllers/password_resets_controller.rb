@@ -17,7 +17,6 @@ class PasswordResetsController < ApplicationController
   before_filter :find_users_by_email, :only => [:email_logins]
   before_filter :find_user_by_token, :only => [:edit, :update]
 
-#  before_filter :require_no_user, :only => [:new, :create, :edit, :update]
   skip_before_filter :require_user, :require_org, :authorize
 
   def section_id
