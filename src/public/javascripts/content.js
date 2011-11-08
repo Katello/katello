@@ -52,7 +52,7 @@ $(document).ready(function() {
       function(evt, data, status, xhr){
        var syncs = $.parseJSON(data);
        $.each(syncs, function(index, item){
-          KT.content_actions.addSyncing(item);
+          KT.content_actions.addSyncing(item.id);
           KT.content.draw_syncing(item, 0);
        })
 
@@ -143,7 +143,7 @@ KT.content_actions = (function(){
                }
                $.each(data, function(index, repo){
                    // Only stop when we reach 100% and the finish_time is done sometimes they are not both complete
-                   if (data.raw_state == 'canceled' || (data.progress.progress === 100 && data.finish_time)) {
+                   if (repo.raw_state == 'canceled' || (repo.progress.progress === 100 && repo.finish_time)) {
                         removeSyncing(repo.id);
                    }
                    else {

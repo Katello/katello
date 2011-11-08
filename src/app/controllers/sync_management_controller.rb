@@ -27,8 +27,8 @@ class SyncManagementController < ApplicationController
                      PulpSyncStatus::Status::NOT_SYNCED => ""}
 
 
-  before_filter :find_provider, :except => [:index, :sync]
-  before_filter :find_providers, :only => [:sync]
+  before_filter :find_provider, :except => [:index, :sync, :sync_status]
+  before_filter :find_providers, :only => [:sync, :sync_status]
   before_filter :authorize
   
 
@@ -41,7 +41,12 @@ class SyncManagementController < ApplicationController
   def rules
 
     list_test = lambda{Provider.any_readable?(current_organization) }
-    sync_read_test = lambda{@provider.readable?}
+    sync_read_test = lambda{
+      @providers.each{|prov|
+        return false if !prov.readable?
+      }
+      return true
+    }
     sync_test = lambda {current_organization.syncable?}
     
     { :index => list_test,
@@ -54,7 +59,6 @@ class SyncManagementController < ApplicationController
 
 
   def index
-    # TODO: We need to switch to using an Org's ID vs the display name.  See BZ 701406
     @organization = current_organization
     @products = @organization.locker.products.readable(@organization).reject { |p| p.repos(p.organization.locker).empty? }
     @products.sort! { |p1,p2| p1.name.upcase() <=> p2.name.upcase() }
@@ -94,7 +98,7 @@ class SyncManagementController < ApplicationController
   end
 
   def sync
-    ids = sync_repos(params[:repos]) || {}
+    ids = sync_repos(params[:repoids]) || {}
     respond_with (ids) do |format|
       format.js { render :json => ids.to_json, :status => :ok }
     end
@@ -104,7 +108,7 @@ class SyncManagementController < ApplicationController
     collected = []
     params[:repoids].each do |id|
       begin
-        sync_status = Repository.find_by_pulp_id(id).sync_status
+        sync_status = Repository.find(id).sync_status
         progress = format_sync_progress(sync_status)
         progress[:repo_id] = id
         collected.push(progress)
@@ -116,6 +120,7 @@ class SyncManagementController < ApplicationController
 
     respond_with (collected) do |format|
       format.js { render :json => collected.to_json, :status => :ok }
+    end
   end
 
   def product_status
@@ -148,14 +153,15 @@ class SyncManagementController < ApplicationController
 private
 
   def find_provider
-    prod = Product.find(params[:product_id])
-    @provider = prod.provider
+    Repository.find(params[:repo]).product.provider
   end
 
   def find_providers
+    ids = params[:repoids]
+    ids = [params[:repoids]] if !params[:repoids].is_a? Array
     @providers = []
-    params[:repos].each{|repo_id|
-      repo = Repository.find(repo_id)
+    ids.each{|id|
+      repo = Repository.find(id)
       @providers << repo.product.provider
     }
   end
@@ -197,6 +203,7 @@ private
 
   # loop through checkbox list of products and sync
   def sync_repos(repos)
+    repos = [repos] if !repos.is_a? Array
     collected = []
     repos.each do |id|
       begin
@@ -206,7 +213,7 @@ private
         errors N_("There is already an active sync process for the '#{r.name}' repository. Please try again later")
         next
       end
-      collected.push({:repo_id => id, :sync_id => resp[:id], :state => resp[:state]})
+      collected.push({:id => id, :state => resp[:state]})
     end
     collected
   end
