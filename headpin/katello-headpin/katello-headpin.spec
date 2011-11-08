@@ -19,7 +19,7 @@
 %global confdir deploy/common
 
 Name:           katello-headpin
-Version:        0.1.101
+Version:        0.1.102
 Release:        1%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
@@ -104,6 +104,9 @@ and then run katello-configure to configure everything.
 cp -Rf %{homedir}/* %{katello_dir}
 
 %changelog
+* Tue Nov 08 2011 Tom McKay <thomasmckay@redhat.com> 0.1.102-1
+- gen_changes.sh run (thomasmckay@redhat.com)
+
 * Fri Nov 04 2011 Tom McKay <thomasmckay@redhat.com> 0.1.101-1
 - gen_changes.sh run (thomasmckay@redhat.com)
 - Add in requirements for katello-configure and the headpin cli
