@@ -88,14 +88,20 @@ module Glue::Pulp::Repos
     end
 
 
-    def repos env
+    def repos env, include_disabled = false
       @repo_cache = {} if @repo_cache.nil?
       #cache repos so we can cache lazy_accessors
       if @repo_cache[env.id].nil?
         @repo_cache[env.id] = Repository.joins(:environment_product).where(
             "environment_products.product_id" => self.id, "environment_products.environment_id"=> env)
       end
-      @repo_cache[env.id]
+      if self.custom? || include_disabled
+        return @repo_cache[env.id]
+      end
+
+      # we only want the enabled repos to be visible
+      # This serves as a white list for redhat repos
+      @repo_cache[env.id].select{|repo| repo.enabled?}
     end
 
     def promote from_env, to_env
@@ -339,7 +345,8 @@ module Glue::Pulp::Repos
                                         :content_type => pc.content.type,
                                         :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
                                         :preserve_metadata => true, #preserve repo metadata when importing from cp
-                                        :release=>release_version
+                                        :release=>release_version,
+                                        :enabled =>false
                                         )
 
           rescue RestClient::InternalServerError => e
