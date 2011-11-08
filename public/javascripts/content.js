@@ -214,7 +214,15 @@ KT.content = (function(){
             fadeUpdate(element.find(".start_time"), starttime);
             fadeUpdate(element.find(".duration"), duration);
             fadeUpdate(element.find(".size"), size + ' (' + packages + ')');
-            element.find(".progress").progressbar({ value : progress});
+            var pg = element.find(".progress");
+            if (progress === 100 && (pg.progressbar( "option", "value" ) < 75)) { 
+              pg.progressbar.animate({'width': 99 },{ queue:false,
+                                       duration:"slow", easing:"easeInSine" });
+            } 
+            else {
+              pg.progressbar({ value : progress});
+            }
+            fadeUpdate(element.find(".result"), "");
         },
         updateProduct = function (prod_id, done, percent) {
             var element = $("#product-" + prod_id).find(".result");
