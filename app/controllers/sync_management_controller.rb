@@ -63,20 +63,18 @@ class SyncManagementController < ApplicationController
     @products = org.locker.products.readable(org).reject { |p| p.repos(p.organization.locker).empty? }
     @products.sort! { |p1,p2| p1.name.upcase() <=> p2.name.upcase() }
     @sproducts = @products.reject{|prod| !prod.syncable?} # syncable products
+
     
-    @product_status = Hash.new
     @product_size = Hash.new
     @repo_status = Hash.new
-
 
     Glue::Pulp::Repos.prepopulate! @products, org.locker
 
     for p in @products
       pstatus = p.sync_status
-      @product_status[p.id] = format_sync_progress(pstatus, p.id)
       @product_size[p.id] = number_to_human_size(p.sync_size)
       for r in p.repos(p.organization.locker)
-        @repo_status[r.id] = format_sync_progress(r.sync_status, r.id)
+        @repo_status[r.id] = format_sync_progress(r.sync_status, r)
       end
     end
 
@@ -96,8 +94,8 @@ class SyncManagementController < ApplicationController
     collected = []
     params[:repoids].each do |id|
       begin
-        sync_status = Repository.find(id).sync_status
-        progress = format_sync_progress(sync_status, id)
+        repo = Repository.find(id)
+        progress = format_sync_progress(repo.sync_status, repo)
         collected.push(progress)
       rescue Exception => e
         errors e.to_s # debugging and skip for now
@@ -110,21 +108,6 @@ class SyncManagementController < ApplicationController
     end
   end
 
-  def product_status
-    product = Product.first(:conditions => {:id => params['product_id']})
-    repo_stat = Repository.find_by_pulp_id(params[:repo_id]).sync_status
-    status = product.sync_status 
-    send_notification(product, repo_stat) if status.state == PulpSyncStatus::Status::FINISHED
-    report_error(product) if status.state == PulpSyncStatus::Status::ERROR
-
-    progress = format_sync_progress(status)
-    progress[:product_id] = params['product_id']
-    progress[:size] = number_to_human_size(product.sync_size)
-    progress[:repo_id] = params['repo_id']
-    respond_with (progress) do |format|
-      format.js { render :json => progress.to_json, :status => :ok }
-    end
-  end
 
   def destroy
     retval = Pulp::Repository.cancel(params[:id], params[:id])
@@ -154,11 +137,12 @@ private
   end
 
 
-  def format_sync_progress(sync_status, repo_id)
+  def format_sync_progress(sync_status, repo)
     not_running_states = [PulpSyncStatus::Status::FINISHED,
                           PulpSyncStatus::Status::ERROR,
                           PulpSyncStatus::Status::CANCELED]
-    {   :id         => repo_id,
+    {   :id         => repo.id,
+        :product_id => repo.product.id,
         :progress   => calc_progress(sync_status),
         :sync_id    => sync_status.uuid,
         :state      => format_state(sync_status.state),
@@ -168,7 +152,7 @@ private
         :duration   => format_duration(sync_status.finish_time, sync_status.start_time),
         :packages   => sync_status.progress.total_count,
         :size       => number_to_human_size(sync_status.progress.total_size),
-        :is_running => !not_running_states.include?(sync_status.state.to_sym)
+        :is_running => !not_running_states.include?(sync_status.state.to_sym) && sync_status.finish_time.nil?
     }
   end
 
@@ -197,14 +181,13 @@ private
     repos = [repos] if !repos.is_a? Array
     collected = []
     repos.each do |id|
+      repo = Repository.find(id)
       begin
-        resp = Repository.find(id).sync().first
+        resp = repo.sync().first
+        collected.push({:id => id, :product_id=>repo.product.id, :state => resp[:state]})
       rescue RestClient::Conflict => e
-        r = Repository.find(id)
-        errors N_("There is already an active sync process for the '#{r.name}' repository. Please try again later")
-        next
+        errors N_("There is already an active sync process for the '#{repo.name}' repository. Please try again later")
       end
-      collected.push({:id => id, :state => resp[:state]})
     end
     collected
   end
