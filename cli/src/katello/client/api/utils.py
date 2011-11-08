@@ -74,10 +74,10 @@ def get_repo(orgName, prodName, repoName, envName=None):
         print _("Could not find product [ %s ]") % prodName
         return None
 
-    repos = repo_api.repos_by_env_product(env["id"], prod["id"])
-    for repo in repos:
-        if repo["name"] == repoName:
-            return repo
+    repos = repo_api.repos_by_env_product(env["id"], prod["id"], repoName)
+    if len(repos) > 0:
+        #repo by id call provides more information
+        return repo_api.repo(repos[0]["id"])
 
     print _("Could not find repository [ %s ] within organization [ %s ], product [ %s ] and environemnt [ %s ]") % (repoName, orgName, prodName, env["name"])
     return None

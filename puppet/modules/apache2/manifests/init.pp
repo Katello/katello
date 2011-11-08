@@ -12,11 +12,4 @@ class apache2 {
     require     => Service["httpd"],
     refreshonly => true,
   }
-
-    exec { "restart-apache2":
-    command     => "/sbin/service httpd restart",
-    require     => Service["httpd"],
-    refreshonly => true,
-  }
-
 }

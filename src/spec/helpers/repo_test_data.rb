@@ -24,7 +24,7 @@ module RepoTestData
   CLONED_REPO_ENV_ID = 4
 
   REPO_PROPERTIES = {
-    :id => REPO_ID,
+    :pulp_id => REPO_ID,
     :name => REPO_NAME,
     :arch => 'architecture',
     :relative_path => "ACME_Corporation/Locker/zoo/base",
@@ -40,7 +40,7 @@ module RepoTestData
   }.with_indifferent_access
 
   CLONED_PROPERTIES = {
-    :id => CLONED_REPO_ID,
+    :pulp_id => CLONED_REPO_ID,
     :name => REPO_NAME,
     :arch => 'architecture',
     :relative_path => "ACME_Corporation/Dev/zoo/base",

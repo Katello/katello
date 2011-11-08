@@ -41,6 +41,17 @@ class katello::config {
     unless  => "getenforce |egrep -iq 'disable|Permissive'",
   }
 
+  exec {"httpd-restart":
+    command => "/bin/sleep 5; /sbin/service httpd restart; /bin/sleep 10",
+    onlyif => "/usr/sbin/apachectl -t",
+    before => Exec["katello_seed_db"],
+    require   => $katello::params::deployment ? {
+        'katello' => [ Config_file["${katello::params::config_dir}/katello.yml"], Class["candlepin::service"], Class["pulp::service"] ],
+        'headpin' => [ Config_file["${katello::params::config_dir}/katello.yml"], Class["candlepin::service"] ],
+         default  => [],
+    },
+  }
+
   common::simple_replace { "org_name":
       file => "/usr/share/katello/db/seeds.rb",
       pattern => "ACME_Corporation",
