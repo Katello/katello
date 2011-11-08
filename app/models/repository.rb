@@ -36,4 +36,12 @@ class Repository < ActiveRecord::Base
     return nil if release.nil?
     release.to_i
   end
+
+  def redhat?
+    product.redhat?
+  end
+
+  def custom?
+    !(redhat?)
+  end
 end

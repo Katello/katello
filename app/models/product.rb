@@ -100,6 +100,14 @@ class Product < ActiveRecord::Base
     hash
   end
 
+  def redhat?
+    provider.redhat_provider?
+  end
+
+  def custom?
+    !(redhat?)
+  end
+
   #Permissions
 
   scope :readable, lambda {|org| ::Provider.readable(org).joins(:provider)}
