@@ -431,7 +431,7 @@ module Glue::Pulp::Repo
     rescue
       history = Pulp::Repository.sync_history(pulp_id) 
     end
-    return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED) if (history.nil? or history.empty?)
+    return [::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED)] if (history.nil? or history.empty?)
     history.collect{|item| ::PulpSyncStatus.using_pulp_task(item)}
   end
     
