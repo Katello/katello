@@ -29,6 +29,7 @@ $(document).ready(function() {
           KT.content.draw_syncing(repo_id, status.progress.progress);
       }
     });
+    KT.content.reset_products(KT.repo_status);
     KT.content_actions.addSyncing(ids);
 
 
@@ -55,6 +56,7 @@ $(document).ready(function() {
        $.each(syncs, function(index, item){
           ids.push(item.id);
           KT.content.draw_syncing(item.id, 0);
+          KT.content.updateProduct(item.product_id, false, 0);
        });
        KT.content_actions.addSyncing(ids);
 
@@ -144,14 +146,12 @@ KT.content_actions = (function(){
               global: false
             },
             function(data,success) {
-               console.log(success);
                if (success == "notmodified") {
                  return;
                }
                $.each(data, function(index, repo){
                    // Only stop when we reach 100% and the finish_time is done sometimes they are not both complete
                    if (!repo.is_running) {
-                       console.log(repo);
                         removeSyncing(repo.id);
                         KT.content.finishRepo(repo.id, repo.state, repo.duration);
                    }
@@ -164,11 +164,12 @@ KT.content_actions = (function(){
                                             repo.packages);
                    }
                });
+               KT.content.reset_products(data);
             },
             function(){
                 updater.stop();
             }
-            );
+        );
             
     };
 
@@ -185,6 +186,7 @@ KT.content_actions = (function(){
 KT.content = (function(){
 
      var draw_syncing = function(repo_id, progress){
+
             var element = $("#repo-" + repo_id).find(".result"),
                 cancelButton = $('<a/>').attr("class", "cancel_sync").text(i18n.cancel),
                 progressBar = $('<div/>').attr('class', 'progress').text(" ");
@@ -192,7 +194,8 @@ KT.content = (function(){
             progressBar.progressbar({
                 value: progress
             });
-            element.text("").append(progressBar).append(cancelButton);
+            element.html("");
+            element.append(progressBar).append(cancelButton);
         },
         updateRepo = function(repo_id, starttime, duration, progress, size, packages){
             var repo = $("#repo-" + repo_id);
@@ -212,27 +215,18 @@ KT.content = (function(){
             fadeUpdate(element.find(".duration"), duration);
             fadeUpdate(element.find(".size"), size + ' (' + packages + ')');
             element.find(".progress").progressbar({ value : progress});
-            fadeUpdate(element.find(".result"), "");
         },
-        updateProduct = function (prod_id, repo_id) {
-//            var url = KT.routes.sync_management_product_status_path();
-//            $.ajax({
-//              type: 'GET',
-//              url: url,
-//              data: { product_id: prod_id, repo_id: repo_id},
-//              dataType: 'json',
-//              success: function(data) {
-//                $('#table_' + prod_id).find('div.productstatus').html(data.state);
-//                fadeUpdate("#prod_sync_finish_" + data.product_id, data.duration);
-//                fadeUpdate("#prod_sync_start_" + data.product_id, data.start_time);
-//                fadeUpdate("#prod_size_" + data.product_id, data.size);
-//              },
-//              error: function(data) {
-//                fadeUpdate("#prod_sync_finish_" + data.product_id, data.duration);
-//                fadeUpdate("#prod_sync_start_" + data.product_id, data.start_time);
-//                fadeUpdate("#prod_size_" + data.product_id, data.size);
-//              }
-//            });
+        updateProduct = function (prod_id, done, percent) {
+            var element = $("#product-" + prod_id).find(".result");
+            if(done){
+                element.html(i18n.complete);
+            }
+            else{
+                var progressBar = $('<div/>').attr('class', 'progress').text(" ");
+                element.html(progressBar);
+                progressBar.progressbar({value: percent});
+
+            }
         },
         fadeUpdate = function(element, text) {
             element.fadeOut('fast').text(text);
@@ -243,6 +237,25 @@ KT.content = (function(){
         },
         select_none = function(){
             $("#products_table").find("input[type=checkbox]").removeAttr('checked');
+        },
+        reset_products = function(status_set){
+            var products = {};
+            $.each(status_set, function(index, item){
+                var pid = item.product_id;
+                if(products[pid] === undefined){
+                    products[pid] = [];
+                }
+                if (item.is_running){
+                    products[pid].push(item.progress.progress)
+                }
+            });
+            $.each(products, function(prod_id, percentages){
+                var total = 0;
+                $.each(percentages, function(i, val){total += val;});
+                updateProduct(prod_id, percentages.length === 0, total/percentages.length);
+
+            });
+
         };
     
     return {
@@ -252,6 +265,7 @@ KT.content = (function(){
         finishRepo: finishRepo,
         select_all : select_all,
         select_none: select_none,
-        draw_syncing: draw_syncing
+        draw_syncing: draw_syncing,
+        reset_products: reset_products
     }
 })();
