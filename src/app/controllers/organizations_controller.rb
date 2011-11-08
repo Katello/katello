@@ -30,14 +30,14 @@ class OrganizationsController < ApplicationController
     delete_test = lambda{@organization.deletable?}
 
     {:index =>  index_test,
-     :items => index_test,
-     :auto_complete_search => index_test,
-     :new => create_test,
-     :create => create_test,
-     :edit => read_test,
-     :update => edit_test,
-     :destroy => delete_test,
-     :environments_partial => index_test,
+      :items => index_test,
+      :auto_complete_search => index_test,
+      :new => create_test,
+      :create => create_test,
+      :edit => read_test,
+      :update => edit_test,
+      :destroy => delete_test,
+      :environments_partial => index_test,
     }
   end
 
