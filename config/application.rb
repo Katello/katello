@@ -62,8 +62,8 @@ module Src
     config.action_mailer.raise_delivery_errors = true
 
     host = "127.0.0.1" # default
-    port = "3000"      # default
     protocol = "http"  # default
+    port = nil
     unless katello_config['common'].nil?
       host = katello_config['common']['host'] unless katello_config['common']['host'].nil?
       port = katello_config['common']['port'].to_s unless katello_config['common']['port'].nil?
@@ -74,7 +74,11 @@ module Src
       end
     end
     prefix = ENV['RAILS_RELATIVE_URL_ROOT'] || '/'
-    config.action_mailer.default_url_options = {:host => host + ':' + port + prefix, :protocol => protocol}
+    if (port.nil?)
+      config.action_mailer.default_url_options = {:host => host + prefix, :protocol => protocol}
+    else
+      config.action_mailer.default_url_options = {:host => host + ':' + port + prefix, :protocol => protocol}
+    end
 
   end
 end
