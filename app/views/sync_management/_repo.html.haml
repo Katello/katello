@@ -1,7 +1,7 @@
 -# repo,  parent_set
 %tr{:class=>parent_set_class(parent_set), :id=>repo_id(repo), "data-id"=>repo.id}
   %td.one-line-ellipsis
-    =check_box_tag "repos", repo.id, false
+    =check_box_tag "repoids", repo.id, false
     #{repo.name}
   %td.start_time
     #{@repo_status[repo.id][:start_time]}
