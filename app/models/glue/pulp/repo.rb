@@ -274,24 +274,8 @@ module Glue::Pulp::Repo
     [Pulp::Repository.sync(self.pulp_id)]
   end
 
-  #get last sync status of all repositories in this product
-  def latest_sync_statuses
-    [self._get_most_recent_sync_status()]
-  end
-
-  def sync_status
-    @sync_status = self._get_most_recent_sync_status if @sync_status.nil?
-    @sync_status
-  end
-
-  def sync_state
-    status = self._get_most_recent_sync_status()
-    return ::PulpSyncStatus::Status::NOT_SYNCED if status.nil?
-    status.state
-  end
-
   def sync_start
-    status = _get_most_recent_sync_status()
+    status = self.sync_status
     retval = nil
     if status.nil? or status.start_time.nil?
       retval = nil
@@ -300,14 +284,6 @@ module Glue::Pulp::Repo
       # retval = date.strftime("%H:%M:%S %Y-%m-%d")
     end
     retval
-  end
-
-  def cancel_sync
-    Rails.logger.info "Cancelling synchronization of repository #{self.pulp_id}"
-    history = Pulp::Repository.sync_history(self.pulp_id)
-    return if (history.nil? or history.empty?)
-
-    Pulp::Repository.cancel(self.pulp_id, history[0][:id])
   end
 
   def add_packages pkg_id_list
@@ -322,27 +298,42 @@ module Glue::Pulp::Repo
     Pulp::Repository.add_distribution self.id,  distribution_id
   end
 
+  def cancel_sync
+    Rails.logger.info "Cancelling synchronization of repository #{self.pulp_id}"
+    history = @sync_status
+    return if (history.nil? or history.empty?)
+
+    Pulp::Repository.cancel(self.pulp_id, history.first.id)
+  end
+
   def sync_finish
-    status = _get_most_recent_sync_status()
+    status = self.sync_status
     retval = nil
     if status.nil? or status.finish_time.nil?
       retval = nil
     else
       retval = status.finish_time
-      # retval = date.strftime("%H:%M:%S %Y-%m-%d")
     end
     retval
   end
 
-
-  def _get_most_recent_sync_status()
-    history = Pulp::Repository.sync_history(pulp_id)
-    return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED) if (history.nil? or history.empty?)
-    ::PulpSyncStatus.using_pulp_task(history[0])
+  def sync_status
+    sync_statuses.first
+  end
+    
+  def sync_statuses
+    @sync_status = self._get_most_recent_sync_status() if @sync_status.nil?
+    @sync_status
   end
 
+  def sync_state
+    status = sync_status
+    return ::PulpSyncStatus::Status::NOT_SYNCED if status.nil?
+    status.state
+  end
+    
   def synced?
-    sync_history = Pulp::Repository.sync_history pulp_id
+    sync_history = self.sync_status
     !sync_history.nil? && !sync_history.empty? && successful_sync?(sync_history[0])
   end
 
@@ -434,8 +425,17 @@ module Glue::Pulp::Repo
     new_content
   end
 
+  def _get_most_recent_sync_status()
+    begin
+      history = [Pulp::Repository.sync_status(pulp_id)]
+    rescue
+      history = Pulp::Repository.sync_history(pulp_id) 
+    end
+    return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED) if (history.nil? or history.empty?)
+    history.collect{|item| ::PulpSyncStatus.using_pulp_task(item)}
+  end
+    
   private
-
 
   def get_groupid_param name
     idx = self.groupid.index do |s| s.start_with? name+':' end
