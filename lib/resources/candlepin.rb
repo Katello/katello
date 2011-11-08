@@ -99,9 +99,11 @@ module Candlepin
         JSON.parse(response).with_indifferent_access
       end
 
-      def update uuid, facts
-        attrs = {:facts => facts}
-        response = self.put(path(uuid), attrs.to_json, self.default_headers).body
+      def update uuid, facts, guest_ids
+        attrs = {:facts => facts, :guestIds => guest_ids}.delete_if {|k,v| v.nil?}
+        unless attrs.empty?
+          response = self.put(path(uuid), attrs.to_json, self.default_headers).body
+        end
         # consumer update doesn't return any data atm
         # JSON.parse(response).with_indifferent_access
       end
