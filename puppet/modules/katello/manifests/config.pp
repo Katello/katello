@@ -94,7 +94,11 @@ class katello::config {
       pattern => "email => 'root@localhost'",
       replacement => "email => '$katello::params::user_email'",
       before => Exec["katello_seed_db"],
-      require => [ Class["candlepin::service"], Class["pulp::service"] ],
+      require => $katello::params::deployment ? {
+                'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
+                'headpin' => [ Class["candlepin::service"] ],
+                default => [],
+    },
   }
 
   exec {"katello_db_migrate":
