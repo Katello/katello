@@ -8,7 +8,7 @@
 # Highly recommend changing the default_password with "pulp-admin user update"
 #
 [server]
-server_name: <%= fqdn %>
+server_name: <%= defined? fqdn ? hostname : fqdn %>
 relative_url: /pulp/repos
 key_url: /pulp/gpg
 ks_url: /pulp/ks
