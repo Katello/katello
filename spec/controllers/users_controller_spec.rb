@@ -34,7 +34,6 @@ describe UsersController do
       controller.stub!(:errors)
       @organization = new_test_org
       @environment = KTEnvironment.create!(:name => 'first-env', :prior => @organization.locker.id, :organization => @organization)
-      #controller.stub!(:current_organization).and_return(@organization)
     end
 
     it "should create a user correctly" do
@@ -58,7 +57,6 @@ describe UsersController do
 
       post 'create', {:user => { :password=>"password1234"}}
       response.should_not be_success
-
     end
     
   end
