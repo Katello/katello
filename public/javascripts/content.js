@@ -54,7 +54,7 @@ $(document).ready(function() {
        var ids = [];
        $.each(syncs, function(index, item){
           ids.push(item.id);
-          KT.content.draw_syncing(item, 0);
+          KT.content.draw_syncing(item.id, 0);
        });
        KT.content_actions.addSyncing(ids);
 
@@ -151,9 +151,9 @@ KT.content_actions = (function(){
                $.each(data, function(index, repo){
                    // Only stop when we reach 100% and the finish_time is done sometimes they are not both complete
                    if (!repo.is_running) {
-                       console.log("REMOVING");
                        console.log(repo);
                         removeSyncing(repo.id);
+                        KT.content.finishRepo(repo.id, repo.state, repo.duration);
                    }
                    else {
                     KT.content.updateRepo(  repo.id,
@@ -197,6 +197,11 @@ KT.content = (function(){
         updateRepo = function(repo_id, starttime, duration, progress, size, packages){
             var repo = $("#repo-" + repo_id);
             update_item(repo, starttime, duration, progress, size, packages );
+        },
+        finishRepo = function(repo_id, state, duration){
+            var element = $("#repo-" + repo_id);
+            element.find(".result").html(state);
+            fadeUpdate(element.find(".duration"), duration);
         },
         cancelRepo = function(repo_id){
             //TODO handle product
@@ -244,6 +249,7 @@ KT.content = (function(){
         cancelRepo: cancelRepo,
         updateProduct: updateProduct,
         updateRepo: updateRepo,
+        finishRepo: finishRepo,
         select_all : select_all,
         select_none: select_none,
         draw_syncing: draw_syncing
