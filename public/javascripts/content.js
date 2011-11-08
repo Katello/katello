@@ -216,13 +216,12 @@ KT.content = (function(){
             fadeUpdate(element.find(".size"), size + ' (' + packages + ')');
             var pg = element.find(".progress");
             if (progress === 100 && (pg.progressbar( "option", "value" ) < 75)) { 
-              pg.progressbar.animate({'width': 99 },{ queue:false,
-                                       duration:"slow", easing:"easeInSine" });
+              pg.find(".ui-progressbar-value").animate({'width': 99 },{ queue:false,
+                                               duration:"slow", easing:"easeInSine" });
             } 
             else {
               pg.progressbar({ value : progress});
             }
-            fadeUpdate(element.find(".result"), "");
         },
         updateProduct = function (prod_id, done, percent) {
             var element = $("#product-" + prod_id).find(".result");
