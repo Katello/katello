@@ -105,7 +105,7 @@ KT.menu = (function(){
             var li = child.parent().parent();
             var  ul = child.parent();
             li.prepend($('<div class="arrow_icon_menu"></div>'));
-            li.hover(
+            li.hoverIntent(
                 function(){
                   ul.addClass("third_level").slideDown('fast');
                 },

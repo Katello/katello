@@ -48,36 +48,25 @@ $(document).ready(function () {
     var activeBlock = null;
     var activeBlockId = null;
     var ajax_url = null;
-    var original_top = Math.floor($('.left').position(top).top);
-    var subpanel_top = Math.floor($('.left').position(top).top + subpanelSpacing);
-
-    //create the initial selected count
-    KT.panel.updateResult();
-    KT.panel.actions.registerDefaultActions();
-    KT.panel.updateResult();
 
     $('.block').live('click', function (event) {
         if (event.target.nodeName === "A" && event.target.className.match('content_add_remove')) {
             return false;
-        }
-        else {
+        } else {
             activeBlock = $(this);
             ajax_url = activeBlock.attr("data-ajax_url");
             activeBlockId = activeBlock.attr('id');
             if(event.ctrlKey && !thisPanel.hasClass('opened') && !(event.target.id == "new") && !activeBlock.hasClass('active')) {
                 if (activeBlock.hasClass('active')) {
                     activeBlock.removeClass('active');
-                }
-                else {
+                } else {
                     activeBlock.addClass('active');
                     activeBlock.find('.arrow-right').hide();
                 }
-            }
-            else {
+            } else {
                 if(activeBlock.hasClass('active') && thisPanel.hasClass('opened')){
                     KT.panel.closePanel(thisPanel);
-                }
-                else {
+                } else {
                     $.bbq.pushState({
                         panel: activeBlockId
                     });
@@ -136,12 +125,16 @@ $(document).ready(function () {
         autoHide: true
     });
 
+    //register a common select none action
     KT.panel.actions.registerAction("select_none", {});
     $('#select-none').mouseup(function(){
         $('.block.active').removeClass('active');
         KT.panel.updateResult();
     });
+    //create the initial selected count
     KT.panel.updateResult();
+    //register the default actions for the page's actions partial
+    KT.panel.actions.registerDefaultActions();
 
     $('.search').fancyQueries();
     if (KT.panel.control_bbq) {
@@ -172,10 +165,6 @@ var list = (function(){
            });
            return false;
        },
-       complete_refresh: function(url, success_cb) {
-        $('#list').html('<img src="images/spinner.gif">');
-        list.refresh("list", url, success_cb);
-       },
        refresh : function(id, url, success_cb){
            var jQid = $('#' + id);
             $.ajax({
@@ -201,6 +190,7 @@ $(window).ready(function(){
         KT.panel.registerPanel($('#panel-frame'), 0);
         $(window).scroll(KT.panel.list.extend);
     }
+    KT.panel.actions.resetActions();
 });
 KT.panel = (function ($) {
     var retrievingNewContent= false,
@@ -555,6 +545,7 @@ KT.panel = (function ($) {
                         }
                     });
                 });
+                updateResult();
             },
             registerAction = function(name, params) {
                 /**
