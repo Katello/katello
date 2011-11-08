@@ -13,7 +13,8 @@
 #   emails from the server.  For example, the host would be the fqdn portion
 #   of a URL for resetting a user's password.
 #
-# port: Similar to host; however, provides the port component of the URL.
+# port (default= <unset>): Similar to host; however, provides the port
+#   component of the URL.
 #
 # password_reset_expiration (default=10): Specifies the number of
 #   minutes that a password reset token will remain valid.
@@ -30,6 +31,7 @@ common:
 
   host: <%= scope.lookupvar("katello::params::host") %>
   use_ssl: true
+  port:
 
   password_reset_expiration: 10
 
