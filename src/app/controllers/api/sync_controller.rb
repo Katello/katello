@@ -23,7 +23,7 @@ class Api::SyncController < Api::ApiController
   def index
     # GET /repositories/<id>/sync/
     # get most recent sync status(es)
-    render :json => @obj.latest_sync_statuses
+    render :json => @obj.sync_status
   end
 
   def create
