@@ -1,5 +1,5 @@
 - pid = prod[:id]
-%tr{:id=>product_id(pid)}
+%tr.product{:id=>product_id(pid)}
   -#%td{:class=>'product', 'data-id'=>prod.id}
   %td
     -#= check_box_tag "product[#{pid}]", '', '', :disabled=>!@sproducts.include?(prod)
@@ -12,7 +12,6 @@
     #{@product_size[pid]}
 
   %td.result{:id =>'table_#{pid}'}
-    #{@product_status[pid][:state]} &nbsp;
 
 
 
