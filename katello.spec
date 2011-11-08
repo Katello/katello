@@ -266,6 +266,7 @@ fi
 # Break apart the main bits
 %{homedir}/app/controllers
 %{homedir}/app/helpers
+%{homedir}/app/mailers
 %{homedir}/app/models/*.rb
 %{homedir}/app/stylesheets
 %{homedir}/app/views
