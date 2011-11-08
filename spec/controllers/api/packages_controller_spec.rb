@@ -21,8 +21,11 @@ describe Api::PackagesController do
 
   describe "get a listing of packages" do
     it "should call pulp find packages api" do
-      Pulp::Repository.should_receive(:packages).once.with(1)
-      get 'index', :repository_id => 1
+      repoid = 1
+      repo = OpenStruct.new(:packages => {})
+      repo.should_receive(:packages).and_return([])
+      Repository.should_receive(:find).with(repoid).and_return(repo)
+      get 'index', :repository_id => repoid
     end
   end
 

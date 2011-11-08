@@ -57,30 +57,40 @@ describe User do
   end
 
   context "Pulp orchestration" do
-    before(:each) { disable_user_orchestration }
+    context "on create" do
 
-    it "should call pulp user create api during user creation" do
-      Pulp::User.should_receive(:create).once.with(hash_including(:login => USERNAME, :name => USERNAME)).and_return({})
-      User.create!(to_create_simple)
+      before(:each) { disable_user_orchestration }
+
+      it "should call pulp user create api during user creation" do
+        Pulp::User.should_receive(:create).once.with(hash_including(:login => USERNAME, :name => USERNAME)).and_return({})
+        User.create!(to_create_simple)
+      end
+
+      it "should call pulp role api during user creation" do
+        Pulp::Roles.should_receive(:add).once.with("super-users", USERNAME).and_return(true)
+        User.create!(to_create_simple)
+      end
     end
 
-    it "should call pulp role api during user creation" do
-      Pulp::Roles.should_receive(:add).once.with("super-users", USERNAME).and_return(true)
-      User.create!(to_create_simple)
-    end
+    context "on destroy" do
 
-    it "should call pulp user delete api during user deletion" do
-      u = User.create!(to_create_simple)
+      before(:each) do
+        disable_user_orchestration
+        @user = User.create!(to_create_simple)
 
-      Pulp::User.should_receive(:destroy).once.with(USERNAME).and_return(200)
-      u.destroy
-    end
+        current_user = mock_model(User, :id=>1, :username=>"test_mock_user", :password=>"Password")
+        User.stub(:current).and_return(current_user)
+      end
 
-    it "should call pulp role api during user deletion" do
-      u = User.create!(to_create_simple)
+      it "should call pulp user delete api during user deletion" do
+        Pulp::User.should_receive(:destroy).once.with(USERNAME).and_return(200)
+        @user.destroy
+      end
 
-      Pulp::Roles.should_receive(:remove).once.with("super-users", USERNAME).and_return(true)
-      u.destroy
+      it "should call pulp role api during user deletion" do
+        Pulp::Roles.should_receive(:remove).once.with("super-users", USERNAME).and_return(true)
+        @user.destroy
+      end
     end
   end
 

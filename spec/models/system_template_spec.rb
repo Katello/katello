@@ -137,12 +137,13 @@ describe SystemTemplate do
       @tpl1.packages << SystemTemplatePackage.new(:package_name => 'foo', :system_template => @tpl1)
       @tpl1.stub(:get_promotable_packages).and_return([package_1])
 
-      repo = Glue::Pulp::Repo.new(repo_1)
-      clone = Glue::Pulp::Repo.new(repo_2)
+      repo = Repository.new(repo_1)
+      clone = Repository.new(repo_2)
       repo.stub(:is_cloned_in?).and_return(true)
       repo.stub(:get_clone).and_return(clone)
 
-      Glue::Pulp::Repo.stub(:find).with(package_1[:repo_id]).and_return(repo)
+      Repository.stub(:find).with(package_1[:repo_id]).and_return(repo)
+      Repository.stub(:find_by_pulp_id).with(package_1[:repo_id]).and_return(repo)
       clone.should_receive(:add_packages).with([package_1[:id]])
 
       @tpl1.stub(:copy_to_env).and_return(@tpl1_clone)
@@ -154,10 +155,11 @@ describe SystemTemplate do
       @tpl1.packages << SystemTemplatePackage.new(:package_name => 'foo', :system_template => @tpl1)
       @tpl1.stub(:get_promotable_packages).and_return([package_1])
 
-      repo = Glue::Pulp::Repo.new(repo_1)
+      repo = Repository.new(repo_1)
       repo.stub(:is_cloned_in?).and_return(false)
 
-      Glue::Pulp::Repo.stub(:find).with(package_1[:repo_id]).and_return(repo)
+      Repository.stub(:find).with(package_1[:repo_id]).and_return(repo)
+      Repository.stub(:find_by_pulp_id).with(package_1[:repo_id]).and_return(repo)
       Product.stub(:find_by_cp_id).with(package_1[:product_id]).and_return(@prod1)
 
       @prod1.should_receive(:promote).with(@from_env, @to_env).and_return([])
@@ -398,18 +400,18 @@ describe SystemTemplate do
 
     let(:pg_name) { RepoTestData.repo_package_groups.values[0]["name"] }
     let(:missing_pg_name) { "missing_pg" }
-    let(:repo) {{
+    let(:repo) {Repository.new({
       :name => 'foo repo',
       :groupid => [
         "product:"+@prod1.cp_id.to_s,
         "env:"+@organization.locker.id.to_s,
         "org:"+@organization.name.to_s
       ]
-    }}
+    })}
 
     before :each do
       Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups)
-      Pulp::Repository.stub(:all => [repo])
+      Repository.stub_chain(:joins, :where).and_return( [repo])
     end
 
     describe "#add_package_group" do
@@ -451,21 +453,20 @@ describe SystemTemplate do
 
 
   describe "package group categories" do
-
     let(:pg_category_name) { RepoTestData.repo_package_group_categories.values[0]["name"] }
     let(:missing_pg_category_name) { "missing_pgc" }
-    let(:repo) {{
+    let(:repo) {Repository.new({
       :name => 'foo repo',
       :groupid => [
         "product:"+@prod1.cp_id.to_s,
         "env:"+@organization.locker.id.to_s,
         "org:"+@organization.name.to_s
       ]
-    }}
+    })}
 
     before :each do
       Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories)
-      Pulp::Repository.stub(:all => [repo])
+      Repository.stub_chain(:joins, :where).and_return( [repo])
     end
 
     describe "#add_pg_category" do
@@ -508,14 +509,15 @@ describe SystemTemplate do
   describe "distributions" do
 
     let(:distribution) { RepoTestData.repo_distributions["id"] }
-    let(:repo) {{
+    let(:repo) {Repository.new({
       :name => 'foo repo',
+      :pulp_id => 'foo repo',
       :id => 'foo repo',
-    }}
+    })}
 
     before :each do
       Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
-      Pulp::Repository.stub(:all => [repo])
+      Repository.stub_chain(:joins, :where).and_return( [repo])
     end
 
     describe "#add_distribution" do
@@ -558,8 +560,9 @@ describe SystemTemplate do
         disable_repo_orchestration
         Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
         Pulp::Distribution.stub(:find => RepoTestData.repo_distributions)
-        Pulp::Repository.stub(:all => [RepoTestData::REPO_PROPERTIES])
-        @prod1.stub(:repos => [Glue::Pulp::Repo.new(RepoTestData::REPO_PROPERTIES)])
+        Repository.stub_chain(:joins, :where).and_return([Repository.new(RepoTestData::REPO_PROPERTIES)])
+        @prod1.stub(:repos => [Repository.new(RepoTestData::REPO_PROPERTIES)])
+
         @tpl1.products << @prod1
         @tpl1.add_distribution(distribution)
       end

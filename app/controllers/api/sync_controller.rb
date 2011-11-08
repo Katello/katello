@@ -59,7 +59,7 @@ class Api::SyncController < Api::ApiController
   end
 
   def find_repository
-    @repository = Glue::Pulp::Repo.find(params[:repository_id])
+    @repository = Repository.find(params[:repository_id])
     raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:repository_id]}'") if @repository.nil?
     raise HttpErrors::NotFound, _("You can only synchronize repositories in locker environment'") if not @repository.environment.locker?
     @repository
