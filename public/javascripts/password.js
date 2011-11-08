@@ -48,7 +48,7 @@ KT.password = function() {
                 button.removeClass("disabled");
                 if (resetPassword && xhr.status < 400) {
                     // this is a password reset, so we'll redirect the user to the login page
-                    window.location.href = data.redirectToUrl;
+                    window.location.replace(KT.routes.root_path());
                 }
             },
             error: function(e) {

@@ -51,7 +51,7 @@ class PasswordResetsController < ApplicationController
     begin
       @user.update_attributes!(params[:user])
       notice _("Password has been reset for user '%{s}'." % {:s => @user.username}), {:persist => false}
-      redirect_to root_url
+      render :text => ""
 
     rescue Exception => e
       errors e.to_s, {:persist => false}
