@@ -16,9 +16,6 @@ function getProductId(field) {
     return prod_id;
 }
 
-
-
-
 $(document).ready(function() {
 
     // Setup initial state
@@ -63,34 +60,7 @@ $(document).ready(function() {
     });
   
   
-  // if parent is checked then all children should be selected
-//  $('.product input:checkbox').click(function() {
-//    $(this).siblings().find('input:checkbox').attr('checked', this.checked);
-//  });
-
-  // if all children are checked, check the parent
-  $('li.repo input:checkbox').click(function() {
-    var td = $(this).parent().parent().parent();
-    var parent_cbx = td.find('input:checkbox').first();
-    var siblings = parent_cbx.siblings().find('input:checkbox');
-    var total = siblings.length;
-    var checked = 0;
-    siblings.each( function() { if (this.checked == true) checked++; });
-    if (total == checked) {
-      parent_cbx.attr('checked', true);
-    }
-    else if (checked > 0) {
-      parent_cbx.attr('checked', false);
-    }
-    else {
-      parent_cbx.attr('checked', false);
-    }
-
-  });
-
 });
-
-
 
 KT.content_actions = (function(){
     var syncing = [],
@@ -215,7 +185,7 @@ KT.content = (function(){
             fadeUpdate(element.find(".duration"), duration);
             fadeUpdate(element.find(".size"), size + ' (' + packages + ')');
             var pg = element.find(".progress");
-            if (progress === 100 && (pg.progressbar( "option", "value" ) < 75)) { 
+            if (progress === 100) { 
               pg.find(".ui-progressbar-value").animate({'width': 99 },{ queue:false,
                                                duration:"slow", easing:"easeInSine" });
             } 
