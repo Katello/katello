@@ -80,8 +80,8 @@ class HttpResource
     def print_debug_info(a_path, headers={}, payload={})
       Rails.logger.debug "Headers: #{headers.to_json}"
       Rails.logger.debug "Body: #{payload.to_json}"
-    rescue RestClient::Exception => e
-      Rails.logger.warn "Unable to print debug information"
+    rescue Exception => e
+      Rails.logger.debug "Unable to print debug information"
     end
 
     def get(a_path, headers={})
@@ -209,19 +209,22 @@ class HttpResource
 
     private
 
-    def get_oauth_query_hash(query)
+    def get_oauth_query_parts(query)
       query_hash = {}
+      query_parts = []
 
-      query_parts = query.split("&")
-      query_parts.each do |qp|
-        qp_parts = qp.split("=")
+      query.split("&").each do |query_param|
+        qp_parts = query_param.split("=")
         key   = qp_parts[0]
         value = qp_parts[1]
 
-        query_hash[key] = value if not query_hash.has_key?(key)
+        if not query_hash.has_key?(key)
+          query_hash[key] = value
+          query_parts << query_param
+        end
       end
 
-      query_hash
+      query_parts
     end
 
     def get_oauth_url(url)
@@ -231,7 +234,7 @@ class HttpResource
         base  = parts[0]
         query = parts[1]
 
-        return base +"?"+ get_oauth_query_hash(query).to_query
+        return base +"?"+ get_oauth_query_parts(query).join("&")
       else
         return url
       end

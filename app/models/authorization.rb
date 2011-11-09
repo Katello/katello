@@ -68,8 +68,8 @@ module Authorization
 
   def access_denied(operation)
     strid = self.id ? "(id = #{self.id})" : ''
-    struser = User.current.nil? ? "anonymous" : User.current.username
-    msg = "User #{struser} doesn't have permission to #{operation} the #{type_name} #{strid}"
+    struser = User.current.nil? ? "" : User.current.username
+    msg = "User #{struser} does not have permission to #{operation} the #{type_name} #{strid}"
     Rails.logger.warn msg
     raise Errors::SecurityViolation, msg
   end

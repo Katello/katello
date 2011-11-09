@@ -42,7 +42,7 @@ class Changeset < ActiveRecord::Base
   has_many :users, :class_name=>"ChangesetUser", :inverse_of=>:changeset
   has_and_belongs_to_many :system_templates
   has_many :errata, :class_name=>"ChangesetErratum", :inverse_of=>:changeset
-  has_many :repos, :class_name=>"ChangesetRepo", :inverse_of => :changeset
+  has_and_belongs_to_many :repos, :class_name=>"Repository", :uniq => true
   has_many :distributions, :class_name=>"ChangesetDistribution", :inverse_of => :changeset
   has_many :dependencies, :class_name=>"ChangesetDependency", :inverse_of =>:changeset
   belongs_to :environment, :class_name=>"KTEnvironment"
@@ -79,7 +79,7 @@ class Changeset < ActiveRecord::Base
     to_ret = []
     to_ret = to_ret + self.packages.collect{|pkg| pkg.product}
     to_ret = to_ret + self.errata.collect{|pkg| pkg.product}
-    to_ret = to_ret + self.repos.collect{|pkg| pkg.product}
+    to_ret = to_ret + self.repos.collect{|rep| rep.product}
     to_ret = to_ret + self.distributions.collect{|distro| distro.product}
     to_ret.uniq
   end
@@ -171,18 +171,10 @@ class Changeset < ActiveRecord::Base
   end
 
   def add_repo repo_name, product_name
-    product = find_product(product_name)
-    repos = product.repos(self.environment.prior)
-    idx = repos.index do |r| r.name == repo_name end
-    if idx != nil
-      repo = repos[idx]
-      cs_repo = ChangesetRepo.new(:repo_id => repo.id, :display_name => repo_name, :product_id => product.id, :changeset => self)
-      cs_repo.save!
-      self.repos << cs_repo
-
-      return cs_repo
-    end
-    raise Errors::ChangesetContentException.new("Repository not found within this environment.")
+    repo = find_repo_by_name(repo_name, product_name)
+    raise Errors::ChangesetContentException.new("Repository not found within this environment.") unless repo
+    self.repos << repo
+    repo
   end
 
   def add_distribution distribution_id, product_name
@@ -242,14 +234,13 @@ class Changeset < ActiveRecord::Base
   end
 
   def remove_repo repo_name, product_name
-    product = find_product(product_name)
-    repos = product.repos(self.environment.prior)
-    idx = repos.index do |r| r.name == repo_name end
-    if idx != nil
-      repo = repos[idx]
-      ChangesetRepo.destroy_all(:repo_id => repo.id, :changeset_id => self.id, :product_id => product.id)
-      return
-    end
+    repo = find_repo_by_name(repo_name, product_name)
+    self.repos.delete(repo) if repo
+  end
+
+  def find_repos product
+    repos.join(:environment_product).where("environment_products.environment_id" => environment.id,
+                                                  "environment_products.product_id" =>product.id)
   end
 
 
@@ -335,11 +326,8 @@ class Changeset < ActiveRecord::Base
 
   def promote_repos from_env, to_env
     async_tasks = []
-
-    for r in self.repos
-      product = r.product
-      repo    = Repository.find_by_pulp_id(r.repo_id)
-
+    self.repos.each do |repo|
+      product = repo.product
       next if (products.uniq! or []).include? product
 
       cloned = repo.get_clone(to_env)
@@ -440,7 +428,7 @@ class Changeset < ActiveRecord::Base
   def uniquify_artifacts
     system_templates.uniq! unless self.system_templates.nil?
     products.uniq! unless self.products.nil?
-    [[:packages,:package_id],[:errata, :errata_id],[:repos, :repo_id],[:distributions, :distribution_id]].each do |items, item_id|
+    [[:packages,:package_id],[:errata, :errata_id],[:distributions, :distribution_id]].each do |items, item_id|
       unless self.send(items).nil?
         s = Set.new
         # for some reason uniq! with a closure didn''t work
@@ -465,11 +453,7 @@ class Changeset < ActiveRecord::Base
   end
 
   def not_included_repos product, environment
-    product_repos = product.repos(environment)
-    product_repos.delete_if do |product_repo|
-      not repos.index{ |cs_repo| cs_repo.repo_id == product_repo.id }.nil?
-    end
-    product_repos
+    product_repos = product.repos(environment) - self.repos
   end
 
 
@@ -504,7 +488,7 @@ class Changeset < ActiveRecord::Base
     package_names = packages_for_dep_calc(product).map{ |p| p.name }.uniq
     return [] if package_names.empty?
 
-    from_repos = not_included_repos(product, from_env).map{ |r| r.id }
+    from_repos = not_included_repos(product, from_env).map{ |r| r.pulp_id }
 
     dependencies = Pulp::Package.dep_solve(package_names, from_repos)
     dependencies
@@ -523,6 +507,12 @@ class Changeset < ActiveRecord::Base
       end
     end
     new_dependencies
+  end
+
+  private
+  def find_repo_by_name repo_name, product_name
+    product = find_product(product_name)
+    product.repos(self.environment.prior).where("repositories.name" => repo_name).first
   end
 
 end
