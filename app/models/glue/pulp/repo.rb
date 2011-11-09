@@ -68,7 +68,7 @@ module Glue::Pulp::Repo
     end
 
   def to_hash
-    @params.merge(:sync_state => self.sync_state)
+    pulp_repo_facts.merge(as_json).merge(:sync_state=> sync_state)
   end
 
   TYPE_YUM = "yum"
@@ -105,8 +105,9 @@ module Glue::Pulp::Repo
   def promote(to_environment, filters = [])
 
     key = EnvironmentProduct.find_or_create(to_environment, self.product)
-    Repository.create!(:environment_product => key, :clone_from => self,
+    repo = Repository.create!(:environment_product => key, :clone_from => self,
                             :cloned_content => self.content_for_clone, :cloned_filters => filters)
+    repo.clone_response
   end
 
   def setup_repo_clone
@@ -252,15 +253,15 @@ module Glue::Pulp::Repo
   end
 
   def find_packages_by_name name
-    Pulp::Repository.packages_by_name id, name
+    Pulp::Repository.packages_by_name self.pulp_id, name
   end
 
   def find_packages_by_nvre name, version, release, epoch
-    Pulp::Repository.packages_by_nvre id, name, version, release, epoch
+    Pulp::Repository.packages_by_nvre self.pulp_id, name, version, release, epoch
   end
 
   def find_latest_packages_by_name name
-    Katello::PackageUtils.find_latest_packages(Pulp::Repository.packages_by_name(id, name))
+    Katello::PackageUtils.find_latest_packages(Pulp::Repository.packages_by_name(self.pulp_id, name))
   end
 
   def has_erratum? id
@@ -295,7 +296,7 @@ module Glue::Pulp::Repo
   end
 
   def add_distribution distribution_id
-    Pulp::Repository.add_distribution self.id,  distribution_id
+    Pulp::Repository.add_distribution self.pulp_id,  distribution_id
   end
 
   def cancel_sync

@@ -63,7 +63,7 @@ describe Api::SyncController do
       found_repository = Repository.new
       found_repository.stub!(:environment).and_return(KTEnvironment.new(:locker => true))
 
-      Repository.should_receive(:find_by_pulp_id).once.with(repository_id).and_return(found_repository)
+      Repository.should_receive(:find).once.with(repository_id).and_return(found_repository)
       controller.stub!(:params).and_return({:repository_id => repository_id })
 
       controller.find_object.should == found_repository

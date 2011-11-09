@@ -16,6 +16,8 @@ module Errors
   # unauthorized access
   class SecurityViolation < StandardError; end
 
+  class UserNotSet < SecurityViolation; end
+
   class OrchestrationException < StandardError; end
 
   class TemplateContentException < StandardError; end

@@ -36,13 +36,13 @@ class Glue::Pulp::Errata
     filter_for_errata = filter.except(*filter_for_repo.keys)
 
     repos = repos_for_filter(filter_for_repo)
-    repos.each {|repo| errata.concat(Pulp::Repository.errata(repo.id, filter_for_errata)) }
+    repos.each {|repo| errata.concat(Pulp::Repository.errata(repo.pulp_id, filter_for_errata)) }
     errata
   end
 
   def self.repos_for_filter(filter)
     if repoid = filter[:repoid]
-      return [Repository.find_by_pulp_id(repoid)]
+      return [Repository.find(repoid)]
     elsif environment_id = filter[:environment_id]
       env = KTEnvironment.find(environment_id)
       if product_id = filter[:product_id]
