@@ -15,20 +15,17 @@ require 'resources/pulp' if AppConfig.katello?
 class Api::SyncController < Api::ApiController
 
   before_filter :find_object, :only => [:index, :create, :cancel]
+  before_filter :ensure_locker, :only => [:create]
   respond_to :json
 
   # TODO: define authorization rules
   skip_before_filter :authorize
 
   def index
-    # GET /repositories/<id>/sync/
-    # get most recent sync status(es)
     render :json => @obj.latest_sync_statuses
   end
 
   def create
-    # POST /repositories/<id>/sync/
-    # start syncing
     async_jobs = @obj.sync
     to_return = async_jobs.collect do |pulp_task|
       ts = PulpSyncStatus.using_pulp_task(pulp_task) {|t| t.organization = @obj.organization}
@@ -40,8 +37,6 @@ class Api::SyncController < Api::ApiController
   end
 
   def cancel
-    # DELETE /repositories/<id>/sync/
-    # cancel the latest sync action
     @obj.cancel_sync
     render :text => "cancelled synchronization of #{@sync_of}: #{@obj.id}", :status => 200
   end
@@ -59,9 +54,8 @@ class Api::SyncController < Api::ApiController
   end
 
   def find_repository
-    @repository = Glue::Pulp::Repo.find(params[:repository_id])
+    @repository = Repository.find(params[:repository_id])
     raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:repository_id]}'") if @repository.nil?
-    raise HttpErrors::NotFound, _("You can only synchronize repositories in locker environment'") if not @repository.environment.locker?
     @repository
   end
 
@@ -80,5 +74,12 @@ class Api::SyncController < Api::ApiController
     end
     @obj
   end
+
+  def ensure_locker
+    if @sync_of == 'repository'
+      raise HttpErrors::NotFound, _("You can synchronize repositories only in locker environment'") if not @obj.environment.locker?
+    end
+  end
+
 
 end

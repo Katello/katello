@@ -20,7 +20,7 @@ class Api::PackagesController < Api::ApiController
   skip_before_filter :authorize
 
   def index
-    packages = Pulp::Repository.packages(params[:repository_id])
+    packages = Repository.find(params[:repository_id]).packages
     render :json => packages
   end
 

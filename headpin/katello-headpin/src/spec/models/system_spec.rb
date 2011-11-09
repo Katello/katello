@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
+require 'helpers/system_test_data'
 include OrchestrationHelper
 
 describe System do
@@ -100,7 +101,7 @@ describe System do
     end
 
     it "should call Candlepin::Consumer.update" do
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, facts).and_return(true)
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, facts, nil).and_return(true)
       @system.save!
     end
 s  end
@@ -200,4 +201,34 @@ s  end
     end
   end
 
+  describe "host-guest relation" do
+
+    context "guest system" do
+      before { Candlepin::Consumer.stub(:host => nil, :guests => []) }
+
+      it "should get host system" do
+        Candlepin::Consumer.should_receive(:host).with(@system.uuid).and_return(SystemTestData.host)
+        @system.host.name.should == SystemTestData.host["name"]
+      end
+    end
+
+    context "host system" do
+      before { Candlepin::Consumer.stub(:host => nil, :guests => []) }
+
+      it "should get guest systems" do
+        Candlepin::Consumer.should_receive(:guests).with(@system.uuid).and_return(SystemTestData.guests)
+        guests = @system.guests
+        guests.should have(1).system
+        guests.first.name.should == SystemTestData.guests.first["name"]
+      end
+    end
+
+    context "guest without host (before running virt-who)" do
+      it "should return no host" do
+        Candlepin::CandlepinResource.stub(:default_headers => {}, :get => MemoStruct.new(:code => 204, :body => ""))
+        @system.host.should_not be
+      end
+    end
+
+  end
 end
