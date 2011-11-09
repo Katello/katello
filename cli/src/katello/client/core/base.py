@@ -74,8 +74,17 @@ class Command(object):
                  'Supported Actions:']
         for name in self._action_order:
             action = self._actions[name]
-            lines.append('\t%-14s %-25s' % (name, action.description))
+            lines += self.__build_action_usage_lines(action)
         return '\n'.join(lines)
+
+    def __build_action_usage_lines(self, action):
+        lines = []
+        desc_lines = action.description.split("\n")
+        
+        lines.append('\t%-14s %s' % (action.name, desc_lines.pop(0)) )
+        for l in desc_lines:
+            lines.append('\t%-14s %s' % (" ", l) )
+        return lines
 
     @property
     def description(self):

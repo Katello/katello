@@ -46,7 +46,9 @@ class Status(PingAction):
         return 0
 
     def run(self):
+        
         status = self.api.ping()
+
 
         self.printer.addColumn('status')
         self.printer.addColumn('service')
@@ -56,24 +58,63 @@ class Status(PingAction):
 
         self.printer.setHeader(_("Katello Status"))
 
-        details = status["status"]
+        statusList = self.__statusToList(status)
+        self.printer.printItems(statusList)
+        
+        return self.__returnCode(status)
 
+
+    def __returnCode(self, status):
+        """
+        Creates a return code according to returned statuses.
+        Error codes (combination by bitwise or):
+            candlepin:      2
+            candlepin_auth: 4
+            pulp:           8
+            pulp_auth:     16
+        """
+        if status['result'] == 'ok':
+            return 0
+            
+        code = 0
+        for serviceName, serviceStatus in self.__sortedStatuses(status, reverse=True):
+            if serviceStatus['result'] != 'ok':
+                code += 1
+            code = code << 1
+        return code
+
+
+    def __statusToList(self, status):
         statusList = []
+        statusList.append(self.__buildOverallStatusDetail(status))
 
+        for serviceName, serviceStatus in self.__sortedStatuses(status):            
+            statusList.append(self.__buildServiceStatusDetail(serviceName, serviceStatus))            
+        return statusList
+
+
+    def __sortedStatuses(self, status, reverse = False):
+        for serviceName in sorted(status["status"].keys(), reverse=reverse):
+            serviceStatus = status["status"][serviceName]
+            
+            yield (serviceName, serviceStatus)
+
+
+    def __buildOverallStatusDetail(self, status):
         detail = {}
         detail['status']  = status["result"]
-        statusList.append(detail)
+        return detail
 
-        for key in details.keys():
-            detail = details[key]
-            detail['service'] = key
 
-            if "duration_ms" in detail:
-                detail["duration"] = detail["duration_ms"] + "ms"
-            statusList.append(detail)
+    def __buildServiceStatusDetail(self, serviceName, serviceStatus):
+        detail = serviceStatus
+        detail['service'] = serviceName
 
-        self.printer.printItems(statusList)
-        return os.EX_OK
+        if "duration_ms" in detail:
+            detail["duration"] = detail["duration_ms"] + "ms"
+            
+        return detail
+        
 
 # ping command ------------------------------------------------------------
 

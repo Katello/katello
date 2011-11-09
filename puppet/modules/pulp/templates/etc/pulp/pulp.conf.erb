@@ -8,12 +8,12 @@
 # Highly recommend changing the default_password with "pulp-admin user update"
 #
 [server]
-server_name: <%= fqdn %>
+server_name: <%= defined? fqdn ? hostname : fqdn %>
 relative_url: /pulp/repos
 key_url: /pulp/gpg
 ks_url: /pulp/ks
-default_login: admin
-default_password: admin
+default_login: <%= scope.lookupvar("pulp::params::pulp_user_name") %> 
+default_password: <%= scope.lookupvar("pulp::params::pulp_user_pass") %>
 
 # Messaging options.
 #
@@ -89,10 +89,26 @@ num_old_pkgs_keep: 2
 # 0 represents unlimited
 # limit_in_KB: 500
 # Uncomment the below section with appropriate values for proxy configuration
+<% if scope.lookupvar("pulp::params::pulp_proxy_url") == "NONE" %> 
 # proxy_url:
+<% else %>
+proxy_url: <%= scope.lookupvar("pulp::params::pulp_proxy_url") %>
+<% end %>
+<% if scope.lookupvar("pulp::params::pulp_proxy_port") == "NONE" %>
 # proxy_port:
+<% else %>
+proxy_port: <%= scope.lookupvar("pulp::params::pulp_proxy_port") %>
+<% end %>
+<% if scope.lookupvar("pulp::params::pulp_proxy_user") == "NONE" %>
 # proxy_user:
+<% else %>
+proxy_user: <%= scope.lookupvar("pulp::params::pulp_proxy_user") %>
+<% end %>
+<% if scope.lookupvar("pulp::params::pulp_proxy_pass") == "NONE" %>
 # proxy_pass:
+<% else %>
+proxy_pass: <%= scope.lookupvar("pulp::params::pulp_proxy_pass") %>
+<% end %>
 
 [repos]
 content_url: https://cdn.redhat.com/

@@ -17,4 +17,13 @@ class pulp::params {
   $oauth_key = $katello::params::oauth_key
   $oauth_secret = $katello::params::oauth_secret
 
+  #Initial pulp administrative user/pass
+  $pulp_user_name = $katello::params::user_name
+  $pulp_user_pass = $katello::params::user_pass
+
+  #Pulp HTTP Proxy configuration
+  $pulp_proxy_url = $katello::params::proxy_url
+  $pulp_proxy_port = $katello::params::proxy_port
+  $pulp_proxy_user = $katello::params::proxy_user
+  $pulp_proxy_pass = $katello::params::proxy_pass
 }

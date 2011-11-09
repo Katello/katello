@@ -15,6 +15,13 @@ KT.panel.list.registerPage('providers', { create : 'new_provider' });
 
 $(document).ready(function() {
 
+  $("#redhatSubscriptionTable").treeTable({
+    expandable: true,
+    initialState: "collapsed",
+    clickableNodeNames: true,
+    onNodeShow: function(){$.sparkline_display_visible()}
+  });
+
   $('#upload_button').live('submit', function(e) {
     // disable submit to avoid duplicate clicks
     $('input[id^=provider_submit]').attr("disabled", true);

@@ -114,6 +114,7 @@ class Info(ActivationKeyAction):
 
         keys = self.api.activation_keys_by_organization(organization['cp_key'], keyName)
         if len(keys) == 0:
+            print _("Could not find activation key [ %s ]") % keyName
             return os.EX_DATAERR
         for akey in keys:
             akey["pools"] = "[ "+ ", ".join([pool["cp_id"] for pool in akey["pools"]]) +" ]"

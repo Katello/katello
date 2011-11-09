@@ -1,5 +1,5 @@
 import unittest
-import copy
+from copy import deepcopy
 from mock import Mock
 
 import katello.client.core.utils
@@ -25,7 +25,7 @@ class CLITestCase(unittest.TestCase):
 
         #mock the function
         m = Mock()
-        m.return_value = copy.copy(return_value)
+        m.return_value = deepcopy(return_value)
         setattr(obj, property_name, m)
 
         return m

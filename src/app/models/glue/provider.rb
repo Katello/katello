@@ -157,6 +157,10 @@ module Glue::Provider
       Candlepin::Owner.import self.organization.cp_key, zip_file_path
     end
 
+    def owner_imports
+      Candlepin::Owner.imports self.organization.cp_key
+    end
+
     def queue_import_manifest zip_file_path
       queue.create(:name => "import manifest #{zip_file_path} for owner: #{self.organization.name}", :priority => 3, :action => [self, :owner_import, zip_file_path])
       queue.create(:name => "import of products in manifest #{zip_file_path}",                       :priority => 5, :action => [self, :import_products_from_cp])

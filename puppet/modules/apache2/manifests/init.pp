@@ -12,5 +12,4 @@ class apache2 {
     require     => Service["httpd"],
     refreshonly => true,
   }
-
 }

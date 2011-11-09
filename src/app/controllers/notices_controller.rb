@@ -21,7 +21,6 @@ class NoticesController < ApplicationController
 
   def notices_authorize
     user = current_user
-    user = User.anonymous unless user
     true
   end
 

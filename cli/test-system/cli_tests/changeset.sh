@@ -1,7 +1,5 @@
 #!/bin/bash
 
-require "repo"
-
 header "Changeset"
 
 # synchronize repo to load the packages
@@ -23,7 +21,6 @@ if ! jobs_running; then
 fi
 
 test_success "promote changeset with one product" changeset promote --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME"
-sleep 5 # sqlite concurrency workaround
 
 test_success "changeset create" changeset create --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2"
 test_success "changeset add package"  changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --from_product="$FEWUPS_PRODUCT" --add_package="cheetah"
@@ -32,13 +29,13 @@ test_success "changeset add repo"     changeset update  --org="$TEST_ORG" --envi
 
 test_success "changeset promote" changeset promote --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2"
 
+test_success "changeset list" changeset list --org="$TEST_ORG" --environment="$TEST_ENV"
+test_success "changeset info" changeset info --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME"
+
 test_success "changeset remove product"  changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME" --remove_product="$FEWUPS_PRODUCT"
 test_success "changeset remove package"  changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --from_product="$FEWUPS_PRODUCT" --remove_package="cheetah"
 test_success "changeset remove erratum"  changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --from_product="$FEWUPS_PRODUCT" --remove_erratum="RHEA-2010:9984"
 test_success "changeset remove repo"     changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_2" --from_product="$FEWUPS_PRODUCT" --remove_repo="$REPO_NAME"
-
-test_success "changeset list" changeset list --org="$TEST_ORG" --environment="$TEST_ENV"
-test_success "changeset info" changeset info --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME"
 
 #promote template with product and package
 PROM_TEMPLATE_NAME="promotion_test_tpl_$RAND"

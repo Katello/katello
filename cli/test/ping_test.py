@@ -1,0 +1,51 @@
+import unittest
+import os
+from mock import Mock
+from copy import deepcopy
+
+from cli_test_utils import CLIOptionTestCase, CLIActionTestCase
+import test_data
+
+import katello.client.core.ping
+from katello.client.core.ping import Status
+
+
+
+class ProductListTest(CLIActionTestCase):
+
+
+    def setUp(self):
+        self.set_action(Status())
+        self.set_module(katello.client.core.ping)
+
+        self.mock(self.action.api, 'ping', test_data.PING_STATUS)
+        self.mock_printer()
+
+
+    def test_calls_the_api(self):
+        self.action.run()
+        self.action.api.ping.assert_called_once()
+
+    def test_it_returns_correct_error_code_when_all_systems_up(self):
+        self.assertEqual(self.action.run(), os.EX_OK)
+
+    def test_it_returns_correct_error_codes(self):
+        self.check_return_code(['candlepin'], 2)
+        self.check_return_code(['candlepin_auth'], 4)
+        self.check_return_code(['pulp'], 8)
+        self.check_return_code(['pulp_auth'], 16)
+
+        self.check_return_code(['candlepin', 'candlepin_auth'], 6)
+        self.check_return_code(['pulp', 'pulp_auth'], 24)
+
+        self.check_return_code(['candlepin', 'candlepin_auth', 'pulp', 'pulp_auth'], 30)
+
+    def check_return_code(self, failed_services, expected_code):
+        status = deepcopy(test_data.PING_STATUS)
+        for s in failed_services:
+            status['status'][s]['result'] = 'failed'
+        
+        self.mock(self.action.api, 'ping', status)
+        
+        self.assertEqual(self.action.run(), expected_code)
+
