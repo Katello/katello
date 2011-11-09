@@ -140,7 +140,8 @@ private
   def format_sync_progress(sync_status, repo)
     not_running_states = [PulpSyncStatus::Status::FINISHED,
                           PulpSyncStatus::Status::ERROR,
-                          PulpSyncStatus::Status::CANCELED]
+                          PulpSyncStatus::Status::CANCELED,
+                          PulpSyncStatus::Status::NOT_SYNCED]
     {   :id         => repo.id,
         :product_id => repo.product.id,
         :progress   => calc_progress(sync_status),

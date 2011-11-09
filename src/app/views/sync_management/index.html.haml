@@ -28,16 +28,22 @@
 
 
 
-    .actions
+    .list_actions
       - if @sproducts.length > 0
         .grid_2
-          %a{:id=>"select_none", :class=>"fl" }
+          %a#select_none.fl
             #{_("Select None")}
         .grid_2
-          %a{:id=>"select_all", :class=>"fl" }
+          %a#select_all.fl
             #{_("Select All")}
       .grid_3
-        %a{:id=>"toggle_all", :class=>"fl" }
-          #{_("Expand/Contract All")}
+        %input#sync_toggle{:type=>'checkbox'}
+        %label{:for=>"sync_toggle"}
+          #{_('Only show syncing.')}
+
+
+      -#.grid_3
+      -#  %a{:id=>"toggle_all", :class=>"fl" }
+      -#    #{_("Expand/Contract All")}
       - if @sproducts.length > 0
         = submit_tag _('Synchronize Now'), :class => 'dialogbutton fr', :id => 'sync_button'

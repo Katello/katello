@@ -11,10 +11,6 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-function getProductId(field) {
-    var prod_id = field.parent().attr('id').replace(/[^\d]+/,'');
-    return prod_id;
-}
 
 $(document).ready(function() {
 
@@ -30,10 +26,7 @@ $(document).ready(function() {
     KT.content_actions.addSyncing(ids);
 
 
-    $("#products_table").treeTable({
-        clickableNodeNames: true,
-        indent: 15
-    });
+    KT.content.showAll();
 
 
     $('#select_all').click(KT.content.select_all);
@@ -43,7 +36,7 @@ $(document).ready(function() {
 
     $("#products_table").delegate(".cancel_sync", "click", function(){
     var repo_id = $(this).parents("tr").attr("data-id");
-    KT.actions.cancelSync(repo_id, $(this));
+    KT.actions.cancelSyncgetProductId(repo_id, $(this));
     });
 
     $('#sync_product_form').bind("ajax:success",
@@ -58,7 +51,20 @@ $(document).ready(function() {
        KT.content_actions.addSyncing(ids);
 
     });
-  
+
+
+    $("#sync_toggle").change(function(){
+        var img = "<img  src='" + KT.common.spinner_path() + "'>";
+        $("#list_actions").append(img);
+        if ($(this).is(":checked")){
+            KT.content.showOnlySyncing();
+        }
+        else {
+            KT.content.showAll();
+        }
+        $("#list_actions").find("img").remove();
+    });
+
   
 });
 
@@ -241,7 +247,34 @@ KT.content = (function(){
 
             });
 
+        },
+        showOnlySyncing = function(){
+            $("#products_table").find("tbody").find("tr").hide();
+            $.each(KT.content_actions.getSyncing(), function(index, repoid){
+                var repo = $("#repo-" + repoid);
+                showChain(repo);
+
+
+            });
+        },
+        showChain = function(element){
+            element.show().addClass("expanded").removeClass("collapsed");
+            $.each(element.attr("class").split(" "), function(index, claz){
+                if (claz.indexOf("child-of-") === 0){
+                    var found = claz.split("child-of-")[1];
+                    showChain($("#" + found));
+                }
+            });
+        },
+        showAll = function(){
+            var rows = $("#products_table").find("tbody").find("tr").show().removeClass("expanded").addClass("collapsed");
+
+            $("#products_table").treeTable({
+                clickableNodeNames: true,
+                indent: 15
+            });
         };
+
     
     return {
         cancelRepo: cancelRepo,
@@ -251,6 +284,8 @@ KT.content = (function(){
         select_all : select_all,
         select_none: select_none,
         draw_syncing: draw_syncing,
-        reset_products: reset_products
+        reset_products: reset_products,
+        showOnlySyncing: showOnlySyncing,
+        showAll: showAll
     }
 })();
