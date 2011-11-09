@@ -30,11 +30,11 @@
     .grid_5.la
       - if @environment.nil?
         #env_box
-          #{_("No environments are currently available in this organization.  Please add some to be able to create users.")}
+          #{_("No environments are currently available in this organization.  Please add some to be able to set default.")}
       - else
         #env_box
           = environment_selector(:path_widget_class=>"grid_5", :path_entries_class=>"grid_5", :locker_clickable=>false,
-            :accessible_envs=>accessible_envs, :url_templates_proc=>url_templates_proc)
+            :accessible_envs=>accessible_envs)
     .clear
       &nbsp;
     .grid_5.la.prefix_3

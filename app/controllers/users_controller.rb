@@ -127,22 +127,20 @@ class UsersController < ApplicationController
   def edit_environment
     if @user.has_default_env?
       @old_perm = Permission.find_all_by_role_id(@user.own_role.id)[0]
-      @old_env = @user.default_environment
-      @organization = Organization.find(@old_env.attributes['organization_id'])
+      @environment = @user.default_environment
+      @old_env = @environment
+      @organization = Organization.find(@environment.attributes['organization_id'])
     else
       @organization = current_organization
     end
     accessible_envs = KTEnvironment.systems_registerable(@organization)
     setup_environment_selector(@organization, accessible_envs)
-    @environment = first_env_in_path(accessible_envs, false, @organization)
-    #accessible_envs = current_organization.environments
-    #setup_environment_selector(current_organization, accessible_envs)
-    #@environment = first_env_in_path(accessible_envs)
+    #@environment = first_env_in_path(accessible_envs, false, @organization)
+
     render :partial=>"edit_environment", :layout => "tupane_layout", :locals=>{:user=>@user,
                                                                    :editable=>@user.editable?,
                                                                    :name=>controller_display_name,
                                                                    :accessible_envs => accessible_envs}
-
   end
 
   def update_environment
