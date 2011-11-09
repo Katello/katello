@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.10
+Version:        0.1.11
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -52,6 +52,17 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Wed Nov 09 2011 Clifford Perry <cperry@redhat.com> 0.1.11-1
+- Expose HTTP Proxy configuration within the katello-configure installation
+  process. (cperry@redhat.com)
+- 751132 - force restart of httpd to occurr post pulp-migrate, but before
+  katellos rake db:seed (cperry@redhat.com)
+- Minor change to katello-configure for db seed log size to expect for
+  installation (cperry@redhat.com)
+- 752058 - Could not find value for 'fqdn' (lzap+git@redhat.com)
+- Ehnahce the org name changes to not require pulp for headpin installs
+  (bkearney@redhat.com)
+
 * Fri Nov 04 2011 Clifford Perry <cperry@redhat.com> 0.1.10-1
 - Adding support to katello-configure for initial user/pass & org
   (cperry@redhat.com)
