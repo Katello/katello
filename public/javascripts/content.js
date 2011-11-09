@@ -31,8 +31,7 @@ $(document).ready(function() {
 
     $('#select_all').click(KT.content.select_all);
     $('#select_none').click(KT.content.select_none);
-    //$('#toggle_all').click(function(){$('tr').show(); });
-
+    $("input[name='repoids']:checkbox").click(KT.content.select_repo);
 
     $("#products_table").delegate(".cancel_sync", "click", function(){
         var repo_id = $(this).parents("tr").attr("data-id");
@@ -239,9 +238,16 @@ KT.content = (function(){
         },
         select_all = function(){
             $("#products_table").find("input[type=checkbox]").attr('checked',true);
+            $("#sync_button").removeClass("disabled");
         },
         select_none = function(){
             $("#products_table").find("input[type=checkbox]").removeAttr('checked');
+            $("#sync_button").addClass("disabled");
+        },
+        select_repo = function(){
+            $("input[name='repoids']:checked").length > 0 ? 
+                $("#sync_button").removeClass("disabled") : 
+                $("#sync_button").addClass("disabled");
         },
         reset_products = function(status_set){
             var products = {};
@@ -297,6 +303,7 @@ KT.content = (function(){
         finishRepo: finishRepo,
         select_all : select_all,
         select_none: select_none,
+        select_repo: select_repo,
         draw_syncing: draw_syncing,
         reset_products: reset_products,
         showOnlySyncing: showOnlySyncing,
