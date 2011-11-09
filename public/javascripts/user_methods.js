@@ -96,7 +96,7 @@ KT.user_page = function() {
             button.addClass('disabled');
             var username = $('#username_field').val();
             var password = $('#password_field').val();
-            var env_id = $(".path_link, active").attr('data-env_id');
+            var env_id = $(".path_link.active").attr('data-env_id');
             $.ajax({
                 type: "POST",
                 url: button.attr('data-url'),
@@ -134,7 +134,7 @@ KT.user_page = function() {
         var button = $(this);
         var url = button.attr("data-url");
         var password = $('#password_field').val();
-        var env_id = $(".path_link, active").attr('data-env_id');
+        var env_id = $(".path_link.active").attr('data-env_id');
         button.addClass("disabled");
         $.ajax({
             type: "PUT",
