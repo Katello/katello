@@ -22,7 +22,7 @@ module Glue::Candlepin::Consumer
       before_save :save_candlepin_orchestration
       before_destroy :destroy_candlepin_orchestration
 
-      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created,
+      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds,
         :initializer => lambda {
                           if uuid
                             consumer_json = Candlepin::Consumer.get(uuid)
@@ -76,10 +76,8 @@ module Glue::Candlepin::Consumer
     end
 
     def update_candlepin_consumer
-      return true if @facts.nil?
-
       Rails.logger.info "Updating consumer in candlepin: #{name}"
-      Candlepin::Consumer.update(self.uuid, self.facts)
+      Candlepin::Consumer.update(self.uuid, @facts, @guestIds)
     rescue => e
       Rails.logger.error "Failed to update candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -193,6 +191,17 @@ module Glue::Candlepin::Consumer
       @facts ||= {}
       facts["virt.is_guest"] = val
 
+    end
+
+    def host
+      host_attributes = Candlepin::Consumer.host(self.uuid)
+      System.new(host_attributes) if host_attributes
+    end
+
+    # returns systems that are guests for this host
+    def guests
+      guests_attributes = Candlepin::Consumer.guests(self.uuid)
+      guests_attributes.map { |attr| System.new(attr) }
     end
 
     def name=(val)

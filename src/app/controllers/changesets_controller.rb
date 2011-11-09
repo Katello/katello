@@ -203,8 +203,8 @@ class ChangesetsController < ApplicationController
             ChangesetPackage.destroy_all(:package_id =>id, :changeset_id => @changeset.id) if !adding
 
           when "repo"
-              @changeset.repos << ChangesetRepo.new(:repo_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding
-              ChangesetRepo.destroy_all(:repo_id =>id, :changeset_id => @changeset.id) if !adding
+              @changeset.repos << Repository.find(id) if adding
+              @changeset.repos.delete(Repository.find(id)) if !adding
 
           when "distribution"
               @changeset.distributions << ChangesetDistribution.new(:distribution_id=>id, :display_name=>name, :product_id => pid, :changeset => @changeset) if adding

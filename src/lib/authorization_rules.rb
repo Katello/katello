@@ -20,7 +20,7 @@ module AuthorizationRules
   def authorize(ctrl = params[:controller], action = self.action_name)
 
     user = current_user
-    user = User.anonymous unless user
+    raise StandardError, "Current user not set" unless user
     logger.debug "Authorizing #{current_user.username} for #{ctrl}/#{action}"
 
     allowed = false

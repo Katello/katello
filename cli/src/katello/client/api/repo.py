@@ -31,9 +31,14 @@ class RepoAPI(KatelloAPI):
         result_list = self.server.GET(path)[1]
         return result_list
 
-    def repos_by_env_product(self, envId, productId):
+    def repos_by_env_product(self, envId, productId, name=None):
         path = "/api/environments/%s/products/%s/repositories" % (envId, productId)
-        result_list = self.server.GET(path)[1]
+        
+        search_params = {}
+        if name != None:
+            search_params['name'] = name
+            
+        result_list = self.server.GET(path, search_params)[1]
         return result_list
 
     def repos_by_product(self, productId):

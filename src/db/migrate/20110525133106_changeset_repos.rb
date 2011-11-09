@@ -1,14 +1,12 @@
 class ChangesetRepos < ActiveRecord::Migration
   def self.up
-    create_table :changeset_repos do |t|
-       t.integer :changeset_id
-       t.string :repo_id
-       t.string :display_name
-       t.references :product, :null=>false
+    create_table :changesets_repositories, :id => false do |t|
+       t.references :changeset, :null =>false
+       t.references :repository, :null=>false
     end
   end
 
   def self.down
-    drop_table :changeset_repos
+    drop_table :changesets_repositories
   end
 end

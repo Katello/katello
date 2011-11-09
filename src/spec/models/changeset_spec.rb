@@ -75,15 +75,16 @@ describe Changeset do
         @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM, :organization => @organization, :repository_url => "https://something.url/stuff")
 
         @prod = Product.new({:name => "prod"})
+
         @prod.provider = @provider
         @prod.environments << @organization.locker
         @prod.stub(:arch).and_return('noarch')
         @prod.save!
-
+        ep = EnvironmentProduct.find_or_create(@organization.locker, @prod)
         @pack = mock('Pack', {:id => 1, :name => 'pack'})
         @err  = mock('Err', {:id => 'err', :name => 'err'})
 
-        @repo = mock('Repo', {:id => 1, :name => 'repo'})
+        @repo = Repository.create!(:environment_product => ep, :name=> "repo", :pulp_id=>"1")
         @distribution = mock('Distribution', {:id=> 'some-distro-id'})
         @repo.stub(:distributions).and_return([@distribution])
         @repo.stub_chain(:distributions, :index).and_return([@distribution])
@@ -93,10 +94,10 @@ describe Changeset do
         @repo.stub(:has_erratum?).with('err').and_return(true)
         @repo.stub(:has_distribution?).with('some-distro-id').and_return(true)
         @repo.stub(:clone_ids).and_return([])
-
-        @prod.stub(:repos).and_return([@repo])
         Product.stub(:find).and_return(@prod)
 
+        @prod.stub(:repos).and_return([@repo])
+        @prod.stub_chain(:repos, :where).and_return([@repo])
         @environment.prior.stub(:products).and_return([@prod])
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
       end
@@ -193,10 +194,12 @@ describe Changeset do
         @prod.stub(:arch).and_return('noarch')
         @prod.save!
 
+        ep = EnvironmentProduct.find_or_create(@organization.locker, @prod)
         @pack = mock('Pack', {:id => 1, :name => 'pack'})
         @err  = mock('Err', {:id => 'err', :name => 'err'})
 
-        @repo = mock('Repo', {:id => 1, :name => 'repo'})
+        @repo = Repository.create!(:environment_product => ep, :name=> "repo", :pulp_id=>"1")
+
         @distribution = mock('Distribution', {:id=> 'some-distro-id'})
         @repo.stub(:distributions).and_return([@distribution])
         @repo.stub(:packages).and_return([@pack])
@@ -204,6 +207,7 @@ describe Changeset do
         @repo.stub(:clone_ids).and_return([])
 
         @prod.stub(:repos).and_return([@repo])
+        @prod.stub_chain(:repos, :where).and_return([@repo])
 
         @changeset.products = [@prod]
 
@@ -227,7 +231,7 @@ describe Changeset do
       end
 
       it "should remove repo" do
-        ChangesetRepo.should_receive(:destroy_all).with(:repo_id => 1, :changeset_id => @changeset.id, :product_id => @prod.id).and_return(true)
+        @changeset.repos.should_receive(:delete).with(@repo).and_return(true)
         @changeset.remove_repo("repo", "prod")
       end
 
@@ -254,10 +258,10 @@ describe Changeset do
         @pack = mock('Pack', {:id => 1, :name => 'pack'})
         @err  = mock('Err', {:id => 'err', :name => 'err'})
         @distribution = mock('Distribution', {:id=> 'some-distro-id'})
-
-        @repo = mock('Repo', {:id => 1, :name => 'repo'})
-        @repo.stub(:distributions).and_return([@distribution])
+        ep = EnvironmentProduct.find_or_create(@organization.locker, @prod)
+        @repo = Repository.create!(:environment_product => ep, :name=>'repo', :pulp_id=>"1")
         @repo.stub_chain(:distributions, :index).and_return([@distribution])
+        @repo.stub(:distributions).and_return([@distribution])
         @repo.stub(:packages).and_return([@pack])
         @repo.stub(:errata).and_return([@err])
         @repo.stub(:promote).and_return([])
@@ -268,7 +272,8 @@ describe Changeset do
 
         @repo.stub(:is_cloned_in?).and_return(true)
         @repo.stub(:clone_ids).and_return([])
-        Glue::Pulp::Repo.stub(:find).and_return(@repo)
+        Repository.stub(:find_by_pulp_id).and_return(@repo)
+
 
         @clone = mock('Repo', {:id => 2, :name => 'repo_clone'})
         @clone.stub(:has_package?).and_return(false)
@@ -278,11 +283,14 @@ describe Changeset do
         @repo.stub(:get_clone).and_return(@clone)
         @repo.stub(:get_cloned_in).and_return(nil)
         @prod.stub(:repos).and_return([@repo])
+        @prod.stub(:repos).and_return([@repo])
+        @prod.stub_chain(:repos, :where).and_return([@repo])
 
         @environment.prior.stub(:products).and_return([@prod])
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
         @changeset.stub(:wait_for_tasks).and_return(nil)
         @changeset.stub(:calc_dependencies).and_return([])
+
       end
 
       it "should fail if the product is not in the review phase" do
@@ -300,12 +308,11 @@ describe Changeset do
 
       it "should promote repositories" do
         @prod.environments << @environment
-        @changeset.repos << ChangesetRepo.new(:repo_id => @repo.id, :display_name => 'repo', :product_id => @prod.id, :changeset => @changeset)
         @changeset.state = Changeset::REVIEW
 
         @repo.stub(:is_cloned_in?).and_return(false)
         @repo.stub(:get_clone).and_return(nil)
-
+        @changeset.stub(:repos).and_return([@repo])
         @repo.should_receive(:promote).once
 
         @changeset.promote(false)
@@ -313,9 +320,8 @@ describe Changeset do
 
       it "should synchronize repositories that have been promoted" do
         @prod.environments << @environment
-        @changeset.repos << ChangesetRepo.new(:repo_id => @repo.id, :display_name => @repo.name, :product_id => @prod.id, :changeset => @changeset)
         @changeset.state = Changeset::REVIEW
-
+        @changeset.stub(:repos).and_return([@repo])
         @repo.stub(:is_cloned_in?).and_return(true)
         @repo.stub(:get_clone).and_return(@clone)
         @clone.should_receive(:sync).once.and_return([])

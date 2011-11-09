@@ -42,7 +42,7 @@ describe KTEnvironment do
     @first_product.save!
     @second_product.save!
     @third_product.save!
-    
+    @fourth_product.save!
   end
 
   specify { @environment.name.should == @env_name }

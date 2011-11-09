@@ -96,6 +96,7 @@ class Api::SystemsController < Api::ApiController
     @system.name = params[:name] if params[:name]
     @system.location = params[:location] if params[:location]
     @system.facts = params[:facts] if params.has_key?(:facts)
+    @system.guestIds = params[:guestIds] if params.has_key?(:guestIds)
     
     @system.save!
     render :json => @system.to_json

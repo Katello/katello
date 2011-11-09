@@ -25,6 +25,7 @@ class Api::ErrataController < Api::ApiController
       raise HttpErrors::BadRequest.new(_("Repo id or environment must be provided"))
     end
     render :json => Glue::Pulp::Errata.filter(filter)
+
   end
 
   def show
