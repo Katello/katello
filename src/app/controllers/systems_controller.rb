@@ -192,7 +192,8 @@ class SystemsController < ApplicationController
     else
       packages = []
     end
-    render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages, :offset => offset}
+    render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages,
+                                                                       :offset => offset, :editable => @system.editable?}
   end
 
   def more_packages
