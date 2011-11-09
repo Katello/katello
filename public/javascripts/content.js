@@ -35,8 +35,8 @@ $(document).ready(function() {
 
 
     $("#products_table").delegate(".cancel_sync", "click", function(){
-    var repo_id = $(this).parents("tr").attr("data-id");
-    KT.actions.cancelSyncgetProductId(repo_id, $(this));
+        var repo_id = $(this).parents("tr").attr("data-id");
+        KT.content_actions.cancelSync(repo_id, $(this));
     });
 
     $('#sync_product_form').bind("ajax:success",
@@ -55,14 +55,14 @@ $(document).ready(function() {
 
     $("#sync_toggle").change(function(){
         var img = "<img  src='" + KT.common.spinner_path() + "'>";
-        $("#list_actions").append(img);
+        $("#sync_toggle_cont").append(img);
         if ($(this).is(":checked")){
             KT.content.showOnlySyncing();
         }
         else {
             KT.content.showAll();
         }
-        $("#list_actions").find("img").remove();
+        $("#sync_toggle_cont").find("img").remove();
     });
 
   
@@ -96,18 +96,16 @@ KT.content_actions = (function(){
     getSyncing = function(){
         return syncing;
     },
-    cancelSync = function(repo_id, btn){
-        btn.addClass("disabled");
-        
+    cancelSync = function(repo_id){
         $.ajax({
           type: 'DELETE',
           url: KT.routes.sync_management_path(repo_id),
           dataType: 'json',
           success: function(data) {
+            removeSyncing(repo_id);
             KT.content.cancelRepo(repo_id);
           },
           error: function(data) {
-            btn.removeClass("disabled");
           }
         });
     },
@@ -183,8 +181,24 @@ KT.content = (function(){
             fadeUpdate(element.find(".duration"), duration);
         },
         cancelRepo = function(repo_id){
-            //TODO handle product
-            fadeUpdate($("#repo-" + repo_id).find(".result"), i18n.cancelled);
+            var repo = $("#repo-" + repo_id);
+            var prod_id = repo.attr("data-product_id");
+            var repos = [];
+            fadeUpdate(repo.find(".result"), i18n.cancelled);
+            $.each(KT.content_actions.getSyncing(), function(index, tmp_repo){
+                if (prod_id === $("#repo-" + tmp_repo).attr("data-product_id")){
+                    repos.push(tmp_repo);
+                }
+            });
+
+            //if no more repos are syncing of this product, update product to be complete
+            if(repos.length === 0){
+                $("#product-" + prod_id).find(".result").html("");
+            }
+            else {
+                //else do nothing and wait for next status update.
+            }
+
         },
         update_item = function(element, starttime, duration, progress, size, packages) {
             fadeUpdate(element.find(".start_time"), starttime);
