@@ -193,6 +193,17 @@ module Glue::Candlepin::Consumer
 
     end
 
+    def host
+      host_attributes = Candlepin::Consumer.host(self.uuid)
+      System.new(host_attributes) if host_attributes
+    end
+
+    # returns systems that are guests for this host
+    def guests
+      guests_attributes = Candlepin::Consumer.guests(self.uuid)
+      guests_attributes.map { |attr| System.new(attr) }
+    end
+
     def name=(val)
       super(val)
       @facts ||= {}
