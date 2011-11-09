@@ -110,11 +110,9 @@ class SyncManagementController < ApplicationController
 
 
   def destroy
-    retval = Pulp::Repository.cancel(params[:id], params[:id])
-    cancel =  {:sync_id => retval[:id], :state => retval[:state] }
-    respond_with (cancel) do |format|
-      format.js { render :json => cancel.to_json, :status => :ok }
-    end
+    retval = Repository.find(params[:id]).cancel_sync
+    render :text=>""
+
   end
 
 
@@ -123,7 +121,7 @@ class SyncManagementController < ApplicationController
 private
 
   def find_provider
-    Repository.find(params[:repo]).product.provider
+    Repository.find(params[:repo] || params[:id]).product.provider
   end
 
   def find_providers

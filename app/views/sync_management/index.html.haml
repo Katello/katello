@@ -28,7 +28,7 @@
 
 
 
-    .list_actions
+    #list_actions
       - if @sproducts.length > 0
         .grid_2
           %a#select_none.fl
@@ -36,7 +36,7 @@
         .grid_2
           %a#select_all.fl
             #{_("Select All")}
-      .grid_3
+      #sync_toggle_cont.grid_3
         %input#sync_toggle{:type=>'checkbox'}
         %label{:for=>"sync_toggle"}
           #{_('Only show syncing.')}
