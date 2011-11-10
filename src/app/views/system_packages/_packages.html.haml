@@ -1,4 +1,4 @@
-= javascript :system_packages
+= javascript :form, :system_packages
 
 = content_for :title do
   #{@system.name}
@@ -15,35 +15,35 @@
       .summary_text.fl #{_("All Packages are up-to-date.")}
 
   - if packages.length > 0
-    %table.packages.ajaxScroll
-      %thead
-        %th{:colspan => 3}
-          %a#package_sort{"data-sort"=>"asc", :class=>"ascending"}
-            #{_("Name")}
-        %th
-          #{_("Date Added")}
-      %tbody
-        -packages.each do |p|
-          %tr
-            %td.package_select
-              = check_box_tag "subscription_id[#{p.id}]", false
-            %td.package_status.packages_icon
-            %td{:class=>"package"}
-              #{p.nvrea}
-            %td{:class=>"arch"}
-              TODO: installed date
+    .grid_8
+      = form_tag system_system_packages_path(@system.id), :id => "packages_form", :method => "post", :remote => true do
+        %table.packages.ajaxScroll
+          %thead
+            %th{:colspan => 3}
+              %a#package_sort{"data-sort"=>"asc", :class=>"ascending"}
+                #{_("Name")}
+            %th
+              #{_("Date Added")}
+          %tbody
+            -packages.each do |p|
+              %tr
+                %td.package_select
+                  = check_box_tag "package_id[#{p.id}]"
+                %td.package_status.packages_icon
+                %td{:class=>"package"}
+                  #{p.nvrea}
+                %td{:class=>"arch"}
+                  TODO: installed date
 
-    %a#more{"data-scroll_url"=>url_for(more_packages_system_system_packages_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("More...")}
+        %a#more{"data-scroll_url"=>url_for(more_packages_system_system_packages_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("More...")}
 
-    - if editable
-      .prefix_2.grid_6.ra
-        #update_key.button{}
-          #{_("Update")}
-        #remove_key.button{}
-          #{_("Remove")}
+        - if editable
+          .prefix_2.grid_6.ra
+            = submit_tag _("Update"), :class => 'button', :id => 'update_packages', 'data-url' => system_system_packages_path(@system.id)
+            = submit_tag _('Remove'), :class => 'button', :id => 'remove_packages', 'data-url' => remove_system_system_packages_path(@system.id)
 
-    #list-spinner
-      = image_tag("spinner.gif", :class=>"ajax_scroll")
+      #list-spinner
+        = image_tag("spinner.gif", :class=>"ajax_scroll")
 
   - else
     %p There are no packages to display.

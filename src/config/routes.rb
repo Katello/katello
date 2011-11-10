@@ -54,8 +54,11 @@ Src::Application.routes.draw do
   end
 
   resources :systems, :except => [:destroy] do
-    resources :system_packages do
+    resources :system_packages, :only => {} do
       collection do
+        put :add
+        post :remove
+        post :update
         get :packages
         get :more_packages
       end
