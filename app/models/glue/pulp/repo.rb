@@ -301,10 +301,10 @@ module Glue::Pulp::Repo
 
   def cancel_sync
     Rails.logger.info "Cancelling synchronization of repository #{self.pulp_id}"
-    history = @sync_status
-    return if (history.nil? or history.empty?)
+    history = self.sync_status
+    return if history.nil? || history.state == ::PulpSyncStatus::Status::NOT_SYNCED
 
-    Pulp::Repository.cancel(self.pulp_id, history.first.id)
+    Pulp::Repository.cancel(self.pulp_id, history)
   end
 
   def sync_finish
@@ -335,7 +335,7 @@ module Glue::Pulp::Repo
     
   def synced?
     sync_history = self.sync_status
-    !sync_history.nil? && !sync_history.empty? && successful_sync?(sync_history[0])
+    !sync_history.nil? && successful_sync?(sync_history)
   end
 
   def successful_sync?(sync_history_item)
