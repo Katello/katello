@@ -12,7 +12,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 %define base_name katello
-%global homedir %{_datarootdir}/%{name}
+%global homedir %{_datarootdir}/%{base_name}
 
 Name:          %{base_name}-cli-tests
 Summary:       System tests for Katello client package
@@ -34,20 +34,23 @@ application life-cycle for Linux systems
 
 
 %prep
+%setup -q
 
 %build
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d -m 755 $RPM_BUILD_ROOT%{homedir}/scripts/cli-tests
-cp -Rp cli_tests/ cli-system-test helpers *zip $RPM_BUILD_ROOT%{homedir}/scripts/cli-tests
+install -d -m 755 $RPM_BUILD_ROOT%{homedir}/script/cli-tests
+pwd
+ls
+cp -Rp cli_tests/ cli-system-test helpers *zip $RPM_BUILD_ROOT%{homedir}/script/cli-tests
 
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files 
-%attr(755,root,root) %{homedir}/scripts/cli-tests
+%{homedir}/script/cli-tests
 
 
 %changelog
