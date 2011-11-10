@@ -208,6 +208,30 @@ describe Product do
         Glue::Candlepin::Product.import_from_cp(ProductTestData::PRODUCT_WITH_CP_CONTENT)
       end
 
+      describe "product major/minor versions" do
+        before do
+          @substitutor_mock.stub!(:substitute_vars).and_return do |path|
+            ret = {}
+            [ {"releasever" => "6Server", "basearch" => "x86_64"},
+              {"releasever" => "6.0", "basearch" => "x86_64"},
+              {"releasever" => "6.1", "basearch" => "x86_64"}].each do |substitutions|
+              ret[substitutions] = substitutions.inject(path) {|new_path,(var,val)| new_path.gsub("$#{var}", val)}
+             end
+            ret
+          end
+          @product = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
+          @product.orchestration_for = :import_from_cp
+        end
+
+        it "should determine major and minor version of the product" do
+          Repository.should_receive(:create!).once.with(hash_including(:major => 6, :minor => '6Server'))
+          Repository.should_receive(:create!).once.with(hash_including(:major => 6, :minor => '6.0'))
+          Repository.should_receive(:create!).once.with(hash_including(:major => 6, :minor => '6.1'))
+          @product.save!
+          @product.setup_repos
+        end
+      end
+
       context "product has more archs" do
         after do
           @substitutor_mock.stub!(:substitute_vars).and_return do |path|

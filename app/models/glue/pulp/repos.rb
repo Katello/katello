@@ -308,10 +308,13 @@ module Glue::Pulp::Repos
           feed_url = repository_url(path)
           arch = substitutions["basearch"] || "noarch"
           repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
+          version = CDN::Utils.parse_version(substitutions["releasever"])
           begin
             env_prod = EnvironmentProduct.find_or_create(self.organization.locker, self)
             repo = Repository.create!(:environment_product=> env_prod, :pulp_id => repo_id(repo_name),
                                         :arch => arch,
+                                        :major => version[:major],
+                                        :minor => version[:minor],
                                         :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, repo_name),
                                         :name => repo_name,
                                         :feed => feed_url,
