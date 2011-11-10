@@ -208,30 +208,30 @@ describe Product do
         Glue::Candlepin::Product.import_from_cp(ProductTestData::PRODUCT_WITH_CP_CONTENT)
       end
 
-     context "product has more archs" do
-       after do
-         @substitutor_mock.stub!(:substitute_vars).and_return do |path|
-           ret = {}
-           [{"releasever" => "6Server", "basearch" => "i386"},
-            {"releasever" => "6Server", "basearch" => "x86_64"}].each do |substitutions|
-             ret[substitutions] = substitutions.inject(path) {|new_path,(var,val)| new_path.gsub("$#{var}", val)}
-            end
-           ret
-         end
+      context "product has more archs" do
+        after do
+          @substitutor_mock.stub!(:substitute_vars).and_return do |path|
+            ret = {}
+            [{"releasever" => "6Server", "basearch" => "i386"},
+             {"releasever" => "6Server", "basearch" => "x86_64"}].each do |substitutions|
+              ret[substitutions] = substitutions.inject(path) {|new_path,(var,val)| new_path.gsub("$#{var}", val)}
+             end
+            ret
+          end
 
-         p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
-         p.stub(:attrs => [{:name => 'arch', :value => 'x86_64,i386'}])
-         p.orchestration_for = :import_from_cp
-         p.save!
-         p.setup_repos
-       end
+          p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
+          p.stub(:attrs => [{:name => 'arch', :value => 'x86_64,i386'}])
+          p.orchestration_for = :import_from_cp
+          p.save!
+          p.setup_repos
+        end
 
-       it "should create repo for each arch" do
-        expected_feed = "#{@provider.repository_url}/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage/"
-        Repository.should_receive(:create!).once.with(hash_including(:feed => expected_feed, :name => 'some-name33 6Server x86_64'))
-        Repository.should_receive(:create!).once.with(hash_including(:name => 'some-name33 6Server i386'))
-       end
-     end
+        it "should create repo for each arch" do
+          expected_feed = "#{@provider.repository_url}/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage/"
+          Repository.should_receive(:create!).once.with(hash_including(:feed => expected_feed, :name => 'some-name33 6Server x86_64'))
+          Repository.should_receive(:create!).once.with(hash_including(:name => 'some-name33 6Server i386'))
+        end
+      end
 
     end
   end
