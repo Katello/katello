@@ -86,7 +86,7 @@ class KatelloCLI(object):
         lines.append('\t%-14s %s' % (command.name, desc_lines.pop(0)) )
         for l in desc_lines:
             lines.append('\t%-14s %s' % (" ", l) )
-            
+
         return lines
 
     def add_command(self, name, command):

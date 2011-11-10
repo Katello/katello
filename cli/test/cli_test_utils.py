@@ -77,7 +77,7 @@ class CLIActionTestCase(CLITestCase):
             return self._options[opt]
         except:
             return default
-            
+
     def mock_spinner(self):
         spinner = Mock()
         self.mock(spinner, "start")

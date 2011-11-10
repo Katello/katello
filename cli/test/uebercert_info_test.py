@@ -17,7 +17,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     def test_no_error_if_required_options_provided(self):
         self.action.process_options(['uebercert_info', '--name=org'])
         self.assertEqual(len(self.action.optErrors), 0)
-        
+
 class CreateUebercertTest(CLIActionTestCase):
     NAME = 'ORG'
 
@@ -25,9 +25,9 @@ class CreateUebercertTest(CLIActionTestCase):
         self.set_action(ShowDebugCert())
         self.set_module(katello.client.core.organization)
         self.mock_printer()
-        
+
         self.mock_options({ 'name': self.NAME })
-        
+
         self.action.api.uebercert = Mock()
 
     def tearDown(self):
