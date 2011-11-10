@@ -76,7 +76,7 @@ module Navigation
         },
         { :key => :packages,
           :name =>N_("Packages"),
-          :url => lambda{packages_system_path(@system.id)},
+          :url => lambda{packages_system_system_packages_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
         }
