@@ -115,7 +115,7 @@ function msg_status() {
 function test_cmd() {
     test_success=$1; shift
     test_name=$1; shift
-    
+
     if [ $PRINT_ALL -eq 1 ]; then
         echo $*
     fi
@@ -134,7 +134,7 @@ function test_cmd() {
         #command succeeded
         if [ $test_success -eq 1 ]; then status=1; else status=0; fi
     fi
-    
+
 
     if [ $status -eq 0 ]; then
         if [ $PRINT_ALL -eq 1 ]; then
