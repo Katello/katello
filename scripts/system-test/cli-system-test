@@ -14,7 +14,13 @@ export TESTDIR=$script_dir
 RAND=$(date | openssl md5 | cut -c10-16)
 USER='admin'
 PASSWORD='admin'
-CMD_NOUSER="$script_dir/../../cli/bin/katello"
+if [ -x "$script_dir/../../cli/bin/katello" ]; then
+    # running it from the git repo
+    CMD_NOUSER="$script_dir/../../cli/bin/katello"
+else
+    # running from rpm
+    CMD_NOUSER="katello"
+fi
 CMD="$CMD_NOUSER -u $USER -p $PASSWORD"
 TEST_DIR=$script_dir'/cli_tests/'
 
