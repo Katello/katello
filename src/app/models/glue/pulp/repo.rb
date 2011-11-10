@@ -304,7 +304,7 @@ module Glue::Pulp::Repo
     history = self.sync_status
     return if history.nil? || history.state == ::PulpSyncStatus::Status::NOT_SYNCED
 
-    Pulp::Repository.cancel(self.pulp_id, history)
+    Pulp::Repository.cancel(self.pulp_id, history.uuid)
   end
 
   def sync_finish
