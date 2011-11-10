@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.100
+Version:        0.1.101
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -324,6 +324,14 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Nov 10 2011 Shannon Hughes <shughes@redhat.com> 0.1.101-1
+- disable sync KBlimit (shughes@redhat.com)
+- repos - orchestration fix, 'del_content' was not returning true when there
+  was nothing to delete (tstrachota@redhat.com)
+- 746339 - System Validates on the uniqueness of name (lzap+git@redhat.com)
+- repos - orchestration fix, deleting a repo was not deleting the product
+  content (tstrachota@redhat.com)
+
 * Wed Nov 09 2011 Shannon Hughes <shughes@redhat.com> 0.1.100-1
 - virt-who - support host-guests systems relationship (inecas@redhat.com)
 - virt-who - support uploading the guestIds to Candlepin (inecas@redhat.com)
