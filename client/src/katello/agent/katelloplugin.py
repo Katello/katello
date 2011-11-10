@@ -116,26 +116,26 @@ class Packages:
     """
 
     @remote
-    def install(self, names, reboot=False, permissive=False):
+    def install(self, names, reboot=False, importkeys=False):
         """
         Install packages by name.
         @param names: A list of package names.
         @type names: [str,]
         @param reboot: Request reboot after packages are installed.
         @type reboot: bool
-        @param permissive: Assume YES to YUM prompts.
-        @type permissive: bool
-        @return: (installed, (reboot requested, delay))
-        @rtype: tuple
+        @param importkeys: Import GPG keys as needed.
+        @type importkeys: bool
+        @return: { installed : [], reboot_scheduled : <bool> }
+        @rtype: dict
         """
-        delay = None
         pkg = Package()
-        installed = pkg.install(names, permissive)
+        installed = pkg.install(names, importkeys)
         log.info('Packages installed: %s', installed)
-        if reboot and getbool(cfg.reboot.allow):
-            delay = cfg.reboot.delay
-            os.system('shutdown -h %s &' % delay)
-        return (installed, (reboot, delay))
+        if reboot and installed:
+            scheduled = self.reboot()
+        else:
+            scheduled = False
+        return dict(installed=installed, reboot_scheduled=scheduled)
 
     @remote
     def uninstall(self, names):
@@ -150,6 +150,20 @@ class Packages:
         uninstalled = pkg.uninstall(names)
         log.info('Packages uninstalled: %s', uninstalled)
         return uninstalled
+    
+    def reboot(self):
+        """
+        Schedule a sytem reboot.
+        @return: True if scheduled.
+        @rtype: bool
+        """
+        scheduled = False
+        if getbool(cfg.reboot.allow):
+            scheduled = True
+            delay = cfg.reboot.delay
+            os.system('shutdown -h %s &' % delay)
+            log.info('rebooting in %s (min)', delay)
+        return scheduled
 
 
 class PackageGroups:
