@@ -128,10 +128,11 @@ module Glue::Pulp::Repo
 
   def destroy_repo
     Pulp::Repository.destroy(self.pulp_id)
+    true
   end
 
   def del_content
-    return if self.content.nil?
+    return true if self.content.nil?
     content_group_id = Glue::Pulp::Repos.content_groupid(self.content)
 
     content_repo_ids = Pulp::Repository.all([content_group_id]).map{|r| r['id']}
