@@ -19,17 +19,25 @@
  * This file is for use with the packages subnav within systems page.
  */
 
-$(document).ready(function() {
-    $('#more').bind('click', function(){
-        KT.packages.morePackages();
-    });
-    $('#package_sort').bind('click', function(){
-        KT.packages.reverseSort();
-    });
-});
-
 KT.packages = function() {
     var retrievingNewContent = true,
+    packages_form = $('#packages_form');
+    remove_button = $('#remove_packages'),
+    update_button = $('#update_packages'),
+    disableButtons = function() {
+        remove_button.attr('disabled', 'disabled');
+        update_button.attr('disabled', 'disabled');
+
+        remove_button.addClass('disabled');
+        update_button.addClass('disabled');
+    },
+    enableButtons = function() {
+        remove_button.removeAttr('disabled');
+        update_button.removeAttr('disabled');
+
+        remove_button.removeClass('disabled');
+        update_button.removeClass('disabled');
+    },
     morePackages = function() {
         var list = $('.packages');
         var more = $('#more');
@@ -106,10 +114,51 @@ KT.packages = function() {
                 retrievingNewContent = false;
             }
         });
+    },
+    registerEvents = function() {
+        $('#more').bind('click', morePackages);
+        $('#package_sort').bind('click', reverseSort);
+        $('#remove_packages').bind('click', removePackages);
+        $('#update_packages').bind('click', updatePackages);
+    },
+    removePackages = function(data) {
+        data.preventDefault();
+        disableButtons();
+        packages_form.ajaxSubmit({
+            url: remove_button.attr('data-url'),
+            type: 'POST',
+            success: function() {
+                enableButtons();
+            },
+            error: function() {
+                enableButtons();
+            }
+        });
+    },
+    updatePackages = function(data) {
+        data.preventDefault();
+        disableButtons();
+        packages_form.ajaxSubmit({
+            url: update_button.attr('data-url'),
+            type: 'POST',
+            success: function() {
+                enableButtons();
+            },
+            error: function() {
+                enableButtons();
+            }
+        });
     };
     return {
         morePackages: morePackages,
         sortOrder: sortOrder,
-        reverseSort: reverseSort
+        reverseSort: reverseSort,
+        registerEvents: registerEvents,
+        removePackages: removePackages,
+        updatePackages: updatePackages
     }
 }();
+
+$(document).ready(function() {
+    KT.packages.registerEvents();
+});
