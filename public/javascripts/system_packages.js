@@ -28,85 +28,88 @@ $(document).ready(function() {
     });
 });
 
-KT.packages = (function(){
-    return {
-        morePackages : function(){
-            var list = $('.packages');
-            var more = $('#more');
-            var spinner = $('#list-spinner');
-            var dataScrollURL = more.attr("data-scroll_url");
+KT.packages = function() {
+    var retrievingNewContent = true,
+    morePackages = function() {
+        var list = $('.packages');
+        var more = $('#more');
+        var spinner = $('#list-spinner');
+        var dataScrollURL = more.attr("data-scroll_url");
 
-            var offset = parseInt(more.attr("data-offset"), 10) + parseInt(more.attr("data-page_size"), 10);
-            dataScrollURL = dataScrollURL + "?offset=" + offset + "&pkg_order="+ $('#package_sort').attr("data-sort") +"&";
-            //console.log(dataScrollURL + ", page_size: " + offset);
-            spinner.fadeIn();
-            $.ajax({
-                type: "GET",
-                url: dataScrollURL,
-                cache: false,
-                success: function(data) {
-                    KT.packages.retrievingNewContent = false;
-                    spinner.fadeOut();
-                    list.append(data);
-                    $('#filter').keyup();
-                    $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
-                    if (data.length == 0) {
-                        more.empty().remove();
-                    }else{
-                        $('#more').attr("data-offset", offset);
-                    }
-                },
-                error: function() {
-                    spinner.fadeOut();
-                    KT.packages.retrievingNewContent = false;
+        var offset = parseInt(more.attr("data-offset"), 10) + parseInt(more.attr("data-page_size"), 10);
+        dataScrollURL = dataScrollURL + "?offset=" + offset + "&pkg_order="+ $('#package_sort').attr("data-sort") +"&";
+        //console.log(dataScrollURL + ", page_size: " + offset);
+        spinner.fadeIn();
+        $.ajax({
+            type: "GET",
+            url: dataScrollURL,
+            cache: false,
+            success: function(data) {
+                retrievingNewContent = false;
+                spinner.fadeOut();
+                list.append(data);
+                $('#filter').keyup();
+                $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
+                if (data.length == 0) {
+                    more.empty().remove();
+                }else{
+                    $('#more').attr("data-offset", offset);
                 }
-            });
-        },
-        sortOrder : function(){
-            var packageSort = $('#package_sort');
-            var packageSortOrder = packageSort.attr("data-sort");
-            if (packageSort.attr("data-sort") == "asc"){
-                packageSortOrder = "desc";
-                packageSort.removeClass("ascending").addClass("descending");
-            } else {
-                packageSortOrder = "asc";
-                packageSort.removeClass("descending").addClass("ascending");
+            },
+            error: function() {
+                spinner.fadeOut();
+                retrievingNewContent = false;
             }
-            packageSort.attr("data-sort", packageSortOrder);
-            return packageSortOrder;
-        },
-        reverseSort : function(){
-            var list = $('.packages');
-            var more = $('#more');
-            var spinner = $('#list-spinner');
-            var dataScrollURL = more.attr("data-scroll_url");
-            var reverse = parseInt(more.attr("data-offset"), 10);
+        });
+    },
+    sortOrder = function() {
+        var packageSort = $('#package_sort');
+        var packageSortOrder = packageSort.attr("data-sort");
+        if (packageSort.attr("data-sort") == "asc"){
+            packageSortOrder = "desc";
+            packageSort.removeClass("ascending").addClass("descending");
+        } else {
+            packageSortOrder = "asc";
+            packageSort.removeClass("descending").addClass("ascending");
+        }
+        packageSort.attr("data-sort", packageSortOrder);
+        return packageSortOrder;
+    },
+    reverseSort = function() {
+        var list = $('.packages');
+        var more = $('#more');
+        var spinner = $('#list-spinner');
+        var dataScrollURL = more.attr("data-scroll_url");
+        var reverse = parseInt(more.attr("data-offset"), 10);
 
-            dataScrollURL = dataScrollURL + "?reverse=" + reverse + "&pkg_order=" + KT.packages.sortOrder() + "&";
-            spinner.fadeIn();
-            list.find('tbody > tr').empty().remove();
-            $.ajax({
-                type: "GET",
-                url: dataScrollURL,
-                cache: false,
-                success: function(data) {
-                    KT.packages.retrievingNewContent = false;
-                    spinner.fadeOut();
-                    list.append(data);
-                    $('#filter').keyup();
-                    $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
-                    if (data.length == 0) {
-                        more.empty().remove();
-                    }else{
-                        $('#more').attr("data-offset", reverse);
-                    }
-                },
-                error: function() {
-                    spinner.fadeOut();
-                    KT.packages.retrievingNewContent = false;
+        dataScrollURL = dataScrollURL + "?reverse=" + reverse + "&pkg_order=" + KT.packages.sortOrder() + "&";
+        spinner.fadeIn();
+        list.find('tbody > tr').empty().remove();
+        $.ajax({
+            type: "GET",
+            url: dataScrollURL,
+            cache: false,
+            success: function(data) {
+                retrievingNewContent = false;
+                spinner.fadeOut();
+                list.append(data);
+                $('#filter').keyup();
+                $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
+                if (data.length == 0) {
+                    more.empty().remove();
+                }else{
+                    $('#more').attr("data-offset", reverse);
                 }
-            });
-        },
-        retrievingNewContent : true
+            },
+            error: function() {
+                spinner.fadeOut();
+                retrievingNewContent = false;
+            }
+        });
+    };
+    return {
+        morePackages: morePackages,
+        sortOrder: sortOrder,
+        reverseSort: reverseSort
     }
-})();
+}();
