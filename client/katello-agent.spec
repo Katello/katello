@@ -1,7 +1,7 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
 
 Name: katello-agent
-Version: 0.11
+Version: 0.12
 Release: 1%{?dist}
 Summary: The Katello Agent
 Group:   Development/Languages
@@ -45,6 +45,9 @@ rm -rf %{buildroot}
 %doc LICENSE
 
 %changelog
+* Thu Nov 10 2011 Mike McCune <mmccune@redhat.com> 0.12-1
+- re-adding license file
+
 * Thu Nov 10 2011 Mike McCune <mmccune@redhat.com> 0.11-1
 - import into Katello's src
 
