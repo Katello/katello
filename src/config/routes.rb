@@ -51,15 +51,21 @@ Src::Application.routes.draw do
       get :systems
       get :subscriptions
     end
-
   end
 
-
   resources :systems, :except => [:destroy] do
+    resources :system_packages, :only => {} do
+      collection do
+        put :add
+        post :remove
+        post :update
+        get :packages
+        get :more_packages
+      end
+    end
+
     member do
       get :edit
-      get :packages
-      get :more_packages
       get :subscriptions
       post :update_subscriptions
       get :facts
