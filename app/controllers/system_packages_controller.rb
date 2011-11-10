@@ -51,7 +51,6 @@ class SystemPackagesController < ApplicationController
   def packages
     offset = current_user.page_size
     packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    debugger
     if packages.length > 0
       if params.has_key? :pkg_order
         if params[:pkg_order].downcase == "desc"
