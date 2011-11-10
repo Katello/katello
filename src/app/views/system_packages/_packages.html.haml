@@ -33,7 +33,7 @@
             %td{:class=>"arch"}
               TODO: installed date
 
-    %a#more{"data-scroll_url"=>url_for(more_packages_system_path()), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("More...")}
+    %a#more{"data-scroll_url"=>url_for(more_packages_system_system_packages_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("More...")}
 
     - if editable
       .prefix_2.grid_6.ra

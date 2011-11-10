@@ -45,8 +45,6 @@ class SystemsController < ApplicationController
       :env_items => env_system,
       :subscriptions => read_system,
       :update_subscriptions => edit_system,
-      :packages => read_system,
-      :more_packages => read_system,
       :update => edit_system,
       :edit => read_system,
       :show => read_system,
@@ -177,52 +175,6 @@ class SystemsController < ApplicationController
       errors error.to_s, {:level => :message, :persist => false}
       render :nothing => true
     end
-  end
-
-  def packages
-    offset = current_user.page_size
-    packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    if packages.length > 0
-      if params.has_key? :pkg_order
-        if params[:pkg_order].downcase == "desc"
-          packages.reverse!
-        end
-      end
-      packages = packages[0...offset]
-    else
-      packages = []
-    end
-    render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages,
-                                                                       :offset => offset, :editable => @system.editable?}
-  end
-
-  def more_packages
-    #grab the current user setting for page size
-    size = current_user.page_size
-    #what packages are available?
-    packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    if packages.length > 0
-      #check for the params offset (start of array chunk)
-      if params.has_key? :offset
-        offset = params[:offset].to_i
-      else
-        offset = current_user.page_size
-      end
-      if params.has_key? :pkg_order
-        if params[:pkg_order].downcase == "desc"
-          #reverse if order is desc
-          packages.reverse!
-        end
-      end
-      if params.has_key? :reverse
-        packages = packages[0...params[:reverse].to_i]
-      else
-        packages = packages[offset...offset+size]
-      end
-    else
-      packages = []
-    end
-    render :partial=>"more_packages", :locals=>{:system=>@system, :packages => packages, :offset=> offset}
   end
 
   def edit
