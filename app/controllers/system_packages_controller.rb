@@ -16,49 +16,42 @@ class SystemPackagesController < ApplicationController
   before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :bulk_destroy, :new, :create]
   before_filter :authorize
 
+  def section_id
+    'systems'
+  end
+
   def rules
     edit_system = lambda{System.find(params[:system_id]).editable?}
     read_system = lambda{System.find(params[:system_id]).readable?}
-    env_system = lambda{@environment.systems_readable?}
-    any_readable = lambda{System.any_readable?(current_organization)}
-    delete_systems = lambda{true}
-    register_system = lambda { System.registerable?(@environment, current_organization) }
 
     {
-      :index => any_readable,
-      :create => register_system,
-      :new => register_system,
-      :items => any_readable,
-      :auto_complete_search => any_readable,
-      :environments => env_system,
-      :env_items => env_system,
-      :subscriptions => read_system,
-      :update_subscriptions => edit_system,
       :packages => read_system,
       :more_packages => read_system,
-      :update => edit_system,
-      :edit => read_system,
-      :show => read_system,
-      :facts => read_system,
-      :bulk_destroy => delete_systems
+      :add => edit_system,
+      :remove => edit_system,
+      :update => edit_system
     }
   end
 
-  def new
+  def add
+    # TODO: action for adding packages
+    render :text => ''
   end
 
-  def create
+  def remove
+    # TODO: action for removing packages
+    render :text => ''
   end
 
-  def index
-  end
-
-  def items
+  def update
+    # TODO: action for updating packages
+    render :text => ''
   end
 
   def packages
     offset = current_user.page_size
     packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    debugger
     if packages.length > 0
       if params.has_key? :pkg_order
         if params[:pkg_order].downcase == "desc"
@@ -100,19 +93,6 @@ class SystemPackagesController < ApplicationController
       packages = []
     end
     render :partial=>"more_packages", :locals=>{:system=>@system, :packages => packages, :offset=> offset}
-  end
-
-  def edit
-  end
-
-  def update
-  end
-
-  def show
-  end
-
-  def section_id
-    'systems'
   end
 
   private
