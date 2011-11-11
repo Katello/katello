@@ -29,9 +29,15 @@
               %tr.no_sort
                 %td{:colspan => 4}
                   %div#add_packages_form
-                    - help_text = _("Enter package names separated by a space...")
+                    - help_text = _("Enter package names (comma separated)...")
                     %input{:type=>'text', :id=>'add_packages_input', :size=>'35', :placeholder => help_text, :title => help_text}
-                    %a#add_packages{:style => 'padding-left: 16px;', 'data-url' => add_system_system_packages_path(@system.id)} #{_('+ Add')}
+                    %a#add_packages{:style => 'padding-left: 16px;', 'data-url' => add_system_system_packages_path(@system.id)} #{_('+ Add Packages')}
+              %tr.no_sort
+                %td{:colspan => 4}
+                  %div#add_package_groups_form
+                    - help_text = _("Enter package group names (comma separated)...")
+                    %input{:type=>'text', :id=>'add_package_groups_input', :size=>'35', :placeholder => help_text, :title => help_text}
+                    %a#add_package_groups{:style => 'padding-left: 16px;', 'data-url' => add_system_system_packages_path(@system.id)} #{_('+ Add Groups')}
 
             -packages.each do |p|
               - cssclass = cycle("alt", "")

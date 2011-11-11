@@ -28,6 +28,8 @@ KT.packages = function() {
     update_button = $('#update_packages'),
     add_packages_form = $('#add_packages_form'),
     add_packages_button = $('#add_packages'),
+    add_package_groups_form = $('#add_package_groups_form'),
+    add_package_groups_button = $('#add_package_groups'),
     disableButtons = function() {
         remove_button.attr('disabled', 'disabled');
         update_button.attr('disabled', 'disabled');
@@ -120,6 +122,7 @@ KT.packages = function() {
         more_button.bind('click', morePackages);
         sort_button.bind('click', reverseSort);
         add_packages_button.bind('click', addPackages);
+        add_package_groups_button.bind('click', addPackageGroups);
         remove_button.bind('click', removePackages);
         update_button.bind('click', updatePackages);
     },
@@ -128,7 +131,16 @@ KT.packages = function() {
         $.ajax({
             url: add_packages_button.attr('data-url'),
             type: 'PUT',
-            data: {'names' : add_packages_form.find('#add_packages_input').val()},
+            data: {'packages' : add_packages_form.find('#add_packages_input').val()},
+            cache: false
+        });
+    },
+    addPackageGroups = function(data) {
+        data.preventDefault();
+        $.ajax({
+            url: add_package_groups_button.attr('data-url'),
+            type: 'PUT',
+            data: {'groups' : add_package_groups_form.find('#add_package_groups_input').val()},
             cache: false
         });
     },
@@ -166,6 +178,7 @@ KT.packages = function() {
         reverseSort: reverseSort,
         registerEvents: registerEvents,
         addPackages: addPackages,
+        addPackageGroups: addPackageGroups,
         removePackages: removePackages,
         updatePackages: updatePackages
     }
