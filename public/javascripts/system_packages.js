@@ -21,9 +21,13 @@
 
 KT.packages = function() {
     var retrievingNewContent = true,
-    packages_form = $('#packages_form');
+    more_button = $('#more'),
+    sort_button = $('#package_sort'),
+    packages_form = $('#packages_form'),
     remove_button = $('#remove_packages'),
     update_button = $('#update_packages'),
+    add_packages_form = $('#add_packages_form'),
+    add_packages_button = $('#add_packages'),
     disableButtons = function() {
         remove_button.attr('disabled', 'disabled');
         update_button.attr('disabled', 'disabled');
@@ -40,12 +44,11 @@ KT.packages = function() {
     },
     morePackages = function() {
         var list = $('.packages');
-        var more = $('#more');
         var spinner = $('#list-spinner');
-        var dataScrollURL = more.attr("data-scroll_url");
+        var dataScrollURL = more_button.attr("data-scroll_url");
 
-        var offset = parseInt(more.attr("data-offset"), 10) + parseInt(more.attr("data-page_size"), 10);
-        dataScrollURL = dataScrollURL + "?offset=" + offset + "&pkg_order="+ $('#package_sort').attr("data-sort") +"&";
+        var offset = parseInt(more_button.attr("data-offset"), 10) + parseInt(more_button.attr("data-page_size"), 10);
+        dataScrollURL = dataScrollURL + "?offset=" + offset + "&pkg_order="+ sort_button.attr("data-sort") +"&";
         //console.log(dataScrollURL + ", page_size: " + offset);
         spinner.fadeIn();
         $.ajax({
@@ -59,9 +62,9 @@ KT.packages = function() {
                 $('#filter').keyup();
                 $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
                 if (data.length == 0) {
-                    more.empty().remove();
+                    more_button.empty().remove();
                 }else{
-                    $('#more').attr("data-offset", offset);
+                    more_button.attr("data-offset", offset);
                 }
             },
             error: function() {
@@ -71,24 +74,22 @@ KT.packages = function() {
         });
     },
     sortOrder = function() {
-        var packageSort = $('#package_sort');
-        var packageSortOrder = packageSort.attr("data-sort");
-        if (packageSort.attr("data-sort") == "asc"){
+        var packageSortOrder = sort_button.attr("data-sort");
+        if (sort_button.attr("data-sort") == "asc"){
             packageSortOrder = "desc";
-            packageSort.removeClass("ascending").addClass("descending");
+            sort_button.removeClass("ascending").addClass("descending");
         } else {
             packageSortOrder = "asc";
-            packageSort.removeClass("descending").addClass("ascending");
+            sort_button.removeClass("descending").addClass("ascending");
         }
-        packageSort.attr("data-sort", packageSortOrder);
+        sort_button.attr("data-sort", packageSortOrder);
         return packageSortOrder;
     },
     reverseSort = function() {
         var list = $('.packages');
-        var more = $('#more');
         var spinner = $('#list-spinner');
-        var dataScrollURL = more.attr("data-scroll_url");
-        var reverse = parseInt(more.attr("data-offset"), 10);
+        var dataScrollURL = more_button.attr("data-scroll_url");
+        var reverse = parseInt(more_button.attr("data-offset"), 10);
 
         dataScrollURL = dataScrollURL + "?reverse=" + reverse + "&pkg_order=" + KT.packages.sortOrder() + "&";
         spinner.fadeIn();
@@ -104,9 +105,9 @@ KT.packages = function() {
                 $('#filter').keyup();
                 $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
                 if (data.length == 0) {
-                    more.empty().remove();
+                    more_button.empty().remove();
                 }else{
-                    $('#more').attr("data-offset", reverse);
+                    more_button.attr("data-offset", reverse);
                 }
             },
             error: function() {
@@ -116,10 +117,20 @@ KT.packages = function() {
         });
     },
     registerEvents = function() {
-        $('#more').bind('click', morePackages);
-        $('#package_sort').bind('click', reverseSort);
-        $('#remove_packages').bind('click', removePackages);
-        $('#update_packages').bind('click', updatePackages);
+        more_button.bind('click', morePackages);
+        sort_button.bind('click', reverseSort);
+        add_packages_button.bind('click', addPackages);
+        remove_button.bind('click', removePackages);
+        update_button.bind('click', updatePackages);
+    },
+    addPackages = function(data) {
+        data.preventDefault();
+        $.ajax({
+            url: add_packages_button.attr('data-url'),
+            type: 'PUT',
+            data: {'names' : add_packages_form.find('#add_packages_input').val()},
+            cache: false
+        });
     },
     removePackages = function(data) {
         data.preventDefault();
@@ -154,6 +165,7 @@ KT.packages = function() {
         sortOrder: sortOrder,
         reverseSort: reverseSort,
         registerEvents: registerEvents,
+        addPackages: addPackages,
         removePackages: removePackages,
         updatePackages: updatePackages
     }

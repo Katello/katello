@@ -35,6 +35,10 @@ class SystemPackagesController < ApplicationController
 
   def add
     # TODO: action for adding packages
+
+    # the packages to be added will be provided as a string of space separated names
+    packages = params[:names].split() unless params[:names].nil?
+
     render :text => ''
   end
 
