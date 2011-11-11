@@ -95,6 +95,7 @@ class UsersController < ApplicationController
       else
         notice _("'#{@user["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
         render :json => { :no_match => true }
+      end
     rescue Exception => error
       errors error
       #transaction, if something goes wrong with the creation of the permission, we will need to delete the user
