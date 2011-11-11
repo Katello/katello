@@ -15,6 +15,20 @@ require 'http_resource'
 
 module CDN
 
+  class Utils
+
+    # takes releasever from contentUrl (e.g. 6Server, 6.0, 6.1)
+    # returns hash e.g. {:major => 6, :minor => "6.1"}
+    # used to be able to make hierarchial view for RH repos
+    def self.parse_version(releasever)
+      if releasever.to_s =~ /^\d/
+        {:major => releasever[/^\d+/].to_i, :minor => releasever }
+      else
+        {}
+      end
+    end
+  end
+
   class CdnResource
     attr_reader :url
 
