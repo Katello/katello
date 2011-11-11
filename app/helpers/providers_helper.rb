@@ -19,5 +19,17 @@ module ProvidersHelper
                                     current_organization.locker, true)
     @product_map
   end
+
+  def can_enable_repo?
+    @provider.editable?
+  end
+
+  def can_upload_rh_manifest?
+    @provider.editable?
+  end
+
+  def can_edit_rh_provider?
+    @provider.editable?
+  end
 end
 
