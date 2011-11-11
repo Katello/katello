@@ -98,7 +98,7 @@ class ProvidersController < ApplicationController
       Rails.logger.error "Error fetching subscriptions from Candlepin"
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
-      render :template =>"providers/redhat_provider", :status => :bad_request and return
+      render :template =>"providers/redhat/show", :status => :bad_request and return
     end
 
     begin
@@ -112,10 +112,10 @@ class ProvidersController < ApplicationController
       Rails.logger.error "Error fetching subscription history from Candlepin"
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
-      render :template =>"providers/redhat_provider", :status => :bad_request and return
+      render :template =>"providers/redhat/show", :status => :bad_request and return
     end
 
-    render :template =>"providers/redhat_provider"
+    render :template =>"providers/redhat/show"
   end
 
   def items
