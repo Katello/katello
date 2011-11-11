@@ -95,6 +95,30 @@ module ProductTestData
   })
 
 
+  PRODUCT_WITH_CP_CONTENT = HashWithIndifferentAccess.new({
+    :name => ProductTestData::PRODUCT_NAME,
+    :id => ProductTestData::PRODUCT_ID,
+    :multiplier => 1,
+    :productContent => [ {
+          "content" => {
+            "name" => "some-name(33)",
+            "id" => "1234999",
+            "type" => "yum",
+            "label" => "some-label",
+            "vendor" => "redhat",
+            "contentUrl" => "/released-extra/RHEL-5-Server/$releasever/$basearch/os/ClusterStorage/",
+            "gpgUrl" => "/some/gpg/url/",
+            "updated" => "2011-01-04T18:47:47.219+0000",
+            "created" => "2011-01-04T18:47:47.219+0000"
+          },
+          "enabled" => true,
+          "flexEntitlement" => 0,
+          "physicalEntitlement" => 0}
+    ],
+    :attributes => []
+  })
+
+
   POOLS = HashWithIndifferentAccess.new({
     "id" => "ff808081311ad38001311ae11f4e0010",
     "attributes" => [],

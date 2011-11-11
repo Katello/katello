@@ -118,6 +118,8 @@ Src::Application.routes.draw do
     member do
       post :clear_helptips
       put :update_roles
+      get :edit_environment
+      put :update_environment
     end
   end
 
@@ -194,6 +196,13 @@ Src::Application.routes.draw do
   match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
 
   resources :organizations do
+    collection do
+      get :auto_complete_search
+      get :items
+    end
+    member do
+      get :environments_partial
+    end
     resources :environments do
       member do
         get :system_templates
@@ -201,10 +210,6 @@ Src::Application.routes.draw do
       end
     end
     resources :providers
-    collection do
-      get :auto_complete_search
-      get :items
-    end
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
 
@@ -405,6 +410,8 @@ Src::Application.routes.draw do
     end
 
     resources :tasks, :only => [:show]
+
+    match "/status"  => "ping#status", :via => :get
 
     # some paths conflicts with rhsm
     scope 'katello' do

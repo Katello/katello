@@ -91,7 +91,7 @@ class SystemAPI(KatelloAPI):
     def errata(self, system_id):
         path = "/api/systems/%s/errata" % system_id
         return self.server.GET(path)[1]
-                
+
     def report_by_org(self, orgId, format):
         path = "/api/organizations/%s/systems/report" % orgId
         to_return = self.server.GET(path, customHeaders={"Accept": format})
@@ -101,8 +101,7 @@ class SystemAPI(KatelloAPI):
         environment = get_environment(orgId, envName)
         if environment is None:
             return None
-        
+
         path = "/api/environments/%s/systems/report" % environment['id']
         to_return = self.server.GET(path, customHeaders={"Accept": format})
         return (to_return[1], to_return[2])
-        

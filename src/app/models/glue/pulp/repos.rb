@@ -21,6 +21,8 @@ module Glue::Pulp::Repos
     base.send :include, InstanceMethods
     base.class_eval do
       before_save :save_repos_orchestration
+      after_save :import_repos_orchestration
+
       before_destroy :destroy_repos_orchestration
 
       has_and_belongs_to_many :filters, :uniq => true, :before_add => :add_filters_orchestration, :before_remove => :remove_filters_orchestration
@@ -74,16 +76,9 @@ module Glue::Pulp::Repos
     end
 
 
-    def repos env, search_params = {}
-      if search_params.empty?
-        self.get_cached_repos(env)
-      else
-        self.get_repos(env, search_params)
-      end
-    end
-
-    def all_repos search_params = {}
-      self.get_repos(nil, search_params)
+    def repos env
+      Repository.joins(:environment_product).where(
+            "environment_products.product_id" => self.id, "environment_products.environment_id"=> env)
     end
 
     def promote from_env, to_env
@@ -273,14 +268,13 @@ module Glue::Pulp::Repos
     end
 
     def delete_repo_by_id(repo_id)
-      repo = Glue::Pulp::Repo.find(repo_id)
-      repo.destroy
-      save!
+      Repository.destroy_all(:id=>repo_id)
     end
 
     def add_repo(name, url, repo_type)
       check_for_repo_conflicts(name)
-      repo = Glue::Pulp::Repo.new(:id => repo_id(name),
+      key = EnvironmentProduct.find_or_create(self.organization.locker, self)
+      repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(name),
           :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
           :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, name),
           :arch => arch,
@@ -288,7 +282,6 @@ module Glue::Pulp::Repos
           :feed => url,
           :content_type => repo_type
       )
-      repo.create
     end
 
     def setup_sync_schedule
@@ -300,7 +293,7 @@ module Glue::Pulp::Repos
       end
     end
 
-    def set_repos
+    def setup_repos
       self.productContent.collect do |pc|
         cert = self.certificate
         key = self.key
@@ -312,24 +305,27 @@ module Glue::Pulp::Repos
         substitutions_with_paths = cdn_var_substitutor.substitute_vars(pc.content.contentUrl)
 
         substitutions_with_paths.each do |(substitutions, path)|
-
           feed_url = repository_url(path)
           arch = substitutions["basearch"] || "noarch"
           repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
-          repo = Glue::Pulp::Repo.new(:id => repo_id(repo_name),
-                                      :arch => arch,
-                                      :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, repo_name),
-                                      :name => repo_name,
-                                      :feed => feed_url,
-                                      :feed_ca => ca,
-                                      :feed_cert => cert,
-                                      :feed_key => key,
-                                      :content_type => pc.content.type,
-                                      :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
-                                      :preserve_metadata => orchestration_for == :import_from_cp #preserve repo metadata when importing from cp
-                                      )
+          version = CDN::Utils.parse_version(substitutions["releasever"])
           begin
-            repo.create
+            env_prod = EnvironmentProduct.find_or_create(self.organization.locker, self)
+            repo = Repository.create!(:environment_product=> env_prod, :pulp_id => repo_id(repo_name),
+                                        :arch => arch,
+                                        :major => version[:major],
+                                        :minor => version[:minor],
+                                        :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, repo_name),
+                                        :name => repo_name,
+                                        :feed => feed_url,
+                                        :feed_ca => ca,
+                                        :feed_cert => cert,
+                                        :feed_key => key,
+                                        :content_type => pc.content.type,
+                                        :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
+                                        :preserve_metadata => true #preserve repo metadata when importing from cp
+                                        )
+
           rescue RestClient::InternalServerError => e
             if e.message.include? "Architecture must be one of"
               Rails.logger.error("Pulp does not support arch '#{arch}'")
@@ -346,7 +342,7 @@ module Glue::Pulp::Repos
 
       deleted_content.each do |pc|
         Rails.logger.debug "deleting repository #{pc.content.label}"
-        Pulp::Repository.destroy(pc.content.label)
+        Repository.destroy_all(:pulp_id => repo_id(pc.content.name))
       end
 
       added_content.each do |pc|
@@ -390,13 +386,19 @@ module Glue::Pulp::Repos
       case orchestration_for
         when :create
           # no repositories are added when a product is created
-        when :import_from_cp
-          queue.create(:name => "create pulp repositories for product: #{self.name}",      :priority => 1, :action => [self, :set_repos])
         when :update
           #called when sync schedule changed, repo added, repo deleted
           queue.create(:name => "setting up pulp sync schedule for product: #{self.name}", :priority => 2, :action => [self, :setup_sync_schedule])
         when :promote
           # do nothing, as repos have already been promoted (see promote_repos method)
+      end
+    end
+
+
+    def import_repos_orchestration
+      case orchestration_for
+        when :import_from_cp
+          queue.create(:name => "create pulp repositories for product: #{self.name}", :priority => 1, :action => [self, :set_repos])
       end
     end
 
@@ -441,11 +443,11 @@ module Glue::Pulp::Repos
           async_tasks << repo.get_clone(to_env).sync
         else
           #repo is not in the next environment yet, we have to clone it there
-
-          to_env.prior == locker ?
-              async_tasks << repo.promote(to_env, filters.collect {|p| p.pulp_id}) :
-              async_tasks << repo.promote(to_env)
-
+          if to_env.prior == locker
+            async_tasks << repo.promote(to_env, filters.collect {|p| p.pulp_id})
+          else
+            async_tasks << repo.promote(to_env)
+          end
         end
       end
       async_tasks.flatten(1)
@@ -461,33 +463,11 @@ module Glue::Pulp::Repos
     end
 
     def check_for_repo_conflicts(repo_name)
-      unless self.repos(self.locker, {:name => repo_name}).empty?
+      is_dupe =  Repository.joins(:environment_product).where( :name=> repo_name,
+              "environment_products.product_id" => self.id, "environment_products.environment_id"=> self.locker.id).count > 0
+      if is_dupe
         raise Errors::ConflictException.new(_("There is already a repo with the name [ %s ] for product [ %s ]") % [repo_name, self.name])
       end
     end
-
-    def cache_repos env
-      @repos ||= {}
-      @repos[env.id] = []
-
-      product_repos = Pulp::Repository.all [Glue::Pulp::Repos.product_groupid(self), Glue::Pulp::Repos.env_groupid(env)]
-      product_repos.each do |repo_attr|
-        @repos[env.id] << Glue::Pulp::Repo.new(repo_attr)
-      end
-    end
-
-    def get_cached_repos env
-      @repos ||= {}
-      if not @repos.has_key?(env.id)
-        self.cache_repos env
-      end
-
-      return @repos[env.id] || []
-    end
-
-    def get_repos env, search_params = {}
-      Pulp::Repository.all [Glue::Pulp::Repos.product_groupid(self), Glue::Pulp::Repos.env_groupid(env)], search_params
-    end
-
   end
 end

@@ -18,6 +18,7 @@ describe UsersController do
   include LocaleHelperMethods
   include AuthorizationHelperMethods
   include OrchestrationHelper
+  include OrganizationHelperMethods
 
     before(:each) do
       disable_user_orchestration
@@ -31,22 +32,31 @@ describe UsersController do
     before(:each) do
       controller.stub!(:notice)
       controller.stub!(:errors)
+      @organization = new_test_org
+      @environment = KTEnvironment.create!(:name => 'first-env', :prior => @organization.locker.id, :organization => @organization)
     end
 
     it "should create a user correctly" do
       name = "foo-user"
-      post 'create', {:user => {:username=>name, :password=>"password1234"}}
+      post 'create', {:user => {:username=>name, :password=>"password1234", :env_id => @environment.id}}
       response.should be_success
       User.where(:username=>name).should_not be_empty
     end
-    
-    it "should error if no username " do
-      post 'create', {:user => {:username=>"", :password=>"password1234"}}
+
+    it "should error if no username" do
+      post 'create', {:user => {:username=>"", :password=>"password1234", :env_id => @environment.id}}
       response.should_not be_success
-      
+
       post 'create', {:user => { :password=>"password1234"}}
       response.should_not be_success
-      
+    end
+
+    it "should error if no environment" do
+      post 'create', {:user => {:username=>"bar-user", :password=>"password1234"}}
+      response.should_not be_success
+
+      post 'create', {:user => { :password=>"password1234"}}
+      response.should_not be_success
     end
     
   end

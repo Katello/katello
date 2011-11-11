@@ -42,12 +42,12 @@ module Glue::Candlepin::Product
 
     valid_name = attrs['name'].gsub(/[^a-z0-9\-_ ]/i,"")
     attrs = attrs.merge('name' => valid_name)
-
     product = Product.new(attrs, &block)
     product.productContent_will_change!
     product.productContent = product.build_productContent(productContent_attrs)
     product.orchestration_for = :import_from_cp
     product.save!
+    product.setup_repos
 
   rescue => e
     Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
@@ -56,23 +56,23 @@ module Glue::Candlepin::Product
 
   module InstanceMethods
 
-    def initialize(attrs = nil)
-      unless attrs.nil?
-        attributes_key = attrs.has_key?(:attributes) ? :attributes : 'attributes'
-        if attrs.has_key?(attributes_key)
-          attrs[:attrs] = attrs[attributes_key]
-          attrs.delete(attributes_key)
+    def initialize(attribs = nil)
+      unless attribs.nil?
+        attributes_key = attribs.has_key?(:attributes) ? :attributes : 'attributes'
+        if attribs.has_key?(attributes_key)
+          attribs[:attrs] = attribs[attributes_key]
+          attribs.delete(attributes_key)
         end
 
-        @productContent = [] unless attrs.has_key?(:productContent)
+        @productContent = [] unless attribs.has_key?(:productContent)
 
         # ugh. hack-ish. otherwise we have to modify code every time things change on cp side
-        attrs = attrs.reject do |k, v|
+        attribs = attribs.reject do |k, v|
           !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
         end
       end
 
-      super(attrs)
+      super(attribs)
     end
 
     def build_productContent(attrs)
@@ -111,6 +111,7 @@ module Glue::Candlepin::Product
     def convert_from_cp_fields(cp_json)
       ar_safe_json = cp_json.has_key?(:attributes) ? cp_json.merge(:attrs => cp_json.delete(:attributes)) : cp_json
       ar_safe_json[:productContent] = ar_safe_json[:productContent].collect { |pc| Glue::Candlepin::ProductContent.new pc }
+      ar_safe_json[:attrs] ||=[]
       ar_safe_json.except('id')
     end
 
@@ -119,8 +120,10 @@ module Glue::Candlepin::Product
       self.productContent << content
     end
 
-    def remove_content content
-      Candlepin::Product.remove_content self.cp_id, content.content.id
+    def remove_content_by_id content_id
+      self.productContent_will_change!
+      self.productContent.delete_if {|pc| pc.content.id == content_id}
+      self.save!
     end
 
     def set_product
@@ -171,7 +174,7 @@ module Glue::Candlepin::Product
     def remove_all_content
       self.productContent.each do |pc|
         Rails.logger.info "Removing content from product '#{self.cp_id}' in candlepin: #{pc.content.name}"
-        self.remove_content pc
+        self.remove_content_by_id pc.content.id
       end
       true
     rescue => e
@@ -231,7 +234,7 @@ module Glue::Candlepin::Product
       self.productContent.each do |pc|
         content_repos = Pulp::Repository.all [Glue::Pulp::Repos.content_groupid(pc)]
         if content_repos.empty?
-          self.remove_content pc
+          self.remove_content_by_id pc.content.id
           pc.destroy
         end
       end
@@ -254,11 +257,9 @@ module Glue::Candlepin::Product
           queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
         when :update
           #called when sync schedule changed, repo added, repo deleted
-          queue.create(:name => "delete unused content in candlein: #{self.name}", :priority => 1, :action => [self, :del_unused_content])
+          queue.create(:name => "update content in candlein: #{self.name}", :priority => 1, :action => [self, :update_content])
         when :promote
           #queue.create(:name => "update candlepin product: #{self.name}", :priority =>3, :action => [self, :update_content])
-        when :import_from_cp
-          queue.create(:name => "delete imported content from locker environment: #{self.name}", :priority =>2, :action => [self, :remove_imported_content])
       end
     end
 
@@ -270,7 +271,6 @@ module Glue::Candlepin::Product
     end
 
     protected
-
     def added_content
       old_content_ids = productContent_change[0].nil? ? [] : productContent_change[0].map {|pc| pc.content.label}
       new_content_ids = productContent_change[1].map {|pc| pc.content.label}

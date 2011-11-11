@@ -29,7 +29,6 @@ class User < ActiveRecord::Base
   has_many :search_favorites, :dependent => :destroy
   has_many :search_histories, :dependent => :destroy
 
-
   validates :username, :uniqueness => true, :presence => true, :username => true, :length => { :maximum => 255 }
   validate :own_role_included_in_roles
 
@@ -47,9 +46,27 @@ class User < ActiveRecord::Base
   # validate the password length before hashing
   validates_each :password do |model, attr, value|
     if model.password_changed?
-      model.errors.add(attr, "at least 5 characters") if value.length < 5
+      model.errors.add(attr, _("at least 5 characters")) if value.length < 5
     end
   end
+
+#  validates_each :own_role do |model, attr, value|
+#    #This is enforced throught a user's self role where a permission with a tag is created
+#    #that has the environment id of the default environment for the user
+#    err_msg =  _("A user must have a default org and environment associated.")
+#    if model.blank?
+#      model.errors.add(attr,err_msg)
+#    else
+#      perm = Permission.find_all_by_role_id(@user.own_role.id)
+#      if perm.blank?
+#        model.errors.add(attr,err_msg)
+#      else
+#        if !perm[0].tags
+#          model.errors.add(attr,err_msg)
+#        end
+#      end
+#    end
+#  end
 
   # hash the password before creating or updateing the record
   before_save do |u|
@@ -93,11 +110,6 @@ class User < ActiveRecord::Base
   # support for session (thread-local) variables
   include Katello::ThreadSession::UserModel
   include Ldap
-
-  # return the special "nobody" user account
-  def self.anonymous
-    find_by_username('anonymous')
-  end
 
   def self.authenticate!(username, password)
     u = User.where({:username => username}).first
@@ -157,11 +169,9 @@ class User < ActiveRecord::Base
 
   # Class method that has the same functionality as allowed_all_tags? method but operates
   # on the current logged user. The class attribute User.current must be set!
-  # If the current user is not set (is nil) it treats it like the 'anonymous' user.
   def self.allowed_all_tags?(verb, resource_type = nil, org = nil)
     u = User.current
-    u = User.anonymous if u.nil?
-    raise ArgumentError, "current user is not set" if u.nil? or not u.is_a? User
+    raise Errors::UserNotSet, "current user is not set" if u.nil? or not u.is_a? User
     u.allowed_all_tags?(verb, resource_type, org)
   end
 
@@ -182,12 +192,10 @@ class User < ActiveRecord::Base
 
   # Class method that has the same functionality as allowed_tags_sql method but operates
   # on the current logged user. The class attribute User.current must be set!
-  # If the current user is not set (is nil) it treats it like the 'anonymous' user.
   def self.allowed_tags_sql(verb, resource_type = nil, org = nil)
     ResourceType.check resource_type, verb
     u = User.current
-    u = User.anonymous if u.nil?
-    raise ArgumentError, "current user is not set" if u.nil? or not u.is_a? User
+    raise Errors::UserNotSet, "current user is not set" if u.nil? or not u.is_a? User
     u.allowed_tags_sql(verb, resource_type, org)
   end
 
@@ -230,11 +238,9 @@ class User < ActiveRecord::Base
 
   # Class method that has the same functionality as allowed_to? method but operates
   # on the current logged user. The class attribute User.current must be set!
-  # If the current user is not set (is nil) it treats it like the 'anonymous' user.
   def self.allowed_to?(verb, resource_type, tags = nil, org = nil, any_tags = false)
     u = User.current
-    u = User.anonymous if u.nil?
-    raise ArgumentError, "current user is not set" if u.nil? or not u.is_a? User
+    raise Errors::UserNotSet, "current user is not set" if u.nil? or not u.is_a? User
     u.allowed_to?(verb, resource_type, tags, org, any_tags)
   end
 
@@ -242,7 +248,7 @@ class User < ActiveRecord::Base
   # SecurityViolation exception leading to the denial page.
   def self.allowed_to_or_error?(verb, resource_type, tags = nil, org = nil, any_tags = false)
     u = User.current
-    raise ArgumentError, "current user is not set" if u.nil? or not u.is_a? User
+    raise Errors::UserNotSet, "current user is not set" if u.nil? or not u.is_a? User
     unless u.allowed_to?(verb, resource_type, tags, org, any_tags)
       msg = "User #{u.username} is not allowed to #{verb} in #{resource_type} using #{tags}"
       Rails.logger.error msg
@@ -350,6 +356,27 @@ class User < ActiveRecord::Base
 
   def deletable?
     User.allowed_to?([:delete], :users, nil)
+  end
+
+  def has_default_env?
+    #the own_role is used exclusively for storing a perm with a tag that tells the default env
+    if !self.own_role
+      return false
+    else
+      if Permission.find_all_by_role_id(self.own_role.id).empty?
+        return false
+      end
+    end
+    true
+  end
+
+  def default_environment
+    sr = self.own_role
+    perm = Permission.find_all_by_role_id(self.own_role.id)
+    if sr && !perm.empty? && perm[0].tags
+      return KTEnvironment.find(perm[0].tags[0].tag_id)
+    end
+    nil
   end
 
   protected

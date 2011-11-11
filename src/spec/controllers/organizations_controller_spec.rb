@@ -20,7 +20,7 @@ describe OrganizationsController do
 
   module OrgControllerTest
     ORG_ID = 1
-    ORGANIZATION = {:name => "organization_name", :description => "organization_description", :cp_key => "organization_name"}
+    ORGANIZATION = {:name => "organization_name", :description => "organization_description", :cp_key => "organization_name", :envname => "organization_env"}
   end
 
   describe "rules" do
@@ -91,7 +91,7 @@ describe OrganizationsController do
       end
 
       it 'should create organization and account for spaces' do
-        post 'create', {:name => "multi word organization", :description => "spaced out organization"}
+        post 'create', {:name => "multi word organization", :description => "spaced out organization", :envname => "first-env"}
         response.should_not redirect_to(:action => 'new')
         response.should be_success
         assigns[:organization].name.should == "multi word organization"

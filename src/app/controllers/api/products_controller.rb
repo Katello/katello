@@ -49,7 +49,7 @@ class Api::ProductsController < Api::ApiController
   end
 
   def repositories
-    render :json => @product.repos(@environment)
+    render :json => @product.repos(@environment).where(query_params.slice(:name))
   end
 
   private

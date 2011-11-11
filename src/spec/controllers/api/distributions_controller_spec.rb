@@ -27,7 +27,7 @@ describe Api::DistributionsController do
     
     it "should call pulp find repo api" do
       
-      Glue::Pulp::Repo.should_receive(:find).once.with(1).and_return(@repo)
+      Repository.should_receive(:find).once.with(1).and_return(@repo)
       @repo.should_receive(:distributions)
       
       get 'index', :repository_id => 1

@@ -41,28 +41,51 @@ class katello::config {
     unless  => "getenforce |egrep -iq 'disable|Permissive'",
   }
 
+  exec {"httpd-restart":
+    command => "/bin/sleep 5; /sbin/service httpd restart; /bin/sleep 10",
+    onlyif => "/usr/sbin/apachectl -t",
+    before => Exec["katello_seed_db"],
+    require   => $katello::params::deployment ? {
+        'katello' => [ Config_file["${katello::params::config_dir}/katello.yml"], Class["candlepin::service"], Class["pulp::service"] ],
+        'headpin' => [ Config_file["${katello::params::config_dir}/katello.yml"], Class["candlepin::service"] ],
+         default  => [],
+    },
+  }
+
   common::simple_replace { "org_name":
       file => "/usr/share/katello/db/seeds.rb",
       pattern => "ACME_Corporation",
       replacement => "$katello::params::org_name",
       before => Exec["katello_seed_db"],
-      require => [ Class["candlepin::service"], Class["pulp::service"] ],
+      require => $katello::params::deployment ? {
+                'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
+                'headpin' => [ Class["candlepin::service"] ],
+                default => [],
+    },
   }
- 
+
   common::simple_replace { "org_description":
       file => "/usr/share/katello/db/seeds.rb",
       pattern => "ACME Corporation Organization",
       replacement => "$katello::params::org_name Organization",
       before => Exec["katello_seed_db"],
-      require => [ Class["candlepin::service"], Class["pulp::service"] ],
+      require => $katello::params::deployment ? {
+                'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
+                'headpin' => [ Class["candlepin::service"] ],
+                default => [],
+    },
   }
- 
+
   common::simple_replace { "primary_user_pass":
       file => "/usr/share/katello/db/seeds.rb",
       pattern => "password => 'admin'",
       replacement => "password => '$katello::params::user_pass'",
       before => Exec["katello_seed_db"],
-      require => [ Class["candlepin::service"], Class["pulp::service"] ],
+      require => $katello::params::deployment ? {
+                'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
+                'headpin' => [ Class["candlepin::service"] ],
+                default => [],
+    },
   }
 
   common::simple_replace { "primary_user_name":
@@ -70,7 +93,11 @@ class katello::config {
       pattern => "username => 'admin'",
       replacement => "username => '$katello::params::user_name'",
       before => Exec["katello_seed_db"],
-      require => [ Class["candlepin::service"], Class["pulp::service"] ],
+      require => $katello::params::deployment ? {
+                'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
+                'headpin' => [ Class["candlepin::service"] ],
+                default => [],
+    },
   }
 
   exec {"katello_db_migrate":

@@ -69,7 +69,7 @@ class SyncManagementController < ApplicationController
       @product_size[p.id] = number_to_human_size(p.sync_size)
       for r in p.repos(p.organization.locker)
         repo_status = r.sync_status
-        @repo_status[r.id] = format_sync_progress(repo_status)
+        @repo_status[r.pulp_id] = format_sync_progress(repo_status)
       end
     end
   end
@@ -82,7 +82,7 @@ class SyncManagementController < ApplicationController
   end
  
   def sync_status
-    sync_status = Glue::Pulp::Repo.new(:id => params[:repo_id]).sync_status
+    sync_status = Repository.find_by_pulp_id(params[:repo_id]).sync_status
     progress = format_sync_progress(sync_status)
     progress[:repo_id] = params['repo_id']
 
@@ -93,7 +93,7 @@ class SyncManagementController < ApplicationController
 
   def product_status
     product = Product.first(:conditions => {:id => params['product_id']})
-    repo_stat = Glue::Pulp::Repo.new(:id => params[:repo_id]).sync_status
+    repo_stat = Repository.find_by_pulp_id(params[:repo_id]).sync_status
     status = product.sync_status 
     send_notification(product, repo_stat) if status.state == PulpSyncStatus::Status::FINISHED
     report_error(product) if status.state == PulpSyncStatus::Status::ERROR
@@ -175,7 +175,7 @@ private
       begin
         resp = Pulp::Repository.sync(id, data)
       rescue RestClient::Conflict => e
-        r = Glue::Pulp::Repo.find(id)
+        r = Repository.find_by_pulp_id(id)
         errors N_("There is already an active sync process for the '#{r.name}' repository. Please try again later")
         next
       end

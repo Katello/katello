@@ -9,31 +9,88 @@
 # NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+require 'resources/pulp'
 
+module Glue::Pulp::Repo
+  def self.included(base)
+    base.send :include, LazyAccessor
+    base.send :include, InstanceMethods
 
-class Glue::Pulp::Repo
-  attr_accessor :id, :groupid, :arch, :name, :feed, :feed_cert, :feed_key, :feed_ca,
-                :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type, :filters
-
-  def initialize(params = {})
-    @params = params
-    params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
+    base.class_eval do
+    before_validation :setup_repo_clone
+      before_save :save_repo_orchestration
+      before_destroy :destroy_repo_orchestration
+      lazy_accessor :pulp_repo_facts,
+                    :initializer => lambda {
+                      if pulp_id
+                        Pulp::Repository.find(pulp_id)
+                      end
+                    }
+      lazy_accessor :groupid, :arch, :feed, :feed_cert, :feed_key, :feed_ca, :source, :filters,
+                :clone_ids, :uri_ref, :last_sync, :relative_path, :preserve_metadata, :content_type,
+                :initializer => lambda {
+                  if pulp_id
+                      pulp_repo_facts
+                  end
+                }
+      attr_accessor :clone_from, :clone_response, :cloned_filters, :cloned_content
+    end
   end
 
+  def self.repo_id product_name, repo_name, env_name, organization_name
+    [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
+  end
+
+
+  module InstanceMethods
+    def save_repo_orchestration
+      case orchestration_for
+        when :create
+          queue.create(:name => "create pulp repo: #{self.name}", :priority => 2, :action => [self, :clone_or_create_repo])
+      end
+    end
+
+    def initialize(attrs = nil)
+      if attrs.nil?
+        super
+      elsif
+        type_key = attrs.has_key?('type') ? 'type' : :type
+        #rename "type" to "cp_type" (activerecord and candlepin variable name conflict)
+        #if attrs.has_key?(type_key) && !(attrs.has_key?(:cp_type) || attrs.has_key?('cp_type'))
+        #  attrs[:cp_type] = attrs[type_key]
+        #end
+
+        attrs_used_by_model = attrs.reject do |k, v|
+          !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+        end
+        super(attrs_used_by_model)
+      end
+    end
+
   def to_hash
-    @params.merge(:sync_state => self.sync_state)
+    pulp_repo_facts.merge(as_json).merge(:sync_state=> sync_state)
   end
 
   TYPE_YUM = "yum"
   TYPE_LOCAL = "local"
 
-  def create
+
+
+  def clone_or_create_repo
+    if clone_from
+      clone_repo
+    else
+      create_pulp_repo
+    end
+  end
+
+  def create_pulp_repo
     feed_cert_data = {:ca => self.feed_ca,
         :cert => self.feed_cert,
         :key => self.feed_key
     }
     Pulp::Repository.create({
-        :id => self.id,
+        :id => self.pulp_id,
         :name => self.name,
         :relative_path => self.relative_path,
         :arch => self.arch,
@@ -45,8 +102,53 @@ class Glue::Pulp::Repo
     })
   end
 
-  def destroy
-    Pulp::Repository.destroy(id)
+  def promote(to_environment, filters = [])
+
+    key = EnvironmentProduct.find_or_create(to_environment, self.product)
+    repo = Repository.create!(:environment_product => key, :clone_from => self,
+                            :cloned_content => self.content_for_clone, :cloned_filters => filters)
+    repo.clone_response
+  end
+
+  def setup_repo_clone
+    if clone_from
+      self.pulp_id = clone_from.clone_id(environment_product.environment)
+      self.relative_path = Glue::Pulp::Repos.clone_repo_path(clone_from, environment_product.environment)
+      self.arch = clone_from.arch
+      self.name = clone_from.name
+      self.feed = clone_from.feed
+      self.major = clone_from.major
+      self.minor = clone_from.minor
+      self.groupid = Glue::Pulp::Repos.groupid(environment_product.product, environment_product.environment, cloned_content)
+    end
+  end
+
+  def clone_repo
+    self.clone_response = [Pulp::Repository.clone_repo(clone_from, self, "parent", cloned_filters)]
+  end
+
+
+  def destroy_repo
+    Pulp::Repository.destroy(self.pulp_id)
+    true
+  end
+
+  def del_content
+    return true if self.content.nil?
+    content_group_id = Glue::Pulp::Repos.content_groupid(self.content)
+
+    content_repo_ids = Pulp::Repository.all([content_group_id]).map{|r| r['id']}
+    other_content_repo_ids = (content_repo_ids - [self.pulp_id])
+
+    if other_content_repo_ids.empty?
+      self.product.remove_content_by_id self.content_id
+    end
+    true
+  end
+
+  def destroy_repo_orchestration
+    queue.create(:name => "remove product content : #{self.name}", :priority => 1, :action => [self, :del_content])
+    queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 2, :action => [self, :destroy_repo])
   end
 
   # TODO: remove after pulp >= 0.0.401 get's released. There is this attribute
@@ -65,7 +167,7 @@ class Glue::Pulp::Repo
 
   def packages
     if @repo_packages.nil?
-      self.packages = Pulp::Repository.packages(id)
+      self.packages = Pulp::Repository.packages(self.pulp_id)
     end
     @repo_packages
   end
@@ -79,7 +181,7 @@ class Glue::Pulp::Repo
 
   def errata
     if @repo_errata.nil?
-       self.errata = Pulp::Repository.errata(id)
+       self.errata = Pulp::Repository.errata(self.pulp_id)
     end
     @repo_errata
   end
@@ -93,7 +195,7 @@ class Glue::Pulp::Repo
 
   def distributions
     if @repo_distributions.nil?
-      self.distributions = Pulp::Repository.distributions(id)
+      self.distributions = Pulp::Repository.distributions(self.pulp_id)
     end
     @repo_distributions
   end
@@ -113,7 +215,7 @@ class Glue::Pulp::Repo
   end
 
   def package_groups search_args = {}
-    groups = ::Pulp::PackageGroup.all @id
+    groups = ::Pulp::PackageGroup.all self.pulp_id
     unless search_args.empty?
       groups.delete_if do |group_id, group_attrs|
         search_args.any?{ |attr,value| group_attrs[attr] != value }
@@ -123,7 +225,7 @@ class Glue::Pulp::Repo
   end
 
   def package_group_categories search_args = {}
-    categories = ::Pulp::PackageGroupCategory.all @id
+    categories = ::Pulp::PackageGroupCategory.all self.pulp_id
     unless search_args.empty?
       categories.delete_if do |category_id, category_attrs|
         search_args.any?{ |attr,value| category_attrs[attr] != value }
@@ -132,8 +234,8 @@ class Glue::Pulp::Repo
     categories.values
   end
 
-  def clone_id(environment)
-    Glue::Pulp::Repo.repo_id(self.product.name, self.name, environment.name,environment.organization.name)
+  def clone_id(env)
+    Glue::Pulp::Repo.repo_id(self.product.name, self.name, env.name,env.organization.name)
   end
 
   #is the repo cloned in the specified environment
@@ -143,7 +245,7 @@ class Glue::Pulp::Repo
   end
 
   def get_clone env
-    Glue::Pulp::Repo.find(self.clone_id(env))
+    Repository.find_by_pulp_id(self.clone_id(env))
   rescue
     nil
   end
@@ -162,15 +264,15 @@ class Glue::Pulp::Repo
   end
 
   def find_packages_by_name name
-    Pulp::Repository.packages_by_name id, name
+    Pulp::Repository.packages_by_name self.pulp_id, name
   end
 
   def find_packages_by_nvre name, version, release, epoch
-    Pulp::Repository.packages_by_nvre id, name, version, release, epoch
+    Pulp::Repository.packages_by_nvre self.pulp_id, name, version, release, epoch
   end
 
   def find_latest_packages_by_name name
-    Katello::PackageUtils.find_latest_packages(Pulp::Repository.packages_by_name(id, name))
+    Katello::PackageUtils.find_latest_packages(Pulp::Repository.packages_by_name(self.pulp_id, name))
   end
 
   def has_erratum? id
@@ -181,7 +283,7 @@ class Glue::Pulp::Repo
   end
 
   def sync
-    [Pulp::Repository.sync(id)]
+    [Pulp::Repository.sync(self.pulp_id)]
   end
 
   #get last sync status of all repositories in this product
@@ -212,23 +314,23 @@ class Glue::Pulp::Repo
   end
 
   def cancel_sync
-    Rails.logger.info "Cancelling synchronization of repository #{@id}"
-    history = Pulp::Repository.sync_history(@id)
+    Rails.logger.info "Cancelling synchronization of repository #{self.pulp_id}"
+    history = Pulp::Repository.sync_history(self.pulp_id)
     return if (history.nil? or history.empty?)
 
-    Pulp::Repository.cancel(@id.to_s, history[0][:id])
+    Pulp::Repository.cancel(self.pulp_id, history[0][:id])
   end
 
   def add_packages pkg_id_list
-    Pulp::Repository.add_packages self.id,  pkg_id_list
+    Pulp::Repository.add_packages self.pulp_id,  pkg_id_list
   end
 
   def add_errata errata_id_list
-    Pulp::Repository.add_errata self.id,  errata_id_list
+    Pulp::Repository.add_errata self.pulp_id,  errata_id_list
   end
 
   def add_distribution distribution_id
-    Pulp::Repository.add_distribution self.id,  distribution_id
+    Pulp::Repository.add_distribution self.pulp_id,  distribution_id
   end
 
   def sync_finish
@@ -245,31 +347,18 @@ class Glue::Pulp::Repo
 
 
   def _get_most_recent_sync_status()
-    history = Pulp::Repository.sync_history(@id)
+    history = Pulp::Repository.sync_history(pulp_id)
     return ::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED) if (history.nil? or history.empty?)
     ::PulpSyncStatus.using_pulp_task(history[0])
   end
 
   def synced?
-    sync_history = Pulp::Repository.sync_history @id
+    sync_history = Pulp::Repository.sync_history pulp_id
     !sync_history.nil? && !sync_history.empty? && successful_sync?(sync_history[0])
   end
 
   def successful_sync?(sync_history_item)
     sync_history_item['state'] == 'finished'
-  end
-
-  def promote(to_environment, filters = [])
-    content = self.content_for_clone
-
-    cloned = Glue::Pulp::Repo.new
-    cloned.id = self.clone_id(to_environment)
-    cloned.relative_path = Glue::Pulp::Repos.clone_repo_path(self, to_environment)
-    cloned.arch = arch
-    cloned.name = name
-    cloned.feed = feed
-    cloned.groupid = Glue::Pulp::Repos.groupid(self.product, to_environment, content)
-    [Pulp::Repository.clone_repo(self, cloned, "parent", filters)]
   end
 
   def organization_id
@@ -287,17 +376,8 @@ class Glue::Pulp::Repo
   def content_id
     get_groupid_param 'content'
   end
-
   def organization
     Organization.find(self.organization_id)
-  end
-
-  def environment
-    KTEnvironment.find(self.environment_id)
-  end
-
-  def product
-    Product.find_by_cp_id(self.product_id)
   end
 
   def content
@@ -310,17 +390,14 @@ class Glue::Pulp::Repo
     [organization_name, env_name, product_name, repo_name].compact.join("-").gsub(/[^-\w]/,"_")
   end
 
-  def self.find(id)
-    Glue::Pulp::Repo.new(Pulp::Repository.find(id))
-  end
-
   def add_filters filter_ids
-    ::Pulp::Repository.add_filters id, filter_ids
+    ::Pulp::Repository.add_filters self.pulp_id, filter_ids
   end
 
   def remove_filters filter_ids
-    ::Pulp::Repository.remove_filters id, filter_ids
+    ::Pulp::Repository.remove_filters self.pulp_id, filter_ids
   end
+
 
   # Convert array of Repo objects to Ruby Hash in the form of repo.id => repo_object for fast searches.
   #
@@ -348,8 +425,7 @@ class Glue::Pulp::Repo
 
   def clone_content
     return nil if self.clone_ids.empty?
-
-    clone = Glue::Pulp::Repo.find(self.clone_ids[0])
+    clone = Repository.find_by_pulp_id(self.clone_ids[0])
     clone.content
   end
 
@@ -379,6 +455,7 @@ class Glue::Pulp::Repo
     else
       return nil
     end
+  end
   end
 
 end

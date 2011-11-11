@@ -18,7 +18,8 @@ class UsersController < ApplicationController
   end
    
   before_filter :setup_options, :only => [:items, :index]
-  before_filter :find_user, :only => [:edit, :update, :update_roles, :clear_helptips, :destroy]
+  before_filter :find_user, :only => [:edit, :edit_environment, :update_environment,
+                                      :update, :update_roles, :clear_helptips, :destroy]
   before_filter :authorize
   skip_before_filter :require_org
 
@@ -39,6 +40,8 @@ class UsersController < ApplicationController
        :new => create_test,
        :create => create_test,
        :edit => read_test,
+       :edit_environment => read_test,
+       :update_environment => read_test,
        :update => edit_details_test,
        :update_roles => edit_test,
        :clear_helptips => edit_details_test,
@@ -53,25 +56,51 @@ class UsersController < ApplicationController
   end
 
   
-  def edit 
-    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:user=>@user, :editable=>@user.editable?, :name=>controller_display_name}
+  def edit
+    @organization = current_organization
+    accessible_envs = current_organization.environments
+    setup_environment_selector(current_organization, accessible_envs)
+    @environment = first_env_in_path(accessible_envs)
+    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:user=>@user,
+                                                                   :editable=>@user.editable?,
+                                                                   :name=>controller_display_name,
+                                                                   :accessible_envs => accessible_envs}
   end
   
   def new
     @user = User.new
-    render :partial=>"new", :layout => "tupane_layout", :locals=>{:user=>@user}
+    @organization = current_organization
+    accessible_envs = current_organization.environments
+    setup_environment_selector(current_organization, accessible_envs)
+    @environment = first_env_in_path(accessible_envs)
+    render :partial=>"new", :layout => "tupane_layout", :locals=>{:user=>@user, :accessible_envs => accessible_envs}
   end
 
   def create
-    @user = User.new(params[:user])
-    @user.save!
-    notice @user.username + _(" created successfully.")
-   
-    if User.where(:id => @user.id).search_for(params[:search]).include?(@user) 
-      render :partial=>"common/list_item", :locals=>{:item=>@user, :accessor=>"id", :columns=>["username"], :name=>controller_display_name}
-    else
-      notice _("'#{@user["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
-      render :json => { :no_match => true }
+    begin
+      @user = User.new(params[:user])
+      @environment = KTEnvironment.find(params[:user]['env_id'])
+      @organization = @environment.organization
+      @user.save!
+      perm = Permission.create! :role => @user.own_role,
+                         :resource_type=> ResourceType.find_or_create_by_name("environments"),
+                         :verbs=>[Verb.find_or_create_by_verb("register_systems")],
+                         :name=>"default systems reg permission",
+                         :organization=> @organization
+      PermissionTag.create!(:permission_id => perm.id, :tag_id => @environment.id)
+
+      notice @user.username + _(" created successfully.")
+      if User.where(:id => @user.id).search_for(params[:search]).include?(@user)
+        render :partial=>"common/list_item", :locals=>{:item=>@user, :accessor=>"id", :columns=>["username"], :name=>controller_display_name}
+      else
+        notice _("'#{@user["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+        render :json => { :no_match => true }
+      end
+    rescue Exception => error
+      errors error
+      #transaction, if something goes wrong with the creation of the permission, we will need to delete the user
+      @user.destroy if @user.id
+      render :json=>@user.errors, :status=>:bad_request
     end
   rescue Exception => error
     errors error
@@ -94,6 +123,64 @@ class UsersController < ApplicationController
     end
     errors "", {:list_items => @user.errors.to_a}
     render :text => @user.errors, :status=>:ok
+  end
+
+  def edit_environment
+    if @user.has_default_env?
+      @old_perm = Permission.find_all_by_role_id(@user.own_role.id)[0]
+      @environment = @user.default_environment
+      @old_env = @environment
+      @organization = Organization.find(@environment.attributes['organization_id'])
+    else
+      @organization = current_organization
+    end
+    accessible_envs = KTEnvironment.systems_registerable(@organization)
+    setup_environment_selector(@organization, accessible_envs)
+    #@environment = first_env_in_path(accessible_envs, false, @organization)
+
+    render :partial=>"edit_environment", :layout => "tupane_layout", :locals=>{:user=>@user,
+                                                                   :editable=>@user.editable?,
+                                                                   :name=>controller_display_name,
+                                                                   :accessible_envs => accessible_envs}
+  end
+
+  def update_environment
+    begin
+
+      new_env =  params["env_id"]["env_id"].to_i
+      if @user.has_default_env?
+        old_perm = Permission.find_all_by_role_id(@user.own_role.id)[0]
+        old_env = old_perm.tags[0].tag_id
+      end
+      if (old_perm.nil? || (old_env != new_env))
+        #First delete the old role if it is not equal to the old one
+        old_perm.destroy if @user.has_default_env?
+
+        @environment = KTEnvironment.find(new_env)
+        @organization = @environment.organization
+
+        #Second create a new one with the newly selected env
+        perm = Permission.create! :role => @user.own_role,
+                     :resource_type=> ResourceType.find_or_create_by_name("environments"),
+                     :verbs=>[Verb.find_or_create_by_verb("register_systems")],
+                     :name=>"default systems reg permission",
+                     :organization=> @organization
+        PermissionTag.create!(:permission_id => perm.id, :tag_id => new_env)
+
+        notice _("User environment updated successfully.")
+        #attr = params[:user].first.last if params[:user].first
+        #attr ||= ""
+        render :json => {:org => @organization.name, :env => @environment.name} and return
+      else
+        err_msg = N_("The default you supplied was the same as the old default.")
+        errors err_msg
+        render(:text => err_msg, :status => 400) and return
+      end
+
+    rescue Exception => error
+      errors error.message
+      render :text =>error.message, :status=>400
+    end
   end
 
   def update_roles
