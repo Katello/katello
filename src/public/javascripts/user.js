@@ -43,14 +43,18 @@ $(document).ready(function() {
         org_selector.change(function(event) {
         var refill = $('#env_box');
         var selected_org_id = org_selector.val();
-        var url = KT.common.rootURL() + 'organizations/' + selected_org_id +  '/environments_partial';
-        $.ajax({
-            type: "GET",
-            url: url,
-            success: function(data) {
-                  refill.html(data);
-           }
-        });
+        if(!selected_org_id) {
+            refill.html(i18n.noDefaultEnv);
+        } else {
+            var url = KT.common.rootURL() + 'organizations/' + selected_org_id +  '/environments_partial';
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function(data) {
+                      refill.html(data);
+               }
+            });
+        }
    });
 
         $('#password_field').simplePassMeter({
