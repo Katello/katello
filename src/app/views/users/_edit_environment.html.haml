@@ -21,7 +21,7 @@
     .grid_3.ra
       = label :user, :org, _("New Default Organization:")
     .grid_5.la
-      = organization_select @organization.id
+      = organization_select (@organization ? @organization.id : nil)
   %fieldset.fl.clear
   .promotion_paths
     = hidden_field_tag 'user[environment_id]', @environment.id unless @environment.nil?
@@ -30,7 +30,10 @@
     .grid_5.la
       - if @environment.nil?
         #env_box
-          #{_("No environments are currently available in this organization.  Please add some to be able to set default.")}
+          -if @organization.nil?
+            #{_("No default environment. Select an organization to choose from available environments.")}
+          -else
+            #{_("No environments are currently available in this organization. Saving will set user to no default environment.")}
       - else
         #env_box
           = environment_selector(:path_widget_class=>"grid_5", :path_entries_class=>"grid_5", :locker_clickable=>false,
@@ -38,9 +41,5 @@
     .clear
       &nbsp;
     .grid_5.la.prefix_3
-      - if @environment.nil?
-        #update_user.verify_password.button.disabled{'data-url'=>update_environment_user_path(@user.id)}
-          #{_("Save")}
-      -else
-        #update_user.verify_password.button{'data-url'=>update_environment_user_path(@user.id)}
-          #{_("Save")}
+      #update_user.verify_password.button{'data-url'=>update_environment_user_path(@user.id)}
+        #{_("Save")}

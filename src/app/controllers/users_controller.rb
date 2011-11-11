@@ -135,12 +135,12 @@ class UsersController < ApplicationController
       @environment = @user.default_environment
       @old_env = @environment
       @organization = Organization.find(@environment.attributes['organization_id'])
+      accessible_envs = KTEnvironment.systems_registerable(@organization)
+      setup_environment_selector(@organization, accessible_envs)
     else
-      @organization = current_organization
+      @organization = nil
+      accessible_envs = nil
     end
-    accessible_envs = KTEnvironment.systems_registerable(@organization)
-    setup_environment_selector(@organization, accessible_envs)
-    #@environment = first_env_in_path(accessible_envs, false, @organization)
 
     render :partial=>"edit_environment", :layout => "tupane_layout", :locals=>{:user=>@user,
                                                                    :editable=>@user.editable?,
@@ -150,31 +150,41 @@ class UsersController < ApplicationController
 
   def update_environment
     begin
-
-      new_env =  params["env_id"]["env_id"].to_i
+      new_env = params['env_id'] ? params['env_id']['env_id'].to_i : nil
       if @user.has_default_env?
         old_perm = Permission.find_all_by_role_id(@user.own_role.id)[0]
         old_env = old_perm.tags[0].tag_id
+      else
+        old_env = nil
       end
-      if (old_perm.nil? || (old_env != new_env))
+      #if (old_perm.nil? || (old_env != new_env))
+      if ((old_env != nil || new_env != nil) && old_env != new_env)
         #First delete the old role if it is not equal to the old one
         old_perm.destroy if @user.has_default_env?
 
-        @environment = KTEnvironment.find(new_env)
-        @organization = @environment.organization
+        if new_env
+          @environment = KTEnvironment.find(new_env)
+          @organization = @environment.organization
 
-        #Second create a new one with the newly selected env
-        perm = Permission.create! :role => @user.own_role,
-                     :resource_type=> ResourceType.find_or_create_by_name("environments"),
-                     :verbs=>[Verb.find_or_create_by_verb("register_systems")],
-                     :name=>"default systems reg permission",
-                     :organization=> @organization
-        PermissionTag.create!(:permission_id => perm.id, :tag_id => new_env)
+          #Second create a new one with the newly selected env
+          perm = Permission.create! :role => @user.own_role,
+                       :resource_type=> ResourceType.find_or_create_by_name("environments"),
+                       :verbs=>[Verb.find_or_create_by_verb("register_systems")],
+                       :name=>"default systems reg permission",
+                       :organization=> @organization
+          PermissionTag.create!(:permission_id => perm.id, :tag_id => new_env)
+        else
+          @old_env = nil
+          @environment = nil
+          @organization = nil
+        end
 
         notice _("User environment updated successfully.")
-        #attr = params[:user].first.last if params[:user].first
-        #attr ||= ""
-        render :json => {:org => @organization.name, :env => @environment.name} and return
+
+        if @organization && @environment
+          render :json => {:org => @organization.name, :env => @environment.name} and return
+        end
+        render :json => {:org => _("No default set for this user."), :env => _("No default set for this user.")} and return
       else
         err_msg = N_("The default you supplied was the same as the old default.")
         errors err_msg
