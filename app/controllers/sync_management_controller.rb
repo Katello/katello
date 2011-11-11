@@ -223,20 +223,17 @@ private
   def collect_repos products
     list = []
     products.each{|prod|
-      majors = []
-      major_map, non_found_repos = collect_majors(prod)
-      major_map.each{|major, major_repos|
-        minors = []
-        collect_release(major_repos).each{|minor, minor_repos|
-          arches = []
-          collect_arches(minor_repos).each{|arch, arch_repos|
-            arches << {:name=>arch, :id=>arch, :type=>"arch", :children=>[], :repos=>arch_repos}
-          }
-          minors << {:name=>minor, :id=>minor, :type=>"minor", :children=>arches, :repos=>[]}
+      minors = []
+      release, non_release = collect_release(prod.repos(current_organization.locker))
+      release.each{|minor, minor_repos|
+        arches = []
+        collect_arches(minor_repos).each{|arch, arch_repos|
+          arches << {:name=>arch, :id=>arch, :type=>"arch", :children=>[], :repos=>arch_repos}
         }
-        majors << {:name=>major, :id=>major, :type=>"major", :children=>minors, :repos=>[]}
+        minors << {:name=>minor, :id=>minor, :type=>"minor", :children=>arches, :repos=>[]}
       }
-      list << {:name=>prod.name, :id=>prod.id, :type=>"product",  :repos=>non_found_repos, :children=>majors}
+      
+      list << {:name=>prod.name, :id=>prod.id, :type=>"product",  :repos=>non_release, :children=>minors}
     }
     list
   end
@@ -259,11 +256,16 @@ private
 
   def collect_release repos
     release = {}
+    empty = []
     repos.each{|r|
-      release[r.release] ||= []
-      release[r.release] << r
+      if r.release
+        release[r.release] ||= []
+        release[r.release] << r
+      else
+        empty << r 
+      end
     }
-    release
+    [release, empty]
   end
 
   def collect_arches repos
