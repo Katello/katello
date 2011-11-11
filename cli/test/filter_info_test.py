@@ -33,7 +33,7 @@ class FilterAddTest(CLIActionTestCase):
         'org':ORG,
         'name':FILTER
     }
-    
+
     def setUp(self):
         self.set_action(Info())
         self.set_module(katello.client.core.filters)
@@ -44,10 +44,10 @@ class FilterAddTest(CLIActionTestCase):
 
     def tearDown(self):
         self.restore_mocks()
-                
+
     def test_it_calls_filter_info_api(self):
         self.action.run()
         self.action.api.info.assert_called_once_with(self.ORG, self.FILTER)
-        
+
     def test_package_list_as_string(self):
         self.assertEqual("filter1, filter2, filter3", self.action.package_list_as_string(["filter1", "filter2", "filter3"]))

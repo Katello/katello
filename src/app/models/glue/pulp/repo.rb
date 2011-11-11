@@ -117,6 +117,8 @@ module Glue::Pulp::Repo
       self.arch = clone_from.arch
       self.name = clone_from.name
       self.feed = clone_from.feed
+      self.major = clone_from.major
+      self.minor = clone_from.minor
       self.groupid = Glue::Pulp::Repos.groupid(environment_product.product, environment_product.environment, cloned_content)
     end
   end
@@ -128,10 +130,25 @@ module Glue::Pulp::Repo
 
   def destroy_repo
     Pulp::Repository.destroy(self.pulp_id)
+    true
+  end
+
+  def del_content
+    return true if self.content.nil?
+    content_group_id = Glue::Pulp::Repos.content_groupid(self.content)
+
+    content_repo_ids = Pulp::Repository.all([content_group_id]).map{|r| r['id']}
+    other_content_repo_ids = (content_repo_ids - [self.pulp_id])
+
+    if other_content_repo_ids.empty?
+      self.product.remove_content_by_id self.content_id
+    end
+    true
   end
 
   def destroy_repo_orchestration
-    queue.create(:name => "delete pulp repo : #{self.name}", :priority => 6, :action => [self, :destroy_repo])
+    queue.create(:name => "remove product content : #{self.name}", :priority => 1, :action => [self, :del_content])
+    queue.create(:name => "delete pulp repo : #{self.name}",       :priority => 2, :action => [self, :destroy_repo])
   end
 
   # TODO: remove after pulp >= 0.0.401 get's released. There is this attribute

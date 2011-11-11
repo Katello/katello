@@ -350,11 +350,11 @@ class ListFilters(ProductAction):
 
 class AddFilter(ProductAction):
     description = _('add a filter to a product')
-    
+
     def __init__(self):
         super(AddFilter, self).__init__()
         self.filterAPI = FilterAPI()
-    
+
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
                                help=_("organization name eg: foo.example.com (required)"))
@@ -376,13 +376,13 @@ class AddFilter(ProductAction):
         prod = get_product(orgName, prodName)
         if (prod == None):
             return os.EX_DATAERR
-            
+
         if self.filterAPI.info(orgName, filterName) == None:
             return os.EX_DATAERR
-            
+
         filters = self.api.filters(prod['id'])
         self.api.update_filters(prod['id'], [f['name'] for f in filters] + [filterName])
-        
+
         print _("Added filter [ %s ] to product [ %s ]" % (filterName, prodName))
         return os.EX_OK
 
@@ -418,18 +418,18 @@ class DeleteFilter(ProductAction):
         if self.filterAPI.info(orgName, filterName) == None:
             return os.EX_DATAERR
 
-        filters = self.api.filters(prod['id'])        
+        filters = self.api.filters(prod['id'])
         existingFilterNames = [f['name'] for f in filters]
 
         if len(existingFilterNames) == 0:
-            return os.EX_OK            
+            return os.EX_OK
 
-        existingFilterNames.remove(filterName)             
+        existingFilterNames.remove(filterName)
         self.api.update_filters(prod['id'], existingFilterNames)
 
         print _("Deleted filter [ %s ] from product [ %s ]" % (filterName, prodName))
         return os.EX_OK
-    
+
 # product command ------------------------------------------------------------
 
 class Product(Command):

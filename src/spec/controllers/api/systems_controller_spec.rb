@@ -170,7 +170,7 @@ describe Api::SystemsController do
 
     it "requires either organization_id, owner, or environment_id" do
       get :index
-      response.code.should == "400"
+      response.code.should == "404"
     end
 
     it "should show all systems in the organization" do

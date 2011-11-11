@@ -24,7 +24,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
 
 
 class DeleteTest(CLIActionTestCase):
-    
+
     ORG = test_data.ORGS[0]
     PROD = test_data.PRODUCTS[0]
 
@@ -32,7 +32,7 @@ class DeleteTest(CLIActionTestCase):
         'org': ORG['name'],
         'name': PROD['name']
     }
-    
+
     def setUp(self):
         self.set_action(Delete())
         self.set_module(katello.client.core.product)
@@ -46,16 +46,15 @@ class DeleteTest(CLIActionTestCase):
     def test_it_finds_the_product(self):
         self.action.run()
         self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'])
-     
+
     def test_it_returns_error_when_product_not_found(self):
         self.mock(self.module, 'get_product', None)
         self.assertEqual(self.action.run(), os.EX_DATAERR)
-        
+
     def test_it_calls_delete_api(self):
         self.action.run()
         self.action.api.delete.assert_called_once_with(self.PROD['id'])
-        
+
     def test_it_returns_status_ok(self):
         self.action.run()
         self.assertEqual(self.action.run(), os.EX_OK)
-        

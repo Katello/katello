@@ -37,7 +37,7 @@ class FilterAPI(KatelloAPI):
     def info(self, org, name):
         path = "/api/organizations/%s/filters/%s" % (str(org), str(name))
         return self.server.GET(path)[1]
-        
+
     def update_packages(self, org, name, package_list):
         path = "/api/organizations/%s/filters/%s" % (str(org), str(name))
         return self.server.PUT(path, {'packages': package_list})[1]

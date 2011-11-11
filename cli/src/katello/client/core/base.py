@@ -80,7 +80,7 @@ class Command(object):
     def __build_action_usage_lines(self, action):
         lines = []
         desc_lines = action.description.split("\n")
-        
+
         lines.append('\t%-14s %s' % (action.name, desc_lines.pop(0)) )
         for l in desc_lines:
             lines.append('\t%-14s %s' % (" ", l) )

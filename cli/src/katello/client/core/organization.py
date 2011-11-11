@@ -171,14 +171,14 @@ class GenerateDebugCert(OrganizationAction):
         name = self.get_option('name')
 
         uebercert = self.api.generate_uebercert(name)
-        
+
         self.printer.addColumn('key')
         self.printer.addColumn('cert')
         self.printer.setHeader(_("Organization Uebercert"))
         self.printer.printItem(uebercert)
-        
+
         return os.EX_OK
-        
+
 # ------------------------------------------------------------------------------
 
 class ShowDebugCert(OrganizationAction):
@@ -195,22 +195,22 @@ class ShowDebugCert(OrganizationAction):
     def run(self):
         name = self.get_option('name')
         uebercert = self.api.uebercert(name)
-        
+
         self.printer.addColumn('key')
         self.printer.addColumn('cert')
         self.printer.setHeader(_("Organization Uebercert"))
         self.printer.printItem(uebercert)
-        
+
         return os.EX_OK
-        
+
 class ShowSubscriptions(OrganizationAction):
-    
+
     description = _('show subscriptions')
-    
+
     def __init__(self):
         super(ShowSubscriptions, self).__init__()
         self.productApi = ProductAPI()
-    
+
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
                                help=_("organization name eg: foo.example.com (required)"))
@@ -223,7 +223,7 @@ class ShowSubscriptions(OrganizationAction):
         pools = self.api.pools(name)
 
         updated_pool_info = [self.displayable_pool(pool) for pool in pools]
-        
+
         self.printer.setOutputMode(Printer.OUTPUT_FORCE_VERBOSE)
         self.printer.addColumn('productName')
         self.printer.addColumn('consumed')
@@ -234,7 +234,7 @@ class ShowSubscriptions(OrganizationAction):
         self.printer.addColumn('endDate')
         self.printer.setHeader(_("Organization's Subscriptions"))
         self.printer.printItems(updated_pool_info)
-        
+
         return os.EX_OK
 
     def sla(self, pool):
@@ -245,7 +245,7 @@ class ShowSubscriptions(OrganizationAction):
         delta = timedelta(hours = offset / 100)
         t = datetime.strptime(timestamp_field[:-9], "%Y-%m-%dT%H:%M:%S") - delta
         return datetime.strftime(t, "%Y/%m/%d %H:%M:%S")
-    
+
     def extract_sla_from_product(self, p):
         sla_attr = [attr.get("value", "") for attr in p["attributes"] if attr.get("name", "") == "sla"]
         return sla_attr[0] if len(sla_attr) > 0 else ""
