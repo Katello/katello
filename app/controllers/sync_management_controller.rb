@@ -224,7 +224,7 @@ private
     list = []
     products.each{|prod|
       minors = []
-      release, non_release = collect_release(prod.repos(current_organization.locker))
+      release, non_release = collect_minor(prod.repos(current_organization.locker))
       release.each{|minor, minor_repos|
         arches = []
         collect_arches(minor_repos).each{|arch, arch_repos|
@@ -239,33 +239,18 @@ private
   end
 
 
-  def collect_majors prod
-    majors = {}
-    non_major = [] #list of repos that don't have a major version
-    prod.repos(current_organization.locker).each{|r|
-      if r.major_version
-        majors[r.major_version] ||= []
-        majors[r.major_version] << r
-      else
-        non_major << r
-      end
-
-    }
-    [majors, non_major]
-  end
-
-  def collect_release repos
-    release = {}
+  def collect_minor repos
+    minors = {}
     empty = []
     repos.each{|r|
-      if r.release
-        release[r.release] ||= []
-        release[r.release] << r
+      if r.minor
+        minors[r.minor] ||= []
+        minors[r.minor] << r
       else
         empty << r 
       end
     }
-    [release, empty]
+    [minors, empty]
   end
 
   def collect_arches repos
