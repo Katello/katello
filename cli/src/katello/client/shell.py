@@ -20,7 +20,12 @@
 
 # NOTE: the 'self' variable is an instance of SpacewalkShell
 
-import atexit, logging, os, readline, re, sys
+import atexit
+import logging
+import os
+import readline
+import re
+import sys
 from cmd import Cmd
 from pwd import getpwuid
 

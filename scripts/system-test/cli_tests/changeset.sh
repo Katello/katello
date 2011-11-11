@@ -49,10 +49,3 @@ test_success "changeset add template" changeset update  --org="$TEST_ORG" --envi
 test_success "changeset promote" changeset promote --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_3"
 
 test_success "changeset remove template" changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$CS_NAME_3" --remove_template="$PROM_TEMPLATE_NAME"
-
-
-
-
-
-
-
