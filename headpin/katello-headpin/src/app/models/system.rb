@@ -35,6 +35,7 @@ class System < ActiveRecord::Base
 
   validates :environment, :presence => true, :non_locker_environment => true
   validates :name, :presence => true, :no_trailing_space => true, :uniqueness => true
+  validates_uniqueness_of :name, :scope => :environment_id
   validates :description, :katello_description_format => true
   validates_length_of :location, :maximum => 255
   before_create  :fill_defaults
