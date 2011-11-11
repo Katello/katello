@@ -13,7 +13,6 @@
 
 class ProvidersController < ApplicationController
   include AutoCompleteSearch
-
   before_filter :find_provider, :only => [:products_repos, :show, :subscriptions, :update_subscriptions, :edit, :update, :destroy]
   before_filter :authorize #after find_provider
   before_filter :panel_options, :only => [:index, :items]

@@ -10,6 +10,15 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+class RepoDisablementValidator < ActiveModel::Validator
+  def validate(record)
+    if record.redhat? && record.enabled_changed? && (!record.enabled?) && record.promoted?
+      record.errors[:base] << N_("Repository cannot be disabled since it has already been promoted.")
+    end
+  end
+end
+
+
 class Repository < ActiveRecord::Base
   include Glue::Pulp::Repo if (AppConfig.use_cp and AppConfig.use_pulp)
   include Glue if AppConfig.use_cp
@@ -19,7 +28,7 @@ class Repository < ActiveRecord::Base
   has_and_belongs_to_many :changesets
   validates :pulp_id, :presence => true, :uniqueness => true
   validates :name, :presence => true
-
+  validates :enabled, :repo_disablement => true, :on => [:update]
 
   def product
     self.environment_product.product

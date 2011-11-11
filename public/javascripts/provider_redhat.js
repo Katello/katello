@@ -19,5 +19,43 @@ $(document).ready(function() {
     clickableNodeNames: true,
     onNodeShow: function(){$.sparkline_display_visible()}
   });
+    KT.common.jscroll_init($('.scroll-pane'));
+    KT.common.jscroll_resize($('.jspPane'));
+
+  $("#products_table").treeTable({
+    expandable: true,
+    initialState: "collapsed",
+    clickableNodeNames: true,
+    onNodeShow: function(){$.sparkline_display_visible()}
+  });
+
+    $('#products_table input[type="checkbox"]').bind('change', function() {
+        KT.redhat_provider_page.checkboxChanged($(this));
+    });
+
   //end doc ready
 });
+
+
+KT.redhat_provider_page = (function($) {
+    checkboxChanged = function(checkbox) {
+        var name = checkbox.attr("name");
+        var options = {};
+        if (checkbox.attr("checked") !== undefined) {
+            options[name] = "1";
+        } else {
+            options[name] = "0";
+        }
+        var url = checkbox.attr("data-url");
+        $.ajax({
+            type: "PUT",
+            url: url,
+            data: options,
+            cache: false
+        });
+        return false;
+    };
+    return {
+        checkboxChanged: checkboxChanged
+    }
+}(jQuery));
