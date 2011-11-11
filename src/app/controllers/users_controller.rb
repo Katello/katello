@@ -76,15 +76,22 @@ class UsersController < ApplicationController
   def create
     begin
       @user = User.new(params[:user])
-      @environment = KTEnvironment.find(params[:user]['env_id'])
-      @organization = @environment.organization
-      @user.save!
-      perm = Permission.create! :role => @user.own_role,
-                         :resource_type=> ResourceType.find_or_create_by_name("environments"),
-                         :verbs=>[Verb.find_or_create_by_verb("register_systems")],
-                         :name=>"default systems reg permission",
-                         :organization=> @organization
-      PermissionTag.create!(:permission_id => perm.id, :tag_id => @environment.id)
+      env_id = params[:user]['env_id']
+      if env_id
+        @environment = KTEnvironment.find(env_id)
+        @organization = @environment.organization
+        @user.save!
+        perm = Permission.create! :role => @user.own_role,
+                           :resource_type=> ResourceType.find_or_create_by_name("environments"),
+                           :verbs=>[Verb.find_or_create_by_verb("register_systems")],
+                           :name=>"default systems reg permission",
+                           :organization=> @organization
+        PermissionTag.create!(:permission_id => perm.id, :tag_id => @environment.id)
+      else
+        @user.save!
+        @environment = nil
+        @organization = nil
+      end
 
       notice @user.username + _(" created successfully.")
       if User.where(:id => @user.id).search_for(params[:search]).include?(@user)
