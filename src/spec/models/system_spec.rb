@@ -34,6 +34,7 @@ describe System do
      {"epoch" => 0, "name" => "twolame-libs", "arch" => "x86_64", "version" => "0.3.12", "vendor" => "RPM Fusion", "release" => "4.fc11"},
      {"epoch" => 0, "name" => "gtk-vnc", "arch" => "x86_64", "version" => "0.4.2", "vendor" => "Fedora Project", "release" => "4.fc14"}]
   }
+  let(:installed_products) { [{"productId"=>"69", "productName"=>"Red Hat Enterprise Linux Server"}] }
 
   before(:each) do
     disable_org_orchestration
@@ -43,7 +44,13 @@ describe System do
 
     Organization.stub!(:first).and_return(@organization)
 
-    @system = System.new(:name => system_name, :environment => @environment, :cp_type => cp_type, :facts => facts, :description => description, :uuid => uuid)
+    @system = System.new(:name => system_name,
+                         :environment => @environment,
+                         :cp_type => cp_type,
+                         :facts => facts,
+                         :description => description,
+                         :uuid => uuid,
+                         :installedProducts => installed_products)
 
     Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Candlepin::Consumer.stub!(:update).and_return(true)
@@ -60,7 +67,7 @@ describe System do
   end
 
   it "registers system in candlepin and pulp on create" do
-    Candlepin::Consumer.should_receive(:create).once.with(@organization.name, system_name, cp_type, facts).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Candlepin::Consumer.should_receive(:create).once.with(@organization.name, system_name, cp_type, facts, installed_products).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}})
     @system.save!
   end
@@ -97,11 +104,19 @@ describe System do
   context "update system" do
     before(:each) do
       @system.save!
-      @system.facts = facts
     end
 
-    it "should call Candlepin::Consumer.update" do
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, facts, nil).and_return(true)
+    it "should give facts to Candlepin::Consumer" do
+      @system.facts = facts
+      @system.installedProducts = nil # simulate it's not loaded in memory
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, facts, nil, nil).and_return(true)
+      @system.save!
+    end
+
+    it "should give installeProducts to Candlepin::Consumer" do
+      @system.installedProducts = installed_products
+      @system.facts = nil # simulate it's not loaded in memory
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products).and_return(true)
       @system.save!
     end
 s  end

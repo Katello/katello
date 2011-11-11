@@ -30,6 +30,7 @@ describe Api::SystemsController do
      {"epoch" => 0, "name" => "twolame-libs", "arch" => "x86_64", "version" => "0.3.12", "vendor" => "RPM Fusion", "release" => "4.fc11"},
      {"epoch" => 0, "name" => "gtk-vnc", "arch" => "x86_64", "version" => "0.4.2", "vendor" => "Fedora Project", "release" => "4.fc14"}]
   }
+  let(:installed_products) { [{"productId"=>"69", "productName"=>"Red Hat Enterprise Linux Server"}] }
   let(:sorted) { package_profile.sort {|a,b| a["name"].downcase <=> b["name"].downcase} }
 
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can(:read_systems, :organizations, nil, @organization) } }
@@ -67,6 +68,11 @@ describe Api::SystemsController do
     it "requires either environment_id, owner, or organization_id to be specified" do
       post :create
       response.code.should == "400"
+    end
+
+    it "sets insatalled products to the consumer" do
+        System.should_receive(:create!).with(hash_including(:environment => @environment_1, :cp_type => 'system', :installedProducts => installed_products, :name => 'test')).once.and_return({})
+        post :create, :organization_id => @organization.name, :name => 'test', :cp_type => 'system', :installedProducts => installed_products
     end
 
     context "in organization with one environment" do
@@ -261,6 +267,14 @@ describe Api::SystemsController do
     it "should change the location" do
       Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true)
       post :update, :id => uuid, :location => "never-neverland"
+      response.body.should == @sys.to_json
+      response.should be_success
+    end
+
+    it "should update installed products" do
+      @sys.facts = nil
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products).and_return(true)
+      post :update, :id => uuid, :installedProducts => installed_products
       response.body.should == @sys.to_json
       response.should be_success
     end
