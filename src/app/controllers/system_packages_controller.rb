@@ -98,7 +98,7 @@ class SystemPackagesController < ApplicationController
     else
       packages = []
     end
-    render :partial=>"more_packages", :locals=>{:system=>@system, :packages => packages, :offset=> offset}
+    render :partial=>"package_items", :locals=>{:packages => packages, :offset=> offset}
   end
 
   private
