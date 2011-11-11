@@ -78,8 +78,10 @@ class UsersController < ApplicationController
 
   def create
     begin
+      # Pulp quietly ignored unkonwn attributes; Headpin needs to remove
+      env_id = params[:user].delete(:env_id)
       @user = User.new(params[:user])
-      @environment = KTEnvironment.find(params[:user]['env_id'])
+      @environment = KTEnvironment.find(env_id)
       @organization = @environment.organization
       @user.save!
       perm = Permission.create! :role => @user.own_role,
