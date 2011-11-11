@@ -38,61 +38,14 @@
             = _("Subscription")
         %li
           %a{:href => "#tabs-2"}
+            = _("Enable Repositories")
+
+        %li
+          %a{:href => "#tabs-3"}
             = _("Import History")
     #tabs-1
-      .tree
-        %table#redhatSubscriptionTable
-          %thead
-            %th{:style => "width: 80%"} #{_("Name")}
-            %th #{_("Consumed")}
-          %tbody
-            - if @grouped_subscriptions.length > 0
-              - @grouped_subscriptions.each do |group_name, sub_group|
-                - cycle_class = cycle("", "alt")
-                - if sub_group.length > 1
-                  %tr{:id => "#{group_name}", :class => cycle_class}
-                    %td
-                      -# The group's name is just the product name of the first element in array
-                      = sub_group[0]["productName"]
-                    %td
-                  - sub_class = "child-of-#{group_name}"
-                - else
-                  - sub_class = "#{group_name}"
-                - sub_group.each do |sub|
-                  %tr{:id => "#{sub["subscriptionId"]}", :class => "#{sub_class} #{cycle_class}"}
-                    %td
-                      = sub["productName"]
-                    %td
-                      = "#{sub["consumed"]} of #{sub["quantity"]}"
-                  -# TODO: Should the bundled products be displayed too?
-                  -# - if sub["providedProducts"].length > 0
-                  -#   %tr{:class => "child-of-#{sub["subscriptionId"]} #{cycle_class}"}
-                  -#     %td{:colspan=>7}
-                  -#       = _("Bundled Products:")
-                  -# - sub["providedProducts"].each do |product|
-                  -#   %tr{:class => "child-of-#{sub["subscriptionId"]} #{cycle_class}"}
-                  -#     %td{:colspan=>7}
-                  -#       %ul
-                  -#         %li
-                  -#           &nbsp;&nbsp;
-                  -#           = product["productName"]
-                  -#         -# - product.productContent.each do |product_content|
-                  -#         -#   = render :partial=>'subscription_details', :locals=>{:group => sub["subscriptionId"], :product_content => product_content}
-            - else
-              %tr
-                %td{:colspan=>5} #{_("No subscriptions have been imported.")}
+      = render :partial=>"providers/redhat/subscription_details"
     #tabs-2
-      %table
-        %thead
-          %th #{_("Message")}
-          %th #{_("Import Time")}
-        %tbody
-        - if @statuses
-          - @statuses.each do |status|
-            %tr{:class => cycle(nil, 'alt')}
-              %td{:style => "width: 70%;"}
-                %span.icon_wrap.fl
-                  %span.fl{:class => (status["status"] == "FAILURE" ? "failure_icon" : "success_icon")}
-                = status["statusMessage"]
-              %td
-                = _("%s ago") % time_ago_in_words(status["created"])
+      = render :partial=>"providers/redhat/repo_whitelist"
+    #tabs-3
+      = render :partial=>"providers/redhat/import_history"

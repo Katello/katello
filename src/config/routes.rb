@@ -173,6 +173,7 @@ Src::Application.routes.draw do
   match '/providers/:id' => 'providers#update', :via => :put
   match '/providers/:id' => 'providers#update', :via => :post
 
+  match '/repositories/:id/enable_repo' => 'repositories#enable_repo', :via => :put, :as => :enable_repo
 
   resources :promotions, :only =>[] do
     collection do
@@ -256,6 +257,7 @@ Src::Application.routes.draw do
     post 'set_org'
     get 'allowed_orgs'
   end
+
 
   resource :account
 
@@ -390,6 +392,8 @@ Src::Application.routes.draw do
       resources :activation_keys, :only => [:index, :create]
       resources :templates, :only => [:index]
     end
+
+
 
     resources :activation_keys do
       post :pools, :action => :add_pool, :on => :member
