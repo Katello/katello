@@ -2,7 +2,8 @@
 %tr{:class=>parent_set_class(parent_set), :id=>repo_id(repo), "data-product_id="=>repo.product.id, "data-id"=>repo.id}
   %td
     .one-line-ellipsis{:title=>repo.name}
-      =check_box_tag "repo", repo.id, repo.enabled?,{:id=>"input_repo_#{repo.id}",
-            "data-url" => enable_repo_path(repo.id), :disabled =>(repo.promoted?)}
+      -if can_enable_repo?
+        =check_box_tag "repo", repo.id, repo.enabled?,{:id=>"input_repo_#{repo.id}",
+              "data-url" => enable_repo_path(repo.id), :disabled =>(repo.promoted?)}
       %label{:for=>"input_repo_#{repo.id}"}
         #{repo.name}

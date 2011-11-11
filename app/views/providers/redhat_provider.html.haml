@@ -18,16 +18,17 @@
       %fieldset.fl.clear
         .grid_5
           %label #{_("Repository Url")}:
-        .grid_5.la.editable.edit_textfield{'name' => 'provider[repository_url]', 'data-url' => provider_path(@provider.id)} #{@provider[:repository_url]}
+        .grid_5.la{'name' => 'provider[repository_url]',:class=>("editable edit_textfield" if can_edit_rh_provider?),  'data-url' => provider_path(@provider.id)} #{@provider[:repository_url]}
   %br.clearfloat
-  #subscription_manifest
-    %h4 #{_("Upload Subscription Manifest")}
-    = form_for @provider, :html => {:multipart => true, :method => :post, :id => :upload_manifest}, :remote => true, :url => redhat_provider_providers_path do |f|
-      .grid_4
-        = f.label :upload, _("Specify Local Manifest")
-        = f.file_field :contents
-      #upload_button.fr
-        = f.submit _("Upload")
+  - if can_upload_rh_manifest?
+    #subscription_manifest
+      %h4 #{_("Upload Subscription Manifest")}
+      = form_for @provider, :html => {:multipart => true, :method => :post, :id => :upload_manifest}, :remote => true, :url => redhat_provider_providers_path do |f|
+        .grid_4
+          = f.label :upload, _("Specify Local Manifest")
+          = f.file_field :contents
+        #upload_button.fr
+          = f.submit _("Upload")
 
 .grid_10
   #tabs
