@@ -72,7 +72,7 @@ module Glue::Pulp::Repos
   def self.prepopulate! products, environment, repos=[]
     full_repos = Pulp::Repository.all
     products.each{|prod|
-      prod.repos(environment).each{|repo|
+      prod.repos(environment, true).each{|repo|
         repo.populate_from(full_repos)
       }
     }
@@ -88,7 +88,7 @@ module Glue::Pulp::Repos
     end
 
 
-    def repos env, include_disabled = true
+    def repos env, include_disabled = false
       @repo_cache = {} if @repo_cache.nil?
       #cache repos so we can cache lazy_accessors
       if @repo_cache[env.id].nil?

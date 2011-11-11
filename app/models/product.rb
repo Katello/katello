@@ -12,7 +12,7 @@
 
 class LockerPresenceValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    record.errors[attribute] << "must contain 'Locker'" if value.select {|e| e.locker}.empty?
+    record.errors[attribute] << N_("must contain 'Locker'") if value.select {|e| e.locker}.empty?
   end
 end
 
@@ -20,7 +20,7 @@ class ProductNameUniquenessValidator < ActiveModel::Validator
   def validate(record)
     name_duplicate_ids = Product.select("products.id").joins(:provider).where("products.name" => record.name, "providers.organization_id" => record.organization.id).all.map {|p| p.id}
     name_duplicate_ids = name_duplicate_ids - [record.id]
-    record.errors[:base] << _("Products within an organization must have unique name.") if name_duplicate_ids.count > 0
+    record.errors[:base] << N_("Products within an organization must have unique name.") if name_duplicate_ids.count > 0
   end
 end
 
@@ -52,6 +52,11 @@ class Product < ActiveRecord::Base
   scope :completer_scope, lambda { |options| authorized_items(options[:organization_id], READ_PERM_VERBS)}
   scoped_search :on => :name, :complete_value => true
   scoped_search :on => :multiplier, :complete_value => true
+  scope :with_repos_only, lambda { |env|
+    where("products.id in (" +
+              EnvironmentProduct.joins(:repositories).where(
+          :environment_id => env).select("DISTINCT environment_products.product_id").to_sql + ")")
+  }
 
   def initialize(attrs = nil)
 

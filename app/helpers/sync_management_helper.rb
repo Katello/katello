@@ -33,4 +33,66 @@ module SyncManagementHelper
     "repo-#{repo.id}"
   end
 
+
+  module RepoMethods
+    def collect_repos products, env, include_disabled = false
+      Glue::Pulp::Repos.prepopulate! products, env,[]
+      list = []
+      products.each{|prod|
+        minors = []
+        release, non_release = collect_minor(prod.repos(current_organization.locker, include_disabled))
+        release.each{|minor, minor_repos|
+          arches = []
+          collect_arches(minor_repos).each{|arch, arch_repos|
+            arches << {:name=>arch, :id=>arch, :type=>"arch", :children=>[], :repos=>arch_repos}
+          }
+          minors << {:name=>minor, :id=>minor, :type=>"minor", :children=>arches, :repos=>[]}
+        }
+
+        list << {:name=>prod.name, :id=>prod.id, :type=>"product",  :repos=>non_release, :children=>minors}
+      }
+      list
+    end
+
+
+    def collect_minor repos
+      minors = {}
+      empty = []
+      repos.each{|r|
+        if r.minor
+          minors[r.minor] ||= []
+          minors[r.minor] << r
+        else
+          empty << r
+        end
+      }
+      [minors, empty]
+    end
+
+    def collect_arches repos
+      arches = {}
+      repos.each{|r|
+        arches[r.arch] ||= [ ]
+        arches[r.arch] << r
+      }
+      arches
+    end
+
+    #Used for debugging collect_repos output
+    def pprint_collection coll
+      coll.each{|prod|
+        Rails.logger.error prod[:name]
+        prod[:children].each{|major|
+          Rails.logger.error major[:name]
+          major[:children].each{|minor|
+            Rails.logger.error minor[:name]
+            minor[:children].each{|arch|
+              Rails.logger.error arch[:repos].length
+            }
+          }
+        }
+      }
+    end
+  end
+
 end

@@ -250,6 +250,10 @@ module Glue::Pulp::Repo
     self.clone_ids.include? clone_id
   end
 
+  def promoted?
+    !self.clone_ids.empty?
+  end
+
   def get_clone env
     Repository.find_by_pulp_id(self.clone_id(env))
   rescue
