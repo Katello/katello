@@ -1,5 +1,6 @@
 - pid = prod[:id]
-%tr.product{:id=>product_id(pid)}
+- cycle_class = cycle("", "alt")
+%tr.product{:id=>product_id(pid), :class => cycle_class}
   -#%td{:class=>'product', 'data-id'=>prod.id}
   %td
     -#= check_box_tag "product[#{pid}]", '', '', :disabled=>!@sproducts.include?(prod)
@@ -15,10 +16,10 @@
 
 
 
-= render :partial=>"children", :locals=>{:children=>prod[:children], :parent_set=>[pid]} if !prod[:children].empty?
+= render :partial=>"children", :locals=>{:children=>prod[:children], :parent_set=>[pid], :cycle_class=>cycle_class} if !prod[:children].empty?
 
 = render :partial=>"repo", :collection=>prod[:repos].sort{|a,b| a.name <=> b.name},
-                  :as=>:repo, :locals=>{:parent_set=>[pid]} if !prod[:repos].empty?
+                  :as=>:repo, :locals=>{:parent_set=>[pid], :cycle_class=>cycle_class} if !prod[:repos].empty?
 
 
 
