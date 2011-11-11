@@ -39,16 +39,7 @@
                     %input{:type=>'text', :id=>'add_package_groups_input', :size=>'35', :placeholder => help_text, :title => help_text}
                     %a#add_package_groups{:style => 'padding-left: 16px;', 'data-url' => add_system_system_packages_path(@system.id)} #{_('+ Add Groups')}
 
-            -packages.each do |p|
-              - cssclass = cycle("alt", "")
-              %tr{:class => cssclass}
-                %td.package_select
-                  = check_box_tag "package[#{p.name}]"
-                %td.package_status.packages_icon
-                %td{:class=>"package"}
-                  #{p.nvrea}
-                %td{:class=>"arch"}
-                  TODO: installed date
+            = render :partial => 'package_items', :locals => {:packages => packages}
 
         %a#more{"data-scroll_url"=>url_for(more_packages_system_system_packages_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("More...")}
 

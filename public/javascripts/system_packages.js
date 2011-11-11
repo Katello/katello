@@ -95,7 +95,7 @@ KT.packages = function() {
 
         dataScrollURL = dataScrollURL + "?reverse=" + reverse + "&pkg_order=" + KT.packages.sortOrder() + "&";
         spinner.fadeIn();
-        list.find('tbody > tr').empty().remove();
+        list.find('tbody > tr.package').empty().remove();
         $.ajax({
             type: "GET",
             url: dataScrollURL,
