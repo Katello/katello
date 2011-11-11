@@ -25,10 +25,19 @@
             %th
               #{_("Date Added")}
           %tbody
+            -if editable
+              %tr.no_sort
+                %td{:colspan => 4}
+                  %div#add_packages_form
+                    - help_text = _("Enter package names separated by a space...")
+                    %input{:type=>'text', :id=>'add_packages_input', :size=>'35', :placeholder => help_text, :title => help_text}
+                    %a#add_packages{:style => 'padding-left: 16px;', 'data-url' => add_system_system_packages_path(@system.id)} #{_('+ Add')}
+
             -packages.each do |p|
-              %tr
+              - cssclass = cycle("alt", "")
+              %tr{:class => cssclass}
                 %td.package_select
-                  = check_box_tag "package_id[#{p.id}]"
+                  = check_box_tag "package[#{p.name}]"
                 %td.package_status.packages_icon
                 %td{:class=>"package"}
                   #{p.nvrea}
