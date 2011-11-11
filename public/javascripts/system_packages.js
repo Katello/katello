@@ -30,6 +30,7 @@ KT.packages = function() {
     add_packages_button = $('#add_packages'),
     add_package_groups_form = $('#add_package_groups_form'),
     add_package_groups_button = $('#add_package_groups'),
+    selected_checkboxes = 0,
     disableButtons = function() {
         remove_button.attr('disabled', 'disabled');
         update_button.attr('disabled', 'disabled');
@@ -61,6 +62,7 @@ KT.packages = function() {
                 retrievingNewContent = false;
                 spinner.fadeOut();
                 list.append(data);
+                registerCheckboxEvents();
                 $('#filter').keyup();
                 $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
                 if (data.length == 0) {
@@ -104,6 +106,7 @@ KT.packages = function() {
                 retrievingNewContent = false;
                 spinner.fadeOut();
                 list.append(data);
+                registerCheckboxEvents();
                 $('#filter').keyup();
                 $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
                 if (data.length == 0) {
@@ -118,6 +121,23 @@ KT.packages = function() {
             }
         });
     },
+    registerCheckboxEvents = function() {
+        var checkboxes = $('input[type="checkbox"]');
+        checkboxes.unbind('change');
+        checkboxes.each(function(){
+            $(this).change(function(){
+                if($(this).is(":checked")){
+                    selected_checkboxes++;
+                    enableButtons();
+                }else{
+                    selected_checkboxes--;
+                    if(selected_checkboxes == 0){
+                        disableButtons();
+                    }
+                }
+            });
+        });
+    },
     registerEvents = function() {
         more_button.bind('click', morePackages);
         sort_button.bind('click', reverseSort);
@@ -125,6 +145,9 @@ KT.packages = function() {
         add_package_groups_button.bind('click', addPackageGroups);
         remove_button.bind('click', removePackages);
         update_button.bind('click', updatePackages);
+
+        disableButtons();
+        registerCheckboxEvents();
     },
     addPackages = function(data) {
         data.preventDefault();
