@@ -174,7 +174,7 @@ module ApplicationHelper
       if !selected_env.locker?
         classes << "active"
       else
-        #we only want to higlight the Locker along the path that is actually selected
+        #we only want to highlight the Locker along the path that is actually selected
         classes << "active" if curr_path[1] == selected_path[1]
       end
     end

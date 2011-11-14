@@ -83,13 +83,13 @@ describe PasswordResetsController do
     it "should update the user's password" do
       @testuser.should_receive(:update_attributes!).with("password" => @new_password)
       put :update, @params
-      response.should redirect_to(root_url)
+      response.should be_success
     end
 
     it "should generate a notice" do
       controller.should_receive(:notice)
       put :update, @params
-      response.should redirect_to(root_url)
+      response.should be_success
     end
 
     it "should generate an error notice, if exception raised" do
