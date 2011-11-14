@@ -32,6 +32,14 @@ module Glue::Candlepin::Consumer
       lazy_accessor :entitlements, :initializer => lambda { Candlepin::Consumer.entitlements(uuid) }
       lazy_accessor :pools, :initializer => lambda { entitlements.collect { |ent| Candlepin::Pool.get ent["pool"]["id"]} }
       lazy_accessor :available_pools, :initializer => lambda { Candlepin::Consumer.available_pools(uuid) }
+      lazy_accessor :host, :initializer => lambda {
+        host_attributes = Candlepin::Consumer.host(self.uuid)
+        System.new(host_attributes) if host_attributes
+      }
+      lazy_accessor :guests, :initializer => lambda {
+        guests_attributes = Candlepin::Consumer.guests(self.uuid)
+        guests_attributes.map { |attr| System.new(attr) }
+      }
       validate :validate_cp_consumer
     end
   end
@@ -191,17 +199,6 @@ module Glue::Candlepin::Consumer
       @facts ||= {}
       facts["virt.is_guest"] = val
 
-    end
-
-    def host
-      host_attributes = Candlepin::Consumer.host(self.uuid)
-      System.new(host_attributes) if host_attributes
-    end
-
-    # returns systems that are guests for this host
-    def guests
-      guests_attributes = Candlepin::Consumer.guests(self.uuid)
-      guests_attributes.map { |attr| System.new(attr) }
     end
 
     def name=(val)
