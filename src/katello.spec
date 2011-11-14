@@ -224,12 +224,6 @@ rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 
-#handle branding files
-if [ -d %{buildroot}%{homedir}/branding ] ; then
-  cp -r %{buildroot}%{homedir}/branding/* .
-  rm -rf %{buildroot}%{homedir}/ branding
-fi
-
 #remove development tasks
 rm %{buildroot}%{homedir}/lib/tasks/rcov.rake
 rm %{buildroot}%{homedir}/lib/tasks/yard.rake
