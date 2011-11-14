@@ -324,6 +324,35 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Nov 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.102-2
+- bump release for build (shughes@redhat.com)
+- sync up spec with katello (shughes@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+- rescue exceptions retrieving a system's guests and host
+  (thomasmckay@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+- 750120 - search - fix error on org search (bbuckingham@redhat.com)
+- scoped_search - updating to gem version 2.3.6 (bbuckingham@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+- fix brand processing of source files (shughes@redhat.com)
+- Automatic commit of package [katello] release [0.1.101-2].
+  (shughes@redhat.com)
+- bump release (shughes@redhat.com)
+- fix rpm macro syntax (shughes@redhat.com)
+- move branding processing (shughes@redhat.com)
+- remove sprites from branding (shughes@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+- Removing katello.scss to limit overrides.  Added look.scss to make it
+  simpler. (jrist@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+
 * Mon Nov 14 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.102-1
 - 753329 - distros - fix to support distros containing space in the id
 - TODO: Unsure how to test this after making :host, :guests use lazy_accessor
