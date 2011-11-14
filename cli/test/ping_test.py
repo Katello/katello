@@ -44,8 +44,7 @@ class ProductListTest(CLIActionTestCase):
         status = deepcopy(test_data.PING_STATUS)
         for s in failed_services:
             status['status'][s]['result'] = 'failed'
-        
-        self.mock(self.action.api, 'ping', status)
-        
-        self.assertEqual(self.action.run(), expected_code)
 
+        self.mock(self.action.api, 'ping', status)
+
+        self.assertEqual(self.action.run(), expected_code)

@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.99
+Version:        0.1.102
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -57,7 +57,7 @@ Requires:       rubygem(i18n_data) >= 0.2.6
 Requires:       rubygem(gettext_i18n_rails)
 Requires:       rubygem(simple-navigation) >= 3.3.4
 Requires:       rubygem(pg)
-Requires:       rubygem(scoped_search) >= 2.3.1
+Requires:       rubygem(scoped_search) >= 2.3.6
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(acts_as_reportable) >= 1.1.1
 Requires:       rubygem(pdf-writer) >= 1.1.8
@@ -141,12 +141,6 @@ Katello connection classes for the Candlepin backend
 
 %prep
 %setup -q
-# branding 
-if [ -d branding ] ; then
-  cp -r branding/* .
-  rm -rf branding
-fi
-
 
 %build
 #configure Bundler
@@ -180,6 +174,12 @@ install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 mkdir .bundle
 mv ./deploy/bundle-config .bundle/config
 cp -R .bundle * %{buildroot}%{homedir}
+
+#handle branding files
+if [ -d branding ] ; then
+  cp -r branding/* %{buildroot}%{homedir}/.
+  rm -rf %{buildroot}%{homedir}/branding
+fi
 
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 644 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
@@ -325,6 +325,163 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Nov 14 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.102-1
+- 753329 - distros - fix to support distros containing space in the id
+- TODO: Unsure how to test this after making :host, :guests use lazy_accessor
+- 749258 - new state 'failed' for changesets
+- fixed save button on edit user password
+- guests of a host cleanly displayed
+- adding rootpw tag to the TDL export
+- corrected test for creating user w/o env
+- manifest import - fixes in orchestration - content remained created in locker
+  env - fixed infinite recursive call of set_repos
+- + both new user and modifying a user's environment now work + TODO: probably
+  need to wordsmith form labels
+- user#create updated for optional default env
+- + don't require an initial environment for new org + new user default org/env
+  choice box allows none (controller not updated yet)
+- installed-products - API supports consumer installedProducts
+- clean up of branch merge defaultorgenv
+- correctly pass default env during user create and update
+- comment and whitespace cleanup
+- updated rspec tests for new default org and environment
+- minor clean-up
+- Security enhancements for default org and environment
+- Updating KAtello to work with older subscription managers (5.7) that expect
+  displayMessage in the return JSON
+- User environment edit page no longer clicks a link in order to refresh the
+  page after a successful update, but rather fills in the new data via AJAX
+- Fixing a display message when creating an organization
+- Not allowing a superadmin to create a user if the org does not ahave any
+  environments from which to choose
+- Now older subscription managers can register against Katello without
+  providing an org or environment
+- You can now change the default environment for a user on the
+  Administration/Users/Environments tab
+- updating config file secret
+- Adding missing file
+- Middle of ajax environments_partial call
+- Moved the user new JS to the callback in user.js instead of a separate file
+  for easier debugging.
+- Saving a default permission whever a new user is created, although the
+  details will likely change
+- Now when you create an org you MUST specify a default environment. If you do
+  not the org you created will be destroyed and you will be given proper error
+  messages. I added a feature to pass a prepend string to the error in case
+  there are two items you are trying to create on the page. It would have been
+  easier to just prepend it at the time of message creation, but that would
+  have affected every page. Perhaps we can revisit this in the future
+- In the middle of stuff
+- begin to display guests/host for a system
+- major-minor - fix down migration
+- major-minor - Parsing releasever and saving result to db
+- white-space
+
+* Thu Nov 10 2011 Shannon Hughes <shughes@redhat.com> 0.1.101-1
+- disable sync KBlimit (shughes@redhat.com)
+- repos - orchestration fix, 'del_content' was not returning true when there
+  was nothing to delete (tstrachota@redhat.com)
+- 746339 - System Validates on the uniqueness of name (lzap+git@redhat.com)
+- repos - orchestration fix, deleting a repo was not deleting the product
+  content (tstrachota@redhat.com)
+
+* Wed Nov 09 2011 Shannon Hughes <shughes@redhat.com> 0.1.100-1
+- virt-who - support host-guests systems relationship (inecas@redhat.com)
+- virt-who - support uploading the guestIds to Candlepin (inecas@redhat.com)
+- sync api - fix for listing status of promoted repos A condition that ensures
+  synchronization of repos only in the Locker was too restrictive and affected
+  also other actions. (tstrachota@redhat.com)
+- 741961 - Removed traces of the anonymous user since he is no longer needed
+  (paji@redhat.com)
+- repo api - fix in spec tests for listing products (tstrachota@redhat.com)
+- repos api - filtering by name in listing repos of a product
+  (tstrachota@redhat.com)
+- Merge branch 'master' into repo-remodel (paji@redhat.com)
+- API - add status route for api to return the current version
+  (inecas@redhat.com)
+- include treetable.js in custom providers (thomasmckay@redhat.com)
+- user spec tests - fix for pulp orchestration (tstrachota@redhat.com)
+- Updated Gemfile.lock (inecas@redhat.com)
+- 751844 - Fix for max height on right_tree sliding_container.
+  (jrist@redhat.com)
+- Merge branch 'master' into repo-remodel (paji@redhat.com)
+- Refactored look and katello a little bit because of an order of operations
+  error.` (jrist@redhat.com)
+- Pulling out the header and maincontent and putting into a new SCSS file,
+  look.scss for purposes of future ability to change subtle look and feel
+  easily. (jrist@redhat.com)
+- Switched the 3rd level nav to hoverIntent. (jrist@redhat.com)
+- branding changes (shughes@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (mmccune@redhat.com)
+- removed display of bundled products (thomasmckay@redhat.com)
+- grouping by stacking_id now (thomasmckay@redhat.com)
+- now group by subscription productId (thomasmckay@redhat.com)
+- grouping by product name (which isn't right but treetable is working mostly
+  (thomasmckay@redhat.com)
+- show expansion with bundled products in a subscription
+  (thomasmckay@redhat.com)
+- changesets - added unique constraint on repos (tstrachota@redhat.com)
+- Fixed distributions related spec tests (paji@redhat.com)
+- Fixed sync related spec tests (paji@redhat.com)
+- Fixed repo related spec tests (paji@redhat.com)
+- Fixed packages test (paji@redhat.com)
+- Fixed errata spec tests (paji@redhat.com)
+- Merge branch 'master' into repo-remodel (paji@redhat.com)
+- Fixed some repo related unit tests (paji@redhat.com)
+- Removed the ChangesetRepo table + object and made it connect to the
+  Repository model directly (paji@redhat.com)
+- Merge branch 'master' into repo-remodel (paji@redhat.com)
+- repo - using pulp id instead of AR id in pulp api calls
+  (tstrachota@redhat.com)
+- distributions api - fix for listing (tstrachota@redhat.com)
+- Fixed some package group related tests (paji@redhat.com)
+- Fixed errata based cli tests (paji@redhat.com)
+- Some fixes involving issues with cli-system-test (paji@redhat.com)
+- Merge branch 'master' into repo-remodel (paji@redhat.com)
+- Fixed environment based spec tests (paji@redhat.com)
+- Merge branch 'master' into repo-remodel (paji@redhat.com)
+- Merge branch 'master' into repo-remodel (paji@redhat.com)
+- removed spacing to deal with a warning (paji@redhat.com)
+- Fixed the Systemtemplate spec tests (paji@redhat.com)
+- Fixed errata tests (paji@redhat.com)
+- Fixed sync related spec tests (paji@redhat.com)
+- Fixed distribution spec tests (paji@redhat.com)
+- Fixed Rep  related spec tests (paji@redhat.com)
+- Fixed changeset tests (paji@redhat.com)
+- fixed product spec tests that came up after master merge (paji@redhat.com)
+- fixed more merge conflicts (paji@redhat.com)
+- Fixed a bunch of merge conflicts (paji@redhat.com)
+- More unit test fixes on the system templates stuff (paji@redhat.com)
+- Fixed a good chunk of the product + repo seoc tests (paji@redhat.com)
+- Merge branch 'master' into repo-remodel (paji@redhat.com)
+- fixed some unit tests (paji@redhat.com)
+- Fixed the repo destroy (paji@redhat.com)
+- Master merge + fixed conflicts (paji@redhat.com)
+- Adding the env products model (paji@redhat.com)
+- Fixed merge conflicts related to master merge (paji@redhat.com)
+- Added code to check for repo name conflicts before insert (paji@redhat.com)
+- Updated repo code to work with promotions (paji@redhat.com)
+- Added some error reporting for glue errors (paji@redhat.com)
+- Glue::Pulp::Repo.find is now replaced by Repository.find_by_pulp_id now that
+  we have the repository data model. (paji@redhat.com)
+- Fixed a sync alert issue related to the new repo model (paji@redhat.com)
+- Got the repo delete functionality working (paji@redhat.com)
+- Merge branch 'master' into repo-remodel (paji@redhat.com)
+- fixed the delete script for this model (paji@redhat.com)
+- Got the sync pages to work with the new repo model (paji@redhat.com)
+- Got the repo view to render the source url correctly (paji@redhat.com)
+- Modified the code to get repo delete call working (paji@redhat.com)
+- Updated the environment model to do a proper list products call
+  (paji@redhat.com)
+- Merge branch 'master' into repo-remodel (paji@redhat.com)
+- Merge branch 'master' into repo-remodel (paji@redhat.com)
+- Removed some wasted  comments (paji@redhat.com)
+- Added environment mappings to the repo object and got product.repos search
+  working (paji@redhat.com)
+- Initial commit of the repo remodeling where the repository is created in
+  katello (paji@redhat.com)
+
 * Mon Nov 07 2011 Mike McCune <mmccune@redhat.com> 0.1.99-1
 - misc rel-eng updates based on new RPMs from Fedora (mmccune@redhat.com)
 * Wed Nov 02 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.98-1

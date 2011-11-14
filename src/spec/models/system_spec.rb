@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
+require 'helpers/system_test_data'
 include OrchestrationHelper
 
 describe System do
@@ -33,6 +34,7 @@ describe System do
      {"epoch" => 0, "name" => "twolame-libs", "arch" => "x86_64", "version" => "0.3.12", "vendor" => "RPM Fusion", "release" => "4.fc11"},
      {"epoch" => 0, "name" => "gtk-vnc", "arch" => "x86_64", "version" => "0.4.2", "vendor" => "Fedora Project", "release" => "4.fc14"}]
   }
+  let(:installed_products) { [{"productId"=>"69", "productName"=>"Red Hat Enterprise Linux Server"}] }
 
   before(:each) do
     disable_org_orchestration
@@ -42,7 +44,13 @@ describe System do
 
     Organization.stub!(:first).and_return(@organization)
 
-    @system = System.new(:name => system_name, :environment => @environment, :cp_type => cp_type, :facts => facts, :description => description, :uuid => uuid)
+    @system = System.new(:name => system_name,
+                         :environment => @environment,
+                         :cp_type => cp_type,
+                         :facts => facts,
+                         :description => description,
+                         :uuid => uuid,
+                         :installedProducts => installed_products)
 
     Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Candlepin::Consumer.stub!(:update).and_return(true)
@@ -59,7 +67,7 @@ describe System do
   end
 
   it "registers system in candlepin and pulp on create" do
-    Candlepin::Consumer.should_receive(:create).once.with(@organization.name, system_name, cp_type, facts).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Candlepin::Consumer.should_receive(:create).once.with(@organization.name, system_name, cp_type, facts, installed_products).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}})
     @system.save!
   end
@@ -96,11 +104,19 @@ describe System do
   context "update system" do
     before(:each) do
       @system.save!
-      @system.facts = facts
     end
 
-    it "should call Candlepin::Consumer.update" do
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, facts).and_return(true)
+    it "should give facts to Candlepin::Consumer" do
+      @system.facts = facts
+      @system.installedProducts = nil # simulate it's not loaded in memory
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, facts, nil, nil).and_return(true)
+      @system.save!
+    end
+
+    it "should give installeProducts to Candlepin::Consumer" do
+      @system.installedProducts = installed_products
+      @system.facts = nil # simulate it's not loaded in memory
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products).and_return(true)
       @system.save!
     end
 s  end
@@ -200,4 +216,36 @@ s  end
     end
   end
 
+  describe "host-guest relation" do
+
+    # TODO: Unsure how to test this after making :host, :guests use lazy_accessor
+    pending "guest system" do
+      before { Candlepin::Consumer.stub(:host => nil, :guests => []) }
+
+      it "should get host system" do
+        Candlepin::Consumer.should_receive(:host).with(@system.uuid).and_return(SystemTestData.host)
+        @system.host.name.should == SystemTestData.host["name"]
+      end
+    end
+
+    # TODO: Unsure how to test this after making :host, :guests use lazy_accessor
+    pending "host system" do
+      before { Candlepin::Consumer.stub(:host => nil, :guests => []) }
+
+      it "should get guest systems" do
+        Candlepin::Consumer.should_receive(:guests).with(@system.uuid).and_return(SystemTestData.guests)
+        guests = @system.guests
+        guests.should have(1).system
+        guests.first.name.should == SystemTestData.guests.first["name"]
+      end
+    end
+
+    context "guest without host (before running virt-who)" do
+      it "should return no host" do
+        Candlepin::CandlepinResource.stub(:default_headers => {}, :get => MemoStruct.new(:code => 204, :body => ""))
+        @system.host.should_not be
+      end
+    end
+
+  end
 end

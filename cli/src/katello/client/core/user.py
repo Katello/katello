@@ -179,24 +179,24 @@ class Update(UserAction):
         return os.EX_OK
 
 class Report(UserAction):
-    
+
     description = _('user report')
-    
+
     def setup_parser(self):
         self.parser.add_option('--format', dest='format',
                 help=_("report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"))
-        
+
     def run(self):
         format = self.get_option('format')
         report = self.api.report(convert_to_mime_type(format, 'text'))
-        
+
         if format == 'pdf':
             save_report(report[0], attachment_file_name(report[1], 'katello_users_report.pdf'))
         else:
             print report[0]
 
-        return os.EX_OK        
-        
+        return os.EX_OK
+
 
 # user command ------------------------------------------------------------
 

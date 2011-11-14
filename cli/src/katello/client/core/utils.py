@@ -83,7 +83,9 @@ class Printer:
     # returns terminal width (tested only with Linux)
     def _getTermWidth(self):
         try:
-            import fcntl, termios, struct
+            import fcntl
+            import termios
+            import struct
             h, w, hp, wp = struct.unpack('HHHH',
                 fcntl.ioctl(0, termios.TIOCGWINSZ,
                 struct.pack('HHHH', 0, 0, 0, 0)))
@@ -571,8 +573,8 @@ def progress(left, total):
     sizeLeft = float(left)
     sizeTotal = float(total)
     return 0.0 if total == 0 else (sizeTotal - sizeLeft) / sizeTotal
-    
-    
+
+
 def convert_to_mime_type(type, default=None):
     availableMimeTypes = {
         'text': 'text/plain',
@@ -580,26 +582,23 @@ def convert_to_mime_type(type, default=None):
         'html': 'text/html',
         'pdf':  'application/pdf'
     }
-    
+
     return availableMimeTypes.get(type, availableMimeTypes.get(default))
-    
+
 def attachment_file_name(headers, default):
     contentDisposition = filter(lambda h: h[0].lower() == 'content-disposition', headers)
 
     if len(contentDisposition) >  0:
         filename = contentDisposition[0][1].split('filename=')
         if len(filename) < 2:
-            return default            
+            return default
         if filename[1][0] == '"' or filename[1][0] == "'":
             return filename[1][1:-1]
         return filename
-        
+
     return default
-    
+
 def save_report(report, filename):
     f = open(filename, 'w')
     f.write(report)
     f.close()
-    
-    
-            

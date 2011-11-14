@@ -56,6 +56,3 @@ class SubscriptionsListTest(CLIActionTestCase):
     def test_displayable_pool(self):
         pool_with_sla = self.action.displayable_pool(test_data.POOL)
         self.assertEqual(test_data.SLA_VALUE, pool_with_sla['sla'])
-
-
-    

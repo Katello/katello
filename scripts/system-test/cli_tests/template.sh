@@ -40,9 +40,3 @@ test_failure "template update add unknown product" template update --name="$TEMP
 test_failure "template update add unknown package" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package="does_not_exist"
 test_failure "template update add unknown product" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group="does_not_exist"
 test_failure "template update add unknown package" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group_category="does_not_exist"
-
-
-
-
-
-

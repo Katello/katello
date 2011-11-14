@@ -84,8 +84,8 @@ common:
     url: <%= scope.lookupvar("katello::params::pulp_url") %>
     oauth_key: <%= scope.lookupvar("katello::params::oauth_key") %>
     oauth_secret: <%= scope.lookupvar("katello::params::oauth_secret") %>
-    sync_threads: 15
-    sync_KBlimit: 100
+    sync_threads: 4
+    #sync_KBlimit: 100
 
 # Setup your foreman environment here
   foreman:

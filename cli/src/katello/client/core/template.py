@@ -139,10 +139,10 @@ class Info(TemplateAction):
         self.printer.setHeader(_("Template Info"))
         self.printer.printItem(template)
         return os.EX_OK
-        
-        
+
+
     def _build_nvrea(self, package):
-        
+
         if package['version'] != None and package['release'] != None:
             nvrea = '-'.join((package['package_name'], package['version'], package['release']))
             if package['arch'] != None:
@@ -150,11 +150,11 @@ class Info(TemplateAction):
             if package['epoch'] != None:
                 nvrea = package['epoch'] +':'+ nvrea
             return nvrea
-        
+
         else:
             return package['package_name']
-    
-    
+
+
 
 # ==============================================================================
 class Import(TemplateAction):
@@ -336,7 +336,7 @@ class Update(TemplateAction):
                                help=_("new template name"))
         self.parser.add_option("--description", dest="description",
                                help=_("template description"))
-                               
+
         self.parser.add_option('--add_product', dest='add_products',
                                 action="append",
                                 help=_("name of the product"))
@@ -360,14 +360,14 @@ class Update(TemplateAction):
         self.parser.add_option('--remove_parameter', dest='remove_parameters',
                                 action="append",
                                 help=_("name of the parameter"))
-                               
+
         self.parser.add_option('--add_package_group', dest='add_pgs',
                                 action="append",
                                 help=_("name of the package group"))
         self.parser.add_option('--remove_package_group', dest='remove_pgs',
                                 action="append",
                                 help=_("name of the package group"))
-                                
+
         self.parser.add_option('--add_package_group_category', dest='add_pg_categories',
                                 action="append",
                                 help=_("name of the package group category"))
@@ -387,34 +387,34 @@ class Update(TemplateAction):
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
-        
+
         #check for missing values
         for k, v in self.add_parameters.iteritems():
             if v == None:
                 self.add_option_error(_("missing value for parameter '%s'") % k)
-        
+
     def resetParameters(self):
         self.add_parameters = {}
 
     def getContent(self):
         orgName = self.get_option('org')
-        
+
         content = {}
         content['+products'] = self.get_option('add_products') or []
         content['+products'] = self.productNamesToIds(orgName, content['+products'])
-        
+
         content['-products'] = self.get_option('remove_products') or []
         content['-products'] = self.productNamesToIds(orgName, content['-products'])
-        
+
         content['+packages'] = self.get_option('add_packages') or []
         content['-packages'] = self.get_option('remove_packages') or []
-        
+
         content['+pgs'] = self.get_option('add_pgs') or []
         content['-pgs'] = self.get_option('remove_pgs') or []
-        
+
         content['+pg_categories'] = self.get_option('add_pg_categories') or []
         content['-pg_categories'] = self.get_option('remove_pg_categories') or []
-        
+
         content['+parameters'] = self.add_parameters.copy()
         content['-parameters'] = self.get_option('remove_parameters') or []
 
@@ -442,15 +442,15 @@ class Update(TemplateAction):
                 parentId = self.get_parent_id(orgName, env["name"], parentName)
             else:
                 parentId = None
-                
+
             run_spinner_in_bg(self.updateTemplate, [template["id"], newName, desc, parentId], _("Updating the template, please wait... "))
             run_spinner_in_bg(self.updateContent,  [template["id"], content], _("Updating the template, please wait... "))
             print _("Successfully updated template [ %s ]") % template['name']
             return os.EX_OK
         else:
             return os.EX_DATAERR
-       
-       
+
+
     def productNamesToIds(self, orgName, productNames):
         ids = []
         for prodName in productNames:
@@ -460,12 +460,12 @@ class Update(TemplateAction):
             else:
                 system_exit(os.EX_DATAERR)
         return ids
-        
-            
+
+
     def updateTemplate(self, tplId, name, desc, parentId):
         self.api.update(tplId, name, desc, parentId)
-    
-    
+
+
     def updateContent(self, tplId, content):
 
         for p in content['-products']:

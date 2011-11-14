@@ -72,9 +72,9 @@ class RepoAction(Action):
             repo = self.api.repo(repoId)
         else:
             repo = get_repo(orgName, prodName, repoName, envName)
-            
+
         return repo
-        
+
 
 # actions --------------------------------------------------------------------
 
@@ -259,7 +259,7 @@ class Status(RepoAction):
             self.require_option('product')
 
     def run(self):
-        
+
         repo = self.get_repo()
         if repo == None:
             return os.EX_DATAERR
@@ -317,7 +317,7 @@ class Info(RepoAction):
         repo = self.get_repo()
         if repo == None:
             return os.EX_DATAERR
-                
+
         repo['url'] = repo['source']['url']
         repo['last_sync'] = format_sync_time(repo['last_sync'])
         repo['sync_state'] = format_sync_state(repo['sync_state'])
