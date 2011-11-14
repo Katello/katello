@@ -92,7 +92,7 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :distributions, :only => [:show] do
+  resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ } do
     member do
       get :filelist
     end
@@ -256,7 +256,6 @@ Src::Application.routes.draw do
     delete 'favorite/:id' => 'search#destroy_favorite', :on => :collection, :as => 'destroy_favorite'
   end
 
-
   resource :user_session do
     post 'set_org'
     get 'allowed_orgs'
@@ -403,7 +402,7 @@ Src::Application.routes.draw do
 
     resources :packages, :only => [:show]
     resources :errata, :only => [:index, :show]
-    resources :distributions, :only => [:show]
+    resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
 
     resources :users do
       get :report, :on => :collection
