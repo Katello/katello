@@ -11,14 +11,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'pp'
-
 class OrganizationsController < ApplicationController
   navigation :organizations
   include AutoCompleteSearch
   respond_to :html, :js
   skip_before_filter :authorize
   before_filter :find_organization, :only => [:edit, :update, :destroy]
+  before_filter :find_organization_by_id, :only => [:environments_partial]
   before_filter :authorize #call authorize after find_organization so we call auth based on the id instead of cp_id
   before_filter :setup_options, :only=>[:index, :items]
   before_filter :search_filter, :only => [:auto_complete_search]
@@ -38,6 +37,7 @@ class OrganizationsController < ApplicationController
       :edit => read_test,
       :update => edit_test,
       :destroy => delete_test,
+      :environments_partial => index_test,
     }
   end
 
@@ -55,11 +55,29 @@ class OrganizationsController < ApplicationController
 
   def create
     begin
+      if params[:envname] && params[:envname] != ''
+        @new_env = KTEnvironment.new(:name => params[:envname], :description => params[:envdescription])
+      else
+        @new_env = nil
+      end
+
       @organization = Organization.new(:name => params[:name], :description => params[:description], :cp_key => params[:name].tr(' ', '_'))
       @organization.save!
+      
+      if @new_env
+        @new_env.organization = @organization
+        @new_env.prior = @organization.locker
+        @new_env.save!
+      end
+      notice [_("Organization '#{@organization["name"]}' was created.")]
     rescue Exception => error
-      errors error
+      errors(error, {:include_class_name => KTEnvironment::ERROR_CLASS_NAME})
       Rails.logger.info error.backtrace.join("\n")
+      #rollback creation of the org if the org creation passed but the environment was not created
+      if @organization && @organization.id #it is saved to the db
+        @organization.destroy
+      end
+
       render :text=> error.to_s, :status=>:bad_request and return
     end
     
@@ -121,9 +139,17 @@ class OrganizationsController < ApplicationController
       render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
     else
       errors [_("Could not delete organization '#{params[:id]}'."),  _("At least one organization must exist.")]
-      
+
       render :text => "At least one organization must exist.", :status=>:bad_request and return
     end
+  end
+
+  def environments_partial
+    @organization = Organization.find(params[:id])
+    accessible_envs = KTEnvironment.systems_registerable(@organization)
+    setup_environment_selector(@organization, accessible_envs)
+    @environment = first_env_in_path(accessible_envs, false, @organization)
+    render :partial=>"environments", :locals=>{:accessible_envs => accessible_envs}
   end
 
   protected
@@ -131,6 +157,17 @@ class OrganizationsController < ApplicationController
   def find_organization
     begin
       @organization = Organization.first(:conditions => {:cp_key => params[:id]})
+      raise if @organization.nil?
+    rescue Exception => error
+      errors _("Couldn't find organization with ID=#{params[:id]}")
+      execute_after_filters
+      render :text => error, :status => :bad_request
+    end
+  end
+
+  def find_organization_by_id
+    begin
+      @organization = Organization.find(params[:id])
       raise if @organization.nil?
     rescue Exception => error
       errors _("Couldn't find organization with ID=#{params[:id]}")
