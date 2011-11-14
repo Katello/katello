@@ -17,7 +17,7 @@ class EnvironmentProduct < ActiveRecord::Base
   validates_uniqueness_of :product_id, :scope => :environment_id, :message => N_("must be unique within one environment")
 
   def self.find_or_create(env, product)
-    item = EnvironmentProduct.where(:environment_id=> env, :product_id=> product).first
+    item = EnvironmentProduct.where(:environment_id=> env.id, :product_id=> product.id).first
     item ||= EnvironmentProduct.create!(:environment=> env, :product=> product)
     item
   end
