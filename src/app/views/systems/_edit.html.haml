@@ -45,9 +45,11 @@
               .grid_5.la
                 = _("None")
             - else
-              - system.guests.each do |guest|
-                .grid_5.la
-                  = guest.attributes['name']
+              .grid_5.la
+                %ul
+                - system.guests.each do |guest|
+                  %li{:style=>'list-style: none;'}
+                    = guest.attributes['name']
     .clear
     .grid_8
       %h5 #{_("System Properties")}      
