@@ -220,7 +220,7 @@ rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 
 #handle branding files
 if [ -d %{buildroot}%{homedir}/branding ] ; then
-  cp -r %{buildroot)%{homedir}/branding/* .
+  cp -r %{buildroot}%{homedir}/branding/* .
   rm -rf %{buildroot}%{homedir}/ branding
 fi
 
