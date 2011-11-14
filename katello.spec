@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.101
+Version:        0.1.102
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -57,7 +57,7 @@ Requires:       rubygem(i18n_data) >= 0.2.6
 Requires:       rubygem(gettext_i18n_rails)
 Requires:       rubygem(simple-navigation) >= 3.3.4
 Requires:       rubygem(pg)
-Requires:       rubygem(scoped_search) >= 2.3.1
+Requires:       rubygem(scoped_search) >= 2.3.6
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(acts_as_reportable) >= 1.1.1
 Requires:       rubygem(pdf-writer) >= 1.1.8
@@ -141,12 +141,6 @@ Katello connection classes for the Candlepin backend
 
 %prep
 %setup -q
-# branding 
-if [ -d branding ] ; then
-  cp -r branding/* .
-  rm -rf branding
-fi
-
 
 %build
 #configure Bundler
@@ -180,6 +174,12 @@ install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 mkdir .bundle
 mv ./deploy/bundle-config .bundle/config
 cp -R .bundle * %{buildroot}%{homedir}
+
+#handle branding files
+if [ -d branding ] ; then
+  cp -r branding/* %{buildroot}%{homedir}/.
+  rm -rf %{buildroot}%{homedir}/branding
+fi
 
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 644 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
@@ -324,6 +324,58 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Nov 14 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.102-1
+- 753329 - distros - fix to support distros containing space in the id
+- TODO: Unsure how to test this after making :host, :guests use lazy_accessor
+- 749258 - new state 'failed' for changesets
+- fixed save button on edit user password
+- guests of a host cleanly displayed
+- adding rootpw tag to the TDL export
+- corrected test for creating user w/o env
+- manifest import - fixes in orchestration - content remained created in locker
+  env - fixed infinite recursive call of set_repos
+- + both new user and modifying a user's environment now work + TODO: probably
+  need to wordsmith form labels
+- user#create updated for optional default env
+- + don't require an initial environment for new org + new user default org/env
+  choice box allows none (controller not updated yet)
+- installed-products - API supports consumer installedProducts
+- clean up of branch merge defaultorgenv
+- correctly pass default env during user create and update
+- comment and whitespace cleanup
+- updated rspec tests for new default org and environment
+- minor clean-up
+- Security enhancements for default org and environment
+- Updating KAtello to work with older subscription managers (5.7) that expect
+  displayMessage in the return JSON
+- User environment edit page no longer clicks a link in order to refresh the
+  page after a successful update, but rather fills in the new data via AJAX
+- Fixing a display message when creating an organization
+- Not allowing a superadmin to create a user if the org does not ahave any
+  environments from which to choose
+- Now older subscription managers can register against Katello without
+  providing an org or environment
+- You can now change the default environment for a user on the
+  Administration/Users/Environments tab
+- updating config file secret
+- Adding missing file
+- Middle of ajax environments_partial call
+- Moved the user new JS to the callback in user.js instead of a separate file
+  for easier debugging.
+- Saving a default permission whever a new user is created, although the
+  details will likely change
+- Now when you create an org you MUST specify a default environment. If you do
+  not the org you created will be destroyed and you will be given proper error
+  messages. I added a feature to pass a prepend string to the error in case
+  there are two items you are trying to create on the page. It would have been
+  easier to just prepend it at the time of message creation, but that would
+  have affected every page. Perhaps we can revisit this in the future
+- In the middle of stuff
+- begin to display guests/host for a system
+- major-minor - fix down migration
+- major-minor - Parsing releasever and saving result to db
+- white-space
+
 * Thu Nov 10 2011 Shannon Hughes <shughes@redhat.com> 0.1.101-1
 - disable sync KBlimit (shughes@redhat.com)
 - repos - orchestration fix, 'del_content' was not returning true when there

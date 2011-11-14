@@ -46,7 +46,7 @@ class OrganizationsController < ApplicationController
   end
 
   def items
-    render_panel_items(Organization.readable.order('lower(name)'), @panel_options, params[:search], params[:offset])
+    render_panel_items(Organization.readable.order('lower(organizations.name)'), @panel_options, params[:search], params[:offset])
   end
 
   def new
