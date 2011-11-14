@@ -361,6 +361,19 @@ describe Changeset do
         @changeset.promote(false)
       end
 
+      it "should have correct state after successful promotion" do
+        @changeset.state = Changeset::REVIEW
+        @changeset.promote(false)
+        @changeset.state.should == Changeset::PROMOTED
+      end
+
+      it "should have correct state after unsuccessful promotion" do
+        @changeset.state = Changeset::REVIEW
+        @changeset.stub(:calc_and_save_dependencies).and_raise(Exception)
+        lambda {@changeset.promote(false)}.should raise_exception
+        @changeset.state.should == Changeset::FAILED
+      end
+
     end
   end
 end
