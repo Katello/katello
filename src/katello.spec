@@ -324,6 +324,60 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Nov 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.101-2
+- bump release (shughes@redhat.com)
+- fix rpm macro syntax (shughes@redhat.com)
+- move branding processing (shughes@redhat.com)
+- remove sprites from branding (shughes@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+- Removing katello.scss to limit overrides.  Added look.scss to make it
+  simpler. (jrist@redhat.com)
+- installed-products - API supports consumer installedProducts
+  (inecas@redhat.com)
+- clean up of branch merge defaultorgenv (thomasmckay@redhat.com)
+- correctly pass default env during user create and update
+  (thomasmckay@redhat.com)
+- comment and whitespace cleanup (thomasmckay@redhat.com)
+- updated rspec tests for new default org and environment
+  (thomasmckay@redhat.com)
+- minor clean-up (thomasmckay@redhat.com)
+- Security enhancements for default org and environment (tsmart@redhat.com)
+- Updating KAtello to work with older subscription managers (5.7) that expect
+  displayMessage in the return JSON (tsmart@redhat.com)
+- User environment edit page no longer clicks a link in order to refresh the
+  page after a successful update, but rather fills in the new data via AJAX
+  (tsmart@redhat.com)
+- Fixing a display message when creating an organization (tsmart@redhat.com)
+- Not allowing a superadmin to create a user if the org does not ahave any
+  environments from which to choose (tsmart@redhat.com)
+- Now older subscription managers can register against Katello without
+  providing an org or environment (tsmart@redhat.com)
+- You can now change the default environment for a user on the
+  Administration/Users/Environments tab (tsmart@redhat.com)
+- updating config file secret (tsmart@redhat.com)
+- Adding missing file (tsmart@redhat.com)
+- Middle of ajax environments_partial call (tsmart@redhat.com)
+- Moved the user new JS to the callback in user.js instead of a separate file
+  for easier debugging. (tsmart@redhat.com)
+- Saving a default permission whever a new user is created, although the
+  details will likely change (tsmart@redhat.com)
+- Now when you create an org you MUST specify a default environment. If you do
+  not the org you created will be destroyed and you will be given proper error
+  messages. I added a feature to pass a prepend string to the error in case
+  there are two items you are trying to create on the page. It would have been
+  easier to just prepend it at the time of message creation, but that would
+  have affected every page. Perhaps we can revisit this in the future
+  (tsmart@redhat.com)
+- In the middle of stuff (tsmart@redhat.com)
+- major-minor - fix down migration (inecas@redhat.com)
+- major-minor - Parsing releasever and saving result to db (inecas@redhat.com)
+- white-space (inecas@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+
 * Mon Nov 14 2011 Shannon Hughes <shughes@redhat.com>
 - fix rpm macro syntax (shughes@redhat.com)
 - move branding processing (shughes@redhat.com)
