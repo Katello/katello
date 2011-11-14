@@ -141,12 +141,6 @@ Katello connection classes for the Candlepin backend
 
 %prep
 %setup -q
-# branding 
-if [ -d branding ] ; then
-  cp -r branding/* .
-  rm -rf branding
-fi
-
 
 %build
 #configure Bundler
@@ -223,6 +217,12 @@ rm -rf %{buildroot}%{homedir}/%{name}.spec
 rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
+
+#handle branding files
+if [ -d %{buildroot}%{homedir}/branding ] ; then
+  cp -r %{buildroot)%{homedir}/branding/* .
+  rm -rf %{buildroot}%{homedir}/ branding
+fi
 
 #remove development tasks
 rm %{buildroot}%{homedir}/lib/tasks/rcov.rake
