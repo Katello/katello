@@ -1,3 +1,6 @@
+-# This view contains several lines that are commented (i.e. -#) out on purpose... They may be uncommented when package
+-# updates are supported.
+
 = javascript :filtertable, :form, :system_packages
 
 = content_for :title do
@@ -7,12 +10,12 @@
   = render_navigation(:items => systems_navigation, :expand_all => true, :level => 1)
 
 = content_for :content do
-  .grid_8.summary
-    .summary_top
-      .packages_icon
-      .fl
-        = image_tag("boxshadow.png")
-      .summary_text.fl #{_("All Packages are up-to-date.")}
+  -#.grid_8.summary
+    -#.summary_top
+      -#.packages_icon
+      -#.fl
+        -#= image_tag("boxshadow.png")
+      -#.summary_text.fl #{_("All Packages are up-to-date.")}
 
   - if packages.length > 0
     .grid_8
@@ -23,8 +26,8 @@
             %th{:colspan => 3}
               %a#package_sort{"data-sort"=>"asc", :class=>"ascending"}
                 #{_("Name")}
-            %th
-              #{_("Date Added")}
+            -#%th
+              -##{_("Date Added")}
           %tbody
             -if editable
               %tr.no_sort.not_filtered
@@ -46,7 +49,7 @@
 
         - if editable
           .prefix_2.grid_6.ra
-            = submit_tag _("Update"), :class => 'button', :id => 'update_packages', 'data-url' => system_system_packages_path(@system.id)
+            -#= submit_tag _("Update"), :class => 'button', :id => 'update_packages', 'data-url' => system_system_packages_path(@system.id)
             = submit_tag _('Remove'), :class => 'button', :id => 'remove_packages', 'data-url' => remove_system_system_packages_path(@system.id)
 
       #list-spinner
