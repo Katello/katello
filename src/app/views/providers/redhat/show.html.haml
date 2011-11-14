@@ -19,7 +19,7 @@
         .grid_5
           %label #{_("Repository Url")}:
         .grid_5.la{'name' => 'provider[repository_url]',:class=>("editable edit_textfield" if can_edit_rh_provider?),  'data-url' => provider_path(@provider.id)} #{@provider[:repository_url]}
-.grid_8
+.grid_6.suffix_2
   - if can_upload_rh_manifest?
     #subscription_manifest
       %h4 #{_("Upload Subscription Manifest")}
