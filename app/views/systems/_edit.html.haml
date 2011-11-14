@@ -22,6 +22,36 @@
         .grid_5.la #{system.uuid}
     .clear
     .grid_8
+      %h5 #{_("Host & Guest Info")}
+    .grid_8#system_host_guest
+      %fieldset
+        .grid_2.ra.fieldset
+          = label :host_guest, :host_type, _("Host Type")
+        - if system.guest == 'true'
+          .grid_5.la
+            = _("Guest")
+          %fieldset
+            .grid_2.ra.fieldset
+              = label :host_guest, :host, _("Host")
+            .grid_5.la
+              = system.host ? system.host.attributes['name'] : _("Unknown")
+        -else
+          .grid_5.la
+            = _("Host")
+          %fieldset
+            .grid_2.ra.fieldset
+              = label :host_guest, :guest, _("Guests")
+            - if system.guests.length < 1
+              .grid_5.la
+                = _("None")
+            - else
+              .grid_5.la
+                %ul
+                - system.guests.each do |guest|
+                  %li{:style=>'list-style: none;'}
+                    = guest.attributes['name']
+    .clear
+    .grid_8
       %h5 #{_("System Properties")}      
     .grid_8#system_properties
       %fieldset  

@@ -12,6 +12,8 @@
       "usernameMatch": '#{_("The password should not contain the username.")}'
     });
 
+= javascript :edit_helpers
+
 #users
   .grid_10
 
@@ -52,12 +54,11 @@
         .grid_5.la
           = text_field :user, :username, :id=>"confirm_field", :value=>"", :type=>"password"
 
-      .grid_5.la.prefix_3
-        #save_password.verify_password.button{'data-url'=>user_path(@user.id)}
-          #{_("Save")}
       .grid_5.la.prefix_2
         #password_conflict
-
+      .grid_5.la.prefix_3
+        #save_password.verify_password.disabled.button{'data-url'=>user_path(@user.id)}
+        
   .grid_10
     = form_tag user_path(@user), :method => :put, :remote => true do
       %fieldset
@@ -65,4 +66,3 @@
           = label :user, :email, _("Email Address:")
         .grid_5.la{'name' => 'user[email]',  :class => ("editable edit_textfield" if editable), 'data-url' => user_path(@user)} #{@user.email}
 
-= javascript :user_edit, :edit_helpers

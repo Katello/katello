@@ -47,11 +47,29 @@ class User < ActiveRecord::Base
   # validate the password length before hashing
   validates_each :password do |model, attr, value|
     if model.password_changed?
-      model.errors.add(attr, "at least 5 characters") if value.length < 5
+      model.errors.add(attr, _("at least 5 characters")) if value.length < 5
     end
   end
 
-  # hash the password before creating or updating the record
+#  validates_each :own_role do |model, attr, value|
+#    #This is enforced throught a user's self role where a permission with a tag is created
+#    #that has the environment id of the default environment for the user
+#    err_msg =  _("A user must have a default org and environment associated.")
+#    if model.blank?
+#      model.errors.add(attr,err_msg)
+#    else
+#      perm = Permission.find_all_by_role_id(@user.own_role.id)
+#      if perm.blank?
+#        model.errors.add(attr,err_msg)
+#      else
+#        if !perm[0].tags
+#          model.errors.add(attr,err_msg)
+#        end
+#      end
+#    end
+#  end
+
+  # hash the password before creating or updateing the record
   before_save do |u|
     u.password = Password::update(u.password) if u.password.length != 192
   end
@@ -348,6 +366,27 @@ class User < ActiveRecord::Base
     save!
 
     UserMailer.send_password_reset(self)
+  end
+
+  def has_default_env?
+    #the own_role is used exclusively for storing a perm with a tag that tells the default env
+    if !self.own_role
+      return false
+    else
+      if Permission.find_all_by_role_id(self.own_role.id).empty?
+        return false
+      end
+    end
+    true
+  end
+
+  def default_environment
+    sr = self.own_role
+    perm = Permission.find_all_by_role_id(self.own_role.id)
+    if sr && !perm.empty? && perm[0].tags
+      return KTEnvironment.find(perm[0].tags[0].tag_id)
+    end
+    nil
   end
 
   protected

@@ -5,7 +5,7 @@
   - @distributions.each do |element|
     - distribution = element[0]
     - repo = element[1]
-    %li.no_slide.block{:id => distribution.id, "data-ajax_url" => distribution_path(distribution.id)}
+    %li.no_slide.block{:id => distribution.id, "data-ajax_url" => distribution_path(URI::escape(distribution.id))}
       - if @next_env_distros.include? distribution.id
         .fr.promoted
           = _("Promoted")
