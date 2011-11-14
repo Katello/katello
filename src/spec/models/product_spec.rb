@@ -219,6 +219,9 @@ describe Product do
              end
             ret
           end
+          env_product = mock_model(EnvironmentProduct, {:id => 1})
+          EnvironmentProduct.stub(:find_or_create).and_return(env_product)
+
           @product = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
           @product.orchestration_for = :import_from_cp
         end
@@ -228,7 +231,6 @@ describe Product do
           Repository.should_receive(:create!).once.with(hash_including(:major => 6, :minor => '6.0'))
           Repository.should_receive(:create!).once.with(hash_including(:major => 6, :minor => '6.1'))
           @product.save!
-          @product.setup_repos
         end
       end
 
@@ -243,11 +245,13 @@ describe Product do
             ret
           end
 
+          env_product = mock_model(EnvironmentProduct, {:id => 1})
+          EnvironmentProduct.stub(:find_or_create).and_return(env_product)
+
           p = Product.new(ProductTestData::PRODUCT_WITH_CONTENT)
           p.stub(:attrs => [{:name => 'arch', :value => 'x86_64,i386'}])
           p.orchestration_for = :import_from_cp
           p.save!
-          p.setup_repos
         end
 
         it "should create repo for each arch" do
