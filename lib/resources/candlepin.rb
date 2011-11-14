@@ -159,6 +159,15 @@ module Candlepin
       rescue Exception => e
         return nil
       end
+
+      def compliance uuid
+        response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'compliance'), self.default_headers).body
+        unless response.empty?
+          JSON.parse(response).with_indifferent_access
+        else
+          return nil
+        end
+      end
     end
   end
 
