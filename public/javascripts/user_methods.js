@@ -65,16 +65,24 @@ KT.user_page = function() {
             return false;
         }
         else {
-            $("#password_conflict").text("");
-            $(match_button).removeClass("disabled");
+            //this is to say, if there is an environment available from which to select, then
+            //allow the creation of a user
+            if ($('#no_env_box').length == 0)
+            {
+                $("#password_conflict").text("");
+                $(match_button).removeClass("disabled");
 
-            //reset the edit user button
-            $('#save_password').die('click');
-            $('#save_password').live('click',changePassword);
-            //reset the new user button
-            $('#save_user').die('click');
-            $('#save_user').live('click',createNewUser);
-            return true;
+                //reset the edit user button
+                $('#save_password').die('click');
+                $('#save_password').live('click',changePassword);
+                //reset the new user button
+                $('#save_user').die('click');
+                $('#save_user').live('click',createNewUser);
+                return true;
+            }
+            else {
+                return false;
+            }
         }
 
     },
@@ -88,10 +96,11 @@ KT.user_page = function() {
             button.addClass('disabled');
             var username = $('#username_field').val();
             var password = $('#password_field').val();
+            var env_id = $(".path_link.active").attr('data-env_id');
             $.ajax({
                 type: "POST",
                 url: button.attr('data-url'),
-                data: { "user":{"username":username, "password":password}},
+                data: { "user":{"username":username, "password":password, "env_id":env_id }},
                 cache: false,
                 success: function(data) {
                     button.removeClass('disabled');
@@ -121,6 +130,27 @@ KT.user_page = function() {
             }
         });
     },
+    updateUser = function() {
+        var button = $(this);
+        var url = button.attr("data-url");
+        var password = $('#password_field').val();
+        var env_id = $(".path_link.active").attr('data-env_id');
+        button.addClass("disabled");
+        $.ajax({
+            type: "PUT",
+            url: url,
+            data: {"env_id":{"env_id":env_id}},
+            cache: false,
+            success: function(data) {
+                $('#env_name').html(data.env);
+                $('#org_name').html(data.org);
+                button.removeClass("disabled");
+            },
+            error: function(e) {
+                button.removeClass('disabled');
+            }
+        });
+    },
     updateRoles = function(e) {
         e.preventDefault();
         var button = $(this).find('input[type|="submit"]');
@@ -140,12 +170,14 @@ KT.user_page = function() {
         $('#save_user').live('click', createNewUser);
         $('#clear_helptips').live('click',clearHelptips);
         $('#save_password').live('click',changePassword);
+        $('#update_user').live('click',updateUser);
         $('#update_roles').live('submit', updateRoles);
     };
 
     return {
         createNewUser: createNewUser,
         verifyPassword: verifyPassword,
+        updateUser: updateUser,
         changePassword: changePassword,
         checkboxChanged: checkboxChanged,
         clearHelptips: clearHelptips,
