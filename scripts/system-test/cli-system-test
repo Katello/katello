@@ -6,7 +6,7 @@ if [[ $script_dir_link == "." ]]; then
 else
     script_dir=$script_dir_link
 fi
-export PYTHONPATH=$script_dir/../src
+export PYTHONPATH=$script_dir/../../cli/src
 export TESTDIR=$script_dir
 
 . $script_dir/helpers
@@ -14,7 +14,13 @@ export TESTDIR=$script_dir
 RAND=$(date | openssl md5 | cut -c10-16)
 USER='admin'
 PASSWORD='admin'
-CMD_NOUSER="$script_dir/../../cli/bin/katello"
+if [ -x "$script_dir/../../cli/bin/katello" ]; then
+    # running it from the git repo
+    CMD_NOUSER="$script_dir/../../cli/bin/katello"
+else
+    # running from rpm
+    CMD_NOUSER="katello"
+fi
 CMD="$CMD_NOUSER -u $USER -p $PASSWORD"
 TEST_DIR=$script_dir'/cli_tests/'
 
@@ -115,7 +121,7 @@ function msg_status() {
 function test_cmd() {
     test_success=$1; shift
     test_name=$1; shift
-    
+
     if [ $PRINT_ALL -eq 1 ]; then
         echo $*
     fi
@@ -134,7 +140,7 @@ function test_cmd() {
         #command succeeded
         if [ $test_success -eq 1 ]; then status=1; else status=0; fi
     fi
-    
+
 
     if [ $status -eq 0 ]; then
         if [ $PRINT_ALL -eq 1 ]; then

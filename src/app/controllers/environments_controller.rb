@@ -48,6 +48,7 @@ class EnvironmentsController < ApplicationController
     render :partial=>"new", :layout => "tupane_layout"
   end
 
+
   # GET /environments/1/edit
   def edit
     # Create a hash of the available environments and convert to json to be included

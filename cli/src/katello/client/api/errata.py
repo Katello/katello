@@ -16,7 +16,7 @@
 from katello.client.api.base import KatelloAPI
 
 class ErrataAPI(KatelloAPI):
-    
+
     def errata_filter(self, repo_id=None, environment_id=None, prod_id=None, type=None, severity=None):
         path = "/api/errata"
         params = {}

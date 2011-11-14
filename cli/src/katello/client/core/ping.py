@@ -46,7 +46,7 @@ class Status(PingAction):
         return 0
 
     def run(self):
-        
+
         status = self.api.ping()
 
 
@@ -60,7 +60,7 @@ class Status(PingAction):
 
         statusList = self.__statusToList(status)
         self.printer.printItems(statusList)
-        
+
         return self.__returnCode(status)
 
 
@@ -75,7 +75,7 @@ class Status(PingAction):
         """
         if status['result'] == 'ok':
             return 0
-            
+
         code = 0
         for serviceName, serviceStatus in self.__sortedStatuses(status, reverse=True):
             if serviceStatus['result'] != 'ok':
@@ -88,15 +88,15 @@ class Status(PingAction):
         statusList = []
         statusList.append(self.__buildOverallStatusDetail(status))
 
-        for serviceName, serviceStatus in self.__sortedStatuses(status):            
-            statusList.append(self.__buildServiceStatusDetail(serviceName, serviceStatus))            
+        for serviceName, serviceStatus in self.__sortedStatuses(status):
+            statusList.append(self.__buildServiceStatusDetail(serviceName, serviceStatus))
         return statusList
 
 
     def __sortedStatuses(self, status, reverse = False):
         for serviceName in sorted(status["status"].keys(), reverse=reverse):
             serviceStatus = status["status"][serviceName]
-            
+
             yield (serviceName, serviceStatus)
 
 
@@ -112,9 +112,9 @@ class Status(PingAction):
 
         if "duration_ms" in detail:
             detail["duration"] = detail["duration_ms"] + "ms"
-            
+
         return detail
-        
+
 
 # ping command ------------------------------------------------------------
 

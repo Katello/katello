@@ -26,15 +26,15 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
 
 
 class FilterDeleteTest(CLIActionTestCase):
-    
+
     ORG = 'org'
     FILTER = 'filter'
-    
+
     OPTIONS = {
         'org':ORG,
         'name':FILTER
     }
-    
+
     def setUp(self):
         self.set_action(Delete())
         self.set_module(katello.client.core.filters)
@@ -44,8 +44,8 @@ class FilterDeleteTest(CLIActionTestCase):
         self.mock(self.action.api, 'delete')
 
     def tearDown(self):
-        self.restore_mocks()        
-        
+        self.restore_mocks()
+
     def test_it_uses_filter_delete_api(self):
         self.action.run()
         self.action.api.delete.assert_called_once_with(self.ORG, self.FILTER)

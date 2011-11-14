@@ -35,7 +35,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
 
 
 class DeleteTest(CLIActionTestCase):
-    
+
     ORG = test_data.ORGS[0]
     PROD = test_data.PRODUCTS[0]
     REPO = test_data.REPOS[0]
@@ -51,7 +51,7 @@ class DeleteTest(CLIActionTestCase):
         'org': ORG['name'],
         'env': ENV['name'],
     }
-    
+
     def setUp(self):
         self.set_action(Delete())
         self.set_module(katello.client.core.repo)
@@ -59,7 +59,7 @@ class DeleteTest(CLIActionTestCase):
         self.mock_options(self.OPTIONS_WITH_ID)
 
         self.mock(self.module, 'get_repo', self.REPO)
-        
+
         self.mock(self.action.api, 'repo', self.REPO)
         self.mock(self.action.api, 'delete')
 
@@ -72,17 +72,16 @@ class DeleteTest(CLIActionTestCase):
         self.mock_options(self.OPTIONS_WITH_NAME)
         self.action.run()
         self.module.get_repo.assert_called_once_with(self.ORG['name'], self.PROD['name'], self.REPO['name'], self.ENV['name'])
-    
+
     def test_returns_with_error_when_no_repo_found(self):
         self.mock_options(self.OPTIONS_WITH_NAME)
         self.module.get_repo.return_value =  None
         self.assertEqual(self.action.run(), os.EX_DATAERR)
-        
+
     def test_it_calls_delete_api(self):
         self.action.run()
         self.action.api.delete.assert_called_once_with(self.REPO['id'])
-        
+
     def test_it_returns_status_ok(self):
         self.action.run()
         self.assertEqual(self.action.run(), os.EX_OK)
-        
