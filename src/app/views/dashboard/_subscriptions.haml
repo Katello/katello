@@ -18,21 +18,21 @@
             %h5
               #{_("Invalid Subscriptions")}
           .sub_count.fr
-            442
+            #{owner_info.total_invalid_compliance_consumers}
         %li
           %span
             .icon.yellow_icon.fl
             %h5
               #{_("Insufficient Entitlements")}
           .sub_count.fr
-            131
+            #{owner_info.total_partial_compliance_consumers}
         %li
           %span
             .icon.green_icon.fl
             %h5
               #{_("Current Subscriptions")}
           .sub_count.fr
-            2,978
+            #{owner_info.total_valid_compliance_consumers}
       %hr
         .sys_count.fr
           #{owner_info.total_consumers}
