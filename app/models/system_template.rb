@@ -141,6 +141,8 @@ class SystemTemplate < ActiveRecord::Base
           xm.install("type" => "url") {
             xm.url distro.url
           }
+          # TODO root password is hardcoded for now
+          xm.rootpw "redhat"
         }
       elsif self.distributions.count < 1
         Rails.logger.info "Template '%s' is missing distribution" % self.name
