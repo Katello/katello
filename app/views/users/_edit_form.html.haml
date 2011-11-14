@@ -58,6 +58,7 @@
         #password_conflict
       .grid_5.la.prefix_3
         #save_password.verify_password.disabled.button{'data-url'=>user_path(@user.id)}
+          #{_('Save')}
         
   .grid_10
     = form_tag user_path(@user), :method => :put, :remote => true do
