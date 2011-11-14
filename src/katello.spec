@@ -141,12 +141,6 @@ Katello connection classes for the Candlepin backend
 
 %prep
 %setup -q
-# branding 
-if [ -d branding ] ; then
-  cp -r branding/* .
-  rm -rf branding
-fi
-
 
 %build
 #configure Bundler
@@ -180,6 +174,12 @@ install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 mkdir .bundle
 mv ./deploy/bundle-config .bundle/config
 cp -R .bundle * %{buildroot}%{homedir}
+
+#handle branding files
+if [ -d branding ] ; then
+  cp -r branding/* %{buildroot}%{homedir}/.
+  rm -rf %{buildroot}%{homedir}/branding
+fi
 
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 644 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
