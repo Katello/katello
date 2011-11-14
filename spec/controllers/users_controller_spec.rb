@@ -51,12 +51,9 @@ describe UsersController do
       response.should_not be_success
     end
 
-    it "should error if no environment" do
+    it "should pass if no environment" do
       post 'create', {:user => {:username=>"bar-user", :password=>"password1234"}}
-      response.should_not be_success
-
-      post 'create', {:user => { :password=>"password1234"}}
-      response.should_not be_success
+      response.should be_success
     end
     
   end
