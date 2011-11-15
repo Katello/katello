@@ -13,4 +13,6 @@
       %div.indented
         = check_box_tag :remember_me
         = label_tag :remember_me
+      %div.indented
+        = link_to _("Forgotten username or password?"), new_password_reset_path
       = submit_tag _('Log In'), :class => 'submit dialogbutton'

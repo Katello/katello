@@ -95,6 +95,10 @@ class Organization < ActiveRecord::Base
     User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
   end
 
+  def systems_readable?
+    User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
+  end
+
   def self.list_verbs global = false
     org_verbs = {
       :update => N_("Manage Organization and Environments"),

@@ -10,6 +10,7 @@ require: []
 
 environment: production
 max_persistent_conns: 512
+# stop katello prior changing servers option
 servers: <%= scope.lookupvar("katello::params::process_count") %>
 daemonize: yes
 chdir: <%= scope.lookupvar("katello::params::katello_dir") %>

@@ -97,7 +97,7 @@ class Create(RepoAction):
         self.require_option('org')
         self.require_option('name')
         self.require_option('url')
-        self.require_option('prod', '--product')
+        self.require_option('prod')
 
     def run(self):
         name     = self.get_option('name')
@@ -135,7 +135,7 @@ class Discovery(RepoAction):
         self.require_option('org')
         self.require_option('name')
         self.require_option('url')
-        self.require_option('prod', '--product')
+        self.require_option('prod')
 
     def run(self):
         name     = self.get_option('name')

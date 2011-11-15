@@ -19,9 +19,10 @@ class UserAPI(KatelloAPI):
     """
     Connection class to access User Data
     """
-    def create(self, name, pw, disabled):
+    def create(self, name, pw, email, disabled):
         userdata = {"username": name,
                 "password": pw,
+                "email": email,
                 "disabled": disabled}
         path = "/api/users/"
         return self.server.POST(path, userdata)[1]
@@ -30,9 +31,10 @@ class UserAPI(KatelloAPI):
         path = "/api/users/%s" % str(user_id)
         return self.server.DELETE(path)[1]
 
-    def update(self, user_id, pw, disabled):
+    def update(self, user_id, pw, email, disabled):
         userdata = {}
         userdata = self.update_dict(userdata, "password", pw)
+        userdata = self.update_dict(userdata, "email", email)
         userdata = self.update_dict(userdata, "disabled", disabled)
         path = "/api/users/%s" % str(user_id)
         return self.server.PUT(path, {"user": userdata})[1]
