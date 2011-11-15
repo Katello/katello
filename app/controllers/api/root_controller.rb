@@ -13,6 +13,7 @@
 class Api::RootController < Api::ApiController
 
   skip_before_filter :authorize
+  skip_before_filter :require_user
 
   def resource_list
     all_routes = Rails.application.routes.routes
