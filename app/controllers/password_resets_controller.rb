@@ -75,9 +75,7 @@ class PasswordResetsController < ApplicationController
     begin
       @user = User.find_by_username_and_email!(params[:username], params[:email])
     rescue Exception => error
-      errors error.to_s, {:persist => false}
-      redirect_to root_url
-      execute_after_filters
+      Rails.logger.error error.to_s
     end
   end
 
@@ -85,9 +83,7 @@ class PasswordResetsController < ApplicationController
     begin
       @users = User.where(:email => params[:email])
     rescue Exception => error
-      errors error.to_s, {:persist => false}
-      redirect_to root_url
-      execute_after_filters
+      Rails.logger.error error.to_s
     end
   end
 
