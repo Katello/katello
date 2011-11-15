@@ -53,9 +53,11 @@ class Product < ActiveRecord::Base
   scoped_search :on => :name, :complete_value => true
   scoped_search :on => :multiplier, :complete_value => true
   scope :with_repos_only, lambda { |env|
-    where("products.id in (" +
-              EnvironmentProduct.joins(:repositories).where(
-          :environment_id => env).select("DISTINCT environment_products.product_id").to_sql + ")")
+    with_repos(env, false)
+  }
+
+  scope :with_enabled_repos_only, lambda { |env|
+        with_repos(env, true)
   }
 
   def initialize(attrs = nil)
@@ -114,25 +116,26 @@ class Product < ActiveRecord::Base
   end
 
   #Permissions
-
-  scope :readable, lambda {|org| ::Provider.readable(org).joins(:provider)}
-  scope :editable, lambda {|org| ::Provider.editable(org).joins(:provider)}
-  scope :syncable, lambda {|org| sync_items(org)}
+  scope :all_readable, lambda {|org| ::Provider.readable(org).joins(:provider)}
+  scope :readable, lambda{|org| all_readable(org).with_enabled_repos_only(org.locker)}
+  scope :all_editable, lambda {|org| ::Provider.editable(org).joins(:provider)}
+  scope :editable, lambda {|org| all_editable(org).with_enabled_repos_only(org.locker)}
+  scope :syncable, lambda {|org| sync_items(org).with_enabled_repos_only(org.locker)}
 
   def self.any_readable?(org)
     ::Provider.any_readable?(org)
   end
 
   def readable?
-    provider.readable?
+    Product.readable(self.organization).where(:id => id).count > 0
   end
 
   def syncable?
-    provider.organization.syncable?
+    Product.syncable(self.organization).where(:id => id).count > 0
   end
 
   def editable?
-    provider.editable?
+    Product.editable(self.organization).where(:id => id).count > 0
   end
 
   protected
@@ -153,4 +156,10 @@ class Product < ActiveRecord::Base
 
   READ_PERM_VERBS = [:read, :create, :update, :delete]
 
+  def self.with_repos env, enabled_only
+    query = EnvironmentProduct.joins(:repositories).where(
+          :environment_id => env).select("environment_products.product_id")
+    query = query.where("repositories.enabled" => true) if enabled_only
+    where("products.id in (" + query.to_sql + ")")
+  end
 end

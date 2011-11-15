@@ -120,6 +120,7 @@ module Glue::Pulp::Repo
       self.major = clone_from.major
       self.minor = clone_from.minor
       self.groupid = Glue::Pulp::Repos.groupid(environment_product.product, environment_product.environment, cloned_content)
+      self.enabled = clone_from.enabled
     end
   end
 
