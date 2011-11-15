@@ -155,7 +155,7 @@ describe Api::SyncController do
     end
 
     it "should call latest_sync_statuses on the object of synchronization" do
-       @syncable.should_receive(:latest_sync_statuses)
+       @syncable.should_receive(:sync_status)
        get :index, :provider_id => provider_id
     end
   end
