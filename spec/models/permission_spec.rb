@@ -42,15 +42,18 @@ describe Permission do
     @god = User.find_or_create_by_username(
       :username => 'god',
       :password => "password",
+      :email => 'god@somewhere.com',
       :roles => [ @super_admin ])
 
     @admin = User.find_or_create_by_username(
       :username => 'admin',
       :password => "password",
+      :email => 'admin@somewhere.com',
       :roles => [ @some_role ])
     @user_bob = User.find_or_create_by_username(
       :username => 'bob',
       :password => "password",
+      :email => 'bob@somewhere.com',
       :roles => [ @repo_admin ])
 
 

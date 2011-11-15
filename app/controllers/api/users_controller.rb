@@ -51,6 +51,7 @@ class Api::UsersController < Api::ApiController
     render :json => User.create!(
       :username => params[:username],
       :password => params[:password],
+      :email => params[:email],
       :disabled=> params[:disabled]
     ).to_json
   end

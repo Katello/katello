@@ -1,4 +1,9 @@
-= javascript :user_edit
+= javascript :env_select
+= javascript do
+  :javascript
+    localize({
+      "noDefaultEnv": '#{_("No default environment. Select an organization to choose from available environments.")}'
+    });
 
 = content_for :title do
   #{_("New User")}
@@ -9,27 +14,62 @@
 = content_for :content do
   #new_user
     .grid_10#new_user
+
       %fieldset.fl.clear
         .grid_2.ra
-          = label :user, :username, _("Username")
+          = label :user, :username, _("Username:")
         .grid_5.la
           = text_field :user, :username, :id=>"username_field", :tabindex => auto_tab_index
+
       %fieldset.fl.clear
         .grid_2.ra
-          = label :user, :username, _("Password")
+          = label :user, :username, _("Password:")
         .grid_5.la
           = text_field :user, :username, :id=>"password_field", :type=>"password", :tabindex => auto_tab_index
       .grid_5.la.prefix_2
         #password_meter             
+
       %fieldset.fl.clear
         .grid_2.ra
-          = label :user, :username, _("Confirm")
+          = label :user, :username, _("Confirm:")
         .grid_5.la
           = text_field :user, :username, :id=>"confirm_field", :type=>"password", :tabindex => auto_tab_index
         .grid_2.ra
         .grid_5.la
           #password_conflict
-        
+
+      %fieldset.fl.clear
+        .grid_2.ra
+          = label :user, :email, _("Email Address:")
+        .grid_5.la
+          = text_field :user, :email, :id=>"email_field", :tabindex => auto_tab_index
+
+      %fieldset.fl.clear
+        .grid_2.ra
+          = label :user, :org, _("Default Organization:")
+        .grid_5.la
+          = organization_select
+      %fieldset.fl.clear
+
+      .promotion_paths
+        = hidden_field_tag 'user[environment_id]', @environment.id unless @environment.nil?
+        .grid_2.ra
+          %label #{_("Environment")}:
+        .grid_5.la
+          - if @environment.nil?
+            #env_box
+              -if @organization.nil?
+                #{_("No default environment. Select an organization to choose from available environments.")}
+              -else
+                #{_("No environments are currently available in this organization.  Please add some to be able to set user default.")}
+          - else
+            #env_box
+              = environment_selector(:path_widget_class=>"grid_5", :path_entries_class=>"grid_5", :locker_clickable=>false,
+                :accessible_envs=>accessible_envs, :url_templates_proc=>url_templates_proc)
+
+        .clear
+          &nbsp;
+
     .grid_5.la.prefix_2
       #save_user.verify_password.button{'data-url' => users_path, :tabindex => auto_tab_index}
         #{_("Save User")}

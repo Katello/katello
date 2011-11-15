@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.101
+Version:        0.1.104
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -57,7 +57,7 @@ Requires:       rubygem(i18n_data) >= 0.2.6
 Requires:       rubygem(gettext_i18n_rails)
 Requires:       rubygem(simple-navigation) >= 3.3.4
 Requires:       rubygem(pg)
-Requires:       rubygem(scoped_search) >= 2.3.1
+Requires:       rubygem(scoped_search) >= 2.3.6
 Requires:       rubygem(delayed_job) >= 2.1.4
 Requires:       rubygem(acts_as_reportable) >= 1.1.1
 Requires:       rubygem(pdf-writer) >= 1.1.8
@@ -141,17 +141,17 @@ Katello connection classes for the Candlepin backend
 
 %prep
 %setup -q
-# branding 
-if [ -d branding ] ; then
-  cp -r branding/* .
-  rm -rf branding
-fi
-
 
 %build
 #configure Bundler
 rm -f Gemfile.lock
 sed -i '/@@@DEV_ONLY@@@/,$d' Gemfile
+
+#pull in branding if present
+if [ -d branding ] ; then
+  cp -r branding/* .
+fi
+
 #compile SASS files
 echo Compiling SASS files...
 compass compile
@@ -224,6 +224,11 @@ rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 
+#remove staged branding
+if [ -d branding ] ; then
+  rm -rf %{buildroot}%{homedir}/branding
+fi
+
 #remove development tasks
 rm %{buildroot}%{homedir}/lib/tasks/rcov.rake
 rm %{buildroot}%{homedir}/lib/tasks/yard.rake
@@ -266,6 +271,7 @@ fi
 # Break apart the main bits
 %{homedir}/app/controllers
 %{homedir}/app/helpers
+%{homedir}/app/mailers
 %{homedir}/app/models/*.rb
 %{homedir}/app/stylesheets
 %{homedir}/app/views
@@ -324,6 +330,111 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Nov 15 2011 Shannon Hughes <shughes@redhat.com> 0.1.104-1
+- Reverting look.scss to previous contents. (jrist@redhat.com)
+- tdl-repos - use repo name for name attribute (inecas@redhat.com)
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- password reset - add server to logins email, ignore errors on requests for
+  email (bbuckingham@redhat.com)
+- cdn-proxy - accept url as well as host for cdn proxy (inecas@redhat.com)
+- cdn-proxy - let proxy to be configured when calling CDN (inecas@redhat.com)
+- 752863 - katello service will return "OK" on error (lzap+git@redhat.com)
+- Rename of look.scss to _look.scss to reflect the fact that it's an import.
+  Fixed the text-shadow deprecation error we were seeing on compass compile.
+  (jrist@redhat.com)
+- user edit - add 'save' text to form... lost in merge (bbuckingham@redhat.com)
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- password reset - updates from code inspection (bbuckingham@redhat.com)
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- password reset - fixes for issues found in production install
+  (bbuckingham@redhat.com)
+- katello.spec - adding mailers to be included in rpm (bbuckingham@redhat.com)
+- password reset - fix issue w/ redirect to login after reset
+  (bbuckingham@redhat.com)
+- installler - minor update to setting of email in seeds.rb
+  (bbuckingham@redhat.com)
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- password reset - adding specs for new controller (bbuckingham@redhat.com)
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- cli - add email address to 'user' as a required attribute
+  (bbuckingham@redhat.com)
+- password reset - replace flash w/ notices, add config options to
+  katello.yml...ec (bbuckingham@redhat.com)
+- password reset - update so that emails are sent asynchronously
+  (bbuckingham@redhat.com)
+- password reset - misc fixes (bbuckingham@redhat.com)
+- password reset - add ability to send user login based on email
+  (bbuckingham@redhat.com)
+- password reset - chgs to support the actual password reset
+  (bbuckingham@redhat.com)
+- password reset - chgs to dev env to configure sendmail
+  (bbuckingham@redhat.com)
+- password reset - initial commit w/ logic for resetting user password
+  (bbuckingham@redhat.com)
+- Users specs - fixes for req'd email address and new tests
+  (bbuckingham@redhat.com)
+- Users - add email address (model/controller/view) (bbuckingham@redhat.com)
+
+* Mon Nov 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.103-1
+- fix up branding file pulls (shughes@redhat.com)
+- rescue exceptions retrieving a system's guests and host
+  (thomasmckay@redhat.com)
+- 750120 - search - fix error on org search (bbuckingham@redhat.com)
+- scoped_search - updating to gem version 2.3.6 (bbuckingham@redhat.com)
+- fix brand processing of source files (shughes@redhat.com)
+
+* Mon Nov 14 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.102-1
+- 753329 - distros - fix to support distros containing space in the id
+- TODO: Unsure how to test this after making :host, :guests use lazy_accessor
+- 749258 - new state 'failed' for changesets
+- fixed save button on edit user password
+- guests of a host cleanly displayed
+- adding rootpw tag to the TDL export
+- corrected test for creating user w/o env
+- manifest import - fixes in orchestration - content remained created in locker
+  env - fixed infinite recursive call of set_repos
+- + both new user and modifying a user's environment now work + TODO: probably
+  need to wordsmith form labels
+- user#create updated for optional default env
+- + don't require an initial environment for new org + new user default org/env
+  choice box allows none (controller not updated yet)
+- installed-products - API supports consumer installedProducts
+- clean up of branch merge defaultorgenv
+- correctly pass default env during user create and update
+- comment and whitespace cleanup
+- updated rspec tests for new default org and environment
+- minor clean-up
+- Security enhancements for default org and environment
+- Updating KAtello to work with older subscription managers (5.7) that expect
+  displayMessage in the return JSON
+- User environment edit page no longer clicks a link in order to refresh the
+  page after a successful update, but rather fills in the new data via AJAX
+- Fixing a display message when creating an organization
+- Not allowing a superadmin to create a user if the org does not ahave any
+  environments from which to choose
+- Now older subscription managers can register against Katello without
+  providing an org or environment
+- You can now change the default environment for a user on the
+  Administration/Users/Environments tab
+- updating config file secret
+- Adding missing file
+- Middle of ajax environments_partial call
+- Moved the user new JS to the callback in user.js instead of a separate file
+  for easier debugging.
+- Saving a default permission whever a new user is created, although the
+  details will likely change
+- Now when you create an org you MUST specify a default environment. If you do
+  not the org you created will be destroyed and you will be given proper error
+  messages. I added a feature to pass a prepend string to the error in case
+  there are two items you are trying to create on the page. It would have been
+  easier to just prepend it at the time of message creation, but that would
+  have affected every page. Perhaps we can revisit this in the future
+- In the middle of stuff
+- begin to display guests/host for a system
+- major-minor - fix down migration
+- major-minor - Parsing releasever and saving result to db
+- white-space
+
 * Thu Nov 10 2011 Shannon Hughes <shughes@redhat.com> 0.1.101-1
 - disable sync KBlimit (shughes@redhat.com)
 - repos - orchestration fix, 'del_content' was not returning true when there

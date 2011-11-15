@@ -51,9 +51,7 @@ Src::Application.routes.draw do
       get :systems
       get :subscriptions
     end
-
   end
-
 
   resources :systems, :except => [:destroy] do
     member do
@@ -92,7 +90,7 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :distributions, :only => [:show] do
+  resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ } do
     member do
       get :filelist
     end
@@ -118,6 +116,8 @@ Src::Application.routes.draw do
     member do
       post :clear_helptips
       put :update_roles
+      get :edit_environment
+      put :update_environment
     end
   end
 
@@ -195,6 +195,13 @@ Src::Application.routes.draw do
   match '/organizations/:org_id/environments/:env_id/edit' => 'environments#update', :via => :put
 
   resources :organizations do
+    collection do
+      get :auto_complete_search
+      get :items
+    end
+    member do
+      get :environments_partial
+    end
     resources :environments do
       member do
         get :system_templates
@@ -202,10 +209,6 @@ Src::Application.routes.draw do
       end
     end
     resources :providers
-    collection do
-      get :auto_complete_search
-      get :items
-    end
   end
   match '/organizations/:id/edit' => 'organizations#update', :via => :put
 
@@ -252,7 +255,6 @@ Src::Application.routes.draw do
     delete 'favorite/:id' => 'search#destroy_favorite', :on => :collection, :as => 'destroy_favorite'
   end
 
-
   resource :user_session do
     post 'set_org'
     get 'allowed_orgs'
@@ -268,7 +270,11 @@ Src::Application.routes.draw do
   match '/user_session/logout' => 'user_sessions#destroy'
   match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
 
-
+  resources :password_resets, :only => [:new, :create, :edit, :update] do
+    collection do
+      get :email_logins
+    end
+  end
 
   namespace :api do
     class RegisterWithActivationKeyContraint
@@ -402,7 +408,7 @@ Src::Application.routes.draw do
 
     resources :packages, :only => [:show]
     resources :errata, :only => [:index, :show]
-    resources :distributions, :only => [:show]
+    resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
 
     resources :users do
       get :report, :on => :collection
