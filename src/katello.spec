@@ -146,6 +146,12 @@ Katello connection classes for the Candlepin backend
 #configure Bundler
 rm -f Gemfile.lock
 sed -i '/@@@DEV_ONLY@@@/,$d' Gemfile
+
+#pull in branding if present
+if [ -d branding ] ; then
+  cp -r branding/* .
+fi
+
 #compile SASS files
 echo Compiling SASS files...
 compass compile
@@ -174,12 +180,6 @@ install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 mkdir .bundle
 mv ./deploy/bundle-config .bundle/config
 cp -R .bundle * %{buildroot}%{homedir}
-
-#handle branding files
-if [ -d branding ] ; then
-  cp -r branding/* %{buildroot}%{homedir}/.
-  rm -rf %{buildroot}%{homedir}/branding
-fi
 
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 644 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
@@ -223,6 +223,11 @@ rm -rf %{buildroot}%{homedir}/%{name}.spec
 rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
+
+#remove staged branding
+if [ -d branding ] ; then
+  rm -rf %{buildroot}%{homedir}/branding
+fi
 
 #remove development tasks
 rm %{buildroot}%{homedir}/lib/tasks/rcov.rake
