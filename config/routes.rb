@@ -51,9 +51,7 @@ Src::Application.routes.draw do
       get :systems
       get :subscriptions
     end
-
   end
-
 
   resources :systems, :except => [:destroy] do
     member do
@@ -270,7 +268,11 @@ Src::Application.routes.draw do
   match '/user_session/logout' => 'user_sessions#destroy'
   match '/user_session' => 'user_sessions#show', :via=>:get, :as=>'show_user_session'
 
-
+  resources :password_resets, :only => [:new, :create, :edit, :update] do
+    collection do
+      get :email_logins
+    end
+  end
 
   namespace :api do
     class RegisterWithActivationKeyContraint

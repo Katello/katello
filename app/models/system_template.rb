@@ -159,7 +159,7 @@ class SystemTemplate < ActiveRecord::Base
       xm.repositories {
         self.products.each do |p|
           pc = p.repos(self.environment).each do |repo|
-            xm.repository("name" => repo.id) {
+            xm.repository("name" => repo.name) {
               xm.url repo.uri
               xm.persisted "No"
               xm.clientcert uebercert[:cert] unless uebercert.nil?

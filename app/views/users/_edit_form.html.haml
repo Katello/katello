@@ -12,21 +12,26 @@
       "usernameMatch": '#{_("The password should not contain the username.")}'
     });
 
+= javascript :edit_helpers
+
 #users
   .grid_10
+
     %fieldset
       .grid_3.ra
-        = label :name, _("Username:")
-      #username.grid_5.la 
+        = label :user, :name, _("Username:")
+      #username.grid_5.la
         #{@user.username}
+
     %fieldset
       .grid_3.ra
-        = label :helptips_enable, _("Inline help enabled:")
+        = label :user, :helptips_enable, _("Inline Help Enabled:")
       .grid_5.la
         - if editable
           = check_box("user", "helptips_enabled", :id=>"helptips_enabled", 'data-url'=>user_path(@user.id), :checked=>@user.helptips_enabled ? "checked": "")
         - else
           = @user.helptips_enabled ? _("Yes") : _("No")
+
     - if editable
       %fieldset.fl.clear
         .grid_3.ra
@@ -34,20 +39,31 @@
         .grid_5.la
           #clear_helptips{:class=>"button", "data-url"=>clear_helptips_user_path(@user.id)}
             = _("Clear")
+
       %fieldset.fl.clear
         .grid_3.ra
-          = label :user, :password, _("Change Password")
+          = label :user, :password, _("Change Password:")
         .grid_5.la
           = text_field :user, :password, :id=>"password_field", :value=>"", :type=>"password"
       .grid_5.la.prefix_3
         #password_meter
+
       %fieldset.fl.clear
         .grid_3.ra
-          = label :user, :username, _("Confirm")
+          = label :user, :username, _("Confirm:")
         .grid_5.la
           = text_field :user, :username, :id=>"confirm_field", :value=>"", :type=>"password"
+
       .grid_5.la.prefix_2
         #password_conflict
       .grid_5.la.prefix_3
         #save_password.verify_password.disabled.button{'data-url'=>user_path(@user.id)}
-          #{_("Save")}
+          #{_('Save')}
+        
+  .grid_10
+    = form_tag user_path(@user), :method => :put, :remote => true do
+      %fieldset
+        .grid_3.ra
+          = label :user, :email, _("Email Address:")
+        .grid_5.la{'name' => 'user[email]',  :class => ("editable edit_textfield" if editable), 'data-url' => user_path(@user)} #{@user.email}
+
