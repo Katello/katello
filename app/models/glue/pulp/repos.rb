@@ -21,8 +21,6 @@ module Glue::Pulp::Repos
     base.send :include, InstanceMethods
     base.class_eval do
       before_save :save_repos_orchestration
-      after_save :import_repos_orchestration
-
       before_destroy :destroy_repos_orchestration
 
       has_and_belongs_to_many :filters, :uniq => true, :before_add => :add_filters_orchestration, :before_remove => :remove_filters_orchestration
@@ -316,22 +314,23 @@ module Glue::Pulp::Repos
       end
     end
 
-    def setup_repos
+    def substituted_paths url
+      cdn_var_substitutor = CDN::CdnVarSubstitutor.new(self.provider[:repository_url],
+                                                       :ssl_client_cert => OpenSSL::X509::Certificate.new(self.certificate),
+                                                       :ssl_client_key => OpenSSL::PKey::RSA.new(self.key))
+      cdn_var_substitutor.substitute_vars(url)
+    end
+
+    def set_repos
       self.productContent.collect do |pc|
-        cert = self.certificate
-        key = self.key
         ca = File.read(CDN::CdnResource.ca_file)
 
-        cdn_var_substitutor = CDN::CdnVarSubstitutor.new(self.provider[:repository_url],
-                                                         :ssl_client_cert => OpenSSL::X509::Certificate.new(cert),
-                                                         :ssl_client_key => OpenSSL::PKey::RSA.new(key))
-        substitutions_with_paths = cdn_var_substitutor.substitute_vars(pc.content.contentUrl)
-
-        substitutions_with_paths.each do |(substitutions, path)|
+        substituted_paths(pc.content.contentUrl).each do |(substitutions, path)|
           feed_url = repository_url(path)
           arch = substitutions["basearch"] || "noarch"
           repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
           version = CDN::Utils.parse_version(substitutions["releasever"])
+
           begin
             env_prod = EnvironmentProduct.find_or_create(self.organization.locker, self)
             repo = Repository.create!(:environment_product=> env_prod, :pulp_id => repo_id(repo_name),
@@ -342,8 +341,8 @@ module Glue::Pulp::Repos
                                         :name => repo_name,
                                         :feed => feed_url,
                                         :feed_ca => ca,
-                                        :feed_cert => cert,
-                                        :feed_key => key,
+                                        :feed_cert => self.certificate,
+                                        :feed_key => self.key,
                                         :content_type => pc.content.type,
                                         :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
                                         :preserve_metadata => true, #preserve repo metadata when importing from cp
@@ -410,19 +409,13 @@ module Glue::Pulp::Repos
       case orchestration_for
         when :create
           # no repositories are added when a product is created
+        when :import_from_cp
+          queue.create(:name => "create pulp repositories for product: #{self.name}",      :priority => 1, :action => [self, :set_repos])
         when :update
           #called when sync schedule changed, repo added, repo deleted
           queue.create(:name => "setting up pulp sync schedule for product: #{self.name}", :priority => 2, :action => [self, :setup_sync_schedule])
         when :promote
           # do nothing, as repos have already been promoted (see promote_repos method)
-      end
-    end
-
-
-    def import_repos_orchestration
-      case orchestration_for
-        when :import_from_cp
-          queue.create(:name => "create pulp repositories for product: #{self.name}", :priority => 1, :action => [self, :set_repos])
       end
     end
 

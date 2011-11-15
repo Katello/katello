@@ -269,7 +269,7 @@ describe SystemTemplatesController do
       disable_user_orchestration
 
       @organization = new_test_org
-      @testuser = User.create!(:username=>"TestUser", :password=>"foobar")
+      @testuser = User.create!(:username=>"TestUser", :password=>"foobar", :email=>"TestUser@somewhere.com")
       @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @organization.locker)
 
     end

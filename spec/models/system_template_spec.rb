@@ -568,8 +568,9 @@ describe SystemTemplate do
       end
 
       it "should contain repos referencing to pulp repositories" do
-        repo_uri = subject.xpath("/template/repositories/repository/url").text
-        repo_uri.should =~ /repos\/ACME_Corporation\/Locker\/zoo\/base$/
+        repo = subject.xpath("/template/repositories/repository").first
+        repo["name"].should == "repo"
+        repo.xpath("./url").text.should =~ /repos\/ACME_Corporation\/Locker\/zoo\/base$/
       end
 
       it "should contain 'persisted' tag" do
