@@ -102,6 +102,13 @@ class OptionParser(_OptionParser):
             _OptionParser.error(self, errorMsg)
 
 
+    def get_option_by_dest(self, dest):
+        for opt in self.option_list:
+            if opt.dest == dest:
+                return opt
+        return None
+
+
     def get_options(self):
         return self._long_opt.keys() + self._short_opt.keys()
 

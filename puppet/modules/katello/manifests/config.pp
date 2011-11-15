@@ -100,6 +100,18 @@ class katello::config {
     },
   }
 
+  common::simple_replace { "primary_user_email":
+      file => "/usr/share/katello/db/seeds.rb",
+      pattern => "email => 'root@localhost'",
+      replacement => "email => '$katello::params::user_email'",
+      before => Exec["katello_seed_db"],
+      require => $katello::params::deployment ? {
+                'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
+                'headpin' => [ Class["candlepin::service"] ],
+                default => [],
+    },
+  }
+
   exec {"katello_db_migrate":
     cwd         => $katello::params::katello_dir,
     user        => $katello::params::user,
