@@ -52,7 +52,7 @@ class List(ChangesetAction):
 
     def check_options(self):
         self.require_option('org')
-        self.require_option('env', '--environment')
+        self.require_option('env')
 
     def run(self):
         orgName = self.get_option('org')
@@ -95,7 +95,7 @@ class Info(ChangesetAction):
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
-        self.require_option('env', '--environment')
+        self.require_option('env')
 
     def run(self):
         orgName = self.get_option('org')
@@ -148,7 +148,7 @@ class Create(ChangesetAction):
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
-        self.require_option('env', '--environment')
+        self.require_option('env')
 
     def run(self):
         orgName = self.get_option('org')
@@ -230,7 +230,7 @@ class UpdateContent(ChangesetAction):
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
-        self.require_option('env', '--environment')
+        self.require_option('env')
 
 
     def run(self):
@@ -280,7 +280,7 @@ class Delete(ChangesetAction):
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
-        self.require_option('env', '--environment')
+        self.require_option('env')
 
     def run(self):
         csName  = self.get_option('name')
@@ -312,7 +312,7 @@ class Promote(ChangesetAction):
     def check_options(self):
         self.require_option('name')
         self.require_option('org')
-        self.require_option('env', '--environment')
+        self.require_option('env')
 
     def run(self):
         csName  = self.get_option('name')
