@@ -70,6 +70,36 @@ common:
     sync_threads: 4
     #sync_KBlimit: 100
 
+# Setup proxy to use when accessing CDN.
+# Katello calls CDN to retrieve list of repositories for a product
+
+<%- unless scope.lookupvar("katello::params::proxy_host") == "NONE" -%> 
+  cdn_proxy:
+    host: <%= scope.lookupvar("katello::params::proxy_host") %>
+    <%- unless scope.lookupvar("katello::params::proxy_port") == "NONE" -%>
+    port: <%= scope.lookupvar("katello::params::proxy_port") %>
+    <%- else -%>
+#   port: 3128
+    <%- end -%>
+    <%- unless scope.lookupvar("katello::params::proxy_user") == "NONE" -%>
+    user: <%= scope.lookupvar("katello::params::proxy_user") %>
+    <%- else -%>
+#   user: username
+    <%- end -%>
+    <%- unless scope.lookupvar("katello::params::proxy_pass") == "NONE" -%>
+    password: <%= scope.lookupvar("katello::params::proxy_pass") %>
+    <%- else -%>
+#   password: password
+    <%- end -%>
+<%- else -%>
+# Uncomment in case you want this calls to go through your proxy
+#  cdn_proxy:
+#    host: localhost
+#    port: 3128
+#    user: username
+#    password: password
+<%- end -%>
+
 # Setup your foreman environment here
   foreman:
     url: <%= scope.lookupvar("katello::params::foreman_url") %>
