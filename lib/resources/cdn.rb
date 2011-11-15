@@ -93,11 +93,16 @@ module CDN
 
     def load_proxy_settings
       if AppConfig.cdn_proxy
-        self.proxy_host = AppConfig.cdn_proxy.host
+        self.proxy_host = parse_host(AppConfig.cdn_proxy.host)
         self.proxy_port = AppConfig.cdn_proxy.port
         self.proxy_user = AppConfig.cdn_proxy.user
         self.proxy_password = AppConfig.cdn_proxy.password
       end
+    end
+
+    def parse_host(host_or_url)
+      uri = URI.parse(host_or_url)
+      return uri.host || uri.path
     end
 
  end
