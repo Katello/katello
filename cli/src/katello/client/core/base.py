@@ -227,18 +227,22 @@ class Action(object):
         return self.get_option(opt) != None
 
 
-    def require_option(self, opt, flag=None):
+    def require_option(self, opt_dest):
         """
-        Raise error if option is not present.
-        @type opt: str
-        @param opt: name of option to check
-        @type flag: str
-        @param flaf: flag for option, if None then --option_name is used
+        Add option error if an option is not present.
+        @type opt_dest: str
+        @param opt: name of option or option destination to check
         """
-        flag = flag or '--' + opt
-        if (not self.option_specified(opt)):
+        if (not self.option_specified(opt_dest)):
+            opt = self.parser.get_option_by_dest(opt_dest)
+            if opt != None:
+                flag = opt.get_opt_string()
+            else:
+                flag = '--' + opt_dest
+            
             self.add_option_error(_('Option %s is required; please see --help') % flag)
         return
+
 
     def option_specified(self, opt):
         return self.has_option(opt) and self.get_option(opt) != ""
