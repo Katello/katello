@@ -60,7 +60,7 @@ class SyncManagementController < ApplicationController
 
   def index
     org = current_organization
-    @products = org.locker.products.readable(org).reject { |p| p.repos(p.organization.locker).empty? }
+    @products = org.locker.products.readable(org)
     @products.sort! { |p1,p2| p1.name.upcase() <=> p2.name.upcase() }
     @sproducts = @products.reject{|prod| !prod.syncable?} # syncable products
 
