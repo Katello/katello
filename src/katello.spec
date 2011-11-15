@@ -329,6 +329,38 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Nov 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.103-2
+- build bump release (shughes@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+- Rename of look.scss to _look.scss to reflect the fact that it's an import.
+  Fixed the text-shadow deprecation error we were seeing on compass compile.
+  (jrist@redhat.com)
+- Automatic commit of package [katello] release [0.1.102-2].
+  (shughes@redhat.com)
+- bump release for build (shughes@redhat.com)
+- sync up spec with katello (shughes@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+- Automatic commit of package [katello] release [0.1.101-2].
+  (shughes@redhat.com)
+- bump release (shughes@redhat.com)
+- fix rpm macro syntax (shughes@redhat.com)
+- move branding processing (shughes@redhat.com)
+- remove sprites from branding (shughes@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+- Removing katello.scss to limit overrides.  Added look.scss to make it
+  simpler. (jrist@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+
 * Mon Nov 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.103-1
 - fix up branding file pulls (shughes@redhat.com)
 - rescue exceptions retrieving a system's guests and host
