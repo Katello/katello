@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.103
+Version:        0.1.104
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -330,6 +330,51 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Nov 15 2011 Shannon Hughes <shughes@redhat.com> 0.1.104-1
+- Reverting look.scss to previous contents. (jrist@redhat.com)
+- tdl-repos - use repo name for name attribute (inecas@redhat.com)
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- password reset - add server to logins email, ignore errors on requests for
+  email (bbuckingham@redhat.com)
+- cdn-proxy - accept url as well as host for cdn proxy (inecas@redhat.com)
+- cdn-proxy - let proxy to be configured when calling CDN (inecas@redhat.com)
+- 752863 - katello service will return "OK" on error (lzap+git@redhat.com)
+- Rename of look.scss to _look.scss to reflect the fact that it's an import.
+  Fixed the text-shadow deprecation error we were seeing on compass compile.
+  (jrist@redhat.com)
+- user edit - add 'save' text to form... lost in merge (bbuckingham@redhat.com)
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- password reset - updates from code inspection (bbuckingham@redhat.com)
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- password reset - fixes for issues found in production install
+  (bbuckingham@redhat.com)
+- katello.spec - adding mailers to be included in rpm (bbuckingham@redhat.com)
+- password reset - fix issue w/ redirect to login after reset
+  (bbuckingham@redhat.com)
+- installler - minor update to setting of email in seeds.rb
+  (bbuckingham@redhat.com)
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- password reset - adding specs for new controller (bbuckingham@redhat.com)
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- cli - add email address to 'user' as a required attribute
+  (bbuckingham@redhat.com)
+- password reset - replace flash w/ notices, add config options to
+  katello.yml...ec (bbuckingham@redhat.com)
+- password reset - update so that emails are sent asynchronously
+  (bbuckingham@redhat.com)
+- password reset - misc fixes (bbuckingham@redhat.com)
+- password reset - add ability to send user login based on email
+  (bbuckingham@redhat.com)
+- password reset - chgs to support the actual password reset
+  (bbuckingham@redhat.com)
+- password reset - chgs to dev env to configure sendmail
+  (bbuckingham@redhat.com)
+- password reset - initial commit w/ logic for resetting user password
+  (bbuckingham@redhat.com)
+- Users specs - fixes for req'd email address and new tests
+  (bbuckingham@redhat.com)
+- Users - add email address (model/controller/view) (bbuckingham@redhat.com)
+
 * Mon Nov 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.103-1
 - fix up branding file pulls (shughes@redhat.com)
 - rescue exceptions retrieving a system's guests and host
