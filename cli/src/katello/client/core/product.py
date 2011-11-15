@@ -199,7 +199,7 @@ class Promote(ProductAction):
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
-        self.require_option('env', '--environment')
+        self.require_option('env')
 
     def run(self):
         orgName     = self.get_option('org')

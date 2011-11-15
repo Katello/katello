@@ -31,7 +31,15 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
 
   def perform
     User.current = User.find_by_username(username)
-    @result = object.send(method_name, *args) if object
+
+    # If the object provided is a Mailer object, the user wants to send an email; therefore,invoke the method with a
+    # deliver; otherwise, invoke the method exactly as provided by the user.  Although this seems a bit odd, this is
+    # essentially how the delayed job gem would also send mail, if we were using it directly.
+    if object.superclass == ActionMailer::Base
+      @result = object.send(method_name, *args).deliver
+    elsif object
+      @result = object.send(method_name, *args)
+    end
   end
 
   def method_missing(symbol, *args)
