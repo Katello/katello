@@ -9,11 +9,15 @@
 = content_for :content do
   .grid_8.subs
     .subs_top
-      .subs_icon{:class => "#{@system.status_color}"}
+      .subs_icon{:class => "#{@system.compliance_color}"}
       .fl
         = image_tag("boxshadow.png")
       .subs_text.fl
-        = @system.compliant? ? _("Subscriptions are Current") : _("Subscriptions are not Current")
+        - if @system.compliant?
+          - until_time = @system.compliant_until
+          = until_time ? _("Subscriptions are Current Until %s") % until_time : _("Subscriptions are Current")
+        - else
+          = _("Subscriptions are not Current")
     .subs_left.ca
       #{_("Socket Requirement")}
       %br
