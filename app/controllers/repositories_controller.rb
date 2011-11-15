@@ -19,17 +19,19 @@ class RepositoriesController < ApplicationController
   before_filter :find_provider, :only => [:new, :create, :edit, :destroy]
   before_filter :authorize
   before_filter :find_product, :only => [:new, :create, :edit, :destroy]
-  before_filter :find_repository, :only => [:edit, :destroy]
+  before_filter :find_repository, :only => [:edit, :destroy, :enable_repo]
 
   def rules
     read_test = lambda{@provider.readable?}
     edit_test = lambda{@provider.editable?}
+    org_edit = lambda{current_organization.editable?}
     {
       :new => edit_test,
       :create => edit_test,
       :edit =>read_test,
       :update => edit_test,
       :destroy => edit_test,
+      :enable_repo => org_edit
     }
   end
 
@@ -64,6 +66,17 @@ class RepositoriesController < ApplicationController
   end
 
   def update
+  end
+
+  def enable_repo
+    @repository.enabled = params[:repo] == "1"
+    @repository.save!
+    if @repository.enabled?
+      notice _("Repository '#{@repository.name}' enabled.")
+    else
+      notice _("Repository '#{@repository.name}' disabled.")
+    end
+    render :json => ""
   end
 
   def destroy
