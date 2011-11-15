@@ -76,6 +76,8 @@ common:
     sync_threads: 4
     #sync_KBlimit: 100
 
+
+
 # Setup your foreman environment here
   foreman:
     url: https://foreman.instance.company.com:443
@@ -83,6 +85,15 @@ common:
   cloud_forms:
     oauth_key: cloud_forms
     oauth_secret: shhh
+
+# Setup proxy to use when accessing CDN.
+# Katello calls CDN to retrieve list of repositories for a product
+# Uncomment in case you want this calls to go through your proxy
+#  cdn_proxy:
+#    host: localhost
+#    port: 3128
+#    user: username
+#    password: password
 
 #
 # Production environment configuration
