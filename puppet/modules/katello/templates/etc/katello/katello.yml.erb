@@ -29,7 +29,7 @@ common:
   use_pulp: <%= scope.lookupvar("katello::params::deployment") == 'katello' %>
   rest_client_timeout: 30
 
-  host: <%= scope.lookupvar("katello::params::host") %>
+  host: <%= has_variable?("fqdn") ? fqdn : hostname %>
   use_ssl: true
   port:
 
