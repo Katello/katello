@@ -4,19 +4,12 @@
 @import "colors";
 @import "sprites";
 
-//Images
-$body_background_img:         url("../../../images/rh-outer-background.png") repeat-x 0 -7px #FFF !important;
-
-body {
-    background: $body_background_img;
-}
-
 #head {
   font-size: 12px;
-  padding: 0;
+  padding: 5px 0 0 0;
   overflow: hidden;
+  /*@include text-shadow(#000, 0, 1px, 0);*/
   height: 40px;
-  margin-bottom: 5px;
   header {
     display: block;
     ul {
@@ -46,15 +39,14 @@ body {
     }
     .pipe {
       display: inline-block;
-      height: 22px;
+      height: 24px;
       width: 1px;
       background-color: $white_color;
       background-color: rgba(255,255,255,0.7);
       vertical-align: middle;
-      margin-top: -4px;
     }
     img {
-      margin: 0 6px 6px 6px;
+      margin: 6px;
       display: inline-block;
       vertical-align: middle;
     }
@@ -65,7 +57,7 @@ body {
       padding: 8px 0 0 0;
     }
     #unread_notices {
-      @include _text-shadow(#000,0,1px,1px);
+      @include text-shadow(#000,0,1px,1px);
       @include border-radius(3em);
       background-color: darken($kprimary_color,24%);
       margin: 0.3em;
