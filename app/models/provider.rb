@@ -135,7 +135,6 @@ class Provider < ActiveRecord::Base
   end
 
   def self.creatable? org
-    return false if redhat_provider?
     User.allowed_to?([:create], :providers, nil, org)
   end
 
