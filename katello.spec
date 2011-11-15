@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.102
+Version:        0.1.103
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -329,6 +329,14 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Nov 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.103-1
+- fix up branding file pulls (shughes@redhat.com)
+- rescue exceptions retrieving a system's guests and host
+  (thomasmckay@redhat.com)
+- 750120 - search - fix error on org search (bbuckingham@redhat.com)
+- scoped_search - updating to gem version 2.3.6 (bbuckingham@redhat.com)
+- fix brand processing of source files (shughes@redhat.com)
+
 * Mon Nov 14 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.102-1
 - 753329 - distros - fix to support distros containing space in the id
 - TODO: Unsure how to test this after making :host, :guests use lazy_accessor
