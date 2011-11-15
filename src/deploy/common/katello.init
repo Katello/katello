@@ -23,7 +23,7 @@ KATELLO_GROUP=${KATELLO_GROUP:-katello}
 KATELLO_HOME=${KATELLO_HOME:-/usr/share/katello}
 KATELLO_DATA_DIR=${KATELLO_DATA_DIR:-/var/lib/katello}
 KATELLO_ENV=${KATELLO_ENV:-production}
-KATELLO_PID=${KATELLO_PID:-${KATELLO_HOME}/tmp/pids/thin.5000.pid}
+KATELLO_PIDS=${KATELLO_PIDS:-${KATELLO_HOME}/tmp/pids/thin.*.pid}
 export KATELLO_LOGGING=${KATELLO_LOGGING:-info}
 
 export RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX
@@ -36,32 +36,24 @@ check_privilege() {
     fi
 }
 
-check_permissions() {
-    if [ -f "$KATELLO_PID" ] && [ "$(stat -c %U $KATELLO_PID)" != "$KATELLO_USER" ]; then
-        echo "Incorrect permissions, please do not run katello as root"
-        echo "Correct permission of all log files and pid file to 'katello' user:"
-        echo "chown katello:katello $KATELLO_PID"
-        echo "chown -R katello:katello $KATELLO_DATA_DIR"
-        exit 1
-    fi
-}
-
 status() {
-    #check if pid file exists
-    if [ -f ${KATELLO_PID} ]; then
-        pid=`cat ${KATELLO_PID}`
-        #check if proces with pid from the file is running
-        if `ps -p $pid > /dev/null`; then
-            echo "$prog is running."
-            RETVAL=0
+    for KATELLO_PID in $KATELLO_PIDS
+    do
+        if [ -f ${KATELLO_PID} ]; then
+            pid=`cat ${KATELLO_PID}`
+            #check if proces with pid from the file is running
+            if `ps -p $pid > /dev/null`; then
+                echo "$prog ($pid) is running."
+                RETVAL=0
+            else
+                echo "$prog ($pid) is not running."
+                RETVAL=1
+            fi
         else
             echo "$prog is not running."
-            RETVAL=1
+            RETVAL=3
         fi
-    else
-        echo "$prog is not running."
-        RETVAL=3
-    fi
+    done
 
     return $RETVAL
 }
@@ -73,13 +65,12 @@ status_q() {
 
 start() {
     check_privilege
-    check_permissions
 
     [ ! -f $KATELLO_DATA_DIR/initdb_done ] && echo "Please run initdb first" && echo_failure && return 1
 
     echo -n $"Starting $prog: "
     if status_q; then
-        echo -n $"$prog is already running. "
+        echo -n $"$prog is already running."
         RETVAL=0
         echo_success
     else
@@ -87,7 +78,7 @@ start() {
         # delete Gemfile.lock (it will be regenerated)
         rm -f $KATELLO_DATA_DIR/Gemfile.lock
         export HOME=
-        daemon --user ${KATELLO_USER} $THIN start --user ${KATELLO_USER} --group ${KATELLO_GROUP} --config /etc/katello/thin.yml --rackup "${KATELLO_HOME}/config.ru" > /var/log/katello/startup.log 2>&1
+        $THIN start --user ${KATELLO_USER} --group ${KATELLO_GROUP} --config /etc/katello/thin.yml --rackup "${KATELLO_HOME}/config.ru"
         RETVAL=$?
         if [ $RETVAL = 0 ]; then
             echo_success
