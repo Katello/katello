@@ -85,7 +85,7 @@
   -webkit-box-shadow: none;
 }
 
-@mixin text-shadow($x,$y,$blur,$color) {
+@mixin _text-shadow($x,$y,$blur,$color) {
   text-shadow: $x $y $blur $color;
   -moz-text-shadow: $x $y $blur $color;
   -webkit-text-shadow: $x $y $blur $color;
@@ -144,7 +144,7 @@
 
 @mixin crumb-disable-hover-selected {
   &:hover {
-    background: $listhover_color !important; color: #FFF; @include text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
+    background: $listhover_color !important; color: #FFF; @include _text-shadow(2px ,2px,2px,rgba(0,0,0,0.6));
     &:after {
       border-left-color: $listhover_color !important;
     }
