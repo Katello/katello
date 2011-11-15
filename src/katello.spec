@@ -16,8 +16,8 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.102
-Release:        2%{?dist}
+Version:        0.1.103
+Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
 Group:          Applications/Internet
@@ -146,6 +146,12 @@ Katello connection classes for the Candlepin backend
 #configure Bundler
 rm -f Gemfile.lock
 sed -i '/@@@DEV_ONLY@@@/,$d' Gemfile
+
+#pull in branding if present
+if [ -d branding ] ; then
+  cp -r branding/* .
+fi
+
 #compile SASS files
 echo Compiling SASS files...
 compass compile
@@ -174,12 +180,6 @@ install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 mkdir .bundle
 mv ./deploy/bundle-config .bundle/config
 cp -R .bundle * %{buildroot}%{homedir}
-
-#handle branding files
-if [ -d branding ] ; then
-  cp -r branding/* %{buildroot}%{homedir}/.
-  rm -rf %{buildroot}%{homedir}/branding
-fi
 
 #copy configs and other var files (will be all overwriten with symlinks)
 install -m 644 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
@@ -223,6 +223,11 @@ rm -rf %{buildroot}%{homedir}/%{name}.spec
 rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
+
+#remove staged branding
+if [ -d branding ] ; then
+  rm -rf %{buildroot}%{homedir}/branding
+fi
 
 #remove development tasks
 rm %{buildroot}%{homedir}/lib/tasks/rcov.rake
@@ -324,34 +329,13 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
-* Mon Nov 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.102-2
-- bump release for build (shughes@redhat.com)
-- sync up spec with katello (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
+* Mon Nov 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.103-1
+- fix up branding file pulls (shughes@redhat.com)
 - rescue exceptions retrieving a system's guests and host
   (thomasmckay@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
 - 750120 - search - fix error on org search (bbuckingham@redhat.com)
 - scoped_search - updating to gem version 2.3.6 (bbuckingham@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
 - fix brand processing of source files (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.101-2].
-  (shughes@redhat.com)
-- bump release (shughes@redhat.com)
-- fix rpm macro syntax (shughes@redhat.com)
-- move branding processing (shughes@redhat.com)
-- remove sprites from branding (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Removing katello.scss to limit overrides.  Added look.scss to make it
-  simpler. (jrist@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
 
 * Mon Nov 14 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.102-1
 - 753329 - distros - fix to support distros containing space in the id
