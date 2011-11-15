@@ -1,0 +1,5 @@
+%table#products_table
+  %thead
+    %th #{_("Product")}
+  %tbody
+    = render :partial=>"providers/redhat/product", :collection=>product_map, :as=>:prod

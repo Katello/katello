@@ -14,7 +14,9 @@
 class ProvidersController < ApplicationController
   include AutoCompleteSearch
 
-  before_filter :find_provider, :only => [:products_repos, :show, :subscriptions, :update_subscriptions, :edit, :update, :destroy]
+  before_filter :find_rh_provider, :only => [:redhat_provider,:update_redhat_provider]
+
+  before_filter :find_provider, :only => [:products_repos, :show, :edit, :update, :destroy]
   before_filter :authorize #after find_provider
   before_filter :panel_options, :only => [:index, :items]
   before_filter :search_filter, :only => [:auto_complete_search]
@@ -31,8 +33,6 @@ class ProvidersController < ApplicationController
     read_test = lambda{@provider.readable?}
     edit_test = lambda{@provider.editable?}
     delete_test = lambda{@provider.deletable?}
-    redhat_provider_read_test = lambda{current_organization.readable?}
-    redhat_provider_edit_test = lambda{current_organization.editable?}
     {
       :index => index_test,
       :items => index_test,
@@ -45,8 +45,8 @@ class ProvidersController < ApplicationController
       :destroy => delete_test,
       :products_repos => read_test,
 
-      :redhat_provider =>redhat_provider_read_test,
-      :update_redhat_provider => redhat_provider_edit_test,
+      :redhat_provider =>read_test,
+      :update_redhat_provider => edit_test
     }
   end
 
@@ -57,8 +57,6 @@ class ProvidersController < ApplicationController
   end
 
   def update_redhat_provider
-
-    @provider = current_organization.redhat_provider
     if !params[:provider].blank? and params[:provider].has_key? :contents
       temp_file = nil
       begin
@@ -88,7 +86,6 @@ class ProvidersController < ApplicationController
   end
 
   def redhat_provider
-    @provider = current_organization.redhat_provider
     # We default to none imported until we can properly poll Candlepin for status of the import
     @grouped_subscriptions = []
     begin
@@ -101,7 +98,7 @@ class ProvidersController < ApplicationController
       Rails.logger.error "Error fetching subscriptions from Candlepin"
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
-      render :template =>"providers/redhat_provider", :status => :bad_request and return
+      render :template =>"providers/redhat/show", :status => :bad_request and return
     end
 
     begin
@@ -115,10 +112,10 @@ class ProvidersController < ApplicationController
       Rails.logger.error "Error fetching subscription history from Candlepin"
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
-      render :template =>"providers/redhat_provider", :status => :bad_request and return
+      render :template =>"providers/redhat/show", :status => :bad_request and return
     end
 
-    render :template =>"providers/redhat_provider"
+    render :template =>"providers/redhat/show"
   end
 
   def items
@@ -222,6 +219,11 @@ class ProvidersController < ApplicationController
       render :text => error, :status => :bad_request
     end
   end
+
+  def find_rh_provider
+      @provider = current_organization.redhat_provider
+  end
+
 
   def panel_options
         @panel_options = { :title => _('Providers'),

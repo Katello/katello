@@ -22,7 +22,7 @@ class Api::SyncController < Api::ApiController
   skip_before_filter :authorize
 
   def index
-    render :json => @obj.latest_sync_statuses
+    render :json => @obj.sync_status
   end
 
   def create
