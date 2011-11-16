@@ -160,6 +160,7 @@ class Product < ActiveRecord::Base
     query = EnvironmentProduct.joins(:repositories).where(
           :environment_id => env).select("environment_products.product_id")
     query = query.where("repositories.enabled" => true) if enabled_only
-    where("products.id in (" + query.to_sql + ")")
+    joins(:provider).where('providers.organization_id' => env.organization).
+        where("(providers.provider_type ='#{::Provider::CUSTOM}') OR ( providers.provider_type ='#{::Provider::REDHAT}' AND products.id in (#{query.to_sql}))")
   end
 end
