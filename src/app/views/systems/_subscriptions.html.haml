@@ -18,22 +18,21 @@
           = until_time ? _("Subscriptions are Current Until %s") % until_time : _("Subscriptions are Current")
         - else
           = _("Subscriptions are not Current")
-      %br.clear
-        .grid_2.la
-          = form_tag system_path(@system), :id=>"autoheal_form", :method=>"put", :remote=>true do
-            = check_box_tag "autoheal", value=@system.autoheal, @system.autoheal
-            &nbsp;
-            Auto-heal
-    .subs_left.ca
-      #{_("Socket Requirement")}
-      %br
-      .subs_num
-        = image_tag("icons/check_icon.png")
-        #{sockets}
-    .subs_right.ca
-      #{_("Guests Requirement")}
-      %br
-      .subs_num #{"--"}
+    .subs_bottom.la
+      = form_tag system_path(@system), :id=>"autoheal_form", :method=>"put", :remote=>true do
+        = check_box_tag "autoheal", value=@system.autoheal, @system.autoheal
+        &nbsp;
+        Auto-heal
+    -# .subs_left.ca
+    -#   #{_("Socket Requirement")}
+    -#   %br
+    -#   .subs_num
+    -#     = image_tag("icons/check_icon.png")
+    -#     #{sockets}
+    -# .subs_right.ca
+    -#   #{_("Guests Requirement")}
+    -#   %br
+    -#   .subs_num #{"--"}
   #subs_data
     = render :partial=>"subs", :locals=>{:system=>@system, :avail_subs => avail_subs, :consumed_entitlements => consumed_entitlements, :editable=>editable}
   %br.clear
