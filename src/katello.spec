@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.106
+Version:        0.1.107
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -334,6 +334,26 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.107-1
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (jsherril@redhat.com)
+- removing duplicated method (jsherril@redhat.com)
+- incorporate redhat-logos rpm for system engine installs (shughes@redhat.com)
+- 754442 - handle error status codes from CDN (inecas@redhat.com)
+- 754207 - fixing issue where badly formed cdn_proxy would throw a non-sensical
+  error, and we would attempt to parse a nil host (jsherril@redhat.com)
+- Merge branch 'master' into sys-status (thomasmckay@redhat.com)
+- minor verbage change to label: Host Type to System Type
+  (thomasmckay@redhat.com)
+- Merge branch 'master' into sys-status (thomasmckay@redhat.com)
+- Merge branch 'master' into sys-status (thomasmckay@redhat.com)
+- Merge branch 'master' into sys-status (thomasmckay@redhat.com)
+- added compliant until date (thomasmckay@redhat.com)
+- display a system's subscription status and colored icon
+  (thomasmckay@redhat.com)
+- Merge branch 'master' into sys-status (thomasmckay@redhat.com)
+- display dashboard system status (thomasmckay@redhat.com)
+
 * Wed Nov 16 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.106-1
 - async job - fix for broken promotions (bbuckingham@redhat.com)
 
