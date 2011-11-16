@@ -396,6 +396,7 @@ module TemplateContentBreadcrumb
       add_crumb_node!(bc, packages_bc_id(template), "", _("Packages"), [root_id, template_id], {:client_render => true})
       add_crumb_node!(bc, products_bc_id(template), "", _("Products"), [root_id, template_id], {:client_render => true})
       add_crumb_node!(bc, comps_bc_id(template), "", _("Package Groups"), [root_id, template_id], {:client_render => true})
+      add_crumb_node!(bc, distro_bc_id(template), "", _("Selected Distribution"), [root_id, template_id], {:client_render => true})
 
     }
 
@@ -422,6 +423,10 @@ module TemplateContentBreadcrumb
 
   def products_bc_id template
     "products_#{template.id}"
+  end
+
+  def distro_bc_id template
+    "distribution_#{template.id}"
   end
 
   def template_list
