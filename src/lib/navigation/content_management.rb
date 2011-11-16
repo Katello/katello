@@ -56,7 +56,7 @@ module Navigation
        :url => :sub_level,
        :if => :sub_level,
        :options => {:class=>'content second_level', "data-menu"=>"content"},
-       :items => [menu_custom_providers, menu_redhat_providers, menu_filters]
+       :items => [menu_custom_providers, menu_redhat_providers, menu_filters, menu_gpg]
       }
 
     end
@@ -151,9 +151,21 @@ module Navigation
        {:key => :filters,
         :name => N_("Package Filters"),
         :url => filters_path,
-        :if => lambda {Filter.any_readable?(current_organization)}
+        :if => lambda {Filter.any_readable?(current_organization)},
+        :options => {:class=>"third_level"}
        }
     end
+
+
+    def menu_gpg
+       {:key => :gpg,
+        :name => N_("GPG Keys"),
+        :url => gpg_keys_path,
+        :if => lambda {GpgKey.any_readable?(current_organization)},
+        :options => {:class=>"third_level"}
+       }
+    end
+
 
 
     def promotion_packages_navigation
