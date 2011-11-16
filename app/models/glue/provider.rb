@@ -117,7 +117,7 @@ module Glue::Provider
       end
     end
 
-    def add_custom_product(name, description, url)
+    def add_custom_product(name, description, url, gpg = nil)
       # URL isn't used yet until we can do custom repo discovery in pulp
       begin
         Rails.logger.info "Creating custom product #{name} for provider: #{self.name}"
@@ -129,6 +129,7 @@ module Glue::Provider
         self.products << product
         product.provider = self
         product.environments << self.organization.locker
+        product.gpg_key = gpg
         product.save!
         product
       rescue => e
