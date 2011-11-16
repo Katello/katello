@@ -22,6 +22,8 @@ class Organization < ActiveRecord::Base
   has_one :locker, :class_name =>"KTEnvironment", :conditions => {:locker => true}, :dependent => :destroy
   has_many :filters, :dependent => :destroy, :inverse_of => :organization
 
+  has_many :gpgs, :dependent => :destroy, :inverse_of => :organization
+
   attr_accessor :statistics
 
   scoped_search :on => :name, :complete_value => true, :rename => :'organization.name'
