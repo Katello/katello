@@ -1,6 +1,6 @@
 class CreateGpgs < ActiveRecord::Migration
   def self.up
-    create_table :gpgs do |t|
+    create_table :gpg_keys do |t|
       t.string :name, :null => false
       t.references :organization, :null => false
       t.text :content
@@ -9,6 +9,6 @@ class CreateGpgs < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :gpgs
+    drop_table :gpg_keys
   end
 end
