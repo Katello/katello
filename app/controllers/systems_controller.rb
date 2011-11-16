@@ -239,9 +239,9 @@ class SystemsController < ApplicationController
       if not System.where(:id => @system.id).search_for(params[:search]).include?(@system)
         notice _("'#{@system["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
       end
-      
+
       respond_to do |format|
-        format.html { render :text=>params[:system].first[1] if params[:system] }
+        format.html { render :text=>(params[:system] ? params[:system].first[1] : "") }
         format.js
       end
     rescue Exception => error
