@@ -10,8 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Gpg < ActiveRecord::Base
-  has_many :repositories, :inverse_of => :gpg
+class GpgKey < ActiveRecord::Base
+  has_many :repositories, :inverse_of => :gpg_key
   validates :name, :katello_name_format => true
-  belongs_to :organization, :inverse_of => :gpgs
+  belongs_to :organization, :inverse_of => :gpg_keys
 end
