@@ -17,7 +17,7 @@
 
 Name:           katello
 Version:        0.1.106
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
 Group:          Applications/Internet
@@ -331,6 +331,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com>
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
 * Wed Nov 16 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.106-1
 - async job - fix for broken promotions (bbuckingham@redhat.com)
 
