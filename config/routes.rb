@@ -15,6 +15,16 @@ Src::Application.routes.draw do
     end
   end
 
+  resources :gpg_keys do
+    collection do
+      get :auto_complete_search
+      get :items
+    end
+    member do
+      post :update
+    end
+  end
+
   resource :account
 
   resources :sync_plans, :only => [:index, :create, :new, :edit, :update, :show, :destroy, :auto_complete_search] do
