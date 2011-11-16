@@ -170,6 +170,7 @@ rm -rf %{buildroot}
 install -d -m0755 %{buildroot}%{homedir}
 install -d -m0755 %{buildroot}%{datadir}
 install -d -m0755 %{buildroot}%{datadir}/tmp
+install -d -m0755 %{buildroot}%{datadir}/tmp/pids
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
 install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 
