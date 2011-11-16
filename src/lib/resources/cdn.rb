@@ -92,12 +92,15 @@ module CDN
     end
 
     def load_proxy_settings
-      if AppConfig.cdn_proxy
+      if AppConfig.cdn_proxy && AppConfig.cdn_proxy.host
         self.proxy_host = parse_host(AppConfig.cdn_proxy.host)
         self.proxy_port = AppConfig.cdn_proxy.port
         self.proxy_user = AppConfig.cdn_proxy.user
         self.proxy_password = AppConfig.cdn_proxy.password
       end
+    rescue Exception => e
+      Rails.logger.error "Could not parse cdn_proxy:"
+      Rails.logger.error e.to_s
     end
 
     def parse_host(host_or_url)
