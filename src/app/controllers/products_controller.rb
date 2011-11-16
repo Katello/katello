@@ -46,7 +46,8 @@ class ProductsController < ApplicationController
   def create
     begin
       product_params = params[:product]
-      @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url])
+      gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key])
+      @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url], gpg)
       notice _("Product '#{product_params[:name]}' created.")
     rescue Exception => error
       Rails.logger.error error.to_s
@@ -58,10 +59,9 @@ class ProductsController < ApplicationController
   def update
     begin
       result = params[:product].values.first
-
-      @product.name = params[:product][:name] unless params[:product][:name].nil?
-      @product.description = params[:product][:description] unless params[:product][:description].nil?
-
+      @product.name = params[:product][:name] if params[:product][:name]
+      @product.description = params[:product][:description] if params[:product][:description]
+      @product.gpg_key = GpgKey.readable(current_organization).find(params[:product][:gpg_key]) if params[:product][:gpg_key]
       @product.save!
       notice _("Product '#{@product.name}' was updated.")
 
