@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.107
+Version:        0.1.108
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -334,6 +334,12 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Nov 16 2011 shughes@redhat.com
+- Pie chart updates now functions with actual data. (jrist@redhat.com)
+- Fix for pie chart on dashboard page. (jrist@redhat.com)
+- Fixed a permission check to only load syncplans belonging to a specific org
+  as opposed to syncplnas belongign to all org (paji@redhat.com)
+
 * Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.107-1
 - Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
   (jsherril@redhat.com)
