@@ -13,6 +13,40 @@
 class GpgKey < ActiveRecord::Base
   has_many :repositories, :inverse_of => :gpg_key
   has_many :products, :inverse_of => :gpg_key
-  validates :name, :katello_name_format => true
+
   belongs_to :organization, :inverse_of => :gpg_keys
+
+  validates :name, :katello_name_format => true
+  validates :content, :presence => true
+  validates_uniqueness_of :name, :scope => :organization_id, :message => N_("must be unique within one organization")
+
+  scope :completer_scope, lambda { |options| readable(options[:organization_id])}
+  scoped_search :on => :name, :complete_value => true
+
+
+  #Permission items
+  scope :readable, lambda { |org|
+     if org.readable? || org.gpg_keys_manageable? || ::Provider.any_readable?(org)
+        where(:organization_id => org.id)
+     else
+       where("0 = 1")
+     end
+  }
+
+  scope :manageable, lambda { |org|
+     if org.gpg_keys_manageable?
+        where(:organization_id => org.id)
+     else
+       where("0 = 1")
+     end
+  }
+
+  def  readable?
+    GpgKey.readable(organization).where(:id => id).count > 0
+  end
+
+  def manageable?
+    GpgKey.manageable(organization).where(:id => id).count > 0
+  end
+
 end
