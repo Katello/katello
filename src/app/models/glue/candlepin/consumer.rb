@@ -40,6 +40,8 @@ module Glue::Candlepin::Consumer
         guests_attributes = Candlepin::Consumer.guests(self.uuid)
         guests_attributes.map { |attr| System.new(attr) }
       }
+      lazy_accessor :compliance, :initializer => lambda { Candlepin::Consumer.compliance(uuid) }
+
       validate :validate_cp_consumer
     end
   end
@@ -301,6 +303,26 @@ module Glue::Candlepin::Consumer
       consumed_entitlements
     end
 
+    def compliant?
+      return self.compliance['compliant'] == true
+    end
+
+    # As a convenience and common terminology 
+    def compliance_color
+      if self.compliant?
+        return 'green'
+      elsif self.compliance['nonCompliantProducts'].length == 0 && self.compliance['partiallyCompliantProducts'].length > 0
+        return 'yellow'
+      else
+        return 'red'
+      end
+    end
+
+    def compliant_until
+      if self.compliance['compliantUntil']
+        convert_time(self.compliance['compliantUntil'])
+      end
+    end
   end
 
 end

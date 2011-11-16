@@ -67,6 +67,18 @@ module Glue::Pulp::Repos
       "content:#{content.id}"
   end
 
+  def self.prepopulate! products, environment, repos=[]
+    full_repos = Pulp::Repository.all
+    products.each{|prod|
+      prod.repos(environment, true).each{|repo|
+        repo.populate_from(full_repos)
+      }
+    }
+    repos.each{|repo|
+      repo.populate_from(full_repos)
+    }
+  end
+
   module InstanceMethods
 
     def empty?
@@ -74,9 +86,20 @@ module Glue::Pulp::Repos
     end
 
 
-    def repos env
-      Repository.joins(:environment_product).where(
+    def repos env, include_disabled = false
+      @repo_cache = {} if @repo_cache.nil?
+      #cache repos so we can cache lazy_accessors
+      if @repo_cache[env.id].nil?
+        @repo_cache[env.id] = Repository.joins(:environment_product).where(
             "environment_products.product_id" => self.id, "environment_products.environment_id"=> env)
+      end
+      if self.custom? || include_disabled
+        return @repo_cache[env.id]
+      end
+
+      # we only want the enabled repos to be visible
+      # This serves as a white list for redhat repos
+      @repo_cache[env.id].select{|repo| repo.enabled?}
     end
 
     def promote from_env, to_env
@@ -132,6 +155,15 @@ module Glue::Pulp::Repos
       end.flatten(1)
     end
 
+    def distributions env
+      to_ret = []
+      self.repos(env).each{|repo|
+        distros = repo.distributions
+        to_ret = to_ret +  distros if !distros.empty?
+      }
+      to_ret
+    end
+    
     def get_distribution env, id
       self.repos(env).map do |repo|
         repo.distributions.find_all {|d| d.id == id }
@@ -322,7 +354,8 @@ module Glue::Pulp::Repos
                                         :feed_key => self.key,
                                         :content_type => pc.content.type,
                                         :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
-                                        :preserve_metadata => true #preserve repo metadata when importing from cp
+                                        :preserve_metadata => true, #preserve repo metadata when importing from cp
+                                        :enabled =>false
                                         )
 
           rescue RestClient::InternalServerError => e

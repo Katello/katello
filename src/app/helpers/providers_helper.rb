@@ -10,16 +10,26 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Api::RootController < Api::ApiController
+module ProvidersHelper
+  include SyncManagementHelper
+  include SyncManagementHelper::RepoMethods
 
-  skip_before_filter :authorize
-  skip_before_filter :require_user
-
-  def resource_list
-    all_routes = Rails.application.routes.routes
-    api_root_routes = all_routes.select {|r| r.path =~ %r{^/api/[^/]+/:id\(\.:format\)$} }.collect {|r| r.path[0..-(":id(.:format)".length+1)]}.uniq
-
-    render :json => api_root_routes.collect {|r| {:rel => r["/api/".size..-2], :href => r} }
+  def product_map
+    @product_map ||= collect_repos(@provider.products.with_repos_only(current_organization.locker),
+                                    current_organization.locker, true)
+    @product_map
   end
 
+  def can_enable_repo?
+    @provider.editable?
+  end
+
+  def can_upload_rh_manifest?
+    @provider.editable?
+  end
+
+  def can_edit_rh_provider?
+    @provider.editable?
+  end
 end
+
