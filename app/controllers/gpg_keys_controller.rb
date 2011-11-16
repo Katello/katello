@@ -10,9 +10,9 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class GPGKeysController < ApplicationController
+class GpgKeysController < ApplicationController
   include AutoCompleteSearch
-  #include GPGKeysHelper
+  include GpgKeysHelper
 
   before_filter :require_user
   before_filter :find_gpg_key, :only => [:show, :edit, :update, :destroy]
@@ -27,8 +27,8 @@ class GPGKeysController < ApplicationController
   end
 
   def rules
-    read_test = lambda{GPGKey.readable?(current_organization)}
-    manage_test = lambda{GPGKey.manageable?(current_organization)}
+    read_test = lambda{GpgKey.readable?(current_organization)}
+    manage_test = lambda{GpgKey.manageable?(current_organization)}
     {
       :index => read_test,
       :items => read_test,
@@ -170,7 +170,7 @@ class GPGKeysController < ApplicationController
 
   def find_gpg_key
     begin
-      @gpg_key = GPGKey.find(params[:id])
+      @gpg_key = GpgKey.find(params[:id])
     rescue Exception => error
       errors error.to_s
 
@@ -191,7 +191,7 @@ class GPGKeysController < ApplicationController
       :name => controller_display_name,
       :ajax_load  => true,
       :ajax_scroll => items_activation_keys_path(),
-      :enable_create => GPGKey.manageable?(current_organization)}
+      :enable_create => GpgKey.manageable?(current_organization)}
   end
 
   private

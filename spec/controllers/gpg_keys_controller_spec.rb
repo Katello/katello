@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe GPGKeysController do
+describe GpgKeysController do
 
   include LoginHelperMethods
   include LocaleHelperMethods
@@ -31,7 +31,7 @@ describe GPGKeysController do
     login_user
 
     @organization = new_test_org
-    @gpg_key = GPGKey.create!( :name => "Another Test Key", :organization => @organization )
+    @gpg_key = GpgKey.create!( :name => "Another Test Key", :organization => @organization )
     @gpg_key_params = { :gpg_key => { :name => "Test Key", :organization_id => @organization.id } }
   end
 
@@ -267,12 +267,13 @@ describe GPGKeysController do
 
   describe "DELETE destroy" do
     describe "with valid GPG Key id" do
+      before (:each) do
         controller.stub!(:render).and_return("") #ignore missing list_remove js partial
       end
 
       it "should delete the GPG Key" do
         delete :destroy, :id => @gpg_key.id
-        GPGKey.exists?(@gpg_key.id).should be_false
+        GpgKey.exists?(@gpg_key.id).should be_false
       end
 
       it "should generate a success notice" do
