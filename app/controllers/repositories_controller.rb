@@ -22,8 +22,8 @@ class RepositoriesController < ApplicationController
   before_filter :find_repository, :only => [:edit, :destroy, :enable_repo]
 
   def rules
-    read_test = lambda{@provider.readable?}
-    edit_test = lambda{@provider.editable?}
+    read_test = lambda{@product.readable?}
+    edit_test = lambda{@product.editable?}
     org_edit = lambda{current_organization.editable?}
     {
       :new => edit_test,
