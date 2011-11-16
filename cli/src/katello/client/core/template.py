@@ -203,7 +203,7 @@ class Import(TemplateAction):
 class Export(TemplateAction):
 
     description = _('export the template into the file')
-
+    supported_formats = ['json', 'tdl']
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
@@ -214,8 +214,8 @@ class Export(TemplateAction):
                                help=_("environment name eg: dev"))
         self.parser.add_option("--file", dest="file",
                                help=_("path to the template file (required)"))
-        self.parser.add_option("--format", dest="format",
-                               help=_("format of the export, possible values: %s, default: json") % self.supported_formats())
+        self.parser.add_option("--format", dest="format", choices=self.supported_formats,
+                               help=_("format of the export, possible values: %s, default: json") % self.supported_formats)
 
 
     def check_options(self):
@@ -224,19 +224,12 @@ class Export(TemplateAction):
         self.require_option('file')
         self.require_option('env')
 
-    def supported_formats(self):
-        return ['json', 'tdl']
-
     def run(self):
         tplName = self.get_option('name')
         orgName = self.get_option('org')
         envName = self.get_option('env')
         format  = self.get_option('format') or "json"
         tplPath = self.get_option('file')
-
-        if not format in self.supported_formats():
-            print _("Format must be one of %s") % self.supported_formats()
-            return os.EX_IOERR
 
         template = get_template(orgName, envName, tplName)
         if not template:
