@@ -84,6 +84,8 @@ class Api::TemplatesController < Api::ApiController
   end
 
   def export
+    raise HttpErrors::BadRequest, _("Cannot export templates form the Locker environment.") if @template.environment.locker?
+
     respond_to do |format|
       format.tdl { render(:text => @template.export_as_tdl, :content_type => Mime::TDL) and return }
       format.json { render :text => @template.export_as_json }
