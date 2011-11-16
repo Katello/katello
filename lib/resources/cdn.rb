@@ -70,7 +70,19 @@ module CDN
       begin
         @net.start do |http|
           res = http.request(req, nil) { |http_response| http_response.read_body }
-          return res.body
+          code = res.code.to_i
+          if code == 200
+            return res.body
+          else
+            # we don't really use RestClient here (it doesn't allow to safely
+            # set the proxy only for a set of requests and we don't want the
+            # backend engines communication to go through the same proxy like
+            # accessing CDN - its another use case)
+            # But RestClient exceptions are really nice and can be handled in
+            # the same way
+            exception_class = RestClient::Exceptions::EXCEPTIONS_MAP[code] || RestClient::RequestFailed
+            raise exception_class.new(nil, code)
+          end
         end
       rescue EOFError
         raise RestClient::ServerBrokeConnection
