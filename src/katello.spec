@@ -334,6 +334,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.108-2
+- system engine build (shughes@redhat.com)
 * Wed Nov 16 2011 shughes@redhat.com
 - Pie chart updates now functions with actual data. (jrist@redhat.com)
 - Fix for pie chart on dashboard page. (jrist@redhat.com)
