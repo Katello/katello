@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.3
+Version:       0.1.4
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -54,6 +54,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.4-1
+- system tests - removed duplicit test for provider import
+- system tests - added ability to set katello, pulp and cp url
+- system-tests fix load path setting
+- possibility to run system tests from rpm
+- getting katello-cli-tests.spec working
+- adding katello-cli-tests.spec
+- moving system tests into /scripts
+
 * Thu Nov 10 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.3-1
 - possibility to run system tests from rpm
 - getting katello-cli-tests.spec working
