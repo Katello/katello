@@ -44,6 +44,7 @@ class Product < ActiveRecord::Base
 
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products
+  belongs_to :gpg_key, :inverse_of => :products
 
   validates :description, :katello_description_format => true
   validates :environments, :locker_presence => true
