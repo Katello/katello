@@ -1,0 +1,25 @@
+= javascript :edit_helpers, :gpg_key_edit
+
+= content_for :title do
+  #{@gpg_key.name}
+
+= content_for :remove_item do
+  - if editable
+    = link_to _("Remove GPG Key"), gpg_key_path(@gpg_key.id), :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
+
+= content_for :content do
+  = help_tip_button('gpg_keys_edit-help')
+
+  %input#panel_element_id{:name => @gpg_key.id, :type => "hidden", :value => "#{name}_#{@gpg_key.id}", "data-ajax_url"=>gpg_key_path(@gpg_key.id)}
+
+  #gpg_key
+    .grid_10
+      = help_tip(_("Edit Activation Key enables you to modify the selected GPG Key."), 'gpg_keys_edit-help') |
+
+    .grid_10
+      = form_tag gpg_key_path(@gpg_key), :method => :put, :remote => true do
+        %fieldset.clearfix
+          .grid_2.ra
+            %label #{_("Name")}:
+          .grid_7.la#gpg_key_name{'name' => 'gpg_key[name]', :class => ("editable edit_panel_element" if editable), 'data-url' => gpg_key_path(@gpg_key.id)} #{@gpg_key[:name]}
+        %input#save_key.button{:type => "submit", :value => "#{_("Save")}"}

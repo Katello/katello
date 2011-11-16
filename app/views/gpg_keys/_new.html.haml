@@ -1,0 +1,14 @@
+= content_for :title do
+  #{_("New GPG Key")}
+
+= content_for :content do
+  .grid_10
+    = form_tag gpg_keys_path, :method => "post", :id => "new_gpg_key" do
+      %fieldset
+        .grid_2.ra
+          %label #{_("Name")}:
+        .grid_7.la
+          = text_field_tag 'gpg_key[name]', params[:name], :size => "42", :tabindex => auto_tab_index
+
+      .grid_9.ra
+        = button_to _("Save"), {:action => "create", :controller => "gpg_keys"}, :method => :post, :id => :save_key, :tabindex => auto_tab_index
