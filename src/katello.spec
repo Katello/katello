@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.104
+Version:        0.1.106
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -170,6 +170,7 @@ rm -rf %{buildroot}
 install -d -m0755 %{buildroot}%{homedir}
 install -d -m0755 %{buildroot}%{datadir}
 install -d -m0755 %{buildroot}%{datadir}/tmp
+install -d -m0755 %{buildroot}%{datadir}/tmp/pids
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
 install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 
@@ -330,6 +331,70 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Nov 16 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.106-1
+- async job - fix for broken promotions (bbuckingham@redhat.com)
+
+* Wed Nov 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.105-1
+- 754430 - Product promotion fails as katello-jobs doesn't start
+- system templates - adding support for adding a distribution to a system
+  template in the ui
+- Fixed a unit test failure
+- Small fix to get the redhat enablement working in FF 3.6
+- Fix to make the product.readable call only  out RH products that do not have
+  any repositories enabled
+- Added a message asking the user to enable repos after manifest was uploaded
+- 751407 - root_controller doesn't require user authorization
+- Made Product.readable call now adhere to  repo enablement constructs
+- Small fix to improve the permission debug message
+- bug - RAILS_ENV was ignored for thin
+- Small fix to import_history, changes to styling for tabs on rh providers
+  page.
+- Moving the upload top right.
+- Moved the redhat provider haml to a more appropriate location
+- Updated some permissions on the redhat providers page
+- Update to get the redhat providers repo enablement code to work.
+- color shade products for sync status
+- adding migration for removal of releaes version
+- sync management - making sync page use major/minor versions that was added
+- sync mangement - getting rid of major version
+- sync management - fixing repository cancel
+- fixing repo spec tests
+- sync management - fixing button disabling
+- sync management - fix for syncing multiple repos
+- disable sync button if no repos are selected
+- sync management - fixing cancel sync
+- merge conflict
+- sync management - adding show only syncing button
+- js cleanup for progress bars
+- For now automatically including all the repos in the repos call
+- Initial commit on an updated repo data model to handle things like whitelists
+  for rh
+- handle product status progress when 100 percent
+- smooth out repo progress bar for recent completed syncs
+- ubercharged progress bar for previous completed syncs
+- fix missing array return of pulp sync status
+- sync management - fixing repo progress and adding product progress
+- sync management - somre more fixes
+- sync management - getting sync status showing up correct
+- fixing some merge issues
+- support sync status 1-call to server
+- sync management - dont start periodical updater until we have added all the
+  initial syncing repos
+- sync management - a couple of periodical updater fixes
+- removing unneeded view
+- sync management - lots of javascript changes, a lot of stuff still broken
+- sync management - some page/js modifications
+- sync management - moving repos preopulation to a central place
+- sync management =  javascript improvements
+- sync mgmnt - fixing sync call
+- sync management - adding sorting for repos and categories
+- sync management - custom products showing up correctly now
+- sync management - making table expand by major version/ minor version/arch
+- use new pulp sync status, history task objects
+- caching repo data and sync status to reduce sync management load time to ~40s
+- adding ability to preload lazy accessors
+- repos - adding release version attribute and importing
+
 * Tue Nov 15 2011 Shannon Hughes <shughes@redhat.com> 0.1.104-1
 - Reverting look.scss to previous contents. (jrist@redhat.com)
 - tdl-repos - use repo name for name attribute (inecas@redhat.com)

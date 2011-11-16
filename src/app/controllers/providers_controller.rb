@@ -66,7 +66,7 @@ class ProvidersController < ApplicationController
         temp_file.write params[:provider][:contents].read
         temp_file.close
         @provider.import_manifest File.expand_path(temp_file.path)
-        notice _("Subscription manifest uploaded successfully for provider '%{name}'." % {:name => @provider.name}), {:synchronous_request => false}
+        notice _("Subscription manifest uploaded successfully for provider '%{name}'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled." % {:name => @provider.name}), {:synchronous_request => false}
       rescue Exception => error
         display_message = parse_display_message(error.response)
         error_text = _("Subscription manifest upload for provider '%{name}' failed." % {:name => @provider.name})
