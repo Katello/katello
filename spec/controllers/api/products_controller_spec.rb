@@ -16,151 +16,147 @@ describe Api::ProductsController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
 
-  let(:user_with_read_permissions) { user_with_permissions { |u| u.can([:read], :providers, nil, @ogranization) } }
+  let(:user_with_read_permissions) { user_with_permissions { |u| u.can([:read], :providers, @provider.id, @organization) } }
   let(:user_without_read_permissions) { user_without_permissions }
 
-  let(:products) do
-    [{
-      :name => 'a_product',
-      :id => 'id',
-      :multiplier => 1
-    }].map{|attr| Product.new(attr) }
-  end
-  let(:organization_id) { 'organization' }
-  let(:environment_id) { '1' }
-  let(:product_id) { '1234' }
-  let(:repositories) do
-    [
-        { :pulp_id => "1", :id => 1 },
-        { :pulp_id => "2", :id => 2  }
-    ].map {|repo_attrs| Repository.new(repo_attrs)}
-  end
-
   before (:each) do
-    @organization = Organization.new
-    @organization.id = 1
+    disable_org_orchestration
+    disable_product_orchestration
+    disable_user_orchestration
 
-    @environment = KTEnvironment.new
-    @locker = KTEnvironment.new
+    @organization = new_test_org
+    @environment = KTEnvironment.create!(:name=> "foo123", :organization => @organization, :prior =>@organization.locker)
+    @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM,
+                                 :organization => @organization, :repository_url => "https://something.url/stuff")
+    @product = Product.new({:name => "prod"})
 
-    @organization.locker = @locker
-    @organization.environments << @environment
+    @product.provider = @provider
+    @product.environments << @organization.locker
+    @product.stub(:arch).and_return('noarch')
+    @product.save!
+    ep_locker = EnvironmentProduct.find_or_create(@organization.locker, @product)
+    @repo_locker= Repository.create!(:environment_product => ep_locker, :name=> "repo", :pulp_id=>"2",:enabled => true)
+    @repo_locker.stub!(:pulp_repo_facts).and_return({})
+    Pulp::Repository.stub!(:clone_repo).and_return({})
+    Glue::Pulp::Repos.stub!(:groupid).and_return([])
+    @repo_locker.stub!(:content_for_clone).and_return({})
+    @repo_locker.promote(@environment)
+    ep = EnvironmentProduct.find_or_create(@environment, @product)
+    @repo = Repository.where(:environment_product_id => ep).first
 
-    products.stub(:where).and_return(products)
-    repositories.stub(:where).and_return(repositories)
 
-    @product = products[0]
+    @products = [@product]
+    @repositories = [@repo]
+
+    @product = @products[0]
+
     Product.stub!(:find_by_cp_id).and_return(@product)
     Product.stub!(:find).and_return(@product)
 
-    Product.stub!(:select).and_return(products)
-    products.stub!(:readable).and_return(products)
-    products.stub!(:select).and_return(products)
-    products.stub!(:joins).and_return(products)
-    products.stub!(:where).and_return(products)
-    products.stub!(:all).and_return(products)
-    @product.stub(:repos).and_return(repositories)
+    Product.stub!(:select).and_return(@products)
+    @product.stub(:repos).and_return(@repositories)
     @product.stub(:sync_state => ::PulpSyncStatus::Status::NOT_SYNCED)
     Pulp::Repository.stub(:sync_history => [])
-
-    @provider = Provider.new
-    @provider.organization = @organization
-    @product.provider = @provider
-
-    Organization.stub!(:first).and_return(@organization)
-    KTEnvironment.stub!(:first).and_return(@environment)
-
-    Organization.stub!(:find).and_return(@organization)
-    KTEnvironment.stub!(:find_by_id).and_return(@environment)
-
-    @organization.stub!(:locker).and_return(@locker)
-
-    @environment.stub!(:products).and_return(products)
-    @locker.stub!(:products).and_return(products)
-
 
 
     @request.env["HTTP_ACCEPT"] = "application/json"
     login_user_api
   end
 
-  context "show all products in an environment" do
+  context "show all @products in an environment" do
 
     let(:action) { :index }
-    let(:req) { get 'index', :organization_id => organization_id }
+    let(:req) { get 'index', :organization_id => @organization.cp_key }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
 
+    before do
+      @dumb_prod = {:id => @product.id}
+      Product.stub!(:readable).and_return(@products)
+      @products.stub_chain(:select, :joins,:where,:all).and_return(@dumb_prod)
+    end
+
     it "should find organization" do
-      Organization.should_receive(:first).once.with({:conditions => {:cp_key => organization_id}}).and_return(@organization)
-      get 'index', :organization_id => organization_id
+      Organization.should_receive(:first).once.with({:conditions => {:cp_key => @organization.cp_key}}).and_return(@organization)
+      get 'index', :organization_id => @organization.cp_key
     end
 
     it "should find environment" do
-      KTEnvironment.should_receive(:find_by_id).once.with(environment_id).and_return([@environment])
-      get 'index', :organization_id => organization_id, :environment_id => environment_id
+      KTEnvironment.should_receive(:find_by_id).once.with(@environment.id).and_return([@environment])
+      get 'index', :organization_id => @organization.cp_key, :environment_id => @environment.id
     end
 
     it "should respond with success" do
-      get 'index', :organization_id => organization_id, :environment_id => environment_id
+      get 'index', :organization_id => @organization.cp_key, :environment_id => @environment.id
       response.should be_success
     end
 
     it "should respond return product json" do
-      get 'index', :organization_id => organization_id, :environment_id => environment_id
-      response.body.should == products.to_json
+      get 'index', :organization_id => @organization.cp_key, :environment_id => @environment.id
+      response.body.should == @dumb_prod.to_json
     end
   end
 
-  context "show all products in locker" do
+  context "show all @products in locker" do
+    before do
+      @dumb_prod = {:id => @product.id}
+      Product.stub!(:readable).and_return(@products)
+      @products.stub_chain(:select, :joins,:where,:all).and_return(@dumb_prod)
+    end
+
     it "should find organization" do
-      Organization.should_receive(:first).once.with({:conditions => {:cp_key => organization_id}}).and_return(@organization)
-      get 'index', :organization_id => organization_id
+      Organization.should_receive(:first).once.with({:conditions => {:cp_key => @organization.cp_key}}).and_return(@organization)
+      get 'index', :organization_id => @organization.cp_key
     end
 
     it "should find locker" do
-      @organization.should_receive(:locker).once.and_return(@locker)
-      get 'index', :organization_id => organization_id
+      @organization.should_receive(:locker).once.and_return(@organization.locker)
+      get 'index', :organization_id => @organization.cp_key
     end
 
     it "should respond with success" do
-      get 'index', :organization_id => organization_id, :environment_id => environment_id
+      get 'index', :organization_id => @organization.cp_key, :environment_id => @environment.id
       response.should be_success
     end
 
     it "should respond return product json" do
-      get 'index', :organization_id => organization_id, :environment_id => environment_id
-      response.body.should == products.to_json
+      get 'index', :organization_id => @organization.cp_key, :environment_id => @environment.id
+      response.body.should == @dumb_prod.to_json
     end
   end
 
   context "show repositories for a product in an environment" do
-
     let(:action) { :repositories }
-    let(:req) { get 'repositories', :organization_id => organization_id, :environment_id => environment_id, :id => product_id }
+    let(:req) {
+      get 'repositories', :organization_id => @organization.cp_key, :environment_id => @organization.locker.id, :id => @product.id
+    }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
 
     it "should find environment" do
-      KTEnvironment.should_receive(:find_by_id).once.with(environment_id).and_return([@environment])
-      get 'repositories', :organization_id => organization_id, :environment_id => environment_id, :id => product_id
+      KTEnvironment.should_receive(:find_by_id).once.with(@environment.id).and_return([@environment])
+      get 'repositories', :organization_id => @organization.cp_key, :environment_id => @environment.id, :id => @product.id
     end
 
     it "should find product" do
-      Product.should_receive(:find_by_cp_id).once.with(product_id).and_return(products[0])
-      get 'repositories', :organization_id => organization_id, :environment_id => environment_id, :id => product_id
+      Product.should_receive(:find_by_cp_id).once.with(@product.id.to_s).and_return(@products[0])
+      get 'repositories', :organization_id => @organization.cp_key, :environment_id => @environment.id, :id => @product.id
     end
 
     it "should retrieve all repositories for the product" do
+      @product.stub!(:readable?).and_return(true)
+      Product.stub!(:readable).and_return(@products)
       @product.should_receive(:repos).once.with(@environment).and_return({})
-      get 'repositories', :organization_id => organization_id, :environment_id => environment_id, :id => product_id
+      get 'repositories', :organization_id => @organization.cp_key, :environment_id => @environment.id, :id => @product.id
     end
 
     it "should return json of product repositories" do
-      get 'repositories', :organization_id => organization_id, :environment_id => environment_id, :id => product_id
-      response.body.should == repositories.to_json
+      @product.stub!(:readable?).and_return(true)
+      @repositories.stub!(:where).and_return(@repositories)
+      get 'repositories', :organization_id => @organization.cp_key, :environment_id => @environment.id, :id => @product.id
+      response.body.should == @repositories.to_json
     end
   end
 

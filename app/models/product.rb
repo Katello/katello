@@ -12,7 +12,7 @@
 
 class LockerPresenceValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    record.errors[attribute] << "must contain 'Locker'" if value.select {|e| e.locker}.empty?
+    record.errors[attribute] << N_("must contain 'Locker'") if value.select {|e| e.locker}.empty?
   end
 end
 
@@ -20,7 +20,7 @@ class ProductNameUniquenessValidator < ActiveModel::Validator
   def validate(record)
     name_duplicate_ids = Product.select("products.id").joins(:provider).where("products.name" => record.name, "providers.organization_id" => record.organization.id).all.map {|p| p.id}
     name_duplicate_ids = name_duplicate_ids - [record.id]
-    record.errors[:base] << _("Products within an organization must have unique name.") if name_duplicate_ids.count > 0
+    record.errors[:base] << N_("Products within an organization must have unique name.") if name_duplicate_ids.count > 0
   end
 end
 
@@ -52,6 +52,13 @@ class Product < ActiveRecord::Base
   scope :completer_scope, lambda { |options| authorized_items(options[:organization_id], READ_PERM_VERBS)}
   scoped_search :on => :name, :complete_value => true
   scoped_search :on => :multiplier, :complete_value => true
+  scope :with_repos_only, lambda { |env|
+    with_repos(env, false)
+  }
+
+  scope :with_enabled_repos_only, lambda { |env|
+        with_repos(env, true)
+  }
 
   def initialize(attrs = nil)
 
@@ -100,22 +107,35 @@ class Product < ActiveRecord::Base
     hash
   end
 
-  #Permissions
+  def redhat?
+    provider.redhat_provider?
+  end
 
-  scope :readable, lambda {|org| ::Provider.readable(org).joins(:provider)}
-  scope :editable, lambda {|org| ::Provider.editable(org).joins(:provider)}
-  scope :syncable, lambda {|org| sync_items(org)}
+  def custom?
+    !(redhat?)
+  end
+
+  #Permissions
+  scope :all_readable, lambda {|org| ::Provider.readable(org).joins(:provider)}
+  scope :readable, lambda{|org| all_readable(org).with_enabled_repos_only(org.locker)}
+  scope :all_editable, lambda {|org| ::Provider.editable(org).joins(:provider)}
+  scope :editable, lambda {|org| all_editable(org).with_enabled_repos_only(org.locker)}
+  scope :syncable, lambda {|org| sync_items(org).with_enabled_repos_only(org.locker)}
 
   def self.any_readable?(org)
     ::Provider.any_readable?(org)
   end
 
   def readable?
-    provider.readable?
+    Product.readable(self.organization).where(:id => id).count > 0
+  end
+
+  def syncable?
+    Product.syncable(self.organization).where(:id => id).count > 0
   end
 
   def editable?
-    provider.editable?
+    Product.editable(self.organization).where(:id => id).count > 0
   end
 
   protected
@@ -136,4 +156,11 @@ class Product < ActiveRecord::Base
 
   READ_PERM_VERBS = [:read, :create, :update, :delete]
 
+  def self.with_repos env, enabled_only
+    query = EnvironmentProduct.joins(:repositories).where(
+          :environment_id => env).select("environment_products.product_id")
+    query = query.where("repositories.enabled" => true) if enabled_only
+    joins(:provider).where('providers.organization_id' => env.organization).
+        where("(providers.provider_type ='#{::Provider::CUSTOM}') OR ( providers.provider_type ='#{::Provider::REDHAT}' AND products.id in (#{query.to_sql}))")
+  end
 end

@@ -15,8 +15,23 @@ require 'http_resource'
 
 module CDN
 
+  class Utils
+
+    # takes releasever from contentUrl (e.g. 6Server, 6.0, 6.1)
+    # returns hash e.g. {:major => 6, :minor => "6.1"}
+    # used to be able to make hierarchial view for RH repos
+    def self.parse_version(releasever)
+      if releasever.to_s =~ /^\d/
+        {:major => releasever[/^\d+/].to_i, :minor => releasever }
+      else
+        {}
+      end
+    end
+  end
+
   class CdnResource
     attr_reader :url
+    attr_accessor :proxy_host, :proxy_port, :proxy_user, :proxy_password
 
     def initialize url, options = {}
       options.reverse_merge!(:verify_ssl => 9)
@@ -24,15 +39,70 @@ module CDN
       if options[:ssl_client_cert]
         options.reverse_merge!(:ssl_ca_file => CdnResource.ca_file)
       end
-      @resource = RestClient::Resource.new url, options
+      load_proxy_settings
+
+      @uri = URI.parse(url)
+      @net = net_http_class.new(@uri.host, @uri.port)
+      @net.use_ssl = @uri.is_a?(URI::HTTPS)
+
+      @net.cert = options[:ssl_client_cert]
+      @net.key = options[:ssl_client_key]
+      @net.ca_file = options[:ssl_ca_file]
+
+      if (options[:verify_ssl] == false) || (options[:verify_ssl] == OpenSSL::SSL::VERIFY_NONE)
+        @net.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      elsif options[:verify_ssl].is_a? Integer
+        @net.verify_mode = options[:verify_ssl]
+        @net.verify_callback = lambda do |preverify_ok, ssl_context|
+          if (!preverify_ok) || ssl_context.error != 0
+            err_msg = "SSL Verification failed -- Preverify: #{preverify_ok}, Error: #{ssl_context.error_string} (#{ssl_context.error})"
+            raise RestClient::SSLCertificateNotVerified.new(err_msg)
+          end
+          true
+        end
+      end
     end
 
     def get(path, headers={})
-      @resource[path].get headers
+      path = File.join(@uri.request_uri,path)
+      Rails.logger.debug "CDN: Requesting path #{path}"
+      req = Net::HTTP::Get.new(path)
+      begin
+        @net.start do |http|
+          res = http.request(req, nil) { |http_response| http_response.read_body }
+          return res.body
+        end
+      rescue EOFError
+        raise RestClient::ServerBrokeConnection
+      rescue Timeout::Error
+        raise RestClient::RequestTimeout
+      end
     end
 
     def self.ca_file
       "#{Rails.root}/ca/redhat-uep.pem"
+    end
+
+    def net_http_class
+      if proxy_host
+        Net::HTTP::Proxy(proxy_host, proxy_port, proxy_user, proxy_password)
+      else
+        Net::HTTP
+      end
+    end
+
+    def load_proxy_settings
+      if AppConfig.cdn_proxy
+        self.proxy_host = parse_host(AppConfig.cdn_proxy.host)
+        self.proxy_port = AppConfig.cdn_proxy.port
+        self.proxy_user = AppConfig.cdn_proxy.user
+        self.proxy_password = AppConfig.cdn_proxy.password
+      end
+    end
+
+    def parse_host(host_or_url)
+      uri = URI.parse(host_or_url)
+      return uri.host || uri.path
     end
 
  end

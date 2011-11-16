@@ -136,7 +136,8 @@ class Api::ApiController < ActionController::Base
   def render_exception(status_code, exception)
     logger.error pp_exception(exception)
     respond_to do |format|
-      format.json { render :json => {:errors => [ exception.message ]}, :status => status_code }
+      #json has to be displayMessage for older RHEL 5.7 subscription managers
+      format.json { render :json => {:displayMessage => exception.message, :errors => [exception.message] }, :status => status_code }
       format.all  { render :text => exception.message, :status => status_code }
     end
   end
