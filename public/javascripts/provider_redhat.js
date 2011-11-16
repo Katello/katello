@@ -29,7 +29,8 @@ $(document).ready(function() {
     onNodeShow: function(){$.sparkline_display_visible()}
   });
 
-    $('#products_table input[type="checkbox"]').bind('change', function() {
+
+    $('#products_table input[type="checkbox"]').live('change', function() {
         KT.redhat_provider_page.checkboxChanged($(this));
     });
 
