@@ -101,6 +101,10 @@ class Organization < ActiveRecord::Base
     User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
   end
 
+  def gpg_keys_manageable?
+    User.allowed_to?([:gpg], :organizations, nil, self)
+  end
+
   def self.list_verbs global = false
     org_verbs = {
       :update => N_("Manage Organization and Environments"),
@@ -109,7 +113,8 @@ class Organization < ActiveRecord::Base
       :register_systems =>N_("Register Systems"),
       :update_systems => N_("Manage Systems"),
       :delete_systems => N_("Delete Systems"),
-      :sync => N_("Sync Products")
+      :sync => N_("Sync Products"),
+      :gpg => N_("Manage GPG Keys")
    }
     org_verbs.merge!({
     :create => N_("Create Organization"),
