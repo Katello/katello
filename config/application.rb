@@ -49,6 +49,37 @@ module Src
       g.test_framework :rspec
       g.template_engine :haml
     end
+
+    # Load the katello.yml.  Details from it are used in setting some config elements of the environment.
+    katello_config = YAML.load_file('/etc/katello/katello.yml')
+    if katello_config.nil?
+      katello_config = YAML.load_file("#{Rails.root}/config/katello.yml") rescue nil
+    end
+
+    # Configure the mailer.
+    config.action_mailer.delivery_method = :sendmail
+    config.action_mailer.perform_deliveries = true
+    config.action_mailer.raise_delivery_errors = true
+
+    host = "127.0.0.1" # default
+    protocol = "http"  # default
+    port = nil
+    unless katello_config['common'].nil?
+      host = katello_config['common']['host'] unless katello_config['common']['host'].nil?
+      port = katello_config['common']['port'].to_s unless katello_config['common']['port'].nil?
+      unless katello_config['common']['use_ssl'].nil?
+        if katello_config['common']['use_ssl']
+          protocol = "https"
+        end
+      end
+    end
+    prefix = ENV['RAILS_RELATIVE_URL_ROOT'] || '/'
+    if (port.nil?)
+      config.action_mailer.default_url_options = {:host => host + prefix, :protocol => protocol}
+    else
+      config.action_mailer.default_url_options = {:host => host + ':' + port + prefix, :protocol => protocol}
+    end
+
   end
 end
 

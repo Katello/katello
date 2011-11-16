@@ -92,16 +92,20 @@ module Candlepin
         JSON.parse(super(path(uuid), self.default_headers).body).with_indifferent_access
       end
 
-      def create key, name, type, facts
+      def create key, name, type, facts, installedProducts
         url = path() + "?owner=#{key}"
-        attrs = {:name => name, :type => type, :facts => facts}
+        attrs = {:name => name, :type => type, :facts => facts, :installedProducts => installedProducts }
         response = self.post(url, attrs.to_json, self.default_headers).body
         JSON.parse(response).with_indifferent_access
       end
 
-      def update uuid, facts
-        attrs = {:facts => facts}
-        response = self.put(path(uuid), attrs.to_json, self.default_headers).body
+      def update uuid, facts, guest_ids = nil, installedProducts = nil
+        attrs = {:facts => facts, :guestIds => guest_ids, :installedProducts => installedProducts}.delete_if {|k,v| v.nil?}
+        unless attrs.empty?
+          response = self.put(path(uuid), attrs.to_json, self.default_headers).body
+        else
+          return true
+        end
         # consumer update doesn't return any data atm
         # JSON.parse(response).with_indifferent_access
       end
@@ -136,6 +140,24 @@ module Candlepin
       def remove_entitlement uuid, ent_id
         uri = join_path(path(uuid), 'entitlements') + "/#{ent_id}"
         self.delete(uri, self.default_headers).code.to_i
+      end
+
+      def guests uuid
+        response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'guests'), self.default_headers).body
+        JSON.parse(response).map { |e| e.with_indifferent_access }
+      rescue Exception => e
+        return []
+      end
+
+      def host uuid
+        response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'host'), self.default_headers).body
+        unless response.empty?
+          JSON.parse(response).with_indifferent_access
+        else
+          return nil
+        end
+      rescue Exception => e
+        return nil
       end
     end
   end

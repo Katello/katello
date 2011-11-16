@@ -18,12 +18,15 @@ module LazyAccessor
   end
 
   module ClassMethods
+    attr_accessor :lazy_attributes
+
     # example: lazy_accessor :a, :b, :c,
     #   :initializer => lambda { json = Candlepin::Product.get(cp_id)[0] },
     #   :unless => lambda { cp_id.nil? }
     def lazy_accessor *args
       options = args.extract_options!
-
+      @lazy_attributes = [] if @lazy_attributes.nil?
+      @lazy_attributes = @lazy_attributes.concat args
       raise ArgumentError, "Attribute names must be symbols" if args.any?{ |attribute| !attribute.is_a?(Symbol) }
       redefined_attr = args.find{ |attribute| instance_methods.include?(attribute.to_s) }
       Rails.logger.warn "Remote attribute '#{redefined_attr}' has already been defined" if redefined_attr
@@ -67,10 +70,11 @@ module LazyAccessor
           attr = symbol.to_s
 
           excepted = options.has_key?(:unless) ? self.instance_eval(&options[:unless]) : new_record?
-          if instance_variable_get("@#{attr}").nil? && (not excepted)
+          if !instance_variables.include?("@#{attr}") && (not excepted)
+          #if instance_variable_get("@#{attr}").nil? && (not excepted)
             remote_values = run_initializer(args.size > 1, initializer)
             if args.size > 1
-              remote_values.each_pair {|k,v| instance_variable_set("@#{k.to_s}", v) if (args.include?(k.to_sym) and respond_to?("#{k.to_s}="))}
+              prepopulate(remote_values)
             else
               instance_variable_set("@#{attr}", remote_values) if respond_to?("#{attr}=")
             end
@@ -127,6 +131,11 @@ module LazyAccessor
         raise RuntimeError.new("Expect initializer to return hash if a group of attributes is defined by lazy_accessor")
       end
       remote_values
+    end
+
+    def prepopulate(remote_values)
+      attrs = self.class.lazy_attributes
+      remote_values.each_pair {|k,v| instance_variable_set("@#{k.to_s}", v) if (attrs.include?(k.to_sym) and respond_to?("#{k.to_s}="))}
     end
   end
 end
