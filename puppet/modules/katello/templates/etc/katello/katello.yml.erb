@@ -90,9 +90,9 @@ common:
 # Setup proxy to use when accessing CDN.
 # Katello calls CDN to retrieve list of repositories for a product
 
-<%- unless scope.lookupvar("katello::params::proxy_host") == "NONE" -%> 
+<%- unless scope.lookupvar("katello::params::proxy_url") == "NONE" -%> 
   cdn_proxy:
-    host: <%= scope.lookupvar("katello::params::proxy_host") %>
+    host: <%= scope.lookupvar("katello::params::proxy_url") %>
     <%- unless scope.lookupvar("katello::params::proxy_port") == "NONE" -%>
     port: <%= scope.lookupvar("katello::params::proxy_port") %>
     <%- else -%>
