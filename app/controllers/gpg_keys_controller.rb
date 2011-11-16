@@ -62,7 +62,14 @@ class GpgKeysController < ApplicationController
   end
 
   def create
-    @gpg_key = GpgKey.create!( params[:gpg_key].merge({ :organization => current_organization }) )
+    gpg_key_params = params[:gpg_key]
+    
+    if params[:gpg_key].has_key?("content_upload") and not params[:gpg_key].has_key?("content")
+      gpg_key_params['content'] = params[:gpg_key][:content_upload].read
+      gpg_key_params.delete('content_upload')
+    end
+
+    @gpg_key = GpgKey.create!( gpg_key_params.merge({ :organization => current_organization }) )
 
     notice _("GPG Key '#{@gpg_key['name']}' was created.")
     
