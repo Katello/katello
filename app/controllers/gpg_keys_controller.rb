@@ -26,18 +26,20 @@ class GpgKeysController < ApplicationController
   end
 
   def rules
-    read_test = lambda{true}#lambda{GpgKey.readable?(current_organization)}
-    manage_test = lambda{true}#lambda{GpgKey.manageable?(current_organization)}
+    read_test = lambda{@gpg_key.readable?}
+    manage_test = lambda{@gpg_key.manageable?}
+    create_test = lambda{GpgKey.createable?(current_organization)}
+    index_test = lambda{GpgKey.any_readable?(current_organization)}
     {
-      :index => read_test,
-      :items => read_test,
+      :index => index_test,
+      :items => index_test,
       :show => read_test,
-      :auto_complete_search => read_test,
+      :auto_complete_search => index_test,
 
-      :new => manage_test,
-      :create => manage_test,
+      :new => create_test,
+      :create => create_test,
 
-      :edit => read_test,
+      :edit => manage_test,
       :update => manage_test,
 
       :destroy => manage_test
@@ -45,7 +47,7 @@ class GpgKeysController < ApplicationController
   end
 
   def items
-    render_panel_items(GpgKey.where(:organization_id => current_organization), @panel_options, params[:search], params[:offset])
+    render_panel_items(GpgKey.readable(current_organization), @panel_options, params[:search], params[:offset])
   end
 
   def show
@@ -57,7 +59,7 @@ class GpgKeysController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:editable => true,#GpgKey.manageable?(current_organization),
+    render :partial => "edit", :layout => "tupane_layout", :locals => {:editable => @gpg_key.manageable?,
                                                                        :name => controller_display_name }
   end
 
