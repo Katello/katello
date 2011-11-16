@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.10
+Version:       0.1.12
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,6 +84,254 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 15 2011 Shannon Hughes <shughes@redhat.com> 0.1.12-1
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- cli - removed unused 'flag' argument from a method 'Command#require_option'
+  (tstrachota@redhat.com)
+- cli - parameter flag determined automatically for required arguments It is no
+  longer necessary to pass both expected destination and flag string to the
+  'require_option' method when those two are different. (tstrachota@redhat.com)
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- cli - add email address to 'user' as a required attribute
+  (bbuckingham@redhat.com)
+
+* Thu Nov 10 2011 Shannon Hughes <shughes@redhat.com> 0.1.11-1
+- moving system tests into /scripts (lzap+git@redhat.com)
+- cli - code reindentation & pep8 fixes (tstrachota@redhat.com)
+- repo cli - fixed failure in repo info caused by api not returning all
+  information (tstrachota@redhat.com)
+- Merge branch 'repo-remodel' of ssh://git.fedorahosted.org/git/katello into
+  repo-remodel (paji@redhat.com)
+- Fixed the bash script to retrieve the pulp id correctly (paji@redhat.com)
+- changeset cli - fix for listing repo names in changeset info
+  (tstrachota@redhat.com)
+- changeset system tests - removed repo dependency +calling changeset info with
+  on changeset with content (tstrachota@redhat.com)
+- Merge branch 'master' into repo-remodel (paji@redhat.com)
+- removing unnecessary sleep from test (lzap+git@redhat.com)
+- bug - error message when registering a system (lzap+git@redhat.com)
+- system tests - testing failure of package group listing
+  (tstrachota@redhat.com)
+- system tests - support for using pulp_repo_id (tstrachota@redhat.com)
+- up-to-date fake manifest (lzap+git@redhat.com)
+- bug - cli was not reporting nonexisting ak (lzap+git@redhat.com)
+- cli tests - fixed wrong mocking of 'save_report' (tstrachota@redhat.com)
+- cli tests - test for ping (tstrachota@redhat.com)
+- cli ping - return code reflects status of subsystems (tstrachota@redhat.com)
+- cli tests - using deepcopy instead of copy in utils for mocking
+  (tstrachota@redhat.com)
+- cli - better description for 'product promote' (tstrachota@redhat.com)
+- cli - support for multiline description of actions (tstrachota@redhat.com)
+- cli - support for multiline description of commands (tstrachota@redhat.com)
+- 749570 - showing pool id along with subscriptions (lzap+git@redhat.com)
+- fixing formatting (lzap+git@redhat.com)
+- fixing cli unit tests - one more (lzap+git@redhat.com)
+- fixing cli unit tests (lzap+git@redhat.com)
+- system tests - changed generating random hash (tstrachota@redhat.com)
+- adding new parameter --nodisc for product creation (lzap+git@redhat.com)
+- distros - adding cli portion for adding/removing distros
+  (lzap+git@redhat.com)
+- distros - adding family, variant, version in CLI (lzap+git@redhat.com)
+- fxiing merge conflict (jsherril@redhat.com)
+- Merge branch 'master' into errata_filter (bbuckingham@redhat.com)
+- cli test for 'org subscriptions' command (dmitri@redhat.com)
+- subscription start/end dates are now being coverted into human-readable
+  format (dmitri@redhat.com)
+- sla information is now being added to subscriptions (dmitri@redhat.com)
+- added support for listing of subscriptions for an organization
+  (dmitri@redhat.com)
+- tdl-export - expose template export in the CLI (inecas@redhat.com)
+- Break up the cli spec file into a common and katello piece
+  (bkearney@redhat.com)
+- nvrea-optional - system test for nvrea support (inecas@redhat.com)
+- Merge branch 'reports' (dmitri@redhat.com)
+- sys tests - enabled org delete test in provider import testsuite
+  (tstrachota@redhat.com)
+- Merge branch 'master' into errata_filter (bbuckingham@redhat.com)
+- improving python code style (lzap+git@redhat.com)
+- cli-akeys-pools - show pools in activation key details (inecas@redhat.com)
+- cli-akeys-pools - remove subscriptions from a activation kay
+  (inecas@redhat.com)
+- cli-akeys-pools - add subscription to a key through CLI (inecas@redhat.com)
+- merge conflict (jsherril@redhat.com)
+- add/remove package updates for cli system test for filters
+  (dmitri@redhat.com)
+- tests for cli for add/remove package to/from filter (dmitri@redhat.com)
+- cli tests for filters (dmitri@redhat.com)
+- added support for updating of package lists of filters (dmitri@redhat.com)
+- merge conflict (jsherril@redhat.com)
+- pools - adding multi entitlement flag to the list (cli) (lzap+git@redhat.com)
+- pools - making use of system.available_pools_full (lzap+git@redhat.com)
+- pools - listing of available pools (lzap+git@redhat.com)
+- added filter-related tests to cli-tests (dmitri@redhat.com)
+- added tests for filter operations in katello cli (dmitri@redhat.com)
+- more product-filter association tests for cli (dmitri@redhat.com)
+- added product-filter association tests for cli (dmitri@redhat.com)
+- errata-filters - filter all errata for a product (inecas@redhat.com)
+- merge conflict (jsherril@redhat.com)
+- fogot to commit some filter-related files (for cli) (dmitri@redhat.com)
+- added support for listing/adding/removing filters to/from products from
+  katello cli (dmitri@redhat.com)
+- added support for filter create/list/show/delete operations in katello cli
+  (dmitri@redhat.com)
+- errata-filters - API and CLI support for filtering on severity
+  (inecas@redhat.com)
+- errata-filters - API and CLI restrict filtering errata on an environment
+  (inecas@redhat.com)
+- errata-filters - API and CLI allow errata filtering on multiple repos
+  (inecas@redhat.com)
+- errata-filters - API and CLI support for filtering errata by type
+  (inecas@redhat.com)
+- errata-filters - cli support for filtering errata by type (inecas@redhat.com)
+- cli - disabled two pylint false alarms (tstrachota@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (bkearney@redhat.com)
+- pulp-repo-secured - system test for chekcing the seruted repo
+  (inecas@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (bkearney@redhat.com)
+- Small refactoring (inecas@redhat.com)
+- New cli strings pushed (bkearney@redhat.com)
+- repo delete - cli unit test (tstrachota@redhat.com)
+- added more cli report tests (dmitri@redhat.com)
+- Fix index error when printing cli table (inecas@redhat.com)
+- recreated cli report tests (dmitri@redhat.com)
+- re-created reports functionality after botched merge (dmitri@redhat.com)
+- 743883 - propper testing on provided url (inecas@redhat.com)
+- repo delete - enabled in system tests (tstrachota@redhat.com)
+- repo cli - refactored way of getting repos (tstrachota@redhat.com)
+- repo delete - cli for deleting single repos (tstrachota@redhat.com)
+- 741274 - correct displaying of unicode values in info (inecas@redhat.com)
+- 741274 - correct displaying of unicode values in listings (inecas@redhat.com)
+- system tests - added option for disabling the base cleanup test -c or
+  --nocleanup (tstrachota@redhat.com)
+- cli unit tests - test for product delete (tstrachota@redhat.com)
+- system tests - enabled removing products in cleanup test
+  (tstrachota@redhat.com)
+- products - cli for removing products (tstrachota@redhat.com)
+- fix for katello-reset-dbs - pgsql support for initdb - typo
+  (lzap+git@redhat.com)
+- sms - list of certificates in the cli (lzap+git@redhat.com)
+- sms - refactoring subscription -> subscriptions path (lzap+git@redhat.com)
+- sms - moving subscriptions list action into the backend (lzap+git@redhat.com)
+- sms - moving unsubscribe action into the backend (lzap+git@redhat.com)
+- 723308 - show names instead of ids in cli environment info
+  (inecas@redhat.com)
+- disabling one system cli test due to bug (lzap+git@redhat.com)
+- sms - subscriptions cli command (lzap+git@redhat.com)
+- templates - removed old way of promoting templates directly
+  (tstrachota@redhat.com)
+- cli unit tests - added exit code tests for template update
+  (tstrachota@redhat.com)
+- cli unit tests - tests for template update (tstrachota@redhat.com)
+- packagegroups - parameter 'repoid' changed to 'repo_id' to keep the cli
+  consistent (tstrachota@redhat.com)
+- system tests - fix for problem with dependencies test for templates require
+  packagegroups (tstrachota@redhat.com)
+- packagegroups cli - removed pprint form command 'info'
+  (tstrachota@redhat.com)
+- system tests - update of parameters for templat cli in changeset test
+  (tstrachota@redhat.com)
+- packagegroups - fixes in unit tests Fixes for testing api that returns arrays
+  instead of hashes. (tstrachota@redhat.com)
+- packagegroups - cli changed to work with array returned from api instead of
+  hashes that were returned formerly (tstrachota@redhat.com)
+- templates - system tests for updates (tstrachota@redhat.com)
+- templates cli - update command exits when product was not found
+  (tstrachota@redhat.com)
+- package groups - groups and group categories returned in an array instead of
+  in a hash (tstrachota@redhat.com)
+- cli - removed deprecated '<>' (tstrachota@redhat.com)
+- templates cli - removed old route for content update (tstrachota@redhat.com)
+- templates cli - command 'update_content' removed (tstrachota@redhat.com)
+- templates cli - package groups and group categories added to update
+  (tstrachota@redhat.com)
+- templates cli - content update using new api (tstrachota@redhat.com)
+- providing final system test fix for RH autocreation (lzap+git@redhat.com)
+- fixing provider import after providers branch merge (lzap+git@redhat.com)
+- correcting system test for default RH provider (lzap+git@redhat.com)
+- sms - improving default value for quantity (lzap+git@redhat.com)
+- cli - removed default value from get_option It was colliding with default
+  value from optparse and as a result the default value from get_option was
+  never used. (tstrachota@redhat.com)
+- sms - cli system subscribe command (lzap+git@redhat.com)
+- sms - remove a subscription from a machine (lzap+git@redhat.com)
+- updated bin/katello to show correct names for uebercert-related commands
+  (dmitri@redhat.com)
+- Revert "BZ 741357: fixed a spelling mistake in katello-jobs.init"
+  (dmitri@redhat.com)
+- BZ 741357: fixed a spelling mistake in katello-jobs.init (dmitri@redhat.com)
+- added cli support for generation/retrieval of uebercerts (dmitri@redhat.com)
+- templates cli - fix for printing None instead of Locker in template list
+  (tstrachota@redhat.com)
+- system tests - new tests for templates and changesets (tstrachota@redhat.com)
+- templates api - fix for getting template by name (tstrachota@redhat.com)
+- cli unit tests - updated template package test data - added nvre information
+  - removed errata (tstrachota@redhat.com)
+- templates cli - showing nvre in tepmlate info (tstrachota@redhat.com)
+- templates cli - removed errata from template info (tstrachota@redhat.com)
+- changesets - cli support for adding template to changesets
+  (tstrachota@redhat.com)
+- templates cli - removed errata from updates (tstrachota@redhat.com)
+- system tests - added function for checking katello jobs
+  (tstrachota@redhat.com)
+- system tests - added test_success and test_failure methods
+  (tstrachota@redhat.com)
+- system templates - refactoring - removed ordering by numbers in filename -
+  added ability to define required test suites to run them prior the current
+  test suite - added function for printing a suite header, headers must be
+  printed in the test files now (tstrachota@redhat.com)
+- packagegroup-templates - fix failing cli unit tests (inecas@redhat.com)
+- packagegroups-templates - show comps in template info (inecas@redhat.com)
+- 732007 - enhanced error message in CLI (inecas@redhat.com)
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (dmitri@redhat.com)
+- 733266 - new option type bool to handle True/False options
+  (inecas@redhat.com)
+- 734882 - User-Agent header in katello-cli and custom error messages
+  (inecas@redhat.com)
+- Merge branch 'uebercert' (dmitri@redhat.com)
+- 736247 - correct error message on unauthorized access (inecas@redhat.com)
+- system-tests - script for generating code coverage (inecas@redhat.com)
+- adding copyright and modeline to our spec files (lzap+git@redhat.com)
+- packagegroups - cli system test helpers methods to separate file
+  (inecas@redhat.com)
+- 737563 - adding more rhsm system testing (lzap+git@redhat.com)
+- 737563 - improving rhsm system testing (lzap+git@redhat.com)
+- 737563 - adding more rhsm system testing (lzap+git@redhat.com)
+- 737563 - adding more rhsm system tests (lzap+git@redhat.com)
+- cli coverage - added --cover-inclusive to get report for all files and not
+  only for those with tests. Helps finding holes in the coverage.
+  (tstrachota@redhat.com)
+- system tests - added check for existing test suites (tstrachota@redhat.com)
+- templates cli - fix for typo in route (tstrachota@redhat.com)
+- templates api - route for listing templates in an environment
+  (tstrachota@redhat.com)
+- added test coverage target to katello cli Makefile (dmitri@redhat.com)
+- packagegroups - name cli tests using convention (inecas@redhat.com)
+- packagegroups-templates - CLI for package group categories in templates
+  (inecas@redhat.com)
+- system-tests - refactor - use function for getting repo_id
+  (inecas@redhat.com)
+- packagegroups-templates - CLI system tests (inecas@redhat.com)
+- packagegroups-templates - CLI for package groups in templates
+  (inecas@redhat.com)
+- 737591 - format function was missing positional arguments method str.format
+  requires positional argument specifiers in Python < 2.7
+  (tstrachota@redhat.com)
+- system tests - temporarily disabled deleting a provider in provider_import
+  test until we fix the bug (tstrachota@redhat.com)
+- cli - removed unused imports (tstrachota@redhat.com)
+- Change the default client config to work with thin/apache
+  (bkearney@redhat.com)
+- Merge branch 'master' into thin (mmccune@redhat.com)
+- Merge branch 'master' into thin (mmccune@redhat.com)
+- CLI - client.conf - update path to default to /katello
+  (bbuckingham@redhat.com)
+- ueber cert - adding cli support (lzap+git@redhat.com)
+
 * Thu Sep 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.10-1
 - cli - deprecated 'has_key' replaced by 'in'
 - cli - reindented .py scripts

@@ -61,11 +61,11 @@ class Info(PackageGroupAction):
     def run(self):
         groupid = self.get_option('id')
         repoid = self.get_option('repo_id')
-        
+
         group = self.api.packagegroup_by_id(repoid, groupid)
         if group == None:
             system_exit(os.EX_DATAERR, _("Package group [%s] not found in repo [%s]") % (groupid, repoid))
-        
+
         self.printer.setHeader(_("Package Group Information"))
         self.printer.addColumn('id')
         self.printer.addColumn('name')
@@ -124,10 +124,10 @@ class CategoryInfo(PackageGroupAction):
         categoryId = self.get_option('id')
         repoid = self.get_option('repo_id')
         category = self.api.packagegroupcategory_by_id(repoid, categoryId)
-        
+
         if category == None:
             system_exit(os.EX_DATAERR, _("Package group category [%s] not found in repo [%s]") % (categoryId, repoid))
-            
+
         self.printer.setHeader(_("Package Group Category Information"))
         self.printer.addColumn('id')
         self.printer.addColumn('name')

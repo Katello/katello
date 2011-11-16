@@ -21,8 +21,6 @@ module ApplicationHelper
 
   #include Navigation
 
-
-
   def current_url(extra_params={})
     url_for params.merge(extra_params)
   end
@@ -140,11 +138,11 @@ module ApplicationHelper
     render :partial=> "common/edit_i18n"
   end
  
- def notification_polling_time()
+  def notification_polling_time
     time  = AppConfig.notification && AppConfig.notification.polling_seconds
     return time.to_i  * 1000 if time
     return 120000
- end
+  end
 
   def environment_selector options = {}
     options[:locker_clickable] = true if options[:locker_clickable].nil? # ||= doesn't work if false
@@ -176,7 +174,7 @@ module ApplicationHelper
       if !selected_env.locker?
         classes << "active"
       else
-        #we only want to higlight the Locker along the path that is actually selected
+        #we only want to highlight the Locker along the path that is actually selected
         classes << "active" if curr_path[1] == selected_path[1]
       end
     end

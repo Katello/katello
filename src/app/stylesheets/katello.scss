@@ -165,7 +165,7 @@ input[type='submit'], button, .button {
   margin: 4px;
   padding: 4px 12px;
   @include border-radius(5px);
-  @include text-shadow($white_color, 0, 1px, 0);
+  @include _text-shadow($white_color, 0, 1px, 0);
   min-height: 14px;
   
   .nomargin {
@@ -1340,3 +1340,15 @@ footer {
 /* classes to highlight or make "standout" inputs that require action from the user */
 .highlight_input { border: 3px solid $kselected_color; }
 .highlight_input_text { color: $kselected_color; font-weight: 600; font-size: 110%; padding-left: 10px;}
+
+
+.ui-widget-header {
+    font-family: $headlinefont;
+    border: 0 none;
+}
+.ui-widget-content {
+    border: 0 none;
+    table {
+         border: 1px solid $stroke_color !important;
+    }
+}

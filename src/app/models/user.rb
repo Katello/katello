@@ -29,8 +29,9 @@ class User < ActiveRecord::Base
   has_many :search_favorites, :dependent => :destroy
   has_many :search_histories, :dependent => :destroy
 
-
   validates :username, :uniqueness => true, :presence => true, :username => true, :length => { :maximum => 255 }
+  validates_presence_of :email
+
   validate :own_role_included_in_roles
 
   # check if the role does not already exist for new username
@@ -40,16 +41,33 @@ class User < ActiveRecord::Base
     end
   end
 
-
   scoped_search :on => :username, :complete_value => true, :rename => :name
   scoped_search :in => :roles, :on => :name, :complete_value => true, :rename => :role
 
   # validate the password length before hashing
   validates_each :password do |model, attr, value|
     if model.password_changed?
-      model.errors.add(attr, "at least 5 characters") if value.length < 5
+      model.errors.add(attr, _("at least 5 characters")) if value.length < 5
     end
   end
+
+#  validates_each :own_role do |model, attr, value|
+#    #This is enforced throught a user's self role where a permission with a tag is created
+#    #that has the environment id of the default environment for the user
+#    err_msg =  _("A user must have a default org and environment associated.")
+#    if model.blank?
+#      model.errors.add(attr,err_msg)
+#    else
+#      perm = Permission.find_all_by_role_id(@user.own_role.id)
+#      if perm.blank?
+#        model.errors.add(attr,err_msg)
+#      else
+#        if !perm[0].tags
+#          model.errors.add(attr,err_msg)
+#        end
+#      end
+#    end
+#  end
 
   # hash the password before creating or updateing the record
   before_save do |u|
@@ -341,6 +359,36 @@ class User < ActiveRecord::Base
     User.allowed_to?([:delete], :users, nil)
   end
 
+  def send_password_reset
+    # generate a random password reset token that will be valid for only a configurable period of time
+    generate_token(:password_reset_token)
+    self.password_reset_sent_at = Time.zone.now
+    save!
+
+    UserMailer.send_password_reset(self)
+  end
+
+  def has_default_env?
+    #the own_role is used exclusively for storing a perm with a tag that tells the default env
+    if !self.own_role
+      return false
+    else
+      if Permission.find_all_by_role_id(self.own_role.id).empty?
+        return false
+      end
+    end
+    true
+  end
+
+  def default_environment
+    sr = self.own_role
+    perm = Permission.find_all_by_role_id(self.own_role.id)
+    if sr && !perm.empty? && perm[0].tags
+      return KTEnvironment.find(perm[0].tags[0].tag_id)
+    end
+    nil
+  end
+
   protected
 
   def can_be_deleted?
@@ -374,6 +422,13 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  # generate a random token, that is unique within the User table for the column provided
+  def generate_token(column)
+    begin
+      self[column] = SecureRandom.hex(32)
+    end while User.exists?(column => self[column])
+  end
 
   def allowed_tags_query(verbs, resource_type,  org = nil, allowed_to_check = true)
     ResourceType.check resource_type, verbs

@@ -2,6 +2,7 @@ class katello::params {
   # First User and Org settings
   $user_name = katello_config_value('user_name')
   $user_pass = katello_config_value('user_pass')
+  $user_email = katello_config_value('user_email')
   $org_name  = katello_config_value('org_name')
 
   # database settings
@@ -10,7 +11,14 @@ class katello::params {
   $db_pass = katello_config_value('db_password')
   $deployment = katello_config_value('deployment')
 
+  # HTTP Proxy settings (currently used by pulp)
+  $proxy_url = katello_config_value('proxy_url')
+  $proxy_port = katello_config_value('proxy_port')
+  $proxy_user = katello_config_value('proxy_user')
+  $proxy_pass = katello_config_value('proxy_pass')
+
   # system settings
+  $host        = katello_config_value('host')
   $user        = "katello"
   $group       = "katello"
   $config_dir  = "/etc/katello"

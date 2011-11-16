@@ -28,11 +28,13 @@ describe SyncManagementController do
 
   describe "GET 'index'" do
     before (:each) do
+      Pulp::Repository.stub(:all).and_return([])
       setup_current_organization
       @locker = KTEnvironment.new
       @mock_org.stub!(:locker).and_return(@locker)
       @locker.stub!(:products).and_return(OpenStruct.new(:readable => [], :syncable=>[]))
       Provider.stub!(:any_readable?).and_return(true)
+      
     end
 
 
@@ -71,7 +73,7 @@ describe SyncManagementController do
 
       let(:action) {:sync}
       let(:req) do
-        put 'sync', :repo => {@product.repos(@organization.locker).first.id=>@product.id}, :name=>"barfoo", :product_id=>@product.id
+        put 'sync', :repoids => [@product.repos(@organization.locker).first.id]
       end
       let(:authorized_user) do
         user_with_permissions { |u| u.can(:sync, :organizations, nil, @organization) }

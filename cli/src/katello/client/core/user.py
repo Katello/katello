@@ -44,6 +44,7 @@ class List(UserAction):
 
         self.printer.addColumn('id')
         self.printer.addColumn('username')
+        self.printer.addColumn('email')
         self.printer.addColumn('disabled')
 
         self.printer.setHeader(_("User List"))
@@ -61,19 +62,23 @@ class Create(UserAction):
                 help=_("user name (required)"))
         self.parser.add_option('--password', dest='password',
                 help=_("initial password (required)"))
+        self.parser.add_option('--email', dest='email',
+                help=_("email (required)"))        
         self.parser.add_option("--disabled", dest="disabled", type="bool",
                 help=_("disabled account (default is 'false')"))
 
     def check_options(self):
         self.require_option('username')
         self.require_option('password')
+        self.require_option('email')
 
     def run(self):
         username = self.get_option('username')
         password = self.get_option('password')
+        email = self.get_option('email')
         disabled = self.get_option('disabled')
 
-        user = self.api.create(username, password, disabled)
+        user = self.api.create(username, password, email, disabled)
         if is_valid_record(user):
             print _("Successfully created user [ %s ]") % user['username']
         else:
@@ -103,6 +108,7 @@ class Info(UserAction):
 
         self.printer.addColumn('id')
         self.printer.addColumn('username')
+        self.printer.addColumn('email')
         self.printer.addColumn('disabled')
 
         self.printer.setHeader(_("User Information"))
@@ -145,6 +151,8 @@ class Update(UserAction):
                 help=_("user name (required)"))
         self.parser.add_option('--password', dest='password',
                 help=_("initial password"))
+        self.parser.add_option('--email', dest='email',
+                help=_("email"))        
         self.parser.add_option("--disabled", dest="disabled",
                 help=_("disabled account (default is 'false')"))
 
@@ -154,6 +162,7 @@ class Update(UserAction):
     def run(self):
         username = self.get_option('username')
         password = self.get_option('password')
+        email = self.get_option('email')
         disabled = self.get_option('disabled')
 
         users = self.api.users({"username": username})
@@ -161,33 +170,33 @@ class Update(UserAction):
             print _("Cannot find user [ %s ]") % username
             return os.EX_DATAERR
 
-        if password == None and disabled == None:
+        if password == None and email == None and disabled == None:
             print _("Provide at least one parameter to update user [ %s ]") % username
             return os.EX_DATAERR
 
-        user = self.api.update(users[0]['id'], password, disabled)
+        user = self.api.update(users[0]['id'], password, email, disabled)
         print _("Successfully updated user [ %s ]") % username
         return os.EX_OK
 
 class Report(UserAction):
-    
+
     description = _('user report')
-    
+
     def setup_parser(self):
         self.parser.add_option('--format', dest='format',
                 help=_("report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"))
-        
+
     def run(self):
         format = self.get_option('format')
         report = self.api.report(convert_to_mime_type(format, 'text'))
-        
+
         if format == 'pdf':
             save_report(report[0], attachment_file_name(report[1], 'katello_users_report.pdf'))
         else:
             print report[0]
 
-        return os.EX_OK        
-        
+        return os.EX_OK
+
 
 # user command ------------------------------------------------------------
 
