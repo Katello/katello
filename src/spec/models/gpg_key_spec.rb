@@ -12,6 +12,6 @@
 
 require 'spec_helper'
 
-describe Gpg do
+describe GpgKey do
   pending "add some examples to (or delete) #{__FILE__}"
 end
