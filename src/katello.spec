@@ -331,6 +331,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.106-2
+- build for system-engine (shughes@redhat.com)
 * Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com>
 - Merge remote-tracking branch 'katello/master' into branding
   (shughes@redhat.com)
