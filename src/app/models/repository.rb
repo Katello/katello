@@ -29,7 +29,7 @@ class Repository < ActiveRecord::Base
   validates :pulp_id, :presence => true, :uniqueness => true
   validates :name, :presence => true
   validates :enabled, :repo_disablement => true, :on => [:update]
-
+  belongs_to gpg, :inverse_of => :repositories
   def product
     self.environment_product.product
   end
