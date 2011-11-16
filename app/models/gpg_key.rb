@@ -12,6 +12,7 @@
 
 class GpgKey < ActiveRecord::Base
   has_many :repositories, :inverse_of => :gpg_key
+  has_many :products, :inverse_of => :gpg_key
   validates :name, :katello_name_format => true
   belongs_to :organization, :inverse_of => :gpg_keys
 end
