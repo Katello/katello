@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.13
+Version:        0.1.14
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -52,6 +52,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Wed Nov 16 2011 Ivan Necas <inecas@redhat.com> 0.1.14-1
+- cdn-proxy - fix typo in Puppet manifest (inecas@redhat.com)
+
 * Tue Nov 15 2011 Shannon Hughes <shughes@redhat.com> 0.1.13-1
 - Merge branch 'master' into password_reset (bbuckingham@redhat.com)
 - cdn-proxy - add support to puppet answer file (inecas@redhat.com)
