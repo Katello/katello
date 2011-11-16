@@ -211,7 +211,7 @@ class Export(TemplateAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
-                               help=_("environment name eg: dev (Locker by default)"))
+                               help=_("environment name eg: dev"))
         self.parser.add_option("--file", dest="file",
                                help=_("path to the template file (required)"))
         self.parser.add_option("--format", dest="format",
@@ -222,6 +222,7 @@ class Export(TemplateAction):
         self.require_option('org')
         self.require_option('name')
         self.require_option('file')
+        self.require_option('env')
 
     def supported_formats(self):
         return ['json', 'tdl']
