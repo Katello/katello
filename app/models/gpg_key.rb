@@ -42,11 +42,19 @@ class GpgKey < ActiveRecord::Base
   }
 
   def  readable?
-    GpgKey.readable(organization).where(:id => id).count > 0
+    GpgKey.any_readable?(organization)
   end
 
   def manageable?
-    GpgKey.manageable(organization).where(:id => id).count > 0
+    organization.gpg_keys_manageable?
+  end
+
+  def self.createable? organization
+    organization.gpg_keys_manageable?
+  end
+  
+  def self.any_readable? organization
+    organization.readable? || organization.gpg_keys_manageable? || ::Provider.any_readable?(organization)
   end
 
 end
