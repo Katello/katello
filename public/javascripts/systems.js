@@ -224,6 +224,7 @@ KT.subs = function() {
           $(this).change(function(){
             $('#autoheal_form').ajaxSubmit({
               data: { autoheal: $(this).is(":checked") },  // Checkboxes in forms aren't included when false
+              dataType: 'html',
               success: function(data) {
                 notices.checkNotices();
               }, error: function(e) {

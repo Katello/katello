@@ -230,6 +230,9 @@ class SystemsController < ApplicationController
 
   def update
     begin
+      # The 'autoheal' flag is not an ActiveRecord attribute so update it explicitly if present
+      @system.autoheal = params[:autoheal] if params[:autoheal]
+
       @system.update_attributes!(params[:system])
       notice _("System '#{@system["name"]}' was updated.")
       
@@ -238,7 +241,7 @@ class SystemsController < ApplicationController
       end
       
       respond_to do |format|
-        format.html { render :text=>params[:system].first[1] }
+        format.html { render :text=>params[:system].first[1] if params[:system] }
         format.js
       end
     rescue Exception => error
