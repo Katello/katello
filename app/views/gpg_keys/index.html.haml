@@ -1,9 +1,9 @@
 .grid_16
   = help_tip_button
-  = help_tip(_("GPG Keys....")) |
+  = help_tip(_("GPG Keys...."))
 
 .grid_16#main
-  = two_panel(@activation_keys, @panel_options)
+  = two_panel(@gpg_keys, @panel_options)
 
 = javascript :edit, :gpg_key
 = include_common_i18n

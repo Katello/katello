@@ -12,7 +12,6 @@
 
 class GpgKeysController < ApplicationController
   include AutoCompleteSearch
-  include GpgKeysHelper
 
   before_filter :require_user
   before_filter :find_gpg_key, :only => [:show, :edit, :update, :destroy]
@@ -27,8 +26,8 @@ class GpgKeysController < ApplicationController
   end
 
   def rules
-    read_test = lambda{GpgKey.readable?(current_organization)}
-    manage_test = lambda{GpgKey.manageable?(current_organization)}
+    read_test = lambda{true}#lambda{GpgKey.readable?(current_organization)}
+    manage_test = lambda{true}#lambda{GpgKey.manageable?(current_organization)}
     {
       :index => read_test,
       :items => read_test,
@@ -45,66 +44,32 @@ class GpgKeysController < ApplicationController
     }
   end
 
-=begin
-  def index
-  end
-
   def items
-    render_panel_items(GPGKey.where(:organization_id => current_organization), @panel_options, params[:search], params[:offset])
+    render_panel_items(GpgKey.where(:organization_id => current_organization), @panel_options, params[:search], params[:offset])
   end
-
 
   def show
     render :partial=>"common/list_update", :locals=>{:item=>@gpg_key, :accessor=>"id", :columns=>['name']}
   end
 
   def new
-    activation_key = ActivationKey.new
-
-    @organization = current_organization
-    accessible_envs = current_organization.environments
-    setup_environment_selector(current_organization, accessible_envs)
-    @environment = first_env_in_path(accessible_envs)
-
-    @system_template_labels = [[no_template, '']]
-    unless @environment.nil?
-      @system_template_labels = [[no_template, '']] + (@environment.system_templates).collect {|p| [ p.name, p.id ]}
-    end
-
-    @selected_template = no_template
-
-    render :partial => "new", :layout => "tupane_layout", :locals => {:activation_key => activation_key,
-                                                                      :accessible_envs => accessible_envs}
+    render :partial => "new", :layout => "tupane_layout"
   end
 
   def edit
-    @organization = current_organization
-    accessible_envs = current_organization.environments
-    setup_environment_selector(current_organization, accessible_envs)
-
-    @system_template_labels = [[no_template, '']]
-    unless @environment.nil?
-      @system_template_labels = [[no_template, '']] + (@activation_key.environment.system_templates).collect {|p| [ p.name, p.id ]}
-    end
-    @selected_template = @activation_key.system_template.nil? ? no_template : @activation_key.system_template.id
-
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:activation_key => @activation_key,
-                                                                       :editable => ActivationKey.manageable?(current_organization),
-                                                                       :name => controller_display_name,
-                                                                       :accessible_envs => accessible_envs}
+    render :partial => "edit", :layout => "tupane_layout", :locals => {:editable => true,#GpgKey.manageable?(current_organization),
+                                                                       :name => controller_display_name }
   end
 
   def create
-    @activation_key = ActivationKey.create!(params[:activation_key]) do |key|
-      key.organization = current_organization
-      key.user = current_user
-    end
-    notice _("Activation key '#{@activation_key['name']}' was created.")
+    @gpg_key = GpgKey.create!( params[:gpg_key].merge({ :organization => current_organization }) )
+
+    notice _("GPG Key '#{@gpg_key['name']}' was created.")
     
-    if ActivationKey.where(:id => @activation_key.id).search_for(params[:search]).include?(@activation_key)
-      render :partial=>"common/list_item", :locals=>{:item=>@activation_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
+    if GpgKey.where(:id => @gpg_key.id).search_for(params[:search]).include?(@gpg_key)
+      render :partial=>"common/list_item", :locals=>{:item=>@gpg_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
     else
-      notice _("'#{@activation_key["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
+      notice _("'#{@gpg_key["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
       render :json => { :no_match => true }
     end
   rescue Exception => error
@@ -113,6 +78,7 @@ class GpgKeysController < ApplicationController
     render :text => error, :status => :bad_request
   end
 
+=begin
   def update
     result = params[:activation_key].nil? ? "" : params[:activation_key].values.first
 
@@ -149,22 +115,20 @@ class GpgKeysController < ApplicationController
       end
     end
   end
-
+=end
   def destroy
     begin
-      @activation_key.destroy
-      if @activation_key.destroyed?
-        notice _("Activation key '#{@activation_key[:name]}' was deleted.")
-        #render and do the removal in one swoop!
+      @gpg_key.destroy
+      if @gpg_key.destroyed?
+        notice _("GPG Key '#{@gpg_key[:name]}' was deleted.")
         render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
       else
         raise
       end
     rescue Exception => e
-      errors e.to_s
+      errors e
     end
-  end*/
-=end
+  end
 
   protected
 
@@ -190,8 +154,9 @@ class GpgKeysController < ApplicationController
       :create => _('GPG Key'), 
       :name => controller_display_name,
       :ajax_load  => true,
-      :ajax_scroll => items_activation_keys_path(),
-      :enable_create => GpgKey.manageable?(current_organization)}
+      :ajax_scroll => items_gpg_keys_path(),
+      :enable_create => true#GpgKey.manageable?(current_organization)
+    }
   end
 
   private

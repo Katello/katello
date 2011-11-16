@@ -28,11 +28,11 @@ describe GpgKeysController do
 
   before(:each) do
     set_default_locale
-    login_user
+    login_user({:mock => false})
 
     @organization = new_test_org
-    @gpg_key = GpgKey.create!( :name => "Another Test Key", :organization => @organization )
-    @gpg_key_params = { :gpg_key => { :name => "Test Key", :organization_id => @organization.id } }
+    @gpg_key = GpgKey.create!( :name => "Another Test Key", :content => "This is the key data string", :organization => @organization )
+    @gpg_key_params_pasted = { :gpg_key => { :name => "Test Key", :content => "This is the pasted key data string" } }
   end
 
   describe "rules" do
@@ -89,7 +89,7 @@ describe GpgKeysController do
   describe "GET new" do
     it "renders a new partial for 2pane" do
       get :new
-      response.should render_template(:partial => "new")
+      response.should render_template(:partial => "_new")
     end
 
     it "should be successful" do
@@ -102,7 +102,7 @@ describe GpgKeysController do
     describe "with valid GPG Key id" do
       it "renders an edit partial for 2pane" do
         get :edit, :id => @gpg_key.id
-        response.should render_template(:partial => "edit")
+        response.should render_template(:partial => "_edit")
       end
 
       it "should be successful" do
@@ -127,24 +127,24 @@ describe GpgKeysController do
   describe "POST create" do
     describe "with valid params" do
       it "should be successful" do
-        post :create, @gpg_key_params
+        post :create, @gpg_key_params_pasted
         response.should be_success
       end
       
       it "assigns a newly created GPG Key" do
-        post :create, @gpg_key_params
+        post :create, @gpg_key_params_pasted
         assigns[:gpg_key].name.should eq(@akey_params[:activation_key][:name])
-        assigns[:gpg_key].organization_id.should eq(@gpg_key_params[:gpg_key][:organization_id])
+        assigns[:gpg_key].organization_id.should eq(@gpg_key_params_pasted[:gpg_key][:organization_id])
       end
 
       it "renders list item partial for 2 pane" do
-        post :create, @gpg_key_params
+        post :create, @gpg_key_params_pasted
         response.should render_template(:partial => "common/_list_item")
       end
       
       it "should generate a success notice" do
         controller.should_receive(:notice)
-        post :create, @gpg_key_params
+        post :create, @gpg_key_params_pasted
       end
     end
 
@@ -162,22 +162,22 @@ describe GpgKeysController do
     
     describe "with inclusive search parameters" do
       it "should render list item partial for 2pane" do
-        @gpg_key_params[:search] = { :name => 'Test' }
-        post :create, @gpg_key_params
+        @gpg_key_params_pasted[:search] = { :name => 'Test' }
+        post :create, @gpg_key_params_pasted
         response.should render_template(:partial => "common/_list_item")
       end
     end
     
     describe "with exclusive search parameters" do
       it "should return no match indicator" do
-        @gpg_key_params[:search] = { :name => 'Fake' }
-        post :create, @gpg_key_params
+        @gpg_key_params_pasted[:search] = { :name => 'Fake' }
+        post :create, @gpg_key_params_pasted
         response.body.should eq({ :no_match => true })
       end
       
       it "should generate message notice" do
-        controller.should_receive(:message)
-        put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME, :search => { :name => 'Fake' }
+        controller.should_receive(:notice).twice
+        put :create, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME, :search => { :name => 'Fake' }
       end
     end
   end
@@ -259,7 +259,7 @@ describe GpgKeysController do
       end
       
       it "should generate message notice" do
-        controller.should_receive(:message)
+        controller.should_receive(:notice).twice
         put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME, :search => { :name => 'Fake' }
       end
     end
