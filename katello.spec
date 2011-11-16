@@ -72,6 +72,7 @@ Requires:       rubygem(chunky_png)
 # bz 743816 temp fix until yum update makes to z stream
 %if 0%{?rhel} == 6
 Requires:       yum >= 3.2.29
+Requires:       redhat-logos >= 60.0.14
 %endif
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
@@ -225,8 +226,10 @@ rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 
-#remove staged branding
+#branding
 if [ -d branding ] ; then
+  ln -svf %{_datadir}/icons/hicolor/24x24/apps/system-logo-icon.png %{buildroot}%{homedir}/public/images/rh-logo.png
+  ln -svf %{_sysconfdir}/favicon.png %{buildroot}%{homedir}/public/images/favicon.png
   rm -rf %{buildroot}%{homedir}/branding
 fi
 
