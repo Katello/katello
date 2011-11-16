@@ -10,10 +10,19 @@ describe RepositoriesController do
   include AuthorizationHelperMethods
   describe "rules" do
     before do
+      disable_product_orchestration
+      disable_user_orchestration
+
       @organization = new_test_org
       @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
       Provider.stub!(:find).and_return(@provider)
-      @product = MemoStruct.new(:provider => @provider, :id => 1000)
+      @product = Product.new({:name => "prod"})
+
+      @product.provider = @provider
+      @product.environments << @organization.locker
+      @product.stub(:arch).and_return('noarch')
+      @product.save!
+      Product.stub!(:find).and_return(@product)
       @repository = MemoStruct.new(:id =>1222)
     end
     describe "GET New" do
