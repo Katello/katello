@@ -20,8 +20,8 @@
           = _("Subscriptions are not Current")
       %br.clear
         .grid_2.la
-          = form_tag system_path(@system), :id=>"autoheal_form", :method=>"post", :remote=>true do
-            = check_box_tag "autoheal", value="#{@system.autoheal}", true
+          = form_tag system_path(@system), :id=>"autoheal_form", :method=>"put", :remote=>true do
+            = check_box_tag "autoheal", value=@system.autoheal, @system.autoheal
             &nbsp;
             Auto-heal
     .subs_left.ca

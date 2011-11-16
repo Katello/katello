@@ -61,7 +61,6 @@ Src::Application.routes.draw do
       get :subscriptions
       post :update_subscriptions
       get :facts
-      post :update
     end
     collection do
       get :auto_complete_search
