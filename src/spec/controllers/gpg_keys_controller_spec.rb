@@ -30,9 +30,15 @@ describe GpgKeysController do
     set_default_locale
     login_user({:mock => false})
 
+    #ActionDispatch::Http::UploadedFile
+    @file = mock(Object)
+    @file.stub_chain(:tempfile, :path).and_return('test_key.gpg')
+    @file.stub!(:read).and_return("This is uploaded key data.")
+
     @organization = new_test_org
     @gpg_key = GpgKey.create!( :name => "Another Test Key", :content => "This is the key data string", :organization => @organization )
     @gpg_key_params_pasted = { :gpg_key => { :name => "Test Key", :content => "This is the pasted key data string" } }
+    @gpg_key_params_uploaded = { :gpg_key => { :name => "Test Key", :content_upload => @file } }
   end
 
   describe "rules" do
@@ -126,25 +132,50 @@ describe GpgKeysController do
 
   describe "POST create" do
     describe "with valid params" do
-      it "should be successful" do
-        post :create, @gpg_key_params_pasted
-        response.should be_success
+      describe "that include a copy/pasted GPG Key" do
+        it "should be successful" do
+          post :create, @gpg_key_params_pasted
+          response.should be_success
+        end
+        
+        it "assigns a newly created GPG Key" do
+          post :create, @gpg_key_params_pasted
+          assigns[:gpg_key].name.should eq(@gpg_key_params_pasted[:gpg_key][:name])
+          assigns[:gpg_key].content.should eq(@gpg_key_params_pasted[:gpg_key][:content])
+        end
+  
+        it "renders list item partial for 2 pane" do
+          post :create, @gpg_key_params_pasted
+          response.should render_template(:partial => "common/_list_item")
+        end
+        
+        it "should generate a success notice" do
+          controller.should_receive(:notice)
+          post :create, @gpg_key_params_pasted
+        end
       end
       
-      it "assigns a newly created GPG Key" do
-        post :create, @gpg_key_params_pasted
-        assigns[:gpg_key].name.should eq(@akey_params[:activation_key][:name])
-        assigns[:gpg_key].organization_id.should eq(@gpg_key_params_pasted[:gpg_key][:organization_id])
-      end
-
-      it "renders list item partial for 2 pane" do
-        post :create, @gpg_key_params_pasted
-        response.should render_template(:partial => "common/_list_item")
-      end
-      
-      it "should generate a success notice" do
-        controller.should_receive(:notice)
-        post :create, @gpg_key_params_pasted
+      describe "that include an uploaded GPG Key file" do
+        it "should be successful" do
+          post :create, @gpg_key_params_uploaded
+          response.should be_success
+        end
+        
+        it "assigns a newly created GPG Key" do
+          post :create, @gpg_key_params_uploaded
+          assigns[:gpg_key].name.should eq(@gpg_key_params_uploaded[:gpg_key][:name])
+          assigns[:gpg_key].content.should eq(@file.read)
+        end
+  
+        it "renders list item partial for 2 pane" do
+          post :create, @gpg_key_params_uploaded
+          response.should render_template(:partial => "common/_list_item")
+        end
+        
+        it "should generate a success notice" do
+          controller.should_receive(:notice)
+          post :create, @gpg_key_params_uploaded
+        end
       end
     end
 
