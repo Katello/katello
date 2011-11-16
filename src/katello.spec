@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.105
+Version:        0.1.106
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -331,6 +331,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Nov 16 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.106-1
+- async job - fix for broken promotions (bbuckingham@redhat.com)
+
 * Wed Nov 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.105-1
 - 754430 - Product promotion fails as katello-jobs doesn't start
 - system templates - adding support for adding a distribution to a system
