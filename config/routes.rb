@@ -166,7 +166,11 @@ Src::Application.routes.draw do
   resources :providers do
     get 'auto_complete_search', :on => :collection
     resources :products do
-      resources :repositories
+      resources :repositories, :only => [:new, :create, :edit, :destroy] do
+        member do
+          put :update_gpg_key, :as => :update_repo_gpg_key
+        end
+      end
     end
     collection do
       get :items

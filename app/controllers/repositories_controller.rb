@@ -16,10 +16,10 @@ class RepositoriesController < ApplicationController
 
   respond_to :html, :js
 
-  before_filter :find_provider, :only => [:new, :create, :edit, :destroy]
-  before_filter :find_product, :only => [:new, :create, :edit, :destroy]
+  before_filter :find_provider, :only => [:new, :create, :edit, :destroy, :update_gpg_key]
+  before_filter :find_product, :only => [:new, :create, :edit, :destroy, :update_gpg_key]
   before_filter :authorize
-  before_filter :find_repository, :only => [:edit, :destroy, :enable_repo]
+  before_filter :find_repository, :only => [:edit, :destroy, :enable_repo, :update_gpg_key]
 
   def rules
     read_test = lambda{@product.readable?}
@@ -29,7 +29,7 @@ class RepositoriesController < ApplicationController
       :new => edit_test,
       :create => edit_test,
       :edit =>read_test,
-      :update => edit_test,
+      :update_gpg_key => edit_test,
       :destroy => edit_test,
       :enable_repo => org_edit
     }
@@ -51,9 +51,10 @@ class RepositoriesController < ApplicationController
     begin
       repo_params = params[:repo]
       raise _('Invalid Url') if !kurl_valid?(repo_params[:feed])
+      gpg = GpgKey.readable(current_organization).find(repo_params[:gpg_key]) if repo_params[:gpg_key]
       # Bundle these into one call, perhaps move to Provider
       # Also fix the hard coded yum
-      @product.add_repo(repo_params[:name], repo_params[:feed], 'yum')
+      @product.add_repo(repo_params[:name], repo_params[:feed], 'yum', gpg)
       @product.save
 
     rescue Exception => error
@@ -65,7 +66,18 @@ class RepositoriesController < ApplicationController
     render :json => ""
   end
 
-  def update
+  def update_gpg_key
+    begin
+      gpg = GpgKey.readable(current_organization).find(params[:gpg_key]) if params[:gpg_key]
+      @repository.gpg_key = gpg
+      @repository.save!
+      notice _("Repository '#{@repository.name}' updated.")
+    rescue Exception => error
+      Rails.logger.error error.to_s
+      errors error
+      render :text=> error.to_s, :status=>:bad_request and return
+    end
+    render :json => ""
   end
 
   def enable_repo
