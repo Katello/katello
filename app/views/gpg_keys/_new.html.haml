@@ -8,7 +8,23 @@
         .grid_2.ra
           %label #{_("Name")}:
         .grid_7.la
-          = text_field_tag 'gpg_key[name]', params[:name], :size => "42", :tabindex => auto_tab_index
-
-      .grid_9.ra
-        = button_to _("Save"), {:action => "create", :controller => "gpg_keys"}, :method => :post, :id => :save_key, :tabindex => auto_tab_index
+          = text_field_tag 'gpg_key[name]', '', :size => "50", :tabindex => auto_tab_index
+      %fieldset
+        .grid_2.ra
+          %label #{_("Paste GPG Key")}:
+        .grid_7.la
+          = text_area_tag 'gpg_key[content]', '', :id=> "gpg_key_content", :size => "40x10", :tabindex => auto_tab_index
+      %fieldset
+        .grid_2.ra
+          %label #{_("or")}
+      %fieldset
+        .grid_2.ra
+          %label #{_("Upload")}:
+        .grid_3.la
+          = file_field_tag 'gpg_key[content_upload]', :id => "gpg_key_content_upload", :tabindex => auto_tab_index
+        .grid_2.la
+          %button#cancel_upload_button{ :type => "button", :disabled => "disabled" }
+            = _("Cancel")
+      %fieldset
+        .grid_2.la.push_2
+          = button_to _("Save"), {:action => "create", :controller => "gpg_keys"}, :method => :post, :id => :save_key, :tabindex => auto_tab_index
