@@ -12,6 +12,21 @@
 */
 
 $(document).ready(function(){
+    var common_settings = {
+        method          :  'PUT',
+        cancel          :  i18n.cancel,
+        submit          :  i18n.save,
+        indicator       :  i18n.saving,
+        tooltip         :  i18n.clickToEdit,
+        placeholder     :  i18n.clickToEdit,
+        submitdata      :  $.extend({ authenticity_token: AUTH_TOKEN }, KT.common.getSearchParams()),
+        onerror         :  function(settings, original, xhr) {
+            original.reset();
+            $("#notification").replaceWith(xhr.responseText);
+            notices.checkNotices();
+        }
+    };
+    
     $('.gpg_ajaxfileupload').editable($(this).attr('url'), {
         type        :  'ajaxupload',
         method      :  'PUT',
@@ -31,4 +46,27 @@ $(document).ready(function(){
         }
     });
     
+	$('.edit_textarea').each(function() {
+        var settings = { 
+                type            :  'textarea',
+                name            :  $(this).attr('name'),
+                height			:  '300',
+                width			:  $(this).width() - 20
+        }; 
+        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings)); 
+    });
+    
+    $('.edit_panel_element').each(function() {
+        var settings = {
+            type        :  'text',
+            width       :  270,
+            name        :  $(this).attr('name'),
+            onsuccess   :  function(result, status, xhr) {
+                var id = $('#panel_element_id');
+                KT.panel.list.refresh(id.attr('value'), id.attr('data-ajax_url'));
+            }
+        };
+        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
+    });
+
 });
