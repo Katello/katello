@@ -33,6 +33,13 @@ $(document).ready(function() {
     $('#select_none').click(KT.content.select_none);
     $("input[name='repoids[]']:checkbox").click(KT.content.select_repo);
 
+    // no submit sync if disabled
+    $('#sync_button').click('click', function(){
+        var button = $(this);
+        if(button.hasClass("disabled")){return false;}
+     });
+
+
     $("#products_table").delegate(".cancel_sync", "click", function(){
         var repo_id = $(this).parents("tr").attr("data-id");
         KT.content_actions.cancelSync(repo_id, $(this));
