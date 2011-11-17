@@ -334,6 +334,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Nov 17 2011 Shannon Hughes <shughes@redhat.com> 0.1.109-2
+- system engine build 109 (shughes@redhat.com)
 * Thu Nov 17 2011 Shannon Hughes <shughes@redhat.com> 0.1.109-1
 - fix sync disabled submit button to not sync when disabled
   (shughes@redhat.com)
