@@ -16,8 +16,8 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.107
-Release:        2%{?dist}
+Version:        0.1.109
+Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
 Group:          Applications/Internet
@@ -334,49 +334,16 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
-* Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.107-2
-- Merge remote-tracking branch 'katello/master' into branding
+* Thu Nov 17 2011 Shannon Hughes <shughes@redhat.com> 0.1.109-1
+- fix sync disabled submit button to not sync when disabled
   (shughes@redhat.com)
-- rely on redhat-logos for rh-logo image (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.106-2].
-  (shughes@redhat.com)
-- Minor change to letter spacing. (jrist@redhat.com)
-- build for system-engine (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Rename of look.scss to _look.scss for branding. (jrist@redhat.com)
-- Application helper for katello title. (jrist@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.103-2].
-  (shughes@redhat.com)
-- build bump release (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.102-2].
-  (shughes@redhat.com)
-- bump release for build (shughes@redhat.com)
-- sync up spec with katello (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.101-2].
-  (shughes@redhat.com)
-- bump release (shughes@redhat.com)
-- fix rpm macro syntax (shughes@redhat.com)
-- move branding processing (shughes@redhat.com)
-- remove sprites from branding (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Removing katello.scss to limit overrides.  Added look.scss to make it
-  simpler. (jrist@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
+- 754215 - Small temporary fix for max height on CS Trees. (jrist@redhat.com)
+
+* Wed Nov 16 2011 shughes@redhat.com
+- Pie chart updates now functions with actual data. (jrist@redhat.com)
+- Fix for pie chart on dashboard page. (jrist@redhat.com)
+- Fixed a permission check to only load syncplans belonging to a specific org
+  as opposed to syncplnas belongign to all org (paji@redhat.com)
 
 * Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.107-1
 - Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
