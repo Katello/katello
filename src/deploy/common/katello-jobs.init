@@ -25,6 +25,9 @@ KATELLO_PID=$KATELLO_HOME/tmp/pids/delayed_job*monitor.pid
 KATELLO_PIDS_ALL=$KATELLO_HOME/tmp/pids/delayed_job*.pid
 export RAILS_ENV=$KATELLO_ENV
 
+KATELLO_PREFIX=${KATELLO_PREFIX:-/katello}
+export RAILS_RELATIVE_URL_ROOT=$KATELLO_PREFIX
+
 status() {
     #check if pid file exists
     pidfile=`ls ${KATELLO_PID} 2>/dev/null | head -n1`

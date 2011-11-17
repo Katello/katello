@@ -96,11 +96,12 @@ KT.user_page = function() {
             button.addClass('disabled');
             var username = $('#username_field').val();
             var password = $('#password_field').val();
+            var email = $('#email_field').val();
             var env_id = $(".path_link.active").attr('data-env_id');
             $.ajax({
                 type: "POST",
                 url: button.attr('data-url'),
-                data: { "user":{"username":username, "password":password, "env_id":env_id }},
+                data: { "user":{"username":username, "password":password, "email":email, "env_id":env_id }},
                 cache: false,
                 success: function(data) {
                     button.removeClass('disabled');

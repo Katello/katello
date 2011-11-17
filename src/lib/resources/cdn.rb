@@ -31,6 +31,7 @@ module CDN
 
   class CdnResource
     attr_reader :url
+    attr_accessor :proxy_host, :proxy_port, :proxy_user, :proxy_password
 
     def initialize url, options = {}
       options.reverse_merge!(:verify_ssl => 9)
@@ -38,15 +39,85 @@ module CDN
       if options[:ssl_client_cert]
         options.reverse_merge!(:ssl_ca_file => CdnResource.ca_file)
       end
-      @resource = RestClient::Resource.new url, options
+      load_proxy_settings
+
+      @uri = URI.parse(url)
+      @net = net_http_class.new(@uri.host, @uri.port)
+      @net.use_ssl = @uri.is_a?(URI::HTTPS)
+
+      @net.cert = options[:ssl_client_cert]
+      @net.key = options[:ssl_client_key]
+      @net.ca_file = options[:ssl_ca_file]
+
+      if (options[:verify_ssl] == false) || (options[:verify_ssl] == OpenSSL::SSL::VERIFY_NONE)
+        @net.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      elsif options[:verify_ssl].is_a? Integer
+        @net.verify_mode = options[:verify_ssl]
+        @net.verify_callback = lambda do |preverify_ok, ssl_context|
+          if (!preverify_ok) || ssl_context.error != 0
+            err_msg = "SSL Verification failed -- Preverify: #{preverify_ok}, Error: #{ssl_context.error_string} (#{ssl_context.error})"
+            raise RestClient::SSLCertificateNotVerified.new(err_msg)
+          end
+          true
+        end
+      end
     end
 
     def get(path, headers={})
-      @resource[path].get headers
+      path = File.join(@uri.request_uri,path)
+      Rails.logger.debug "CDN: Requesting path #{path}"
+      req = Net::HTTP::Get.new(path)
+      begin
+        @net.start do |http|
+          res = http.request(req, nil) { |http_response| http_response.read_body }
+          code = res.code.to_i
+          if code == 200
+            return res.body
+          else
+            # we don't really use RestClient here (it doesn't allow to safely
+            # set the proxy only for a set of requests and we don't want the
+            # backend engines communication to go through the same proxy like
+            # accessing CDN - its another use case)
+            # But RestClient exceptions are really nice and can be handled in
+            # the same way
+            exception_class = RestClient::Exceptions::EXCEPTIONS_MAP[code] || RestClient::RequestFailed
+            raise exception_class.new(nil, code)
+          end
+        end
+      rescue EOFError
+        raise RestClient::ServerBrokeConnection
+      rescue Timeout::Error
+        raise RestClient::RequestTimeout
+      end
     end
 
     def self.ca_file
       "#{Rails.root}/ca/redhat-uep.pem"
+    end
+
+    def net_http_class
+      if proxy_host
+        Net::HTTP::Proxy(proxy_host, proxy_port, proxy_user, proxy_password)
+      else
+        Net::HTTP
+      end
+    end
+
+    def load_proxy_settings
+      if AppConfig.cdn_proxy && AppConfig.cdn_proxy.host
+        self.proxy_host = parse_host(AppConfig.cdn_proxy.host)
+        self.proxy_port = AppConfig.cdn_proxy.port
+        self.proxy_user = AppConfig.cdn_proxy.user
+        self.proxy_password = AppConfig.cdn_proxy.password
+      end
+    rescue Exception => e
+      Rails.logger.error "Could not parse cdn_proxy:"
+      Rails.logger.error e.to_s
+    end
+
+    def parse_host(host_or_url)
+      uri = URI.parse(host_or_url)
+      return uri.host || uri.path
     end
 
  end

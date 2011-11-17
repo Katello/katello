@@ -60,9 +60,15 @@ class SystemTemplatesController < ApplicationController
 
     package_groups = current_organization.locker.package_groups.collect{|grp| grp[:name]}.sort
 
+    distro_map = {}
+    @products.each{|prod|
+      distro_map[prod.id] = prod.distributions(current_organization.locker)
+    }
+
+
     retain_search_history
     render :index, :locals=>{:editable=>SystemTemplate.manageable?(current_organization),
-                             :product_hash => product_hash, :package_groups => package_groups}
+                             :product_hash => product_hash, :package_groups => package_groups, :distro_map=>distro_map}
   end
   
   def items
@@ -88,14 +94,15 @@ class SystemTemplatesController < ApplicationController
   def object
     pkgs = @template.packages.collect{|pkg| {:name=>pkg.package_name}}
     products = @template.products.collect{|prod| {:name=>prod.name, :id=>prod.id}}
-
-    # Collect up the environments for all templates with this name
-    # TODO: Figure out user perms on templates, not sure why we dont have org on template
-    @templates = SystemTemplate.where(:name => @template.name)
+    distro = @template.distributions.empty? ? nil : @template.distributions.first.distribution_pulp_id
+    # Collect up the environments for all templates with this name 
+    @templates = SystemTemplate.where(:name => @template.name).joins(:environment).
+        where("environments.organization_id =  :org_id", :org_id=>current_organization.id)
     environments = @templates.collect{|template| {:name=>template.environment.name, :id=>template.environment.id}}
     groups = @template.package_groups.collect{|grp| {:name=>grp.name}}
     to_ret = {:id=> @template.id, :name=>@template.name, :description=>@template.description,
-              :packages=>pkgs, :products=>products, :package_groups=>groups, :environments => environments}
+              :packages=>pkgs, :products=>products, :package_groups=>groups, :environments => environments,
+              :distribution=>distro}
     render :json=>to_ret
   end
 
@@ -146,6 +153,7 @@ class SystemTemplatesController < ApplicationController
     pkgs = params[:packages]
     products = params[:products]
     pkg_groups = params[:package_groups]
+    distro = params[:distribution]
 
     @template.packages.delete_all
     pkgs.each{|pkg|
@@ -161,6 +169,12 @@ class SystemTemplatesController < ApplicationController
     pkg_groups.each{|grp|
       @template.add_package_group(grp[:name])
     }
+
+    if !distro.nil?
+      @template.distributions = []
+      @template.add_distribution(distro)
+    end
+    distro_check @template
 
     @template.save!
     notice _("Template #{@template.name} has been updated successfully")
@@ -238,6 +252,25 @@ class SystemTemplatesController < ApplicationController
   end
   
   protected
+
+  #verifies that the distro is in one of the templates products and gives a warning otherwise
+  def distro_check template
+    dist = template.distributions.first
+    if !dist.nil?
+      template.products.each{|prod|
+        prod.distributions(current_organization.locker).each{|to_check|
+          return if dist.distribution_pulp_id == to_check.id
+        }
+      }
+      #not found
+      template.distributions = []
+      notice _("Template '#{@template.name}' has been updated successfully, however you have removed a product that "+
+                   "contained the selected distribution for this template.  " +
+                   "Please select another distribution to ensure a working system template."), :level=>:warning
+
+
+    end
+  end
 
   def find_read_only_template
     @template = SystemTemplate.find(params[:id])

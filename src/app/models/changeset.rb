@@ -24,7 +24,8 @@ class Changeset < ActiveRecord::Base
   REVIEW = 'review'
   PROMOTED = 'promoted'
   PROMOTING = 'promoting'
-  STATES = [NEW, REVIEW, PROMOTING, PROMOTED]
+  FAILED = 'failed'
+  STATES = [NEW, REVIEW, PROMOTING, PROMOTED, FAILED]
 
 
   validates_inclusion_of :state,
@@ -111,8 +112,6 @@ class Changeset < ActiveRecord::Base
     raise _("Cannot promote the changeset '#{self.name}' while another changeset (#{self.environment.promoting.first.name}) is being promoted.") if self.environment.promoting_to?
 
     if async
-      self.state = Changeset::PROMOTING
-      self.save!
       task = self.async(:organization=>self.environment.organization).promote_content
       self.task_status = task
       self.save!
@@ -282,6 +281,9 @@ class Changeset < ActiveRecord::Base
 
 
   def promote_content
+    self.state = Changeset::PROMOTING
+    self.save!
+
     update_progress! '0'
     self.calc_and_save_dependencies
 
@@ -305,6 +307,12 @@ class Changeset < ActiveRecord::Base
     self.promotion_date = Time.now
     self.state = Changeset::PROMOTED
     self.save!
+
+  rescue Exception => e
+    self.state = Changeset::FAILED
+    self.save!
+
+    raise e
   end
 
 

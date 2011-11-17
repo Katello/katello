@@ -42,12 +42,17 @@ module Glue::Candlepin::Product
 
     valid_name = attrs['name'].gsub(/[^a-z0-9\-_ ]/i,"")
     attrs = attrs.merge('name' => valid_name)
+
+    # orchestration has 2 phases:
+    # 1) create the product and environment_product active records
+    # 2) create repositories and delete content in the locker
     product = Product.new(attrs, &block)
+    product.orchestration_for = :import_from_cp_ar_setup
+    product.save!
     product.productContent_will_change!
     product.productContent = product.build_productContent(productContent_attrs)
     product.orchestration_for = :import_from_cp
     product.save!
-    product.setup_repos
 
   rescue => e
     Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
@@ -206,7 +211,7 @@ module Glue::Candlepin::Product
       return true unless productContent_changed?
 
       added_content.each do |pc|
-        Rails.logger.debug "deleting imported content #{pc.content.id} from Locker environment"
+        Rails.logger.debug "removing imported content #{pc.content.id} from product #{name}"
         Candlepin::Product.remove_content cp_id, pc.content.id
       end
     end
@@ -255,6 +260,8 @@ module Glue::Candlepin::Product
         when :create
           queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
           queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
+        when :import_from_cp
+          queue.create(:name => "delete imported content from locker environment: #{self.name}", :priority => 2, :action => [self, :remove_imported_content])
         when :update
           #called when sync schedule changed, repo added, repo deleted
           queue.create(:name => "update content in candlein: #{self.name}", :priority => 1, :action => [self, :update_content])

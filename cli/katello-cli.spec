@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.11
+Version:       0.1.13
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,6 +84,22 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.13-1
+- 
+
+* Tue Nov 15 2011 Shannon Hughes <shughes@redhat.com> 0.1.12-1
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- cli - removed unused 'flag' argument from a method 'Command#require_option'
+  (tstrachota@redhat.com)
+- cli - parameter flag determined automatically for required arguments It is no
+  longer necessary to pass both expected destination and flag string to the
+  'require_option' method when those two are different. (tstrachota@redhat.com)
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- Merge branch 'master' into password_reset (bbuckingham@redhat.com)
+- cli - add email address to 'user' as a required attribute
+  (bbuckingham@redhat.com)
+
 * Thu Nov 10 2011 Shannon Hughes <shughes@redhat.com> 0.1.11-1
 - moving system tests into /scripts (lzap+git@redhat.com)
 - cli - code reindentation & pep8 fixes (tstrachota@redhat.com)

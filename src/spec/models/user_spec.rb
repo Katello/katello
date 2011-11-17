@@ -17,11 +17,13 @@ describe User do
 
   USERNAME = "testuser"
   PASSWORD = "password1234"
+  EMAIL = "testuser@somewhere.com"
 
   let(:to_create_simple) do
     {
       :username => USERNAME,
-      :password => PASSWORD
+      :password => PASSWORD,
+      :email => EMAIL
     }
   end
 

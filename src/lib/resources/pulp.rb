@@ -141,7 +141,9 @@ module Pulp
 
     class << self
       def find dist_id
-        response = get(dist_path + dist_id + "/", self.default_headers)
+        # distribution ids may contain spaces; however, pulp expects them to be encoded as %20, so
+        # use URI::escape to convert any spaces
+        response = get(dist_path + URI::escape(dist_id) + "/", self.default_headers)
         JSON.parse(response.body).with_indifferent_access
       end
 
@@ -229,6 +231,8 @@ module Pulp
       end
 
       def sync (repo_id, data = {})
+        data[:limit] ||= AppConfig.pulp.sync_KBlimit if AppConfig.pulp.sync_KBlimit # set bandwidth limit
+        data[:threads] ||= AppConfig.pulp.sync_threads if AppConfig.pulp.sync_threads # set threads per sync
         path = Repository.repository_path + repo_id + "/sync/"
         response = post(path, JSON.generate(data), self.default_headers)
         JSON.parse(response.body).with_indifferent_access
@@ -236,7 +240,7 @@ module Pulp
 
       def sync_history repo_id
         begin
-          response = get(Repository.repository_path + repo_id + "/sync/", self.default_headers)
+          response = get(Repository.repository_path + repo_id + "/history/sync/", self.default_headers)
           json_history = JSON.parse(response.body)
           json_history.collect {|jh| jh.with_indifferent_access }
         rescue RestClient::ResourceNotFound => error
@@ -252,10 +256,12 @@ module Pulp
         JSON.parse(response.body).with_indifferent_access
       end
 
-      def sync_status(repo_id, sync_id)
-        path = Repository.repository_path + repo_id + "/sync/" + sync_id + "/"
+      def sync_status(repo_id)
+        path = Repository.repository_path + repo_id + "/sync/"
         response = get(path, self.default_headers)
-        JSON.parse(response.body).with_indifferent_access
+        parsed = JSON.parse(response.body)
+        return parsed if parsed.empty?
+        return parsed.first.with_indifferent_access
       end
 
       def destroy repo_id

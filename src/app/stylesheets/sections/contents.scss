@@ -163,11 +163,10 @@
     background: $rh_product_icon;
   }
   .progress {
-    position: absolute;
-    display: block;
     height: 16px;
-    display: block !important;
+    display: inline-block !important;
     left: 0;
+    margin-right: 4px;
     width: 100px;
   }
   .cancel {
@@ -234,6 +233,16 @@
           width: 0;
           z-index: 220;
         }
+      }
+    }
+  }
+
+
+  #system_templates{
+    .slider {
+      label {
+        font-weight: normal;
+        color: $text_color;
       }
     }
   }
@@ -396,6 +405,17 @@
     }
   }
 
+
+  //Sync management page
+  #products_table {
+    .expander{
+      margin-right: 4px;
+    }
+    label {
+      font-weight: normal;
+      color: $text_color;
+    }
+  }
 }
 
 .cs_content {
@@ -406,4 +426,8 @@
 
 #upload_button {
     margin-top: 14px;
+}
+
+.ui-tabs-panel {
+    min-height: 300px;
 }

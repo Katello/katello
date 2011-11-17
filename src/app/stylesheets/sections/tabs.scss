@@ -5,6 +5,18 @@
 @import "colors";
 @import "sprites";
 
+/* override some of the jQuery UI stuff */
+.ui-widget-header {
+    font-family: $headlinefont;
+    border: 0 none;
+}
+.ui-widget-content {
+    border: 0 none;
+    table {
+         border: 1px solid $stroke_color !important;
+    }
+}
+
 .ui-tabs {
   padding: 0px;
   .ui-tabs-nav {
@@ -16,12 +28,13 @@
       margin: 0px;
       width: 100%;
     }
+    border: 1px solid $border_color;
   }
   .ui-tabs-selected a {
     cursor: pointer;
     text-transform: none;
     text-decoration: none;
-    @include text-shadow($white_color,0,1px,0);
+    @include _text-shadow($white_color,0,1px,0);
     display: block;
     margin: 0;
     float: left;
@@ -32,7 +45,7 @@
     cursor: pointer;
     text-transform: none;
     text-decoration: none;
-    @include text-shadow($white_color,0,1px,0);
+    @include _text-shadow($white_color,0,1px,0);
     display: block;
     margin: 0;
     padding: 8px 16px 6px;

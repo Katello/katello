@@ -46,7 +46,7 @@ class OrganizationsController < ApplicationController
   end
 
   def items
-    render_panel_items(Organization.readable.order('lower(name)'), @panel_options, params[:search], params[:offset])
+    render_panel_items(Organization.readable.order('lower(organizations.name)'), @panel_options, params[:search], params[:offset])
   end
 
   def new
@@ -55,14 +55,21 @@ class OrganizationsController < ApplicationController
 
   def create
     begin
-      @new_env = KTEnvironment.new(:name => params[:envname], :description => params[:envdescription])
+      if params[:envname] && params[:envname] != ''
+        @new_env = KTEnvironment.new(:name => params[:envname], :description => params[:envdescription])
+      else
+        @new_env = nil
+      end
+
       @organization = Organization.new(:name => params[:name], :description => params[:description], :cp_key => params[:name].tr(' ', '_'))
       @organization.save!
-      @new_env.organization = @organization
-      @new_env.prior = @organization.locker
-      @new_env.save!
+      
+      if @new_env
+        @new_env.organization = @organization
+        @new_env.prior = @organization.locker
+        @new_env.save!
+      end
       notice [_("Organization '#{@organization["name"]}' was created.")]
-        # TODO: example - create permission for the organization
     rescue Exception => error
       errors(error, {:include_class_name => KTEnvironment::ERROR_CLASS_NAME})
       Rails.logger.info error.backtrace.join("\n")

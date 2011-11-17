@@ -47,7 +47,7 @@
       .sys_count {
         font-size: 220%;
         font-weight: bold;
-        text-shadow: 0px 1px 0px #ffffff;
+        @include _text-shadow(#FFF,0,1px,0px);
         margin-left: 20px;
       }
       #sub_graph {
@@ -63,7 +63,7 @@
         display: inline;
         font-size: 115%;
       }
-      .left {
+      .left_side {
         width: 300px;
         display: inline-block;
 
@@ -79,12 +79,13 @@
         .yellow_icon {background: $status_icons_yellow_small;}
         .green_icon {background: $status_icons_green_small;}
       }
-      .right {
+      .right_side {
         width: 150px;
         display: inline-block;
         position: relative;
         margin-right: 10px;
         margin-top: -20px;
+        float: right;
         #overlay {
             background: url("../../../images/chart_overlay.png") no-repeat;
             height: 130px;

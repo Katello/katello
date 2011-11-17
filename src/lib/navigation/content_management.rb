@@ -206,13 +206,13 @@ module Navigation
       [
         { :key => :details,
           :name =>N_("Details"),
-          :url => lambda{distribution_path(@distribution.id)},
+          :url => lambda{distribution_path(URI::escape(@distribution.id))},
           :if => lambda{@distribution},
           :options => {:class=>"navigation_element"}
         },
         { :key => :filelist,
           :name =>N_("Filelist"),
-          :url => lambda{filelist_distribution_path(@distribution.id)},
+          :url => lambda{filelist_distribution_path(URI::escape(@distribution.id))},
           :if => lambda{@distribution},
           :options => {:class=>"navigation_element"}
         }

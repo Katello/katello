@@ -17,7 +17,7 @@ FEWUPS_REPO="repo_$RAND"
 FILTER1="filter_$RAND"
 
 # BASIC RESOURCES (reused in tests)
-test_success "user create" user create --username=$TEST_USER --password=password
+test_success "user create" user create --username=$TEST_USER --password=password --email=$TEST_USER@somewhere.com
 test_success "org create" org create --name=$TEST_ORG --description="org description"
 test_success "environment create" environment create --org="$TEST_ORG" --name="$TEST_ENV" --prior="Locker"
 test_success "environment create" environment create --org="$TEST_ORG" --name="$TEST_ENV_3" --prior="$TEST_ENV"
