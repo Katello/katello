@@ -132,6 +132,7 @@ class Provider < ActiveRecord::Base
   scope :editable, lambda {|org| items(org, EDIT_PERM_VERBS)}
 
   def readable?
+    return organization.readable? if redhat_provider?
     User.allowed_to?(READ_PERM_VERBS, :providers, self.id, self.organization) || self.organization.syncable?
   end
 
@@ -145,10 +146,12 @@ class Provider < ActiveRecord::Base
   end
 
   def editable?
+    return organization.editable? if redhat_provider?
     User.allowed_to?([:update, :create], :providers, self.id, self.organization)
   end
 
   def deletable?
+    return false if redhat_provider?
     User.allowed_to?([:delete, :create], :providers, self.id, self.organization)
   end
 

@@ -69,11 +69,8 @@ class UsersController < ApplicationController
   
   def new
     @user = User.new
-    @organization = current_organization
-    accessible_envs = current_organization.environments
-    setup_environment_selector(current_organization, accessible_envs)
-    @environment = first_env_in_path(accessible_envs)
-    render :partial=>"new", :layout => "tupane_layout", :locals=>{:user=>@user, :accessible_envs => accessible_envs}
+    @organization = nil
+    render :partial=>"new", :layout => "tupane_layout", :locals=>{:user=>@user, :accessible_envs => nil}
   end
 
   def create
@@ -81,15 +78,22 @@ class UsersController < ApplicationController
       # Pulp quietly ignored unkonwn attributes; Headpin needs to remove
       env_id = params[:user].delete(:env_id)
       @user = User.new(params[:user])
-      @environment = KTEnvironment.find(env_id)
-      @organization = @environment.organization
-      @user.save!
-      perm = Permission.create! :role => @user.own_role,
-                         :resource_type=> ResourceType.find_or_create_by_name("environments"),
-                         :verbs=>[Verb.find_or_create_by_verb("register_systems")],
-                         :name=>"default systems reg permission",
-                         :organization=> @organization
-      PermissionTag.create!(:permission_id => perm.id, :tag_id => @environment.id)
+      env_id = params[:user]['env_id']
+      if env_id
+        @environment = KTEnvironment.find(env_id)
+        @organization = @environment.organization
+        @user.save!
+        perm = Permission.create! :role => @user.own_role,
+                           :resource_type=> ResourceType.find_or_create_by_name("environments"),
+                           :verbs=>[Verb.find_or_create_by_verb("register_systems")],
+                           :name=>"default systems reg permission",
+                           :organization=> @organization
+        PermissionTag.create!(:permission_id => perm.id, :tag_id => @environment.id)
+      else
+        @user.save!
+        @environment = nil
+        @organization = nil
+      end
 
       notice @user.username + _(" created successfully.")
       if User.where(:id => @user.id).search_for(params[:search]).include?(@user)
@@ -120,7 +124,7 @@ class UsersController < ApplicationController
       if not User.where(:id => @user.id).search_for(params[:search]).include?(@user)
         notice _("'#{@user["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
       end
-      
+
       render :text => attr and return
     end
     errors "", {:list_items => @user.errors.to_a}
@@ -133,12 +137,12 @@ class UsersController < ApplicationController
       @environment = @user.default_environment
       @old_env = @environment
       @organization = Organization.find(@environment.attributes['organization_id'])
+      accessible_envs = KTEnvironment.systems_registerable(@organization)
+      setup_environment_selector(@organization, accessible_envs)
     else
-      @organization = current_organization
+      @organization = nil
+      accessible_envs = nil
     end
-    accessible_envs = KTEnvironment.systems_registerable(@organization)
-    setup_environment_selector(@organization, accessible_envs)
-    #@environment = first_env_in_path(accessible_envs, false, @organization)
 
     render :partial=>"edit_environment", :layout => "tupane_layout", :locals=>{:user=>@user,
                                                                    :editable=>@user.editable?,
@@ -148,31 +152,41 @@ class UsersController < ApplicationController
 
   def update_environment
     begin
-
-      new_env =  params["env_id"]["env_id"].to_i
+      new_env = params['env_id'] ? params['env_id']['env_id'].to_i : nil
       if @user.has_default_env?
         old_perm = Permission.find_all_by_role_id(@user.own_role.id)[0]
         old_env = old_perm.tags[0].tag_id
+      else
+        old_env = nil
       end
-      if (old_perm.nil? || (old_env != new_env))
+      #if (old_perm.nil? || (old_env != new_env))
+      if ((old_env != nil || new_env != nil) && old_env != new_env)
         #First delete the old role if it is not equal to the old one
         old_perm.destroy if @user.has_default_env?
 
-        @environment = KTEnvironment.find(new_env)
-        @organization = @environment.organization
+        if new_env
+          @environment = KTEnvironment.find(new_env)
+          @organization = @environment.organization
 
-        #Second create a new one with the newly selected env
-        perm = Permission.create! :role => @user.own_role,
-                     :resource_type=> ResourceType.find_or_create_by_name("environments"),
-                     :verbs=>[Verb.find_or_create_by_verb("register_systems")],
-                     :name=>"default systems reg permission",
-                     :organization=> @organization
-        PermissionTag.create!(:permission_id => perm.id, :tag_id => new_env)
+          #Second create a new one with the newly selected env
+          perm = Permission.create! :role => @user.own_role,
+                       :resource_type=> ResourceType.find_or_create_by_name("environments"),
+                       :verbs=>[Verb.find_or_create_by_verb("register_systems")],
+                       :name=>"default systems reg permission",
+                       :organization=> @organization
+          PermissionTag.create!(:permission_id => perm.id, :tag_id => new_env)
+        else
+          @old_env = nil
+          @environment = nil
+          @organization = nil
+        end
 
         notice _("User environment updated successfully.")
-        #attr = params[:user].first.last if params[:user].first
-        #attr ||= ""
-        render :json => {:org => @organization.name, :env => @environment.name} and return
+
+        if @organization && @environment
+          render :json => {:org => @organization.name, :env => @environment.name} and return
+        end
+        render :json => {:org => _("No default set for this user."), :env => _("No default set for this user.")} and return
       else
         err_msg = N_("The default you supplied was the same as the old default.")
         errors err_msg

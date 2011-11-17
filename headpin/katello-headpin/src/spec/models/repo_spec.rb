@@ -199,12 +199,18 @@ describe Glue::Pulp::Repo, :katello => true do
     context "cancelling" do
 
       it "should call Pulp's cancel api if the sync history is not empty" do
+        Pulp::Repository.stub(:sync_status) do
+          raise
+        end
         Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return(RepoTestData::SUCCESSFULL_SYNC_HISTORY)
         Pulp::Repository.should_receive(:cancel)
         @repo.cancel_sync
       end
 
       it "should call Pulp's cancel api if the sync history is empty" do
+        Pulp::Repository.stub(:sync_status) do
+          raise
+        end
         Pulp::Repository.stub(:sync_history).with(RepoTestData::REPO_ID).and_return([])
         Pulp::Repository.should_not_receive(:cancel)
         @repo.cancel_sync

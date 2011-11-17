@@ -30,6 +30,8 @@ class User < ActiveRecord::Base
   has_many :search_histories, :dependent => :destroy
 
   validates :username, :uniqueness => true, :presence => true, :username => true, :length => { :maximum => 255 }
+  validates_presence_of :email
+
   validate :own_role_included_in_roles
 
   # check if the role does not already exist for new username
@@ -38,7 +40,6 @@ class User < ActiveRecord::Base
       model.errors.add(:username, "role with the same name '#{value}' already exists")
     end
   end
-
 
   scoped_search :on => :username, :complete_value => true, :rename => :name
   scoped_search :in => :roles, :on => :name, :complete_value => true, :rename => :role
@@ -358,6 +359,15 @@ class User < ActiveRecord::Base
     User.allowed_to?([:delete], :users, nil)
   end
 
+  def send_password_reset
+    # generate a random password reset token that will be valid for only a configurable period of time
+    generate_token(:password_reset_token)
+    self.password_reset_sent_at = Time.zone.now
+    save!
+
+    UserMailer.send_password_reset(self)
+  end
+
   def has_default_env?
     #the own_role is used exclusively for storing a perm with a tag that tells the default env
     if !self.own_role
@@ -412,6 +422,13 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  # generate a random token, that is unique within the User table for the column provided
+  def generate_token(column)
+    begin
+      self[column] = SecureRandom.hex(32)
+    end while User.exists?(column => self[column])
+  end
 
   def allowed_tags_query(verbs, resource_type,  org = nil, allowed_to_check = true)
     ResourceType.check resource_type, verbs
