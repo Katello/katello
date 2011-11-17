@@ -87,44 +87,32 @@ class GpgKeysController < ApplicationController
     render :text => error, :status => :bad_request
   end
 
-=begin
   def update
-    result = params[:activation_key].nil? ? "" : params[:activation_key].values.first
+    gpg_key_params = params[:gpg_key]
+    
+    if params[:gpg_key].has_key?("content_upload") and not params[:gpg_key].has_key?("content")
+      gpg_key_params['content'] = params[:gpg_key][:content_upload].read
+      gpg_key_params.delete('content_upload')
+    end
+    
+    @gpg_key.update_attributes!(gpg_key_params)
 
-    begin
-      unless params[:activation_key][:description].nil?
-        result = params[:activation_key][:description] = params[:activation_key][:description].gsub("\n",'')
-      end
+    notice _("GPG Key '#{@gpg_key["name"]}' was updated.")
+    
+    if not GpgKey.where(:id => @gpg_key.id).search_for(params[:search]).include?(@gpg_key)
+      notice _("'#{@gpg_key["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
+    end
 
-      if !params[:activation_key][:system_template_id].nil? and params[:activation_key][:system_template_id].blank?
-        params[:activation_key][:system_template_id] = nil
-      end
+    render :json => gpg_key_params.to_json
 
-      @activation_key.update_attributes!(params[:activation_key])
+  rescue Exception => error
+    errors error
 
-      notice _("Activation key '#{@activation_key["name"]}' was updated.")
-
-      unless params[:activation_key][:system_template_id].nil? or params[:activation_key][:system_template_id].blank?
-        # template is being updated.. so return template name vs id...
-        system_template = SystemTemplate.find(@activation_key.system_template_id)
-        result = system_template.name
-      end
-
-      if not ActivationKey.where(:id => @activation_key.id).search_for(params[:search]).include?(@activation_key)
-        notice _("'#{@activation_key["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
-      end
-
-      render :text => escape_html(result)
-
-    rescue Exception => error
-      errors error
-
-      respond_to do |format|
-        format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
-      end
+    respond_to do |format|
+      format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
     end
   end
-=end
+
   def destroy
     begin
       @gpg_key.destroy
