@@ -103,7 +103,7 @@ class GpgKeysController < ApplicationController
       notice _("'#{@gpg_key["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
     end
 
-    render :json => gpg_key_params.to_json
+    render :text => escape_html(gpg_key_params.values.first)
 
   rescue Exception => error
     errors error
