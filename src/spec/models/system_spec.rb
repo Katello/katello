@@ -68,7 +68,7 @@ describe System do
 
   it "registers system in candlepin and pulp on create" do
     Candlepin::Consumer.should_receive(:create).once.with(@organization.name, system_name, cp_type, facts, installed_products).and_return({:uuid => uuid, :owner => {:key => uuid}})
-    Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}}) if AppConfig.katello?
     @system.save!
   end
 
