@@ -46,7 +46,7 @@ class ProductsController < ApplicationController
   def create
     begin
       product_params = params[:product]
-      gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key])
+      gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] 
       @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url], gpg)
       notice _("Product '#{product_params[:name]}' created.")
     rescue Exception => error

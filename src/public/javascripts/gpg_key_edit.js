@@ -10,3 +10,25 @@
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
+
+$(document).ready(function(){
+    $('.gpg_ajaxfileupload').editable($(this).attr('url'), {
+        type        :  'ajaxupload',
+        method      :  'PUT',
+        name        :  $(this).attr('name'),
+        cancel      :  i18n.cancel,
+        submit      :  i18n.upload,
+        indicator   :  i18n.uploading,
+        tooltip     :  i18n.clickToEdit,
+        placeholder :  i18n.clickToEdit,
+        submitdata  :  {authenticity_token: AUTH_TOKEN},
+        onsuccess	:  function(result, status, xhr){
+        	
+        },
+        onerror     :  function(settings, original, xhr) {
+        	original.reset();
+            $("#notification").replaceWith(xhr.responseText);
+        }
+    });
+    
+});
