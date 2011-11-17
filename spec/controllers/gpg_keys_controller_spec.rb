@@ -21,15 +21,11 @@ describe GpgKeysController do
 
 
   module GPGKeyControllerTest
-    #GPGKEY_FILE = Object.new
-    #GPGKEY_FILE.stub_chain(:tempfile, :path).and_return('test_key.gpg')
-    #GPGKEY_FILE.stub!(:read).and_return("This is uploaded key data.")
-    
     GPGKEY_INVALID = {}
     GPGKEY_NAME_INVALID = {:name => ""}
     GPGKEY_NAME = {:name => "Test GPG Key Updated"}
     GPGKEY_CONTENT = {:content => "Test GPG Key Updated key contents."}
-    GPGKEY_CONTENT_UPLOAD = {:content_upload => "GPGKEY_FILE"}
+    GPGKEY_CONTENT_UPLOAD = {}
   end
 
   before(:each) do
@@ -222,12 +218,12 @@ describe GpgKeysController do
 
     describe "authorization rules should behave like" do
       let(:action) { :update }
-      let(:req) { put :update, :id => @a_key.id, :activation_key => AKeyControllerTest::AKEY_NAME }
+      let(:req) { put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME }
       let(:authorized_user) do
-        user_with_permissions { |u| u.can(:manage_all, :activation_keys) }
+        user_with_permissions { |u| u.can(:manage_all, :gpg_keys) }
       end
       let(:unauthorized_user) do
-        user_with_permissions { |u| u.can(:read_all, :activation_keys) }
+        user_with_permissions { |u| u.can(:read_all, :gpg_keys) }
       end
       it_should_behave_like "protected action"
     end
@@ -257,7 +253,7 @@ describe GpgKeysController do
         describe "that include a copy/pasted GPG Key" do
           it "should update requested field - content" do
             put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_CONTENT
-            assigns[:gpg_key].content.should eq(GPGKeyControllerTest::GPGKEY_NAME[:content])
+            assigns[:gpg_key].content.should eq(GPGKeyControllerTest::GPGKEY_CONTENT[:content])
           end
     
           it "should generate a success notice" do
@@ -277,9 +273,16 @@ describe GpgKeysController do
         end
 
         describe "that include an uploaded GPG Key file" do
+          before(:each) do
+            @gpg_key_file = mock(Object)
+            @gpg_key_file.stub_chain(:tempfile, :path).and_return('test_key.gpg')
+            @gpg_key_file.stub!(:read).and_return("This is uploaded key data.")
+            GPGKeyControllerTest::GPGKEY_CONTENT_UPLOAD = { :content_upload => @gpg_key_file }
+          end
+          
           it "should update requested field - content_upload" do
             put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_CONTENT_UPLOAD
-            assigns[:gpg_key].name.should eq(GPGKeyControllerTest::GPGKEY_FILE.read)
+            assigns[:gpg_key].content.should eq(@gpg_key_file.read)
           end
     
           it "should generate a success notice" do
@@ -302,11 +305,11 @@ describe GpgKeysController do
       describe "with invalid params" do
         it "should generate an error notice" do
           controller.should_receive(:errors)
-          put :update, :id => @gpg_key.id, :activation_key => GPGKeyControllerTest::GPGKEY_NAME_INVALID
+          put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME_INVALID
         end
 
         it "should be unsuccessful" do
-          put :update, :id => @gpg_key.id, :activation_key => GPGKeyControllerTest::GPGKEY_NAME_INVALID
+          put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME_INVALID
           response.should_not be_success
         end
       end
@@ -325,21 +328,16 @@ describe GpgKeysController do
     end
     
     describe "with inclusive search parameters" do
-      it "should render list item partial for 2pane" do
-        put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME, :search => { :name => 'Test' }
-        response.should render_template(:partial => "common/_list_item")
+      it "should generate a single notice" do
+        controller.should_receive(:notice)
+        put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME, :search => 'name ~ Test'
       end
     end
     
     describe "with exclusive search parameters" do
-      it "should return no match indicator" do
-        put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME, :search => { :name => 'Fake' }
-        response.body.should eq({ :no_match => true })
-      end
-      
       it "should generate message notice" do
         controller.should_receive(:notice).twice
-        put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME, :search => { :name => 'Fake' }
+        put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME, :search => 'name ~ Fake'
       end
     end
   end
