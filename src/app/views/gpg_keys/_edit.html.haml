@@ -1,4 +1,4 @@
-= javascript :edit_helpers, :gpg_key_edit
+= javascript :gpg_key_edit
 
 = content_for :title do
   #{@gpg_key.name}
@@ -19,21 +19,12 @@
     .grid_10
       -#= form_tag gpg_key_path(@gpg_key), :method => :put, :remote=>true, :id => "new_gpg_key" do
       %fieldset
-        .grid_2.ra
+        .grid_1.ra
           %label #{_("Name")}:
-        .grid_7.la
-          .grid_7.la#gpg_key_name{'name' => 'gpg_key[name]', :class => ("editable edit_panel_element" if editable), 'data-url' => gpg_key_path(@gpg_key.id)} #{@gpg_key[:name]}
+        .grid_8.la
+          .grid_8.la#gpg_key_name{'name' => 'gpg_key[name]', :class => ("editable edit_panel_element" if editable), 'data-url' => gpg_key_path(@gpg_key.id)} #{@gpg_key[:name]}
       %fieldset
-        .grid_2.ra
-          %label #{_("GPG Key")}:
-        .grid_7.la
-          .grid_7.la#gpg_key_content{'name' => 'gpg_key[content]', :class => ("editable edit_textarea" if editable), 'data-url' => gpg_key_path(@gpg_key.id)} #{@gpg_key[:content]}
-      %fieldset
-        .grid_2.ra
-          %label #{_("or")}
-      -if editable
-        %fieldset
-          .grid_2.ra
-            %label #{_("Upload")}:
-          .grid_7.la#gpg_key_content_upload{ 'name' => 'gpg_key[content_upload]', :class => "editable gpg_ajaxfileupload", 'data-url' => gpg_key_path(@gpg_key.id), :tabindex => auto_tab_index }
-            = _("Click to upload new key.")
+        .grid_1.ra
+          %label #{_("Key")}:
+        .grid_8.la
+          .grid_8.la#gpg_key_content{'name' => 'gpg_key[content]', :class => ("editable edit_textarea" if editable), 'data-url' => gpg_key_path(@gpg_key.id)} #{@gpg_key[:content]}
