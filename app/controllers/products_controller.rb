@@ -72,6 +72,11 @@ class ProductsController < ApplicationController
         end
       end 
       
+      if params[:product].has_key?(:gpg_all_repos)
+        notice _("All repository GPG keys for Product '#{@product.name}' were updated.")
+        #Call product set all repos
+      end
+      
       @product.save!
       notice _("Product '#{@product.name}' was updated.")
 
