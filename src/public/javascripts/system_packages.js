@@ -20,16 +20,18 @@
  */
 
 KT.packages = function() {
-    var retrievingNewContent = true,
+    var system_id = $('.packages').attr('data-system_id'),
+    retrievingNewContent = true,
     more_button = $('#more'),
     sort_button = $('#package_sort'),
     packages_form = $('#packages_form'),
     remove_button = $('#remove_packages'),
     update_button = $('#update_packages'),
-    add_packages_form = $('#add_packages_form'),
-    add_packages_button = $('#add_packages'),
-    add_package_groups_form = $('#add_package_groups_form'),
-    add_package_groups_button = $('#add_package_groups'),
+    content_form = $('#content_form'),
+    add_content_button = $('#add_content'),
+    remove_content_button = $('#remove_content'),
+    packages_radio_button = $('#perform_action_packages'),
+    package_groups_radio_button = $('#perform_action_package_groups'),
     selected_checkboxes = 0,
     disableButtons = function() {
         remove_button.attr('disabled', 'disabled');
@@ -141,31 +143,50 @@ KT.packages = function() {
     registerEvents = function() {
         more_button.bind('click', morePackages);
         sort_button.bind('click', reverseSort);
-        add_packages_button.bind('click', addPackages);
-        add_package_groups_button.bind('click', addPackageGroups);
+        add_content_button.bind('click', addContent);
+        remove_content_button.bind('click', removeContent);
         remove_button.bind('click', removePackages);
         update_button.bind('click', updatePackages);
 
         disableButtons();
         registerCheckboxEvents();
     },
-    addPackages = function(data) {
+    addContent = function(data) {
         data.preventDefault();
-        $.ajax({
-            url: add_packages_button.attr('data-url'),
-            type: 'PUT',
-            data: {'packages' : add_packages_form.find('#add_packages_input').val()},
-            cache: false
-        });
+        var selected_action = $("input[@name=perform_action]:checked").attr('id');
+        if (selected_action == 'perform_action_packages') {
+            $.ajax({
+                url: KT.routes.add_system_system_packages_path(system_id),
+                type: 'PUT',
+                data: {'packages' : content_form.find('#content_input').val()},
+                cache: false
+            });
+        } else {
+            $.ajax({
+                url: KT.routes.add_system_system_packages_path(system_id),
+                type: 'PUT',
+                data: {'groups' : content_form.find('#content_input').val()},
+                cache: false
+            });
+        }
     },
-    addPackageGroups = function(data) {
-        data.preventDefault();
-        $.ajax({
-            url: add_package_groups_button.attr('data-url'),
-            type: 'PUT',
-            data: {'groups' : add_package_groups_form.find('#add_package_groups_input').val()},
-            cache: false
-        });
+    removeContent = function(data) {
+        var selected_action = $("input[@name=perform_action]:checked").attr('id');
+        if (selected_action == 'perform_action_packages') {
+            $.ajax({
+                url: KT.routes.remove_system_system_packages_path(system_id),
+                type: 'POST',
+                data: {'packages' : content_form.find('#content_input').val()},
+                cache: false
+            });
+        } else {
+            $.ajax({
+                url: KT.routes.remove_system_system_packages_path(system_id),
+                type: 'POST',
+                data: {'groups' : content_form.find('#content_input').val()},
+                cache: false
+            });
+        }
     },
     removePackages = function(data) {
         data.preventDefault();
@@ -200,8 +221,8 @@ KT.packages = function() {
         sortOrder: sortOrder,
         reverseSort: reverseSort,
         registerEvents: registerEvents,
-        addPackages: addPackages,
-        addPackageGroups: addPackageGroups,
+        addContent: addContent,
+        removeContent: removeContent,
         removePackages: removePackages,
         updatePackages: updatePackages
     }

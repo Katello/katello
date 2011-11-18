@@ -34,36 +34,48 @@ class SystemPackagesController < ApplicationController
   end
 
   def add
-    unless params[:packages].nil?
-      # the packages to be added will be provided as a string of comma separated names (ignore leading/trailing spaces)
+
+    if !params[:packages].nil?
+      # user entered one or more package names (as comma-separated list) in the content box
       packages = params[:packages].split(/ *, */ )
       @system.install_packages packages
       notice _("Install of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
-    end
 
-    unless params[:groups].nil?
-      # the package groups to be added will be provided as a string of comma separated names (ignore leading/trailing spaces)
+    elsif !params[:groups].nil?
+      # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
       @system.install_package_groups groups
       notice _("Install of Package Groups '%{g}' scheduled for System '%{s}'." % {:s => @system['name'], :g => params[:groups]})
+
+    else
+      errors _("Empty request received to install Packages or Package Groups System '%{s}'." % {:s => @system['name']})
     end
 
     render :text => ''
   end
 
   def remove
-    unless params[:package].nil?
+    if !params[:package].nil?
+      # user selected one or more packages from the list of installed packages
       packages = params[:package].keys
       @system.uninstall_packages packages
       notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => packages.join(',')})
-    end
 
-    # TODO : need to update to support removing based on a 'list' of groups w/in a string, once available in UI
-    #unless params[:groups].nil?
-    #  groups = params[:groups].split(/ *, */ )
-    #  @system.uninstall_package_groups groups
-    #  notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => packages.join(',')})
-    #end
+    elsif !params[:packages].nil?
+      # user entered one or more package names (as comma-separated list) in the content box
+      packages = params[:packages].split(/ *, */ )
+      @system.uninstall_packages packages
+      notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
+
+    elsif !params[:groups].nil?
+      # user entered one or more package group names (as comma-separated list) in the content box
+      groups = params[:groups].split(/ *, */ )
+      @system.uninstall_package_groups groups
+      notice _("Uninstall of Package Groups '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => groups.join(',')})
+
+    else
+      errors _("Empty request received to install Packages or Package Groups System '%{s}'." % {:s => @system['name']})
+    end
 
     render :text => ''
   end
