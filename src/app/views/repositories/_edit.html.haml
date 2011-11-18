@@ -21,3 +21,8 @@
     .grid_2.ra
       %label #{_("URL")}:
     .grid_5.la{'name' => 'repo[feed]', 'data-url' => provider_path(@provider.id)} #{@repository.source[:url]}
+    
+  %fieldset
+    .grid_2.ra
+      %label #{_("GPG Key")}:
+    .grid_5.la{'name' => 'gpg_key', 'class' => ("editable edit_select" if editable), 'data-url' => update_repo_gpg_key_provider_product_repository_path(@provider.id, @product.id, @repository.id), 'options' => gpg_keys } #{@repository.gpg_key.name if @repository.gpg_key}

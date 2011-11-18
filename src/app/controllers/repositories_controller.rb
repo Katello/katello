@@ -77,7 +77,7 @@ class RepositoriesController < ApplicationController
       errors error
       render :text=> error.to_s, :status=>:bad_request and return
     end
-    render :json => ""
+    render :text => escape_html(gpg.name)
   end
 
   def enable_repo
