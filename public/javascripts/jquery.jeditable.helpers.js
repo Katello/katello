@@ -107,10 +107,17 @@ $(document).ready(function() {
     });
    
    	$('.edit_select').each(function(){
+   		var element = $(this);
    		var settings = { 
-                type            :  'select',
-                name            :  $(this).attr('name'),
-                data   			:  $(this).attr('options')
+            type            :  'select',
+            name            :  element.attr('name'),
+            data   			:  element.data('options'),
+            onsuccess       :  function(result, status, xhr){
+            	var data = element.data('options');
+            	
+            	data["selected"] = result;
+            	element.html(data[result]);
+            }
         };
         $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
   	});
