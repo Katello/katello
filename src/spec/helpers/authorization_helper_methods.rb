@@ -72,6 +72,14 @@ module AuthorizationHelperMethods
   def user_without_permissions
     user_with_permissions
   end
+
+  def superadmin
+    disable_user_orchestration
+    user = user_with_permissions
+    permission = Permission.create!(:role =>user.own_role, :all_types => true, :name => "superadmin")
+    return user
+  end
+
 end
 
 

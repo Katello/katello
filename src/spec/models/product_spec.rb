@@ -15,7 +15,7 @@ require 'helpers/product_test_data'
 require 'helpers/repo_test_data'
 
 include OrchestrationHelper
-include LoginHelperMethods
+include AuthorizationHelperMethods
 include ProductHelperMethods
 describe Product do
 
@@ -363,9 +363,8 @@ describe Product do
   describe "product permission tests" do
     before (:each) do
       disable_product_orchestration
-      disable_user_orchestration
 
-      User.current = superadmin_user
+      User.current = superadmin
       @product = Product.new({:name => "prod"})
       @product.provider = @organization.redhat_provider
       @product.environments << @organization.locker
