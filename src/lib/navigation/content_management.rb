@@ -18,6 +18,7 @@ module Navigation
         helper_method :promotion_errata_navigation
         helper_method :promotion_distribution_navigation
         helper_method :package_filter_navigation
+        helper_method :gpg_keys_navigation
       end
     end
 
@@ -250,6 +251,23 @@ module Navigation
           :name =>N_("Details"),
           :url => lambda{edit_filter_path(@filter.id)},
           :if => lambda{@filter},
+          :options => {:class=>"navigation_element"}
+        }
+      ]
+    end
+    
+    def gpg_keys_navigation
+      [
+        { :key => :general,
+          :name =>N_("General"),
+          :url => lambda{edit_gpg_key_path(@gpg_key.id)},
+          :if => lambda{gpg_key},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :products_repositories,
+          :name =>N_("Products and Repositories"),
+          :url => lambda{products_repos_gpg_key_path(@gpg_key.id)},
+          :if =>lambda{gpg_key},
           :options => {:class=>"navigation_element"}
         }
       ]
