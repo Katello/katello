@@ -12,7 +12,15 @@
 
 module RepositoriesHelper
   def gpg_keys
-    GpgKey.readable(current_organization)
+    keys = {}
+    
+    GpgKey.readable(current_organization).each{ |key|
+      keys[key.id] = key.name
+    }
+    
+    keys["nil"] = nil
+    keys["selected"] = @repository.gpg_key_id
+    return keys.to_json
   end
 end
 
