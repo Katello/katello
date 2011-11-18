@@ -16,8 +16,8 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.110
-Release:        2%{?dist}
+Version:        0.1.111
+Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
 Group:          Applications/Internet
@@ -334,57 +334,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
-* Thu Nov 17 2011 Shannon Hughes <shughes@redhat.com> 0.1.110-2
-- system engine build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.108-2].
-  (shughes@redhat.com)
-- system engine build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- rely on redhat-logos for rh-logo image (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.106-2].
-  (shughes@redhat.com)
-- Minor change to letter spacing. (jrist@redhat.com)
-- build for system-engine (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Rename of look.scss to _look.scss for branding. (jrist@redhat.com)
-- Application helper for katello title. (jrist@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.103-2].
-  (shughes@redhat.com)
-- build bump release (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.102-2].
-  (shughes@redhat.com)
-- bump release for build (shughes@redhat.com)
-- sync up spec with katello (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.101-2].
-  (shughes@redhat.com)
-- bump release (shughes@redhat.com)
-- fix rpm macro syntax (shughes@redhat.com)
-- move branding processing (shughes@redhat.com)
-- remove sprites from branding (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Removing katello.scss to limit overrides.  Added look.scss to make it
-  simpler. (jrist@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
+* Fri Nov 18 2011 Shannon Hughes <shughes@redhat.com> 0.1.111-1
+- 755048 - handle multiple ks trees for a template (inecas@redhat.com)
 
 * Thu Nov 17 2011 Shannon Hughes <shughes@redhat.com> 0.1.110-1
 - Revert "fix sync disabled submit button to not sync when disabled"
