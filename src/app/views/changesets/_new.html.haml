@@ -1,9 +1,6 @@
 = content_for :title do
   #{_("New Changeset")}
 
-= content_for :navigation do
-  / pretty
-
 = content_for :content do
   .grid_7#new_changeset123
     = form_tag changesets_path, :method => "post", :id => "new_changeset" do

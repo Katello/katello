@@ -51,7 +51,7 @@ class RepositoriesController < ApplicationController
     begin
       repo_params = params[:repo]
       raise _('Invalid Url') if !kurl_valid?(repo_params[:feed])
-      gpg = GpgKey.readable(current_organization).find(repo_params[:gpg_key]) if repo_params[:gpg_key]
+      gpg = GpgKey.readable(current_organization).find(repo_params[:gpg_key]) if repo_params[:gpg_key] != ""
       # Bundle these into one call, perhaps move to Provider
       # Also fix the hard coded yum
       @product.add_repo(repo_params[:name], repo_params[:feed], 'yum', gpg)

@@ -174,12 +174,14 @@ KT.common = (function() {
         escapeId: function(myid) {
             return myid.replace(/([ #;&,.%+*~\':"!^$[\]()=>|\/])/g,'\\$1')
         },
-        customConfirm : function (message, callback) {
+        customConfirm : function (message, yesCallback, noCallback) {
           var html = "<div style='margin:20px;'><span class='status_confirm_icon'/><div style='margin-left: 24px; display:table;height:1%;'>" + message + "</div></div>";
           var confirmTrue = new Boolean(true);
-          var confirmFalse = new Boolean(false);
+          var confirmFalse = new Boolean(false),
+          	yesCallback = yesCallback || function(){},
+          	noCallback = noCallback || function(){};
           
-          $(html).dialog({
+          return $(html).dialog({
             closeOnEscape: false,
             open: function (event, ui) {
                 $('.ui-dialog-titlebar-close').hide();
@@ -194,11 +196,13 @@ KT.common = (function() {
                 "Yes": function () {
                     $(this).dialog("close");
                     $(this).dialog("destroy");
-                    callback();
+                    yesCallback();
+                    return confirmTrue;
                 },
                 "No": function () {
                     $(this).dialog("close");
                     $(this).dialog("destroy");
+                    noCallback();
                     return confirmFalse;
                 }
             }
