@@ -116,6 +116,14 @@ class Product < ActiveRecord::Base
     !(redhat?)
   end
 
+  def reset_repo_gpgs!
+    self.environment_products.each do |ep|
+      ep.repositories.each do |repo|
+        repo.update_attributes!(:gpg_key => self.gpg_key)
+      end
+    end
+  end
+
   #Permissions
   scope :all_readable, lambda {|org| ::Provider.readable(org).joins(:provider)}
   scope :readable, lambda{|org| all_readable(org).with_enabled_repos_only(org.locker)}
