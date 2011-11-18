@@ -21,6 +21,7 @@ Src::Application.routes.draw do
       get :items
     end
     member do
+      get :products_repos
       post :update
     end
   end

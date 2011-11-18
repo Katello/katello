@@ -7,6 +7,9 @@
   - if editable
     = link_to _("Remove GPG Key"), gpg_key_path(@gpg_key.id), :confirm => _('Are you sure?'), :method => :delete, :class=>"remove_item", :remote=>true
 
+= content_for :navigation do
+  = render_navigation(:items => gpg_keys_navigation, :expand_all => true, :level => 1)
+
 = content_for :content do
   = help_tip_button('gpg_keys_edit-help')
 
