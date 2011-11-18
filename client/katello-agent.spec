@@ -13,8 +13,8 @@ BuildArch: noarch
 BuildRequires: python2-devel
 BuildRequires: python-setuptools
 BuildRequires: rpm-python
-Requires: gofer >= 0.54
-Requires: gofer-package >= 0.54
+Requires: gofer >= 0.60
+Requires: gofer-package >= 0.60
 Requires: subscription-manager
 %description
 The Katello agent.

@@ -114,28 +114,57 @@ class Packages:
     """
     Package management object.
     """
+    
+    def __init__(self, importkeys=False):
+        """
+        @param importkeys: Import GPG keys as needed.
+        @type importkeys: bool
+        """
+        self.importkeys = importkeys
 
     @remote
-    def install(self, names, reboot=False, importkeys=False):
+    def install(self, names, reboot=False):
         """
         Install packages by name.
         @param names: A list of package names.
         @type names: [str,]
         @param reboot: Request reboot after packages are installed.
         @type reboot: bool
-        @param importkeys: Import GPG keys as needed.
-        @type importkeys: bool
-        @return: { installed : [], reboot_scheduled : <bool> }
+        @return: {installed=, reboot=}
+          - installed : A list of installed packages
+          - rebooted : A reboot was scheduled.
         @rtype: dict
         """
-        pkg = Package()
-        installed = pkg.install(names, importkeys)
+        p = Package(importkeys=self.importkeys)
+        installed = p.install(names)
         log.info('Packages installed: %s', installed)
         if reboot and installed:
             scheduled = self.reboot()
         else:
             scheduled = False
         return dict(installed=installed, reboot_scheduled=scheduled)
+    
+    @remote
+    def update(self, names, reboot=False):
+        """
+        Update packages by name.
+        @param names: A list of package names.  Empty=ALL.
+        @type names: [str,]
+        @param reboot: Request reboot after packages are installed.
+        @type reboot: bool
+        @return: {updated=, reboot=}
+          - updated : A list of (pkg, {updates=[],obsoletes=[]})
+          - rebooted : A reboot was scheduled.
+        @rtype: dict
+        """
+        p = Package(importkeys=self.importkeys)
+        updated = p.update(names)
+        log.info('Packages updated: %s', updated)
+        if reboot and updated:
+            scheduled = self.reboot()
+        else:
+            scheduled = False
+        return dict(updated=updated, reboot_scheduled=scheduled)
 
     @remote
     def uninstall(self, names):
@@ -146,8 +175,8 @@ class Packages:
         @return: A list of uninstalled packages
         @rtype: list
         """
-        pkg = Package()
-        uninstalled = pkg.uninstall(names)
+        p = Package()
+        uninstalled = p.uninstall(names)
         log.info('Packages uninstalled: %s', uninstalled)
         return uninstalled
     
@@ -170,6 +199,13 @@ class PackageGroups:
     """
     PackageGroup management object
     """
+    
+    def __init__(self, importkeys=False):
+        """
+        @param importkeys: Import GPG keys as needed.
+        @type importkeys: bool
+        """
+        self.importkeys = importkeys
 
     @remote
     def install(self, names):
@@ -178,8 +214,8 @@ class PackageGroups:
         @param names: A list of package group names.
         @param names: str
         """
-        grp = PackageGroup()
-        installed = grp.install(names)
+        g = PackageGroup(importkeys=self.importkeys)
+        installed = g.install(names)
         log.info('Packages installed: %s', installed)
         return installed
 
@@ -192,7 +228,7 @@ class PackageGroups:
         @return: A list of uninstalled packages
         @rtype: list
         """
-        grp = PackageGroup()
-        uninstalled = grp.uninstall(names)
+        g = PackageGroup()
+        uninstalled = g.uninstall(names)
         log.info('Packages uninstalled: %s', uninstalled)
         return uninstalled
