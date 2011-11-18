@@ -60,11 +60,4 @@ module LoginHelperMethods
     object.stub(:updatable?).and_return(true)
     object.stub(:updatable).and_return(true)
   end
-
-  def superadmin_user
-    @user = User.create( :username => "super-foo-user", :password => "password", :email => "foo-user@somewhere.com")
-    @permission = Permission.create!(:role =>@user.roles.first, :all_types => true, :name => "superadmin")
-    return @user
-  end
-
 end
