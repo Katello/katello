@@ -372,6 +372,34 @@ module Pulp
         JSON.parse(response.body)
       end
 
+      def install_packages consumer_id, package_names
+        url = consumer_path(consumer_id) + "installpackages/"
+        attrs = {:packagenames => package_names}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def uninstall_packages consumer_id, package_names
+        url = consumer_path(consumer_id) + "uninstallpackages/"
+        attrs = {:packagenames => package_names}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def install_package_groups consumer_id, package_groups
+        url = consumer_path(consumer_id) + "installpackagegroups/"
+        attrs = {:groupids => package_groups}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def uninstall_package_groups consumer_id, package_groups
+        url = consumer_path(consumer_id) + "uninstallpackagegroups/"
+        attrs = {:groupids => package_groups}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
       def destroy consumer_id
         raise ArgumentError, "consumer_id id has to be specified" unless consumer_id
         self.delete(consumer_path(consumer_id), self.default_headers).code.to_i
