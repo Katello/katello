@@ -14,7 +14,7 @@ class GpgKeysController < ApplicationController
   include AutoCompleteSearch
 
   before_filter :require_user
-  before_filter :find_gpg_key, :only => [:show, :edit, :update, :destroy]
+  before_filter :find_gpg_key, :only => [:show, :edit, :update, :destroy, :products_repos]
   before_filter :authorize
   before_filter :panel_options, :only => [:index, :items]
   before_filter :search_filter, :only => [:auto_complete_search]
@@ -34,6 +34,7 @@ class GpgKeysController < ApplicationController
       :index => index_test,
       :items => index_test,
       :show => read_test,
+      :products_repos => read_test,
       :auto_complete_search => index_test,
 
       :new => create_test,
@@ -61,6 +62,13 @@ class GpgKeysController < ApplicationController
   def edit
     render :partial => "edit", :layout => "tupane_layout", :locals => {:editable => @gpg_key.manageable?,
                                                                        :name => controller_display_name }
+  end
+
+  def products_repos
+    products = @gpg_key.products
+    repositories = @gpg_key.repositories
+    render :partial => "products_repos", :layout => "tupane_layout", 
+            :locals => {:products => products, :repositories => repositories}
   end
 
   def create

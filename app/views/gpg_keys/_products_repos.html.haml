@@ -1,0 +1,29 @@
+= javascript :products_repos
+
+= content_for :title do
+  #{@gpg_key.name}
+
+= content_for :remove_item do
+  - if @gpg_key.manageable?
+    = link_to _("Remove GPG Key"), {:action => "destroy", :controller => "gpg_keys"}, :method => :delete, :confirm => _('Are you sure you want to delete this GPG Key?'), :class => "remove_item", :remote=>true
+
+= content_for :navigation do
+  = render_navigation(:items=>gpg_keys_navigation, :level => 1)
+  
+= content_for :content do
+  #products_repos
+    %ul.bordered-table
+      %div.block_head
+        %div.column_head.column_1
+          = _("Products")
+      -products.each do |product|
+        - cssclass = cycle("", "alt")
+        %div{:class=> cssclass}
+          &nbsp;#{product.name}
+      %div.block_head
+        %div.column_head.column_1
+          = _("Repositories")
+      -repositories.each do |repo|
+        - cssclass = cycle("", "alt")
+        %div{:class=> cssclass}
+          &nbsp;#{repo.name}
