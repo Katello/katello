@@ -15,7 +15,7 @@ require 'helpers/repo_test_data'
 
 include OrchestrationHelper
 include ProductHelperMethods
-include LoginHelperMethods
+include AuthorizationHelperMethods
 
 describe Repository do
 
@@ -48,7 +48,7 @@ describe Repository do
       suffix = rand(10**8).to_s
       @organization = Organization.create!(:name => "test_organization#{suffix}", :cp_key => "test_organization#{suffix}")
 
-      User.current = superadmin_user
+      User.current = superadmin
       @product = Product.new({:name => "prod"})
       @product.provider = @organization.redhat_provider
       @product.environments << @organization.locker
