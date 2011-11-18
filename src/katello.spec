@@ -16,8 +16,8 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.108
-Release:        2%{?dist}
+Version:        0.1.110
+Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
 Group:          Applications/Internet
@@ -334,8 +334,17 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
-* Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.108-2
-- system engine build (shughes@redhat.com)
+* Thu Nov 17 2011 Shannon Hughes <shughes@redhat.com> 0.1.110-1
+- Revert "fix sync disabled submit button to not sync when disabled"
+  (shughes@redhat.com)
+- 747032 - Fixed a bugby error in the dashboard whenever you had more than one
+  synced products (paji@redhat.com)
+
+* Thu Nov 17 2011 Shannon Hughes <shughes@redhat.com> 0.1.109-1
+- fix sync disabled submit button to not sync when disabled
+  (shughes@redhat.com)
+- 754215 - Small temporary fix for max height on CS Trees. (jrist@redhat.com)
+
 * Wed Nov 16 2011 shughes@redhat.com
 - Pie chart updates now functions with actual data. (jrist@redhat.com)
 - Fix for pie chart on dashboard page. (jrist@redhat.com)
