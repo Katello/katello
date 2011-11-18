@@ -52,6 +52,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Fri Nov 18 2011 Shannon Hughes <shughes@redhat.com> 0.1.16-2
+- prep release for sys engine build (shughes@redhat.com)
+
 * Fri Nov 18 2011 Shannon Hughes <shughes@redhat.com> 0.1.16-1
 - 755048 - set pulp host using fqdn (inecas@redhat.com)
 
