@@ -46,7 +46,7 @@ class ProductsController < ApplicationController
   def create
     begin
       product_params = params[:product]
-      gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] 
+      gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] != ""
       @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url], gpg)
       notice _("Product '#{product_params[:name]}' created.")
     rescue Exception => error
@@ -61,7 +61,17 @@ class ProductsController < ApplicationController
       result = params[:product].values.first
       @product.name = params[:product][:name] if params[:product][:name]
       @product.description = params[:product][:description] if params[:product][:description]
-      @product.gpg_key = GpgKey.readable(current_organization).find(params[:product][:gpg_key]) if params[:product][:gpg_key]
+      
+      if params[:product].has_key?(:gpg_key)
+        if params[:product][:gpg_key] != ""
+          @product.gpg_key = GpgKey.readable(current_organization).find(params[:product][:gpg_key])
+          result = @product.gpg_key.id.to_s
+        else
+          @product.gpg_key = nil
+          result = ""
+        end
+      end 
+      
       @product.save!
       notice _("Product '#{@product.name}' was updated.")
 

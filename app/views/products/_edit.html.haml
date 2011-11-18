@@ -20,3 +20,8 @@
     .grid_2.ra
       %label #{_("Description")}:
     .grid_5.la.multiline{'name' => 'product[description]', :class=>("editable edit_textarea" if editable), 'data-url' => provider_product_path(@provider.id)}<> #{@product.description}
+  
+  %fieldset
+    .grid_2.ra
+      %label #{_("GPG Key")}:
+    .grid_5.la{'name' => 'product[gpg_key]', 'class' => ("editable edit_select" if editable), 'data-url' => provider_product_path(@provider.id), 'data-options' => gpg_keys_edit } #{@product.gpg_key.name if @product.gpg_key}

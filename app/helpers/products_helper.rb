@@ -11,16 +11,20 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module ProductsHelper
-  def gpg_keys
+  def gpg_keys_edit
     keys = {}
     
     GpgKey.readable(current_organization).each{ |key|
       keys[key.id] = key.name
     }
     
-    keys["nil"] = nil
-    keys["selected"] = @repository.gpg_key_id
+    keys[""] = ""
+    keys["selected"] = @product.gpg_key_id || ""
     return keys.to_json
+  end
+  
+  def gpg_keys
+    GpgKey.readable(current_organization)
   end
 end
 

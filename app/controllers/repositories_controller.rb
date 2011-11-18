@@ -68,7 +68,13 @@ class RepositoriesController < ApplicationController
 
   def update_gpg_key
     begin
-      gpg = GpgKey.readable(current_organization).find(params[:gpg_key]) if params[:gpg_key]
+      if params[:gpg_key] != ""
+        gpg = GpgKey.readable(current_organization).find(params[:gpg_key])
+        result = gpg.id.to_s
+      else
+        gpg = nil
+        result = ""
+      end
       @repository.gpg_key = gpg
       @repository.save!
       notice _("Repository '#{@repository.name}' updated.")
@@ -77,7 +83,7 @@ class RepositoriesController < ApplicationController
       errors error
       render :text=> error.to_s, :status=>:bad_request and return
     end
-    render :text => escape_html(gpg.name)
+    render :text => escape_html(result)
   end
 
   def enable_repo
