@@ -105,6 +105,15 @@ $(document).ready(function() {
         }; 
         $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings)); 
     });
+   
+   	$('.edit_select').each(function(){
+   		var settings = { 
+                type            :  'select',
+                name            :  $(this).attr('name'),
+                data   			:  $(this).attr('options')
+        };
+        $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));
+  	});
     
     $('.edit_number').each(function() {
         var element = $(this);
