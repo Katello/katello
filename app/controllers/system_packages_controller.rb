@@ -34,19 +34,37 @@ class SystemPackagesController < ApplicationController
   end
 
   def add
-    # TODO: action for adding packages
+    unless params[:packages].nil?
+      # the packages to be added will be provided as a string of comma separated names (ignore leading/trailing spaces)
+      packages = params[:packages].split(/ *, */ )
+      @system.install_packages packages
+      notice _("Install of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
+    end
 
-    # the packages to be added will be provided as a string of comma separated names (ignore leading/trailing spaces)
-    packages = params[:packages].split(/ *, */ ) unless params[:packages].nil?
-
-    # the package groups to be added will be provided as a string of comma separated names (ignore leading/trailing spaces)
-    groups = params[:groups].split(/ *, */ ) unless params[:groups].nil?
+    unless params[:groups].nil?
+      # the package groups to be added will be provided as a string of comma separated names (ignore leading/trailing spaces)
+      groups = params[:groups].split(/ *, */ )
+      @system.install_package_groups groups
+      notice _("Install of Package Groups '%{g}' scheduled for System '%{s}'." % {:s => @system['name'], :g => params[:groups]})
+    end
 
     render :text => ''
   end
 
   def remove
-    # TODO: action for removing packages
+    unless params[:package].nil?
+      packages = params[:package].keys
+      @system.uninstall_packages packages
+      notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => packages.join(',')})
+    end
+
+    # TODO : need to update to support removing based on a 'list' of groups w/in a string, once available in UI
+    #unless params[:groups].nil?
+    #  groups = params[:groups].split(/ *, */ )
+    #  @system.uninstall_package_groups groups
+    #  notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => packages.join(',')})
+    #end
+
     render :text => ''
   end
 
