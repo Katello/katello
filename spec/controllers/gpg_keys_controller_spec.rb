@@ -46,7 +46,7 @@ describe GpgKeysController do
     let(:action) {:items }
     let(:req) { get :items }
     let(:authorized_user) do
-      user_with_permissions { |u| u.can(:read_all, :gpg_keys) }
+      user_with_permissions { |u| u.can(:gpg, :organizations, nil, @organization) }
     end
     let(:unauthorized_user) do
       user_without_permissions
@@ -220,10 +220,10 @@ describe GpgKeysController do
       let(:action) { :update }
       let(:req) { put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME }
       let(:authorized_user) do
-        user_with_permissions { |u| u.can(:manage_all, :gpg_keys) }
+        user_with_permissions { |u| u.can(:gpg, :organizations, nil, @organization)}
       end
       let(:unauthorized_user) do
-        user_with_permissions { |u| u.can(:read_all, :gpg_keys) }
+        user_with_permissions { |u| u.can(:read, :organizations, nil, @organization)}
       end
       it_should_behave_like "protected action"
     end
