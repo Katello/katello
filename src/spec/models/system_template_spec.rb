@@ -565,6 +565,8 @@ describe SystemTemplate, :katello => true do
 
         @tpl1.products << @prod1
         @tpl1.add_distribution(distribution)
+        # simulate another env
+        @tpl1.stub(:environment => @organization.environments.new(:name => "Dev"))
       end
 
       it "should contain repos referencing to pulp repositories" do
@@ -589,7 +591,7 @@ describe SystemTemplate, :katello => true do
       end
 
       it "url should be set" do
-        subject.xpath("/template/os/install/url").text.should == RepoTestData.repo_distributions['url']
+        subject.xpath("/template/os/install/url").text.should == "https://localhost/pulp/ks/ACME_Corporation/Dev/isos/xxx/"
       end
 
       it_should_behave_like "valid tdl"
