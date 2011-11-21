@@ -23,6 +23,8 @@ test_success "template update add package group"           template update --nam
 test_success "template update add package group categrory" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group_category="$PACKAGE_GROUP_CATEGORY_NAME"
 test_success "template update add parameter"               template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_parameter="attr" --value="X"
 
+check_delayed_jobs_running
+
 test_success "create a changeset for promoting the template" changeset create  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$TEMPLATE_CS_NAME"
 test_success "add template to the changeset"                 changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$TEMPLATE_CS_NAME" --add_template="$TEMPLATE_NAME"
 test_success "promote a changeset with the template"         changeset promote --org="$TEST_ORG" --environment="$TEST_ENV" --name="$TEMPLATE_CS_NAME"

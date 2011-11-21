@@ -59,3 +59,10 @@ function jobs_running() {
         return 1
     fi
 }
+
+function check_delayed_jobs_running() {
+    if ! jobs_running; then
+        printf "${txtred}Warning: Jobs daemon is not running, the promotion will hang!${txtrst}\n"
+        printf "${txtred}Run 'service katello-jobs start' or 'rake jobs:work' to proceed.${txtrst}\n"
+    fi
+}
