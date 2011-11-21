@@ -18,11 +18,6 @@
           = until_time ? _("Subscriptions are Current Until %s") % until_time : _("Subscriptions are Current")
         - else
           = _("Subscriptions are not Current")
-    .subs_bottom.la
-      = form_tag system_path(@system), :id=>"autoheal_form", :method=>"put", :remote=>true do
-        = check_box_tag "autoheal", value=@system.autoheal, @system.autoheal
-        &nbsp;
-        Auto-heal
     -# .subs_left.ca
     -#   #{_("Socket Requirement")}
     -#   %br

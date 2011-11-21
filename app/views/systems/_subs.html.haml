@@ -1,7 +1,12 @@
 = include_javascripts :treetable
 .grid_8
+  %h5
+    = form_tag system_path(@system), :id=>"autoheal_form", :method=>"put", :remote=>true do
+      #{_("System Current Subscription(s)")}
+      &nbsp; &nbsp;
+      = check_box_tag "autoheal", value=@system.autoheal, @system.autoheal
+      Auto-heal
   = form_tag update_subscriptions_system_path, :id=>"unsubscribe", :method=>"post", :remote=>true do
-    %h5 #{_("System Current Subscription(s)")}
     .tree
       %table#unsubscribeTable
         %thead
