@@ -12,18 +12,21 @@
   
 = content_for :content do
   #products_repos
-    %ul.bordered-table
-      %div.block_head
-        %div.column_head.column_1
-          = _("Products")
-      -products.each do |product|
-        - cssclass = cycle("", "alt")
-        %div{:class=> cssclass}
-          &nbsp;#{product.name}
-      %div.block_head
-        %div.column_head.column_1
-          = _("Repositories")
-      -repositories.each do |repo|
-        - cssclass = cycle("", "alt")
-        %div{:class=> cssclass}
-          &nbsp;#{repo.name}
+    -if products.length != 0 or repositories.length !=0
+      %ul.bordered-table
+        -if products.length != 0
+          %div.block_head
+            %div.column_head.column_1
+              = _("Products")
+        -products.each do |product|
+          - cssclass = cycle("", "alt")
+          %div{:class=> cssclass}
+            &nbsp;#{product.name}
+        -if repositories.length != 0         
+          %div.block_head
+            %div.column_head.column_1
+              = _("Repositories")
+        -repositories.each do |repo|
+          - cssclass = cycle("", "alt")
+          %div{:class=> cssclass}
+            &nbsp;#{repo.name}

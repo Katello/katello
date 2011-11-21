@@ -181,7 +181,7 @@ KT.common = (function() {
           	yesCallback = yesCallback || function(){},
           	noCallback = noCallback || function(){};
           
-          return $(html).dialog({
+          $(html).dialog({
             closeOnEscape: false,
             open: function (event, ui) {
                 $('.ui-dialog-titlebar-close').hide();
