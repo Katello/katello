@@ -88,6 +88,7 @@ class SystemPackagesController < ApplicationController
   def packages
     offset = current_user.page_size
     packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    total_packages = packages.length
     if packages.length > 0
       if params.has_key? :pkg_order
         if params[:pkg_order].downcase == "desc"
@@ -99,6 +100,7 @@ class SystemPackagesController < ApplicationController
       packages = []
     end
     render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages,
+                                                                       :total_packages => total_packages,
                                                                        :offset => offset, :editable => @system.editable?}
   end
 
