@@ -34,28 +34,30 @@ $(document).ready(function() {
 	            type            :  'select',
 	            name            :  element.attr('name'),
 	            data   			:  element.data('options'),
-	            onsubmit		:  function(){
-	            	KT.common.customConfirm(
-	            		i18n.productUpdateKeyConfirm,
-	            		function(){
-	            			$.ajax({
-	            				type 	: 'PUT',
-	            				url		: element.data('url'), 
-	            				data	: { 'product[gpg_all_repos]' : true },
-	            				success : function(data){
-	            					notices.checkNotices();					
-	            				}
-	            			});
-	            		}
-	            	);
-	            	
-	            	return true;
-	            },
 	            onsuccess       :  function(result, status, xhr){
 	            	var data = element.data('options');
 	            	
 	            	data["selected"] = result;
 	            	element.html(data[result]);
+	            	console.log(result);
+	            	if( result !== "" ){
+		            	KT.common.customConfirm(
+		            		i18n.productUpdateKeyConfirm + "<br/><br/>" + i18n.proudctUpdateKeyWarning,
+		            		function(){
+		            			$.ajax({
+		            				type 	: 'PUT',
+		            				url		: element.data('url'), 
+		            				data	: { 'product[gpg_all_repos]' : true },
+		            				success : function(data){
+		            					notices.checkNotices();					
+		            				}
+		            			});
+		            		},
+		            		function(){
+		            			notices.checkNotices();
+		            		}
+		            	);
+            		}
 	            }
         	};
         $(this).editable($(this).attr('data-url'), $.extend(common_settings, settings));

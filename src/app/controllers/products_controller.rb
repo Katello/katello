@@ -74,11 +74,12 @@ class ProductsController < ApplicationController
       
       if params[:product].has_key?(:gpg_all_repos)
         notice _("All repository GPG keys for Product '#{@product.name}' were updated.")
-        #Call product set all repos
+        @product.reset_repo_gpgs!
+      else
+        notice _("Product '#{@product.name}' was updated.")
       end
       
       @product.save!
-      notice _("Product '#{@product.name}' was updated.")
 
       respond_to do |format|
         format.html { render :text => escape_html(result) }
