@@ -139,7 +139,7 @@ class SystemTemplate < ActiveRecord::Base
           #xm.arch distro.arch
           xm.arch "x86_64"
           xm.install("type" => "url") {
-            xm.url distro.url
+            xm.url distro.url_for_environment(self.environment)
           }
           # TODO root password is hardcoded for now
           xm.rootpw "redhat"
