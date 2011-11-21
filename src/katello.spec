@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.106
+Version:        0.1.111
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -72,6 +72,7 @@ Requires:       rubygem(chunky_png)
 # bz 743816 temp fix until yum update makes to z stream
 %if 0%{?rhel} == 6
 Requires:       yum >= 3.2.29
+Requires:       redhat-logos >= 60.0.14
 %endif
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
@@ -225,8 +226,10 @@ rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 
-#remove staged branding
+#branding
 if [ -d branding ] ; then
+  ln -svf %{_datadir}/icons/hicolor/24x24/apps/system-logo-icon.png %{buildroot}%{homedir}/public/images/rh-logo.png
+  ln -svf %{_sysconfdir}/favicon.png %{buildroot}%{homedir}/public/images/favicon.png
   rm -rf %{buildroot}%{homedir}/branding
 fi
 
@@ -331,6 +334,46 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Nov 18 2011 Shannon Hughes <shughes@redhat.com> 0.1.111-1
+- 755048 - handle multiple ks trees for a template (inecas@redhat.com)
+
+* Thu Nov 17 2011 Shannon Hughes <shughes@redhat.com> 0.1.110-1
+- Revert "fix sync disabled submit button to not sync when disabled"
+  (shughes@redhat.com)
+- 747032 - Fixed a bugby error in the dashboard whenever you had more than one
+  synced products (paji@redhat.com)
+
+* Thu Nov 17 2011 Shannon Hughes <shughes@redhat.com> 0.1.109-1
+- fix sync disabled submit button to not sync when disabled
+  (shughes@redhat.com)
+- 754215 - Small temporary fix for max height on CS Trees. (jrist@redhat.com)
+
+* Wed Nov 16 2011 shughes@redhat.com
+- Pie chart updates now functions with actual data. (jrist@redhat.com)
+- Fix for pie chart on dashboard page. (jrist@redhat.com)
+- Fixed a permission check to only load syncplans belonging to a specific org
+  as opposed to syncplnas belongign to all org (paji@redhat.com)
+
+* Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.107-1
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (jsherril@redhat.com)
+- removing duplicated method (jsherril@redhat.com)
+- incorporate redhat-logos rpm for system engine installs (shughes@redhat.com)
+- 754442 - handle error status codes from CDN (inecas@redhat.com)
+- 754207 - fixing issue where badly formed cdn_proxy would throw a non-sensical
+  error, and we would attempt to parse a nil host (jsherril@redhat.com)
+- Merge branch 'master' into sys-status (thomasmckay@redhat.com)
+- minor verbage change to label: Host Type to System Type
+  (thomasmckay@redhat.com)
+- Merge branch 'master' into sys-status (thomasmckay@redhat.com)
+- Merge branch 'master' into sys-status (thomasmckay@redhat.com)
+- Merge branch 'master' into sys-status (thomasmckay@redhat.com)
+- added compliant until date (thomasmckay@redhat.com)
+- display a system's subscription status and colored icon
+  (thomasmckay@redhat.com)
+- Merge branch 'master' into sys-status (thomasmckay@redhat.com)
+- display dashboard system status (thomasmckay@redhat.com)
+
 * Wed Nov 16 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.106-1
 - async job - fix for broken promotions (bbuckingham@redhat.com)
 

@@ -47,6 +47,6 @@ class katello::params {
 
   # Subsystems settings
   $candlepin_url = "https://localhost:8443/candlepin"
-  $pulp_url      = "https://localhost/pulp/api"
+  $pulp_url      = katello_pulp_url()
   $foreman_url   = "https://localhost/foreman"
 }

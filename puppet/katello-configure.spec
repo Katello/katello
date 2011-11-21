@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.14
+Version:        0.1.16
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -52,6 +52,12 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Fri Nov 18 2011 Shannon Hughes <shughes@redhat.com> 0.1.16-1
+- 755048 - set pulp host using fqdn (inecas@redhat.com)
+
+* Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.15-1
+- 
+
 * Wed Nov 16 2011 Ivan Necas <inecas@redhat.com> 0.1.14-1
 - cdn-proxy - fix typo in Puppet manifest (inecas@redhat.com)
 

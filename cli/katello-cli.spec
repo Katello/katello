@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.12
+Version:       0.1.13
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.13-1
+- 
+
 * Tue Nov 15 2011 Shannon Hughes <shughes@redhat.com> 0.1.12-1
 - Merge branch 'master' into password_reset (bbuckingham@redhat.com)
 - cli - removed unused 'flag' argument from a method 'Command#require_option'
