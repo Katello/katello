@@ -22,6 +22,7 @@
 KT.packages = function() {
     var system_id = $('.packages').attr('data-system_id'),
     retrievingNewContent = true,
+    total_packages = $('.packages').attr('data-total_packages'),
     more_button = $('#more'),
     sort_button = $('#package_sort'),
     packages_form = $('#packages_form'),
@@ -30,8 +31,7 @@ KT.packages = function() {
     content_form = $('#content_form'),
     add_content_button = $('#add_content'),
     remove_content_button = $('#remove_content'),
-    packages_radio_button = $('#perform_action_packages'),
-    package_groups_radio_button = $('#perform_action_package_groups'),
+    loaded_summary = $('#loaded_summary'),
     selected_checkboxes = 0,
     disableButtons = function() {
         remove_button.attr('disabled', 'disabled');
@@ -67,6 +67,7 @@ KT.packages = function() {
                 registerCheckboxEvents();
                 $('#filter').keyup();
                 $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
+                updateLoadedSummary();
                 if (data.length == 0) {
                     more_button.empty().remove();
                 }else{
@@ -111,6 +112,7 @@ KT.packages = function() {
                 registerCheckboxEvents();
                 $('#filter').keyup();
                 $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
+                updateLoadedSummary();
                 if (data.length == 0) {
                     more_button.empty().remove();
                 }else{
@@ -140,6 +142,11 @@ KT.packages = function() {
             });
         });
     },
+    initPackages = function() {
+        registerEvents();
+        disableButtons();
+        updateLoadedSummary();
+    }
     registerEvents = function() {
         more_button.bind('click', morePackages);
         sort_button.bind('click', reverseSort);
@@ -148,7 +155,6 @@ KT.packages = function() {
         remove_button.bind('click', removePackages);
         update_button.bind('click', updatePackages);
 
-        disableButtons();
         registerCheckboxEvents();
     },
     addContent = function(data) {
@@ -215,12 +221,17 @@ KT.packages = function() {
                 enableButtons();
             }
         });
+    },
+    updateLoadedSummary = function() {
+        var total_loaded = $('tr.package').length,
+            message = i18n.x_of_y_packages(total_loaded, total_packages);
+        loaded_summary.html(message);
     };
     return {
         morePackages: morePackages,
         sortOrder: sortOrder,
         reverseSort: reverseSort,
-        registerEvents: registerEvents,
+        initPackages: initPackages,
         addContent: addContent,
         removeContent: removeContent,
         removePackages: removePackages,
@@ -229,5 +240,5 @@ KT.packages = function() {
 }();
 
 $(document).ready(function() {
-    KT.packages.registerEvents();
+    KT.packages.initPackages();
 });
