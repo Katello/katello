@@ -68,5 +68,6 @@
 
     - if editable
       .prefix_2.grid_6.ra
-        -#= submit_tag _("Update"), :class => 'button', :id => 'update_packages', 'data-url' => system_system_packages_path(@system.id)
+        = submit_tag _("Update All"), :class => 'button', :id => 'update_all_packages', 'data-url' => system_system_packages_path(@system.id)
+        = submit_tag _("Update"), :class => 'button', :id => 'update_packages', 'data-url' => system_system_packages_path(@system.id)
         = submit_tag _('Remove'), :class => 'button', :id => 'remove_packages', 'data-url' => remove_system_system_packages_path(@system.id)
