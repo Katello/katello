@@ -70,7 +70,7 @@ module Glue::Pulp::Consumer
 
     def install_package packages
       Rails.logger.info "Scheduling package install for consumer #{self.name}"
-      PulpTaskStatus::wait_for_tasks [Pulp::Consumer.install_packages(self.uuid, packages)]
+      pulp_task = Pulp::Consumer.install_packages(self.uuid, packages)
     rescue => e
       Rails.logger.error "Failed to schedule package install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -78,7 +78,7 @@ module Glue::Pulp::Consumer
 
     def uninstall_package packages
       Rails.logger.info "Scheduling package uninstall for consumer #{self.name}"
-      PulpTaskStatus::wait_for_tasks [Pulp::Consumer.uninstall_packages(self.uuid, packages)]
+      pulp_task = Pulp::Consumer.uninstall_packages(self.uuid, packages)
     rescue => e
       Rails.logger.error "Failed to schedule package uninstall for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -86,7 +86,7 @@ module Glue::Pulp::Consumer
 
     def install_package_group groups
       Rails.logger.info "Scheduling package group install for consumer #{self.name}"
-      PulpTaskStatus::wait_for_tasks [Pulp::Consumer.install_package_groups(self.uuid, groups)]
+      pulp_task = Pulp::Consumer.install_package_groups(self.uuid, groups)
     rescue => e
       Rails.logger.error "Failed to schedule package group install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -94,7 +94,7 @@ module Glue::Pulp::Consumer
 
     def uninstall_package_group groups
       Rails.logger.info "Scheduling package group uninstall for consumer #{self.name}"
-      PulpTaskStatus::wait_for_tasks [Pulp::Consumer.uninstall_package_groups(self.uuid, groups)]
+      pulp_task = Pulp::Consumer.uninstall_package_groups(self.uuid, groups)
     rescue => e
       Rails.logger.error "Failed to schedule package group uninstall for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
