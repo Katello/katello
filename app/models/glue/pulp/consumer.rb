@@ -84,6 +84,14 @@ module Glue::Pulp::Consumer
       raise e
     end
 
+    def update_package packages
+      Rails.logger.info "Scheduling package update for consumer #{self.name}"
+      pulp_task = Pulp::Consumer.update_packages(self.uuid, packages)
+    rescue => e
+      Rails.logger.error "Failed to schedule package update for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
     def install_package_group groups
       Rails.logger.info "Scheduling package group install for consumer #{self.name}"
       pulp_task = Pulp::Consumer.install_package_groups(self.uuid, groups)

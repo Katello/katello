@@ -28,6 +28,7 @@ KT.packages = function() {
     packages_form = $('#packages_form'),
     remove_button = $('#remove_packages'),
     update_button = $('#update_packages'),
+    update_all_button = $('#update_all_packages'),
     content_form = $('#content_form'),
     add_content_button = $('#add_content'),
     remove_content_button = $('#remove_content'),
@@ -46,6 +47,14 @@ KT.packages = function() {
 
         remove_button.removeClass('disabled');
         update_button.removeClass('disabled');
+    },
+    disableUpdateAll = function() {
+        update_all_button.attr('disabled', 'disabled');
+        update_all_button.addClass('disabled');
+    },
+    enableUpdateAll = function() {
+        update_all_button.removeAttr('disabled');
+        update_all_button.removeClass('disabled');
     },
     morePackages = function() {
         var list = $('.packages');
@@ -133,10 +142,12 @@ KT.packages = function() {
                 if($(this).is(":checked")){
                     selected_checkboxes++;
                     enableButtons();
+                    disableUpdateAll();
                 }else{
                     selected_checkboxes--;
                     if(selected_checkboxes == 0){
                         disableButtons();
+                        enableUpdateAll();
                     }
                 }
             });
@@ -145,6 +156,7 @@ KT.packages = function() {
     initPackages = function() {
         registerEvents();
         disableButtons();
+        enableUpdateAll();
         updateLoadedSummary();
     }
     registerEvents = function() {
@@ -154,6 +166,7 @@ KT.packages = function() {
         remove_content_button.bind('click', removeContent);
         remove_button.bind('click', removePackages);
         update_button.bind('click', updatePackages);
+        update_all_button.bind('click', updateAllPackages);
 
         registerCheckboxEvents();
     },
@@ -222,6 +235,21 @@ KT.packages = function() {
             }
         });
     },
+    updateAllPackages = function(data) {
+        data.preventDefault();
+        disableButtons();
+        $.ajax({
+            url: update_button.attr('data-url'),
+            type: 'POST',
+            cache: false,
+            success: function() {
+                enableUpdateAll();
+            },
+            error: function() {
+                enableUpdateAll();
+            }
+        });
+    },
     updateLoadedSummary = function() {
         var total_loaded = $('tr.package').length,
             message = i18n.x_of_y_packages(total_loaded, total_packages);
@@ -235,7 +263,8 @@ KT.packages = function() {
         addContent: addContent,
         removeContent: removeContent,
         removePackages: removePackages,
-        updatePackages: updatePackages
+        updatePackages: updatePackages,
+        updateAllPackages: updateAllPackages
     }
 }();
 
