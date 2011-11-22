@@ -34,7 +34,6 @@ class SystemPackagesController < ApplicationController
   end
 
   def add
-
     if !params[:packages].nil?
       # user entered one or more package names (as comma-separated list) in the content box
       packages = params[:packages].split(/ *, */ )
@@ -81,7 +80,20 @@ class SystemPackagesController < ApplicationController
   end
 
   def update
-    # TODO: action for updating packages
+    packages = nil
+    if !params[:package].nil?
+      # user selected one or more packages from the list of installed packages
+      packages = params[:package].keys
+    end
+
+    @system.update_packages packages
+
+    if packages.nil?
+      notice _("Update of all packages scheduled for System '%{s}'." % {:s => @system['name']})
+    else
+      notice _("Update of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:package]})
+    end
+
     render :text => ''
   end
 

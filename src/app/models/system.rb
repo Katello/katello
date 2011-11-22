@@ -89,6 +89,11 @@ class System < ActiveRecord::Base
     pulp_task = self.uninstall_package(packages)
   end
 
+  def update_packages packages=nil
+    # if no packages are provided, a full system update will be performed (e.g ''yum update' equivalent)
+    pulp_task = self.update_package(packages)
+  end
+
   def install_package_groups groups
     pulp_task = self.install_package_group(groups)
   end
