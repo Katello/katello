@@ -82,19 +82,19 @@ class System < ActiveRecord::Base
   end
 
   def install_packages packages
-    self.async(:organization => self.organization).install_package(packages)
+    pulp_task = self.install_package(packages)
   end
 
   def uninstall_packages packages
-    self.async(:organization => self.organization).uninstall_package(packages)
+    pulp_task = self.uninstall_package(packages)
   end
 
   def install_package_groups groups
-    self.async(:organization => self.organization).install_package_group(groups)
+    pulp_task = self.install_package_group(groups)
   end
 
   def uninstall_package_groups groups
-    self.async(:organization => self.organization).uninstall_package_group(groups)
+    pulp_task = self.uninstall_package_group(groups)
   end
 
   # returns list of virtual permission tags for the current user
