@@ -385,6 +385,7 @@ Src::Application.routes.draw do
       member do
         get :package_groups
         get :package_group_categories
+        post :enable
       end
     end
 
