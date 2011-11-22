@@ -50,7 +50,7 @@ module Pulp
     self.ca_cert_file = cfg.ca_cert_file
 
     def self.default_headers
-      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(::User.current.pulp_oauth_header)
+      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(::User.pulp_oauth_header)
     end
 
     # the path is expected to have trailing slash
