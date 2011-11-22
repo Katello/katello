@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.111
+Version:        0.1.112
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -334,6 +334,20 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Nov 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.112-1
+- fixed failing spec tests all caused by new parameter in
+  Candlepin::Consumer#update
+- template export - spec tests for disabled export form a Locker
+- template export - disabled exporting templates from Locker envs
+- moved auto-heal down next to current subs
+- system templates - fixing issue where distributions were not browsable on a
+  newly created template without refreshing
+- positioned auto-heal button; comment-removed the Socket and Guest Requirement
+  (since were hard-code data populated)
+- fixed missing call to 'render' at end of #update
+- use PUT instead of POST
+- autoheal checkbox on system; toggling not working
+
 * Fri Nov 18 2011 Shannon Hughes <shughes@redhat.com> 0.1.111-1
 - 755048 - handle multiple ks trees for a template (inecas@redhat.com)
 
