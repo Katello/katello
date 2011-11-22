@@ -51,6 +51,12 @@ class RepoAPI(KatelloAPI):
         data = self.server.GET(path)[1]
         return data
 
+
+    def enable(self, repo_id, enable=True):
+        data = {"enable": enable}
+        path = "/api/repositories/%s/enable/" % repo_id
+        return self.server.POST(path, data)[1]
+
     def delete(self, repoId):
         path = "/api/repositories/%s/" % repoId
         return self.server.DELETE(path)[1]

@@ -373,6 +373,49 @@ class Sync(RepoAction):
             return os.EX_DATAERR
 
 
+class Enable(RepoAction):
+
+    @property
+    def description(self):
+        if self._enable:
+            return _('enable a repository')
+        else:
+            return _('disable a repository')
+
+    def __init__(self, enable = True):
+        self._enable = enable
+        super(Enable, self).__init__()
+
+    def setup_parser(self):
+        self.parser.add_option('--id', dest='id',
+                      help=_("repository id"))
+        self.parser.add_option('--name', dest='name',
+                      help=_("repository name"))
+        self.parser.add_option('--org', dest='org',
+                      help=_("organization name eg: foo.example.com"))
+        self.parser.add_option('--environment', dest='env',
+                      help=_("environment name eg: production (default: Locker)"))
+        self.parser.add_option('--product', dest='product',
+                      help=_("product name eg: fedora-14"))
+
+    def check_options(self):
+        if not self.has_option('id'):
+            self.require_option('name')
+            self.require_option('org')
+            self.require_option('product')
+
+    def run(self):
+
+        repo = self.get_repo()
+        if repo == None:
+            return os.EX_DATAERR
+
+        msg = self.api.enable(repo["id"], self._enable)
+        print msg
+            
+        return os.EX_OK
+
+
 class List(RepoAction):
 
     description = _('list repos within an organization')
