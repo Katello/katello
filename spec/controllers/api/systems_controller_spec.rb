@@ -49,7 +49,7 @@ describe Api::SystemsController do
 
     Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Candlepin::Consumer.stub!(:update).and_return(true)
-    
+
     Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Pulp::Consumer.stub!(:update).and_return(true)
 
@@ -195,7 +195,7 @@ describe Api::SystemsController do
     end
 
   end
-  
+
   describe "upload package profile" do
 
     before(:each) do
@@ -215,14 +215,14 @@ describe Api::SystemsController do
       response.body.should == @sys.to_json
     end
   end
-  
+
   describe "view packages in a specific system" do
 
     before(:each) do
       @sys = System.new(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid)
       System.stub!(:first).and_return(@sys)
     end
- 
+
     let(:action) { :package_profile }
     let(:req) { get :package_profile, :id => uuid }
     let(:authorized_user) { user_with_read_permissions }
@@ -236,7 +236,7 @@ describe Api::SystemsController do
       response.should be_success
     end
   end
-  
+
   describe "update a system" do
     before(:each) do
       @sys = System.create!(:name => 'test', :environment => @environment_1, :cp_type => 'system', :facts => facts, :uuid => uuid, :description => "fake description")
@@ -249,21 +249,21 @@ describe Api::SystemsController do
     let(:authorized_user) { user_with_update_permissions }
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
-    
+
     it "should change the name" do
       Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true)
       post :update, :id => uuid, :name => "foo_name"
       response.body.should == @sys.to_json
       response.should be_success
     end
-    
+
     it "should change the description" do
       Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, "redkin is awesome.").and_return(true)
       post :update, :id => uuid, :description => "redkin is awesome."
       response.body.should == @sys.to_json
       response.should be_success
     end
-    
+
     it "should change the location" do
       Pulp::Consumer.should_receive(:update).once.with(@organization.cp_key, uuid, @sys.description).and_return(true)
       post :update, :id => uuid, :location => "never-neverland"
@@ -273,7 +273,7 @@ describe Api::SystemsController do
 
     it "should update installed products" do
       @sys.facts = nil
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products).and_return(true)
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil).and_return(true)
       post :update, :id => uuid, :installedProducts => installed_products
       response.body.should == @sys.to_json
       response.should be_success
