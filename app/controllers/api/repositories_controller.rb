@@ -14,7 +14,7 @@ require 'resources/pulp'
 
 class Api::RepositoriesController < Api::ApiController
   respond_to :json
-  before_filter :find_repository, :only => [:show, :destroy, :package_groups, :package_group_categories]
+  before_filter :find_repository, :only => [:show, :destroy, :package_groups, :package_group_categories, :enable]
   before_filter :find_product, :only => [:create]
   before_filter :find_organization, :only => [:discovery]
 
@@ -38,6 +38,17 @@ class Api::RepositoriesController < Api::ApiController
   def destroy
     @repository.product.delete_repo_by_id(params[:id])
     render :text => _("Deleted repository '#{params[:id]}'"), :status => 200
+  end
+
+  def enable
+    @repository.enabled = query_params[:enable]
+    @repository.save!
+
+    if @repository.enabled?
+      render :text => _("Repository '#{@repository.name}' enabled."), :status => 200
+    else
+      render :text => _("Repository '#{@repository.name}' disabled."), :status => 200
+    end
   end
 
   # proxy repository discovery call to pulp, so we don't have to create an async task to keep track of async task on pulp side
