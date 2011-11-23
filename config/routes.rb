@@ -71,6 +71,8 @@ Src::Application.routes.draw do
       get :more_packages
       get :subscriptions
       post :update_subscriptions
+      get :products
+      get :more_products
       get :facts
     end
     collection do

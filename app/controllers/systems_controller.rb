@@ -45,6 +45,8 @@ class SystemsController < ApplicationController
       :env_items => env_system,
       :subscriptions => read_system,
       :update_subscriptions => edit_system,
+      :products => read_system,
+      :more_products => read_system,
       :packages => read_system,
       :more_packages => read_system,
       :update => edit_system,
@@ -179,12 +181,65 @@ class SystemsController < ApplicationController
     end
   end
 
+  def first_objects objects
+    offset = current_user.page_size
+    if objects.length > 0
+      if params.has_key? :order
+        if params[:order].downcase == "desc"
+          objects.reverse!
+        end
+      end
+      objects = objects[0...offset]
+    else
+      objects = []
+    end
+    return objects, offset
+  end
+
+  def more_objects objects
+    #grab the current user setting for page size
+    size = current_user.page_size
+    if objects.length > 0
+      #check for the params offset (start of array chunk)
+      if params.has_key? :offset
+        offset = params[:offset].to_i
+      else
+        offset = current_user.page_size
+      end
+      if params.has_key? :order
+        if params[:order].downcase == "desc"
+          #reverse if order is desc
+          objects.reverse!
+        end
+      end
+      if params.has_key? :reverse
+        objects = objects[0...params[:reverse].to_i]
+      else
+        objects = objects[offset...offset+size]
+      end
+    else
+      objects = []
+    end
+
+    return [products, offset]
+  end
+
+  def products
+    products , offset = first_objects @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    render :partial=>"products", :layout => "tupane_layout", :locals=>{:system=>@system, :products => products, :offset => offset}
+  end
+
+  def more_products
+    products, offset = more_objects @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    render :partial=>"more_products", :locals=>{:system=>@system, :products => products, :offset=> offset}
+  end
+
   def packages
     offset = current_user.page_size
     packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
     if packages.length > 0
-      if params.has_key? :pkg_order
-        if params[:pkg_order].downcase == "desc"
+      if params.has_key? :order
+        if params[:order].downcase == "desc"
           packages.reverse!
         end
       end
@@ -207,8 +262,8 @@ class SystemsController < ApplicationController
       else
         offset = current_user.page_size
       end
-      if params.has_key? :pkg_order
-        if params[:pkg_order].downcase == "desc"
+      if params.has_key? :order
+        if params[:order].downcase == "desc"
           #reverse if order is desc
           packages.reverse!
         end
