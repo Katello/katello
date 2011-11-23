@@ -13,6 +13,7 @@ Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       puppet >= 2.6.6
+Requires:       wget
 BuildRequires:  /usr/bin/pod2man
 
 BuildArch: noarch
