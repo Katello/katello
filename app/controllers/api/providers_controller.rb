@@ -72,12 +72,7 @@ class Api::ProvidersController < Api::ApiController
   end
 
   def products
-    if query_params['include_disabled']
-      products =  @provider.products.all_readable(@provider.organization)
-    else
-      products = @provider.products.readable(@provider.organization)
-    end
-    render :json => products.select("products.*, providers.name AS provider_name").joins(:provider).to_json
+    render :json => @provider.products.all_readable(@provider.organization).select("products.*, providers.name AS provider_name").joins(:provider).to_json
   end
 
   def import_manifest
