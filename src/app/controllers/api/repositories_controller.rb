@@ -41,6 +41,8 @@ class Api::RepositoriesController < Api::ApiController
   end
 
   def enable
+    raise HttpErrors::NotFound, _("Disable/enable is not supported for custom repositories.") if not @repository.redhat?
+        
     @repository.enabled = query_params[:enable]
     @repository.save!
 
