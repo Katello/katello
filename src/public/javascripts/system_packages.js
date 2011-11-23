@@ -37,7 +37,7 @@ KT.packages = (function(){
             var dataScrollURL = more.attr("data-scroll_url");
 
             var offset = parseInt(more.attr("data-offset"), 10) + parseInt(more.attr("data-page_size"), 10);
-            dataScrollURL = dataScrollURL + "?offset=" + offset + "&pkg_order="+ $('#package_sort').attr("data-sort") +"&";
+            dataScrollURL = dataScrollURL + "?offset=" + offset + "&order="+ $('#package_sort').attr("data-sort") +"&";
             //console.log(dataScrollURL + ", page_size: " + offset);
             spinner.fadeIn();
             $.ajax({
@@ -82,7 +82,7 @@ KT.packages = (function(){
             var dataScrollURL = more.attr("data-scroll_url");
             var reverse = parseInt(more.attr("data-offset"), 10);
 
-            dataScrollURL = dataScrollURL + "?reverse=" + reverse + "&pkg_order=" + KT.packages.sortOrder() + "&";
+            dataScrollURL = dataScrollURL + "?reverse=" + reverse + "&order=" + KT.packages.sortOrder() + "&";
             spinner.fadeIn();
             list.find('tbody > tr').empty().remove();
             $.ajax({
