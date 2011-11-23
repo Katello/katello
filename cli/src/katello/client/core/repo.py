@@ -427,6 +427,8 @@ class List(RepoAction):
             help=_("environment name eg: production (default: locker)"))
         self.parser.add_option('--product', dest='product',
             help=_("product name eg: fedora-14"))
+        self.parser.add_option('--include_disabled', action="store_true", dest='disabled',
+            help=_("list also disabled repositories"))
 
     def check_options(self):
         self.require_option('org')
@@ -435,7 +437,8 @@ class List(RepoAction):
         orgName = self.get_option('org')
         envName = self.get_option('env')
         prodName = self.get_option('product')
-
+        listDisabled = self.has_option('disabled')
+        
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('package_count')
@@ -445,19 +448,19 @@ class List(RepoAction):
             prod = get_product(orgName, prodName)
             if env != None and prod != None:
                 self.printer.setHeader(_("Repo List For Org %s Environment %s Product %s") % (orgName, env["name"], prodName))
-                repos = self.api.repos_by_env_product(env["id"], prod["id"])
+                repos = self.api.repos_by_env_product(env["id"], prod["id"], None, listDisabled)
                 self.printer.printItems(repos)
         elif prodName:
             prod = get_product(orgName, prodName)
             if prod != None:
                 self.printer.setHeader(_("Repo List for Product %s in Org %s ") % (prodName, orgName))
-                repos = self.api.repos_by_product(prod["id"])
+                repos = self.api.repos_by_product(prod["id"], listDisabled)
                 self.printer.printItems(repos)
         else:
             env  = get_environment(orgName, envName)
             if env != None:
                 self.printer.setHeader(_("Repo List For Org %s Environment %s") % (orgName, env["name"]))
-                repos = self.api.repos_by_org_env(orgName,  env["id"])
+                repos = self.api.repos_by_org_env(orgName,  env["id"], listDisabled)
                 self.printer.printItems(repos)
 
         return os.EX_OK
