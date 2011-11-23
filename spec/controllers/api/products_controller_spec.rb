@@ -73,7 +73,7 @@ describe Api::ProductsController do
 
     before do
       @dumb_prod = {:id => @product.id}
-      Product.stub!(:readable).and_return(@products)
+      Product.stub!(:all_readable).and_return(@products)
       @products.stub_chain(:select, :joins,:where,:all).and_return(@dumb_prod)
     end
 
@@ -101,7 +101,7 @@ describe Api::ProductsController do
   context "show all @products in locker" do
     before do
       @dumb_prod = {:id => @product.id}
-      Product.stub!(:readable).and_return(@products)
+      Product.stub!(:all_readable).and_return(@products)
       @products.stub_chain(:select, :joins,:where,:all).and_return(@dumb_prod)
     end
 
@@ -147,8 +147,8 @@ describe Api::ProductsController do
 
     it "should retrieve all repositories for the product" do
       @product.stub!(:readable?).and_return(true)
-      Product.stub!(:readable).and_return(@products)
-      @product.should_receive(:repos).once.with(@environment).and_return({})
+      Product.stub!(:all_readable).and_return(@products)
+      @product.should_receive(:repos).once.with(@environment, nil).and_return({})
       get 'repositories', :organization_id => @organization.cp_key, :environment_id => @environment.id, :id => @product.id
     end
 
