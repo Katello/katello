@@ -192,12 +192,15 @@ class KatelloServer(Server):
     def __init__(self, host, port=443, protocol='https', path_prefix='/katello/api'):
         super(KatelloServer, self).__init__(host, port, protocol, path_prefix)
 
-        default_locale = locale.getdefaultlocale()[0].lower().replace('_', '-')
         default_headers = {'Accept': 'application/json',
-                           'Accept-Language': default_locale,
                            'content-type': 'application/json',
                            'User-Agent': 'katello-cli/0.1'}
         self.headers.update(default_headers)
+
+        default_locale = locale.getdefaultlocale()[0]
+        if default_locale:
+            accept_lang = default_locale.lower().replace('_', '-')
+            self.headers.update( { 'Accept-Language': accept_lang } )
 
         self._log = getLogger('katello')
 
