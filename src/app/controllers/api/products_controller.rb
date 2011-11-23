@@ -41,9 +41,9 @@ class Api::ProductsController < Api::ApiController
 
 
     if @environment.nil?
-      products = query_params[:include_disabled] ? Product.all_readable(@organization) : Product.readable(@organization)
+      products = Product.all_readable(@organization)
     else
-      products = query_params[:include_disabled] ? @environment.products.all_readable(@organization) : @environment.products.readable(@organization)
+      products = @environment.products.all_readable(@organization)
     end
 
     render :json => products.select("products.*, providers.name AS provider_name").joins(:provider).where(query_params).all
@@ -55,7 +55,7 @@ class Api::ProductsController < Api::ApiController
   end
 
   def repositories
-    render :json => @product.repos(@environment).where(query_params.slice(:name))
+    render :json => @product.repos(@environment, query_params[:include_disabled]).where(query_params.slice(:name))
   end
 
   private
