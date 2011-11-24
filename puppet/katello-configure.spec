@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.16
+Version:        0.1.17
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -53,6 +53,12 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Thu Nov 24 2011 Ivan Necas <inecas@redhat.com> 0.1.17-1
+- katello-configure - wait for canlepin to really start (inecas@redhat.com)
+- pulp-revocation - set Candlepin to save CRL to a place Pulp can use
+  (inecas@redhat.com)
+- katello-configure - catch puppet stderr to a log file (inecas@redhat.com)
+
 * Fri Nov 18 2011 Shannon Hughes <shughes@redhat.com> 0.1.16-1
 - 755048 - set pulp host using fqdn (inecas@redhat.com)
 
