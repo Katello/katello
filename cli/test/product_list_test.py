@@ -17,7 +17,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.mock_options()
 
     def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['list', '--environment=env'])
+        self.assertRaises(Exception, self.action.process_options, ['synchronize', '--environment=env'])
 
     def test_no_error_if_org_provided(self):
         self.action.process_options(['list', '--org=ACME'])
