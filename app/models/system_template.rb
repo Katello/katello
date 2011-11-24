@@ -12,6 +12,7 @@
 
 require 'util/package_util'
 require 'active_support/builder' unless defined?(Builder)
+require 'mapping'
 
 class ParentTemplateValidator < ActiveModel::Validator
   def validate(record)
@@ -133,8 +134,9 @@ class SystemTemplate < ActiveRecord::Base
         xm.os {
           distro = self.distributions.first
           # TODO this will probably need a "mapping" table (Pulp->Aeolus Family-Version)
-          xm.name distro.family
-          xm.version distro.version
+          family, version = Mapping::ImageFactoryNaming.translate(distro.family, distro.version)
+          xm.name family
+          xm.version version
           # TODO distro.arch is nil until resolved 750265 - RFE: Separate "arch" field for distribution
           #xm.arch distro.arch
           xm.arch "x86_64"
