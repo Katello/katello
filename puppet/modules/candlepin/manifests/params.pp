@@ -6,6 +6,9 @@ class candlepin::params {
   $cpsetup_log = "/var/log/katello/katello-configure/cpsetup.log"
 
   require "katello::params"
-  $oauth_key = $katello::params::oauth_key
-  $oauth_secret = $katello::params::oauth_secret
+  $katello_oauth_key = $katello::params::oauth_key
+  $katello_oauth_secret = $katello::params::oauth_secret
+
+  require "thumbslug::params"
+  $thumbslug_oauth_secret = $thumbslug::params::oauth_secret
 }
