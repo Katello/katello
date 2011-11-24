@@ -21,7 +21,7 @@ test_success "user create" user create --username=$TEST_USER --password=password
 test_success "org create" org create --name=$TEST_ORG --description="org description"
 test_success "environment create" environment create --org="$TEST_ORG" --name="$TEST_ENV" --prior="Locker"
 test_success "environment create" environment create --org="$TEST_ORG" --name="$TEST_ENV_3" --prior="$TEST_ENV"
-test_success "provider create" provider create --name="$YUM_PROVIDER" --org="$TEST_ORG" --type=custom --url="$FEWUPS_REPO_URL" --description="prov description"
+test_success "provider create" provider create --name="$YUM_PROVIDER" --org="$TEST_ORG" --url="$FEWUPS_REPO_URL" --description="prov description"
 test_success "product create" product create --provider="$YUM_PROVIDER" --org="$TEST_ORG" --name="$FEWUPS_PRODUCT" --url="$FEWUPS_REPO_URL" --assumeyes
 test_success "repo create" repo create --product="$FEWUPS_PRODUCT" --org="$TEST_ORG" --name="$FEWUPS_REPO" --url="$FEWUPS_REPO_URL"
 test_success "filter create" filter create --org="$TEST_ORG" --name="$FILTER1" --description="description" --packages="package1, package2"

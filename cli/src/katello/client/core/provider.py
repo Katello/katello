@@ -33,9 +33,6 @@ except ImportError:
 
 Config()
 
-PROVIDER_TYPES = { 'redhat':   'Red Hat',
-                   'custom':   'Custom'}
-
 
 # base provider action =========================================================
 class ProviderAction(Action):
@@ -138,14 +135,7 @@ class Update(ProviderAction):
         self.parser.add_option('--org', dest='org',
                                help=_("name of organization (required)"))
 
-        if self._create:
-            self.parser.add_option("--type", dest="type",
-                                  help=_("""provider type, one of:
-                                  \"redhat\"   for Red Hat,
-                                  \"custom\"   for Generic Yum Collection (default)"""),
-                                  choices=['redhat', 'custom'])
-                                  #default='yum'
-        else:
+        if not self._create:
             self.parser.add_option('--new_name', dest='new_name',
                                   help=_("provider name"))
 
@@ -154,11 +144,6 @@ class Update(ProviderAction):
 
         self.require_option('name')
         self.require_option('org')
-        if self._create:
-            self.require_option('type')
-
-        if self.get_option('type') == 'redhat':
-            self.require_option('url')
 
         if self.has_option('url'):
             url = self.get_option('url')
@@ -169,8 +154,8 @@ class Update(ProviderAction):
                 self.add_option_error(_('Option --url is not in a valid format'))
 
 
-    def create(self, name, orgName, description, provType, url):
-        prov = self.api.create(name, orgName, description, provType, url)
+    def create(self, name, orgName, description, url):
+        prov = self.api.create(name, orgName, description, "Custom", url)
         if is_valid_record(prov):
             print _("Successfully created provider [ %s ]") % prov['name']
             return True
@@ -199,8 +184,7 @@ class Update(ProviderAction):
         url         = self.get_option('url')
 
         if self._create:
-            provType = PROVIDER_TYPES[self.get_option('type')]
-            if not self.create(name, orgName, description, provType, url):
+            if not self.create(name, orgName, description, url):
                 return os.EX_DATAERR
         else:
             if not self.update(name, orgName, newName, description, url):
