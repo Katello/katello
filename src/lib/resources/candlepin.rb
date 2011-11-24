@@ -217,10 +217,16 @@ module Candlepin
         self.put(path(key), JSON.generate(owner), self.default_headers).body
       end
 
-      def import organization_name, path_to_file
-        self.post(join_path(path(organization_name), 'imports'),
-                             {:import => File.new(path_to_file, 'rb')},
-                             self.default_headers)
+      def import organization_name, path_to_file, options
+        path = join_path(path(organization_name), 'imports')
+
+        query_params = {}
+        query_params[:force] = true if options[:force] == "true"
+        unless query_params.empty?
+          path << "?" << query_params.to_param
+        end
+
+        self.post(path, {:import => File.new(path_to_file, 'rb')}, self.default_headers)
       end
 
       def imports organization_name
