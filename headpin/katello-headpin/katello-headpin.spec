@@ -86,6 +86,7 @@ Requires:       katello-cli-headpin
 Requires:       postgresql-server
 Requires:       postgresql
 Requires:       candlepin-tomcat6
+Requires:       thumbslug
 
 %description all
 This is the Katello-headpin meta-package.  If you want to install Katello and all
