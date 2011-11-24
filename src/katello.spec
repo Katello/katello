@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.112
+Version:        0.1.113
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -336,6 +336,20 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Nov 24 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.113-1
+- fixing typo (space)
+- 755730 - exported RHEL templates mapping
+- rh providers - restriction in adding products to rh providers via api
+- bug - better error message when making unauthetincated call
+- repo block - fixes in spec tests
+- repo blacklist - flag for displaying enabled repos via api
+- repo blacklist - product api lists always all products
+- repo blacklist - flag for displaying disabled products via api
+- repo blacklist - enable api blocked for custom repositories
+- repo blacklist - api for enabling/disabling repos
+- password_reset - fix i18n for emails
+- changing some translation strings upon request
+
 * Tue Nov 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.112-1
 - fixed failing spec tests all caused by new parameter in
   Candlepin::Consumer#update
