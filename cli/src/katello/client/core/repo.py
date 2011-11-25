@@ -75,6 +75,16 @@ class RepoAction(Action):
 
         return repo
 
+class SingleRepoAction(RepoAction):
+
+    select_by_env = False
+
+    def setup_parser(self):
+        self.set_repo_select_options(self.select_by_env)
+
+    def check_options(self):
+        self.check_repo_select_options()
+
     def set_repo_select_options(self, select_by_env=True):
         self.parser.add_option('--id', dest='id', help=_("repository id"))
         self.parser.add_option('--name', dest='name', help=_("repository name"))
@@ -88,6 +98,7 @@ class RepoAction(Action):
             self.require_option('name')
             self.require_option('org')
             self.require_option('product')
+
 
 
 
@@ -251,30 +262,12 @@ class Selection(list):
                 self.append(url)
 
 
-class Status(RepoAction):
+class Status(SingleRepoAction):
 
     description = _('status information about a repository')
-
-    def setup_parser(self):
-        self.parser.add_option('--id', dest='id',
-                        help=_("repository id, string value (required)"))
-        self.parser.add_option('--name', dest='name',
-                        help=_("repository name"))
-        self.parser.add_option('--org', dest='org',
-                        help=_("organization name eg: foo.example.com"))
-        self.parser.add_option('--environment', dest='env',
-                        help=_("environment name eg: production (default: Locker)"))
-        self.parser.add_option('--product', dest='product',
-                        help=_("product name eg: fedora-14"))
-
-    def check_options(self):
-        if not self.has_option('id'):
-            self.require_option('name')
-            self.require_option('org')
-            self.require_option('product')
+    select_by_env = True
 
     def run(self):
-
         repo = self.get_repo()
         if repo == None:
             return os.EX_DATAERR
@@ -305,30 +298,12 @@ class Status(RepoAction):
         return os.EX_OK
 
 
-class Info(RepoAction):
+class Info(SingleRepoAction):
 
     description = _('information about a repository')
-
-    def setup_parser(self):
-        self.parser.add_option('--id', dest='id',
-                      help=_("repository id"))
-        self.parser.add_option('--name', dest='name',
-                      help=_("repository name"))
-        self.parser.add_option('--org', dest='org',
-                      help=_("organization name eg: foo.example.com"))
-        self.parser.add_option('--environment', dest='env',
-                      help=_("environment name eg: production (default: Locker)"))
-        self.parser.add_option('--product', dest='product',
-                      help=_("product name eg: fedora-14"))
-
-    def check_options(self):
-        if not self.has_option('id'):
-            self.require_option('name')
-            self.require_option('org')
-            self.require_option('product')
+    select_by_env = True
 
     def run(self):
-
         repo = self.get_repo()
         if repo == None:
             return os.EX_DATAERR
@@ -351,28 +326,12 @@ class Info(RepoAction):
         return os.EX_OK
 
 
-class Sync(RepoAction):
+class Sync(SingleRepoAction):
 
     description = _('synchronize a repository')
-
-    def setup_parser(self):
-        self.parser.add_option('--id', dest='id',
-                               help=_("repo id, string value (required)"))
-        self.parser.add_option('--org', dest='org',
-                      help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
-                      help=_("repository name"))
-        self.parser.add_option('--product', dest='product',
-                      help=_("product name eg: fedora-14"))
-
-    def check_options(self):
-        if not self.has_option('id'):
-            self.require_option('name')
-            self.require_option('org')
-            self.require_option('product')
-
+    select_by_env = False
+    
     def run(self):
-
         repo = self.get_repo()
         if repo == None:
             return os.EX_DATAERR
@@ -388,18 +347,12 @@ class Sync(RepoAction):
             return os.EX_DATAERR
 
 
-class CancelSync(RepoAction):
+class CancelSync(SingleRepoAction):
 
     description = _('synchronize a repository')
-
-    def setup_parser(self):
-        self.set_repo_select_options(False)
-
-    def check_options(self):
-        self.check_repo_select_options()
+    select_by_env = False
 
     def run(self):
-
         repo = self.get_repo()
         if repo == None:
             return os.EX_DATAERR
@@ -408,7 +361,7 @@ class CancelSync(RepoAction):
         print msg
         return os.EX_OK
 
-class Enable(RepoAction):
+class Enable(SingleRepoAction):
 
     @property
     def description(self):
@@ -417,30 +370,13 @@ class Enable(RepoAction):
         else:
             return _('disable a repository')
 
+    select_by_env = False
+
     def __init__(self, enable = True):
         self._enable = enable
         super(Enable, self).__init__()
 
-    def setup_parser(self):
-        self.parser.add_option('--id', dest='id',
-                      help=_("repository id"))
-        self.parser.add_option('--name', dest='name',
-                      help=_("repository name"))
-        self.parser.add_option('--org', dest='org',
-                      help=_("organization name eg: foo.example.com"))
-        self.parser.add_option('--environment', dest='env',
-                      help=_("environment name eg: production (default: Locker)"))
-        self.parser.add_option('--product', dest='product',
-                      help=_("product name eg: fedora-14"))
-
-    def check_options(self):
-        if not self.has_option('id'):
-            self.require_option('name')
-            self.require_option('org')
-            self.require_option('product')
-
     def run(self):
-
         repo = self.get_repo()
         if repo == None:
             return os.EX_DATAERR
@@ -501,30 +437,12 @@ class List(RepoAction):
         return os.EX_OK
 
 
-class Delete(RepoAction):
+class Delete(SingleRepoAction):
 
     description = _('delete a repository')
-
-    def setup_parser(self):
-        self.parser.add_option('--id', dest='id',
-                      help=_("repository id"))
-        self.parser.add_option('--name', dest='name',
-                      help=_("repository name"))
-        self.parser.add_option('--org', dest='org',
-                      help=_("organization name eg: foo.example.com"))
-        self.parser.add_option('--environment', dest='env',
-                      help=_("environment name eg: production (default: Locker)"))
-        self.parser.add_option('--product', dest='product',
-                      help=_("product name eg: fedora-14"))
-
-    def check_options(self):
-        if not self.has_option('id'):
-            self.require_option('name')
-            self.require_option('org')
-            self.require_option('product')
+    select_by_env = True
 
     def run(self):
-
         repo = self.get_repo()
         if repo == None:
             return os.EX_DATAERR
