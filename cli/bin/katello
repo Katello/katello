@@ -83,6 +83,7 @@ def setup_admin(admin):
     prod_cmd.add_action('list', product.List())
     prod_cmd.add_action('delete', product.Delete())
     prod_cmd.add_action('synchronize', product.Sync())
+    prod_cmd.add_action('cancel_sync', product.CancelSync())
     prod_cmd.add_action('status', product.Status())
     prod_cmd.add_action('promote', product.Promote())
     prod_cmd.add_action('list_filters', product.ListFilters())

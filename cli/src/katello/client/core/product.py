@@ -146,6 +146,24 @@ class Sync(SingleProductAction):
         print _("Product [ %s ] synchronized" % prodName)
         return os.EX_OK
 
+# ------------------------------------------------------------------------------
+class CancelSync(SingleProductAction):
+
+    description = _('cancel currently running synchronization')
+    select_by_env = False
+
+    def run(self):
+        orgName     = self.get_option('org')
+        prodName    = self.get_option('name')
+
+        prod = get_product(orgName, prodName)
+        if (prod == None):
+            return os.EX_DATAERR
+
+        msg = self.api.cancel_sync(prod["id"])
+        print msg
+        return os.EX_OK
+
 
 # ------------------------------------------------------------------------------
 class Status(SingleProductAction):
