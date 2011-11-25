@@ -75,6 +75,21 @@ class RepoAction(Action):
 
         return repo
 
+    def set_repo_select_options(self, select_by_env=True):
+        self.parser.add_option('--id', dest='id', help=_("repository id"))
+        self.parser.add_option('--name', dest='name', help=_("repository name"))
+        self.parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com"))
+        self.parser.add_option('--product', dest='product', help=_("product name eg: fedora-14"))
+        if select_by_env:
+            self.parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Locker)")) 
+       
+    def check_repo_select_options(self):
+        if not self.has_option('id'):
+            self.require_option('name')
+            self.require_option('org')
+            self.require_option('product')
+
+
 
 # actions --------------------------------------------------------------------
 
@@ -372,6 +387,26 @@ class Sync(RepoAction):
             print _("Repo [ %s ] failed to sync: %s" % (repo['name'], json.loads(task.get_hashes()[0]["result"])['errors'][0]))
             return os.EX_DATAERR
 
+
+class CancelSync(RepoAction):
+
+    description = _('synchronize a repository')
+
+    def setup_parser(self):
+        self.set_repo_select_options(False)
+
+    def check_options(self):
+        self.check_repo_select_options()
+
+    def run(self):
+
+        repo = self.get_repo()
+        if repo == None:
+            return os.EX_DATAERR
+       
+        msg = self.api.cancel_sync(repo['id'])
+        print msg
+        return os.EX_OK
 
 class Enable(RepoAction):
 
