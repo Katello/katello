@@ -12,6 +12,7 @@
 
 require 'spec_helper'
 require 'helpers/repo_test_data'
+require 'helpers/repo_helper_methods'
 
 include OrchestrationHelper
 
@@ -411,7 +412,7 @@ describe SystemTemplate do
 
     before :each do
       Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups)
-      Repository.stub_chain(:joins, :where).and_return( [repo])
+      stub_repos([repo])
     end
 
     describe "#add_package_group" do
@@ -466,7 +467,7 @@ describe SystemTemplate do
 
     before :each do
       Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories)
-      Repository.stub_chain(:joins, :where).and_return( [repo])
+      stub_repos([repo])
     end
 
     describe "#add_pg_category" do
@@ -517,7 +518,7 @@ describe SystemTemplate do
 
     before :each do
       Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
-      Repository.stub_chain(:joins, :where).and_return( [repo])
+      stub_repos([repo])
     end
 
     describe "#add_distribution" do
@@ -560,7 +561,7 @@ describe SystemTemplate do
         disable_repo_orchestration
         Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
         Pulp::Distribution.stub(:find => RepoTestData.repo_distributions)
-        Repository.stub_chain(:joins, :where).and_return([Repository.new(RepoTestData::REPO_PROPERTIES)])
+        stub_repos([Repository.new(RepoTestData::REPO_PROPERTIES)])
         @prod1.stub(:repos => [Repository.new(RepoTestData::REPO_PROPERTIES)])
 
         @tpl1.products << @prod1
