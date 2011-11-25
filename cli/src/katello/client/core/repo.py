@@ -39,6 +39,7 @@ SYNC_STATES = { 'waiting':     _("Waiting"),
                 'error':       _("Error"),
                 'finished':    _("Finished"),
                 'cancelled':   _("Cancelled"),
+                'canceled':    _("Canceled"),
                 'timed_out':   _("Timed out"),
                 'not_synced':  _("Not synced") }
 
@@ -283,10 +284,8 @@ class Status(SingleRepoAction):
 
         errors = task.errors()
         if len(errors) > 0:
-            repo['last_errors'] = errors
+            repo['last_errors'] = self._format_error(errors)
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
         self.printer.addColumn('package_count')
         self.printer.addColumn('last_sync')
         self.printer.addColumn('sync_state')
@@ -296,6 +295,10 @@ class Status(SingleRepoAction):
         self.printer.setHeader(_("Repository Status"))
         self.printer.printItem(repo)
         return os.EX_OK
+
+    def _format_error(self, errors):
+        error_list = [e["error"]["error"] for e in errors]
+        return "\n".join(error_list)
 
 
 class Info(SingleRepoAction):
@@ -324,7 +327,7 @@ class Info(SingleRepoAction):
 
         self.printer.printItem(repo)
         return os.EX_OK
-
+    
 
 class Sync(SingleRepoAction):
 
