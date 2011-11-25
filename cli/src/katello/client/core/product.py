@@ -49,6 +49,29 @@ class ProductAction(Action):
         self.repoapi = RepoAPI()
         self.csapi = ChangesetAPI()
 
+
+class SingleProductAction(ProductAction):
+
+    select_by_env = False
+
+    def setup_parser(self):
+        self.set_product_select_options(self.select_by_env)
+
+    def check_options(self):
+        self.check_product_select_options()
+
+    def set_product_select_options(self, select_by_env=True):
+        self.parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name', help=_("product name (required)"))
+        if select_by_env:
+            self.parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Locker)"))
+
+    def check_product_select_options(self):
+        self.require_option('org')
+        self.require_option('name')
+
+
+
 # product actions ------------------------------------------------------------
 
 class List(ProductAction):
@@ -99,19 +122,10 @@ class List(ProductAction):
 
 
 # ------------------------------------------------------------------------------
-class Sync(ProductAction):
+class Sync(SingleProductAction):
 
     description = _('synchronize a product')
-
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
-                               help=_("product name (required)"))
-
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+    select_by_env = False
 
     def run(self):
         orgName     = self.get_option('org')
@@ -120,7 +134,6 @@ class Sync(ProductAction):
         prod = get_product(orgName, prodName)
         if (prod == None):
             return os.EX_DATAERR
-
 
         task = AsyncTask(self.api.sync(prod["id"]))
         run_async_task_with_status(task, ProgressBar())
@@ -135,19 +148,10 @@ class Sync(ProductAction):
 
 
 # ------------------------------------------------------------------------------
-class Status(ProductAction):
+class Status(SingleProductAction):
 
     description = _('status of product\'s synchronization')
-
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
-                               help=_("product name (required)"))
-
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+    select_by_env = False
 
     def run(self):
         orgName     = self.get_option('org')
@@ -173,7 +177,6 @@ class Status(ProductAction):
         self.printer.addColumn('name')
         self.printer.addColumn('provider_id')
         self.printer.addColumn('provider_name')
-
         self.printer.addColumn('last_sync')
         self.printer.addColumn('sync_state')
         self.printer.addColumn('progress', show_in_grep=False)
@@ -184,21 +187,13 @@ class Status(ProductAction):
 
 
 # ------------------------------------------------------------------------------
-class Promote(ProductAction):
+class Promote(SingleProductAction):
 
     description = _('promote a product to an environment\n(creates a temporary changeset with the product and promotes it)')
-
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
-                               help=_("product name (required)"))
-        self.parser.add_option('--environment', dest='env',
-                               help=_("environment name (required)"))
+    select_by_env = True
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+        self.check_product_select_options()
         self.require_option('env')
 
     def run(self):
@@ -293,23 +288,14 @@ class Create(ProductAction):
 
 
 # ------------------------------------------------------------------------------
-class Delete(ProductAction):
+class Delete(SingleProductAction):
 
     description = _('delete a product and its content')
-
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
-                               help=_("product name (required)"))
-
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+    select_by_env = False
 
     def run(self):
-        orgName     = self.get_option('org')
-        prodName    = self.get_option('name')
+        orgName  = self.get_option('org')
+        prodName = self.get_option('name')
         product = get_product(orgName, prodName)
         if product == None:
             return os.EX_DATAERR
@@ -319,18 +305,10 @@ class Delete(ProductAction):
         return os.EX_OK
 
 
-class ListFilters(ProductAction):
+class ListFilters(SingleProductAction):
+    
     description = _('list filters of a product')
-
-    def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
-                               help=_("product name (required)"))
-
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+    select_by_env = False
 
     def run(self):
         orgName     = self.get_option('org')
@@ -348,24 +326,21 @@ class ListFilters(ProductAction):
 
         return os.EX_OK
 
-class AddFilter(ProductAction):
+class AddFilter(SingleProductAction):
     description = _('add a filter to a product')
+    select_by_env = False
 
     def __init__(self):
         super(AddFilter, self).__init__()
         self.filterAPI = FilterAPI()
 
     def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
-                               help=_("product name (required)"))
+        self.set_product_select_options(False)
         self.parser.add_option('--filter', dest='filter',
                               help=_("filter name (required)"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+        self.check_product_select_options()
         self.require_option('filter')
 
     def run(self):
@@ -386,24 +361,21 @@ class AddFilter(ProductAction):
         print _("Added filter [ %s ] to product [ %s ]" % (filterName, prodName))
         return os.EX_OK
 
-class DeleteFilter(ProductAction):
+class DeleteFilter(SingleProductAction):
     description = _('delete a filter from a product')
+    select_by_env = False
 
     def __init__(self):
         super(DeleteFilter, self).__init__()
         self.filterAPI = FilterAPI()
 
     def setup_parser(self):
-        self.parser.add_option('--org', dest='org',
-                               help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
-                               help=_("product name (required)"))
+        self.set_product_select_options(False)
         self.parser.add_option('--filter', dest='filter',
                               help=_("filter name (required)"))
 
     def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
+        self.check_product_select_options()
         self.require_option('filter')
 
     def run(self):
