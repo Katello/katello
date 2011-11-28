@@ -241,6 +241,24 @@ class Sync(SingleProviderAction):
         return os.EX_OK
 
 
+class CancelSync(SingleProviderAction):
+
+    description = _('cancel currently running synchronization')
+
+    def run(self):
+        provName = self.get_option('name')
+        orgName  = self.get_option('org')
+
+        prov = get_provider(orgName, provName)
+        if prov == None:
+            return os.EX_DATAERR
+
+        msg = self.api.cancel_sync(prov["id"])
+        print msg
+
+        return os.EX_OK
+
+
 # ------------------------------------------------------------------------------
 class Status(SingleProviderAction):
 
