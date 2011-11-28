@@ -5,7 +5,7 @@ jpa.config.hibernate.hbm2ddl.auto=validate
 jpa.config.hibernate.connection.username=<%= scope.lookupvar("candlepin::params::db_user") %>
 jpa.config.hibernate.connection.password=<%= scope.lookupvar("candlepin::params::db_pass") %>
 <% unless scope.lookupvar("candlepin::params::katello_oauth_key").empty? -%>
-module.config.katello=org.fedoraproject.candlepin.katello.KatelloModule
+module.config.katello=org.candlepin.katello.KatelloModule
 candlepin.auth.oauth.enabled = true
 candlepin.auth.oauth.consumer.<%= scope.lookupvar("candlepin::params::katello_oauth_key") %>.secret = <%= scope.lookupvar("candlepin::params::katello_oauth_secret") %>
 candlepin.crl.file = <%= scope.lookupvar("candlepin::params::crl_file") %>
