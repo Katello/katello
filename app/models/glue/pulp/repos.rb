@@ -99,7 +99,7 @@ module Glue::Pulp::Repos
 
       # we only want the enabled repos to be visible
       # This serves as a white list for redhat repos
-      @repo_cache[env.id].select{|repo| repo.enabled?}
+      @repo_cache[env.id].where(:enabled => true)
     end
 
     def promote from_env, to_env
@@ -155,6 +155,15 @@ module Glue::Pulp::Repos
       end.flatten(1)
     end
 
+    def distributions env
+      to_ret = []
+      self.repos(env).each{|repo|
+        distros = repo.distributions
+        to_ret = to_ret +  distros if !distros.empty?
+      }
+      to_ret
+    end
+    
     def get_distribution env, id
       self.repos(env).map do |repo|
         repo.distributions.find_all {|d| d.id == id }

@@ -22,7 +22,7 @@ module Glue::Candlepin::Consumer
       before_save :save_candlepin_orchestration
       before_destroy :destroy_candlepin_orchestration
 
-      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds, :installedProducts,
+      lazy_accessor :href, :facts, :cp_type, :href, :idCert, :owner, :lastCheckin, :created, :guestIds, :installedProducts, :autoheal,
         :initializer => lambda {
                           if uuid
                             consumer_json = Candlepin::Consumer.get(uuid)
@@ -40,6 +40,8 @@ module Glue::Candlepin::Consumer
         guests_attributes = Candlepin::Consumer.guests(self.uuid)
         guests_attributes.map { |attr| System.new(attr) }
       }
+      lazy_accessor :compliance, :initializer => lambda { Candlepin::Consumer.compliance(uuid) }
+
       validate :validate_cp_consumer
     end
   end
@@ -72,7 +74,7 @@ module Glue::Candlepin::Consumer
 
     def set_candlepin_consumer
       Rails.logger.info "Creating a consumer in candlepin: #{name}"
-      consumer_json = Candlepin::Consumer.create(self.organization.cp_key, self.name, self.cp_type, self.facts, self.installedProducts)
+      consumer_json = Candlepin::Consumer.create(self.organization.cp_key, self.name, self.cp_type, self.facts, self.installedProducts, self.autoheal)
 
       self.uuid = consumer_json[:uuid]
       convert_from_cp_fields(consumer_json).each do |k,v|
@@ -85,7 +87,7 @@ module Glue::Candlepin::Consumer
 
     def update_candlepin_consumer
       Rails.logger.info "Updating consumer in candlepin: #{name}"
-      Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts)
+      Candlepin::Consumer.update(self.uuid, @facts, @guestIds, @installedProducts, @autoheal)
     rescue => e
       Rails.logger.error "Failed to update candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
@@ -301,6 +303,26 @@ module Glue::Candlepin::Consumer
       consumed_entitlements
     end
 
+    def compliant?
+      return self.compliance['compliant'] == true
+    end
+
+    # As a convenience and common terminology 
+    def compliance_color
+      if self.compliant?
+        return 'green'
+      elsif self.compliance['nonCompliantProducts'].length == 0 && self.compliance['partiallyCompliantProducts'].length > 0
+        return 'yellow'
+      else
+        return 'red'
+      end
+    end
+
+    def compliant_until
+      if self.compliance['compliantUntil']
+        convert_time(self.compliance['compliantUntil'])
+      end
+    end
   end
 
 end

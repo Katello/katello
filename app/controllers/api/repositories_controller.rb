@@ -14,7 +14,7 @@ require 'resources/pulp'
 
 class Api::RepositoriesController < Api::ApiController
   respond_to :json
-  before_filter :find_repository, :only => [:show, :destroy, :package_groups, :package_group_categories]
+  before_filter :find_repository, :only => [:show, :destroy, :package_groups, :package_group_categories, :enable]
   before_filter :find_product, :only => [:create]
   before_filter :find_organization, :only => [:discovery]
 
@@ -27,8 +27,8 @@ class Api::RepositoriesController < Api::ApiController
   end
 
   def index
-    repos = Pulp::Repository.all
-    render :json => repos
+    render :json => Repository.where(:enabled => true) if not query_params[:include_disabled]
+    render :json => Repository.all if query_params[:include_disabled]
   end
 
   def show
@@ -38,6 +38,19 @@ class Api::RepositoriesController < Api::ApiController
   def destroy
     @repository.product.delete_repo_by_id(params[:id])
     render :text => _("Deleted repository '#{params[:id]}'"), :status => 200
+  end
+
+  def enable
+    raise HttpErrors::NotFound, _("Disable/enable is not supported for custom repositories.") if not @repository.redhat?
+
+    @repository.enabled = query_params[:enable]
+    @repository.save!
+
+    if @repository.enabled?
+      render :text => _("Repository '#{@repository.name}' enabled."), :status => 200
+    else
+      render :text => _("Repository '#{@repository.name}' disabled."), :status => 200
+    end
   end
 
   # proxy repository discovery call to pulp, so we don't have to create an async task to keep track of async task on pulp side

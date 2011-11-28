@@ -26,7 +26,7 @@ class PriorValidator < ActiveModel::Validator
     if record.organization
       has_no_prior = record.organization.environments.reject{|env| env == record || env.prior != record.prior || env.prior == env.organization.locker}.empty?
     end
-    record.errors[:prior] << _("environment cannot be a prior to a different environment") unless has_no_prior
+    record.errors[:prior] << _("environment can only have one child") unless has_no_prior
 
     # only Locker can have prior=nil
     record.errors[:prior] << _("environment required") unless !record.prior.nil? || record.locker?

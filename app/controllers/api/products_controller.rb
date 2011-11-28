@@ -39,8 +39,14 @@ class Api::ProductsController < Api::ApiController
     query_params.delete(:organization_id)
     query_params.delete(:environment_id)
 
-    render :json => Product.readable(@organization).select("products.*, providers.name AS provider_name").joins(:provider).where(query_params) if @environment == nil
-    render :json => @environment.products.readable(@organization).select("products.*, providers.name AS provider_name").joins(:provider).where(query_params).all if @environment != nil
+
+    if @environment.nil?
+      products = Product.all_readable(@organization)
+    else
+      products = @environment.products.all_readable(@organization)
+    end
+
+    render :json => products.select("products.*, providers.name AS provider_name").joins(:provider).where(query_params).all
   end
 
   def destroy
@@ -49,7 +55,7 @@ class Api::ProductsController < Api::ApiController
   end
 
   def repositories
-    render :json => @product.repos(@environment).where(query_params.slice(:name))
+    render :json => @product.repos(@environment, query_params[:include_disabled]).where(query_params.slice(:name))
   end
 
   private

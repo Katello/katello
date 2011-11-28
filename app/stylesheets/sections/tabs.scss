@@ -5,6 +5,18 @@
 @import "colors";
 @import "sprites";
 
+/* override some of the jQuery UI stuff */
+.ui-widget-header {
+    font-family: $headlinefont;
+    border: 0 none;
+}
+.ui-widget-content {
+    border: 0 none;
+    table {
+         border: 1px solid $stroke_color !important;
+    }
+}
+
 .ui-tabs {
   padding: 0px;
   .ui-tabs-nav {
@@ -16,6 +28,7 @@
       margin: 0px;
       width: 100%;
     }
+    border: 1px solid $border_color;
   }
   .ui-tabs-selected a {
     cursor: pointer;

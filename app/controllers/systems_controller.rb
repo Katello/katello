@@ -230,15 +230,18 @@ class SystemsController < ApplicationController
 
   def update
     begin
+      # The 'autoheal' flag is not an ActiveRecord attribute so update it explicitly if present
+      @system.autoheal = params[:autoheal] if params[:autoheal]
+
       @system.update_attributes!(params[:system])
       notice _("System '#{@system["name"]}' was updated.")
       
       if not System.where(:id => @system.id).search_for(params[:search]).include?(@system)
         notice _("'#{@system["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
       end
-      
+
       respond_to do |format|
-        format.html { render :text=>params[:system].first[1] }
+        format.html { render :text=>(params[:system] ? params[:system].first[1] : "") }
         format.js
       end
     rescue Exception => error

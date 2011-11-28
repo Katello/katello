@@ -47,6 +47,7 @@ class PromotionsController < ApplicationController
     @changesets = @next_environment.working_changesets if (@next_environment && @next_environment.changesets_readable?)
     @changeset_product_ids = @changeset.products.collect { |p| p.cp_id } if @changeset
     @changeset_product_ids ||= []
+
     locals = {
       :accessible_envs=> access_envs,
       :manage_changesets => @next_environment.nil? ? false : @next_environment.changesets_manageable?,
