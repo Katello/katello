@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.15
+Version:       0.1.16
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 28 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.16-1
+- tdl validations - backend and cli
+
 * Fri Nov 25 2011 Tomas Strachota <tstrachota@redhat.com> 0.1.15-1
 - sync cli - repo status fixed according to changes in async taks format
   (tstrachota@redhat.com)
