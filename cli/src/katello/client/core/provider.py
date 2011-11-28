@@ -42,6 +42,20 @@ class ProviderAction(Action):
         self.api = ProviderAPI()
 
 
+class SingleProviderAction(ProviderAction):
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                               help=_("provider name (required)"))
+        self.parser.add_option('--org', dest='org',
+                               help=_("name of organization (required)"))
+
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+
+
+
 # provider actions =============================================================
 class List(ProviderAction):
 
@@ -73,20 +87,9 @@ class List(ProviderAction):
 
 
 # ==============================================================================
-class Info(ProviderAction):
+class Info(SingleProviderAction):
 
     description = _('list information about a provider')
-
-    def setup_parser(self):
-        # always provide --id option for create, even on registered clients
-        self.parser.add_option('--name', dest='name',
-                               help=_("provider name (required)"))
-        self.parser.add_option('--org', dest='org',
-                               help=_("organization name (required)"))
-
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
 
     def run(self):
         provName = self.get_option('name')
@@ -194,20 +197,9 @@ class Update(ProviderAction):
 
 
 # ==============================================================================
-class Delete(ProviderAction):
+class Delete(SingleProviderAction):
 
     description = _('delete a provider')
-
-    def setup_parser(self):
-        # always provide --name option for create, even on registered clients
-        self.parser.add_option('--name', dest='name',
-                               help=_("provider name (required)"))
-        self.parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
-
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
 
     def run(self):
         provName = self.get_option('name')
@@ -223,20 +215,9 @@ class Delete(ProviderAction):
 
 
 # ==============================================================================
-class Sync(ProviderAction):
+class Sync(SingleProviderAction):
 
     description = _('synchronize a provider')
-
-
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
-                               help=_("provider name (required)"))
-        self.parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
-
-    def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
 
     def run(self):
         provName = self.get_option('name')
@@ -261,19 +242,9 @@ class Sync(ProviderAction):
 
 
 # ------------------------------------------------------------------------------
-class Status(ProviderAction):
+class Status(SingleProviderAction):
 
     description = _('status of provider\'s synchronization')
-
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
-                               help=_("provider name (required)"))
-        self.parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
-
-    def check_options(self):
-        self.require_option('org')
-        self.require_option('name')
 
     def run(self):
         provName = self.get_option('name')
@@ -314,17 +285,13 @@ class ImportManifest(ProviderAction):
 
 
     def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
-                               help=_("provider name (required)"))
-        self.parser.add_option('--org', dest='org',
-                               help=_("name of organization (required)"))
+        super(ImportManifest, self).setup_parser()
         self.parser.add_option("--file", dest="file",
                                help=_("path to the manifest file (required)"))
 
 
     def check_options(self):
-        self.require_option('name')
-        self.require_option('org')
+        super(ImportManifest, self).check_options()
         self.require_option('file')
 
 
