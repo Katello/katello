@@ -241,6 +241,7 @@ class Export(TemplateAction):
             print _("Could not create file %s") % tplPath
             return os.EX_IOERR
 
+        self.api.validate_tpl(template["id"], format)
         response = run_spinner_in_bg(self.api.export_tpl, (template["id"], format), message=_("Exporting template, please wait... "))
         f.write(response)
         f.close()
