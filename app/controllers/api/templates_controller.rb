@@ -16,7 +16,7 @@ class Api::TemplatesController < Api::ApiController
 
   before_filter :find_environment, :only => [:create, :import]
   before_filter :try_find_environment, :only => [:index]
-  before_filter :find_template, :only => [:show, :update, :destroy, :promote, :export]
+  before_filter :find_template, :only => [:show, :update, :destroy, :promote, :export, :validate]
 
   # TODO: define authorization rules
   skip_before_filter :authorize
@@ -83,8 +83,17 @@ class Api::TemplatesController < Api::ApiController
     render :text => _("Template imported"), :status => 200
   end
 
+  def validate
+    raise HttpErrors::BadRequest, _("Cannot validate templates for the Locker environment.") if @template.environment.locker?
+
+    respond_to do |format|
+      format.tdl { @template.validate_tdl; render :text => 'OK' and return }
+      format.json { render :text => 'OK' }
+    end
+  end
+
   def export
-    raise HttpErrors::BadRequest, _("Cannot export templates form the Locker environment.") if @template.environment.locker?
+    raise HttpErrors::BadRequest, _("Cannot export templates for the Locker environment.") if @template.environment.locker?
 
     respond_to do |format|
       format.tdl { render(:text => @template.export_as_tdl, :content_type => Mime::TDL) and return }
