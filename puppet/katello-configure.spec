@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.18
+Version:        0.1.19
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -53,6 +53,11 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Mon Nov 28 2011 Ivan Necas <inecas@redhat.com> 0.1.19-1
+- pulp-revocation - Fix problems with access rights to crl file
+  (inecas@redhat.com)
+- 757176 - Thin process count is set to 0 (lzap+git@redhat.com)
+
 * Thu Nov 24 2011 Ivan Necas <inecas@redhat.com> 0.1.18-1
 - Add thumbslug configuration for headpin (jbowes@redhat.com)
 
