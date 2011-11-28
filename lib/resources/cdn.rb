@@ -70,7 +70,19 @@ module CDN
       begin
         @net.start do |http|
           res = http.request(req, nil) { |http_response| http_response.read_body }
-          return res.body
+          code = res.code.to_i
+          if code == 200
+            return res.body
+          else
+            # we don't really use RestClient here (it doesn't allow to safely
+            # set the proxy only for a set of requests and we don't want the
+            # backend engines communication to go through the same proxy like
+            # accessing CDN - its another use case)
+            # But RestClient exceptions are really nice and can be handled in
+            # the same way
+            exception_class = RestClient::Exceptions::EXCEPTIONS_MAP[code] || RestClient::RequestFailed
+            raise exception_class.new(nil, code)
+          end
         end
       rescue EOFError
         raise RestClient::ServerBrokeConnection
@@ -92,12 +104,15 @@ module CDN
     end
 
     def load_proxy_settings
-      if AppConfig.cdn_proxy
+      if AppConfig.cdn_proxy && AppConfig.cdn_proxy.host
         self.proxy_host = parse_host(AppConfig.cdn_proxy.host)
         self.proxy_port = AppConfig.cdn_proxy.port
         self.proxy_user = AppConfig.cdn_proxy.user
         self.proxy_password = AppConfig.cdn_proxy.password
       end
+    rescue Exception => e
+      Rails.logger.error "Could not parse cdn_proxy:"
+      Rails.logger.error e.to_s
     end
 
     def parse_host(host_or_url)

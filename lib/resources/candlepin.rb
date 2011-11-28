@@ -21,19 +21,19 @@ module Candlepin
     def self.post path, body
       Rails.logger.debug "Sending POST request to Candlepin: #{path}"
       client = CandlepinResource.rest_client(Net::HTTP::Post, :post, path_with_cp_prefix(path))
-      client.post body, {:accept => :json, :content_type => :json}.merge(User.current.cp_oauth_header)
+      client.post body, {:accept => :json, :content_type => :json}.merge(User.cp_oauth_header)
     end
 
     def self.delete path
       Rails.logger.debug "Sending DELETE request to Candlepin: #{path}"
       client = CandlepinResource.rest_client(Net::HTTP::Delete, :delete, path_with_cp_prefix(path))
-      client.delete({:accept => :json, :content_type => :json}.merge(User.current.cp_oauth_header))
+      client.delete({:accept => :json, :content_type => :json}.merge(User.cp_oauth_header))
     end
 
     def self.get path
       Rails.logger.debug "Sending GET request to Candlepin: #{path}"
       client = CandlepinResource.rest_client(Net::HTTP::Get, :get, path_with_cp_prefix(path))
-      client.get({:accept => :json}.merge(User.current.cp_oauth_header))
+      client.get({:accept => :json}.merge(User.cp_oauth_header))
     end
 
     def self.path_with_cp_prefix path
@@ -59,7 +59,7 @@ module Candlepin
     self.resource_permissions = CandlepinResourcePermissions
 
     def self.default_headers
-      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.current.cp_oauth_header)
+      {'accept' => 'application/json', 'content-type' => 'application/json'}.merge(User.cp_oauth_header)
     end
 
     def self.name_to_key a_name
@@ -92,15 +92,15 @@ module Candlepin
         JSON.parse(super(path(uuid), self.default_headers).body).with_indifferent_access
       end
 
-      def create key, name, type, facts, installedProducts
+      def create key, name, type, facts, installedProducts, autoheal=true
         url = path() + "?owner=#{key}"
-        attrs = {:name => name, :type => type, :facts => facts, :installedProducts => installedProducts }
+        attrs = {:name => name, :type => type, :facts => facts, :installedProducts => installedProducts, :autoheal => autoheal }
         response = self.post(url, attrs.to_json, self.default_headers).body
         JSON.parse(response).with_indifferent_access
       end
 
-      def update uuid, facts, guest_ids = nil, installedProducts = nil
-        attrs = {:facts => facts, :guestIds => guest_ids, :installedProducts => installedProducts}.delete_if {|k,v| v.nil?}
+      def update uuid, facts, guest_ids = nil, installedProducts = nil, autoheal = nil
+        attrs = {:facts => facts, :guestIds => guest_ids, :installedProducts => installedProducts, :autoheal => autoheal}.delete_if {|k,v| v.nil?}
         unless attrs.empty?
           response = self.put(path(uuid), attrs.to_json, self.default_headers).body
         else
@@ -111,7 +111,7 @@ module Candlepin
       end
 
       def destroy uuid
-        self.delete(path(uuid), User.current.cp_oauth_header).code.to_i
+        self.delete(path(uuid), User.cp_oauth_header).code.to_i
       end
 
       def available_pools(uuid)
@@ -159,6 +159,15 @@ module Candlepin
       rescue Exception => e
         return nil
       end
+
+      def compliance uuid
+        response = Candlepin::CandlepinResource.get(join_path(path(uuid), 'compliance'), self.default_headers).body
+        unless response.empty?
+          JSON.parse(response).with_indifferent_access
+        else
+          return nil
+        end
+      end
     end
   end
 
@@ -166,7 +175,7 @@ module Candlepin
     class << self
 
       def find key
-          owner_json = self.get(path(key), {'accept' => 'application/json'}.merge(User.current.cp_oauth_header)).body
+          owner_json = self.get(path(key), {'accept' => 'application/json'}.merge(User.cp_oauth_header)).body
           JSON.parse(owner_json).with_indifferent_access
       end
 
@@ -194,11 +203,11 @@ module Candlepin
       end
 
       def destroy key
-        self.delete(path(key), User.current.cp_oauth_header).code.to_i
+        self.delete(path(key), User.cp_oauth_header).code.to_i
       end
 
       def find key
-          owner_json = self.get(path(key), {'accept' => 'application/json'}.merge(User.current.cp_oauth_header)).body
+          owner_json = self.get(path(key), {'accept' => 'application/json'}.merge(User.cp_oauth_header)).body
           JSON.parse(owner_json).with_indifferent_access
       end
 
@@ -239,7 +248,7 @@ module Candlepin
       end
 
       def get_ueber_cert key
-        ueber_cert_json = self.get(join_path(path(key), "uebercert"), {'accept' => 'application/json'}.merge(User.current.cp_oauth_header)).body
+        ueber_cert_json = self.get(join_path(path(key), "uebercert"), {'accept' => 'application/json'}.merge(User.cp_oauth_header)).body
         JSON.parse(ueber_cert_json).with_indifferent_access
       end
 

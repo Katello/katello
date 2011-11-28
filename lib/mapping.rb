@@ -10,10 +10,25 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class ErrorsController < ApplicationController
-  skip_before_filter :require_user, :require_org
-  skip_before_filter :authorize
-  def routing
-    render_404
+# various user-configurable mappings defined in /etc/katello/mapping.yml
+
+require 'yaml'
+
+module Mapping
+
+  def self.configuration
+    @config ||= YAML.load_file('/etc/katello/mapping.yml')
   end
+
+  class ImageFactoryNaming
+
+    def self.translate(name = '', version = '')
+      naming = Mapping.configuration['imagefactory_naming']
+      naming["#{name} #{version}"].map(&:to_s)
+    rescue Exception => e
+      [name.to_s, version.to_s]
+    end
+
+  end
+
 end

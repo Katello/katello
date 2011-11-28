@@ -91,6 +91,13 @@ KT.templates = function() {
             trail: ['templates', template_root],
             url: ''
         };
+        bc['distribution_' + id] = {
+            cache: null,
+            client_render: true,
+            name: i18n.selected_distribution,
+            trail: ['templates', template_root],
+            url: ''
+        };
         bc['products_' + id ] = {
             cache: null,
             client_render: true,
@@ -253,6 +260,12 @@ KT.templates = function() {
             KT.options.current_template.modified = true;
             KT.options.template_tree.rerender_content();
         }
+    },
+    set_distro = function(id) {
+        KT.options.current_template.distribution = id;
+        KT.options.current_template.modified = true;
+        KT.templates.reset_page();
+        
     };
     
     return {
@@ -273,7 +286,8 @@ KT.templates = function() {
         has_product: has_product,
         has_package_group: has_package_group,
         add_package_group: add_package_group,
-        remove_package_group: remove_package_group
+        remove_package_group: remove_package_group,
+        set_distro: set_distro
     };
 
 
@@ -327,6 +341,9 @@ KT.template_renderer = function() {
                 }
                 else if (node === "comps") {
                     content = comps();
+                }
+                else if(node === "distribution"){
+                    content = distros();
                 }
                 render_cb(content);
             });
@@ -425,11 +442,45 @@ KT.template_renderer = function() {
         html += "</div></li>";
         return html ;
     },
+    distros = function(prod_id){
+        var html = "",
+        distros = [],
+        current = KT.options.current_template,
+        selected;
+
+        if (current.products.length === 0){
+            return i18n.need_product;
+        }
+        $.each(current.products, function(index, prod){
+           $.each(KT.distributions[prod.id], function(index, dist){
+                distros.push(dist);
+           });
+        });
+
+        if (distros.length == 0){
+            return i18n.need_distro_product;
+        }
+        html = '<ul>';
+        $.each(distros, function(index, dist){
+            console.log(dist.id + "," + current.distribution)
+            selected = (dist.id === current.distribution)  ? " checked " : "";
+            
+            html +=  '<li class="no_hover">';
+            html += '<input ' + selected + 'type="radio" class="distro_select" name="distro" value="' + dist.id + '" id="' + dist.id + '"> ';
+            html += '<span class="sort_attr"><label for="' + dist.id + '">' + dist.description   + '</label></span>';
+            html += '</li>';
+        });
+        html += '</ul>';
+        return html;
+    },
     details = function(t_id) {
         var html = "<ul>";
-        $.each([['products_', i18n.products], ['packages_', i18n.packages], ['comps_', i18n.package_groups]], function(index, item_set) {
-            html += list_item(item_set[0] + t_id, item_set[1], true);
-        });
+        $.each([['products_', i18n.products], ['packages_', i18n.packages], ['comps_', i18n.package_groups],
+            ['distribution_', i18n.selected_distribution]],
+            function(index, item_set) {
+                html += list_item(item_set[0] + t_id, item_set[1], true);
+            }
+        );
         return html + "</ul>";
     },
     template_list = function() {
@@ -896,7 +947,8 @@ KT.actions =  (function(){
             var data = {
                 packages: current.packages,
                 products: current.products,
-                package_groups: current.package_groups
+                package_groups: current.package_groups,
+                distribution: current.distribution
             };
             $.ajax({
                 type: "PUT",
@@ -912,11 +964,18 @@ KT.actions =  (function(){
             });
             return false;
         });
+    },
+    register_distro_select = function(){
+        $(".distro_select").change(function(){
+            KT.templates.set_distro($(this).attr("id"));
+        });
     };
+
     return {
         toggle_list: toggle_list,
         register_events: register_events,
-        open_modified_dialog: open_modified_dialog
+        open_modified_dialog: open_modified_dialog,
+        register_distro_select: register_distro_select
     };
 })();
 
@@ -1031,6 +1090,7 @@ $(document).ready(function() {
                                 KT.product_actions.register_autocomplete();
                                 KT.package_group_actions.register_autocomplete();
                                 KT.templates.reset_page();
+                                KT.actions.register_distro_select();
                             },
                             enable_search   :  true,
                             enable_float	:  true

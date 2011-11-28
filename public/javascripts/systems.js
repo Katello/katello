@@ -55,7 +55,8 @@ $(document).ready(function() {
          }, error: function(e) {
                button.removeAttr('disabled');
                notices.checkNotices();
-         }});
+         }
+     });
   });
 
   //Set the callback on the environment selector
@@ -216,6 +217,22 @@ KT.subs = function() {
     },
     spinnerSetup = function(){
         setTimeout("$('.ui-spinner').spinner()",1000);
+    },
+    autohealSetup = function(){
+        var checkboxes = $('#autoheal');
+        checkboxes.each(function(){
+          $(this).change(function(){
+            $('#autoheal_form').ajaxSubmit({
+              data: { autoheal: $(this).is(":checked") },  // Checkboxes in forms aren't included when false
+              dataType: 'html',
+              success: function(data) {
+                notices.checkNotices();
+              }, error: function(e) {
+                notices.checkNotices();
+              }
+            });
+          });
+        });
     };
     
     return {
@@ -224,6 +241,7 @@ KT.subs = function() {
         spinnerSetup: spinnerSetup,
         save_selected_environment: save_selected_environment,
         initialize_edit: initialize_edit,
-        reset_env_select: reset_env_select
+        reset_env_select: reset_env_select,
+        autohealSetup: autohealSetup
     }
 }();

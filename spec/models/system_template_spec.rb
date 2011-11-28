@@ -12,6 +12,7 @@
 
 require 'spec_helper'
 require 'helpers/repo_test_data'
+require 'helpers/repo_helper_methods'
 
 include OrchestrationHelper
 
@@ -411,7 +412,7 @@ describe SystemTemplate do
 
     before :each do
       Pulp::PackageGroup.stub(:all => RepoTestData.repo_package_groups)
-      Repository.stub_chain(:joins, :where).and_return( [repo])
+      stub_repos([repo])
     end
 
     describe "#add_package_group" do
@@ -466,7 +467,7 @@ describe SystemTemplate do
 
     before :each do
       Pulp::PackageGroupCategory.stub(:all => RepoTestData.repo_package_group_categories)
-      Repository.stub_chain(:joins, :where).and_return( [repo])
+      stub_repos([repo])
     end
 
     describe "#add_pg_category" do
@@ -517,7 +518,7 @@ describe SystemTemplate do
 
     before :each do
       Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
-      Repository.stub_chain(:joins, :where).and_return( [repo])
+      stub_repos([repo])
     end
 
     describe "#add_distribution" do
@@ -560,11 +561,13 @@ describe SystemTemplate do
         disable_repo_orchestration
         Pulp::Repository.stub(:distributions => [RepoTestData.repo_distributions])
         Pulp::Distribution.stub(:find => RepoTestData.repo_distributions)
-        Repository.stub_chain(:joins, :where).and_return([Repository.new(RepoTestData::REPO_PROPERTIES)])
+        stub_repos([Repository.new(RepoTestData::REPO_PROPERTIES)])
         @prod1.stub(:repos => [Repository.new(RepoTestData::REPO_PROPERTIES)])
 
         @tpl1.products << @prod1
         @tpl1.add_distribution(distribution)
+        # simulate another env
+        @tpl1.stub(:environment => @organization.environments.new(:name => "Dev"))
       end
 
       it "should contain repos referencing to pulp repositories" do
@@ -589,10 +592,24 @@ describe SystemTemplate do
       end
 
       it "url should be set" do
-        subject.xpath("/template/os/install/url").text.should == RepoTestData.repo_distributions['url']
+        subject.xpath("/template/os/install/url").text.should == "https://localhost/pulp/ks/ACME_Corporation/Dev/isos/xxx/"
+      end
+
+      it "should be valid" do
+        @tpl1.validate_tdl.should be_true
       end
 
       it_should_behave_like "valid tdl"
+
+      it "should not be valid without a product" do
+        @tpl1.products.clear
+        expect { @tpl1.validate_tdl }.to raise_error(Errors::TemplateValidationException)
+      end
+
+      it "should not be valid without a distribution" do
+        @tpl1.distributions.clear
+        expect { @tpl1.validate_tdl }.to raise_error(Errors::TemplateValidationException)
+      end
     end
   end
 
