@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ErrorsController < ApplicationController
+  skip_before_filter :require_user, :require_org
   skip_before_filter :authorize
   def routing
     render_404
