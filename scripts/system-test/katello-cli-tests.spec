@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.5
+Version:       0.1.6
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -56,6 +56,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.6-1
+- st - fixing bug with creating categories
+- system tests - new function for delayed jobs check
+- template export - system test for exporting from non-locker env
+
 * Wed Nov 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.5-1
 - adding dependencies for system tests
 

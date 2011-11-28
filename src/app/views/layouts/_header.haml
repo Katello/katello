@@ -5,7 +5,7 @@
     %h1
       = AppConfig.app_name.upcase
   #loading.fr
-    = image_tag('spinner_head.gif', :alt => _('Spinning Work Indicator'))
+    = image_tag('spinner_head.gif', :alt => _('Loading'))
 .grid_13
   = hidden_field_tag 'get_notices_url', nil, 'data-url' => notices_get_new_path
   - if current_user

@@ -54,7 +54,7 @@ describe System do
 
     Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Candlepin::Consumer.stub!(:update).and_return(true)
-    
+
     Pulp::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
   end
 
@@ -67,7 +67,7 @@ describe System do
   end
 
   it "registers system in candlepin and pulp on create" do
-    Candlepin::Consumer.should_receive(:create).once.with(@organization.name, system_name, cp_type, facts, installed_products).and_return({:uuid => uuid, :owner => {:key => uuid}})
+    Candlepin::Consumer.should_receive(:create).once.with(@organization.name, system_name, cp_type, facts, installed_products, nil).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Pulp::Consumer.should_receive(:create).once.with(@organization.cp_key, uuid, description).and_return({:uuid => uuid, :owner => {:key => uuid}}) if AppConfig.katello?
     @system.save!
   end
@@ -109,14 +109,14 @@ describe System do
     it "should give facts to Candlepin::Consumer" do
       @system.facts = facts
       @system.installedProducts = nil # simulate it's not loaded in memory
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, facts, nil, nil).and_return(true)
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, facts, nil, nil, nil).and_return(true)
       @system.save!
     end
 
     it "should give installeProducts to Candlepin::Consumer" do
       @system.installedProducts = installed_products
       @system.facts = nil # simulate it's not loaded in memory
-      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products).and_return(true)
+      Candlepin::Consumer.should_receive(:update).once.with(uuid, nil, nil, installed_products, nil).and_return(true)
       @system.save!
     end
 s  end
@@ -136,7 +136,7 @@ s  end
         @system.uuid = uuid
         @system.save
         Candlepin::Consumer.stub!(:get).and_return({:href => href, :uuid => uuid})
-        Candlepin::Consumer.stub!(:entitlements).and_return({})        
+        Candlepin::Consumer.stub!(:entitlements).and_return({})
         Candlepin::Consumer.stub!(:available_pools).and_return([])
       end
 
@@ -167,7 +167,7 @@ s  end
         specify { @system.href.should == href; }
         specify { @system.entitlements.should == entitlements; }
       end
-      
+
       it "should access candlepin if pools is uninialized" do
         Candlepin::Consumer.should_receive(:entitlements).once.with(uuid).and_return([{"pool" => {"id" => 100}}])
         Candlepin::Pool.should_receive(:get).once.and_return({})
@@ -199,8 +199,8 @@ s  end
           Candlepin::Consumer.should_not_receive(:available_pools)
         end
         specify { @system.available_pools.should == available_pools }
-      end      
-      
+      end
+
     end
 
     context "shouldn't access candlepin if new record" do
@@ -208,8 +208,13 @@ s  end
       specify { @system.href.should be_nil }
     end
   end
+<<<<<<< HEAD
   
   context "pulp attributes", :katello => true do
+=======
+
+  context "pulp attributes" do
+>>>>>>> master
     it "should update package-profile" do
       Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
       @system.upload_package_profile(package_profile)

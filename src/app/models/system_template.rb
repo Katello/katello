@@ -12,6 +12,7 @@
 
 require 'util/package_util'
 require 'active_support/builder' unless defined?(Builder)
+require 'mapping'
 
 class ParentTemplateValidator < ActiveModel::Validator
   def validate(record)
@@ -113,28 +114,66 @@ class SystemTemplate < ActiveRecord::Base
     self.export_as_hash.to_json
   end
 
+  # Validates if this template can be exported in TDL:
+  # - at least one product is present (1)
+  # - exactly one distribution is present (2)
+  # - ueber certificate for it's organization has been generated (3)
+  #
+  # Throws exception when template does not pass all validations.
+  def validate_tdl
+    verrors = []
+
+    # (1)
+    verrors << "At least one product must be present to export a TDL" if self.products.count < 1
+
+    # (2)
+    verrors << "Exactly one distribution must be present to export a TDL" if self.distributions.count != 1
+
+    # (3)
+    begin
+      Candlepin::Owner.get_ueber_cert(environment.organization.cp_key)
+    rescue RestClient::ResourceNotFound
+      verrors << "Uebercert for #{environment.organization.name} has not been generated."
+    end
+
+    raise Errors::TemplateValidationException.new("Template cannot be exported", verrors) if verrors.count > 0
+    true
+  end
+
   # Returns template in XML TDL format:
   # https://github.com/aeolusproject/imagefactory/blob/master/Documentation/TDL.xsd
+  #
+  # Method validate_tdl MUST be called before exporting, this method expects
+  # validated system template.
   def export_as_tdl
+
+    xm = Builder::XmlMarkup.new
+    xm.instruct!
+
+    begin
+      validate_tdl
+    rescue Errors::TemplateValidationException => e
+      xm.comment! "Template is not complete and will likely fail."
+      e.errors.each do |e|
+        xm.comment! " - #{e}"
+      end
+    end
 
     begin
       uebercert = Candlepin::Owner.get_ueber_cert(environment.organization.cp_key)
     rescue RestClient::ResourceNotFound => e
       uebercert = nil
-      Rails.logger.info "Uebercert for #{environment.organization.name} has not been generated. Using empty cert and key fields."
     end
 
-    xm = Builder::XmlMarkup.new
-    xm.instruct!
     xm.template {
       # mandatory tags
       xm.name self.name
       if self.distributions.count == 1
         xm.os {
           distro = self.distributions.first
-          # TODO this will probably need a "mapping" table (Pulp->Aeolus Family-Version)
-          xm.name distro.family
-          xm.version distro.version
+          family, version = Mapping::ImageFactoryNaming.translate(distro.family, distro.version)
+          xm.name family
+          xm.version version
           # TODO distro.arch is nil until resolved 750265 - RFE: Separate "arch" field for distribution
           #xm.arch distro.arch
           xm.arch "x86_64"
@@ -144,10 +183,6 @@ class SystemTemplate < ActiveRecord::Base
           # TODO root password is hardcoded for now
           xm.rootpw "redhat"
         }
-      elsif self.distributions.count < 1
-        Rails.logger.info "Template '%s' is missing distribution" % self.name
-      else
-        Rails.logger.info "Template '%s' contains more than one distribution" % self.name
       end
       # optional tags
       xm.description self.description unless self.description.nil?

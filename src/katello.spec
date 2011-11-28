@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.111
+Version:        0.1.115
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -197,6 +197,7 @@ install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logro
 install -Dp -m0644 %{confdir}/%{name}-jobs.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 install -Dp -m0644 %{confdir}/thin.yml %{buildroot}%{_sysconfdir}/%{name}/
+install -Dp -m0644 %{confdir}/mapping.yml %{buildroot}%{_sysconfdir}/%{name}/
 
 #overwrite config files with symlinks to /etc/katello
 ln -svf %{_sysconfdir}/%{name}/%{name}.yml %{buildroot}%{homedir}/config/%{name}.yml
@@ -267,6 +268,7 @@ fi
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config %{_sysconfdir}/logrotate.d/%{name}-jobs
+%config %{_sysconfdir}/%{name}/mapping.yml
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
@@ -334,6 +336,43 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Nov 28 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.115-1
+- tdl validations - backend and cli
+- tdl validation - model code
+
+* Fri Nov 25 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.114-1
+- Revert "Automatic commit of package [katello] release [0.1.114-1]."
+- Automatic commit of package [katello] release [0.1.114-1].
+- 757094 - use arel structure instead of the array for repos
+
+* Thu Nov 24 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.113-1
+- fixing typo (space)
+- 755730 - exported RHEL templates mapping
+- rh providers - restriction in adding products to rh providers via api
+- bug - better error message when making unauthetincated call
+- repo block - fixes in spec tests
+- repo blacklist - flag for displaying enabled repos via api
+- repo blacklist - product api lists always all products
+- repo blacklist - flag for displaying disabled products via api
+- repo blacklist - enable api blocked for custom repositories
+- repo blacklist - api for enabling/disabling repos
+- password_reset - fix i18n for emails
+- changing some translation strings upon request
+
+* Tue Nov 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.112-1
+- fixed failing spec tests all caused by new parameter in
+  Candlepin::Consumer#update
+- template export - spec tests for disabled export form a Locker
+- template export - disabled exporting templates from Locker envs
+- moved auto-heal down next to current subs
+- system templates - fixing issue where distributions were not browsable on a
+  newly created template without refreshing
+- positioned auto-heal button; comment-removed the Socket and Guest Requirement
+  (since were hard-code data populated)
+- fixed missing call to 'render' at end of #update
+- use PUT instead of POST
+- autoheal checkbox on system; toggling not working
+
 * Fri Nov 18 2011 Shannon Hughes <shughes@redhat.com> 0.1.111-1
 - 755048 - handle multiple ks trees for a template (inecas@redhat.com)
 

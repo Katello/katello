@@ -4,8 +4,12 @@ class candlepin::params {
   $db_pass = "candlepin"
   # where to store output from cpsetup execution
   $cpsetup_log = "/var/log/katello/katello-configure/cpsetup.log"
+  $crl_file = "/var/lib/candlepin/candlepin-crl.crl"
 
   require "katello::params"
-  $oauth_key = $katello::params::oauth_key
-  $oauth_secret = $katello::params::oauth_secret
+  $katello_oauth_key = $katello::params::oauth_key
+  $katello_oauth_secret = $katello::params::oauth_secret
+
+  require "thumbslug::params"
+  $thumbslug_oauth_secret = $thumbslug::params::oauth_secret
 }

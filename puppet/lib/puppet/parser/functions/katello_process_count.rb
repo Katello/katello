@@ -28,8 +28,8 @@ module Puppet::Parser::Functions
       notice("Maximum processes: #{max_processes}")
 
       # safeguard not to have less than 1 or more than max
-      no_processes = 1 if no_processes < 1
       no_processes = max_processes if no_processes > max_processes
+      no_processes = 1 if no_processes < 1
 
       notice("Thin processes: #{no_processes}")
       no_processes.to_s

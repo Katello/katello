@@ -18,7 +18,7 @@ class UserMailer < ActionMailer::Base
     # that logic is merged in
     org = Organization.find(1)
     User.current = user
-    UserMailer.async(:organization => org).password_reset(user)
+    UserMailer.async(:organization => org).password_reset(user, I18n.locale)
   end
 
   def send_logins(users)
@@ -26,15 +26,17 @@ class UserMailer < ActionMailer::Base
     # that logic is merged in
     org = Organization.find(1)
     User.current = users.first
-    UserMailer.async(:organization => org).logins(users)
+    UserMailer.async(:organization => org).logins(users, I18n.locale)
   end
 
-  def password_reset(user)
+  def password_reset(user, locale)
+    I18n.locale = locale
     @user = user
     mail :to => user.email, :subject => _("Katello User '%s' Password Reset") % user.username
   end
 
-  def logins(users)
+  def logins(users, locale)
+    I18n.locale = locale
     @email = users.first.email
     @users = users
     mail :to => @email, :subject => _("Katello Logins")

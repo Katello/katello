@@ -388,10 +388,22 @@ def format_date(date, from_format="%Y-%m-%dT%H:%M:%SZ", to_format="%Y/%m/%d %H:%
 
 
 class Spinner(threading.Thread):
+    """
+    Spinner shows nice cli "spinner" while function is executing.
+
+    Each spinner instance can be started only once. Typical usage:
+
+    s = Spinner()
+    s.start()
+    ...
+    s.stop()
+    s.join()
+    """
 
     def __init__(self, msg=""):
         self._msg = msg
         threading.Thread.__init__(self)
+        self._stopevent = threading.Event()
 
     def _putMessage(self):
         sys.stdout.write(self._msg)
@@ -420,21 +432,18 @@ class Spinner(threading.Thread):
         self._resetCaret()
 
     def run(self):
-        self._stop = False
-
         self._putMessage()
         while True:
             for char in '/-\|':
                 self._putChar(char)
-                if self._stop:
+                if self._stopevent.wait(0.1) or self._stopevent.is_set():
                     self._eraseSpinner()
                     self._eraseMessage()
                     return
-                time.sleep( 0.1 )
                 self._resetCaret()
 
     def stop(self):
-        self._stop = True
+        self._stopevent.set()
 
 class ProgressBar():
 

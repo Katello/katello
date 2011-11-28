@@ -1,26 +1,11 @@
 import unittest
 import os
 
-from cli_test_utils import CLIOptionTestCase, CLIActionTestCase
+from cli_test_utils import CLIActionTestCase
 import test_data
 
 import katello.client.core.product
 from katello.client.core.product import Delete
-
-class RequiredCLIOptionsTests(CLIOptionTestCase):
-    def setUp(self):
-        self.set_action(Delete())
-        self.mock_options()
-
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['delete', '--name=product1'])
-
-    def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['delete', '--org=ACME'])
-
-    def test_no_error_if_required_options_provided(self):
-        self.action.process_options(['delete', '--org=ACME', '--name=product1'])
-        self.assertEqual(len(self.action.optErrors), 0)
 
 
 class DeleteTest(CLIActionTestCase):

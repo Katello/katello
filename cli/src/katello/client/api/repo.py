@@ -26,30 +26,44 @@ class RepoAPI(KatelloAPI):
         path = "/api/repositories/"
         return self.server.POST(path, repodata)[1]
 
-    def repos_by_org_env(self, orgName, envId):
+    def repos_by_org_env(self, orgName, envId, includeDisabled=False):
+        data = {
+            "include_disabled": includeDisabled
+        }
         path = "/api/organizations/%s/environments/%s/repositories" % (orgName, envId)
-        result_list = self.server.GET(path)[1]
+        result_list = self.server.GET(path, data)[1]
         return result_list
 
-    def repos_by_env_product(self, envId, productId, name=None):
+    def repos_by_env_product(self, envId, productId, name=None, includeDisabled=False):
         path = "/api/environments/%s/products/%s/repositories" % (envId, productId)
 
-        search_params = {}
+        search_params = {
+            "include_disabled": includeDisabled
+        }
         if name != None:
             search_params['name'] = name
-
+            
         result_list = self.server.GET(path, search_params)[1]
         return result_list
 
-    def repos_by_product(self, productId):
+    def repos_by_product(self, productId, includeDisabled=False):
         path = "/api/products/%s/repositories" % productId
-        result_list = self.server.GET(path)[1]
+        data = {
+            "include_disabled": includeDisabled
+        }
+        result_list = self.server.GET(path, data)[1]
         return result_list
 
     def repo(self, repo_id):
         path = "/api/repositories/%s/" % repo_id
         data = self.server.GET(path)[1]
         return data
+
+
+    def enable(self, repo_id, enable=True):
+        data = {"enable": enable}
+        path = "/api/repositories/%s/enable/" % repo_id
+        return self.server.POST(path, data)[1]
 
     def delete(self, repoId):
         path = "/api/repositories/%s/" % repoId
@@ -58,6 +72,11 @@ class RepoAPI(KatelloAPI):
     def sync(self, repo_id):
         path = "/api/repositories/%s/sync" % repo_id
         data = self.server.POST(path)[1]
+        return data
+
+    def cancel_sync(self, repo_id):
+        path = "/api/repositories/%s/sync" % repo_id
+        data = self.server.DELETE(path)[1]
         return data
 
     def last_sync_status(self, repo_id):

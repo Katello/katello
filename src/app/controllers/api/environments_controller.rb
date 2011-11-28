@@ -44,7 +44,7 @@ class Api::EnvironmentsController < Api::ApiController
     @organization.save!
     render :json => environment
   end
-  
+
   def update
     if @environment.locker?
       raise HttpErrors::BadRequest, _("Can't update Locker environment")
@@ -60,7 +60,7 @@ class Api::EnvironmentsController < Api::ApiController
   end
 
   def repositories
-    render :json => @environment.products.readable(@organization).collect { |p| p.repos(@environment) }.flatten
+    render :json => @environment.products.all_readable(@organization).collect { |p| p.repos(@environment, query_params[:include_disabled]) }.flatten
   end
 
   def find_environment
@@ -69,5 +69,5 @@ class Api::EnvironmentsController < Api::ApiController
     @organization = @environment.organization
     @environment
   end
-  
+
 end

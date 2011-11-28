@@ -36,12 +36,12 @@ class katello::install {
 	package{["katello", "katello-cli"]:
     require => $katello::params::deployment ? {
                 'katello' => [Yumrepo["fedora-katello"],Class["pulp::install"],Class["candlepin::install"]],
-                'headpin' => [Yumrepo["fedora-katello"],Class["candlepin::install"]],
+                'headpin' => [Yumrepo["fedora-katello"],Class["candlepin::install"],Class["thumbslug::install"]],
                 default => []
     },
     before  => $katello::params::deployment ? {
                 'katello' =>  [Class["candlepin::config"], Class["pulp::config"] ], #avoid some funny post rpm scripts
-                'headpin' =>  [Class["candlepin::config"]], #avoid some funny post rpm scripts
+                'headpin' =>  [Class["candlepin::config"], Class["thumbslug::config"]], #avoid some funny post rpm scripts
                 default => []
     },
     ensure  => installed
