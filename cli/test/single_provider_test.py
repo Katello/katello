@@ -27,5 +27,3 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
     def test_no_error_if_required_options_provided(self):
         self.action.process_options(['some_action', '--org=ACME', '--name=provider'])
         self.assertEqual(len(self.action.optErrors), 0)
-
-

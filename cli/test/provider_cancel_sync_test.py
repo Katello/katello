@@ -47,5 +47,3 @@ class ProviderCancelSyncTest(CLIActionTestCase):
 
     def test_returns_ok(self):
         self.assertEqual(self.action.run(), os.EX_OK)
-
-
