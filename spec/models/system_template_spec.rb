@@ -595,7 +595,21 @@ describe SystemTemplate do
         subject.xpath("/template/os/install/url").text.should == "https://localhost/pulp/ks/ACME_Corporation/Dev/isos/xxx/"
       end
 
+      it "should be valid" do
+        @tpl1.validate_tdl.should be_true
+      end
+
       it_should_behave_like "valid tdl"
+
+      it "should not be valid without a product" do
+        @tpl1.products.clear
+        expect { @tpl1.validate_tdl }.to raise_error(Errors::TemplateValidationException)
+      end
+
+      it "should not be valid without a distribution" do
+        @tpl1.distributions.clear
+        expect { @tpl1.validate_tdl }.to raise_error(Errors::TemplateValidationException)
+      end
     end
   end
 
