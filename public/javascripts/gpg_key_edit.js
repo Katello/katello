@@ -60,9 +60,10 @@ $(document).ready(function(){
         var settings = {
             type        :  'text',
             width       :  270,
+            height		:  20,
             name        :  $(this).attr('name'),
             onsuccess   :  function(result, status, xhr) {
-                var id = $('#panel_element_id');
+                var id = $('#panel_element_id');	
                 KT.panel.list.refresh(id.attr('value'), id.attr('data-ajax_url'));
             }
         };

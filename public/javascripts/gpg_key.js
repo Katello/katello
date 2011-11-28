@@ -18,6 +18,10 @@ $(document).ready(function(){
 		KT.gpg_key.upload();
 	});
 	
+	$('#update_upload_gpg_key').live('click', function(event){
+		KT.gpg_key.upload_update();
+	});
+	
 	$('#gpg_key_content').live('input keyup paste', function(){
 		if( $(this).val() !== '' ){
 			$('#gpg_key_content_upload').attr('disabled', 'disabled');
@@ -42,6 +46,7 @@ $(document).ready(function(){
 		}
 	});
 	
+		
 	$('#clear_upload_gpg_key').live('click', function(){
 		$('#gpg_key_content_upload').val('');
 		$('#gpg_key_content').removeAttr('disabled');
@@ -56,6 +61,22 @@ $(document).ready(function(){
 		$('#upload_gpg_key').removeAttr('disabled');
 		$('#clear_upload_gpg_key').attr('disabled', 'disabled');
 		$('#clear_gpg_key').attr('disabled', 'disabled');
+	});
+
+	$('#gpg_key_content_upload_update').live('change', function(){
+		if( $(this).val() !== '' ){
+			$('#update_upload_gpg_key').removeAttr('disabled');
+			$('#clear_upload_gpg_key').removeAttr('disabled');
+		} else {
+			$('#update_upload_gpg_key').attr('disabled', 'disabled');
+			$('#clear_upload_gpg_key').attr('disabled', 'disabled');
+		}
+	});
+	
+	$('#clear_upload_gpg_key').live('click', function(){
+		$('#update_upload_gpg_key').attr('disabled', 'disabled');
+		$('#clear_upload_gpg_key').attr('disabled', 'disabled');
+		$('#gpg_key_content_upload_update').val('');
 	});
 });
 
@@ -91,15 +112,39 @@ KT.gpg_key = (function($){
 			iframe	: true,
 			success	: function(data, status, xhr){
 				var parsed_data = $(data);
-				
+				console.log(data);
 				if( parsed_data.get(0).tagName === 'PRE' ){
 					notices.displayNotice('error', parsed_data.html());
 				} else {
 					KT.panel.list.createSuccess(data);
 				}
+				
+				enable_buttons();
 			},
 			error	: function(){
+                console.log('error');
                 enable_buttons();
+                notices.checkNotices();
+			}
+		});
+	};
+	
+	self.upload_update = function(){
+		$('#update_upload_gpg_key').attr('disabled', 'disabled');
+		$('#clear_upload_gpg_key').attr('disabled', 'disabled');
+
+		$('#upload_gpg_key').ajaxSubmit({
+			url 	: $(this).data('url'),
+			type 	: 'POST',
+			iframe	: true,
+			success	: function(data, status, xhr){
+				$('#gpg_key_content').html(data);
+				notices.checkNoticesInResponse(xhr);
+				$('#upload_gpg_key').val('');		
+			},
+			error	: function(){
+                $('#update_upload_gpg_key').removeAttr('disabled');
+				$('#clear_upload_gpg_key').removeAttr('disabled');
                 notices.checkNotices();
 			}
 		});
