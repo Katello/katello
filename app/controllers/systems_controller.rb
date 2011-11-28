@@ -181,56 +181,13 @@ class SystemsController < ApplicationController
     end
   end
 
-  def first_objects objects
-    offset = current_user.page_size
-    if objects.length > 0
-      if params.has_key? :order
-        if params[:order].downcase == "desc"
-          objects.reverse!
-        end
-      end
-      objects = objects[0...offset]
-    else
-      objects = []
-    end
-    return objects, offset
-  end
-
-  def more_objects objects
-    #grab the current user setting for page size
-    size = current_user.page_size
-    if objects.length > 0
-      #check for the params offset (start of array chunk)
-      if params.has_key? :offset
-        offset = params[:offset].to_i
-      else
-        offset = current_user.page_size
-      end
-      if params.has_key? :order
-        if params[:order].downcase == "desc"
-          #reverse if order is desc
-          objects.reverse!
-        end
-      end
-      if params.has_key? :reverse
-        objects = objects[0...params[:reverse].to_i]
-      else
-        objects = objects[offset...offset+size]
-      end
-    else
-      objects = []
-    end
-
-    return [products, offset]
-  end
-
   def products
-    products , offset = first_objects @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    products , offset = first_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
     render :partial=>"products", :layout => "tupane_layout", :locals=>{:system=>@system, :products => products, :offset => offset}
   end
 
   def more_products
-    products, offset = more_objects @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
+    products, offset = more_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
     render :partial=>"more_products", :locals=>{:system=>@system, :products => products, :offset=> offset}
   end
 
@@ -273,6 +230,7 @@ class SystemsController < ApplicationController
       else
         packages = packages[offset...offset+size]
       end
+      packages ||= [] # fence for case when offset extended beyond range, etc.
     else
       packages = []
     end
@@ -402,6 +360,50 @@ class SystemsController < ApplicationController
       last = offset + current_user.page_size
       last = systems.length if last > systems.length
       systems[offset...last]
+  end
+
+  def first_objects objects
+    offset = current_user.page_size
+    if objects.length > 0
+      if params.has_key? :order
+        if params[:order].downcase == "desc"
+          objects.reverse!
+        end
+      end
+      objects = objects[0...offset]
+    else
+      objects = []
+    end
+    return objects, offset
+  end
+
+  def more_objects objects
+    #grab the current user setting for page size
+    size = current_user.page_size
+    if objects.length > 0
+      #check for the params offset (start of array chunk)
+      if params.has_key? :offset
+        offset = params[:offset].to_i
+      else
+        offset = current_user.page_size
+      end
+      if params.has_key? :order
+        if params[:order].downcase == "desc"
+          #reverse if order is desc
+          objects.reverse!
+        end
+      end
+      if params.has_key? :reverse
+        next_objects = objects[0...params[:reverse].to_i]
+      else
+        next_objects = objects[offset...offset+size]
+      end
+      next_objects ||= [] # fence for case when offset extended beyond range, etc.
+    else
+      next_objects = []
+    end
+
+    return next_objects, offset
   end
 
 end

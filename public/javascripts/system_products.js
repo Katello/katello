@@ -16,28 +16,28 @@
  * Date: 7/13/11
  * Time: 2:27 PM
  *
- * This file is for use with the packages subnav within systems page.
+ * This file is for use with the products subnav within systems page.
  */
 
 $(document).ready(function() {
-    $('#packages_more').bind('click', function(){
-        KT.packages.morePackages();
+    $('#products_more').bind('click', function(){
+        KT.products.moreProducts();
     });
-    $('#packages_sort').bind('click', function(){
-        KT.packages.reverseSort();
+    $('#products_sort').bind('click', function(){
+        KT.products.reverseSort();
     });
 });
 
-KT.packages = (function(){
+KT.products = (function(){
     return {
-        morePackages : function(){
-            var list = $('.packages');
-            var more = $('#packages_more');
+        moreProducts : function(){
+            var list = $('.products');
+            var more = $('#products_more');
             var spinner = $('#list-spinner');
             var dataScrollURL = more.attr("data-scroll_url");
 
             var offset = parseInt(more.attr("data-offset"), 10) + parseInt(more.attr("data-page_size"), 10);
-            dataScrollURL = dataScrollURL + "?offset=" + offset + "&order="+ $('#packages_sort').attr("data-sort") +"&";
+            dataScrollURL = dataScrollURL + "?offset=" + offset + "&order="+ $('#products_sort').attr("data-sort") +"&";
             //console.log(dataScrollURL + ", page_size: " + offset);
             spinner.fadeIn();
             $.ajax({
@@ -45,43 +45,43 @@ KT.packages = (function(){
                 url: dataScrollURL,
                 cache: false,
                 success: function(data) {
-                    KT.packages.retrievingNewContent = false;
+                    KT.products.retrievingNewContent = false;
                     spinner.fadeOut();
                     list.append(data);
                     $('#filter').keyup();
                     $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
                     if (data.length == 0) {
-                        more.empty().remove();
+                        more.hide(); // Hide more button, but still use it to hold data
                     }
                     more.attr("data-offset", offset);
                 },
                 error: function() {
                     spinner.fadeOut();
-                    KT.packages.retrievingNewContent = false;
+                    KT.products.retrievingNewContent = false;
                 }
             });
         },
         sortOrder : function(){
-            var packageSort = $('#packages_sort');
-            var packageSortOrder = packageSort.attr("data-sort");
-            if (packageSort.attr("data-sort") == "asc"){
-                packageSortOrder = "desc";
-                packageSort.removeClass("ascending").addClass("descending");
+            var productSort = $('#products_sort');
+            var productSortOrder = productSort.attr("data-sort");
+            if (productSort.attr("data-sort") == "asc"){
+                productSortOrder = "desc";
+                productSort.removeClass("ascending").addClass("descending");
             } else {
-                packageSortOrder = "asc";
-                packageSort.removeClass("descending").addClass("ascending");
+                productSortOrder = "asc";
+                productSort.removeClass("descending").addClass("ascending");
             }
-            packageSort.attr("data-sort", packageSortOrder);
-            return packageSortOrder;
+            productSort.attr("data-sort", productSortOrder);
+            return productSortOrder;
         },
         reverseSort : function(){
-            var list = $('.packages');
-            var more = $('#packages_more');
+            var list = $('.products');
+            var more = $('#products_more');
             var spinner = $('#list-spinner');
             var dataScrollURL = more.attr("data-scroll_url");
             var reverse = parseInt(more.attr("data-offset"), 10);
 
-            dataScrollURL = dataScrollURL + "?reverse=" + reverse + "&order=" + KT.packages.sortOrder() + "&";
+            dataScrollURL = dataScrollURL + "?reverse=" + reverse + "&order=" + KT.products.sortOrder() + "&";
             spinner.fadeIn();
             list.find('tbody > tr').empty().remove();
             $.ajax({
@@ -89,7 +89,7 @@ KT.packages = (function(){
                 url: dataScrollURL,
                 cache: false,
                 success: function(data) {
-                    KT.packages.retrievingNewContent = false;
+                    KT.products.retrievingNewContent = false;
                     spinner.fadeOut();
                     list.append(data);
                     $('#filter').keyup();
@@ -97,12 +97,12 @@ KT.packages = (function(){
                     if (data.length == 0) {
                         more.empty().remove();
                     }else{
-                        $('#packages_more').attr("data-offset", reverse);
+                        $('#products_more').attr("data-offset", reverse);
                     }
                 },
                 error: function() {
                     spinner.fadeOut();
-                    KT.packages.retrievingNewContent = false;
+                    KT.products.retrievingNewContent = false;
                 }
             });
         },
