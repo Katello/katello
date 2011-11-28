@@ -29,12 +29,14 @@ install -d -m 0755 %{buildroot}%{_sysconfdir}/yum.repos.d
 install -m 644 fedora-katello.repo %{buildroot}%{_sysconfdir}/yum.repos.d/katello.repo
 install -m 644 fedora-candlepin.repo %{buildroot}%{_sysconfdir}/yum.repos.d/candlepin.repo
 install -m 644 fedora-pulp.repo %{buildroot}%{_sysconfdir}/yum.repos.d/pulp.repo
+install -m 644 fedora-thumbslug.repo %{buildroot}%{_sysconfdir}/yum.repos.d/thumbslug.repo
 %endif
 
 %if 0%{?rhel}
 install -m 644 rhel-katello.repo %{buildroot}%{_sysconfdir}/yum.repos.d/katello.repo
 install -m 644 rhel-candlepin.repo %{buildroot}%{_sysconfdir}/yum.repos.d/candlepin.repo
 install -m 644 rhel-pulp.repo %{buildroot}%{_sysconfdir}/yum.repos.d/pulp.repo
+install -m 644 rhel-thumbslug.repo %{buildroot}%{_sysconfdir}/yum.repos.d/thumbslug.repo
 %endif
 
 %clean

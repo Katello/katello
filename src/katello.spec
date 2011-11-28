@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.104
+Version:        0.1.115
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -72,6 +72,7 @@ Requires:       rubygem(chunky_png)
 # bz 743816 temp fix until yum update makes to z stream
 %if 0%{?rhel} == 6
 Requires:       yum >= 3.2.29
+Requires:       redhat-logos >= 60.0.14
 %endif
 
 # <workaround> for 714167 - undeclared dependencies (regin & multimap)
@@ -170,6 +171,7 @@ rm -rf %{buildroot}
 install -d -m0755 %{buildroot}%{homedir}
 install -d -m0755 %{buildroot}%{datadir}
 install -d -m0755 %{buildroot}%{datadir}/tmp
+install -d -m0755 %{buildroot}%{datadir}/tmp/pids
 install -d -m0755 %{buildroot}%{_sysconfdir}/%{name}
 install -d -m0755 %{buildroot}%{_localstatedir}/log/%{name}
 
@@ -195,6 +197,7 @@ install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logro
 install -Dp -m0644 %{confdir}/%{name}-jobs.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 install -Dp -m0644 %{confdir}/thin.yml %{buildroot}%{_sysconfdir}/%{name}/
+install -Dp -m0644 %{confdir}/mapping.yml %{buildroot}%{_sysconfdir}/%{name}/
 
 #overwrite config files with symlinks to /etc/katello
 ln -svf %{_sysconfdir}/%{name}/%{name}.yml %{buildroot}%{homedir}/config/%{name}.yml
@@ -224,8 +227,10 @@ rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
 
-#remove staged branding
+#branding
 if [ -d branding ] ; then
+  ln -svf %{_datadir}/icons/hicolor/24x24/apps/system-logo-icon.png %{buildroot}%{homedir}/public/images/rh-logo.png
+  ln -svf %{_sysconfdir}/favicon.png %{buildroot}%{homedir}/public/images/favicon.png
   rm -rf %{buildroot}%{homedir}/branding
 fi
 
@@ -263,6 +268,7 @@ fi
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config %{_sysconfdir}/logrotate.d/%{name}-jobs
+%config %{_sysconfdir}/%{name}/mapping.yml
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
@@ -330,6 +336,147 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Nov 28 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.115-1
+- tdl validations - backend and cli
+- tdl validation - model code
+
+* Fri Nov 25 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.114-1
+- Revert "Automatic commit of package [katello] release [0.1.114-1]."
+- Automatic commit of package [katello] release [0.1.114-1].
+- 757094 - use arel structure instead of the array for repos
+
+* Thu Nov 24 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.113-1
+- fixing typo (space)
+- 755730 - exported RHEL templates mapping
+- rh providers - restriction in adding products to rh providers via api
+- bug - better error message when making unauthetincated call
+- repo block - fixes in spec tests
+- repo blacklist - flag for displaying enabled repos via api
+- repo blacklist - product api lists always all products
+- repo blacklist - flag for displaying disabled products via api
+- repo blacklist - enable api blocked for custom repositories
+- repo blacklist - api for enabling/disabling repos
+- password_reset - fix i18n for emails
+- changing some translation strings upon request
+
+* Tue Nov 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.112-1
+- fixed failing spec tests all caused by new parameter in
+  Candlepin::Consumer#update
+- template export - spec tests for disabled export form a Locker
+- template export - disabled exporting templates from Locker envs
+- moved auto-heal down next to current subs
+- system templates - fixing issue where distributions were not browsable on a
+  newly created template without refreshing
+- positioned auto-heal button; comment-removed the Socket and Guest Requirement
+  (since were hard-code data populated)
+- fixed missing call to 'render' at end of #update
+- use PUT instead of POST
+- autoheal checkbox on system; toggling not working
+
+* Fri Nov 18 2011 Shannon Hughes <shughes@redhat.com> 0.1.111-1
+- 755048 - handle multiple ks trees for a template (inecas@redhat.com)
+
+* Thu Nov 17 2011 Shannon Hughes <shughes@redhat.com> 0.1.110-1
+- Revert "fix sync disabled submit button to not sync when disabled"
+  (shughes@redhat.com)
+- 747032 - Fixed a bugby error in the dashboard whenever you had more than one
+  synced products (paji@redhat.com)
+
+* Thu Nov 17 2011 Shannon Hughes <shughes@redhat.com> 0.1.109-1
+- fix sync disabled submit button to not sync when disabled
+  (shughes@redhat.com)
+- 754215 - Small temporary fix for max height on CS Trees. (jrist@redhat.com)
+
+* Wed Nov 16 2011 shughes@redhat.com
+- Pie chart updates now functions with actual data. (jrist@redhat.com)
+- Fix for pie chart on dashboard page. (jrist@redhat.com)
+- Fixed a permission check to only load syncplans belonging to a specific org
+  as opposed to syncplnas belongign to all org (paji@redhat.com)
+
+* Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.107-1
+- Merge branch 'master' of ssh://git.fedorahosted.org/git/katello
+  (jsherril@redhat.com)
+- removing duplicated method (jsherril@redhat.com)
+- incorporate redhat-logos rpm for system engine installs (shughes@redhat.com)
+- 754442 - handle error status codes from CDN (inecas@redhat.com)
+- 754207 - fixing issue where badly formed cdn_proxy would throw a non-sensical
+  error, and we would attempt to parse a nil host (jsherril@redhat.com)
+- Merge branch 'master' into sys-status (thomasmckay@redhat.com)
+- minor verbage change to label: Host Type to System Type
+  (thomasmckay@redhat.com)
+- Merge branch 'master' into sys-status (thomasmckay@redhat.com)
+- Merge branch 'master' into sys-status (thomasmckay@redhat.com)
+- Merge branch 'master' into sys-status (thomasmckay@redhat.com)
+- added compliant until date (thomasmckay@redhat.com)
+- display a system's subscription status and colored icon
+  (thomasmckay@redhat.com)
+- Merge branch 'master' into sys-status (thomasmckay@redhat.com)
+- display dashboard system status (thomasmckay@redhat.com)
+
+* Wed Nov 16 2011 Brad Buckingham <bbuckingham@redhat.com> 0.1.106-1
+- async job - fix for broken promotions (bbuckingham@redhat.com)
+
+* Wed Nov 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.105-1
+- 754430 - Product promotion fails as katello-jobs doesn't start
+- system templates - adding support for adding a distribution to a system
+  template in the ui
+- Fixed a unit test failure
+- Small fix to get the redhat enablement working in FF 3.6
+- Fix to make the product.readable call only  out RH products that do not have
+  any repositories enabled
+- Added a message asking the user to enable repos after manifest was uploaded
+- 751407 - root_controller doesn't require user authorization
+- Made Product.readable call now adhere to  repo enablement constructs
+- Small fix to improve the permission debug message
+- bug - RAILS_ENV was ignored for thin
+- Small fix to import_history, changes to styling for tabs on rh providers
+  page.
+- Moving the upload top right.
+- Moved the redhat provider haml to a more appropriate location
+- Updated some permissions on the redhat providers page
+- Update to get the redhat providers repo enablement code to work.
+- color shade products for sync status
+- adding migration for removal of releaes version
+- sync management - making sync page use major/minor versions that was added
+- sync mangement - getting rid of major version
+- sync management - fixing repository cancel
+- fixing repo spec tests
+- sync management - fixing button disabling
+- sync management - fix for syncing multiple repos
+- disable sync button if no repos are selected
+- sync management - fixing cancel sync
+- merge conflict
+- sync management - adding show only syncing button
+- js cleanup for progress bars
+- For now automatically including all the repos in the repos call
+- Initial commit on an updated repo data model to handle things like whitelists
+  for rh
+- handle product status progress when 100 percent
+- smooth out repo progress bar for recent completed syncs
+- ubercharged progress bar for previous completed syncs
+- fix missing array return of pulp sync status
+- sync management - fixing repo progress and adding product progress
+- sync management - somre more fixes
+- sync management - getting sync status showing up correct
+- fixing some merge issues
+- support sync status 1-call to server
+- sync management - dont start periodical updater until we have added all the
+  initial syncing repos
+- sync management - a couple of periodical updater fixes
+- removing unneeded view
+- sync management - lots of javascript changes, a lot of stuff still broken
+- sync management - some page/js modifications
+- sync management - moving repos preopulation to a central place
+- sync management =  javascript improvements
+- sync mgmnt - fixing sync call
+- sync management - adding sorting for repos and categories
+- sync management - custom products showing up correctly now
+- sync management - making table expand by major version/ minor version/arch
+- use new pulp sync status, history task objects
+- caching repo data and sync status to reduce sync management load time to ~40s
+- adding ability to preload lazy accessors
+- repos - adding release version attribute and importing
+
 * Tue Nov 15 2011 Shannon Hughes <shughes@redhat.com> 0.1.104-1
 - Reverting look.scss to previous contents. (jrist@redhat.com)
 - tdl-repos - use repo name for name attribute (inecas@redhat.com)

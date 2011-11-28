@@ -323,6 +323,7 @@ Src::Application.routes.draw do
     resources :templates do
       post :import, :on => :collection
       get :export, :on => :member
+      get :validate, :on => :member
       resources :products, :controller => :templates_content do
         post   :index, :on => :collection, :action => :add_product
         delete :destroy, :on => :member, :action => :remove_product
@@ -400,6 +401,7 @@ Src::Application.routes.draw do
       member do
         get :package_groups
         get :package_group_categories
+        post :enable
       end
     end
 

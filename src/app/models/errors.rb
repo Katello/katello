@@ -29,4 +29,21 @@ module Errors
   class ConflictException < StandardError; end
 
   class CurrentOrganizationNotFoundException < ActiveRecord::RecordNotFound; end
+
+  class TemplateValidationException < StandardError
+    attr_accessor :errors
+
+    def initialize(msg, errors = [])
+      @errors = errors
+      super(msg)
+    end
+
+    def message
+      if @errors.nil?
+        "#{to_s}: No errors"
+      else
+        "#{to_s}: #{errors.join(', ')}"
+      end
+    end
+  end
 end

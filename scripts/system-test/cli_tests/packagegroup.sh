@@ -1,16 +1,13 @@
 #!/bin/bash
 
+require "repo"
+
 header "Package group"
 
-test_failure "list package groups" package_group list --repo_id $REPO_ID
-test_failure "list package group categories" package_group category_list --repo_id $REPO_ID
-
 REPO_ID=$(get_repo_id)
-PACKAGE_GROUP_ID=test
-PACKAGE_GROUP_NAME=test
-PACKAGE_GROUP_CATEGORY_ID=test
-PACKAGE_GROUP_CATEGORY_NAME=test
-create_sample_package_groups
+# predefined groups and categories in the zoo2 testing repo
+PACKAGE_GROUP_ID=mammal
+PACKAGE_GROUP_CATEGORY_ID=all
 
 test_success "list package groups" package_group list --repo_id $REPO_ID
 test_success "show package group" package_group info --repo_id $REPO_ID --id $PACKAGE_GROUP_ID

@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.13
+Version:        0.1.20
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -13,6 +13,7 @@ Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       puppet >= 2.6.6
+Requires:       wget
 BuildRequires:  /usr/bin/pod2man
 
 BuildArch: noarch
@@ -52,6 +53,32 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Mon Nov 28 2011 Ivan Necas <inecas@redhat.com> 0.1.20-1
+- Update class path for Candlepin 0.5. (dgoodwin@redhat.com)
+
+* Mon Nov 28 2011 Ivan Necas <inecas@redhat.com> 0.1.19-1
+- pulp-revocation - Fix problems with access rights to crl file
+  (inecas@redhat.com)
+- 757176 - Thin process count is set to 0 (lzap+git@redhat.com)
+
+* Thu Nov 24 2011 Ivan Necas <inecas@redhat.com> 0.1.18-1
+- Add thumbslug configuration for headpin (jbowes@redhat.com)
+
+* Thu Nov 24 2011 Ivan Necas <inecas@redhat.com> 0.1.17-1
+- katello-configure - wait for canlepin to really start (inecas@redhat.com)
+- pulp-revocation - set Candlepin to save CRL to a place Pulp can use
+  (inecas@redhat.com)
+- katello-configure - catch puppet stderr to a log file (inecas@redhat.com)
+
+* Fri Nov 18 2011 Shannon Hughes <shughes@redhat.com> 0.1.16-1
+- 755048 - set pulp host using fqdn (inecas@redhat.com)
+
+* Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.15-1
+- 
+
+* Wed Nov 16 2011 Ivan Necas <inecas@redhat.com> 0.1.14-1
+- cdn-proxy - fix typo in Puppet manifest (inecas@redhat.com)
+
 * Tue Nov 15 2011 Shannon Hughes <shughes@redhat.com> 0.1.13-1
 - Merge branch 'master' into password_reset (bbuckingham@redhat.com)
 - cdn-proxy - add support to puppet answer file (inecas@redhat.com)

@@ -34,6 +34,8 @@ if [ $# -lt 2 ]; then
     exit
 fi
 
+SCRIPT_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 NAME=$1
 DEST=$2
 REQUIRES=$3
@@ -44,7 +46,7 @@ TMPDIR="/var/tmp/dummy_package_$RAND"
 mkdir $TMPDIR/
 
 # create spec file from template
-cp ./files/dummy.spec.tpl $TMPDIR/$NAME.spec
+cp $SCRIPT_DIR/files/dummy.spec.tpl $TMPDIR/$NAME.spec
 sed -i "s/###NAME###/$NAME/g" $TMPDIR/$NAME.spec
 sed -i "s/###VERSION###/$VERSION/g" $TMPDIR/$NAME.spec
 sed -i "s/###RELEASE###/$RELEASE/g" $TMPDIR/$NAME.spec

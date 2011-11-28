@@ -97,10 +97,6 @@ class Organization < ActiveRecord::Base
     User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
   end
 
-  def systems_readable?
-    User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
-  end
-
   def gpg_keys_manageable?
     User.allowed_to?([:gpg], :organizations, nil, self)
   end

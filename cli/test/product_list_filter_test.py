@@ -2,29 +2,11 @@ import unittest
 from mock import Mock
 import os
 
-from cli_test_utils import CLIOptionTestCase, CLIActionTestCase
+from cli_test_utils import CLIActionTestCase
 import test_data
 
 import katello.client.core.product
 from katello.client.core.product import ListFilters
-
-
-
-class RequiredCLIOptionsTests(CLIOptionTestCase):
-
-    def setUp(self):
-        self.set_action(ListFilters())
-        self.mock_options()
-
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['list_filters', '--name=product_1'])
-
-    def test_missing_product_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['list_filters', '--org=ACME'])
-
-    def test_no_error_if_org_and_product_provided(self):
-        self.action.process_options(['list_filters', '--org=ACME', '--name=product_1'])
-        self.assertEqual(len(self.action.optErrors), 0)
 
 
 class ProductListFiltersTest(CLIActionTestCase):

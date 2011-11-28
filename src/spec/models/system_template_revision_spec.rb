@@ -12,6 +12,7 @@
 
 require 'spec_helper'
 require 'helpers/repo_test_data'
+require 'helpers/repo_helper_methods'
 
 include OrchestrationHelper
 
@@ -74,7 +75,7 @@ describe SystemTemplate do
 
     before :each do
 
-      Repository.stub_chain(:joins, :where).and_return( [repo])
+      stub_repos([repo])
       Pulp::Repository.stub(:packages_by_name => [pack1])
       Pulp::PackageGroup.stub(:all => pack_groups.clone)
       Pulp::PackageGroupCategory.stub(:all => pack_group_categories.clone)

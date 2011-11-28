@@ -7,6 +7,7 @@ class katello {
       }
       'headpin' : {
         include apache2
+        include thumbslug
       }
       default : {}
   }
