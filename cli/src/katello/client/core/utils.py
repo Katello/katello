@@ -436,7 +436,7 @@ class Spinner(threading.Thread):
         while True:
             for char in '/-\|':
                 self._putChar(char)
-                if self._stopevent.wait(0.1):
+                if self._stopevent.wait(0.1) or self._stopevent.is_set():
                     self._eraseSpinner()
                     self._eraseMessage()
                     return
