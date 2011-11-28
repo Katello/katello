@@ -42,6 +42,7 @@ module Glue::Candlepin::Owner
       Rails.logger.error "Failed to delete candlepin owner #{name}: #{e}, #{e.backtrace.join("\n")}"
       raise e
     end
+        
 
     def del_providers
       Rails.logger.info "All providers for owner #{name} in candlepin"
@@ -53,6 +54,18 @@ module Glue::Candlepin::Owner
       raise e
     end
 
+    #we must delete all systems as part of org deletion explicitly, otherwise the consumers in
+    #  candlepin will be deleted before destroy is called on the Organization object 
+    def del_systems
+      Rails.logger.info "All Systems for owner #{name} in candlepin"
+      System.joins(:environment).where("environments.organization_id = :org_id", :org_id=>self.id).each do |sys|
+        sys.destroy
+      end
+    rescue => e
+      Rails.logger.error "Failed to delete all systems for owner #{name} in candlepin: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
     def save_owner_orchestration
       case self.orchestration_for
         when :create
@@ -61,8 +74,9 @@ module Glue::Candlepin::Owner
     end
 
     def destroy_owner_orchestration
-      queue.create(:name => "candlepin providers for organization: #{self.name}", :priority => 2, :action => [self, :del_providers])
-      queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 3, :action => [self, :del_owner])
+      queue.create(:name => "candlepin systems for organization: #{self.name}", :priority => 2, :action => [self, :del_systems])
+      queue.create(:name => "candlepin providers for organization: #{self.name}", :priority => 3, :action => [self, :del_providers])
+      queue.create(:name => "candlepin owner for organization: #{self.name}", :priority => 4, :action => [self, :del_owner])
     end
 
     def owner_info
