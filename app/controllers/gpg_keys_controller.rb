@@ -91,8 +91,8 @@ class GpgKeysController < ApplicationController
     end
   rescue Exception => error
     Rails.logger.error error.to_s
-    errors error
-    render :text => error, :status => :bad_request
+    return_error = errors(error)
+    render :json => return_error.to_json, :status => :bad_request
   end
 
   def update

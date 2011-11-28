@@ -14,27 +14,97 @@
 KT.panel.list.registerPage('gpg_keys', { create : 'new_gpg_key' });
 
 $(document).ready(function(){
+	$('#upload_gpg_key').live('click', function(event){
+		KT.gpg_key.upload();
+	});
+	
 	$('#gpg_key_content').live('input keyup paste', function(){
 		if( $(this).val() !== '' ){
 			$('#gpg_key_content_upload').attr('disabled', 'disabled');
+			$('#upload_gpg_key').attr('disabled', 'disabled');
+			$('#clear_gpg_key').removeAttr('disabled');
 		} else {
 			$('#gpg_key_content_upload').removeAttr('disabled');
+			$('#upload_gpg_key').removeAttr('disabled');
+			$('#clear_gpg_key').attr('disabled', 'disabled');
 		}
 	});
 	
 	$('#gpg_key_content_upload').live('change', function(){
 		if( $(this).val() !== '' ){
 			$('#gpg_key_content').attr('disabled', 'disabled');
-			$('#cancel_upload_button').removeAttr('disabled');
+			$('#save_gpg_key').attr('disabled', 'disabled');
+			$('#clear_upload_gpg_key').removeAttr('disabled');
 		} else {
 			$('#gpg_key_content').removeAttr('disabled');
-			$('#cancel_upload_button').attr('disabled', 'disabled');
+			$('#save_gpg_key').removeAttr('disabled');
+			$('#clear_upload_gpg_key').attr('disabled', 'disabled');
 		}
 	});
 	
-	$('#cancel_upload_button').live('click', function(){
+	$('#clear_upload_gpg_key').live('click', function(){
 		$('#gpg_key_content_upload').val('');
 		$('#gpg_key_content').removeAttr('disabled');
-		$('#cancel_upload_button').attr('disabled', 'disabled');
+		$('#save_gpg_key').removeAttr('disabled');
+		$('#clear_upload_gpg_key').attr('disabled', 'disabled');
+		$('#clear_gpg_key').attr('disabled', 'disabled');
+	});
+	
+	$('#clear_gpg_key').live('click', function(){
+		$('#gpg_key_content').val('');
+		$('#gpg_key_content_upload').removeAttr('disabled');
+		$('#upload_gpg_key').removeAttr('disabled');
+		$('#clear_upload_gpg_key').attr('disabled', 'disabled');
+		$('#clear_gpg_key').attr('disabled', 'disabled');
 	});
 });
+
+KT.gpg_key = (function($){
+	var self = this,
+	
+		get_buttons = function(){
+			return {
+				'gpg_key_save'	: $('#save_gpg_key'),
+				'gpg_key_upload': $('#upload_gpg_key')
+			}
+		},
+		enable_buttons = function(){
+			var buttons = get_buttons();
+			buttons.gpg_key_save.removeAttr('disabled');
+			buttons.gpg_key_upload.removeAttr('disabled');
+		},
+		disable_buttons = function(){
+			var buttons = get_buttons();
+			buttons.gpg_key_save.attr('disabled', 'disabled');
+			buttons.gpg_key_upload.attr('disabled', 'disabled');
+		};
+	
+	self.upload = function(){
+		var submit_data = { 'gpg_key[name]' : $('#gpg_key_name').val() };
+		
+		disable_buttons();
+		
+		$('#upload_new_gpg_key').ajaxSubmit({
+			url 	: KT.routes['gpg_keys_path'](),
+			type 	: 'POST',
+			data 	: submit_data,
+			iframe	: true,
+			success	: function(data, status, xhr){
+				var parsed_data = $(data);
+				
+				if( parsed_data.get(0).tagName === 'PRE' ){
+					notices.displayNotice('error', parsed_data.html());
+				} else {
+					KT.panel.list.createSuccess(data);
+				}
+			},
+			error	: function(){
+                enable_buttons();
+                notices.checkNotices();
+			}
+		});
+	};
+	
+	return self;
+	
+})(jQuery);

@@ -143,6 +143,9 @@ class ApplicationController < ActionController::Base
       Notice.create!(:text => notice_string, :details => details, :level => level, :global => global,
                      :request_type => requested_action, :user_notices => [UserNotice.new(:user => current_user, :viewed=>false)])
     end
+    
+    return notice_dialog
+    
   end
 
 
