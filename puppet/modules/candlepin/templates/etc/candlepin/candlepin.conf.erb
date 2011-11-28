@@ -8,6 +8,7 @@ jpa.config.hibernate.connection.password=<%= scope.lookupvar("candlepin::params:
 module.config.katello=org.fedoraproject.candlepin.katello.KatelloModule
 candlepin.auth.oauth.enabled = true
 candlepin.auth.oauth.consumer.<%= scope.lookupvar("candlepin::params::katello_oauth_key") %>.secret = <%= scope.lookupvar("candlepin::params::katello_oauth_secret") %>
+candlepin.crl.file = <%= scope.lookupvar("candlepin::params::crl_file") %>
 <%- end -%>
 
 <% unless scope.lookupvar("candlepin::params::thumbslug_oauth_key").empty? -%>
