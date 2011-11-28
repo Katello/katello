@@ -208,13 +208,8 @@ s  end
       specify { @system.href.should be_nil }
     end
   end
-<<<<<<< HEAD
-  
-  context "pulp attributes", :katello => true do
-=======
 
-  context "pulp attributes" do
->>>>>>> master
+  context "pulp attributes", :katello => true do
     it "should update package-profile" do
       Pulp::Consumer.should_receive(:upload_package_profile).once.with(uuid, package_profile).and_return(true)
       @system.upload_package_profile(package_profile)
