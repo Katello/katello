@@ -17,12 +17,12 @@ class Organization < ActiveRecord::Base
   include Authorization
 
   has_many :activation_keys, :dependent => :destroy
-  has_many :providers
+  has_many :providers, :dependent => :destroy
   has_many :environments, :class_name => "KTEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
   has_one :locker, :class_name =>"KTEnvironment", :conditions => {:locker => true}, :dependent => :destroy
   has_many :filters, :dependent => :destroy, :inverse_of => :organization
-
   has_many :gpg_keys, :dependent => :destroy, :inverse_of => :organization
+  has_many :permissions, :dependent => :destroy, :inverse_of => :organization
 
   attr_accessor :statistics
 
