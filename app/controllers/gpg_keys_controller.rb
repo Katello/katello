@@ -110,7 +110,7 @@ class GpgKeysController < ApplicationController
     if not GpgKey.where(:id => @gpg_key.id).search_for(params[:search]).include?(@gpg_key)
       notice _("'#{@gpg_key["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
     end
-
+    
     render :text => escape_html(gpg_key_params.values.first)
 
   rescue Exception => error
