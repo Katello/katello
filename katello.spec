@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.114
+Version:        0.1.115
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -336,6 +336,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Nov 28 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.115-1
+- tdl validations - backend and cli
+- tdl validation - model code
+
 * Fri Nov 25 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.114-1
 - Revert "Automatic commit of package [katello] release [0.1.114-1]."
 - Automatic commit of package [katello] release [0.1.114-1].
