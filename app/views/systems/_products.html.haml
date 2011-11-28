@@ -1,4 +1,4 @@
-= javascript :filtertable, :system_packages
+= javascript :filtertable, :system_products
 
 = content_for :title do
   #{@system.name}
@@ -9,21 +9,21 @@
 = content_for :content do
   - if products.length > 0
     = render :partial => "common/filter_table"
-    %table.filter_table.objects.ajaxScroll
+    %table.filter_table.products.ajaxScroll
       %thead
         %th
-          %a#object_sort{"data-sort"=>"asc", :class=>"ascending"}
+          %a#products_sort{"data-sort"=>"asc", :class=>"ascending"}
             #{_("Name")}
         %th
           #{_("Arch")}
       %tbody
         -products.each do |p|
           %tr
-            %td{:class=>"object"}
-              #{p.nvrea}
+            %td{:class=>"product"}
+              #{p['productName']}
             %td{:class=>"arch"}
-              #{p.arch}
-    %a#more{"data-scroll_url"=>url_for(more_products_system_path()), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("More...")}
+              #{p['productId']}
+    %a#products_more{"data-scroll_url"=>url_for(more_products_system_path()), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("More...")}
     #list-spinner
       = image_tag("spinner.gif", :class=>"ajax_scroll")
   - else
