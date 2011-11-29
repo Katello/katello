@@ -1,11 +1,11 @@
-.grid_7
+.grid_6
   = link_to dashboard_index_path, :class => 'logo' do
     = image_tag("rh-logo.png", :alt => _('CloudForms System Engine Logo'))
     %span{:class => 'pipe'}
     %h1 CloudForms System Engine
   #loading.fr
     = image_tag('rh_spinner_head.gif', :alt => _('Spinning Work Indicator'), :width=>20, :height=>20)
-.grid_9
+.grid_10
   = hidden_field_tag 'root_url', nil, 'data-url' => root_path
   = hidden_field_tag 'get_notices_url', nil, 'data-url' => notices_get_new_path
   - if current_user

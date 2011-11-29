@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.109
+Version:        0.1.111
 Release:        2%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -334,8 +334,15 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
-* Thu Nov 17 2011 Shannon Hughes <shughes@redhat.com> 0.1.109-2
-- system engine build 109 (shughes@redhat.com)
+* Fri Nov 18 2011 Shannon Hughes <shughes@redhat.com> 0.1.111-1
+- 755048 - handle multiple ks trees for a template (inecas@redhat.com)
+
+* Thu Nov 17 2011 Shannon Hughes <shughes@redhat.com> 0.1.110-1
+- Revert "fix sync disabled submit button to not sync when disabled"
+  (shughes@redhat.com)
+- 747032 - Fixed a bugby error in the dashboard whenever you had more than one
+  synced products (paji@redhat.com)
+
 * Thu Nov 17 2011 Shannon Hughes <shughes@redhat.com> 0.1.109-1
 - fix sync disabled submit button to not sync when disabled
   (shughes@redhat.com)
