@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 
-describe GpgKeysController do
+describe GpgKeysController, :katello => true do
 
   include LoginHelperMethods
   include LocaleHelperMethods

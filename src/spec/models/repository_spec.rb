@@ -17,7 +17,7 @@ include OrchestrationHelper
 include ProductHelperMethods
 include AuthorizationHelperMethods
 
-describe Repository do
+describe Repository, :katello => true do
 
   describe "create repo"  do
     before do
