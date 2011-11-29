@@ -44,6 +44,7 @@ class Product < ActiveRecord::Base
 
   belongs_to :provider, :inverse_of => :products
   belongs_to :sync_plan, :inverse_of => :products
+  belongs_to :gpg_key, :inverse_of => :products
 
   validates :description, :katello_description_format => true
   validates :environments, :locker_presence => true
@@ -115,6 +116,14 @@ class Product < ActiveRecord::Base
 
   def custom?
     !(redhat?)
+  end
+
+  def reset_repo_gpgs!
+    self.environment_products.each do |ep|
+      ep.repositories.each do |repo|
+        repo.update_attributes!(:gpg_key => self.gpg_key)
+      end
+    end
   end
 
   #Permissions

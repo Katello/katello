@@ -103,7 +103,7 @@ module Candlepin
         attrs = {:facts => facts, :guestIds => guest_ids, :installedProducts => installedProducts, :autoheal => autoheal}.delete_if {|k,v| v.nil?}
         unless attrs.empty?
           response = self.put(path(uuid), attrs.to_json, self.default_headers).body
-        else
+        else[]
           return true
         end
         # consumer update doesn't return any data atm

@@ -64,4 +64,46 @@ describe ProductsController, :katello => true do
       it_should_behave_like "protected action"
     end
   end
+
+  describe "gpg" do
+    before do
+      disable_product_orchestration
+      disable_org_orchestration
+      disable_user_orchestration
+      set_default_locale
+      login_user
+      @organization = new_test_org
+      @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
+      Provider.stub!(:find).and_return(@provider)
+      @gpg = GpgKey.create!(:name =>"GPG", :organization=>@organization, :content=>"bar")
+    end
+    context "when creating a product" do
+      before do
+        @prod_name = "booyeah"
+        post :create, :provider_id => @provider.id, :product => {:name=> @prod_name, :gpg_key => @gpg.id.to_s}
+      end
+      specify {response.should be_success}
+      subject{Product.find_by_name(@prod_name)}
+      it {should_not be_nil}
+      its(:name){should == @prod_name}
+      its(:gpg_key){should == @gpg}
+    end
+
+
+
+    context "when updating a product" do
+      before do
+        @product = Product.new({:name => "prod"})
+        @product.provider = @provider
+        @product.environments << @organization.locker
+        @product.stub(:arch).and_return('noarch')
+        @product.save!
+        put :update, :provider_id => @provider.id, :id => @product.id, :product => {:gpg_key => @gpg.id.to_s}
+      end
+      specify {response.should be_success}
+      subject{Product.find(@product.id)}
+      its(:gpg_key){should == @gpg}
+    end
+
+  end
 end

@@ -17,10 +17,12 @@ class Organization < ActiveRecord::Base
   include Authorization
 
   has_many :activation_keys, :dependent => :destroy
-  has_many :providers
+  has_many :providers, :dependent => :destroy
   has_many :environments, :class_name => "KTEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
   has_one :locker, :class_name =>"KTEnvironment", :conditions => {:locker => true}, :dependent => :destroy
   has_many :filters, :dependent => :destroy, :inverse_of => :organization
+  has_many :gpg_keys, :dependent => :destroy, :inverse_of => :organization
+  has_many :permissions, :dependent => :destroy, :inverse_of => :organization
 
   attr_accessor :statistics
 
@@ -95,6 +97,10 @@ class Organization < ActiveRecord::Base
     User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
   end
 
+  def gpg_keys_manageable?
+    User.allowed_to?([:gpg], :organizations, nil, self)
+  end
+
   def self.list_verbs global = false
     if AppConfig.katello?
       org_verbs = {
@@ -104,7 +110,8 @@ class Organization < ActiveRecord::Base
         :register_systems =>N_("Register Systems"),
         :update_systems => N_("Manage Systems"),
         :delete_systems => N_("Delete Systems"),
-        :sync => N_("Sync Products")
+        :sync => N_("Sync Products"),
+        :gpg => N_("Manage GPG Keys")
      }
     else
       org_verbs = {
@@ -113,7 +120,7 @@ class Organization < ActiveRecord::Base
         :read_systems => N_("Access Systems"),
         :register_systems =>N_("Register Systems"),
         :update_systems => N_("Manage Systems"),
-        :delete_systems => N_("Delete Systems"),
+        :delete_systems => N_("Delete Systems")
      }
     end
     org_verbs.merge!({

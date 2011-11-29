@@ -60,13 +60,14 @@ describe RepositoriesController, :katello => true do
 
       @org = new_test_org
       @product = new_test_product(@org, @org.locker)
-      @product.stub!(:add_repo)
+      @gpg = GpgKey.create!(:name => "foo", :organization => @organization, :content => "222")
+      @ep = EnvironmentProduct.find_or_create(@organization.locker, @product)
       controller.stub!(:current_organization).and_return(@org)
     end
       let(:invalidrepo) do
         {
-          :product_id => '1',
-          :provider_id => '1',
+          :product_id => @product.id,
+          :provider_id => @product.provider.id,
           :repo => {
             :name => 'test',
             :feed => 'www.foo.com'
@@ -81,6 +82,41 @@ describe RepositoriesController, :katello => true do
         post :create, invalidrepo
         response.should_not be_success
       end
+    end
+
+    context "Test gpg create" do
+      before do
+        @repo_name = "repo-#{rand 10 ** 8}"
+        post :create, { :product_id => @product.id,
+                        :provider_id => @product.provider.id,
+                        :repo => {:name => @repo_name,
+                              :feed => "http://foo.com",
+                              :gpg_key =>@gpg.id.to_s}}
+      end
+      specify  do
+        response.should be_success
+      end
+      subject {Repository.find_by_name(@repo_name)}
+      it{should_not be_nil}
+      its(:gpg_key){should == @gpg}
+    end
+
+    context "Test update gpg" do
+      before do
+        @repo = Repository.create!(:environment_product => @ep, :pulp_id => "pulp-id-#{rand 10**6}",
+                                 :name=>"newname#{rand 10**6}", :url => "http://fedorahosted org")
+        put :update_gpg_key, { :product_id => @product.id,
+                              :provider_id => @product.provider.id,
+                                :id => @repo.id,
+                                :gpg_key => @gpg.id.to_s}
+      end
+
+      specify do
+        response.should be_success
+      end
+      subject {Repository.find(@repo.id)}
+      it{should_not be_nil}
+      its(:gpg_key){should == @gpg}
     end
   end
 end

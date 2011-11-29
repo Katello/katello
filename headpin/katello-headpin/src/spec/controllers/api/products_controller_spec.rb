@@ -15,7 +15,7 @@ require 'spec_helper'
 describe Api::ProductsController, :katello => true do
   include LoginHelperMethods
   include AuthorizationHelperMethods
-
+  include ProductHelperMethods
   let(:user_with_read_permissions) { user_with_permissions { |u| u.can([:read], :providers, @provider.id, @organization) } }
   let(:user_without_read_permissions) { user_without_permissions }
 
@@ -36,13 +36,7 @@ describe Api::ProductsController, :katello => true do
     @product.save!
     ep_locker = EnvironmentProduct.find_or_create(@organization.locker, @product)
     @repo_locker= Repository.create!(:environment_product => ep_locker, :name=> "repo", :pulp_id=>"2",:enabled => true)
-    @repo_locker.stub!(:pulp_repo_facts).and_return({})
-    Pulp::Repository.stub!(:clone_repo).and_return({})
-    Glue::Pulp::Repos.stub!(:groupid).and_return([])
-    @repo_locker.stub!(:content_for_clone).and_return({})
-    @repo_locker.promote(@environment)
-    ep = EnvironmentProduct.find_or_create(@environment, @product)
-    @repo = Repository.where(:environment_product_id => ep).first
+    @repo = promote(@repo_locker, @environment)
 
 
     @products = [@product]
