@@ -19,7 +19,8 @@ module AuthorizationHelperMethods
     AuthorizationHelperMethods.allow(*args)
   end
 
-  def self.allow role, verbs, resource_type, tags=[], org = nil
+  def self.allow role, verbs, resource_type, tags=[], org = nil, options = {}
+    tags ||= []
     role = Role.find_or_create_by_name(role) if String === role
     name = "role-#{role.id}-perm-#{rand 10**6}"
     verbs = [] if verbs.nil?
@@ -43,8 +44,10 @@ module AuthorizationHelperMethods
     resource_type = ResourceType.find_or_create_by_name(resource_type)
     tags = [tags] unless Array === tags
     tags = [] unless tags
-    role.permissions << Permission.create!(:role => role, :name => name, :verbs => verbs, :resource_type => resource_type,
-                                              :organization => org, :tag_values => tags)
+
+    role.permissions << Permission.create!(options.merge(:role => role, :name => name,
+                                              :verbs => verbs, :resource_type => resource_type,
+                                              :organization => org, :tag_values => tags))
     role.save!
   end
 
@@ -53,8 +56,8 @@ module AuthorizationHelperMethods
       @user = user
     end
 
-    def can(verb, resource_type, tags = nil, org = nil)
-      AuthorizationHelperMethods.allow(@user.own_role, verb, resource_type, tags, org)
+    def can(verb, resource_type, tags = nil, org = nil, options = {} )
+      AuthorizationHelperMethods.allow(@user.own_role, verb, resource_type, tags, org, options)
     end
 
   end
@@ -72,6 +75,14 @@ module AuthorizationHelperMethods
   def user_without_permissions
     user_with_permissions
   end
+
+  def superadmin
+    disable_user_orchestration
+    user = user_with_permissions
+    permission = Permission.create!(:role =>user.own_role, :all_types => true, :name => "superadmin")
+    return user
+  end
+
 end
 
 

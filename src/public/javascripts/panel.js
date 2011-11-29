@@ -618,6 +618,7 @@ KT.panel.list = (function () {
         results_items_count = 0,
         retrievingNewContent = false,
         extended_cb = function () {},
+        
         update_counts = function (current, total, results, clear) {
             if (clear) {
                 current_items_count = current;
@@ -719,9 +720,11 @@ KT.panel.list = (function () {
         },
         registerPage = function (resource_type, options) {
             options = options || {};
+            
             setupSearch(resource_type, options);
             KT.search.enableAutoComplete(KT.routes['auto_complete_search_' + resource_type + '_path']());
             KT.panel.control_bbq = false;
+            
             $(window).bind('hashchange', KT.panel.hash_change);
             $(document).ready(function () {
                 if (options['extra_params']) {
@@ -731,40 +734,45 @@ KT.panel.list = (function () {
                 }
                 $(window).trigger('hashchange', [true]);
             });
+            
             if (options['create']) {
                 $('#' + options['create']).live('submit', function (e) {
                     var button = $(this).find('input[type|="submit"]'),
                         data = KT.common.getSearchParams() || {};
+                        
                     e.preventDefault();
                     button.attr("disabled", "disabled");
+                    
                     $(this).ajaxSubmit({
                         url: KT.routes[resource_type + '_path'](),
                         data: data,
-                        success: function (data) {
-                            var id;
-                            if (data['no_match']) {
-                                KT.panel.closePanel($('#panel'));
-                                notices.checkNotices();
-                                update_counts(0, 0, 1);
-                            }
-                            else {
-                                add(data);
-                                KT.panel.closePanel($('#panel'));
-                                id = first_child().attr("id");
-                                $.bbq.pushState({
-                                    panel: id
-                                });
-                                KT.panel.select_item(id);
-                                notices.checkNotices();
-                                update_counts(1, 1, 1);
-                            }
-                        },
+                        success: createSuccess,
                         error: function (e) {
                             button.removeAttr('disabled');
                             notices.checkNotices();
                         }
                     });
                 });
+            }
+        },
+        createSuccess = function(data){
+        	var id;
+                            console.log(data);
+            if (data['no_match']) {
+                KT.panel.closePanel($('#panel'));
+                notices.checkNotices();
+                update_counts(0, 0, 1);
+            }
+            else {
+                add(data);
+                KT.panel.closePanel($('#panel'));
+                id = first_child().attr("id");
+                $.bbq.pushState({
+                    panel: id
+                });
+                KT.panel.select_item(id);
+                notices.checkNotices();
+                update_counts(1, 1, 1);
             }
         },
         setupSearch = function (resource_type, options) {
@@ -815,13 +823,12 @@ KT.panel.list = (function () {
             });
         };
     return {
-        set_extended_cb: function (callBack) {
-            extended_cb = callBack;
-        },
-        extend: extend,
-        registerPage: registerPage,
-        remove: remove,
-        refresh: refresh,
-        add: add
+        set_extended_cb	: function (callBack) { extended_cb = callBack; },
+        extend			: extend,
+        registerPage	: registerPage,
+        createSuccess	: createSuccess,
+        remove			: remove,
+        refresh			: refresh,
+        add				: add
     };
 })();
