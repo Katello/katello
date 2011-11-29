@@ -22,7 +22,7 @@ module Navigation
       {:key => :organizations,
        :name => N_("Organizations"),
         :url => :sub_level,
-        :options => {:class=>'organization top_level', "data-menu"=>"organization"},
+        :options => {:class=>'organizations top_level', "data-menu"=>"organizations"},
         :if => lambda{current_organization() && Organization.any_readable?},
         :items=> [ menu_org_list, menu_org_subscriptions]
       }
@@ -33,7 +33,7 @@ module Navigation
       {:key => :org_list,
        :name => N_("List"),
        :url => organizations_path,
-       :options => {:class=>'organization second_level', "data-menu"=>"organization"}
+       :options => {:class=>'organizations second_level', "data-menu"=>"organizations"}
       }
     end
 
@@ -41,7 +41,7 @@ module Navigation
       {:key => :subscriptions,
        :name => N_("Subscriptions"),
        :url => subscriptions_path(),
-       :options => {:class=>'organization second_level', "data-menu"=>"organization"}
+       :options => {:class=>'organizations second_level', "data-menu"=>"organizations"}
       }
     end
 
@@ -49,13 +49,13 @@ module Navigation
       [
         { :key => :general,
           :name =>N_("General"),
-          :url => lambda{edit_organization_path(@organization.id)},
+          :url => lambda{edit_organization_path(@organization.cp_key)},
           :if => lambda{@organization},
           :options => {:class=>"navigation_element"}
         },
         { :key => :history,
           :name =>N_("History"),
-          :url => lambda{events_organization_path(@organization.id)},
+          :url => lambda{events_organization_path(@organization.cp_key)},
           :if => lambda{@organization},
           :options => {:class=>"navigation_element"}
         }
