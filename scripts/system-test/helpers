@@ -32,23 +32,6 @@ function valid_id() {
     fi
 }
 
-# create sample package group and category
-# requires $REPO_ID, $PACKAGE_GROUP_ID, $PACKAGE_GROUP_CATEGORY_ID
-function create_sample_package_groups() {
-    PULP_REPO_ID=`get_pulp_repo_id`
-    curl -k -u admin:admin  -H "Content-Type: application/json" -H "Accept: application/json" -X POST -d \
-        "{\"groupid\":\"$PACKAGE_GROUP_ID\",\"groupname\":\"$PACKAGE_GROUP_NAME\",\"description\":\"test description\"}" -s \
-        $PULP_URL/repositories/$PULP_REPO_ID/create_packagegroup/ > /dev/null
-
-    curl  -k -u admin:admin -H "Content-Type: application/json" -H "Accept: application/json" -X POST -d \
-        "{\"categoryid\":\"$PACKAGE_GROUP_CATEGORY_ID\",\"categoryname\":\"$PACKAGE_GROUP_CATEGORY_NAME\",\"description\":\"test description\"}" -s \
-        $PULP_URL/repositories/$PULP_REPO_ID/create_packagegroupcategory/ > /dev/null
-
-    curl -k -u admin:admin -H "Content-Type: application/json" -H "Accept: application/json" -X POST -d \
-        "{\"categoryid\":\"$PACKAGE_GROUP_CATEGORY_ID\",\"groupid\":\"$PACKAGE_GROUP_ID\"}" -s  \
-        $PULP_URL/repositories/$PULP_REPO_ID/add_packagegroup_to_category/ > /dev/null
-}
-
 function jobs_running() {
     jobs_rake=`ps aux | grep -v grep | grep "rake jobs:work" > /dev/null; echo $?`
     jobs_service=`service katello-jobs status > /dev/null ; echo $?`
@@ -57,5 +40,12 @@ function jobs_running() {
         return 0
     else
         return 1
+    fi
+}
+
+function check_delayed_jobs_running() {
+    if ! jobs_running; then
+        printf "${txtred}Warning: Jobs daemon is not running, the promotion will hang!${txtrst}\n"
+        printf "${txtred}Run 'service katello-jobs start' or 'rake jobs:work' to proceed.${txtrst}\n"
     fi
 }

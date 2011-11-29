@@ -17,7 +17,7 @@ from katello.client.api.base import KatelloAPI
 
 class ProviderAPI(KatelloAPI):
     """
-    Connection class to access repo specific calls
+    Connection class to access provider specific calls
     """
     def create(self, name, orgName, description=None, pType=None, url=None):
         provdata = {
@@ -74,6 +74,12 @@ class ProviderAPI(KatelloAPI):
     def sync(self, provId):
         path = "/api/providers/%s/sync/" % str(provId)
         provider = self.server.POST(path)[1]
+        return provider
+
+
+    def cancel_sync(self, provId):
+        path = "/api/providers/%s/sync/" % str(provId)
+        provider = self.server.DELETE(path)[1]
         return provider
 
 

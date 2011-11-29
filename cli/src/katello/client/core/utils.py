@@ -107,7 +107,7 @@ class Printer:
         return result.strip()
 
 
-    def addColumn(self, attr_name, name = None, multiline = False, show_in_grep = True, time_format=False):
+    def addColumn(self, attr_name, name = None, multiline = False, show_in_grep = True, time_format=False, value=''):
         """
         Add column to display
         @type attr_name: string
@@ -121,12 +121,15 @@ class Printer:
         @param show_in_grep: flag to set whether the column should be displayed also in grep mode or not
         @type time_format: bool
         @param time_format: flag to set this column as a rails date string to be parsed
+        @type value: string
+        @param value: value that should be used rather than accessing the data hash
         """
         col = {}
         col['attr_name']    = attr_name
         col['multiline']    = multiline
         col['show_in_grep'] = show_in_grep
         col['time_format']  = time_format
+        col['value']        = value
         if name == None:
             col['name'] = self._attrToName(attr_name)
         else:
@@ -150,7 +153,10 @@ class Printer:
             if not col['attr_name'] in item:
                 continue
 
-            value = item[col['attr_name']]
+            if len(str(col['value'])) > 0:
+                value = col['value']
+            else:
+                value = item[col['attr_name']]
             if not col['multiline']:
                 output = format_date(value) if col['time_format'] else value
                 print (unicode("{0:<" + str(colWidth + 1) + "} {1}")).format(self.u_str(col['name']) + ":", output)
@@ -388,10 +394,22 @@ def format_date(date, from_format="%Y-%m-%dT%H:%M:%SZ", to_format="%Y/%m/%d %H:%
 
 
 class Spinner(threading.Thread):
+    """
+    Spinner shows nice cli "spinner" while function is executing.
+
+    Each spinner instance can be started only once. Typical usage:
+
+    s = Spinner()
+    s.start()
+    ...
+    s.stop()
+    s.join()
+    """
 
     def __init__(self, msg=""):
         self._msg = msg
         threading.Thread.__init__(self)
+        self._stopevent = threading.Event()
 
     def _putMessage(self):
         sys.stdout.write(self._msg)
@@ -420,21 +438,18 @@ class Spinner(threading.Thread):
         self._resetCaret()
 
     def run(self):
-        self._stop = False
-
         self._putMessage()
         while True:
             for char in '/-\|':
                 self._putChar(char)
-                if self._stop:
+                if self._stopevent.wait(0.1) or self._stopevent.is_set():
                     self._eraseSpinner()
                     self._eraseMessage()
                     return
-                time.sleep( 0.1 )
                 self._resetCaret()
 
     def stop(self):
-        self._stop = True
+        self._stopevent.set()
 
 class ProgressBar():
 

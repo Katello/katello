@@ -16,8 +16,8 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.111
-Release:        2%{?dist}
+Version:        0.1.117
+Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
 Group:          Applications/Internet
@@ -197,6 +197,7 @@ install -Dp -m0644 %{confdir}/%{name}.logrotate %{buildroot}%{_sysconfdir}/logro
 install -Dp -m0644 %{confdir}/%{name}-jobs.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}-jobs
 install -Dp -m0644 %{confdir}/%{name}.httpd.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 install -Dp -m0644 %{confdir}/thin.yml %{buildroot}%{_sysconfdir}/%{name}/
+install -Dp -m0644 %{confdir}/mapping.yml %{buildroot}%{_sysconfdir}/%{name}/
 
 #overwrite config files with symlinks to /etc/katello
 ln -svf %{_sysconfdir}/%{name}/%{name}.yml %{buildroot}%{homedir}/config/%{name}.yml
@@ -267,6 +268,7 @@ fi
 %config %{_sysconfdir}/%{name}/environment.rb
 %config %{_sysconfdir}/logrotate.d/%{name}
 %config %{_sysconfdir}/logrotate.d/%{name}-jobs
+%config %{_sysconfdir}/%{name}/mapping.yml
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %{_initddir}/%{name}
 %{_initddir}/%{name}-jobs
@@ -334,6 +336,110 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Nov 29 2011 Shannon Hughes <shughes@redhat.com> 0.1.117-1
+- fix user tab so editable fields wrap (shughes@redhat.com)
+- Fixes issue with new template for repositories from adding in gpg key.
+  (ehelms@redhat.com)
+- rake jsroutes (thomasmckay@redhat.com)
+- + display green/yellow/red icon next to installed software products + changed
+  order of packages tab for progression Subscriptions->Software->Packages +
+  TODO: refactor products code based upon sys-packages branch + TODO: hide
+  "More..." button if number of installed products is less than page size
+  (thomasmckay@redhat.com)
+- installed products listed now (still need clean up) (thomasmckay@redhat.com)
+- infrastructure for system/products based upon system/packages
+  (thomasmckay@redhat.com)
+- Removing errant console.log that breaks FF3.6 (ehelms@redhat.com)
+
+* Tue Nov 29 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.116-1
+- adding template to the system info cli call
+- more info when RecordInvalid is thrown
+- Org Deletion - ensuring things are cleaned up properly during org deletion
+- GPG Keys: Adds gpg key helptip.
+- Merge branch 'master' into gpg
+- GPG Keys: Adds uploading gpg key during edit and attempts to fix issues with
+  Firefox and gpg key ajax upload.
+- GPG key: Adds uploading key on creating new key from the UI.
+- GPG Keys: Adds dialog for setting GPG key of product for all underlying
+  repositories.
+- Routing error page doesn't need user credentials
+- Added some gpg key controller tests
+- added some unit tests to deal with gpg keys
+- Moved the super admin method to authorization_helper_methods.rb from
+  login_helper_methods.rb for more consistency
+- Added a reset_repo_gpgs method to reset the gpg keys of the sub product
+- GPG Keys: Adds UI code to check for setting all underlying repositories with
+  products GPG key on edit.
+- GPG Keys: Adds view, action and route for viewing the products and
+  repositories a GPG key is associated with from the details pane of a key.
+- GPG Key: Adds key association to products on create and update views.
+- GPG Key: Adds association of GPG key when creating repository.
+- GPG Key: Adds ability to edit a repository and change the GPG key.
+- Added some methods to do permission checks on repos
+- Added some methods to do permission checks on products
+- GPG keys: Modifies edit box for pasting key and removes upload.
+- GPG keys: Adds edit support for name and pasted gpg key.
+- Adding products and repositories helpers
+- GPG Keys: Adds functional GPG new key view.
+- GPG Keys: Adds update to controller.
+- Added code for repo controller to accept gpg
+- Updated some controller methods to deal with associating gpg keys on
+  products/repos
+- Added a menu entry for the GPG stuff
+- GPG Keys: Updated jsroutes for GPG keys.
+- GPG Keys: Fixes for create with permissions.
+- GPG Keys: Adds create controller actions to handle both pasted GPG keys and
+  uploaded GPG keys.
+- GPG Keys: Adds code for handling non-CRUD controller actions.
+- GPG Keys: Adds basic routes.
+- GPG Keys: Adds javascript scaffolding and activation of 2pane AJAX for GPG
+  Keys.
+- GPG Keys: Initial view scaffolding.
+- GPG Keys: Fixes issues with Rails naming conventions.
+- GPG Keys: Adds basic controller and helper shell. Adds suite of unit tests
+  for TDD.
+- Added some permission checking, scoped and searching on names
+- Adding a product association to gpg keys
+- Renamed Gpg to GpgKey
+- Initial commit of the Gpg Model mappings + Migration scripts
+
+* Mon Nov 28 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.115-1
+- tdl validations - backend and cli
+- tdl validation - model code
+
+* Fri Nov 25 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.114-1
+- Revert "Automatic commit of package [katello] release [0.1.114-1]."
+- Automatic commit of package [katello] release [0.1.114-1].
+- 757094 - use arel structure instead of the array for repos
+
+* Thu Nov 24 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.113-1
+- fixing typo (space)
+- 755730 - exported RHEL templates mapping
+- rh providers - restriction in adding products to rh providers via api
+- bug - better error message when making unauthetincated call
+- repo block - fixes in spec tests
+- repo blacklist - flag for displaying enabled repos via api
+- repo blacklist - product api lists always all products
+- repo blacklist - flag for displaying disabled products via api
+- repo blacklist - enable api blocked for custom repositories
+- repo blacklist - api for enabling/disabling repos
+- password_reset - fix i18n for emails
+- changing some translation strings upon request
+
+* Tue Nov 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.112-1
+- fixed failing spec tests all caused by new parameter in
+  Candlepin::Consumer#update
+- template export - spec tests for disabled export form a Locker
+- template export - disabled exporting templates from Locker envs
+- moved auto-heal down next to current subs
+- system templates - fixing issue where distributions were not browsable on a
+  newly created template without refreshing
+- positioned auto-heal button; comment-removed the Socket and Guest Requirement
+  (since were hard-code data populated)
+- fixed missing call to 'render' at end of #update
+- use PUT instead of POST
+- autoheal checkbox on system; toggling not working
+
 * Fri Nov 18 2011 Shannon Hughes <shughes@redhat.com> 0.1.111-1
 - 755048 - handle multiple ks trees for a template (inecas@redhat.com)
 

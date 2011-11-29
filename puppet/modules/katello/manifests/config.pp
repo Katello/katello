@@ -47,7 +47,7 @@ class katello::config {
     before => Exec["katello_seed_db"],
     require   => $katello::params::deployment ? {
         'katello' => [ Config_file["${katello::params::config_dir}/katello.yml"], Class["candlepin::service"], Class["pulp::service"] ],
-        'headpin' => [ Config_file["${katello::params::config_dir}/katello.yml"], Class["candlepin::service"] ],
+        'headpin' => [ Config_file["${katello::params::config_dir}/katello.yml"], Class["candlepin::service"], Class["thumbslug::service"] ],
          default  => [],
     },
   }
@@ -59,7 +59,7 @@ class katello::config {
       before => Exec["katello_seed_db"],
       require => $katello::params::deployment ? {
                 'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
-                'headpin' => [ Class["candlepin::service"] ],
+                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"] ],
                 default => [],
     },
   }
@@ -71,7 +71,7 @@ class katello::config {
       before => Exec["katello_seed_db"],
       require => $katello::params::deployment ? {
                 'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
-                'headpin' => [ Class["candlepin::service"] ],
+                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"] ],
                 default => [],
     },
   }
@@ -83,7 +83,7 @@ class katello::config {
       before => Exec["katello_seed_db"],
       require => $katello::params::deployment ? {
                 'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
-                'headpin' => [ Class["candlepin::service"] ],
+                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"] ],
                 default => [],
     },
   }
@@ -95,7 +95,7 @@ class katello::config {
       before => Exec["katello_seed_db"],
       require => $katello::params::deployment ? {
                 'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
-                'headpin' => [ Class["candlepin::service"] ],
+                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"] ],
                 default => [],
     },
   }
@@ -107,7 +107,7 @@ class katello::config {
       before => Exec["katello_seed_db"],
       require => $katello::params::deployment ? {
                 'katello' => [ Class["candlepin::service"], Class["pulp::service"]  ],
-                'headpin' => [ Class["candlepin::service"] ],
+                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"] ],
                 default => [],
     },
   }
@@ -133,7 +133,7 @@ class katello::config {
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
                 'katello' => [ Exec["katello_db_migrate"], Class["candlepin::service"], Class["pulp::service"] ],
-                'headpin' => [ Exec["katello_db_migrate"], Class["candlepin::service"] ],
+                'headpin' => [ Exec["katello_db_migrate"], Class["candlepin::service"], Class["thumbslug::service"] ],
                 default => [],
     },
   }

@@ -8,7 +8,7 @@ $stdout.sync = true
 
 default_path = '/usr/share/katello/install/default-answer-file'
 result_config_path = '/etc/katello/katello-configure.conf'
-puppet_cmd = 'puppet --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib -v -d'
+puppet_cmd = 'puppet --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib -v -d 2>&1'
 log_parent_directory = '/var/log/katello'
 
 # Reading answer file, used both for the default answer file

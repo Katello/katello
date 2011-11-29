@@ -21,6 +21,7 @@ except ImportError:
     import simplejson as json
 
 class TemplateAPI(KatelloAPI):
+    format_content_type = {'json': 'application/json', 'tdl':'application/tdl-xml'}
 
     def templates(self, envId):
         path = "/api/environments/%s/templates/" % str(envId)
@@ -56,15 +57,19 @@ class TemplateAPI(KatelloAPI):
         path = "/api/templates/import"
         return self.server.POST(path, tplData, multipart=True)[1]
 
+    def validate_tpl(self, tplId, format):
+        customHeaders = {'Accept': TemplateAPI.format_content_type[format]}
+        path = "/api/templates/%s/validate" % tplId
+        response = self.server.GET(path, customHeaders=customHeaders)[1]
+        return response
+
     def export_tpl(self, tplId, format):
-        format_content_type = {'json': 'application/json', 'tdl':'application/tdl-xml'}
-        customHeaders = {'Accept': format_content_type[format]}
+        customHeaders = {'Accept': TemplateAPI.format_content_type[format]}
         path = "/api/templates/%s/export" % tplId
         response = self.server.GET(path, customHeaders=customHeaders)[1]
         if isinstance(response, dict):
             response = json.dumps(response)
         return response
-
 
     def create(self, envId, name, description, parentId):
         tplData = {

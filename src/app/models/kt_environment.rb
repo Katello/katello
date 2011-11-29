@@ -26,7 +26,7 @@ class PriorValidator < ActiveModel::Validator
     if record.organization
       has_no_prior = record.organization.environments.reject{|env| env == record || env.prior != record.prior || env.prior == env.organization.locker}.empty?
     end
-    record.errors[:prior] << _("environment cannot be a prior to a different environment") unless has_no_prior
+    record.errors[:prior] << _("environment can only have one child") unless has_no_prior
 
     # only Locker can have prior=nil
     record.errors[:prior] << _("environment required") unless !record.prior.nil? || record.locker?
@@ -67,7 +67,7 @@ class KTEnvironment < ActiveRecord::Base
     :join_table => "environment_priors", :association_foreign_key => "prior_id", :uniq => true}
   has_and_belongs_to_many :successors, {:class_name => "KTEnvironment", :foreign_key => "prior_id",
     :join_table => "environment_priors", :association_foreign_key => :environment_id, :readonly => true}
-  has_many :system_templates, :class_name => "SystemTemplate", :foreign_key => :environment_id
+  has_many :system_templates, :dependent => :destroy, :class_name => "SystemTemplate", :foreign_key => :environment_id
 
   has_many :environment_products, :class_name => "EnvironmentProduct", :foreign_key => "environment_id", :dependent => :destroy, :uniq=>true
   has_many :products, :uniq => true, :through => :environment_products  do
@@ -76,9 +76,9 @@ class KTEnvironment < ActiveRecord::Base
     end
   end
 
-  has_many :systems, :inverse_of => :environment, :foreign_key => :environment_id
-  has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"], :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
-  has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
+  has_many :systems, :inverse_of => :environment, :dependent => :destroy,  :foreign_key => :environment_id
+  has_many :working_changesets, :conditions => ["state != '#{Changeset::PROMOTED}'"], :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
+  has_many :changeset_history, :conditions => {:state => Changeset::PROMOTED}, :foreign_key => :environment_id, :dependent => :destroy, :class_name=>"Changeset", :dependent => :destroy, :inverse_of => :environment
 
   scope :completer_scope, lambda { |options| where('organization_id = ?', options[:organization_id])}
 

@@ -20,10 +20,10 @@
  */
 
 $(document).ready(function() {
-    $('#more').bind('click', function(){
+    $('#packages_more').bind('click', function(){
         KT.packages.morePackages();
     });
-    $('#package_sort').bind('click', function(){
+    $('#packages_sort').bind('click', function(){
         KT.packages.reverseSort();
     });
 });
@@ -32,12 +32,12 @@ KT.packages = (function(){
     return {
         morePackages : function(){
             var list = $('.packages');
-            var more = $('#more');
+            var more = $('#packages_more');
             var spinner = $('#list-spinner');
             var dataScrollURL = more.attr("data-scroll_url");
 
             var offset = parseInt(more.attr("data-offset"), 10) + parseInt(more.attr("data-page_size"), 10);
-            dataScrollURL = dataScrollURL + "?offset=" + offset + "&pkg_order="+ $('#package_sort').attr("data-sort") +"&";
+            dataScrollURL = dataScrollURL + "?offset=" + offset + "&order="+ $('#packages_sort').attr("data-sort") +"&";
             //console.log(dataScrollURL + ", page_size: " + offset);
             spinner.fadeIn();
             $.ajax({
@@ -52,9 +52,8 @@ KT.packages = (function(){
                     $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
                     if (data.length == 0) {
                         more.empty().remove();
-                    }else{
-                        $('#more').attr("data-offset", offset);
                     }
+                    more.attr("data-offset", offset);
                 },
                 error: function() {
                     spinner.fadeOut();
@@ -63,7 +62,7 @@ KT.packages = (function(){
             });
         },
         sortOrder : function(){
-            var packageSort = $('#package_sort');
+            var packageSort = $('#packages_sort');
             var packageSortOrder = packageSort.attr("data-sort");
             if (packageSort.attr("data-sort") == "asc"){
                 packageSortOrder = "desc";
@@ -77,12 +76,12 @@ KT.packages = (function(){
         },
         reverseSort : function(){
             var list = $('.packages');
-            var more = $('#more');
+            var more = $('#packages_more');
             var spinner = $('#list-spinner');
             var dataScrollURL = more.attr("data-scroll_url");
             var reverse = parseInt(more.attr("data-offset"), 10);
 
-            dataScrollURL = dataScrollURL + "?reverse=" + reverse + "&pkg_order=" + KT.packages.sortOrder() + "&";
+            dataScrollURL = dataScrollURL + "?reverse=" + reverse + "&order=" + KT.packages.sortOrder() + "&";
             spinner.fadeIn();
             list.find('tbody > tr').empty().remove();
             $.ajax({
@@ -98,7 +97,7 @@ KT.packages = (function(){
                     if (data.length == 0) {
                         more.empty().remove();
                     }else{
-                        $('#more').attr("data-offset", reverse);
+                        $('#packages_more').attr("data-offset", reverse);
                     }
                 },
                 error: function() {
