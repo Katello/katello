@@ -297,7 +297,7 @@ class Status(SingleProviderAction):
 
 
 # ==============================================================================
-class ImportManifest(ProviderAction):
+class ImportManifest(SingleProviderAction):
 
     description = _('import a manifest file')
 
