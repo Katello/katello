@@ -1,0 +1,20 @@
+= javascript :edit_helpers
+
+= content_for :title do
+  = @organization.name
+
+= content_for :navigation do
+  = render_navigation(:items => organizations_navigation, :expand_all => true, :level => 1)
+
+= content_for :content do
+  #facts
+    %table#eventsTable.scroll-panel
+      %thead
+        %th= _("Group")
+        %th= _("Fact")
+        %th= _("Value")
+      %tbody
+        %tr
+          %td
+          %td
+          %td
