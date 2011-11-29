@@ -107,7 +107,7 @@ class Printer:
         return result.strip()
 
 
-    def addColumn(self, attr_name, name = None, multiline = False, show_in_grep = True, time_format=False):
+    def addColumn(self, attr_name, name = None, multiline = False, show_in_grep = True, time_format=False, value=''):
         """
         Add column to display
         @type attr_name: string
@@ -121,12 +121,15 @@ class Printer:
         @param show_in_grep: flag to set whether the column should be displayed also in grep mode or not
         @type time_format: bool
         @param time_format: flag to set this column as a rails date string to be parsed
+        @type value: string
+        @param value: value that should be used rather than accessing the data hash
         """
         col = {}
         col['attr_name']    = attr_name
         col['multiline']    = multiline
         col['show_in_grep'] = show_in_grep
         col['time_format']  = time_format
+        col['value']        = value
         if name == None:
             col['name'] = self._attrToName(attr_name)
         else:
@@ -150,7 +153,10 @@ class Printer:
             if not col['attr_name'] in item:
                 continue
 
-            value = item[col['attr_name']]
+            if len(str(col['value'])) > 0:
+                value = col['value']
+            else:
+                value = item[col['attr_name']]
             if not col['multiline']:
                 output = format_date(value) if col['time_format'] else value
                 print (unicode("{0:<" + str(colWidth + 1) + "} {1}")).format(self.u_str(col['name']) + ":", output)

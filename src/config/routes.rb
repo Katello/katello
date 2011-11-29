@@ -15,6 +15,17 @@ Src::Application.routes.draw do
     end
   end
 
+  resources :gpg_keys do
+    collection do
+      get :auto_complete_search
+      get :items
+    end
+    member do
+      get :products_repos
+      post :update
+    end
+  end
+
   resource :account
 
   resources :sync_plans, :only => [:index, :create, :new, :edit, :update, :show, :destroy, :auto_complete_search] do
@@ -60,6 +71,8 @@ Src::Application.routes.draw do
       get :more_packages
       get :subscriptions
       post :update_subscriptions
+      get :products
+      get :more_products
       get :facts
     end
     collection do
@@ -156,7 +169,11 @@ Src::Application.routes.draw do
   resources :providers do
     get 'auto_complete_search', :on => :collection
     resources :products do
-      resources :repositories
+      resources :repositories, :only => [:new, :create, :edit, :destroy] do
+        member do
+          put :update_gpg_key, :as => :update_repo_gpg_key
+        end
+      end
     end
     collection do
       get :items

@@ -1,6 +1,6 @@
 
 Name:           katello-repos
-Version:        0.1.3
+Version:        0.1.4
 Release:        1%{?dist}
 Summary:        Definition of yum repositories for Katello
 
@@ -47,6 +47,9 @@ rm -rf %{buildroot}
 %{_sysconfdir}/yum.repos.d/*.repo
 
 %changelog
+* Tue Nov 29 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.4-1
+- Add yum repos for thumbslug
+
 * Tue Sep 20 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.3-1
 - no Requires of puppet in katello-repos
 

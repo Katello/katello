@@ -29,6 +29,9 @@ class Repository < ActiveRecord::Base
   validates :pulp_id, :presence => true, :uniqueness => true
   validates :name, :presence => true
   validates :enabled, :repo_disablement => true, :on => [:update]
+  belongs_to :gpg_key, :inverse_of => :repositories
+
+  before_validation :setup_repo_gpg, :on =>[:create]
 
   def product
     self.environment_product.product
@@ -55,4 +58,12 @@ class Repository < ActiveRecord::Base
   def custom?
     !(redhat?)
   end
+
+  protected
+  def setup_repo_gpg
+    unless gpg_key
+      self.gpg_key = product.gpg_key
+    end
+  end
+
 end

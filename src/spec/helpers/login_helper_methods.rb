@@ -60,5 +60,4 @@ module LoginHelperMethods
     object.stub(:updatable?).and_return(true)
     object.stub(:updatable).and_return(true)
   end
-
 end

@@ -107,6 +107,8 @@ class Info(SystemAction):
         # get system details
         system = self.api.system(systems[0]['uuid'])
 
+        for akey in system['activation_key']:
+            system["activation_keys"] = "[ "+ ", ".join([akey["name"] for pool in akey["pools"]]) +" ]"
 
         self.printer.addColumn('name')
         self.printer.addColumn('uuid')
@@ -114,6 +116,10 @@ class Info(SystemAction):
         self.printer.addColumn('created_at', 'Registered', time_format=True)
         self.printer.addColumn('updated_at', 'Last updated', time_format=True)
         self.printer.addColumn('description', multiline=True)
+        self.printer.addColumn('activation_keys', multiline=True, show_in_grep=False)
+        if system.has_key("template"):
+            t = system["template"]["name"]
+            self.printer.addColumn('template', show_in_grep=False, value=t)
 
         self.printer.printItem(system)
 
