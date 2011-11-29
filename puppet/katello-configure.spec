@@ -53,6 +53,10 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Tue Nov 29 2011 Shannon Hughes <shughes@redhat.com> 0.1.21-2
+- build installer (shughes@redhat.com)
+- prep release for sys engine build (shughes@redhat.com)
+
 * Tue Nov 29 2011 Shannon Hughes <shughes@redhat.com> 0.1.21-1
 - Change the default password for thumbslug keystores (bkearney@redhat.com)
 
