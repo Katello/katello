@@ -65,5 +65,5 @@
       %fieldset
         .grid_3.ra
           = label :user, :email, _("Email Address:")
-        .grid_5.la{'name' => 'user[email]',  :class => ("editable edit_textfield" if editable), 'data-url' => user_path(@user)} #{@user.email}
+        .grid_5.la{'name' => 'user[email]',  :class => editable_class(editable), 'data-url' => user_path(@user)} #{@user.email}
 
