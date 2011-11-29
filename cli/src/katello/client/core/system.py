@@ -117,6 +117,9 @@ class Info(SystemAction):
         self.printer.addColumn('updated_at', 'Last updated', time_format=True)
         self.printer.addColumn('description', multiline=True)
         self.printer.addColumn('activation_keys', multiline=True, show_in_grep=False)
+        if system.has_key("template"):
+            t = system["template"]["name"]
+            self.printer.addColumn('template', show_in_grep=False, value=t)
 
         self.printer.printItem(system)
 
