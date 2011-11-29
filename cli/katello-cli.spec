@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.17
+Version:       0.1.18
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,6 +84,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 29 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.18-1
+- adding template to the system info cli call
+- show activation keys in the cli system info
+
 * Mon Nov 28 2011 Tomas Strachota <tstrachota@redhat.com> 0.1.17-1
 - cli - fix for spinner being trapped in a loop (tstrachota@redhat.com)
 - cli unit tests - cancel product synchronization (tstrachota@redhat.com)
