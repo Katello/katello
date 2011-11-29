@@ -1,22 +1,23 @@
 = javascript :edit_helpers
 
 = content_for :title do
-  = @organization.name 
+  = @organization.name
+
 - unless current_organization == @organization || !@organization.deletable?
   = content_for :remove_item do
     = link_to _("Remove Organization"), {:controller=>"organizations", :action=>"destroy"}, :confirm => _('Are you sure you want to remove this organization?'), :method => :delete, :class=>"remove_item", :remote=>true
 
 = content_for :navigation do
-  /pretty
+  = render_navigation(:items => organization_navigation, :expand_all => true, :level => 1)
 
 = content_for :content do
   = form_for @organization, :url => {:action => "update",  :controller => "organizations"}, :method => "put", :remote => true do |f|
-  
+
     %fieldset.clearfix
       .grid_2.la
         %label #{_("Description")}:
       .grid_4.la{:style => "word-wrap: break-word;", 'name' => 'organization[description]', :class=>("editable edit_textfield" if editable), 'data-url'=>edit_organization_path(@organization.cp_key)}<> #{@organization[:description]}
-  
+
     .grid_7
       %h5 #{_("Environment Promotion Paths")}:
 

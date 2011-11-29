@@ -12,11 +12,17 @@
 module Navigation
   module OrganizationMenu
 
+    def self.included(base)
+      base.class_eval do
+        helper_method :organization_navigation
+      end
+    end
+
     def menu_organization
       {:key => :organizations,
        :name => N_("Organizations"),
         :url => :sub_level,
-        :options => {:class=>'organizations top_level', "data-menu"=>"organizations"},
+        :options => {:class=>'organization top_level', "data-menu"=>"organization"},
         :if => lambda{current_organization() && Organization.any_readable?},
         :items=> [ menu_org_list, menu_org_subscriptions]
       }
@@ -27,7 +33,7 @@ module Navigation
       {:key => :org_list,
        :name => N_("List"),
        :url => organizations_path,
-       :options => {:class=>'organizations second_level', "data-menu"=>"organizations"}
+       :options => {:class=>'organization second_level', "data-menu"=>"organization"}
       }
     end
 
@@ -35,9 +41,25 @@ module Navigation
       {:key => :subscriptions,
        :name => N_("Subscriptions"),
        :url => subscriptions_path(),
-       :options => {:class=>'organizations second_level', "data-menu"=>"organizations"}
+       :options => {:class=>'organization second_level', "data-menu"=>"organization"}
       }
     end
 
+    def organization_navigation
+      [
+        { :key => :organizations,
+          :name =>N_("General"),
+          :url => lambda{edit_organization_path(@organization.id)},
+          :if => lambda{@organization},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :history,
+          :name =>N_("History"),
+          :url => lambda{events_organization_path(@organization.id)},
+          :if => lambda{@organization},
+          :options => {:class=>"navigation_element"}
+        }
+      ]
+    end
   end
 end
