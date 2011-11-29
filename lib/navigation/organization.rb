@@ -47,7 +47,7 @@ module Navigation
 
     def organization_navigation
       [
-        { :key => :organizations,
+        { :key => :general,
           :name =>N_("General"),
           :url => lambda{edit_organization_path(@organization.id)},
           :if => lambda{@organization},
