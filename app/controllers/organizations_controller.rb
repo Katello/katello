@@ -16,7 +16,7 @@ class OrganizationsController < ApplicationController
   include AutoCompleteSearch
   respond_to :html, :js
   skip_before_filter :authorize
-  before_filter :find_organization, :only => [:edit, :update, :destroy]
+  before_filter :find_organization, :only => [:edit, :update, :destroy, :events]
   before_filter :find_organization_by_id, :only => [:environments_partial]
   before_filter :authorize #call authorize after find_organization so we call auth based on the id instead of cp_id
   before_filter :setup_options, :only=>[:index, :items]
@@ -38,6 +38,7 @@ class OrganizationsController < ApplicationController
       :update => edit_test,
       :destroy => delete_test,
       :environments_partial => index_test,
+      :events => read_test
     }
   end
 
@@ -93,7 +94,7 @@ class OrganizationsController < ApplicationController
 
   def edit
     @env_choices =  @organization.environments.collect {|p| [ p.name, p.name ]}
-    render :partial=>"edit", :layout => "layouts/tupane_layout", :locals=>{:editable=>@organization.editable?}
+    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:organization=>@organization, :editable=>@organization.editable?, :name => controller_display_name}
   end
 
   def update
@@ -150,6 +151,10 @@ class OrganizationsController < ApplicationController
     setup_environment_selector(@organization, accessible_envs)
     @environment = first_env_in_path(accessible_envs, false, @organization)
     render :partial=>"environments", :locals=>{:accessible_envs => accessible_envs}
+  end
+
+  def events
+    render :partial => 'events', :layout => "tupane_layout"
   end
 
   protected
