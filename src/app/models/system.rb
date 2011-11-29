@@ -30,6 +30,9 @@ class System < ActiveRecord::Base
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :systems
   belongs_to :system_template
 
+  has_many :system_tasks, :dependent => :destroy
+  has_many :task_statuses, :through => :system_tasks
+
   has_many :system_activation_keys, :dependent => :destroy
   has_many :activation_keys, :through => :system_activation_keys
 
