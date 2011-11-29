@@ -15,7 +15,8 @@ class Organization < ActiveRecord::Base
   include Glue::Candlepin::Owner if AppConfig.use_cp
   include Glue if AppConfig.use_cp
   include Authorization
-
+  include AsyncOrchestration
+  
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy
   has_many :environments, :class_name => "KTEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
@@ -25,6 +26,9 @@ class Organization < ActiveRecord::Base
   has_many :permissions, :dependent => :destroy, :inverse_of => :organization
 
   attr_accessor :statistics
+
+  default_scope  where(:task_id=>nil)
+
 
   scoped_search :on => :name, :complete_value => true, :rename => :'organization.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'organization.description'
@@ -40,6 +44,15 @@ class Organization < ActiveRecord::Base
   validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
   validates :description, :katello_description_format => true
 
+  def destroy_async org #org doing the deletion
+    task = self.async(:organization=>org).delete
+    self.task_id = task.id
+    self.save!
+  end
+
+  def delete
+    self.destroy
+  end
 
   def systems
     System.where(:environment_id => environments)

@@ -46,7 +46,7 @@ class OrganizationsController < ApplicationController
   end
 
   def items
-    render_panel_items(Organization.readable.order('lower(organizations.name)'), @panel_options, params[:search], params[:offset])
+    render_panel_items(Organization.unscoped{Organization.readable.order('lower(organizations.name)')}.all, @panel_options, params[:search], params[:offset])
   end
 
   def new
@@ -122,26 +122,19 @@ class OrganizationsController < ApplicationController
   end
 
   def destroy
-    if current_organization == @organization
-      errors [_("Could not delete organization '#{params[:id]}'."),  _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
-
-      render :text => "The current organization cannot be deleted. Please switch to a different organization before deleting.", :status => :bad_request and return
-    elsif Organization.count > 1
-      id = @organization.cp_key
-      @name = @organization.name
-      begin
-        @organization.destroy
-        notice _("Organization '#{params[:id]}' was deleted.")
-      rescue Exception => error
-        errors error.to_s
-        render :text=> error.to_s, :status=>:bad_request and return
-      end
-      render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
-    else
-      errors [_("Could not delete organization '#{params[:id]}'."),  _("At least one organization must exist.")]
-
-      render :text => "At least one organization must exist.", :status=>:bad_request and return
+    found_errors= validate_destroy(@organization)
+    if found_errors
+      errors found_errors
+      render :text=>found_errors[1], :status=>:bad_request and return
     end
+
+    id = @organization.cp_key
+    @organization.destroy_async(current_organization)
+    notice _("Organization '%s' has been scheduled for deletion.") % @organization.name
+    render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
+  rescue Exception => error
+    errors error.to_s
+    render :text=> error.to_s, :status=>:bad_request and return
   end
 
   def environments_partial
@@ -153,6 +146,16 @@ class OrganizationsController < ApplicationController
   end
 
   protected
+
+
+  def validate_destroy org
+    def_error = _("Could not delete organization '%s'.")  % [org.name]
+    if (current_organization == @organization)
+      [def_error, _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
+    elsif Organization.count == 1:
+      [def_error, _("At least one organization must exist.")]
+    end
+  end
 
   def find_organization
     begin
