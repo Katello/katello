@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.115
+Version:        0.1.116
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -336,6 +336,58 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Nov 29 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.116-1
+- adding template to the system info cli call
+- more info when RecordInvalid is thrown
+- Org Deletion - ensuring things are cleaned up properly during org deletion
+- GPG Keys: Adds gpg key helptip.
+- Merge branch 'master' into gpg
+- GPG Keys: Adds uploading gpg key during edit and attempts to fix issues with
+  Firefox and gpg key ajax upload.
+- GPG key: Adds uploading key on creating new key from the UI.
+- GPG Keys: Adds dialog for setting GPG key of product for all underlying
+  repositories.
+- Routing error page doesn't need user credentials
+- Added some gpg key controller tests
+- added some unit tests to deal with gpg keys
+- Moved the super admin method to authorization_helper_methods.rb from
+  login_helper_methods.rb for more consistency
+- Added a reset_repo_gpgs method to reset the gpg keys of the sub product
+- GPG Keys: Adds UI code to check for setting all underlying repositories with
+  products GPG key on edit.
+- GPG Keys: Adds view, action and route for viewing the products and
+  repositories a GPG key is associated with from the details pane of a key.
+- GPG Key: Adds key association to products on create and update views.
+- GPG Key: Adds association of GPG key when creating repository.
+- GPG Key: Adds ability to edit a repository and change the GPG key.
+- Added some methods to do permission checks on repos
+- Added some methods to do permission checks on products
+- GPG keys: Modifies edit box for pasting key and removes upload.
+- GPG keys: Adds edit support for name and pasted gpg key.
+- Adding products and repositories helpers
+- GPG Keys: Adds functional GPG new key view.
+- GPG Keys: Adds update to controller.
+- Added code for repo controller to accept gpg
+- Updated some controller methods to deal with associating gpg keys on
+  products/repos
+- Added a menu entry for the GPG stuff
+- GPG Keys: Updated jsroutes for GPG keys.
+- GPG Keys: Fixes for create with permissions.
+- GPG Keys: Adds create controller actions to handle both pasted GPG keys and
+  uploaded GPG keys.
+- GPG Keys: Adds code for handling non-CRUD controller actions.
+- GPG Keys: Adds basic routes.
+- GPG Keys: Adds javascript scaffolding and activation of 2pane AJAX for GPG
+  Keys.
+- GPG Keys: Initial view scaffolding.
+- GPG Keys: Fixes issues with Rails naming conventions.
+- GPG Keys: Adds basic controller and helper shell. Adds suite of unit tests
+  for TDD.
+- Added some permission checking, scoped and searching on names
+- Adding a product association to gpg keys
+- Renamed Gpg to GpgKey
+- Initial commit of the Gpg Model mappings + Migration scripts
+
 * Mon Nov 28 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.115-1
 - tdl validations - backend and cli
 - tdl validation - model code
