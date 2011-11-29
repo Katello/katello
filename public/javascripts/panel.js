@@ -757,7 +757,7 @@ KT.panel.list = (function () {
         },
         createSuccess = function(data){
         	var id;
-                            console.log(data);
+                            
             if (data['no_match']) {
                 KT.panel.closePanel($('#panel'));
                 notices.checkNotices();
