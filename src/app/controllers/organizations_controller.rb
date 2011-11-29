@@ -12,7 +12,6 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class OrganizationsController < ApplicationController
-  navigation :organizations
   include AutoCompleteSearch
   respond_to :html, :js
   skip_before_filter :authorize
