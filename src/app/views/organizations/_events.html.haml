@@ -4,7 +4,7 @@
   = @organization.name
 
 = content_for :navigation do
-  = render_navigation(:items => organizations_navigation, :expand_all => true, :level => 1)
+  = render_navigation(:items => organization_navigation, :expand_all => true, :level => 1)
 
 = content_for :content do
   #facts
@@ -16,5 +16,6 @@
       %tbody
         %tr
           %td
+            = @organization.cp_key
           %td
           %td
