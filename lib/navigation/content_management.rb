@@ -24,19 +24,19 @@ module Navigation
 
     def custom_provider_navigation
       [
-          { :key => :edit_custom_providers,
-            :name =>N_("Basics"),
-            :url => (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id),
-            :if => lambda{!@provider.nil? && @provider.readable? && !@provider.new_record?},
-            :options => {:class=>"navigation_element"}
-          },
-          { :key => :products_repos,
-            :name =>N_("Products & Repositories"),
-            :url => (@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id),
-            :if => lambda{!@provider.nil? && @provider.readable? &&
-                          !@provider.new_record? && !@provider.has_subscriptions?},
-            :options => {:class=>"navigation_element"}
-          }
+        { :key => :products_repos,
+          :name =>N_("Products & Repositories"),
+          :url => (@provider.nil? || @provider.new_record?) ? "" : products_repos_provider_path(@provider.id),
+          :if => lambda{!@provider.nil? && @provider.readable? &&
+                        !@provider.new_record? && !@provider.has_subscriptions?},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :edit_custom_providers,
+          :name =>N_("Details"),
+          :url => (@provider.nil? || @provider.new_record?) ? "" : edit_provider_path(@provider.id),
+          :if => lambda{!@provider.nil? && @provider.readable? && !@provider.new_record?},
+          :options => {:class=>"navigation_element"}
+        }
       ]
     end
 
@@ -171,12 +171,6 @@ module Navigation
 
     def promotion_packages_navigation
       [
-        { :key => :details,
-          :name =>N_("Details"),
-          :url => lambda{package_path(@package.id)},
-          :if => lambda{@package},
-          :options => {:class=>"navigation_element"}
-        },
         { :key => :dependencies,
           :name =>N_("Dependencies"),
           :url => lambda{dependencies_package_path(@package.id)},
@@ -194,21 +188,27 @@ module Navigation
           :url => lambda{filelist_package_path(@package.id)},
           :if => lambda{@package},
           :options => {:class=>"navigation_element"}
+        },
+        { :key => :details,
+          :name =>N_("Details"),
+          :url => lambda{package_path(@package.id)},
+          :if => lambda{@package},
+          :options => {:class=>"navigation_element"}
         }
       ]
     end
 
     def promotion_errata_navigation
       [
-        { :key => :details,
-          :name =>N_("Details"),
-          :url => lambda{erratum_path(@errata.id)},
-          :if => lambda{@errata},
-          :options => {:class=>"navigation_element"}
-        },
         { :key => :packages,
           :name =>N_("Packages"),
           :url => lambda{packages_erratum_path(@errata.id)},
+          :if => lambda{@errata},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :details,
+          :name =>N_("Details"),
+          :url => lambda{erratum_path(@errata.id)},
           :if => lambda{@errata},
           :options => {:class=>"navigation_element"}
         }
@@ -217,15 +217,15 @@ module Navigation
 
     def promotion_distribution_navigation
       [
-        { :key => :details,
-          :name =>N_("Details"),
-          :url => lambda{distribution_path(URI::escape(@distribution.id))},
-          :if => lambda{@distribution},
-          :options => {:class=>"navigation_element"}
-        },
         { :key => :filelist,
           :name =>N_("Filelist"),
           :url => lambda{filelist_distribution_path(URI::escape(@distribution.id))},
+          :if => lambda{@distribution},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :details,
+          :name =>N_("Details"),
+          :url => lambda{distribution_path(URI::escape(@distribution.id))},
           :if => lambda{@distribution},
           :options => {:class=>"navigation_element"}
         }
@@ -258,16 +258,16 @@ module Navigation
     
     def gpg_keys_navigation
       [
-        { :key => :general,
-          :name =>N_("General"),
-          :url => lambda{edit_gpg_key_path(@gpg_key.id)},
-          :if => lambda{gpg_key},
-          :options => {:class=>"navigation_element"}
-        },
         { :key => :products_repositories,
           :name =>N_("Products and Repositories"),
           :url => lambda{products_repos_gpg_key_path(@gpg_key.id)},
           :if =>lambda{gpg_key},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :details,
+          :name =>N_("Details"),
+          :url => lambda{edit_gpg_key_path(@gpg_key.id)},
+          :if => lambda{gpg_key},
           :options => {:class=>"navigation_element"}
         }
       ]
