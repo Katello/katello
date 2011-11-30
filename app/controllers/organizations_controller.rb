@@ -129,7 +129,7 @@ class OrganizationsController < ApplicationController
     end
 
     id = @organization.cp_key
-    @organization.destroy_async(current_organization)
+    current_organization.destroy_other_async(@organization)
     notice _("Organization '%s' has been scheduled for deletion.") % @organization.name
     render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
   rescue Exception => error
@@ -159,7 +159,7 @@ class OrganizationsController < ApplicationController
 
   def find_organization
     begin
-      @organization = Organization.first(:conditions => {:cp_key => params[:id]})
+      @organization = Organization.unscoped{Organization.first(:conditions => {:cp_key => params[:id]})}
       raise if @organization.nil?
     rescue Exception => error
       errors _("Couldn't find organization with ID=#{params[:id]}")
