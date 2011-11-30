@@ -1,3 +1,5 @@
+
+#source "http://rubygems.org"
 source 'http://repos.fedorapeople.org/repos/katello/gems/'
 
 gem 'rails', '3.0.10'
