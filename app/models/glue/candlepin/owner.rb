@@ -15,7 +15,9 @@ require 'resources/candlepin'
 module Glue::Candlepin::Owner
 
   def self.included(base)
+    base.send :include, LazyAccessor
     base.send :include, InstanceMethods
+
     base.class_eval do
       before_save :save_owner_orchestration
       before_destroy :destroy_owner_orchestration
@@ -23,6 +25,8 @@ module Glue::Candlepin::Owner
       validates :cp_key,
           :presence => true,
           :format => { :with => /^[\w-]*$/ }
+
+      lazy_accessor :events, :initializer => lambda { Candlepin::Owner.events(cp_key) }
     end
   end
 

@@ -153,7 +153,14 @@ class OrganizationsController < ApplicationController
   end
 
   def events
-    render :partial => 'events', :layout => "tupane_layout"
+    entries = @organization.events.collect {|e|
+      entry = {}
+      entry['timestamp'] = Date.parse(e['timestamp'])
+      entry['target'] = e['targetName']
+      entry['message'] = e['messageText']
+      entry
+    }
+    render :partial => 'events', :layout => "tupane_layout", :locals => {:entries => entries[0..50]}
   end
 
   protected
