@@ -346,6 +346,7 @@ KT.roles.permissionWidget = function(){
                 } else {
                     $('#permission_widget_header').html(i18n.add_header_org + ' ' + roles_breadcrumb[current_organization].name);
                 }
+                $('#permission_widget_header').addClass('one-line-ellipsis');
             } else {
                 button.children('span').html(i18n.add_permission);
                 button.removeClass("highlighted");
@@ -437,6 +438,7 @@ KT.roles.permissionWidget = function(){
 				progress_bar.setProgress(100);
 
                 $('#permission_widget_header').html(i18n.edit_permission_header + ' ' + roles_breadcrumb[current_organization].name + ' - ' + permission.name);
+                $('#permission_widget_header').addClass('one-line-ellipsis');
             } else {
                 button.children('span').html(i18n.edit_permission);
                 button.removeClass("highlighted");
