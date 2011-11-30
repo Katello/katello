@@ -46,7 +46,7 @@ class OrganizationsController < ApplicationController
   end
 
   def items
-    render_panel_items(Organization.readable.order('lower(organizations.name)').all, @panel_options, params[:search], params[:offset])
+    render_panel_items(Organization.readable.order('lower(organizations.name)'), @panel_options, params[:search], params[:offset])
   end
 
   def new
@@ -122,18 +122,19 @@ class OrganizationsController < ApplicationController
   end
 
   def destroy
-    found_errors= validate_destroy(@organization)
+    found_errors= @organization.validate_destroy(current_organization)
     if found_errors
       errors found_errors
       render :text=>found_errors[1], :status=>:bad_request and return
     end
 
     id = @organization.cp_key
-    current_organization.destroy_other_async(@organization)
+    current_user.destroy_organization_async(@organization)
     notice _("Organization '%s' has been scheduled for background deletion.") % @organization.name
     render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
   rescue Exception => error
     errors error.to_s
+    debugger
     render :text=> error.to_s, :status=>:bad_request and return
   end
 
@@ -147,19 +148,9 @@ class OrganizationsController < ApplicationController
 
   protected
 
-
-  def validate_destroy org
-    def_error = _("Could not delete organization '%s'.")  % [org.name]
-    if (current_organization == @organization)
-      [def_error, _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
-    elsif Organization.count == 1:
-      [def_error, _("At least one organization must exist.")]
-    end
-  end
-
   def find_organization
     begin
-      @organization = Organization.unscoped{Organization.first(:conditions => {:cp_key => params[:id]})}
+      @organization = Organization.first(:conditions => {:cp_key => params[:id]})
       raise if @organization.nil?
     rescue Exception => error
       errors _("Couldn't find organization with ID=#{params[:id]}")

@@ -15,7 +15,6 @@ class Organization < ActiveRecord::Base
   include Glue::Candlepin::Owner if AppConfig.use_cp
   include Glue if AppConfig.use_cp
   include Authorization
-  include AsyncOrchestration
   
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy
@@ -67,22 +66,14 @@ class Organization < ActiveRecord::Base
     self.providers << ::Provider.new(:name => "Red Hat", :provider_type=> ::Provider::REDHAT, :organization => self)
   end
 
-  #method to delete the specified org.  Due to the way delayed job is impelemented
-  #  we must attached the job to a different instance.  
-  def destroy_other_async org
-    task = self.async(:organization=>self).destroy_other(org.id)
-    org.task_id = task.id
-    org.save!
+  def validate_destroy current_org
+    def_error = _("Could not delete organization '%s'.")  % [self.name]
+    if (current_org == @organization)
+      [def_error, _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
+    elsif Organization.count == 1:
+      [def_error, _("At least one organization must exist.")]
+    end
   end
-
-  def destroy_other org_id
-    org = Organization.unscoped{Organization.find(org_id)}
-    org.destroy
-  rescue Exception=>e
-    Rails.logger.error(e)
-    Rails.logger.error(e.backtrace.join("\n"))        
-  end
-
 
   #permissions
   scope :readable, lambda {authorized_items(READ_PERM_VERBS)}

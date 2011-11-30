@@ -139,6 +139,8 @@ describe OrganizationsController do
     
     describe "with no exceptions thrown" do
       before (:each) do
+        
+        login_user :mock=>false
         @controller.stub!(:render).and_return("") #fix for not finding partial
         @org = new_test_org
         @org.stub!(:name).and_return(OrgControllerTest::ORGANIZATION[:name])
@@ -147,15 +149,16 @@ describe OrganizationsController do
       end
 
       it 'should call katello organization destroy api if there are more than 1 organizations' do
+        @controller.stub(:current_user).and_return(@user)
         Organization.stub!(:count).and_return(2)
-        @org.should_receive(:destroy).with(no_args()).once.and_return(true)
+        @user.should_receive(:destroy_organization_async).with(@org).once.and_return(true)
         delete 'destroy', :id => @org.id
         response.should be_success
       end
 
       it "should generate a success notice" do
         Organization.stub!(:count).and_return(2)
-        @org.should_receive(:destroy).with(no_args()).once.and_return(true)
+        @user.should_receive(:destroy_organization_async).with(@org).once.and_return(true)
         controller.should_receive(:notice)
         delete 'destroy', :id => @org.id
         response.should be_success
