@@ -156,11 +156,13 @@ class OrganizationsController < ApplicationController
     entries = @organization.events.collect {|e|
       entry = {}
       entry['timestamp'] = Date.parse(e['timestamp'])
-      entry['target'] = e['targetName']
       entry['message'] = e['messageText']
       entry
     }
-    render :partial => 'events', :layout => "tupane_layout", :locals => {:entries => entries[0..50]}
+    #entries.compact!  # To remove the nils inserted for rejected entries
+
+    # TODO: add more/paging to these results instead of truncating at 250
+    render :partial => 'events', :layout => "tupane_layout", :locals => {:entries => entries[0...250]}
   end
 
   protected
