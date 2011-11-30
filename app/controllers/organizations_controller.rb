@@ -46,7 +46,7 @@ class OrganizationsController < ApplicationController
   end
 
   def items
-    render_panel_items(Organization.unscoped{Organization.readable.order('lower(organizations.name)')}.all, @panel_options, params[:search], params[:offset])
+    render_panel_items(Organization.readable.order('lower(organizations.name)').all, @panel_options, params[:search], params[:offset])
   end
 
   def new
@@ -130,7 +130,7 @@ class OrganizationsController < ApplicationController
 
     id = @organization.cp_key
     current_organization.destroy_other_async(@organization)
-    notice _("Organization '%s' has been scheduled for deletion.") % @organization.name
+    notice _("Organization '%s' has been scheduled for background deletion.") % @organization.name
     render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
   rescue Exception => error
     errors error.to_s
