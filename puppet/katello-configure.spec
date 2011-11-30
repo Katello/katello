@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.20
+Version:        0.1.21
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Tue Nov 29 2011 Shannon Hughes <shughes@redhat.com> 0.1.21-1
+- Change the default password for thumbslug keystores (bkearney@redhat.com)
+
 * Mon Nov 28 2011 Ivan Necas <inecas@redhat.com> 0.1.20-1
 - Update class path for Candlepin 0.5. (dgoodwin@redhat.com)
 

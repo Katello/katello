@@ -40,7 +40,7 @@ module Errors
 
     def message
       if @errors.nil?
-        "#{to_s}: No errors"
+        "#{to_s}: " + _("No errors")
       else
         "#{to_s}: #{errors.join(', ')}"
       end
