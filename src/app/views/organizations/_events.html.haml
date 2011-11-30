@@ -13,8 +13,6 @@
         %th.column_1
           = _("Time")
         %th
-          = _("Target")
-        %th
           = _("Message")
       %tbody
         - if !entries.nil? && entries.length > 0
@@ -22,8 +20,6 @@
             %tr{:class => cycle(nil, 'alt')}
               %td.column_1
                 = entry['timestamp']
-              %td
-                = entry['target']
               %td
                 = entry['message']
         - else
