@@ -252,6 +252,12 @@ module Candlepin
         JSON.parse(ueber_cert_json).with_indifferent_access
       end
 
+      def events key
+        response = self.get(join_path(path(key), 'events'), self.default_headers).body
+        JSON.parse(response).collect { |e| e.with_indifferent_access }
+      end
+
+
       def path(id=nil)
         "/candlepin/owners/#{url_encode id}"
       end
