@@ -44,16 +44,6 @@ class Organization < ActiveRecord::Base
   validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
   validates :description, :katello_description_format => true
 
-  def destroy_async org #org doing the deletion
-    task = self.async(:organization=>org).delete
-    self.task_id = task.id
-    self.save!
-  end
-
-  def delete
-    self.destroy
-  end
-
   def systems
     System.where(:environment_id => environments)
   end
@@ -76,6 +66,25 @@ class Organization < ActiveRecord::Base
   def create_redhat_provider
     self.providers << ::Provider.new(:name => "Red Hat", :provider_type=> ::Provider::REDHAT, :organization => self)
   end
+
+  #method to delete the specified org.  Due to the way delayed job is impelemented
+  #  we must attached the job to a different instance.  
+  def destroy_other_async org
+    task = self.async(:organization=>self).destroy_other(org.id)
+    org.task_id = task.id
+    org.save!
+  end
+
+  def destroy_other org_id
+    org = Organization.unscoped{Organization.find(org_id)}
+    org.destroy
+  rescue Exception=>e
+    Rails.logger.error(e)
+    Rails.logger.error(e.backtrace.join("\n"))
+    org.task_id = nil #reset the task_id
+    org.save!
+  end
+
 
   #permissions
   scope :readable, lambda {authorized_items(READ_PERM_VERBS)}
