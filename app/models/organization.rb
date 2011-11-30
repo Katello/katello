@@ -27,7 +27,7 @@ class Organization < ActiveRecord::Base
 
   attr_accessor :statistics
 
-  default_scope  where(:task_id=>nil)
+  default_scope  where(:task_id=>nil) #ignore organizations that are being deleted
 
 
   scoped_search :on => :name, :complete_value => true, :rename => :'organization.name'
@@ -80,9 +80,7 @@ class Organization < ActiveRecord::Base
     org.destroy
   rescue Exception=>e
     Rails.logger.error(e)
-    Rails.logger.error(e.backtrace.join("\n"))
-    org.task_id = nil #reset the task_id
-    org.save!
+    Rails.logger.error(e.backtrace.join("\n"))        
   end
 
 
