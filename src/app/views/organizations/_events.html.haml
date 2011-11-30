@@ -7,15 +7,25 @@
   = render_navigation(:items => organization_navigation, :expand_all => true, :level => 1)
 
 = content_for :content do
-  #facts
-    %table#eventsTable.scroll-panel
+  #events
+    %table.scroll-panel
       %thead
-        %th= _("Group")
-        %th= _("Fact")
-        %th= _("Value")
+        %th.column_1
+          = _("Time")
+        %th
+          = _("Target")
+        %th
+          = _("Message")
       %tbody
-        %tr
-          %td
-            = @organization.cp_key
-          %td
-          %td
+        - if !entries.nil? && entries.length > 0
+          - entries.each do |entry|
+            %tr{:class => cycle(nil, 'alt')}
+              %td.column_1
+                = entry['timestamp']
+              %td
+                = entry['target']
+              %td
+                = entry['message']
+        - else
+          %tr
+            %td{:colspan=>"3"} #{_("No event history found for %s") % [@organization.name]}
