@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.116
+Version:        0.1.118
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -336,6 +336,23 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Nov 30 2011 Mike McCune <mmccune@redhat.com> 0.1.118-1
+- periodic rebuild
+* Tue Nov 29 2011 Shannon Hughes <shughes@redhat.com> 0.1.117-1
+- fix user tab so editable fields wrap (shughes@redhat.com)
+- Fixes issue with new template for repositories from adding in gpg key.
+  (ehelms@redhat.com)
+- rake jsroutes (thomasmckay@redhat.com)
+- + display green/yellow/red icon next to installed software products + changed
+  order of packages tab for progression Subscriptions->Software->Packages +
+  TODO: refactor products code based upon sys-packages branch + TODO: hide
+  "More..." button if number of installed products is less than page size
+  (thomasmckay@redhat.com)
+- installed products listed now (still need clean up) (thomasmckay@redhat.com)
+- infrastructure for system/products based upon system/packages
+  (thomasmckay@redhat.com)
+- Removing errant console.log that breaks FF3.6 (ehelms@redhat.com)
+
 * Tue Nov 29 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.116-1
 - adding template to the system info cli call
 - more info when RecordInvalid is thrown

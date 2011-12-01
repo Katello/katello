@@ -218,6 +218,7 @@ Src::Application.routes.draw do
     end
     member do
       get :environments_partial
+      get :events
     end
     resources :environments do
       member do
