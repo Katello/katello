@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Dec 01 2011 Shannon Hughes <shughes@redhat.com> 0.1.19-2
+- system engine build (shughes@redhat.com)
+
 * Tue Nov 29 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.18-1
 - adding template to the system info cli call
 - show activation keys in the cli system info
