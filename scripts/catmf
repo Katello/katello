@@ -1,0 +1,37 @@
+#!/usr/bin/ruby
+# Manifest cat - prints useful information about manifest ZIP import
+#
+# yum -y install unzip rubygem-json
+#
+
+require 'rubygems'
+require 'json'
+
+manifest=ARGV[0]
+
+tmpdir=`mktemp -d`.chomp
+
+`unzip #{manifest} -d #{tmpdir}`
+`unzip #{tmpdir}/consumer_export.zip -d #{tmpdir}`
+
+Dir.glob("#{tmpdir}/export/products/*.json").each do |file|
+  File.open(file, 'r') do |file_json|
+    p = JSON.parse(file_json.readlines.to_s)
+    puts "Product: #{p['name']} (#{p['id']})"
+  end
+end
+
+Dir.glob("#{tmpdir}/export/entitlements/*.json").each do |file|
+  File.open(file, 'r') do |file_json|
+    e = JSON.parse(file_json.readlines.to_s)
+    puts "Entitlement (#{e['pool']['id']}):"
+    puts " Product: #{e['pool']['productName']} (#{e['pool']['productId']})"
+    puts " Pool Id: #{e['pool']['id']}"
+    puts " Quantity: #{e['pool']['quantity']}"
+    puts " Contract: #{e['pool']['contractNumber']}"
+    puts " Account: #{e['pool']['accountNumber']}"
+    puts " Ends: #{e['pool']['endDate']}"
+  end
+end
+
+`rm -rf #{tmpdir}`
