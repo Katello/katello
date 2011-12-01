@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.119
+Version:        0.1.120
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -336,6 +336,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Dec 01 2011 Mike McCune <mmccune@redhat.com> 0.1.120-1
+ - periodic rebuild
 * Wed Nov 30 2011 Mike McCune <mmccune@redhat.com> 0.1.118-1
 - periodic rebuild
 * Tue Nov 29 2011 Shannon Hughes <shughes@redhat.com> 0.1.117-1
