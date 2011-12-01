@@ -14,6 +14,19 @@ tmpdir=`mktemp -d`.chomp
 `unzip #{manifest} -d #{tmpdir}`
 `unzip #{tmpdir}/consumer_export.zip -d #{tmpdir}`
 
+# Grab high level info
+File.open("#{tmpdir}/export/consumer.json", 'r') do |file_json|
+  c = JSON.parse(file_json.readlines.to_s)
+  puts "Consumer UUID:  #{c['uuid']}"
+end
+
+# Grab high level info
+File.open("#{tmpdir}/export/meta.json", 'r') do |file_json|
+  m = JSON.parse(file_json.readlines.to_s)
+  puts "Export Version: #{m['version']}"
+  puts "Creation Date:  #{m['created']}"
+end
+
 Dir.glob("#{tmpdir}/export/products/*.json").each do |file|
   File.open(file, 'r') do |file_json|
     p = JSON.parse(file_json.readlines.to_s)
@@ -31,6 +44,13 @@ Dir.glob("#{tmpdir}/export/entitlements/*.json").each do |file|
     puts " Contract: #{e['pool']['contractNumber']}"
     puts " Account: #{e['pool']['accountNumber']}"
     puts " Ends: #{e['pool']['endDate']}"
+  end
+end
+
+Dir.glob("#{tmpdir}/export/consumer_types/*.json").each do |file|
+  File.open(file, 'r') do |file_json|
+    c = JSON.parse(file_json.readlines.to_s)
+    puts "Consumer Type: #{c['label']} (#{c['id']})"
   end
 end
 
