@@ -184,13 +184,11 @@ class UpdateContent(ChangesetAction):
         self.current_product = value
         parser.values.from_product = True
 
-
     def store_item(self, option, opt_str, value, parser):
         if parser.values.from_product == None:
             raise OptionValueError(_("%s must be preceded by %s") % (option, "--from_product") )
 
         self.items[option.dest].append({"name": value, "product": self.current_product})
-
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
@@ -215,7 +213,7 @@ class UpdateContent(ChangesetAction):
                                 action="callback", callback=self.store_from_product, type="string",
                                 help=_("determines product from which the packages/errata/repositories are picked"))
 
-        for ct in ['package', 'erratum', 'repo']:
+        for ct in ['package', 'erratum', 'repo', 'distribution']:
             self.parser.add_option('--add_'+ct, dest='add_'+ct,
                                 action="callback", callback=self.store_item, type="string",
                                 help=_(ct+" to add to the changeset"))
@@ -225,7 +223,7 @@ class UpdateContent(ChangesetAction):
         self.reset_items()
 
     def reset_items(self):
-        for ct in ['package', 'erratum', 'repo']:
+        for ct in ['package', 'erratum', 'repo', 'distribution']:
             self.items['add_'+ct]    = []
             self.items['remove_'+ct] = []
 
@@ -259,6 +257,8 @@ class UpdateContent(ChangesetAction):
         patch['-products'] = self.get_option('remove_product') or []
         patch['+templates'] = self.get_option('add_template') or []
         patch['-templates'] = self.get_option('remove_template') or []
+        patch['+distributions'] = items["add_distribution"] 
+        patch['-distributions'] = items["remove_distribution"] 
 
         msg = self.api.update_content(cset["id"], patch)
         print _("Successfully updated changeset [ %s ]") % csName
