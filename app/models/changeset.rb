@@ -178,7 +178,7 @@ class Changeset < ActiveRecord::Base
 
   def add_distribution distribution_id, product_name
     product = find_product(product_name)
-    repos = product.repos(self.environment)
+    repos = product.repos(self.environment.prior)
     idx = nil
     repos.each do |repo|
       idx = repo.distributions.index do |d| d.id == distribution_id end

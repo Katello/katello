@@ -80,6 +80,9 @@ class Api::ChangesetsController < Api::ApiController
     each_patch_item '+templates' do |name| @changeset.add_template name end
     each_patch_item '-templates' do |name| @changeset.remove_template name end
 
+    each_patch_item '+distributions' do |rec| @changeset.add_distribution rec[:name], rec[:product]  end
+    each_patch_item '-distributions' do |rec| @changeset.remove_distribution rec[:name], rec[:product] end
+
     @changeset.save!
     render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos])
   end
