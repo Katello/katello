@@ -352,7 +352,7 @@ class Sync(SingleRepoAction):
 
 class CancelSync(SingleRepoAction):
 
-    description = _('synchronize a repository')
+    description = _('cancel currently running synchronization of a repository')
     select_by_env = False
 
     def run(self):
