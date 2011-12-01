@@ -38,7 +38,7 @@ class Api::ChangesetsController < Api::ApiController
 
 
   def show
-    render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos, :system_templates])
+    render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos, :system_templates, :distributions])
   end
 
 

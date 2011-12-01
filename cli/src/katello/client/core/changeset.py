@@ -114,6 +114,7 @@ class Info(ChangesetAction):
         cset["packages"] = "\n".join([p["display_name"] for p in cset["packages"]])
         cset["repositories"] = "\n".join([r["name"] for r in cset["repos"]])
         cset["system_templates"] = "\n".join([t["name"] for t in cset["system_templates"]])
+        cset["distributions"] = "\n".join([t["distribution_id"] for t in cset["distributions"]])
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
@@ -126,6 +127,7 @@ class Info(ChangesetAction):
         self.printer.addColumn('packages', multiline=True, show_in_grep=False)
         self.printer.addColumn('repositories', multiline=True, show_in_grep=False)
         self.printer.addColumn('system_templates', multiline=True, show_in_grep=False)
+        self.printer.addColumn('distributions', multiline=True, show_in_grep=False)
 
         self.printer.setHeader(_("Changeset Info"))
         self.printer.printItem(cset)
