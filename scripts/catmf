@@ -14,6 +14,20 @@ tmpdir=`mktemp -d`.chomp
 `unzip #{manifest} -d #{tmpdir}`
 `unzip #{tmpdir}/consumer_export.zip -d #{tmpdir}`
 
+# Grab Consumer Data
+File.open("#{tmpdir}/export/consumer.json", 'r') do |file_json|
+  c = JSON.parse(file_json.readlines.to_s)
+  puts "Consumer UUID:  #{c['uuid']}"
+end
+
+# Grab Meta data about the export
+File.open("#{tmpdir}/export/meta.json", 'r') do |file_json|
+  m = JSON.parse(file_json.readlines.to_s)
+  puts "Export Version: #{m['version']}"
+  puts "Creation Date:  #{m['created']}"
+end
+
+# Grab the products
 Dir.glob("#{tmpdir}/export/products/*.json").each do |file|
   File.open(file, 'r') do |file_json|
     p = JSON.parse(file_json.readlines.to_s)
@@ -21,6 +35,7 @@ Dir.glob("#{tmpdir}/export/products/*.json").each do |file|
   end
 end
 
+# Grab the entitlements
 Dir.glob("#{tmpdir}/export/entitlements/*.json").each do |file|
   File.open(file, 'r') do |file_json|
     e = JSON.parse(file_json.readlines.to_s)
@@ -31,6 +46,14 @@ Dir.glob("#{tmpdir}/export/entitlements/*.json").each do |file|
     puts " Contract: #{e['pool']['contractNumber']}"
     puts " Account: #{e['pool']['accountNumber']}"
     puts " Ends: #{e['pool']['endDate']}"
+  end
+end
+
+# Grab the consumer types
+Dir.glob("#{tmpdir}/export/consumer_types/*.json").each do |file|
+  File.open(file, 'r') do |file_json|
+    c = JSON.parse(file_json.readlines.to_s)
+    puts "Consumer Type: #{c['label']} (#{c['id']})"
   end
 end
 
