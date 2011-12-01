@@ -11,11 +11,11 @@
         - group = nil
         %thead
           %th= _('Product')
-          %th= _('Quantity')
-          %th= _('Trend')
+          %th= _('Consumed')
           %th= _('Contract')
           %th= _('Support Level')
           %th= _('Arch')
+          %th= _('Machine Type')
           %th= _('Begins')
           %th= _('Expires')
         %tbody
@@ -35,14 +35,14 @@
             %tr{:class => "child-of-#{group}", :id => sub.object_id}
               %td= sub.productName
               %td
-                = sub.consumed
-                = "/"
-                = sub.quantity
-              %td
-                =stats_line(sub.consumed_stats)
+                - if sub.quantity < 0
+                  = _('Unlimited')
+                - else
+                  = "#{sub.consumed} of #{sub.quantity}"
               %td=sub.contractNumber or ""
               %td=sub.product.support_level or ""
               %td=sub.product.arch
+              %td=sub.machine_type
               %td=l sub.startDate
               %td=l sub.endDate
       .actions
