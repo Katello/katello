@@ -77,6 +77,7 @@ if [ $LOCAL_PULP == 1 ]; then
  sudo rm /var/lib/pulp/packages/* -rf
  sudo rm /var/lib/pulp/published/* -rf
  sudo rm /var/lib/pulp/repos/* -rf
+ sudo rm /var/lib/pulp/distributions/* -rf
  sudo service httpd restart
 
 fi

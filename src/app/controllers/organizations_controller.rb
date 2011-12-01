@@ -12,11 +12,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class OrganizationsController < ApplicationController
-  navigation :organizations
   include AutoCompleteSearch
   respond_to :html, :js
   skip_before_filter :authorize
-  before_filter :find_organization, :only => [:edit, :update, :destroy]
+  before_filter :find_organization, :only => [:edit, :update, :destroy, :events]
   before_filter :find_organization_by_id, :only => [:environments_partial]
   before_filter :authorize #call authorize after find_organization so we call auth based on the id instead of cp_id
   before_filter :setup_options, :only=>[:index, :items]
@@ -38,6 +37,7 @@ class OrganizationsController < ApplicationController
       :update => edit_test,
       :destroy => delete_test,
       :environments_partial => index_test,
+      :events => read_test
     }
   end
 
@@ -93,7 +93,7 @@ class OrganizationsController < ApplicationController
 
   def edit
     @env_choices =  @organization.environments.collect {|p| [ p.name, p.name ]}
-    render :partial=>"edit", :layout => "layouts/tupane_layout", :locals=>{:editable=>@organization.editable?}
+    render :partial=>"edit", :layout => "tupane_layout", :locals=>{:organization=>@organization, :editable=>@organization.editable?, :name => controller_display_name}
   end
 
   def update
@@ -122,26 +122,20 @@ class OrganizationsController < ApplicationController
   end
 
   def destroy
-    if current_organization == @organization
-      errors [_("Could not delete organization '#{params[:id]}'."),  _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
-
-      render :text => "The current organization cannot be deleted. Please switch to a different organization before deleting.", :status => :bad_request and return
-    elsif Organization.count > 1
-      id = @organization.cp_key
-      @name = @organization.name
-      begin
-        @organization.destroy
-        notice _("Organization '#{params[:id]}' was deleted.")
-      rescue Exception => error
-        errors error.to_s
-        render :text=> error.to_s, :status=>:bad_request and return
-      end
-      render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
-    else
-      errors [_("Could not delete organization '#{params[:id]}'."),  _("At least one organization must exist.")]
-
-      render :text => "At least one organization must exist.", :status=>:bad_request and return
+    found_errors= @organization.validate_destroy(current_organization)
+    if found_errors
+      errors found_errors
+      render :text=>found_errors[1], :status=>:bad_request and return
     end
+
+    id = @organization.cp_key
+    current_user.destroy_organization_async(@organization)
+    notice _("Organization '%s' has been scheduled for background deletion.") % @organization.name
+    render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
+  rescue Exception => error
+    errors error.to_s
+    debugger
+    render :text=> error.to_s, :status=>:bad_request and return
   end
 
   def environments_partial
@@ -150,6 +144,19 @@ class OrganizationsController < ApplicationController
     setup_environment_selector(@organization, accessible_envs)
     @environment = first_env_in_path(accessible_envs, false, @organization)
     render :partial=>"environments", :locals=>{:accessible_envs => accessible_envs}
+  end
+
+  def events
+    entries = @organization.events.collect {|e|
+      entry = {}
+      entry['timestamp'] = Date.parse(e['timestamp'])
+      entry['message'] = e['messageText']
+      entry
+    }
+    #entries.compact!  # To remove the nils inserted for rejected entries
+
+    # TODO: add more/paging to these results instead of truncating at 250
+    render :partial => 'events', :layout => "tupane_layout", :locals => {:entries => entries[0...250]}
   end
 
   protected

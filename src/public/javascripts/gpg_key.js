@@ -112,7 +112,6 @@ KT.gpg_key = (function($){
 			iframe	: true,
 			success	: function(data, status, xhr){
 				var parsed_data = $(data);
-				console.log(data);
 				if( parsed_data.get(0).tagName === 'PRE' ){
 					notices.displayNotice('error', parsed_data.html());
 				} else {
@@ -122,7 +121,6 @@ KT.gpg_key = (function($){
 				enable_buttons();
 			},
 			error	: function(){
-                console.log('error');
                 enable_buttons();
                 notices.checkNotices();
 			}

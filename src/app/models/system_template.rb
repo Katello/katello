@@ -124,19 +124,19 @@ class SystemTemplate < ActiveRecord::Base
     verrors = []
 
     # (1)
-    verrors << "At least one product must be present to export a TDL" if self.products.count < 1
+    verrors << _("At least one product must be present to export a TDL") if self.products.count < 1
 
     # (2)
-    verrors << "Exactly one distribution must be present to export a TDL" if self.distributions.count != 1
+    verrors << _("Exactly one distribution must be present to export a TDL") if self.distributions.count != 1
 
     # (3)
     begin
       Candlepin::Owner.get_ueber_cert(environment.organization.cp_key)
     rescue RestClient::ResourceNotFound
-      verrors << "Uebercert for #{environment.organization.name} has not been generated."
+      verrors << N_("Uebercert for #{environment.organization.name} has not been generated.")
     end
 
-    raise Errors::TemplateValidationException.new("Template cannot be exported", verrors) if verrors.count > 0
+    raise Errors::TemplateValidationException.new(_("Template cannot be exported"), verrors) if verrors.count > 0
     true
   end
 
@@ -153,7 +153,7 @@ class SystemTemplate < ActiveRecord::Base
     begin
       validate_tdl
     rescue Errors::TemplateValidationException => e
-      xm.comment! "Template is not complete and will likely fail."
+      xm.comment! _("Template is not complete and will likely fail.")
       e.errors.each do |e|
         xm.comment! " - #{e}"
       end
@@ -228,9 +228,9 @@ class SystemTemplate < ActiveRecord::Base
   def add_product product_name
     product = self.environment.products.find_by_name(product_name)
     if product == nil
-      raise Errors::TemplateContentException.new("Product #{product_name} not found in this environment.")
+      raise Errors::TemplateContentException.new(_("Product '%s' not found in this environment.") % product_name)
     elsif self.products.include? product
-      raise Errors::TemplateContentException.new("Product #{product_name} is already present in the template.")
+      raise Errors::TemplateContentException.new(_("Product '%s' is already present in the template.") % product_name)
     end
     self.products << product
   end
@@ -239,15 +239,15 @@ class SystemTemplate < ActiveRecord::Base
     product = self.environment.products.find_by_name(product_name)
     self.products.delete(product)
   rescue ActiveRecord::RecordInvalid
-    raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{product_name}.")
+    raise Errors::TemplateContentException.new(_("The environment still has content that belongs to product '%s'.") % product_name)
   end
 
   def add_product_by_cpid cp_id
     product = self.environment.products.find_by_cp_id(cp_id)
     if product == nil
-      raise Errors::TemplateContentException.new("Product #{cp_id} not found in this environment.")
+      raise Errors::TemplateContentException.new(_("Product '%s' not found in this environment.") % cp_id)
     elsif self.products.include? product
-      raise Errors::TemplateContentException.new("Product #{cp_id} is already present in the template.")
+      raise Errors::TemplateContentException.new(_("Product '%s' is already present in the template.") % cp_id)
     end
     self.products << product
   end
@@ -256,7 +256,7 @@ class SystemTemplate < ActiveRecord::Base
     product = self.environment.products.find_by_cp_id(cp_id)
     self.products.delete(product)
   rescue ActiveRecord::RecordInvalid
-    raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{cp_id}.")
+    raise Errors::TemplateContentException.new(_("The environment still has content that belongs to product '%s'.") % cp_id)
   end
 
   def set_parameter key, value
@@ -265,7 +265,7 @@ class SystemTemplate < ActiveRecord::Base
 
   def remove_parameter key
     if not self.parameters.has_key? key
-      raise Errors::TemplateContentException.new("Parameter #{key} not found in the template.")
+      raise Errors::TemplateContentException.new(_("Parameter '%s' not found in the template.") % key)
     end
     self.parameters.delete(key)
   end
@@ -493,7 +493,7 @@ class SystemTemplate < ActiveRecord::Base
   def check_children
     children = SystemTemplate.find(:all, :conditions => {:parent_id => self.id})
     if not children.empty?
-      raise Errors::TemplateContentException.new("The template has children templates.")
+      raise Errors::TemplateContentException.new(_("The template has children templates."))
     end
   end
 
