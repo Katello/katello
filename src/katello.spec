@@ -17,7 +17,7 @@
 
 Name:           katello
 Version:        0.1.120
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
 Group:          Applications/Internet
