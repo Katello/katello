@@ -15,14 +15,19 @@ class Organization < ActiveRecord::Base
   include Glue::Candlepin::Owner if AppConfig.use_cp
   include Glue if AppConfig.use_cp
   include Authorization
-
+  
   has_many :activation_keys, :dependent => :destroy
-  has_many :providers
+  has_many :providers, :dependent => :destroy
   has_many :environments, :class_name => "KTEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
   has_one :locker, :class_name =>"KTEnvironment", :conditions => {:locker => true}, :dependent => :destroy
   has_many :filters, :dependent => :destroy, :inverse_of => :organization
+  has_many :gpg_keys, :dependent => :destroy, :inverse_of => :organization
+  has_many :permissions, :dependent => :destroy, :inverse_of => :organization
 
   attr_accessor :statistics
+
+  default_scope  where(:task_id=>nil) #ignore organizations that are being deleted
+
 
   scoped_search :on => :name, :complete_value => true, :rename => :'organization.name'
   scoped_search :on => :description, :complete_value => true, :rename => :'organization.description'
@@ -37,7 +42,6 @@ class Organization < ActiveRecord::Base
   before_create :create_redhat_provider
   validates :name, :uniqueness => true, :presence => true, :katello_name_format => true
   validates :description, :katello_description_format => true
-
 
   def systems
     System.where(:environment_id => environments)
@@ -60,6 +64,15 @@ class Organization < ActiveRecord::Base
 
   def create_redhat_provider
     self.providers << ::Provider.new(:name => "Red Hat", :provider_type=> ::Provider::REDHAT, :organization => self)
+  end
+
+  def validate_destroy current_org
+    def_error = _("Could not delete organization '%s'.")  % [self.name]
+    if (current_org == @organization)
+      [def_error, _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
+    elsif Organization.count == 1:
+      [def_error, _("At least one organization must exist.")]
+    end
   end
 
   #permissions
@@ -95,6 +108,10 @@ class Organization < ActiveRecord::Base
     User.allowed_to?(SYSTEMS_READABLE, :organizations, nil, self)
   end
 
+  def gpg_keys_manageable?
+    User.allowed_to?([:gpg], :organizations, nil, self)
+  end
+
   def self.list_verbs global = false
     org_verbs = {
       :update => N_("Manage Organization and Environments"),
@@ -103,7 +120,8 @@ class Organization < ActiveRecord::Base
       :register_systems =>N_("Register Systems"),
       :update_systems => N_("Manage Systems"),
       :delete_systems => N_("Delete Systems"),
-      :sync => N_("Sync Products")
+      :sync => N_("Sync Products"),
+      :gpg => N_("Manage GPG Keys")
    }
     org_verbs.merge!({
     :create => N_("Create Organization"),

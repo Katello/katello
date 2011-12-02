@@ -50,7 +50,6 @@ hr { color: $border_color; }
 .fc { display: inline-block; margin: 0 auto; } /* "float", center */
 .multiline{word-wrap: break-word;}
 
-
 .twocolumn {
   @include column-count(2);
   @include column-gap(10px);
@@ -100,6 +99,8 @@ input, textarea {
   }
   .grid_4 { width: 210px !important; }
   .grid_5 { width: 270px !important; }
+  .grid_6 { width: 330px !important; }
+  .grid_7 { width: 390px !important; }
 }
 
 input[type="search"] {
@@ -722,121 +723,122 @@ footer {
   position:relative;
   z-index: 100;
 
-    h2 {
-        margin-bottom: 0;
-    }
-    #new {
-        border-bottom: 0 none;
-        padding: 8px;
-        position: absolute;
-        margin: 0;
-        clear: right;
-        text-align: center;
-        width: 10em;
-        right: 0;
-        height: 2em;
-        height: 21px;
-        font-size: 100% !important;
-        &.block{
-            &.active{
-                .arrow-right {
-                    border-bottom: 19px solid transparent;
-                    border-left: 17px solid $kselected_color;
-                    border-top: 18px solid transparent;
-                    right: -17px;
-                }
-            }
-            &:hover {
-              .arrow-right {
-                border-left: 17px solid $listhover_color;
-              }
-            }
-        }
-    }
-     /* search forms */
-    .search {
-      float: right;
-      margin-bottom: 6px;
-      margin-top: 6px;
-      margin-right: 6px;
-      position: relative;
+  h2 {
+      margin-bottom: 0;
+  }
+  #new {
+      border-bottom: 0 none;
+      padding: 8px;
+      position: absolute;
+      margin: 0;
       clear: right;
-      button {
-        position: absolute;
-        width: 16px; height: 16px;
-        text-indent: -4000em;
-        margin: -8px 0 0;
-        background-position: 0 0;
-        border: none;
-        padding: 0;
-        &:hover {
-          @include no-box-shadow;
-        }
+      text-align: center;
+      width: 10em;
+      right: 0;
+      height: 2em;
+      height: 21px;
+      font-size: 100% !important;
+      &.block{
+          &.active{
+              .arrow-right {
+                  border-bottom: 19px solid transparent;
+                  border-left: 17px solid $kselected_color;
+                  border-top: 18px solid transparent;
+                  right: -17px;
+              }
+          }
+          &:hover {
+            .arrow-right {
+              border-left: 17px solid $listhover_color;
+            }
+          }
       }
-      input[type="text"] {
-        float: right; /* webkit adds an extra padding and makes the widget narrower */
-        width: 215px;
+  }
+   /* search forms */
+  .search {
+    float: right;
+    margin-bottom: 6px;
+    margin-top: 6px;
+    margin-right: 6px;
+    position: relative;
+    clear: right;
+    button {
+      position: absolute;
+      width: 16px; height: 16px;
+      text-indent: -4000em;
+      margin: -8px 0 0;
+      background-position: 0 0;
+      border: none;
+      padding: 0;
+      &:hover {
+        @include no-box-shadow;
       }
     }
-    .block_head {
-      background-color: lighten($stroke_color,8%);
-      display: block;
-      height: 1.3em;
-      color: $lightgrey_color;
-      .column_1, .column_2, .column_3 {
-        text-align: left;
-        padding-left: 1%;
-        font-size: 85%;
-        font-family: $headlinefont;
-        color: lighten($header_color,20%);
-        text-transform: uppercase;
-        white-space:nowrap;
-        border-right: 1px dotted darken($stroke_color,20%);
-          &:last-child {
-            border-right: 0 none;
-          }
-        a, a:hover {
-          display: block;
-          margin: 0;
-          color: inherit;
-          text-decoration: none;
-          &.active {
-            &.sortable {
-              display: inline-block;
-              padding-right: 20px;
-            }
-            &.desc {
-              background: $order_desc_img;            
-            }
-            &.asc {
-              background: $order_asc_img;
-            }
-          }
-        }
-      }
-    .column_1 { width: 98%; }
-    .column_2 { width: 48%; }
-    .column_3 { width: 31%; }
-  }
-  .column_1 {
-    width: 100%;
-    float: left;
-    height: inherit;
-  }
-  .column_2 {
-    width: 50%;
-    float: left;
-    height: inherit;
-  }
-  .column_3 {
-    width: 33%;
-    float: left;
-    height: inherit;
-    &:last-child {
-      width: 34%;
+    input[type="text"] {
+      float: right; /* webkit adds an extra padding and makes the widget narrower */
+      width: 215px;
     }
   }
 }
+.block_head {
+  background-color: lighten($stroke_color,8%);
+  display: block;
+  height: 1.3em;
+  color: $lightgrey_color;
+  .column_1, .column_2, .column_3 {
+    text-align: left;
+    padding-left: 1%;
+    font-size: 85%;
+    font-family: $headlinefont;
+    color: lighten($header_color,20%);
+    text-transform: uppercase;
+    white-space:nowrap;
+    border-right: 1px dotted darken($stroke_color,20%);
+      &:last-child {
+        border-right: 0 none;
+      }
+    a, a:hover {
+      display: block;
+      margin: 0;
+      color: inherit;
+      text-decoration: none;
+      &.active {
+        &.sortable {
+          display: inline-block;
+          padding-right: 20px;
+        }
+        &.desc {
+          background: $order_desc_img;            
+        }
+        &.asc {
+          background: $order_asc_img;
+        }
+      }
+    }
+  }
+  .column_1 { width: 98%; }
+  .column_2 { width: 48%; }
+  .column_3 { width: 31%; }
+}
+.column_1 {
+  width: 100%;
+  float: left;
+  height: inherit;
+}
+.column_2 {
+  width: 50%;
+  float: left;
+  height: inherit;
+}
+.column_3 {
+  width: 33%;
+  float: left;
+  height: inherit;
+  &:last-child {
+    width: 34%;
+  }
+}
+
 .ui-autocomplete { z-index: 300 !important }
 
 .block {
@@ -960,7 +962,7 @@ footer {
     overflow-y: auto;
     overflow-x: hidden;
     width: auto;
-    margin: 0 0 0 20px;
+    margin: 0 20px 0 20px;
     min-height: 250px;
   }
   #subpanel_main {
@@ -1340,3 +1342,21 @@ footer {
 /* classes to highlight or make "standout" inputs that require action from the user */
 .highlight_input { border: 3px solid $kselected_color; }
 .highlight_input_text { color: $kselected_color; font-weight: 600; font-size: 110%; padding-left: 10px;}
+
+
+.ui-widget-header {
+    font-family: $headlinefont;
+    border: 0 none;
+}
+.ui-widget-content {
+    border: 0 none;
+    table {
+         border: 1px solid $stroke_color !important;
+    }
+}
+
+.bordered-table {
+  border: 1px solid $tree-border_color;
+  background-color: $white_color;
+  font-size: 120%;
+}

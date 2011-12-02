@@ -46,4 +46,12 @@ $(document).ready(function() {
             error: function() {button.removeClass("disabled")}
         });
    });
+
+    $('#download_debug_cert_key').live('click', function(e){
+        e.preventDefault();  //stop the browser from following
+        url = $("#download_debug_cert_key").data("url");
+        window.location.href = url;
+        return false;
+    });
+
 });

@@ -12,6 +12,12 @@
 module Navigation
   module OrganizationMenu
 
+    def self.included(base)
+      base.class_eval do
+        helper_method :organization_navigation
+      end
+    end
+
     def menu_organization
       {:key => :organizations,
        :name => N_("Organizations"),
@@ -39,5 +45,21 @@ module Navigation
       }
     end
 
+    def organization_navigation
+      [
+        { :key => :general,
+          :name =>N_("General"),
+          :url => lambda{edit_organization_path(@organization.cp_key)},
+          :if => lambda{@organization},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :history,
+          :name =>N_("History"),
+          :url => lambda{events_organization_path(@organization.cp_key)},
+          :if => lambda{@organization},
+          :options => {:class=>"navigation_element"}
+        }
+      ]
+    end
   end
 end

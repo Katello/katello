@@ -46,7 +46,8 @@ class ProductsController < ApplicationController
   def create
     begin
       product_params = params[:product]
-      @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url])
+      gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] != ""
+      @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url], gpg)
       notice _("Product '#{product_params[:name]}' created.")
     rescue Exception => error
       Rails.logger.error error.to_s
@@ -58,12 +59,27 @@ class ProductsController < ApplicationController
   def update
     begin
       result = params[:product].values.first
-
-      @product.name = params[:product][:name] unless params[:product][:name].nil?
-      @product.description = params[:product][:description] unless params[:product][:description].nil?
-
+      @product.name = params[:product][:name] if params[:product][:name]
+      @product.description = params[:product][:description] if params[:product][:description]
+      
+      if params[:product].has_key?(:gpg_key)
+        if params[:product][:gpg_key] != ""
+          @product.gpg_key = GpgKey.readable(current_organization).find(params[:product][:gpg_key])
+          result = @product.gpg_key.id.to_s
+        else
+          @product.gpg_key = nil
+          result = ""
+        end
+      end 
+      
+      if params[:product].has_key?(:gpg_all_repos)
+        notice _("All repository GPG keys for Product '#{@product.name}' were updated.")
+        @product.reset_repo_gpgs!
+      else
+        notice _("Product '#{@product.name}' was updated.")
+      end
+      
       @product.save!
-      notice _("Product '#{@product.name}' was updated.")
 
       respond_to do |format|
         format.html { render :text => escape_html(result) }

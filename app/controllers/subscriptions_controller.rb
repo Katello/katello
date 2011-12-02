@@ -46,6 +46,20 @@ class SubscriptionsController < ApplicationController
       converted_sub.product = converted_product
       converted_sub.startDate = Date.parse(converted_sub.startDate)
       converted_sub.endDate = Date.parse(converted_sub.endDate)
+
+      # Other interesting attributes
+      converted_sub.machine_type = ''
+      converted_sub.attributes.each do |attr|
+        if attr['name'] == 'virt_only'
+          if attr['value'] == 'true'
+            converted_sub.machine_type = _('Virtual')
+          elsif attr['value'] == 'false'
+            converted_sub.machine_type = _('Physical')
+          end
+        end
+      end
+      #converted_sub.attributes = OpenStruct.new(converted_sub.attributes) if !converted_sub.attributes.nil?
+      #converted_sub.productAttributes = OpenStruct.new(converted_sub.productAttributes) if !converted_sub.productAttributes.nil?
       subscriptions << converted_sub if !subscriptions.include? converted_sub
     end
     subscriptions

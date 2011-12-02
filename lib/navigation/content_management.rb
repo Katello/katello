@@ -18,6 +18,7 @@ module Navigation
         helper_method :promotion_errata_navigation
         helper_method :promotion_distribution_navigation
         helper_method :package_filter_navigation
+        helper_method :gpg_keys_navigation
       end
     end
 
@@ -56,7 +57,7 @@ module Navigation
        :url => :sub_level,
        :if => :sub_level,
        :options => {:class=>'content second_level', "data-menu"=>"content"},
-       :items => [menu_custom_providers, menu_redhat_providers, menu_filters]
+       :items => [menu_custom_providers, menu_redhat_providers, menu_filters, menu_gpg]
       }
 
     end
@@ -151,9 +152,21 @@ module Navigation
        {:key => :filters,
         :name => N_("Package Filters"),
         :url => filters_path,
-        :if => lambda {Filter.any_readable?(current_organization)}
+        :if => lambda {Filter.any_readable?(current_organization)},
+        :options => {:class=>"third_level"}
        }
     end
+
+
+    def menu_gpg
+       {:key => :gpg,
+        :name => N_("GPG Keys"),
+        :url => gpg_keys_path,
+        :if => lambda {GpgKey.any_readable?(current_organization)},
+        :options => {:class=>"third_level"}
+       }
+    end
+
 
 
     def promotion_packages_navigation
@@ -238,6 +251,23 @@ module Navigation
           :name =>N_("Details"),
           :url => lambda{edit_filter_path(@filter.id)},
           :if => lambda{@filter},
+          :options => {:class=>"navigation_element"}
+        }
+      ]
+    end
+    
+    def gpg_keys_navigation
+      [
+        { :key => :general,
+          :name =>N_("General"),
+          :url => lambda{edit_gpg_key_path(@gpg_key.id)},
+          :if => lambda{gpg_key},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :products_repositories,
+          :name =>N_("Products and Repositories"),
+          :url => lambda{products_repos_gpg_key_path(@gpg_key.id)},
+          :if =>lambda{gpg_key},
           :options => {:class=>"navigation_element"}
         }
       ]
