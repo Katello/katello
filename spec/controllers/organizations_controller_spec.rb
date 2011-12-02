@@ -218,6 +218,7 @@ describe OrganizationsController do
       it "should call katello org update api" do
         @organization.should_receive(:update_attributes!).once
         put 'update', :id => OrgControllerTest::ORG_ID, :organization => OrgControllerTest::ORGANIZATION
+        response.should be_success
       end
       
       it "should generate a success notice" do
@@ -248,6 +249,17 @@ describe OrganizationsController do
         response.should_not be_redirect
       end
     end
-    
-  end  
+  end
+
+  describe "Debug Certificates related test" do
+    before (:each) do
+      new_test_org
+    end
+    it "should download" do
+      Candlepin::Owner.should_receive(:get_ueber_cert).once.and_return(:cert => "uber",:key=>"ueber")
+      get :download_debug_certificate, :id => @organization.id.to_s
+      response.should be_success
+    end
+
+  end
 end
