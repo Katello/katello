@@ -182,16 +182,25 @@ describe Api::TemplatesController do
 
   describe "export" do
     it "should call export_as_json" do
+      @tpl.environment = @environment
       @tpl.should_receive(:export_as_json)
 
       get :export, :id => TEMPLATE_ID
     end
 
     it "should call export_as_tdl" do
+      @tpl.environment = @environment
       @tpl.should_receive(:export_as_tdl)
 
       get :export, :id => TEMPLATE_ID, :format => 'tdl'
     end
+
+    it "should raise an exception when exporting from a Locker" do
+
+      get :export, :id => TEMPLATE_ID
+      response.should_not be_success
+    end
+
   end
 
 

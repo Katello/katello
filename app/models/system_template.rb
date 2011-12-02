@@ -12,6 +12,7 @@
 
 require 'util/package_util'
 require 'active_support/builder' unless defined?(Builder)
+require 'mapping'
 
 class ParentTemplateValidator < ActiveModel::Validator
   def validate(record)
@@ -113,41 +114,75 @@ class SystemTemplate < ActiveRecord::Base
     self.export_as_hash.to_json
   end
 
+  # Validates if this template can be exported in TDL:
+  # - at least one product is present (1)
+  # - exactly one distribution is present (2)
+  # - ueber certificate for it's organization has been generated (3)
+  #
+  # Throws exception when template does not pass all validations.
+  def validate_tdl
+    verrors = []
+
+    # (1)
+    verrors << _("At least one product must be present to export a TDL") if self.products.count < 1
+
+    # (2)
+    verrors << _("Exactly one distribution must be present to export a TDL") if self.distributions.count != 1
+
+    # (3)
+    begin
+      Candlepin::Owner.get_ueber_cert(environment.organization.cp_key)
+    rescue RestClient::ResourceNotFound
+      verrors << N_("Uebercert for #{environment.organization.name} has not been generated.")
+    end
+
+    raise Errors::TemplateValidationException.new(_("Template cannot be exported"), verrors) if verrors.count > 0
+    true
+  end
+
   # Returns template in XML TDL format:
   # https://github.com/aeolusproject/imagefactory/blob/master/Documentation/TDL.xsd
+  #
+  # Method validate_tdl MUST be called before exporting, this method expects
+  # validated system template.
   def export_as_tdl
+
+    xm = Builder::XmlMarkup.new
+    xm.instruct!
+
+    begin
+      validate_tdl
+    rescue Errors::TemplateValidationException => e
+      xm.comment! _("Template is not complete and will likely fail.")
+      e.errors.each do |e|
+        xm.comment! " - #{e}"
+      end
+    end
 
     begin
       uebercert = Candlepin::Owner.get_ueber_cert(environment.organization.cp_key)
     rescue RestClient::ResourceNotFound => e
       uebercert = nil
-      Rails.logger.info "Uebercert for #{environment.organization.name} has not been generated. Using empty cert and key fields."
     end
 
-    xm = Builder::XmlMarkup.new
-    xm.instruct!
     xm.template {
       # mandatory tags
       xm.name self.name
       if self.distributions.count == 1
         xm.os {
           distro = self.distributions.first
-          # TODO this will probably need a "mapping" table (Pulp->Aeolus Family-Version)
-          xm.name distro.family
-          xm.version distro.version
+          family, version = Mapping::ImageFactoryNaming.translate(distro.family, distro.version)
+          xm.name family
+          xm.version version
           # TODO distro.arch is nil until resolved 750265 - RFE: Separate "arch" field for distribution
           #xm.arch distro.arch
           xm.arch "x86_64"
           xm.install("type" => "url") {
-            xm.url distro.url
+            xm.url distro.url_for_environment(self.environment)
           }
           # TODO root password is hardcoded for now
           xm.rootpw "redhat"
         }
-      elsif self.distributions.count < 1
-        Rails.logger.info "Template '%s' is missing distribution" % self.name
-      else
-        Rails.logger.info "Template '%s' contains more than one distribution" % self.name
       end
       # optional tags
       xm.description self.description unless self.description.nil?
@@ -193,9 +228,9 @@ class SystemTemplate < ActiveRecord::Base
   def add_product product_name
     product = self.environment.products.find_by_name(product_name)
     if product == nil
-      raise Errors::TemplateContentException.new("Product #{product_name} not found in this environment.")
+      raise Errors::TemplateContentException.new(_("Product '%s' not found in this environment.") % product_name)
     elsif self.products.include? product
-      raise Errors::TemplateContentException.new("Product #{product_name} is already present in the template.")
+      raise Errors::TemplateContentException.new(_("Product '%s' is already present in the template.") % product_name)
     end
     self.products << product
   end
@@ -204,15 +239,15 @@ class SystemTemplate < ActiveRecord::Base
     product = self.environment.products.find_by_name(product_name)
     self.products.delete(product)
   rescue ActiveRecord::RecordInvalid
-    raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{product_name}.")
+    raise Errors::TemplateContentException.new(_("The environment still has content that belongs to product '%s'.") % product_name)
   end
 
   def add_product_by_cpid cp_id
     product = self.environment.products.find_by_cp_id(cp_id)
     if product == nil
-      raise Errors::TemplateContentException.new("Product #{cp_id} not found in this environment.")
+      raise Errors::TemplateContentException.new(_("Product '%s' not found in this environment.") % cp_id)
     elsif self.products.include? product
-      raise Errors::TemplateContentException.new("Product #{cp_id} is already present in the template.")
+      raise Errors::TemplateContentException.new(_("Product '%s' is already present in the template.") % cp_id)
     end
     self.products << product
   end
@@ -221,7 +256,7 @@ class SystemTemplate < ActiveRecord::Base
     product = self.environment.products.find_by_cp_id(cp_id)
     self.products.delete(product)
   rescue ActiveRecord::RecordInvalid
-    raise Errors::TemplateContentException.new("The environment still has content that belongs to product #{cp_id}.")
+    raise Errors::TemplateContentException.new(_("The environment still has content that belongs to product '%s'.") % cp_id)
   end
 
   def set_parameter key, value
@@ -230,7 +265,7 @@ class SystemTemplate < ActiveRecord::Base
 
   def remove_parameter key
     if not self.parameters.has_key? key
-      raise Errors::TemplateContentException.new("Parameter #{key} not found in the template.")
+      raise Errors::TemplateContentException.new(_("Parameter '%s' not found in the template.") % key)
     end
     self.parameters.delete(key)
   end
@@ -458,7 +493,7 @@ class SystemTemplate < ActiveRecord::Base
   def check_children
     children = SystemTemplate.find(:all, :conditions => {:parent_id => self.id})
     if not children.empty?
-      raise Errors::TemplateContentException.new("The template has children templates.")
+      raise Errors::TemplateContentException.new(_("The template has children templates."))
     end
   end
 

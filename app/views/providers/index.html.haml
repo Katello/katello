@@ -10,3 +10,10 @@
 = javascript :edit, :provider
 = include_common_i18n
 = include_editable_i18n
+
+= javascript do
+  :javascript
+    localize({
+      "productUpdateKeyConfirm" : "#{_('Do you want to set this GPG Key as the key for all repositories within this product?')}",
+      "proudctUpdateKeyWarning" : "#{_('WARNING: This will override any GPG keys already associated with a repository within this product')}"
+    });

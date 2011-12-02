@@ -26,15 +26,19 @@ class Glue::Candlepin::OwnerInfo
   end
 
   def total_invalid_compliance_consumers
-    @info['consumerCountsByComplianceStatus']['invalid'] ||= 0
+    i = @info['consumerCountsByComplianceStatus']['invalid'] ||= 0
+    f = @info['consumerCountsByComplianceStatus']['false'] ||= 0
+    return i + f
   end
 
   def total_valid_compliance_consumers
-    @info['consumerCountsByComplianceStatus']['valid'] ||= 0
+    v = @info['consumerCountsByComplianceStatus']['valid'] ||= 0
+    t = @info['consumerCountsByComplianceStatus']['true'] ||= 0
+    return v + t
   end
 
   def total_partial_compliance_consumers
-    @info['consumerCountsByComplianceStatus']['true'] ||= 0
+    @info['consumerCountsByComplianceStatus']['partial'] ||= 0
   end
 
   private

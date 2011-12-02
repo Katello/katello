@@ -22,20 +22,6 @@ describe Api::UebercertsController do
     Organization.stub!(:first).and_return(org)
   end
 
-  context "create" do
-    before { Candlepin::Owner.stub!(:generate_ueber_cert).and_return({}) }
-
-    it "should find organization" do
-      Organization.should_receive(:first).once.and_return(org)
-      post :create, :organization_id => OWNER_KEY
-    end
-
-    it "should call Uebercert create api" do
-      Candlepin::Owner.should_receive(:generate_ueber_cert).once.with(OWNER_KEY).and_return({})
-      post :create, :organization_id => OWNER_KEY
-    end
-  end
-
   context "show" do
     before { Candlepin::Owner.stub!(:get_ueber_cert).and_return({}) }
 
@@ -45,7 +31,7 @@ describe Api::UebercertsController do
     end
 
     it "should call Uebercert create api" do
-      Candlepin::Owner.should_receive(:get_ueber_cert).once.with(OWNER_KEY).and_return({})
+      org.should_receive(:debug_cert).once.and_return({})
       post :show, :organization_id => OWNER_KEY
     end
   end
