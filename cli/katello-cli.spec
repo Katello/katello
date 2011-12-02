@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.13
+Version:       0.1.19
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,6 +84,44 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 29 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.18-1
+- adding template to the system info cli call
+- show activation keys in the cli system info
+
+* Mon Nov 28 2011 Tomas Strachota <tstrachota@redhat.com> 0.1.17-1
+- cli - fix for spinner being trapped in a loop (tstrachota@redhat.com)
+- cli unit tests - cancel product synchronization (tstrachota@redhat.com)
+- cli unit tests - option test for SingleProductAction (tstrachota@redhat.com)
+- cli - whitespace removal (tstrachota@redhat.com)
+- cli unit tests - tests around provider actions (tstrachota@redhat.com)
+- sync cli - cancel current provider sync (tstrachota@redhat.com)
+- cli - refactoring in provider-centric actions (tstrachota@redhat.com)
+
+* Mon Nov 28 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.16-1
+- tdl validations - backend and cli
+
+* Fri Nov 25 2011 Tomas Strachota <tstrachota@redhat.com> 0.1.15-1
+- sync cli - repo status fixed according to changes in async taks format
+  (tstrachota@redhat.com)
+- sync cli - cancelling current product synchronization (tstrachota@redhat.com)
+- cli - actions around single products refactored (tstrachota@redhat.com)
+- sync cli - actions around single repositories refactored
+  (tstrachota@redhat.com)
+- sync cli - cancelling current repo sync (tstrachota@redhat.com)
+- provider cli - removed needless option '--type' (tstrachota@redhat.com)
+- repo blacklist - cli unit tests for repo list (tstrachota@redhat.com)
+- Revert "repo blacklist - cli unit tests for repo list"
+  (tstrachota@redhat.com)
+- repo blacklist - cli unit tests for repo list (tstrachota@redhat.com)
+- bug - cli was not working when locale was not set (lzap+git@redhat.com)
+- repo blacklist - listing disabled repos in the cli (tstrachota@redhat.com)
+- repo blacklist - cli for enabling/disabling repos (tstrachota@redhat.com)
+- bug - race condition in the cli spinner (lzap+git@redhat.com)
+- template export - checking output format moved to option parser
+  (tstrachota@redhat.com)
+- template export - disabled exporting templates from Locker envs
+  (tstrachota@redhat.com)
+
 * Wed Nov 16 2011 Shannon Hughes <shughes@redhat.com> 0.1.13-1
 - 
 

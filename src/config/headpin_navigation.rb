@@ -74,6 +74,7 @@ module HeadpinNav
             if !@system.nil?
               system_sub.item :general, _("General"), edit_system_path(@system.id), :class => "navigation_element"
               system_sub.item :subscriptions, _("Subscriptions"), subscriptions_system_path(@system.id), :class => "navigation_element"
+              system_sub.item :products, _("Products"), products_system_path(@system.id), :class => "navigation_element"
               system_sub.item :facts, _("Facts"), facts_system_path(@system.id), :class => 'navigation_element'
               system_sub.item :packages, _("Packages"), packages_system_path(@system.id), :class => "navigation_element"
             end

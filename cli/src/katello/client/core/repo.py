@@ -39,6 +39,7 @@ SYNC_STATES = { 'waiting':     _("Waiting"),
                 'error':       _("Error"),
                 'finished':    _("Finished"),
                 'cancelled':   _("Cancelled"),
+                'canceled':    _("Canceled"),
                 'timed_out':   _("Timed out"),
                 'not_synced':  _("Not synced") }
 
@@ -74,6 +75,32 @@ class RepoAction(Action):
             repo = get_repo(orgName, prodName, repoName, envName)
 
         return repo
+
+class SingleRepoAction(RepoAction):
+
+    select_by_env = False
+
+    def setup_parser(self):
+        self.set_repo_select_options(self.select_by_env)
+
+    def check_options(self):
+        self.check_repo_select_options()
+
+    def set_repo_select_options(self, select_by_env=True):
+        self.parser.add_option('--id', dest='id', help=_("repository id"))
+        self.parser.add_option('--name', dest='name', help=_("repository name"))
+        self.parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com"))
+        self.parser.add_option('--product', dest='product', help=_("product name eg: fedora-14"))
+        if select_by_env:
+            self.parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Locker)"))
+       
+    def check_repo_select_options(self):
+        if not self.has_option('id'):
+            self.require_option('name')
+            self.require_option('org')
+            self.require_option('product')
+
+
 
 
 # actions --------------------------------------------------------------------
@@ -236,30 +263,12 @@ class Selection(list):
                 self.append(url)
 
 
-class Status(RepoAction):
+class Status(SingleRepoAction):
 
     description = _('status information about a repository')
-
-    def setup_parser(self):
-        self.parser.add_option('--id', dest='id',
-                        help=_("repository id, string value (required)"))
-        self.parser.add_option('--name', dest='name',
-                        help=_("repository name"))
-        self.parser.add_option('--org', dest='org',
-                        help=_("organization name eg: foo.example.com"))
-        self.parser.add_option('--environment', dest='env',
-                        help=_("environment name eg: production (default: Locker)"))
-        self.parser.add_option('--product', dest='product',
-                        help=_("product name eg: fedora-14"))
-
-    def check_options(self):
-        if not self.has_option('id'):
-            self.require_option('name')
-            self.require_option('org')
-            self.require_option('product')
+    select_by_env = True
 
     def run(self):
-
         repo = self.get_repo()
         if repo == None:
             return os.EX_DATAERR
@@ -275,10 +284,8 @@ class Status(RepoAction):
 
         errors = task.errors()
         if len(errors) > 0:
-            repo['last_errors'] = errors
+            repo['last_errors'] = self._format_error(errors)
 
-        self.printer.addColumn('id')
-        self.printer.addColumn('name')
         self.printer.addColumn('package_count')
         self.printer.addColumn('last_sync')
         self.printer.addColumn('sync_state')
@@ -289,31 +296,17 @@ class Status(RepoAction):
         self.printer.printItem(repo)
         return os.EX_OK
 
+    def _format_error(self, errors):
+        error_list = [e["error"]["error"] for e in errors]
+        return "\n".join(error_list)
 
-class Info(RepoAction):
+
+class Info(SingleRepoAction):
 
     description = _('information about a repository')
-
-    def setup_parser(self):
-        self.parser.add_option('--id', dest='id',
-                      help=_("repository id"))
-        self.parser.add_option('--name', dest='name',
-                      help=_("repository name"))
-        self.parser.add_option('--org', dest='org',
-                      help=_("organization name eg: foo.example.com"))
-        self.parser.add_option('--environment', dest='env',
-                      help=_("environment name eg: production (default: Locker)"))
-        self.parser.add_option('--product', dest='product',
-                      help=_("product name eg: fedora-14"))
-
-    def check_options(self):
-        if not self.has_option('id'):
-            self.require_option('name')
-            self.require_option('org')
-            self.require_option('product')
+    select_by_env = True
 
     def run(self):
-
         repo = self.get_repo()
         if repo == None:
             return os.EX_DATAERR
@@ -334,30 +327,14 @@ class Info(RepoAction):
 
         self.printer.printItem(repo)
         return os.EX_OK
+    
 
-
-class Sync(RepoAction):
+class Sync(SingleRepoAction):
 
     description = _('synchronize a repository')
-
-    def setup_parser(self):
-        self.parser.add_option('--id', dest='id',
-                               help=_("repo id, string value (required)"))
-        self.parser.add_option('--org', dest='org',
-                      help=_("organization name eg: foo.example.com (required)"))
-        self.parser.add_option('--name', dest='name',
-                      help=_("repository name"))
-        self.parser.add_option('--product', dest='product',
-                      help=_("product name eg: fedora-14"))
-
-    def check_options(self):
-        if not self.has_option('id'):
-            self.require_option('name')
-            self.require_option('org')
-            self.require_option('product')
-
+    select_by_env = False
+    
     def run(self):
-
         repo = self.get_repo()
         if repo == None:
             return os.EX_DATAERR
@@ -373,6 +350,46 @@ class Sync(RepoAction):
             return os.EX_DATAERR
 
 
+class CancelSync(SingleRepoAction):
+
+    description = _('cancel currently running synchronization of a repository')
+    select_by_env = False
+
+    def run(self):
+        repo = self.get_repo()
+        if repo == None:
+            return os.EX_DATAERR
+       
+        msg = self.api.cancel_sync(repo['id'])
+        print msg
+        return os.EX_OK
+
+class Enable(SingleRepoAction):
+
+    @property
+    def description(self):
+        if self._enable:
+            return _('enable a repository')
+        else:
+            return _('disable a repository')
+
+    select_by_env = False
+
+    def __init__(self, enable = True):
+        self._enable = enable
+        super(Enable, self).__init__()
+
+    def run(self):
+        repo = self.get_repo()
+        if repo == None:
+            return os.EX_DATAERR
+
+        msg = self.api.enable(repo["id"], self._enable)
+        print msg
+            
+        return os.EX_OK
+
+
 class List(RepoAction):
 
     description = _('list repos within an organization')
@@ -384,6 +401,8 @@ class List(RepoAction):
             help=_("environment name eg: production (default: locker)"))
         self.parser.add_option('--product', dest='product',
             help=_("product name eg: fedora-14"))
+        self.parser.add_option('--include_disabled', action="store_true", dest='disabled',
+            help=_("list also disabled repositories"))
 
     def check_options(self):
         self.require_option('org')
@@ -392,7 +411,8 @@ class List(RepoAction):
         orgName = self.get_option('org')
         envName = self.get_option('env')
         prodName = self.get_option('product')
-
+        listDisabled = self.has_option('disabled')
+        
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('package_count')
@@ -402,48 +422,30 @@ class List(RepoAction):
             prod = get_product(orgName, prodName)
             if env != None and prod != None:
                 self.printer.setHeader(_("Repo List For Org %s Environment %s Product %s") % (orgName, env["name"], prodName))
-                repos = self.api.repos_by_env_product(env["id"], prod["id"])
+                repos = self.api.repos_by_env_product(env["id"], prod["id"], None, listDisabled)
                 self.printer.printItems(repos)
         elif prodName:
             prod = get_product(orgName, prodName)
             if prod != None:
                 self.printer.setHeader(_("Repo List for Product %s in Org %s ") % (prodName, orgName))
-                repos = self.api.repos_by_product(prod["id"])
+                repos = self.api.repos_by_product(prod["id"], listDisabled)
                 self.printer.printItems(repos)
         else:
             env  = get_environment(orgName, envName)
             if env != None:
                 self.printer.setHeader(_("Repo List For Org %s Environment %s") % (orgName, env["name"]))
-                repos = self.api.repos_by_org_env(orgName,  env["id"])
+                repos = self.api.repos_by_org_env(orgName,  env["id"], listDisabled)
                 self.printer.printItems(repos)
 
         return os.EX_OK
 
 
-class Delete(RepoAction):
+class Delete(SingleRepoAction):
 
     description = _('delete a repository')
-
-    def setup_parser(self):
-        self.parser.add_option('--id', dest='id',
-                      help=_("repository id"))
-        self.parser.add_option('--name', dest='name',
-                      help=_("repository name"))
-        self.parser.add_option('--org', dest='org',
-                      help=_("organization name eg: foo.example.com"))
-        self.parser.add_option('--environment', dest='env',
-                      help=_("environment name eg: production (default: Locker)"))
-        self.parser.add_option('--product', dest='product',
-                      help=_("product name eg: fedora-14"))
-
-    def check_options(self):
-        if not self.has_option('id'):
-            self.require_option('name')
-            self.require_option('org')
-            self.require_option('product')
+    select_by_env = True
 
     def run(self):
-
         repo = self.get_repo()
         if repo == None:
             return os.EX_DATAERR

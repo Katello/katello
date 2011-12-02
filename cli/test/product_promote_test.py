@@ -16,17 +16,11 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.set_action(Promote())
         self.mock_options()
 
-    def test_missing_org_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['synchronize', '--name=product_1', '--environment=env_1'])
-
-    def test_missing_product_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['synchronize', '--org=ACME', '--environment=env_1'])
-
     def test_missing_environment_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['synchronize', '--org=ACME', '--name=product_1'])
+        self.assertRaises(Exception, self.action.process_options, ['promote', '--org=ACME', '--name=product_1'])
 
     def test_no_error_if_org_and_product_provided(self):
-        self.action.process_options(['list', '--org=ACME', '--name=product_1', '--environment=env_1'])
+        self.action.process_options(['promote', '--org=ACME', '--name=product_1', '--environment=env_1'])
         self.assertEqual(len(self.action.optErrors), 0)
 
 

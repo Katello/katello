@@ -22,6 +22,11 @@ class pulp::config {
     require     => [Class["mongodb::service"], File["/etc/pulp/pulp.conf"]],
   }
 
+  exec { "set candlepin crl file":
+      command =>  "/usr/bin/openssl x509 -in '$pulp::params::ssl_certificate_file' -hash -noout | /usr/bin/xargs -I{} /bin/ln -s '$candlepin::params::crl_file' '$pulp::params::crl_location/{}.r0'",
+      require => Class["candlepin::config"],
+  }
+
   # disable SELinux
   exec {"setenforce":
     command => "setenforce 0",

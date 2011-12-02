@@ -15,7 +15,8 @@ require 'helpers/product_test_data'
 require 'helpers/repo_test_data'
 
 include OrchestrationHelper
-
+include AuthorizationHelperMethods
+include ProductHelperMethods
 describe Product do
 
   before(:each) do
@@ -356,5 +357,100 @@ describe Product do
         @product.filters -= [@filter1]
       end
     end
+  end
+
+
+  describe "product permission tests" do
+    before (:each) do
+      disable_product_orchestration
+
+      User.current = superadmin
+      @product = Product.new({:name => "prod"})
+      @product.provider = @organization.redhat_provider
+      @product.environments << @organization.locker
+      @product.stub(:arch).and_return('noarch')
+      @product.save!
+      @ep = EnvironmentProduct.find_or_create(@organization.locker, @product)
+      @repo = Repository.create!(:environment_product => @ep, :name => "testrepo",:pulp_id=>"1010")
+      @repo.stub(:promoted?).and_return(false)
+    end
+    context "Test list enabled repos should show redhat repos" do
+      before do
+        @repo.enabled = false
+        @repo.save!
+      end
+      specify {Product.readable(@organization).should be_empty}
+      subject {Product.all_readable(@organization)}
+      it {should_not be_empty}
+      it {should == [@product]}
+      specify {Product.editable(@organization).should be_empty}
+      specify {Product.syncable(@organization).should be_empty}
+
+      subject {Product.all_editable(@organization)}
+      it {should_not be_empty}
+      it {should == [@product]}
+    end
+
+    context "Test list enabled repos should show redhat repos" do
+      before do
+        @repo.enabled = true
+        @repo.save!
+      end
+      specify {Product.readable(@organization).should == [@product]}
+      specify {Product.syncable(@organization).should == [@product]}
+      specify {Product.editable(@organization).should == [@product]}
+    end
+  end
+
+  describe "product reset repo gpgs test" do
+    before do
+      disable_product_orchestration
+      suffix = (rand 10 **6).to_s
+      @gpg = GpgKey.create!(:name =>"GPG", :organization=>@organization, :content=>"bar")
+      @provider = Provider.create!({:organization =>@organization, :name => 'provider' + suffix,
+                              :repository_url => "https://something.url", :provider_type => Provider::CUSTOM})
+      @product = Product.new({:name => "prod#{suffix}"})
+      @product.provider = @provider
+      @product.environments << @organization.locker
+      @product.stub(:arch).and_return('noarch')
+      @product.save!
+
+      @ep = EnvironmentProduct.find_or_create(@organization.locker, @product)
+      @repo = Repository.create!(:environment_product => @ep, :name => "testrepo",:pulp_id=>"1010")
+      @repo.stub(:promoted?).and_return(false)
+    end
+    context "resetting product gpg and asking repos to reset should work" do
+      before do
+        @product.update_attributes!(:gpg_key => @gpg)
+        @product.reset_repo_gpgs!
+      end
+      subject {Repository.find(@repo.id)}
+      its(:gpg_key){should == @gpg}
+    end
+
+    context "resetting product gpg work across multiple environments" do
+      before do
+        @env = KTEnvironment.create!(:name => "new_repo", :organization =>@organization, :prior=>@organization.locker)
+        @new_repo = promote(@repo, @env)
+        @product = Product.find(@product.id)
+        @product.update_attributes!(:gpg_key => @gpg)
+        @product.reset_repo_gpgs!
+      end
+      subject {Repository.find(@new_repo.id)}
+      its(:gpg_key){should == @gpg}
+    end
+
+    context "resetting product gpg to nil should also nil out repos under it" do
+      before do
+        @product.update_attributes!(:gpg_key => @gpg)
+        @product.reset_repo_gpgs!
+        @product.update_attributes!(:gpg_key => nil)
+        @product.reset_repo_gpgs!
+      end
+      subject {Repository.find(@repo.id)}
+      its(:gpg_key){should be_nil}
+    end
+
+
   end
 end

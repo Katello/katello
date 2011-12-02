@@ -18,16 +18,16 @@
           = until_time ? _("Subscriptions are Current Until %s") % until_time : _("Subscriptions are Current")
         - else
           = _("Subscriptions are not Current")
-    .subs_left.ca
-      #{_("Socket Requirement")}
-      %br
-      .subs_num
-        = image_tag("icons/check_icon.png")
-        #{sockets}
-    .subs_right.ca
-      #{_("Guests Requirement")}
-      %br
-      .subs_num #{"--"}
+    -# .subs_left.ca
+    -#   #{_("Socket Requirement")}
+    -#   %br
+    -#   .subs_num
+    -#     = image_tag("icons/check_icon.png")
+    -#     #{sockets}
+    -# .subs_right.ca
+    -#   #{_("Guests Requirement")}
+    -#   %br
+    -#   .subs_num #{"--"}
   #subs_data
     = render :partial=>"subs", :locals=>{:system=>@system, :avail_subs => avail_subs, :consumed_entitlements => consumed_entitlements, :editable=>editable}
   %br.clear

@@ -91,6 +91,13 @@ KT.templates = function() {
             trail: ['templates', template_root],
             url: ''
         };
+        bc['distribution_' + id] = {
+            cache: null,
+            client_render: true,
+            name: i18n.selected_distribution,
+            trail: ['templates', template_root],
+            url: ''
+        };
         bc['products_' + id ] = {
             cache: null,
             client_render: true,
@@ -455,7 +462,6 @@ KT.template_renderer = function() {
         }
         html = '<ul>';
         $.each(distros, function(index, dist){
-            console.log(dist.id + "," + current.distribution)
             selected = (dist.id === current.distribution)  ? " checked " : "";
             
             html +=  '<li class="no_hover">';

@@ -88,6 +88,7 @@ class Api::ApiController < ActionController::Base
 
   def invalid_record(exception)
     logger.error exception.class
+    logger.debug exception.backtrace.join("\n")
     exception.record.errors.each_pair do |c,e|
       logger.error "#{c}: #{e}"
     end

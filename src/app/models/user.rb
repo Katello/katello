@@ -17,6 +17,7 @@ require 'util/password'
 class User < ActiveRecord::Base
   include Glue::Pulp::User if (AppConfig.use_cp and AppConfig.use_pulp)
   include Glue if AppConfig.use_cp
+  include AsyncOrchestration
 
   acts_as_reportable
 
@@ -314,8 +315,18 @@ class User < ActiveRecord::Base
     { 'cp-user' => self.username }
   end
 
+  def self.cp_oauth_header
+    raise Errors::UserNotSet, "unauthenticated to call a backend engine" if self.current.nil?
+    { 'cp-user' => self.current.username }
+  end
+
   def pulp_oauth_header
     { 'pulp-user' => self.username }
+  end
+
+  def self.pulp_oauth_header
+    raise Errors::UserNotSet, "unauthenticated to call a backend engine" if self.current.nil?
+    { 'pulp-user' => self.current.username }
   end
 
   # is the current user consumer? (rhsm)
@@ -387,6 +398,23 @@ class User < ActiveRecord::Base
       return KTEnvironment.find(perm[0].tags[0].tag_id)
     end
     nil
+  end
+
+
+  #method to delete the passed in org.  Due to the way delayed job is impelemented
+  #  we must attached the job to a different instance or object, so we attach it to the current_user
+  def destroy_organization_async org
+    task = self.async(:organization=>org).destroy_organization(org.id)
+    org.task_id = task.id
+    org.save!
+  end
+
+  def destroy_organization org_id
+    org = Organization.unscoped{Organization.find(org_id)}
+    org.destroy
+  rescue Exception=>e
+    Rails.logger.error(e)
+    Rails.logger.error(e.backtrace.join("\n"))
   end
 
   protected

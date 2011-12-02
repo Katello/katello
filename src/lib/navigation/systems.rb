@@ -68,15 +68,21 @@ module Navigation
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
         },
-        { :key => :facts,
-          :name =>N_("Facts"),
-          :url => lambda{facts_system_path(@system.id)},
+        { :key => :products,
+          :name =>N_("Software"),
+          :url => lambda{products_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
         },
         { :key => :packages,
           :name =>N_("Packages"),
           :url => lambda{packages_system_system_packages_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :facts,
+          :name =>N_("Facts"),
+          :url => lambda{facts_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
         }

@@ -21,6 +21,7 @@ $(document).ready(function() {
   KT.subs.unsubSetup();
   KT.subs.subSetup();
   KT.subs.spinnerSetup();
+  KT.subs.autohealSetup();
 
   $("#unsubscribeTable").treeTable({
     expandable: true,

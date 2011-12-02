@@ -270,7 +270,7 @@ module RepoTestData
         "_ns" => "distribution",
         "_id" => "distro-id",
         "id" => "distro-id",
-        "url" => "https://localhost/pulp/ks/ACME_Corporation/Locker/isos/xxx/"
+        "url" => ["https://localhost/pulp/ks/ACME_Corporation/Locker/isos/xxx/", "https://localhost/pulp/ks/ACME_Corporation/Dev/isos/xxx/"]
     }.with_indifferent_access
   end
 

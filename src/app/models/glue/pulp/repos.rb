@@ -99,7 +99,7 @@ module Glue::Pulp::Repos
 
       # we only want the enabled repos to be visible
       # This serves as a white list for redhat repos
-      @repo_cache[env.id].select{|repo| repo.enabled?}
+      @repo_cache[env.id].where(:enabled => true)
     end
 
     def promote from_env, to_env
@@ -301,7 +301,7 @@ module Glue::Pulp::Repos
       Repository.destroy_all(:id=>repo_id)
     end
 
-    def add_repo(name, url, repo_type)
+    def add_repo(name, url, repo_type, gpg = nil)
       check_for_repo_conflicts(name)
       key = EnvironmentProduct.find_or_create(self.organization.locker, self)
       repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(name),
@@ -310,7 +310,8 @@ module Glue::Pulp::Repos
           :arch => arch,
           :name => name,
           :feed => url,
-          :content_type => repo_type
+          :content_type => repo_type,
+          :gpg_key => gpg
       )
     end
 
