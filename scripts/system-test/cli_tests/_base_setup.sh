@@ -19,6 +19,7 @@ FILTER1="filter_$RAND"
 # BASIC RESOURCES (reused in tests)
 test_success "user create" user create --username=$TEST_USER --password=password --email=$TEST_USER@somewhere.com
 test_success "org create" org create --name=$TEST_ORG --description="org description"
+test_success "org uebercert" org uebercert --name=$TEST_ORG
 test_success "environment create" environment create --org="$TEST_ORG" --name="$TEST_ENV" --prior="Locker"
 test_success "environment create" environment create --org="$TEST_ORG" --name="$TEST_ENV_3" --prior="$TEST_ENV"
 test_success "provider create" provider create --name="$YUM_PROVIDER" --org="$TEST_ORG" --url="$FEWUPS_REPO_URL" --description="prov description"
