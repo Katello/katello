@@ -28,11 +28,11 @@ class CreateUebercertTest(CLIActionTestCase):
 
         self.mock_options({ 'name': self.NAME })
 
-        self.action.api.generate_uebercert = Mock()
+        self.action.api.uebercert = Mock()
 
     def tearDown(self):
         self.restore_mocks()
 
     def test_generates_uebercert_in_cp(self):
         self.action.run()
-        self.action.api.generate_uebercert.assert_called_once_with(self.NAME)
+        self.action.api.uebercert.assert_called_once_with(self.NAME)
