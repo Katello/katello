@@ -44,7 +44,7 @@
                         = render :partial=>'subscription_details', :locals=>{:group => entitlement.entitlementId, :product_content => product_content}
           - else
             %tr
-              %td{:colspan=>5} #{_("The system is not currently consuming any subscriptions.")}
+              %td{:colspan=>6} #{_("The system is not currently consuming any subscriptions.")}
       - if editable && consumed_entitlements.length > 0
         .actions
           %a{:class=>'dialogbutton button disabled', :id=>"fake_unsub_submit"} #{_('Unsubscribe')}
@@ -78,8 +78,9 @@
                 %td{:style => "padding-top:9px;"} #{sub.sockets}
                 - if sub.multiEntitlement
                   %td
-                    = number_field_tag "spinner[#{sub.poolId}]", nil, :in => 0..(sub.quantity-sub.consumed), :step=>1, :value=>0, :class=>"ui-spinner"
-                    = "of #{sub.quantity - sub.consumed}"
+                    = text_field_tag "spinner[#{sub.poolId}]", nil, :min => 0, :max => (sub.quantity-sub.consumed), :step=>1, :value=>0, :class=>"ui-spinner"
+                    %span{:style => "padding-top:9px;"}
+                      = "of #{sub.quantity - sub.consumed}"
                 - else
                   %td{:style => "padding-top:9px;"}
                     - if sub.quantity < 0
@@ -92,7 +93,7 @@
                 %td{:style => "padding-top:9px;"} #{sub.expires}
               - sub.providedProducts.each do |product|
                 %tr{:class => "child-of-#{sub.poolId} " + cycle_class}
-                  %td{:colspan=>7}
+                  %td{:colspan=>6}
                     %ul
                       %li
                         = _("Product Name: ")
@@ -101,7 +102,7 @@
                         = render :partial=>'subscription_details', :locals=>{:group => sub.poolId, :product_content => product_content}
           - else
             %tr
-              %td{:colspan=>5} #{_("There are no more subscriptions available.")}
+              %td{:colspan=>6} #{_("There are no more subscriptions available.")}
       - if editable && avail_subs.length > 0
         .actions
           = submit_tag _('Subscribe'), :class => 'submit dialogbutton', :id=>"sub_submit"
