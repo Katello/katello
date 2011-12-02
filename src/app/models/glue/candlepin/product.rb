@@ -261,7 +261,7 @@ module Glue::Candlepin::Product
           queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
           queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
         when :import_from_cp
-          queue.create(:name => "delete imported content from locker environment: #{self.name}", :priority => 2, :action => [self, :remove_imported_content])
+          queue.create(:name => "delete imported content from locker environment: #{self.name}", :priority => 2, :action => [self, :remove_imported_content]) if AppConfig.katello?
         when :update
           #called when sync schedule changed, repo added, repo deleted
           queue.create(:name => "update content in candlein: #{self.name}", :priority => 1, :action => [self, :update_content])
