@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.6
+Version:       0.1.7
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -56,6 +56,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 02 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.7-1
+- uebercert - adding to system tests
+- provider cli - removed needless option '--type'
+- Revert "repo blacklist - cli unit tests for repo list"
+- repo blacklist - cli unit tests for repo list
+
 * Tue Nov 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.6-1
 - st - fixing bug with creating categories
 - system tests - new function for delayed jobs check
