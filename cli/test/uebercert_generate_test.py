@@ -12,10 +12,10 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
         self.mock_options()
 
     def test_missing_name_generates_error(self):
-        self.assertRaises(Exception, self.action.process_options, ['generate_uebercert'])
+        self.assertRaises(Exception, self.action.process_options, ['uebercert'])
 
     def test_no_error_if_required_options_provided(self):
-        self.action.process_options(['generate_uebercert', '--name=org'])
+        self.action.process_options(['uebercert', '--name=org'])
         self.assertEqual(len(self.action.optErrors), 0)
 
 class CreateUebercertTest(CLIActionTestCase):

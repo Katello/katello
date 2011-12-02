@@ -372,7 +372,7 @@ Src::Application.routes.draw do
       resources :repositories, :only => [] do
         post :discovery, :on => :collection
       end
-      resource :uebercert, :only => [:create, :show]
+      resource :uebercert, :only => [:show]
       resources :filters, :only => [:index, :create, :destroy, :show, :update]
     end
 
