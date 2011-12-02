@@ -377,8 +377,32 @@ Src::Application.routes.draw do
     end
 
     resources :changesets, :only => [:show, :destroy] do
-      put :update, :on => :member, :action => :update_content
       post :promote, :on => :member, :action => :promote
+      resources :products, :controller => :changesets_content do
+        post   :index, :on => :collection, :action => :add_product
+        delete :destroy, :on => :member, :action => :remove_product
+      end
+      resources :packages, :controller => :changesets_content do
+        post   :index, :on => :collection, :action => :add_package
+        delete :destroy, :on => :member, :action => :remove_package
+      end
+      resources :errata, :controller => :changesets_content do
+        post   :index, :on => :collection, :action => :add_erratum
+        delete :destroy, :on => :member, :action => :remove_erratum
+      end
+      resources :repositories , :controller => :changesets_content do
+        post   :index, :on => :collection, :action => :add_repo
+        delete :destroy, :on => :member, :action => :remove_repo
+      end
+      resources :distributions, :controller => :changesets_content do
+        post   :index, :on => :collection, :action => :add_distribution
+        delete :destroy, :on => :member, :action => :remove_distribution
+      end
+      resources :templates, :controller => :changesets_content do
+        post   :index, :on => :collection, :action => :add_template
+        delete :destroy, :on => :member, :action => :remove_template
+      end
+
     end
 
     resources :products, :only => [:show, :destroy] do
