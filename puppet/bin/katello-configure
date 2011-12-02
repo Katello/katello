@@ -8,6 +8,7 @@ require 'socket'
 $stdout.sync = true
 
 default_path = '/usr/share/katello/install/default-answer-file'
+options_format_path = '/usr/share/katello/install/options-format-file'
 result_config_path = '/etc/katello/katello-configure.conf'
 puppet_cmd = 'puppet --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib -v -d 2>&1'
 log_parent_directory = '/var/log/katello'
@@ -51,7 +52,7 @@ def read_answer_file(filename)
 	while (line = file.gets)
 		if line =~ /^\s*#/
 			if title == ''
-				title = line.gsub(/^\s*#\s*/, '')
+				title = line.gsub(/^\s*#\s*/, '').chop
 			else
 				synopsis.concat(line.gsub(/^\s*#\s*/, ''))
 			end
@@ -76,6 +77,115 @@ def read_answer_file(filename)
 	end
 	file.close
 	return data, data_order, error, titles, docs
+end
+
+# Reading options format file, that describe what options are required
+# and the allow optin values format described by regular expressions
+# The structure of the answer file is
+#
+#	# The short description of the option.
+#	option_name is_option_mandatory regular_expression
+#
+def read_options_format(filename)
+	file = File.new(filename, "r")
+	error = ''
+	mandatory = {}
+	regex = {}
+	data_order = []
+	titles = {}
+	docs = {}
+	title = ''
+	synopsis = ''
+	while (line = file.gets)
+		if line =~ /^\s*#/
+			if title == ''
+				title = line.gsub(/^\s*#\s*/, '').chop
+			else
+				synopsis.concat(line.gsub(/^\s*#\s*/, ''))
+			end
+			next
+		end
+		line = line.gsub(/\s+$/, '')
+		if not line =~ /\S+/
+			title = ''
+			synopsis = ''
+			next
+		end
+		if line =~ /^\s*(\S+)\s+(true|false)\s+(\S*)$/
+			mandatory[$1] = 'true' == $2
+			regex[$1] = $3
+			docs[$1] = synopsis
+			data_order.push $1
+			titles[$1] = title.gsub(/\.\s*$/, '')
+		else
+			error.concat "Unsupported config line format [#{line}] in file [#{filename}]\n"
+		end
+		title = ''
+		synopsis = ''
+	end
+	file.close
+	return mandatory, regex, data_order, error, titles, docs
+end
+
+def _get_valid_option_value(option, defaults, finals)
+	if finals.include?(option)
+		return finals[option]
+	end
+	return defaults[option]
+end
+
+def _is_option_true(option_value)
+	if option_value.nil?
+		return false
+	end
+	return (option_value.match(/(true|yes|y|1)$/i) != nil)
+end
+
+def _read_password()
+	system("stty -echo")
+	input = STDIN.gets
+	system("stty echo")
+	puts
+	return input
+end
+
+def _request_option_interactively(title, regex, default_value, non_interactive_value)
+	default_value_ok = default_value.to_s() =~ Regexp.new(regex)
+	if non_interactive_value
+		if default_value.nil? or not default_value_ok
+			$stderr.puts "Option: [#{title}] not correctly specified."
+			exit 7
+		else
+			return default_value
+		end
+	end
+
+	read_password = title.include?("password")
+	while true
+		if read_password:
+			while true
+				print "Enter #{title}: "
+				input = _read_password()
+				print "Verify #{title}: "
+				input2 = _read_password()
+				if (input == input2)
+					break
+				end
+				puts "Passwords do not match. Please, try again."
+			end
+		else
+			default_draft = " [ #{default_value} ]" if default_value_ok
+			print "Enter #{title}#{default_draft}: "
+			input = STDIN.gets.strip
+			if input.empty? and default_value_ok
+				input = default_value
+			end
+		end
+		if input.to_s() =~ Regexp.new(regex)
+			return input
+		end
+		puts "Your entry has to match regular expression: /#{regex}/"
+	end
 end
 
 $expected_progress_width = ENV['COLUMNS']
@@ -187,6 +297,33 @@ end
 final_options.update(options)
 final_options.delete('answer_file')
 
+# read required parameter list and its format
+mandatory, regex, __unused_data_order, error, __unused_titles, __usused_docs = read_options_format(options_format_path)
+
+non_interactive_option = _get_valid_option_value('non_interactive', default_options, final_options)
+skip_ssl_ca_generation_option = _get_valid_option_value('skip_ssl_ca_generation', default_options, final_options)
+ssl_ca_password_file_option = _get_valid_option_value('ssl_ca_password_file', default_options, final_options)
+
+if (_is_option_true(skip_ssl_ca_generation_option)) or
+	File.exist?(ssl_ca_password_file_option)
+	mandatory.delete('ssl_ca_password')
+end
+
+mandatory.each do |key, mand|
+	if (not final_options.has_key?(key) and mandatory[key]) or
+	(not final_options[key].nil? and not final_options[key].to_s() =~ Regexp.new(regex[key]))
+		final_options[key] = _request_option_interactively(titles[key], regex[key], default_options[key], _is_option_true(non_interactive_option))
+		if not default_options_order.include?(key)
+			default_options_order.push(key)
+		end
+	end
+end
+
+if default_options_errors != ''
+	$stderr.puts default_options_errors
+	exit 6
+end
+
 # We will only keep values that are different from the default ones.
 final_options.each do |key, value|
 	if default_options[key] == value
@@ -202,6 +339,21 @@ if show_resulting_answer_file
 	end
 	exit
 end
+
+# handle ca password separately, because we do not want
+# to store it into the katello-configure.conf
+if not _is_option_true(skip_ssl_ca_generation_option)
+	begin
+		File.open(ssl_ca_password_file_option, 'w') do |f|
+			f.write(_get_valid_option_value('ssl_ca_password', default_options, final_options))
+		end
+	rescue
+		$stderr.puts "Failed to write to file [#{ssl_ca_password_file_option}]."
+		exit 8
+	end
+end
+final_options.delete('ssl_ca_password')
+default_options_order.delete('ssl_ca_password')
 
 # Prints a warning if FQDN is not set, returns error when
 # localhost or hostname cannot be resolved (/etc/hosts entry is missing).
@@ -230,7 +382,7 @@ end
 result_config = IO.open(IO::sysopen(result_config_path, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
 default_options_order.each do |key|
 	if final_options.has_key?(key)
-		result_config.syswrite(key + ' = ' + final_options[key] + "\n")
+		result_config.syswrite('# ' + (titles[key] || key) + "\n" + key + ' = ' + final_options[key] + "\n\n")
 	end
 end
 result_config.close
