@@ -462,7 +462,6 @@ KT.template_renderer = function() {
         }
         html = '<ul>';
         $.each(distros, function(index, dist){
-            console.log(dist.id + "," + current.distribution)
             selected = (dist.id === current.distribution)  ? " checked " : "";
             
             html +=  '<li class="no_hover">';

@@ -252,6 +252,13 @@ module Candlepin
         JSON.parse(ueber_cert_json).with_indifferent_access
       end
 
+      def get_ueber_cert_pkcs12 key, name = nil, password = nil
+        certs = get_ueber_cert(key)
+        c =  OpenSSL::X509::Certificate.new certs["cert"]
+        p = OpenSSL::PKey::RSA.new certs["key"]
+        OpenSSL::PKCS12.create(password, name, p, c,nil, "PBE-SHA1-3DES" ,"PBE-SHA1-3DES")
+      end
+
       def events key
         response = self.get(join_path(path(key), 'events'), self.default_headers).body
         JSON.parse(response).collect { |e| e.with_indifferent_access }

@@ -219,6 +219,7 @@ Src::Application.routes.draw do
     member do
       get :environments_partial
       get :events
+      get :download_debug_certificate
     end
     resources :environments do
       member do
@@ -371,7 +372,7 @@ Src::Application.routes.draw do
       resources :repositories, :only => [] do
         post :discovery, :on => :collection
       end
-      resource :uebercert, :only => [:create, :show]
+      resource :uebercert, :only => [:show]
       resources :filters, :only => [:index, :create, :destroy, :show, :update]
     end
 

@@ -1,8 +1,14 @@
 .tree
   %table#redhatSubscriptionTable
     %thead
-      %th{:style => "width: 80%"} #{_("Name")}
-      %th #{_("Consumed")}
+      %th= _("Name")
+      %th= _("Consumed")
+      %th= _('Contract')
+      %th= _('Support Level')
+      %th= _('Arch')
+      %th= _('Machine Type')
+      %th= _('Begins')
+      %th= _('Expires')
     %tbody
       - if @grouped_subscriptions.length > 0
         - @grouped_subscriptions.each do |group_name, sub_group|
@@ -18,10 +24,18 @@
             - sub_class = "#{group_name}"
           - sub_group.each do |sub|
             %tr{:id => "#{sub["subscriptionId"]}", :class => "#{sub_class} #{cycle_class}"}
+              %td= sub['productName']
               %td
-                = sub["productName"]
-              %td
-                = "#{sub["consumed"]} of #{sub["quantity"]}"
+                - if sub['quantity'] < 0
+                  = _('Unlimited')
+                -else
+                  = "#{sub['consumed']} of #{sub['quantity']}"
+              %td= sub['contractNumber']
+              %td= sub['support_level'] or ""
+              %td= sub['arch'] or ""
+              %td= sub['machine_type']
+              %td=l Date.parse(sub['startDate'])
+              %td=l Date.parse(sub['endDate'])
             -# TODO: Should the bundled products be displayed too?
             -# - if sub["providedProducts"].length > 0
             -#   %tr{:class => "child-of-#{sub["subscriptionId"]} #{cycle_class}"}

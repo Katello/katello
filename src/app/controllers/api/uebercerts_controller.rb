@@ -11,16 +11,12 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Api::UebercertsController < Api::ApiController
-  before_filter :find_organization, :only => [:show, :create]
+  before_filter :find_organization, :only => [:show]
 
   # TODO: define authorization rules
   skip_before_filter :authorize
 
-  def create
-    render :json => Candlepin::Owner.generate_ueber_cert(@organization.cp_key)
-  end
-
   def show
-    render :json => Candlepin::Owner.get_ueber_cert(@organization.cp_key)
+    render :json => @organization.debug_cert
   end
 end

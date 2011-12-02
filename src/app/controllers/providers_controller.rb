@@ -245,6 +245,8 @@ class ProvidersController < ApplicationController
   end
 
   def setup_subs
+    # TODO: See subscriptions_controller#reformat_subscriptions for a better(?) OpenStruct implementation
+
     @provider = current_organization.redhat_provider
     all_subs = Candlepin::Owner.pools @provider.organization.cp_key
     # We default to none imported until we can properly poll Candlepin for status of the import
@@ -258,7 +260,22 @@ class ProvidersController < ApplicationController
       sub['productAttributes'].each do |attr|
         if attr['name'] == 'stacking_id'
           group_id = attr['value']
-          break
+        elsif attr['name'] == 'support_level'
+          sub['support_level'] = attr['value']
+        elsif attr['name'] == 'arch'
+          sub['arch'] = attr['value']
+        end
+      end
+
+      # Other interesting attributes
+      sub['machine_type'] = ''
+      sub['attributes'].each do |attr|
+        if attr['name'] == 'virt_only'
+          if attr['value'] == 'true'
+            sub['machine_type'] = _('Virtual')
+          elsif attr['value'] == 'false'
+            sub['machine_type'] = _('Physical')
+          end
         end
       end
 
