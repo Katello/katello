@@ -5,7 +5,7 @@
 #
 
 # options common to all subcommands (+ 3rd level opts for simplicity)
-_katello_common_opts="-g -v --help
+_katello_common_opts="ACME_Corporation -g -v --help
 --id --repo --org --name --prior --product --repo_id --description --environment
 --url --type --file --username --password --disabled"
 
