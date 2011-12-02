@@ -19,7 +19,7 @@ Summary:       System tests for Katello client package
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.7
+Version:       0.1.8
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 02 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.8-1
+- fixing more system tests (removing --type for all imports)
+
 * Fri Dec 02 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.7-1
 - uebercert - adding to system tests
 - provider cli - removed needless option '--type'
