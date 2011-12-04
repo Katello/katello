@@ -80,6 +80,12 @@ module Navigation
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
         },
+        { :key => :errata,
+          :name =>N_("Errata"),
+          :url => lambda{errata_system_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"navigation_element"}
+        },
         { :key => :facts,
           :name =>N_("Facts"),
           :url => lambda{facts_system_path(@system.id)},
