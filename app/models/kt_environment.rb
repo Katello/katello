@@ -161,6 +161,7 @@ class KTEnvironment < ActiveRecord::Base
   def as_json options = {}
     to_ret = self.attributes
     to_ret['prior'] = self.prior &&  self.prior.name
+    to_ret['prior_id'] = self.prior &&  self.prior.id
     to_ret['organization'] = self.organization &&  self.organization.name
     to_ret
   end
