@@ -237,7 +237,7 @@ class UpdateContent(ChangesetAction):
 
         def erratum(self, options):
             return {
-                'name': options['name'],
+                'erratum_id': options['name'],
                 'product_id': self.product_id(options)
             }
 
