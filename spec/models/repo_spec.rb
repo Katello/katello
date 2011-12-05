@@ -255,6 +255,8 @@ describe Glue::Pulp::Repo do
       ep = EnvironmentProduct.find_or_create(@to_env, @product1)
       RepoTestData::CLONED_PROPERTIES.merge!(:environment_product => ep)
       @repo.stub(:clone_id).with(@to_env).and_return(RepoTestData::CLONED_REPO_ID)
+      @content_path = "/content/dist/rhel/server/5/5.1/x86_64/os"
+      @repo.stub(:relative_path => "#{@organization.name}/Locker#{@content_path}")
 
     end
 
@@ -294,7 +296,7 @@ describe Glue::Pulp::Repo do
 
     it "should set relative path correctly" do
       Pulp::Repository.should_receive(:clone_repo).with do |repo, cloned|
-        cloned.relative_path.should == "#{@repo.organization.name}/#{@to_env.name}/#{@repo.product.name}/repo"
+        cloned.relative_path.should == "#{@repo.organization.name}/#{@to_env.name}#{@content_path}"
         true
       end
       @repo.should_receive(:content_for_clone).and_return(nil)

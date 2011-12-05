@@ -34,14 +34,25 @@ module Glue::Pulp::Repos
   end
 
   def self.clone_repo_path(repo, environment, for_cp = false)
-    repo_path(environment,repo.product, repo.name, for_cp)
+    org, env, content_path = repo.relative_path.split("/",3)
+    "#{org}/#{environment.name}/#{content_path}"
   end
 
-  # if for_cp tells it's used for contentUrl in candlepin
-  # CP computes the rest of path automaticly - it does not to be specified here
-  def self.repo_path(environment, product, name, for_cp = false)
+  def self.repo_path_from_content_path(environment, content_path)
+    content_path = content_path.sub(/^\//, "")
+    "#{environment.organization.name}/#{environment.name}/#{content_path}"
+  end
+
+  # repo path for custom product repos (RH repo paths are derivated from
+  # content url)
+  def self.custom_repo_path(environment, product, name)
     parts = []
-    parts += [environment.organization.name,environment.name] unless for_cp
+    parts += [environment.organization.name,environment.name]
+    # We generate repo path only for custom product content. We add this
+    # constant string to avoid colisions with RH content. RH content url
+    # begins usually with something like "/content/dist/rhel/...".
+    # There we prefix custom content/repo url with "/custom/..."
+    parts << "custom"
     parts += [product.name,name]
     parts.map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
   end
@@ -306,7 +317,7 @@ module Glue::Pulp::Repos
       key = EnvironmentProduct.find_or_create(self.organization.locker, self)
       repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(name),
           :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
-          :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, name),
+          :relative_path => Glue::Pulp::Repos.custom_repo_path(self.locker, self, name),
           :arch => arch,
           :name => name,
           :feed => url,
@@ -347,7 +358,7 @@ module Glue::Pulp::Repos
                                         :arch => arch,
                                         :major => version[:major],
                                         :minor => version[:minor],
-                                        :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, repo_name),
+                                        :relative_path => Glue::Pulp::Repos.repo_path_from_content_path(self.locker, path),
                                         :name => repo_name,
                                         :feed => feed_url,
                                         :feed_ca => ca,
