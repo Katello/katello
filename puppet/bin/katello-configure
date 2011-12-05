@@ -11,6 +11,24 @@ result_config_path = '/etc/katello/katello-configure.conf'
 puppet_cmd = 'puppet --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib -v -d 2>&1'
 log_parent_directory = '/var/log/katello'
 
+# error codes for exit_with function
+ERROR_CODES = {
+  :success => 0,
+  :general => 1,
+  :default_option_error => 2,
+  :answer_missing => 3,
+  :answer_parsing_error => 4,
+  :answer_unknown_option => 5,
+  :error_executing_puppet => 6,
+  :unknown => 127,
+}
+
+# Terminate script with error code from ERROR_CODES hash
+def exit_with(code = :unknown)
+  code = ERROR_CODES[code.to_sym] || ERROR_CODES[:unknown]
+  exit code
+end
+
 # Reading answer file, used both for the default answer file
 # and for user files. The structure of the answer file is
 #
@@ -124,7 +142,7 @@ begin
 rescue => e
 	$stderr.puts e.message
 	$stderr.puts option_parser
-	exit 1
+	exit_with :general
 end
 
 # We only warn about possible errors in the default answer
@@ -132,7 +150,7 @@ end
 # even if there are errors in the default file.
 if default_options_errors != ''
 	$stderr.puts default_options_errors
-	exit 2
+	exit_with :default_option_error
 end
 
 # If there was an answer file specified, we parse it.
@@ -140,12 +158,12 @@ final_options = {}
 if options['answer_file'] != nil
 	if not File.file?(options['answer_file'])
 		$stderr.puts "Answer file [#{options['answer_file']}] does seem to exist"
-		exit 3
+		exit_with :answer_missing
 	end
 	final_options, __unused, error = read_answer_file(options['answer_file'])
 	if error != ''
 		$stderr.puts error
-		exit 4
+		exit_with :answer_parsing_error
 	end
 
 	# The user answer file can only use (override) options that
@@ -158,7 +176,7 @@ if options['answer_file'] != nil
 		end
 	end
 	if need_exit
-		exit 5
+		exit_with :answer_unknown_option
 	end
 end
 
@@ -284,7 +302,7 @@ end
 puppet_logfile.close
 
 if seen_err
-	exit 6
+	exit_with :error_executing_puppet
 end
 
 exit
