@@ -25,7 +25,7 @@ $(document).ready(function() {
   });
 
   $('.clickable').click(function(){
-    $(this).parent().parent().parent().find('ul').slideToggle();
+    $('download_debug_cert_key').slideToggle();
 
     var arrow = $(this).parent().find('a').find('img');
     if(arrow.attr("src").indexOf("collapsed") === -1){
