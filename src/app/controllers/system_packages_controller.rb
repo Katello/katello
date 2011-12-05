@@ -11,9 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class SystemPackagesController < ApplicationController
-  include AutoCompleteSearch
 
-  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :bulk_destroy, :new, :create]
+  before_filter :find_system
   before_filter :authorize
 
   def section_id
@@ -29,7 +28,8 @@ class SystemPackagesController < ApplicationController
       :more_packages => read_system,
       :add => edit_system,
       :remove => edit_system,
-      :update => edit_system
+      :update => edit_system,
+      :status => edit_system
     }
   end
 
@@ -143,6 +143,10 @@ class SystemPackagesController < ApplicationController
       packages = []
     end
     render :partial=>"package_items", :locals=>{:packages => packages, :offset=> offset}
+  end
+
+  def status
+    # TODO: this action will be used by the client to retrieve updates on the status of pending actions
   end
 
   private
