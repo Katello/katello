@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.23
+Version:        0.1.24
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Mon Dec 05 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.24-1
+- using candlepin certificates for both katello and pulp
+
 * Mon Dec 05 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.23-1
 - SSL certificate generation and deployment
 - introduce mandatory option file with predefined option format
