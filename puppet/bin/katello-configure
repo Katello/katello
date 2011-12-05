@@ -3,6 +3,7 @@
 require 'optparse'
 require 'fcntl'
 require 'fileutils'
+require 'socket'
 
 $stdout.sync = true
 
@@ -20,6 +21,7 @@ ERROR_CODES = {
   :answer_parsing_error => 4,
   :answer_unknown_option => 5,
   :error_executing_puppet => 6,
+  :hostname_error => 7,
   :unknown => 127,
 }
 
@@ -201,6 +203,23 @@ if show_resulting_answer_file
 	exit
 end
 
+# Prints a warning if FQDN is not set, returns error when
+# localhost or hostname cannot be resolved (/etc/hosts entry is missing).
+def check_hostname
+  hostname = Socket.gethostname
+  Socket.gethostbyname hostname
+  Socket.gethostbyname 'localhost'
+	$stderr.puts "WARNING: FQDN is not set!" unless hostname.index '.'
+rescue SocketError => e
+  puts "Error"
+	$stderr.puts "Unable to resolve '#{hostname}' or 'localhost'. Check your DNS and /etc/hosts settings."
+  exit_with :hostname_error
+end
+
+# perform check-up
+check_hostname
+
+# start configuring
 puts 'Starting Katello configuration'
 
 orig_umask = File.umask(077)
