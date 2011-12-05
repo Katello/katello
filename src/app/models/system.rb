@@ -87,6 +87,17 @@ class System < ActiveRecord::Base
 
   def install_packages packages
     pulp_task = self.install_package(packages)
+
+    task_status = PulpTaskStatus.using_pulp_task(pulp_task) {|t| t.organization = self.organization}
+    task_status.save!
+
+    system_task = SystemTask.create!(:system => self, :task_status => task_status, :type_id => SystemTask::PACKAGE_INSTALL)
+
+    packages.each do |package|
+      PackageTask.create!(:system_task => system_task, :task_status => task_status, :name => package)
+    end
+
+    system_task
   end
 
   def uninstall_packages packages
