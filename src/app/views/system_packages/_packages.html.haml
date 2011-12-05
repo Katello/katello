@@ -4,6 +4,26 @@
 = javascript do
   :javascript
     localize({
+      "adding_package"          : '#{_('Adding Package...')}',
+      "adding_package_success"  : '#{_('Add Package Completed')}',
+      "adding_package_failed"   : '#{_('Add Package Failed')}',
+
+      "updating_package"        : '#{_('Updating Package...')}',
+      "update_package_success"  : '#{_('Update Package Completed')}',
+      "update_package_failed"   : '#{_('Update Package Failed')}',
+
+      "removing_package"        : '#{_('Removing Package...')}',
+      "remove_package_success"  : '#{_('Remove Package Completed')}',
+      "remove_package_failed"   : '#{_('Remove Package Failed')}',
+
+      "adding_group"          : '#{_('Adding Package Group...')}',
+      "adding_group_success"  : '#{_('Add Package Group Completed')}',
+      "adding_group_failed"   : '#{_('Add Package Group Failed')}',
+
+      "removing_group"        : '#{_('Removing Package Group...')}',
+      "remove_group_success"  : '#{_('Remove Package Group Completed')}',
+      "remove_group_failed"   : '#{_('Remove Package Group Failed')}',
+
       "x_of_y_packages" : function(x,y){ return '#{_("(Loaded %X of %Y Total)")}'.replace("%X", x).replace("%Y", y); }
       });
 
@@ -44,7 +64,7 @@
                   = radio_button_tag :perform_action, :package_groups, false
                   = label_tag _('Package Groups')
 
-              %tr.no_sort.not_filtered
+              %tr#content_form_row.no_sort.not_filtered
                 %td{:colspan => 4}
                   %div#content_form
                     - help_text = _("Enter Selected Content...")

@@ -29,10 +29,12 @@ KT.packages = function() {
     remove_button = $('#remove_packages'),
     update_button = $('#update_packages'),
     update_all_button = $('#update_all_packages'),
+    content_form_row = $('#content_form_row'),
     content_form = $('#content_form'),
     add_content_button = $('#add_content'),
     remove_content_button = $('#remove_content'),
     loaded_summary = $('#loaded_summary'),
+    add_row_shading = false,
     selected_checkboxes = 0,
     disableButtons = function() {
         remove_button.attr('disabled', 'disabled');
@@ -172,38 +174,104 @@ KT.packages = function() {
     },
     addContent = function(data) {
         data.preventDefault();
-        var selected_action = $("input[@name=perform_action]:checked").attr('id');
+        var selected_action = $("input[@name=perform_action]:checked").attr('id'),
+            content_list = content_form.find('#content_input').val();
         if (selected_action == 'perform_action_packages') {
             $.ajax({
                 url: KT.routes.add_system_system_packages_path(system_id),
                 type: 'PUT',
-                data: {'packages' : content_form.find('#content_input').val()},
-                cache: false
+                data: {'packages' : content_list},
+                cache: false,
+                success: function() {
+                    packages = content_list.split(',');
+                    for (i = 0; i < packages.length; i++) {
+                        if (add_row_shading) {
+                            add_row_shading = false;
+                            content_form_row.after('<tr class="alt"><td></td><td>' + packages[i] + '</td><td><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
+                        }
+                        else
+                        {
+                            add_row_shading = true;
+                            content_form_row.after('<tr><td></td><td>' + packages[i] + '</td><td><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
+                        }
+                    }
+                },
+                error: function() {
+                }
             });
         } else {
             $.ajax({
                 url: KT.routes.add_system_system_packages_path(system_id),
                 type: 'PUT',
-                data: {'groups' : content_form.find('#content_input').val()},
-                cache: false
+                data: {'groups' : content_list},
+                cache: false,
+                success: function() {
+                    groups = content_list.split(',');
+                    for (i = 0; i < groups.length; i++) {
+                        if (add_row_shading) {
+                            add_row_shading = false;
+                            content_form_row.after('<tr class="alt"><td></td><td>' + groups[i] + '</td><td><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
+                        }
+                        else
+                        {
+                            add_row_shading = true;
+                            content_form_row.after('<tr><td></td><td>' + groups[i] + '</td><td><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
+                        }
+                    }
+                },
+                error: function() {
+                }
             });
         }
     },
     removeContent = function(data) {
-        var selected_action = $("input[@name=perform_action]:checked").attr('id');
+        var selected_action = $("input[@name=perform_action]:checked").attr('id'),
+            content_list = content_form.find('#content_input').val();
         if (selected_action == 'perform_action_packages') {
             $.ajax({
                 url: KT.routes.remove_system_system_packages_path(system_id),
                 type: 'POST',
-                data: {'packages' : content_form.find('#content_input').val()},
-                cache: false
+                data: {'packages' : content_list},
+                cache: false,
+                success: function() {
+                    packages = content_list.split(',');
+                    for (i = 0; i < packages.length; i++) {
+                        if (add_row_shading) {
+                            add_row_shading = false;
+                            content_form_row.after('<tr class="alt"><td></td><td>' + packages[i] + '</td><td><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
+                        }
+                        else
+                        {
+                            add_row_shading = true;
+                            content_form_row.after('<tr><td></td><td>' + packages[i] + '</td><td><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
+                        }
+                    }
+                },
+                error: function() {
+                }
             });
         } else {
             $.ajax({
                 url: KT.routes.remove_system_system_packages_path(system_id),
                 type: 'POST',
-                data: {'groups' : content_form.find('#content_input').val()},
-                cache: false
+                data: {'groups' : content_list},
+                cache: false,
+                success: function() {
+                    groups = content_list.split(',');
+                    for (i = 0; i < groups.length; i++) {
+                        if (add_row_shading) {
+                            add_row_shading = false;
+                            content_form_row.after('<tr class="alt"><td></td><td>' + groups[i] + '</td><td><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
+                        }
+                        else
+                        {
+                            add_row_shading = true;
+                            content_form_row.after('<tr><td></td><td>' + groups[i] + '</td><td><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
+                        }
+                    }
+                },
+                error: function() {
+                }
             });
         }
     },
@@ -214,6 +282,11 @@ KT.packages = function() {
             url: remove_button.attr('data-url'),
             type: 'POST',
             success: function() {
+                // locate the selected packages and update the status column to indicate the action being performed
+                $(':checkbox:checked').each( function() {
+                    $(this).closest('.package').find('.package_action_status')
+                        .html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package);
+                });
                 enableButtons();
             },
             error: function() {
@@ -228,6 +301,11 @@ KT.packages = function() {
             url: update_button.attr('data-url'),
             type: 'POST',
             success: function() {
+                // locate the selected packages and update the status column to indicate the action being performed
+                $(':checkbox:checked').each( function() {
+                    $(this).closest('.package').find('.package_action_status')
+                        .html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.updating_package);
+                });
                 enableButtons();
             },
             error: function() {
