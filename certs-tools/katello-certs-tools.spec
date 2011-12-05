@@ -2,7 +2,7 @@ Name: katello-certs-tools
 Summary: Katello SSL Key/Cert Tool
 Group: Applications/Internet
 License: GPLv2 and Python
-Version: 1.0.0
+Version: 1.0.1
 Release: 1%{?dist}
 URL:      https://fedorahosted.org/katello
 Source0:  https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
@@ -47,5 +47,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_var}/www/html/pub/bootstrap/client_config_update.py*
 
 %changelog
+* Mon Dec 05 2011 Lukas Zapletal <lzap+git@redhat.com> 1.0.1-1
+- new package built with tito
+
 * Mon Nov 14 2011 Tomas Lestach <tlestach@redhat.com> 1.0.0-1
 - introduce katello-cert-tools based on spacewalk-cert-tools 1.6.6-1
