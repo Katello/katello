@@ -72,6 +72,7 @@ Src::Application.routes.draw do
         post :update
         get :packages
         get :more_packages
+        get :status
       end
     end
 
