@@ -44,15 +44,15 @@ class Api::ChangesetsContentController < Api::ApiController
   end
 
   def add_erratum
-    @changeset.add_erratum(params[:name], params[:product_id])
+    @changeset.add_erratum(params[:erratum_id], params[:product_id])
     @changeset.save!
-    render :text => _("Added package '#{params[:name]}'"), :status => 200
+    render :text => _("Added erratum '#{params[:erratum_id]}'"), :status => 200
   end
 
   def remove_erratum
     @changeset.remove_erratum(params[:id], params[:product_id])
     @changeset.save!
-    render :text => _("Removed package '#{params[:id]}'"), :status => 200
+    render :text => _("Removed erratum '#{params[:id]}'"), :status => 200
   end
 
   def add_repo
@@ -95,7 +95,7 @@ class Api::ChangesetsContentController < Api::ApiController
 
   def find_changeset
     @changeset = Changeset.find(params[:changeset_id])
-    raise HttpErrors::NotFound, _("Couldn't find changeset '#{params[:id]}'") if @changeset.nil?
+    raise HttpErrors::NotFound, _("Couldn't find changeset '#{params[:changeset_id]}'") if @changeset.nil?
     @changeset
   end
 
