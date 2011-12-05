@@ -82,7 +82,7 @@ module Navigation
         },
         { :key => :errata,
           :name =>N_("Errata"),
-          :url => lambda{errata_system_path(@system.id)},
+          :url => lambda{system_errata_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
         },
