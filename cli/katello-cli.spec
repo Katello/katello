@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.19
+Version:       0.1.20
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,6 +84,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 02 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.20-1
+- ueber - fixing cli unit tests
+- generate_uebercert -> ubercert in the cli
+
 * Tue Nov 29 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.18-1
 - adding template to the system info cli call
 - show activation keys in the cli system info
