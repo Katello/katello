@@ -359,7 +359,7 @@ KT.template_renderer = function() {
     },
     list_item = function(id, text, is_slide_link) {
         var html = '<li class="' + (is_slide_link ? 'slide_link' : '')  + '">';
-        html += '<div class="link_details simple_link" id="' + id + '">';
+        html += '<div class="link_details simple_link one-line-ellipsis" id="' + id + '">';
         html += '<span class="sort_attr">' + text + '</span>';
         html += "</div></li>";
         return html ;
