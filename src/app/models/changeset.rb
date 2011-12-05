@@ -193,14 +193,7 @@ class Changeset < ActiveRecord::Base
     raise Errors::ChangesetContentException.new("Distribution not found within this environment.")
   end
 
-
-  def remove_product product_name
-    prod = self.products.find_by_name(product_name)
-    raise Errors::ChangesetContentException.new("Product #{product_name} not found in the changeset.") if prod.nil?
-    self.products.delete(prod)
-  end
-
-  def remove_product_by_cpid cpid 
+  def remove_product cpid
     prod = self.products.find_by_cp_id(cpid)
     raise Errors::ChangesetContentException.new("Product #{cpid} not found in the changeset.") if prod.nil?
     self.products.delete(prod)
