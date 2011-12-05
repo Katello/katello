@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.21
+Version:        0.1.22
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -53,6 +53,10 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Mon Dec 05 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.22-1
+- configure - adding hostname checks
+- configure - adding exit codes table
+
 * Tue Nov 29 2011 Shannon Hughes <shughes@redhat.com> 0.1.21-1
 - Change the default password for thumbslug keystores (bkearney@redhat.com)
 
