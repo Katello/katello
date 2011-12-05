@@ -20,15 +20,15 @@ class Api::ChangesetsContentController < Api::ApiController
   skip_before_filter :authorize
 
   def add_product
-    @changeset.add_product_by_cpid(params[:product_id])
+    product = @changeset.add_product(params[:product_id])
     @changeset.save!
-    render :text => _("Added product '#{params[:product_id]}'"), :status => 200
+    render :text => _("Added product '#{product.name}'"), :status => 200
   end
 
   def remove_product
-    product = @changeset.remove_product_by_cpid(params[:id])
+    @changeset.remove_product(params[:id])
     @changeset.save!
-    render :text => _("Removed product '#{product.name}'"), :status => 200
+    render :text => _("Removed product '#{params[:id]}'"), :status => 200
   end
 
   def add_package
@@ -54,7 +54,7 @@ class Api::ChangesetsContentController < Api::ApiController
     @changeset.save!
     render :text => _("Removed package '#{params[:id]}'"), :status => 200
   end
-  
+
   def add_repo
     repo = @changeset.add_repo(params[:repository_id], params[:product_id])
     @changeset.save!
@@ -86,9 +86,9 @@ class Api::ChangesetsContentController < Api::ApiController
   end
 
   def remove_distribution
-    @changeset.remove_distribution(params[:distribution_id], params[:product_id])
+    @changeset.remove_distribution(params[:id], params[:product_id])
     @changeset.save!
-    render :text => _("Removed distribution '#{params[:distribution_id]}'")
+    render :text => _("Removed distribution '#{params[:id]}'")
   end
 
   private
