@@ -1,4 +1,4 @@
-= javascript :filtertable, :system_errata
+= javascript :filtertable
 
 = javascript do
   :javascript
@@ -31,12 +31,12 @@
             %td
               = check_box_tag "select_all", "select_all"
             %td
-              e.type
-            %td
-              e.id
-            %td
-              e.product
-    %a#errata_more{"data-scroll_url"=>url_for(more_errata_system_path()), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("More...")}
+              %div{:class=>errata_type_class(e)}
+            %td.one-line-ellipsis
+              = e.id
+            %td.one-line-ellipsis
+              = e.product
+    %a#errata_more{"data-scroll_url"=>url_for(system_errata_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("More...")}
     #list-spinner
       = image_tag("spinner.gif", :class=>"ajax_scroll")
   - else
