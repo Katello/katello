@@ -54,7 +54,7 @@ class Api::OrganizationsController < Api::ApiController
   end
 
   def destroy
-    @organization.destroy
+    current_user.destroy_organization_async(@organization)
     render :text => _("Deleted organization '#{params[:id]}'"), :status => 200
   end
 

@@ -223,12 +223,13 @@ class Promote(SingleProductAction):
         if (env == None):
             return os.EX_DATAERR
 
+        prod = get_product(orgName, prodName)
+        if (prod == None):
+            return os.EX_DATAERR
+
         cset = self.csapi.create(orgName, env["id"], self.create_cs_name())
         try:
-            patch = {}
-            patch['+products'] = [prodName]
-            cset = self.csapi.update_content(cset["id"], patch)
-
+            self.csapi.add_content(cset["id"], "products", {'product_id': prod['id']})
             task = self.csapi.promote(cset["id"])
 
             result = run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the product, please wait... "))
@@ -324,7 +325,7 @@ class Delete(SingleProductAction):
 
 
 class ListFilters(SingleProductAction):
-    
+
     description = _('list filters of a product')
     select_by_env = False
 

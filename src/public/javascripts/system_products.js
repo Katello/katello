@@ -38,7 +38,6 @@ KT.products = (function(){
 
             var offset = parseInt(more.attr("data-offset"), 10) + parseInt(more.attr("data-page_size"), 10);
             dataScrollURL = dataScrollURL + "?offset=" + offset + "&order="+ $('#products_sort').attr("data-sort") +"&";
-            //console.log(dataScrollURL + ", page_size: " + offset);
             spinner.fadeIn();
             $.ajax({
                 type: "GET",
