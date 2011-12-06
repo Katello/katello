@@ -12,7 +12,7 @@
 
 class SystemErrataController < ApplicationController
 
-  before_filter :find_system, :only =>[:update, :index, :more_errata]
+  before_filter :find_system, :only =>[:update, :index, :more_errata, :items]
   before_filter :authorize
 
   def section_id
@@ -25,22 +25,28 @@ class SystemErrataController < ApplicationController
 
     {
       :index => read_system,
+      :items => read_system,
       :more_errata => read_system,
       :update => edit_system
     }
   end
 
   def index
-    errata_temp = OpenStruct.new
-    errata_temp.id = "Test Errata"
-    errata_temp.product = "Red Hat Enterprise Linux 6.0"
-    errata_temp.errata_type = Glue::Pulp::Errata::BUGZILLA
-    errata = [errata_temp]
+    chunk_size = current_user.page_size
+    errata, total_errata = get_errata(0, chunk_size)
+    
     render :partial=>"systems/errata/index", :layout => "tupane_layout", :locals=>{:system=>@system, :errata => errata,
-                                                                       :editable => @system.editable?, :offset => 25}
+                                                                       :editable => @system.editable?, :offset => 25,
+                                                                       :total_errata => total_errata }
   end
 
-  def more_errata
+  def items
+    debugger
+    offset = params[:offset]
+    chunk_size = current_user.page_size
+    errata = get_errata(offset, offset+chunk_size)
+    
+    render :partial => "systems/errata/items", :locals => { :errata => errata }    
   end
 
   def update
@@ -49,6 +55,27 @@ class SystemErrataController < ApplicationController
   private
 
   include SortColumnList
+
+  def get_errata start, finish
+    types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
+
+    to_ret = []
+    (rand(85) + 10).times{ |num|
+      errata = OpenStruct.new
+      errata.errata_id = "RHSA-2011-01-#{num}"
+      errata.errata_type = types[rand(3)]
+      errata.product = "Red Hat Enterprise Linux 6.0"
+      to_ret << errata
+    }
+    
+    errata = to_ret.sort { |a,b|
+      a.errata_id.downcase <=> b.errata_id.downcase 
+    }
+    total_errata = errata.length
+    to_ret = to_ret[start...finish]
+    
+    return to_ret, total_errata
+  end
 
   def find_system
     @system = System.find(params[:system_id])

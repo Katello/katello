@@ -45,22 +45,48 @@ describe SystemErrataController do
         @systems = System.select(:id).where(:environment_id => @environment.id).all.collect{|s| s.id}
       end
 
-      describe 'and requesting individual data' do
+      describe 'and requesting errata' do
         before (:each) do
           @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
 
-          Pulp::Consumer.stub!(:errata).and_return([])
+          types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
+        
+          to_ret = []
+          (rand(85) + 10).times{ |num|
+            errata = OpenStruct.new
+            errata.errata_id = "RHSA-2011-01-#{num}"
+            errata.errata_type = types[rand(3)]
+            errata.product = "Red Hat Enterprise Linux 6.0"
+            to_ret << errata
+          }
+
+          Pulp::Consumer.stub!(:errata).and_return(to_ret)
         end
         
-        it "should be successful" do
-          get :index, :system_id => @system.id
-          response.should be_success
+        describe 'on initial load' do
+          it "should be successful" do
+            get :index, :system_id => @system.id
+            response.should be_success
+          end
+  
+          it "should render errata template" do
+            get :index, :system_id => @system.id
+            response.should render_template("index")
+          end
         end
-
-        it "should render errata template" do
-          get :index, :system_id => @system.id
-          response.should render_template("index")
+        
+        describe 'with an offset' do
+          it "should be successful" do
+            get :items, :system_id => @system.id, :offset => 25
+            response.should be_success
+          end
+  
+          it "should render errata items" do
+            get :items, :system_id => @system.id, :offset => 25
+            response.should render_template("items")
+          end
         end
+        
       end
     end
   end
