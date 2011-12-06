@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.125
+Version:        0.1.126
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -336,6 +336,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Dec 06 2011 Shannon Hughes <shughes@redhat.com> 0.1.126-1
+- break out branding from app controller (shughes@redhat.com)
+
 * Tue Dec 06 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.125-1
 - Revert "759533 - proper path for distributions"
 
