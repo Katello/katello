@@ -53,7 +53,7 @@ class List(UserRoleAction):
 
 class Create(UserRoleAction):
 
-    description = _('create user')
+    description = _('create user role')
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
@@ -74,6 +74,36 @@ class Create(UserRoleAction):
         else:
             print _("Could not create user role [ %s ]") % role['name']
         return os.EX_OK
+
+# ------------------------------------------------------------------------------
+
+class Info(UserRoleAction):
+
+    description = _('list information about user role')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                help=_("user role name (required)"))
+
+    def check_options(self):
+        self.require_option('name')
+
+    def run(self):
+        name = self.get_option('name')
+
+        role = self.api.role_by_name(name)
+        if role == None:
+            print _("Cannot find user role [ %s ]") % name
+            return os.EX_OK
+
+        self.printer.addColumn('id')
+        self.printer.addColumn('name')
+        self.printer.addColumn('description')
+
+        self.printer.setHeader(_("User Role Information"))
+        self.printer.printItem(role)
+        return os.EX_OK
+
 
 
 # user command ------------------------------------------------------------

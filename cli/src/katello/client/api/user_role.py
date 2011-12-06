@@ -29,6 +29,15 @@ class UserRoleAPI(KatelloAPI):
 
     def roles(self, query={}):
         path = "/api/roles/"
-        orgs = self.server.GET(path, query)[1]
-        return orgs
+        return self.server.GET(path, query)[1]
 
+    def role(self, role_id):
+        path = "/api/roles/%s" % str(role_id)
+        return self.server.GET(path)[1]
+
+    def role_by_name(self, name):
+        roles = self.roles({"name": name})
+        if len(roles) >= 1:
+            return roles[0]
+        else:
+            return None
