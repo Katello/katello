@@ -26,17 +26,7 @@
         %th
           #{_("PRODUCT")}
       %tbody
-        -errata.each do |e|
-          %tr
-            %td
-              = check_box_tag "select_all", "select_all"
-            %td
-              %div{:class=>errata_type_class(e)}
-            %td.one-line-ellipsis
-              = e.id
-            %td.one-line-ellipsis
-              = e.product
-    %a#errata_more{"data-scroll_url"=>url_for(system_errata_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("More...")}
+        = render :partial => "systems/errata/items", :locals => { :errata => errata }
     #list-spinner
       = image_tag("spinner.gif", :class=>"ajax_scroll")
   - else
@@ -46,7 +36,7 @@
   .grid_8
     %a#more{:style => "padding-left: 20px;", "data-scroll_url"=>url_for(system_errata_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("Load %{n} More" % {:n => offset})}
     %span{:id => 'loaded_summary', :style => "padding-left: 20px;"}
-      -##{"%{n} Loaded of %{t} Total" % {:n => offset, :t => total_packages}}
+      #{_("%{n} Loaded of %{t} Total" % {:n => offset, :t => total_errata })}
 
     - if editable
       .prefix_2.grid_6.ra
