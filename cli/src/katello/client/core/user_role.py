@@ -61,10 +61,8 @@ class Create(UserRoleAction):
     description = _('create user role')
 
     def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
-                help=_("role name (required)"))
-        self.parser.add_option('--description', dest='desc',
-                help=_("role description"))
+        self.parser.add_option('--name', dest='name',help=_("role name (required)"))
+        self.parser.add_option('--description', dest='desc', help=_("role description"))
 
     def check_options(self):
         self.require_option('name')
@@ -88,8 +86,7 @@ class Info(UserRoleAction):
     description = _('list information about user role')
 
     def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
-                help=_("user role name (required)"))
+        self.parser.add_option('--name', dest='name', help=_("user role name (required)"))
 
     def check_options(self):
         self.require_option('name')
@@ -114,8 +111,7 @@ class Delete(UserRoleAction):
     description = _('delete a user role')
 
     def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
-                help=_("user role name (required)"))
+        self.parser.add_option('--name', dest='name', help=_("user role name (required)"))
 
     def check_options(self):
         self.require_option('name')
