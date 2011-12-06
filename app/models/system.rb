@@ -32,7 +32,6 @@ class System < ActiveRecord::Base
   belongs_to :system_template
 
   has_many :system_tasks, :dependent => :destroy
-  has_many :task_statuses, :through => :system_tasks
 
   has_many :system_activation_keys, :dependent => :destroy
   has_many :activation_keys, :through => :system_activation_keys
@@ -87,16 +86,14 @@ class System < ActiveRecord::Base
 
   def install_packages packages
     pulp_task = self.install_package(packages)
-
-    task_status = PulpTaskStatus.using_pulp_task(pulp_task) {|t| t.organization = self.organization}
+    task_status = PulpTaskStatus.using_pulp_task(pulp_task) do |t|
+       t.organization = self.organization
+       t.task_type = :package_install
+       t.parameters = {:packages => packages}
+    end
     task_status.save!
 
-    system_task = SystemTask.create!(:system => self, :task_status => task_status, :type_id => SystemTask::PACKAGE_INSTALL)
-
-    packages.each do |package|
-      PackageTask.create!(:system_task => system_task, :task_status => task_status, :name => package)
-    end
-
+    system_task = SystemTask.create!(:system => self, :task_status => task_status)
     system_task
   end
 
@@ -164,6 +161,9 @@ class System < ActiveRecord::Base
     ret
   end
 
+  def tasks
+    SystemTask.refresh_for_system(self)
+  end
 
   private
   
