@@ -41,3 +41,7 @@ class UserRoleAPI(KatelloAPI):
             return roles[0]
         else:
             return None
+
+    def delete(self, role_id):
+        path = "/api/roles/%s" % str(role_id)
+        return self.server.DELETE(path)[1]

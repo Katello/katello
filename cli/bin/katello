@@ -80,6 +80,7 @@ def setup_admin(admin):
     user_role_cmd.add_action('create', user_role.Create())
     user_role_cmd.add_action('info', user_role.Info())
     user_role_cmd.add_action('list', user_role.List())
+    user_role_cmd.add_action('delete', user_role.Delete())
     admin.add_command('user_role', user_role_cmd)
 
     admin.add_command('ping', ping.Status())

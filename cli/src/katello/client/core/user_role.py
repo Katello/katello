@@ -104,6 +104,32 @@ class Info(UserRoleAction):
         self.printer.printItem(role)
         return os.EX_OK
 
+# ------------------------------------------------------------------------------
+
+class Delete(UserRoleAction):
+
+    description = _('delete a user role')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                help=_("user role name (required)"))
+
+    def check_options(self):
+        self.require_option('name')
+
+    def run(self):
+        name = self.get_option('name')
+
+        role = self.api.role_by_name(name)
+        if role == None:
+            print _("Cannot find user role [ %s ]") % name
+            return os.EX_DATAERR
+
+        self.api.delete(role['id'])
+        print _("Successfully deleted user role [ %s ]") % name
+        return os.EX_OK
+
+
 
 
 # user command ------------------------------------------------------------
