@@ -37,46 +37,48 @@ class SystemPackagesController < ApplicationController
     if !params[:packages].nil?
       # user entered one or more package names (as comma-separated list) in the content box
       packages = params[:packages].split(/ *, */ )
-      @system.install_packages packages
+      task = @system.install_packages packages
       notice _("Install of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
 
     elsif !params[:groups].nil?
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
-      @system.install_package_groups groups
+      task = @system.install_package_groups groups
       notice _("Install of Package Groups '%{g}' scheduled for System '%{s}'." % {:s => @system['name'], :g => params[:groups]})
 
     else
       errors _("Empty request received to install Packages or Package Groups System '%{s}'." % {:s => @system['name']})
+      render :text => '' and return
     end
 
-    render :text => ''
+    render :text => task.task_status.uuid
   end
 
   def remove
     if !params[:package].nil?
       # user selected one or more packages from the list of installed packages
       packages = params[:package].keys
-      @system.uninstall_packages packages
+      task = @system.uninstall_packages packages
       notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => packages.join(',')})
 
     elsif !params[:packages].nil?
       # user entered one or more package names (as comma-separated list) in the content box
       packages = params[:packages].split(/ *, */ )
-      @system.uninstall_packages packages
+      task = @system.uninstall_packages packages
       notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
 
     elsif !params[:groups].nil?
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
-      @system.uninstall_package_groups groups
+      task = @system.uninstall_package_groups groups
       notice _("Uninstall of Package Groups '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => groups.join(',')})
 
     else
       errors _("Empty request received to install Packages or Package Groups System '%{s}'." % {:s => @system['name']})
+      render :test => '' and return
     end
 
-    render :text => ''
+    render :text => task.task_status.uuid
   end
 
   def update
@@ -86,7 +88,7 @@ class SystemPackagesController < ApplicationController
       packages = params[:package].keys
     end
 
-    @system.update_packages packages
+    task = @system.update_packages packages
 
     if packages.nil?
       notice _("Update of all packages scheduled for System '%{s}'." % {:s => @system['name']})
@@ -94,7 +96,7 @@ class SystemPackagesController < ApplicationController
       notice _("Update of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:package]})
     end
 
-    render :text => ''
+    render :text => task.task_status.uuid
   end
 
   def packages
@@ -146,7 +148,11 @@ class SystemPackagesController < ApplicationController
   end
 
   def status
-    # TODO: this action will be used by the client to retrieve updates on the status of pending actions
+    # retrieve the status for the package actions initiated by the client
+    statuses = @system.tasks.where(:uuid => params[:uuid],
+                                   :task_type => [:package_install, :package_update, :package_remove,
+                                                  :package_group_install, :package_group_remove])
+    render :json => statuses
   end
 
   private

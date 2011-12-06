@@ -19,6 +19,17 @@
  * This file is for use with the packages subnav within systems page.
  */
 
+KT.package_action_types = function() {
+    return {
+        PKG_INSTALL : "pkg_install",
+        PKG_UPDATE : "pkg_update",
+        PKG_REMOVE : "pkg_remove",
+        PKG_GRP_INSTALL : "pkg_grp_install",
+        PKG_GRP_UPDATE : "pkg_grp_update",
+        PKG_GRP_REMOVE : "pkg_grp_remove"
+    };
+}();
+
 KT.packages = function() {
     var system_id = $('.packages').attr('data-system_id'),
     retrievingNewContent = true,
@@ -36,6 +47,8 @@ KT.packages = function() {
     loaded_summary = $('#loaded_summary'),
     add_row_shading = false,
     selected_checkboxes = 0,
+    actions_in_progress = {},
+    actions_updater = undefined,
     disableButtons = function() {
         remove_button.attr('disabled', 'disabled');
         update_button.attr('disabled', 'disabled');
@@ -155,12 +168,120 @@ KT.packages = function() {
             });
         });
     },
+    updateStatus = function(data) {
+        // For each action that the user has initiated, update the status.
+        $.each(data, function(index, status) {
+            var action = actions_in_progress[status["uuid"]],
+                action_status = status["state"],
+                action_row = $('tr[data-uuid="'+status["uuid"]+'"]'),
+                action_status_col = action_row.find('td.package_action_status');
+
+            switch (action_status) {
+                case "waiting":
+                case "running":
+                    // do nothing, no change to status needed
+                    break;
+                case "error":
+                    switch (action) {
+                        case KT.package_action_types.PKG_INSTALL:
+                            action_status_col.html(i18n.adding_package_failed);
+                            break;
+                        case KT.package_action_types.PKG_UPDATE:
+                            action_status_col.html(i18n.updating_package_failed);
+                            break;
+                        case KT.package_action_types.PKG_REMOVE:
+                            action_status_col.html(i18n.removing_package_failed);
+                            break;
+                        case KT.package_action_types.PKG_GRP_INSTALL:
+                            action_status_col.html(i18n.adding_group_failed);
+                            break;
+                        case KT.package_action_types.PKG_GRP_REMOVE:
+                            action_status_col.html(i18n.removing_group_failed);
+                            break;
+                    }
+                    delete actions_in_progress[status["uuid"]];
+                    break;
+                case "finished":
+                    switch (action) {
+                        case KT.package_action_types.PKG_INSTALL:
+                            action_status_col.html(i18n.adding_package_success);
+                            break;
+                        case KT.package_action_types.PKG_UPDATE:
+                            action_status_col.html(i18n.updating_package_success);
+                            break;
+                        case KT.package_action_types.PKG_REMOVE:
+                            action_status_col.html(i18n.removing_package_success);
+                            break;
+                        case KT.package_action_types.PKG_GRP_INSTALL:
+                            action_status_col.html(i18n.adding_group_success);
+                            break;
+                        case KT.package_action_types.PKG_GRP_REMOVE:
+                            action_status_col.html(i18n.removing_group_success);
+                            break;
+                    }
+                    delete actions_in_progress[status["uuid"]];
+                    break;
+                case "canceled":
+                    switch (action) {
+                        case KT.package_action_types.PKG_INSTALL:
+                            action_status_col.html(i18n.adding_package_canceled);
+                            break;
+                        case KT.package_action_types.PKG_UPDATE:
+                            action_status_col.html(i18n.updating_package_canceled);
+                            break;
+                        case KT.package_action_types.PKG_REMOVE:
+                            action_status_col.html(i18n.removing_package_canceled);
+                            break;
+                        case KT.package_action_types.PKG_GRP_INSTALL:
+                            action_status_col.html(i18n.adding_group_canceled);
+                            break;
+                        case KT.package_action_types.PKG_GRP_REMOVE:
+                            action_status_col.html(i18n.removing_group_canceled);
+                            break;
+                    }
+                    delete actions_in_progress[status["uuid"]];
+                    break;
+                case "timed_out":
+                    switch (action) {
+                        case KT.package_action_types.PKG_INSTALL:
+                            action_status_col.html(i18n.adding_package_timeout);
+                            break;
+                        case KT.package_action_types.PKG_UPDATE:
+                            action_status_col.html(i18n.updating_package_timeout);
+                            break;
+                        case KT.package_action_types.PKG_REMOVE:
+                            action_status_col.html(i18n.removing_package_timeout);
+                            break;
+                        case KT.package_action_types.PKG_GRP_INSTALL:
+                            action_status_col.html(i18n.adding_group_timeout);
+                            break;
+                        case KT.package_action_types.PKG_GRP_REMOVE:
+                            action_status_col.html(i18n.removing_group_timeout);
+                            break;
+                    }
+                    delete actions_in_progress[status["uuid"]];
+                    break;
+            }
+        });
+    },
+    startUpdater = function () {
+        var timeout = 8000;
+        actions_updater = $.PeriodicalUpdater(KT.routes.status_system_system_packages_path(system_id), {
+            method: 'get',
+            type: 'json',
+            data: function() {return {uuid: Object.keys(actions_in_progress)};},
+            global: false,
+            minTimeout: timeout,
+            maxTimeout: timeout
+        }, updateStatus);
+    },
     initPackages = function() {
         registerEvents();
         disableButtons();
         enableUpdateAll();
         updateLoadedSummary();
-    }
+        startUpdater();
+    },
     registerEvents = function() {
         more_button.bind('click', morePackages);
         sort_button.bind('click', reverseSort);
@@ -174,25 +295,30 @@ KT.packages = function() {
     },
     addContent = function(data) {
         data.preventDefault();
+
         var selected_action = $("input[@name=perform_action]:checked").attr('id'),
             content_list = content_form.find('#content_input').val();
+
         if (selected_action == 'perform_action_packages') {
             $.ajax({
                 url: KT.routes.add_system_system_packages_path(system_id),
                 type: 'PUT',
                 data: {'packages' : content_list},
                 cache: false,
-                success: function() {
-                    packages = content_list.split(',');
+                success: function(data) {
+                    var packages = content_list.split(',');
+
+                    actions_in_progress[data] = KT.package_action_types.PKG_INSTALL;
+
                     for (i = 0; i < packages.length; i++) {
                         if (add_row_shading) {
                             add_row_shading = false;
-                            content_form_row.after('<tr class="alt"><td></td><td>' + packages[i] + '</td><td><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
+                            content_form_row.after('<tr class="alt" data-uuid='+data+'><td></td><td id="content_name">' + packages[i] + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
                         }
                         else
                         {
                             add_row_shading = true;
-                            content_form_row.after('<tr><td></td><td>' + packages[i] + '</td><td><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
+                            content_form_row.after('<tr data-uuid='+data+'><td></td><td id="content_name">' + packages[i] + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
                         }
                     }
                 },
@@ -205,17 +331,20 @@ KT.packages = function() {
                 type: 'PUT',
                 data: {'groups' : content_list},
                 cache: false,
-                success: function() {
-                    groups = content_list.split(',');
+                success: function(data) {
+                    var groups = content_list.split(',');
+
+                    actions_in_progress[data] = KT.package_action_types.PKG_GRP_INSTALL;
+
                     for (i = 0; i < groups.length; i++) {
                         if (add_row_shading) {
                             add_row_shading = false;
-                            content_form_row.after('<tr class="alt"><td></td><td>' + groups[i] + '</td><td><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
+                            content_form_row.after('<tr class="alt" data-uuid='+data+'><td></td><td>' + groups[i] + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
                         }
                         else
                         {
                             add_row_shading = true;
-                            content_form_row.after('<tr><td></td><td>' + groups[i] + '</td><td><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
+                            content_form_row.after('<tr data-uuid='+data+'><td></td><td>' + groups[i] + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
                         }
                     }
                 },
@@ -233,17 +362,20 @@ KT.packages = function() {
                 type: 'POST',
                 data: {'packages' : content_list},
                 cache: false,
-                success: function() {
-                    packages = content_list.split(',');
+                success: function(data) {
+                    var packages = content_list.split(',');
+
+                    actions_in_progress[data] = KT.package_action_types.PKG_REMOVE;
+
                     for (i = 0; i < packages.length; i++) {
                         if (add_row_shading) {
                             add_row_shading = false;
-                            content_form_row.after('<tr class="alt"><td></td><td>' + packages[i] + '</td><td><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
+                            content_form_row.after('<tr class="alt" data-uuid='+data+'><td></td><td>' + packages[i] + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
                         }
                         else
                         {
                             add_row_shading = true;
-                            content_form_row.after('<tr><td></td><td>' + packages[i] + '</td><td><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
+                            content_form_row.after('<tr data-uuid='+data+'><td></td><td>' + packages[i] + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
                         }
                     }
                 },
@@ -256,17 +388,20 @@ KT.packages = function() {
                 type: 'POST',
                 data: {'groups' : content_list},
                 cache: false,
-                success: function() {
-                    groups = content_list.split(',');
+                success: function(data) {
+                    var groups = content_list.split(',');
+
+                    actions_in_progress[data] = KT.package_action_types.PKG_GRP_REMOVE;
+
                     for (i = 0; i < groups.length; i++) {
                         if (add_row_shading) {
                             add_row_shading = false;
-                            content_form_row.after('<tr class="alt"><td></td><td>' + groups[i] + '</td><td><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
+                            content_form_row.after('<tr class="alt" data-uuid='+data+'><td></td><td>' + groups[i] + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
                         }
                         else
                         {
                             add_row_shading = true;
-                            content_form_row.after('<tr><td></td><td>' + groups[i] + '</td><td><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
+                            content_form_row.after('<tr data-uuid='+data+'><td></td><td>' + groups[i] + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
                         }
                     }
                 },
@@ -281,12 +416,15 @@ KT.packages = function() {
         packages_form.ajaxSubmit({
             url: remove_button.attr('data-url'),
             type: 'POST',
-            success: function() {
+            success: function(data) {
                 // locate the selected packages and update the status column to indicate the action being performed
                 $(':checkbox:checked').each( function() {
-                    $(this).closest('.package').find('.package_action_status')
-                        .html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package);
+                    var pkg = $(this).closest('.package');
+                    pkg.attr('data-uuid', data);
+                    pkg.find('.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package);
                 });
+                actions_in_progress[data] = KT.package_action_types.PKG_REMOVE;
+
                 enableButtons();
             },
             error: function() {
@@ -300,12 +438,15 @@ KT.packages = function() {
         packages_form.ajaxSubmit({
             url: update_button.attr('data-url'),
             type: 'POST',
-            success: function() {
+            success: function(data) {
                 // locate the selected packages and update the status column to indicate the action being performed
                 $(':checkbox:checked').each( function() {
-                    $(this).closest('.package').find('.package_action_status')
-                        .html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.updating_package);
+                    var pkg = $(this).closest('.package');
+                    pkg.attr('data-uuid', data);
+                    pkg.find('.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.updating_package);
                 });
+                actions_in_progress[data] = KT.package_action_types.PKG_UPDATE;
+
                 enableButtons();
             },
             error: function() {
