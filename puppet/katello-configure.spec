@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.24
+Version:        0.1.25
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Tue Dec 06 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.25-1
+- 760280 - katello-configure fails with ssl key creation error
+
 * Mon Dec 05 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.24-1
 - using candlepin certificates for both katello and pulp
 
