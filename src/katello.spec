@@ -336,6 +336,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Dec 06 2011 Shannon Hughes <shughes@redhat.com> 0.1.126-2
+- new system engine build (shughes@redhat.com)
 * Tue Dec 06 2011 Shannon Hughes <shughes@redhat.com> 0.1.126-1
 - break out branding from app controller (shughes@redhat.com)
 
