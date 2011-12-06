@@ -45,3 +45,10 @@ class UserRoleAPI(KatelloAPI):
     def delete(self, role_id):
         path = "/api/roles/%s" % str(role_id)
         return self.server.DELETE(path)[1]
+
+    def update(self, role_id, name, desc):
+        data = {}
+        data = self.update_dict(data, "name", name)
+        data = self.update_dict(data, "description", desc)
+        path = "/api/roles/%s" % str(role_id)
+        return self.server.PUT(path, {"role": data})[1]

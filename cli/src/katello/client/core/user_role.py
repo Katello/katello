@@ -20,7 +20,7 @@ from gettext import gettext as _
 from katello.client.api.user_role import UserRoleAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, convert_to_mime_type, attachment_file_name, save_report
+from katello.client.core.utils import is_valid_record, system_exit
 
 Config()
 
@@ -32,6 +32,11 @@ class UserRoleAction(Action):
         super(UserRoleAction, self).__init__()
         self.api = UserRoleAPI()
 
+    def get_role(self, name):
+        role = self.api.role_by_name(name)
+        if role == None:
+            system_exit(os.EX_DATAERR, _("Cannot find user role [ %s ]") % name )
+        return role
 
 # user actions ---------------------------------------------------------
 
@@ -71,9 +76,10 @@ class Create(UserRoleAction):
         role = self.api.create(name, desc)
         if is_valid_record(role):
             print _("Successfully created user role [ %s ]") % role['name']
+            return os.EX_OK
         else:
             print _("Could not create user role [ %s ]") % role['name']
-        return os.EX_OK
+            return os.EX_DATAERR
 
 # ------------------------------------------------------------------------------
 
@@ -91,10 +97,7 @@ class Info(UserRoleAction):
     def run(self):
         name = self.get_option('name')
 
-        role = self.api.role_by_name(name)
-        if role == None:
-            print _("Cannot find user role [ %s ]") % name
-            return os.EX_OK
+        role = self.get_role(name)
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
@@ -120,17 +123,37 @@ class Delete(UserRoleAction):
     def run(self):
         name = self.get_option('name')
 
-        role = self.api.role_by_name(name)
-        if role == None:
-            print _("Cannot find user role [ %s ]") % name
-            return os.EX_DATAERR
+        role = self.get_role(name)
 
         self.api.delete(role['id'])
         print _("Successfully deleted user role [ %s ]") % name
         return os.EX_OK
 
 
+# ------------------------------------------------------------------------------
 
+class Update(UserRoleAction):
+
+    description = _('update a role')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name', help=_("user role name (required)"))
+        self.parser.add_option('--new_name', dest='new_name', help=_("new user role name"))
+        self.parser.add_option('--description', dest='desc', help=_("role description"))
+
+    def check_options(self):
+        self.require_option('name')
+
+    def run(self):
+        name = self.get_option('name')
+        newName = self.get_option('new_name')
+        desc = self.get_option('desc')
+
+        role = self.get_role(name)
+
+        user = self.api.update(role['id'], newName, desc)
+        print _("Successfully updated user role [ %s ]") % name
+        return os.EX_OK
 
 # user command ------------------------------------------------------------
 
