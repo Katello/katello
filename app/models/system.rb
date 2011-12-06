@@ -162,17 +162,8 @@ class System < ActiveRecord::Base
   end
 
   private
-
     def save_system_task pulp_task, task_type, parameters_type, parameters
-      task_status = PulpTaskStatus.using_pulp_task(pulp_task) do |t|
-         t.organization = self.organization
-         t.task_type = task_type
-         t.parameters = {parameters_type => parameters}
-      end
-      task_status.save!
-
-      system_task = SystemTask.create!(:system => self, :task_status => task_status)
-      system_task
+      SystemTask.make(self, pulp_task, task_type, parameters_type => parameters)
     end
 
     def fill_defaults
