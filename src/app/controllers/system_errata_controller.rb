@@ -41,10 +41,10 @@ class SystemErrataController < ApplicationController
   end
 
   def items
-    debugger
     offset = params[:offset]
+    filter_type = params[:filter_type] if params[:filter_type]
     chunk_size = current_user.page_size
-    errata = get_errata(offset, offset+chunk_size)
+    errata, total_errata = get_errata(offset.to_i, offset.to_i+chunk_size, filter_type)
     
     render :partial => "systems/errata/items", :locals => { :errata => errata }    
   end
@@ -56,25 +56,56 @@ class SystemErrataController < ApplicationController
 
   include SortColumnList
 
-  def get_errata start, finish
+  def get_errata start, finish, filter_type="All"
     types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
 
-    to_ret = []
+    errata_list = []
     (rand(85) + 10).times{ |num|
       errata = OpenStruct.new
       errata.errata_id = "RHSA-2011-01-#{num}"
       errata.errata_type = types[rand(3)]
       errata.product = "Red Hat Enterprise Linux 6.0"
-      to_ret << errata
+      errata_list << errata
     }
     
-    errata = to_ret.sort { |a,b|
+    errata_list = filter_by_type(errata_list, filter_type)
+    
+    errata_list = errata_list.sort { |a,b|
       a.errata_id.downcase <=> b.errata_id.downcase 
     }
-    total_errata = errata.length
-    to_ret = to_ret[start...finish]
     
-    return to_ret, total_errata
+    total_errata = errata_list.length
+    errata_list = errata_list[start...finish]
+    
+    return errata_list, total_errata
+  end
+
+  def filter_by_type errata_list, filter_type
+    filtered_list = []
+    
+    if filter_type != "All"
+      pulp_filter_type = get_pulp_filter_type(filter_type)
+      
+      errata_list.each{ |errata| 
+        if errata.errata_type == pulp_filter_type
+          filtered_list << errata
+        end
+      }
+    else
+      filtered_list = errata_list
+    end
+    
+    return filtered_list
+  end
+
+  def get_pulp_filter_type filter_type
+    if filter_type == "Bug"
+      return Glue::Pulp::Errata::BUGZILLA
+    elsif filter_type == "Enhancement"
+      return Glue::Pulp::Errata::ENHANCEMENT
+    elsif filter_type == "Security"
+      return Glue::Pulp::Errata::SECURITY
+    end
   end
 
   def find_system
