@@ -3,7 +3,7 @@
 
 Name:           katello-configure
 Version:        0.1.26
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Configuration tool for Katello
 
 Group:          Applications/Internet
