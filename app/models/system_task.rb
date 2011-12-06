@@ -22,7 +22,7 @@ class SystemTask < ActiveRecord::Base
 
   def self.refresh_for_system(sid)
     query = SystemTask.select(:task_status_id).joins(:task_status).where(:system_id => sid)
-    ids = query.where("task_statuses.state"=>:waiting).collect {|row| row[:task_status_id]}
+    ids = query.where("task_statuses.state"=>[:waiting, :running]).collect {|row| row[:task_status_id]}
     refresh(ids)
     TaskStatus.where("task_statuses.id in (#{query.to_sql})")
   end
