@@ -86,32 +86,28 @@ class System < ActiveRecord::Base
 
   def install_packages packages
     pulp_task = self.install_package(packages)
-    task_status = PulpTaskStatus.using_pulp_task(pulp_task) do |t|
-       t.organization = self.organization
-       t.task_type = :package_install
-       t.parameters = {:packages => packages}
-    end
-    task_status.save!
-
-    system_task = SystemTask.create!(:system => self, :task_status => task_status)
-    system_task
+    system_task = save_system_task(pulp_task, :package_install, :packages, packages)
   end
 
   def uninstall_packages packages
     pulp_task = self.uninstall_package(packages)
+    system_task = save_system_task(pulp_task, :package_remove, :packages, packages)
   end
 
   def update_packages packages=nil
     # if no packages are provided, a full system update will be performed (e.g ''yum update' equivalent)
     pulp_task = self.update_package(packages)
+    system_task = save_system_task(pulp_task, :package_update, :packages, packages)
   end
 
   def install_package_groups groups
     pulp_task = self.install_package_group(groups)
+    system_task = save_system_task(pulp_task, :package_group_install, :groups, groups)
   end
 
   def uninstall_package_groups groups
     pulp_task = self.uninstall_package_group(groups)
+    system_task = save_system_task(pulp_task, :package_group_remove, :groups, groups)
   end
 
   # returns list of virtual permission tags for the current user
@@ -166,7 +162,19 @@ class System < ActiveRecord::Base
   end
 
   private
-  
+
+    def save_system_task pulp_task, task_type, parameters_type, parameters
+      task_status = PulpTaskStatus.using_pulp_task(pulp_task) do |t|
+         t.organization = self.organization
+         t.task_type = task_type
+         t.parameters = {parameters_type => parameters}
+      end
+      task_status.save!
+
+      system_task = SystemTask.create!(:system => self, :task_status => task_status)
+      system_task
+    end
+
     def fill_defaults
       self.description = "Initial Registration Params" unless self.description
       self.location = "None" unless self.location
