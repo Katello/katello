@@ -139,6 +139,8 @@ class Update(UserRoleAction):
 
     def check_options(self):
         self.require_option('name')
+        if not self.has_option('new_name') and not self.has_option('desc'):
+            self.add_option_error(_("Provide at least one parameter to update the user role"))
 
     def run(self):
         name = self.get_option('name')
