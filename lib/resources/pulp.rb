@@ -145,7 +145,7 @@ module Pulp
       end
 
       def dist_path
-        "/pulp/api/distributions/"
+        "/pulp/api/distribution/"
       end
     end
   end
