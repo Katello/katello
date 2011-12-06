@@ -49,6 +49,33 @@ class List(UserRoleAction):
         self.printer.printItems(roles)
         return os.EX_OK
 
+# ------------------------------------------------------------------------------
+
+class Create(UserRoleAction):
+
+    description = _('create user')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name',
+                help=_("role name (required)"))
+        self.parser.add_option('--description', dest='desc',
+                help=_("role description"))
+
+    def check_options(self):
+        self.require_option('name')
+
+    def run(self):
+        name = self.get_option('name')
+        desc = self.get_option('desc')
+
+        role = self.api.create(name, desc)
+        if is_valid_record(role):
+            print _("Successfully created user role [ %s ]") % role['name']
+        else:
+            print _("Could not create user role [ %s ]") % role['name']
+        return os.EX_OK
+
+
 # user command ------------------------------------------------------------
 
 class UserRole(Command):

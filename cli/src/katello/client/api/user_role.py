@@ -19,10 +19,16 @@ class UserRoleAPI(KatelloAPI):
     """
     Connection class to access User Data
     """
+    def create(self, name, description):
+        data = {
+            "name": name,
+            "description": description
+        }
+        path = "/api/roles/"
+        return self.server.POST(path, {"role": data})[1]
 
     def roles(self, query={}):
         path = "/api/roles/"
         orgs = self.server.GET(path, query)[1]
         return orgs
-
 
