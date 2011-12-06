@@ -76,6 +76,9 @@ Src::Application.routes.draw do
       end
     end
     resources :errata, :controller => "system_errata", :only => [:index, :update] do
+      collection do
+        get :items
+      end
     end
 
     member do
