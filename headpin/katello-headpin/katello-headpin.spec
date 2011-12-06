@@ -19,7 +19,7 @@
 %global confdir deploy/common
 
 Name:           katello-headpin
-Version:        0.1.111
+Version:        0.1.112
 Release:        1%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
