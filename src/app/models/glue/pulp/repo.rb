@@ -17,7 +17,7 @@ module Glue::Pulp::Repo
     base.send :include, InstanceMethods
 
     base.class_eval do
-    before_validation :setup_repo_clone
+      before_validation :setup_repo_clone
       before_save :save_repo_orchestration
       before_destroy :destroy_repo_orchestration
       lazy_accessor :pulp_repo_facts,
@@ -105,8 +105,7 @@ module Glue::Pulp::Repo
   def promote(to_environment, filters = [])
 
     key = EnvironmentProduct.find_or_create(to_environment, self.product)
-    repo = Repository.create!(:environment_product => key, :clone_from => self,
-                            :cloned_content => self.content_for_clone, :cloned_filters => filters)
+    repo = Repository.create!(:environment_product => key, :clone_from => self, :cloned_content => self.content, :cloned_filters => filters)
     repo.clone_response
   end
 
@@ -411,40 +410,6 @@ module Glue::Pulp::Repo
   end
 
   protected
-
-  def content_for_clone
-    return self.content unless self.content_id.nil?
-    return self.clone_content unless self.clone_ids.empty?
-
-    new_repo_path = Glue::Pulp::Repos.clone_repo_path_for_cp(self)
-    new_content = self.create_content(new_repo_path)
-
-    self.product.add_content new_content
-    new_content.content
-  end
-
-
-  def clone_content
-    return nil if self.clone_ids.empty?
-    clone = Repository.find_by_pulp_id(self.clone_ids[0])
-    clone.content
-  end
-
-  def create_content path
-    new_content = Glue::Candlepin::ProductContent.new({
-      :content => {
-        :name => self.name,
-        :contentUrl => path,
-        :gpgUrl => "",
-        :type => "yum",
-        :label => self.name,
-        :vendor => self.product.provider.provider_type
-      },
-      :enabled => true
-    })
-    new_content.create
-    new_content
-  end
 
   def _get_most_recent_sync_status()
     begin
