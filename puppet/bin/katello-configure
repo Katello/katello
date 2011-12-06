@@ -23,6 +23,7 @@ ERROR_CODES = {
   :answer_unknown_option => 5,
   :error_executing_puppet => 6,
   :hostname_error => 7,
+  :not_root => 8,
   :unknown => 127,
 }
 
@@ -367,6 +368,15 @@ rescue SocketError => e
 	$stderr.puts "Unable to resolve '#{hostname}' or 'localhost'. Check your DNS and /etc/hosts settings."
   exit_with :hostname_error
 end
+
+# check if running as root and change current dir
+unless Process.uid == 0
+  $stderr.puts "ERROR: You must run katello-configure as root"
+  exit_with :not_root
+end
+
+# we MUST change the current directory to /root because Puppet expects that
+Dir.chdir '/root'
 
 # perform check-up
 check_hostname
