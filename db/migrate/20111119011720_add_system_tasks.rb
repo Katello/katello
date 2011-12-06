@@ -1,6 +1,6 @@
 class AddSystemTasks < ActiveRecord::Migration
   def self.up
-    create_table :system_tasks do |t|
+    create_table :system_tasks, :id => false do |t|
       t.references :system
       t.references :task_status
     end

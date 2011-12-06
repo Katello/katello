@@ -45,16 +45,21 @@ class PulpTaskStatus < TaskStatus
   end
 
   def refresh
-    pulp_task = Pulp::Task.find(uuid)
-    self.attributes = {
+    PulpTaskStatus.refresh(self)
+  end
+
+  def self.refresh task_status
+    pulp_task = Pulp::Task.find(task_status.uuid)
+    task_status.attributes = {
         :state => pulp_task[:state],
         :finish_time => pulp_task[:finish_time],
         :progress => pulp_task[:progress],
         :result => pulp_task[:result].nil? ? {:errors => [pulp_task[:exception], pulp_task[:traceback]]}.to_json : pulp_task[:result]
     }
-    self.save! if not self.new_record?
-    self
+    task_status.save! if not task_status.new_record?
+    task_status
   end
+
 
 
 end
