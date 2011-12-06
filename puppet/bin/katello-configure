@@ -381,6 +381,11 @@ Dir.chdir '/root'
 # perform check-up
 check_hostname
 
+# Puppet tries to determine FQDN from /etc/resolv.conf and we do NOT want this behavior
+# (see https://bugzilla.redhat.com/show_bug.cgi?id=760265)
+facter_hostname = Socket.gethostname
+ENV['FACTER_fqdn'] = facter_hostname
+
 # start configuring
 puts 'Starting Katello configuration'
 
