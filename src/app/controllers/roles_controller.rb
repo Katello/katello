@@ -24,7 +24,7 @@ class RolesController < ApplicationController
   
   def rules
     create_check = lambda{Role.creatable?}
-    read_check = lambda{Role.any_readable?}
+    read_check = lambda{(@role && @role.self_role_for_user && @role.self_role_for_user.id == current_user.id) || Role.any_readable?}
     edit_check = lambda{Role.editable?}
     delete_check = lambda{Role.deletable?}
     {
