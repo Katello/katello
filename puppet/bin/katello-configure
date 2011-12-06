@@ -23,6 +23,7 @@ ERROR_CODES = {
   :answer_unknown_option => 5,
   :error_executing_puppet => 6,
   :hostname_error => 7,
+  :not_root => 8,
   :unknown => 127,
 }
 
@@ -368,8 +369,22 @@ rescue SocketError => e
   exit_with :hostname_error
 end
 
+# check if running as root and change current dir
+unless Process.uid == 0
+  $stderr.puts "ERROR: You must run katello-configure as root"
+  exit_with :not_root
+end
+
+# we MUST change the current directory to /root because Puppet expects that
+Dir.chdir '/root'
+
 # perform check-up
 check_hostname
+
+# Puppet tries to determine FQDN from /etc/resolv.conf and we do NOT want this behavior
+# (see https://bugzilla.redhat.com/show_bug.cgi?id=760265)
+facter_hostname = Socket.gethostname
+ENV['FACTER_fqdn'] = facter_hostname
 
 # start configuring
 puts 'Starting Katello configuration'

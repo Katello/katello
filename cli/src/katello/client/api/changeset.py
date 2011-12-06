@@ -59,3 +59,13 @@ class ChangesetAPI(KatelloAPI):
 
         path = "/api/changesets/%s" % (csId)
         return self.server.PUT(path, data)[1]
+
+    def add_content(self, csId, contentType, attrs):
+        path = "/api/changesets/%s/%s/" % (str(csId), contentType)
+        return self.server.POST(path, attrs)[1]
+
+    def remove_content(self, csId, contentType, attrs):
+        path = "/api/changesets/%s/%s/%s/" % (str(csId), contentType, str(attrs['content_id']))
+        return self.server.DELETE(path, attrs)[1]
+
+
