@@ -10,13 +10,13 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class Api::UebercertsController < Api::ApiController
-  before_filter :find_organization, :only => [:show]
 
-  # TODO: define authorization rules
-  skip_before_filter :authorize
-
-  def show
-    render :json => @organization.debug_cert
+module BrandingHelper
+  def project_name
+    _("Katello")
+  end
+  
+  def default_title
+    _("Open Source Systems Management")
   end
 end

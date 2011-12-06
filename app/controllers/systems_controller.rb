@@ -99,12 +99,6 @@ class SystemsController < ApplicationController
       Rails.logger.info error.backtrace.join("\n")
       render :text => error, :status => :bad_request
     end
-
-    render :partial=>"systems/list_systems",
-            :locals=>{:accessor=>"id",
-                      :columns=>['name', 'lastCheckin','created' ],
-                      :collection=>[@system],
-                      :name=> controller_display_name}
   end
 
   def index

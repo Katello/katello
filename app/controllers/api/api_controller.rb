@@ -92,7 +92,11 @@ class Api::ApiController < ActionController::Base
     exception.record.errors.each_pair do |c,e|
       logger.error "#{c}: #{e}"
     end
-    render :text => pp_exception(exception, :with_class => false), :status => 400
+
+    respond_to do |format|
+      format.json { render :json => {:displayMessage => exception.message, :errors => [exception.message] }, :status => 400 }
+      format.all  { render :text => pp_exception(exception, :with_class => false), :status => 400 }
+    end
   end
 
   def find_organization

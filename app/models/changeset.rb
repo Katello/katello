@@ -123,20 +123,20 @@ class Changeset < ActiveRecord::Base
     end
   end
 
-  def add_product product_name
-    product = find_product(product_name)
+  def add_product cpid
+    product = find_product_by_cpid(cpid)
     self.products << product
     product
   end
 
-  def add_template template_name
-    tpl = find_template(template_name)
+  def add_template template_id
+    tpl = find_template(template_id)
     self.system_templates << tpl
     tpl
   end
 
-  def add_package package_name, product_name
-    product = find_product(product_name)
+  def add_package package_name, product_cpid
+    product = find_product_by_cpid(product_cpid)
     product.repos(self.environment.prior).each do |repo|
       #search for package in all repos in a product
       idx = repo.packages.index do |p| p.name == package_name end
@@ -152,8 +152,8 @@ class Changeset < ActiveRecord::Base
     raise Errors::ChangesetContentException.new("Package not found in the source environment.")
   end
 
-  def add_erratum erratum_id, product_name
-    product = find_product(product_name)
+  def add_erratum erratum_id, product_cpid
+    product = find_product_by_cpid(product_cpid)
     product.repos(self.environment.prior).each do |repo|
       #search for erratum in all repos in a product
       idx = repo.errata.index do |e| e.id == erratum_id end
@@ -169,16 +169,16 @@ class Changeset < ActiveRecord::Base
     raise Errors::ChangesetContentException.new("Erratum not found in the source environment.")
   end
 
-  def add_repo repo_name, product_name
-    repo = find_repo_by_name(repo_name, product_name)
+  def add_repo repo_id, product_cpid
+    repo = find_repo(repo_id, product_cpid)
     raise Errors::ChangesetContentException.new("Repository not found within this environment.") unless repo
     self.repos << repo
     repo
   end
 
-  def add_distribution distribution_id, product_name
-    product = find_product(product_name)
-    repos = product.repos(self.environment)
+  def add_distribution distribution_id, product_cpid
+    product = find_product_by_cpid(product_cpid)
+    repos = product.repos(self.environment.prior)
     idx = nil
     repos.each do |repo|
       idx = repo.distributions.index do |d| d.id == distribution_id end
@@ -193,21 +193,20 @@ class Changeset < ActiveRecord::Base
     raise Errors::ChangesetContentException.new("Distribution not found within this environment.")
   end
 
-
-  def remove_product product_name
-    prod = self.products.find_by_name(product_name)
-    raise Errors::ChangesetContentException.new("Product #{product_name} not found in the changeset.") if prod.nil?
+  def remove_product cpid
+    prod = self.products.find_by_cp_id(cpid)
+    raise Errors::ChangesetContentException.new("Product #{cpid} not found in the changeset.") if prod.nil?
     self.products.delete(prod)
   end
 
-  def remove_template template_name
-    tpl = self.system_templates.find_by_name(template_name)
-    raise Errors::ChangesetContentException.new("Template #{template_name} not found in the changeset.") if tpl.nil?
+  def remove_template template_id
+    tpl = self.system_templates.find(template_id)
+    raise Errors::ChangesetContentException.new("Template #{template_id} not found in the changeset.") if tpl.nil?
     self.system_templates.delete(tpl)
   end
 
-  def remove_package package_name, product_name
-    product = find_product(product_name)
+  def remove_package package_name, product_cpid
+    product = find_product_by_cpid(product_cpid)
     product.repos(self.environment.prior).each do |repo|
       #search for package in all repos in a product
       idx = repo.packages.index do |p| p.name == package_name end
@@ -219,8 +218,8 @@ class Changeset < ActiveRecord::Base
     end
   end
 
-  def remove_erratum erratum_id, product_name
-    product = find_product(product_name)
+  def remove_erratum erratum_id, product_cpid
+    product = find_product_by_cpid(product_cpid)
     product.repos(self.environment.prior).each do |repo|
       #search for erratum in all repos in a product
       idx = repo.errata.index do |e| e.id == erratum_id end
@@ -232,8 +231,8 @@ class Changeset < ActiveRecord::Base
     end
   end
 
-  def remove_repo repo_name, product_name
-    repo = find_repo_by_name(repo_name, product_name)
+  def remove_repo repo_id, product_cpid
+    repo = find_repo(repo_id, product_cpid)
     self.repos.delete(repo) if repo
   end
 
@@ -243,8 +242,8 @@ class Changeset < ActiveRecord::Base
   end
 
 
-  def remove_distribution distribution_id, product_name
-    product = find_product(product_name)
+  def remove_distribution distribution_id, product_cpid
+    product = find_product_by_cpid(product_cpid)
     repos = product.repos(self.environment)
     idx = nil
     repos.each do |repo|
@@ -257,9 +256,9 @@ class Changeset < ActiveRecord::Base
 
   private
 
-  def find_template template_name
+  def find_template template_id
     from_env = self.environment.prior
-    tpl = from_env.system_templates.find_by_name(template_name)
+    tpl = from_env.system_templates.find(template_id)
     raise Errors::ChangesetContentException.new("Template not found within environment you want to promote from.") if tpl.nil?
     tpl
   end
@@ -270,6 +269,14 @@ class Changeset < ActiveRecord::Base
     raise Errors::ChangesetContentException.new("Product not found within environment you want to promote from.") if product.nil?
     product
   end
+
+  def find_product_by_cpid product_cpid
+    from_env = self.environment.prior
+    product = from_env.products.find_by_cp_id(product_cpid.to_s)
+    raise Errors::ChangesetContentException.new("Product not found within environment you want to promote from.") if product.nil?
+    product
+  end
+
 
 
   def update_progress! percent
@@ -517,10 +524,9 @@ class Changeset < ActiveRecord::Base
     new_dependencies
   end
 
-  private
-  def find_repo_by_name repo_name, product_name
-    product = find_product(product_name)
-    product.repos(self.environment.prior).where("repositories.name" => repo_name).first
+  def find_repo repo_id, product_cpid
+    product = find_product_by_cpid(product_cpid)
+    product.repos(self.environment.prior).where("repositories.id" => repo_id).first
   end
 
 end
