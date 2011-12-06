@@ -276,7 +276,6 @@ describe Glue::Pulp::Repo do
         cloned.feed.should == RepoTestData::CLONED_PROPERTIES[:feed]
         true
       end
-      @repo.should_receive(:content_for_clone).and_return(nil)
       @repo.promote(@to_env)
     end
 
@@ -299,7 +298,6 @@ describe Glue::Pulp::Repo do
         cloned.relative_path.should == "#{@repo.organization.name}/#{@to_env.name}#{@content_path}"
         true
       end
-      @repo.should_receive(:content_for_clone).and_return(nil)
       @repo.promote(@to_env)
     end
   end
