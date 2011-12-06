@@ -87,6 +87,25 @@ describe SystemErrataController do
           end
         end
         
+        describe 'with a filter type' do
+          it "should be successful" do
+            get :items, :system_id => @system.id, :offset => 25, :filter_type => 'Bug'
+            response.should be_success
+          end
+          
+          it "should render errata items" do
+            get :items, :system_id => @system.id, :offset => 25, :filter_type => 'Bug'
+            response.should render_template("items")
+          end
+        end  
+        
+        describe 'with a bad filter type' do
+          pending "should be unsuccessful" do
+            get :items, :system_id => @system.id, :offset => 25, :filter_type => 'Fake Type'
+            response.should_not be_success
+          end
+        end
+        
       end
     end
   end

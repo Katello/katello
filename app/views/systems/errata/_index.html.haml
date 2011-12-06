@@ -1,4 +1,4 @@
-= javascript :filtertable
+= javascript :filtertable, :system_errata
 
 = javascript do
   :javascript
@@ -14,23 +14,28 @@
 
 = content_for :content do
   - if errata.length > 0
-    = render :partial => "common/filter_table"
-    %table.filter_table.ajaxScroll
-      %thead
-        %th
-          = check_box_tag "select_all", "select_all"
-        %th
-          #{_("TYPE")}
-        %th
-          #{_("ERRATA")}
-        %th
-          #{_("PRODUCT")}
-      %tbody
-        = render :partial => "systems/errata/items", :locals => { :errata => errata }
-    #list-spinner
-      = image_tag("spinner.gif", :class=>"ajax_scroll")
-  - else
-    %p There is no errata to display.
+    #system_errata{ "data-system_id" => @system.id }
+      %div
+        %h5.fl
+          #{_("Display")}
+        %span.fl
+          = select_tag "display_errata_type", '<option value="All">All Errata</option><option>Bug</option><option>Enhancement</option><option>Security</option>'.html_safe
+      %table.filter_table.ajaxScroll
+        %thead
+          %th
+            = check_box_tag "select_all", "select_all"
+          %th
+            #{_("TYPE")}
+          %th
+            #{_("ERRATA")}
+          %th
+            #{_("PRODUCT")}
+        %tbody
+          = render :partial => "systems/errata/items", :locals => { :errata => errata }
+      #list-spinner
+        = image_tag("spinner.gif", :class=>"ajax_scroll")
+    - else
+      %p There is no errata to display.
 
 = content_for :footer do
   .grid_8
