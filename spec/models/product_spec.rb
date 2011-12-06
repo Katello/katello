@@ -178,6 +178,7 @@ describe Product do
     describe "add repo" do
       before(:each) do
         Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
+        Candlepin::Content.stub!(:create).and_return({:id => "123"})
         @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
       end
 
@@ -429,6 +430,7 @@ describe Product do
                                  :pulp_id=>"1010",
                                  :relative_path => "#{@organization.name}/Locker/Prod/Repo")
       @repo.stub(:promoted?).and_return(false)
+      @repo.stub(:content => {:id => "123"})
     end
     context "resetting product gpg and asking repos to reset should work" do
       before do
