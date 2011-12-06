@@ -17,18 +17,18 @@ class UsersController < ApplicationController
      'operations'
   end
    
-  before_filter :setup_options, :only => [:items, :index]
-  before_filter :find_user, :only => [:edit, :edit_environment, :update_environment,
-                                      :update, :update_roles, :clear_helptips, :destroy]
+  before_filter :setup_options, :only => [:items, :index, :account]
+  before_filter :find_user, :only => [:index, :edit, :edit_environment, :update_environment,
+                                      :update, :update_roles, :clear_helptips, :destroy, :account]
   before_filter :authorize
   skip_before_filter :require_org
 
   def rules
-    index_test = lambda{User.any_readable?}
+    index_test = lambda{true}
     create_test = lambda{User.creatable?}
 
-    read_test = lambda{@user.readable?}
-    edit_test = lambda{@user.editable?}
+    read_test = lambda{@user.id == current_user.id || @user.readable?}
+    edit_test = lambda{@user.id == current_user.id || @user.editable?}
     delete_test = lambda{@user.deletable?}
     edit_details_test = lambda{@user.id == current_user.id || @user.editable?}
     user_helptip = lambda{true} #everyone can enable disable a helptip
@@ -40,6 +40,7 @@ class UsersController < ApplicationController
        :new => create_test,
        :create => create_test,
        :edit => read_test,
+       :account => read_test,
        :edit_environment => read_test,
        :update_environment => read_test,
        :update => edit_details_test,
@@ -52,17 +53,25 @@ class UsersController < ApplicationController
   end
   
   def items
-    render_panel_items(User.readable, @panel_options, params[:search], params[:offset])
+    if User.any_readable?
+      render_panel_items(User.readable, @panel_options, params[:search], params[:offset])
+    else
+      render_panel_items([current_user], @panel_options, params[:search], params[:offset])
+    end
   end
 
-  
+  def account
+    @user = current_user
+    render_panel_items([current_user], @panel_options, params[:search], params[:offset])
+  end
+
   def edit
     @organization = current_organization
     accessible_envs = current_organization.environments
     setup_environment_selector(current_organization, accessible_envs)
     @environment = first_env_in_path(accessible_envs)
     render :partial=>"edit", :layout => "tupane_layout", :locals=>{:user=>@user,
-                                                                   :editable=>@user.editable?,
+                                                                   :editable=>@user.id == current_user.id || @user.editable?,
                                                                    :name=>controller_display_name,
                                                                    :accessible_envs => accessible_envs}
   end
@@ -251,7 +260,11 @@ class UsersController < ApplicationController
   private
 
   def find_user
-    @user = User.find params[:id]
+    if User.any_readable?
+      @user = User.find params[:id] if params[:id]
+    else
+      @user = current_user
+    end
   end
   
 
