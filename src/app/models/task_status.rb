@@ -12,7 +12,7 @@
 
 class TaskStatus < ActiveRecord::Base
   serialize :progress
-
+  serialize :parameters, Hash
   class Status
     WAITING = :waiting
     RUNNING = :running
@@ -22,8 +22,21 @@ class TaskStatus < ActiveRecord::Base
     TIMED_OUT = :timed_out
   end
 
+  TYPES = { :package_install => {:class => SystemTask, :name => _("Package Install")},
+            :package_update =>  {:class => SystemTask, :name => _("Package Update")},
+            :package_remove => {:class => SystemTask, :name => _("Package Remove")},
+            :package_group_install => {:class => SystemTask, :name => _("Package Group Install")},
+            :package_group_update => {:class => SystemTask, :name => _("Package Group Update")},
+            :package_group_remove => {:class => SystemTask, :name => _("Package Group Remove")},
+  }.with_indifferent_access
+
+
   include Authorization
   belongs_to :organization
+
+  before_save :setup_task_type
+
+
 
   def initialize(attrs = nil)
     unless attrs.nil?
@@ -36,8 +49,45 @@ class TaskStatus < ActiveRecord::Base
     super(attrs)
   end
 
+
   def refresh
     self
+  end
+
+
+  def self.refresh(ids)
+    type_map = {}
+    ids.each do |i|
+      task = TaskStatus.find(i)
+      if task.task_type
+        type_map[task.task_type] = [] unless type_map.has_key? task.task_type
+        type_map[task.task_type] << i
+      end
+    end
+    type_map.each_pair do |key, value|
+      TYPES[key][:class].refresh(value)
+    end
+  end
+
+  def refresh_pulp
+    pulp_task = Pulp::Task.find(uuid)
+    self.attributes = {
+        :state => pulp_task[:state],
+        :finish_time => pulp_task[:finish_time],
+        :progress => pulp_task[:progress],
+        :result => pulp_task[:result].nil? ? {:errors => [pulp_task[:exception], pulp_task[:traceback]]}.to_json : pulp_task[:result]
+    }
+    self.save! if not self.new_record?
+    self
+  end
+
+
+
+  protected
+  def setup_task_type
+    unless self.task_type
+      self.task_type = self.class().name
+    end
   end
 
 end
