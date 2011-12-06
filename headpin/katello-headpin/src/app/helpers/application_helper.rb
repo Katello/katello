@@ -16,6 +16,7 @@ module ApplicationHelper
 
   include LayoutHelper
   include ScopedSearch::RailsHelper
+  include BrandingHelper
 
   #require 'navigation/main'
 
@@ -28,11 +29,11 @@ module ApplicationHelper
   def project_name
     AppConfig.app_name
   end
-  
+
   def default_title
     AppConfig.katello? ? _("Open Source Systems Management") : _("Open Source Entitlement Management")
   end
-    
+
   def link_to_authorized(*args, &block)
 
     if block_given?
