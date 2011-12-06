@@ -18,8 +18,8 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.19
-Release:       2%{?dist}
+Version:       0.1.22
+Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -84,8 +84,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Dec 01 2011 Shannon Hughes <shughes@redhat.com> 0.1.19-2
-- system engine build (shughes@redhat.com)
+* Tue Dec 06 2011 Shannon Hughes <shughes@redhat.com> 0.1.22-1
+- 758447: Allow the prompt to be customized via the config file
+  (bkearney@redhat.com)
+
+* Fri Dec 02 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.20-1
+- ueber - fixing cli unit tests
+- generate_uebercert -> ubercert in the cli
 
 * Tue Nov 29 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.18-1
 - adding template to the system info cli call

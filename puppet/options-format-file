@@ -1,0 +1,18 @@
+# SSL CA password
+ssl_ca_password				true	\S{5,}
+# SSL CA country
+ssl_ca_country				true	^[A-Z]{2}$
+# SSL CA state
+ssl_ca_state				true	\S+
+# SSL CA city
+ssl_ca_city					true	\S+
+# SSL CA organization
+ssl_ca_org					true	\S+
+# SSL CA organization unit
+ssl_ca_org_unit				true	\S+
+# SSL CA common name
+ssl_ca_cn					true	\S+
+# SSL CA e-mail address
+ssl_ca_email				true	\S+@\S+
+# SSL certificate expiration (in days)
+ssl_cert_expiration			true	\d+

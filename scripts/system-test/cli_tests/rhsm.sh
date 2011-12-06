@@ -22,7 +22,7 @@ if sm_present; then
   test_success "environment create for rhsm" environment create --org="$RHSM_ORG" --name="$RHSM_ENV" --prior="Locker"
   test_success "activation key 1 create" activation_key create --name="$RHSM_AK1" --environment="$RHSM_ENV" --org="$RHSM_ORG"
   test_success "activation key 2 create" activation_key create --name="$RHSM_AK2" --environment="$RHSM_ENV" --org="$RHSM_ORG"
-  test_success "provider create" provider create --name="$RHSM_YPROV" --org="$RHSM_ORG" --type=custom --url="$RHSM_REPO"
+  test_success "provider create" provider create --name="$RHSM_YPROV" --org="$RHSM_ORG" --url="$RHSM_REPO"
   test_success "product create" product create --provider="$RHSM_YPROV" --org="$RHSM_ORG" --name="$RHSM_YPROD" --url="$RHSM_REPO" --assumeyes
   test_success "changeset create" changeset create --org="$RHSM_ORG" --environment="$RHSM_ENV" --name="$CS1_NAME"
   test_success "changeset add product" changeset update  --org="$RHSM_ORG" --environment="$RHSM_ENV" --name="$CS1_NAME" --add_product="$RHSM_YPROD"

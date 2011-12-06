@@ -158,7 +158,7 @@ class Update(OrganizationAction):
 
 class GenerateDebugCert(OrganizationAction):
 
-    description = _('generate/re-generate ueber certificate')
+    description = _('generate and show ueber certificate')
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
@@ -170,7 +170,7 @@ class GenerateDebugCert(OrganizationAction):
     def run(self):
         name = self.get_option('name')
 
-        uebercert = self.api.generate_uebercert(name)
+        uebercert = self.api.uebercert(name)
 
         self.printer.addColumn('key')
         self.printer.addColumn('cert')
@@ -180,28 +180,6 @@ class GenerateDebugCert(OrganizationAction):
         return os.EX_OK
 
 # ------------------------------------------------------------------------------
-
-class ShowDebugCert(OrganizationAction):
-
-    description = _('show ueber certificate')
-
-    def setup_parser(self):
-        self.parser.add_option('--name', dest='name',
-                               help=_("organization name eg: foo.example.com (required)"))
-
-    def check_options(self):
-        self.require_option('name')
-
-    def run(self):
-        name = self.get_option('name')
-        uebercert = self.api.uebercert(name)
-
-        self.printer.addColumn('key')
-        self.printer.addColumn('cert')
-        self.printer.setHeader(_("Organization Uebercert"))
-        self.printer.printItem(uebercert)
-
-        return os.EX_OK
 
 class ShowSubscriptions(OrganizationAction):
 

@@ -7,7 +7,17 @@
 require 'rubygems'
 require 'json'
 
+if ARGV.size == 0
+  puts "Usage: #{$0} manifest.zip"
+  exit 1
+end
+
 manifest=ARGV[0]
+
+unless File.exist? manifest
+  puts "Unable to read file #{manifest}"
+  exit 2
+end
 
 tmpdir=`mktemp -d`.chomp
 

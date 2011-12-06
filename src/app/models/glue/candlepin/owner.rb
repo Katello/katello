@@ -27,6 +27,7 @@ module Glue::Candlepin::Owner
           :format => { :with => /^[\w-]*$/ }
 
       lazy_accessor :events, :initializer => lambda { Candlepin::Owner.events(cp_key) }
+      lazy_accessor :debug_cert, :initializer => lambda { load_debug_cert}
     end
   end
 
@@ -95,6 +96,19 @@ module Glue::Candlepin::Owner
       end
       pools.collect { |p| KTPool.new p }
     end
+
+    def generate_debug_cert
+      Candlepin::Owner.generate_ueber_cert(cp_key)
+    end
+
+    def load_debug_cert
+      begin
+        return Candlepin::Owner.get_ueber_cert(cp_key)
+      rescue RestClient::ResourceNotFound =>  e
+        return generate_debug_cert
+      end
+    end
+
   end
 
 end

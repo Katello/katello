@@ -2,8 +2,8 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.21
-Release:        2%{?dist}
+Version:        0.1.26
+Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
 Group:          Applications/Internet
@@ -14,6 +14,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       puppet >= 2.6.6
 Requires:       wget
+Requires:       katello-certs-tools
+Requires:       nss-tools
 BuildRequires:  /usr/bin/pod2man
 
 BuildArch: noarch
@@ -40,6 +42,7 @@ cp -Rp modules/* %{buildroot}%{homedir}/puppet/modules
 install -d -m 0755 %{buildroot}%{homedir}/puppet/lib
 cp -Rp lib/* %{buildroot}%{homedir}/puppet/lib
 install -m 0644 default-answer-file %{buildroot}%{homedir}
+install -m 0644 options-format-file %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/katello-configure.man1 %{buildroot}%{_mandir}/man1/katello-configure.1
 
@@ -53,9 +56,22 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
-* Tue Nov 29 2011 Shannon Hughes <shughes@redhat.com> 0.1.21-2
-- build installer (shughes@redhat.com)
-- prep release for sys engine build (shughes@redhat.com)
+* Tue Dec 06 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.26-1
+- 760265 - Puppet guesses the FQDN from /etc/resolv.conf
+
+* Tue Dec 06 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.25-1
+- 760280 - katello-configure fails with ssl key creation error
+
+* Mon Dec 05 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.24-1
+- using candlepin certificates for both katello and pulp
+
+* Mon Dec 05 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.23-1
+- SSL certificate generation and deployment
+- introduce mandatory option file with predefined option format
+
+* Mon Dec 05 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.22-1
+- configure - adding hostname checks
+- configure - adding exit codes table
 
 * Tue Nov 29 2011 Shannon Hughes <shughes@redhat.com> 0.1.21-1
 - Change the default password for thumbslug keystores (bkearney@redhat.com)
