@@ -39,7 +39,6 @@ $(document).ready(function() {
 	            	
 	            	data["selected"] = result;
 	            	element.html(data[result]);
-	            	console.log(result);
 	            	if( result !== "" ){
 		            	KT.common.customConfirm(
 		            		i18n.productUpdateKeyConfirm + "<br/><br/>" + i18n.proudctUpdateKeyWarning,

@@ -16,7 +16,7 @@ class OrganizationsController < ApplicationController
   respond_to :html, :js
   skip_before_filter :authorize
   before_filter :find_organization, :only => [:edit, :update, :destroy, :events]
-  before_filter :find_organization_by_id, :only => [:environments_partial]
+  before_filter :find_organization_by_id, :only => [:environments_partial, :download_debug_certificate]
   before_filter :authorize #call authorize after find_organization so we call auth based on the id instead of cp_id
   before_filter :setup_options, :only=>[:index, :items]
   before_filter :search_filter, :only => [:auto_complete_search]
@@ -37,7 +37,8 @@ class OrganizationsController < ApplicationController
       :update => edit_test,
       :destroy => delete_test,
       :environments_partial => index_test,
-      :events => read_test
+      :events => read_test,
+      :download_debug_certificate => edit_test
     }
   end
 
@@ -122,26 +123,20 @@ class OrganizationsController < ApplicationController
   end
 
   def destroy
-    if current_organization == @organization
-      errors [_("Could not delete organization '#{params[:id]}'."),  _("The current organization cannot be deleted. Please switch to a different organization before deleting.")]
-
-      render :text => "The current organization cannot be deleted. Please switch to a different organization before deleting.", :status => :bad_request and return
-    elsif Organization.count > 1
-      id = @organization.cp_key
-      @name = @organization.name
-      begin
-        @organization.destroy
-        notice _("Organization '#{params[:id]}' was deleted.")
-      rescue Exception => error
-        errors error.to_s
-        render :text=> error.to_s, :status=>:bad_request and return
-      end
-      render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
-    else
-      errors [_("Could not delete organization '#{params[:id]}'."),  _("At least one organization must exist.")]
-
-      render :text => "At least one organization must exist.", :status=>:bad_request and return
+    found_errors= @organization.validate_destroy(current_organization)
+    if found_errors
+      errors found_errors
+      render :text=>found_errors[1], :status=>:bad_request and return
     end
+
+    id = @organization.cp_key
+    current_user.destroy_organization_async(@organization)
+    notice _("Organization '%s' has been scheduled for background deletion.") % @organization.name
+    render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
+  rescue Exception => error
+    errors error.to_s
+    debugger
+    render :text=> error.to_s, :status=>:bad_request and return
   end
 
   def environments_partial
@@ -164,6 +159,16 @@ class OrganizationsController < ApplicationController
     # TODO: add more/paging to these results instead of truncating at 250
     render :partial => 'events', :layout => "tupane_layout", :locals => {:entries => entries[0...250]}
   end
+
+  def download_debug_certificate
+    pem = @organization.debug_cert
+    data = "#{pem[:key]}\n\n #{pem[:cert]}"
+    send_data data,
+      :filename => "#{@organization.name}-key-cert.pem",
+      :type => "application/text"
+  end
+
+
 
   protected
 

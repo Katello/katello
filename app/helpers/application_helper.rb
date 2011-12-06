@@ -16,6 +16,7 @@ module ApplicationHelper
 
   include LayoutHelper
   include ScopedSearch::RailsHelper
+  include BrandingHelper
 
   #require 'navigation/main'
 
@@ -25,14 +26,6 @@ module ApplicationHelper
     url_for params.merge(extra_params)
   end
 
-  def project_name
-    _("Katello")
-  end
-  
-  def default_title
-    _("Open Source Systems Management")
-  end
-    
   def link_to_authorized(*args, &block)
 
     if block_given?
