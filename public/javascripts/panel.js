@@ -834,9 +834,6 @@ KT.panel.list = (function () {
                         $('.ui-autocomplete').hide();
                         $('#list').addClass("ajaxScroll");
                         search_cb();
-                        if(qp && qp['id']) {
-                            $.bbq.pushState({panel: resource_type + '_' + qp['id']});
-                        }
                     },
                     error: function (e) {
                         button.removeAttr('disabled');
