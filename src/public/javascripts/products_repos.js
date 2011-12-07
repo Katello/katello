@@ -25,7 +25,7 @@ $(document).ready(function() {
   });
 
   $('.clickable').click(function(){
-    $('download_debug_cert_key').slideToggle();
+    $(this).parent().parent().parent().find('ul').slideToggle();
 
     var arrow = $(this).parent().find('a').find('img');
     if(arrow.attr("src").indexOf("collapsed") === -1){
@@ -35,9 +35,6 @@ $(document).ready(function() {
     }
     return false;
   });
-  
-  
-  
 });
 
 function toggle_form(form) {
@@ -47,3 +44,4 @@ function toggle_form(form) {
     form.hide();
   }
 }
+

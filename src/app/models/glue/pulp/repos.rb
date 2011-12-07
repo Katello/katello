@@ -319,7 +319,7 @@ module Glue::Pulp::Repos
       return true if not self.sync_plan_id_changed?
 
       schedule = (self.sync_plan && self.sync_plan.schedule_format) || ""
-      self.all_repos.each do |repo|
+      self.repos(self.locker).each do |repo|
         repo.set_sync_schedule(schedule)
       end
     end

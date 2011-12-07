@@ -458,6 +458,7 @@ Src::Application.routes.draw do
     resources :users do
       get :report, :on => :collection
     end
+    resources :roles
 
     resources :tasks, :only => [:show]
 
