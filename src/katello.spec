@@ -336,6 +336,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Dec 07 2011 Shannon Hughes <shughes@redhat.com> 0.1.130-2
+- system engine build (shughes@redhat.com)
 * Wed Dec 07 2011 Shannon Hughes <shughes@redhat.com> 0.1.130-1
 - bump version to fix tags (shughes@redhat.com)
 
