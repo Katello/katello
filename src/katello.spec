@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.128
+Version:        0.1.129
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -336,6 +336,13 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Dec 07 2011 Shannon Hughes <shughes@redhat.com> 0.1.129-1
+- user roles - spec test for roles api (tstrachota@redhat.com)
+- user roles - new api controller (tstrachota@redhat.com)
+- fix long name breadcrumb trails in roles (shughes@redhat.com)
+- Fix for jrist being an idiot and putting in some bad code.`
+  (jrist@redhat.com)
+
 * Tue Dec 06 2011 Mike McCune <mmccune@redhat.com> 0.1.128-1
 - periodic rebuild
 
