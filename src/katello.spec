@@ -336,6 +336,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Dec 07 2011 Shannon Hughes <shughes@redhat.com> 0.1.130-1
+- bump version to fix tags (shughes@redhat.com)
+
 * Wed Dec 07 2011 Shannon Hughes <shughes@redhat.com> 0.1.129-1
 - user roles - spec test for roles api (tstrachota@redhat.com)
 - user roles - new api controller (tstrachota@redhat.com)
