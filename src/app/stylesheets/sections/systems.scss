@@ -1,0 +1,161 @@
+@import "katello";
+
+#systems {
+  table {
+    margin-bottom: 4px;
+  }
+  .tall {
+    @extend .block;
+    height: 70px;
+
+    li {
+      padding: 0;
+      height: 1.2em;
+    }
+    .column_3 {
+      height: 35px;
+    }
+    #new {
+        height: 25px;
+    }
+  }
+
+  #facts {
+    table {
+      td {
+        padding-left: 18px;
+      }
+    }
+  }
+  .product {
+    .status_icon {
+      height: 15px;
+      width: 15px;
+      background: $status_icons_green_small;
+      float: left;
+      margin: 1px 1px;
+      &.green {
+       background: $status_icons_green_small;
+      }
+      &.yellow {
+       background: $status_icons_yellow_small;
+      }
+      &.red {
+       background: $status_icons_red_small;
+      }
+    }
+  }
+  #subscriptions {
+    .labels {
+      overflow: auto;
+    }
+    label { display: block; }
+    .needs_attention { color: red; }
+    
+    .lower_content {
+      table {
+        tbody {
+          td:first-child { text-align: left; text-indent: 2px; }
+          td:last-child {
+            font-weight: 500;
+            &:hover {
+              span { color: $kselected_color;}
+              .remove_subscription_img { background: $circle_x_icon_black; }
+              .subscribe { background: $play_icon_black; }
+            }
+          }
+          .subscription_row { margin-left: 19px; }
+          .remove_subscription_img { background: $circle_x_icon_grey; overflow: hidden; margin-right: 2px; margin-top: 2px; }
+          .subscribe { background: $play_icon_grey; overflow: hidden; margin-right: 2px; margin-top: 2px; }
+          span { margin-top: 3px; display: block; float: left; color: #888; }
+          .editable { 
+            @include border-radius(0); 
+            background: $edit_icon; 
+            background-position: 100px 7px; 
+            width: 180px;
+            padding: 6px 0px;
+            text-align: center;
+          }
+        }
+      }
+    }
+    .add_subs {
+      float: right;
+      padding-left: 25px;
+    }
+  }
+  .subs {
+    background-color: $white_color;
+    @include border-radius(5px);
+    border: 1px solid $border_color;
+    font-family: $headlinefont;
+    color: #747474;
+    font-size: 14px;
+    height: 36px;
+    .subs_text {
+        margin: 8px 0 2px 8px;
+        padding: 0px;
+        float: left;
+        height: 36px;
+    }
+    .subs_icon {
+      height: 23px;
+      width: 25px;
+      background: $status_icons_green;
+      float: left;
+      margin: 7px 8px;
+      &.green {
+       background: $status_icons_green;
+      }
+      &.yellow {
+       background: $status_icons_yellow;
+      }
+      &.red {
+       background: $status_icons_red;
+      }
+    }
+    .subs_top {
+      width: 100%;
+      height: 100%;
+      font-size: 15px;
+      border-bottom: 1px solid $border_color;
+      @include border-radius(5px)
+    }
+    .subs_left {
+      border-right: 1px solid $border_color;
+      width: 49%;
+      float: left;
+      clear: left;
+    }
+    .subs_right {
+      width: 49%;
+      float: right;
+    }
+    .subs_num {
+      font-size: 24px;
+      color: #999;
+    }
+  }
+  #list-spinner {
+    display: none;
+  }
+  #package_sort {
+    &.ascending {
+        &:after {
+            content: " ▲"
+        }
+    }
+    &.descending {
+        &:after {
+            content: " ▼"
+        }
+    }
+  }
+  .delete_icon {
+    display: inline;
+    background: $circle_x_icon_black;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+}

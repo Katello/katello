@@ -1,0 +1,25 @@
+= content_for :title do
+  = @package.nvrea
+
+= content_for :navigation do
+  = render_navigation(:items => promotion_packages_navigation, :expand_all => true, :level => 1)
+
+= content_for :content do  
+  -#%h2 
+    -#= _("Dependencies")*/
+  
+  .grid_3
+    %h4
+      = _("Requires")
+  
+    - @package.requires.each do |item|
+      .li
+        = item
+      
+  .grid_3
+    %h4
+      = _("Provides")
+  
+    - @package.provides.each do |item|
+      .li
+        = item

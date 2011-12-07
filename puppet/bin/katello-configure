@@ -1,0 +1,494 @@
+#!/usr/bin/ruby
+
+require 'optparse'
+require 'fcntl'
+require 'fileutils'
+require 'socket'
+
+$stdout.sync = true
+
+default_path = '/usr/share/katello/install/default-answer-file'
+options_format_path = '/usr/share/katello/install/options-format-file'
+result_config_path = '/etc/katello/katello-configure.conf'
+puppet_cmd = 'puppet --modulepath /usr/share/katello/install/puppet/modules --libdir /usr/share/katello/install/puppet/lib -v -d 2>&1'
+log_parent_directory = '/var/log/katello'
+
+# error codes for exit_with function
+ERROR_CODES = {
+  :success => 0,
+  :general => 1,
+  :default_option_error => 2,
+  :answer_missing => 3,
+  :answer_parsing_error => 4,
+  :answer_unknown_option => 5,
+  :error_executing_puppet => 6,
+  :hostname_error => 7,
+  :not_root => 8,
+  :unknown => 127,
+}
+
+# Terminate script with error code from ERROR_CODES hash
+def exit_with(code = :unknown)
+  code = ERROR_CODES[code.to_sym] || ERROR_CODES[:unknown]
+  exit code
+end
+
+# Reading answer file, used both for the default answer file
+# and for user files. The structure of the answer file is
+#
+#	# The short description of the option.
+#	# Multiline synopsis of the option
+#	# with more details.
+#	option_name = option_value
+#
+def read_answer_file(filename)
+	file = File.new(filename, "r")
+	error = ''
+	data = {}
+	data_order = []
+	titles = {}
+	docs = {}
+	title = ''
+	synopsis = ''
+	while (line = file.gets)
+		if line =~ /^\s*#/
+			if title == ''
+				title = line.gsub(/^\s*#\s*/, '').chop
+			else
+				synopsis.concat(line.gsub(/^\s*#\s*/, ''))
+			end
+			next
+		end
+		line = line.gsub(/\s+$/, '')
+		if not line =~ /\S+/
+			title = ''
+			synopsis = ''
+			next
+		end
+		if line =~ /^\s*(\w+)\s*=\s*(.*)/
+			data[$1] = $2
+			docs[$1] = synopsis
+			data_order.push $1
+			titles[$1] = title.gsub(/\.\s*$/, '')
+		else
+			error.concat "Unsupported config line format [#{line}] in file [#{filename}]\n"
+		end
+		title = ''
+		synopsis = ''
+	end
+	file.close
+	return data, data_order, error, titles, docs
+end
+
+# Reading options format file, that describe what options are required
+# and the allow optin values format described by regular expressions
+# The structure of the answer file is
+#
+#	# The short description of the option.
+#	option_name is_option_mandatory regular_expression
+#
+def read_options_format(filename)
+	file = File.new(filename, "r")
+	error = ''
+	mandatory = {}
+	regex = {}
+	data_order = []
+	titles = {}
+	docs = {}
+	title = ''
+	synopsis = ''
+	while (line = file.gets)
+		if line =~ /^\s*#/
+			if title == ''
+				title = line.gsub(/^\s*#\s*/, '').chop
+			else
+				synopsis.concat(line.gsub(/^\s*#\s*/, ''))
+			end
+			next
+		end
+		line = line.gsub(/\s+$/, '')
+		if not line =~ /\S+/
+			title = ''
+			synopsis = ''
+			next
+		end
+		if line =~ /^\s*(\S+)\s+(true|false)\s+(\S*)$/
+			mandatory[$1] = 'true' == $2
+			regex[$1] = $3
+			docs[$1] = synopsis
+			data_order.push $1
+			titles[$1] = title.gsub(/\.\s*$/, '')
+		else
+			error.concat "Unsupported config line format [#{line}] in file [#{filename}]\n"
+		end
+		title = ''
+		synopsis = ''
+	end
+	file.close
+	return mandatory, regex, data_order, error, titles, docs
+end
+
+def _get_valid_option_value(option, defaults, finals)
+	if finals.include?(option)
+		return finals[option]
+	end
+	return defaults[option]
+end
+
+def _is_option_true(option_value)
+	if option_value.nil?
+		return false
+	end
+	return (option_value.match(/(true|yes|y|1)$/i) != nil)
+end
+
+def _read_password()
+	system("stty -echo")
+	input = STDIN.gets
+	system("stty echo")
+	puts
+	return input
+end
+
+def _request_option_interactively(title, regex, default_value, non_interactive_value)
+	default_value_ok = default_value.to_s() =~ Regexp.new(regex)
+	if non_interactive_value
+		if default_value.nil? or not default_value_ok
+			$stderr.puts "Option: [#{title}] not correctly specified."
+			exit 7
+		else
+			return default_value
+		end
+	end
+
+	read_password = title.include?("password")
+	while true
+		if read_password:
+			while true
+				print "Enter #{title}: "
+				input = _read_password()
+				print "Verify #{title}: "
+				input2 = _read_password()
+				if (input == input2)
+					break
+				end
+				puts "Passwords do not match. Please, try again."
+			end
+		else
+			default_draft = " [ #{default_value} ]" if default_value_ok
+			print "Enter #{title}#{default_draft}: "
+			input = STDIN.gets.strip
+			if input.empty? and default_value_ok
+				input = default_value
+			end
+		end
+		if input.to_s() =~ Regexp.new(regex)
+			return input
+		end
+		puts "Your entry has to match regular expression: /#{regex}/"
+	end
+end
+
+$expected_progress_width = ENV['COLUMNS']
+if $expected_progress_width == nil
+	$expected_progress_width = 80
+end
+$expected_progress_width -= 20
+$expected_progress_width = 5 if $expected_progress_width < 0
+$previous_progress = 0
+def progress_clear
+	$previous_progress = 0
+end
+def progress_bar(filename, expected_total)
+	current_total = File.size(filename)
+	width = $expected_progress_width * current_total / expected_total
+	width = $expected_progress_width if width > $expected_progress_width
+	while $previous_progress < width - 1 do
+		$previous_progress += 1
+		print '#'
+	end
+end
+def progress_final
+	while $previous_progress < $expected_progress_width do
+		$previous_progress += 1
+		print '#'
+	end
+	$previous_progress = 0
+end
+
+# We first parse the default answer file. The list of options
+# found in the default file also determines the command line
+# options that can be specified (that's why we parse the default
+# file first), as well as values that can be overwritten in user
+# answer file.
+default_options = {}
+default_options_order = []
+default_options_errors = ''
+titles = {}
+if File.file?(default_path)
+	default_options, default_options_order, default_options_errors, titles = read_answer_file(default_path)
+end
+
+# After having read the default option list, we parse the
+# command line options.
+options = {}
+option_parser = OptionParser.new
+answer_file = nil
+show_resulting_answer_file = false
+begin
+	option_parser.banner = "Usage: #{$0} [options]"
+
+	default_options_order.each do |key|
+		option_parser.on('--' + key.gsub(/_/, '-') + '=' + key.upcase, String, titles[key]) do |value|
+			options[key] = value
+		end
+	end
+
+	option_parser.on_tail.on('--only-show-config', 'Print the resulting configuration and exit') do
+		show_resulting_answer_file = true
+	end
+	option_parser.on_tail.on('-h', '--help', 'Show this short summary') do
+		puts option_parser
+		exit
+	end
+	option_parser.parse!
+rescue => e
+	$stderr.puts e.message
+	$stderr.puts option_parser
+	exit_with :general
+end
+
+# We only warn about possible errors in the default answer
+# file here, to make it possible to use for example --help,
+# even if there are errors in the default file.
+if default_options_errors != ''
+	$stderr.puts default_options_errors
+	exit_with :default_option_error
+end
+
+# If there was an answer file specified, we parse it.
+final_options = {}
+if options['answer_file'] != nil
+	if not File.file?(options['answer_file'])
+		$stderr.puts "Answer file [#{options['answer_file']}] does seem to exist"
+		exit_with :answer_missing
+	end
+	final_options, __unused, error = read_answer_file(options['answer_file'])
+	if error != ''
+		$stderr.puts error
+		exit_with :answer_parsing_error
+	end
+
+	# The user answer file can only use (override) options that
+	# were already defined in the default answer file.
+	need_exit = false
+	final_options.keys.each do |key|
+		if not default_options.has_key?(key)
+			$stderr.puts "Unknown option [#{key}] in answer file [#{options['answer_file']}]"
+			need_exit = true
+		end
+	end
+	if need_exit
+		exit_with :answer_unknown_option
+	end
+end
+
+# The command line options take precedence over the user
+# answer file values.
+final_options.update(options)
+final_options.delete('answer_file')
+
+# read required parameter list and its format
+mandatory, regex, __unused_data_order, error, __unused_titles, __usused_docs = read_options_format(options_format_path)
+
+non_interactive_option = _get_valid_option_value('non_interactive', default_options, final_options)
+skip_ssl_ca_generation_option = _get_valid_option_value('skip_ssl_ca_generation', default_options, final_options)
+ssl_ca_password_file_option = _get_valid_option_value('ssl_ca_password_file', default_options, final_options)
+
+if (_is_option_true(skip_ssl_ca_generation_option)) or
+	File.exist?(ssl_ca_password_file_option)
+	mandatory.delete('ssl_ca_password')
+end
+
+mandatory.each do |key, mand|
+	if (not final_options.has_key?(key) and mandatory[key]) or
+	(not final_options[key].nil? and not final_options[key].to_s() =~ Regexp.new(regex[key]))
+		final_options[key] = _request_option_interactively(titles[key], regex[key], default_options[key], _is_option_true(non_interactive_option))
+		if not default_options_order.include?(key)
+			default_options_order.push(key)
+		end
+	end
+end
+
+if default_options_errors != ''
+	$stderr.puts default_options_errors
+	exit 6
+end
+
+# We will only keep values that are different from the default ones.
+final_options.each do |key, value|
+	if default_options[key] == value
+		final_options.delete(key)
+	end
+end
+
+if show_resulting_answer_file
+	default_options_order.each do |key|
+		if final_options.has_key?(key)
+			puts key + ' = ' + final_options[key]
+		end
+	end
+	exit
+end
+
+# handle ca password separately, because we do not want
+# to store it into the katello-configure.conf
+if not _is_option_true(skip_ssl_ca_generation_option)
+	begin
+		File.open(ssl_ca_password_file_option, 'w') do |f|
+			f.write(_get_valid_option_value('ssl_ca_password', default_options, final_options))
+		end
+	rescue
+		$stderr.puts "Failed to write to file [#{ssl_ca_password_file_option}]."
+		exit 8
+	end
+end
+final_options.delete('ssl_ca_password')
+default_options_order.delete('ssl_ca_password')
+
+# Prints a warning if FQDN is not set, returns error when
+# localhost or hostname cannot be resolved (/etc/hosts entry is missing).
+def check_hostname
+  hostname = Socket.gethostname
+  Socket.gethostbyname hostname
+  Socket.gethostbyname 'localhost'
+	$stderr.puts "WARNING: FQDN is not set!" unless hostname.index '.'
+rescue SocketError => e
+  puts "Error"
+	$stderr.puts "Unable to resolve '#{hostname}' or 'localhost'. Check your DNS and /etc/hosts settings."
+  exit_with :hostname_error
+end
+
+# check if running as root and change current dir
+unless Process.uid == 0
+  $stderr.puts "ERROR: You must run katello-configure as root"
+  exit_with :not_root
+end
+
+# we MUST change the current directory to /root because Puppet expects that
+Dir.chdir '/root'
+
+# perform check-up
+check_hostname
+
+# Puppet tries to determine FQDN from /etc/resolv.conf and we do NOT want this behavior
+# (see https://bugzilla.redhat.com/show_bug.cgi?id=760265)
+facter_hostname = Socket.gethostname
+ENV['FACTER_fqdn'] = facter_hostname
+
+# start configuring
+puts 'Starting Katello configuration'
+
+orig_umask = File.umask(077)
+begin
+	File.unlink(result_config_path)
+rescue
+end
+result_config = IO.open(IO::sysopen(result_config_path, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
+default_options_order.each do |key|
+	if final_options.has_key?(key)
+		result_config.syswrite('# ' + (titles[key] || key) + "\n" + key + ' = ' + final_options[key] + "\n\n")
+	end
+end
+result_config.close
+File.umask(orig_umask)
+
+now = Time.now.strftime("%Y%m%d-%H%M%S")
+log_directory = log_parent_directory + '/katello-configure-' + now
+log_directory_link = log_parent_directory + '/katello-configure'
+if File.symlink?(log_directory_link)
+	begin
+		File.unlink(log_directory_link)
+	rescue
+	end
+end
+if File.directory?(log_directory_link)
+	File.rename(log_directory_link, log_directory_link + '-backup-' + now)
+end
+
+FileUtils.mkdir_p(log_directory, :mode => 0700)
+FileUtils.ln_sf('katello-configure-' + now, log_directory_link)
+
+FileUtils.cp result_config_path, log_directory
+
+ENV['KATELLO_ANSWER_FILE'] = result_config_path
+
+commands_by_logfiles = {
+	'/var/log/katello/katello-configure/cpsetup.log' => [ 'Candlepin setup', 276 ],
+	'/var/log/katello/katello-configure/db_seed.log' => [ 'Populating Katello database schema', 25470 ],
+	'/var/log/katello/katello-configure/create-postgresql-candlepin-user.log' => [ 'Creating Candlepin database user', 12 ],
+	'/var/log/katello/katello-configure/create-postgresql-candlepin-database.log' => [ 'Creating Candlepin database', 16 ],
+	'/var/log/katello/katello-configure/create-postgresql-katello-user.log' => [ 'Creating Katello database user', 12 ],
+	'/var/log/katello/katello-configure/create-postgresql-katello-database.log' => [ 'Creating Katello database', 16 ],
+}
+
+puppet_logfile_filename = log_directory + '/main.log'
+puppet_logfile = IO.open(IO::sysopen(puppet_logfile_filename, Fcntl::O_WRONLY | Fcntl::O_EXCL | Fcntl::O_CREAT))
+puts "The top-level log file is [#{puppet_logfile_filename}]"
+seen_err = false
+begin
+	IO.popen(puppet_cmd, 'w+') do |f|
+		f.puts "include katello"
+		f.close_write
+		processing_logfile = nil
+		t = nil
+		while line = f.gets do
+			puppet_logfile.syswrite(line)
+			puts "Got " + line if ENV['KATELLO_CONFIGURE_DEBUG']
+			if processing_logfile != nil
+				message = nil
+				if line =~ /notice:.*executed successfully/
+					t.kill
+					progress_final()
+					puts " ... OK"
+					processing_logfile = nil
+				elsif line =~ /err:/
+					t.kill
+					puts "\n  Failed, please check [#{processing_logfile}]"
+					processing_logfile = nil
+					seen_err = true
+				end
+			elsif line =~ /err:/
+				print line
+				seen_err = true
+			end
+			if line =~ /\]: Executing \'(.+)/
+				line_rest = $1
+				commands_by_logfiles.keys.each do |logfile|
+					if line_rest.index(logfile) != nil
+						processing_logfile = logfile
+						puts commands_by_logfiles[logfile][0]
+						progress_clear()
+						t = Thread.new do
+							while true do
+								sleep 1
+								progress_bar(logfile, commands_by_logfiles[logfile][1])
+							end
+						end
+						break
+					end
+				end
+			end
+		end
+	end
+rescue => e
+	$stderr.puts 'Error: ' + e.message
+	seen_err = true
+end
+puppet_logfile.close
+
+if seen_err
+	exit_with :error_executing_puppet
+end
+
+exit

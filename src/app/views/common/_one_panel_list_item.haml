@@ -1,0 +1,5 @@
+%div{:class => 'block', :id => item.send(accessor), :panel_id => panel_id, "data-hover-text" => (hover_text if hover_text)}
+  - for col in columns
+    %div{:class => 'column_' + columns.length.to_s}
+      = item.send(col)
+  .arrow-right

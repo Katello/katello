@@ -1,0 +1,53 @@
+#
+# Copyright 2011 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
+
+class ChangesetErratumValidator < ActiveModel::Validator
+  def validate(record)
+    from_env = record.changeset.environment.prior
+    to_env   = record.changeset.environment
+    product = Product.find(record.product_id)
+
+    #package must be in one of the repositories in the source environment
+    #the repository must belong to a product that is in both source and target environment
+    #the repository must be cloned in the target environment
+
+    if not (product.environments.include? from_env and product.environments.include? to_env)
+      record.errors[:base] <<  _("Product of the erratum '#{record.errata_id}' must belong to both source and target environment!")
+    end
+
+    found_in_repo = false
+    #search for the erratum in all repos in its product
+    product.repos(from_env).each do |repo|
+      if repo.has_erratum? record.errata_id
+        record.errors[:base] <<  _("Repository of the erratum '#{record.errata_id}' has not been promoted into the target environment!") if not repo.is_cloned_in? to_env
+        found_in_repo = true
+      end
+    end
+
+    record.errors[:base] <<  _("Erratum '#{record.errata_id}' doesn't belong to the specified product!") if not found_in_repo
+  end
+end
+
+class ChangesetErratum < ActiveRecord::Base
+  include Authorization
+
+  belongs_to :changeset, :inverse_of=>:errata
+  belongs_to :product
+  validates :display_name, :length => { :maximum => 255 }
+  validates_with ChangesetErratumValidator
+
+  # returns list of virtual permission tags for the current user
+  def self.list_tags
+    select('id,display_name').all.collect { |m| VirtualTag.new(m.id, m.display_name) }
+  end
+end

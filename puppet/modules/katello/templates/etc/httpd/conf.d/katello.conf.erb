@@ -1,0 +1,52 @@
+NameVirtualHost *:443
+<VirtualHost *:443>
+
+  ErrorLog /etc/httpd/logs/ssl_kt_error_log
+  TransferLog /etc/httpd/logs/ssl_kt_access_log
+  LogLevel info
+
+  ProxyRequests Off
+  SSLEngine On
+  SSLCertificateFile <%= scope.lookupvar("katello::params::ssl_certificate_file") %>
+  SSLCertificateKeyFile <%= scope.lookupvar("katello::params::ssl_certificate_key_file") %>
+  SSLCaCertificateFile <%= scope.lookupvar("katello::params::ssl_certificate_ca_file") %>
+  ProxyPreserveHost Off
+  RequestHeader set X_FORWARDED_PROTO 'https'
+
+  Timeout 5400
+  ProxyTimeout 5400
+
+  <Proxy balancer://thinservers>
+  <%- scope.lookupvar("katello::params::process_count").to_i.times do |i| -%>
+    <%= "BalancerMember http://127.0.0.1:#{scope.lookupvar('katello::params::thin_start_port').to_i + i}/#{scope.lookupvar('katello::params::deployment')}" %>
+  <%- end -%>
+  </Proxy>
+
+  Alias /<%= scope.lookupvar("katello::params::deployment") %>/assets "/usr/share/katello/public/assets"
+  Alias /<%= scope.lookupvar("katello::params::deployment") %>/images "/usr/share/katello/public/images"
+  Alias /<%= scope.lookupvar("katello::params::deployment") %>/fonts "/usr/share/katello/public/fonts"
+
+  ProxyPass /<%= scope.lookupvar("katello::params::deployment") %>/assets !
+  ProxyPass /<%= scope.lookupvar("katello::params::deployment") %>/images !
+  ProxyPass /<%= scope.lookupvar("katello::params::deployment") %>/fonts !
+  ProxyPass /<%= scope.lookupvar("katello::params::deployment") %> balancer://thinservers/
+
+  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment") %> balancer://thinservers/
+  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment") %>/assets !
+  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment") %>/images !
+  ProxyPassReverse /<%= scope.lookupvar("katello::params::deployment") %>/fonts !
+
+  <Location /<%= scope.lookupvar("katello::params::deployment") %>>
+    RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"
+    SSLVerifyClient optional
+    SSLRenegBufferSize 262144
+    SSLVerifyDepth 2
+  </Location>
+</VirtualHost>
+
+NameVirtualHost *:80
+<VirtualHost *:80>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule /<%= scope.lookupvar("katello::params::deployment") %>(.*)$ https://%{HTTP_HOST}%{REQUEST_URI}
+</VirtualHost>

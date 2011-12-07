@@ -1,0 +1,8 @@
+- if @status
+  %p Task id: #{params[:task_id]}
+  %p % complete: #{@status.pct_complete}, status: #{@status.status}, message: #{@status.message}
+
+%p There are #{@info[:pending]} pending and #{@info[:processed]} processed jobs across #{@info[:queues]} queues.
+
+= form_for :consumers, :url => { :action => "export", :id => 'b4460d6c-9ffb-4246-9573-206916f24d78' } do |f|
+  = submit_tag "export"

@@ -1,0 +1,12 @@
+/var/log/katello/production.log /var/log/katello/production_sql.log /var/log/katello/thin-log.*.log {
+  missingok
+  notifempty
+  create 0644 katello katello
+  sharedscripts
+  rotate 5
+  compress
+  weekly
+  postrotate
+    [ -e /etc/init.d/katello ] && /etc/init.d/katello restart >/dev/null 2>&1 || true
+  endscript
+}
