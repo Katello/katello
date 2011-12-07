@@ -17,9 +17,9 @@ class UsersController < ApplicationController
      'operations'
   end
    
-  before_filter :setup_options, :only => [:items, :index, :account]
-  before_filter :find_user, :only => [:index, :edit, :edit_environment, :update_environment,
-                                      :update, :update_roles, :clear_helptips, :destroy, :account]
+  before_filter :setup_options, :only => [:items, :index]
+  before_filter :find_user, :only => [:items, :index, :edit, :edit_environment, :update_environment,
+                                      :update, :update_roles, :clear_helptips, :destroy]
   before_filter :authorize
   skip_before_filter :require_org
 
@@ -51,18 +51,20 @@ class UsersController < ApplicationController
        :disable_helptip => user_helptip,
      }
   end
-  
+
+  # Render list of users. Note that if the current user does not have permission
+  # to view all users, the results are restricted to just themselves.
   def items
     if User.any_readable?
-      render_panel_items(User.readable, @panel_options, params[:search], params[:offset])
+      if params[:only]
+        users = [@user]
+      else
+        users = User.readable
+      end
     else
-      render_panel_items([current_user], @panel_options, params[:search], params[:offset])
+      users = [current_user]
     end
-  end
-
-  def account
-    @user = current_user
-    render_panel_items([current_user], @panel_options, params[:search], params[:offset])
+    render_panel_items(users, @panel_options, params[:search], params[:offset])
   end
 
   def edit
