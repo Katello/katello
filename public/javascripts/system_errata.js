@@ -10,25 +10,20 @@
  have received a copy of GPLv2 along with this software; if not, see
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
-/**
- * Created by .
- * User: jrist
- * Date: 7/13/11
- * Time: 2:27 PM
- *
- * This file is for use with the packages subnav within systems page.
- */
 
 KT.system = KT.system || {};
 
 KT.system.errata = function() {
-    var     		system_id = $('#system_errata').data('system_id'),
-    
+    var system_errata_container = $('#system_errata'),
+    	system_id = system_errata_container.data('system_id'),
+    	table_body = system_errata_container.find('tbody'),
+    		
     	init = function(){
     		register_events();
     	},
     	register_events = function(){
     		$('#display_errata_type').live('change', filter_errata_by_type);
+    		$('#select_all_errata').live('change', select_all_errata);
     	},
     	filter_errata_by_type = function(data){
     		var value = data.currentTarget.value;
@@ -41,11 +36,20 @@ KT.system.errata = function() {
     			insert_data(data, false);
     		});
     	},
+    	select_all_errata = function(){
+    		var checkboxes = table_body.find(':checkbox');
+    		
+    		if( $('#select_all_errata').attr('checked') ){
+    			checkboxes.attr('checked', true);	
+    		} else {
+    			checkboxes.attr('checked', false);
+    		}
+    	},
     	insert_data = function(html, append){
     		if( append ){
-    			$('#system_errata').find('tbody').append(html);
+    			table_body.append(html);
     		} else {
-    			$('#system_errata').find('tbody').html(html);
+    			table_body.html(html);
     		}
     	};
 	    
