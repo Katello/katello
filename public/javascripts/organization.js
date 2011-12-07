@@ -46,6 +46,17 @@ $(document).ready(function() {
             error: function() {button.removeClass("disabled")}
         });
    });
+  $('#debug_cert').live('click',function(){
+    $('#show_debug_button').slideToggle();
+
+    var arrow = $(this).parent().find('img');
+    if(arrow.attr("src").indexOf("collapsed") === -1){
+      arrow.attr("src", KT.common.rootURL() + "images/icons/expander-collapsed.png");
+    } else {
+      arrow.attr("src", KT.common.rootURL() + "images/icons/expander-expanded.png");
+    }
+    return false;
+  });
 
     $('#download_debug_cert_key').live('click', function(e){
         e.preventDefault();  //stop the browser from following

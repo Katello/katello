@@ -100,6 +100,7 @@ describe Changeset do
         @prod.stub_chain(:repos, :where).and_return([@repo])
         @environment.prior.stub(:products).and_return([@prod])
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
+        @environment.prior.products.stub(:find_by_cp_id).and_return(@prod)
       end
 
       describe "fail adding content from not promoted product" do
@@ -187,7 +188,7 @@ describe Changeset do
       before(:each) do
         @provider = Provider.create!(:name => "provider", :provider_type => Provider::CUSTOM, :organization => @organization, :repository_url => "https://something.url/stuff")
 
-        @prod = Product.new({:name => "prod"})
+        @prod = Product.new({:name => "prod", :cp_id => "prod"})
         @prod.provider = @provider
         @prod.environments << @organization.locker
         @prod.environments << @environment
@@ -210,9 +211,11 @@ describe Changeset do
         @prod.stub_chain(:repos, :where).and_return([@repo])
 
         @changeset.products = [@prod]
+        @changeset.products.stub(:find_by_cp_id).and_return(@prod)
 
         @environment.prior.stub(:products).and_return([@prod])
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
+        @environment.prior.products.stub(:find_by_cp_id).and_return(@prod)
       end
 
       it "should remove product" do
