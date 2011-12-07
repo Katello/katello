@@ -305,7 +305,7 @@ KT.packages = function() {
     },
     clearAction = function(action_id, content, content_type) {
         // clear/remove the details associated with the action....
-        delete actions_in_progress[action_id];
+        noLongerMonitorStatus(action_id);
 
         // clear the package and group names associated with the action
         $.each(content, function(index, content_item) {
@@ -330,12 +330,27 @@ KT.packages = function() {
             maxTimeout: timeout
         }, updateStatus);
     },
+    monitorStatus = function(task_id, task_type) {
+        actions_in_progress[task_id] = task_type;
+
+        if (actions_updater === undefined){
+            startUpdater();
+        } else {
+            actions_updater.restart();
+        }
+    },
+    noLongerMonitorStatus = function(task_id) {
+        delete actions_in_progress[task_id];
+
+        if (Object.keys(actions_in_progress).length === 0) {
+            actions_updater.stop();
+        }
+    },
     initPackages = function() {
         registerEvents();
         disableButtons();
         enableUpdateAll();
         updateLoadedSummary();
-        startUpdater();
     },
     registerEvents = function() {
         more_button.bind('click', morePackages);
@@ -388,7 +403,7 @@ KT.packages = function() {
                     data: {'packages' : content_string},
                     cache: false,
                     success: function(data) {
-                        actions_in_progress[data] = KT.package_action_types.PKG_INSTALL;
+                        monitorStatus(data, KT.package_action_types.PKG_INSTALL);
 
                         for (i = 0; i < content_array.length; i++) {
                             var pkg_name = $.trim(content_array[i]), already_exists = false;
@@ -428,7 +443,7 @@ KT.packages = function() {
                     data: {'groups' : content_string},
                     cache: false,
                     success: function(data) {
-                        actions_in_progress[data] = KT.package_action_types.PKG_GRP_INSTALL;
+                        monitorStatus(data, KT.package_action_types.PKG_GRP_INSTALL);
 
                         for (i = 0; i < content_array.length; i++) {
                             var group_name = $.trim(content_array[i]), already_exists = false;
@@ -477,7 +492,7 @@ KT.packages = function() {
                     data: {'packages' : content_string},
                     cache: false,
                     success: function(data) {
-                        actions_in_progress[data] = KT.package_action_types.PKG_REMOVE;
+                        monitorStatus(data, KT.package_action_types.PKG_REMOVE);
 
                         for (i = 0; i < content_array.length; i++) {
                             var pkg_name = $.trim(content_array[i]), already_exists = false;
@@ -517,7 +532,7 @@ KT.packages = function() {
                     data: {'groups' : content_string},
                     cache: false,
                     success: function(data) {
-                        actions_in_progress[data] = KT.package_action_types.PKG_GRP_REMOVE;
+                        monitorStatus(data, KT.package_action_types.PKG_GRP_REMOVE);
 
                         for (i = 0; i < content_array.length; i++) {
                             var group_name = $.trim(content_array[i]), already_exists = false;
@@ -563,7 +578,7 @@ KT.packages = function() {
                     pkg.attr('data-uuid', data);
                     pkg.find('.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package);
                 });
-                actions_in_progress[data] = KT.package_action_types.PKG_REMOVE;
+                monitorStatus(data, KT.package_action_types.PKG_REMOVE);
 
                 enableButtons();
             },
@@ -585,7 +600,7 @@ KT.packages = function() {
                     pkg.attr('data-uuid', data);
                     pkg.find('.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.updating_package);
                 });
-                actions_in_progress[data] = KT.package_action_types.PKG_UPDATE;
+                monitorStatus(data, KT.package_action_types.PKG_UPDATE);
 
                 enableButtons();
             },
