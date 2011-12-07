@@ -45,6 +45,11 @@ A subscription management only version of katello
 mv src/* .
 rm -rf src
 
+#pull in branding if present
+if [ -d branding ] ; then
+  cp -r branding/* .
+fi
+
 
 %install
 rm -rf %{buildroot}
@@ -71,6 +76,13 @@ rm -rf %{buildroot}%{homedir}/%{name}.spec
 rm -f %{buildroot}%{homedir}/lib/tasks/.gitkeep
 rm -f %{buildroot}%{homedir}/public/stylesheets/.gitkeep
 rm -f %{buildroot}%{homedir}/vendor/plugins/.gitkeep
+
+#branding
+if [ -d branding ] ; then
+  ln -svf %{_datadir}/icons/hicolor/24x24/apps/system-logo-icon.png %{buildroot}%{homedir}/public/images/rh-logo.png
+  ln -svf %{_sysconfdir}/favicon.png %{buildroot}%{homedir}/public/images/favicon.png
+  rm -rf %{buildroot}%{homedir}/branding
+fi
 
 #remove development tasks
 rm %{buildroot}%{homedir}/lib/tasks/test.rake
