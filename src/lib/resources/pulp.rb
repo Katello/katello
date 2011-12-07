@@ -413,7 +413,7 @@ module Pulp
       end
 
       def errata consumer_id
-        response = post(consumer_path(consumer_id) + "listerrata/", {:types => []}.to_json, self.default_headers)
+        response = get(consumer_path(consumer_id) + "errata/", self.default_headers)
         JSON.parse(response.body)
       end
 

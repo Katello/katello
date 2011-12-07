@@ -27,7 +27,7 @@ module Glue::Pulp::Consumer
   end
   module InstanceMethods
     def errata
-      (::Pulp::Consumer.errata self.uuid).with_indifferent_access
+      (::Pulp::Consumer.errata self.uuid)
     end
 
     def del_pulp_consumer
