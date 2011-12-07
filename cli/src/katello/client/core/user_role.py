@@ -76,7 +76,7 @@ class Create(UserRoleAction):
             print _("Successfully created user role [ %s ]") % role['name']
             return os.EX_OK
         else:
-            print _("Could not create user role [ %s ]") % role['name']
+            print _("Could not create user role [ %s ]") % name
             return os.EX_DATAERR
 
 # ------------------------------------------------------------------------------
