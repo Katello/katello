@@ -173,7 +173,7 @@ var sliding_tree = function(tree_id, options) {
                 crumbs = trail.slice(1, trail.length);
             } else {
                 if( trail.length === 0 ){
-                    html += '<li><div id="' + id + '" class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div></li>';
+                    html += '<li class="one-line-ellipsis"><div id="' + id + '" class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div></li>';
                 }
             }
     
@@ -181,7 +181,7 @@ var sliding_tree = function(tree_id, options) {
                 for(var i = 0; i < crumbs.length; i++) {
                     html += create_crumb(crumbs[i]);
                 }
-                html += '<li><div id="' + id + '" class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div></li>';
+                html += '<li class="one-line-ellipsis"><div id="' + id + '" class="currentCrumb fl">' + settings.breadcrumb[id].name + '</div></li>';
             }
             
             breadcrumb.append(html);
