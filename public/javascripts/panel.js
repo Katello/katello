@@ -494,6 +494,17 @@ KT.panel = (function ($) {
             });
             panels_list.push(new_panel);
         },
+        // http://devnull.djolley.net/2010/11/accessing-query-string-parameters-from.html
+        queryParameters = function () {
+            var queryString = new Object;
+            var qstr=window.location.search.substring(1);
+            var params=qstr.split('&');
+            for (var i=0; i<params.length; i++) {
+                var pair=params[i].split('=');
+                queryString[pair[0]]=pair[1];
+            }
+            return queryString;
+        },
         actions = (function(){
             var action_list = {};
 
@@ -608,6 +619,7 @@ KT.panel = (function ($) {
         panelAjax: panelAjax,
         control_bbq: control_bbq,
         registerPanel: registerPanel,
+        queryParameters: queryParameters,
         actions: actions
     };
 })(jQuery);
@@ -784,8 +796,7 @@ KT.panel.list = (function () {
                     extra_params = options['extra_params'],
                     data = {},
                     page_load = page_load || false,
-                    search_cb = search_cb ||
-                function () {};
+                    search_cb = search_cb || function () {};
                 e.preventDefault();
                 button.attr("disabled", "disabled");
                 element.find('section').empty();
@@ -794,6 +805,20 @@ KT.panel.list = (function () {
                     $.bbq.pushState($(this).serialize());
                 }
                 url += '?offset=' + offset;
+
+                // Pass along all additional parameters
+                var qp = KT.panel.queryParameters();
+                if (qp) {
+                    for (var key in qp) {
+                        url += '&' + key + '=' + qp[key];
+                    }
+                }
+                //var only = KT.panel.queryParameters()['only'];
+                //var id = KT.panel.queryParameters()['id'];
+                //if(only) {
+                //    url += '&id=' + id
+                //    url += '&only=' + only
+                //}
                 if (extra_params) {
                     for (var i = 0; i < extra_params.length; i += 1) {
                         data[extra_params[i]['hash_id']] = $.bbq.getState(extra_params[i]['hash_id']);
