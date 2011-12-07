@@ -210,6 +210,13 @@ module Pulp
         find repo_id
       end
 
+      # specific call to just update the sync schedule for a repo
+      def update_schedule(repo_id, schedule)
+        body = put(Repository.repository_path + repo_id +"/schedules/sync/",
+                   JSON.generate(:schedule => schedule), self.default_headers).body
+        find repo_id
+      end
+
       def add_packages repo_id, pkg_id_list
         body = post(Repository.repository_path + repo_id +"/add_package/", {:packageid=>pkg_id_list}.to_json, self.default_headers).body
       end
