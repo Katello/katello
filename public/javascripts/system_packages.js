@@ -75,6 +75,26 @@ KT.packages = function() {
         update_all_button.removeAttr('disabled');
         update_all_button.removeClass('disabled');
     },
+    disableLinks = function() {
+        add_content_button.unbind('click');
+        remove_content_button.unbind('click');
+
+        add_content_button.attr('disabled', 'disabled');
+        remove_content_button.attr('disabled', 'disabled');
+
+        add_content_button.addClass('disabled');
+        remove_content_button.addClass('disabled');
+    },
+    enableLinks = function() {
+        add_content_button.bind('click', addContent);
+        remove_content_button.bind('click', removeContent);
+
+        add_content_button.removeAttr('disabled');
+        remove_content_button.removeAttr('disabled');
+
+        add_content_button.removeClass('disabled');
+        remove_content_button.removeClass('disabled');
+    },
     morePackages = function() {
         var list = $('.packages');
         var spinner = $('#list-spinner');
@@ -289,11 +309,14 @@ KT.packages = function() {
 
         // clear the package and group names associated with the action
         $.each(content, function(index, content_item) {
-            if (content_type === KT.package_action_types.PKG) {
-                delete packages_in_progress[content_item];
-            } else if (content_type === KT.package_action_types.PKG_GRP) {
-                delete groups_in_progress[content_item];
-            }
+            var names = content_item.toString().split(',');
+            $.each(names, function(index, name) {
+                if (content_type === KT.package_action_types.PKG) {
+                    delete packages_in_progress[name];
+                } else if (content_type === KT.package_action_types.PKG_GRP) {
+                    delete groups_in_progress[name];
+                }
+            });
         });
     },
     startUpdater = function () {
@@ -327,18 +350,19 @@ KT.packages = function() {
     },
     valid_action_requested = function(content, content_type) {
         // if one or more of the content items requested already has an action pending on it, reject the request
-        var is_valid = true;
+        var is_valid = true, item;
         $.each(content, function(index, content_item) {
+            item = $.trim(content_item);
             switch (content_type) {
                 case KT.package_action_types.PKG:
-                    if (packages_in_progress[content_item]) {
+                    if (packages_in_progress[item] === true) {
                         alert("One or more of the packages provided has an action pending.");
                         is_valid = false;
                         break;
                     }
                     break;
                 case KT.package_action_types.PKG_GRP:
-                    if (groups_in_progress[content_item]) {
+                    if (groups_in_progress[item] === true) {
                         alert("One or more of the groups provided has an action pending.");
                         is_valid = false;
                         break;
@@ -357,6 +381,7 @@ KT.packages = function() {
 
         if (selected_action == 'perform_action_packages') {
             if (valid_action_requested(content_array, KT.package_action_types.PKG)) {
+                disableLinks();
                 $.ajax({
                     url: KT.routes.add_system_system_packages_path(system_id),
                     type: 'PUT',
@@ -387,13 +412,16 @@ KT.packages = function() {
                                 }
                             }
                         }
+                        enableLinks();
                     },
                     error: function() {
+                        enableLinks();
                     }
                 });
             }
         } else {
             if (valid_action_requested(content_array, KT.package_action_types.PKG_GRP)) {
+                disableLinks();
                 $.ajax({
                     url: KT.routes.add_system_system_packages_path(system_id),
                     type: 'PUT',
@@ -424,20 +452,25 @@ KT.packages = function() {
                                 }
                             }
                         }
+                        enableLinks();
                     },
                     error: function() {
+                        enableLinks();
                     }
                 });
             }
         }
     },
     removeContent = function(data) {
+        data.preventDefault();
+
         var selected_action = $("input[@name=perform_action]:checked").attr('id'),
             content_string = content_form.find('#content_input').val(),
             content_array = content_string.split(',');
 
         if (selected_action == 'perform_action_packages') {
             if (valid_action_requested(content_array, KT.package_action_types.PKG)) {
+                disableLinks();
                 $.ajax({
                     url: KT.routes.remove_system_system_packages_path(system_id),
                     type: 'POST',
@@ -454,7 +487,7 @@ KT.packages = function() {
                                 if ($(this).html() === pkg_name) {
                                     already_exists = true;
                                     $(this).parent().attr('data-uuid', data);
-                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package);
+                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package);
                                 }
                             });
                             // if row already existed... skip...
@@ -468,13 +501,16 @@ KT.packages = function() {
                                 }
                             }
                         }
+                        enableLinks();
                     },
                     error: function() {
+                        enableLinks();
                     }
                 });
             }
         } else {
             if (valid_action_requested(content_array, KT.package_action_types.PKG_GRP)) {
+                disableLinks();
                 $.ajax({
                     url: KT.routes.remove_system_system_packages_path(system_id),
                     type: 'POST',
@@ -505,8 +541,10 @@ KT.packages = function() {
                                 }
                             }
                         }
+                        enableLinks();
                     },
                     error: function() {
+                        enableLinks();
                     }
                 });
             }
