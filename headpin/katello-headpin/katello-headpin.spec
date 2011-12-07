@@ -117,6 +117,9 @@ and then run katello-configure to configure everything.
 cp -Rf %{homedir}/* %{katello_dir}
 
 %changelog
+* Wed Dec 07 2011 Bryan Kearney <bkearney@redhat.com>
+- 
+
 * Wed Dec 07 2011 Bryan Kearney <bkearney@redhat.com> 0.1.112-2
 - Bump the release (bkearney@redhat.com)
 - Fix the README (bkearney@redhat.com)
