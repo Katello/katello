@@ -262,9 +262,7 @@ module Glue::Pulp::Repo
   end
 
   def set_sync_schedule schedule
-    Pulp::Repository.update(self.id, {
-      :sync_schedule => schedule
-    })
+    Pulp::Repository.update_schedule(self.pulp_id, schedule)
   end
 
   def has_package? id
