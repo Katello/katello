@@ -35,7 +35,11 @@ class FailedAuthenticationController < ActionController::Base
   # This method is called when warden stack cannot authenticate API request
   def unauthenticated_api
     Rails.logger.warn "Request is unauthenticated_api for #{request.remote_ip}"
-    head :status => 401 and return false
+    m = "Invalid credentials"
+    respond_to do |format|
+      format.json { render :json => {:displayMessage => m, :errors => [m] }, :status => 401 }
+      format.all  { render :text => m, :status => 401 }
+    end
   end
 
   # In case Warden would fail this returns some reasonable output too
