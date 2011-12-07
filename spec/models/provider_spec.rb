@@ -74,7 +74,6 @@ describe Provider do
     it "should make correct calls" do
       @provider.should_receive(:owner_import).once.and_return(true)
       @provider.should_receive(:import_products_from_cp).once.and_return(true)
-      @provider.should_receive(:delete_not_assigned_products).once.and_return(true)
 
       @provider.import_manifest "path_to_manifest"
     end
