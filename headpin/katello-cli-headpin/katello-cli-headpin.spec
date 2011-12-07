@@ -57,6 +57,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Dec 07 2011 Bryan Kearney <bkearney@redhat.com> 0.1.12-2
+- Bump the version (bkearney@redhat.com)
+- 758447: Add headpin prompt to the config file (bkearney@redhat.com)
+- The default location for the headpin path is /headpin (bkearney@redhat.com)
+
 * Wed Oct 26 2011 Bryan Kearney <bkearney@redhat.com> 0.1.12-1
 - Move the headpin packaegs to a new location (bkearney@redhat.com)
 
