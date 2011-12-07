@@ -45,7 +45,7 @@ class SystemErrataController < ApplicationController
     filter_type = params[:filter_type] if params[:filter_type]
     chunk_size = current_user.page_size
     errata, total_errata = get_errata(offset.to_i, offset.to_i+chunk_size, filter_type)
-    
+        
     render :partial => "systems/errata/items", :locals => { :errata => errata }    
   end
 
@@ -60,7 +60,7 @@ class SystemErrataController < ApplicationController
     types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
 
     errata_list = []
-    (rand(85) + 10).times{ |num|
+    100.times{ |num|
       errata = OpenStruct.new
       errata.errata_id = "RHSA-2011-01-#{num}"
       errata.errata_type = types[rand(3)]

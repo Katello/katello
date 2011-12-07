@@ -3,7 +3,7 @@
 = javascript do
   :javascript
     localize({
-      "x_of_y_errata" : function(x,y){ return '#{_("(Loaded %X of %Y Total)")}'.replace("%X", x).replace("%Y", y); }
+      "x_of_y_errata" : function(x,y){ return '#{_("Loaded %X of %Y Total")}'.replace("%X", x).replace("%Y", y); }
       });
 
 = content_for :title do
@@ -38,11 +38,13 @@
       %p There is no errata to display.
 
 = content_for :footer do
-  .grid_8
-    %a#more{:style => "padding-left: 20px;", "data-scroll_url"=>url_for(system_errata_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("Load %{n} More" % {:n => offset})}
-    %span{:id => 'loaded_summary', :style => "padding-left: 20px;"}
-      #{_("%{n} Loaded of %{t} Total" % {:n => offset, :t => total_errata })}
+  %div
+    %a#load_more_errata{"data-scroll_url"=>url_for(system_errata_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("Load %{n} More" % {:n => offset})}
+    %span.fl{:id => 'loaded_summary', :style => 'margin-left: 20px;', 'data-total' => total_errata, "data-current_count" => offset }
+      #{_("Loaded of %{n} of %{t} Total" % {:n => offset, :t => total_errata })}
 
     - if editable
-      .prefix_2.grid_6.ra
+      %span.fr
         = submit_tag _('Run'), :class => 'button', :id => 'add_errata', 'data-url' => system_errata_path(@system.id)
+      %span.fr
+        = submit_tag _('Cancel'), :class => 'button', :id => 'cancel_errata', 'data-url' => system_errata_path(@system.id)
