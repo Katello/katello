@@ -813,12 +813,6 @@ KT.panel.list = (function () {
                         url += '&' + key + '=' + qp[key];
                     }
                 }
-                //var only = KT.panel.queryParameters()['only'];
-                //var id = KT.panel.queryParameters()['id'];
-                //if(only) {
-                //    url += '&id=' + id
-                //    url += '&only=' + only
-                //}
                 if (extra_params) {
                     for (var i = 0; i < extra_params.length; i += 1) {
                         data[extra_params[i]['hash_id']] = $.bbq.getState(extra_params[i]['hash_id']);
@@ -840,6 +834,9 @@ KT.panel.list = (function () {
                         $('.ui-autocomplete').hide();
                         $('#list').addClass("ajaxScroll");
                         search_cb();
+                        if(qp && qp['id']) {
+                            $.bbq.pushState({panel: resource_type + '_' + qp['id']});
+                        }
                     },
                     error: function (e) {
                         button.removeAttr('disabled');
