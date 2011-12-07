@@ -1,0 +1,23 @@
+.grid_6
+  = link_to dashboard_index_path, :class => 'logo' do
+    = image_tag("rh-logo.png", :alt => _('Subscription Asset Manager Logo'))
+    %span{:class => 'pipe'}
+    %h1 Subscription Asset Manager
+  #loading.fr
+    = image_tag('rh_spinner_head.gif', :alt => _('Spinning Work Indicator'), :width=>20, :height=>20)
+.grid_10
+  = hidden_field_tag 'root_url', nil, 'data-url' => root_path
+  = hidden_field_tag 'get_notices_url', nil, 'data-url' => notices_get_new_path
+  - if current_user
+    - if current_organization
+      %div.org
+        = render :partial => '/layouts/org'
+    %ul
+      %li.hello
+        = link_to account_path do
+          %strong
+            = current_user.username
+      %li
+        = link_to current_user.user_notices.length, notices_path, :id => 'unread_notices', :title => _('System Notifications')
+      %li.logout
+        = link_to _("Logout"), logout_path, :method=>"POST"
