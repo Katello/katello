@@ -21,8 +21,8 @@ from optparse import OptionValueError
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask
-from katello.client.api.utils import get_environment, get_changeset
+from katello.client.core.utils import is_valid_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, system_exit
+from katello.client.api.utils import get_organization, get_environment, get_changeset, get_template, get_repo, get_product
 
 try:
     import json
@@ -114,6 +114,7 @@ class Info(ChangesetAction):
         cset["packages"] = "\n".join([p["display_name"] for p in cset["packages"]])
         cset["repositories"] = "\n".join([r["name"] for r in cset["repos"]])
         cset["system_templates"] = "\n".join([t["name"] for t in cset["system_templates"]])
+        cset["distributions"] = "\n".join([t["distribution_id"] for t in cset["distributions"]])
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
@@ -126,6 +127,7 @@ class Info(ChangesetAction):
         self.printer.addColumn('packages', multiline=True, show_in_grep=False)
         self.printer.addColumn('repositories', multiline=True, show_in_grep=False)
         self.printer.addColumn('system_templates', multiline=True, show_in_grep=False)
+        self.printer.addColumn('distributions', multiline=True, show_in_grep=False)
 
         self.printer.setHeader(_("Changeset Info"))
         self.printer.printItem(cset)
@@ -170,11 +172,139 @@ class Create(ChangesetAction):
 # ==============================================================================
 class UpdateContent(ChangesetAction):
 
+
+    class PatchBuilder(object):
+
+        @staticmethod
+        def build_patch(action, itemBuilder, items):
+            patch = {}
+            patch['packages']      = [itemBuilder.package(i) for i in items[action+"_package"]]
+            patch['errata']        = [itemBuilder.erratum(i) for i in items[action+"_erratum"]]
+            patch['repositories']  = [itemBuilder.repo(i) for i in items[action+"_repo"]]
+            patch['products']      = [itemBuilder.product(i) for i in items[action+"_product"]]
+            patch['templates']     = [itemBuilder.template(i) for i in items[action+"_template"]]
+            patch['distributions'] = [itemBuilder.distro(i) for i in items[action+"_distribution"]]
+            return patch
+
+    class PatchItemBuilder(object):
+
+        def __init__(self, orgName, envName):
+            self.orgName = orgName
+            self.envName = envName
+
+            self.orgId = get_organization(orgName)['id']
+            self.envId = get_environment(orgName, envName)['id']
+            self.priorEnvId = get_environment(orgName, envName)['prior_id']
+            self.priorEnvName = get_environment(orgName, envName)['prior']
+
+
+        def product_id(self, options):
+            if 'product' in options:
+                prodName = options['product']
+            else:
+                prodName = options['name']
+
+            prod = get_product(self.orgName, prodName)
+            if prod == None:
+                system_exit(os.EX_DATAERR)
+            return prod['id']
+
+        def repo_id(self, options):
+            repo = get_repo(self.orgName, options['product'], options['name'], self.priorEnvName)
+            if repo == None:
+                system_exit(os.EX_DATAERR)
+            return repo['id']
+
+        def template_id(self, options):
+            tpl = get_template(self.orgName, self.priorEnvName, options['name'])
+            if tpl == None:
+                system_exit(os.EX_DATAERR)
+            return tpl['id']
+
+
+    class AddPatchItemBuilder(PatchItemBuilder):
+
+        def package(self, options):
+            return {
+                'name': options['name'],
+                'product_id': self.product_id(options)
+            }
+
+        def product(self, options):
+            return {
+                'product_id': self.product_id(options)
+            }
+
+        def erratum(self, options):
+            return {
+                'erratum_id': options['name'],
+                'product_id': self.product_id(options)
+            }
+
+        def repo(self, options):
+            return {
+                'repository_id': self.repo_id(options),
+                'product_id': self.product_id(options)
+            }
+
+        def template(self, options):
+            return {
+                'template_id': self.template_id(options)
+            }
+
+        def distro(self, options):
+            return {
+                'distribution_id': options['name'],
+                'product_id': self.product_id(options)
+            }
+
+
+
+    class RemovePatchItemBuilder(PatchItemBuilder):
+
+        def package(self, options):
+            return {
+                'content_id': options['name'],
+                'product_id': self.product_id(options)
+            }
+
+        def product(self, options):
+            return {
+                'content_id': self.product_id(options)
+            }
+
+        def erratum(self, options):
+            return {
+                'content_id': options['name'],
+                'product_id': self.product_id(options)
+            }
+
+        def repo(self, options):
+            return {
+                'content_id': self.repo_id(options),
+                'product_id': self.product_id(options)
+            }
+
+        def template(self, options):
+            return {
+                'content_id': self.template_id(options)
+            }
+
+        def distro(self, options):
+            return {
+                'content_id': options['name'],
+                'product_id': self.product_id(options)
+            }
+
+
+
+    productDependentContent = ['package', 'erratum', 'repo', 'distribution']
+    productIndependentContent = ['product', 'template']
+
     description = _('updates content of a changeset')
 
     def __init__(self):
         self.current_product = None
-        self.items = {}
         super(UpdateContent, self).__init__()
 
 
@@ -182,13 +312,14 @@ class UpdateContent(ChangesetAction):
         self.current_product = value
         parser.values.from_product = True
 
-
-    def store_item(self, option, opt_str, value, parser):
+    def store_item_with_product(self, option, opt_str, value, parser):
         if parser.values.from_product == None:
             raise OptionValueError(_("%s must be preceded by %s") % (option, "--from_product") )
 
         self.items[option.dest].append({"name": value, "product": self.current_product})
 
+    def store_item(self, option, opt_str, value, parser):
+        self.items[option.dest].append({"name": value})
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name',
@@ -197,33 +328,34 @@ class UpdateContent(ChangesetAction):
                                 help=_("name of organization (required)"))
         self.parser.add_option('--environment', dest='env',
                                 help=_("environment name (required)"))
-        self.parser.add_option('--add_product', dest='add_product',
-                                action="append",
+        self.parser.add_option('--add_product', dest='add_product', type="string",
+                                action="callback", callback=self.store_item,
                                 help=_("product to add to the changeset"))
-        self.parser.add_option('--remove_product', dest='remove_product',
-                                action="append",
+        self.parser.add_option('--remove_product', dest='remove_product', type="string",
+                                action="callback", callback=self.store_item,
                                 help=_("product to remove from the changeset"))
-        self.parser.add_option('--add_template', dest='add_template',
-                                action="append",
+        self.parser.add_option('--add_template', dest='add_template', type="string",
+                                action="callback", callback=self.store_item,
                                 help=_("name of a template to be added to the changeset"))
-        self.parser.add_option('--remove_template', dest='remove_template',
-                                action="append",
+        self.parser.add_option('--remove_template', dest='remove_template', type="string",
+                                action="callback", callback=self.store_item,
                                 help=_("name of a template to be removed from the changeset"))
         self.parser.add_option('--from_product', dest='from_product',
                                 action="callback", callback=self.store_from_product, type="string",
                                 help=_("determines product from which the packages/errata/repositories are picked"))
 
-        for ct in ['package', 'erratum', 'repo']:
+        for ct in self.productDependentContent:
             self.parser.add_option('--add_'+ct, dest='add_'+ct,
-                                action="callback", callback=self.store_item, type="string",
+                                action="callback", callback=self.store_item_with_product, type="string",
                                 help=_(ct+" to add to the changeset"))
             self.parser.add_option('--remove_'+ct, dest='remove_'+ct,
-                                action="callback", callback=self.store_item, type="string",
+                                action="callback", callback=self.store_item_with_product, type="string",
                                 help=_(ct+" to remove from the changeset"))
         self.reset_items()
 
     def reset_items(self):
-        for ct in ['package', 'erratum', 'repo']:
+        self.items = {}
+        for ct in self.productDependentContent + self.productIndependentContent:
             self.items['add_'+ct]    = []
             self.items['remove_'+ct] = []
 
@@ -246,22 +378,20 @@ class UpdateContent(ChangesetAction):
         if cset == None:
             return os.EX_DATAERR
 
-        patch = {}
-        patch['+packages'] = items["add_package"]
-        patch['-packages'] = items["remove_package"]
-        patch['+errata'] = items["add_erratum"]
-        patch['-errata'] = items["remove_erratum"]
-        patch['+repos'] = items["add_repo"]
-        patch['-repos'] = items["remove_repo"]
-        patch['+products'] = self.get_option('add_product') or []
-        patch['-products'] = self.get_option('remove_product') or []
-        patch['+templates'] = self.get_option('add_template') or []
-        patch['-templates'] = self.get_option('remove_template') or []
+        addPatch    = self.PatchBuilder.build_patch('add', self.AddPatchItemBuilder(orgName, envName), items)
+        removePatch = self.PatchBuilder.build_patch('remove', self.RemovePatchItemBuilder(orgName, envName), items)
+        self.update_content(cset["id"], addPatch, self.api.add_content)
+        self.update_content(cset["id"], removePatch, self.api.remove_content)
 
-        msg = self.api.update_content(cset["id"], patch)
         print _("Successfully updated changeset [ %s ]") % csName
-
         return os.EX_OK
+
+
+    def update_content(self, csId, patch, updateMethod):
+        for contentType, items in patch.iteritems():
+            for i in items:
+                updateMethod(csId, contentType, i)
+
 
 
 # ==============================================================================
