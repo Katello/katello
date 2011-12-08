@@ -112,28 +112,43 @@ class katello::config {
     },
   }
 
-  exec {"katello_db_migrate":
+  exec {"katello_db_printenv":
     cwd         => $katello::params::katello_dir,
     user        => $katello::params::user,
     environment => "RAILS_ENV=${katello::params::environment}",
-    refreshonly => true,
-    require     => [ Config_file["${katello::params::config_dir}/katello.yml"],
-                     Postgres::Createdb[$katello::params::db_name] ],
-    command     => "/usr/bin/env rake db:migrate >> ${katello::params::migrate_log} 2>&1",
+    command     => "/usr/bin/env > ${katello::params::dbenv_log}",
+    before  => Class["katello::service"],
+    require => $katello::params::deployment ? {
+                'katello' => [ Class["candlepin::service"], Class["pulp::service"] ],
+                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"] ],
+                default => [],
+    },
   }
 
-  # seed our DB across pulp/candlepin and katello
-  # should only run once.
+  exec {"katello_migrate_db":
+    cwd         => $katello::params::katello_dir,
+    user        => $katello::params::user,
+    environment => "RAILS_ENV=${katello::params::environment}",
+    command     => "/usr/bin/env rake db:migrate --trace --verbose > ${katello::params::migrate_log} 2>&1 && touch /var/lib/katello/db_migrate_done",
+    creates => "/var/lib/katello/db_migrate_done",
+    before  => Class["katello::service"],
+    require => $katello::params::deployment ? {
+                'katello' => [ Exec["katello_db_printenv"] ],
+                'headpin' => [ Exec["katello_db_printenv"] ],
+                default => [],
+    },
+  }
+
   exec {"katello_seed_db":
     cwd         => $katello::params::katello_dir,
     user        => $katello::params::user,
     environment => "RAILS_ENV=${katello::params::environment}",
-    command     => "/bin/env >> ${katello::params::seed_log} 2>&1 && /bin/echo \" Starting Migrate \" >> ${katello::params::seed_log} 2>&1 && /usr/bin/env rake db:migrate --trace --verbose >> ${katello::params::seed_log} 2>&1 && /bin/echo \" Starting Seed \" >> ${katello::params::seed_log} 2>&1 && /usr/bin/env rake db:seed --trace --verbose >> ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/db_seed_done",
+    command     => "/usr/bin/env rake db:seed --trace --verbose > ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/db_seed_done",
     creates => "/var/lib/katello/db_seed_done",
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
-                'katello' => [ Exec["katello_db_migrate"], Class["candlepin::service"], Class["pulp::service"] ],
-                'headpin' => [ Exec["katello_db_migrate"], Class["candlepin::service"], Class["thumbslug::service"] ],
+                'katello' => [ Exec["katello_migrate_db"] ],
+                'headpin' => [ Exec["katello_migrate_db"] ],
                 default => [],
     },
   }
