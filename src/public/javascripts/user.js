@@ -17,6 +17,15 @@ $(document).ready(function() {
 
     KT.user_page.registerEdits();
 
+    env_select.original_env_id = undefined;
+    env_select.env_changed_callback = function(env_id) {
+        if(env_select.original_env_id == env_id) {
+            $('#update_user').addClass('disabled');
+        }else{
+            $('#update_user').removeClass('disabled');
+        }
+    }
+
     ratings =
         [{'minScore': 0,
             'className': 'meterFail',
@@ -41,21 +50,24 @@ $(document).ready(function() {
 
         var org_selector = $('#org_id_org_id');
         org_selector.change(function(event) {
-        var refill = $('#env_box');
-        var selected_org_id = org_selector.val();
-        if(!selected_org_id) {
-            refill.html(i18n.noDefaultEnv);
-        } else {
-            var url = KT.common.rootURL() + 'organizations/' + selected_org_id +  '/environments_partial';
-            $.ajax({
-                type: "GET",
-                url: url,
-                success: function(data) {
-                      refill.html(data);
-               }
-            });
-        }
-   });
+            var refill = $('#env_box');
+            var selected_org_id = org_selector.val();
+            if(!selected_org_id) {
+                refill.html(i18n.noDefaultEnv);
+                env_select.env_changed_callback('');
+            } else {
+                var url = KT.common.rootURL() + 'organizations/' + selected_org_id +  '/environments_partial';
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    success: function(data) {
+                        refill.html(data);
+                        // On successful update, update the original env id and disable save button
+                        env_select.env_changed_callback(env_select.get_selected_env());
+                    }
+                });
+            }
+        });
 
         $('#password_field').simplePassMeter({
             'container': '#password_meter',

@@ -81,7 +81,7 @@ module ProductTestData
             "type" => "yum",
             "label" => "some-label",
             "vendor" => "redhat",
-            "contentUrl" => "/released-extra/RHEL-5-Server/$releasever/$basearch/os/ClusterStorage/",
+            "contentUrl" => "/released-extra/RHEL-5-Server/$releasever/$basearch/os/ClusterStorage",
             "gpgUrl" => "/some/gpg/url/",
             "updated" => "2011-01-04T18:47:47.219+0000",
             "created" => "2011-01-04T18:47:47.219+0000"

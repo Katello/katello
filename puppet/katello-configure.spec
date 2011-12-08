@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.26
+Version:        0.1.31
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,26 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Thu Dec 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.31-1
+- puppet - regenerate NSS db each run - fix
+
+* Thu Dec 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.30-1
+- puppet - regenerate NSS db each run
+- puppet - better warning message
+
+* Thu Dec 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.29-1
+- puppet - force creation of the candlepin symlink
+- puppet - type in logfile
+
+* Thu Dec 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.28-1
+- puppet - fixing variable reassignment
+
+* Thu Dec 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.27-1
+- puppet - splitting migrate and seed exec actions up
+- puppet - renaming initdb_done to db_seed_done
+- puppet - adding cwds to ssl-certs actions
+- configure - adding 2nd run check
+
 * Tue Dec 06 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.26-1
 - 760265 - Puppet guesses the FQDN from /etc/resolv.conf
 

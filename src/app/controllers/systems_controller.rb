@@ -48,8 +48,6 @@ class SystemsController < ApplicationController
       :update_subscriptions => edit_system,
       :products => read_system,
       :more_products => read_system,
-      :packages => read_system,
-      :more_packages => read_system,
       :update => edit_system,
       :edit => read_system,
       :show => read_system,
@@ -190,52 +188,6 @@ class SystemsController < ApplicationController
   def more_products
     products, offset = more_objects @system.installedProducts.sort {|a,b| a['productName'].downcase <=> b['productName'].downcase}
     render :partial=>"more_products", :locals=>{:system=>@system, :products => products, :offset=> offset}
-  end
-
-  def packages
-    offset = current_user.page_size
-    packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    if packages.length > 0
-      if params.has_key? :order
-        if params[:order].downcase == "desc"
-          packages.reverse!
-        end
-      end
-      packages = packages[0...offset]
-    else
-      packages = []
-    end
-    render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages, :offset => offset}
-  end
-
-  def more_packages
-    #grab the current user setting for page size
-    size = current_user.page_size
-    #what packages are available?
-    packages = @system.simple_packages.sort {|a,b| a.nvrea.downcase <=> b.nvrea.downcase}
-    if packages.length > 0
-      #check for the params offset (start of array chunk)
-      if params.has_key? :offset
-        offset = params[:offset].to_i
-      else
-        offset = current_user.page_size
-      end
-      if params.has_key? :order
-        if params[:order].downcase == "desc"
-          #reverse if order is desc
-          packages.reverse!
-        end
-      end
-      if params.has_key? :reverse
-        packages = packages[0...params[:reverse].to_i]
-      else
-        packages = packages[offset...offset+size]
-      end
-      packages ||= [] # fence for case when offset extended beyond range, etc.
-    else
-      packages = []
-    end
-    render :partial=>"more_packages", :locals=>{:system=>@system, :packages => packages, :offset=> offset}
   end
 
   def edit

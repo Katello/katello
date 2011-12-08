@@ -24,7 +24,8 @@ class katello::params {
   $config_dir  = "/etc/katello"
   $katello_dir = "/usr/share/katello"
   $environment = "production"
-  $migrate_log = "${katello_dir}/log/db_migrate.log"
+  $db_env_log  = "/var/log/katello/katello-configure/db_env.log"
+  $migrate_log = "/var/log/katello/katello-configure/db_migrate.log"
   $seed_log    = "/var/log/katello/katello-configure/db_seed.log"
 
   # SSL settings

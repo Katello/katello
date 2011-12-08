@@ -16,6 +16,10 @@
  *   optional arguments:
  *     column to limit search too (the column title in the table header)
  *     ifHidden - callback to execute if one or more elements was hidden
+ *
+ * If a user has a table where certain rows should not be filtered,
+ * simply add a class of 'not_filtered' to those rows and they will
+ * be skipped during filtering.
  */
 (function($) {
   $.uiTableFilter = function(jq, phrase, column, ifHidden){
@@ -56,11 +60,11 @@
 
       // only hide visible rows
       matches = function(elem) {;}
-      var elems = jq.find("tbody:first > tr:visible")
+      var elems = jq.find("tbody:first > tr:visible").not(".not_filtered")
     }
     else {
       new_hidden = true;
-      var elems = jq.find("tbody:first > tr")
+      var elems = jq.find("tbody:first > tr").not(".not_filtered")
     }
 
     elems.each(function(){

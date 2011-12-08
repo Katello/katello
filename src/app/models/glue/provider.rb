@@ -23,9 +23,10 @@ module Glue::Provider
 
   module InstanceMethods
 
-    def import_manifest zip_file_path
+    def import_manifest zip_file_path, options = {}
+      options.assert_valid_keys(:force)
       Rails.logger.info "Importing manifest for provider #{name}"
-      queue_import_manifest zip_file_path
+      queue_import_manifest zip_file_path, options
       self.save!
     end
 
@@ -154,19 +155,17 @@ module Glue::Provider
       raise e
     end
 
-    def owner_import zip_file_path
-      Candlepin::Owner.import self.organization.cp_key, zip_file_path
+    def owner_import zip_file_path, options
+      Candlepin::Owner.import self.organization.cp_key, zip_file_path, options
     end
 
     def owner_imports
       Candlepin::Owner.imports self.organization.cp_key
     end
 
-    def queue_import_manifest zip_file_path
-      queue.create(:name => "import manifest #{zip_file_path} for owner: #{self.organization.name}", :priority => 3, :action => [self, :owner_import, zip_file_path])
+    def queue_import_manifest zip_file_path, options
+      queue.create(:name => "import manifest #{zip_file_path} for owner: #{self.organization.name}", :priority => 3, :action => [self, :owner_import, zip_file_path, options])
       queue.create(:name => "import of products in manifest #{zip_file_path}",                       :priority => 5, :action => [self, :import_products_from_cp])
-      queue.create(:name => "delete imported products not assigned to any owner #{zip_file_path}",   :priority => 6, :action => [self, :delete_not_assigned_products]) if AppConfig.katello?
-      queue.create(:name => "delete imported content that have no repos #{zip_file_path}",           :priority => 7, :action => [self, :delete_not_assigned_content]) if AppConfig.katello?
     end
 
     def import_products_from_cp
@@ -175,26 +174,6 @@ module Glue::Provider
           p.provider = self
           p.environments << self.organization.locker
         end
-      end
-    end
-
-    def delete_not_assigned_products
-      not_assigned_products.each do |product_attrs|
-
-        unless product_attrs['productContent'].nil?
-          product_attrs['productContent'].each do |pc|
-            Candlepin::Product.remove_content product_attrs['id'], pc[:content][:id]
-          end
-        end
-
-        Candlepin::Product.destroy product_attrs['id']
-      end
-    end
-
-    def delete_not_assigned_content
-
-      not_assigned_content_ids.each do |content_id|
-        Candlepin::Content.destroy(content_id)
       end
     end
 
@@ -211,18 +190,6 @@ module Glue::Provider
 
       new_product_ids = (product_existing_in_cp_ids - product_existing_in_katello_ids)
       new_product_ids.collect {|id| (Candlepin::Product.get(id))[0] }
-    end
-
-    def not_assigned_products
-      all_product_existing_in_katello_ids = Product.all(:select => "cp_id").map(&:cp_id)
-      all_product_existing_in_cp_ids = get_all_product_ids
-
-      product_ids = (all_product_existing_in_cp_ids - all_product_existing_in_katello_ids)
-      product_ids.collect {|id| (Candlepin::Product.get(id))[0] }
-    end
-
-    def not_assigned_content_ids
-      (get_all_content_ids - get_assigned_content_ids)
     end
 
     def get_pool_product_ids

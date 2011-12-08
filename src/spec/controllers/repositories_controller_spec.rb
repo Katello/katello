@@ -63,6 +63,7 @@ describe RepositoriesController, :katello => true do
       @gpg = GpgKey.create!(:name => "foo", :organization => @organization, :content => "222")
       @ep = EnvironmentProduct.find_or_create(@organization.locker, @product)
       controller.stub!(:current_organization).and_return(@org)
+      Candlepin::Content.stub(:create => {:id => "123"})
     end
       let(:invalidrepo) do
         {

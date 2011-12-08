@@ -12,7 +12,7 @@
 
 class TaskStatus < ActiveRecord::Base
   serialize :progress
-
+  serialize :parameters, Hash
   class Status
     WAITING = :waiting
     RUNNING = :running
@@ -25,6 +25,8 @@ class TaskStatus < ActiveRecord::Base
   include Authorization
   belongs_to :organization
 
+  before_save :setup_task_type
+
   def initialize(attrs = nil)
     unless attrs.nil?
       # only keep keys for which we have db columns
@@ -36,8 +38,22 @@ class TaskStatus < ActiveRecord::Base
     super(attrs)
   end
 
+
   def refresh
     self
+  end
+
+
+  def refresh_pulp
+    PulpTaskStatus.refresh(self)
+  end
+
+
+  protected
+  def setup_task_type
+    unless self.task_type
+      self.task_type = self.class().name
+    end
   end
 
 end

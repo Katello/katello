@@ -207,15 +207,6 @@ module Glue::Candlepin::Product
       end
     end
 
-    def remove_imported_content
-      return true unless productContent_changed?
-
-      added_content.each do |pc|
-        Rails.logger.debug "removing imported content #{pc.content.id} from product #{name}"
-        Candlepin::Product.remove_content cp_id, pc.content.id
-      end
-    end
-
     def set_unlimited_subscription
       # we create unlimited subscriptions only for generic yum providers
       if self.provider and self.provider.yum_repo?
@@ -261,7 +252,7 @@ module Glue::Candlepin::Product
           queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
           queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
         when :import_from_cp
-          queue.create(:name => "delete imported content from locker environment: #{self.name}", :priority => 2, :action => [self, :remove_imported_content]) if AppConfig.katello?
+          # we leave it as it is - to not break re-import logic
         when :update
           #called when sync schedule changed, repo added, repo deleted
           queue.create(:name => "update content in candlein: #{self.name}", :priority => 1, :action => [self, :update_content])

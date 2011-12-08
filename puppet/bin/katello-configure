@@ -371,12 +371,17 @@ end
 
 # check if running as root and change current dir
 unless Process.uid == 0
-  $stderr.puts "ERROR: You must run katello-configure as root"
+  $stderr.puts "You must run katello-configure as root"
   exit_with :not_root
 end
 
 # we MUST change the current directory to /root because Puppet expects that
 Dir.chdir '/root'
+
+# check if puppet was already executed
+if File.exists? '/var/lib/katello/db_seed_done'
+  $stderr.puts "WARNING: Katello was already configured, reconfiguration is NOT supported yet"
+end
 
 # perform check-up
 check_hostname
