@@ -16,6 +16,10 @@
  * A small javascript file needed to load system subscription related stuff
  *
  */
+KT.panel.set_expand_cb(function(){
+	KT.menu.hoverMenu('#panel .third_level:first-child', { top : '75px' });
+});
+
 (function(){
 	var options = { create : 'new_system' };
 	

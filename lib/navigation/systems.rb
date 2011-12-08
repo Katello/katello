@@ -56,11 +56,12 @@ module Navigation
 
     def systems_navigation
       [
-        { :key => :general,
-          :name =>N_("General"),
+        { :key => :details,
+          :name =>N_("Details"),
           :url => lambda{edit_system_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"navigation_element"},
+          :items => systems_subnav
         },
         { :key => :subscriptions,
           :name =>N_("Subscriptions"),
@@ -79,12 +80,23 @@ module Navigation
           :url => lambda{packages_system_system_packages_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
+        }
+      ]
+    end
+
+    def systems_subnav
+      [
+        { :key => :system_info,
+          :name =>N_("System Info"),
+          :url => lambda{edit_system_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"third_level navigation_element"},
         },
         { :key => :facts,
           :name =>N_("Facts"),
           :url => lambda{facts_system_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"navigation_element"}
+          :options => {:class=>"third_level navigation_element"}
         }
       ]
     end
