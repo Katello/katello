@@ -13,6 +13,9 @@ git diff master --name-only | grep -v "katello.spec" | grep "^src/"   > $CHANGES
 cd ../..
 while read change
 do
-    cp --parents $change $HEADPIN
+    if [ -e "$change" ]
+    then
+        cp --parents $change $HEADPIN
+    fi
 done < $HEADPIN/$CHANGES_FILE
 cd $HEADPIN
