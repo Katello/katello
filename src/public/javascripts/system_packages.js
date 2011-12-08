@@ -53,6 +53,7 @@ KT.packages = function() {
     packages_in_progress = {},
     groups_in_progress = {},
     actions_updater = undefined,
+
     disableButtons = function() {
         remove_button.attr('disabled', 'disabled');
         update_button.attr('disabled', 'disabled');
@@ -94,6 +95,23 @@ KT.packages = function() {
 
         add_content_button.removeClass('disabled');
         remove_content_button.removeClass('disabled');
+    },
+    getActionType = function(item) {
+        var action_type = undefined;
+
+        if (item.find('td.package_action_status:contains("'+i18n.adding_package+'")').length > 0) {
+            action_type = KT.package_action_types.PKG_INSTALL;
+        } else if (item.find('td.package_action_status:contains("'+i18n.updating_package+'")').length > 0) {
+            action_type = KT.package_action_types.PKG_UPDATE;
+        } else if (item.find('td.package_action_status:contains("'+i18n.removing_package+'")').length > 0) {
+            action_type = KT.package_action_types.PKG_REMOVE;
+        } else if (item.find('td.package_action_status:contains("'+i18n.adding_group+'")').length > 0) {
+            action_type = KT.package_action_types.PKG_GRP_INSTALL;
+        } else if (item.find('td.package_action_status:contains("'+i18n.removing_group+'")').length > 0) {
+            action_type = KT.package_action_types.PKG_GRP_REMOVE;
+        }
+
+        return action_type;
     },
     morePackages = function() {
         var list = $('.packages');
@@ -347,10 +365,38 @@ KT.packages = function() {
         }
     },
     initPackages = function() {
+        initProgress();
         registerEvents();
         disableButtons();
         enableUpdateAll();
         updateLoadedSummary();
+    },
+    initProgress = function() {
+        // when the page loads, we need to initialize the 'in progress' structures, to support monitoring
+        // the status of any actions currently in progress...
+
+        // if we are currently polling for status, temporarily stop the updater while we initialize the structures
+        if (actions_updater !== undefined) {
+            actions_updater.stop();
+        }
+
+        $('tr.content_package').each( function() {
+            actions_in_progress[$(this).attr('data-uuid')] = getActionType($(this));
+            packages_in_progress[$.trim($(this).find('td.package_name').html())] = true;
+        });
+        $('tr.content_group').each( function() {
+            actions_in_progress[$(this).attr('data-uuid')] = getActionType($(this));
+            packages_in_progress[$.trim($(this).find('td.package_name').html())] = true;
+        });
+
+        // start the updater, if there are any actions in progress
+        if (Object.keys(actions_in_progress).length > 0) {
+            if (actions_updater === undefined){
+                startUpdater();
+            } else {
+                actions_updater.restart();
+            }
+        }
     },
     registerEvents = function() {
         more_button.bind('click', morePackages);
@@ -410,7 +456,7 @@ KT.packages = function() {
                             packages_in_progress[pkg_name] = true;
 
                             $('tr.content_package').find('td.package_name').each( function() {
-                                if ($(this).html() === pkg_name) {
+                                if ($.trim($(this).html()) === pkg_name) {
                                     already_exists = true;
                                     $(this).parent().attr('data-uuid', data);
                                     $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package);
@@ -450,7 +496,7 @@ KT.packages = function() {
                             groups_in_progress[group_name] = true;
 
                             $('tr.content_group').find('td.package_name').each( function() {
-                                if ($(this).html() === group_name) {
+                                if ($.trim($(this).html()) === group_name) {
                                     already_exists = true;
                                     $(this).parent().attr('data-uuid', data);
                                     $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group);
@@ -499,7 +545,7 @@ KT.packages = function() {
                             packages_in_progress[pkg_name] = true;
 
                             $('tr.content_package').find('td.package_name').each( function() {
-                                if ($(this).html() === pkg_name) {
+                                if ($.trim($(this).html()) === pkg_name) {
                                     already_exists = true;
                                     $(this).parent().attr('data-uuid', data);
                                     $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package);
@@ -539,7 +585,7 @@ KT.packages = function() {
                             groups_in_progress[group_name] = true;
 
                             $('tr.content_group').find('td.package_name').each( function() {
-                                if ($(this).html() === group_name) {
+                                if ($.trim($(this).html()) === group_name) {
                                     already_exists = true;
                                     $(this).parent().attr('data-uuid', data);
                                     $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group);
