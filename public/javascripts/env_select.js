@@ -19,6 +19,20 @@ var env_select =   {
      */
     scroll_obj: undefined,
     click_callback: undefined,
+
+    // To facilitate triggering UI elements to change state based upon the currently selected environment,
+    // this callback is called whenever the env is changed. Note that this does not guarantee that the env id
+    // is actually different, just that the user interacted w/ the UI in a way that it updated.
+    //
+    // eg. Consider user.js, which saves off the original env id and then enables/disables the save button.
+    // 1. The original id is set when the page is loaded (see _edit_environment.html.haml
+    // 2. Callback is defined in user.js to enable/disable save button
+    // 3. *IMPORTANT* Note that the callback is manually triggered in user.js:set_expand_cb(). This is where
+    //    the widget is populated with a new org.
+    // 4. Finally in this example case, once the new env is successfully saved the button should be disabled
+    //    and the original env updated. (see user_methods.js)
+    env_changed_callback: undefined,
+
     active_div:  undefined,
     recalc_scroll: function() {
         $(".path_entries").show();
@@ -44,6 +58,10 @@ var env_select =   {
         env_select.active_div = $(this);
         env_select.highlight_selected();
 
+        if(env_select.env_changed_callback){
+            env_select.env_changed_callback(env_select.get_selected_env());
+        }
+
         return false;
     },
     get_selected_env: function() {
@@ -63,6 +81,9 @@ var env_select =   {
 
         if (env_select.click_callback) {
           env_select.click_callback(id, $(this));
+        }
+        if(env_select.env_changed_callback){
+            env_select.env_changed_callback(id);
         }
 
         env_select.recalc_scroll();
