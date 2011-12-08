@@ -116,7 +116,7 @@ class katello::config {
     cwd         => $katello::params::katello_dir,
     user        => $katello::params::user,
     environment => "RAILS_ENV=${katello::params::environment}",
-    command     => "/usr/bin/env > ${katello::params::dbenv_log}",
+    command     => "/usr/bin/env > ${katello::params::db_env_log}",
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
                 'katello' => [ Class["candlepin::service"], Class["pulp::service"] ],

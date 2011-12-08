@@ -306,6 +306,8 @@ class ImportManifest(SingleProviderAction):
         super(ImportManifest, self).setup_parser()
         self.parser.add_option("--file", dest="file",
                                help=_("path to the manifest file (required)"))
+        self.parser.add_option("--force", dest="force", action="store_true",
+                               help=_("force reimporting the manifest"))
 
 
     def check_options(self):
@@ -317,6 +319,7 @@ class ImportManifest(SingleProviderAction):
         provName = self.get_option('name')
         orgName  = self.get_option('org')
         manifestPath = self.get_option('file')
+        force = self.get_option('force')
 
         try:
             f = open(get_abs_path(manifestPath))
@@ -326,7 +329,7 @@ class ImportManifest(SingleProviderAction):
 
         prov = get_provider(orgName, provName)
         if prov != None:
-            response = run_spinner_in_bg(self.api.import_manifest, (prov["id"], f), message=_("Importing manifest, please wait... "))
+            response = run_spinner_in_bg(self.api.import_manifest, (prov["id"], f, force), message=_("Importing manifest, please wait... "))
             f.close()
             print response
             return os.EX_OK

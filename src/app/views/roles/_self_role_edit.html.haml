@@ -21,8 +21,11 @@
       .grid_3.ra
         = _("Assigned roles:")
       .grid_6.la
-        - for role in @user.defined_roles
-          = role.name
+        -if @user.defined_roles.length > 0
+          - for role in @user.defined_roles
+            = role.name
+        -else
+          No assigned roles
 
     -# no self roles for now
     -#%h5.grid_10 #{_("Permissions")}
