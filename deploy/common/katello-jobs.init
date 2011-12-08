@@ -56,7 +56,7 @@ status_q() {
 
 start() {
 
-    [ ! -f $KATELLO_DATA_DIR/initdb_done ] && echo "Please run service katello initdb first" && echo_failure && return 1
+    [ ! -f $KATELLO_DATA_DIR/db_seed_done ] && echo "Please run katello-configure first" && echo_failure && return 1
 
     echo -n $"Starting $prog: "
     if status_q; then
