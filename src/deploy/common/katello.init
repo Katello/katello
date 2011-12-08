@@ -66,7 +66,7 @@ status_q() {
 start() {
     check_privilege
 
-    [ ! -f $KATELLO_DATA_DIR/initdb_done ] && echo "Please run initdb first" && echo_failure && return 1
+    [ ! -f $KATELLO_DATA_DIR/db_seed_done ] && echo "Please run initdb first" && echo_failure && return 1
 
     echo -n $"Starting $prog: "
     if status_q; then
@@ -152,7 +152,7 @@ case "$1" in
         rm -rf $TMPDIR
         ;;
     initdb)
-        [ -f $KATELLO_DATA_DIR/initdb_done ] && echo "Database was already initialized, remove $KATELLO_DATA_DIR/initdb_done" && echo_failure && return 1
+        [ -f $KATELLO_DATA_DIR/db_seed_done ] && echo "Database was already initialized, remove $KATELLO_DATA_DIR/db_seed_done" && echo_failure && return 1
 
         # check if there are not wrong permission of schema.rb
         if [ -f "$KATELLO_DATA_DIR/schema.rb" ] && [ "$(stat -c %U $KATELLO_DATA_DIR/schema.rb)" != "$KATELLO_USER" ]; then
@@ -165,7 +165,7 @@ case "$1" in
         pushd $KATELLO_HOME >/dev/null
         RAILS_ENV=$KATELLO_ENV rake setup --trace 2>&1 | tee /var/log/katello/initdb.log
         popd >/dev/null
-        touch $KATELLO_DATA_DIR/initdb_done
+        touch $KATELLO_DATA_DIR/db_seed_done
         ;;
     *)
         echo "Usage: {start|stop|restart|condrestart|status|initdb}"
