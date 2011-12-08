@@ -4,31 +4,31 @@
 = javascript do
   :javascript
     localize({
-      "adding_package"            : '#{_('Adding Package...')}',
+      "adding_package"            : '#{adding_package}',
       "adding_package_success"    : '#{_('Add Package Completed')}',
       "adding_package_failed"     : '#{_('Add Package Failed')}',
       "adding_package_canceled"   : '#{_('Add Package Canceled')}',
       "adding_package_timeout"    : '#{_('Add Package Timeout')}',
 
-      "updating_package"          : '#{_('Updating Package...')}',
+      "updating_package"          : '#{updating_package}',
       "updating_package_success"  : '#{_('Update Package Completed')}',
       "updating_package_failed"   : '#{_('Update Package Failed')}',
       "updating_package_canceled" : '#{_('Update Package Canceled')}',
       "updating_package_timeout"  : '#{_('Update Package Timeout')}',
 
-      "removing_package"          : '#{_('Removing Package...')}',
+      "removing_package"          : '#{removing_package}',
       "removing_package_success"  : '#{_('Remove Package Completed')}',
       "removing_package_failed"   : '#{_('Remove Package Failed')}',
       "removing_package_canceled" : '#{_('Remove Package Canceled')}',
       "removing_package_timeout"  : '#{_('Remove Package Timeout')}',
 
-      "adding_group"              : '#{_('Adding Package Group...')}',
+      "adding_group"              : '#{adding_package_group}',
       "adding_group_success"      : '#{_('Add Package Group Completed')}',
       "adding_group_failed"       : '#{_('Add Package Group Failed')}',
       "adding_group_canceled"     : '#{_('Add Package Group Canceled')}',
       "adding_group_timeout"      : '#{_('Add Package Group Timeout')}',
 
-      "removing_group"            : '#{_('Removing Package Group...')}',
+      "removing_group"            : '#{removing_package_group}',
       "removing_group_success"    : '#{_('Remove Package Group Completed')}',
       "removing_group_failed"     : '#{_('Remove Package Group Failed')}',
       "removing_group_canceled"   : '#{_('Remove Package Group Canceled')}',
@@ -82,7 +82,8 @@
                     %a#add_content{:style => 'padding-left: 10px;'} #{_('+ Add')}
                     %a#remove_content{:style => 'padding-left: 10px;'} #{_('- Remove')}
 
-            = render :partial => 'package_items', :locals => {:packages => packages}
+            = render :partial => 'package_items', :locals => {:package_tasks => package_tasks, :group_tasks => group_tasks,
+                                                              :packages => packages}
 
       #list-spinner
         = image_tag("spinner.gif", :class=>"ajax_scroll")

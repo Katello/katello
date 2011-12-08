@@ -113,8 +113,16 @@ class SystemPackagesController < ApplicationController
     else
       packages = []
     end
-    render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages,
+
+    package_tasks = @system.tasks.where(:task_type => [:package_install, :package_update, :package_remove],
+                                        :state => [:waiting, :running])
+    group_tasks = @system.tasks.where(:task_type => [:package_group_install, :package_group_remove],
+                                      :state => [:waiting, :running])
+
+    render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system => @system, :packages => packages,
                                                                        :total_packages => total_packages,
+                                                                       :package_tasks => package_tasks,
+                                                                       :group_tasks => group_tasks,
                                                                        :offset => offset, :editable => @system.editable?}
   end
 
@@ -144,7 +152,8 @@ class SystemPackagesController < ApplicationController
     else
       packages = []
     end
-    render :partial=>"package_items", :locals=>{:packages => packages, :offset=> offset}
+    render :partial=>"package_items", :locals=>{:packages => packages, :package_tasks => nil,
+                                                :group_tasks => nil, :offset=> offset}
   end
 
   def status
