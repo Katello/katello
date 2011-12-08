@@ -35,7 +35,11 @@ describe Api::ProductsController, :katello => true do
     @product.stub(:arch).and_return('noarch')
     @product.save!
     ep_locker = EnvironmentProduct.find_or_create(@organization.locker, @product)
-    @repo_locker= Repository.create!(:environment_product => ep_locker, :name=> "repo", :pulp_id=>"2",:enabled => true)
+    @repo_locker= Repository.create!(:environment_product => ep_locker,
+                                     :name=> "repo",
+                                     :relative_path => "#{@organization.name}/Locker/prod/repo",
+                                     :pulp_id=>"2",
+                                     :enabled => true)
     @repo = promote(@repo_locker, @environment)
 
 

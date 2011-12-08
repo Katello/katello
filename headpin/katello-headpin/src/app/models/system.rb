@@ -31,6 +31,8 @@ class System < ActiveRecord::Base
   # TODO - system could belong to more than one system template in future (activation keys)
   belongs_to :system_template
 
+  has_many :system_tasks, :dependent => :destroy
+
   has_many :system_activation_keys, :dependent => :destroy
   has_many :activation_keys, :through => :system_activation_keys
 
@@ -82,6 +84,32 @@ class System < ActiveRecord::Base
     end
   end
 
+  def install_packages packages
+    pulp_task = self.install_package(packages)
+    system_task = save_system_task(pulp_task, :package_install, :packages, packages)
+  end
+
+  def uninstall_packages packages
+    pulp_task = self.uninstall_package(packages)
+    system_task = save_system_task(pulp_task, :package_remove, :packages, packages)
+  end
+
+  def update_packages packages=nil
+    # if no packages are provided, a full system update will be performed (e.g ''yum update' equivalent)
+    pulp_task = self.update_package(packages)
+    system_task = save_system_task(pulp_task, :package_update, :packages, packages)
+  end
+
+  def install_package_groups groups
+    pulp_task = self.install_package_group(groups)
+    system_task = save_system_task(pulp_task, :package_group_install, :groups, groups)
+  end
+
+  def uninstall_package_groups groups
+    pulp_task = self.uninstall_package_group(groups)
+    system_task = save_system_task(pulp_task, :package_group_remove, :groups, groups)
+  end
+
   # returns list of virtual permission tags for the current user
   def self.list_tags
     select('id,name').all.collect { |m| VirtualTag.new(m.id, m.name) }
@@ -129,9 +157,15 @@ class System < ActiveRecord::Base
     ret
   end
 
+  def tasks
+    SystemTask.refresh_for_system(self)
+  end
 
   private
-  
+    def save_system_task pulp_task, task_type, parameters_type, parameters
+      SystemTask.make(self, pulp_task, task_type, parameters_type => parameters)
+    end
+
     def fill_defaults
       self.description = "Initial Registration Params" unless self.description
       self.location = "None" unless self.location
