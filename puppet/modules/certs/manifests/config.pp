@@ -6,12 +6,14 @@ class certs::config {
   if ($certs::params::skip_ssl_ca_generation == "true") {
 
       exec { "generate-ssl-server-certificate-key":
+        cwd => '/root',
         command => "rhn-ssl-tool --gen-server --key-only --server-key '${https_cert_name}.key'",
         path => "/usr/bin:/bin",
         creates => "/root/ssl-build/$fqdn/$https_cert_name.key",
       }
 
       exec { "generate-ssl-server-certificate-request":
+        cwd => '/root',
         command => "rhn-ssl-tool --gen-server --cert-req-only --set-country '${certs::params::ssl_ca_country}' --set-state '${certs::params::ssl_ca_state}' --set-city '${certs::params::ssl_ca_city}' --set-org '${certs::params::ssl_ca_org}' --set-org-unit '${certs::params::ssl_ca_org_unit}' --set-email '${certs::params::ssl_ca_email}' --cert-expiration '${certs::params::ssl_cert_expiration}' --server-cert-req='${https_cert_name}.req' --server-key='${https_cert_name}.key'",
         path => "/usr/bin:/bin",
         creates => "/root/ssl-build/$fqdn/$https_cert_name.csr",
@@ -19,12 +21,14 @@ class certs::config {
       }
 
       exec { "generate-ssl-qpid-broker-certificate-key":
+        cwd => '/root',
         command => "rhn-ssl-tool --gen-server --key-only --server-key '${qpid_cert_name}.key'",
         path => "/usr/bin:/bin",
         creates => "/root/ssl-build/$fqdn/$qpid_cert_name.key",
       }
 
       exec { "generate-ssl-qpid-broker-certificate-request":
+        cwd => '/root',
         command => "rhn-ssl-tool --gen-server --cert-req-only --set-country '${certs::params::ssl_ca_country}' --set-state '${certs::params::ssl_ca_state}' --set-city '${certs::params::ssl_ca_city}' --set-org 'pulp' --set-org-unit '${certs::params::ssl_ca_org_unit}' --set-email '${certs::params::ssl_ca_email}' --cert-expiration '${certs::params::ssl_cert_expiration}' --server-cert-req='${qpid_cert_name}.req' --server-key='${qpid_cert_name}.key'",
         path => "/usr/bin:/bin",
         creates => "/root/ssl-build/$fqdn/$qpid_cert_name.csr",
@@ -117,6 +121,7 @@ class certs::config {
       $https_package = "katello-${https_cert_name}-key-pair"
 
       exec { "generate-ssl-server-certificate":
+        cwd => '/root',
         command => "rhn-ssl-tool --gen-server -p \"$(cat ${certs::params::ssl_ca_password_file})\"  --ca-cert '${katello_pub_cert}' --ca-key '${katello_private_key}' --set-country '${certs::params::ssl_ca_country}' --set-state '${certs::params::ssl_ca_state}' --set-city '${certs::params::ssl_ca_city}' --set-org '${certs::params::ssl_ca_org}' --set-org-unit '${certs::params::ssl_ca_org_unit}' --set-email '${certs::params::ssl_ca_email}' --cert-expiration '${certs::params::ssl_cert_expiration}' --server-cert '${https_cert_name}.crt' --server-cert-req '${https_cert_name}.req' --server-key '${https_cert_name}.key' --server-tar '${https_package}' --server-rpm '${https_package}'",
         path => "/usr/bin:/bin",
         creates => "/root/ssl-build/$fqdn/$https_cert_name.crt",
@@ -134,6 +139,7 @@ class certs::config {
       $qpid_package = "katello-${qpid_cert_name}-key-pair"
 
       exec { "generate-ssl-qpid-broker-certificate":
+        cwd => '/root',
         command => "rhn-ssl-tool --gen-server -p \"$(cat ${certs::params::ssl_ca_password_file})\" --ca-cert '${katello_pub_cert}' --ca-key '${katello_private_key}' --set-country '${certs::params::ssl_ca_country}' --set-state '${certs::params::ssl_ca_state}' --set-city '${certs::params::ssl_ca_city}' --set-org 'pulp' --set-org-unit '${certs::params::ssl_ca_org_unit}' --set-email '${certs::params::ssl_ca_email}' --cert-expiration '${certs::params::ssl_cert_expiration}' --server-cert '${qpid_cert_name}.crt' --server-cert-req '${qpid_cert_name}.req' --server-key '${qpid_cert_name}.key' --server-tar 'katello-${qpid_cert_name}-key-pair' --server-rpm 'katello-${qpid_cert_name}-key-pair'",
         path => "/usr/bin:/bin",
         creates => "/root/ssl-build/$fqdn/$qpid_cert_name.crt",
