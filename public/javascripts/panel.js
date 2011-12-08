@@ -110,9 +110,15 @@ $(document).ready(function () {
             url: $(this).attr('href'),
             dataType: 'html',
             success: function (data) {
+            	var callbacks = KT.panel.get_expand_cb(),
+                	cb = function(){};
+            	
                 thisPanel.find(".panel-content").html(data);
                 KT.panel.panelResize($('#panel_main'), false);
-                KT.panel.get_expand_cb()();
+                
+                for( cb in callbacks ){
+                	callbacks[cb]();
+                }
             }
         });
         return false;
@@ -198,7 +204,7 @@ KT.panel = (function ($) {
         current_scroll = 0,
         panels_list = [],
         left_list_content = "",
-        expand_cb = function () {},
+        expand_cb = [],
         //callback after a pane is loaded
         contract_cb = function () {},
         switch_content_cb = function () {},
@@ -262,6 +268,8 @@ KT.panel = (function ($) {
                 dataType: 'html',
                 success: function (data, status, xhr) {
                     var pc = panelContent.html(data);
+                    var callback;
+                    
                     spinner.hide();
                     pc.fadeIn(function () {
                         $(".panel-content :input:visible:enabled:first").focus();
@@ -271,7 +279,10 @@ KT.panel = (function ($) {
                     } else {
                         panelResize($('#panel_main'), isSubpanel);
                     }
-                    expand_cb(name);
+                    
+                    for( callback in expand_cb ){
+                    	expand_cb[callback](name);
+                    }
                     // Add a handler for ellipsis
                     $(".one-line-ellipsis").ellipsis(true);
                 },
@@ -598,10 +609,10 @@ KT.panel = (function ($) {
         })();
     return {
         set_expand_cb: function (callBack) {
-            expand_cb = callBack;
+            expand_cb.push(callBack);
         },
         get_expand_cb: function () {
-            return expand_cb
+            return expand_cb;
         },
         set_contract_cb: function (callBack) {
             contract_cb = callBack;

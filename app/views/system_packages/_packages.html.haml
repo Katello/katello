@@ -39,11 +39,7 @@
 
 = javascript :filtertable, :form, :system_packages
 
-= content_for :title do
-  #{@system.name}
-
-= content_for :navigation do
-  = render_navigation(:items => systems_navigation, :expand_all => true, :level => 1)
+= render :partial => "systems/system_tupane_header_nav"
 
 = content_for :content do
   -#.grid_8.summary

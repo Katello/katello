@@ -101,20 +101,28 @@ KT.menu = (function(){
         var children = $('.third_level:first-child');
 
         $.each(children, function(i, item) {
-            var child = $(item);
-            var li = child.parent().parent();
-            var  ul = child.parent();
-            li.prepend($('<div class="arrow_icon_menu"></div>'));
-            li.hoverIntent(
-                function(){
-                  ul.addClass("third_level").slideDown('fast');
-                },
-                function(){
-                  ul.slideUp('fast').removeClass("third_level");
-            });
-            li.mouseenter().mouseleave();
+            KT.menu.hoverMenu(item);
         });
-
+    },
+    hoverMenu : function(element, options){
+	    var child = $(element);
+        var li = child.parent().parent();
+        var ul = child.parent();
+        var options = options || {};
+        
+        if( options.top ){
+        	ul.css('top', options.top);
+        }
+        
+        li.prepend($('<div class="arrow_icon_menu"></div>'));
+        li.hoverIntent(
+            function(){
+              ul.addClass("third_level").slideDown('fast');
+            },
+            function(){
+              ul.slideUp('fast').removeClass("third_level");
+        });
+        li.mouseenter().mouseleave();
     }
   };
 })();
