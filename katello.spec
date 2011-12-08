@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.134
+Version:        0.1.135
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
