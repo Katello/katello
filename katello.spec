@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.131
+Version:        0.1.132
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -336,6 +336,15 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Dec 08 2011 Ivan Necas <inecas@redhat.com> 0.1.132-1
+- reimport-manifest - don't delete untracked products when importing
+  (inecas@redhat.com)
+- reimport-manifest - don't manipulate CP content on promotion
+  (inecas@redhat.com)
+- reimport-manifest - repos relative paths conform with content url
+  (inecas@redhat.com)
+- reimport-manifest - support for force option while manifest import
+  (inecas@redhat.com)
 * Wed Dec 07 2011 Shannon Hughes <shughes@redhat.com> 0.1.130-1
 - bump version to fix tags (shughes@redhat.com)
 
