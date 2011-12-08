@@ -175,9 +175,11 @@ class certs::config {
         ensure => "directory"
       }
 
+      # TODO - we should split this up into atomic actions and execute them only and only if input files change
+      # currently we regenerate the NSS db each run
       exec { "create-nss-db":
-        command => "certutil -N -d '${nss_db_dir}' -f '${certs::params::nss_db_password_file}'; certutil -A -d '${nss_db_dir}' -n 'ca' -t 'TCu,Cu,Tuw' -a -i '${katello_pub_cert}'; certutil -A -d '${nss_db_dir}' -n 'broker' -t ',,' -a -i '/etc/pki/tls/certs/$qpid_cert_name.crt'; certutil -A -d '${nss_db_dir}' -n 'tomcat' -t ',,' -a -i '/etc/pki/tls/certs/$https_cert_name.crt'",
-        path => "/usr/bin",
+        command => "rm -f ${nss_db_dir}/*; certutil -N -d '${nss_db_dir}' -f '${certs::params::nss_db_password_file}'; certutil -A -d '${nss_db_dir}' -n 'ca' -t 'TCu,Cu,Tuw' -a -i '${katello_pub_cert}'; certutil -A -d '${nss_db_dir}' -n 'broker' -t ',,' -a -i '/etc/pki/tls/certs/$qpid_cert_name.crt'; certutil -A -d '${nss_db_dir}' -n 'tomcat' -t ',,' -a -i '/etc/pki/tls/certs/$https_cert_name.crt'",
+        path    => "/usr/bin",
         require => [Exec["deploy-ssl-qpid-broker-certificate"], Exec["deploy-ssl-server-certificate"], File["${certs::params::nss_db_password_file}"], File[$nss_db_dir]]
       }
   }
