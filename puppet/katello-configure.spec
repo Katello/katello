@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.27
+Version:        0.1.28
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Thu Dec 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.28-1
+- puppet - fixing variable reassignment
+
 * Thu Dec 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.27-1
 - puppet - splitting migrate and seed exec actions up
 - puppet - renaming initdb_done to db_seed_done
