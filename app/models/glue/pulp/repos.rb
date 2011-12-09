@@ -55,7 +55,7 @@ module Glue::Pulp::Repos
         :contentUrl => path,
         :gpgUrl => "",
         :type => "yum",
-        :label => name,
+        :label => "#{self.id}-#{name}",
         :vendor => Provider::CUSTOM
       },
       :enabled => true
