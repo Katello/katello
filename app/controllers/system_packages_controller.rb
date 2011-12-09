@@ -34,13 +34,13 @@ class SystemPackagesController < ApplicationController
   end
 
   def add
-    if !params[:packages].nil?
+    if !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
       packages = params[:packages].split(/ *, */ )
       task = @system.install_packages packages
       notice _("Install of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
 
-    elsif !params[:groups].nil?
+    elsif !params[:groups].blank?
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
       task = @system.install_package_groups groups
@@ -61,13 +61,13 @@ class SystemPackagesController < ApplicationController
       task = @system.uninstall_packages packages
       notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => packages.join(',')})
 
-    elsif !params[:packages].nil?
+    elsif !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
       packages = params[:packages].split(/ *, */ )
       task = @system.uninstall_packages packages
       notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
 
-    elsif !params[:groups].nil?
+    elsif !params[:groups].blank?
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
       task = @system.uninstall_package_groups groups
@@ -75,7 +75,7 @@ class SystemPackagesController < ApplicationController
 
     else
       errors _("Empty request received to install Packages or Package Groups System '%{s}'." % {:s => @system['name']})
-      render :test => '' and return
+      render :text => '' and return
     end
 
     render :text => task.task_status.uuid
