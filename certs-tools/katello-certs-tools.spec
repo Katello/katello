@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_var}/www/html/pub/bootstrap/client_config_update.py*
 
 %changelog
+* Thu Dec 08 2011 Shannon Hughes <shughes@redhat.com> 1.0.1-2
+- brew build (shughes@redhat.com)
+
 * Mon Dec 05 2011 Lukas Zapletal <lzap+git@redhat.com> 1.0.1-1
 - new package built with tito
 
