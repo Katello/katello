@@ -45,6 +45,9 @@ rm -rf %{buildroot}
 %doc LICENSE
 
 %changelog
+* Thu Dec 08 2011 Shannon Hughes <shughes@redhat.com> 0.13-2
+- brew build (shughes@redhat.com)
+
 * Thu Dec 08 2011 Mike McCune <mmccune@redhat.com> 0.13-1
 - moving client/ to agent/, more appropriate (mmccune@redhat.com)
 
