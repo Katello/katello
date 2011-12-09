@@ -3,7 +3,7 @@ Summary: Katello SSL Key/Cert Tool
 Group: Applications/Internet
 License: GPLv2 and Python
 Version: 1.0.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL:      https://fedorahosted.org/katello
 Source0:  https://fedorahosted.org/releases/k/a/katello/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
