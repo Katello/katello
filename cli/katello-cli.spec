@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Dec 08 2011 Shannon Hughes <shughes@redhat.com> 0.1.23-3
+- brew build (shughes@redhat.com)
+
 * Thu Dec 08 2011 Mike McCune <mmccune@redhat.com> 0.1.23-2
 - periodic rebuild
 * Thu Dec 08 2011 Mike McCune <mmccune@redhat.com>
