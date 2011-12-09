@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.31
+Version:        0.1.32
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,10 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Fri Dec 09 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.32-1
+- 765813 - Puppet: create-nss-db fails on RHEL 6.2 [TEMP FIX]
+- 758712 - Installer (db:seed) sometimes fail [TEMP FIX]
+
 * Thu Dec 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.31-1
 - puppet - regenerate NSS db each run - fix
 
