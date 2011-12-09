@@ -36,9 +36,15 @@ class SystemPackagesController < ApplicationController
   def add
     if !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
-      packages = params[:packages].split(/ *, */ )
-      task = @system.install_packages packages
-      notice _("Install of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
+      packages = validate_package_list_format(params[:packages])
+      
+      if packages
+        task = @system.install_packages packages
+        notice _("Install of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
+      else
+        errors _("One or more errors found in Package names '%{s}'." % {:s => @system['name']})
+        render :text => '' and return
+      end
 
     elsif !params[:groups].blank?
       # user entered one or more package group names (as comma-separated list) in the content box
@@ -63,9 +69,15 @@ class SystemPackagesController < ApplicationController
 
     elsif !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
-      packages = params[:packages].split(/ *, */ )
-      task = @system.uninstall_packages packages
-      notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
+      packages = validate_package_list_format(params[:packages])
+      
+      if packages
+        task = @system.uninstall_packages packages
+        notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
+      else
+        errors _("One or more errors found in Package names '%{s}'." % {:s => @system['name']})
+        render :text => '' and return        
+      end
 
     elsif !params[:groups].blank?
       # user entered one or more package group names (as comma-separated list) in the content box
@@ -183,6 +195,26 @@ class SystemPackagesController < ApplicationController
       last = offset + current_user.page_size
       last = systems.length if last > systems.length
       systems[offset...last]
+  end
+  
+  def valid_package_characters
+    /[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\-\.\_\+\,]+/
+  end
+  
+  def validate_package_list_format packages
+    packages = packages.split(/ *, */ )
+
+    packages.each{ |package_name|
+      if not valid_package_name_format(package_name).nil?
+        return false
+      end
+    }
+    
+    return packages
+  end
+  
+  def valid_package_name_format package
+    return (package =~ valid_package_characters)
   end
 
 end

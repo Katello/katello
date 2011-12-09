@@ -33,6 +33,8 @@
       "removing_group_failed"     : '#{_('Remove Package Group Failed')}',
       "removing_group_canceled"   : '#{_('Remove Package Group Canceled')}',
       "removing_group_timeout"    : '#{_('Remove Package Group Timeout')}',
+      
+      "validation_error_name_format" : '#{_('One or more package names are invalid.')}',
 
       "x_of_y_packages" : function(x,y){ return '#{_("(Loaded %X of %Y Total)")}'.replace("%X", x).replace("%Y", y); }
       });
@@ -73,6 +75,10 @@
                   = label_tag _('Packages')
                   = radio_button_tag :perform_action, :package_groups, false
                   = label_tag _('Package Groups')
+
+              %tr#error_message_container
+                %td{:colspan => 4}
+                  %div#error_message.validation_error_text
 
               %tr#content_form_row.no_sort.not_filtered
                 %td{:colspan => 4}
