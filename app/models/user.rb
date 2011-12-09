@@ -18,8 +18,13 @@ class User < ActiveRecord::Base
   include Glue::Pulp::User if (AppConfig.use_cp and AppConfig.use_pulp)
   include Glue if AppConfig.use_cp
   include AsyncOrchestration
+  include IndexedModel
 
   acts_as_reportable
+
+  index_options :json=>{:except=>[:password, :password_reset_token,
+                                  :password_reset_sent_at, :helptips_enabled,
+                                  :disabled, :own_role_id]}
 
   has_many :roles_users
   has_many :roles, :through => :roles_users

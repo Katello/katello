@@ -117,6 +117,11 @@ module LazyAccessor
       end
     end
 
+    def lazy_attributes
+      self.class.lazy_attributes
+    end
+
+
     private
     def remote_attribute_value(attr, initializer, in_group)
       return nil if new_record?
