@@ -3,13 +3,13 @@ class candlepin::config {
   postgres::createuser { $candlepin::params::db_user:
     passwd => $candlepin::params::db_pass,
     roles  => "CREATEDB",
-    logfile  => '/var/log/katello/katello-configure/create-postgresql-candlepin-user.log',
+    logfile  => '${katello::params::log_base}/katello-configure/create-postgresql-candlepin-user.log',
   }
   # cpsetup drops our db, safe to keep it here until this gets fixed in cpsetup
   postgres::createdb {$candlepin::params::db_name:
     owner   => $candlepin::params::db_user,
     require => Postgres::Createuser[$candlepin::params::db_user],
-    logfile  => '/var/log/katello/katello-configure/create-postgresql-candlepin-database.log',
+    logfile  => '${katello::params::log_base}/katello-configure/create-postgresql-candlepin-database.log',
   }
 
   file { "/etc/candlepin/candlepin.conf":

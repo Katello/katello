@@ -3,7 +3,7 @@ class candlepin::params {
   $db_name = "candlepin"
   $db_pass = "candlepin"
   # where to store output from cpsetup execution
-  $cpsetup_log = "/var/log/katello/katello-configure/cpsetup.log"
+  $cpsetup_log = "${katello::params::log_base}/katello-configure/cpsetup.log"
   $crl_file = "/var/lib/candlepin/candlepin-crl.crl"
 
   require "katello::params"
