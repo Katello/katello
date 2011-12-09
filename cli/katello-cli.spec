@@ -19,7 +19,7 @@ Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
 Version:       0.1.23
-Release:       2%{?dist}
+Release:       3%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
