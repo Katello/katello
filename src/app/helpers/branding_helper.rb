@@ -13,10 +13,10 @@
 
 module BrandingHelper
   def project_name
-    _("Katello")
+    _("Headpin")
   end
   
   def default_title
-    _("Open Source Systems Management")
+    _("Open Source Subscription Management")
   end
 end
