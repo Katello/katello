@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.135
+Version:        0.1.136
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 
@@ -336,6 +336,14 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Dec 09 2011 Ivan Necas <inecas@redhat.com> 0.1.136-1
+- 758219 - make labels for custom content unique (inecas@redhat.com)
+- spec test fix for create system (TODO: add default env tests)
+  (thomasmckay@redhat.com)
+- Merge branch 'master' into BZ-761726 (thomasmckay@redhat.com)
+- BZ-761710 (thomasmckay@redhat.com)
+- fixed another rescue handler (thomasmckay@redhat.com)
+
 * Thu Dec 08 2011 Mike McCune <mmccune@redhat.com> 0.1.133-1
 - periodic rebuild
 * Thu Dec 08 2011 Ivan Necas <inecas@redhat.com> 0.1.132-1
