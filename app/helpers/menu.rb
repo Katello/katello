@@ -21,16 +21,12 @@ module Menu
       helper_method :render_menu
     end
   end
-  def render_menu(level)
-    @menu_items ||= create_menu
-    render_navigation(:items=>Support.deep_copy(@menu_items), :expand_all=>true, :level => level)
+  def render_menu(level, items = nil)
+    items ||= menu_main
+    prune_menu(items)
+    render_navigation(:items=>items, :expand_all=>true, :level => level)
   end
 
-  def create_menu
-    ret = menu_main
-    prune_menu ret
-    ret
-  end
 
   private
   def prune_menu menu_items
