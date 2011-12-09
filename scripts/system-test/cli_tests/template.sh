@@ -22,6 +22,7 @@ test_success "template update add package using nvrea"     template update --nam
 test_success "template update add package group"           template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group="mammal"
 test_success "template update add package group categrory" template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_package_group_category="all"
 test_success "template update add parameter"               template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_parameter="attr" --value="X"
+test_success "template update add distribution"            template update --name="$TEMPLATE_NAME" --org="$TEST_ORG" --add_distribution="ks-TestFamily-TestVariant-16-x86_64"
 
 check_delayed_jobs_running
 
@@ -29,10 +30,7 @@ test_success "create a changeset for promoting the template" changeset create  -
 test_success "add template to the changeset"                 changeset update  --org="$TEST_ORG" --environment="$TEST_ENV" --name="$TEMPLATE_CS_NAME" --add_template="$TEMPLATE_NAME"
 test_success "promote a changeset with the template"         changeset promote --org="$TEST_ORG" --environment="$TEST_ENV" --name="$TEMPLATE_CS_NAME"
 
-# TODO add distribution test (we need a small repo with distribution - then swap the following tests to "success")
-
-test_failure "template export in tdl"                 template export --name="$TEMPLATE_NAME" --org="$TEST_ORG" --format=tdl  --file=/dev/null --environment="$TEST_ENV"
-test_failure "template export in tdl"                 template export --name="$TEMPLATE_NAME" --org="$TEST_ORG" --format=tdl  --file=/dev/null --environment="$TEST_ENV"
+test_success "template export in tdl"                 template export --name="$TEMPLATE_NAME" --org="$TEST_ORG" --format=tdl  --file=/dev/null --environment="$TEST_ENV"
 test_success "template export in json"                template export --name="$TEMPLATE_NAME" --org="$TEST_ORG" --format=json --file=/dev/null --environment="$TEST_ENV"
 test_success "template export in json (default)"      template export --name="$TEMPLATE_NAME" --org="$TEST_ORG" --file=/dev/null --environment="$TEST_ENV"
 

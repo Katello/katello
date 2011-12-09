@@ -191,12 +191,6 @@ describe SystemsController do
           response.should render_template("subscriptions")
         end
 
-        it "should show packages", :katello => true do
-          get :packages, :id => @system.id
-          response.should be_success
-          response.should render_template("packages")
-        end
-
         it "should show systems by env" do
           @environment2 = KTEnvironment.new(:name => 'testenv', :prior => @organization.locker.id, :organization => @organization)
           @environment2.save!

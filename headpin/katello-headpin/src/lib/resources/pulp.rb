@@ -148,7 +148,7 @@ module Pulp
       end
 
       def dist_path
-        "/pulp/api/distribution/"
+        "/pulp/api/distributions/"
       end
     end
   end
@@ -210,6 +210,13 @@ module Pulp
       # :id, :name, :arch, :groupid, :feed
       def update repo_id, attrs
         body = put(Repository.repository_path + repo_id +"/", JSON.generate(attrs), self.default_headers).body
+        find repo_id
+      end
+
+      # specific call to just update the sync schedule for a repo
+      def update_schedule(repo_id, schedule)
+        body = put(Repository.repository_path + repo_id +"/schedules/sync/",
+                   JSON.generate(:schedule => schedule), self.default_headers).body
         find repo_id
       end
 
@@ -373,6 +380,41 @@ module Pulp
       def installed_packages consumer_id
         response = get(consumer_path(consumer_id) + "package_profile/", self.default_headers)
         JSON.parse(response.body)
+      end
+
+      def install_packages consumer_id, package_names
+        url = consumer_path(consumer_id) + "installpackages/"
+        attrs = {:packagenames => package_names}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def uninstall_packages consumer_id, package_names
+        url = consumer_path(consumer_id) + "uninstallpackages/"
+        attrs = {:packagenames => package_names}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def update_packages consumer_id, package_names
+        url = consumer_path(consumer_id) + "updatepackages/"
+        attrs = {:packagenames => package_names}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def install_package_groups consumer_id, package_groups
+        url = consumer_path(consumer_id) + "installpackagegroups/"
+        attrs = {:groupids => package_groups}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
+      end
+
+      def uninstall_package_groups consumer_id, package_groups
+        url = consumer_path(consumer_id) + "uninstallpackagegroups/"
+        attrs = {:groupids => package_groups}
+        response = self.post(url, attrs.to_json, self.default_headers)
+        JSON.parse(response.body).with_indifferent_access
       end
 
       def destroy consumer_id

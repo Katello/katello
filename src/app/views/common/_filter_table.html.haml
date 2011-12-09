@@ -1,4 +1,5 @@
 %form#filter_form.clear
-  %input{ :name => "f", :type => "search", :placeholder => _('Filter...'), :id=>"filter"}
-  %button.filter_button #{_("Filter")}
+  - filter_placeholder = filter_placeholder.nil? ? _('Filter...') : filter_placeholder
+  %input{ :name => "f", :type => "search", :placeholder => filter_placeholder, :id=>"filter"}
+  %button.filter_button #{('Filter')}
   %br.clear

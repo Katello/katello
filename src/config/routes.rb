@@ -65,10 +65,19 @@ Src::Application.routes.draw do
   end
 
   resources :systems, :except => [:destroy] do
+    resources :system_packages, :only => {} do
+      collection do
+        put :add
+        post :remove
+        post :update
+        get :packages
+        get :more_packages
+        get :status
+      end
+    end
+
     member do
       get :edit
-      get :packages
-      get :more_packages
       get :subscriptions
       post :update_subscriptions
       get :products
@@ -458,6 +467,7 @@ Src::Application.routes.draw do
     resources :users do
       get :report, :on => :collection
     end
+    resources :roles
 
     resources :tasks, :only => [:show]
 

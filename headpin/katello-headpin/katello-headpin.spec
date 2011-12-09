@@ -19,7 +19,7 @@
 %global confdir deploy/common
 
 Name:           katello-headpin
-Version:        0.1.112
+Version:        0.1.115
 Release:        2%{?dist}
 Summary:        A subscription management only version of katello
 Group:          Applications/Internet
@@ -118,7 +118,7 @@ cp -Rf %{homedir}/* %{katello_dir}
 
 %changelog
 * Wed Dec 07 2011 Bryan Kearney <bkearney@redhat.com>
-- 
+-
 
 * Wed Dec 07 2011 Bryan Kearney <bkearney@redhat.com> 0.1.112-2
 - Bump the release (bkearney@redhat.com)

@@ -179,6 +179,7 @@ describe Product, :katello => true do
     describe "add repo" do
       before(:each) do
         Candlepin::Product.stub!(:create).and_return({:id => ProductTestData::PRODUCT_ID})
+        Candlepin::Content.stub!(:create).and_return({:id => "123"})
         @p = Product.create!(ProductTestData::SIMPLE_PRODUCT)
       end
 
@@ -238,6 +239,7 @@ describe Product, :katello => true do
 
       context "product has more archs" do
         after do
+          Repository.stub(:create! => true)
           @substitutor_mock.stub!(:substitute_vars).and_return do |path|
             ret = {}
             [{"releasever" => "6Server", "basearch" => "i386"},
@@ -256,10 +258,17 @@ describe Product, :katello => true do
           p.save!
         end
 
-        it "should create repo for each arch" do
-          expected_feed = "#{@provider.repository_url}/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage/"
-          Repository.should_receive(:create!).once.with(hash_including(:feed => expected_feed, :name => 'some-name33 6Server x86_64'))
-          Repository.should_receive(:create!).once.with(hash_including(:name => 'some-name33 6Server i386'))
+        describe "repository for product content" do
+          it "should be created for each arch" do
+            expected_feed = "#{@provider.repository_url}/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage"
+            Repository.should_receive(:create!).once.with(hash_including(:feed => expected_feed, :name => 'some-name33 6Server x86_64'))
+            Repository.should_receive(:create!).once.with(hash_including(:name => 'some-name33 6Server i386'))
+          end
+
+          it "should follow the format of the content url in candlepin" do
+            expected_relative_path = "#{@organization.name}/Locker/released-extra/RHEL-5-Server/6Server/x86_64/os/ClusterStorage"
+            Repository.should_receive(:create!).once.with(hash_including(:relative_path => expected_relative_path))
+          end
         end
       end
 
@@ -417,8 +426,12 @@ describe Product, :katello => true do
       @product.save!
 
       @ep = EnvironmentProduct.find_or_create(@organization.locker, @product)
-      @repo = Repository.create!(:environment_product => @ep, :name => "testrepo",:pulp_id=>"1010")
+      @repo = Repository.create!(:environment_product => @ep,
+                                 :name => "testrepo",
+                                 :pulp_id=>"1010",
+                                 :relative_path => "#{@organization.name}/Locker/Prod/Repo")
       @repo.stub(:promoted?).and_return(false)
+      @repo.stub(:content => {:id => "123"})
     end
     context "resetting product gpg and asking repos to reset should work" do
       before do
