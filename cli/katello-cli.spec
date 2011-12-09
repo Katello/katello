@@ -18,7 +18,7 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.22
+Version:       0.1.23
 Release:       2%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,12 +84,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Dec 06 2011 Shannon Hughes <shughes@redhat.com> 0.1.22-2
-- builds for cli/installer (shughes@redhat.com)
-- Automatic commit of package [katello-cli] release [0.1.19-2].
-  (shughes@redhat.com)
-- system engine build (shughes@redhat.com)
-- build cli (shughes@redhat.com)
+* Thu Dec 08 2011 Mike McCune <mmccune@redhat.com> 0.1.23-2
+- periodic rebuild
+* Thu Dec 08 2011 Mike McCune <mmccune@redhat.com>
+- periodic rebuild
 
 * Tue Dec 06 2011 Shannon Hughes <shughes@redhat.com> 0.1.22-1
 - 758447: Allow the prompt to be customized via the config file

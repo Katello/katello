@@ -51,6 +51,14 @@ describe ActivationKey do
       @akey.should_not be_valid
       @akey.errors[:environment].should_not be_empty
     end
+
+    it "should be invalid if the environment is Locker" do
+      @akey.name = 'invalid key'
+      @akey.environment = @organization.locker
+      @akey.should_not be_valid
+      @akey.errors[:base].should_not be_empty
+    end
+
   end
 
   it "should be able to create" do

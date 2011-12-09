@@ -29,21 +29,60 @@ module Glue::Pulp::Repos
 
   def self.groupid(product, environment, content = nil)
       groups = [self.product_groupid(product), self.env_groupid(environment), self.org_groupid(product.locker.organization)]
-      groups << self.content_groupid(content) if not content.nil?
+      groups << self.content_groupid(content) if content
       groups
   end
 
   def self.clone_repo_path(repo, environment, for_cp = false)
-    repo_path(environment,repo.product, repo.name, for_cp)
+    org, env, content_path = repo.relative_path.split("/",3)
+    if for_cp
+      "/#{content_path}"
+    else
+      "#{org}/#{environment.name}/#{content_path}"
+    end
   end
 
-  # if for_cp tells it's used for contentUrl in candlepin
-  # CP computes the rest of path automaticly - it does not to be specified here
-  def self.repo_path(environment, product, name, for_cp = false)
+  def self.repo_path_from_content_path(environment, content_path)
+    content_path = content_path.sub(/^\//, "")
+    "#{environment.organization.name}/#{environment.name}/#{content_path}"
+  end
+
+  # create content for custom repo
+  def create_content(name, path)
+    new_content = Glue::Candlepin::ProductContent.new({
+      :content => {
+        :name => name,
+        :contentUrl => path,
+        :gpgUrl => "",
+        :type => "yum",
+        :label => name,
+        :vendor => Provider::CUSTOM
+      },
+      :enabled => true
+    })
+    new_content.create
+    add_content new_content
+    new_content.content
+  end
+
+
+
+  # repo path for custom product repos (RH repo paths are derivated from
+  # content url)
+  def self.custom_repo_path(environment, product, name)
+    prefix = [environment.organization.name,environment.name].map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
+    prefix + custom_content_path(product, name)
+  end
+
+  def self.custom_content_path(product, name)
     parts = []
-    parts += [environment.organization.name,environment.name] unless for_cp
+    # We generate repo path only for custom product content. We add this
+    # constant string to avoid colisions with RH content. RH content url
+    # begins usually with something like "/content/dist/rhel/...".
+    # There we prefix custom content/repo url with "/custom/..."
+    parts << "custom"
     parts += [product.name,name]
-    parts.map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
+    "/" + parts.map{|x| x.gsub(/[^-\w]/,"_") }.join("/")
   end
 
   def self.clone_repo_path_for_cp(repo)
@@ -304,15 +343,17 @@ module Glue::Pulp::Repos
     def add_repo(name, url, repo_type, gpg = nil)
       check_for_repo_conflicts(name)
       key = EnvironmentProduct.find_or_create(self.organization.locker, self)
+      content = create_content(name, Glue::Pulp::Repos.custom_content_path(self, name))
       repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(name),
-          :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
-          :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, name),
+          :groupid => Glue::Pulp::Repos.groupid(self, self.locker, content),
+          :relative_path => Glue::Pulp::Repos.custom_repo_path(self.locker, self, name),
           :arch => arch,
           :name => name,
           :feed => url,
           :content_type => repo_type,
           :gpg_key => gpg
       )
+      repo
     end
 
     def setup_sync_schedule
@@ -347,7 +388,7 @@ module Glue::Pulp::Repos
                                         :arch => arch,
                                         :major => version[:major],
                                         :minor => version[:minor],
-                                        :relative_path => Glue::Pulp::Repos.repo_path(self.locker, self, repo_name),
+                                        :relative_path => Glue::Pulp::Repos.repo_path_from_content_path(self.locker, path),
                                         :name => repo_name,
                                         :feed => feed_url,
                                         :feed_ca => ca,

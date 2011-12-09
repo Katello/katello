@@ -67,7 +67,47 @@ module Glue::Pulp::Consumer
       Rails.logger.error "Failed to upload package profile to pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
       raise e  
     end
-    
+
+    def install_package packages
+      Rails.logger.info "Scheduling package install for consumer #{self.name}"
+      pulp_task = Pulp::Consumer.install_packages(self.uuid, packages)
+    rescue => e
+      Rails.logger.error "Failed to schedule package install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
+    def uninstall_package packages
+      Rails.logger.info "Scheduling package uninstall for consumer #{self.name}"
+      pulp_task = Pulp::Consumer.uninstall_packages(self.uuid, packages)
+    rescue => e
+      Rails.logger.error "Failed to schedule package uninstall for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
+    def update_package packages
+      Rails.logger.info "Scheduling package update for consumer #{self.name}"
+      pulp_task = Pulp::Consumer.update_packages(self.uuid, packages)
+    rescue => e
+      Rails.logger.error "Failed to schedule package update for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
+    def install_package_group groups
+      Rails.logger.info "Scheduling package group install for consumer #{self.name}"
+      pulp_task = Pulp::Consumer.install_package_groups(self.uuid, groups)
+    rescue => e
+      Rails.logger.error "Failed to schedule package group install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
+    def uninstall_package_group groups
+      Rails.logger.info "Scheduling package group uninstall for consumer #{self.name}"
+      pulp_task = Pulp::Consumer.uninstall_package_groups(self.uuid, groups)
+    rescue => e
+      Rails.logger.error "Failed to schedule package group uninstall for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
     def save_pulp_orchestration
       case orchestration_for
         when :create
