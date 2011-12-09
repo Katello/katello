@@ -10,7 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class SystemsEventsController < ApplicationController
+class SystemEventsController < ApplicationController
+  skip_before_filter :authorize
   before_filter :find_system
   before_filter :authorize
 
@@ -20,7 +21,7 @@ class SystemsEventsController < ApplicationController
 
 
   def rules
-    read_system = lambda{System.find(params[:id]).readable?}
+    read_system = lambda{@system.readable?}
     {
       :index => read_system,
       :show => read_system,
