@@ -56,9 +56,8 @@ module Navigation
 
     def systems_navigation
       [
-        { :key => :details,
-          :name =>N_("Details"),
-          :url => lambda{edit_system_path(@system.id)},
+        { :key => :general,
+          :name =>N_("General"),
           :if => lambda{@system},
           :options => {:class=>"navigation_element"},
           :items => systems_subnav
@@ -86,6 +85,12 @@ module Navigation
 
     def systems_subnav
       [
+        { :key => :events,
+          :name =>_("Events"),
+          :url => lambda{system_events_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"third_level navigation_element"},
+        },
         { :key => :system_info,
           :name =>N_("System Info"),
           :url => lambda{edit_system_path(@system.id)},
@@ -97,7 +102,7 @@ module Navigation
           :url => lambda{facts_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"third_level navigation_element"}
-        }
+        },
       ]
     end
 

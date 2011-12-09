@@ -2,4 +2,4 @@
   #{@system.name}
 
 = content_for :navigation do
-  = render_navigation(:items => systems_navigation, :expand_all => true, :level => 1..2)
+  = render_menu(1..2, systems_navigation)
