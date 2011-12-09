@@ -145,7 +145,7 @@ module Pulp
       end
 
       def dist_path
-        "/pulp/api/distribution/"
+        "/pulp/api/distributions/"
       end
     end
   end
@@ -207,6 +207,13 @@ module Pulp
       # :id, :name, :arch, :groupid, :feed
       def update repo_id, attrs
         body = put(Repository.repository_path + repo_id +"/", JSON.generate(attrs), self.default_headers).body
+        find repo_id
+      end
+
+      # specific call to just update the sync schedule for a repo
+      def update_schedule(repo_id, schedule)
+        body = put(Repository.repository_path + repo_id +"/schedules/sync/",
+                   JSON.generate(:schedule => schedule), self.default_headers).body
         find repo_id
       end
 

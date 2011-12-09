@@ -23,12 +23,13 @@ from katello.client.core import (
   environment,
   organization,
   user,
+  user_role,
   provider,
   ping,
   product,
   repo,
   packagegroup,
-  distribution,  
+  distribution,
   package,
   errata,
   system,
@@ -47,7 +48,7 @@ def setup_admin(admin):
     akey_cmd.add_action('update', activation_key.Update())
     akey_cmd.add_action('delete', activation_key.Delete())
     admin.add_command('activation_key', akey_cmd)
-    
+
     env_cmd = environment.Environment()
     env_cmd.add_action('create', environment.Create())
     env_cmd.add_action('info', environment.Info())
@@ -74,6 +75,14 @@ def setup_admin(admin):
     user_cmd.add_action('delete', user.Delete())
     user_cmd.add_action('report', user.Report())
     admin.add_command('user', user_cmd)
+
+    user_role_cmd = user_role.UserRole()
+    user_role_cmd.add_action('create', user_role.Create())
+    user_role_cmd.add_action('info', user_role.Info())
+    user_role_cmd.add_action('list', user_role.List())
+    user_role_cmd.add_action('update', user_role.Update())
+    user_role_cmd.add_action('delete', user_role.Delete())
+    admin.add_command('user_role', user_role_cmd)
 
     admin.add_command('ping', ping.Status())
 
@@ -172,13 +181,13 @@ def setup_admin(admin):
     cset_cmd.add_action('delete', changeset.Delete())
     cset_cmd.add_action('promote', changeset.Promote())
     admin.add_command('changeset', cset_cmd)
-    
+
     client_cmd = client.Client()
     client_cmd.add_action('remember', client.Remember())
     client_cmd.add_action('forget', client.Forget())
     client_cmd.add_action('saved_options', client.SavedOptions())
     admin.add_command('client', client_cmd)
-    
+
     filter_cmd = filters.Filter()
     filter_cmd.add_action('create', filters.Create())
     filter_cmd.add_action('list', filters.List())
