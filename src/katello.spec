@@ -16,13 +16,8 @@
 %global confdir deploy/common
 
 Name:           katello
-<<<<<<< HEAD
-Version:        0.1.130
-Release:        2%{?dist}
-=======
 Version:        0.1.135
 Release:        1%{?dist}
->>>>>>> katello/master
 Summary:        A package for managing application life-cycle for Linux systems
 
 Group:          Applications/Internet
@@ -341,16 +336,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
-<<<<<<< HEAD
-<<<<<<< HEAD
-* Tue Dec 06 2011 Shannon Hughes <shughes@redhat.com> 0.1.126-2
-- new system engine build (shughes@redhat.com)
-=======
-* Wed Dec 07 2011 Shannon Hughes <shughes@redhat.com> 0.1.130-2
-- system engine build (shughes@redhat.com)
-=======
 * Thu Dec 08 2011 Mike McCune <mmccune@redhat.com> 0.1.133-1
 - periodic rebuild
+
 * Thu Dec 08 2011 Ivan Necas <inecas@redhat.com> 0.1.132-1
 - reimport-manifest - don't delete untracked products when importing
   (inecas@redhat.com)
@@ -360,7 +348,7 @@ fi
   (inecas@redhat.com)
 - reimport-manifest - support for force option while manifest import
   (inecas@redhat.com)
->>>>>>> katello/master
+
 * Wed Dec 07 2011 Shannon Hughes <shughes@redhat.com> 0.1.130-1
 - bump version to fix tags (shughes@redhat.com)
 
@@ -374,7 +362,6 @@ fi
 * Tue Dec 06 2011 Mike McCune <mmccune@redhat.com> 0.1.128-1
 - periodic rebuild
 
->>>>>>> 01dfa50e597182263aba0e979b382e3cdd02183a
 * Tue Dec 06 2011 Shannon Hughes <shughes@redhat.com> 0.1.126-1
 - break out branding from app controller (shughes@redhat.com)
 
