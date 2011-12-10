@@ -17,7 +17,7 @@ describe ChangesetsController do
   include LocaleHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
-
+  include UserHelperMethods
   module CSControllerTest
 
     ENV_NAME = "environment_name"
@@ -84,7 +84,8 @@ describe ChangesetsController do
     end
 
     it "should be able to check the progress of a changeset being promoted" do
-      @changeset.task_status = TaskStatus.create!(:organization_id =>@org.id, :uuid=>"FOO", :progress=>"0")
+
+      @changeset.task_status = TaskStatus.create!(:organization_id =>@org.id, :uuid=>"FOO", :progress=>"0", :user=> new_user)
       @changeset.save!
       get :promotion_progress, :id=>@changeset.id
       response.should be_success
