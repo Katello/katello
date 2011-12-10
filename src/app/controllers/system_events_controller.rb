@@ -33,7 +33,6 @@ class SystemEventsController < ApplicationController
   def index
     # list of events
     render :partial=>"items", :layout => "tupane_layout", :locals=>{:system => @system}
-
   end
 
   def show
