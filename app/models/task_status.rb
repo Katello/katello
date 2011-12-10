@@ -24,8 +24,14 @@ class TaskStatus < ActiveRecord::Base
 
   include Authorization
   belongs_to :organization
-
+  belongs_to :user
   before_save :setup_task_type
+
+  before_save do |status|
+    unless status.user
+      status.user = User.current
+    end
+  end
 
   def initialize(attrs = nil)
     unless attrs.nil?
