@@ -421,12 +421,13 @@
 }
 .dropbutton {
     height: 16px;
-    width: 17px;
+    width: 26px;
     @include border-radius(23px);
     border:1px solid $border_color;
     background: #f0f0f0;
     position: relative;
-    &:hover{
+    z-index: 10;
+    &:hover, &.active{
         background: #dcdcdc;
     }
     span {
@@ -438,4 +439,34 @@
         margin: 0;
     }
 
+}
+.dashboard_popout {
+    /*background: url("../../../images/black_arrow.png");*/
+    width: 209px;
+    height: 122px;
+    position: absolute;
+    z-index: 200;
+    .dashboard_popout_child{
+        height: 67px;
+        left: 12px;
+        padding-bottom: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 10px;
+        position: relative;
+        text-align: right;
+        top: 24px;
+        width: 166px;
+        .popout_row {
+            display: block;
+            width: 100%;
+            padding: 7px 0 4px 0;
+            label {
+                color: #FFF;
+            }
+            select {
+                width: 115px;
+            }
+        }
+    }
 }
