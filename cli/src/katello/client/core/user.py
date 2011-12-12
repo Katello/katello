@@ -18,6 +18,7 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.user import UserAPI
+from katello.client.api.user_role import UserRoleAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, convert_to_mime_type, attachment_file_name, save_report
@@ -177,6 +178,40 @@ class Update(UserAction):
         user = self.api.update(users[0]['id'], password, email, disabled)
         print _("Successfully updated user [ %s ]") % username
         return os.EX_OK
+
+
+class AssignRole(UserAction):
+
+    description = _('assign role to a user')
+
+    def __init__(self):
+        super(AssignRole, self).__init__()
+        self.role_api = UserRoleAPI()
+
+    def setup_parser(self):
+        self.parser.add_option('--username', dest='username', help=_("user name (required)"))
+        self.parser.add_option('--role', dest='role', help=_("user role (required)"))
+
+    def check_options(self):
+        self.require_option('username')
+        self.require_option('role')
+
+    def run(self):
+        userName = self.get_option('username')
+        roleName = self.get_option('role')
+
+        users = self.api.users({"username": userName})
+        if len(users) != 1:
+            print _("Cannot find user [ %s ]") % userName
+            return os.EX_DATAERR
+
+        role = self.role_api.role_by_name(roleName)
+        msg = self.api.assign_role(users[0]['id'], role['id']) 
+
+        print msg 
+        return os.EX_OK
+
+
 
 class Report(UserAction):
 

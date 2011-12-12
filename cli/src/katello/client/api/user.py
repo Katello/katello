@@ -49,6 +49,15 @@ class UserAPI(KatelloAPI):
         org = self.server.GET(path)[1]
         return org
 
+    def assign_role(self, user_id, role_id):
+        path = "/api/users/%s/roles" % str(user_id)
+        data = {"role_id": role_id}
+        return self.server.POST(path, data)[1]
+
+    def unassign_role(self, user_id, role_id):
+        path = "/api/users/%s/roles/%s" % (str(user_id), str(role_id))
+        return self.server.DELETE(path)[1]
+
     def report(self, format):
         to_return = self.server.GET("/api/users/report", customHeaders={"Accept": format})
         return (to_return[1], to_return[2])
