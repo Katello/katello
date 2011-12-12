@@ -488,48 +488,44 @@ KT.packages = function() {
             }
         } else {
             if (valid_action_requested(content_array, KT.package_action_types.PKG_GRP)) {
-            	if( valid_package_list_format(content_array) ){
-	                disableLinks();
-	                $.ajax({
-	                    url: KT.routes.add_system_system_packages_path(system_id),
-	                    type: 'PUT',
-	                    data: {'groups' : content_string},
-	                    cache: false,
-	                    success: function(data) {
-	                        monitorStatus(data, KT.package_action_types.PKG_GRP_INSTALL);
-	
-	                        for (i = 0; i < content_array.length; i++) {
-	                            var group_name = $.trim(content_array[i]), already_exists = false;
-	                            groups_in_progress[group_name] = true;
-	
-	                            $('tr.content_group').find('td.package_name').each( function() {
-	                                if ($.trim($(this).html()) === group_name) {
-	                                    already_exists = true;
-	                                    $(this).parent().attr('data-uuid', data);
-	                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group);
-	                                }
-	                            });
-	                            // if row already existed... skip...
-	                            if (already_exists === false) {
-	                                if (add_row_shading) {
-	                                    add_row_shading = false;
-	                                    content_form_row.after('<tr class="alt content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
-	                                } else {
-	                                    add_row_shading = true;
-	                                    content_form_row.after('<tr class="content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
-	                                }
-	                            }
-	                        }
-	                        enableLinks();
-	                        show_validation_error(false);
-	                    },
-	                    error: function() {
-	                        enableLinks();
-	                    }
-	                });
-                } else {
-                	show_validation_error(true);
-                }
+                disableLinks();
+                $.ajax({
+                    url: KT.routes.add_system_system_packages_path(system_id),
+                    type: 'PUT',
+                    data: {'groups' : content_string},
+                    cache: false,
+                    success: function(data) {
+                        monitorStatus(data, KT.package_action_types.PKG_GRP_INSTALL);
+
+                        for (i = 0; i < content_array.length; i++) {
+                            var group_name = $.trim(content_array[i]), already_exists = false;
+                            groups_in_progress[group_name] = true;
+
+                            $('tr.content_group').find('td.package_name').each( function() {
+                                if ($.trim($(this).html()) === group_name) {
+                                    already_exists = true;
+                                    $(this).parent().attr('data-uuid', data);
+                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group);
+                                }
+                            });
+                            // if row already existed... skip...
+                            if (already_exists === false) {
+                                if (add_row_shading) {
+                                    add_row_shading = false;
+                                    content_form_row.after('<tr class="alt content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
+                                } else {
+                                    add_row_shading = true;
+                                    content_form_row.after('<tr class="content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
+                                }
+                            }
+                        }
+                        enableLinks();
+                        show_validation_error(false);
+                    },
+                    error: function() {
+                        enableLinks();
+                    }
+                });
             }
         }
     },
@@ -587,48 +583,44 @@ KT.packages = function() {
             }
         } else {
             if (valid_action_requested(content_array, KT.package_action_types.PKG_GRP)) {
-            	if( valid_package_list_format(content_array) ){
-	                disableLinks();
-	                $.ajax({
-	                    url: KT.routes.remove_system_system_packages_path(system_id),
-	                    type: 'POST',
-	                    data: {'groups' : content_string},
-	                    cache: false,
-	                    success: function(data) {
-	                        monitorStatus(data, KT.package_action_types.PKG_GRP_REMOVE);
-	
-	                        for (i = 0; i < content_array.length; i++) {
-	                            var group_name = $.trim(content_array[i]), already_exists = false;
-	                            groups_in_progress[group_name] = true;
-	
-	                            $('tr.content_group').find('td.package_name').each( function() {
-	                                if ($.trim($(this).html()) === group_name) {
-	                                    already_exists = true;
-	                                    $(this).parent().attr('data-uuid', data);
-	                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group);
-	                                }
-	                            });
-	                            // if row already existed... skip...
-	                            if (already_exists === false) {
-	                                if (add_row_shading) {
-	                                    add_row_shading = false;
-	                                    content_form_row.after('<tr class="alt content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
-	                                } else {
-	                                    add_row_shading = true;
-	                                    content_form_row.after('<tr class="content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
-	                                }
-	                            }
-	                        }
-	                        enableLinks();
-	                        show_validation_error(false);
-	                    },
-	                    error: function() {
-	                        enableLinks();
-	                    }
-	                });
-                } else {
-                	show_validation_error(true);
-                }
+                disableLinks();
+                $.ajax({
+                    url: KT.routes.remove_system_system_packages_path(system_id),
+                    type: 'POST',
+                    data: {'groups' : content_string},
+                    cache: false,
+                    success: function(data) {
+                        monitorStatus(data, KT.package_action_types.PKG_GRP_REMOVE);
+
+                        for (i = 0; i < content_array.length; i++) {
+                            var group_name = $.trim(content_array[i]), already_exists = false;
+                            groups_in_progress[group_name] = true;
+
+                            $('tr.content_group').find('td.package_name').each( function() {
+                                if ($.trim($(this).html()) === group_name) {
+                                    already_exists = true;
+                                    $(this).parent().attr('data-uuid', data);
+                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group);
+                                }
+                            });
+                            // if row already existed... skip...
+                            if (already_exists === false) {
+                                if (add_row_shading) {
+                                    add_row_shading = false;
+                                    content_form_row.after('<tr class="alt content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
+                                } else {
+                                    add_row_shading = true;
+                                    content_form_row.after('<tr class="content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
+                                }
+                            }
+                        }
+                        enableLinks();
+                        show_validation_error(false);
+                    },
+                    error: function() {
+                        enableLinks();
+                    }
+                });
             }
         }
     },
