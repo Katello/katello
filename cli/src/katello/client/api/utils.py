@@ -22,6 +22,7 @@ from katello.client.api.repo import RepoAPI
 from katello.client.api.provider import ProviderAPI
 from katello.client.api.template import TemplateAPI
 from katello.client.api.changeset import ChangesetAPI
+from katello.client.api.user import UserAPI
 
 def get_organization(orgName):
     organization_api = OrganizationAPI()
@@ -116,3 +117,11 @@ def get_changeset(orgName, envName, csName):
     if cset == None:
         print _("Could not find changeset [ %s ] within environment [ %s ]") % (csName, env["name"])
     return cset
+
+def get_user(userName):
+    user_api = UserAPI()
+    user = user_api.user_by_name(userName)
+    if user == None:
+        print _("Could not fing user [ %s ]") % (userName)
+    return user
+

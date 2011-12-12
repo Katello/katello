@@ -41,13 +41,20 @@ class UserAPI(KatelloAPI):
 
     def users(self, query={}):
         path = "/api/users/"
-        orgs = self.server.GET(path, query)[1]
-        return orgs
+        users = self.server.GET(path, query)[1]
+        return users
 
     def user(self, user_id):
         path = "/api/users/%s" % str(user_id)
-        org = self.server.GET(path)[1]
-        return org
+        user = self.server.GET(path)[1]
+        return user
+
+    def user_by_name(self, user_name):
+        users = self.users({"username": user_name})
+        if len(users) >= 1:
+            return users[0]
+        else:
+            return None
 
     def assign_role(self, user_id, role_id):
         path = "/api/users/%s/roles" % str(user_id)

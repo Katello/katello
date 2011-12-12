@@ -19,6 +19,7 @@ from gettext import gettext as _
 
 from katello.client.api.user import UserAPI
 from katello.client.api.user_role import UserRoleAPI
+from katello.client.api.utils import get_user
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, convert_to_mime_type, attachment_file_name, save_report
@@ -102,9 +103,8 @@ class Info(UserAction):
     def run(self):
         username = self.get_option('username')
 
-        users = self.api.users({"username": username})
-        if len(users) != 1:
-            print _("Cannot find user [ %s ]") % username
+        user = get_user(username)
+        if user == None:
             return os.EX_DATAERR
 
         self.printer.addColumn('id')
@@ -113,7 +113,7 @@ class Info(UserAction):
         self.printer.addColumn('disabled')
 
         self.printer.setHeader(_("User Information"))
-        self.printer.printItem(users[0])
+        self.printer.printItem(user)
         return os.EX_OK
 
 # ------------------------------------------------------------------------------
@@ -132,12 +132,11 @@ class Delete(UserAction):
     def run(self):
         username = self.get_option('username')
 
-        users = self.api.users({"username": username})
-        if len(users) != 1:
-            print _("Cannot find user [ %s ]") % username
+        user = get_user(username)
+        if user == None:
             return os.EX_DATAERR
 
-        self.api.delete(users[0]['id'])
+        self.api.delete(user['id'])
         print _("Successfully deleted user [ %s ]") % username
         return os.EX_OK
 
@@ -166,16 +165,15 @@ class Update(UserAction):
         email = self.get_option('email')
         disabled = self.get_option('disabled')
 
-        users = self.api.users({"username": username})
-        if len(users) != 1:
-            print _("Cannot find user [ %s ]") % username
+        user = get_user(username)
+        if user == None:
             return os.EX_DATAERR
 
         if password == None and email == None and disabled == None:
             print _("Provide at least one parameter to update user [ %s ]") % username
             return os.EX_DATAERR
 
-        user = self.api.update(users[0]['id'], password, email, disabled)
+        user = self.api.update(user['id'], password, email, disabled)
         print _("Successfully updated user [ %s ]") % username
         return os.EX_OK
 
@@ -200,13 +198,16 @@ class AssignRole(UserAction):
         userName = self.get_option('username')
         roleName = self.get_option('role')
 
-        users = self.api.users({"username": userName})
-        if len(users) != 1:
-            print _("Cannot find user [ %s ]") % userName
+        user = get_user(userName)
+        if user == None:
             return os.EX_DATAERR
 
         role = self.role_api.role_by_name(roleName)
-        msg = self.api.assign_role(users[0]['id'], role['id']) 
+        if role == None:
+            print _("Role [ %s ] not found" % roleName)
+            return os.EX_DATAERR
+
+        msg = self.api.assign_role(user['id'], role['id']) 
 
         print msg 
         return os.EX_OK
