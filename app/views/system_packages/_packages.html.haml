@@ -97,16 +97,17 @@
         = image_tag("spinner.gif", :class=>"ajax_scroll")
 
   - else
-    %p There are no packages to display.
+    %p #{_("There are no packages to display.")}
 
 = content_for :footer do
-  .grid_8
-    %a#more{:style => "padding-left: 20px;", "data-scroll_url"=>url_for(more_packages_system_system_packages_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("Load %{n} More" % {:n => offset})}
-    %span{:id => 'loaded_summary', :style => "padding-left: 20px;"}
-      -##{"%{n} Loaded of %{t} Total" % {:n => offset, :t => total_packages}}
+  - if packages.length > 0
+    .grid_8
+      %a#more{:style => "padding-left: 20px;", "data-scroll_url"=>url_for(more_packages_system_system_packages_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("Load %{n} More" % {:n => offset})}
+      %span{:id => 'loaded_summary', :style => "padding-left: 20px;"}
+        -##{"%{n} Loaded of %{t} Total" % {:n => offset, :t => total_packages}}
 
-    - if editable
-      .prefix_2.grid_6.ra
-        = submit_tag _("Update All"), :class => 'button', :id => 'update_all_packages', 'data-url' => system_system_packages_path(@system.id)
-        = submit_tag _("Update"), :class => 'button', :id => 'update_packages', 'data-url' => system_system_packages_path(@system.id)
-        = submit_tag _('Remove'), :class => 'button', :id => 'remove_packages', 'data-url' => remove_system_system_packages_path(@system.id)
+      - if editable
+        .prefix_2.grid_6.ra
+          = submit_tag _("Update All"), :class => 'button', :id => 'update_all_packages', 'data-url' => system_system_packages_path(@system.id)
+          = submit_tag _("Update"), :class => 'button', :id => 'update_packages', 'data-url' => system_system_packages_path(@system.id)
+          = submit_tag _('Remove'), :class => 'button', :id => 'remove_packages', 'data-url' => remove_system_system_packages_path(@system.id)
