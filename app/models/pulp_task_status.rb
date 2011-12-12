@@ -10,6 +10,8 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
+
 class PulpTaskStatus < TaskStatus
 
   def self.wait_for_tasks async_tasks
@@ -17,21 +19,13 @@ class PulpTaskStatus < TaskStatus
       PulpTaskStatus.using_pulp_task(t)
     end
 
-    any_running = true
-    while any_running
-      any_running = false
-      for t in async_tasks
-        t.refresh
-        sleep 0.5 # do not overload backend engines
-        if ((t.state == TaskStatus::Status::WAITING.to_s) or (t.state == TaskStatus::Status::RUNNING.to_s))
-          any_running = true
-          break
-        end
-      end
+    while any_task_running(async_tasks)
       sleep 1
     end
+
     async_tasks
   end
+
 
   def self.using_pulp_task(sync)
     self.new(
@@ -48,6 +42,10 @@ class PulpTaskStatus < TaskStatus
     PulpTaskStatus.refresh(self)
   end
 
+  def error
+    ActiveSupport::JSON.decode(self.result)["errors"][0] if self.error? 
+  end
+
   def self.refresh task_status
     pulp_task = Pulp::Task.find(task_status.uuid)
     task_status.attributes = {
@@ -60,6 +58,20 @@ class PulpTaskStatus < TaskStatus
     task_status
   end
 
+  protected
+
+  def self.any_task_running(async_tasks)
+    for t in async_tasks
+      t.refresh
+      sleep 0.5 # do not overload backend engines
+      if not t.finished?
+        return true
+      elsif t.error?
+        raise RuntimeError, t.error
+      end
+    end
+    return false
+  end
 
 
 end
