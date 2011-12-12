@@ -12,17 +12,17 @@
 
 module DashboardHelper
 
-  def dashboard_entry name, partial
-    render :partial=>"entry", :locals=>{:name=>name, :partial=>partial}
+  def dashboard_entry name, partial, dropbutton
+    render :partial=>"entry", :locals=>{:name=>name, :partial=>partial, :dropbutton=>dropbutton}
   end
 
-  def dashboard_ajax_entry name, identifier, url, class_wrapper
-    render :partial=>"ajax_entry", :locals=>{:name=>name, :url=>url, :class_wrap=>class_wrapper, :identifier=>identifier}
+  def dashboard_ajax_entry name, identifier, url, class_wrapper, dropbutton, quantity=5
+    render :partial=>"ajax_entry", :locals=>{:name=>name, :url=>url, :class_wrap=>class_wrapper, :identifier=>identifier, :dropbutton=>dropbutton, :quantity=>quantity}
   end
 
-  def user_notices
+  def user_notices num=quantity
     trim_length = 45
-    current_user.notices.order("created_at DESC").limit(10).collect{|note|
+    current_user.notices.order("created_at DESC").limit(num).collect{|note|
       if note.text.length > trim_length + 3
         text = note.text[0..trim_length] + '...'
       else
@@ -32,10 +32,10 @@ module DashboardHelper
     }
   end
 
-  def promotions
+  def promotions num=quantity
     return  Changeset.joins(:task_status).
         where("changesets.environment_id"=>KTEnvironment.changesets_readable(current_organization)).
-        order("task_statuses.updated_at DESC").limit(5)
+        order("task_statuses.updated_at DESC").limit(num)
   end
 
   def changeset_class cs
@@ -59,8 +59,8 @@ module DashboardHelper
   end
 
 
-  def systems_list
-    System.readable(current_organization).limit(10)
+  def systems_list num=quantity
+    System.readable(current_organization).limit(num)
   end
 
   def changeset_path_helper cs
@@ -71,30 +71,30 @@ module DashboardHelper
       end
   end
 
-  def products_synced
+  def products_synced num= quantity
     Product.readable(current_organization).reject{|prod|
       prod.sync_status.uuid.nil?
-    }.sort{|a,b| a.sync_status.start_time <=> b.sync_status.start_time}[0..10]
+    }.sort{|a,b| a.start_time <=> b.start_time}[0..num]
   end
+
 
   def sync_percentage(product)
     stat =product.sync_status.progress
     return 0 if stat.total_size == 0
-    (stat.total_size - stat.size_left)*100/stat.total_size
+    "%.0f" % (stat.total_size - stat.size_left)*100/stat.total_size
   end
 
 
   def subscription_counts
     info = Glue::Candlepin::OwnerInfo.new(current_organization)
-
   end
 
   #TODO Make this not be fake data
-  def errata_summary
+  def errata_summary limit=quantity
     types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
 
     to_ret = []
-    (rand(5) + 10).times{|num|
+    (rand(limit + 1 )).times{|num|
       errata = OpenStruct.new
       errata.e_id = "RHSA-2011-01-#{num}"
       errata.systems = ([1]*(rand(10) + 1)).collect{|i| "server-" + rand(10).to_s + ".example.com"}
@@ -102,7 +102,7 @@ module DashboardHelper
       errata.product = "Red Hat Enterprise Linux 6.0"
       to_ret << errata
     }
-    to_ret
+    to_ret[0..limit-1]
   end
 
   def errata_type_class errata

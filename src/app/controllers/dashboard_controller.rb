@@ -14,6 +14,10 @@ class DashboardController < ApplicationController
 
   skip_before_filter :authorize,:require_org
 
+  before_filter :update_preferences_quantity , :except => [:index, :section_id]
+  #before_filter :update_preferences_age , :except => [:index, :section_id]
+
+
   def index
   end
 
@@ -23,29 +27,44 @@ class DashboardController < ApplicationController
 
 
   def sync
-    render :partial=>"sync"
+    render :partial=>"sync", :locals=>{:quantity=> quantity}
   end
 
   def errata
-    render :partial=>"errata"
+    render :partial=>"errata", :locals=>{:quantity=> quantity}
   end
 
   def promotions
-    render :partial=>"promotions"
+    render :partial=>"promotions", :locals=>{:quantity=>quantity}
   end
 
   def systems
-    render :partial=>"systems"
+    render :partial=>"systems", :locals=>{:quantity=>quantity}
   end
 
   def subscriptions
-    render :partial=>"subscriptions"
+    render :partial=>"subscriptions", :locals=>{:quantity=>quantity}
   end
 
   def notices
-    render :partial=>"notices"
+    render :partial=>"notices", :locals=>{:quantity=>quantity}
   end
 
+  private
 
-  
+  def update_preferences_quantity
+    action = params[:action]
+    num_of_items = params[:quantity].to_i
+    if num_of_items && num_of_items > 0 && quantity != num_of_items
+      current_user.preferences = HashWithIndifferentAccess.new  unless current_user.preferences
+      current_user.preferences[:dashboard] = {} unless current_user.preferences.has_key? :dashboard
+      current_user.preferences[:dashboard][action] = {:page_size => num_of_items}
+      current_user.save!
+    end
+  end
+
+  helper_method :quantity
+  def quantity
+    current_user.preferences[:dashboard][params[:action]][:page_size] rescue 5
+  end
 end
