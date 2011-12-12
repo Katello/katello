@@ -1,6 +1,6 @@
 
 
-#dashboard_errata.big_widget
+#dashboard_errata.big_widget{"data-quantity"=>quantity}
   .list
     .block_head.clear
       .column_head.col_1
@@ -10,7 +10,7 @@
       .column_head.col_3
         #{_('Product')}
     .scroll-pane
-      -for errata in errata_summary()
+      -for errata in errata_summary(quantity)
         .errata
           %div.errata_item
             .col_1
