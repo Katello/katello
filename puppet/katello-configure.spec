@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.34
+Version:        0.1.35
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Mon Dec 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.35-1
+- 758712 - adding missing requires for candlepin sql
+
 * Mon Dec 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.34-1
 - 758712 - execute classes with logs in correct order
 
