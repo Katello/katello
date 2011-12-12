@@ -410,84 +410,61 @@ KT.packages = function() {
 
         registerCheckboxEvents();
     },
-    valid_action_requested = function(content, content_type) {
-        // if one or more of the content items requested already has an action pending on it, reject the request
-        var is_valid = true, item;
-        $.each(content, function(index, content_item) {
-            item = $.trim(content_item);
-            switch (content_type) {
-                case KT.package_action_types.PKG:
-                    if (packages_in_progress[item] === true) {
-                        alert("One or more of the packages provided has an action pending.");
-                        is_valid = false;
-                        break;
-                    }
-                    break;
-                case KT.package_action_types.PKG_GRP:
-                    if (groups_in_progress[item] === true) {
-                        alert("One or more of the groups provided has an action pending.");
-                        is_valid = false;
-                        break;
-                    }
-                    break;
-            }
-        });
-        return is_valid;
-    },
     addContent = function(data) {
         data.preventDefault();
 
         var selected_action = $("input[@name=perform_action]:checked").attr('id'),
             content_string = content_form.find('#content_input').val(),
-            content_array = content_string.split(/ *, */);
+            content_array = content_string.split(/ *, */),
+            validation_error = undefined;
 
         if (selected_action == 'perform_action_packages') {
-            if (valid_action_requested(content_array, KT.package_action_types.PKG)) {
-            	if( valid_package_list_format(content_array) ){
-	                disableLinks();
-	                $.ajax({
-	                    url: KT.routes.add_system_system_packages_path(system_id),
-	                    type: 'PUT',
-	                    data: {'packages' : content_string},
-	                    cache: false,
-	                    success: function(data) {
-	                        monitorStatus(data, KT.package_action_types.PKG_INSTALL);
-	
-	                        for (i = 0; i < content_array.length; i++) {
-	                            var pkg_name = $.trim(content_array[i]), already_exists = false;
-	                            packages_in_progress[pkg_name] = true;
-	
-	                            $('tr.content_package').find('td.package_name').each( function() {
-	                                if ($.trim($(this).html()) === pkg_name) {
-	                                    already_exists = true;
-	                                    $(this).parent().attr('data-uuid', data);
-	                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package);
-	                                }
-	                            });
-	                            // if row already existed... skip...
-	                            if (already_exists === false) {
-	                                if (add_row_shading) {
-	                                    add_row_shading = false;
-	                                    content_form_row.after('<tr class="alt content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
-	                                } else {
-	                                    add_row_shading = true;
-	                                    content_form_row.after('<tr class="content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
-	                                }
-	                            }
-	                        }
-	                        enableLinks();
-	                        show_validation_error(false);
-	                    },
-	                    error: function() {
-	                        enableLinks();
-	                    }
-	                });
-                } else {
-                	show_validation_error(true);
-                }
+            validation_error = validate_action_requested(content_array, KT.package_action_types.PKG);
+            if (validation_error === undefined) {
+                disableLinks();
+                $.ajax({
+                    url: KT.routes.add_system_system_packages_path(system_id),
+                    type: 'PUT',
+                    data: {'packages' : content_string},
+                    cache: false,
+                    success: function(data) {
+                        monitorStatus(data, KT.package_action_types.PKG_INSTALL);
+
+                        for (i = 0; i < content_array.length; i++) {
+                            var pkg_name = $.trim(content_array[i]), already_exists = false;
+                            packages_in_progress[pkg_name] = true;
+
+                            $('tr.content_package').find('td.package_name').each( function() {
+                                if ($.trim($(this).html()) === pkg_name) {
+                                    already_exists = true;
+                                    $(this).parent().attr('data-uuid', data);
+                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package);
+                                }
+                            });
+                            // if row already existed... skip...
+                            if (already_exists === false) {
+                                if (add_row_shading) {
+                                    add_row_shading = false;
+                                    content_form_row.after('<tr class="alt content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
+                                } else {
+                                    add_row_shading = true;
+                                    content_form_row.after('<tr class="content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
+                                }
+                            }
+                        }
+                        enableLinks();
+                        show_validation_error(false);
+                    },
+                    error: function() {
+                        enableLinks();
+                    }
+                });
+            } else {
+                show_validation_error(true, validation_error);
             }
         } else {
-            if (valid_action_requested(content_array, KT.package_action_types.PKG_GRP)) {
+            validation_error = validate_action_requested(content_array, KT.package_action_types.PKG_GRP);
+            if (validation_error === undefined) {
                 disableLinks();
                 $.ajax({
                     url: KT.routes.add_system_system_packages_path(system_id),
@@ -526,6 +503,8 @@ KT.packages = function() {
                         enableLinks();
                     }
                 });
+            } else {
+                show_validation_error(true, validation_error);
             }
         }
     },
@@ -534,55 +513,56 @@ KT.packages = function() {
 
         var selected_action = $("input[@name=perform_action]:checked").attr('id'),
             content_string = content_form.find('#content_input').val(),
-            content_array = content_string.split(/ *, */);
+            content_array = content_string.split(/ *, */),
+            validation_error = undefined;
 
         if (selected_action == 'perform_action_packages') {
-            if (valid_action_requested(content_array, KT.package_action_types.PKG)) {
-            	if( valid_package_list_format(content_array) ){
-	                disableLinks();
-	                $.ajax({
-	                    url: KT.routes.remove_system_system_packages_path(system_id),
-	                    type: 'POST',
-	                    data: {'packages' : content_string},
-	                    cache: false,
-	                    success: function(data) {
-	                        monitorStatus(data, KT.package_action_types.PKG_REMOVE);
-	
-	                        for (i = 0; i < content_array.length; i++) {
-	                            var pkg_name = $.trim(content_array[i]), already_exists = false;
-	                            packages_in_progress[pkg_name] = true;
-	
-	                            $('tr.content_package').find('td.package_name').each( function() {
-	                                if ($.trim($(this).html()) === pkg_name) {
-	                                    already_exists = true;
-	                                    $(this).parent().attr('data-uuid', data);
-	                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package);
-	                                }
-	                            });
-	                            // if row already existed... skip...
-	                            if (already_exists === false) {
-	                                if (add_row_shading) {
-	                                    add_row_shading = false;
-	                                    content_form_row.after('<tr class="alt content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
-	                                } else {
-	                                    add_row_shading = true;
-	                                    content_form_row.after('<tr class="content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
-	                                }
-	                            }
-	                        }
-	                        enableLinks();
-	                        show_validation_error(false);
-	                    },
-	                    error: function() {
-	                        enableLinks();
-	                    }
-	                });
-                } else {
-                	show_validation_error(true);
-                }
+            validation_error = validate_action_requested(content_array, KT.package_action_types.PKG);
+            if (validation_error === undefined) {
+                disableLinks();
+                $.ajax({
+                    url: KT.routes.remove_system_system_packages_path(system_id),
+                    type: 'POST',
+                    data: {'packages' : content_string},
+                    cache: false,
+                    success: function(data) {
+                        monitorStatus(data, KT.package_action_types.PKG_REMOVE);
+
+                        for (i = 0; i < content_array.length; i++) {
+                            var pkg_name = $.trim(content_array[i]), already_exists = false;
+                            packages_in_progress[pkg_name] = true;
+
+                            $('tr.content_package').find('td.package_name').each( function() {
+                                if ($.trim($(this).html()) === pkg_name) {
+                                    already_exists = true;
+                                    $(this).parent().attr('data-uuid', data);
+                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package);
+                                }
+                            });
+                            // if row already existed... skip...
+                            if (already_exists === false) {
+                                if (add_row_shading) {
+                                    add_row_shading = false;
+                                    content_form_row.after('<tr class="alt content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
+                                } else {
+                                    add_row_shading = true;
+                                    content_form_row.after('<tr class="content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
+                                }
+                            }
+                        }
+                        enableLinks();
+                        show_validation_error(false);
+                    },
+                    error: function() {
+                        enableLinks();
+                    }
+                });
+            } else {
+                show_validation_error(true, validation_error);
             }
         } else {
-            if (valid_action_requested(content_array, KT.package_action_types.PKG_GRP)) {
+            validation_error = validate_action_requested(content_array, KT.package_action_types.PKG_GRP);
+            if (validation_error === undefined) {
                 disableLinks();
                 $.ajax({
                     url: KT.routes.remove_system_system_packages_path(system_id),
@@ -621,6 +601,8 @@ KT.packages = function() {
                         enableLinks();
                     }
                 });
+            } else {
+                show_validation_error(true, validation_error);
             }
         }
     },
@@ -688,12 +670,43 @@ KT.packages = function() {
             message = i18n.x_of_y_packages(total_loaded, total_packages);
         loaded_summary.html(message);
     },
-    show_validation_error = function(show){
+    validate_action_requested = function(content, content_type) {
+        // validate the action being requested and return a validation error, if an error is found
+        var validation_error = undefined;
+
+        // validate the package list format
+        if ((content_type === KT.package_action_types.PKG) && !valid_package_list_format(content)) {
+            validation_error = i18n.validation_error_name_format;
+
+        // validate that no actions pending on same package or group
+        } else {
+            var item;
+            $.each(content, function(index, content_item) {
+                item = $.trim(content_item);
+                switch (content_type) {
+                    case KT.package_action_types.PKG:
+                        if (packages_in_progress[item] === true) {
+                            validation_error = i18n.validation_error_package_pending;
+                            break;
+                        }
+                        break;
+                    case KT.package_action_types.PKG_GRP:
+                        if (groups_in_progress[item] === true) {
+                            validation_error = i18n.validation_error_group_pending;
+                            break;
+                        }
+                        break;
+                }
+            });
+        }
+        return validation_error;
+    },
+    show_validation_error = function(show, validation_error){
     	var input = content_form.find('#content_input');
     	
     	if( show ){
     		input.addClass('validation_error_input');
-    		error_message.html(i18n.validation_error_name_format);
+    		error_message.html(validation_error);
     		error_message.show();
     	} else {
     		input.removeClass('validation_error_input');
