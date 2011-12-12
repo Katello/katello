@@ -38,7 +38,7 @@ class SystemEventsController < ApplicationController
 
   def show
     # details
-    task = SystemTask.find(params[:id]).task_status
+    task = @system.tasks.where("#{TaskStatus.table_name}.id" => params[:id])
     render :partial=>"details", :layout => "tupane_layout", :locals=>{:system => @system, :task =>task}
   end
 
