@@ -90,8 +90,8 @@
                     %a#add_content{:style => 'padding-left: 10px;'} #{_('+ Add')}
                     %a#remove_content{:style => 'padding-left: 10px;'} #{_('- Remove')}
 
-            = render :partial => 'package_items', :locals => {:package_tasks => package_tasks, :group_tasks => group_tasks,
-                                                              :packages => packages}
+            = render :partial => 'package_items', :locals => {:editable => editable, :package_tasks => package_tasks,
+                                                              :group_tasks => group_tasks, :packages => packages}
 
       #list-spinner
         = image_tag("spinner.gif", :class=>"ajax_scroll")
