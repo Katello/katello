@@ -468,6 +468,11 @@ Src::Application.routes.draw do
 
     resources :users do
       get :report, :on => :collection
+      resources :roles, :controller => :users do
+       post   :index, :on => :collection, :action => :add_role
+       delete :destroy, :on => :member, :action => :remove_role
+       get    :index, :on => :collection, :action => :list_roles
+      end
     end
     resources :roles
 
