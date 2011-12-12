@@ -29,7 +29,6 @@ class SystemEventsController < ApplicationController
   end
 
 
-
   def index
     # list of events
     tasks = @system.tasks
@@ -46,7 +45,5 @@ class SystemEventsController < ApplicationController
   def find_system
     @system = System.find(params[:system_id])
   end
-
-
 
 end
