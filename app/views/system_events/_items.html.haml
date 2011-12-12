@@ -1,7 +1,34 @@
+:javascript
+  $('td').click(function(){
+    $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
+  });
+
 = render :partial => "systems/system_tupane_header_nav"
 
 = content_for :content do
-  Here are my events!!!
-  %a.subpanel_element{"data-url"=>system_event_path(@system.id, 1)}
-    = _("FOOBAR")  
+  #events
+    %table#eventsTable.scroll-panel
+      %thead
+        %th= _("Events")
+        %th= _("Status")
+        %th= _("Date")
+        %th= _("Details")
+      %tbody
+        - tasks.each do |task|
+          %tr{:id => task.id}
+            %td= SystemTask::TYPES[task.task_type][:name]
+            %th= _(task.state.capitalize)
+            %td= format_time(task.created_at)
+            %td
+              %a.subpanel_element{"data-url"=>system_event_path(@system.id, task.id)}
+                = _("Details")
+
+          -#%tr{:class => "child-of-#{task.id}", :id => task.id}
+          -#  %td
+          -#  %td=
+          -#  %td= value
+    :javascript
+      $("#eventsTable").treeTable({initialState: "collapsed", clickableNodeNames: true});
+      $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
+
 
