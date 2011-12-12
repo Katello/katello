@@ -10,6 +10,13 @@ class candlepin::params {
   $katello_oauth_key = $katello::params::oauth_key
   $katello_oauth_secret = $katello::params::oauth_secret
 
-  require "thumbslug::params"
-  $thumbslug_oauth_secret = $thumbslug::params::oauth_secret
+  case $katello::params::deployment {
+      'headpin' : {
+        require "thumbslug::params"
+        $thumbslug_oauth_key = "thumbslug"
+        $thumbslug_oauth_secret = $thumbslug::params::oauth_secret
+      }
+      default : {}
+  }
+
 }
