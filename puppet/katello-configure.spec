@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.35
+Version:        0.1.36
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,11 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Tue Dec 13 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.36-1
+- 767139 - Puppet sometimes fails on RHEL 6.1
+- 759564: Candlepin puppet module did not add the thumbslug oauth line during a
+  headpin install
+
 * Mon Dec 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.35-1
 - 758712 - adding missing requires for candlepin sql
 
