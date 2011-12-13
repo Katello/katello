@@ -58,13 +58,17 @@ class UsersController < ApplicationController
     if User.any_readable?
       if params[:only]
         users = [@user]
+        render_panel_items(users, @panel_options, nil, params[:offset])
       else
-        users = User.readable
+        search = '*'
+        search = params[:search] if params[:search] && params[:search] != ''
+
+        #  def render_panel_direct(obj_class, options, search, start, sort, filters)
+
+        render_panel_direct(User, @panel_options, search, params[:offset], [:login, 'asc'])
+
       end
-    else
-      users = [current_user]
     end
-    render_panel_items(users, @panel_options, params[:search], params[:offset])
   end
 
   def edit
