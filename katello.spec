@@ -19,6 +19,7 @@ Name:           katello
 Version:        0.1.140
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
+BuildArch:      noarch
 
 Group:          Applications/Internet
 License:        GPLv2
@@ -36,6 +37,7 @@ Conflicts:       %{name}-headpin
 Provides a package for managing application life-cycle for Linux systems.
 
 %package common
+BuildArch:      noarch
 Summary:        Common bits for all Katello instances
 Requires:       httpd
 Requires:       mod_ssl
@@ -98,13 +100,12 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 
-BuildArch: noarch
-
 %description common
 Common bits for all Katello instances
 
 
 %package all
+BuildArch:      noarch
 Summary:        A meta-package to pull in all components for Katello
 Requires:       %{name}
 Requires:       %{name}-configure
@@ -120,6 +121,7 @@ of its dependencies on a single machine, you should install this package
 and then run katello-configure to configure everything.
 
 %package glue-pulp
+BuildArch:      noarch
 Summary:         Katello connection classes for the Pulp backend
 Requires:        %{name}-common
 
@@ -127,6 +129,7 @@ Requires:        %{name}-common
 Katello connection classes for the Pulp backend
 
 %package glue-foreman
+BuildArch:      noarch
 Summary:         Katello connection classes for the Foreman backend
 Requires:        %{name}-common
 
@@ -134,6 +137,7 @@ Requires:        %{name}-common
 Katello connection classes for the Foreman backend
 
 %package glue-candlepin
+BuildArch:      noarch
 Summary:         Katello connection classes for the Candlepin backend
 Requires:        %{name}-common
 
@@ -262,7 +266,8 @@ if [ "$1" -ge "1" ] ; then
 fi
 
 %files
-%attr(600, katello, katello) %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
+%attr(600, katello, katello)
+%config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 
 %files common
 %defattr(-,root,root)
