@@ -23,23 +23,33 @@ KT.system.errata = function() {
     		register_events();
     	},
     	register_events = function(){
-    		$('#display_errata_type').live('change', filter_errata_by_type);
+    		$('#display_errata_type').live('change', filter_errata);
     		$('#select_all_errata').live('change', select_all_errata);
+    		$('#errata_state_radio_applied').live('change', filter_errata);
+    		$('#errata_state_radio_outstanding').live('change', filter_errata);
     		load_more.live('click', get_errata);
     	},
-    	filter_errata_by_type = function(data){
-    		var value = get_current_filter();
+    	filter_errata = function(event){
+    		var type = get_current_filter(),
+    			state = get_current_state();
     		
-    		$.ajax({
+    		insert_data([], false);
+    		show_spinner(true);
+    		
+			$.ajax({
     			method	: 'get',
     			url		: KT.routes.items_system_errata_path(system_id),
-    			data	: { filter_type : value, offset : 0 },
+    			data	: { filter_type : type, offset : 0, errata_state : state },
     		}).success(function(data){
     			insert_data(data, false);
+    			show_spinner(false);
     		});
     	},
     	get_current_filter = function(){
     		return $('#display_errata_type').val();
+    	},
+    	get_current_state = function(){
+    		return $('input[@name=errata_state_radio]:checked').val();
     	},
     	select_all_errata = function(){
     		var checkboxes = table_body.find(':checkbox');
@@ -83,6 +93,13 @@ KT.system.errata = function() {
     		} else {
     			load_more.show();
     		}
+    	},
+    	show_spinner = function(show){
+    		if( show ){
+    			$('#list-spinner').show();
+    		} else {
+				$('#list-spinner').hide();
+			}	
     	};
 	    
     return {

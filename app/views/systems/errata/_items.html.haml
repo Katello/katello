@@ -1,7 +1,8 @@
 -errata.each do |e|
   %tr
-    %td
-      = check_box_tag "select_all", "select_all"
+    - if editable
+      %td
+        = check_box_tag "select_all", "select_all"
     %td
       %div{:class=>errata_type_class(e)}
     %td.one-line-ellipsis
