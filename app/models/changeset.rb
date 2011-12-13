@@ -519,7 +519,7 @@ class Changeset < ActiveRecord::Base
 
     from_repos = not_included_repos(product, from_env).map{ |r| r.pulp_id }
 
-    dependencies = Pulp::Package.dep_solve(package_names, from_repos)
+    dependencies = Pulp::Package.dep_solve(package_names, from_repos)['resolved']
     dependencies
   end
 
