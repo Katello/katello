@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.140
+Version:        0.1.141
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -345,6 +345,12 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Dec 13 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.141-1
+- marking all katello packages as noarch again
+- 766933 - katello.yml is world readable including db uname/password
+- 766939 - security_token.rb should be regenerated on each install
+- making seed script idempotent
+
 * Tue Dec 13 2011 Ivan Necas <inecas@redhat.com> 0.1.140-1
 - reimport-manifest - save content into repo groupid on import
   (inecas@redhat.com)
