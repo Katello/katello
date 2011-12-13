@@ -67,8 +67,9 @@ describe Provider do
 
   context "import manifest via RED HAT provider" do
     before(:each) do
-      @organization = Organization.new(:name =>"org10020", :cp_key => "org10020_key")
-      @provider = Provider.create(to_create_rh)
+      disable_org_orchestration
+      @organization = Organization.create!(:name =>"org10021", :cp_key => "org10021_key")
+      @provider = @organization.redhat_provider
     end
 
     it "should make correct calls" do
@@ -76,6 +77,40 @@ describe Provider do
       @provider.should_receive(:import_products_from_cp).once.and_return(true)
 
       @provider.import_manifest "path_to_manifest"
+    end
+
+    describe "engineering and marketing product" do
+      let(:eng_product_attrs) { ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "20", "name" => "Red Hat Enterprise Linux 6 Server SVC") }
+      let(:marketing_product_attrs) { ProductTestData::PRODUCT_WITH_CONTENT.merge("id" => "rhel6-server", "name" => "Red Hat Enterprise Linux 6") }
+      let(:eng_product_after_import) do
+          product = Product.new(eng_product_attrs) do |p|
+            p.provider = @provider
+            p.environments << @organization.locker
+          end
+          product.orchestration_for = :import_from_cp_ar_setup
+          product.save!
+          product
+      end
+      before do
+        Candlepin::Owner.stub(:pools).and_return([ProductTestData::POOLS])
+        Candlepin::Product.stub(:get).and_return do |id|
+          case id
+                 when "rhel6-server" then [marketing_product_attrs]
+                 when "20" then [eng_product_attrs]
+                 end
+        end
+      end
+
+      it "should be created together with repository for each content" do
+        Glue::Candlepin::Product.should_receive(:import_from_cp).with(eng_product_attrs).and_return do
+          eng_product_after_import
+        end
+        Glue::Candlepin::Product.should_receive(:import_marketing_from_cp).with do |attrs, product_ids|
+          attrs.should == marketing_product_attrs
+          product_ids.should == [eng_product_after_import.id]
+        end
+        @provider.import_products_from_cp
+      end
     end
   end
 
