@@ -43,10 +43,11 @@ class SystemErrataController < ApplicationController
   def items
     offset = params[:offset]
     filter_type = params[:filter_type] if params[:filter_type]
+    errata_state = params[:errata_state] if params[:errata_state]
     chunk_size = current_user.page_size
-    errata, total_errata = get_errata(offset.to_i, offset.to_i+chunk_size, filter_type)
+    errata, total_errata = get_errata(offset.to_i, offset.to_i+chunk_size, filter_type, errata_state)
         
-    render :partial => "systems/errata/items", :locals => { :errata => errata }    
+    render :partial => "systems/errata/items", :locals => { :errata => errata, :editable => @system.editable? }    
   end
 
   def update
@@ -56,7 +57,7 @@ class SystemErrataController < ApplicationController
 
   include SortColumnList
 
-  def get_errata start, finish, filter_type="All"
+  def get_errata start, finish, filter_type="All", errata_state="outstanding"
     types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
 
     errata_list = []
@@ -69,6 +70,7 @@ class SystemErrataController < ApplicationController
     }
     
     errata_list = filter_by_type(errata_list, filter_type)
+    errata_list = filter_by_state(errata_list, errata_state)
     
     errata_list = errata_list.sort { |a,b|
       a.errata_id.downcase <=> b.errata_id.downcase 
@@ -105,6 +107,14 @@ class SystemErrataController < ApplicationController
       return Glue::Pulp::Errata::ENHANCEMENT
     elsif filter_type == "Security"
       return Glue::Pulp::Errata::SECURITY
+    end
+  end
+
+  def filter_by_state errata_list, errata_state
+    if errata_state == "applied"
+      return []
+    else
+      return errata_list
     end
   end
 

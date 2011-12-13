@@ -12,18 +12,29 @@
 = content_for :navigation do
   = render_navigation(:items => systems_navigation, :expand_all => true, :level => 1)
 
+= content_for :header do
+  #system_errata_header.clear
+    %h5.fl
+      #{_("Display")}
+    %span
+      = select_tag "display_errata_type", '<option value="All">All Errata</option><option>Bug</option><option>Enhancement</option><option>Security</option>'.html_safe
+    %span
+      = radio_button_tag "errata_state_radio", "outstanding", true
+      %label
+        #{_("Outstanding")}
+    %span
+      = radio_button_tag "errata_state_radio", "applied"
+      %label
+        #{_("Applied")}
+
 = content_for :content do
   - if errata.length > 0
     #system_errata{ "data-system_id" => @system.id }
-      %div
-        %h5.fl
-          #{_("Display")}
-        %span.fl
-          = select_tag "display_errata_type", '<option value="All">All Errata</option><option>Bug</option><option>Enhancement</option><option>Security</option>'.html_safe
       %table.filter_table.ajaxScroll
         %thead
-          %th
-            = check_box_tag "select_all_errata", "select_all_errata"
+          - if editable
+            %th
+              = check_box_tag "select_all_errata", "select_all_errata"
           %th
             #{_("TYPE")}
           %th
@@ -31,20 +42,21 @@
           %th
             #{_("PRODUCT")}
         %tbody
-          = render :partial => "systems/errata/items", :locals => { :errata => errata }
+          = render :partial => "systems/errata/items", :locals => { :errata => errata, :editable => editable }
       #list-spinner
         = image_tag("spinner.gif", :class=>"ajax_scroll")
-    - else
-      %p There is no errata to display.
+  - else
+    %p There is no errata to display.
 
 = content_for :footer do
   %div
-    %a#load_more_errata{"data-scroll_url"=>url_for(system_errata_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("Load %{n} More" % {:n => offset})}
-    %span.fl{:id => 'loaded_summary', :style => 'margin-left: 20px;', 'data-total' => total_errata, "data-current_count" => offset }
-      #{_("Loaded of %{n} of %{t} Total" % {:n => offset, :t => total_errata })}
-
-    - if editable
-      %span.fr
-        = submit_tag _('Run'), :class => 'button', :id => 'add_errata', 'data-url' => system_errata_path(@system.id)
-      %span.fr
-        = submit_tag _('Cancel'), :class => 'button', :id => 'cancel_errata', 'data-url' => system_errata_path(@system.id)
+    - if errata.length > 0
+      %a#load_more_errata{"data-scroll_url"=>url_for(system_errata_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("Load %{n} More" % {:n => offset})}
+      %span.fl{:id => 'loaded_summary', :style => 'margin-left: 20px;', 'data-total' => total_errata, "data-current_count" => offset }
+        #{_("Loaded of %{n} of %{t} Total" % {:n => offset, :t => total_errata })}
+  
+      - if editable
+        %span.fr
+          = submit_tag _('Run'), :class => 'button', :id => 'add_errata', 'data-url' => system_errata_path(@system.id)
+        %span.fr
+          = submit_tag _('Cancel'), :class => 'button', :id => 'cancel_errata', 'data-url' => system_errata_path(@system.id)
