@@ -65,6 +65,10 @@ class UserAPI(KatelloAPI):
         path = "/api/users/%s/roles/%s" % (str(user_id), str(role_id))
         return self.server.DELETE(path)[1]
 
+    def roles(self, user_id):
+        path = "/api/users/%s/roles/" % str(user_id)
+        return self.server.GET(path)[1]
+
     def report(self, format):
         to_return = self.server.GET("/api/users/report", customHeaders={"Accept": format})
         return (to_return[1], to_return[2])

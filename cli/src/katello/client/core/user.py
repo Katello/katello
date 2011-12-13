@@ -60,14 +60,10 @@ class Create(UserAction):
     description = _('create user')
 
     def setup_parser(self):
-        self.parser.add_option('--username', dest='username',
-                help=_("user name (required)"))
-        self.parser.add_option('--password', dest='password',
-                help=_("initial password (required)"))
-        self.parser.add_option('--email', dest='email',
-                help=_("email (required)"))
-        self.parser.add_option("--disabled", dest="disabled", type="bool",
-                help=_("disabled account (default is 'false')"))
+        self.parser.add_option('--username', dest='username', help=_("user name (required)"))
+        self.parser.add_option('--password', dest='password', help=_("initial password (required)"))
+        self.parser.add_option('--email', dest='email', help=_("email (required)"))
+        self.parser.add_option("--disabled", dest="disabled", type="bool", help=_("disabled account (default is 'false')"))
 
     def check_options(self):
         self.require_option('username')
@@ -94,8 +90,7 @@ class Info(UserAction):
     description = _('list information about user')
 
     def setup_parser(self):
-        self.parser.add_option('--username', dest='username',
-                help=_("user name (required)"))
+        self.parser.add_option('--username', dest='username', help=_("user name (required)"))
 
     def check_options(self):
         self.require_option('username')
@@ -123,8 +118,7 @@ class Delete(UserAction):
     description = _('delete user')
 
     def setup_parser(self):
-        self.parser.add_option('--username', dest='username',
-                help=_("user name (required)"))
+        self.parser.add_option('--username', dest='username', help=_("user name (required)"))
 
     def check_options(self):
         self.require_option('username')
@@ -147,14 +141,10 @@ class Update(UserAction):
     description = _('update an user')
 
     def setup_parser(self):
-        self.parser.add_option('--username', dest='username',
-                help=_("user name (required)"))
-        self.parser.add_option('--password', dest='password',
-                help=_("initial password"))
-        self.parser.add_option('--email', dest='email',
-                help=_("email"))
-        self.parser.add_option("--disabled", dest="disabled",
-                help=_("disabled account (default is 'false')"))
+        self.parser.add_option('--username', dest='username', help=_("user name (required)"))
+        self.parser.add_option('--password', dest='password', help=_("initial password"))
+        self.parser.add_option('--email', dest='email', help=_("email"))
+        self.parser.add_option("--disabled", dest="disabled", help=_("disabled account (default is 'false')"))
 
     def check_options(self):
         self.require_option('username')
@@ -175,6 +165,33 @@ class Update(UserAction):
 
         user = self.api.update(user['id'], password, email, disabled)
         print _("Successfully updated user [ %s ]") % username
+        return os.EX_OK
+
+# ------------------------------------------------------------------------------
+
+class ListRoles(UserAction):
+
+    description = _("list user's roles")
+
+    def setup_parser(self):
+        self.parser.add_option('--username', dest='username', help=_("user name (required)"))
+
+    def check_options(self):
+        self.require_option('username')
+
+    def run(self):
+        username = self.get_option('username')
+
+        user = get_user(username)
+        if user == None:
+            return os.EX_DATAERR
+
+        roles = self.api.roles(user['id'])
+
+        self.printer.addColumn('id')
+        self.printer.addColumn('name')
+        self.printer.setHeader(_("User Role List"))
+        self.printer.printItems(roles)
         return os.EX_OK
 
 
@@ -231,8 +248,7 @@ class Report(UserAction):
     description = _('user report')
 
     def setup_parser(self):
-        self.parser.add_option('--format', dest='format',
-                help=_("report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"))
+        self.parser.add_option('--format', dest='format', help=_("report format (possible values: 'html', 'text' (default), 'csv', 'pdf')"))
 
     def run(self):
         format = self.get_option('format')
