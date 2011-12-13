@@ -169,10 +169,25 @@ module Glue::Provider
     end
 
     def import_products_from_cp
-      added_products.each do |product_attrs|
-        product = Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
-          p.provider = self
-          p.environments << self.organization.locker
+      product_existing_in_katello_ids = self.organization.locker.products.all(:select => "cp_id").map(&:cp_id)
+      marketing_to_enginnering_product_ids_mapping.each do |marketing_product_id, engineering_product_ids|
+        engineering_product_ids = engineering_product_ids.uniq
+        added_eng_products = (engineering_product_ids - product_existing_in_katello_ids).map do |id|
+          Candlepin::Product.get(id)[0]
+        end
+        added_eng_products.each do |product_attrs|
+          Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
+            p.provider = self
+            p.environments << self.organization.locker
+          end
+        end
+
+        unless product_existing_in_katello_ids.include?(marketing_product_id)
+          engineering_product_in_katello_ids = self.organization.locker.products.where(:cp_id => engineering_product_ids).map(&:id)
+          Glue::Candlepin::Product.import_marketing_from_cp(Candlepin::Product.get(marketing_product_id)[0], engineering_product_in_katello_ids) do |p|
+            p.provider = self
+            p.environments << self.organization.locker
+          end
         end
       end
     end
@@ -184,23 +199,23 @@ module Glue::Provider
 
     protected
 
-    def added_products
-      product_existing_in_katello_ids = self.organization.locker.products.all(:select => "cp_id").map(&:cp_id)
-      product_existing_in_cp_ids = get_pool_product_ids
-
-      new_product_ids = (product_existing_in_cp_ids - product_existing_in_katello_ids)
-      new_product_ids.collect {|id| (Candlepin::Product.get(id))[0] }
-    end
-
-    def get_pool_product_ids
+    # There are two types of products in Candlepin: marketing and engineering.
+    # When promoting, we care only about the engineering products. These are
+    # the products that content/repos are assigned to. The marketing product is
+    # that one that subscriptions are assigned to. Between marketing and
+    # enginering products is M:N relation (see MarketingEngineeringProduct
+    # model)
+    def marketing_to_enginnering_product_ids_mapping
+      mapping = {}
       pools = Candlepin::Owner.pools self.organization.cp_key
-      pools.collect do |pool|
-        provided_products = pool[:providedProducts]
-        pool_product_ids = []
-        pool_product_ids = provided_products.collect {|provided| provided[:productId]} unless provided_products.nil?
-        # Done with provided products, lets add the *actual* product
-        pool_product_ids << pool[:productId]
-      end.flatten.uniq
+      pools.each do |pool|
+        mapping[pool[:productId]] ||= []
+        if pool[:providedProducts]
+          eng_product_ids = pool[:providedProducts].map { |provided| provided[:productId] }
+          mapping[pool[:productId]].concat(eng_product_ids)
+        end
+      end
+      mapping
     end
 
     def get_all_product_ids
