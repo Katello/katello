@@ -184,8 +184,7 @@ mv ./deploy/bundle-config .bundle/config
 cp -R .bundle * %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
-install -m 644 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
-#install -m 644 config/database.yml %{buildroot}%{_sysconfdir}/%{name}/database.yml
+install -m 600 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
 install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/environment.rb
 
 #copy init scripts and sysconfigs
@@ -263,7 +262,7 @@ if [ "$1" -ge "1" ] ; then
 fi
 
 %files
-%config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
+%attr(600, katello, katello) %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 
 %files common
 %defattr(-,root,root)
