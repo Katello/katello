@@ -10,13 +10,13 @@ class katello::config {
 
   postgres::createuser { $katello::params::db_user:
     passwd  => $katello::params::db_pass,
-    logfile => '${katello::params::log_base}/katello-configure/create-postgresql-katello-user.log',
+    logfile => "${katello::params::log_base}/katello-configure/create-postgresql-katello-user.log",
     require => [ File["${katello::params::log_base}"] ],
   }
 
   postgres::createdb {$katello::params::db_name:
     owner   => $katello::params::db_user,
-    logfile => '${katello::params::log_base}/katello-configure/create-postgresql-katello-database.log',
+    logfile => "${katello::params::log_base}/katello-configure/create-postgresql-katello-database.log",
     require => [ Postgres::Createuser[$katello::params::db_user], File["${katello::params::log_base}"] ],
   }
 
