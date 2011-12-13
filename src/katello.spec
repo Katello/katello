@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.141
+Version:        0.1.142
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -345,6 +345,12 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Dec 13 2011 Ivan Necas <inecas@redhat.com> 0.1.142-1
+- Fix db:seed script not being able to create admin user (inecas@redhat.com)
+- 753804 - handling marketing products (inecas@redhat.com)
+- Fix handling of 404 from Pulp repositories API (inecas@redhat.com)
+- committing czech rails locales (lzap+git@redhat.com)
+
 * Tue Dec 13 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.141-1
 - marking all katello packages as noarch again
 - 766933 - katello.yml is world readable including db uname/password
