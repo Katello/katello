@@ -113,8 +113,10 @@ KT.menu = (function(){
         if( options.top ){
         	ul.css('top', options.top);
         }
-        
-        li.prepend($('<div class="arrow_icon_menu"></div>'));
+        if(li.find(".arrow_icon_menu").length === 0) {
+            li.prepend($('<div class="arrow_icon_menu"></div>'));
+        }
+
         li.hoverIntent(
             function(){
               ul.addClass("third_level").slideDown('fast');
