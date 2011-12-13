@@ -74,7 +74,8 @@ def setup_admin(admin):
     user_cmd.add_action('update', user.Update())
     user_cmd.add_action('delete', user.Delete())
     user_cmd.add_action('report', user.Report())
-    user_cmd.add_action('assign_role', user.AssignRole())
+    user_cmd.add_action('assign_role', user.AssignRole(True))
+    user_cmd.add_action('unassign_role', user.AssignRole(False))
     admin.add_command('user', user_cmd)
 
     user_role_cmd = user_role.UserRole()
