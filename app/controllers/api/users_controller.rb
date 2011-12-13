@@ -69,7 +69,7 @@ class Api::UsersController < Api::ApiController
   end
 
   def list_roles
-    render :json => @user.roles.to_json
+    render :json => @user.roles.non_self.to_json
   end
 
   def add_role
