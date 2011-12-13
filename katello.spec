@@ -86,7 +86,7 @@ Requires(pre):  shadow-utils
 Requires(preun): chkconfig
 Requires(preun): initscripts
 Requires(post): chkconfig
-Requires(postun): initscripts
+Requires(postun): initscripts coreutils sed
 
 BuildRequires:  coreutils findutils sed
 BuildRequires:  rubygems
@@ -253,6 +253,11 @@ rm -rf %{buildroot}
 /sbin/chkconfig --add %{name}
 
 %postun common
+#update config/initializers/secret_token.rb with new key
+NEWKEY=$(</dev/urandom tr -dc A-Za-z0-9 | head -c128)
+sed -i "s/^Src::Application.config.secret_token = '.*'/Src::Application.config.secret_token = '$NEWKEY'/" \
+    %{homedir}/config/initializers/secret_token.rb
+
 if [ "$1" -ge "1" ] ; then
     /sbin/service %{name} condrestart >/dev/null 2>&1 || :
 fi
