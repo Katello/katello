@@ -10,6 +10,9 @@
   %nav.subnav.clear
     - if content_for?(:navigation)
       = yield :navigation
+
+  - if content_for?(:header)
+    = yield :header
   
   - if content_for?(:content)
     %a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}
@@ -22,7 +25,8 @@
       = yield :subcontent
 
 - if content_for?(:footer)
-  = yield :footer
+  .tupane_footer
+    = yield :footer
 
 - if content_for?(:custom)
   = yield :custom
