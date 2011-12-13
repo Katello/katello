@@ -26,7 +26,8 @@ class Repository < ActiveRecord::Base
   include AsyncOrchestration
   include IndexedModel
   
-  index_options :extended_json=>:extended_index_attrs, :json=>{:except=>[:pulp_repo_facts, :groupid, :environment_product_id]}
+  index_options :extended_json=>:extended_index_attrs,
+                :json=>{:except=>[:pulp_repo_facts, :groupid, :environment_product_id]}
 
 
   belongs_to :environment_product, :inverse_of => :repositories
