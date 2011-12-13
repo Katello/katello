@@ -33,11 +33,16 @@ reader_role_perm = Permission.find_or_create_by_name(:role => reader_role,
 throw "Unable to create reader role permission: #{$!}" if reader_role_perm.nil? or reader_role_perm.errors.size > 0
 
 # create the super admin if none exist - it must be created before any statement in the seed.rb script
-User.current = user_admin = User.find_or_create_by_username(
+User.current = user_admin = User.find_by_username('admin')
+unless user_admin
+  user_admin = User.new(
   :roles => [ superadmin_role ],
   :username => 'admin',
   :password => 'admin',
   :email => 'root@localhost')
+  User.current = user_admin
+  user_admin.save!
+end
 throw "Unable to create admin user: #{$!}" if user_admin.nil? or user_admin.errors.size > 0
 
 # create the default org = "admin" if none exist
