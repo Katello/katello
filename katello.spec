@@ -159,7 +159,8 @@ compass compile
 
 #generate Rails JS/CSS/... assets
 echo Generating Rails assets...
-jammit
+jammit --config config/assets.yml -f
+
 
 #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
 echo Generating gettext files...
