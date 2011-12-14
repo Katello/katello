@@ -15,12 +15,82 @@ class SystemTask < ActiveRecord::Base
   belongs_to :task_status
 
 
-  TYPES = { :package_install => {:name => _("Package Install")},
-            :package_update =>  {:name => _("Package Update")},
-            :package_remove => {:name => _("Package Remove")},
-            :package_group_install => { :name => _("Package Group Install")},
-            :package_group_update => {:name => _("Package Group Update")},
-            :package_group_remove => {:name => _("Package Group Remove")},
+  TYPES = {
+      #package tasks
+     :package_install => {
+          :name => _("Package Install"),
+          :type => :package,
+          :event_messages => {
+              :running => _('Adding Package...'),
+              :waiting => _('Adding Package...'),
+              :finished => _('Add Package Completed'),
+              :error => _('Add Package Failed'),
+              :cancelled => _('Add Package Canceled'),
+              :timeout => _('Add Package Timed Out')
+          },
+      },
+      :package_update => {
+          :name => _("Package Update"),
+          :type => :package,
+          :event_messages => {
+              :running => _('Updating Package...'),
+              :waiting => _('Updating Package...'),
+              :finished => _('Update Package Completed'),
+              :error => _('Update Package Failed'),
+              :cancelled => _('Update Package Canceled'),
+              :timeout => _('Update Package Timed Out')
+          },
+      },
+      :package_remove => {
+          :name => _("Package Remove"),
+          :type => :package,
+          :event_messages => {
+              :running => _('Removing Package...'),
+              :waiting => _('Removing Package...'),
+              :finished => _('Remove Package Completed'),
+              :error => _('Remove Package Failed'),
+              :cancelled => _('Remove Package Canceled'),
+              :timeout => _('Remove Package Timed Out')
+          },
+      },
+      #package group tasks
+      :package_group_install => {
+          :name => _("Package Group Install"),
+          :type => :package_group,
+          :event_messages => {
+              :running => _('Adding Package Group...'),
+              :waiting => _('Adding Package Group...'),
+              :finished => _('Add Package Group Completed'),
+              :error => _('Add Package Group Failed'),
+              :cancelled => _('Add Package Group Canceled'),
+              :timeout => _('Add Package Group Timed Out')
+          },
+      },
+      :package_group_update => {
+          :name => _("Package Group Update"),
+          :type => :package_group,
+          :event_messages => {
+              :running => _('Updating Package Group...'),
+              :waiting => _('Updating Package Group...'),
+              :finished => _('Update Package Group Completed'),
+              :error => _('Update Package Group Failed'),
+              :cancelled => _('Update Package Group Canceled'),
+              :timeout => _('Update Package Group Timed Out')
+          },
+      },
+      :package_group_remove => {
+          :name => _("Package Group Remove"),
+          :type => :package_group,
+          :event_messages => {
+              :running => _('Removing Package Group...'),
+              :waiting => _('Removing Package Group...'),
+              :finished => _('Remove Package Group Completed'),
+              :error => _('Remove Package Group Failed'),
+              :cancelled => _('Remove Package Group Canceled'),
+              :timeout => _('Remove Package Group Timed Out')
+          },
+      },
+
   }.with_indifferent_access
 
 

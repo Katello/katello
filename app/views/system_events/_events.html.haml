@@ -1,0 +1,27 @@
+= javascript do
+  :javascript
+    KT.event_types = $.parseJSON('#{escape_javascript(generate_event_types)}');
+= javascript :filtertable, :system_events
+
+= render :partial => "systems/system_tupane_header_nav"
+
+= content_for :content do
+  - if tasks.length > 0
+    .grid_8
+      = render :partial => "common/filter_table", :locals => {:filter_placeholder => _('Filter on loaded tasks...')}
+      %table.filter_table.events.ajaxScroll{'data-system_id' => system.id}
+        %thead
+          %th
+            %a#event_sort{"data-sort"=>"asc", :class=>"ascending"}
+              #{_("Name")}
+          %th
+            #{_("Date Added")}
+          %th
+            #{_("Status")}
+
+        %tbody
+          = render :partial => 'event_items', :locals => {:system => system, :tasks => tasks}
+      #list-spinner
+        = image_tag("spinner.gif", :class=>"ajax_scroll")
+  - else
+    %p #{_("There are no events to display.")}
