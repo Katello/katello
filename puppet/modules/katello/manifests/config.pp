@@ -1,13 +1,23 @@
 class katello::config {
 
-  postgres::createuser { $katello::params::db_user:
-    passwd => $katello::params::db_pass,
-    logfile  => '/var/log/katello/katello-configure/create-postgresql-katello-user.log',
+  # this should be required by all classes that need to log there (everytime $log_base is used)
+  file { "${katello::params::log_base}":
+    owner   => $katello::params::user,
+    group   => $katello::params::group,
+    mode    => 644,
+    recurse => true;
   }
+
+  postgres::createuser { $katello::params::db_user:
+    passwd  => $katello::params::db_pass,
+    logfile => "${katello::params::log_base}/katello-configure/create-postgresql-katello-user.log",
+    require => [ File["${katello::params::log_base}"] ],
+  }
+
   postgres::createdb {$katello::params::db_name:
     owner   => $katello::params::db_user,
-    require => Postgres::Createuser[$katello::params::db_user],
-    logfile  => '/var/log/katello/katello-configure/create-postgresql-katello-database.log',
+    logfile => "${katello::params::log_base}/katello-configure/create-postgresql-katello-database.log",
+    require => [ Postgres::Createuser[$katello::params::db_user], File["${katello::params::log_base}"] ],
   }
 
   config_file {
@@ -20,12 +30,6 @@ class katello::config {
     "/etc/httpd/conf.d/katello.conf":
       template => "katello/etc/httpd/conf.d/katello.conf.erb",
       notify   => Exec["reload-apache2"];
-  }
-  file{"/var/log/katello":
-    owner   => $katello::params::user,
-    group   => $katello::params::group,
-    mode    => 644,
-    recurse => true;
   }
 
   # disable SELinux
@@ -119,8 +123,8 @@ class katello::config {
     command     => "/usr/bin/env > ${katello::params::db_env_log}",
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
-                'katello' => [ Class["candlepin::service"], Class["pulp::service"] ],
-                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"] ],
+                'katello' => [ Class["candlepin::service"], Class["pulp::service"], File["${katello::params::log_base}"] ],
+                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"], File["${katello::params::log_base}"] ],
                 default => [],
     },
   }
@@ -133,8 +137,8 @@ class katello::config {
     creates => "/var/lib/katello/db_migrate_done",
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
-                'katello' => [ Exec["katello_db_printenv"] ],
-                'headpin' => [ Exec["katello_db_printenv"] ],
+                'katello' => [ Exec["katello_db_printenv"], File["${katello::params::log_base}"] ],
+                'headpin' => [ Exec["katello_db_printenv"], File["${katello::params::log_base}"] ],
                 default => [],
     },
   }
@@ -147,8 +151,8 @@ class katello::config {
     creates => "/var/lib/katello/db_seed_done",
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
-                'katello' => [ Exec["katello_migrate_db"] ],
-                'headpin' => [ Exec["katello_migrate_db"] ],
+                'katello' => [ Exec["katello_migrate_db"], File["${katello::params::log_base}"] ],
+                'headpin' => [ Exec["katello_migrate_db"], File["${katello::params::log_base}"] ],
                 default => [],
     },
   }

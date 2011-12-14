@@ -46,7 +46,7 @@ class katello::install {
     },
     ensure  => installed
   }
-  Class["katello::install"] -> File["/var/log/katello"]
+  Class["katello::install"] -> File["${katello::params::log_base}"]
   Class["katello::install"] -> File["${katello::params::config_dir}/thin.yml"]
   Class["katello::install"] -> File["${katello::params::config_dir}/katello.yml"]
   Class["katello::install"] -> File["/etc/httpd/conf.d/katello.conf"]

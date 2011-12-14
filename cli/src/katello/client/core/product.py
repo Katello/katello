@@ -142,6 +142,9 @@ class Sync(SingleProductAction):
             errors = [json.loads(t["result"])['errors'][0] for t in task.get_hashes() if t['state'] == 'error']
             print _("Product [ %s ] failed to sync: %s" % (prodName, errors))
             return os.EX_DATAERR
+        elif task.cancelled():
+            print _("Product [ %s ] synchronization cancelled" % prodName)
+            return os.EX_DATAERR
 
         print _("Product [ %s ] synchronized" % prodName)
         return os.EX_OK

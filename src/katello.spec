@@ -16,9 +16,10 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.134
+Version:        0.1.143
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
+BuildArch:      noarch
 
 Group:          Applications/Internet
 License:        GPLv2
@@ -36,6 +37,7 @@ Conflicts:       %{name}-headpin
 Provides a package for managing application life-cycle for Linux systems.
 
 %package common
+BuildArch:      noarch
 Summary:        Common bits for all Katello instances
 Requires:       httpd
 Requires:       mod_ssl
@@ -86,7 +88,7 @@ Requires(pre):  shadow-utils
 Requires(preun): chkconfig
 Requires(preun): initscripts
 Requires(post): chkconfig
-Requires(postun): initscripts
+Requires(postun): initscripts coreutils sed
 
 BuildRequires:  coreutils findutils sed
 BuildRequires:  rubygems
@@ -98,13 +100,12 @@ BuildRequires:  rubygem(fssm) >= 0.2.7
 BuildRequires:  rubygem(compass) >= 0.11.5
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 
-BuildArch: noarch
-
 %description common
 Common bits for all Katello instances
 
 
 %package all
+BuildArch:      noarch
 Summary:        A meta-package to pull in all components for Katello
 Requires:       %{name}
 Requires:       %{name}-configure
@@ -120,6 +121,7 @@ of its dependencies on a single machine, you should install this package
 and then run katello-configure to configure everything.
 
 %package glue-pulp
+BuildArch:      noarch
 Summary:         Katello connection classes for the Pulp backend
 Requires:        %{name}-common
 
@@ -127,6 +129,7 @@ Requires:        %{name}-common
 Katello connection classes for the Pulp backend
 
 %package glue-foreman
+BuildArch:      noarch
 Summary:         Katello connection classes for the Foreman backend
 Requires:        %{name}-common
 
@@ -134,6 +137,7 @@ Requires:        %{name}-common
 Katello connection classes for the Foreman backend
 
 %package glue-candlepin
+BuildArch:      noarch
 Summary:         Katello connection classes for the Candlepin backend
 Requires:        %{name}-common
 
@@ -184,8 +188,7 @@ mv ./deploy/bundle-config .bundle/config
 cp -R .bundle * %{buildroot}%{homedir}
 
 #copy configs and other var files (will be all overwriten with symlinks)
-install -m 644 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
-#install -m 644 config/database.yml %{buildroot}%{_sysconfdir}/%{name}/database.yml
+install -m 600 config/%{name}.yml %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
 install -m 644 config/environments/production.rb %{buildroot}%{_sysconfdir}/%{name}/environment.rb
 
 #copy init scripts and sysconfigs
@@ -253,11 +256,17 @@ rm -rf %{buildroot}
 /sbin/chkconfig --add %{name}
 
 %postun common
+#update config/initializers/secret_token.rb with new key
+NEWKEY=$(</dev/urandom tr -dc A-Za-z0-9 | head -c128)
+sed -i "s/^Src::Application.config.secret_token = '.*'/Src::Application.config.secret_token = '$NEWKEY'/" \
+    %{homedir}/config/initializers/secret_token.rb
+
 if [ "$1" -ge "1" ] ; then
     /sbin/service %{name} condrestart >/dev/null 2>&1 || :
 fi
 
 %files
+%attr(600, katello, katello)
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.yml
 
 %files common
@@ -336,6 +345,55 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Dec 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.143-1
+- + Bug 766888 - Clicking environment on system creation screen doesn't select
+  an Env   https://bugzilla.redhat.com/show_bug.cgi?id=766888   The environment
+  selector on the Systems pages were broken in several ways, including just not
+  being hooked up properly. Two env selectors cannot co-exist in the same page
+  so when the New System is opened when viewing systems by environment, the
+  selector is not shown but instead just the name of the current environment.
+  (thomasmckay@redhat.com)
+- quick fix for ee653b28 - broke cli completely (lzap+git@redhat.com)
+- 765888 - Error during promotion - unittests (lzap+git@redhat.com)
+- 765888 - Error during promotion (lzap+git@redhat.com)
+- 761526 - password reset - clear the token on password reset
+  (bbuckingham@redhat.com)
+- 732444 - Moves Red Hat products to the top of the sync management list sorted
+  alphabetically followed by custom products sorted alphabetically.
+  (ehelms@redhat.com)
+- Changes all tupane slide out view to have Details tab and moves that tab to
+  the last position. (ehelms@redhat.com)
+- Removes older navigation files that appear no longer needed.
+  (ehelms@redhat.com)
+- system packages - minor change to status text (bbuckingham@redhat.com)
+
+* Tue Dec 13 2011 Ivan Necas <inecas@redhat.com> 0.1.142-1
+- Fix db:seed script not being able to create admin user (inecas@redhat.com)
+- 753804 - handling marketing products (inecas@redhat.com)
+- Fix handling of 404 from Pulp repositories API (inecas@redhat.com)
+- committing czech rails locales (lzap+git@redhat.com)
+
+* Tue Dec 13 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.141-1
+- marking all katello packages as noarch again
+- 766933 - katello.yml is world readable including db uname/password
+- 766939 - security_token.rb should be regenerated on each install
+- making seed script idempotent
+
+* Tue Dec 13 2011 Ivan Necas <inecas@redhat.com> 0.1.140-1
+- reimport-manifest - save content into repo groupid on import
+  (inecas@redhat.com)
+
+* Mon Dec 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.138-1
+- 760290 - read only role has now permissions
+
+* Fri Dec 09 2011 Ivan Necas <inecas@redhat.com> 0.1.136-1
+- 758219 - make labels for custom content unique (inecas@redhat.com)
+- spec test fix for create system (TODO: add default env tests)
+  (thomasmckay@redhat.com)
+- Merge branch 'master' into BZ-761726 (thomasmckay@redhat.com)
+- BZ-761710 (thomasmckay@redhat.com)
+- fixed another rescue handler (thomasmckay@redhat.com)
+
 * Thu Dec 08 2011 Mike McCune <mmccune@redhat.com> 0.1.133-1
 - periodic rebuild
 * Thu Dec 08 2011 Ivan Necas <inecas@redhat.com> 0.1.132-1

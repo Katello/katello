@@ -211,6 +211,29 @@ describe Product, :katello => true do
         Glue::Candlepin::Product.import_from_cp(ProductTestData::PRODUCT_WITH_CP_CONTENT)
       end
 
+      context "marketing product" do
+        let(:eng_product_after_import) do
+          product = Product.new(ProductTestData::PRODUCT_WITH_CP_CONTENT.merge("id" => "20", "name" => "Red Hat Enterprise Server 6")) do |p|
+            p.provider = @provider
+            p.environments << @organization.locker
+          end
+          product.orchestration_for = :import_from_cp_ar_setup
+          product.save!
+          product
+        end
+
+        subject { Glue::Candlepin::Product.import_marketing_from_cp(ProductTestData::PRODUCT_WITH_CP_CONTENT, [eng_product_after_import.id]) }
+
+        specify "repositories should not get created for that" do
+          Repository.should_not_receive(:create!)
+          subject
+        end
+
+        its(:engineering_products) { should == [eng_product_after_import] }
+
+        it { should be_an_instance_of MarketingProduct }
+      end
+
       describe "product major/minor versions" do
         before do
           @substitutor_mock.stub!(:substitute_vars).and_return do |path|
