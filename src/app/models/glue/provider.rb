@@ -181,6 +181,7 @@ module Glue::Provider
             p.environments << self.organization.locker
           end
         end
+        product_existing_in_katello_ids.concat(added_eng_products.map{|p| p["id"]})
 
         unless product_existing_in_katello_ids.include?(marketing_product_id)
           engineering_product_in_katello_ids = self.organization.locker.products.where(:cp_id => engineering_product_ids).map(&:id)
@@ -188,6 +189,7 @@ module Glue::Provider
             p.provider = self
             p.environments << self.organization.locker
           end
+          product_existing_in_katello_ids << marketing_product_id
         end
       end
     end
