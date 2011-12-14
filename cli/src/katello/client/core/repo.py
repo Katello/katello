@@ -62,7 +62,7 @@ class RepoAction(Action):
         super(RepoAction, self).__init__()
         self.api = RepoAPI()
 
-    def get_repo(self):
+    def get_repo(self, includeDisabled=False):
         repoId   = self.get_option('id')
         repoName = self.get_option('name')
         orgName  = self.get_option('org')
@@ -72,7 +72,7 @@ class RepoAction(Action):
         if repoId:
             repo = self.api.repo(repoId)
         else:
-            repo = get_repo(orgName, prodName, repoName, envName)
+            repo = get_repo(orgName, prodName, repoName, envName, includeDisabled)
 
         return repo
 
@@ -383,7 +383,7 @@ class Enable(SingleRepoAction):
         super(Enable, self).__init__()
 
     def run(self):
-        repo = self.get_repo()
+        repo = self.get_repo(True)
         if repo == None:
             return os.EX_DATAERR
 
