@@ -307,7 +307,7 @@ class Info(SingleRepoAction):
     select_by_env = True
 
     def run(self):
-        repo = self.get_repo()
+        repo = self.get_repo(True)
         if repo == None:
             return os.EX_DATAERR
 
