@@ -1,0 +1,13 @@
+-tasks.each do |t|
+  - cssclass = cycle("alt", "")
+
+  %tr{:class => cssclass + ' task'}
+    %td.event_name
+      #{SystemTask::TYPES[t.task_type][:name]}
+    %td.event_date
+      = format_time(t.created_at)
+    %td
+      %a.subpanel_element{"data-url"=>system_event_path(system.id, t.id)}
+        #{_(t.state.capitalize)}
+
+

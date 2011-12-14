@@ -39,20 +39,8 @@ describe SystemEventsController do
     describe "system tasks" do
       before do
         @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
-        #create some tasks
-        #@tasks = [
-        #  @system.install_packages("foo, bar, bazz, geez"),
-        #  @system.update_packages("foo, bar, bazz, geez"),
-        #  @system.remove_packages("foo, bar, bazz, geez")
-        #]
-      end
-      it "should call the right templates" do
-        get :index, :system_id => @system.id
-        response.should be_success
-        response.should render_template("items")
       end
       context "shows the Tasks list" do
-
         before do
           User.current = @user
           stub_consumer_packages_install(pulp_task_without_error)
