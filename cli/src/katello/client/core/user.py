@@ -199,17 +199,19 @@ class AssignRole(UserAction):
 
     @property
     def description(self):
-        if self._assign:
+        if self.__assign:
             return _('assign role to a user')
         else:
             return _('unassign role to a user')
 
+    def assign(self):
+        return self.__assign
 
     def __init__(self, assign = True):
         super(AssignRole, self).__init__()
         self.role_api = UserRoleAPI()
 
-        self._assign = assign
+        self.__assign = assign
 
     def setup_parser(self):
         self.parser.add_option('--username', dest='username', help=_("user name (required)"))
@@ -232,12 +234,12 @@ class AssignRole(UserAction):
             print _("Role [ %s ] not found" % roleName)
             return os.EX_DATAERR
 
-        msg = self._update_role(user['id'], role['id']) 
+        msg = self.update_role(user['id'], role['id']) 
         print msg 
         return os.EX_OK
 
-    def _update_role(self, userId, roleId):
-        if self._assign:
+    def update_role(self, userId, roleId):
+        if self.assign():
             return self.api.assign_role(userId, roleId)
         else:
             return self.api.unassign_role(userId, roleId)
