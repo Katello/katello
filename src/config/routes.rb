@@ -66,7 +66,11 @@ Src::Application.routes.draw do
 
   resources :systems, :except => [:destroy] do
 
-    resources :events, :only => [:index, :show], :controller => "system_events"
+    resources :events, :only => [:index, :show], :controller => "system_events" do
+      collection do
+        get :status
+      end
+    end
     resources :system_packages, :only => {} do
       collection do
         put :add

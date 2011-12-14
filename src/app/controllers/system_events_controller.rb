@@ -22,9 +22,11 @@ class SystemEventsController < ApplicationController
 
   def rules
     read_system = lambda{@system.readable?}
+
     {
       :index => read_system,
       :show => read_system,
+      :status => read_system
     }
   end
 
@@ -32,7 +34,7 @@ class SystemEventsController < ApplicationController
   def index
     # list of events
     tasks = @system.tasks
-    render :partial=>"items", :layout => "tupane_layout", :locals=>{:system => @system, :tasks => tasks}
+    render :partial=>"events", :layout => "tupane_layout", :locals=>{:system => @system, :tasks => tasks}
   end
 
   def show
@@ -41,6 +43,13 @@ class SystemEventsController < ApplicationController
     type = SystemTask::TYPES[task.first.task_type][:name]
     render :partial=>"details", :layout => "tupane_layout", :locals=>{:type => type, :system => @system, :task =>task}
   end
+
+  def status
+    # retrieve the status for the package actions initiated by the client
+    statuses = @system.tasks.where(:uuid => params[:uuid])
+    render :json => statuses
+  end
+
 
   protected
   def find_system
