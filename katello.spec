@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.142
+Version:        0.1.143
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -345,6 +345,28 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Dec 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.143-1
+- + Bug 766888 - Clicking environment on system creation screen doesn't select
+  an Env   https://bugzilla.redhat.com/show_bug.cgi?id=766888   The environment
+  selector on the Systems pages were broken in several ways, including just not
+  being hooked up properly. Two env selectors cannot co-exist in the same page
+  so when the New System is opened when viewing systems by environment, the
+  selector is not shown but instead just the name of the current environment.
+  (thomasmckay@redhat.com)
+- quick fix for ee653b28 - broke cli completely (lzap+git@redhat.com)
+- 765888 - Error during promotion - unittests (lzap+git@redhat.com)
+- 765888 - Error during promotion (lzap+git@redhat.com)
+- 761526 - password reset - clear the token on password reset
+  (bbuckingham@redhat.com)
+- 732444 - Moves Red Hat products to the top of the sync management list sorted
+  alphabetically followed by custom products sorted alphabetically.
+  (ehelms@redhat.com)
+- Changes all tupane slide out view to have Details tab and moves that tab to
+  the last position. (ehelms@redhat.com)
+- Removes older navigation files that appear no longer needed.
+  (ehelms@redhat.com)
+- system packages - minor change to status text (bbuckingham@redhat.com)
+
 * Tue Dec 13 2011 Ivan Necas <inecas@redhat.com> 0.1.142-1
 - Fix db:seed script not being able to create admin user (inecas@redhat.com)
 - 753804 - handling marketing products (inecas@redhat.com)
