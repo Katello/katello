@@ -62,7 +62,6 @@ module Navigation
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
         },
-      [
         { :key => :subscriptions,
           :name =>N_("Subscriptions"),
           :url => lambda{subscriptions_system_path(@system.id)},
