@@ -117,6 +117,17 @@ and then run katello-configure to configure everything.
 cp -Rf %{homedir}/* %{katello_dir}
 
 %changelog
+* Wed Dec 14 2011 Bryan Kearney <bkearney@redhat.com> 0.1.116-2
+- Automatic commit of package [katello-headpin] release [0.1.115-2].
+  (bkearney@redhat.com)
+- Bring in katello-headpin version 115 (bkearney@redhat.com)
+- Change (bkearney@redhat.com)
+- Automatic commit of package [katello-headpin] release [0.1.112-2].
+  (bkearney@redhat.com)
+- Bump the release (bkearney@redhat.com)
+- Fix the README (bkearney@redhat.com)
+- Pull in the branding code from system engine (bkearney@redhat.com)
+
 * Fri Dec 09 2011 Bryan Kearney <bkearney@redhat.com> 0.1.115-2
 - Bring in katello-headpin version 115 (bkearney@redhat.com)
 - Change (bkearney@redhat.com)
