@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.143
+Version:        0.1.144
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -345,6 +345,11 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Dec 14 2011 Ivan Necas <inecas@redhat.com> 0.1.144-1
+- 753804 - fix for duplicite product name exception (inecas@redhat.com)
+- 741656 - fix query on resource type for search (bbuckingham@redhat.com)
+- fixing typos in the seeds script (lzap+git@redhat.com)
+
 * Wed Dec 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.143-1
 - + Bug 766888 - Clicking environment on system creation screen doesn't select
   an Env   https://bugzilla.redhat.com/show_bug.cgi?id=766888   The environment
