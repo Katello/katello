@@ -236,6 +236,9 @@ class Sync(SingleProviderAction):
             errors = [json.loads(t["result"])['errors'][0] for t in task.get_hashes() if t['state'] == 'error']
             print _("Provider [ %s ] failed to sync: %s" % (providerName, errors))
             return os.EX_DATAERR
+        elif task.cancelled():
+            print _("Provider [ %s ] synchronization cancelled" % providerName)
+            return os.EX_DATAERR
 
         print _("Provider [ %s ] synchronized" % providerName)
         return os.EX_OK

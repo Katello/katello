@@ -55,7 +55,7 @@ module Glue::Pulp::Repos
         :contentUrl => path,
         :gpgUrl => "",
         :type => "yum",
-        :label => name,
+        :label => "#{self.id}-#{name}",
         :vendor => Provider::CUSTOM
       },
       :enabled => true
@@ -395,7 +395,7 @@ module Glue::Pulp::Repos
                                         :feed_cert => self.certificate,
                                         :feed_key => self.key,
                                         :content_type => pc.content.type,
-                                        :groupid => Glue::Pulp::Repos.groupid(self, self.locker),
+                                        :groupid => Glue::Pulp::Repos.groupid(self, self.locker, pc.content),
                                         :preserve_metadata => true, #preserve repo metadata when importing from cp
                                         :enabled =>false
                                         )

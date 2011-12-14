@@ -160,7 +160,8 @@ class GpgKeysController < ApplicationController
       :name => controller_display_name,
       :ajax_load  => true,
       :ajax_scroll => items_gpg_keys_path(),
-      :enable_create => true#GpgKey.manageable?(current_organization)
+      :initial_action=> :products_repos,
+      :enable_create => GpgKey.createable?(current_organization)
     }
   end
 

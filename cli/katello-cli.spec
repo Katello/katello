@@ -18,8 +18,8 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.23
-Release:       2%{?dist}
+Version:       0.1.25
+Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Dec 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.25-1
+- system engine build 
+
 * Thu Dec 08 2011 Mike McCune <mmccune@redhat.com> 0.1.23-2
 - periodic rebuild
 * Thu Dec 08 2011 Mike McCune <mmccune@redhat.com>

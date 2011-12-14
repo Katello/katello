@@ -1,6 +1,7 @@
+
+= javascript :env_select
+
 -if defined? envsys
-  = javascript :env_select
-  
   .grid_16
     = environment_selector(:locker_clickable=>false, :accessible_envs=>accessible_envs,  :url_proc => lambda {|a| environments_systems_path(:env_id =>a[:environment].id )})
 
@@ -8,4 +9,14 @@
   = two_panel(@systems, @panel_options)
 
 = javascript :edit, :multiselect, :system, :treetable
-= include_editable_i18n 
+= include_editable_i18n
+-if defined? envsys
+  = javascript do
+    :javascript
+      $(document).ready(function() {
+          env_select.env_changed_callback('#{@environment.id}');
+          env_select.click_callback = function(env_id) {
+              $.bbq.pushState({env_id : env_id});
+              $('#search_form').trigger('submit');
+          };
+      });

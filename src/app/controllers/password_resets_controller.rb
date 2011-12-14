@@ -49,6 +49,10 @@ class PasswordResetsController < ApplicationController
     end
 
     begin
+      # update the password and reset the 'password reset token' so that it cannot be reused
+      params[:user][:password_reset_token] = nil
+      params[:user][:password_reset_sent_at] = nil
+
       @user.update_attributes!(params[:user])
       notice _("Password has been reset for user '%{s}'." % {:s => @user.username}), {:persist => false}
       render :text => ""

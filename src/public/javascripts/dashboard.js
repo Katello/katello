@@ -35,6 +35,87 @@ KT.dashboard = (function(){
         }
 
     },
+    popoutSetup = function (){
+        var popout = $('.dashboard_popout');
+        var dropbutton = $('.dropbutton');
+        var currentDropbutton = null;
+        var thisPortal = null;
+        dropbutton.hide();
+        dropbutton.each(function(){
+            currentDropbutton = $(this);
+            currentDropbutton.attr('original-title',popout.html()).tipsy({
+              gravity: 'n',
+              fade:true,
+              html:true,
+              opacity: 0.9,
+              trigger: 'manual',
+              afterShow: function(){
+                //attach some events to the current popout
+                //the current portal under the dropbutton
+                thisPortal = currentDropbutton.parent().parent().find('.portal').children(':first').children(':first');
+                $('.tipsy').find('select.num_of_results').each(function(){
+                  $(this).val(thisPortal.attr("data-quantity"));
+                  $(this).unbind();
+                  $(this).bind('change', function(){
+                    KT.dashboard.widgetReload(thisPortal, $(this).val(), "quantity");
+                    KT.dashboard.popoutClose();
+                  });
+                });
+              }
+
+            });
+        });
+        dropbutton.live('click', function(){
+          KT.dashboard.popoutClose();
+          currentDropbutton = $(this);
+          if (!currentDropbutton.hasClass('active')){
+            //make it active
+            $(this).addClass('active');
+            $(this).tipsy("show");
+          } else {
+            KT.dashboard.popoutClose();
+          }
+        });
+        $(document).mouseup(function(e){
+          var target = $(e.target);
+          if(!(target.hasClass('popout'))){
+            KT.dashboard.popoutClose();
+          }
+        });
+    },
+    popoutClose = function(){
+      $('.dropbutton.active').tipsy('hide').removeClass('active').removeClass('showing');
+    },
+    widgetReload = function(theWidget, quantity, type) {
+        if(quantity == undefined){quantity=-1}
+        if(!typeof(type) != "string"){type="quantity"}
+        var div = theWidget;
+        var url = div.attr("data-url");
+        var id = div.attr("data-id");
+        $.ajax({
+            url: url+"?"+type+"="+quantity,
+            success: function(data){
+                var parent = div.parent();
+                var newDiv = null;
+                div.replaceWith(data);
+                newDiv = parent.children(":first");
+                newDiv.attr("data-url", url);
+                parent.parent().parent().find('.dropbutton').fadeIn();
+
+
+                // Add a handler for ellipsis
+                parent.find(".one-line-ellipsis").ellipsis();
+
+                KT.common.jscroll_init(parent.find('.scroll-pane'));
+                KT.common.jscroll_resize(parent.find('.jspPane'));
+
+                var proc = KT.dashboard.widget_map[id];
+                if (proc) {
+                    proc();
+                }
+            }
+        });
+    },
     register_errata = function() {
         $("#dashboard_errata").delegate(".collapsed", "click", function() {
             var btn = $(this);
@@ -65,7 +146,10 @@ KT.dashboard = (function(){
     };
     
     return {
-        widget_map: widget_map()
+        widget_map: widget_map(),
+        widgetReload: widgetReload,
+        popoutClose : popoutClose,
+        popoutSetup : popoutSetup
     }
 
 })();
@@ -77,38 +161,15 @@ $(document).ready(function() {
     $.each(KT.dashboard.widget_map, function(key, value){
         value();
     });
-
+    KT.dashboard.popoutSetup();
 
 });
 
 
 //wait until the entire page is loaded, to ensure images and things are downloaded
 $(window).load(function() {
-    $(".loading").each(function(item) {
-        var div = $(this);
-        var url = div.attr("data-url");
-        var id = div.attr("data-id");
-        $.ajax({
-            url: url,
-            success: function(data){
-                var parent = div.parent();
-                div.replaceWith(data);
-
-                // Add a handler for ellipsis
-                parent.find(".one-line-ellipsis").ellipsis();
-
-                KT.common.jscroll_init(parent.find('.scroll-pane'));
-                KT.common.jscroll_resize(parent.find('.jspPane'));
-
-                var proc = KT.dashboard.widget_map[id];
-                if (proc) {
-                    proc();
-                }
-
-            }
-        });
-
-
+    $(".loading").each(function(){
+       KT.dashboard.widgetReload($(this))
     });
 
 });

@@ -153,6 +153,7 @@ describe Changeset do
         before(:each) do
           @prod.environments << @environment
           @repo.stub(:is_cloned_in?).and_return(true)
+          @repo.stub(:last_sync).and_return("2011-11-11 11:11")
         end
 
         it "should add product" do

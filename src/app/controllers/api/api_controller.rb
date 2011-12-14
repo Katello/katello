@@ -126,15 +126,8 @@ class Api::ApiController < ActionController::Base
     logger.error pp_exception(ex.original.nil? ? ex : ex.original)
     orig_message = (ex.original.nil? && '') || ex.original.message
     respond_to do |format|
-      format.json do
-        render :json => {
-          :errors => [ ex.message, orig_message ]
-        }, :status => status_code
-      end
-      format.all do
-        render :text => "#{ex.message} (#{orig_message})",
-          :status => status_code
-      end
+      format.json { render :json => {:displayMessage => ex.message, :errors => [ ex.message, orig_message ]}, :status => status_code }
+      format.all { render :text => "#{ex.message} (#{orig_message})", :status => status_code }
     end
   end
 

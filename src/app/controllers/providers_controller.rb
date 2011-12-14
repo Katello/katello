@@ -226,14 +226,14 @@ class ProvidersController < ApplicationController
 
 
   def panel_options
-        @panel_options = { :title => _('Providers'),
-                 :col => ['name'],
-                 :create => _('Provider'),
-                 :name => controller_display_name,
-                 :ajax_load => true,
-                 :ajax_scroll=>items_providers_path(),
-                 :enable_create=> Provider.creatable?(current_organization) && AppConfig.katello?}
-        
+    @panel_options = { :title => _('Providers'),
+             :col => ['name'],
+             :create => _('Provider'),
+             :name => controller_display_name,
+             :ajax_load => true,
+             :ajax_scroll=>items_providers_path(),
+             :initial_action => :products_repos,
+             :enable_create => Provider.creatable?(current_organization)}
   end
 
   def controller_display_name
