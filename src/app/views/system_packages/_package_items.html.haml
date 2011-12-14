@@ -34,8 +34,9 @@
 -packages.each do |p|
 
   %tr{:class => row_shading + ' package'}
-    %td.package_select
-      = check_box_tag "package[#{p.name}]"
+    - if editable
+      %td.package_select
+        = check_box_tag "package[#{p.name}]"
     -#%td.package_status.packages_icon
     %td.package_name
       #{p.nvrea}

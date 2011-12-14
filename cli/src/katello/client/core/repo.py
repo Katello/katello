@@ -93,7 +93,7 @@ class SingleRepoAction(RepoAction):
         self.parser.add_option('--product', dest='product', help=_("product name eg: fedora-14"))
         if select_by_env:
             self.parser.add_option('--environment', dest='env', help=_("environment name eg: production (default: Locker)"))
-       
+
     def check_repo_select_options(self):
         if not self.has_option('id'):
             self.require_option('name')
@@ -327,13 +327,13 @@ class Info(SingleRepoAction):
 
         self.printer.printItem(repo)
         return os.EX_OK
-    
+
 
 class Sync(SingleRepoAction):
 
     description = _('synchronize a repository')
     select_by_env = False
-    
+
     def run(self):
         repo = self.get_repo()
         if repo == None:
@@ -344,6 +344,9 @@ class Sync(SingleRepoAction):
 
         if task.succeeded():
             print _("Repo [ %s ] synced" % repo['name'])
+            return os.EX_OK
+        elif task.cancelled():
+            print _("Repo [ %s ] synchronization cancelled" % repo['name'])
             return os.EX_OK
         else:
             print _("Repo [ %s ] failed to sync: %s" % (repo['name'], json.loads(task.get_hashes()[0]["result"])['errors'][0]))
@@ -359,7 +362,7 @@ class CancelSync(SingleRepoAction):
         repo = self.get_repo()
         if repo == None:
             return os.EX_DATAERR
-       
+
         msg = self.api.cancel_sync(repo['id'])
         print msg
         return os.EX_OK
@@ -386,7 +389,7 @@ class Enable(SingleRepoAction):
 
         msg = self.api.enable(repo["id"], self._enable)
         print msg
-            
+
         return os.EX_OK
 
 
@@ -412,7 +415,7 @@ class List(RepoAction):
         envName = self.get_option('env')
         prodName = self.get_option('product')
         listDisabled = self.has_option('disabled')
-        
+
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('package_count')

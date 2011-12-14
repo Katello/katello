@@ -132,8 +132,8 @@ module CDN
   # takes path e.g. "/rhel/server/5/$releasever/$basearch/os"
   # returns hash substituting variables:
   #
-  #   { {"releasever" => "6Server", "basearch" => "i386"} =>  "/rhel/server/5/6Server/i386/os",
-  #     {"releasever" => "6Server", "basearch" => "x86_64"} =>  "/rhel/server/5/6Server/x84_64/os"}
+     { {"releasever" => "6Server", "basearch" => "i386"} =>  "/rhel/server/5/6Server/i386/os",
+       {"releasever" => "6Server", "basearch" => "x86_64"} =>  "/rhel/server/5/6Server/x84_64/os"}
   #
   # values are loaded from CDN
     def substitute_vars(path_with_vars)
@@ -151,6 +151,10 @@ module CDN
           paths_without_vars[substitutions] = path
         end
       end
+
+      #File.open(File.join(Rails.root,"tmp","example_cdn_paths.rb"), "a") do |f|
+        #f << %["#{path_with_vars}" => #{paths_without_vars.pretty_print_inspect},\n\n]
+      #end
 
       return paths_without_vars
     end

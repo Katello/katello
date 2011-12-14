@@ -2,8 +2,8 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.31
-Release:        2%{?dist}
+Version:        0.1.37
+Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
 Group:          Applications/Internet
@@ -56,8 +56,26 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
-* Thu Dec 08 2011 Shannon Hughes <shughes@redhat.com> 0.1.31-2
-- brew build (shughes@redhat.com)
+* Wed Dec 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.37-1
+- system engine build 
+
+* Tue Dec 13 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.36-1
+- 767139 - Puppet sometimes fails on RHEL 6.1
+- 759564: Candlepin puppet module did not add the thumbslug oauth line during a
+  headpin install
+
+* Mon Dec 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.35-1
+- 758712 - adding missing requires for candlepin sql
+
+* Mon Dec 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.34-1
+- 758712 - execute classes with logs in correct order
+
+* Fri Dec 09 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.33-1
+- 758712 - Installer (db:seed) sometimes fail - better [TEMP FIX]
+
+* Fri Dec 09 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.32-1
+- 765813 - Puppet: create-nss-db fails on RHEL 6.2 [TEMP FIX]
+- 758712 - Installer (db:seed) sometimes fail [TEMP FIX]
 
 * Thu Dec 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.31-1
 - puppet - regenerate NSS db each run - fix

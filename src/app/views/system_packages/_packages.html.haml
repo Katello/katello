@@ -5,34 +5,38 @@
   :javascript
     localize({
       "adding_package"            : '#{adding_package}',
-      "adding_package_success"    : '#{_('Add Package Completed')}',
-      "adding_package_failed"     : '#{_('Add Package Failed')}',
+      "adding_package_success"    : '#{_('Add Package Complete')}',
+      "adding_package_failed"     : '#{_('Add Package Error')}',
       "adding_package_canceled"   : '#{_('Add Package Canceled')}',
       "adding_package_timeout"    : '#{_('Add Package Timeout')}',
 
       "updating_package"          : '#{updating_package}',
-      "updating_package_success"  : '#{_('Update Package Completed')}',
-      "updating_package_failed"   : '#{_('Update Package Failed')}',
+      "updating_package_success"  : '#{_('Update Package Complete')}',
+      "updating_package_failed"   : '#{_('Update Package Error')}',
       "updating_package_canceled" : '#{_('Update Package Canceled')}',
       "updating_package_timeout"  : '#{_('Update Package Timeout')}',
 
       "removing_package"          : '#{removing_package}',
-      "removing_package_success"  : '#{_('Remove Package Completed')}',
-      "removing_package_failed"   : '#{_('Remove Package Failed')}',
+      "removing_package_success"  : '#{_('Remove Package Complete')}',
+      "removing_package_failed"   : '#{_('Remove Package Error')}',
       "removing_package_canceled" : '#{_('Remove Package Canceled')}',
       "removing_package_timeout"  : '#{_('Remove Package Timeout')}',
 
       "adding_group"              : '#{adding_package_group}',
-      "adding_group_success"      : '#{_('Add Package Group Completed')}',
-      "adding_group_failed"       : '#{_('Add Package Group Failed')}',
+      "adding_group_success"      : '#{_('Add Package Group Complete')}',
+      "adding_group_failed"       : '#{_('Add Package Group Error')}',
       "adding_group_canceled"     : '#{_('Add Package Group Canceled')}',
       "adding_group_timeout"      : '#{_('Add Package Group Timeout')}',
 
       "removing_group"            : '#{removing_package_group}',
-      "removing_group_success"    : '#{_('Remove Package Group Completed')}',
-      "removing_group_failed"     : '#{_('Remove Package Group Failed')}',
+      "removing_group_success"    : '#{_('Remove Package Group Complete')}',
+      "removing_group_failed"     : '#{_('Remove Package Group Error')}',
       "removing_group_canceled"   : '#{_('Remove Package Group Canceled')}',
       "removing_group_timeout"    : '#{_('Remove Package Group Timeout')}',
+      
+      "validation_error_name_format" : '#{_('One or more package names are invalid.')}',
+      "validation_error_package_pending" : '#{_('One or more of the packages provided has an action pending.')}',
+      "validation_error_group_pending" : '#{_('One or more of the groups provided has an action pending.')}',
 
       "x_of_y_packages" : function(x,y){ return '#{_("(Loaded %X of %Y Total)")}'.replace("%X", x).replace("%Y", y); }
       });
@@ -74,6 +78,10 @@
                   = radio_button_tag :perform_action, :package_groups, false
                   = label_tag _('Package Groups')
 
+              %tr#error_message_container
+                %td{:colspan => 4}
+                  %div#error_message.validation_error_text
+
               %tr#content_form_row.no_sort.not_filtered
                 %td{:colspan => 4}
                   %div#content_form
@@ -82,23 +90,24 @@
                     %a#add_content{:style => 'padding-left: 10px;'} #{_('+ Add')}
                     %a#remove_content{:style => 'padding-left: 10px;'} #{_('- Remove')}
 
-            = render :partial => 'package_items', :locals => {:package_tasks => package_tasks, :group_tasks => group_tasks,
-                                                              :packages => packages}
+            = render :partial => 'package_items', :locals => {:editable => editable, :package_tasks => package_tasks,
+                                                              :group_tasks => group_tasks, :packages => packages}
 
       #list-spinner
         = image_tag("spinner.gif", :class=>"ajax_scroll")
 
   - else
-    %p There are no packages to display.
+    %p #{_("There are no packages to display.")}
 
 = content_for :footer do
-  .grid_8
-    %a#more{:style => "padding-left: 20px;", "data-scroll_url"=>url_for(more_packages_system_system_packages_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("Load %{n} More" % {:n => offset})}
-    %span{:id => 'loaded_summary', :style => "padding-left: 20px;"}
-      -##{"%{n} Loaded of %{t} Total" % {:n => offset, :t => total_packages}}
+  - if packages.length > 0
+    .grid_8
+      %a#more{:style => "padding-left: 20px;", "data-scroll_url"=>url_for(more_packages_system_system_packages_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("Load %{n} More" % {:n => offset})}
+      %span{:id => 'loaded_summary', :style => "padding-left: 20px;"}
+        -##{"%{n} Loaded of %{t} Total" % {:n => offset, :t => total_packages}}
 
-    - if editable
-      .prefix_2.grid_6.ra
-        = submit_tag _("Update All"), :class => 'button', :id => 'update_all_packages', 'data-url' => system_system_packages_path(@system.id)
-        = submit_tag _("Update"), :class => 'button', :id => 'update_packages', 'data-url' => system_system_packages_path(@system.id)
-        = submit_tag _('Remove'), :class => 'button', :id => 'remove_packages', 'data-url' => remove_system_system_packages_path(@system.id)
+      - if editable
+        .prefix_2.grid_6.ra
+          = submit_tag _("Update All"), :class => 'button', :id => 'update_all_packages', 'data-url' => system_system_packages_path(@system.id)
+          = submit_tag _("Update"), :class => 'button', :id => 'update_packages', 'data-url' => system_system_packages_path(@system.id)
+          = submit_tag _('Remove'), :class => 'button', :id => 'remove_packages', 'data-url' => remove_system_system_packages_path(@system.id)

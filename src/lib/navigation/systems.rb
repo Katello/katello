@@ -56,12 +56,6 @@ module Navigation
 
     def systems_navigation
       [
-        { :key => :general,
-          :name =>N_("General"),
-          :url => lambda{edit_system_path(@system.id)},
-          :if => lambda{@system},
-          :options => {:class=>"navigation_element"}
-        },
         { :key => :subscriptions,
           :name =>N_("Subscriptions"),
           :url => lambda{subscriptions_system_path(@system.id)},
@@ -85,18 +79,18 @@ module Navigation
           :url => lambda{facts_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
+        },
+        { :key => :details,
+          :name =>N_("Details"),
+          :url => lambda{edit_system_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"navigation_element"}
         }
       ]
     end
 
     def activation_keys_navigation
       [
-        { :key => :general,
-          :name =>N_("General"),
-          :url => lambda{edit_activation_key_path(@activation_key.id)},
-          :if => lambda{activation_key},
-          :options => {:class=>"navigation_element"}
-        },
         { :key => :applied_subscriptions,
           :name =>N_("Applied Subscriptions"),
           :url => lambda{applied_subscriptions_activation_key_path(@activation_key.id)},
@@ -107,6 +101,12 @@ module Navigation
           :name =>N_("Available Subscriptions"),
           :url => lambda{available_subscriptions_activation_key_path(@activation_key.id)},
           :if => lambda{@system},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :details,
+          :name =>N_("Details"),
+          :url => lambda{edit_activation_key_path(@activation_key.id)},
+          :if => lambda{activation_key},
           :options => {:class=>"navigation_element"}
         }
       ]

@@ -22,7 +22,7 @@ class Api::ProductsController < Api::ApiController
     index_test = lambda { Product.any_readable?(@organization) }
     read_test = lambda { @product.readable? }
     edit_test = lambda { @product.editable? }
-    repo_test = lambda { @product.readable? }
+    repo_test = lambda { Product.any_readable?(@organization) }
     {
       :index => index_test,
       :show => read_test,
