@@ -1,7 +1,7 @@
 require 'spec_helper'
 include OrchestrationHelper
 
-describe Changeset do
+describe Changeset, :katello => true do
 
   describe "Changeset should" do
     before(:each) do

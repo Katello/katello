@@ -56,12 +56,6 @@ module Navigation
 
     def systems_navigation
       a = [
-        { :key => :general,
-          :name =>N_("General"),
-          :url => lambda{edit_system_path(@system.id)},
-          :if => lambda{@system},
-          :options => {:class=>"navigation_element"}
-        },
         { :key => :subscriptions,
           :name =>N_("Subscriptions"),
           :url => lambda{subscriptions_system_path(@system.id)},
@@ -86,8 +80,8 @@ module Navigation
           :url => lambda{facts_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
-        },
-        { :key => :details,
+        }
+      a << { :key => :details,
           :name =>N_("Details"),
           :url => lambda{edit_system_path(@system.id)},
           :if => lambda{@system},
