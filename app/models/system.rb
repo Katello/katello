@@ -166,6 +166,13 @@ class System < ActiveRecord::Base
     SystemTask.refresh_for_system(self)
   end
 
+
+
+  def extended_index_attrs
+    {:facts=>self.facts, :organization_id=>self.organization.id}
+  end
+
+
   private
     def save_system_task pulp_task, task_type, parameters_type, parameters
       SystemTask.make(self, pulp_task, task_type, parameters_type => parameters)
@@ -174,11 +181,6 @@ class System < ActiveRecord::Base
     def fill_defaults
       self.description = "Initial Registration Params" unless self.description
       self.location = "None" unless self.location
-    end
-
-
-    def extended_index_attrs
-      {:facts=>self.facts, :organization_id=>self.organization.id}
     end
 
 end
