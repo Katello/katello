@@ -133,11 +133,17 @@ class SystemsController < ApplicationController
   end
 
   def items
+    search = params[:search]
     if params[:env_id]
       find_environment
-      render_panel_items(System.readable(current_organization).where(:environment_id => @environment.id), @panel_options, params[:search], params[:offset])
+      filters = {:environment_id=>[params[:env_id]]}
+      render_panel_direct(System, @panel_options, search, params[:offset], [:id, 'asc'], filters, true)
+
+      #render_panel_items(System.readable(current_organization).where(:environment_id => @environment.id), @panel_options, params[:search], params[:offset])
     else
-      render_panel_items(System.readable(current_organization), @panel_options, params[:search], params[:offset])
+      filters = {:organization_id=>[current_organization.id]}
+      render_panel_direct(System, @panel_options, search, params[:offset], [:id, 'asc'], filters, true)
+      #render_panel_items(System.readable(current_organization), @panel_options, params[:search], params[:offset])
     end
   end
 
