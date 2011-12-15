@@ -29,6 +29,7 @@ class User < ActiveRecord::Base
   has_many :notices, :through => :user_notices
   has_many :search_favorites, :dependent => :destroy
   has_many :search_histories, :dependent => :destroy
+  serialize :preferences, HashWithIndifferentAccess
 
   validates :username, :uniqueness => true, :presence => true, :username => true, :length => { :maximum => 255 }
   validates_presence_of :email
@@ -73,6 +74,7 @@ class User < ActiveRecord::Base
   # hash the password before creating or updateing the record
   before_save do |u|
     u.password = Password::update(u.password) if u.password.length != 192
+    u.preferences=HashWithIndifferentAccess.new unless u.preferences
   end
 
   # create own role for new user

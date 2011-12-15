@@ -125,6 +125,10 @@ class Changeset < ActiveRecord::Base
 
   def add_product cpid
     product = find_product_by_cpid(cpid)
+
+    # check if product was already synced
+    raise _("Product '#{product.name}' was not synchronized yet") if product.last_sync.nil?
+
     self.products << product
     product
   end
