@@ -135,7 +135,7 @@ module LazyAccessor
 
     def prepopulate(remote_values)
       attrs = self.class.lazy_attributes
-      remote_values.each_pair {|k,v| instance_variable_set("@#{k.to_s}", v) if (attrs.include?(k.to_sym) and respond_to?("#{k.to_s}="))}
+      remote_values.each_pair {|k,v| instance_variable_set("@#{k.to_s}", v) if (attrs and attrs.include?(k.to_sym) and respond_to?("#{k.to_s}="))}
     end
   end
 end
