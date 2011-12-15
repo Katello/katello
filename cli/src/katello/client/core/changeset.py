@@ -462,7 +462,7 @@ class Promote(ChangesetAction):
             print _("Changeset [ %s ] promoted" % csName)
             return os.EX_OK
         else:
-            print _("Changeset [ %s ] promotion failed: %s" % (csName, format_task_errors(task.error())) )
+            print _("Changeset [ %s ] promotion failed: %s" % (csName, format_task_errors(task.errors())) )
             return os.EX_DATAERR
 
 
