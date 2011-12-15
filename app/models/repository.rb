@@ -70,6 +70,11 @@ class Repository < ActiveRecord::Base
      :product=>self.product.name, :product_id=> self.product.id}
   end
 
+  after_save do
+    self.product.provider.update_index
+  end
+
+
   def index_packages
     pkgs = self.packages.collect{|pkg| pkg.as_json.merge({:_type =>'package'})}
     Tire.index AppConfig.elastic_index do
