@@ -27,7 +27,7 @@ class System < ActiveRecord::Base
   include IndexedModel
 
   index_options :extended_json=>:extended_index_attrs,
-                :json=>{:only=>[:name, :environment_id]}
+                :json=>{:only=>[:name, :environment_id, :id]}
 
 
   acts_as_reportable
