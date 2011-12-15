@@ -402,7 +402,7 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def render_panel_direct(obj_class, options, search, start, sort, filters=nil)
+  def render_panel_direct(obj_class, options, search, start, sort, filters=nil, load=false)
 
     search = '*' if search == ''
 
@@ -415,7 +415,7 @@ class ApplicationController < ActionController::Base
     @items = []
 
     begin
-      results = obj_class.search do
+      results = obj_class.search :load=>load do
          query { string search}
          sort {by sort[0], sort[1] }
          filter :terms, filters if filters
