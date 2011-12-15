@@ -54,6 +54,9 @@ class TaskStatus < ActiveRecord::Base
     PulpTaskStatus.refresh(self)
   end
 
+  def pending?
+    self.state.to_s == "waiting" || self.state.to_s == "error"
+  end
 
   protected
   def setup_task_type

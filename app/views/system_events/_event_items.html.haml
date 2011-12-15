@@ -2,7 +2,7 @@
   - cssclass = cycle("alt", "")
 
   %tr{:class => cssclass + ' task'}
-    %td.event_name
+    %td.event_name{"data-pending-task-id" => (t.id if t.pending?)}
       #{SystemTask::TYPES[t.task_type][:name]}
     %td.event_date
       = format_time(t.created_at)

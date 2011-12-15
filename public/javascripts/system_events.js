@@ -37,8 +37,6 @@ KT.events = function() {
 //    loaded_summary = $('#loaded_summary'),
     add_row_shading = false,
     actions_in_progress = {},
-    packages_in_progress = {},
-    groups_in_progress = {},
     actions_updater = undefined,
 
     moreEvents = function() {
@@ -150,24 +148,8 @@ KT.events = function() {
 
             if(status["state"] !== "waiting" || status["state"] !== "error") {
                 action_status_col.html(KT.event_types[action]["event_messages"][status["state"]]);
-                clearAction(status["uuid"], status["parameters"], KT.event_types[action]["type"]);
+               noLongerMonitorStatus(status["uuid"]);
             }
-        });
-    },
-    clearAction = function(action_id, content, content_type) {
-        // clear/remove the details associated with the action....
-        noLongerMonitorStatus(action_id);
-
-        // clear the package and group names associated with the action
-        $.each(content, function(index, content_item) {
-            var names = content_item.toString().split(',');
-            $.each(names, function(index, name) {
-                if (content_type ==="package") {
-                    delete packages_in_progress[name];
-                } else if (content_type === "package_group") {
-                    delete groups_in_progress[name];
-                }
-            });
         });
     },
     startUpdater = function () {
@@ -198,7 +180,7 @@ KT.events = function() {
         }
     },
     initEvents = function() {
-        enableUpdateAll();
+
         //updateLoadedSummary();
     },
     updateLoadedSummary = function() {
