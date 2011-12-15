@@ -416,7 +416,7 @@ class ApplicationController < ActionController::Base
 
     begin
       results = obj_class.search do
-         query { string search }
+         query { string search}
          sort {by sort[0], sort[1] }
          filter :terms, filters if filters
          size page_size
