@@ -24,6 +24,11 @@ class System < ActiveRecord::Base
   include Glue
   include Authorization
   include AsyncOrchestration
+  include IndexedModel
+
+  index_options :extended_json=>:extended_index_attrs,
+                :json=>{:only=>[:name, :environment_id]}
+
 
   acts_as_reportable
 
@@ -170,4 +175,10 @@ class System < ActiveRecord::Base
       self.description = "Initial Registration Params" unless self.description
       self.location = "None" unless self.location
     end
+
+
+    def extended_index_attrs
+      {:facts=>self.facts, :organization_id=>self.organization.id}
+    end
+
 end
