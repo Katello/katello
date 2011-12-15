@@ -282,7 +282,7 @@ class Status(SingleRepoAction):
             pkgsLeft = task.items_left()
             repo['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
 
-        errors = task.errors()
+        errors = task.progress_errors()
         if len(errors) > 0:
             repo['last_errors'] = self._format_error(errors)
 
