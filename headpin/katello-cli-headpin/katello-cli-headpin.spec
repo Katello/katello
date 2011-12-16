@@ -19,7 +19,7 @@ Summary:       Client package for managing a katello-headpin installation
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.12
+Version:       0.1.13
 Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -57,6 +57,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 16 2011 Bryan Kearney <bkearney@redhat.com> 0.1.13-1
+- 758447: Add headpin prompt to the config file (bkearney@redhat.com)
+- The default location for the headpin path is /headpin (bkearney@redhat.com)
+
 * Wed Oct 26 2011 Bryan Kearney <bkearney@redhat.com> 0.1.12-1
 - Move the headpin packaegs to a new location (bkearney@redhat.com)
 
