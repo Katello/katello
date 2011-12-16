@@ -21,6 +21,13 @@ import threading
 import time
 from katello.client.api.task_status import TaskStatusAPI
 
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
+
+
 # output formatting -----------------------------------------------------------
 
 
@@ -393,6 +400,28 @@ def format_date(date, from_format="%Y-%m-%dT%H:%M:%SZ", to_format="%Y/%m/%d %H:%
     return time.strftime(to_format, t)
 
 
+def format_progress_errors(errors):
+    """
+    Format errors in progress returned from AsyncTask
+    @type errors: list
+    @param errors: list of progress errors returned from AsyncTask.progress_errors()
+    @return string, each error on one line
+    """
+    error_list = [e["error"]["error"] for e in errors]
+    return "\n".join(error_list)
+
+
+def format_task_errors(errors):
+    """
+    Format errors returned from AsyncTask
+    @type errors: list
+    @param errors: list of errors returned from AsyncTask.errors()
+    @return string, each error on one line
+    """
+    error_list = [e[0] for e in errors]
+    return "\n".join(error_list)
+
+
 class Spinner(threading.Thread):
     """
     Spinner shows nice cli "spinner" while function is executing.
@@ -546,8 +575,11 @@ class AsyncTask():
     def items_left(self):
         return self._get_progress_sum('items_left')
 
+    def progress_errors(self):
+        return [err for task in self._tasks if 'error_details' in task['progress'] for err in task['progress']['error_details']]
+
     def errors(self):
-        return [err for t in self._tasks if 'error_details' in t['progress'] for err in t['progress']['error_details']]
+        return [json.loads(task["result"])["errors"] for task in self._tasks]
 
     def _get_progress_sum(self, name):
         return sum([t['progress'][name] for t in self._tasks])

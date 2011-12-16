@@ -21,7 +21,7 @@ from optparse import OptionValueError
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
-from katello.client.core.utils import is_valid_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, system_exit
+from katello.client.core.utils import is_valid_record, run_spinner_in_bg, format_date, wait_for_async_task, AsyncTask, system_exit, format_task_errors
 from katello.client.api.utils import get_organization, get_environment, get_changeset, get_template, get_repo, get_product
 
 try:
@@ -462,7 +462,7 @@ class Promote(ChangesetAction):
             print _("Changeset [ %s ] promoted" % csName)
             return os.EX_OK
         else:
-            print _("Changeset [ %s ] promotion failed: %s" % (csName, json.loads(task.get_hashes()[0]["result"])['errors'][0]))
+            print _("Changeset [ %s ] promotion failed: %s" % (csName, format_task_errors(task.errors())) )
             return os.EX_DATAERR
 
 

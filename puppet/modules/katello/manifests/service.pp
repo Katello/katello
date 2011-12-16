@@ -1,5 +1,5 @@
 class katello::service {
-  service {["katello", "katello-jobs"]:
+  service {"katello":
     ensure  => running, enable => true, hasstatus => true, hasrestart => true,
     require => $katello::params::deployment ? {
                 'katello' =>  [Class["katello::config"],Class["candlepin::service"], Class["pulp::service"], Class["apache2::config"]],
@@ -9,4 +9,8 @@ class katello::service {
     notify  => Exec["reload-apache2"];
   }
 
+  service {"katello-jobs":
+    ensure  => running, enable => true, hasstatus => true, hasrestart => true,
+    require => Service["katello"]
+  }
 }

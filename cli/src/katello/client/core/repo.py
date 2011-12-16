@@ -24,7 +24,7 @@ from katello.client.api.repo import RepoAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_product, get_repo
-from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask
+from katello.client.core.utils import system_exit, run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_progress_errors, format_task_errors
 from katello.client.core.utils import ProgressBar
 
 try:
@@ -62,7 +62,7 @@ class RepoAction(Action):
         super(RepoAction, self).__init__()
         self.api = RepoAPI()
 
-    def get_repo(self):
+    def get_repo(self, includeDisabled=False):
         repoId   = self.get_option('id')
         repoName = self.get_option('name')
         orgName  = self.get_option('org')
@@ -72,7 +72,7 @@ class RepoAction(Action):
         if repoId:
             repo = self.api.repo(repoId)
         else:
-            repo = get_repo(orgName, prodName, repoName, envName)
+            repo = get_repo(orgName, prodName, repoName, envName, includeDisabled)
 
         return repo
 
@@ -282,9 +282,9 @@ class Status(SingleRepoAction):
             pkgsLeft = task.items_left()
             repo['progress'] = ("%d%% done (%d of %d packages downloaded)" % (task.get_progress()*100, pkgsTotal-pkgsLeft, pkgsTotal))
 
-        errors = task.errors()
+        errors = task.progress_errors()
         if len(errors) > 0:
-            repo['last_errors'] = self._format_error(errors)
+            repo['last_errors'] = format_progress_errors(errors)
 
         self.printer.addColumn('package_count')
         self.printer.addColumn('last_sync')
@@ -296,10 +296,6 @@ class Status(SingleRepoAction):
         self.printer.printItem(repo)
         return os.EX_OK
 
-    def _format_error(self, errors):
-        error_list = [e["error"]["error"] for e in errors]
-        return "\n".join(error_list)
-
 
 class Info(SingleRepoAction):
 
@@ -307,7 +303,7 @@ class Info(SingleRepoAction):
     select_by_env = True
 
     def run(self):
-        repo = self.get_repo()
+        repo = self.get_repo(True)
         if repo == None:
             return os.EX_DATAERR
 
@@ -349,7 +345,7 @@ class Sync(SingleRepoAction):
             print _("Repo [ %s ] synchronization cancelled" % repo['name'])
             return os.EX_OK
         else:
-            print _("Repo [ %s ] failed to sync: %s" % (repo['name'], json.loads(task.get_hashes()[0]["result"])['errors'][0]))
+            print _("Repo [ %s ] failed to sync: %s" % (repo['name'], format_task_errors(task.errors())) )
             return os.EX_DATAERR
 
 
@@ -383,7 +379,7 @@ class Enable(SingleRepoAction):
         super(Enable, self).__init__()
 
     def run(self):
-        repo = self.get_repo()
+        repo = self.get_repo(True)
         if repo == None:
             return os.EX_DATAERR
 

@@ -13,6 +13,9 @@ NameVirtualHost *:443
   ProxyPreserveHost Off
   RequestHeader set X_FORWARDED_PROTO 'https'
 
+  # Performance related configurations
+  AddOutputFilterByType DEFLATE text/html text/css application/x-javascript application/javascript
+
   Timeout 5400
   ProxyTimeout 5400
 
