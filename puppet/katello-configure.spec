@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.37
+Version:        0.1.38
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,11 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Fri Dec 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.38-1
+- puppet - katello-jobs now depends on katello
+- adding debug options to the katello.yml
+- 767812 - compress our javascript and CSS
+
 * Wed Dec 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.37-1
 - system engine build 
 
