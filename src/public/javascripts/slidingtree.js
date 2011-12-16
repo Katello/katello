@@ -215,7 +215,14 @@ var sliding_tree = function(tree_id, options) {
                 $(document).trigger('hash_change.slidingtree');
             }
         },
-        setupSearch = function(){
+        setup_search = function(options){
+        	options = options || {};
+        	
+        	if( options.type === 'filter' ){
+        		setup_filter();
+        	}
+        },
+        setup_filter = function(){
              var bcs,
                  bcs_height = 0,
                  search_form = $('#search_form'),
@@ -289,8 +296,12 @@ var sliding_tree = function(tree_id, options) {
         $.extend( settings, options );
     }
     
-    if( settings.enable_search ){
-        setupSearch();
+    if( settings.enable_filter ){
+        setup_filter();
+    }
+    
+	if( settings.enable_search ){
+        setup_search();
     }
     
 	if( settings.enable_float ){
