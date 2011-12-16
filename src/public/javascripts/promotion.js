@@ -1489,6 +1489,7 @@ $(document).ready(function() {
                                         default_tab     :  "content",
                                         bbq_tag         :  "content",
                                         base_icon       :  'home_img',
+                                        enable_search   :  true,
                                         tab_change_cb   :  promotion_page.set_current_product
                                     });
 

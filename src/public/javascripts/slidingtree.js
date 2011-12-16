@@ -216,11 +216,42 @@ var sliding_tree = function(tree_id, options) {
             }
         },
         setup_search = function(options){
-        	options = options || {};
-        	
-        	if( options.type === 'filter' ){
-        		setup_filter();
-        	}
+             var bcs,
+                 bcs_height = 0,
+                 search_form = $('#search_form'),
+                 search_input = $('#search_input');
+             
+             $('.search_button').toggle(
+                 function() {
+                     bcs = $('.breadcrumb_search');
+                     bcs_height = bcs.height();
+                     bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
+                     search_input.css("margin-left", '4px');
+                     search_form.css("opacity", "0").show();
+                     search_form.animate({"opacity":"1"}, { duration: 200, queue: false });
+                     search_input.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
+                     $(this).css({backgroundPosition: "-32px -16px"});
+                     
+                     if( $('.remove_item').length ){
+                         $('.remove_item').css({ top : 52 });
+                     }
+                     
+                     if( $('.close').length ){
+                         $('.close').css({ top : 52 });
+                     }
+                 },function() {
+                     search_form.fadeOut("fast", function(){
+                         bcs.animate({ "height": bcs_height }, "fast");
+                         if( $('.remove_item').length ){
+                             $('.remove_item').css({ top : 12 });
+                         }
+                         if( $('.close').length ){
+                             $('.close').css({ top : 12 });
+                         }
+                     });
+                     $(this).css({backgroundPosition: "0 -16px"});
+                 }
+             );
         },
         setup_filter = function(){
              var bcs,
