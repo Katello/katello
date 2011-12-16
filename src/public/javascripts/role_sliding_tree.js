@@ -1087,7 +1087,7 @@ var rolesRenderer = (function($){
                 width = panel.width();
             
             panel.find('.sliding_container').width(width);
-            panel.find('.breadcrumb_search').width(width);
+            panel.find('.breadcrumb_filter').width(width);
             panel.find('.slider').width(width);
             panel.find('.sliding_list').width(width * 2);
             panel.find('.slide_up_container').width(width);
