@@ -213,6 +213,7 @@ var sliding_tree = function(tree_id, options) {
             if (settings.current_tab != newContent) {
                 prerender(newContent);
                 $(document).trigger('hash_change.slidingtree');
+                $.bbq.removeState('search');
             }
         },
         setup_search = function(options){
@@ -262,9 +263,12 @@ var sliding_tree = function(tree_id, options) {
 					
             	event.preventDefault();
             	
-            	search_url += '?offset=' + offset;
-            	
             	if( settings.breadcrumb[current_crumb]['searchable'] ){
+                    if ($(this).serialize() !== 'search=') {
+                        $.bbq.pushState($(this).serialize());
+                    }
+
+            	    search_url += '?offset=' + offset;
                     panel.html("<img src='images/spinner.gif' >");
 
 	            	$(this).ajaxSubmit({
