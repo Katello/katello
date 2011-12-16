@@ -213,28 +213,24 @@ var sliding_tree = function(tree_id, options) {
             if (settings.current_tab != newContent) {
                 prerender(newContent);
                 $(document).trigger('hash_change.slidingtree');
+                $.bbq.removeState('search');
             }
         },
-        setupSearch = function(){
+        setup_search = function(options){
              var bcs,
                  bcs_height = 0,
                  search_form = $('#search_form'),
-                 search_filter = $('#search_filter');
-             
-             search_form.submit(function(){
-                 search_filter.change();
-                 return false;
-             });
+                 search_input = $('#search_input');
              
              $('.search_button').toggle(
                  function() {
                      bcs = $('.breadcrumb_search');
                      bcs_height = bcs.height();
                      bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
-                     search_filter.css("margin-left", '4px');
+                     search_input.css("margin-left", '4px');
                      search_form.css("opacity", "0").show();
                      search_form.animate({"opacity":"1"}, { duration: 200, queue: false });
-                     search_filter.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
+                     search_input.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
                      $(this).css({backgroundPosition: "-32px -16px"});
                      
                      if( $('.remove_item').length ){
@@ -255,12 +251,85 @@ var sliding_tree = function(tree_id, options) {
                          }
                      });
                      $(this).css({backgroundPosition: "0 -16px"});
-                     search_filter.val("").change();
+                 }
+             );
+             
+            search_form.live('submit', function(event){
+            	var current_crumb 	= $.bbq.getState(settings.bbq_tag) || settings.default_tab,
+					search_url 		= settings.breadcrumb[current_crumb]['url'],
+					offset 			= offset || 0,
+					data 			= {},
+	                panel           = list.children('.has_content');
+					
+            	event.preventDefault();
+            	
+            	if( settings.breadcrumb[current_crumb]['searchable'] ){
+                    if ($(this).serialize() !== 'search=') {
+                        $.bbq.pushState($(this).serialize());
+                    }
+
+            	    search_url += '?offset=' + offset;
+                    panel.html("<img src='images/spinner.gif' >");
+
+	            	$(this).ajaxSubmit({
+	                    url		: search_url,
+	                    data	: data,
+	                    success	: function (data) {
+                            panel.html(data);
+	                    },
+	                    error: function (e) {
+	                        //button.removeAttr('disabled');
+	                    }
+	               	});
+               	}
+            });
+        },
+        setup_filter = function(){
+             var bcs,
+                 bcs_height = 0,
+                 filter_form = $('#filter_form'),
+                 filter_input = $('#filter_input');
+             
+             filter_form.submit(function(){
+                 filter_input.change();
+                 return false;
+             });
+             
+             $('.filter_button').toggle(
+                 function() {
+                     bcs = $('.breadcrumb_filter');
+                     bcs_height = bcs.height();
+                     bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
+                     filter_input.css("margin-left", '4px');
+                     filter_form.css("opacity", "0").show();
+                     filter_form.animate({"opacity":"1"}, { duration: 200, queue: false });
+                     filter_input.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
+                     $(this).css({backgroundPosition: "-32px -16px"});
+                     
+                     if( $('.remove_item').length ){
+                         $('.remove_item').css({ top : 52 });
+                     }
+                     
+                     if( $('.close').length ){
+                         $('.close').css({ top : 52 });
+                     }
+                 },function() {
+                     filter_form.fadeOut("fast", function(){
+                         bcs.animate({ "height": bcs_height }, "fast");
+                         if( $('.remove_item').length ){
+                             $('.remove_item').css({ top : 12 });
+                         }
+                         if( $('.close').length ){
+                             $('.close').css({ top : 12 });
+                         }
+                     });
+                     $(this).css({backgroundPosition: "0 -16px"});
+                     filter_input.val("").change();
                      $("#" + tree_id + " .has_content .filterable li").fadeIn('fast');
                  }
              );
              
-             search_filter.live('change, keyup', function(){
+             filter_input.live('change, keyup', function(){
                  if ($.trim($(this).val()).length >= 2) {
                      $("#" + tree_id + " .has_content .filterable li:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
                      $("#" + tree_id + " .has_content .filterable li:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
@@ -268,7 +337,7 @@ var sliding_tree = function(tree_id, options) {
                      $("#" + tree_id + " .has_content .filterable li").fadeIn('fast');
                  }
              });
-             search_filter.val("").change();
+             filter_input.val("").change();
         };
 
     var settings = {
@@ -289,8 +358,12 @@ var sliding_tree = function(tree_id, options) {
         $.extend( settings, options );
     }
     
-    if( settings.enable_search ){
-        setupSearch();
+    if( settings.enable_filter ){
+        setup_filter();
+    }
+    
+	if( settings.enable_search ){
+        setup_search();
     }
     
 	if( settings.enable_float ){
