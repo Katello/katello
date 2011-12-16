@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.40
+Version:        0.1.41
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Fri Dec 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.41-1
+- 766933 - katello.yml now deployed with correct perms
+
 * Fri Dec 16 2011 Ivan Necas <inecas@redhat.com> 0.1.40-1
 - Fix syntax error in dependency specification in katello service
   (inecas@redhat.com)
