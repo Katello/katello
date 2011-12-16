@@ -123,8 +123,18 @@ class katello::config {
     command     => "/usr/bin/env > ${katello::params::db_env_log}",
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
-                'katello' => [ Class["candlepin::service"], Class["pulp::service"], File["${katello::params::log_base}"] ],
-                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"], File["${katello::params::log_base}"] ],
+                'katello' => [
+                  Class["candlepin::service"], 
+                  Class["pulp::service"], 
+                  File["${katello::params::log_base}"], 
+                  Config_file["${katello::params::config_dir}/katello.yml"]
+                ],
+                'headpin' => [
+                  Class["candlepin::service"],
+                  Class["thumbslug::service"],
+                  File["${katello::params::log_base}"],
+                  Config_file["${katello::params::config_dir}/katello.yml"]
+                ],
                 default => [],
     },
   }
