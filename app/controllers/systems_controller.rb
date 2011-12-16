@@ -25,7 +25,7 @@ class SystemsController < ApplicationController
   before_filter :search_filter, :only => [:auto_complete_search]
 
   # two pane columns and mapping for sortable fields
-  COLUMNS = {'name' => 'name', 'lastCheckin' => 'lastCheckin', 'created' => 'created_at'}
+  COLUMNS = {'name' => 'name', 'lastCheckin' => 'lastCheckin'}
 
   def rules
     edit_system = lambda{System.find(params[:id]).editable?}
@@ -61,8 +61,13 @@ class SystemsController < ApplicationController
     @organization = current_organization
     accessible_envs = current_organization.environments
     setup_environment_selector(current_organization, accessible_envs)
-    @environment = first_env_in_path(accessible_envs)
-    render :partial=>"new", :layout => "tupane_layout", :locals=>{:system=>@system, :accessible_envs => accessible_envs}
+
+    # This controls whether the New System page will display an environment selector or not.
+    # Since only one selector may exist at a time, it is left off of the New page when the
+    # Environments page is displayed.
+    envsys = !params[:env_id].nil?
+
+    render :partial=>"new", :layout => "tupane_layout", :locals=>{:system=>@system, :accessible_envs => accessible_envs, :envsys => envsys}
   end
 
   def create
@@ -266,14 +271,14 @@ class SystemsController < ApplicationController
     @panel_options = { :title => _('Systems'),
                       :col => COLUMNS.keys,
                       :custom_rows => true,
-                      :enable_create => true,
+                      :enable_create => System.registerable?(@environment, current_organization),
                       :create => "System",
                       :enable_sort => true,
                       :name => controller_display_name,
                       :list_partial => 'systems/list_systems',
                       :ajax_load  => true,
                       :ajax_scroll => items_systems_path(),
-                      :actions => 'actions'
+                      :actions => System.deletable?(@environment, current_organization) ? 'actions' : nil
                       }
   end
 

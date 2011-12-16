@@ -158,7 +158,7 @@ class PromotionsController < ApplicationController
     @next_env_repos = []
     if @next_environment
       @product.repos(@next_environment).each{|repo|
-        @next_env_repos << repo.id
+        @next_env_repos << repo.pulp_id
         repo.distributions.each{|distro|
           @next_env_distros << distro.id
         }
