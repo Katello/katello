@@ -225,23 +225,23 @@ var sliding_tree = function(tree_id, options) {
         setup_filter = function(){
              var bcs,
                  bcs_height = 0,
-                 search_form = $('#search_form'),
-                 search_filter = $('#search_filter');
+                 filter_form = $('#filter_form'),
+                 filter_input = $('#filter_input');
              
-             search_form.submit(function(){
-                 search_filter.change();
+             filter_form.submit(function(){
+                 filter_input.change();
                  return false;
              });
              
-             $('.search_button').toggle(
+             $('.filter_button').toggle(
                  function() {
-                     bcs = $('.breadcrumb_search');
+                     bcs = $('.breadcrumb_filter');
                      bcs_height = bcs.height();
                      bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
-                     search_filter.css("margin-left", '4px');
-                     search_form.css("opacity", "0").show();
-                     search_form.animate({"opacity":"1"}, { duration: 200, queue: false });
-                     search_filter.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
+                     filter_input.css("margin-left", '4px');
+                     filter_form.css("opacity", "0").show();
+                     filter_form.animate({"opacity":"1"}, { duration: 200, queue: false });
+                     filter_input.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
                      $(this).css({backgroundPosition: "-32px -16px"});
                      
                      if( $('.remove_item').length ){
@@ -252,7 +252,7 @@ var sliding_tree = function(tree_id, options) {
                          $('.close').css({ top : 52 });
                      }
                  },function() {
-                     search_form.fadeOut("fast", function(){
+                     filter_form.fadeOut("fast", function(){
                          bcs.animate({ "height": bcs_height }, "fast");
                          if( $('.remove_item').length ){
                              $('.remove_item').css({ top : 12 });
@@ -262,12 +262,12 @@ var sliding_tree = function(tree_id, options) {
                          }
                      });
                      $(this).css({backgroundPosition: "0 -16px"});
-                     search_filter.val("").change();
+                     filter_input.val("").change();
                      $("#" + tree_id + " .has_content .filterable li").fadeIn('fast');
                  }
              );
              
-             search_filter.live('change, keyup', function(){
+             filter_input.live('change, keyup', function(){
                  if ($.trim($(this).val()).length >= 2) {
                      $("#" + tree_id + " .has_content .filterable li:not(:contains('" + $(this).val() + "'))").filter(':not').fadeOut('fast');
                      $("#" + tree_id + " .has_content .filterable li:contains('" + $(this).val() + "')").filter(':hidden').fadeIn('fast');
@@ -275,7 +275,7 @@ var sliding_tree = function(tree_id, options) {
                      $("#" + tree_id + " .has_content .filterable li").fadeIn('fast');
                  }
              });
-             search_filter.val("").change();
+             filter_input.val("").change();
         };
 
     var settings = {
