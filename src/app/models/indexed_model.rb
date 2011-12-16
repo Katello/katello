@@ -7,7 +7,7 @@ module IndexedModel
 
       cattr_accessor :class_index_options
 
-      index_name AppConfig.elastic_index
+      index_name AppConfig.elastic_index + '_' +  self.name.downcase
 
       def self.index_options options={}
           self.class_index_options = options
@@ -38,6 +38,7 @@ module IndexedModel
     if self.class.class_index_options[:extended_json]
       to_ret.merge!(self.send(self.class.class_index_options[:extended_json]))
     end
+        
     to_ret.to_json
   end
 
