@@ -20,31 +20,31 @@ class katello::config {
     require => [ Postgres::Createuser[$katello::params::db_user], File["${katello::params::log_base}"] ],
   }
 
-  file {"${katello::params::config_dir}/thin.yml":
-    content => template("katello/${katello::params::config_dir}/thin.yml.erb"),
-    owner   => "root",
-    group   => "root",
-    mode    => "644";
-  "${katello::params::config_dir}/katello.yml":
-    content => template("katello/${katello::params::config_dir}/katello.yml.erb"),
-    owner   => $katello::params::user,
-    group   => $katello::params::group,
-    mode    => "600", # could possibly contain confidental info
-  }
+  file {
+    "${katello::params::config_dir}/thin.yml":
+      content => template("katello/${katello::params::config_dir}/thin.yml.erb"),
+      owner   => "root",
+      group   => "root",
+      mode    => "644";
 
-  file {"/etc/sysconfig/katello":
-    content => template("katello/etc/sysconfig/katello.erb"),
-    owner   => "root",
-    group   => "root",
-    mode    => "644",
-  }
+    "${katello::params::config_dir}/katello.yml":
+      content => template("katello/${katello::params::config_dir}/katello.yml.erb"),
+      owner   => $katello::params::user,
+      group   => $katello::params::group,
+      mode    => "600";
 
-  file {"/etc/httpd/conf.d/katello.conf":
-    content => template("katello/etc/httpd/conf.d/katello.conf.erb"),
-    owner   => $katello::params::user,
-    group   => $katello::params::group,
-    mode    => "600", # could possibly contain confidental info
-    notify  => Exec["reload-apache2"]
+    "/etc/sysconfig/katello":
+      content => template("katello/etc/sysconfig/katello.erb"),
+      owner   => "root",
+      group   => "root",
+      mode    => "644";
+
+    "/etc/httpd/conf.d/katello.conf":
+      content => template("katello/etc/httpd/conf.d/katello.conf.erb"),
+      owner   => $katello::params::user,
+      group   => $katello::params::group,
+      mode    => "600",
+      notify  => Exec["reload-apache2"];
   }
 
   # disable SELinux
