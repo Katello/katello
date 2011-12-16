@@ -11,6 +11,6 @@ class katello::service {
 
   service {"katello-jobs":
     ensure  => running, enable => true, hasstatus => true, hasrestart => true,
-    require => "katello"
+    require => Service["katello"]
   }
 }
