@@ -1,4 +1,5 @@
 = javascript :panel, :env_select, :edit, :promotion, :fancyqueries
+= stylesheet :fancyqueries
 = include_editable_i18n
 
 
@@ -162,7 +163,13 @@
           #{_('+ New Changeset')}
           .arrow-right
       %h2 #{@environment.name + _(" Content")}
-      .tree_breadcrumb.clear.clickable
+      .breadcrumb_search.clear.clickable
+        %form#search_form.search{"data-url" => search_index_path()}
+          = text_field_tag(:search, params[:search], {:type => "text", :placeholder => "Search...", :class => "auto_complete_input ui-autocomplete-input"})
+          %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
+        .search_button.clickable.fr
+          #{_('Search')}
+        .tree_breadcrumb
       .sliding_container
         #list.list.sliding_list{"data-page_size"=>current_user.page_size}
           .slider_one.has_content.slider
