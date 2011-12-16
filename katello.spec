@@ -40,6 +40,7 @@ Summary:        Common bits for all Katello instances
 Requires:       httpd
 Requires:       mod_ssl
 Requires:       openssl
+Requires:       elasticsearch
 Requires:       rubygems
 Requires:       rubygem(rails) >= 3.0.10
 Requires:       rubygem(multimap)
@@ -68,6 +69,7 @@ Requires:       rubygem(thin)
 Requires:       rubygem(fssm)
 Requires:       rubygem(sass)
 Requires:       rubygem(chunky_png)
+Requires:       rubygem(tire)
 
 # bz 743816 temp fix until yum update makes to z stream
 %if 0%{?rhel} == 6
