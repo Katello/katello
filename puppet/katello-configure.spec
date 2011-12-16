@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.38
+Version:        0.1.39
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Fri Dec 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.39-1
+- puppet - migrate script depends on katello.yml
+
 * Fri Dec 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.38-1
 - puppet - katello-jobs now depends on katello
 - adding debug options to the katello.yml
