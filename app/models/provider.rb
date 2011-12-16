@@ -18,7 +18,11 @@ class Provider < ActiveRecord::Base
   include IndexedModel
 
 
-  index_options :extended_json=>:extended_index_attrs
+  index_options :extended_json=>:extended_index_attrs, :json=>{:except=>[]}
+
+  mapping do
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+  end
 
 
   REDHAT = 'Red Hat'
@@ -161,6 +165,18 @@ class Provider < ActiveRecord::Base
     hash
   end
 
+  def extended_index_attrs
+    products = []
+    #products = self.products.map{|prod|
+    #  {:provider_name=>prod.name, :repos=>prod.repos(self.organization.locker).collect{|repo| repo.name}}
+    #}
+    {
+      :products=>products,
+      :name_sort=>name.downcase
+
+    }
+  end
+
   protected
 
    def sanitize_repository_url
@@ -186,15 +202,7 @@ class Provider < ActiveRecord::Base
   READ_PERM_VERBS = [:read, :create, :update, :delete]
   EDIT_PERM_VERBS = [:create, :update]
 
-  def extended_index_attrs
-    products = self.products.map{|prod|
-      {:name=>prod.name, :repos=>prod.repos(self.organization.locker).collect{|repo| {:name=>repo.name} }}
-    }
-    {
-      :products=>products
-        
-    }
-  end
+
 
 
 end
