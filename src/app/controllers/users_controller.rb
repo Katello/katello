@@ -65,7 +65,7 @@ class UsersController < ApplicationController
 
         #  def render_panel_direct(obj_class, options, search, start, sort, filters)
 
-        render_panel_direct(User, @panel_options, search, params[:offset], [:login, 'asc'])
+        render_panel_direct(User, @panel_options, search, params[:offset], [:login_sort, 'asc'])
 
       end
     end
