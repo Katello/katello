@@ -19,4 +19,43 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     Glue::Pulp::Package.new(Pulp::Package.find(id))
   end
 
+
+  def self.index_mapping
+    {
+      :package => {
+        :properties => {
+          :nvrea_sort    => { :type => 'string', :index=> :not_analyzed }
+        }
+      }
+    }
+  end
+
+  def self.index
+    "#{AppConfig.elastic_index}_package"
+  end
+
+  def index_options
+    {
+      "_type" => :package,
+      "nvrea_sort" => nvrea.downcase,
+      "nvrea" => nvrea
+    }
+  end
+
+
+  def self.search query, repoids=nil, sort=[:nvrea_sort, "ASC"]
+
+    Tire.search self.index do
+      query do
+        string query
+      end
+
+      if repoids
+        filter :terms, :repository_ids => repoids
+      end
+
+      sort { by sort[0], sort[1] }
+    end
+  end
+
 end
