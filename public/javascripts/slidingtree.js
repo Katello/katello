@@ -252,6 +252,33 @@ var sliding_tree = function(tree_id, options) {
                      $(this).css({backgroundPosition: "0 -16px"});
                  }
              );
+             
+            search_form.live('submit', function(event){
+            	var current_crumb 	= $.bbq.getState(settings.bbq_tag) || settings.default_tab,
+					search_url 		= settings.breadcrumb[current_crumb]['url'],
+					offset 			= offset || 0,
+					data 			= {},
+	                panel           = list.children('.has_content');
+					
+            	event.preventDefault();
+            	
+            	search_url += '?offset=' + offset;
+            	
+            	if( settings.breadcrumb[current_crumb]['searchable'] ){
+                    panel.html("<img src='images/spinner.gif' >");
+
+	            	$(this).ajaxSubmit({
+	                    url		: search_url,
+	                    data	: data,
+	                    success	: function (data) {
+                            panel.html(data);
+	                    },
+	                    error: function (e) {
+	                        //button.removeAttr('disabled');
+	                    }
+	               	});
+               	}
+            });
         },
         setup_filter = function(){
              var bcs,

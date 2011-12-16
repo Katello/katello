@@ -845,7 +845,7 @@ KT.panel.list = (function () {
                     error: function (e) {
                         button.removeAttr('disabled');
                     }
-                })
+                });
             });
         };
     return {
