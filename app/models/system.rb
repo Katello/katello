@@ -29,6 +29,9 @@ class System < ActiveRecord::Base
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:only=>[:name, :environment_id, :id]}
 
+  mapping do
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+  end
 
   acts_as_reportable
 
@@ -177,7 +180,7 @@ class System < ActiveRecord::Base
 
 
   def extended_index_attrs
-    {:facts=>self.facts, :organization_id=>self.organization.id}
+    {:facts=>self.facts, :organization_id=>self.organization.id, :name_sort=>name.downcase}
   end
 
 
