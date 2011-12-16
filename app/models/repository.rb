@@ -74,17 +74,17 @@ class Repository < ActiveRecord::Base
     self.product.provider.update_index
   end
 
-
   def index_packages
-    pkgs = self.packages.collect{|pkg| pkg.as_json.merge({:_type =>'package'})}
-    Tire.index AppConfig.elastic_index do
+    pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
+    Tire.index Glue::Pulp::Package.index do
+      create :mappings => Glue::Pulp::Package.index_mapping
       import pkgs               
     end
   end
 
   def index_errata
-    errata = self.errata.collect{|err| err.as_json.merge({:_type =>'errata'})}
-    Tire.index AppConfig.elastic_index do
+    errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
+    Tire.index "#{AppConfig.elastic_index}_errata" do
       import errata
     end
   end
