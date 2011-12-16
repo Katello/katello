@@ -1,4 +1,4 @@
-= javascript :panel, :env_select, :edit, :promotion, :fancyqueries
+= javascript :panel, :env_select, :edit, :promotion, :fancyqueries, :form
 = stylesheet :fancyqueries
 = include_editable_i18n
 
@@ -167,7 +167,7 @@
         %form#search_form.search{"data-url" => search_index_path()}
           = text_field_tag(:search, params[:search], {:type => "text", :placeholder => "Search...", :class => "auto_complete_input ui-autocomplete-input"})
           %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
-        .search_button.clickable.fr
+        .search_button.clickable.fr{ :disabled => "disabled" }
           #{_('Search')}
         .tree_breadcrumb
       .sliding_container
