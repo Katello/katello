@@ -27,10 +27,11 @@ class System < ActiveRecord::Base
   include IndexedModel
 
   index_options :extended_json=>:extended_index_attrs,
-                :json=>{:only=>[:name, :environment_id, :id]}
+                :json=>{:only=>[:name, :environment_id, :id, :created_at, :lastCheckin]}
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
+    indexes :lastCheckin, :type=>'date'
   end
 
   acts_as_reportable

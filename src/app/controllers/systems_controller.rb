@@ -25,7 +25,7 @@ class SystemsController < ApplicationController
   before_filter :search_filter, :only => [:auto_complete_search]
 
   # two pane columns and mapping for sortable fields
-  COLUMNS = {'name' => 'name', 'lastCheckin' => 'lastCheckin'}
+  COLUMNS = {'name' => 'name_sort', 'lastCheckin' => 'lastCheckin'}
 
   def rules
     edit_system = lambda{System.find(params[:id]).editable?}
@@ -138,18 +138,29 @@ class SystemsController < ApplicationController
   end
 
   def items
+    order = split_order(params[:order])
+
     search = params[:search]
     if params[:env_id]
       find_environment
       filters = {:environment_id=>[params[:env_id]]}
-      render_panel_direct(System, @panel_options, search, params[:offset], [:name_sort, 'asc'], filters, true)
+      render_panel_direct(System, @panel_options, search, params[:offset], order, filters, true)
 
       #render_panel_items(System.readable(current_organization).where(:environment_id => @environment.id), @panel_options, params[:search], params[:offset])
     else
       filters = {:organization_id=>[current_organization.id]}
-      render_panel_direct(System, @panel_options, search, params[:offset], [:name_sort, 'asc'], filters, true)
+      render_panel_direct(System, @panel_options, search, params[:offset], order, filters, true)
       #render_panel_items(System.readable(current_organization), @panel_options, params[:search], params[:offset])
     end
+  end
+
+  def split_order order
+    if order
+      order.split
+    else
+      [:name_sort, "ASC"]
+    end
+
   end
 
   def subscriptions
