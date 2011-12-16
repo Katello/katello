@@ -67,7 +67,7 @@ describe Api::SystemsController do
 
     it "requires either environment_id, owner, or organization_id to be specified" do
       post :create
-      response.code.should == "400"
+      response.code.should == "500"
     end
 
     it "sets insatalled products to the consumer" do

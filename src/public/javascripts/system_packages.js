@@ -47,12 +47,14 @@ KT.packages = function() {
     add_content_button = $('#add_content'),
     remove_content_button = $('#remove_content'),
     loaded_summary = $('#loaded_summary'),
+    error_message = $('#error_message'),
     add_row_shading = false,
     selected_checkboxes = 0,
     actions_in_progress = {},
     packages_in_progress = {},
     groups_in_progress = {},
     actions_updater = undefined,
+
     disableButtons = function() {
         remove_button.attr('disabled', 'disabled');
         update_button.attr('disabled', 'disabled');
@@ -94,6 +96,23 @@ KT.packages = function() {
 
         add_content_button.removeClass('disabled');
         remove_content_button.removeClass('disabled');
+    },
+    getActionType = function(item) {
+        var action_type = undefined;
+
+        if (item.find('td.package_action_status:contains("'+i18n.adding_package+'")').length > 0) {
+            action_type = KT.package_action_types.PKG_INSTALL;
+        } else if (item.find('td.package_action_status:contains("'+i18n.updating_package+'")').length > 0) {
+            action_type = KT.package_action_types.PKG_UPDATE;
+        } else if (item.find('td.package_action_status:contains("'+i18n.removing_package+'")').length > 0) {
+            action_type = KT.package_action_types.PKG_REMOVE;
+        } else if (item.find('td.package_action_status:contains("'+i18n.adding_group+'")').length > 0) {
+            action_type = KT.package_action_types.PKG_GRP_INSTALL;
+        } else if (item.find('td.package_action_status:contains("'+i18n.removing_group+'")').length > 0) {
+            action_type = KT.package_action_types.PKG_GRP_REMOVE;
+        }
+
+        return action_type;
     },
     morePackages = function() {
         var list = $('.packages');
@@ -347,10 +366,38 @@ KT.packages = function() {
         }
     },
     initPackages = function() {
+        initProgress();
         registerEvents();
         disableButtons();
         enableUpdateAll();
         updateLoadedSummary();
+    },
+    initProgress = function() {
+        // when the page loads, we need to initialize the 'in progress' structures, to support monitoring
+        // the status of any actions currently in progress...
+
+        // if we are currently polling for status, temporarily stop the updater while we initialize the structures
+        if (actions_updater !== undefined) {
+            actions_updater.stop();
+        }
+
+        $('tr.content_package').each( function() {
+            actions_in_progress[$(this).attr('data-uuid')] = getActionType($(this));
+            packages_in_progress[$.trim($(this).find('td.package_name').html())] = true;
+        });
+        $('tr.content_group').each( function() {
+            actions_in_progress[$(this).attr('data-uuid')] = getActionType($(this));
+            packages_in_progress[$.trim($(this).find('td.package_name').html())] = true;
+        });
+
+        // start the updater, if there are any actions in progress
+        if (Object.keys(actions_in_progress).length > 0) {
+            if (actions_updater === undefined){
+                startUpdater();
+            } else {
+                actions_updater.restart();
+            }
+        }
     },
     registerEvents = function() {
         more_button.bind('click', morePackages);
@@ -363,39 +410,17 @@ KT.packages = function() {
 
         registerCheckboxEvents();
     },
-    valid_action_requested = function(content, content_type) {
-        // if one or more of the content items requested already has an action pending on it, reject the request
-        var is_valid = true, item;
-        $.each(content, function(index, content_item) {
-            item = $.trim(content_item);
-            switch (content_type) {
-                case KT.package_action_types.PKG:
-                    if (packages_in_progress[item] === true) {
-                        alert("One or more of the packages provided has an action pending.");
-                        is_valid = false;
-                        break;
-                    }
-                    break;
-                case KT.package_action_types.PKG_GRP:
-                    if (groups_in_progress[item] === true) {
-                        alert("One or more of the groups provided has an action pending.");
-                        is_valid = false;
-                        break;
-                    }
-                    break;
-            }
-        });
-        return is_valid;
-    },
     addContent = function(data) {
         data.preventDefault();
 
         var selected_action = $("input[@name=perform_action]:checked").attr('id'),
             content_string = content_form.find('#content_input').val(),
-            content_array = content_string.split(',');
+            content_array = content_string.split(/ *, */),
+            validation_error = undefined;
 
         if (selected_action == 'perform_action_packages') {
-            if (valid_action_requested(content_array, KT.package_action_types.PKG)) {
+            validation_error = validate_action_requested(content_array, KT.package_action_types.PKG);
+            if (validation_error === undefined) {
                 disableLinks();
                 $.ajax({
                     url: KT.routes.add_system_system_packages_path(system_id),
@@ -410,7 +435,7 @@ KT.packages = function() {
                             packages_in_progress[pkg_name] = true;
 
                             $('tr.content_package').find('td.package_name').each( function() {
-                                if ($(this).html() === pkg_name) {
+                                if ($.trim($(this).html()) === pkg_name) {
                                     already_exists = true;
                                     $(this).parent().attr('data-uuid', data);
                                     $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package);
@@ -428,14 +453,18 @@ KT.packages = function() {
                             }
                         }
                         enableLinks();
+                        show_validation_error(false);
                     },
                     error: function() {
                         enableLinks();
                     }
                 });
+            } else {
+                show_validation_error(true, validation_error);
             }
         } else {
-            if (valid_action_requested(content_array, KT.package_action_types.PKG_GRP)) {
+            validation_error = validate_action_requested(content_array, KT.package_action_types.PKG_GRP);
+            if (validation_error === undefined) {
                 disableLinks();
                 $.ajax({
                     url: KT.routes.add_system_system_packages_path(system_id),
@@ -450,7 +479,7 @@ KT.packages = function() {
                             groups_in_progress[group_name] = true;
 
                             $('tr.content_group').find('td.package_name').each( function() {
-                                if ($(this).html() === group_name) {
+                                if ($.trim($(this).html()) === group_name) {
                                     already_exists = true;
                                     $(this).parent().attr('data-uuid', data);
                                     $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group);
@@ -468,11 +497,14 @@ KT.packages = function() {
                             }
                         }
                         enableLinks();
+                        show_validation_error(false);
                     },
                     error: function() {
                         enableLinks();
                     }
                 });
+            } else {
+                show_validation_error(true, validation_error);
             }
         }
     },
@@ -481,10 +513,12 @@ KT.packages = function() {
 
         var selected_action = $("input[@name=perform_action]:checked").attr('id'),
             content_string = content_form.find('#content_input').val(),
-            content_array = content_string.split(',');
+            content_array = content_string.split(/ *, */),
+            validation_error = undefined;
 
         if (selected_action == 'perform_action_packages') {
-            if (valid_action_requested(content_array, KT.package_action_types.PKG)) {
+            validation_error = validate_action_requested(content_array, KT.package_action_types.PKG);
+            if (validation_error === undefined) {
                 disableLinks();
                 $.ajax({
                     url: KT.routes.remove_system_system_packages_path(system_id),
@@ -499,7 +533,7 @@ KT.packages = function() {
                             packages_in_progress[pkg_name] = true;
 
                             $('tr.content_package').find('td.package_name').each( function() {
-                                if ($(this).html() === pkg_name) {
+                                if ($.trim($(this).html()) === pkg_name) {
                                     already_exists = true;
                                     $(this).parent().attr('data-uuid', data);
                                     $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package);
@@ -517,14 +551,18 @@ KT.packages = function() {
                             }
                         }
                         enableLinks();
+                        show_validation_error(false);
                     },
                     error: function() {
                         enableLinks();
                     }
                 });
+            } else {
+                show_validation_error(true, validation_error);
             }
         } else {
-            if (valid_action_requested(content_array, KT.package_action_types.PKG_GRP)) {
+            validation_error = validate_action_requested(content_array, KT.package_action_types.PKG_GRP);
+            if (validation_error === undefined) {
                 disableLinks();
                 $.ajax({
                     url: KT.routes.remove_system_system_packages_path(system_id),
@@ -539,7 +577,7 @@ KT.packages = function() {
                             groups_in_progress[group_name] = true;
 
                             $('tr.content_group').find('td.package_name').each( function() {
-                                if ($(this).html() === group_name) {
+                                if ($.trim($(this).html()) === group_name) {
                                     already_exists = true;
                                     $(this).parent().attr('data-uuid', data);
                                     $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group);
@@ -557,11 +595,14 @@ KT.packages = function() {
                             }
                         }
                         enableLinks();
+                        show_validation_error(false);
                     },
                     error: function() {
                         enableLinks();
                     }
                 });
+            } else {
+                show_validation_error(true, validation_error);
             }
         }
     },
@@ -628,7 +669,68 @@ KT.packages = function() {
         var total_loaded = $('tr.package').length,
             message = i18n.x_of_y_packages(total_loaded, total_packages);
         loaded_summary.html(message);
+    },
+    validate_action_requested = function(content, content_type) {
+        // validate the action being requested and return a validation error, if an error is found
+        var validation_error = undefined;
+
+        // validate the package list format
+        if ((content_type === KT.package_action_types.PKG) && !valid_package_list_format(content)) {
+            validation_error = i18n.validation_error_name_format;
+
+        // validate that no actions pending on same package or group
+        } else {
+            var item;
+            $.each(content, function(index, content_item) {
+                item = $.trim(content_item);
+                switch (content_type) {
+                    case KT.package_action_types.PKG:
+                        if (packages_in_progress[item] === true) {
+                            validation_error = i18n.validation_error_package_pending;
+                            break;
+                        }
+                        break;
+                    case KT.package_action_types.PKG_GRP:
+                        if (groups_in_progress[item] === true) {
+                            validation_error = i18n.validation_error_group_pending;
+                            break;
+                        }
+                        break;
+                }
+            });
+        }
+        return validation_error;
+    },
+    show_validation_error = function(show, validation_error){
+    	var input = content_form.find('#content_input');
+    	
+    	if( show ){
+    		input.addClass('validation_error_input');
+    		error_message.html(validation_error);
+    		error_message.show();
+    	} else {
+    		input.removeClass('validation_error_input');
+    		error_message.hide();
+    	}
+    },
+    valid_package_list_format = function(packages){
+    	var i, length = packages.length;
+    		
+    	for( i = 0; i < length; i += 1){
+    		if( !valid_package_name(packages[i]) ){
+    			return false;
+    		}
+    	}
+    	
+    	return true;
+    },
+    valid_package_name = function(package_name){
+    	var is_match = package_name.match(/[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\-\.\_\+\,]+/);
+    	
+    	return is_match === null ? true : false;
     };
+    
+    
     return {
         morePackages: morePackages,
         sortOrder: sortOrder,

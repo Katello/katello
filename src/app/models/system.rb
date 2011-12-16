@@ -154,6 +154,14 @@ class System < ActiveRecord::Base
     environment.systems_deletable?
   end
 
+  def self.deletable? env, org
+    org ||= env.organization if env
+    ret = false
+    ret ||= User.allowed_to?([:delete_systems], :organizations, nil, org) if org
+    ret ||= User.allowed_to?([:delete_systems], :environments, env.id, org) if env
+    ret
+  end
+
   def self.registerable? env, org
     org ||= env.organization if env
     ret = false
