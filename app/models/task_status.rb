@@ -55,7 +55,7 @@ class TaskStatus < ActiveRecord::Base
   end
 
   def pending?
-    self.state.to_s == "waiting" || self.state.to_s == "error"
+    self.state.to_s == "waiting" || self.state.to_s == "running"
   end
 
   protected
