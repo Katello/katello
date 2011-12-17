@@ -46,7 +46,7 @@ class SystemEventsController < ApplicationController
 
   def status
     # retrieve the status for the package actions initiated by the client
-    statuses = @system.tasks.where(:uuid => params[:uuid])
+    statuses = @system.tasks.where(:id => params[:id])
     render :json => statuses
   end
 

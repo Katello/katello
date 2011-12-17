@@ -45,14 +45,31 @@ describe SystemEventsController do
           User.current = @user
           stub_consumer_packages_install(pulp_task_without_error)
           @task = @system.install_packages("foo, bar, bazz, geez")
-          get :index, :system_id => @system.id
+
         end
-        specify{response.should be_success}
+        specify "index call does the right thing" do
+          get :index, :system_id => @system.id
+          response.should be_success
+        end
+
+        specify "status call does the right thing" do
+          get :status, :system_id => @system.id, :id => @task.task_status.id
+          response.should be_success
+          response.body.should == [@task.task_status].to_json
+        end
+
+        specify "status call does the right thing for multi tasks" do
+          task1 = @system.install_packages("baz")
+          get :status, :system_id => @system.id, :id => [@task.task_status.id, task1.task_status.id]
+          response.should be_success
+          response.body.should == [@task.task_status, task1.task_status].to_json
+        end
+
+
         #specify do
         #  response.should render_template("items",:with=> {:locals => [@system,1, @task]})
         #end
       end
-
 
     end
 
