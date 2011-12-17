@@ -58,6 +58,10 @@ class TaskStatus < ActiveRecord::Base
     self.state.to_s == "waiting" || self.state.to_s == "running"
   end
 
+  def as_json(options = {})
+    super(:methods => :pending?)
+  end
+
   protected
   def setup_task_type
     unless self.task_type
