@@ -7,7 +7,8 @@
     %td.event_date
       = format_time(t.created_at)
     %td
-      %a.subpanel_element{"data-url"=>system_event_path(system.id, t.id)}
-        #{_(t.state.capitalize)}
-
+      %a.event_status.event_status.subpanel_element{"data-url"=>system_event_path(system.id, t.id)}
+        - if t.pending?
+          = image_tag("spinner.gif")
+        = status_message(t)
 

@@ -12,29 +12,18 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 /**
- * This file is for use with the packages subnav within systems page.
+ * This file is for use with the events subnav within systems page.
  */
 
-KT.package_action_types = function() {
-    return {
-        PKG : "pkg",
-        PKG_INSTALL : "pkg_install",
-        PKG_UPDATE : "pkg_update",
-        PKG_REMOVE : "pkg_remove",
-        PKG_GRP : "pkg_grp",
-        PKG_GRP_INSTALL : "pkg_grp_install",
-        PKG_GRP_UPDATE : "pkg_grp_update",
-        PKG_GRP_REMOVE : "pkg_grp_remove"
-    };
-}();
 
 KT.events = function() {
-    var system_id = $('.events').attr('data-system_id'),
-    retrievingNewContent = true,
 //    total_packages = $('.packages').attr('data-total_packages'),
 //    more_button = $('#more'),
 //    sort_button = $('#package_sort'),
 //    loaded_summary = $('#loaded_summary'),
+
+    var system_id = $('.events').attr('data-system_id'),
+    retrievingNewContent = true,
     add_row_shading = false,
     actions_in_progress = {},
     actions_updater = undefined,
@@ -59,7 +48,7 @@ KT.events = function() {
                 $('#filter').keyup();
                 $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
                 updateLoadedSummary();
-                if (data.length == 0) {
+                if (data.length === 0) {
                     more_button.empty().remove();
                 }else{
                     more_button.attr("data-offset", offset);
@@ -118,50 +107,40 @@ KT.events = function() {
         });
     },
 */
-/*
-    registerCheckboxEvents = function() {
-        var checkboxes = $('input[type="checkbox"]');
-        checkboxes.unbind('change');
-        checkboxes.each(function(){
-            $(this).change(function(){
-                if($(this).is(":checked")){
-                    selected_checkboxes++;
-                    enableButtons();
-                    disableUpdateAll();
-                }else{
-                    selected_checkboxes--;
-                    if(selected_checkboxes == 0){
-                        disableButtons();
-                        enableUpdateAll();
-                    }
-                }
-            });
-        });
-    },
-*/
     updateStatus = function(data) {
         // For each action that the user has initiated, update the status.
         $.each(data, function(index, status) {
-            var action = actions_in_progress[status["uuid"]],
-                action_row = $('tr[data-uuid="'+status["uuid"]+'"]'),
-                action_status_col = action_row.find('td.package_action_status');
-
-            if(status["state"] !== "waiting" || status["state"] !== "error") {
-                action_status_col.html(KT.event_types[action]["event_messages"][status["state"]]);
-               noLongerMonitorStatus(status["uuid"]);
+            var node = undefined,
+                msg = undefined;
+            if(!status["pending?"]) {
+                node = $('.event_name[data-pending-task-id=' + status['id'] + ']');
+                if(node !== undefined) {
+                    node.removeAttr("data-pending-task-id");
+                    msg = KT.event_types[status["task_type"]]["event_messages"][status["state"]];
+                    node.parent().find(".event_status").text(msg);
+                }
             }
         });
+        if ($('.event_name[data-pending-task-id]').length === 0) {
+            actions_updater.stop();
+        }
     },
     startUpdater = function () {
-        var timeout = 8000;
-        actions_updater = $.PeriodicalUpdater(KT.routes.status_system_events_path(system_id), {
-            method: 'get',
-            type: 'json',
-            data: function() {return {uuid: Object.keys(actions_in_progress)};},
-            global: false,
-            minTimeout: timeout,
-            maxTimeout: timeout
-        }, updateStatus);
+        var timeout = 8000,
+            pending_items = [];
+        $('.event_name[data-pending-task-id]').each(function(i) {
+            pending_items[i] = $(this).data("pending-task-id");
+        });
+        if(pending_items.length > 0) {
+            actions_updater = $.PeriodicalUpdater(KT.routes.status_system_events_path(system_id), {
+                method: 'get',
+                type: 'json',
+                data: function() {return {id: pending_items};},
+                global: false,
+                minTimeout: timeout,
+                maxTimeout: timeout
+            }, updateStatus);
+        }
     },
     monitorStatus = function(task_id, task_type) {
         actions_in_progress[task_id] = task_type;
@@ -180,8 +159,9 @@ KT.events = function() {
         }
     },
     initEvents = function() {
-
-        //updateLoadedSummary();
+        if($('.event_name[data-pending-task-id]').length > 0) {
+            startUpdater();
+        }
     },
     updateLoadedSummary = function() {
         var total_loaded = $('tr.package').length,
@@ -193,9 +173,9 @@ KT.events = function() {
 //        sortOrder: sortOrder,
 //        reverseSort: reverseSort,
         initEvents: initEvents
-    }
+    };
 }();
 
 $(document).ready(function() {
-    KT.packages.initEvents();
+    KT.events.initEvents();
 });
