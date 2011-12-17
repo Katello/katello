@@ -92,7 +92,10 @@ class SystemTask < ActiveRecord::Base
       },
 
   }.with_indifferent_access
-
+ 
+  def self.message_for task
+    SystemTask::TYPES[task.task_type][:event_messages][task.state]
+  end
 
   def self.refresh(ids)
     ids.each do |id|
