@@ -29,6 +29,7 @@ from katello.client.core import (
   product,
   repo,
   packagegroup,
+  permission,
   distribution,
   package,
   errata,
@@ -86,6 +87,10 @@ def setup_admin(admin):
     user_role_cmd.add_action('update', user_role.Update())
     user_role_cmd.add_action('delete', user_role.Delete())
     admin.add_command('user_role', user_role_cmd)
+
+    permission_cmd = permission.Permission()
+    permission_cmd.add_action('available_verbs', permission.ListAvailableVerbs())
+    admin.add_command('permission', permission_cmd)
 
     admin.add_command('ping', ping.Status())
 
