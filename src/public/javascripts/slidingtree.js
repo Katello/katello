@@ -220,45 +220,68 @@ var sliding_tree = function(tree_id, options) {
                 prerender(newContent);
                 $(document).trigger('hash_change.slidingtree');
                 $.bbq.removeState('search');
+                if( settings.enable_search ){
+                    set_search_button_state(newContent);
+                }
+            }
+        },
+        set_search_button_state = function(current_crumb){
+            var searchable = settings.breadcrumb[current_crumb]['searchable'],
+                search_button = container.find('.search_button');
+
+            if( !searchable ){
+                search_button.css({ backgroundPosition : "0 0" });
+                search_button.addClass('disabled');
+                search_button.attr('title', i18n.disabled_search);
+            } else {
+                search_button.css({backgroundPosition: "0 -16px"});
+                search_button.removeClass('disabled');
+                search_button.attr('title', i18n.search);
             }
         },
         setup_search = function(options){
              var bcs,
                  bcs_height = 0,
                  search_form = $('#search_form'),
-                 search_input = $('#search_input');
+                 search_input = $('#search_input'),
+                 bcs = $('.breadcrumb_search');
              
              $('.search_button').toggle(
                  function() {
-                     bcs = $('.breadcrumb_search');
-                     bcs_height = bcs.height();
-                     bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
-                     search_input.css("margin-left", '4px');
-                     search_form.css("opacity", "0").show();
-                     search_form.animate({"opacity":"1"}, { duration: 200, queue: false });
-                     search_input.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
-                     $(this).css({backgroundPosition: "-32px -16px"});
-                     
-                     if( $('.remove_item').length ){
-                         $('.remove_item').css({ top : 52 });
-                     }
-                     
-                     if( $('.close').length ){
-                         $('.close').css({ top : 52 });
-                     }
-                 },function() {
-                     search_form.fadeOut("fast", function(){
-                         bcs.animate({ "height": bcs_height }, "fast");
+                    if( !$(this).hasClass('disabled') ){
+                         bcs_height = bcs.height();
+                         bcs.animate({ "height": bcs_height+40}, { duration: 200, queue: false });
+                         search_input.css("margin-left", '4px');
+                         search_form.css("opacity", "0").show();
+                         search_form.animate({"opacity":"1"}, { duration: 200, queue: false });
+                         search_input.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
+                         $(this).css({backgroundPosition: "-32px -16px"});
+                         $(this).attr('title', i18n.close);
+                         
                          if( $('.remove_item').length ){
-                             $('.remove_item').css({ top : 12 });
+                             $('.remove_item').css({ top : 52 });
                          }
+                         
                          if( $('.close').length ){
-                             $('.close').css({ top : 12 });
+                             $('.close').css({ top : 52 });
                          }
-                     });
-                     $(this).css({backgroundPosition: "0 -16px"});
+                    }
+                 },function() {
+                    if( !$(this).hasClass('disabled') ){
+                         search_form.fadeOut("fast", function(){
+                             bcs.animate({ "height": bcs_height }, "fast");
+                             if( $('.remove_item').length ){
+                                 $('.remove_item').css({ top : 12 });
+                             }
+                             if( $('.close').length ){
+                                 $('.close').css({ top : 12 });
+                             }
+                         });
+                         $(this).css({backgroundPosition: "0 -16px"});
+                         $(this).attr('title', i18n.search);
+                    }
                  }
-             );
+             ).tipsy({ fade : true, gravity : 's' });
              
             search_form.live('submit', function(event){
             	var current_crumb 	= $.bbq.getState(settings.bbq_tag) || settings.default_tab,
@@ -313,6 +336,7 @@ var sliding_tree = function(tree_id, options) {
                      filter_form.animate({"opacity":"1"}, { duration: 200, queue: false });
                      filter_input.animate({"width": (bcs.width() - 60) + "px", "opacity":"1"}, { duration: 200, queue: false });
                      $(this).css({backgroundPosition: "-32px -16px"});
+                     $(this).attr('title', i18n.close);
                      
                      if( $('.remove_item').length ){
                          $('.remove_item').css({ top : 52 });
@@ -332,10 +356,11 @@ var sliding_tree = function(tree_id, options) {
                          }
                      });
                      $(this).css({backgroundPosition: "0 -16px"});
+                     $(this).attr('title', i18n.filter);
                      filter_input.val("").change();
                      $("#" + tree_id + " .has_content .filterable li").fadeIn('fast');
                  }
-             );
+            ).tipsy({ fade : true, gravity : 's' });
              
              filter_input.live('change, keyup', function(){
                  if ($.trim($(this).val()).length >= 2) {
