@@ -13,12 +13,12 @@
 module SystemErrataHelper
   
   def errata_type_class errata
-    case errata.errata_type
-      when  Glue::Pulp::Errata::SECURITY
+    case errata.type
+      when Glue::Pulp::Errata::SECURITY
         return "security_icon"
-      when  Glue::Pulp::Errata::ENHANCEMENT
+      when Glue::Pulp::Errata::ENHANCEMENT
         return "enhancement_icon"
-      when  Glue::Pulp::Errata::BUGZILLA
+      when Glue::Pulp::Errata::BUGZILLA
         return "bugzilla_icon"
     end
   end
