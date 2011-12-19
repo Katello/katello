@@ -19,7 +19,7 @@ Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
 Version:       0.1.29
-Release:       1%{?dist}
+Release:       2%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 19 2011 Shannon Hughes <shughes@redhat.com> 0.1.29-2
+- system engine build
+
 * Wed Dec 14 2011 Ivan Necas <inecas@redhat.com> 0.1.27-1
 - Fix bug on cli repo info for disabled repository (inecas@redhat.com)
 
