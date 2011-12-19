@@ -2,8 +2,8 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.37
-Release:        2%{?dist}
+Version:        0.1.42
+Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
 Group:          Applications/Internet
@@ -56,18 +56,23 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
-* Wed Dec 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.37-2
-- system engine build (shughes@redhat.com)
-- Automatic commit of package [katello-configure] release [0.1.31-2].
-  (shughes@redhat.com)
-- brew build (shughes@redhat.com)
-- Automatic commit of package [katello-configure] release [0.1.26-2].
-  (shughes@redhat.com)
-- builds for cli/installer (shughes@redhat.com)
-- Automatic commit of package [katello-configure] release [0.1.21-2].
-  (shughes@redhat.com)
-- build installer (shughes@redhat.com)
-- prep release for sys engine build (shughes@redhat.com)
+* Mon Dec 19 2011 Shannon Hughes <shughes@redhat.com> 0.1.42-1
+- 766933 - katello.yml perms - reformatting source (lzap+git@redhat.com)
+
+* Fri Dec 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.41-1
+- 766933 - katello.yml now deployed with correct perms
+
+* Fri Dec 16 2011 Ivan Necas <inecas@redhat.com> 0.1.40-1
+- Fix syntax error in dependency specification in katello service
+  (inecas@redhat.com)
+
+* Fri Dec 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.39-1
+- puppet - migrate script depends on katello.yml
+
+* Fri Dec 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.38-1
+- puppet - katello-jobs now depends on katello
+- adding debug options to the katello.yml
+- 767812 - compress our javascript and CSS
 
 * Wed Dec 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.37-1
 - system engine build 

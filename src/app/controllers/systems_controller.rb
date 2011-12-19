@@ -25,7 +25,7 @@ class SystemsController < ApplicationController
   before_filter :search_filter, :only => [:auto_complete_search]
 
   # two pane columns and mapping for sortable fields
-  COLUMNS = {'name' => 'name', 'lastCheckin' => 'lastCheckin', 'created' => 'created_at'}
+  COLUMNS = {'name' => 'name', 'lastCheckin' => 'lastCheckin'}
 
   def rules
     edit_system = lambda{System.find(params[:id]).editable?}
@@ -265,14 +265,14 @@ class SystemsController < ApplicationController
     @panel_options = { :title => _('Systems'),
                       :col => COLUMNS.keys,
                       :custom_rows => true,
-                      :enable_create => true,
+                      :enable_create => System.registerable?(@environment, current_organization),
                       :create => "System",
                       :enable_sort => true,
                       :name => controller_display_name,
                       :list_partial => 'systems/list_systems',
                       :ajax_load  => true,
                       :ajax_scroll => items_systems_path(),
-                      :actions => 'actions'
+                      :actions => System.deletable?(@environment, current_organization) ? 'actions' : nil
                       }
   end
 

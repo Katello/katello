@@ -453,7 +453,9 @@ Src::Application.routes.draw do
       resources :templates, :only => [:index]
     end
 
-
+    resources :gpg_keys, :only => [] do
+      get :content, :on => :member
+    end
 
     resources :activation_keys do
       post :pools, :action => :add_pool, :on => :member
