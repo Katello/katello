@@ -16,7 +16,7 @@ module BreadcrumbHelper
     cache = false || params[:cache] #default to false
     hash[id] = {:name=>name, :url=>url, :trail=>trail, :cache=>cache}
     hash[id][:content] = params[:content] if params[:content]
-    hash[id][:scrollable] = true if params[:scrollable]
+    hash[id][:scrollable] = params[:scrollable] ? true : false
     hash[id][:client_render] = true if params[:client_render]
     hash[id][:searchable] = true if params[:searchable]
     hash[id] = hash[id].merge(attributes)
