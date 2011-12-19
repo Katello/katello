@@ -135,7 +135,6 @@ describe RolesController do
       response.should be_success
       response.should render_template("list_items")
       assigns[:items].should include Role.find_by_name("bar%05d" % 8)
-      assigns[:items_offset].should_not include Role.find_by_name("bar%05d" % 30)
     end
     
   end
