@@ -78,6 +78,26 @@ class SystemAPI(KatelloAPI):
         path = "/api/systems/%s" % system_id
         return self.server.PUT(path, params)[1]
 
+    def install_packages(self, system_id, packages):
+        path = "/api/systems/%s/packages" % system_id
+        return self.server.POST(path, {"packages": packages})[1]
+
+    def remove_packages(self, system_id, packages):
+        path = "/api/systems/%s/packages" % system_id
+        return self.server.DELETE(path, {"packages": packages})[1]
+
+    def update_packages(self, system_id, packages):
+        path = "/api/systems/%s/packages" % system_id
+        return self.server.PUT(path, {"packages": packages})[1]
+
+    def install_package_groups(self, system_id, packages):
+        path = "/api/systems/%s/packages" % system_id
+        return self.server.POST(path, {"groups": packages})[1]
+
+    def remove_package_groups(self, system_id, packages):
+        path = "/api/systems/%s/packages" % system_id
+        return self.server.DELETE(path, {"groups": packages})[1]
+
     def systems_by_org(self, orgId, query = {}):
         path = "/api/organizations/%s/systems" % orgId
         return self.server.GET(path, query)[1]

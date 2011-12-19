@@ -1,5 +1,5 @@
 #
-# Katello Repos actions
+# Katello System actions
 # Copyright (c) 2010 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
@@ -21,6 +21,8 @@ from katello.client.api.system import SystemAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, Printer, convert_to_mime_type, attachment_file_name, save_report
+from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
+import re
 
 Config()
 
@@ -127,7 +129,7 @@ class Info(SystemAction):
 
 class InstalledPackages(SystemAction):
 
-    description = _('display the installed packages of a system')
+    description = _('display and manipulate with the installed packages of a system')
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
@@ -136,16 +138,39 @@ class InstalledPackages(SystemAction):
                        help=_("system name (required)"))
         self.parser.add_option('--environment', dest='environment',
                        help=_("environment name"))
+        self.parser.add_option('--install', dest='install',
+                       help=_("packages to be installed remotely on the system, package names are separated with comma"))
+        self.parser.add_option('--remove', dest='remove',
+                       help=_("packages to be removed remotely from the system, package names are separated with comma"))
+        self.parser.add_option('--update', dest='update',
+                       help=_("packages to be updated on the system, use --all to update all packages, package names are separated with comma"))
+        self.parser.add_option('--install_groups', dest='install_groups',
+                       help=_("package groups to be installed remotely on the system, group names are separated with comma"))
+        self.parser.add_option('--remove_groups', dest='remove_groups',
+                       help=_("package groups to be removed remotely from the system, group names are separated with comma"))
 
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
+        remote_options = [self.get_option(option) for option in ['install', 'remove', 'update', 'install_groups', 'remove_groups']]
+        if len([1 for o in remote_options if o]) > 1:
+            self.add_option_error(_('You can specify at most one install/remove/update action per call'))
+
 
     def run(self):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
         verbose = self.get_option('verbose')
+
+        install = self.get_option('install')
+        remove = self.get_option('remove')
+        update = self.get_option('update')
+        install_groups = self.get_option('install_groups')
+        remove_groups = self.get_option('remove_groups')
+        packages_separator = ","
+
+        task = None
 
         if env_name is None:
             self.printer.setHeader(_("Package Information for System [ %s ] in Org [ %s ]") % (sys_name, org_name))
@@ -157,7 +182,41 @@ class InstalledPackages(SystemAction):
         if not systems:
             return os.EX_DATAERR
 
-        packages = self.api.packages(systems[0]['uuid'])
+        system_id = systems[0]['uuid']
+
+        if install:
+            task = self.api.install_packages(system_id, install.split(packages_separator))
+        if remove:
+            task = self.api.remove_packages(system_id, remove.split(packages_separator))
+        if update:
+            if update == '--all':
+                 update_packages = []
+            else:
+                update_packages = update.split(packages_separator)
+            task = self.api.update_packages(system_id, update_packages)
+        if install_groups:
+            task = self.api.install_package_groups(system_id, install_groups.split(packages_separator))
+        if remove_groups:
+            task = self.api.remove_package_groups(system_id, remove_groups.split(packages_separator))
+
+        if task:
+            task = AsyncTask(task)
+            run_spinner_in_bg(wait_for_async_task, [task], message=_("Performing remote action... "))
+            if task.succeeded():
+                print _("Remote action finished")
+                return os.EX_OK
+            else:
+                error_message = format_task_errors(task.errors())
+                # On installation, Pulp returns not-readable message, we don't need to show it to the user.
+                # TODO: once Pulp returns something meaningful, remove this condition!
+                if re.match('^\(', error_message):
+                    print _("Remote action failed")
+                else:
+                    print (_("Remote action failed: %s") % error_message)
+                return os.EX_DATAERR
+
+        packages = self.api.packages(system_id)
+
 
         for p in packages:
             p['name_version_release_arch'] = "%s-%s-%s.%s" % \
