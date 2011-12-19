@@ -24,6 +24,8 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     {
       :package => {
         :properties => {
+          :name          => { :type=> 'string', :analyzer=>'keyword'}, 
+          :nvrea         => { :type=> 'string', :analyzer=>'keyword'},
           :nvrea_sort    => { :type => 'string', :index=> :not_analyzed }
         }
       }
@@ -42,6 +44,27 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
     }
   end
 
+  def self.name_search query, repoids=nil, number=15,sort=[:nvrea_sort, "ASC"]
+     start = 0
+     query = "name:#{query}"
+     search = Tire.search self.index do
+      fields [:name]
+      query do
+        string query
+      end
+      
+      if repoids
+        filter :terms, :repository_ids => repoids
+      end
+      sort { by sort[0], sort[1] }      
+     end
+     to_ret = []
+     search.results.each{|pkg|  
+        to_ret << pkg.name if !to_ret.include?(pkg.name)
+        break if to_ret.size == number
+     } 
+     return to_ret
+  end
 
   def self.search query, start, page_size, repoids=nil, not_repoids=nil, sort=[:nvrea_sort, "ASC"]
     query_down = query.downcase
@@ -59,9 +82,9 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
         filter :terms, :repository_ids => repoids
       end
       if not_repoids
-        filter do
-           not :terms, :repository_ids => not_repoids
-        end 
+        #filter do
+        #   not :terms, :repository_ids => not_repoids
+        #end 
       end
 
       sort { by sort[0], sort[1] }

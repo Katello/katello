@@ -79,14 +79,14 @@ class Repository < ActiveRecord::Base
     Tire.index Glue::Pulp::Package.index do
       create :mappings => Glue::Pulp::Package.index_mapping
       import pkgs               
-    end
+    end if !pkgs.empty?
   end
 
   def index_errata
     errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
     Tire.index "#{AppConfig.elastic_index}_errata" do
       import errata
-    end
+    end if !errata.empty?
   end
 
   protected
