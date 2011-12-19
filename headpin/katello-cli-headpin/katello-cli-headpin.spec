@@ -57,6 +57,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 19 2011 Bryan Kearney <bkearney@redhat.com> 0.1.13-2
+- Missed a merge (bkearney@redhat.com)
+- Latest upstream code (bkearney@redhat.com)
+- Automatic commit of package [katello-cli-headpin] release [0.1.12-2].
+  (bkearney@redhat.com)
+- Bump the version (bkearney@redhat.com)
+
 * Fri Dec 16 2011 Bryan Kearney <bkearney@redhat.com> 0.1.13-1
 - 758447: Add headpin prompt to the config file (bkearney@redhat.com)
 - The default location for the headpin path is /headpin (bkearney@redhat.com)
