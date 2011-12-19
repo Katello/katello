@@ -43,19 +43,32 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
   end
 
 
-  def self.search query, repoids=nil, sort=[:nvrea_sort, "ASC"]
-
-    Tire.search self.index do
+  def self.search query, start, page_size, repoids=nil, not_repoids=nil, sort=[:nvrea_sort, "ASC"]
+    query_down = query.downcase
+    query = "name:#{query}" if [':', 'and', 'org', 'not'].all?{|s| !query_down.include?(s)}
+    search = Tire.search self.index do
       query do
         string query
       end
 
+      if page_size > 0
+       size page_size
+       from start
+      end
       if repoids
         filter :terms, :repository_ids => repoids
+      end
+      if not_repoids
+        filter do
+           not :terms, :repository_ids => not_repoids
+        end 
       end
 
       sort { by sort[0], sort[1] }
     end
+    return search.results
+  rescue
+    return []
   end
 
 end
