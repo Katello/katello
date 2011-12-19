@@ -16,7 +16,7 @@ require 'set'
 class Glue::Pulp::Errata
 
   SECURITY = "security"
-  BUGZILLA = "bugzilla"
+  BUGZILLA = "bugfix"
   ENHANCEMENT = "enhancement"
 
 

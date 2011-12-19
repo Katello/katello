@@ -23,13 +23,11 @@ module Glue::Pulp::Consumer
       lazy_accessor :package_profile, :initializer => lambda { Pulp::Consumer.installed_packages(uuid) }
       lazy_accessor :simple_packages, :initializer => lambda { Pulp::Consumer.installed_packages(uuid).
                                                               collect{|pack| Glue::Pulp::SimplePackage.new(pack)} }
+      lazy_accessor :errata, :initializer => lambda { Pulp::Consumer.errata(uuid).
+                                                              collect{|errata| Glue::Pulp::Errata.new(errata)} }
     end
   end
   module InstanceMethods
-    def errata
-      (::Pulp::Consumer.errata self.uuid)
-    end
-
     def del_pulp_consumer
       Rails.logger.info "Deleting consumer in pulp: #{self.name}"
       Pulp::Consumer.destroy(self.uuid)
