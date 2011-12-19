@@ -47,6 +47,7 @@ KT.packages = function() {
     add_content_button = $('#add_content'),
     remove_content_button = $('#remove_content'),
     loaded_summary = $('#loaded_summary'),
+    error_message = $('#error_message'),
     add_row_shading = false,
     selected_checkboxes = 0,
     actions_in_progress = {},
@@ -409,39 +410,17 @@ KT.packages = function() {
 
         registerCheckboxEvents();
     },
-    valid_action_requested = function(content, content_type) {
-        // if one or more of the content items requested already has an action pending on it, reject the request
-        var is_valid = true, item;
-        $.each(content, function(index, content_item) {
-            item = $.trim(content_item);
-            switch (content_type) {
-                case KT.package_action_types.PKG:
-                    if (packages_in_progress[item] === true) {
-                        alert("One or more of the packages provided has an action pending.");
-                        is_valid = false;
-                        break;
-                    }
-                    break;
-                case KT.package_action_types.PKG_GRP:
-                    if (groups_in_progress[item] === true) {
-                        alert("One or more of the groups provided has an action pending.");
-                        is_valid = false;
-                        break;
-                    }
-                    break;
-            }
-        });
-        return is_valid;
-    },
     addContent = function(data) {
         data.preventDefault();
 
         var selected_action = $("input[@name=perform_action]:checked").attr('id'),
             content_string = content_form.find('#content_input').val(),
-            content_array = content_string.split(',');
+            content_array = content_string.split(/ *, */),
+            validation_error = undefined;
 
         if (selected_action == 'perform_action_packages') {
-            if (valid_action_requested(content_array, KT.package_action_types.PKG)) {
+            validation_error = validate_action_requested(content_array, KT.package_action_types.PKG);
+            if (validation_error === undefined) {
                 disableLinks();
                 $.ajax({
                     url: KT.routes.add_system_system_packages_path(system_id),
@@ -474,14 +453,18 @@ KT.packages = function() {
                             }
                         }
                         enableLinks();
+                        show_validation_error(false);
                     },
                     error: function() {
                         enableLinks();
                     }
                 });
+            } else {
+                show_validation_error(true, validation_error);
             }
         } else {
-            if (valid_action_requested(content_array, KT.package_action_types.PKG_GRP)) {
+            validation_error = validate_action_requested(content_array, KT.package_action_types.PKG_GRP);
+            if (validation_error === undefined) {
                 disableLinks();
                 $.ajax({
                     url: KT.routes.add_system_system_packages_path(system_id),
@@ -514,11 +497,14 @@ KT.packages = function() {
                             }
                         }
                         enableLinks();
+                        show_validation_error(false);
                     },
                     error: function() {
                         enableLinks();
                     }
                 });
+            } else {
+                show_validation_error(true, validation_error);
             }
         }
     },
@@ -527,10 +513,12 @@ KT.packages = function() {
 
         var selected_action = $("input[@name=perform_action]:checked").attr('id'),
             content_string = content_form.find('#content_input').val(),
-            content_array = content_string.split(',');
+            content_array = content_string.split(/ *, */),
+            validation_error = undefined;
 
         if (selected_action == 'perform_action_packages') {
-            if (valid_action_requested(content_array, KT.package_action_types.PKG)) {
+            validation_error = validate_action_requested(content_array, KT.package_action_types.PKG);
+            if (validation_error === undefined) {
                 disableLinks();
                 $.ajax({
                     url: KT.routes.remove_system_system_packages_path(system_id),
@@ -563,14 +551,18 @@ KT.packages = function() {
                             }
                         }
                         enableLinks();
+                        show_validation_error(false);
                     },
                     error: function() {
                         enableLinks();
                     }
                 });
+            } else {
+                show_validation_error(true, validation_error);
             }
         } else {
-            if (valid_action_requested(content_array, KT.package_action_types.PKG_GRP)) {
+            validation_error = validate_action_requested(content_array, KT.package_action_types.PKG_GRP);
+            if (validation_error === undefined) {
                 disableLinks();
                 $.ajax({
                     url: KT.routes.remove_system_system_packages_path(system_id),
@@ -603,11 +595,14 @@ KT.packages = function() {
                             }
                         }
                         enableLinks();
+                        show_validation_error(false);
                     },
                     error: function() {
                         enableLinks();
                     }
                 });
+            } else {
+                show_validation_error(true, validation_error);
             }
         }
     },
@@ -674,7 +669,68 @@ KT.packages = function() {
         var total_loaded = $('tr.package').length,
             message = i18n.x_of_y_packages(total_loaded, total_packages);
         loaded_summary.html(message);
+    },
+    validate_action_requested = function(content, content_type) {
+        // validate the action being requested and return a validation error, if an error is found
+        var validation_error = undefined;
+
+        // validate the package list format
+        if ((content_type === KT.package_action_types.PKG) && !valid_package_list_format(content)) {
+            validation_error = i18n.validation_error_name_format;
+
+        // validate that no actions pending on same package or group
+        } else {
+            var item;
+            $.each(content, function(index, content_item) {
+                item = $.trim(content_item);
+                switch (content_type) {
+                    case KT.package_action_types.PKG:
+                        if (packages_in_progress[item] === true) {
+                            validation_error = i18n.validation_error_package_pending;
+                            break;
+                        }
+                        break;
+                    case KT.package_action_types.PKG_GRP:
+                        if (groups_in_progress[item] === true) {
+                            validation_error = i18n.validation_error_group_pending;
+                            break;
+                        }
+                        break;
+                }
+            });
+        }
+        return validation_error;
+    },
+    show_validation_error = function(show, validation_error){
+    	var input = content_form.find('#content_input');
+    	
+    	if( show ){
+    		input.addClass('validation_error_input');
+    		error_message.html(validation_error);
+    		error_message.show();
+    	} else {
+    		input.removeClass('validation_error_input');
+    		error_message.hide();
+    	}
+    },
+    valid_package_list_format = function(packages){
+    	var i, length = packages.length;
+    		
+    	for( i = 0; i < length; i += 1){
+    		if( !valid_package_name(packages[i]) ){
+    			return false;
+    		}
+    	}
+    	
+    	return true;
+    },
+    valid_package_name = function(package_name){
+    	var is_match = package_name.match(/[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\-\.\_\+\,]+/);
+    	
+    	return is_match === null ? true : false;
     };
+    
+    
     return {
         morePackages: morePackages,
         sortOrder: sortOrder,

@@ -525,8 +525,11 @@ class AsyncTask():
     def failed(self):
         return (len(filter(lambda t: t['state'] in ('error', 'timed out'), self._tasks)) > 0)
 
+    def cancelled(self):
+        return (len(filter(lambda t: t['state'] in ('cancelled', 'canceled'), self._tasks)) > 0)
+
     def succeeded(self):
-        return not self.failed()
+        return not (self.failed() or self.cancelled())
 
     def subtask_count(self):
         return len(self._tasks)

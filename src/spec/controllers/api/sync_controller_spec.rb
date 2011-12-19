@@ -132,9 +132,17 @@ describe Api::SyncController do
     end
 
     it "should call cancel_sync on the object of synchronization" do
+       @syncable.stub(:sync_state).and_return(PulpSyncStatus::Status::RUNNING)
        @syncable.should_receive(:cancel_sync)
        delete :cancel, :provider_id => provider_id
     end
+
+    it "should not call cancel_sync when the object is not being synchronized" do
+      @syncable.stub(:sync_state).and_return(PulpSyncStatus::Status::FINISHED)
+      @syncable.should_not_receive(:cancel_sync)
+       delete :cancel, :provider_id => provider_id
+    end
+
   end
 
 
