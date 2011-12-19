@@ -13,7 +13,6 @@
 
 class ProvidersController < ApplicationController
   include AutoCompleteSearch
-  include IndexedModel
 
   before_filter :find_rh_provider, :only => [:redhat_provider,:update_redhat_provider]
 
@@ -120,6 +119,7 @@ class ProvidersController < ApplicationController
   end
 
   def items
+    
     ids = Provider.readable(current_organization).collect{|p| p.id}
     render_panel_direct(Provider, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
                         [{"id"=>ids}, {:provider_type=>[Provider::CUSTOM.downcase]}])

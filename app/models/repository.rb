@@ -71,7 +71,7 @@ class Repository < ActiveRecord::Base
   end
 
   after_save do
-    self.product.provider.update_index
+    self.product.provider.update_index if self.product.provider.respond_to? :update_index
   end
 
   def index_packages
