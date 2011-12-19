@@ -139,18 +139,14 @@ class SystemsController < ApplicationController
 
   def items
     order = split_order(params[:order])
-
     search = params[:search]
     if params[:env_id]
       find_environment
       filters = {:environment_id=>[params[:env_id]]}
       render_panel_direct(System, @panel_options, search, params[:offset], order, filters, true)
-
-      #render_panel_items(System.readable(current_organization).where(:environment_id => @environment.id), @panel_options, params[:search], params[:offset])
     else
       filters = {:organization_id=>[current_organization.id]}
       render_panel_direct(System, @panel_options, search, params[:offset], order, filters, true)
-      #render_panel_items(System.readable(current_organization), @panel_options, params[:search], params[:offset])
     end
   end
 
