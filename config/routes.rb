@@ -319,6 +319,7 @@ Src::Application.routes.draw do
         get :pools
       end
       resources :subscriptions, :only => [:create, :index, :destroy]
+      resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
     end
 
     resources :providers, :except => [:index] do
