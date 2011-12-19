@@ -2,12 +2,18 @@ module IndexedModel
 
   def self.included(base)
     base.class_eval do
-      include Tire::Model::Search
-      include Tire::Model::Callbacks
 
+      if !Rails.env.test?
+        include Tire::Model::Search
+        include Tire::Model::Callbacks
+        index_name AppConfig.elastic_index + '_' +  self.name.downcase
+      else
+        #stub mapping
+        def self.mapping
+        end
+      end
       cattr_accessor :class_index_options
 
-      index_name AppConfig.elastic_index + '_' +  self.name.downcase
 
       def self.index_options options={}
           self.class_index_options = options
@@ -18,6 +24,7 @@ module IndexedModel
 
 
   def to_indexed_json
+
     to_ret = {}
     attrs = attributes.keys.collect{|key| key.to_sym}
     attrs += self.lazy_attributes if self.respond_to?(:lazy_attributes)
