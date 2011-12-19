@@ -60,7 +60,7 @@ def get_product(orgName, prodName):
     return prod
 
 
-def get_repo(orgName, prodName, repoName, envName=None):
+def get_repo(orgName, prodName, repoName, envName=None, includeDisabled=False):
     repo_api = RepoAPI()
 
     env  = get_environment(orgName, envName)
@@ -74,7 +74,7 @@ def get_repo(orgName, prodName, repoName, envName=None):
         print _("Could not find product [ %s ]") % prodName
         return None
 
-    repos = repo_api.repos_by_env_product(env["id"], prod["id"], repoName)
+    repos = repo_api.repos_by_env_product(env["id"], prod["id"], repoName, includeDisabled)
     if len(repos) > 0:
         #repo by id call provides more information
         return repo_api.repo(repos[0]["id"])

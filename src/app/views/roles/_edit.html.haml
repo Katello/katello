@@ -51,7 +51,7 @@
           .permission_widget_container#resource_type_container
             %label.ra.fl #{_("Permission For:")}
             %select.fl{ :id => 'resource_type', :name => 'permission[resource_type_attributes[name]]', :tabindex => 1 }
-            %span.fl
+            %span.fl#all_types_span
               #{_("or")}
             .button.fl#all_types
               #{_('+ All')}

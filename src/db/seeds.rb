@@ -9,20 +9,25 @@ require 'util/password'
 AppConfig.use_cp = false if ENV['NO_CP']
 AppConfig.use_pulp = false if ENV['NO_PULP']
 
+def format_errors model=nil
+  return '(nil found)' if model.nil?
+  model.errors.full_messages.join(';')
+end
+
 # create basic roles
 superadmin_role = Role.find_or_create_by_name(
   :name => 'Administrator', 
   :description => 'Super administrator with all access.')
-throw "Unable to create super-admin role: #{$!}" if superadmin_role.nil? or superadmin_role.errors.size > 0
+raise "Unable to create super-admin role: #{format_errors superadmin_role}" if superadmin_role.nil? or superadmin_role.errors.size > 0
 
 superadmin_role_perm = Permission.find_or_create_by_name(:name=> "super-admin-perm", :role => superadmin_role, :all_types => true)
-throw "Unable to create super-admin role permission: #{$!}" if superadmin_role_perm.nil? or superadmin_role_perm.errors.size > 0
+raise "Unable to create super-admin role permission: #{format_errors superadmin_role_perm}" if superadmin_role_perm.nil? or superadmin_role_perm.errors.size > 0
 
 # create read *everything* role and assign permissions to it
 reader_role = Role.find_or_create_by_name(
   :name => 'Read Everything',
   :description => 'Permissions to read everything.')
-throw "Unable to create reader role: #{$!}" if reader_role.nil? or reader_role.errors.size > 0
+raise "Unable to create reader role: #{format_errors reader_role}" if reader_role.nil? or reader_role.errors.size > 0
 
 reader_role_perm = Permission.find_or_create_by_name(:role => reader_role,
                    :resource_type => ResourceType.find_by_name("all"),
@@ -30,7 +35,7 @@ reader_role_perm = Permission.find_or_create_by_name(:role => reader_role,
                    :all_verbs => true,
                    :name => "Read All",
                    :description => "Read everything permission")
-throw "Unable to create reader role permission: #{$!}" if reader_role_perm.nil? or reader_role_perm.errors.size > 0
+raise "Unable to create reader role permission: #{format_errors reader_role_perm}" if reader_role_perm.nil? or reader_role_perm.errors.size > 0
 
 # create the super admin if none exist - it must be created before any statement in the seed.rb script
 User.current = user_admin = User.find_by_username('admin')
@@ -43,12 +48,12 @@ unless user_admin
   User.current = user_admin
   user_admin.save!
 end
-throw "Unable to create admin user: #{$!}" if user_admin.nil? or user_admin.errors.size > 0
+raise "Unable to create admin user: #{format_errors user_admin}" if user_admin.nil? or user_admin.errors.size > 0
 
 # create the default org = "admin" if none exist
 first_org = Organization.find_or_create_by_name(:name => "ACME_Corporation", :description => "ACME Corporation Organization", :cp_key => 'ACME_Corporation')
-throw "Unable to create first org: #{first_org.errors}" if first_org and first_org.errors.size > 0
-throw "Are you sure you cleared candlepin! unable to create first org!" if first_org.environments.nil?
+raise "Unable to create first org: #{format_errors first_org}" if first_org and first_org.errors.size > 0
+raise "Are you sure you cleared candlepin?! Unable to create first org!" if first_org.environments.nil?
 
 #create a provider
 if Provider.count == 0

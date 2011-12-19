@@ -27,6 +27,7 @@ common:
   app: headpin
   use_cp: true
   use_pulp: false
+  debug_rest: false
   debug_cp_proxy: false
   debug_pulp_proxy: false
   rest_client_timeout: 30
@@ -117,21 +118,14 @@ common:
 #
 # The following configuration values override ones from the common section
 #
-#production:
-#database:
-#    adapter: sqlite3
-#    database: /var/lib/katello/production.sqlite3
-#    pool: 5
-#    timeout: 5000
-##or
-#  database:
-#   adapter: postgresql
-#   username: katello
-#   password: katello
-#   database: katello
-#   host: localhost
-#   encoding: UTF8
-
+production:
+  database:
+    adapter: postgresql
+    username: katello
+    password: katello
+    database: katello
+    host: localhost
+    encoding: UTF8
 
 #
 # Development environment configuration

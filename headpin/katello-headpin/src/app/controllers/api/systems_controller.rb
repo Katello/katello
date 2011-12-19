@@ -182,8 +182,21 @@ class Api::SystemsController < Api::ApiController
   def find_only_environment
     if !@environment && @organization && !params.has_key?(:environment_id)
       raise HttpErrors::BadRequest, _("Organization #{@organization.name} has 'Locker' environment only. Please create an environment for system registration.") if @organization.environments.empty?
-      raise HttpErrors::BadRequest, _("Organization #{@organization.name} has more than one environment. Please specify target environment for system registration.") if @organization.environments.size > 1
-      @environment = @organization.environments.first and return
+
+      # Some subscription-managers will call /users/$user/owners to retrieve the orgs that a user belongs to.
+      # Then, If there is just one org, that will be passed to the POST /api/consumers as the owner. To handle
+      # this scenario, if the org passed in matches the user's default org, use the default env. If not use
+      # the single env of the org or throw an error if more than one.
+      #
+      if @organization.environments.size > 1
+        if current_user.default_environment && current_user.default_environment.organization == @organization
+          @environment = current_user.default_environment
+        else
+          raise HttpErrors::BadRequest, _("Organization #{@organization.name} has more than one environment. Please specify target environment for system registration.")
+        end
+      else
+        @environment = @organization.environments.first and return
+      end
     end
   end
 
