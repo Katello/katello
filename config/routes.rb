@@ -474,7 +474,10 @@ Src::Application.routes.draw do
        get    :index, :on => :collection, :action => :list_roles
       end
     end
-    resources :roles
+    resources :roles do
+      get :available_verbs, :on => :collection, :action => :available_verbs
+    end
+
 
     resources :tasks, :only => [:show]
 
