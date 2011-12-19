@@ -60,6 +60,9 @@
       "changeset_progress": '#{_("This changeset is currently being promoted.")}',
       "promoting": '#{_("Promoting...")}',
       "promoted": '#{_("Promoted")}',
+      "search" : "#{_('Filter')}",
+      "search" : "#{_('Search')}",
+      "disabled_search" : "#{_('Search is not available for the current content')}"
     });
 
 #error_dialog{:style=>"display: none"}
@@ -97,7 +100,7 @@
               %input{ :name => "filter", :type => "input", :placeholder => "Filter...", :id=>"filter_input"}
               %button.action #{_("Filter")}
               %br.clear
-            .filter_button.fr.clickable
+            .filter_button.fr.clickable{ :title => "#{_('Filter')}" }
               #{_('Filter')}
             .tree_breadcrumb
           .sliding_container
@@ -167,7 +170,7 @@
         %form#search_form.search{"data-url" => search_index_path()}
           = text_field_tag(:search, params[:search], {:type => "text", :placeholder => "Search...", :class => "auto_complete_input ui-autocomplete-input"})
           %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
-        .search_button.clickable.fr{ :disabled => "disabled" }
+        .search_button.clickable.fr{ :disabled => "disabled", :title => "#{_('Search')}" }
           #{_('Search')}
         .tree_breadcrumb
       .sliding_container
