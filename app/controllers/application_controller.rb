@@ -418,13 +418,24 @@ class ApplicationController < ActionController::Base
       results = obj_class.search :load=>load do
          query { string search}
          sort {by sort[0], sort[1] }
-         filter :terms, filters if filters
+         
+         if filters
+           filter_array = filters.keys.collect{|key| {key=>filters[key]}}
+
+           filter_array.each{|i|
+            filter  :terms, i
+           }
+
+         end
+
          size page_size
          from start
       end
       @items = results
 
-    rescue
+    rescue Tire::Search::SearchRequestFailed => e
+      Rails.logger.error(e.class)
+
       options[:total_count] = 0
       options[:total_results] = 0
 
@@ -435,11 +446,12 @@ class ApplicationController < ActionController::Base
 
   def render_panel_results(results, options)
     
-    options[:total_count] = results.total
-    options[:total_results] = results.total
-    @items = results
+    options[:total_count] = results.empty? ? 0 : results.total
+    options[:total_results] = results.empty? ? 0 : results.total
     options[:collection] = results
     
+    @items = results
+
     if options[:list_partial]
       rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)
     else

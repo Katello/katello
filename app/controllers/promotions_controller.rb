@@ -62,7 +62,12 @@ class PromotionsController < ApplicationController
 
   # AJAX Calls
 
+
   def packages
+    new_packages
+  end
+
+  def new_packages
     
     @next_env_pkgs = Glue::Pulp::Package.search("*", 0, 0)
 
