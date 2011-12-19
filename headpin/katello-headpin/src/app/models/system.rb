@@ -37,7 +37,7 @@ class System < ActiveRecord::Base
   has_many :activation_keys, :through => :system_activation_keys
 
   validates :environment, :presence => true, :non_locker_environment => true
-  validates :name, :presence => true, :no_trailing_space => true, :uniqueness => true
+  validates :name, :presence => true, :no_trailing_space => true
   validates_uniqueness_of :name, :scope => :environment_id
   validates :description, :katello_description_format => true
   validates_length_of :location, :maximum => 255
@@ -147,6 +147,14 @@ class System < ActiveRecord::Base
 
   def deletable?
     environment.systems_deletable?
+  end
+
+  def self.deletable? env, org
+    org ||= env.organization if env
+    ret = false
+    ret ||= User.allowed_to?([:delete_systems], :organizations, nil, org) if org
+    ret ||= User.allowed_to?([:delete_systems], :environments, env.id, org) if env
+    ret
   end
 
   def self.registerable? env, org
