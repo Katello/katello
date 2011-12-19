@@ -10,6 +10,7 @@ class katello::config {
 
   postgres::createuser { $katello::params::db_user:
     passwd  => $katello::params::db_pass,
+    roles => "CREATEDB",
     logfile => "${katello::params::log_base}/katello-configure/create-postgresql-katello-user.log",
     require => [ File["${katello::params::log_base}"] ],
   }
