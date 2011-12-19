@@ -402,7 +402,7 @@ class ApplicationController < ActionController::Base
   end
 
 
-  def render_panel_direct(obj_class, options, search, start, sort, filters=nil, load=false)
+  def render_panel_direct(obj_class, options, search, start, sort, filters=[], load=false)
 
     search = '*' if search == ''
 
@@ -418,11 +418,11 @@ class ApplicationController < ActionController::Base
       results = obj_class.search :load=>load do
          query { string search}
          sort {by sort[0], sort[1] }
-         
-         if filters
-           filter_array = filters.keys.collect{|key| {key=>filters[key]}}
 
-           filter_array.each{|i|
+         filters = [filters] if !filters.is_a? Array
+         if !filters.empty?
+
+           filters.each{|i|
             filter  :terms, i
            }
 
