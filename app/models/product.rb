@@ -148,7 +148,7 @@ class Product < ActiveRecord::Base
   end
 
   after_save do
-      self.provider.update_index 
+      self.provider.update_index if self.provider.respond_to? :update_index
   end
 
 
