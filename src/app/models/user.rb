@@ -319,7 +319,7 @@ class User < ActiveRecord::Base
 
   def self.cp_oauth_header
     raise Errors::UserNotSet, "unauthenticated to call a backend engine" if self.current.nil?
-    { 'cp-user' => self.current.username }
+    self.current.cp_oauth_header
   end
 
   def pulp_oauth_header
