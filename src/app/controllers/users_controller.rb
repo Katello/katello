@@ -89,7 +89,6 @@ class UsersController < ApplicationController
       # Pulp quietly ignored unkonwn attributes; Headpin needs to remove
       env_id = params[:user].delete(:env_id)
       @user = User.new(params[:user])
-      env_id = params[:user]['env_id']
       if env_id
         @environment = KTEnvironment.find(env_id)
         @organization = @environment.organization
