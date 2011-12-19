@@ -422,16 +422,23 @@ class ApplicationController < ActionController::Base
          size page_size
          from start
       end
-      @items = results.results
-      options[:total_count] = results.total
-      options[:total_results] = results.total
+      @items = results
+
     rescue
       options[:total_count] = 0
       options[:total_results] = 0
 
     end
 
-    options[:collection] = @items
+    render_panel_results(@items, options)
+  end
+
+  def render_panel_results(results, options)
+    
+    options[:total_count] = results.total
+    options[:total_results] = results.total
+    @items = results
+    options[:collection] = results
     
     if options[:list_partial]
       rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)
@@ -439,15 +446,16 @@ class ApplicationController < ActionController::Base
       rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options)
     end
 
+    
+
     render :json => {:html => rendered_html,
                       :results_count => options[:total_count],
                       :total_items => options[:total_results],
                       :current_items => options[:collection].length }
 
     retain_search_history
-
+    
   end
-
 
   def render_panel_items(items, options, search, start)
     @items = items
