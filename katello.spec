@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.147
+Version:        0.1.148
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -346,6 +346,16 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Dec 19 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.148-1
+- Revert "765888 - Error during promotion"
+- ak - fixing unit tests
+- ak - subscribing according products
+- Bug 768388 - Perpetual spinner cursor upon changing a user's org.
+  https://bugzilla.redhat.com/show_bug.cgi?id=768388 + Incorrectly loading
+  env_select.js twice which was causing javascript errors   and these resulted
+  in spinner not clearing
+- Changes organizations tupane subnavigation to be consistent with others.
+
 * Wed Dec 14 2011 Ivan Necas <inecas@redhat.com> 0.1.144-1
 - 753804 - fix for duplicite product name exception (inecas@redhat.com)
 - 741656 - fix query on resource type for search (bbuckingham@redhat.com)
