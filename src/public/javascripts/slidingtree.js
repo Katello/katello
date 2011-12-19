@@ -80,7 +80,13 @@ var sliding_tree = function(tree_id, options) {
                  settings.fetching = id;
                 $.get(crumb.url, function(data) {
                     if (settings.fetching == id) {
-                        newPanel.html(data);
+                        if (data.html) {
+                            newPanel.html(data.html);
+                        }
+                        else {
+                            newPanel.html(data);
+                        }
+
                         settings.fetching = 0;
                         settings.tab_change_cb(id);
     
@@ -274,8 +280,10 @@ var sliding_tree = function(tree_id, options) {
 	            	$(this).ajaxSubmit({
 	                    url		: search_url,
 	                    data	: data,
+                            cache       : false,
 	                    success	: function (data) {
-                            panel.html(data);
+                                var to_append = data.html ? data.html : data;
+                                panel.html(to_append);
 	                    },
 	                    error: function (e) {
 	                        //button.removeAttr('disabled');
