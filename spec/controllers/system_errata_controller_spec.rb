@@ -53,10 +53,10 @@ describe SystemErrataController do
         
           to_ret = []
           (rand(85) + 10).times{ |num|
-            errata = OpenStruct.new
-            errata.errata_id = "RHSA-2011-01-#{num}"
-            errata.errata_type = types[rand(3)]
-            errata.product = "Red Hat Enterprise Linux 6.0"
+            errata = {}
+            errata["id"] = "RHSA-2011-01-#{num}"
+            errata["type"] = types[rand(3)]
+            errata["release"] = "Red Hat Enterprise Linux 6.0"
             to_ret << errata
           }
 

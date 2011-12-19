@@ -60,20 +60,13 @@ class SystemErrataController < ApplicationController
   def get_errata start, finish, filter_type="All", errata_state="outstanding"
     types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
 
-    errata_list = []
-    100.times{ |num|
-      errata = OpenStruct.new
-      errata.errata_id = "RHSA-2011-01-#{num}"
-      errata.errata_type = types[rand(3)]
-      errata.product = "Red Hat Enterprise Linux 6.0"
-      errata_list << errata
-    }
-    
+    errata_list = @system.errata
+
     errata_list = filter_by_type(errata_list, filter_type)
     errata_list = filter_by_state(errata_list, errata_state)
     
     errata_list = errata_list.sort { |a,b|
-      a.errata_id.downcase <=> b.errata_id.downcase 
+      a.id.downcase <=> b.id.downcase 
     }
     
     total_errata = errata_list.length
@@ -89,7 +82,7 @@ class SystemErrataController < ApplicationController
       pulp_filter_type = get_pulp_filter_type(filter_type)
       
       errata_list.each{ |errata| 
-        if errata.errata_type == pulp_filter_type
+        if errata.type == pulp_filter_type
           filtered_list << errata
         end
       }
