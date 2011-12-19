@@ -476,6 +476,7 @@ Src::Application.routes.draw do
     end
     resources :roles do
       get :available_verbs, :on => :collection, :action => :available_verbs
+      resources :permissions, :only => [:index, :show, :create, :destroy]
     end
 
 
