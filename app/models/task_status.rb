@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class TaskStatus < ActiveRecord::Base
+  serialize :result
   serialize :progress
   serialize :parameters, Hash
   class Status

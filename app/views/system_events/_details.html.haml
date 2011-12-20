@@ -1,6 +1,25 @@
 = content_for :title do
-  = _("System Event Details") 
+  = type
 
 = content_for :subcontent do
-  #{type}
+  %h4
+    = format_time(task.created_at)
+
+  %fieldset
+    .grid_7
+      %h5 #{_("Summary")}
+    .grid_7.multiline
+      = user_message
+
+  %fieldset
+    .grid_7
+      %h5 #{_("Details")}
+    .grid_7.la
+      = status_message(task)
+
+  %fieldset
+    .grid_7
+      %h5 #{_("Result")}
+    .grid_7.multiline
+      = task.result
   

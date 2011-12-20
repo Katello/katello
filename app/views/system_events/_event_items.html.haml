@@ -3,12 +3,10 @@
 
   %tr{:class => cssclass + ' task'}
     %td.event_name{"data-pending-task-id" => (t.id if t.pending?)}
-      #{SystemTask::TYPES[t.task_type][:name]}
-    %td.event_date
-      = format_time(t.created_at)
-    %td
-      %a.event_status.event_status.subpanel_element{"data-url"=>system_event_path(system.id, t.id)}
+      %a.event_status.subpanel_element{"data-url"=>system_event_path(system.id, t.id)}
         - if t.pending?
           = image_tag("spinner.gif")
         = status_message(t)
+    %td.event_date
+      = format_time(t.created_at)
 
