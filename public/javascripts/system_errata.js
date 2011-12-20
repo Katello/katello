@@ -27,6 +27,7 @@ KT.system.errata = function() {
     		$('#select_all_errata').live('change', select_all_errata);
     		$('#errata_state_radio_applied').live('change', filter_errata);
     		$('#errata_state_radio_outstanding').live('change', filter_errata);
+            $('#run_errata_button').live('click', add_errata);
     		load_more.live('click', get_errata);
     	},
     	filter_errata = function(event){
@@ -73,6 +74,11 @@ KT.system.errata = function() {
     			update_counts();
     		});
     	},
+        add_errata = function(){
+            var selected_errata = $('input[@name=errata_checkbox]:checked');
+
+            set_status(selected_errata);
+        },
     	insert_data = function(html, append){
     		if( append ){
     			table_body.append(html);
@@ -100,7 +106,10 @@ KT.system.errata = function() {
     		} else {
 				$('#list-spinner').hide();
 			}	
-    	};
+    	},
+        set_status = function(items){
+            items.parent().parent().find('.errata_status').show();
+        };
 	    
     return {
         init	: init,

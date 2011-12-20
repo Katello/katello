@@ -40,7 +40,7 @@
           %th
             #{_("ERRATA")}
           %th
-            #{_("PRODUCT")}
+            #{_("TITLE")}
         %tbody
           = render :partial => "systems/errata/items", :locals => { :errata => errata, :editable => editable }
       #list-spinner
@@ -57,6 +57,7 @@
   
       - if editable
         %span.fr
-          = submit_tag _('Run'), :class => 'button', :id => 'add_errata', 'data-url' => system_errata_path(@system.id)
+          %button{ :class => 'button', :id => 'run_errata_button', 'data-url' => system_errata_path(@system.id) }
+            #{_('Run')}
         %span.fr
-          = submit_tag _('Cancel'), :class => 'button', :id => 'cancel_errata', 'data-url' => system_errata_path(@system.id)
+          = submit_tag _('Cancel'), :class => 'button', :id => 'cancel_errata_button', 'data-url' => system_errata_path(@system.id)
