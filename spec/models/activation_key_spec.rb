@@ -153,25 +153,46 @@ describe ActivationKey do
       Candlepin::Pool.stub!(:get) do |x|
         {
           :productName => "Blah Server OS",
-          :startDate => dates[x]
+          :productId => dates[x][:productId],
+          :startDate => dates[x][:startDate],
+          :quantity => dates[x][:quantity],
+          :consumed => dates[x][:consumed],
         }
       end
-      @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"})
+      @system = System.new(:name => "test", :cp_type => "system", :facts => {"distribution.name"=>"Fedora"}, :uuid => "uuid-uuid")
+      @system.should_receive(:sockets).and_return(sockets)
       dates.each_pair do |k,v|
         pool = KTPool.create!(:cp_id => k)
-        @akey.key_pools.create!(:pool_id  => pool.id, :allocated => 2)
+        @akey.key_pools.create!(:pool_id  => pool.id)
+      end
+    end
+
+    describe "with no pools" do
+      let(:dates) do {} end
+      let(:sockets) { 1 }
+
+      it "consumes the correct entitlement" do
+        @akey.pools.size.should == 0
+        @akey.subscribe_system(@system)
+        # no exception should be thrown
       end
     end
 
     describe "entitlement out of one" do
       let(:dates) do
         {
-          "a" => "2011-02-11T11:11:11.111+0000",
+          "a" => {
+            :productId => "A",
+            :startDate => "2011-02-11T11:11:11.111+0000",
+            :quantity => 10,
+            :consumed => 0,
+          }
         }
       end
+      let(:sockets) { 1 }
 
       it "consumes the correct entitlement" do
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "a", 2)
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "a", 1)
         @akey.pools.size.should == 1
         @akey.subscribe_system(@system)
       end
@@ -180,30 +201,25 @@ describe ActivationKey do
     describe "entitlement with most recent date out of two" do
       let(:dates) do
         {
-          "a" => "2011-02-11T11:11:11.111+0000",
-          "b" => "2011-03-11T11:11:11.111+0000",
+          "a" => {
+            :productId => "A",
+            :startDate => "2011-01-02T11:11:11.111+0000",
+            :quantity => 10,
+            :consumed => 0,
+          },
+          "b" => {
+            :productId => "A",
+            :startDate => "2011-01-01T11:11:11.111+0000", # older
+            :quantity => 10,
+            :consumed => 0,
+          }
         }
       end
+      let(:sockets) { 1 }
 
       it "consumes the correct entitlement" do
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "b", 2)
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "b", 1)
         @akey.pools.size.should == 2
-        @akey.subscribe_system(@system)
-      end
-    end
-
-    describe "entitlement with most recent date out of three" do
-      let(:dates) do
-        {
-          "a" => "2011-02-11T11:11:11.111+0000",
-          "b" => "2011-03-11T11:11:11.111+0000",
-          "c" => "2011-01-11T11:11:11.111+0000",
-        }
-      end
-
-      it "consumes the correct entitlement" do
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "b", 2)
-        @akey.pools.size.should == 3
         @akey.subscribe_system(@system)
       end
     end
@@ -211,15 +227,292 @@ describe ActivationKey do
     describe "entitlement with least number available out of three" do
       let(:dates) do
         {
-          "a" => "2011-01-11T11:11:11.111+0000",
-          "b" => "2011-01-11T11:11:11.111+0000",
-          "c" => "2011-01-11T11:11:11.111+0000",
+          "b" => {
+            :productId => "A",
+            :startDate => "2011-01-11T11:11:11.111+0000",
+            :quantity => 10,
+            :consumed => 0,
+          },
+          "c" => {
+            :productId => "A",
+            :startDate => "2011-01-11T11:11:11.111+0000",
+            :quantity => 10,
+            :consumed => 0,
+          },
+          "a" => {
+            :productId => "A",
+            :startDate => "2011-01-11T11:11:11.111+0000",
+            :quantity => 10,
+            :consumed => 0,
+          }
         }
       end
+      let(:sockets) { 1 }
 
       it "consumes the correct entitlement" do
-        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "a", 2)
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "a", 1)
         @akey.pools.size.should == 3
+        @akey.subscribe_system(@system)
+      end
+    end
+
+    # see https://fedorahosted.org/katello/wiki/ActivationKeysDesign for more info
+    describe "consume 1 entitlement in S1 (5-5)" do
+      let(:dates) do
+        {
+          "pool 1" => {
+            :productId => "product 1",
+            :startDate => "2011-01-11T11:11:11.111+0000",
+            :quantity => 5,
+            :consumed => 0,
+          },
+          "pool 2" => {
+            :productId => "product 2",
+            :startDate => "2011-01-11T11:11:11.111+0000",
+            :quantity => 5,
+            :consumed => 0,
+          },
+        }
+      end
+      let(:sockets) { 1 }
+
+      it "consumes the correct entitlement" do
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 1)
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 1)
+        @akey.subscribe_system(@system)
+      end
+    end
+
+    # see https://fedorahosted.org/katello/wiki/ActivationKeysDesign for more info
+    describe "consume 8 entitlements in S2 (5-5) - older" do
+      let(:dates) do
+        {
+          "pool 1" => {
+            :productId => "product 1",
+            :startDate => "2011-01-02T00:00:00.000+0000",
+            :quantity => 5,
+            :consumed => 0,
+          },
+          "pool 2" => {
+            :productId => "product 1",
+            :startDate => "2011-01-01T00:00:00.000+0000", # older
+            :quantity => 5,
+            :consumed => 0,
+          },
+        }
+      end
+      let(:sockets) { 8 }
+
+      it "consumes the correct entitlement" do
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 5)
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 3)
+        @akey.subscribe_system(@system)
+      end
+    end
+
+    # see https://fedorahosted.org/katello/wiki/ActivationKeysDesign for more info
+    describe "consume 1 entitlement in S2 (5-5) - older" do
+      let(:dates) do
+        {
+          "pool 1" => {
+            :productId => "product 1",
+            :startDate => "2011-01-02T00:00:00.000+0000",
+            :quantity => 5,
+            :consumed => 0,
+          },
+          "pool 2" => {
+            :productId => "product 1",
+            :startDate => "2011-01-01T00:00:00.000+0000", # older
+            :quantity => 5,
+            :consumed => 0,
+          },
+        }
+      end
+      let(:sockets) { 1 }
+
+      it "consumes the correct entitlement" do
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 1)
+        @akey.subscribe_system(@system)
+      end
+    end
+
+    # see https://fedorahosted.org/katello/wiki/ActivationKeysDesign for more info
+    describe "consume 1 entitlement in S2 (5-5) - higher number" do
+      let(:dates) do
+        {
+          "pool 1" => {
+            :productId => "product 1",
+            :startDate => "2011-01-01T00:00:00.000+0000",
+            :quantity => 5,
+            :consumed => 0,
+          },
+          "pool 2" => {
+            :productId => "product 1",
+            :startDate => "2011-01-01T00:00:00.000+0000",
+            :quantity => 5,
+            :consumed => 0,
+          },
+        }
+      end
+      let(:sockets) { 1 }
+
+      it "consumes the correct entitlement" do
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 1)
+        @akey.subscribe_system(@system)
+      end
+    end
+
+    # see https://fedorahosted.org/katello/wiki/ActivationKeysDesign for more info
+    describe "consume 2 entitlements in S1 (0-2) - zero" do
+      let(:dates) do
+        {
+          "pool 1" => {
+            :productId => "product 1",
+            :startDate => "2011-01-01T00:00:00.000+0000",
+            :quantity => 0,
+            :consumed => 0,
+          },
+          "pool 2" => {
+            :productId => "product 2",
+            :startDate => "2011-01-01T00:00:00.000+0000",
+            :quantity => 2,
+            :consumed => 0,
+          },
+        }
+      end
+      let(:sockets) { 2 }
+
+      it "consumes the correct entitlement" do
+        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough entitlements/)
+      end
+    end
+
+    # see https://fedorahosted.org/katello/wiki/ActivationKeysDesign for more info
+    describe "consume 2 entitlements in S1 (0-2) - all consumed" do
+      let(:dates) do
+        {
+          "pool 1" => {
+            :productId => "product 1",
+            :startDate => "2011-01-01T00:00:00.000+0000",
+            :quantity => 99,
+            :consumed => 99,
+          },
+          "pool 2" => {
+            :productId => "product 2",
+            :startDate => "2011-01-01T00:00:00.000+0000",
+            :quantity => 2,
+            :consumed => 0,
+          },
+        }
+      end
+      let(:sockets) { 2 }
+
+      it "consumes the correct entitlement" do
+        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough entitlements/)
+      end
+    end
+
+    # see https://fedorahosted.org/katello/wiki/ActivationKeysDesign for more info
+    describe "consume 2 entitlement(s) in S2 (0-2)" do
+      let(:dates) do
+        {
+          "pool 1" => {
+            :productId => "product 1",
+            :startDate => "2011-01-01T00:00:00.000+0000",
+            :quantity => 5, # 0 remaining
+            :consumed => 5,
+          },
+          "pool 2" => {
+            :productId => "product 1",
+            :startDate => "2011-01-01T00:00:00.000+0000",
+            :quantity => 5, # 2 remaining
+            :consumed => 3,
+          },
+        }
+      end
+      let(:sockets) { 2 }
+
+      it "consumes the correct entitlement" do
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 2)
+        @akey.subscribe_system(@system)
+      end
+    end
+
+    # see https://fedorahosted.org/katello/wiki/ActivationKeysDesign for more info
+    describe "consume 2 entitlements in S1 (1-1) - first fails" do
+      let(:dates) do
+        {
+          "pool 1" => {
+            :productId => "product 1",
+            :startDate => "2011-01-01T00:00:00.000+0000", # older
+            :quantity => 1,
+            :consumed => 0,
+          },
+          "pool 2" => {
+            :productId => "product 2",
+            :startDate => "2011-01-02T00:00:00.000+0000",
+            :quantity => 2, # 1 remaining
+            :consumed => 1,
+          },
+        }
+      end
+      let(:sockets) { 2 }
+
+      it "consumes the correct entitlement" do
+        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough entitlements/)
+      end
+    end
+
+    # see https://fedorahosted.org/katello/wiki/ActivationKeysDesign for more info
+    describe "consume 2 entitlements in S1 (1-1) - second fails with rollback" do
+      let(:dates) do
+        {
+          "pool 1" => {
+            :productId => "product 1",
+            :startDate => "2011-01-01T00:00:00.000+0000", # older
+            :quantity => 2,
+            :consumed => 0,
+          },
+          "pool 2" => {
+            :productId => "product 2",
+            :startDate => "2011-01-02T00:00:00.000+0000",
+            :quantity => 2, # 1 remaining
+            :consumed => 1,
+          },
+        }
+      end
+      let(:sockets) { 2 }
+
+      it "consumes the correct entitlement" do
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 2).and_return([ { "id" => "ent1" } ])
+        Candlepin::Consumer.should_receive(:remove_entitlement).with(@system.uuid, "ent1")
+        lambda { @akey.subscribe_system(@system) }.should raise_error(RuntimeError, /^Not enough entitlements/)
+      end
+    end
+
+    # see https://fedorahosted.org/katello/wiki/ActivationKeysDesign for more info
+    describe "consume 2 entitlements in S2 (1-1)" do
+      let(:dates) do
+        {
+          "pool 1" => {
+            :productId => "product 1",
+            :startDate => "2011-01-01T00:00:00.000+0000", # same date
+            :quantity => 5, # 1 remaining
+            :consumed => 4,
+          },
+          "pool 2" => {
+            :productId => "product 1",
+            :startDate => "2011-01-01T00:00:00.000+0000", # same date
+            :quantity => 5, # 1 remaining
+            :consumed => 4,
+          },
+        }
+      end
+      let(:sockets) { 2 }
+
+      it "consumes the correct entitlement" do
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 1", 1)
+        Candlepin::Consumer.should_receive(:consume_entitlement).with(@system.uuid, "pool 2", 1)
         @akey.subscribe_system(@system)
       end
     end

@@ -453,7 +453,9 @@ Src::Application.routes.draw do
       resources :templates, :only => [:index]
     end
 
-
+    resources :gpg_keys, :only => [] do
+      get :content, :on => :member
+    end
 
     resources :activation_keys do
       post :pools, :action => :add_pool, :on => :member
@@ -466,8 +468,17 @@ Src::Application.routes.draw do
 
     resources :users do
       get :report, :on => :collection
+      resources :roles, :controller => :users do
+       post   :index, :on => :collection, :action => :add_role
+       delete :destroy, :on => :member, :action => :remove_role
+       get    :index, :on => :collection, :action => :list_roles
+      end
     end
-    resources :roles
+    resources :roles do
+      get :available_verbs, :on => :collection, :action => :available_verbs
+      resources :permissions, :only => [:index, :show, :create, :destroy]
+    end
+
 
     resources :tasks, :only => [:show]
 

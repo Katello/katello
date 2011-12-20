@@ -31,7 +31,7 @@ var env_select =   {
     //    the widget is populated with a new org.
     // 4. Finally in this example case, once the new env is successfully saved the button should be disabled
     //    and the original env updated. (see user_methods.js)
-    env_changed_callback: undefined,
+    env_changed_callback: function(env_id) {},
 
     active_div:  undefined,
     recalc_scroll: function() {
