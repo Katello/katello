@@ -17,16 +17,13 @@ class SystemTemplatesController < ApplicationController
   before_filter :find_template, :only =>[:update, :edit, :destroy, :show, :download, :object, :update_content]
   before_filter :find_read_only_template, :only =>[:promotion_details]
 
-
   #around_filter :catch_exceptions
 
   def section_id
     'contents'
   end
 
-
   def rules
-
     read_test = lambda{SystemTemplate.readable?(current_organization)}
     manage_test = lambda{SystemTemplate.manageable?(current_organization)}
     {
@@ -39,6 +36,7 @@ class SystemTemplatesController < ApplicationController
       :show => read_test,
       :edit => read_test,
       :download => read_test,
+      :product_repos => read_test,
       :product_packages => read_test,
       :product_comps => read_test,
       :update => manage_test,
@@ -48,7 +46,6 @@ class SystemTemplatesController < ApplicationController
       :create => manage_test,
     }
   end
-
 
   def index
     @environment = current_organization.locker
@@ -65,9 +62,8 @@ class SystemTemplatesController < ApplicationController
       distro_map[prod.id] = prod.distributions(current_organization.locker)
     }
 
-
     retain_search_history
-    render :index, :locals=>{:editable=>SystemTemplate.manageable?(current_organization),
+    render :index, :locals=>{:editable=>SystemTemplate.manageable?(current_organization), :environment => @environment,
                              :product_hash => product_hash, :package_groups => package_groups, :distro_map=>distro_map}
   end
   
@@ -95,14 +91,19 @@ class SystemTemplatesController < ApplicationController
     pkgs = @template.packages.collect{|pkg| {:name=>pkg.package_name}}
     products = @template.products.collect{|prod| {:name=>prod.name, :id=>prod.id}}
     distro = @template.distributions.empty? ? nil : @template.distributions.first.distribution_pulp_id
+    repos = @template.repositories.collect{|repo| {:name=>repo.name, :id=>repo.id}}
+
     # Collect up the environments for all templates with this name 
     @templates = SystemTemplate.where(:name => @template.name).joins(:environment).
         where("environments.organization_id =  :org_id", :org_id=>current_organization.id)
+
     environments = @templates.collect{|template| {:name=>template.environment.name, :id=>template.environment.id}}
     groups = @template.package_groups.collect{|grp| {:name=>grp.name}}
+
     to_ret = {:id=> @template.id, :name=>@template.name, :description=>@template.description,
-              :packages=>pkgs, :products=>products, :package_groups=>groups, :environments => environments,
-              :distribution=>distro}
+              :packages=>pkgs, :products=>products, :repos=>repos, :package_groups=>groups,
+              :environments => environments, :distribution=>distro}
+
     render :json=>to_ret
   end
 
@@ -111,7 +112,6 @@ class SystemTemplatesController < ApplicationController
            :locals => {:template=>@template,
                        :editable=> SystemTemplate.manageable?(current_organization)}
   end
-
 
   def product_packages
     @product = Product.readable(current_organization).find(params[:product_id])
@@ -122,11 +122,9 @@ class SystemTemplatesController < ApplicationController
         }
       }
 
-
     @packages = trim @packages
 
     render :partial=>"product_packages"
-
   end
 
   def product_comps
@@ -147,6 +145,10 @@ class SystemTemplatesController < ApplicationController
     render :partial=>"product_comps"
   end
 
+  def product_repos
+    @product = Product.readable(current_organization).find(params[:product_id])
+    render :partial=>"product_repos", :locals => {:current_organization => current_organization.locker}
+  end
 
   def update_content
     
@@ -154,6 +156,7 @@ class SystemTemplatesController < ApplicationController
     products = params[:products]
     pkg_groups = params[:package_groups]
     distro = params[:distribution]
+    repos = params[:repos]
 
     @template.packages.delete_all
     pkgs.each{|pkg|
@@ -164,7 +167,12 @@ class SystemTemplatesController < ApplicationController
     products.each{|prod|
       @template.products << Product.readable(current_organization).find(prod[:id])
     }
-    
+
+    @template.repositories = []
+    repos.each{|repo|
+      @template.repositories << Repository.readable(current_organization.locker).where(:name => repo[:name])
+    }
+
     @template.package_groups = []
     pkg_groups.each{|grp|
       @template.add_package_group(grp[:name])
@@ -198,7 +206,6 @@ class SystemTemplatesController < ApplicationController
   end
 
   def destroy
-      
       @template.destroy
       notice _("Template '#{@template.name}' was deleted.")
       render :partial => "common/list_remove", :locals => {:id => @template.id, :name=>"details"}
@@ -238,7 +245,6 @@ class SystemTemplatesController < ApplicationController
   end
 
   def create
-    
     obj_params = params[:system_template]
     obj_params[:environment_id] = current_organization.locker.id
 
@@ -267,8 +273,6 @@ class SystemTemplatesController < ApplicationController
       notice _("Template '#{@template.name}' has been updated successfully, however you have removed a product that "+
                    "contained the selected distribution for this template.  " +
                    "Please select another distribution to ensure a working system template."), :level=>:warning
-
-
     end
   end
 
@@ -283,7 +287,6 @@ class SystemTemplatesController < ApplicationController
     errors e
     render :text=>e, :status=>400 and return false
   end
-
 
   def trim list
     list.sort!.uniq!

@@ -48,6 +48,9 @@ class SystemTemplate < ActiveRecord::Base
   has_many :pg_categories, :class_name => "SystemTemplatePgCategory", :inverse_of => :system_template, :dependent => :destroy
   has_many :distributions, :class_name => "SystemTemplateDistribution", :inverse_of => :system_template, :dependent => :destroy
 
+  has_many :system_template_repositories, :dependent => :destroy
+  has_many :repositories, :through => :system_template_repositories
+
   attr_accessor :host_group
   lazy_accessor :parameters, :initializer => lambda { init_parameters }, :unless => lambda { false }
 

@@ -1,0 +1,9 @@
+%ul.expand_list
+  -if @product.repos(current_organization).empty?
+    #{_("No repositories available.")}
+  - @product.repos(current_organization).each do |repo|
+    %li
+      %a{:class => "fr repo_add_remove st_button", "data-name"=> repo.name, :id => "add_remove_repo_#{repo.name}"}= "+ #{_("Add")}"
+      .no_slide.simple_link
+        %span.block{"data-name"=>repo.name}
+          = repo.name
