@@ -106,6 +106,14 @@ module Glue::Pulp::Consumer
       raise e
     end
 
+    def install_consumer_errata errata_ids
+      Rails.logger.info "Scheduling errata install for consumer #{self.name}"
+      pulp_task = Pulp::Consumer.install_errata(self.uuid, errata_ids)
+    rescue => e
+      Rails.logger.error "Failed to schedule errata install for pulp consumer #{self.name}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
     def save_pulp_orchestration
       case orchestration_for
         when :create
