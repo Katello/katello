@@ -36,4 +36,22 @@ $(document).ready(function() {
     clickableNodeNames: true,
     onNodeShow: function(){$.sparkline_display_visible()}
   });
+
+  $('#unsubscribe').live('submit', function(e) {
+    e.preventDefault();
+    var button = $(this).find('input[type|="submit"]');
+    button.attr("disabled","disabled");
+    $(this).ajaxSubmit({
+         success: function(data) {
+             button.removeAttr('disabled');
+             notices.checkNotices();
+             var id = $('#panel_element_id')
+             KT.panel.list.refresh(id.attr('value'), id.attr('data-ajax_url'));
+         }, error: function(e) {
+             button.removeAttr('disabled');
+             notices.checkNotices();
+         }
+     });
+  });
+
 });
