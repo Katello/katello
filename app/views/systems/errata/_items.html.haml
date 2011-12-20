@@ -1,11 +1,16 @@
 -errata.each do |e|
-  %tr
+  %tr{ :id => "system_errata_#{e.id}" }
     - if editable
       %td
-        = check_box_tag "select_all", "select_all"
+        = check_box_tag "errata_checkbox", e.id
     %td
       %div{:class=>errata_type_class(e)}
     %td.one-line-ellipsis
       = e.id
     %td.one-line-ellipsis
-      = e.title
+      %span
+        = e.title
+      %span.errata_status.fr.hidden
+        = image_tag('spinner.gif', :alt => _('Loading'))
+        %span.errata_status_text
+          #{_('Running')}
