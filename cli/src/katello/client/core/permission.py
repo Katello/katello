@@ -66,27 +66,19 @@ class ListAvailableVerbs(PermissionAction):
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org', help=_("organization name eg: foo.example.com,\nlists organization specific verbs"))
-        self.parser.add_option('--global', dest='global', action="store_true", help=_("list scopes and verbs available globally"))
         self.parser.add_option('--scope', dest='scope', help=_("filter listed results by scope"))
-
-    def check_options(self):
-        if not self.has_option('global'):
-            self.require_option('org')
 
     def run(self):
         scope = self.get_option('scope')
-        listGlobal = self.has_option('global')
-        if not listGlobal:
-            orgName = self.get_option('org')
-        else:
-            orgName = None
-
+        orgName = self.get_option('org')
+        listGlobal = not self.has_option('org')
 
         self.setOutputMode()
 
         self.printer.addColumn("scope")
         self.printer.addColumn("available_verbs", multiline=True)
-        self.printer.addColumn("available_tags", multiline=True, show_in_grep=False)
+        if not listGlobal:
+            self.printer.addColumn("available_tags", multiline=True, show_in_grep=False)
 
         permissions = self.getPermissions(orgName, scope)
         display_data = self.formatDisplayData(permissions, listGlobal)
