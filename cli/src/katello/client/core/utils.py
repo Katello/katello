@@ -19,7 +19,7 @@ import sys
 import time
 import threading
 import time
-from katello.client.api.task_status import TaskStatusAPI
+from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
 
 try:
     import json
@@ -554,9 +554,11 @@ class AsyncTask():
         else:
             self._tasks = task
 
+    def status_api(self):
+        return TaskStatusAPI()
+
     def update(self):
-        status_api = TaskStatusAPI()
-        self._tasks = [status_api.status(t['uuid']) for t in self._tasks]
+        self._tasks = [self.status_api().status(t['uuid']) for t in self._tasks]
 
     def get_progress(self):
         return progress(self.items_left(), self.total_count())
@@ -595,7 +597,7 @@ class AsyncTask():
         return [err for task in self._tasks if 'error_details' in task['progress'] for err in task['progress']['error_details']]
 
     def errors(self):
-        return [json.loads(task["result"])["errors"] for task in self._tasks]
+        return [task["result"]["errors"] for task in self._tasks]
 
     def _get_progress_sum(self, name):
         return sum([t['progress'][name] for t in self._tasks])
@@ -608,6 +610,15 @@ class AsyncTask():
 
     def get_subtasks(self):
         return [AsyncTask(t) for t in self._tasks]
+
+# Envelope around system task status structure. Besides the standard AsyncTask
+# it has description and result_description specified
+class SystemAsyncTask(AsyncTask):
+    def status_api(self):
+        return SystemTaskStatusAPI()
+
+    def get_result_description(self):
+        return ", ".join([task["result_description"] for task in self._tasks])
 
 
 

@@ -18,10 +18,11 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.system import SystemAPI
+from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, Printer, convert_to_mime_type, attachment_file_name, save_report
-from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
+from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, format_task_errors
 import re
 
 Config()
@@ -200,19 +201,17 @@ class InstalledPackages(SystemAction):
             task = self.api.remove_package_groups(system_id, remove_groups.split(packages_separator))
 
         if task:
-            task = AsyncTask(task)
-            run_spinner_in_bg(wait_for_async_task, [task], message=_("Performing remote action... "))
+            uuid = task["uuid"]
+            print (_("Performing remote action [ %s ]... ") % uuid)
+            task = SystemAsyncTask(task)
+            run_spinner_in_bg(wait_for_async_task, [task])
             if task.succeeded():
-                print _("Remote action finished")
+                print _("Remote action finished:")
+                print task.get_result_description()
                 return os.EX_OK
             else:
-                error_message = format_task_errors(task.errors())
-                # On installation, Pulp returns not-readable message, we don't need to show it to the user.
-                # TODO: once Pulp returns something meaningful, remove this condition!
-                if re.match('^\(', error_message):
-                    print _("Remote action failed")
-                else:
-                    print (_("Remote action failed: %s") % error_message)
+                print _("Remote action failed:")
+                print task.get_result_description()
                 return os.EX_DATAERR
 
         packages = self.api.packages(system_id)
@@ -236,6 +235,83 @@ class InstalledPackages(SystemAction):
         self.printer.printItems(packages)
 
         return os.EX_OK
+
+class TasksList(SystemAction):
+
+    description = _('display status of remote tasks')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                       help=_("system name"))
+        self.parser.add_option('--environment', dest='environment',
+                       help=_("environment name"))
+
+    def check_options(self):
+        self.require_option('org')
+
+    def run(self):
+        org_name = self.get_option('org')
+        env_name = self.get_option('environment')
+        sys_name = self.get_option('name')
+        verbose = self.get_option('verbose')
+
+        self.printer.setHeader(_("Remote tasks"))
+
+        tasks = self.api.tasks(org_name, env_name, sys_name)
+
+
+        for t in tasks:
+            t['result'] = "\n" + t['result_description']
+
+        if verbose:
+            self.printer.addColumn('system_name', name=_("System"))
+            self.printer.addColumn('description', name=_("Action"))
+            self.printer.addColumn('created_at', name=_("Started"), time_format=True)
+            self.printer.addColumn('finish_time', name=_("Finished"), time_format=True)
+            self.printer.addColumn('state', name=_("Status"))
+            self.printer.addColumn('result', name=_("Result"))
+        else:
+            self.printer.addColumn('uuid', name=_("Task id"))
+            self.printer.addColumn('system_name', name=_("System"))
+            self.printer.addColumn('description', name=_("Action"))
+            self.printer.addColumn('state', name=_("Status"))
+
+        self.printer.printItems(tasks)
+
+        return os.EX_OK
+
+class TaskInfo(SystemAction):
+
+    description = _('display status of remote task')
+
+    def setup_parser(self):
+        self.parser.add_option('--id', dest='id',
+                       help=_("UUID of the task"))
+
+    def check_options(self):
+        self.require_option('id')
+
+    def run(self):
+        uuid = self.get_option('id')
+
+        self.printer.setHeader(_("Remote task"))
+
+        task = SystemTaskStatusAPI().status(uuid)
+        task['result'] = "\n" + task['result_description']
+
+        self.printer.addColumn('system_name', name=_("System"))
+        self.printer.addColumn('description', name=_("Action"))
+        self.printer.addColumn('created_at', name=_("Started"), time_format=True)
+        self.printer.addColumn('finish_time', name=_("Finished"), time_format=True)
+        self.printer.addColumn('state', name=_("Status"))
+        self.printer.addColumn('result', name=_("Result"))
+        self.printer.printItem(task)
+
+        return os.EX_OK
+
+
 
 class Facts(SystemAction):
 
