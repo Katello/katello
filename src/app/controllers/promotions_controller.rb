@@ -64,7 +64,7 @@ class PromotionsController < ApplicationController
 
 
   def packages
-    new_packages
+    old_packages  #switch to new once bz 765849 is resolved
   end
 
   def new_packages
