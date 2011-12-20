@@ -33,8 +33,10 @@ class SystemAPI(KatelloAPI):
           "name": name,
           "cp_type": cp_type,
           "facts": {
-            "distribution.name": "Fedora"
-          }
+              # TODO - provide real facts
+              "distribution.name": "Fedora",
+              "cpu.cpu_socket(s)": "1"
+              }
         }
         if activation_keys:
             sysdata["activation_keys"] = activation_keys
