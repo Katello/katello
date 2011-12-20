@@ -117,7 +117,7 @@ KT.events = function() {
                 if(node !== undefined) {
                     node.removeAttr("data-pending-task-id");
                     msg = KT.event_types[status["task_type"]]["event_messages"][status["state"]];
-                    node.parent().find(".event_status").text(msg);
+                    node.find(".event_status").text(msg);
                 }
             }
         });

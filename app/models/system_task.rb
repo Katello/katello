@@ -28,6 +28,7 @@ class SystemTask < ActiveRecord::Base
               :cancelled => _('Add Package Canceled'),
               :timeout => _('Add Package Timed Out')
           },
+         :user_message => _('Package Install scheduled by %s')
       },
       :package_update => {
           :name => _("Package Update"),
@@ -40,6 +41,7 @@ class SystemTask < ActiveRecord::Base
               :cancelled => _('Update Package Canceled'),
               :timeout => _('Update Package Timed Out')
           },
+          :user_message => _('Package Update scheduled by %s')
       },
       :package_remove => {
           :name => _("Package Remove"),
@@ -52,6 +54,7 @@ class SystemTask < ActiveRecord::Base
               :cancelled => _('Remove Package Canceled'),
               :timeout => _('Remove Package Timed Out')
           },
+          :user_message => _('Package Remove scheduled by %s')
       },
       #package group tasks
       :package_group_install => {
@@ -65,6 +68,7 @@ class SystemTask < ActiveRecord::Base
               :cancelled => _('Add Package Group Canceled'),
               :timeout => _('Add Package Group Timed Out')
           },
+          :user_message => _('Package Group Install scheduled by %s')
       },
       :package_group_update => {
           :name => _("Package Group Update"),
@@ -77,6 +81,7 @@ class SystemTask < ActiveRecord::Base
               :cancelled => _('Update Package Group Canceled'),
               :timeout => _('Update Package Group Timed Out')
           },
+          :user_message => _('Package Group Update scheduled by %s')
       },
       :package_group_remove => {
           :name => _("Package Group Remove"),
@@ -89,6 +94,7 @@ class SystemTask < ActiveRecord::Base
               :cancelled => _('Remove Package Group Canceled'),
               :timeout => _('Remove Package Group Timed Out')
           },
+          :user_message => _('Package Group Remove scheduled by %s')
       },
 
   }.with_indifferent_access

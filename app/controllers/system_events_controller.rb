@@ -39,9 +39,12 @@ class SystemEventsController < ApplicationController
 
   def show
     # details
-    task = @system.tasks.where("#{TaskStatus.table_name}.id" => params[:id])
-    type = SystemTask::TYPES[task.first.task_type][:name]
-    render :partial=>"details", :layout => "tupane_layout", :locals=>{:type => type, :system => @system, :task =>task}
+    task = @system.tasks.where("#{TaskStatus.table_name}.id" => params[:id]).first
+    task_template = SystemTask::TYPES[task.task_type]
+    type = task_template[:name]
+    user_message = task_template[:user_message] % task.user.username
+    render :partial=>"details", :layout => "tupane_layout", :locals=>{:type => type, :user_message => user_message,
+                                                                          :system => @system, :task =>task}
   end
 
   def status
