@@ -44,44 +44,7 @@
   	KT.panel.list.registerPage('systems', options);
 }());
 
-
 $(document).ready(function() {
-  $('#update_subscriptions').live('submit', function(e) {
-     e.preventDefault();
-     var button = $(this).find('input[type|="submit"]');
-      button.attr("disabled","disabled");
-     $(this).ajaxSubmit({
-         success: function(data) {
-               button.removeAttr('disabled');
-               notices.checkNotices();
-         }, error: function(e) {
-               button.removeAttr('disabled');
-               notices.checkNotices();
-         }
-     });
-  });
-
-  //Set the callback on the environment selector
-  /*env_select.click_callback = function(env_id) {
-    KT.subs.save_selected_environment(env_id);
-   };*/
-  // check if we are viewing systems by environment
-  
-  	/*var selected = $.bbq.getState("env_id");
-	if(selected !== undefined) {
-		env_select.set_selected(selected);
-	}
-   
-  if (window.env_select !== undefined) {
-    env_select.click_callback = KT.systems_page.env_change;
-  }
-    //env_select.click_callback = systems_page.env_change;
-    $.bbq.pushState({env_id : env_select.get_selected_env()});
-    env_select.click_callback = function(env_id) {
-        $.bbq.pushState({env_id : env_id});
-    };
-  }*/
-
   KT.panel.set_expand_cb(function() {
     KT.subs.initialize_edit();
   });

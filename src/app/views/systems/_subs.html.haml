@@ -1,4 +1,5 @@
 = include_javascripts :treetable
+= javascript :system_subscriptions
 .grid_8
   %h5
     = form_tag system_path(@system), :id=>"autoheal_form", :method=>"put", :remote=>true do
@@ -48,7 +49,7 @@
       - if editable && consumed_entitlements.length > 0
         .actions
           %a{:class=>'dialogbutton button disabled', :id=>"fake_unsub_submit"} #{_('Unsubscribe')}
-          = submit_tag _('Unsubscribe'), :class => 'submit dialogbutton', :id=>"unsub_submit"
+          = submit_tag _('Unsubscribe'), :class => 'update_subscriptions submit dialogbutton', :id=>"unsub_submit"
 .grid_8
   = form_tag update_subscriptions_system_path, :id=>"subscribe", :method=>"post", :remote=>true do
     %h5 #{_("Available Subscriptions")}
