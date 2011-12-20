@@ -8,14 +8,16 @@
     %div{:class => 'column_2'}
       = get_checkin(item)
   %div
-    %div{:class => 'column_1', :style => "padding-left: 2em;"}
+    %div{:class => 'column_1'}
       %ul
         %li
+          &nbsp;&nbsp;
           = _('OS: ')
           = item.send('distribution_name')
           &nbsp;&nbsp;
           = item.send('arch')
         %li
+          &nbsp;&nbsp;
           = _('IP: ')
           = item.send('ip')
   .arrow-right
