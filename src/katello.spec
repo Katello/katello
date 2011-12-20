@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.148
+Version:        0.1.149
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -346,6 +346,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Dec 20 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.149-1
+- 
+
 * Mon Dec 19 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.148-1
 - Revert "765888 - Error during promotion"
 - ak - fixing unit tests
