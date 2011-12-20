@@ -14,12 +14,9 @@
         %thead
           %th
             %a#event_sort{"data-sort"=>"asc", :class=>"ascending"}
-              #{_("Name")}
+              #{_("Event")}
           %th
-            #{_("Date Added")}
-          %th
-            #{_("Status")}
-
+            #{_("Date Created")}
         %tbody
           = render :partial => 'event_items', :locals => {:system => system, :tasks => tasks}
       #list-spinner
