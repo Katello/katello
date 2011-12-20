@@ -127,7 +127,7 @@ class SystemTemplate < ActiveRecord::Base
     verrors = []
 
     # (1)
-    verrors << _("At least one product must be present to export a TDL") if self.products.count < 1
+    verrors << _("At least one product or repository must be present to export a TDL") if (self.products.count < 1 and self.repositories.count < 1)
 
     # (2)
     verrors << _("Exactly one distribution must be present to export a TDL") if self.distributions.count != 1
@@ -204,6 +204,14 @@ class SystemTemplate < ActiveRecord::Base
               xm.clientkey uebercert[:key] unless uebercert.nil?
             }
           end
+        end
+        self.repositories.each do |repo|
+          xm.repository("name" => repo.name) {
+            xm.url repo.uri
+            xm.persisted "No"
+            xm.clientcert uebercert[:cert] unless uebercert.nil?
+            xm.clientkey uebercert[:key] unless uebercert.nil?
+          }
         end
       }
     }
