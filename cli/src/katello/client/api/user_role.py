@@ -52,3 +52,9 @@ class UserRoleAPI(KatelloAPI):
         data = self.update_dict(data, "description", desc)
         path = "/api/roles/%s" % str(role_id)
         return self.server.PUT(path, {"role": data})[1]
+
+    def available_verbs(self, orgName):
+        data = {}
+        data = self.update_dict(data, "organization_id", orgName)
+        path = "/api/roles/available_verbs/"
+        return self.server.GET(path, data)[1]

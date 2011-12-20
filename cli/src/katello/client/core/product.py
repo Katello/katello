@@ -230,6 +230,8 @@ class Promote(SingleProductAction):
         if (prod == None):
             return os.EX_DATAERR
 
+        returnCode = os.EX_OK
+
         cset = self.csapi.create(orgName, env["id"], self.create_cs_name())
         try:
             self.csapi.add_content(cset["id"], "products", {'product_id': prod['id']})
@@ -238,15 +240,22 @@ class Promote(SingleProductAction):
 
             run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the product, please wait... "))
 
-        finally:
-            self.csapi.delete(cset["id"])
             if task.succeeded():
                 print _("Product [ %s ] promoted to environment [ %s ] " % (prodName, envName))
-                return os.EX_OK
+                returnCode = os.EX_OK
             else:
                 print _("Product [ %s ] promotion failed: %s" % (prodName, format_task_errors(task.errors())) )
-                return os.EX_DATAERR
-       
+                returnCode = os.EX_DATAERR
+
+        except Exception as e:
+            #exception message is printed from action's main method
+            raise e
+
+        finally:
+            self.csapi.delete(cset["id"])
+        
+        return returnCode
+
     def create_cs_name(self):
         curTime = datetime.datetime.now()
         return "product_promotion_"+str(curTime)
