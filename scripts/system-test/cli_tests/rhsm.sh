@@ -10,6 +10,7 @@ RHSM_YPROV="yum_$RAND"
 CS1_NAME="changeset_$RAND"
 RHSM_REPO="http://lzap.fedorapeople.org/fakerepos/zoo/"
 RHSM_YPROD="yum_product_$RAND"
+HOST="$(hostname)_$RAND"
 
 sm_present() {
   which subscription-manager &> /dev/null
@@ -31,16 +32,16 @@ if sm_present; then
   test_own_cmd_success "rhsm show organizations" sudo subscription-manager orgs --username=$USER --password=$PASSWORD
   test_own_cmd_success "rhsm show environments" sudo subscription-manager environments --username=$USER --password=$PASSWORD --org=$RHSM_ORG
   test_own_cmd_success "rhsm registration with org" sudo subscription-manager register --username=$USER --password=$PASSWORD \
-    --org=$RHSM_ORG --name=$HOSTNAME --force
+    --org=$RHSM_ORG --name=$HOST --force
   test_own_cmd_success "rhsm show identity" sudo subscription-manager identity
   test_own_cmd_success "rhsm registration with org/env" sudo subscription-manager register --username=$USER --password=$PASSWORD \
-    --org=$RHSM_ORG --environment=$RHSM_ENV --name=$HOSTNAME --force
+    --org=$RHSM_ORG --environment=$RHSM_ENV --name=$HOST --force
   test_own_cmd_success "rhsm regenerate identity" sudo subscription-manager identity --regenerate
   test_own_cmd_success "rhsm registration with one ak" sudo subscription-manager register \
-    --org=$RHSM_ORG --activationkey="$RHSM_AK1" --force
+    --org=$RHSM_ORG --activationkey="$RHSM_AK1" --name=$HOST --force
   test_own_cmd_success "rhsm force regenerate identity" sudo subscription-manager identity --regenerate --force --username=$USER --password=$PASSWORD
   test_own_cmd_success "rhsm registration with two aks" sudo subscription-manager register \
-    --org=$RHSM_ORG --activationkey="$RHSM_AK1,$RHSM_AK2" --force
+    --org=$RHSM_ORG --activationkey="$RHSM_AK1,$RHSM_AK2" --name=$HOST --force
   test_own_cmd_success "rhsm auto subscribe" sudo subscription-manager subscribe --auto
   test_own_cmd_success "rhsm list all" sudo subscription-manager list --available --all
   POOLID=$(sudo subscription-manager list --available --all | grep PoolId | head -n1 | awk '{print $2}') # grab first pool
