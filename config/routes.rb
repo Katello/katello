@@ -318,6 +318,9 @@ Src::Application.routes.draw do
         get :errata
         get :pools
       end
+      collection do
+        match "/tasks/:id" => "systems#task_show", :via => :get
+      end
       resources :subscriptions, :only => [:create, :index, :destroy]
       resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
     end
@@ -376,6 +379,10 @@ Src::Application.routes.draw do
       resources :providers, :only => [:index]
       resources :systems, :only => [:index] do
         get :report, :on => :collection
+
+        collection do
+          get :tasks
+        end
       end
       match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :activation_keys, :only => [:index]
