@@ -47,8 +47,8 @@ module Navigation
 
     def organization_navigation
       [
-        { :key => :general,
-          :name =>N_("General"),
+        { :key => :details,
+          :name =>N_("Details"),
           :url => lambda{edit_organization_path(@organization.cp_key)},
           :if => lambda{@organization},
           :options => {:class=>"navigation_element"}
