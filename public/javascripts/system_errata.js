@@ -95,9 +95,10 @@ KT.system.errata = function() {
                 params = {};
 
             $.each(selected_errata, function(index, value){
-                set_status($(value).parent().parent(), 'installing');
                 errata_ids.push($(value).val());
             });
+
+            set_status(errata_ids, 'installing');
 
             params["errata_ids"] = errata_ids;
             params = $.param(params);
@@ -120,23 +121,18 @@ KT.system.errata = function() {
             for(i; i < length; i += 1){
                 task = data[i];
                 if( task['state'] === 'finished' ){
-                    set_status_finished(task_list[task['uuid']]);
+                    set_status(task_list[task['uuid']], 'finished');
                     delete task_list[task['uuid']];
+                } else if( task['state'] === 'running' ){
+                    if( !task_list.hasOwnProperty(task['uuid']) ){
+                        task_list[task['uuid']] = task['parameters']['errata_ids'];
+                        set_status(task['parameters']['errata_ids'], 'installing');
+                    }
                 }
             }
 
             if( Object.keys(task_list).length === 0 ){
                 actions_updater.stop();
-            }
-        },
-        set_status_finished = function(errata_ids){
-            var i = 0, 
-                length = errata_ids.length,
-                errata = [];
-
-            for( i; i < length; i += 1){
-                errata = $('#system_errata_' + KT.common.escapeId(errata_ids[i]));
-                set_status(errata, 'finished');
             }
         },
     	insert_data = function(html, append){
@@ -167,15 +163,35 @@ KT.system.errata = function() {
 				$('#list-spinner').hide();
 			}	
     	},
-        set_status = function(errata_row, status){
-            if( status === 'installing' ){
-                errata_row.find('.errata_status_text').html(i18n.errata_installing);
-                errata_row.find('img').show();
-            } else if( status === 'finished' ){
-                errata_row.find('img').hide();
-                errata_row.find('.errata_status_text').html(i18n.errata_install_finished);
+        set_status = function(errata_ids, status){
+            var rows = get_rows(errata_ids),
+                errata_row, i, length;
+            
+            length = rows.length;
+
+            for( i = 0; i < length; i += 1){
+                errata_row = rows[i];
+
+                if( status === 'installing' ){
+                    errata_row.find('.errata_status_text').html(i18n.errata_installing);
+                    errata_row.find('img').show();
+                } else if( status === 'finished' ){
+                    errata_row.find('img').hide();
+                    errata_row.find('.errata_status_text').html(i18n.errata_install_finished);
+                }
+                errata_row.find('.errata_status').show();
             }
-            errata_row.find('.errata_status').show();
+        },
+        get_rows = function(errata_ids){
+            var i = 0, 
+                length = errata_ids.length,
+                rows = [];
+
+            for( i; i < length; i += 1){
+                rows.push($('#system_errata_' + KT.common.escapeId(errata_ids[i])));
+            }
+
+            return rows;
         };
 	    
     return {
