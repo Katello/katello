@@ -19,9 +19,11 @@ KT.system.errata = function() {
     	table_body = system_errata_container.find('tbody'),
     	load_more = $('#load_more_errata'),
         task_list = {},
+        actions_updater,
     		
     	init = function(){
     		register_events();
+            init_status_check();
     	},
     	register_events = function(){
     		$('#display_errata_type').live('change', filter_errata);
@@ -31,6 +33,18 @@ KT.system.errata = function() {
             $('#run_errata_button').live('click', add_errata);
     		load_more.live('click', get_errata);
     	},
+        init_status_check = function(){
+            var timeout = 8000;
+
+            actions_updater = $.PeriodicalUpdater(KT.routes.status_system_errata_path(system_id), {
+                method: 'get',
+                type: 'json',
+                data: function() {return {uuid: Object.keys(task_list)};},
+                global: false,
+                minTimeout: timeout,
+                maxTimeout: timeout
+            }, update_status);
+        },
     	filter_errata = function(event){
     		var type = get_current_filter(),
     			state = get_current_state();
@@ -94,10 +108,22 @@ KT.system.errata = function() {
                 data : params
             }).success(function(data){
                 task_list[data] = errata_ids;
-                set_errata_finished(errata_ids);
+                get_status(data);
             });
         },
-        set_errata_finished = function(errata_ids){
+        update_status = function(data){
+            var i = 0, length = data.length,
+                task;
+
+            for(i; i < length; i += 1){
+                task = data[i];
+                if( task['state'] === 'finished' ){
+                    set_status_finished(task_list[task['uuid']]);
+                    delete task_list[task['uuid']];
+                }
+            }
+        },
+        set_status_finished = function(errata_ids){
             var i = 0, 
                 length = errata_ids.length,
                 errata = [];

@@ -21,6 +21,7 @@ class SystemTask < ActiveRecord::Base
             :package_group_install => { :name => _("Package Group Install")},
             :package_group_update => {:name => _("Package Group Update")},
             :package_group_remove => {:name => _("Package Group Remove")},
+            :errata_install => {:name => _("Errata Install")}
   }.with_indifferent_access
 
 
