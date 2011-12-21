@@ -64,7 +64,7 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :systems, :except => [:destroy] do
+  resources :systems do
     resources :system_packages, :only => {} do
       collection do
         put :add

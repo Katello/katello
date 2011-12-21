@@ -262,6 +262,19 @@ describe SystemsController do
       end
     end
 
+    describe 'delete a single system' do
+      before (:each) do
+        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+        @id = @system.id
+        System.stub(:find).and_return @system
+      end
+      it "should delete the system" do
+        @system.should_receive(:destroy)
+        delete :destroy, {:id => @id, :system =>@system}
+        response.should be_success
+      end
+    end
+
     describe 'creating a system' do
       render_views
 
