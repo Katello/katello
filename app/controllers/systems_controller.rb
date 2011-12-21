@@ -14,7 +14,7 @@ class SystemsController < ApplicationController
   include AutoCompleteSearch
   include SystemsHelper
 
-  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :bulk_destroy, :new, :create]
+  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :bulk_destroy, :destroy, :new, :create]
   before_filter :find_systems, :only=>[:bulk_destroy]
 
   skip_before_filter :authorize
@@ -51,6 +51,7 @@ class SystemsController < ApplicationController
       :edit => read_system,
       :show => read_system,
       :facts => read_system,
+      :destroy=> delete_systems,
       :bulk_destroy => delete_systems
     }
   end
@@ -253,6 +254,23 @@ class SystemsController < ApplicationController
     errors e
     render :text=>e, :status=>500
   end
+
+  def destroy
+    id = params[:id]
+    system = find_system
+    system.destroy
+    if system.destroyed?
+      notice _("#{system.name} Removed Successfully")
+      #render and do the removal in one swoop!
+      render :partial => "common/list_remove", :locals => {:id => id, :name=>controller_display_name} and return
+    end
+    errors "", {:list_items => system.errors.to_a}
+    render :text => @system.errors, :status=>:ok
+  rescue Exception => e
+    errors e
+    render :text=>e, :status=>500
+  end
+
 
 
   private
