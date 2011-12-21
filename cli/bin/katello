@@ -155,6 +155,8 @@ def setup_admin(admin):
     system_cmd.add_action('facts', system.Facts())
     system_cmd.add_action('update', system.Update())
     system_cmd.add_action('report', system.Report())
+    system_cmd.add_action('tasks', system.TasksList())
+    system_cmd.add_action('task', system.TaskInfo())
     admin.add_command('system', system_cmd)
 
     template_cmd = template.Template()
