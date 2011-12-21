@@ -94,7 +94,7 @@ class SystemTask < ActiveRecord::Base
     if task_type =~ /^package_group/
       action = task_type.include?("remove") ? :removed : :installed
       if result.empty?
-        packages_change_description([], action)
+        ret << packages_change_description([], action)
       else
         result.each do |(group, packages)|
           ret << "@#{group}\n"
@@ -151,7 +151,6 @@ class SystemTask < ActiveRecord::Base
 
   def error_description
     errors, stacktrace = task_status.result[:errors]
-    puts "errors are: #{errors.pretty_inspect}"
     return "" unless errors
 
     # Handle not very friendly Pulp message
