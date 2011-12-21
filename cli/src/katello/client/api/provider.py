@@ -89,7 +89,9 @@ class ProviderAPI(KatelloAPI):
         return data
 
 
-    def import_manifest(self, provId, manifestFile):
+    def import_manifest(self, provId, manifestFile, force=False):
         path = "/api/providers/%s/import_manifest" % str(provId)
-        result = self.server.POST(path, {"import": manifestFile}, multipart=True)[1]
+        params = {"import": manifestFile}
+        if force: params["force"] = "true"
+        result = self.server.POST(path, params, multipart=True)[1]
         return result

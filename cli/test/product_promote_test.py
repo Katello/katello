@@ -48,13 +48,14 @@ class ProductPromoteTest(CLIActionTestCase):
         self.mock_options(self.OPTIONS)
 
         self.mock(self.action.csapi, 'create', self.CSET)
-        self.mock(self.action.csapi, 'update_content', self.CSET)
+        self.mock(self.action.csapi, 'add_content')
         self.mock(self.action.csapi, 'promote', test_data.SYNC_RESULT_WITHOUT_ERROR)
         self.mock(self.action.csapi, 'delete')
 
         self.mock(self.action, 'create_cs_name', self.TMP_CHANGESET_NAME)
 
         self.mock(self.module, 'get_environment', self.ENV)
+        self.mock(self.module, 'get_product', self.PROD)
         self.mock(self.module, 'run_spinner_in_bg', test_data.SYNC_RESULT_WITHOUT_ERROR)
 
     def tearDown(self):
@@ -69,13 +70,22 @@ class ProductPromoteTest(CLIActionTestCase):
         self.action.run()
         self.assertEqual(self.action.run(), os.EX_DATAERR)
 
+    def test_it_finds_the_product(self):
+        self.action.run()
+        self.module.get_product.assert_called_once_with(self.ORG['name'], self.PROD['name'])
+
+    def test_it_returns_with_error_when_no_product_found(self):
+        self.module.get_product.return_value =  None
+        self.action.run()
+        self.assertEqual(self.action.run(), os.EX_DATAERR)
+
     def test_it_creates_new_changeset(self):
         self.action.run()
         self.action.csapi.create.assert_called_once_with(self.ORG['name'], self.ENV['id'], self.TMP_CHANGESET_NAME)
 
     def test_it_updates_the_changeset(self):
         self.action.run()
-        self.action.csapi.update_content.assert_called_once_with(self.CSET['id'], {'+products': [self.PROD['name']]})
+        self.action.csapi.add_content.assert_called_once_with(self.CSET['id'], 'products', {'product_id': self.PROD['id']})
 
     def test_it_promotes_the_changeset(self):
         self.action.run()

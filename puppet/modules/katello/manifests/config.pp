@@ -1,31 +1,51 @@
 class katello::config {
 
-  postgres::createuser { $katello::params::db_user:
-    passwd => $katello::params::db_pass,
-    logfile  => '/var/log/katello/katello-configure/create-postgresql-katello-user.log',
-  }
-  postgres::createdb {$katello::params::db_name:
-    owner   => $katello::params::db_user,
-    require => Postgres::Createuser[$katello::params::db_user],
-    logfile  => '/var/log/katello/katello-configure/create-postgresql-katello-database.log',
-  }
-
-  config_file {
-    "${katello::params::config_dir}/thin.yml":
-      template => "katello/${katello::params::config_dir}/thin.yml.erb";
-    "${katello::params::config_dir}/katello.yml":
-      template => "katello/${katello::params::config_dir}/katello.yml.erb";
-    "/etc/sysconfig/katello":
-      template => "katello/etc/sysconfig/katello.erb";
-    "/etc/httpd/conf.d/katello.conf":
-      template => "katello/etc/httpd/conf.d/katello.conf.erb",
-      notify   => Exec["reload-apache2"];
-  }
-  file{"/var/log/katello":
+  # this should be required by all classes that need to log there (everytime $log_base is used)
+  file { "${katello::params::log_base}":
     owner   => $katello::params::user,
     group   => $katello::params::group,
     mode    => 644,
     recurse => true;
+  }
+
+  postgres::createuser { $katello::params::db_user:
+    passwd  => $katello::params::db_pass,
+    roles => "CREATEDB",
+    logfile => "${katello::params::log_base}/katello-configure/create-postgresql-katello-user.log",
+    require => [ File["${katello::params::log_base}"] ],
+  }
+
+  postgres::createdb {$katello::params::db_name:
+    owner   => $katello::params::db_user,
+    logfile => "${katello::params::log_base}/katello-configure/create-postgresql-katello-database.log",
+    require => [ Postgres::Createuser[$katello::params::db_user], File["${katello::params::log_base}"] ],
+  }
+
+  file {
+    "${katello::params::config_dir}/thin.yml":
+      content => template("katello/${katello::params::config_dir}/thin.yml.erb"),
+      owner   => "root",
+      group   => "root",
+      mode    => "644";
+
+    "${katello::params::config_dir}/katello.yml":
+      content => template("katello/${katello::params::config_dir}/katello.yml.erb"),
+      owner   => $katello::params::user,
+      group   => $katello::params::group,
+      mode    => "600";
+
+    "/etc/sysconfig/katello":
+      content => template("katello/etc/sysconfig/katello.erb"),
+      owner   => "root",
+      group   => "root",
+      mode    => "644";
+
+    "/etc/httpd/conf.d/katello.conf":
+      content => template("katello/etc/httpd/conf.d/katello.conf.erb"),
+      owner   => $katello::params::user,
+      group   => $katello::params::group,
+      mode    => "600",
+      notify  => Exec["reload-apache2"];
   }
 
   # disable SELinux
@@ -46,8 +66,8 @@ class katello::config {
     onlyif => "/usr/sbin/apachectl -t",
     before => Exec["katello_seed_db"],
     require   => $katello::params::deployment ? {
-        'katello' => [ Config_file["${katello::params::config_dir}/katello.yml"], Class["candlepin::service"], Class["pulp::service"] ],
-        'headpin' => [ Config_file["${katello::params::config_dir}/katello.yml"], Class["candlepin::service"], Class["thumbslug::service"] ],
+        'katello' => [ File["${katello::params::config_dir}/katello.yml"], Class["candlepin::service"], Class["pulp::service"] ],
+        'headpin' => [ File["${katello::params::config_dir}/katello.yml"], Class["candlepin::service"], Class["thumbslug::service"] ],
          default  => [],
     },
   }
@@ -112,43 +132,55 @@ class katello::config {
     },
   }
 
-  exec {"katello_db_migrate":
+  exec {"katello_db_printenv":
     cwd         => $katello::params::katello_dir,
     user        => $katello::params::user,
     environment => "RAILS_ENV=${katello::params::environment}",
-    refreshonly => true,
-    require     => [ Config_file["${katello::params::config_dir}/katello.yml"],
-                     Postgres::Createdb[$katello::params::db_name] ],
-    command     => "/usr/bin/env rake db:migrate >> ${katello::params::migrate_log} 2>&1",
-  }
-
-  # seed our DB across pulp/candlepin and katello
-  # should only run once.
-  exec {"katello_seed_db":
-    cwd         => $katello::params::katello_dir,
-    user        => $katello::params::user,
-    environment => "RAILS_ENV=${katello::params::environment}",
-    command     => "/bin/env >> ${katello::params::seed_log} 2>&1 && /bin/echo \" Starting Migrate \" >> ${katello::params::seed_log} 2>&1 && /usr/bin/env rake db:migrate --trace --verbose >> ${katello::params::seed_log} 2>&1 && /bin/echo \" Starting Seed \" >> ${katello::params::seed_log} 2>&1 && /usr/bin/env rake db:seed --trace --verbose >> ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/initdb_done",
-    creates => "/var/lib/katello/initdb_done",
+    command     => "/usr/bin/env > ${katello::params::db_env_log}",
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
-                'katello' => [ Exec["katello_db_migrate"], Class["candlepin::service"], Class["pulp::service"] ],
-                'headpin' => [ Exec["katello_db_migrate"], Class["candlepin::service"], Class["thumbslug::service"] ],
+                'katello' => [
+                  Class["candlepin::service"], 
+                  Class["pulp::service"], 
+                  File["${katello::params::log_base}"], 
+                  File["${katello::params::config_dir}/katello.yml"]
+                ],
+                'headpin' => [
+                  Class["candlepin::service"],
+                  Class["thumbslug::service"],
+                  File["${katello::params::log_base}"],
+                  File["${katello::params::config_dir}/katello.yml"]
+                ],
                 default => [],
     },
   }
 
-  define config_file($source = "", $template = "") {
-    file {$name:
-      content => $template ? {
-        "" => undef,
-        default =>  template($template)
-      },
-      source => $source ? {
-        "" => undef,
-        default => $source,
-      },
-    }
+  exec {"katello_migrate_db":
+    cwd         => $katello::params::katello_dir,
+    user        => $katello::params::user,
+    environment => "RAILS_ENV=${katello::params::environment}",
+    command     => "/usr/bin/env rake db:migrate --trace --verbose > ${katello::params::migrate_log} 2>&1 && touch /var/lib/katello/db_migrate_done",
+    creates => "/var/lib/katello/db_migrate_done",
+    before  => Class["katello::service"],
+    require => $katello::params::deployment ? {
+                'katello' => [ Exec["katello_db_printenv"], File["${katello::params::log_base}"] ],
+                'headpin' => [ Exec["katello_db_printenv"], File["${katello::params::log_base}"] ],
+                default => [],
+    },
+  }
+
+  exec {"katello_seed_db":
+    cwd         => $katello::params::katello_dir,
+    user        => $katello::params::user,
+    environment => "RAILS_ENV=${katello::params::environment}",
+    command     => "/usr/bin/env rake db:seed --trace --verbose > ${katello::params::seed_log} 2>&1 && touch /var/lib/katello/db_seed_done",
+    creates => "/var/lib/katello/db_seed_done",
+    before  => Class["katello::service"],
+    require => $katello::params::deployment ? {
+                'katello' => [ Exec["katello_migrate_db"], File["${katello::params::log_base}"] ],
+                'headpin' => [ Exec["katello_migrate_db"], File["${katello::params::log_base}"] ],
+                default => [],
+    },
   }
 
   # Headpin does not care about pulp

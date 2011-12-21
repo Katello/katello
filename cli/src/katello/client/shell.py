@@ -53,7 +53,10 @@ class KatelloShell(Cmd):
         self.server = ''
         self.admin_cli = admin_cli
 
-        self.prompt = 'katello> '
+        try:
+            self.prompt = Config.parser.get('shell', 'prompt') + ' '
+        except:
+            self.prompt = 'katello> '
 
         userinfo = getpwuid(os.getuid())
         self.conf_dir = os.path.join(userinfo[5], '.katello')

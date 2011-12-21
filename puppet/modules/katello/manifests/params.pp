@@ -24,17 +24,22 @@ class katello::params {
   $config_dir  = "/etc/katello"
   $katello_dir = "/usr/share/katello"
   $environment = "production"
-  $migrate_log = "${katello_dir}/log/db_migrate.log"
-  $seed_log    = "/var/log/katello/katello-configure/db_seed.log"
+  $log_base    = "/var/log/katello"
+  $db_env_log  = "$log_base/katello-configure/db_env.log"
+  $migrate_log = "$log_base/katello-configure/db_migrate.log"
+  $seed_log    = "$log_base/katello-configure/db_seed.log"
 
   # SSL settings
+  #$ssl_certificate_file     = "/etc/pki/tls/certs/httpd-ssl.crt"
+  #$ssl_certificate_key_file = "/etc/pki/tls/private/httpd-ssl.key"
+  #$ssl_certificate_ca_file  = "/usr/share/katello/KATELLO-TRUSTED-SSL-CERT"
   $ssl_certificate_file     = "/etc/candlepin/certs/candlepin-ca.crt"
   $ssl_certificate_key_file = "/etc/candlepin/certs/candlepin-ca.key"
   $ssl_certificate_ca_file  = $ssl_certificate_file
 
   # apache settings
   $thin_start_port = "5000"
-  $thin_log        = "/var/log/katello/thin-log.log"
+  $thin_log        = "$log_base/thin-log.log"
   $process_count   = katello_process_count()
 
   # LDAP settings

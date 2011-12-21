@@ -16,7 +16,10 @@ describe SystemsController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include SystemHelperMethods
+  include OrchestrationHelper
   include AuthorizationHelperMethods
+
+
 
   describe "rules" do
     let(:uuid) { '1234' }
@@ -48,9 +51,14 @@ describe SystemsController do
           let(:unauthorized_user) do
             user_without_permissions
           end
-          let(:on_success) do
-            assigns[:items].should include @system
+
+          let(:before_success) do
+            controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+              filters[:organization_id].should include(@organization.id)
+              controller.stub(:render)
+            }
           end
+
           it_should_behave_like "protected action"
         end
 
@@ -68,10 +76,14 @@ describe SystemsController do
           let(:unauthorized_user) do
             user_without_permissions
           end
-          let(:on_success) do
-            assigns[:items].should include @system2
-            assigns[:items].should_not include @system
+          
+          let(:before_success) do
+            controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+              filters[:organization_id].should include(@organization.id)
+              controller.stub(:render)
+            }
           end
+          
           it_should_behave_like "protected action"
         end
 
@@ -126,6 +138,11 @@ describe SystemsController do
       @environment = KTEnvironment.new(:name => 'test', :prior => @organization.locker.id, :organization => @organization)
       @environment.save!
 
+      @env1 = KTEnvironment.new(:name => 'env1', :prior => @organization.locker.id, :organization => @organization)
+      @env1.save!
+      @env2 = KTEnvironment.new(:name => 'env2', :prior => @env1.id, :organization => @organization)
+      @env2.save!
+
       controller.stub!(:errors)
       controller.stub!(:notice)
 
@@ -149,18 +166,24 @@ describe SystemsController do
       end
 
       it "should render the first 25 systems" do
+        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+          options[:list_partial].should == "systems/list_systems"
+          controller.stub(:render)
+
+        }
         get :items
         response.should be_success
-        response.should render_template("list_systems")
-        assigns[:items_offset].collect{|sys| sys.id}.should == @systems[0..24]
       end
 
       describe 'with an offset' do
         pending "should return a portion of systems" do
+          controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+            options[:list_partial].should == "systems/list_systems"
+            start.should == 25
+            controller.stub(:render)
+          }
           get :items, :offset=>25
           response.should be_success
-          response.should render_template("list_systems")
-          assigns[:items_offset].should include System.where(:name => "bar35")
         end
       end
 
@@ -237,8 +260,72 @@ describe SystemsController do
         delete :bulk_destroy, { :ids => [@system.id]}
         response.should be_success
       end
+    end
 
-      
+    describe 'delete a single system' do
+      before (:each) do
+        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+        @id = @system.id
+        System.stub(:find).and_return @system
+      end
+      it "should delete the system" do
+        @system.should_receive(:destroy)
+        delete :destroy, {:id => @id, :system =>@system}
+        response.should be_success
+      end
+    end
+
+    describe 'creating a system' do
+      render_views
+
+      before (:each) do
+        System.stub!(:save!).and_return true
+
+        # Stub out System.where().search_for()
+        @system = System.create!(:name=>"bar", :environment => @environment, :cp_type=>"system", :facts=>{"Test" => ""})
+        System.stub!(:where).and_return @system
+        @system.stub!(:search_for).and_return [@system]
+      end
+
+      # GET :index should not render an env_select until the :new is called
+      it "should create a system in env" do
+        get :index
+        response.should_not render_template(:partial=>"_env_select")
+
+        get :new
+        response.should render_template(:partial=>"_new")
+        response.should render_template(:partial=>"_env_select")
+
+        controller.should_receive(:notice)
+        post :create, {:system=>{:name=>"sys1", :environment_id=>@env1.id, :sockets=>2},
+                       :arch=>{:arch_id=>1},
+                       :system_type=>{:virtualized=>'virtual'}}
+        response.should be_success
+      end
+
+      # GET :index should render an env_select but not on the :new response
+      it "should create a system in env" do
+        get :environments, :env_id=>@env2.id
+        response.should render_template(:partial=>"_env_select")
+
+        # The link to :new should include env_id
+        # NOTE: This can't be tested since the url is modified by javascript
+        #response.should have_selector("a", :id=>'new', :href=>"#", 'data-ajax_url'=>"/headpin/systems/new?env_id=#{@env2.id}")
+
+        get :new, {:env_id=>@env2.id}
+        response.should render_template(:partial=>"_new")
+        response.should_not render_template(:partial=>"_env_select")
+
+        # The hidden env_id form field should have correct id
+        response.should have_selector("input", :id=>'system_environment_id', :value=>"#{@env2.id}")
+
+        controller.should_receive(:notice)
+        post :create, {:system=>{:name=>"sys1", :environment_id=>@env2.id, :sockets=>2},
+                       :arch=>{:arch_id=>1},
+                       :system_type=>{:virtualized=>'virtual'}}
+        response.should be_success
+        response.should contain '{"no_match":true}'
+      end
     end
 
   end

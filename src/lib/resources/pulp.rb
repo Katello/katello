@@ -145,7 +145,7 @@ module Pulp
       end
 
       def dist_path
-        "/pulp/api/distribution/"
+        "/pulp/api/distributions/"
       end
     end
   end
@@ -169,8 +169,8 @@ module Pulp
         response = get(repository_path  + repo_id + "/", self.default_headers)
         body = response.body
         JSON.parse(body).with_indifferent_access
-      rescue RestClientException => e
-        return nil if e.code.to_i == 404 && !yell_on_404
+      rescue RestClient::ResourceNotFound => e
+        return nil if !yell_on_404
         raise e
       end
 
@@ -182,8 +182,8 @@ module Pulp
 
         response = get(self.repository_path + search_query , self.default_headers)
         JSON.parse(response.body)
-      rescue RestClientException => e
-        return nil if e.code.to_i == 404 && !yell_on_404
+      rescue RestClient::ResourceNotFound => e
+        return nil if !yell_on_404
         raise e
       end
 
@@ -207,6 +207,13 @@ module Pulp
       # :id, :name, :arch, :groupid, :feed
       def update repo_id, attrs
         body = put(Repository.repository_path + repo_id +"/", JSON.generate(attrs), self.default_headers).body
+        find repo_id
+      end
+
+      # specific call to just update the sync schedule for a repo
+      def update_schedule(repo_id, schedule)
+        body = put(Repository.repository_path + repo_id +"/schedules/sync/",
+                   JSON.generate(:schedule => schedule), self.default_headers).body
         find repo_id
       end
 

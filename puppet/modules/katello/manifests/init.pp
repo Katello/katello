@@ -1,5 +1,6 @@
 class katello {
   include katello::params
+  include certs
   # Headpin does not care about pulp
   case $katello::params::deployment {
       'katello': {
@@ -13,6 +14,7 @@ class katello {
   }
   include apache2
   include candlepin
+  include elasticsearch
   include katello::config
   include katello::service
 }

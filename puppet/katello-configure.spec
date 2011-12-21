@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.21
+Version:        0.1.44
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -14,6 +14,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires:       puppet >= 2.6.6
 Requires:       wget
+Requires:       katello-certs-tools
+Requires:       nss-tools
 BuildRequires:  /usr/bin/pod2man
 
 BuildArch: noarch
@@ -40,6 +42,7 @@ cp -Rp modules/* %{buildroot}%{homedir}/puppet/modules
 install -d -m 0755 %{buildroot}%{homedir}/puppet/lib
 cp -Rp lib/* %{buildroot}%{homedir}/puppet/lib
 install -m 0644 default-answer-file %{buildroot}%{homedir}
+install -m 0644 options-format-file %{buildroot}%{homedir}
 install -d -m 0755 %{buildroot}%{_mandir}/man1
 install -m 0644 man/katello-configure.man1 %{buildroot}%{_mandir}/man1/katello-configure.1
 
@@ -53,6 +56,94 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Wed Dec 21 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.44-1
+- Revert "769540 - katello-configure fails: katelloschema"
+- Gave create db access to katello user
+- 768191 - forgot the include so we actually execute the ES config
+- 768191 - first cut at getting elasticsearch configured
+
+* Wed Dec 21 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.43-1
+- 769540 - katello-configure fails: katelloschema
+- mbacovsk's public key
+- tstrachota's public key
+- Revert "765813 - Puppet: create-nss-db fails on RHEL 6.2 [TEMP FIX]"
+
+* Mon Dec 19 2011 Shannon Hughes <shughes@redhat.com> 0.1.42-1
+- 766933 - katello.yml perms - reformatting source (lzap+git@redhat.com)
+
+* Fri Dec 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.41-1
+- 766933 - katello.yml now deployed with correct perms
+
+* Fri Dec 16 2011 Ivan Necas <inecas@redhat.com> 0.1.40-1
+- Fix syntax error in dependency specification in katello service
+  (inecas@redhat.com)
+
+* Fri Dec 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.39-1
+- puppet - migrate script depends on katello.yml
+
+* Fri Dec 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.38-1
+- puppet - katello-jobs now depends on katello
+- adding debug options to the katello.yml
+- 767812 - compress our javascript and CSS
+
+* Wed Dec 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.37-1
+- system engine build 
+
+* Tue Dec 13 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.36-1
+- 767139 - Puppet sometimes fails on RHEL 6.1
+- 759564: Candlepin puppet module did not add the thumbslug oauth line during a
+  headpin install
+
+* Mon Dec 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.35-1
+- 758712 - adding missing requires for candlepin sql
+
+* Mon Dec 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.34-1
+- 758712 - execute classes with logs in correct order
+
+* Fri Dec 09 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.33-1
+- 758712 - Installer (db:seed) sometimes fail - better [TEMP FIX]
+
+* Fri Dec 09 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.32-1
+- 765813 - Puppet: create-nss-db fails on RHEL 6.2 [TEMP FIX]
+- 758712 - Installer (db:seed) sometimes fail [TEMP FIX]
+
+* Thu Dec 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.31-1
+- puppet - regenerate NSS db each run - fix
+
+* Thu Dec 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.30-1
+- puppet - regenerate NSS db each run
+- puppet - better warning message
+
+* Thu Dec 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.29-1
+- puppet - force creation of the candlepin symlink
+- puppet - type in logfile
+
+* Thu Dec 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.28-1
+- puppet - fixing variable reassignment
+
+* Thu Dec 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.27-1
+- puppet - splitting migrate and seed exec actions up
+- puppet - renaming initdb_done to db_seed_done
+- puppet - adding cwds to ssl-certs actions
+- configure - adding 2nd run check
+
+* Tue Dec 06 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.26-1
+- 760265 - Puppet guesses the FQDN from /etc/resolv.conf
+
+* Tue Dec 06 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.25-1
+- 760280 - katello-configure fails with ssl key creation error
+
+* Mon Dec 05 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.24-1
+- using candlepin certificates for both katello and pulp
+
+* Mon Dec 05 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.23-1
+- SSL certificate generation and deployment
+- introduce mandatory option file with predefined option format
+
+* Mon Dec 05 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.22-1
+- configure - adding hostname checks
+- configure - adding exit codes table
+
 * Tue Nov 29 2011 Shannon Hughes <shughes@redhat.com> 0.1.21-1
 - Change the default password for thumbslug keystores (bkearney@redhat.com)
 

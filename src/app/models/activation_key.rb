@@ -33,9 +33,14 @@ class ActivationKey < ActiveRecord::Base
   validates :description, :katello_description_format => true
   validates :environment, :presence => true
   validate :environment_exists
+  validate :environment_not_locker
 
   def environment_exists
     errors.add(:environment, _("id: #{environment_id} doesn't exist ")) if environment.nil?
+  end
+
+  def environment_not_locker
+    errors.add(:base, _("Cannot create activation keys in Locker environment ")) if environment and  environment.locker?
   end
 
   # set's up system when registering with this activation key
@@ -45,13 +50,86 @@ class ActivationKey < ActiveRecord::Base
     system.system_activation_keys.build(:activation_key => self)
   end
 
-  # subscribe to the pool which starts most recently (or with the least number available)
+  # calculate entitlement consupmtion for given amount and pool quantity left, example use:
+  #   calculate_consumption(4, [10, 10]) -> [4, 0]
+  #   calculate_consumption(4, [3, 2]) -> [3, 1]
+  #   calculate_consumption(4, [1, 2, 1]) -> [1, 2, 1]
+  #   calculate_consumption(4, [1, 1]) -> exception "Not enough entitlements"
+  #   calculate_consumption(4, []) -> exception "Not enough entitlements"
+  def calculate_consumption(amount = 1, entitlements = [])
+    a = amount
+    result = entitlements.collect do |x|
+      if a > 0
+        min = [a,x].min
+        a = a - min
+        min
+      else
+        0
+      end
+    end
+    total = result.inject{|sum,x| sum + x }
+    raise _("Not enough entitlements in pools (%d), required: %d, available: %d" % [entitlements.size, amount, total]) if amount != total
+    result
+  end
+
+  # subscribe to each product according the entitlements remaining
   def subscribe_system(system)
-    sorted_kp = self.key_pools.sort { |a,b| (b.pool.startDate_as_datetime <=> a.pool.startDate_as_datetime).nonzero? || (a.pool.cp_id <=> b.pool.cp_id) }
-    if (sorted_kp.count > 0)
-      system.subscribe(sorted_kp.first.pool.cp_id, sorted_kp.first.allocated)
-    else
-      Rails.logger.warn "No available entitlements for activation key '#{self.name}'"
+    already_subscribed = []
+    begin
+      # collect products involved in this activation key as a hash in the following format:
+      # {"productId" => { "poolId_1" => [start_date, entitlements_left], "poolId_2" => ... } }
+      products = {}
+      self.pools.each do |pool|
+        raise _("Pool %s has no product associated" % pool.cp_id) unless pool.productId
+        products[pool.productId] = {} unless products.key? pool.productId
+        quantity = pool.quantity == -1 ? 999_999_999 : pool.quantity
+        raise _("Unable to determine quantity for pool %s" % pool.cp_id) if quantity.nil?
+        left = quantity - pool.consumed
+        raise _("Number of consumed entitlements exceeded quantity for %s" % pool.cp_id) if left < 0
+        products[pool.productId][pool.cp_id] = [pool.startDate_as_datetime, left]
+      end
+
+      # for each product consumer "allocate" amount of entitlements
+      allocate = system.sockets.to_i
+      Rails.logger.debug "Number of sockets for registration: #{allocate}"
+      raise _("Number of sockets must be higher than 0 for system %s" % system.name) if allocate.nil? or allocate <= 0
+      #puts products.inspect
+      products.each do |productId, pools|
+        # create two arrays - pool ids and remaining entitlements
+        # subscription order is with most recent start or with the least pool number available
+        pools_a = pools.to_a.sort { |a,b| (a[1][0] <=> b[1][0]).nonzero? || (a[0] <=> b[0]) }
+        pools_ids = []
+        pools_left = []
+        pools_a.each { |p| pools_ids << p[0]; pools_left << p[1][1] }
+
+        # calculate consupmtion array (throws an error when there are not enough entitlements)
+        to_consume = calculate_consumption(allocate, pools_left)
+        i = 0
+        Rails.logger.debug "Autosubscribing pools: #{pools_ids.inspect} with amounts: #{to_consume.inspect}"
+        pools_ids.each do |poolId|
+          amount = to_consume[i]
+          Rails.logger.debug "Subscribing #{system.name} to product: #{productId}, amount: #{amount}"
+          if amount > 0
+            entitlements_array = system.subscribe(poolId, amount)
+            # store for possible rollback
+            entitlements_array.each do |ent|
+              already_subscribed << ent['id']
+            end unless entitlements_array.nil?
+          end
+          i = i + 1
+        end
+      end
+    rescue Exception => e
+      Rails.logger.info "Autosubscribtion failed, rolling back: #{already_subscribed.inspect}"
+      already_subscribed.each do |entitlement_id|
+        begin
+          Rails.logger.debug "Rolling back: #{entitlement_id}"
+          entitlements_array = system.unsubscribe entitlement_id
+        rescue Exception => re
+          Rails.logger.warn "Rollback failed, skipping: #{re.message}"
+        end
+      end
+      raise e
     end
   end
 
