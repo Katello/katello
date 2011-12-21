@@ -49,7 +49,11 @@ class SystemEventsController < ApplicationController
 
   def status
     # retrieve the status for the package actions initiated by the client
-    statuses = @system.tasks.where(:id => params[:id])
+    statuses = @system.tasks.where(:id => params[:id]).collect do |status|
+      status_html = render_to_string(:template => 'system_events/_event_items.html.haml',
+                                        :layout => false, :locals => {:include_tr => false, :system => @system, :t => status})
+      status.as_json(:status_html => status_html)
+    end
     render :json => statuses
   end
 

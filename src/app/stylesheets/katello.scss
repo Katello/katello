@@ -1360,3 +1360,19 @@ footer {
   background-color: $white_color;
   font-size: 120%;
 }
+
+.status_icons {
+    margin-right: 5px;
+     .check_icon {
+       width: 16px;
+       height: 16px;
+       @include action-icon($check_icon_black);
+       margin-left: 0px;
+     }
+
+     .error_icon {
+       width: 16px;
+       @include action-icon($warning_icon_black);
+       margin-left: 0px;
+     }
+}
