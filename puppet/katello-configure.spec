@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.43
+Version:        0.1.44
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,12 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Wed Dec 21 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.44-1
+- Revert "769540 - katello-configure fails: katelloschema"
+- Gave create db access to katello user
+- 768191 - forgot the include so we actually execute the ES config
+- 768191 - first cut at getting elasticsearch configured
+
 * Wed Dec 21 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.43-1
 - 769540 - katello-configure fails: katelloschema
 - mbacovsk's public key
