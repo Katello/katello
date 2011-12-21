@@ -19,7 +19,7 @@ import sys
 import time
 import threading
 import time
-from katello.client.api.task_status import TaskStatusAPI
+from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
 
 try:
     import json
@@ -410,6 +410,22 @@ def format_progress_errors(errors):
     error_list = [e["error"]["error"] for e in errors]
     return "\n".join(error_list)
 
+def parse_error_array(message):
+    """
+    Pulp might return a string in a format:
+      ['This is very long errror',
+       'it contains',
+       'many lines']
+    This method joins converts this kind of messages to
+      This is very long errror
+      it contains
+      many lines
+    """
+    if re.match('^\[.*,.*\]$',message, re.M|re.S):
+        lines = [re.sub('^\W+|\W+$',"",l) for l in message.split(',')]
+        return "\n".join(lines)
+    else:
+        return message
 
 def format_task_errors(errors):
     """
@@ -418,7 +434,7 @@ def format_task_errors(errors):
     @param errors: list of errors returned from AsyncTask.errors()
     @return string, each error on one line
     """
-    error_list = [e[0] for e in errors]
+    error_list = [parse_error_array(e[0]) for e in errors]
     return "\n".join(error_list)
 
 
@@ -538,9 +554,11 @@ class AsyncTask():
         else:
             self._tasks = task
 
+    def status_api(self):
+        return TaskStatusAPI()
+
     def update(self):
-        status_api = TaskStatusAPI()
-        self._tasks = [status_api.status(t['uuid']) for t in self._tasks]
+        self._tasks = [self.status_api().status(t['uuid']) for t in self._tasks]
 
     def get_progress(self):
         return progress(self.items_left(), self.total_count())
@@ -579,7 +597,7 @@ class AsyncTask():
         return [err for task in self._tasks if 'error_details' in task['progress'] for err in task['progress']['error_details']]
 
     def errors(self):
-        return [json.loads(task["result"])["errors"] for task in self._tasks]
+        return [task["result"]["errors"] for task in self._tasks]
 
     def _get_progress_sum(self, name):
         return sum([t['progress'][name] for t in self._tasks])
@@ -592,6 +610,15 @@ class AsyncTask():
 
     def get_subtasks(self):
         return [AsyncTask(t) for t in self._tasks]
+
+# Envelope around system task status structure. Besides the standard AsyncTask
+# it has description and result_description specified
+class SystemAsyncTask(AsyncTask):
+    def status_api(self):
+        return SystemTaskStatusAPI()
+
+    def get_result_description(self):
+        return ", ".join([task["result_description"] for task in self._tasks])
 
 
 

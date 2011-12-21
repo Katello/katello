@@ -21,9 +21,9 @@ class Changeset < ActiveRecord::Base
   include AsyncOrchestration
 
 
-  include IndexedModel
-
-  index_options :extended_json=>:extended_index_attrs
+  #include IndexedModel
+  #
+  #index_options :extended_json=>:extended_index_attrs
 
 
   NEW = 'new'
@@ -539,7 +539,7 @@ class Changeset < ActiveRecord::Base
   def extended_index_attrs
     pkgs = self.packages.collect{|pkg| pkg.display_name}
     errata = self.errata.collect{|err| err.display_name}
-    products = self.product.collect{|prod| prod.name}
+    products = self.products.collect{|prod| prod.name}
     repos = self.repos.collect{|repo| repo.name}
     {
       :package=>pkgs,
