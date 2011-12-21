@@ -79,6 +79,7 @@ Src::Application.routes.draw do
       collection do
         get :items
         post :install
+        get :status
       end
     end
 

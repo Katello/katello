@@ -12,7 +12,7 @@
 
 class SystemErrataController < ApplicationController
 
-  before_filter :find_system, :only =>[:install, :index, :items]
+  before_filter :find_system, :only =>[:install, :index, :items, :status]
   before_filter :authorize
 
   def section_id
@@ -26,7 +26,8 @@ class SystemErrataController < ApplicationController
     {
       :index => read_system,
       :items => read_system,
-      :install => edit_system
+      :install => edit_system,
+      :status => edit_system
     }
   end
 
@@ -60,6 +61,13 @@ class SystemErrataController < ApplicationController
     Rails.logger.info error.backtrace.join("\n")
     render :text => error, :status => :bad_request
   end
+
+  def status
+    #statuses = @system.tasks.where(:uuid => params[:uuid], :task_type => [:errata_install])
+    statuses = [{ :uuid => "1234", :state => "finished" }]
+    render :json => statuses
+  end
+
 
   private
 
