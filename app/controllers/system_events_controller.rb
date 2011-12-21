@@ -26,15 +26,15 @@ class SystemEventsController < ApplicationController
     {
       :index => read_system,
       :show => read_system,
-      :status => read_system
+      :status => read_system,
+      :more_events => read_system
     }
   end
 
 
   def index
-    # list of events
-    tasks = @system.tasks.order("updated_at desc").limit(50)
-    render :partial=>"events", :layout => "tupane_layout", :locals=>{:system => @system, :tasks => tasks}
+    render :partial=>"events", :layout => "tupane_layout", :locals=>{:system => @system,
+                                                                :offset => current_user.page_size, :tasks => tasks}
   end
 
   def show
@@ -44,7 +44,7 @@ class SystemEventsController < ApplicationController
     type = task_template[:name]
     user_message = task_template[:user_message] % task.user.username
     render :partial=>"details", :layout => "tupane_layout", :locals=>{:type => type, :user_message => user_message,
-                                                                          :system => @system, :task =>task}
+                                                  :system => @system, :task =>task}
   end
 
   def status
@@ -57,10 +57,32 @@ class SystemEventsController < ApplicationController
     render :json => statuses
   end
 
+  def more_events
+    if params.has_key? :offset
+      offset = params[:offset].to_i
+    else
+      offset = current_user.page_size
+    end
+
+    statuses = tasks(current_user.page_size + offset)
+    statuses = statuses[offset..statuses.length]
+    if statuses
+      render(:partial => 'more_events', :locals => {:system => @system, :tasks=> statuses})
+    else
+      render :nothing => true
+    end
+
+  end
+
 
   protected
   def find_system
     @system = System.find(params[:system_id])
+  end
+
+  helper_method :tasks
+  def tasks(page_size = current_user.page_size)
+    @system.tasks.order("updated_at desc").limit(page_size)
   end
 
 end

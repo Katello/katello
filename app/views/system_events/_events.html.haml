@@ -23,3 +23,7 @@
         = image_tag("spinner.gif", :class=>"ajax_scroll")
   - else
     %p #{_("There are no events to display.")}
+
+= content_for :footer do
+  .grid_8
+    %a#more{:style => "padding-left: 20px;", "data-scroll_url"=>url_for(more_events_system_events_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("Load %{n} More" % {:n => offset})}
