@@ -34,6 +34,7 @@ class TaskStatus < ActiveRecord::Base
     end
   end
 
+
   def initialize(attrs = nil)
     unless attrs.nil?
       # only keep keys for which we have db columns
@@ -60,7 +61,8 @@ class TaskStatus < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    super(:methods => :pending?)
+    json = super :methods => :pending?
+    json.merge(options) if options
   end
 
   protected

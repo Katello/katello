@@ -1,7 +1,7 @@
-= javascript do
-  :javascript
-    KT.event_types = $.parseJSON('#{escape_javascript(generate_event_types)}');
-
+-#= javascript do
+-#  :javascript
+-#    KT.event_types = $.parseJSON('#{escape_javascript(generate_event_types)}');
+-#
 = javascript :filtertable, :system_events
 
 = render :partial => "systems/system_tupane_header_nav"
@@ -18,7 +18,7 @@
           %th
             #{_("Date Created")}
         %tbody
-          = render :partial => 'event_items', :locals => {:system => system, :tasks => tasks}
+          = render :partial => 'event_items', :locals => {:system => system, :include_tr => true}, :collection=> tasks, :as=>:t
       #list-spinner
         = image_tag("spinner.gif", :class=>"ajax_scroll")
   - else
