@@ -107,8 +107,10 @@ KT.system.errata = function() {
                 type : 'POST',
                 data : params
             }).success(function(data){
+                if( Object.keys(task_list).length === 0 ){
+                    actions_updater.restart();
+                }
                 task_list[data] = errata_ids;
-                get_status(data);
             });
         },
         update_status = function(data){
@@ -121,6 +123,10 @@ KT.system.errata = function() {
                     set_status_finished(task_list[task['uuid']]);
                     delete task_list[task['uuid']];
                 }
+            }
+
+            if( Object.keys(task_list).length === 0 ){
+                actions_updater.stop();
             }
         },
         set_status_finished = function(errata_ids){
