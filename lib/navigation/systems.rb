@@ -101,19 +101,8 @@ module Navigation
           :name =>N_("Facts"),
           :url => lambda{facts_system_path(@system.id)},
           :if => lambda{@system},
-<<<<<<< HEAD
           :options => {:class=>"third_level navigation_element"}
         },
-=======
-          :options => {:class=>"navigation_element"}
-        },
-        { :key => :details,
-          :name =>N_("Details"),
-          :url => lambda{edit_system_path(@system.id)},
-          :if => lambda{@system},
-          :options => {:class=>"navigation_element"}
-        }
->>>>>>> master
       ]
     end
 
