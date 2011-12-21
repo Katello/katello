@@ -19,12 +19,12 @@
 KT.events = function() {
 
     var system_id = $('.events').attr('data-system_id'),
-    total_events = parseInt($('.events').data('total_events')),
-    total_loaded = undefined,
+    total_events = 0,
+    total_loaded = 0,
     actions_updater = undefined,
     loaded_summary = $('#loaded_summary'),
     more_button = $('#more'),
-    page_size = parseInt(more_button.data("page_size")),
+    page_size = 0,
     moreEvents = function() {
         var list = $('.events'),
         spinner = $('#list-spinner'),
@@ -85,10 +85,24 @@ KT.events = function() {
     },
 
     initEvents = function() {
-        more_button.bind('click', moreEvents);
-        updateLoadedSummary();
-        if($('.event_name[data-pending-task-id]').length > 0) {
-            startUpdater();
+        total_events = $('.events').data('total_events');
+        if(total_events !== undefined) {
+            total_events = parseInt(total_events, 10);
+        } else {
+            total_events = 0;
+        }
+        if(total_events > 0) {
+            if(more_button !== undefined) {
+                page_size = parseInt(more_button.data("page_size"),10);
+                more_button.bind('click', moreEvents);
+            } else {
+                page_size = 0;
+            }
+
+            updateLoadedSummary();
+            if($('.event_name[data-pending-task-id]').length > 0) {
+                startUpdater();
+            }
         }
     },
     updateLoadedSummary = function() {
