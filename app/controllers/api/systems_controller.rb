@@ -14,12 +14,13 @@ class Api::SystemsController < Api::ApiController
   respond_to :json
 
   before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index, :activate]
-  before_filter :find_organization, :only => [:create, :index, :activate, :report]
+  before_filter :find_organization, :only => [:create, :index, :activate, :report, :tasks]
   before_filter :find_only_environment, :only => [:create]
-  before_filter :find_environment, :only => [:create, :index, :report]
+  before_filter :find_environment, :only => [:create, :index, :report, :tasks]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
                                         :unsubscribe, :subscriptions, :pools]
+  before_filter :find_task, :only => [:task_show]
   before_filter :authorize, :except => :activate
 
   skip_before_filter :require_user, :only => [:activate]
@@ -47,7 +48,9 @@ class Api::SystemsController < Api::ApiController
       :unsubscribe => edit_system,
       :subscriptions => read_system,
       :pools => read_system,
-      :activate => register_system
+      :activate => register_system,
+      :tasks => index_systems,
+      :task_show => read_system
     }
   end
 
@@ -168,6 +171,25 @@ class Api::SystemsController < Api::ApiController
     end
   end
 
+  def tasks
+    @tasks = SystemTask.joins(:system,:task_status).where(:"task_statuses.organization_id" => @organization.id)
+    if @environment
+      @tasks = @tasks.where(:"system.environment_id" => @environment.id)
+    end
+    if params[:system_name]
+      @tasks = @tasks.where(:"system.name" => params[:system_name])
+    end
+    @tasks.each {|t| t.task_status.refresh }
+    render :json => @tasks.to_json
+  end
+
+  def task_show
+    @task.task_status.refresh
+    render :json => @task.to_json
+  end
+
+  protected
+
   def find_organization
     return unless (params.has_key?(:organization_id) or params.has_key?(:owner))
 
@@ -242,6 +264,12 @@ class Api::SystemsController < Api::ApiController
       raise HttpErrors::BadRequest, _("At least one activation key must be provided")
     end
     activation_keys
+  end
+
+  def find_task
+    @task = SystemTask.joins(:task_status).where(:"task_statuses.uuid" => params[:id]).first
+    raise ActiveRecord::RecordNotFound.new unless @task
+    @system = @task.system
   end
 
 end
