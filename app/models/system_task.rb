@@ -62,12 +62,12 @@ class SystemTask < ActiveRecord::Base
           :name => _("Package Group Install"),
           :type => :package_group,
           :event_messages => {
-              :running => _('Adding Package Group...'),
-              :waiting => _('Adding Package Group...'),
-              :finished => _('Add Package Group Completed'),
-              :error => _('Add Package Group Failed'),
-              :cancelled => _('Add Package Group Canceled'),
-              :timeout => _('Add Package Group Timed Out')
+              :running => [N_('installing package group...'),N_('installing package groups...')],
+              :waiting => [N_('installing package group...'),N_('installing package groups...')],
+              :finished => [N_('%s package group installed'), N_('%s (%s other package groups) installed.')],
+              :error=> [N_('%s package group install failed'), N_('%s (%s other package groups) install failed')],
+              :cancelled => [N_('%s package group install cancelled'), N_('%s (%s other package groups) install cancelled')],
+              :timed_out =>[N_('%s package group install timed out'), N_('%s (%s other package groups) install timed out')],
           },
           :user_message => _('Package Group Install scheduled by %s')
       },
@@ -75,12 +75,13 @@ class SystemTask < ActiveRecord::Base
           :name => _("Package Group Update"),
           :type => :package_group,
           :event_messages => {
-              :running => _('Updating Package Group...'),
-              :waiting => _('Updating Package Group...'),
-              :finished => _('Update Package Group Completed'),
-              :error => _('Update Package Group Failed'),
-              :cancelled => _('Update Package Group Canceled'),
-              :timeout => _('Update Package Group Timed Out')
+              :running => [N_('updating package group...'), N_('updating package groups...')],
+              :waiting => [N_('updating package group...'), N_('updating package groups...')],
+              :finished =>[ N_('%s package group updated'), N_('%s (%s other package groups) updated')],
+              :error => [N_('%s package group update failed'), N_('%s (%s other package groups) update failed')],
+              :cancelled =>[N_('%s package group update cancelled'), N_('%s (%s other package groups) update cancelled')],
+              :timed_out =>[N_('%s package group update timed out'), N_('%s (%s other package groups) update timed out')],
+
           },
           :user_message => _('Package Group Update scheduled by %s')
       },
@@ -88,12 +89,13 @@ class SystemTask < ActiveRecord::Base
           :name => _("Package Group Remove"),
           :type => :package_group,
           :event_messages => {
-              :running => _('Removing Package Group...'),
-              :waiting => _('Removing Package Group...'),
-              :finished => _('Remove Package Group Completed'),
-              :error => _('Remove Package Group Failed'),
-              :cancelled => _('Remove Package Group Canceled'),
-              :timeout => _('Remove Package Group Timed Out')
+              :running => [N_('removing package group...'), N_('removing package groups...')],
+              :waiting => [N_('removing package group...'), N_('removing package groups...')],
+              :finished => [N_('%s package group removed'), N_('%s (%s other package groups) removed')],
+              :error => [N_('%s package group remove failed'), N_('%s (%s other package groups) remove failed')],
+              :cancelled => [N_('%s package group remove cancelled'), N_('%s (%s other package groups) remove cancelled')],
+              :timed_out => [N_('%s package group remove timed out'), N_('%s (%s other package groups) remove timed out')],
+
           },
           :user_message => _('Package Group Remove scheduled by %s')
       },
