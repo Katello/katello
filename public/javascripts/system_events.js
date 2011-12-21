@@ -19,17 +19,16 @@
 KT.events = function() {
 
     var system_id = $('.events').attr('data-system_id'),
-    add_row_shading = false,
+    total_events = parseInt($('.events').data('total_events')),
+    total_loaded = undefined,
     actions_updater = undefined,
+    loaded_summary = $('#loaded_summary'),
     more_button = $('#more'),
+    page_size = parseInt(more_button.data("page_size")),
     moreEvents = function() {
-        var list = $('.events');
-        var spinner = $('#list-spinner');
-        var dataScrollURL = more_button.data("scroll_url");
-
-        var offset = parseInt(more_button.data("offset"),0);
-        dataScrollURL = dataScrollURL + "?offset=" + offset +"&";
-        //console.log(dataScrollURL + ", page_size: " + offset);
+        var list = $('.events'),
+        spinner = $('#list-spinner'),
+        dataScrollURL = more_button.data("scroll_url") + "?offset=" + total_loaded +"&";
         spinner.fadeIn();
         $.ajax({
             type: "GET",
@@ -40,10 +39,10 @@ KT.events = function() {
                 list.append(data);
                 $('#filter').keyup();
                 $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
-                if (data.trim().length === 0) {
+                updateLoadedSummary();
+
+                if (total_loaded === total_events) {
                     more_button.empty().remove();
-                }else{
-                    more_button.data("offset", offset + parseInt(more_button.data("page_size"),25));
                 }
             },
             error: function() {
@@ -87,17 +86,22 @@ KT.events = function() {
 
     initEvents = function() {
         more_button.bind('click', moreEvents);
+        updateLoadedSummary();
         if($('.event_name[data-pending-task-id]').length > 0) {
             startUpdater();
         }
     },
     updateLoadedSummary = function() {
-        var total_loaded = $('tr.package').length,
-            message = i18n.x_of_y_packages(total_loaded, total_packages);
-        loaded_summary.html(message);
+        var more_size = page_size;
+        total_loaded = $('tr.tasks').length;
+        loaded_summary.html(i18n.x_of_y_events(total_loaded, total_events));
+
+        if(more_size > (total_events - total_loaded)) {
+           more_size = total_events - total_loaded;
+        }
+        more_button.text(i18n.x_more_events(more_size));
     };
     return {
-        moreEvents: moreEvents,
         initEvents: initEvents
     };
 }();
