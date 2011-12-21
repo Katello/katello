@@ -542,7 +542,7 @@ module Glue::Pulp::Repos
     private
 
     def yum_gpg_key_url(gpg_key)
-      gpg_key.nil? ? "" : content_api_gpg_key_url(gpg_key, :host => AppConfig.host, :protocol => 'https')
+      gpg_key.nil? ? "" : content_api_gpg_key_url(gpg_key, :host => AppConfig.host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
     rescue => e
       msg = "problem setting up yum GPG URL: #{e}"
       errors.add :base, msg
