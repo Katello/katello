@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.152
+Version:        0.1.153
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -348,6 +348,53 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Dec 21 2011 Justin Sherrill <jsherril@redhat.com> 0.1.153-1
+- fixing routes.js (jsherril@redhat.com)
+- reverting to old package behavior (jsherril@redhat.com)
+- unit test fix (jsherril@redhat.com)
+- fixing broken unit tests
+- ignoring tire if running tests
+- Search: Adds button disabling on unsearchable content within sliding tree.
+  (ehelms@redhat.com)
+- making filters more flexible within application controller
+  (jsherril@redhat.com)
+- fixing provider search to not show redhat provider (jsherril@redhat.com)
+- adding elasticsearch plugin log to logrotate for katello
+  (jsherril@redhat.com)
+- changing system templates auto complete to use elastic search
+  (jsherril@redhat.com)
+- adding package search for promotions (jsherril@redhat.com)
+- Merge branch 'search' of ssh://git.fedorahosted.org/git/katello into search
+  (paji@redhat.com)
+- Added a way to delete the search indices when the DB was reset
+  (paji@redhat.com)
+- Search: Adds search on sliding tree to bbq. (ehelms@redhat.com)
+- Search: Enables simple form search widget for content sliding tree on
+  promotion page. (ehelms@redhat.com)
+- Search: Adds ability to enable a full search widget within a sliding tree and
+  adds to the content tree on promotions page. (ehelms@redhat.com)
+- Sliding Tree: Refactor to sliding tree to turn the previous search widget
+  into a pure filter widget. (ehelms@redhat.com)
+- Search: Changes to sliding tree filtering to make way for adding sliding tree
+  search. (ehelms@redhat.com)
+- making user sorting be on a non-analyzed login attribute
+  (jsherril@redhat.com)
+- Adding delayed job after kicking off repo sync to index packages, made
+  packages sortable (jsherril@redhat.com)
+- fixing ordering for systems (jsherril@redhat.com)
+- converting to not use a generic katello index for each model and fixing sort
+  on systems and provider (jsherril@redhat.com)
+- Merge branch 'master' into search (mmccune@redhat.com)
+- 768191 - adding elasticsearch to our specfile (mmccune@redhat.com)
+- test (jsherril@redhat.com)
+- test (jsherril@redhat.com)
+- adding initial system searching (jsherril@redhat.com)
+- product/repo saving for providers (jsherril@redhat.com)
+- adding provider searching (jsherril@redhat.com)
+- controller support for indexed (jsherril@redhat.com)
+- search - initial full text search additions (jsherril@redhat.com)
+- Gemfile Update - adding Tire to gemfile (jsherril@redhat.com)
+
 * Wed Dec 21 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.151-1
 
 * Tue Dec 20 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.149-1
