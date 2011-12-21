@@ -171,6 +171,7 @@ class SystemTask < ActiveRecord::Base
     end
   end
 
+  # non self methods
   def humanize_type
     { :package_install => _("Package Install"),
       :package_update =>  _("Package Update"),
@@ -263,7 +264,7 @@ class SystemTask < ActiveRecord::Base
       else
       verb = case action
              when :removed then _("removed")
-             else ("installed")
+             else _("installed")
              end
       ret << packages.map{|i| "#{i} #{verb}"}.join("\n")
       end
