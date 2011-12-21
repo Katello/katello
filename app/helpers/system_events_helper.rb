@@ -18,4 +18,9 @@ module SystemEventsHelper
   def status_message(task)
     SystemTask.message_for task
   end
+
+  def pending_status_message(task)
+    SystemTask.pending_message_for task
+  end
+
 end
