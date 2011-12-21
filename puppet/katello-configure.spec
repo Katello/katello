@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.31
+Version:        0.1.43
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,51 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Wed Dec 21 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.43-1
+- 769540 - katello-configure fails: katelloschema
+- mbacovsk's public key
+- tstrachota's public key
+- Revert "765813 - Puppet: create-nss-db fails on RHEL 6.2 [TEMP FIX]"
+
+* Mon Dec 19 2011 Shannon Hughes <shughes@redhat.com> 0.1.42-1
+- 766933 - katello.yml perms - reformatting source (lzap+git@redhat.com)
+
+* Fri Dec 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.41-1
+- 766933 - katello.yml now deployed with correct perms
+
+* Fri Dec 16 2011 Ivan Necas <inecas@redhat.com> 0.1.40-1
+- Fix syntax error in dependency specification in katello service
+  (inecas@redhat.com)
+
+* Fri Dec 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.39-1
+- puppet - migrate script depends on katello.yml
+
+* Fri Dec 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.38-1
+- puppet - katello-jobs now depends on katello
+- adding debug options to the katello.yml
+- 767812 - compress our javascript and CSS
+
+* Wed Dec 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.37-1
+- system engine build 
+
+* Tue Dec 13 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.36-1
+- 767139 - Puppet sometimes fails on RHEL 6.1
+- 759564: Candlepin puppet module did not add the thumbslug oauth line during a
+  headpin install
+
+* Mon Dec 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.35-1
+- 758712 - adding missing requires for candlepin sql
+
+* Mon Dec 12 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.34-1
+- 758712 - execute classes with logs in correct order
+
+* Fri Dec 09 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.33-1
+- 758712 - Installer (db:seed) sometimes fail - better [TEMP FIX]
+
+* Fri Dec 09 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.32-1
+- 765813 - Puppet: create-nss-db fails on RHEL 6.2 [TEMP FIX]
+- 758712 - Installer (db:seed) sometimes fail [TEMP FIX]
+
 * Thu Dec 08 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.31-1
 - puppet - regenerate NSS db each run - fix
 

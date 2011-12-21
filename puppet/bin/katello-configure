@@ -421,7 +421,8 @@ if File.directory?(log_directory_link)
 	File.rename(log_directory_link, log_directory_link + '-backup-' + now)
 end
 
-FileUtils.mkdir_p(log_directory, :mode => 0700)
+# create with 777 mode - ownership and permissions will be changed in puppet (RHBZ 758712)
+FileUtils.mkdir_p(log_directory, :mode => 0777)
 FileUtils.ln_sf('katello-configure-' + now, log_directory_link)
 
 FileUtils.cp result_config_path, log_directory

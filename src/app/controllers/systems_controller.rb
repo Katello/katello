@@ -14,7 +14,7 @@ class SystemsController < ApplicationController
   include AutoCompleteSearch
   include SystemsHelper
 
-  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :bulk_destroy, :new, :create]
+  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :bulk_destroy, :destroy, :new, :create]
   before_filter :find_systems, :only=>[:bulk_destroy]
 
   skip_before_filter :authorize
@@ -25,7 +25,7 @@ class SystemsController < ApplicationController
   before_filter :search_filter, :only => [:auto_complete_search]
 
   # two pane columns and mapping for sortable fields
-  COLUMNS = {'name' => 'name', 'lastCheckin' => 'lastCheckin', 'created' => 'created_at'}
+  COLUMNS = {'name' => 'name_sort', 'lastCheckin' => 'lastCheckin'}
 
   def rules
     edit_system = lambda{System.find(params[:id]).editable?}
@@ -51,6 +51,7 @@ class SystemsController < ApplicationController
       :edit => read_system,
       :show => read_system,
       :facts => read_system,
+      :destroy=> delete_systems,
       :bulk_destroy => delete_systems
     }
   end
@@ -61,8 +62,13 @@ class SystemsController < ApplicationController
     @organization = current_organization
     accessible_envs = current_organization.environments
     setup_environment_selector(current_organization, accessible_envs)
-    @environment = first_env_in_path(accessible_envs)
-    render :partial=>"new", :layout => "tupane_layout", :locals=>{:system=>@system, :accessible_envs => accessible_envs}
+
+    # This controls whether the New System page will display an environment selector or not.
+    # Since only one selector may exist at a time, it is left off of the New page when the
+    # Environments page is displayed.
+    envsys = !params[:env_id].nil?
+
+    render :partial=>"new", :layout => "tupane_layout", :locals=>{:system=>@system, :accessible_envs => accessible_envs, :envsys => envsys}
   end
 
   def create
@@ -133,12 +139,25 @@ class SystemsController < ApplicationController
   end
 
   def items
+    order = split_order(params[:order])
+    search = params[:search]
     if params[:env_id]
       find_environment
-      render_panel_items(System.readable(current_organization).where(:environment_id => @environment.id), @panel_options, params[:search], params[:offset])
+      filters = {:environment_id=>[params[:env_id]]}
+      render_panel_direct(System, @panel_options, search, params[:offset], order, filters, true)
     else
-      render_panel_items(System.readable(current_organization), @panel_options, params[:search], params[:offset])
+      filters = {:organization_id=>[current_organization.id]}
+      render_panel_direct(System, @panel_options, search, params[:offset], order, filters, true)
     end
+  end
+
+  def split_order order
+    if order
+      order.split
+    else
+      [:name_sort, "ASC"]
+    end
+
   end
 
   def subscriptions
@@ -236,6 +255,23 @@ class SystemsController < ApplicationController
     render :text=>e, :status=>500
   end
 
+  def destroy
+    id = params[:id]
+    system = find_system
+    system.destroy
+    if system.destroyed?
+      notice _("#{system.name} Removed Successfully")
+      #render and do the removal in one swoop!
+      render :partial => "common/list_remove", :locals => {:id => id, :name=>controller_display_name} and return
+    end
+    errors "", {:list_items => system.errors.to_a}
+    render :text => @system.errors, :status=>:ok
+  rescue Exception => e
+    errors e
+    render :text=>e, :status=>500
+  end
+
+
 
   private
 
@@ -260,14 +296,14 @@ class SystemsController < ApplicationController
     @panel_options = { :title => _('Systems'),
                       :col => COLUMNS.keys,
                       :custom_rows => true,
-                      :enable_create => true,
+                      :enable_create => System.registerable?(@environment, current_organization),
                       :create => "System",
                       :enable_sort => true,
                       :name => controller_display_name,
                       :list_partial => 'systems/list_systems',
                       :ajax_load  => true,
                       :ajax_scroll => items_systems_path(),
-                      :actions => 'actions'
+                      :actions => System.deletable?(@environment, current_organization) ? 'actions' : nil
                       }
   end
 

@@ -484,7 +484,7 @@ var promotion_page = (function($){
                     cancel_btn.hide();
                     
                     $("#changeset_tree .tree_breadcrumb").removeClass("locked_breadcrumb");
-                    $(".breadcrumb_search").removeClass("locked_breadcrumb_search");
+                    $(".breadcrumb_filter").removeClass("locked_breadcrumb_filter");
                     $("#cslist").removeClass("locked");
                     $('#locked_icon').remove();
                     $('#review_changeset > span').html(i18n.review);
@@ -495,7 +495,7 @@ var promotion_page = (function($){
                 else { //in review stage
                     cancel_btn.show();
                     $("#changeset_tree .tree_breadcrumb").addClass("locked_breadcrumb");
-                    $(".breadcrumb_search").addClass("locked_breadcrumb_search");
+                    $(".breadcrumb_filter").addClass("locked_breadcrumb_filter");
                     if( $('#locked_icon').length === 0 ){
                         $("#changeset_tree .tree_breadcrumb #changeset_" + current_changeset.id).prepend('<div id="locked_icon" class="locked_icon fl" >');
                     }
@@ -515,7 +515,7 @@ var promotion_page = (function($){
             else {
                 $(status.hide());
                 $("#changeset_tree .tree_breadcrumb").removeClass("locked_breadcrumb");
-                $(".breadcrumb_search").removeClass("locked_breadcrumb_search");
+                $(".breadcrumb_filter").removeClass("locked_breadcrumb_filter");
                 $("#cslist").removeClass("locked");
                 $('#locked_icon').remove();
 
@@ -1489,6 +1489,7 @@ $(document).ready(function() {
                                         default_tab     :  "content",
                                         bbq_tag         :  "content",
                                         base_icon       :  'home_img',
+                                        enable_search   :  true,
                                         tab_change_cb   :  promotion_page.set_current_product
                                     });
 
@@ -1498,7 +1499,7 @@ $(document).ready(function() {
                                         bbq_tag         :  "changeset",
                                         base_icon       :  'home_img',
                                         render_cb       :  promotionsRenderer.render,
-                                        enable_search   :  true,
+                                        enable_filter   :  true,
                                         enable_float	:  true,
                                         tab_change_cb   :  function(hash_id) {
                                           promotion_page.init_changeset_list();

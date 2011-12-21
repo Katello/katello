@@ -27,7 +27,7 @@ from katello.client.api.changeset import ChangesetAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.api.utils import get_environment, get_provider, get_product
-from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask
+from katello.client.core.utils import run_async_task_with_status, run_spinner_in_bg, wait_for_async_task, AsyncTask, format_task_errors
 from katello.client.core.utils import ProgressBar
 
 try:
@@ -142,6 +142,9 @@ class Sync(SingleProductAction):
             errors = [json.loads(t["result"])['errors'][0] for t in task.get_hashes() if t['state'] == 'error']
             print _("Product [ %s ] failed to sync: %s" % (prodName, errors))
             return os.EX_DATAERR
+        elif task.cancelled():
+            print _("Product [ %s ] synchronization cancelled" % prodName)
+            return os.EX_DATAERR
 
         print _("Product [ %s ] synchronized" % prodName)
         return os.EX_OK
@@ -227,17 +230,31 @@ class Promote(SingleProductAction):
         if (prod == None):
             return os.EX_DATAERR
 
+        returnCode = os.EX_OK
+
         cset = self.csapi.create(orgName, env["id"], self.create_cs_name())
         try:
             self.csapi.add_content(cset["id"], "products", {'product_id': prod['id']})
             task = self.csapi.promote(cset["id"])
+            task = AsyncTask(task)
 
-            result = run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the product, please wait... "))
-            print _("Product [ %s ] promoted to environment [ %s ]" % (prodName, envName))
+            run_spinner_in_bg(wait_for_async_task, [task], message=_("Promoting the product, please wait... "))
+
+            if task.succeeded():
+                print _("Product [ %s ] promoted to environment [ %s ] " % (prodName, envName))
+                returnCode = os.EX_OK
+            else:
+                print _("Product [ %s ] promotion failed: %s" % (prodName, format_task_errors(task.errors())) )
+                returnCode = os.EX_DATAERR
+
+        except Exception as e:
+            #exception message is printed from action's main method
+            raise e
 
         finally:
             self.csapi.delete(cset["id"])
-        return os.EX_OK
+        
+        return returnCode
 
     def create_cs_name(self):
         curTime = datetime.datetime.now()

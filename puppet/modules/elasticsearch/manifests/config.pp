@@ -1,0 +1,3 @@
+class elasticsearch::config {
+  
+}

@@ -169,8 +169,8 @@ module Pulp
         response = get(repository_path  + repo_id + "/", self.default_headers)
         body = response.body
         JSON.parse(body).with_indifferent_access
-      rescue RestClientException => e
-        return nil if e.code.to_i == 404 && !yell_on_404
+      rescue RestClient::ResourceNotFound => e
+        return nil if !yell_on_404
         raise e
       end
 
@@ -182,8 +182,8 @@ module Pulp
 
         response = get(self.repository_path + search_query , self.default_headers)
         JSON.parse(response.body)
-      rescue RestClientException => e
-        return nil if e.code.to_i == 404 && !yell_on_404
+      rescue RestClient::ResourceNotFound => e
+        return nil if !yell_on_404
         raise e
       end
 

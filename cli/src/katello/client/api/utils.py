@@ -22,6 +22,7 @@ from katello.client.api.repo import RepoAPI
 from katello.client.api.provider import ProviderAPI
 from katello.client.api.template import TemplateAPI
 from katello.client.api.changeset import ChangesetAPI
+from katello.client.api.user import UserAPI
 
 def get_organization(orgName):
     organization_api = OrganizationAPI()
@@ -60,7 +61,7 @@ def get_product(orgName, prodName):
     return prod
 
 
-def get_repo(orgName, prodName, repoName, envName=None):
+def get_repo(orgName, prodName, repoName, envName=None, includeDisabled=False):
     repo_api = RepoAPI()
 
     env  = get_environment(orgName, envName)
@@ -74,7 +75,7 @@ def get_repo(orgName, prodName, repoName, envName=None):
         print _("Could not find product [ %s ]") % prodName
         return None
 
-    repos = repo_api.repos_by_env_product(env["id"], prod["id"], repoName)
+    repos = repo_api.repos_by_env_product(env["id"], prod["id"], repoName, includeDisabled)
     if len(repos) > 0:
         #repo by id call provides more information
         return repo_api.repo(repos[0]["id"])
@@ -116,3 +117,11 @@ def get_changeset(orgName, envName, csName):
     if cset == None:
         print _("Could not find changeset [ %s ] within environment [ %s ]") % (csName, env["name"])
     return cset
+
+def get_user(userName):
+    user_api = UserAPI()
+    user = user_api.user_by_name(userName)
+    if user == None:
+        print _("Could not fing user [ %s ]") % (userName)
+    return user
+
