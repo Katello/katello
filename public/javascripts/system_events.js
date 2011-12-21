@@ -17,24 +17,18 @@
 
 
 KT.events = function() {
-//    total_packages = $('.packages').attr('data-total_packages'),
-//    more_button = $('#more'),
-//    sort_button = $('#package_sort'),
-//    loaded_summary = $('#loaded_summary'),
 
     var system_id = $('.events').attr('data-system_id'),
-    retrievingNewContent = true,
     add_row_shading = false,
-    actions_in_progress = {},
     actions_updater = undefined,
-
+    more_button = $('#more'),
     moreEvents = function() {
         var list = $('.events');
         var spinner = $('#list-spinner');
-        var dataScrollURL = more_button.attr("data-scroll_url");
+        var dataScrollURL = more_button.data("scroll_url");
 
-        var offset = parseInt(more_button.attr("data-offset"), 10) + parseInt(more_button.attr("data-page_size"), 10);
-        dataScrollURL = dataScrollURL + "?offset=" + offset + "&pkg_order="+ sort_button.attr("data-sort") +"&";
+        var offset = parseInt(more_button.data("offset"),0);
+        dataScrollURL = dataScrollURL + "?offset=" + offset +"&";
         //console.log(dataScrollURL + ", page_size: " + offset);
         spinner.fadeIn();
         $.ajax({
@@ -42,71 +36,21 @@ KT.events = function() {
             url: dataScrollURL,
             cache: false,
             success: function(data) {
-                retrievingNewContent = false;
                 spinner.fadeOut();
                 list.append(data);
                 $('#filter').keyup();
                 $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
-                updateLoadedSummary();
-                if (data.length === 0) {
+                if (data.trim().length === 0) {
                     more_button.empty().remove();
                 }else{
-                    more_button.attr("data-offset", offset);
+                    more_button.data("offset", offset + parseInt(more_button.data("page_size"),25));
                 }
             },
             error: function() {
                 spinner.fadeOut();
-                retrievingNewContent = false;
             }
         });
     },
-/*
-    sortOrder = function() {
-        var packageSortOrder = sort_button.attr("data-sort");
-        if (sort_button.attr("data-sort") == "asc"){
-            packageSortOrder = "desc";
-            sort_button.removeClass("ascending").addClass("descending");
-        } else {
-            packageSortOrder = "asc";
-            sort_button.removeClass("descending").addClass("ascending");
-        }
-        sort_button.attr("data-sort", packageSortOrder);
-        return packageSortOrder;
-    },
-    reverseSort = function() {
-        var list = $('.packages');
-        var spinner = $('#list-spinner');
-        var dataScrollURL = more_button.attr("data-scroll_url");
-        var reverse = parseInt(more_button.attr("data-offset"), 10);
-
-        dataScrollURL = dataScrollURL + "?reverse=" + reverse + "&pkg_order=" + KT.packages.sortOrder() + "&";
-        spinner.fadeIn();
-        list.find('tbody > tr.package').empty().remove();
-        $.ajax({
-            type: "GET",
-            url: dataScrollURL,
-            cache: false,
-            success: function(data) {
-                retrievingNewContent = false;
-                spinner.fadeOut();
-                list.append(data);
-                registerCheckboxEvents();
-                $('#filter').keyup();
-                $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
-                updateLoadedSummary();
-                if (data.length == 0) {
-                    more_button.empty().remove();
-                }else{
-                    more_button.attr("data-offset", reverse);
-                }
-            },
-            error: function() {
-                spinner.fadeOut();
-                retrievingNewContent = false;
-            }
-        });
-    },
-*/
     updateStatus = function(data) {
         // For each action that the user has initiated, update the status.
         $.each(data, function(index, status) {
@@ -140,23 +84,9 @@ KT.events = function() {
             }, updateStatus);
         }
     },
-    monitorStatus = function(task_id, task_type) {
-        actions_in_progress[task_id] = task_type;
 
-        if (actions_updater === undefined){
-            startUpdater();
-        } else {
-            actions_updater.restart();
-        }
-    },
-    noLongerMonitorStatus = function(task_id) {
-        delete actions_in_progress[task_id];
-
-        if (Object.keys(actions_in_progress).length === 0) {
-            actions_updater.stop();
-        }
-    },
     initEvents = function() {
+        more_button.bind('click', moreEvents);
         if($('.event_name[data-pending-task-id]').length > 0) {
             startUpdater();
         }
@@ -167,9 +97,7 @@ KT.events = function() {
         loaded_summary.html(message);
     };
     return {
-//        morePackages: morePackages,
-//        sortOrder: sortOrder,
-//        reverseSort: reverseSort,
+        moreEvents: moreEvents,
         initEvents: initEvents
     };
 }();
