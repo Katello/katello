@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.45
+Version:        0.1.44
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,9 +56,6 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
-* Wed Dec 21 2011 Justin Sherrill <jsherril@redhat.com> 0.1.45-1
-- 
-
 * Wed Dec 21 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.44-1
 - Revert "769540 - katello-configure fails: katelloschema"
 - Gave create db access to katello user
