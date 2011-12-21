@@ -12,7 +12,7 @@
 
 class SystemErrataController < ApplicationController
 
-  before_filter :find_system, :only =>[:update, :index, :more_errata, :items]
+  before_filter :find_system, :only =>[:install, :index, :items]
   before_filter :authorize
 
   def section_id
@@ -26,8 +26,7 @@ class SystemErrataController < ApplicationController
     {
       :index => read_system,
       :items => read_system,
-      :more_errata => read_system,
-      :update => edit_system
+      :install => edit_system
     }
   end
 
@@ -50,7 +49,16 @@ class SystemErrataController < ApplicationController
     render :partial => "systems/errata/items", :locals => { :errata => errata, :editable => @system.editable? }    
   end
 
-  def update
+  def install
+    errata_ids = params[:errata_ids]
+    task = "1234"#@system.install_errata(errata_ids)
+    puts errata_ids
+    notice _("Errata scheduled for install.")
+    render :text => task#task.task_status.uuid
+  rescue Exception => error
+    errors error
+    Rails.logger.info error.backtrace.join("\n")
+    render :text => error, :status => :bad_request
   end
 
   private

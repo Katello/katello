@@ -105,6 +105,9 @@ describe SystemErrataController do
             response.should_not be_success
           end
         end
+      end
+  
+      describe 'and installing errata' do
         
       end
     end

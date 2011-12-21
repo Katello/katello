@@ -78,6 +78,7 @@ Src::Application.routes.draw do
     resources :errata, :controller => "system_errata", :only => [:index, :update] do
       collection do
         get :items
+        post :install
       end
     end
 
