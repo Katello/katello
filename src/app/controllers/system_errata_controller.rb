@@ -63,8 +63,11 @@ class SystemErrataController < ApplicationController
   end
 
   def status
-    statuses = @system.tasks.where(:uuid => params[:uuid], :task_type => [:errata_install])
-    #statuses = [{ :uuid => "1234", :state => "finished" }]
+    if params[:uuid]
+      statuses = @system.tasks.where(:uuid => params[:uuid], :task_type => [:errata_install])
+    else
+      statuses = @system.tasks.where(:task_type => [:errata_install], :state => [:waiting, :running])
+    end
     render :json => statuses
   end
 
