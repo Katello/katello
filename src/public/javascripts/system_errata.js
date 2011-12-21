@@ -18,6 +18,7 @@ KT.system.errata = function() {
     	system_id = system_errata_container.data('system_id'),
     	table_body = system_errata_container.find('tbody'),
     	load_more = $('#load_more_errata'),
+        task_list = {},
     		
     	init = function(){
     		register_events();
@@ -75,9 +76,36 @@ KT.system.errata = function() {
     		});
     	},
         add_errata = function(){
-            var selected_errata = $('input[@name=errata_checkbox]:checked');
+            var selected_errata = $('#system_errata').find(':checkbox:checked'),
+                errata_ids = [],
+                params = {};
 
-            set_status(selected_errata);
+            $.each(selected_errata, function(index, value){
+                set_status($(value).parent().parent(), 'installing');
+                errata_ids.push($(value).val());
+            });
+
+            params["errata_ids"] = errata_ids;
+            params = $.param(params);
+
+            $.ajax({
+                url : KT.routes.install_system_errata_path(system_id),
+                type : 'POST',
+                data : params
+            }).success(function(data){
+                task_list[data] = errata_ids;
+                set_errata_finished(errata_ids);
+            });
+        },
+        set_errata_finished = function(errata_ids){
+            var i = 0, 
+                length = errata_ids.length,
+                errata = [];
+
+            for( i; i < length; i += 1){
+                errata = $('#system_errata_' + KT.common.escapeId(errata_ids[i]));
+                set_status(errata, 'finished');
+            }
         },
     	insert_data = function(html, append){
     		if( append ){
@@ -107,12 +135,19 @@ KT.system.errata = function() {
 				$('#list-spinner').hide();
 			}	
     	},
-        set_status = function(items){
-            items.parent().parent().find('.errata_status').show();
+        set_status = function(errata_row, status){
+            if( status === 'installing' ){
+                errata_row.find('.errata_status_text').html(i18n.errata_installing);
+                errata_row.find('img').show();
+            } else if( status === 'finished' ){
+                errata_row.find('img').hide();
+                errata_row.find('.errata_status_text').html(i18n.errata_install_finished);
+            }
+            errata_row.find('.errata_status').show();
         };
 	    
     return {
-        init	: init,
+        init	: init
     };
     
 }();
