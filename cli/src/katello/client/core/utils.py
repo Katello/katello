@@ -18,7 +18,7 @@ import re
 import sys
 import time
 import threading
-import time
+import calendar
 from katello.client.api.task_status import TaskStatusAPI, SystemTaskStatusAPI
 
 try:
@@ -397,7 +397,9 @@ def format_date(date, from_format="%Y-%m-%dT%H:%M:%SZ", to_format="%Y/%m/%d %H:%
     @return string, formatted date
     """
     t = time.strptime(date, from_format)
-    return time.strftime(to_format, t)
+    lt = calendar.timegm(t)
+    return time.strftime(to_format, time.localtime(lt))
+
 
 
 def format_progress_errors(errors):
