@@ -129,6 +129,7 @@ module ProductTestData
         "displayName" => "ACME_Corporation"
     },
     "providedProducts" => [
+
         {
             "id" => "ff808081311ad38001311ae11f4f0011",
             "productName" => "Red Hat Enterprise Linux 6 Server SVC",

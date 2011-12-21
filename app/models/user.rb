@@ -18,8 +18,19 @@ class User < ActiveRecord::Base
   include Glue::Pulp::User if (AppConfig.use_cp and AppConfig.use_pulp)
   include Glue if AppConfig.use_cp
   include AsyncOrchestration
+  include IndexedModel
 
   acts_as_reportable
+
+  index_options :extended_json=>:extended_index_attrs,
+                :json=>{:except=>[:password, :password_reset_token,
+                                  :password_reset_sent_at, :helptips_enabled,
+                                  :disabled, :own_role_id]}
+
+  mapping do
+    indexes :login_sort, :type => 'string', :index => :not_analyzed
+  end
+
 
   has_many :roles_users
   has_many :roles, :through => :roles_users
@@ -29,6 +40,7 @@ class User < ActiveRecord::Base
   has_many :notices, :through => :user_notices
   has_many :search_favorites, :dependent => :destroy
   has_many :search_histories, :dependent => :destroy
+  serialize :preferences, HashWithIndifferentAccess
 
   validates :username, :uniqueness => true, :presence => true, :username => true, :length => { :maximum => 255 }
   validates_presence_of :email
@@ -73,6 +85,7 @@ class User < ActiveRecord::Base
   # hash the password before creating or updateing the record
   before_save do |u|
     u.password = Password::update(u.password) if u.password.length != 192
+    u.preferences=HashWithIndifferentAccess.new unless u.preferences
   end
 
   # create own role for new user
@@ -317,7 +330,7 @@ class User < ActiveRecord::Base
 
   def self.cp_oauth_header
     raise Errors::UserNotSet, "unauthenticated to call a backend engine" if self.current.nil?
-    { 'cp-user' => self.current.username }
+    self.current.cp_oauth_header
   end
 
   def pulp_oauth_header
@@ -447,6 +460,13 @@ class User < ActiveRecord::Base
     return ACTION_TO_VERB[type][verb] if ACTION_TO_VERB[type] and ACTION_TO_VERB[type][verb]
     return DEFAULT_VERBS[verb] if DEFAULT_VERBS[verb]
     verb
+  end
+
+
+  def extended_index_attrs
+    {
+        :login_sort => login.downcase
+    }
   end
 
   private

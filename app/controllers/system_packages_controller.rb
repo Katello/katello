@@ -34,13 +34,19 @@ class SystemPackagesController < ApplicationController
   end
 
   def add
-    if !params[:packages].nil?
+    if !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
-      packages = params[:packages].split(/ *, */ )
-      task = @system.install_packages packages
-      notice _("Install of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
+      packages = validate_package_list_format(params[:packages])
+      
+      if packages
+        task = @system.install_packages packages
+        notice _("Install of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
+      else
+        errors _("One or more errors found in Package names '%{s}'." % {:s => @system['name']})
+        render :text => '' and return
+      end
 
-    elsif !params[:groups].nil?
+    elsif !params[:groups].blank?
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
       task = @system.install_package_groups groups
@@ -61,13 +67,19 @@ class SystemPackagesController < ApplicationController
       task = @system.uninstall_packages packages
       notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => packages.join(',')})
 
-    elsif !params[:packages].nil?
+    elsif !params[:packages].blank?
       # user entered one or more package names (as comma-separated list) in the content box
-      packages = params[:packages].split(/ *, */ )
-      task = @system.uninstall_packages packages
-      notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
+      packages = validate_package_list_format(params[:packages])
+      
+      if packages
+        task = @system.uninstall_packages packages
+        notice _("Uninstall of Packages '%{p}' scheduled for System '%{s}'." % {:s => @system['name'], :p => params[:packages]})
+      else
+        errors _("One or more errors found in Package names '%{s}'." % {:s => @system['name']})
+        render :text => '' and return        
+      end
 
-    elsif !params[:groups].nil?
+    elsif !params[:groups].blank?
       # user entered one or more package group names (as comma-separated list) in the content box
       groups = params[:groups].split(/ *, */ )
       task = @system.uninstall_package_groups groups
@@ -75,7 +87,7 @@ class SystemPackagesController < ApplicationController
 
     else
       errors _("Empty request received to install Packages or Package Groups System '%{s}'." % {:s => @system['name']})
-      render :test => '' and return
+      render :text => '' and return
     end
 
     render :text => task.task_status.uuid
@@ -113,8 +125,16 @@ class SystemPackagesController < ApplicationController
     else
       packages = []
     end
-    render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system=>@system, :packages => packages,
+
+    package_tasks = @system.tasks.where(:task_type => [:package_install, :package_update, :package_remove],
+                                        :state => [:waiting, :running])
+    group_tasks = @system.tasks.where(:task_type => [:package_group_install, :package_group_remove],
+                                      :state => [:waiting, :running])
+
+    render :partial=>"packages", :layout => "tupane_layout", :locals=>{:system => @system, :packages => packages,
                                                                        :total_packages => total_packages,
+                                                                       :package_tasks => package_tasks,
+                                                                       :group_tasks => group_tasks,
                                                                        :offset => offset, :editable => @system.editable?}
   end
 
@@ -144,7 +164,8 @@ class SystemPackagesController < ApplicationController
     else
       packages = []
     end
-    render :partial=>"package_items", :locals=>{:packages => packages, :offset=> offset}
+    render :partial=>"package_items", :locals=>{:packages => packages, :package_tasks => nil,
+                                                :group_tasks => nil, :offset=> offset, :editable => @system.editable?}
   end
 
   def status
@@ -174,6 +195,26 @@ class SystemPackagesController < ApplicationController
       last = offset + current_user.page_size
       last = systems.length if last > systems.length
       systems[offset...last]
+  end
+  
+  def valid_package_characters
+    /[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\-\.\_\+\,]+/
+  end
+  
+  def validate_package_list_format packages
+    packages = packages.split(/ *, */ )
+
+    packages.each{ |package_name|
+      if not valid_package_name_format(package_name).nil?
+        return false
+      end
+    }
+    
+    return packages
+  end
+  
+  def valid_package_name_format package
+    return (package =~ valid_package_characters)
   end
 
 end
