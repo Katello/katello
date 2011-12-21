@@ -33,7 +33,7 @@ class SystemEventsController < ApplicationController
 
   def index
     # list of events
-    tasks = @system.tasks
+    tasks = @system.tasks.order("updated_at desc").limit(50)
     render :partial=>"events", :layout => "tupane_layout", :locals=>{:system => @system, :tasks => tasks}
   end
 
