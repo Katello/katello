@@ -23,9 +23,10 @@ module Glue::Provider
 
   module InstanceMethods
 
-    def import_manifest zip_file_path
+    def import_manifest zip_file_path, options = {}
+      options.assert_valid_keys(:force)
       Rails.logger.info "Importing manifest for provider #{name}"
-      queue_import_manifest zip_file_path
+      queue_import_manifest zip_file_path, options
       self.save!
     end
 
@@ -154,47 +155,42 @@ module Glue::Provider
       raise e
     end
 
-    def owner_import zip_file_path
-      Candlepin::Owner.import self.organization.cp_key, zip_file_path
+    def owner_import zip_file_path, options
+      Candlepin::Owner.import self.organization.cp_key, zip_file_path, options
     end
 
     def owner_imports
       Candlepin::Owner.imports self.organization.cp_key
     end
 
-    def queue_import_manifest zip_file_path
-      queue.create(:name => "import manifest #{zip_file_path} for owner: #{self.organization.name}", :priority => 3, :action => [self, :owner_import, zip_file_path])
+    def queue_import_manifest zip_file_path, options
+      queue.create(:name => "import manifest #{zip_file_path} for owner: #{self.organization.name}", :priority => 3, :action => [self, :owner_import, zip_file_path, options])
       queue.create(:name => "import of products in manifest #{zip_file_path}",                       :priority => 5, :action => [self, :import_products_from_cp])
-      queue.create(:name => "delete imported products not assigned to any owner #{zip_file_path}",   :priority => 6, :action => [self, :delete_not_assigned_products])
-      queue.create(:name => "delete imported content that have no repos #{zip_file_path}",           :priority => 7, :action => [self, :delete_not_assigned_content])
     end
 
     def import_products_from_cp
-      added_products.each do |product_attrs|
-        product = Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
-          p.provider = self
-          p.environments << self.organization.locker
+      product_existing_in_katello_ids = self.organization.locker.products.all(:select => "cp_id").map(&:cp_id)
+      marketing_to_enginnering_product_ids_mapping.each do |marketing_product_id, engineering_product_ids|
+        engineering_product_ids = engineering_product_ids.uniq
+        added_eng_products = (engineering_product_ids - product_existing_in_katello_ids).map do |id|
+          Candlepin::Product.get(id)[0]
         end
-      end
-    end
-
-    def delete_not_assigned_products
-      not_assigned_products.each do |product_attrs|
-
-        unless product_attrs['productContent'].nil?
-          product_attrs['productContent'].each do |pc|
-            Candlepin::Product.remove_content product_attrs['id'], pc[:content][:id]
+        added_eng_products.each do |product_attrs|
+          Glue::Candlepin::Product.import_from_cp(product_attrs) do |p|
+            p.provider = self
+            p.environments << self.organization.locker
           end
         end
+        product_existing_in_katello_ids.concat(added_eng_products.map{|p| p["id"]})
 
-        Candlepin::Product.destroy product_attrs['id']
-      end
-    end
-
-    def delete_not_assigned_content
-
-      not_assigned_content_ids.each do |content_id|
-        Candlepin::Content.destroy(content_id)
+        unless product_existing_in_katello_ids.include?(marketing_product_id)
+          engineering_product_in_katello_ids = self.organization.locker.products.where(:cp_id => engineering_product_ids).map(&:id)
+          Glue::Candlepin::Product.import_marketing_from_cp(Candlepin::Product.get(marketing_product_id)[0], engineering_product_in_katello_ids) do |p|
+            p.provider = self
+            p.environments << self.organization.locker
+          end
+          product_existing_in_katello_ids << marketing_product_id
+        end
       end
     end
 
@@ -205,35 +201,23 @@ module Glue::Provider
 
     protected
 
-    def added_products
-      product_existing_in_katello_ids = self.organization.locker.products.all(:select => "cp_id").map(&:cp_id)
-      product_existing_in_cp_ids = get_pool_product_ids
-
-      new_product_ids = (product_existing_in_cp_ids - product_existing_in_katello_ids)
-      new_product_ids.collect {|id| (Candlepin::Product.get(id))[0] }
-    end
-
-    def not_assigned_products
-      all_product_existing_in_katello_ids = Product.all(:select => "cp_id").map(&:cp_id)
-      all_product_existing_in_cp_ids = get_all_product_ids
-
-      product_ids = (all_product_existing_in_cp_ids - all_product_existing_in_katello_ids)
-      product_ids.collect {|id| (Candlepin::Product.get(id))[0] }
-    end
-
-    def not_assigned_content_ids
-      (get_all_content_ids - get_assigned_content_ids)
-    end
-
-    def get_pool_product_ids
+    # There are two types of products in Candlepin: marketing and engineering.
+    # When promoting, we care only about the engineering products. These are
+    # the products that content/repos are assigned to. The marketing product is
+    # that one that subscriptions are assigned to. Between marketing and
+    # enginering products is M:N relation (see MarketingEngineeringProduct
+    # model)
+    def marketing_to_enginnering_product_ids_mapping
+      mapping = {}
       pools = Candlepin::Owner.pools self.organization.cp_key
-      pools.collect do |pool|
-        provided_products = pool[:providedProducts]
-        pool_product_ids = []
-        pool_product_ids = provided_products.collect {|provided| provided[:productId]} unless provided_products.nil?
-        # Done with provided products, lets add the *actual* product
-        pool_product_ids << pool[:productId]
-      end.flatten.uniq
+      pools.each do |pool|
+        mapping[pool[:productId]] ||= []
+        if pool[:providedProducts]
+          eng_product_ids = pool[:providedProducts].map { |provided| provided[:productId] }
+          mapping[pool[:productId]].concat(eng_product_ids)
+        end
+      end
+      mapping
     end
 
     def get_all_product_ids

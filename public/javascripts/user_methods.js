@@ -145,10 +145,11 @@ KT.user_page = function() {
             success: function(data) {
                 $('#env_name').html(data.env);
                 $('#org_name').html(data.org);
-                button.removeClass("disabled");
+                env_select.original_env_id = env_id;
+                env_select.env_changed_callback(env_id);
             },
             error: function(e) {
-                button.removeClass('disabled');
+                button.removeClass('disabled');  // Guarantee button is enabled (should be already, though)
             }
         });
     },

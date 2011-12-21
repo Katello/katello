@@ -178,8 +178,6 @@ describe UsersController do
       let(:on_success) do
         assigns(:items).should include @testuser
       end
-
-      it_should_behave_like "protected action"
     end
 
     describe "update user put" do

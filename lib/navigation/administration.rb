@@ -19,24 +19,24 @@ module Navigation
 
     def user_navigation
       [
-          { :key => :general,
-            :name =>N_("General"),
-            :url => (@user.nil? || @user.new_record?) ? "" : edit_user_path(@user.id),
-            :if => lambda{!@user.nil?},
-            :options => {:class=>"navigation_element"}
-          },
-          { :key => :environment,
-            :name =>N_("Environments"),
-            :url => (@user.nil? || @user.new_record?) ? "" : edit_environment_user_path(@user.id),
-            :if => lambda{!@user.nil?},
-            :options => {:class=>"navigation_element"}
-          },
-          { :key => :roles_and_permissions,
-            :name =>N_("Roles & Permissions"),
-            :url => (@user.nil? || @user.new_record?) ? "" : edit_role_path(@user.own_role_id),
-            :if => lambda{!@user.nil?},
-            :options => {:class=>"navigation_element"}
-          }
+        { :key => :environment,
+          :name =>N_("Environments"),
+          :url => (@user.nil? || @user.new_record?) ? "" : edit_environment_user_path(@user.id),
+          :if => lambda{!@user.nil?},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :roles,
+          :name =>N_("Roles"),
+          :url => (@user.nil? || @user.new_record?) ? "" : edit_role_path(@user.own_role_id),
+          :if => lambda{!@user.nil?},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :details,
+          :name =>N_("Details"),
+          :url => (@user.nil? || @user.new_record?) ? "" : edit_user_path(@user.id),
+          :if => lambda{!@user.nil?},
+          :options => {:class=>"navigation_element"}
+        }
       ]
     end
 

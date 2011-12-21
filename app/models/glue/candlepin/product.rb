@@ -33,6 +33,10 @@ module Glue::Candlepin::Product
     end
   end
 
+  def self.validate_name(name)
+    name.gsub(/[^a-z0-9\-_ ]/i,"")
+  end
+
   def self.import_from_cp(attrs=nil, &block)
     if attrs.has_key?(:productContent)
       productContent_attrs = attrs.delete(:productContent)
@@ -40,8 +44,7 @@ module Glue::Candlepin::Product
       productContent_attrs = []
     end
 
-    valid_name = attrs['name'].gsub(/[^a-z0-9\-_ ]/i,"")
-    attrs = attrs.merge('name' => valid_name)
+    attrs = attrs.merge('name' => validate_name(attrs['name']))
 
     # orchestration has 2 phases:
     # 1) create the product and environment_product active records
@@ -54,6 +57,21 @@ module Glue::Candlepin::Product
     product.orchestration_for = :import_from_cp
     product.save!
 
+  rescue => e
+    Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
+    raise e
+  end
+
+  def self.import_marketing_from_cp(attrs, engineering_product_ids, &block)
+    attrs = attrs.merge('name' => validate_name(attrs['name']))
+
+    product = MarketingProduct.new(attrs, &block)
+    product.orchestration_for = :import_from_cp_ar_setup
+    product.save!
+    engineering_product_ids.each do |engineering_product_id|
+      product.marketing_engineering_products.create(:engineering_product_id => engineering_product_id)
+    end
+    product
   rescue => e
     Rails.logger.error "Failed to create product #{attrs['name']} for provider #{name}: #{e}, #{e.backtrace.join("\n")}"
     raise e
@@ -207,15 +225,6 @@ module Glue::Candlepin::Product
       end
     end
 
-    def remove_imported_content
-      return true unless productContent_changed?
-
-      added_content.each do |pc|
-        Rails.logger.debug "removing imported content #{pc.content.id} from product #{name}"
-        Candlepin::Product.remove_content cp_id, pc.content.id
-      end
-    end
-
     def set_unlimited_subscription
       # we create unlimited subscriptions only for generic yum providers
       if self.provider and self.provider.yum_repo?
@@ -261,7 +270,7 @@ module Glue::Candlepin::Product
           queue.create(:name => "candlepin product: #{self.name}",                          :priority => 1, :action => [self, :set_product])
           queue.create(:name => "create unlimited subscription in candlepin: #{self.name}", :priority => 2, :action => [self, :set_unlimited_subscription])
         when :import_from_cp
-          queue.create(:name => "delete imported content from locker environment: #{self.name}", :priority => 2, :action => [self, :remove_imported_content])
+          # we leave it as it is - to not break re-import logic
         when :update
           #called when sync schedule changed, repo added, repo deleted
           queue.create(:name => "update content in candlein: #{self.name}", :priority => 1, :action => [self, :update_content])

@@ -13,7 +13,7 @@
 class Api::ChangesetsController < Api::ApiController
 
   before_filter :find_environment, :only => [:index, :create]
-  before_filter :find_changeset, :only => [:show, :destroy, :update_content, :promote]
+  before_filter :find_changeset, :only => [:show, :destroy, :promote]
   before_filter :authorize
 
   def rules
@@ -26,7 +26,6 @@ class Api::ChangesetsController < Api::ApiController
       :create => manage_perm,
       :promote => promote_perm,
       :destroy =>manage_perm,
-      :update_content => manage_perm,
     }
   end
 
@@ -38,7 +37,7 @@ class Api::ChangesetsController < Api::ApiController
 
 
   def show
-    render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos, :system_templates])
+    render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos, :system_templates, :distributions])
   end
 
 
@@ -60,36 +59,6 @@ class Api::ChangesetsController < Api::ApiController
   def destroy
     @changeset.destroy
     render :text => _("Deleted changeset '#{params[:id]}'"), :status => 200
-  end
-
-
-  def update_content
-
-    each_patch_item '+products' do |name| @changeset.add_product name end
-    each_patch_item '-products' do |name| @changeset.remove_product name end
-
-    each_patch_item '+packages' do |rec| @changeset.add_package rec[:name], rec[:product] end
-    each_patch_item '-packages' do |rec| @changeset.remove_package rec[:name], rec[:product] end
-
-    each_patch_item '+errata' do |rec| @changeset.add_erratum rec[:name], rec[:product] end
-    each_patch_item '-errata' do |rec| @changeset.remove_erratum rec[:name], rec[:product] end
-
-    each_patch_item '+repos' do |rec| @changeset.add_repo rec[:name], rec[:product] end
-    each_patch_item '-repos' do |rec| @changeset.remove_repo rec[:name], rec[:product] end
-
-    each_patch_item '+templates' do |name| @changeset.add_template name end
-    each_patch_item '-templates' do |name| @changeset.remove_template name end
-
-    @changeset.save!
-    render :json => @changeset.to_json(:include => [:products, :packages, :errata, :repos])
-  end
-
-  def each_patch_item name, &block
-    return if params[:patch].nil? or params[:patch][name].nil?
-
-    params[:patch][name].each do |rec|
-      yield rec
-    end
   end
 
   def find_changeset

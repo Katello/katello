@@ -452,17 +452,17 @@ KT.roles.permissionWidget = function(){
             if( !selected ){
                 flow['resource_type'].input.hide();
                 flow['resource_type'].input.val('all');
-                flow['resource_type'].container.find('span').hide();
+                $('#all_types_span').hide();
                 $('<span id="all_types_selected">' + i18n.all_types_selected + '</span>').insertBefore(all_types_button);
                 all_types_button.html(i18n.cancel);
-                all_types_button.addClass('selected');            	
+                all_types_button.addClass('selected');
                 flow['verbs'].container.hide();
 	            flow['tags'].container.hide();
                 
             	if( mode === 'create' ){
 	                current_stage = 'resource_type';
-	           
-	            	flow['resource_type'].container.find('span').hide();
+
+                    $('#all_types_span').hide();
 	                flow['details'].container.hide();
 
 	                progress_bar.setProgress(25);
@@ -470,7 +470,7 @@ KT.roles.permissionWidget = function(){
 	                next_button.show();
                	}
             } else {
-                flow['resource_type'].container.find('span').show();
+                $('#all_types_span').show();
                 flow['resource_type'].input.show();
                 $('#all_types_selected').remove();
             	all_types_button.html(i18n.all);
@@ -1087,7 +1087,7 @@ var rolesRenderer = (function($){
                 width = panel.width();
             
             panel.find('.sliding_container').width(width);
-            panel.find('.breadcrumb_search').width(width);
+            panel.find('.breadcrumb_filter').width(width);
             panel.find('.slider').width(width);
             panel.find('.sliding_list').width(width * 2);
             panel.find('.slide_up_container').width(width);

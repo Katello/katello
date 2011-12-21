@@ -21,9 +21,11 @@
 
 KT.package_action_types = function() {
     return {
+        PKG : "pkg",
         PKG_INSTALL : "pkg_install",
         PKG_UPDATE : "pkg_update",
         PKG_REMOVE : "pkg_remove",
+        PKG_GRP : "pkg_grp",
         PKG_GRP_INSTALL : "pkg_grp_install",
         PKG_GRP_UPDATE : "pkg_grp_update",
         PKG_GRP_REMOVE : "pkg_grp_remove"
@@ -45,10 +47,14 @@ KT.packages = function() {
     add_content_button = $('#add_content'),
     remove_content_button = $('#remove_content'),
     loaded_summary = $('#loaded_summary'),
+    error_message = $('#error_message'),
     add_row_shading = false,
     selected_checkboxes = 0,
     actions_in_progress = {},
+    packages_in_progress = {},
+    groups_in_progress = {},
     actions_updater = undefined,
+
     disableButtons = function() {
         remove_button.attr('disabled', 'disabled');
         update_button.attr('disabled', 'disabled');
@@ -70,6 +76,43 @@ KT.packages = function() {
     enableUpdateAll = function() {
         update_all_button.removeAttr('disabled');
         update_all_button.removeClass('disabled');
+    },
+    disableLinks = function() {
+        add_content_button.unbind('click');
+        remove_content_button.unbind('click');
+
+        add_content_button.attr('disabled', 'disabled');
+        remove_content_button.attr('disabled', 'disabled');
+
+        add_content_button.addClass('disabled');
+        remove_content_button.addClass('disabled');
+    },
+    enableLinks = function() {
+        add_content_button.bind('click', addContent);
+        remove_content_button.bind('click', removeContent);
+
+        add_content_button.removeAttr('disabled');
+        remove_content_button.removeAttr('disabled');
+
+        add_content_button.removeClass('disabled');
+        remove_content_button.removeClass('disabled');
+    },
+    getActionType = function(item) {
+        var action_type = undefined;
+
+        if (item.find('td.package_action_status:contains("'+i18n.adding_package+'")').length > 0) {
+            action_type = KT.package_action_types.PKG_INSTALL;
+        } else if (item.find('td.package_action_status:contains("'+i18n.updating_package+'")').length > 0) {
+            action_type = KT.package_action_types.PKG_UPDATE;
+        } else if (item.find('td.package_action_status:contains("'+i18n.removing_package+'")').length > 0) {
+            action_type = KT.package_action_types.PKG_REMOVE;
+        } else if (item.find('td.package_action_status:contains("'+i18n.adding_group+'")').length > 0) {
+            action_type = KT.package_action_types.PKG_GRP_INSTALL;
+        } else if (item.find('td.package_action_status:contains("'+i18n.removing_group+'")').length > 0) {
+            action_type = KT.package_action_types.PKG_GRP_REMOVE;
+        }
+
+        return action_type;
     },
     morePackages = function() {
         var list = $('.packages');
@@ -172,11 +215,10 @@ KT.packages = function() {
         // For each action that the user has initiated, update the status.
         $.each(data, function(index, status) {
             var action = actions_in_progress[status["uuid"]],
-                action_status = status["state"],
                 action_row = $('tr[data-uuid="'+status["uuid"]+'"]'),
                 action_status_col = action_row.find('td.package_action_status');
 
-            switch (action_status) {
+            switch (status["state"]) {
                 case "waiting":
                 case "running":
                     // do nothing, no change to status needed
@@ -185,83 +227,115 @@ KT.packages = function() {
                     switch (action) {
                         case KT.package_action_types.PKG_INSTALL:
                             action_status_col.html(i18n.adding_package_failed);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_UPDATE:
                             action_status_col.html(i18n.updating_package_failed);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_REMOVE:
                             action_status_col.html(i18n.removing_package_failed);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_GRP_INSTALL:
                             action_status_col.html(i18n.adding_group_failed);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                         case KT.package_action_types.PKG_GRP_REMOVE:
                             action_status_col.html(i18n.removing_group_failed);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                     }
-                    delete actions_in_progress[status["uuid"]];
                     break;
                 case "finished":
                     switch (action) {
                         case KT.package_action_types.PKG_INSTALL:
                             action_status_col.html(i18n.adding_package_success);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_UPDATE:
                             action_status_col.html(i18n.updating_package_success);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_REMOVE:
                             action_status_col.html(i18n.removing_package_success);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_GRP_INSTALL:
                             action_status_col.html(i18n.adding_group_success);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                         case KT.package_action_types.PKG_GRP_REMOVE:
                             action_status_col.html(i18n.removing_group_success);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                     }
-                    delete actions_in_progress[status["uuid"]];
                     break;
                 case "canceled":
                     switch (action) {
                         case KT.package_action_types.PKG_INSTALL:
                             action_status_col.html(i18n.adding_package_canceled);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_UPDATE:
                             action_status_col.html(i18n.updating_package_canceled);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_REMOVE:
                             action_status_col.html(i18n.removing_package_canceled);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_GRP_INSTALL:
                             action_status_col.html(i18n.adding_group_canceled);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                         case KT.package_action_types.PKG_GRP_REMOVE:
                             action_status_col.html(i18n.removing_group_canceled);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                     }
-                    delete actions_in_progress[status["uuid"]];
                     break;
                 case "timed_out":
                     switch (action) {
                         case KT.package_action_types.PKG_INSTALL:
                             action_status_col.html(i18n.adding_package_timeout);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_UPDATE:
                             action_status_col.html(i18n.updating_package_timeout);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_REMOVE:
                             action_status_col.html(i18n.removing_package_timeout);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG);
                             break;
                         case KT.package_action_types.PKG_GRP_INSTALL:
                             action_status_col.html(i18n.adding_group_timeout);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                         case KT.package_action_types.PKG_GRP_REMOVE:
                             action_status_col.html(i18n.removing_group_timeout);
+                            clearAction(status["uuid"], status["parameters"], KT.package_action_types.PKG_GRP);
                             break;
                     }
-                    delete actions_in_progress[status["uuid"]];
                     break;
             }
+        });
+    },
+    clearAction = function(action_id, content, content_type) {
+        // clear/remove the details associated with the action....
+        noLongerMonitorStatus(action_id);
+
+        // clear the package and group names associated with the action
+        $.each(content, function(index, content_item) {
+            var names = content_item.toString().split(',');
+            $.each(names, function(index, name) {
+                if (content_type === KT.package_action_types.PKG) {
+                    delete packages_in_progress[name];
+                } else if (content_type === KT.package_action_types.PKG_GRP) {
+                    delete groups_in_progress[name];
+                }
+            });
         });
     },
     startUpdater = function () {
@@ -275,12 +349,55 @@ KT.packages = function() {
             maxTimeout: timeout
         }, updateStatus);
     },
+    monitorStatus = function(task_id, task_type) {
+        actions_in_progress[task_id] = task_type;
+
+        if (actions_updater === undefined){
+            startUpdater();
+        } else {
+            actions_updater.restart();
+        }
+    },
+    noLongerMonitorStatus = function(task_id) {
+        delete actions_in_progress[task_id];
+
+        if (Object.keys(actions_in_progress).length === 0) {
+            actions_updater.stop();
+        }
+    },
     initPackages = function() {
+        initProgress();
         registerEvents();
         disableButtons();
         enableUpdateAll();
         updateLoadedSummary();
-        startUpdater();
+    },
+    initProgress = function() {
+        // when the page loads, we need to initialize the 'in progress' structures, to support monitoring
+        // the status of any actions currently in progress...
+
+        // if we are currently polling for status, temporarily stop the updater while we initialize the structures
+        if (actions_updater !== undefined) {
+            actions_updater.stop();
+        }
+
+        $('tr.content_package').each( function() {
+            actions_in_progress[$(this).attr('data-uuid')] = getActionType($(this));
+            packages_in_progress[$.trim($(this).find('td.package_name').html())] = true;
+        });
+        $('tr.content_group').each( function() {
+            actions_in_progress[$(this).attr('data-uuid')] = getActionType($(this));
+            packages_in_progress[$.trim($(this).find('td.package_name').html())] = true;
+        });
+
+        // start the updater, if there are any actions in progress
+        if (Object.keys(actions_in_progress).length > 0) {
+            if (actions_updater === undefined){
+                startUpdater();
+            } else {
+                actions_updater.restart();
+            }
+        }
     },
     registerEvents = function() {
         more_button.bind('click', morePackages);
@@ -297,117 +414,196 @@ KT.packages = function() {
         data.preventDefault();
 
         var selected_action = $("input[@name=perform_action]:checked").attr('id'),
-            content_list = content_form.find('#content_input').val();
+            content_string = content_form.find('#content_input').val(),
+            content_array = content_string.split(/ *, */),
+            validation_error = undefined;
 
         if (selected_action == 'perform_action_packages') {
-            $.ajax({
-                url: KT.routes.add_system_system_packages_path(system_id),
-                type: 'PUT',
-                data: {'packages' : content_list},
-                cache: false,
-                success: function(data) {
-                    var packages = content_list.split(',');
+            validation_error = validate_action_requested(content_array, KT.package_action_types.PKG);
+            if (validation_error === undefined) {
+                disableLinks();
+                $.ajax({
+                    url: KT.routes.add_system_system_packages_path(system_id),
+                    type: 'PUT',
+                    data: {'packages' : content_string},
+                    cache: false,
+                    success: function(data) {
+                        monitorStatus(data, KT.package_action_types.PKG_INSTALL);
 
-                    actions_in_progress[data] = KT.package_action_types.PKG_INSTALL;
+                        for (i = 0; i < content_array.length; i++) {
+                            var pkg_name = $.trim(content_array[i]), already_exists = false;
+                            packages_in_progress[pkg_name] = true;
 
-                    for (i = 0; i < packages.length; i++) {
-                        if (add_row_shading) {
-                            add_row_shading = false;
-                            content_form_row.after('<tr class="alt" data-uuid='+data+'><td></td><td id="content_name">' + packages[i] + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
+                            $('tr.content_package').find('td.package_name').each( function() {
+                                if ($.trim($(this).html()) === pkg_name) {
+                                    already_exists = true;
+                                    $(this).parent().attr('data-uuid', data);
+                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package);
+                                }
+                            });
+                            // if row already existed... skip...
+                            if (already_exists === false) {
+                                if (add_row_shading) {
+                                    add_row_shading = false;
+                                    content_form_row.after('<tr class="alt content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
+                                } else {
+                                    add_row_shading = true;
+                                    content_form_row.after('<tr class="content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
+                                }
+                            }
                         }
-                        else
-                        {
-                            add_row_shading = true;
-                            content_form_row.after('<tr data-uuid='+data+'><td></td><td id="content_name">' + packages[i] + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_package + '</td></tr>');
-                        }
+                        enableLinks();
+                        show_validation_error(false);
+                    },
+                    error: function() {
+                        enableLinks();
                     }
-                },
-                error: function() {
-                }
-            });
+                });
+            } else {
+                show_validation_error(true, validation_error);
+            }
         } else {
-            $.ajax({
-                url: KT.routes.add_system_system_packages_path(system_id),
-                type: 'PUT',
-                data: {'groups' : content_list},
-                cache: false,
-                success: function(data) {
-                    var groups = content_list.split(',');
+            validation_error = validate_action_requested(content_array, KT.package_action_types.PKG_GRP);
+            if (validation_error === undefined) {
+                disableLinks();
+                $.ajax({
+                    url: KT.routes.add_system_system_packages_path(system_id),
+                    type: 'PUT',
+                    data: {'groups' : content_string},
+                    cache: false,
+                    success: function(data) {
+                        monitorStatus(data, KT.package_action_types.PKG_GRP_INSTALL);
 
-                    actions_in_progress[data] = KT.package_action_types.PKG_GRP_INSTALL;
+                        for (i = 0; i < content_array.length; i++) {
+                            var group_name = $.trim(content_array[i]), already_exists = false;
+                            groups_in_progress[group_name] = true;
 
-                    for (i = 0; i < groups.length; i++) {
-                        if (add_row_shading) {
-                            add_row_shading = false;
-                            content_form_row.after('<tr class="alt" data-uuid='+data+'><td></td><td>' + groups[i] + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
+                            $('tr.content_group').find('td.package_name').each( function() {
+                                if ($.trim($(this).html()) === group_name) {
+                                    already_exists = true;
+                                    $(this).parent().attr('data-uuid', data);
+                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group);
+                                }
+                            });
+                            // if row already existed... skip...
+                            if (already_exists === false) {
+                                if (add_row_shading) {
+                                    add_row_shading = false;
+                                    content_form_row.after('<tr class="alt content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
+                                } else {
+                                    add_row_shading = true;
+                                    content_form_row.after('<tr class="content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
+                                }
+                            }
                         }
-                        else
-                        {
-                            add_row_shading = true;
-                            content_form_row.after('<tr data-uuid='+data+'><td></td><td>' + groups[i] + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.adding_group + '</td></tr>');
-                        }
+                        enableLinks();
+                        show_validation_error(false);
+                    },
+                    error: function() {
+                        enableLinks();
                     }
-                },
-                error: function() {
-                }
-            });
+                });
+            } else {
+                show_validation_error(true, validation_error);
+            }
         }
     },
     removeContent = function(data) {
+        data.preventDefault();
+
         var selected_action = $("input[@name=perform_action]:checked").attr('id'),
-            content_list = content_form.find('#content_input').val();
+            content_string = content_form.find('#content_input').val(),
+            content_array = content_string.split(/ *, */),
+            validation_error = undefined;
+
         if (selected_action == 'perform_action_packages') {
-            $.ajax({
-                url: KT.routes.remove_system_system_packages_path(system_id),
-                type: 'POST',
-                data: {'packages' : content_list},
-                cache: false,
-                success: function(data) {
-                    var packages = content_list.split(',');
+            validation_error = validate_action_requested(content_array, KT.package_action_types.PKG);
+            if (validation_error === undefined) {
+                disableLinks();
+                $.ajax({
+                    url: KT.routes.remove_system_system_packages_path(system_id),
+                    type: 'POST',
+                    data: {'packages' : content_string},
+                    cache: false,
+                    success: function(data) {
+                        monitorStatus(data, KT.package_action_types.PKG_REMOVE);
 
-                    actions_in_progress[data] = KT.package_action_types.PKG_REMOVE;
+                        for (i = 0; i < content_array.length; i++) {
+                            var pkg_name = $.trim(content_array[i]), already_exists = false;
+                            packages_in_progress[pkg_name] = true;
 
-                    for (i = 0; i < packages.length; i++) {
-                        if (add_row_shading) {
-                            add_row_shading = false;
-                            content_form_row.after('<tr class="alt" data-uuid='+data+'><td></td><td>' + packages[i] + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
+                            $('tr.content_package').find('td.package_name').each( function() {
+                                if ($.trim($(this).html()) === pkg_name) {
+                                    already_exists = true;
+                                    $(this).parent().attr('data-uuid', data);
+                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package);
+                                }
+                            });
+                            // if row already existed... skip...
+                            if (already_exists === false) {
+                                if (add_row_shading) {
+                                    add_row_shading = false;
+                                    content_form_row.after('<tr class="alt content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
+                                } else {
+                                    add_row_shading = true;
+                                    content_form_row.after('<tr class="content_package" data-uuid='+data+'><td></td><td class="package_name">' + pkg_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
+                                }
+                            }
                         }
-                        else
-                        {
-                            add_row_shading = true;
-                            content_form_row.after('<tr data-uuid='+data+'><td></td><td>' + packages[i] + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package + '</td></tr>');
-                        }
+                        enableLinks();
+                        show_validation_error(false);
+                    },
+                    error: function() {
+                        enableLinks();
                     }
-                },
-                error: function() {
-                }
-            });
+                });
+            } else {
+                show_validation_error(true, validation_error);
+            }
         } else {
-            $.ajax({
-                url: KT.routes.remove_system_system_packages_path(system_id),
-                type: 'POST',
-                data: {'groups' : content_list},
-                cache: false,
-                success: function(data) {
-                    var groups = content_list.split(',');
+            validation_error = validate_action_requested(content_array, KT.package_action_types.PKG_GRP);
+            if (validation_error === undefined) {
+                disableLinks();
+                $.ajax({
+                    url: KT.routes.remove_system_system_packages_path(system_id),
+                    type: 'POST',
+                    data: {'groups' : content_string},
+                    cache: false,
+                    success: function(data) {
+                        monitorStatus(data, KT.package_action_types.PKG_GRP_REMOVE);
 
-                    actions_in_progress[data] = KT.package_action_types.PKG_GRP_REMOVE;
+                        for (i = 0; i < content_array.length; i++) {
+                            var group_name = $.trim(content_array[i]), already_exists = false;
+                            groups_in_progress[group_name] = true;
 
-                    for (i = 0; i < groups.length; i++) {
-                        if (add_row_shading) {
-                            add_row_shading = false;
-                            content_form_row.after('<tr class="alt" data-uuid='+data+'><td></td><td>' + groups[i] + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
+                            $('tr.content_group').find('td.package_name').each( function() {
+                                if ($.trim($(this).html()) === group_name) {
+                                    already_exists = true;
+                                    $(this).parent().attr('data-uuid', data);
+                                    $(this).parent().find('td.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group);
+                                }
+                            });
+                            // if row already existed... skip...
+                            if (already_exists === false) {
+                                if (add_row_shading) {
+                                    add_row_shading = false;
+                                    content_form_row.after('<tr class="alt content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
+                                } else {
+                                    add_row_shading = true;
+                                    content_form_row.after('<tr class="content_group" data-uuid='+data+'><td></td><td class="package_name">' + group_name + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
+                                }
+                            }
                         }
-                        else
-                        {
-                            add_row_shading = true;
-                            content_form_row.after('<tr data-uuid='+data+'><td></td><td>' + groups[i] + '</td><td class="package_action_status"><img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_group + '</td></tr>');
-                        }
+                        enableLinks();
+                        show_validation_error(false);
+                    },
+                    error: function() {
+                        enableLinks();
                     }
-                },
-                error: function() {
-                }
-            });
+                });
+            } else {
+                show_validation_error(true, validation_error);
+            }
         }
     },
     removePackages = function(data) {
@@ -423,7 +619,7 @@ KT.packages = function() {
                     pkg.attr('data-uuid', data);
                     pkg.find('.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.removing_package);
                 });
-                actions_in_progress[data] = KT.package_action_types.PKG_REMOVE;
+                monitorStatus(data, KT.package_action_types.PKG_REMOVE);
 
                 enableButtons();
             },
@@ -445,7 +641,7 @@ KT.packages = function() {
                     pkg.attr('data-uuid', data);
                     pkg.find('.package_action_status').html('<img style="padding-right:8px;" src="images/spinner.gif">' + i18n.updating_package);
                 });
-                actions_in_progress[data] = KT.package_action_types.PKG_UPDATE;
+                monitorStatus(data, KT.package_action_types.PKG_UPDATE);
 
                 enableButtons();
             },
@@ -473,7 +669,68 @@ KT.packages = function() {
         var total_loaded = $('tr.package').length,
             message = i18n.x_of_y_packages(total_loaded, total_packages);
         loaded_summary.html(message);
+    },
+    validate_action_requested = function(content, content_type) {
+        // validate the action being requested and return a validation error, if an error is found
+        var validation_error = undefined;
+
+        // validate the package list format
+        if ((content_type === KT.package_action_types.PKG) && !valid_package_list_format(content)) {
+            validation_error = i18n.validation_error_name_format;
+
+        // validate that no actions pending on same package or group
+        } else {
+            var item;
+            $.each(content, function(index, content_item) {
+                item = $.trim(content_item);
+                switch (content_type) {
+                    case KT.package_action_types.PKG:
+                        if (packages_in_progress[item] === true) {
+                            validation_error = i18n.validation_error_package_pending;
+                            break;
+                        }
+                        break;
+                    case KT.package_action_types.PKG_GRP:
+                        if (groups_in_progress[item] === true) {
+                            validation_error = i18n.validation_error_group_pending;
+                            break;
+                        }
+                        break;
+                }
+            });
+        }
+        return validation_error;
+    },
+    show_validation_error = function(show, validation_error){
+    	var input = content_form.find('#content_input');
+    	
+    	if( show ){
+    		input.addClass('validation_error_input');
+    		error_message.html(validation_error);
+    		error_message.show();
+    	} else {
+    		input.removeClass('validation_error_input');
+    		error_message.hide();
+    	}
+    },
+    valid_package_list_format = function(packages){
+    	var i, length = packages.length;
+    		
+    	for( i = 0; i < length; i += 1){
+    		if( !valid_package_name(packages[i]) ){
+    			return false;
+    		}
+    	}
+    	
+    	return true;
+    },
+    valid_package_name = function(package_name){
+    	var is_match = package_name.match(/[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\-\.\_\+\,]+/);
+    	
+    	return is_match === null ? true : false;
     };
+    
+    
     return {
         morePackages: morePackages,
         sortOrder: sortOrder,
