@@ -12,9 +12,9 @@
 
 class Api::PermissionsController < Api::ApiController
 
-  before_filter :find_role, :only => [:index]
-  before_filter :find_organization, :only => []
-  before_filter :find_permission, :only => [:destroy]
+  before_filter :find_role, :only => [:index, :create]
+  before_filter :find_organization, :only => [:create]
+  before_filter :find_permission, :only => [:destroy, :show]
   before_filter :authorize
   respond_to :json
 
@@ -36,11 +36,35 @@ class Api::PermissionsController < Api::ApiController
   end
 
   def index
-    render :json => @role.permissions.to_json
+    render :json => @role.permissions.to_json()
+  end
+
+  def show
+    render :json => @permission.to_json(:include => [:tags, :verbs, :resource_type])
   end
 
   def create
-    render :json => "creating new permisson"
+    
+    #{"name"=>"", "type"=>"", "verbs"=>[], "tags"=>[], "description"=>"", "organization_id"=>""}
+
+    new_params = {
+      :name => params[:name], 
+      :description => params[:description],
+      :role => @role, 
+      :organization => @organization
+    }
+    new_params[:verb_values] = params[:verbs] || []
+    new_params[:tag_values] = params[:tags] || []
+
+    if params[:type] == "all"
+      new_params[:all_tags] = true
+      new_params[:all_verbs] = true
+    end
+    
+    new_params[:resource_type] = ResourceType.find_or_create_by_name(params[:type])
+    
+    @permission = Permission.create! new_params
+    render :json => @permission.to_json(:include => [:tags, :verbs, :resource_type])
   end
 
   def destroy
