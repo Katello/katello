@@ -34,7 +34,7 @@ class SystemEventsController < ApplicationController
 
   def index
     render :partial=>"events", :layout => "tupane_layout", :locals=>{:system => @system,
-                                                                :offset => current_user.page_size, :tasks => tasks}
+                                                                :tasks => tasks}
   end
 
   def show
@@ -67,7 +67,7 @@ class SystemEventsController < ApplicationController
     statuses = tasks(current_user.page_size + offset)
     statuses = statuses[offset..statuses.length]
     if statuses
-      render(:partial => 'more_events', :locals => {:system => @system, :tasks=> statuses})
+      render(:partial => 'more_events', :locals => {:cycle_extra => (offset %2 ==1), :system => @system, :tasks=> statuses})
     else
       render :nothing => true
     end
@@ -84,5 +84,11 @@ class SystemEventsController < ApplicationController
   def tasks(page_size = current_user.page_size)
     @system.tasks.order("updated_at desc").limit(page_size)
   end
+
+  helper_method :total_events_length
+  def total_events_length()
+    @system.tasks.length
+  end
+
 
 end

@@ -1,7 +1,11 @@
--#= javascript do
--#  :javascript
--#    KT.event_types = $.parseJSON('#{escape_javascript(generate_event_types)}');
--#
+= javascript do
+  :javascript
+    localize({
+      "x_of_y_events" : function(x,y){ return '#{_("(Loaded %X of %Y Total)")}'.replace("%X", x).replace("%Y", y); },
+      "x_more_events" : function(x){ return '#{_("(Load %X More)")}'.replace("%X", x); }
+      });
+
+
 = javascript :filtertable, :system_events
 
 = render :partial => "systems/system_tupane_header_nav"
@@ -10,7 +14,7 @@
   - if tasks.length > 0
     .grid_8
       = render :partial => "common/filter_table", :locals => {:filter_placeholder => _('Filter on loaded Events...')}
-      %table.filter_table.events.ajaxScroll{'data-system_id' => system.id}
+      %table.filter_table.events.ajaxScroll{'data-system_id' => system.id, 'data-total_events' => total_events_length}
         %thead
           %th
             %a#event_sort{"data-sort"=>"asc", :class=>"ascending"}
@@ -26,4 +30,5 @@
 
 = content_for :footer do
   .grid_8
-    %a#more{:style => "padding-left: 20px;", "data-scroll_url"=>url_for(more_events_system_events_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("Load %{n} More" % {:n => offset})}
+    %a#more{:style => "padding-left: 20px;", "data-scroll_url"=>url_for(more_events_system_events_path(@system.id)), "data-page_size"=>current_user.page_size, :class=>"fl"}
+    %span{:id => 'loaded_summary', :style => "padding-left: 20px;"}
