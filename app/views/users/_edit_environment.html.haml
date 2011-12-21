@@ -1,3 +1,10 @@
+= javascript do
+  :javascript
+    localize({
+      "noDefaultEnv": '#{_("No default environment. Select an organization to choose from available environments.")}'
+    });
+    env_select.original_env_id = '#{@old_env ? @old_env.id : ''}';
+
 = content_for :title do
   #{@user.username}
 
@@ -41,5 +48,5 @@
     .clear
       &nbsp;
     .grid_5.la.prefix_3
-      #update_user.verify_password.button{'data-url'=>update_environment_user_path(@user.id)}
+      #update_user.verify_password.disabled.button{'data-url'=>update_environment_user_path(@user.id)}
         #{_("Save")}

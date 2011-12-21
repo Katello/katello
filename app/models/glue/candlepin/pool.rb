@@ -20,7 +20,7 @@ module Glue::Candlepin::Pool
     base.send :extend, ClassMethods
 
     base.class_eval do
-      lazy_accessor :productName, :startDate, :endDate, :consumed, :quantity, :attrs, :owner,
+      lazy_accessor :productName, :productId, :startDate, :endDate, :consumed, :quantity, :attrs, :owner,
         :initializer => lambda {
           json = Candlepin::Pool.get(cp_id)
           # symbol "attributes" is reserved by Rails and cannot be used
@@ -55,6 +55,7 @@ module Glue::Candlepin::Pool
         @quantity = attrs["quantity"]
         @attrs = attrs["attributes"]
         @owner = attrs["owner"]
+        @productId = attrs["productId"]
         super(:cp_id => attrs['id'])
       else
         super

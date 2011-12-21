@@ -39,7 +39,7 @@ module ProductHelperMethods
     repo.stub!(:pulp_repo_facts).and_return({})
     Pulp::Repository.stub!(:clone_repo).and_return({})
     Glue::Pulp::Repos.stub!(:groupid).and_return([])
-    repo.stub!(:content_for_clone).and_return({})
+    repo.stub(:content => {:id => "123"})
     repo.promote(environment)
     ep = EnvironmentProduct.find_or_create(environment, repo.product)
     Repository.where(:environment_product_id => ep).first

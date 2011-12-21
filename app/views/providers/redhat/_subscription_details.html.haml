@@ -18,7 +18,7 @@
               %td
                 -# The group's name is just the product name of the first element in array
                 = sub_group[0]["productName"]
-              %td
+              %td{:colspan => 7}
             - sub_class = "child-of-#{group_name}"
           - else
             - sub_class = "#{group_name}"
@@ -52,4 +52,4 @@
             -#         -#   = render :partial=>'subscription_details', :locals=>{:group => sub["subscriptionId"], :product_content => product_content}
       - else
         %tr
-          %td{:colspan=>5} #{_("No subscriptions have been imported.")}
+          %td{:colspan=>8} #{_("No subscriptions have been imported.")}

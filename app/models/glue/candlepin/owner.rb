@@ -104,12 +104,8 @@ module Glue::Candlepin::Owner
     def load_debug_cert
       begin
         return Candlepin::Owner.get_ueber_cert(cp_key)
-      rescue => e
-          if RestClient::ResourceNotFound  === e
-            return  generate_debug_cert
-          else
-            raise e
-          end
+      rescue RestClient::ResourceNotFound =>  e
+        return generate_debug_cert
       end
     end
 

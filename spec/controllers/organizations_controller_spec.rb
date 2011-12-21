@@ -130,7 +130,6 @@ describe OrganizationsController do
     it 'should allow for an offset' do
       get 'items', :offset=>5
       response.should be_success
-      assigns[:items_offset].should_not include @organization
     end
   end
   

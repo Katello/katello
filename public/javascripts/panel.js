@@ -111,6 +111,8 @@ $(document).ready(function () {
             dataType: 'html',
             success: function (data) {
                 thisPanel.find(".panel-content").html(data);
+                KT.common.jscroll_init($('.scroll-pane'));
+    			KT.common.jscroll_resize($('.jspPane'));
                 KT.panel.panelResize($('#panel_main'), false);
                 KT.panel.get_expand_cb()();
             }
@@ -262,10 +264,15 @@ KT.panel = (function ($) {
                 dataType: 'html',
                 success: function (data, status, xhr) {
                     var pc = panelContent.html(data);
+                    
                     spinner.hide();
                     pc.fadeIn(function () {
                         $(".panel-content :input:visible:enabled:first").focus();
                     });
+                    
+                    KT.common.jscroll_init($('.scroll-pane'));
+    				KT.common.jscroll_resize($('.jspPane'));
+                    
                     if (isSubpanel) {
                         panelResize($('#subpanel_main'), isSubpanel);
                     } else {
@@ -494,6 +501,17 @@ KT.panel = (function ($) {
             });
             panels_list.push(new_panel);
         },
+        // http://devnull.djolley.net/2010/11/accessing-query-string-parameters-from.html
+        queryParameters = function () {
+            var queryString = new Object;
+            var qstr=window.location.search.substring(1);
+            var params=qstr.split('&');
+            for (var i=0; i<params.length; i++) {
+                var pair=params[i].split('=');
+                queryString[pair[0]]=pair[1];
+            }
+            return queryString;
+        },
         actions = (function(){
             var action_list = {};
 
@@ -608,6 +626,7 @@ KT.panel = (function ($) {
         panelAjax: panelAjax,
         control_bbq: control_bbq,
         registerPanel: registerPanel,
+        queryParameters: queryParameters,
         actions: actions
     };
 })(jQuery);
@@ -703,6 +722,7 @@ KT.panel.list = (function () {
                             expand_list = $('.expand_list');
                         }
                         retrievingNewContent = false;
+                        console.log(data);
                         expand_list.append(data['html']);
                         $('.list-spinner').remove();
                         if (data['current_items'] === 0) {
@@ -784,8 +804,7 @@ KT.panel.list = (function () {
                     extra_params = options['extra_params'],
                     data = {},
                     page_load = page_load || false,
-                    search_cb = search_cb ||
-                function () {};
+                    search_cb = search_cb || function () {};
                 e.preventDefault();
                 button.attr("disabled", "disabled");
                 element.find('section').empty();
@@ -794,6 +813,14 @@ KT.panel.list = (function () {
                     $.bbq.pushState($(this).serialize());
                 }
                 url += '?offset=' + offset;
+
+                // Pass along all additional parameters
+                var qp = KT.panel.queryParameters();
+                if (qp) {
+                    for (var key in qp) {
+                        url += '&' + key + '=' + qp[key];
+                    }
+                }
                 if (extra_params) {
                     for (var i = 0; i < extra_params.length; i += 1) {
                         data[extra_params[i]['hash_id']] = $.bbq.getState(extra_params[i]['hash_id']);
@@ -805,8 +832,10 @@ KT.panel.list = (function () {
                 $(this).ajaxSubmit({
                     url: url,
                     data: data,
+                    cache: false,
                     success: function (data) {
-                        element.find('section').append(data['html']);
+                        var to_append = data.html ? data.html : data;
+                        element.find('section').append(to_append);
                         element.find('.spinner').hide();
                         button.removeAttr('disabled');
                         element.find('section').fadeIn();
@@ -819,7 +848,7 @@ KT.panel.list = (function () {
                     error: function (e) {
                         button.removeAttr('disabled');
                     }
-                })
+                });
             });
         };
     return {

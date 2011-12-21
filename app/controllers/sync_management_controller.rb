@@ -61,7 +61,15 @@ class SyncManagementController < ApplicationController
   def index
     org = current_organization
     @products = org.locker.products.readable(org)
-    @products.sort! { |p1,p2| p1.name.upcase() <=> p2.name.upcase() }
+    
+    redhat_products = @products.select{ |prod| prod.redhat? }
+    custom_products = @products.select{ |prod| !prod.redhat? }
+    
+    redhat_products.sort! { |p1,p2| p1.name.upcase() <=> p2.name.upcase() }
+    custom_products.sort! { |p1,p2| p1.name.upcase() <=> p2.name.upcase() }
+    
+    @products = redhat_products + custom_products
+    
     @sproducts = @products.reject{|prod| !prod.syncable?} # syncable products
 
     

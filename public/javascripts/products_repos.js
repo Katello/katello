@@ -35,9 +35,6 @@ $(document).ready(function() {
     }
     return false;
   });
-  
-  
-  
 });
 
 function toggle_form(form) {
@@ -47,3 +44,4 @@ function toggle_form(form) {
     form.hide();
   }
 }
+
