@@ -52,10 +52,10 @@ class SystemErrataController < ApplicationController
 
   def install
     errata_ids = params[:errata_ids]
-    task = "1234"#@system.install_errata(errata_ids)
-    puts errata_ids
+    task = @system.install_errata(errata_ids)
+    
     notice _("Errata scheduled for install.")
-    render :text => task#task.task_status.uuid
+    render :text => task.task_status.uuid
   rescue Exception => error
     errors error
     Rails.logger.info error.backtrace.join("\n")
@@ -63,8 +63,8 @@ class SystemErrataController < ApplicationController
   end
 
   def status
-    #statuses = @system.tasks.where(:uuid => params[:uuid], :task_type => [:errata_install])
-    statuses = [{ :uuid => "1234", :state => "finished" }]
+    statuses = @system.tasks.where(:uuid => params[:uuid], :task_type => [:errata_install])
+    #statuses = [{ :uuid => "1234", :state => "finished" }]
     render :json => statuses
   end
 
