@@ -15,6 +15,7 @@ require 'spec_helper'
 describe ProvidersController do
   include LoginHelperMethods
   include LocaleHelperMethods
+  include OrchestrationHelper
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
 
@@ -55,7 +56,10 @@ describe ProvidersController do
       post 'update_redhat_provider', {:provider => contents}
       response.should be_success
     end
+
   end
+
+
 
 
   describe "rules" do
@@ -73,9 +77,14 @@ describe ProvidersController do
       let(:unauthorized_user) do
         user_without_permissions
       end
-      let(:on_success) do
-        assigns(:items).should_not include @provider2
-        assigns(:items).should include @provider
+      let(:before_success) do
+        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+          found = nil
+          filters.each{|f|  found = f['id'] if f['id'] }
+          assert found.include?(@provider.id)
+          assert !found.include?(@provider2.id)
+          controller.stub(:render)
+        }
       end
 
       it_should_behave_like "protected action"

@@ -47,7 +47,7 @@ class Role < ActiveRecord::Base
   end
 
   def self.search_by_type(key, operator, value)
-    permissions = Permission.all(:conditions => "verbs.verb #{operator} '#{value_to_sql(operator, value)}'", :include => :verbs)
+    permissions = Permission.all(:conditions => "resource_types.name #{operator} '#{value_to_sql(operator, value)}'", :include => :resource_type)
     roles = permissions.map(&:role)
     opts  = roles.empty? ? "= 'nil'" : "IN (#{roles.map(&:id).join(',')})"
 

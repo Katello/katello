@@ -25,7 +25,8 @@ shared_examples_for "protected action" do
   end
   context "I have sufficient rights" do
     it "should let me to it" do
-      unless defined? on_success
+      if !defined?(on_success) && !defined?(before_success)
+
         controller.stub(action)
         controller.stub(:render)
       end
@@ -40,11 +41,16 @@ shared_examples_for "protected action" do
 
       req
       on_success if defined?(on_success)
+
+      
+      response.should be_success
+
+
     end
   end
   context "I have not sufficient rights" do
     it "should not let me to it" do
-      unless defined? on_failure
+      if !defined?(on_success) && !defined?(before_success)
         @controller.stub(action)
         @controller.stub(:render)
       end

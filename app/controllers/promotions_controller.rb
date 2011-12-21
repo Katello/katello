@@ -62,7 +62,32 @@ class PromotionsController < ApplicationController
 
   # AJAX Calls
 
+
   def packages
+    old_packages  #switch to new once bz 765849 is resolved
+  end
+
+  def new_packages
+    
+    @next_env_pkgs = Glue::Pulp::Package.search("*", 0, 0)
+
+    search = params[:search]
+    search = "*" if search.nil? || search == ''
+    offset = params[:offset] || 0
+    @packages = Glue::Pulp::Package.search(search, params[:offset], current_user.page_size)
+    render :text=>"" and return if @packages.empty?
+
+    options = {:list_partial => 'promotions/package_items'}
+
+    if offset.to_i >  0
+      render_panel_results(@packages, options)
+    else
+      render :partial=>"packages", :locals=>{:collection => @packages}
+    end
+    
+  end
+
+  def old_packages 
     package_hash = {}
     @product.repos(@environment).each{|repo|
       repo.packages.each{|pkg|
@@ -87,12 +112,13 @@ class PromotionsController < ApplicationController
 
       options = {:list_partial => 'promotions/package_items'}
       render_panel_items(@packages, options, nil, offset)
+
+
     else
       @packages = @packages[0..current_user.page_size]
       render :partial=>"packages", :locals=>{:collection => @packages}
     end
   end
-
 
   def repos
     @repos = @product.repos(@environment)
@@ -158,7 +184,7 @@ class PromotionsController < ApplicationController
     @next_env_repos = []
     if @next_environment
       @product.repos(@next_environment).each{|repo|
-        @next_env_repos << repo.id
+        @next_env_repos << repo.pulp_id
         repo.distributions.each{|distro|
           @next_env_distros << distro.id
         }

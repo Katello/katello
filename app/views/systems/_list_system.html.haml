@@ -1,21 +1,24 @@
 .block.tall{:id => "#{name}_#{item.send(accessor)}", "data-ajax_url" => system_events_path(item.id)}
-  - for col in columns
-    %div{:class => 'column_' + columns.length.to_s}
-      - if col.to_s == 'name'
-        = item.send('name')[0...32]
-      - elsif col.to_s == 'created'
-        = convert_time(item.created)
-      - elsif col.to_s == 'lastCheckin'
-        = get_checkin(item)
-      - else
-        = item.send(col)
+  %div
+    %div{:class => 'column_2'}
+      .product
+        .status_icon{:class => "#{item.send('compliance_color')}"}
+      %div.one-line-ellipsis{:style => "padding-top: 2px;"}
+        = item.send('name')
+    %div{:class => 'column_2'}
+      = get_checkin(item)
+
   %div
     %div{:class => 'column_1'}
       %ul
         %li
-          = _('Kernel: ')
-          = item.send('kernel')
+          &nbsp;&nbsp;
+          = _('OS: ')
+          = item.send('distribution_name')
+          &nbsp;&nbsp;
+          = item.send('arch')
         %li
+          &nbsp;&nbsp;
           = _('IP: ')
           = item.send('ip')
   .arrow-right

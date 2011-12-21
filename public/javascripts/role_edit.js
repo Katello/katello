@@ -10,7 +10,7 @@ $(document).ready(function() {
                       default_tab     :  "roles",
                       bbq_tag         :  "role_edit",
                       render_cb       :  rolesRenderer.render,
-                      enable_search   :  true,
+                      enable_filter   :  true,
                       tab_change_cb   :  function(hash_id) {
                             rolesRenderer.sort(hash_id);
                             rolesRenderer.setTreeHeight();
