@@ -84,14 +84,21 @@ class Create(PermissionAction):
         except KeyError, e:
             system_exit(os.EX_DATAERR, _("Could not find tag [ %s ] in scope of [ %s ]") % (e[0], scope))
 
+    def split_options(self, opts):
+        if opts == "":
+            return []
+        else:
+            return opts.split(",")
+
+
     def run(self):
         role_name = self.get_option('user_role')
         name = self.get_option('name')
         desc = self.get_option('desc')
         org_name = self.get_option('org')
         scope = self.get_option('scope')
-        verbs = self.get_option('verbs').split(',')
-        tags = self.get_option('tags').split(',')
+        verbs = self.split_options(self.get_option('verbs'))
+        tags = self.split_options(self.get_option('tags'))
 
         tag_ids = self.tags_to_ids(tags, org_name, scope)
 
