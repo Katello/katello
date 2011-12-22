@@ -136,6 +136,51 @@ class Delete(PermissionAction):
         return os.EX_OK
 
 
+class List(PermissionAction):
+
+    description = _('list permissions for a user role')
+
+    def setup_parser(self):
+        self.parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
+
+    def check_options(self):
+        self.require_option('user_role')
+
+    def format_verbs(self, verbs):
+        return [v['verb'] for v in verbs]
+
+    def format_tags(self, tags):
+        return [t['formatted']['display_name'] for t in tags]
+
+    def format_permission(self, permission):
+        permission['scope'] = permission['resource_type']['name']
+        permission['verbs'] = self.format_verbs(permission['verbs'])
+        permission['tags'] = self.format_tags(permission['tags'])
+        return permission
+
+    def run(self):
+        role_name = self.get_option('user_role')
+
+        role = get_role(role_name)
+        if role == None:
+            return os.EX_DATAERR
+
+        permissions = self.api.permissions(role['id'])
+        display_permissons = []
+        for p in permissions:
+            display_permissons.append(self.format_permission(p))
+
+        self.printer.addColumn('id')
+        self.printer.addColumn('name')
+        self.printer.addColumn('scope')
+        self.printer.addColumn('verbs', multiline=True)
+        self.printer.addColumn('tags', multiline=True)
+
+        self.printer.setHeader(_("Permission List"))
+        self.printer.printItems(display_permissons)
+        return os.EX_OK
+
+
 class ListAvailableVerbs(PermissionAction):
 
     description = _('list available scopes, verbs and tags that can be set in a permission')

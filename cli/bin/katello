@@ -90,6 +90,7 @@ def setup_admin(admin):
 
     permission_cmd = permission.Permission()
     permission_cmd.add_action('create', permission.Create())
+    permission_cmd.add_action('list', permission.List())
     permission_cmd.add_action('delete', permission.Delete())
     permission_cmd.add_action('available_verbs', permission.ListAvailableVerbs())
     admin.add_command('permission', permission_cmd)
