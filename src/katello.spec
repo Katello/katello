@@ -346,6 +346,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Dec 22 2011 Shannon Hughes <shughes@redhat.com> 0.1.150-2
+- bk system build (shughes@redhat.com)
+- temp branding for bk build (shughes@redhat.com)
+
 * Tue Dec 20 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.149-1
 - 
 
