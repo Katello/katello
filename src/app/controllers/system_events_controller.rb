@@ -25,6 +25,7 @@ class SystemEventsController < ApplicationController
 
     {
       :index => read_system,
+      :items => read_system,
       :show => read_system,
       :status => read_system,
       :more_events => read_system
@@ -74,6 +75,18 @@ class SystemEventsController < ApplicationController
 
   end
 
+  def items
+    render_proc = lambda do |items, options|
+      if items && !items.empty?
+        render_to_string(:partial => 'more_events', :locals => {:cycle_extra => false, :system => @system, :tasks=> items})
+      else
+        ""
+      end
+    end
+    render_panel_direct(TaskStatus, {:no_search_history => true,:render_list_proc => render_proc},
+                        params[:search], params[:offset], [:finish_time, 'DESC'],
+                        {:system_ids => [@system.id]}, true)
+  end
 
   protected
   def find_system

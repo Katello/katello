@@ -28,14 +28,21 @@ class PulpTaskStatus < TaskStatus
 
 
   def self.using_pulp_task(sync)
-    self.new(
-        :uuid => sync[:id],
-        :state => sync[:state],
-        :start_time => sync[:start_time],
-        :finish_time => sync[:finish_time],
-        :progress => sync[:progress],
-        :result => sync[:result].nil? ? {:errors => [sync[:exception], sync[:traceback]]} : sync[:result]
-    ) { |t| yield t if block_given? }
+    t = self.new { |t| yield t if block_given? }
+    PulpTaskStatus.dump_state(sync, t)
+  end
+
+  def self.dump_state(pulp_status, task_status)
+    task_status.attributes = {
+    :uuid => pulp_status[:id],
+    :state => pulp_status[:state],
+    :start_time => pulp_status[:start_time],
+    :finish_time => pulp_status[:finish_time],
+    :progress => pulp_status[:progress],
+    :result => pulp_status[:result].nil? ? {:errors => [pulp_status[:exception], pulp_status[:traceback]]} : pulp_status[:result]
+    }
+    task_status.save! if not task_status.new_record?
+    task_status
   end
 
   def refresh

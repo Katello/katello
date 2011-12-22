@@ -160,14 +160,15 @@ class SystemTask < ActiveRecord::Base
     end
 
     def make system, pulp_task, task_type, parameters
-      task_status = PulpTaskStatus.using_pulp_task(pulp_task) do |t|
-         t.organization = system.organization
-         t.task_type = task_type
-         t.parameters = parameters
-      end
+      task_status = TaskStatus.new(
+         :organization => system.organization,
+         :task_type => task_type,
+         :parameters => parameters,
+         :systems => [system]
+      )
+      task_status.merge_pulp_task!(pulp_task)
       task_status.save!
-      system_task = SystemTask.create!(:system => system, :task_status => task_status)
-      system_task
+      task_status.system_tasks.first
     end
   end
 
