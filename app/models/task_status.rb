@@ -23,16 +23,27 @@ class TaskStatus < ActiveRecord::Base
     CANCELED = :canceled
     TIMED_OUT = :timed_out
   end
-
+  include IndexedModel
   include Authorization
   belongs_to :organization
   belongs_to :user
   before_save :setup_task_type
 
+  has_many :system_tasks
+  has_many :systems, :through => :system_tasks 
+
   before_save do |status|
     unless status.user
       status.user = User.current
     end
+  end
+
+  index_options :json=>{:only=> [:state, :parameters, :result, :task_type,
+                     :organization_id, :system_ids, :start_time, :finish_time ]}
+
+  mapping do
+    indexes :start_time, :type=>'date'
+    indexes :finish_time, :type=>'date'
   end
 
 
@@ -61,6 +72,9 @@ class TaskStatus < ActiveRecord::Base
     self
   end
 
+  def merge_pulp_task!(pulp_task)
+    PulpTaskStatus.dump_state(pulp_task, self)
+  end
 
   def refresh_pulp
     PulpTaskStatus.refresh(self)
@@ -73,6 +87,11 @@ class TaskStatus < ActiveRecord::Base
   def as_json(options = {})
     json = super :methods => :pending?
     json.merge(options) if options
+  end
+
+  # used by search  to filter tasks by systems :)
+  def system_filter_clause
+    {:system_ids => system_ids}
   end
 
   protected

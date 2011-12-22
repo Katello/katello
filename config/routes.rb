@@ -69,6 +69,7 @@ Src::Application.routes.draw do
       collection do
         get :status
         get :more_events
+        get :items
       end
     end
     resources :system_packages, :only => {} do

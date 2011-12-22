@@ -103,7 +103,41 @@ KT.events = function() {
             if($('.event_name[data-pending-task-id]').length > 0) {
                 startUpdater();
             }
+
+            var  search_button = $('#event_filter_button'),
+                    search_field = $('#event_search_filter'),
+                spinner = $('#list-spinner');
+
+            search_button.bind('click', function(evt){
+                evt.preventDefault();
+                console.log("binding the get call");
+                $.ajax({
+                    type: "GET",
+                    url: search_field.data('search_url'),
+                    data: {search: search_field.val()},
+                    cache: false,
+                    success: function(data) {
+                        console.log(data);
+                        spinner.fadeOut();
+                        $("#event_items").html(data["html"]);
+                        $('#filter').keyup();
+                        $('.scroll-pane').jScrollPane().data('jsp').reinitialise();
+                        updateLoadedSummary();
+                        if (total_loaded === total_events) {
+                            more_button.empty().remove();
+                        }
+                    },
+                    error: function() {
+                        spinner.fadeOut();
+                    }
+                });
+            });
+
         }
+
+
+
+
     },
     updateLoadedSummary = function() {
         var more_size = page_size;

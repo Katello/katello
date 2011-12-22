@@ -454,6 +454,8 @@ class ApplicationController < ActionController::Base
 
     if options[:list_partial]
       rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)
+    elsif options[:render_list_proc]
+      rendered_html = options[:render_list_proc].call(@items, options)
     else
       rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options)
     end
@@ -465,7 +467,7 @@ class ApplicationController < ActionController::Base
                       :total_items => options[:total_results],
                       :current_items => options[:collection].length }
 
-    retain_search_history
+    retain_search_history unless options[:no_search_history]
     
   end
 
