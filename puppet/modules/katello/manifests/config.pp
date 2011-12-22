@@ -10,6 +10,7 @@ class katello::config {
 
   postgres::createuser { $katello::params::db_user:
     passwd  => $katello::params::db_pass,
+    roles => "CREATEDB",
     logfile => "${katello::params::log_base}/katello-configure/create-postgresql-katello-user.log",
     require => [ File["${katello::params::log_base}"] ],
   }
@@ -142,7 +143,8 @@ class katello::config {
                   Class["candlepin::service"], 
                   Class["pulp::service"], 
                   File["${katello::params::log_base}"], 
-                  File["${katello::params::config_dir}/katello.yml"]
+                  File["${katello::params::config_dir}/katello.yml"],
+                  Postgres::Createdb[$katello::params::db_user]
                 ],
                 'headpin' => [
                   Class["candlepin::service"],

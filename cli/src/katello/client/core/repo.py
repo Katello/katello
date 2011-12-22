@@ -429,6 +429,8 @@ class List(RepoAction):
                 self.printer.setHeader(_("Repo List for Product %s in Org %s ") % (prodName, orgName))
                 repos = self.api.repos_by_product(prod["id"], listDisabled)
                 self.printer.printItems(repos)
+            else:
+                return os.EX_DATAERR
         else:
             env  = get_environment(orgName, envName)
             if env != None:

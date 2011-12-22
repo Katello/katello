@@ -16,8 +16,8 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.147
-Release:        2%{?dist}
+Version:        0.1.152
+Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -42,6 +42,7 @@ Summary:        Common bits for all Katello instances
 Requires:       httpd
 Requires:       mod_ssl
 Requires:       openssl
+Requires:       elasticsearch
 Requires:       rubygems
 Requires:       rubygem(rails) >= 3.0.10
 Requires:       rubygem(multimap)
@@ -70,6 +71,7 @@ Requires:       rubygem(thin)
 Requires:       rubygem(fssm)
 Requires:       rubygem(sass)
 Requires:       rubygem(chunky_png)
+Requires:       rubygem(tire)
 
 # bz 743816 temp fix until yum update makes to z stream
 %if 0%{?rhel} == 6
@@ -346,200 +348,15 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
-* Mon Dec 19 2011 Shannon Hughes <shughes@redhat.com> 0.1.147-2
-- system engine eng build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.143-2].
-  (shughes@redhat.com)
-- system engine build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.135-2].
-  (shughes@redhat.com)
-- brew build (shughes@redhat.com)
-- brew build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge branch 'BRANDING' of git+ssh://axiom.rdu.redhat.com/scm/git/system-
-  engine into branding (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.130-2].
-  (shughes@redhat.com)
-- system engine build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.126-2].
-  (shughes@redhat.com)
-- new system engine build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- add in branding helper for System Engine (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.120-2].
-  (shughes@redhat.com)
-- build for system engine (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.117-2].
-  (shughes@redhat.com)
-- katello build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Less spacing for the header text, grid_6 as a result for the left side.
-  (jrist@redhat.com)
-- prep release for sys engine build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.110-2].
-  (shughes@redhat.com)
-- system engine build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.108-2].
-  (shughes@redhat.com)
-- system engine build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- rely on redhat-logos for rh-logo image (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.106-2].
-  (shughes@redhat.com)
-- Minor change to letter spacing. (jrist@redhat.com)
-- build for system-engine (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Rename of look.scss to _look.scss for branding. (jrist@redhat.com)
-- Application helper for katello title. (jrist@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.103-2].
-  (shughes@redhat.com)
-- build bump release (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.102-2].
-  (shughes@redhat.com)
-- bump release for build (shughes@redhat.com)
-- sync up spec with katello (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.101-2].
-  (shughes@redhat.com)
-- bump release (shughes@redhat.com)
-- fix rpm macro syntax (shughes@redhat.com)
-- move branding processing (shughes@redhat.com)
-- remove sprites from branding (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Removing katello.scss to limit overrides.  Added look.scss to make it
-  simpler. (jrist@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-
-* Mon Dec 19 2011 Shannon Hughes <shughes@redhat.com>
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.143-2].
-  (shughes@redhat.com)
-- system engine build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.135-2].
-  (shughes@redhat.com)
-- brew build (shughes@redhat.com)
-- brew build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge branch 'BRANDING' of git+ssh://axiom.rdu.redhat.com/scm/git/system-
-  engine into branding (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.130-2].
-  (shughes@redhat.com)
-- system engine build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.126-2].
-  (shughes@redhat.com)
-- new system engine build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- add in branding helper for System Engine (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.120-2].
-  (shughes@redhat.com)
-- build for system engine (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.117-2].
-  (shughes@redhat.com)
-- katello build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Less spacing for the header text, grid_6 as a result for the left side.
-  (jrist@redhat.com)
-- prep release for sys engine build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.110-2].
-  (shughes@redhat.com)
-- system engine build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.108-2].
-  (shughes@redhat.com)
-- system engine build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- rely on redhat-logos for rh-logo image (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.106-2].
-  (shughes@redhat.com)
-- Minor change to letter spacing. (jrist@redhat.com)
-- build for system-engine (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Rename of look.scss to _look.scss for branding. (jrist@redhat.com)
-- Application helper for katello title. (jrist@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.103-2].
-  (shughes@redhat.com)
-- build bump release (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.102-2].
-  (shughes@redhat.com)
-- bump release for build (shughes@redhat.com)
-- sync up spec with katello (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello] release [0.1.101-2].
-  (shughes@redhat.com)
-- bump release (shughes@redhat.com)
-- fix rpm macro syntax (shughes@redhat.com)
-- move branding processing (shughes@redhat.com)
-- remove sprites from branding (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Removing katello.scss to limit overrides.  Added look.scss to make it
-  simpler. (jrist@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
+* Mon Dec 19 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.148-1
+- Revert "765888 - Error during promotion"
+- ak - fixing unit tests
+- ak - subscribing according products
+- Bug 768388 - Perpetual spinner cursor upon changing a user's org.
+  https://bugzilla.redhat.com/show_bug.cgi?id=768388 + Incorrectly loading
+  env_select.js twice which was causing javascript errors   and these resulted
+  in spinner not clearing
+- Changes organizations tupane subnavigation to be consistent with others.
 
 * Wed Dec 14 2011 Ivan Necas <inecas@redhat.com> 0.1.144-1
 - 753804 - fix for duplicite product name exception (inecas@redhat.com)

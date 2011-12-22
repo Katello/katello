@@ -63,9 +63,7 @@ $(document).ready(function() {
                     success: function(data) {
                         refill.html(data);
                         // On successful update, update the original env id and disable save button
-                        if(env.env_changed_callback) {
-                            env_select.env_changed_callback(env_select.get_selected_env());
-                        }
+                        env_select.env_changed_callback(env_select.get_selected_env());
                     }
                 });
             }

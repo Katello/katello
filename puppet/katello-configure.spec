@@ -2,8 +2,8 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.42
-Release:        2%{?dist}
+Version:        0.1.43
+Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
 Group:          Applications/Internet
@@ -56,21 +56,11 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
-* Mon Dec 19 2011 Shannon Hughes <shughes@redhat.com> 0.1.42-2
-- system engine build (shughes@redhat.com)
-- Automatic commit of package [katello-configure] release [0.1.37-2].
-  (shughes@redhat.com)
-- system engine build (shughes@redhat.com)
-- Automatic commit of package [katello-configure] release [0.1.31-2].
-  (shughes@redhat.com)
-- brew build (shughes@redhat.com)
-- Automatic commit of package [katello-configure] release [0.1.26-2].
-  (shughes@redhat.com)
-- builds for cli/installer (shughes@redhat.com)
-- Automatic commit of package [katello-configure] release [0.1.21-2].
-  (shughes@redhat.com)
-- build installer (shughes@redhat.com)
-- prep release for sys engine build (shughes@redhat.com)
+* Wed Dec 21 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.43-1
+- 769540 - katello-configure fails: katelloschema
+- mbacovsk's public key
+- tstrachota's public key
+- Revert "765813 - Puppet: create-nss-db fails on RHEL 6.2 [TEMP FIX]"
 
 * Mon Dec 19 2011 Shannon Hughes <shughes@redhat.com> 0.1.42-1
 - 766933 - katello.yml perms - reformatting source (lzap+git@redhat.com)

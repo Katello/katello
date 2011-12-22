@@ -64,7 +64,7 @@ Src::Application.routes.draw do
     end
   end
 
-  resources :systems, :except => [:destroy] do
+  resources :systems do
     resources :system_packages, :only => {} do
       collection do
         put :add
@@ -468,8 +468,17 @@ Src::Application.routes.draw do
 
     resources :users do
       get :report, :on => :collection
+      resources :roles, :controller => :users do
+       post   :index, :on => :collection, :action => :add_role
+       delete :destroy, :on => :member, :action => :remove_role
+       get    :index, :on => :collection, :action => :list_roles
+      end
     end
-    resources :roles
+    resources :roles do
+      get :available_verbs, :on => :collection, :action => :available_verbs
+      resources :permissions, :only => [:index, :show, :create, :destroy]
+    end
+
 
     resources :tasks, :only => [:show]
 
