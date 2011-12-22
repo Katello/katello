@@ -13,7 +13,13 @@
 = content_for :content do
   - if total_events_length > 0
     .grid_8
-      = render :partial => "common/filter_table", :locals => {:filter_placeholder => _('Filter on loaded Events...')}
+      %form#event_filter_form.clear
+        %input{ :name => "event_search", :type => "search",
+            :placeholder => _('Filter on loaded Events...'), :id=>"event_search_filter",
+             'data-search_url' => items_system_events_path(@system.id) }
+        %button.filter_button#event_filter_button #{('Filter')}
+        %br.clear
+
       %table.filter_table.events.ajaxScroll{'data-system_id' => system.id, 'data-total_events' => total_events_length}
         %thead
           %th
@@ -21,7 +27,7 @@
               #{_("Event")}
           %th
             #{_("Date")}
-        %tbody
+        %tbody#event_items
           = render :partial => 'event_items', :locals => {:system => system, :include_tr => true}, :collection=> tasks, :as=>:t
       #list-spinner
         = image_tag("spinner.gif", :class=>"ajax_scroll")
