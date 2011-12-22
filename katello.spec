@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.154
+Version:        0.1.155
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -348,6 +348,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Dec 22 2011 Ivan Necas <inecas@redhat.com> 0.1.155-1
+- periodic rebuild
 * Wed Dec 21 2011 Mike McCune <mmccune@redhat.com> 0.1.154-1
 - removing indexing for changesets, as its not needed currently
   (jsherril@redhat.com)
