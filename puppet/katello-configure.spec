@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.46
+Version:        0.1.47
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Thu Dec 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.47-1
+- 769540 - katello-configure fails: katelloschema
+
 * Wed Dec 21 2011 Mike McCune <mmccune@redhat.com> 0.1.46-1
 - 768191 - adding a default config for elasticsearch
 * Wed Dec 21 2011 Mike McCune <mmccune@redhat.com> 0.1.45-1
