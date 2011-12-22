@@ -1,6 +1,7 @@
 %ul.expand_list
   -if repos.empty?
     #{_("No repositories")}
+
   -for repo in repos
     %li.clear.slide_link
       %a.repo_add_remove.st_button.fr{ "data-id" => repo.id, "data-name"=>repo.name}
