@@ -20,7 +20,7 @@ import datetime
 
 from katello.client.api.user_role import UserRoleAPI
 from katello.client.api.permission import PermissionAPI
-from katello.client.api.utils import get_role, get_organization
+from katello.client.api.utils import get_role, get_organization, get_permission
 from katello.client.core.utils import Printer, system_exit, is_valid_record
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
@@ -106,6 +106,34 @@ class Create(PermissionAction):
         else:
             print _("Could not create permission [ %s ]") % name
             return os.EX_DATAERR
+
+
+class Delete(PermissionAction):
+
+    description = _('delete a permission')
+
+    def setup_parser(self):
+        self.parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
+        self.parser.add_option('--name', dest='name',help=_("permission name (required)"))
+
+    def check_options(self):
+        self.require_option('user_role')
+        self.require_option('name')
+
+    def run(self):
+        role_name = self.get_option('user_role')
+        name = self.get_option('name')
+
+        role = get_role(role_name)
+        if role == None:
+            return os.EX_DATAERR
+        perm = get_permission(role_name, name)
+        if perm == None:
+            return os.EX_DATAERR
+
+        self.api.delete(role['id'], perm['id'])
+        print _("Successfully deleted permission [ %s ] for role [ %s ]") % (name, role_name)
+        return os.EX_OK
 
 
 class ListAvailableVerbs(PermissionAction):

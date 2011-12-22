@@ -31,13 +31,20 @@ class PermissionAPI(KatelloAPI):
         path = "/api/roles/%s/permissions/" % str(roleId)
         return self.server.POST(path, data)[1]
 
-    def permissions(self, roleId):
+    def permissions(self, roleId, query={}):
         path = "/api/roles/%s/permissions/" % str(roleId)
-        return self.server.GET(path)[1]
+        return self.server.GET(path, query)[1]
 
     def permission(self, roleId, permissionId):
         path = "/api/roles/%s/permissions/%s/" % (str(roleId), str(permissionId))
         return self.server.GET(path)[1]
+
+    def permission_by_name(self, roleId, name):
+        perms = self.permissions(roleId, {"name": name})
+        if len(perms) >= 1:
+            return perms[0]
+        else:
+            return None
 
     def delete(self, roleId, permissionId):
         path = "/api/roles/%s/permissions/%s" % (str(roleId), str(permissionId))
