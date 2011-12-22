@@ -19,6 +19,17 @@ class PermissionAPI(KatelloAPI):
     """
     Connection class to access Permissions
     """
+    def create(self, roleId, name, description, type, verbs, tagIds, orgId = None):
+        data = {
+            "name": name,
+            "description": description,
+            "type": type,
+            "verbs": verbs,
+            "tags": tagIds,
+            "organization_id": orgId
+        }
+        path = "/api/roles/%s/permissions/" % str(roleId)
+        return self.server.POST(path, data)[1]
 
     def permissions(self, roleId):
         path = "/api/roles/%s/permissions/" % str(roleId)
@@ -31,4 +42,3 @@ class PermissionAPI(KatelloAPI):
     def delete(self, roleId, permissionId):
         path = "/api/roles/%s/permissions/%s" % (str(roleId), str(permissionId))
         return self.server.DELETE(path)[1]
-

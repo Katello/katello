@@ -23,6 +23,7 @@ from katello.client.api.provider import ProviderAPI
 from katello.client.api.template import TemplateAPI
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.api.user import UserAPI
+from katello.client.api.user_role import UserRoleAPI
 
 def get_organization(orgName):
     organization_api = OrganizationAPI()
@@ -125,3 +126,9 @@ def get_user(userName):
         print _("Could not fing user [ %s ]") % (userName)
     return user
 
+def get_role(name):
+    user_role_api = UserRoleAPI()
+    role = user_role_api.role_by_name(name)
+    if role == None:
+        print _("Cannot find user role [ %s ]") % (name)
+    return role

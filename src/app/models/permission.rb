@@ -126,8 +126,8 @@ class Permission < ActiveRecord::Base
 
   def as_json(*args)
     ret = super.as_json(*args)
-    ret[:tags] = self.tags.collect do |t| 
-        t[:formatted] = Tag.formatted(self.resource_type.name, t.id) 
+    ret[:tags] = self.tags.collect do |t|
+        t[:formatted] = Tag.formatted(self.resource_type.name, t.tag_id)
         t
     end
     ret[:verbs] = self.verbs

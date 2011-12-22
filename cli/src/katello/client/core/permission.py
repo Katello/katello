@@ -19,7 +19,9 @@ from gettext import gettext as _
 import datetime
 
 from katello.client.api.user_role import UserRoleAPI
-from katello.client.core.utils import Printer
+from katello.client.api.permission import PermissionAPI
+from katello.client.api.utils import get_role, get_organization
+from katello.client.core.utils import Printer, system_exit, is_valid_record
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 
@@ -34,10 +36,11 @@ class PermissionAction(Action):
 
     def __init__(self):
         super(PermissionAction, self).__init__()
-        self.api = UserRoleAPI()
+        self.user_role_api = UserRoleAPI()
+        self.api = PermissionAPI()
 
-    def getPermissions(self, orgName, scope=None):
-        data = self.api.available_verbs(orgName)
+    def getAvailablePermissions(self, orgName, scope=None):
+        data = self.user_role_api.available_verbs(orgName)
         if scope == None:
             return data
         elif scope in data:
@@ -45,20 +48,65 @@ class PermissionAction(Action):
         else:
             return {}
 
+# permission actions -----------------------------------------------------------
 
 
-class SinglePermissionAction(PermissionAction):
+class Create(PermissionAction):
 
+    description = _('create a permission for a user role')
 
     def setup_parser(self):
-        pass
+        self.parser.add_option('--user_role', dest='user_role',help=_("role name (required)"))
+        self.parser.add_option('--name', dest='name',help=_("permission name (required)"))
+        self.parser.add_option('--description', dest='desc', help=_("permission description"))
+        self.parser.add_option('--org', dest='org', help=_("organization name"))
+        self.parser.add_option('--scope', dest='scope', help=_("scope of the permisson"))
+        self.parser.add_option('--verbs', dest='verbs', help=_("verbs for the permission"), default="")
+        self.parser.add_option('--tags', dest='tags', help=_("tags for the permission"), default="")
 
     def check_options(self):
-        pass
+        self.require_option('user_role')
+        self.require_option('name')
+        self.require_option('scope')
 
+    def tag_name_to_id_map(self, org_name, scope):
+        permissions = self.getAvailablePermissions(org_name, scope)
 
+        tag_map = {}
+        for t in permissions[scope]['tags']:
+            tag_map[t['display_name']] = t['name']
+        return tag_map
 
-# permission actions -----------------------------------------------------------
+    def tags_to_ids(self, tags, org_name, scope):
+        tag_map = self.tag_name_to_id_map(org_name, scope)
+        try:
+            return [tag_map[t] for t in tags]
+        except KeyError, e:
+            system_exit(os.EX_DATAERR, _("Could not find tag [ %s ] in scope of [ %s ]") % (e[0], scope))
+
+    def run(self):
+        role_name = self.get_option('user_role')
+        name = self.get_option('name')
+        desc = self.get_option('desc')
+        org_name = self.get_option('org')
+        scope = self.get_option('scope')
+        verbs = self.get_option('verbs').split(',')
+        tags = self.get_option('tags').split(',')
+
+        tag_ids = self.tags_to_ids(tags, org_name, scope)
+
+        role = get_role(role_name)
+        if role == None:
+            return os.EX_DATAERR
+
+        permission = self.api.create(role['id'], name, desc, scope, verbs, tag_ids, org_name)
+        if is_valid_record(role):
+            print _("Successfully created permission [ %s ] for user role [ %s ]") % (name, role['name'])
+            return os.EX_OK
+        else:
+            print _("Could not create permission [ %s ]") % name
+            return os.EX_DATAERR
+
 
 class ListAvailableVerbs(PermissionAction):
 
@@ -80,7 +128,7 @@ class ListAvailableVerbs(PermissionAction):
         if not listGlobal:
             self.printer.addColumn("available_tags", multiline=True, show_in_grep=False)
 
-        permissions = self.getPermissions(orgName, scope)
+        permissions = self.getAvailablePermissions(orgName, scope)
         display_data = self.formatDisplayData(permissions, listGlobal)
 
         if scope:
