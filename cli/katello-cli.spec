@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Dec 22 2011 Shannon Hughes <shughes@redhat.com> 0.1.31-2
+- sys eng build (shughes@redhat.com)
+
 * Thu Dec 22 2011 Ivan Necas <inecas@redhat.com> 0.1.31-1
 - periodic rebuild
 
