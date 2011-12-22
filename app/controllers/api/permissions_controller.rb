@@ -36,7 +36,7 @@ class Api::PermissionsController < Api::ApiController
   end
 
   def index
-    render :json => @role.permissions.to_json()
+    render :json => @role.permissions.where(query_params).to_json()
   end
 
   def show
@@ -46,9 +46,9 @@ class Api::PermissionsController < Api::ApiController
   def create
 
     new_params = {
-      :name => params[:name], 
+      :name => params[:name],
       :description => params[:description],
-      :role => @role, 
+      :role => @role,
       :organization => @organization
     }
     new_params[:verb_values] = params[:verbs] || []
@@ -58,9 +58,9 @@ class Api::PermissionsController < Api::ApiController
       new_params[:all_tags] = true
       new_params[:all_verbs] = true
     end
-    
+
     new_params[:resource_type] = ResourceType.find_or_create_by_name(params[:type])
-    
+
     @permission = Permission.create! new_params
     render :json => @permission.to_json()
   end
