@@ -21,11 +21,9 @@ class ChangesetsController < ApplicationController
   before_filter :authorize
   before_filter :setup_options, :only => [:index, :items, :auto_complete_search]
 
-
   after_filter :update_editors, :only => [:update]
 
   #around_filter :catch_exceptions
-
 
   def rules
     read_perm = lambda{@environment.changesets_readable?}
@@ -50,9 +48,6 @@ class ChangesetsController < ApplicationController
       :promotion_progress => read_perm
     }
   end
-
-
-
 
   ####
   # Changeset history methods
@@ -109,7 +104,6 @@ class ChangesetsController < ApplicationController
   def object
     render :json => simplify_changeset(@changeset), :content_type => :json
   end
-
 
   def new
     render :partial=>"new", :layout => "tupane_layout"
@@ -249,7 +243,8 @@ class ChangesetsController < ApplicationController
 
   def promotion_progress
     progress = @changeset.task_status.progress
-    to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'progress' => progress.to_i}
+    state = @changeset.state
+    to_ret = {'id' => 'changeset_' + @changeset.id.to_s, 'state' => state, 'progress' => progress.to_i}
     render :json=>to_ret
   end
 
@@ -305,7 +300,7 @@ class ChangesetsController < ApplicationController
   def simplify_changeset cs
 
     to_ret = {:id=>cs.id.to_s, :name=>cs.name, :description=>cs.description, :timestamp =>cs.updated_at.to_i.to_s,
-                          :system_templates => {},:products=>{}, :is_new => cs.state == Changeset::NEW}
+              :system_templates => {},:products=>{}, :is_new => cs.state == Changeset::NEW, :state => cs.state}
     cs.system_templates.each do |temp|
       to_ret[:system_templates][temp.id] = {:id=> temp.id, :name=>temp.name}
     end

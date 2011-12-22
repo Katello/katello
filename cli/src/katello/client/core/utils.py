@@ -412,22 +412,6 @@ def format_progress_errors(errors):
     error_list = [e["error"]["error"] for e in errors]
     return "\n".join(error_list)
 
-def parse_error_array(message):
-    """
-    Pulp might return a string in a format:
-      ['This is very long errror',
-       'it contains',
-       'many lines']
-    This method joins converts this kind of messages to
-      This is very long errror
-      it contains
-      many lines
-    """
-    if re.match('^\[.*,.*\]$',message, re.M|re.S):
-        lines = [re.sub('^\W+|\W+$',"",l) for l in message.split(',')]
-        return "\n".join(lines)
-    else:
-        return message
 
 def format_task_errors(errors):
     """
@@ -436,7 +420,7 @@ def format_task_errors(errors):
     @param errors: list of errors returned from AsyncTask.errors()
     @return string, each error on one line
     """
-    error_list = [parse_error_array(e[0]) for e in errors]
+    error_list = [e[0] for e in errors]
     return "\n".join(error_list)
 
 
