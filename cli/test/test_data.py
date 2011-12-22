@@ -255,7 +255,7 @@ SYNC_RESULT_NOT_SYNCED = [
 
 SYNC_RESULT_WITHOUT_ERROR = [
   {
-    "result": "{\"errors\":[null,null]}",
+    "result": {"errors":[None,None]},
     "created_at": None,
     "uuid": "6d3d8711-cf28-11e0-b10e-f0def13c24e5",
     "updated_at": None,
@@ -297,7 +297,7 @@ SYNC_RESULT_WITHOUT_ERROR = [
 
 SYNC_RESULT_WITH_ERROR = [
   {
-    "result": "{\"errors\":[\"some error 1\",\"some error 2\"]}",
+    "result": {"errors": ["some error 1","some error 2"]},
     "created_at": None,
     "uuid": "6d3d8711-cf28-11e0-b10e-f0def13c24e5",
     "updated_at": None,
@@ -316,7 +316,7 @@ SYNC_RESULT_WITH_ERROR = [
     "start_time": "2011-08-25T14:42:16Z"
   },
   {
-    "result": "{\"errors\":[null,null]}",
+    "result": {"errors":[None,None]},
     "created_at": None,
     "uuid": "6d523975-cf28-11e0-b196-f0def13c24e5",
     "updated_at": None,
@@ -338,7 +338,7 @@ SYNC_RESULT_WITH_ERROR = [
 
 SYNC_RESULT_CANCELLED = [
   {
-    "result": "{\"errors\":[null,null]}",
+    "result": {"errors":[None,None]},
     "created_at": None,
     "uuid": "6d3d8711-cf28-11e0-b10e-f0def13c24e5",
     "updated_at": None,
@@ -357,7 +357,7 @@ SYNC_RESULT_CANCELLED = [
     "start_time": "2011-08-25T14:42:16Z"
   },
   {
-    "result": "{\"errors\":[null,null]}",
+    "result": {"errors":[None,None]},
     "created_at": None,
     "uuid": "6d523975-cf28-11e0-b196-f0def13c24e5",
     "updated_at": None,
@@ -380,7 +380,7 @@ SYNC_RESULT_CANCELLED = [
 
 SYNC_RUNNING_RESULT = [
   {
-    "result": "{\"errors\":[null,null]}",
+    "result": {"errors":[None,None]},
     "created_at": "2011-08-25T14:44:17Z",
     "uuid": "b57a9d75-cf28-11e0-8a7a-f0def13c24e5",
     "updated_at": "2011-08-25T14:44:17Z",
@@ -400,7 +400,7 @@ SYNC_RUNNING_RESULT = [
     "start_time": None
   },
   {
-    "result": "{\"errors\":[null,null]}",
+    "result": {"errors":[None,None]},
     "created_at": "2011-08-25T14:44:17Z",
     "uuid": "b58a9635-cf28-11e0-8ae3-f0def13c24e5",
     "updated_at": "2011-08-25T14:44:17Z",
