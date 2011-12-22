@@ -90,7 +90,7 @@ KT.templates = function() {
         bc['repos_' + id] = {
             cache: null,
             client_render: true,
-            name: i18n.repositories,
+            name: i18n.repos,
             trail: ['templates', template_root],
             url: ''
         };
