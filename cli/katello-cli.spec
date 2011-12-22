@@ -84,6 +84,28 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Dec 22 2011 Shannon Hughes <shughes@redhat.com> 0.1.30-2
+- system engine build (shughes@redhat.com)
+- Merge remote-tracking branch 'katello/search' into branding
+  (shughes@redhat.com)
+- Automatic commit of package [katello-cli] release [0.1.29-2].
+  (shughes@redhat.com)
+- Automatic commit of package [katello-cli] release [0.1.25-2].
+  (shughes@redhat.com)
+- system engine build (shughes@redhat.com)
+- Automatic commit of package [katello-cli] release [0.1.23-3].
+  (shughes@redhat.com)
+- brew build (shughes@redhat.com)
+- Merge remote-tracking branch 'katello/master' into branding
+  (shughes@redhat.com)
+- Automatic commit of package [katello-cli] release [0.1.22-2].
+  (shughes@redhat.com)
+- builds for cli/installer (shughes@redhat.com)
+- Automatic commit of package [katello-cli] release [0.1.19-2].
+  (shughes@redhat.com)
+- system engine build (shughes@redhat.com)
+- build cli (shughes@redhat.com)
+
 * Mon Dec 19 2011 Shannon Hughes <shughes@redhat.com> 0.1.29-2
 - system engine build
 
