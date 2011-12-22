@@ -56,6 +56,16 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Thu Dec 22 2011 Shannon Hughes <shughes@redhat.com> 0.1.43-2
+- system engine build (shughes@redhat.com)
+- Merge branch 'master' into search (jsherril@redhat.com)
+- Merge branch 'master' into search (jsherril@redhat.com)
+- Gave create db access to katello user (paji@redhat.com)
+- 768191 - forgot the include so we actually execute the ES config
+  (mmccune@redhat.com)
+- Merge branch 'master' into search (mmccune@redhat.com)
+- 768191 - first cut at getting elasticsearch configured (mmccune@redhat.com)
+
 * Wed Dec 21 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.43-1
 - 769540 - katello-configure fails: katelloschema
 - mbacovsk's public key
