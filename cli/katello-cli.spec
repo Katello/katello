@@ -18,8 +18,8 @@ Summary:       Client package for managing application life-cycle for Linux syst
 Group:         Applications/System
 License:       GPLv2
 URL:           http://www.katello.org
-Version:       0.1.30
-Release:       2%{?dist}
+Version:       0.1.31
+Release:       1%{?dist}
 Source0:       %{name}-%{version}.tar.gz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -84,30 +84,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Dec 22 2011 Shannon Hughes <shughes@redhat.com> 0.1.30-2
-- system engine build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/search' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello-cli] release [0.1.29-2].
-  (shughes@redhat.com)
-- Automatic commit of package [katello-cli] release [0.1.25-2].
-  (shughes@redhat.com)
-- system engine build (shughes@redhat.com)
-- Automatic commit of package [katello-cli] release [0.1.23-3].
-  (shughes@redhat.com)
-- brew build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/master' into branding
-  (shughes@redhat.com)
-- Automatic commit of package [katello-cli] release [0.1.22-2].
-  (shughes@redhat.com)
-- builds for cli/installer (shughes@redhat.com)
-- Automatic commit of package [katello-cli] release [0.1.19-2].
-  (shughes@redhat.com)
-- system engine build (shughes@redhat.com)
-- build cli (shughes@redhat.com)
-
-* Mon Dec 19 2011 Shannon Hughes <shughes@redhat.com> 0.1.29-2
-- system engine build
+* Thu Dec 22 2011 Ivan Necas <inecas@redhat.com> 0.1.31-1
+- periodic rebuild
 
 * Wed Dec 14 2011 Ivan Necas <inecas@redhat.com> 0.1.27-1
 - Fix bug on cli repo info for disabled repository (inecas@redhat.com)

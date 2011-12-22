@@ -16,8 +16,8 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.152
-Release:        2%{?dist}
+Version:        0.1.155
+Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
 
@@ -348,12 +348,14 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
-* Thu Dec 22 2011 Shannon Hughes <shughes@redhat.com> 0.1.152-2
-- system engine build (shughes@redhat.com)
-- Merge remote-tracking branch 'katello/search' into branding
-  (shughes@redhat.com)
-- Merge branch 'master' into search (jsherril@redhat.com)
-- Merge branch 'master' into search (jsherril@redhat.com)
+* Thu Dec 22 2011 Ivan Necas <inecas@redhat.com> 0.1.155-1
+- periodic rebuild
+* Wed Dec 21 2011 Mike McCune <mmccune@redhat.com> 0.1.154-1
+- removing indexing for changesets, as its not needed currently
+  (jsherril@redhat.com)
+- make sure that katello prefix is part of the gpg url (ohadlevy@redhat.com)
+* Wed Dec 21 2011 Justin Sherrill <jsherril@redhat.com> 0.1.153-1
+- fixing routes.js (jsherril@redhat.com)
 - reverting to old package behavior (jsherril@redhat.com)
 - unit test fix (jsherril@redhat.com)
 - fixing broken unit tests
@@ -362,11 +364,14 @@ fi
   (ehelms@redhat.com)
 - making filters more flexible within application controller
   (jsherril@redhat.com)
+<<<<<<< HEAD
 - Automatic commit of package [katello] release [0.1.147-2].
   (shughes@redhat.com)
 - system engine eng build (shughes@redhat.com)
 - Merge remote-tracking branch 'katello/master' into branding
   (shughes@redhat.com)
+=======
+>>>>>>> katello/master
 - fixing provider search to not show redhat provider (jsherril@redhat.com)
 - adding elasticsearch plugin log to logrotate for katello
   (jsherril@redhat.com)
@@ -400,6 +405,7 @@ fi
 - adding initial system searching (jsherril@redhat.com)
 - product/repo saving for providers (jsherril@redhat.com)
 - adding provider searching (jsherril@redhat.com)
+<<<<<<< HEAD
 - Automatic commit of package [katello] release [0.1.143-2].
   (shughes@redhat.com)
 - system engine build (shughes@redhat.com)
@@ -496,6 +502,16 @@ fi
   (shughes@redhat.com)
 - Merge remote-tracking branch 'katello/master' into branding
   (shughes@redhat.com)
+=======
+- controller support for indexed (jsherril@redhat.com)
+- search - initial full text search additions (jsherril@redhat.com)
+- Gemfile Update - adding Tire to gemfile (jsherril@redhat.com)
+
+* Wed Dec 21 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.151-1
+
+* Tue Dec 20 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.149-1
+- 
+>>>>>>> katello/master
 
 * Mon Dec 19 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.148-1
 - Revert "765888 - Error during promotion"
