@@ -56,6 +56,12 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Thu Dec 22 2011 Shannon Hughes <shughes@redhat.com> 0.1.47-2
+- sys eng build (shughes@redhat.com)
+- Automatic commit of package [katello-configure] release [0.1.43-2].
+  (shughes@redhat.com)
+- system engine build (shughes@redhat.com)
+
 * Thu Dec 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.47-1
 - 769540 - katello-configure fails: katelloschema
 
