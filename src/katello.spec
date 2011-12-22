@@ -348,6 +348,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Dec 22 2011 Shannon Hughes <shughes@redhat.com> 0.1.155-2
+- system engine build (shughes@redhat.com)
 * Thu Dec 22 2011 Ivan Necas <inecas@redhat.com> 0.1.155-1
 - periodic rebuild
 * Wed Dec 21 2011 Mike McCune <mmccune@redhat.com> 0.1.154-1
