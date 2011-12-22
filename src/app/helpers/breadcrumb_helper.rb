@@ -29,7 +29,7 @@ module ChangesetBreadcrumbs
     add_crumb_node!(bc, "changesets", "", _("Changesets"), [], {:client_render => true})
 
     @changesets.each{|cs|
-      cs_info = {:is_new=>cs.state == Changeset::NEW}
+      cs_info = {:is_new=>cs.state == Changeset::NEW, :state=>cs.state}
       if (cs.state == Changeset::PROMOTING)
         prog = cs.task_status.progress
         if prog
