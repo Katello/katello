@@ -14,7 +14,6 @@ class Api::ChangesetsController < Api::ApiController
 
   before_filter :find_changeset, :only => [:show, :destroy, :promote]
   before_filter :find_environment
-  before_filter :authorize
 
   def rules
     read_perm = lambda{@environment.changesets_readable?}
