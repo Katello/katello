@@ -15,7 +15,6 @@ require 'rest_client'
 class Api::ChangesetsContentController < Api::ApiController
 
   before_filter :find_changeset
-  before_filter :authorize
 
   def rules
     manage_perm = lambda{@changeset.environment.changesets_manageable?}
