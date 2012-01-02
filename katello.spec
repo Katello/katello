@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.156
+Version:        0.1.157
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -348,6 +348,11 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jan 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.157-1
+- api perms review - activation keys
+- 751033 - adding subscriptions to activation key exception
+- perms - changesets permission review
+
 * Fri Dec 23 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.156-1
 - api perms - changesets unittests
 - api perms - changesets
