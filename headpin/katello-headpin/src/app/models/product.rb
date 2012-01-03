@@ -149,6 +149,13 @@ class Product < ActiveRecord::Base
     Product.editable(self.organization).where(:id => id).count > 0
   end
 
+  after_save do
+      self.provider.update_index if self.provider.respond_to? :update_index
+  end
+
+
+
+
   protected
 
   def self.authorized_items org, verbs, resource = :providers
