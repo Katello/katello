@@ -70,6 +70,11 @@ SOURCES.each do |source|
     end
 end
 
+# Below are custom system calls to get more info
+ouput = `rpm -qa | egrep "katello|candlepin|pulp|thumbslug" >> #{File.join(target_dir, "packages")}`
+
+
+
 # Tar the output and log it
 tarfile = target_dir + ".tar.gz"
 pwd = Dir.pwd()
