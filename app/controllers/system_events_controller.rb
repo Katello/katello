@@ -45,7 +45,8 @@ class SystemEventsController < ApplicationController
     type = task_template[:name]
     user_message = task_template[:user_message] % task.user.username
     render :partial=>"details", :layout => "tupane_layout", :locals=>{:type => type, :user_message => user_message,
-                                                  :system => @system, :task =>task}
+                                                  :system => @system, :task =>task,
+                                                  :system_task => find_system_task(task, @system) }
   end
 
   def status
@@ -93,6 +94,16 @@ class SystemEventsController < ApplicationController
     @system = System.find(params[:system_id])
   end
 
+  helper_method :find_system_task
+  def find_system_task task, system = nil
+    if system
+      SystemTask.where(:task_status_id =>  task, :system_id => system).first
+    else
+      SystemTask.where(:task_status_id =>  task).first
+    end
+  end
+
+
   helper_method :tasks
   def tasks(page_size = current_user.page_size)
     @system.tasks.order("updated_at desc").limit(page_size)
@@ -102,6 +113,7 @@ class SystemEventsController < ApplicationController
   def total_events_length()
     @system.tasks.length
   end
+
 
 
 end

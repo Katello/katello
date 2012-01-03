@@ -174,13 +174,7 @@ class SystemTask < ActiveRecord::Base
 
   # non self methods
   def humanize_type
-    { :package_install => _("Package Install"),
-      :package_update =>  _("Package Update"),
-      :package_remove => _("Package Remove"),
-      :package_group_install => _("Package Group Install"),
-      :package_group_update => _("Package Group Update"),
-      :package_group_remove => _("Package Group Remove"),
-    }[task_status.task_type.to_sym].to_s
+    TYPES[task_status.task_type][:name]
   end
 
   def humanize_parameters

@@ -19,7 +19,13 @@
 
   %fieldset
     .grid_7
+      %h5 #{_("Parameters")}
+    .grid_7.la
+      = system_task.humanize_parameters
+
+  %fieldset
+    .grid_7
       %h5 #{_("Result")}
     .grid_7.multiline
-      = task.result
+      = system_task.result_description
   
