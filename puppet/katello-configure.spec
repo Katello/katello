@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Tue Jan 03 2012 Shannon Hughes <shughes@redhat.com> 0.1.49-2
+- se build (shughes@redhat.com)
+
 * Tue Jan 03 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.49-1
 - 771352 - SAM does not need to use the katello-jobs
 
