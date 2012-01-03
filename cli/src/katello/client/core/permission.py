@@ -60,7 +60,7 @@ class Create(PermissionAction):
         self.parser.add_option('--name', dest='name',help=_("permission name (required)"))
         self.parser.add_option('--description', dest='desc', help=_("permission description"))
         self.parser.add_option('--org', dest='org', help=_("organization name"))
-        self.parser.add_option('--scope', dest='scope', help=_("scope of the permisson"))
+        self.parser.add_option('--scope', dest='scope', help=_("scope of the permisson (required)"))
         self.parser.add_option('--verbs', dest='verbs', help=_("verbs for the permission"), default="")
         self.parser.add_option('--tags', dest='tags', help=_("tags for the permission"), default="")
 
@@ -107,7 +107,7 @@ class Create(PermissionAction):
             return os.EX_DATAERR
 
         permission = self.api.create(role['id'], name, desc, scope, verbs, tag_ids, org_name)
-        if is_valid_record(role):
+        if is_valid_record(permission):
             print _("Successfully created permission [ %s ] for user role [ %s ]") % (name, role['name'])
             return os.EX_OK
         else:
