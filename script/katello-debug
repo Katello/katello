@@ -4,6 +4,7 @@ require "optparse"
 require "fileutils"
 
 NAME="katello-debug"
+PAD="  "
 
 # Set up the options
 options = {}
@@ -61,12 +62,16 @@ if File.exists?(target_dir)
 end
 
 FileUtils.mkdir_p(target_dir)
+puts ("created directory #{target_dir}")
 
 SOURCES.each do |source|
     if File.exists?(source)
         complete_target = File.join(target_dir, File.dirname(source))
         FileUtils.mkdir_p(complete_target)
+        puts ("#{PAD}copying over #{source}")
         FileUtils.cp_r(source, complete_target, :preserve => true)
+    else
+        puts ("#{PAD}skipping #{source} since it does not exist")
     end
 end
 
