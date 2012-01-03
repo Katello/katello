@@ -15,7 +15,15 @@ class Organization < ActiveRecord::Base
   include Glue::Candlepin::Owner if AppConfig.use_cp
   include Glue if AppConfig.use_cp
   include Authorization
-  
+  include IndexedModel
+
+  index_options :extended_json=>:extended_index_attrs,
+                :json=>{:except=>[:debug_cert, :events]}
+
+  mapping do
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+  end
+
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy
   has_many :environments, :class_name => "KTEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
@@ -150,5 +158,10 @@ class Organization < ActiveRecord::Base
 
   READ_PERM_VERBS = [:read, :create, :update, :delete]
   SYNC_PERM_VERBS = [:sync]
+  
+
+  def extended_index_attrs
+    {:name_sort=>name.downcase}
+  end
 
 end
