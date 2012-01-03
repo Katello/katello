@@ -1,4 +1,5 @@
-= javascript :panel, :env_select, :edit, :promotion
+= javascript :panel, :env_select, :edit, :promotion, :fancyqueries, :form
+= stylesheet :fancyqueries
 = include_editable_i18n
 
 
@@ -59,6 +60,10 @@
       "changeset_progress": '#{_("This changeset is currently being promoted.")}',
       "promoting": '#{_("Promoting...")}',
       "promoted": '#{_("Promoted")}',
+      "promotion_failed": '#{_("Promotion Failed")}',
+      "search" : "#{_('Filter')}",
+      "search" : "#{_('Search')}",
+      "disabled_search" : "#{_('Search is not available for the current content')}"
     });
 
 #error_dialog{:style=>"display: none"}
@@ -91,13 +96,13 @@
       #changeset_tree
         - if read_changesets
           %h2 #{@next_environment.name + _(" Changesets")}
-          .breadcrumb_search.fl.clear.clickable
-            %form#search_form.search.clear
-              %input{ :name => "s", :type => "input", :placeholder => "Filter...", :id=>"search_filter"}
-              %button.action #{_("Search")}
+          .breadcrumb_filter.fl.clear.clickable
+            %form#filter_form.filter.clear
+              %input{ :name => "filter", :type => "input", :placeholder => "Filter...", :id=>"filter_input"}
+              %button.action #{_("Filter")}
               %br.clear
-            .search_button.fr.clickable
-              #{_('Search')}
+            .filter_button.fr.clickable{ :title => "#{_('Filter')}" }
+              #{_('Filter')}
             .tree_breadcrumb
           .sliding_container
             #cslist.list.sliding_list{"data-page_size"=>current_user.page_size}
@@ -162,7 +167,13 @@
           #{_('+ New Changeset')}
           .arrow-right
       %h2 #{@environment.name + _(" Content")}
-      .tree_breadcrumb.clickable.clear
+      .breadcrumb_search.clear.clickable
+        %form#search_form.search{"data-url" => search_index_path()}
+          = text_field_tag(:search, params[:search], {:type => "text", :placeholder => "Search...", :class => "auto_complete_input ui-autocomplete-input"})
+          %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
+        .search_button.clickable.fr{ :disabled => "disabled", :title => "#{_('Search')}" }
+          #{_('Search')}
+        .tree_breadcrumb
       .sliding_container
         #list.list.sliding_list{"data-page_size"=>current_user.page_size}
           .slider_one.has_content.slider

@@ -13,16 +13,18 @@
 class DistributionsController < ApplicationController
 
   before_filter :lookup_distribution
+  before_filter :authorize
 
   def rules
-    #TODO, only allow the user to see a distro if they have rights to a product its in
-    test = lambda{true}
+    # TODO: change the route to /repositories/:repo_id/distributions/:id
+    # and fetch repository/product first to check permissions
+    readable = lambda{ true }
+    #readable = lambda{ @product.readable? }
     {
-      :show => test,
-      :filelist => test,
+      :show => readable,
+      :filelist => readable,
     }
   end
-
 
   def show
     render :partial=>"show", :layout => "tupane_layout"

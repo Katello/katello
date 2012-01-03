@@ -26,6 +26,7 @@ common:
   warden: database
   use_cp: true
   use_pulp: true
+  debug_rest: false
   debug_cp_proxy: false
   debug_pulp_proxy: false
   rest_client_timeout: 30
@@ -118,19 +119,12 @@ common:
 #
 production:
   database:
-    adapter: sqlite3
-    database: /var/lib/katello/production.sqlite3
-    pool: 5
-    timeout: 5000
-#or
-#  database:
-#   adapter: postgresql
-#   username: katello
-#   password: katello
-#   database: katello
-#   host: localhost
-#   encoding: UTF8
-
+    adapter: postgresql
+    username: katello
+    password: katello
+    database: katello
+    host: localhost
+    encoding: UTF8
 
 #
 # Development environment configuration

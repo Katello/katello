@@ -50,7 +50,8 @@ class PackagesController < ApplicationController
 
   def auto_complete_locker
     name = params[:term]
-    render :json=>Pulp::Package.name_search(name).sort.uniq[0..19]
+    #render :json=>Pulp::Package.name_search(name).sort.uniq[0..19]
+    render :json=>Glue::Pulp::Package.name_search(name + '*')
   end
 
   
