@@ -91,16 +91,20 @@ class Info(DistributionAction):
 
     def setup_parser(self):
         # always provide --id option for create, even on registered clients
+        self.parser.add_option('--repo_id', dest='repo_id',
+                      help=_("repository id"))
         self.parser.add_option('--id', dest='id',
                                help=_("distribution id eg: ks-rh-noarch (required)"))
 
     def check_options(self):
+        self.require_option('repo_id')
         self.require_option('id')
 
     def run(self):
+        repoId  = self.get_option('repo_id')
         dist_id = self.get_option('id')
 
-        data = self.api.distribution(dist_id)
+        data = self.api.distribution(repoId, dist_id)
 
         self.printer.addColumn('id')
         self.printer.addColumn('description')

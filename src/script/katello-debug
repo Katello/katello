@@ -1,0 +1,92 @@
+#!/usr/bin/env ruby
+
+require "optparse"
+require "fileutils"
+
+NAME="katello-debug"
+
+# Set up the options
+options = {}
+
+optparse = OptionParser.new do|opts|
+    opts.banner = "Usage: #{NAME} [options] command"
+
+    options[:basedir] = '/tmp'
+    opts.on( '--dir [DIRECTORY]', 'Directory to place the tarball. Defaults to /tmp' ) do |opt|
+        options[:basedir] = opt
+    end
+
+
+    opts.on( '--help', 'Display help and exit' ) do
+        puts opts
+        exit
+    end
+
+end
+
+optparse.parse!
+
+# Check that we are running as root
+if Process.uid != 0
+    puts("#{NAME} must be run as root")
+    exit
+end
+
+# Define what we want to collect
+SOURCES = [
+# Candlepin
+"/var/log/tomcat6",
+"/etc/candlepin",
+"/etc/tomcat6",
+# Thumbslug
+"/etc/thumbslug",
+"/var/log/thumbslug",
+# Katello
+"/var/log/katello",
+"/etc/katello",
+"/etc/httpd.d/katello.conf",
+# Pulp
+"/etc/pulp",
+"/var/log/pulp",
+"/etc/httpd.d/pulp.conf",
+]
+
+# Collect the files
+timename =  "katello-debug-#{Time.now.strftime("%Y%m%d%H%M%S")}"
+target_dir = File.join(options[:basedir], timename)
+
+if File.exists?(target_dir)
+    puts("#{target_dir} already exists. Please delete it")
+    exit
+end
+
+FileUtils.mkdir_p(target_dir)
+
+SOURCES.each do |source|
+    if File.exists?(source)
+        complete_target = File.join(target_dir, File.dirname(source))
+        FileUtils.mkdir_p(complete_target)
+        FileUtils.cp_r(source, complete_target, :preserve => true)
+    end
+end
+
+# Below are custom system calls to get more info
+ouput = `rpm -qa | egrep "katello|candlepin|pulp|thumbslug" >> #{File.join(target_dir, "packages")}`
+
+
+
+# Tar the output and log it
+tarfile = target_dir + ".tar.gz"
+pwd = Dir.pwd()
+Dir.chdir(options[:basedir])
+output = `tar -czf #{tarfile} #{timename}`
+Dir.chdir(pwd)
+
+puts "A debug file has been created at #{tarfile}."
+
+# Clean up
+FileUtils.rm_r(target_dir)
+
+
+
+
