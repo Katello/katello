@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'helpers/system_test_data'
+
 include OrchestrationHelper
 
 describe Hypervisor do
@@ -42,6 +43,17 @@ describe Hypervisor do
     end
   end
 
+  describe "unsupported actions" do
+    subject { System.create_hypervisor(@environment.id, SystemTestData.new_hypervisor) }
+
+    [:package_profile, :pulp_facts, :simple_packages, :errata, :del_pulp_consumer, :set_pulp_consumer,
+     :update_pulp_consumer, :upload_package_profile, :install_package, :uninstall_package,
+     :update_package, :install_package_group, :uninstall_package_group].each do |unsupported_action|
+      specify do
+        expect { subject.send(unsupported_action) }.to raise_error Errors::UnsupportedActionException
+      end
+    end
+  end
 
 end
 
