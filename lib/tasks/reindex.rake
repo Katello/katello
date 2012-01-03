@@ -8,11 +8,17 @@ task :reindex=>["environment", "clear_search_indices"]  do
   models.each{|mod|
     if !ignore_list.include?(mod.name) && mod.respond_to?(:index)
        print "Re-indexing #{mod}\n"
-       mod.index.import(mod.all)
+       mod.index.import(mod.all) if mod.count > 0
     end
   }
 
+
   print "Re-indexing Repositories\n"
+  
+  #pulp_repos = Pulp::Repository.all
+  #repos = Repository.all
+  #repos.each{|r| r.populate_from pulp_repos}
+
   Repository.all.each{|repo|
     repo.index_packages
     repo.index_errata
