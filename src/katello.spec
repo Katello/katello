@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.159
+Version:        0.1.160
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -348,6 +348,21 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Jan 03 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.160-1
+- moving /distributions API into /repositories path
+- disabling auto-complete on tupane pages
+- system templates - fix packages, groups and repos to be consistent w/
+  promotions
+- system templates - fix label on template tree for repos
+- system templates - fix specs broken by addition of repo
+- system template - updates to tdl for handling templates containing individual
+  repos
+- system template - update to allow adding individual repos to template
+- auto_search_complete - allow controller to provide object for permissions
+  check
+- Add missing Copyright headers.
+- Added permission to list the readable repositories in an environment
+
 * Mon Jan 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.157-1
 - api perms review - activation keys
 - 751033 - adding subscriptions to activation key exception
