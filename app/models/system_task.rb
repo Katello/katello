@@ -14,7 +14,6 @@ class SystemTask < ActiveRecord::Base
   belongs_to :system
   belongs_to :task_status
 
-
   TYPES = {
       #package tasks
      :package_install => {
@@ -114,7 +113,11 @@ class SystemTask < ActiveRecord::Base
             end
             return ""
           end
-          return n_("%s", N_("%s (%s other packages)"), p.length) % [p.first, p.length - 1]
+          if p.length == 1
+            return p.first
+          else
+            return  _("%s (%s other packages)") % [p.first, p.length - 1]
+          end
       end
 
     end
@@ -140,9 +143,7 @@ class SystemTask < ActiveRecord::Base
           end
           msg = details[:event_messages][task.state]
           r = msg + [p.length]
-          return n_(*r) % [p.first, p.length - 1]
-        else
-          return "Boo yeah"
+          return n_(r[0], r[1], p.length-1) % [p.first, p.length - 1]
       end
     end
 
