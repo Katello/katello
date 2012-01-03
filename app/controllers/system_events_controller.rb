@@ -69,7 +69,7 @@ class SystemEventsController < ApplicationController
     statuses = tasks(current_user.page_size + offset)
     statuses = statuses[offset..statuses.length]
     if statuses
-      render(:partial => 'more_events', :locals => {:cycle_extra => (offset %2 ==1), :system => @system, :tasks=> statuses})
+      render(:partial => 'more_events', :locals => {:cycle_extra => offset.odd?, :system => @system, :tasks=> statuses})
     else
       render :nothing => true
     end
@@ -113,7 +113,4 @@ class SystemEventsController < ApplicationController
   def total_events_length()
     @system.tasks.length
   end
-
-
-
 end
