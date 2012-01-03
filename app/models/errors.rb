@@ -30,6 +30,15 @@ module Errors
 
   class CurrentOrganizationNotFoundException < ActiveRecord::RecordNotFound; end
 
+  class UnsupportedActionException < StandardError
+    attr_reader :action, :receiver
+
+    def initialize(action, receiver, message)
+      @action, @receiver = action, receiver
+      super(message)
+    end
+  end
+
   class TemplateValidationException < StandardError
     attr_accessor :errors
 
