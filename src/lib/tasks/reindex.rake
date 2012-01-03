@@ -1,7 +1,7 @@
 task :reindex=>["environment", "clear_search_indices"]  do
   User.current = User.first #set a user for orchestration
 
-  ignore_list = ["CpConsumerUser", "TaskStatus"]
+  ignore_list = ["CpConsumerUser", "TaskStatus", "Repository"]
 
   Dir.glob(RAILS_ROOT + '/app/models/*.rb').each { |file| require file }
   models = ActiveRecord::Base.subclasses.sort{|a,b| a.name <=> b.name}
