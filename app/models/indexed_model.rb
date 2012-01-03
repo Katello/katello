@@ -19,6 +19,12 @@ module IndexedModel
           self.class_index_options = options
       end
 
+      def self.use_index_of(model)
+        if !Rails.env.test?
+          index_name model.index_name
+          document_type model.document_type
+        end
+      end
     end
   end
 
