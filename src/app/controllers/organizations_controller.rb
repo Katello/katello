@@ -47,7 +47,9 @@ class OrganizationsController < ApplicationController
   end
 
   def items
-    render_panel_items(Organization.readable.order('lower(organizations.name)'), @panel_options, params[:search], params[:offset])
+    ids = Organization.readable.collect{|o| o.id}
+    render_panel_direct(Organization, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
+                        [{"id"=>ids}])
   end
 
   def new
