@@ -13,7 +13,7 @@
 
 
 class PulpTaskStatus < TaskStatus
-
+  use_index_of TaskStatus
   def self.wait_for_tasks async_tasks
     async_tasks = async_tasks.collect do |t|
       PulpTaskStatus.using_pulp_task(t)
