@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.48
+Version:        0.1.49
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Tue Jan 03 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.49-1
+- 771352 - SAM does not need to use the katello-jobs
+
 * Thu Dec 22 2011 Mike McCune <mmccune@redhat.com> 0.1.48-1
 - 768191 - ensure we have elasticsearch running before seed
   (mmccune@redhat.com)
