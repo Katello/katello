@@ -18,8 +18,19 @@ class User < ActiveRecord::Base
   include Glue::Pulp::User if AppConfig.katello?
   include Glue if AppConfig.use_cp
   include AsyncOrchestration
+  include IndexedModel
 
   acts_as_reportable
+
+  index_options :extended_json=>:extended_index_attrs,
+                :json=>{:except=>[:password, :password_reset_token,
+                                  :password_reset_sent_at, :helptips_enabled,
+                                  :disabled, :own_role_id]}
+
+  mapping do
+    indexes :login_sort, :type => 'string', :index => :not_analyzed
+  end
+
 
   has_many :roles_users
   has_many :roles, :through => :roles_users
@@ -449,6 +460,13 @@ class User < ActiveRecord::Base
     return ACTION_TO_VERB[type][verb] if ACTION_TO_VERB[type] and ACTION_TO_VERB[type][verb]
     return DEFAULT_VERBS[verb] if DEFAULT_VERBS[verb]
     verb
+  end
+
+
+  def extended_index_attrs
+    {
+        :login_sort => login.downcase
+    }
   end
 
   private

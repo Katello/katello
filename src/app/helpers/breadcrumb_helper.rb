@@ -16,8 +16,9 @@ module BreadcrumbHelper
     cache = false || params[:cache] #default to false
     hash[id] = {:name=>name, :url=>url, :trail=>trail, :cache=>cache}
     hash[id][:content] = params[:content] if params[:content]
-    hash[id][:scrollable] = true if params[:scrollable]
+    hash[id][:scrollable] = params[:scrollable] ? true : false
     hash[id][:client_render] = true if params[:client_render]
+    hash[id][:searchable] = true if params[:searchable]
     hash[id] = hash[id].merge(attributes)
   end
 end
@@ -28,7 +29,7 @@ module ChangesetBreadcrumbs
     add_crumb_node!(bc, "changesets", "", _("Changesets"), [], {:client_render => true})
 
     @changesets.each{|cs|
-      cs_info = {:is_new=>cs.state == Changeset::NEW}
+      cs_info = {:is_new=>cs.state == Changeset::NEW, :state=>cs.state}
       if (cs.state == Changeset::PROMOTING)
         prog = cs.task_status.progress
         if prog
@@ -149,7 +150,7 @@ module ContentBreadcrumbs
 
      #product_packages
      add_crumb_node!(bc, packages_bc_id(prod), packages_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
-        _("Packages"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
+        _("Packages"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true, :searchable => true})
 
      #product_errata
      add_crumb_node!(bc, errata_id, nil,
