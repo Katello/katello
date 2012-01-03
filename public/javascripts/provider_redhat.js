@@ -30,10 +30,10 @@ $(document).ready(function() {
   });
 
 
-    $('#products_table input[type="checkbox"]').live('change', function() {
-        KT.redhat_provider_page.checkboxChanged($(this));
-    });
-
+  $('#products_table input[type="checkbox"]').live('change', function() {
+      KT.redhat_provider_page.checkboxChanged($(this));
+  });
+  $('#upload_submit').click(function(){$(this).closest('form').submit()});
   //end doc ready
 });
 
