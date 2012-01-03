@@ -66,7 +66,7 @@ SOURCES.each do |source|
     if File.exists?(source)
         complete_target = File.join(target_dir, File.dirname(source))
         FileUtils.mkdir_p(complete_target)
-        FileUtils.cp_r(source, complete_target)
+        FileUtils.cp_r(source, complete_target, :preserve => true)
     end
 end
 
