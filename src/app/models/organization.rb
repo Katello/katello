@@ -161,7 +161,7 @@ class Organization < ActiveRecord::Base
   
 
   def extended_index_attrs
-    {:name_sort=>name.downcase}
+    {:name_sort=>name.downcase, :environment=>self.environments.collect{|e| e.name}}
   end
 
 end
