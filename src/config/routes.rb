@@ -442,7 +442,7 @@ Src::Application.routes.draw do
       end
       resources :packages, :only => [:index]
       resources :errata, :only => [:index]
-      resources :distributions, :only => [:index]
+      resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
       member do
         get :package_groups
         get :package_group_categories
@@ -472,7 +472,6 @@ Src::Application.routes.draw do
 
     resources :packages, :only => [:show]
     resources :errata, :only => [:index, :show]
-    resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
 
     resources :users do
       get :report, :on => :collection
