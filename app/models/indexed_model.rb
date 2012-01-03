@@ -22,6 +22,12 @@ module IndexedModel
     end
   end
 
+  #mocked methods for testing
+  if Rails.env.test?
+    def update_index
+    end
+  end
+
 
   def to_indexed_json
 
