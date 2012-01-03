@@ -15,17 +15,31 @@ require 'resources/pulp'
 class Api::DistributionsController < Api::ApiController
   respond_to :json
 
+  before_filter :find_repository
+  before_filter :check_distribution, :only => [:show]
+
   # TODO: define authorization rules
   skip_before_filter :authorize
 
   def index
-    repo = Repository.find(params[:repository_id])
-    render :json => repo.distributions
+    render :json => @repo.distributions
   end
 
   def show
     dist = Glue::Pulp::Distribution.find(params[:id])
     render :json => dist
+  end
+
+  private
+
+  def find_repository
+    @repo = Repository.find(params[:repository_id])
+    raise HttpErrors::NotFound, _("Couldn't find repository '#{params[:repository_id]}'") if @repo.nil?
+    @repo
+  end
+
+  def check_distribution
+    raise HttpErrors::NotFound, _("Distribtion '#{params[:id]}' not found within the repository") unless @repo.has_distribution? params[:id]
   end
 
 end
