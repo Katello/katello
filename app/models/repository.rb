@@ -24,6 +24,12 @@ class Repository < ActiveRecord::Base
   include Glue if AppConfig.use_cp
   include Authorization
   include AsyncOrchestration
+  include IndexedModel
+  
+  index_options :extended_json=>:extended_index_attrs,
+                :json=>{:except=>[:pulp_repo_facts, :groupid, :environment_product_id]}
+
+
   belongs_to :environment_product, :inverse_of => :repositories
   has_and_belongs_to_many :changesets
   validates :pulp_id, :presence => true, :uniqueness => true
@@ -68,6 +74,29 @@ class Repository < ActiveRecord::Base
     end
   }
 
+  def extended_index_attrs
+    {:environment=>self.environment.name, :environment_id=>self.environment.id,
+     :product=>self.product.name, :product_id=> self.product.id}
+  end
+
+  after_save do
+    self.product.provider.update_index if self.product.provider.respond_to? :update_index
+  end
+
+  def index_packages
+    pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
+    Tire.index Glue::Pulp::Package.index do
+      create :mappings => Glue::Pulp::Package.index_mapping
+      import pkgs               
+    end if !pkgs.empty?
+  end
+
+  def index_errata
+    errata = self.errata.collect{|err| err.as_json.merge(err.index_options)}
+    Tire.index "#{AppConfig.elastic_index}_errata" do
+      import errata
+    end if !errata.empty?
+  end
 
   protected
   def setup_repo_gpg
@@ -75,6 +104,5 @@ class Repository < ActiveRecord::Base
       self.gpg_key = product.gpg_key
     end
   end
-
 
 end

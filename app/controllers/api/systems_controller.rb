@@ -14,12 +14,13 @@ class Api::SystemsController < Api::ApiController
   respond_to :json
 
   before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index, :activate]
-  before_filter :find_organization, :only => [:create, :index, :activate, :report]
+  before_filter :find_organization, :only => [:create, :index, :activate, :report, :tasks]
   before_filter :find_only_environment, :only => [:create]
-  before_filter :find_environment, :only => [:create, :index, :report]
+  before_filter :find_environment, :only => [:create, :index, :report, :tasks]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
                                         :unsubscribe, :subscriptions, :pools]
+  before_filter :find_task, :only => [:task_show]
   before_filter :authorize, :except => :activate
 
   skip_before_filter :require_user, :only => [:activate]
@@ -47,7 +48,9 @@ class Api::SystemsController < Api::ApiController
       :unsubscribe => edit_system,
       :subscriptions => read_system,
       :pools => read_system,
-      :activate => register_system
+      :activate => register_system,
+      :tasks => index_systems,
+      :task_show => read_system
     }
   end
 
@@ -168,6 +171,25 @@ class Api::SystemsController < Api::ApiController
     end
   end
 
+  def tasks
+    @tasks = SystemTask.joins(:system,:task_status).where(:"task_statuses.organization_id" => @organization.id)
+    if @environment
+      @tasks = @tasks.where(:"system.environment_id" => @environment.id)
+    end
+    if params[:system_name]
+      @tasks = @tasks.where(:"system.name" => params[:system_name])
+    end
+    @tasks.each {|t| t.task_status.refresh }
+    render :json => @tasks.to_json
+  end
+
+  def task_show
+    @task.task_status.refresh
+    render :json => @task.to_json
+  end
+
+  protected
+
   def find_organization
     return unless (params.has_key?(:organization_id) or params.has_key?(:owner))
 
@@ -180,8 +202,21 @@ class Api::SystemsController < Api::ApiController
   def find_only_environment
     if !@environment && @organization && !params.has_key?(:environment_id)
       raise HttpErrors::BadRequest, _("Organization #{@organization.name} has 'Locker' environment only. Please create an environment for system registration.") if @organization.environments.empty?
-      raise HttpErrors::BadRequest, _("Organization #{@organization.name} has more than one environment. Please specify target environment for system registration.") if @organization.environments.size > 1
-      @environment = @organization.environments.first and return
+
+      # Some subscription-managers will call /users/$user/owners to retrieve the orgs that a user belongs to.
+      # Then, If there is just one org, that will be passed to the POST /api/consumers as the owner. To handle
+      # this scenario, if the org passed in matches the user's default org, use the default env. If not use
+      # the single env of the org or throw an error if more than one.
+      #
+      if @organization.environments.size > 1
+        if current_user.default_environment && current_user.default_environment.organization == @organization
+          @environment = current_user.default_environment
+        else
+          raise HttpErrors::BadRequest, _("Organization #{@organization.name} has more than one environment. Please specify target environment for system registration.")
+        end
+      else
+        @environment = @organization.environments.first and return
+      end
     end
   end
 
@@ -229,6 +264,12 @@ class Api::SystemsController < Api::ApiController
       raise HttpErrors::BadRequest, _("At least one activation key must be provided")
     end
     activation_keys
+  end
+
+  def find_task
+    @task = SystemTask.joins(:task_status).where(:"task_statuses.uuid" => params[:id]).first
+    raise ActiveRecord::RecordNotFound.new unless @task
+    @system = @task.system
   end
 
 end

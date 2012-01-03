@@ -119,7 +119,12 @@ class ProvidersController < ApplicationController
   end
 
   def items
-    render_panel_items(Provider.readable(current_organization).custom.order('providers.name'), @panel_options, params[:search], params[:offset])
+    
+    ids = Provider.readable(current_organization).collect{|p| p.id}
+    render_panel_direct(Provider, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
+                        [{"id"=>ids}, {:provider_type=>[Provider::CUSTOM.downcase]}])
+
+    #render_panel_items(Provider.readable(current_organization).custom.order('providers.name'), @panel_options, params[:search], params[:offset])
   end
 
   def show
@@ -268,6 +273,7 @@ class ProvidersController < ApplicationController
       end
 
       # Other interesting attributes
+      derived = false
       sub['machine_type'] = ''
       sub['attributes'].each do |attr|
         if attr['name'] == 'virt_only'
@@ -276,14 +282,24 @@ class ProvidersController < ApplicationController
           elsif attr['value'] == 'false'
             sub['machine_type'] = _('Physical')
           end
+        elsif attr['name'] == 'pool_derived'
+          if attr['value'] == 'true'
+            sub['derived'] = true
+          end
         end
       end
 
-      product = Product.where(:cp_id => sub['productId']).first
-      if product and product.provider == @provider
-        @grouped_subscriptions[group_id] ||= []
-        @grouped_subscriptions[group_id] << sub if !@grouped_subscriptions[group_id].include? sub
+      # Derived pools are not displayed on the providers page
+      if sub['derived'] == true
+        next
       end
+
+      Product.where(:cp_id => sub['productId']).each { |product|
+        if product and product.provider == @provider
+          @grouped_subscriptions[group_id] ||= []
+          @grouped_subscriptions[group_id] << sub if !@grouped_subscriptions[group_id].include? sub
+        end
+      }
 =begin TODO: Should the bundled products be displayed too?
       if sub['providedProducts'].length > 0
         sub['providedProducts'].each do |cp_product|

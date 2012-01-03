@@ -26,6 +26,7 @@ require 'spec_helper.rb'
 
 describe Api::ChangesetsContentController do
   include LoginHelperMethods
+  include AuthorizationHelperMethods
 
   let(:changeset_id) { 1 }
   let(:product_cp_id) { 123456 }
@@ -56,124 +57,154 @@ describe Api::ChangesetsContentController do
     login_user_api
   end
 
+  let(:authorized_user) do
+    user_with_permissions { |u| u.can(:manage_changesets,:environments, @environment.id, @organization) }
+  end
+  let(:unauthorized_user) do
+    user_without_permissions
+  end
 
-
-
-  describe "update products" do
+  describe "products" do
+    let(:action) {:add_product}
+    let(:req) { post :add_product, :changeset_id => changeset_id, :product_id => product_cp_id }
+    it_should_behave_like "protected action"
 
     it "should add a product" do
       @cs.should_receive(:add_product).with(product_cp_id).and_return(@product)
-
-      post :add_product, :changeset_id => changeset_id, :product_id => product_cp_id
+      req
       response.should be_success
     end
+  end
+
+  describe "products" do
+    let(:action) {:remove_product}
+    let(:req) { delete :remove_product, :changeset_id => changeset_id, :id => product_cp_id }
+    it_should_behave_like "protected action"
 
     it "should remove a product" do
       @cs.should_receive(:remove_product).with(product_cp_id).and_return(true)
-
-      delete :remove_product, :changeset_id => changeset_id, :id => product_cp_id
+      req
       response.should be_success
     end
-
   end
 
-
-  describe "update packages" do
+  describe "packages" do
+    let(:action) {:add_package}
+    let(:req) { post :add_package, :changeset_id => changeset_id, :name => package_name, :product_id => product_cp_id }
+    it_should_behave_like "protected action"
 
     it "should add a package" do
       @cs.should_receive(:add_package).with(package_name, product_cp_id).and_return(true)
-
-      post :add_package, :changeset_id => changeset_id, :name => package_name, :product_id => product_cp_id
+      req
       response.should be_success
     end
+  end
+
+  describe "packages" do
+    let(:action) {:remove_package}
+    let(:req) { delete :remove_package, :changeset_id => changeset_id, :id => package_name, :product_id => product_cp_id }
+    it_should_behave_like "protected action"
 
     it "should remove a package" do
       @cs.should_receive(:remove_package).with(package_name, product_cp_id).and_return(true)
-
-      delete :remove_package, :changeset_id => changeset_id, :id => package_name, :product_id => product_cp_id
+      req
       response.should be_success
     end
-
   end
 
-
-  describe "update errata" do
+  describe "erratum" do
+    let(:action) {:add_erratum}
+    let(:req) { post :add_erratum, :changeset_id => changeset_id, :erratum_id => erratum_id, :product_id => product_cp_id }
+    it_should_behave_like "protected action"
 
     it "should add an erratum" do
       @cs.should_receive(:add_erratum).with(erratum_id, product_cp_id).and_return(true)
-
-      post :add_erratum, :changeset_id => changeset_id, :erratum_id => erratum_id, :product_id => product_cp_id
+      req
       response.should be_success
     end
+  end
+
+  describe "erratum" do
+    let(:action) {:remove_erratum}
+    let(:req) { delete :remove_erratum, :changeset_id => changeset_id, :id => erratum_id, :product_id => product_cp_id }
+    it_should_behave_like "protected action"
 
     it "should remove an erratum" do
       @cs.should_receive(:remove_erratum).with(erratum_id, product_cp_id).and_return(true)
-
-      delete :remove_erratum, :changeset_id => changeset_id, :id => erratum_id, :product_id => product_cp_id
+      req
       response.should be_success
     end
-
   end
 
-
-  describe "update repos" do
+  describe "repos" do
+    let(:action) {:add_repo}
+    let(:req) { post :add_repo, :changeset_id => changeset_id, :repository_id => repo_id, :product_id => product_cp_id }
+    it_should_behave_like "protected action"
 
     it "should add a repo" do
       @cs.should_receive(:add_repo).with(repo_id, product_cp_id).and_return(@repo)
-
-      post :add_repo, :changeset_id => changeset_id, :repository_id => repo_id, :product_id => product_cp_id
+      req
       response.should be_success
     end
+  end
+
+  describe "repos" do
+    let(:action) {:remove_repo}
+    let(:req) { delete :remove_repo, :changeset_id => changeset_id, :id => repo_id, :product_id => product_cp_id }
+    it_should_behave_like "protected action"
 
     it "should remove a repo" do
       @cs.should_receive(:remove_repo).with(repo_id, product_cp_id).and_return(true)
-
-      delete :remove_repo, :changeset_id => changeset_id, :id => repo_id, :product_id => product_cp_id
+      req
       response.should be_success
     end
-
   end
 
-
-  describe "update templates" do
+  describe "templates" do
+    let(:action) {:add_template}
+    let(:req) { post :add_template, :changeset_id => changeset_id, :template_id => template_id }
+    it_should_behave_like "protected action"
 
     it "should add a template" do
       @cs.should_receive(:add_template).with(template_id).and_return(@template)
-
-      post :add_template, :changeset_id => changeset_id, :template_id => template_id
+      req
       response.should be_success
     end
+  end
+
+  describe "templates" do
+    let(:action) {:remove_template}
+    let(:req) { delete :remove_template, :changeset_id => changeset_id, :id => template_id }
+    it_should_behave_like "protected action"
 
     it "should remove a template" do
       @cs.should_receive(:remove_template).with(template_id).and_return(true)
-
-      delete :remove_template, :changeset_id => changeset_id, :id => template_id
+      req
       response.should be_success
     end
-
   end
 
-  describe "update distributions" do
+  describe "distributions" do
+    let(:action) {:add_distribution}
+    let(:req) { post :add_distribution, :changeset_id => changeset_id, :distribution_id => distribution_id, :product_id => product_cp_id }
+    it_should_behave_like "protected action"
 
     it "should add a distribution" do
       @cs.should_receive(:add_distribution).with(distribution_id, product_cp_id).and_return(true)
-
-      post :add_distribution, :changeset_id => changeset_id, :distribution_id => distribution_id, :product_id => product_cp_id
+      req
       response.should be_success
     end
+  end
+
+  describe "distributions" do
+    let(:action) {:remove_distribution}
+    let(:req) { delete :remove_distribution, :changeset_id => changeset_id, :id => distribution_id, :product_id => product_cp_id }
+    it_should_behave_like "protected action"
 
     it "should remove a distribution" do
       @cs.should_receive(:remove_distribution).with(distribution_id, product_cp_id).and_return(true)
-
-      delete :remove_distribution, :changeset_id => changeset_id, :id => distribution_id, :product_id => product_cp_id
+      req
       response.should be_success
     end
-
   end
-
-
-
-
-
-
 end

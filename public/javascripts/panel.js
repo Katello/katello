@@ -111,6 +111,8 @@ $(document).ready(function () {
             dataType: 'html',
             success: function (data) {
                 thisPanel.find(".panel-content").html(data);
+                KT.common.jscroll_init($('.scroll-pane'));
+    			KT.common.jscroll_resize($('.jspPane'));
                 KT.panel.panelResize($('#panel_main'), false);
                 KT.panel.get_expand_cb()();
             }
@@ -262,10 +264,15 @@ KT.panel = (function ($) {
                 dataType: 'html',
                 success: function (data, status, xhr) {
                     var pc = panelContent.html(data);
+                    
                     spinner.hide();
                     pc.fadeIn(function () {
                         $(".panel-content :input:visible:enabled:first").focus();
                     });
+                    
+                    KT.common.jscroll_init($('.scroll-pane'));
+    				KT.common.jscroll_resize($('.jspPane'));
+                    
                     if (isSubpanel) {
                         panelResize($('#subpanel_main'), isSubpanel);
                     } else {
@@ -715,6 +722,7 @@ KT.panel.list = (function () {
                             expand_list = $('.expand_list');
                         }
                         retrievingNewContent = false;
+                        console.log(data);
                         expand_list.append(data['html']);
                         $('.list-spinner').remove();
                         if (data['current_items'] === 0) {
@@ -824,8 +832,10 @@ KT.panel.list = (function () {
                 $(this).ajaxSubmit({
                     url: url,
                     data: data,
+                    cache: false,
                     success: function (data) {
-                        element.find('section').append(data['html']);
+                        var to_append = data.html ? data.html : data;
+                        element.find('section').append(to_append);
                         element.find('.spinner').hide();
                         button.removeAttr('disabled');
                         element.find('section').fadeIn();
@@ -838,7 +848,7 @@ KT.panel.list = (function () {
                     error: function (e) {
                         button.removeAttr('disabled');
                     }
-                })
+                });
             });
         };
     return {
