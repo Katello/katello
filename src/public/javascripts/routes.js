@@ -1560,7 +1560,7 @@
   
   window.KT.routes.options = {
     prefix: '',
-    default_format: '',
+    default_format: ''
   };
 
 

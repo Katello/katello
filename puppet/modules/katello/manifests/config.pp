@@ -10,6 +10,7 @@ class katello::config {
 
   postgres::createuser { $katello::params::db_user:
     passwd  => $katello::params::db_pass,
+    roles => "CREATEDB",
     logfile => "${katello::params::log_base}/katello-configure/create-postgresql-katello-user.log",
     require => [ File["${katello::params::log_base}"] ],
   }
@@ -20,16 +21,31 @@ class katello::config {
     require => [ Postgres::Createuser[$katello::params::db_user], File["${katello::params::log_base}"] ],
   }
 
-  config_file {
+  file {
     "${katello::params::config_dir}/thin.yml":
-      template => "katello/${katello::params::config_dir}/thin.yml.erb";
+      content => template("katello/${katello::params::config_dir}/thin.yml.erb"),
+      owner   => "root",
+      group   => "root",
+      mode    => "644";
+
     "${katello::params::config_dir}/katello.yml":
-      template => "katello/${katello::params::config_dir}/katello.yml.erb";
+      content => template("katello/${katello::params::config_dir}/katello.yml.erb"),
+      owner   => $katello::params::user,
+      group   => $katello::params::group,
+      mode    => "600";
+
     "/etc/sysconfig/katello":
-      template => "katello/etc/sysconfig/katello.erb";
+      content => template("katello/etc/sysconfig/katello.erb"),
+      owner   => "root",
+      group   => "root",
+      mode    => "644";
+
     "/etc/httpd/conf.d/katello.conf":
-      template => "katello/etc/httpd/conf.d/katello.conf.erb",
-      notify   => Exec["reload-apache2"];
+      content => template("katello/etc/httpd/conf.d/katello.conf.erb"),
+      owner   => $katello::params::user,
+      group   => $katello::params::group,
+      mode    => "600",
+      notify  => Exec["reload-apache2"];
   }
 
   # disable SELinux
@@ -50,8 +66,8 @@ class katello::config {
     onlyif => "/usr/sbin/apachectl -t",
     before => Exec["katello_seed_db"],
     require   => $katello::params::deployment ? {
-        'katello' => [ Config_file["${katello::params::config_dir}/katello.yml"], Class["candlepin::service"], Class["pulp::service"] ],
-        'headpin' => [ Config_file["${katello::params::config_dir}/katello.yml"], Class["candlepin::service"], Class["thumbslug::service"] ],
+        'katello' => [ File["${katello::params::config_dir}/katello.yml"], Class["candlepin::service"], Class["pulp::service"] ],
+        'headpin' => [ File["${katello::params::config_dir}/katello.yml"], Class["candlepin::service"], Class["thumbslug::service"] ],
          default  => [],
     },
   }
@@ -123,8 +139,20 @@ class katello::config {
     command     => "/usr/bin/env > ${katello::params::db_env_log}",
     before  => Class["katello::service"],
     require => $katello::params::deployment ? {
-                'katello' => [ Class["candlepin::service"], Class["pulp::service"], File["${katello::params::log_base}"] ],
-                'headpin' => [ Class["candlepin::service"], Class["thumbslug::service"], File["${katello::params::log_base}"] ],
+                'katello' => [
+                  Class["candlepin::service"], 
+                  Class["pulp::service"], 
+                  File["${katello::params::log_base}"], 
+                  File["${katello::params::config_dir}/katello.yml"],
+                  Postgres::Createdb[$katello::params::db_name]
+                ],
+                'headpin' => [
+                  Class["candlepin::service"],
+                  Class["thumbslug::service"],
+                  File["${katello::params::log_base}"],
+                  File["${katello::params::config_dir}/katello.yml"],
+                  Postgres::Createdb[$katello::params::db_name]
+                ],
                 default => [],
     },
   }
@@ -155,19 +183,6 @@ class katello::config {
                 'headpin' => [ Exec["katello_migrate_db"], File["${katello::params::log_base}"] ],
                 default => [],
     },
-  }
-
-  define config_file($source = "", $template = "") {
-    file {$name:
-      content => $template ? {
-        "" => undef,
-        default =>  template($template)
-      },
-      source => $source ? {
-        "" => undef,
-        default => $source,
-      },
-    }
   }
 
   # Headpin does not care about pulp

@@ -15,9 +15,25 @@ require 'rest_client'
 class Api::ChangesetsContentController < Api::ApiController
 
   before_filter :find_changeset
+  before_filter :authorize
 
-  # TODO: define authorization rules
-  skip_before_filter :authorize
+  def rules
+    manage_perm = lambda{@changeset.environment.changesets_manageable?}
+    {
+      :add_product => manage_perm,
+      :remove_product => manage_perm,
+      :add_package => manage_perm,
+      :remove_package => manage_perm,
+      :add_erratum => manage_perm,
+      :remove_erratum => manage_perm,
+      :add_repo => manage_perm,
+      :remove_repo => manage_perm,
+      :add_template => manage_perm,
+      :remove_template => manage_perm,
+      :add_distribution => manage_perm,
+      :remove_distribution => manage_perm,
+    }
+  end
 
   def add_product
     product = @changeset.add_product(params[:product_id])

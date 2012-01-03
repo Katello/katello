@@ -7,15 +7,15 @@
 = content_for :custom do
   #role
     #roles_tree.sliding_tree
-      .breadcrumb_search.clear.clickable
+      .breadcrumb_filter.clear.clickable
         %a.close{:href => "#", "data-close"=>"panel"} #{_("Close")}
-        %form#search_form.search.clear
-          %input{ :name => "s", :type => "input", :placeholder => "Filter...", :id=>"search_filter"}
-          %button.action #{_("Search")}
+        %form#filter_form.filter.clear
+          %input{ :name => "filter", :type => "input", :placeholder => "Filter...", :id=>"filter_input"}
+          %button.action #{_("Filter")}
           %br.clear
   
-        .search_button.fr.clickable
-          #{_('Search')}
+        .filter_button.fr.clickable
+          #{_('Filter')}
         .tree_breadcrumb
       .sliding_container
         #roles_list.list.sliding_list{"data-page_size"=>current_user.page_size}
@@ -51,7 +51,7 @@
           .permission_widget_container#resource_type_container
             %label.ra.fl #{_("Permission For:")}
             %select.fl{ :id => 'resource_type', :name => 'permission[resource_type_attributes[name]]', :tabindex => 1 }
-            %span.fl
+            %span.fl#all_types_span
               #{_("or")}
             .button.fl#all_types
               #{_('+ All')}

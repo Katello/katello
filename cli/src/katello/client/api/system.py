@@ -33,8 +33,10 @@ class SystemAPI(KatelloAPI):
           "name": name,
           "cp_type": cp_type,
           "facts": {
-            "distribution.name": "Fedora"
-          }
+              # TODO - provide real facts
+              "distribution.name": "Fedora",
+              "cpu.cpu_socket(s)": "1"
+              }
         }
         if activation_keys:
             sysdata["activation_keys"] = activation_keys
@@ -68,6 +70,20 @@ class SystemAPI(KatelloAPI):
         path = "/api/systems/%s" % system_id
         return self.server.GET(path)[1]
 
+    def tasks(self, org_name, env_name, system_name):
+        params = {}
+        if env_name:
+            environment = get_environment(org_name, env_name)
+            if not environment:
+                return None
+            params['environment_id'] = environment['id']
+
+        if system_name:
+            params['system_name'] = system_name
+
+        path = "/api/organizations/%s/systems/tasks" % org_name
+        return self.server.GET(path, params)[1]
+
     def packages(self, system_id):
         path = "/api/systems/%s/packages" % system_id
         return self.server.GET(path)[1]
@@ -75,6 +91,26 @@ class SystemAPI(KatelloAPI):
     def update(self, system_id, params = {}):
         path = "/api/systems/%s" % system_id
         return self.server.PUT(path, params)[1]
+
+    def install_packages(self, system_id, packages):
+        path = "/api/systems/%s/packages" % system_id
+        return self.server.POST(path, {"packages": packages})[1]
+
+    def remove_packages(self, system_id, packages):
+        path = "/api/systems/%s/packages" % system_id
+        return self.server.DELETE(path, {"packages": packages})[1]
+
+    def update_packages(self, system_id, packages):
+        path = "/api/systems/%s/packages" % system_id
+        return self.server.PUT(path, {"packages": packages})[1]
+
+    def install_package_groups(self, system_id, packages):
+        path = "/api/systems/%s/packages" % system_id
+        return self.server.POST(path, {"groups": packages})[1]
+
+    def remove_package_groups(self, system_id, packages):
+        path = "/api/systems/%s/packages" % system_id
+        return self.server.DELETE(path, {"groups": packages})[1]
 
     def systems_by_org(self, orgId, query = {}):
         path = "/api/organizations/%s/systems" % orgId

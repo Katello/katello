@@ -3,12 +3,19 @@
 
 #container
   .right
-    -if actions
-      = render :partial=>actions
-    -else
-      .panel_action{'data-id'=>"select_none"}
-        #select-result
-        %a#select-none #{_("Select None")}
+    .helptip_area
+      = help_tip_button('panel-help')
+      = help_tip(_("To view the details of an item on the left, simply click on a single row." + |
+                "<br/><br/>To select multiple rows, hold the Control Key and click multiple rows." + |
+                "<br/><br/>If you don't need this help anymore, please click the close button in the top right " + |
+                "of this box."), 'panel-help') |
+    .fl.clear
+      -if actions
+        = render :partial=>actions
+      -else
+        .panel_action{'data-id'=>"select_none"}
+          #select-result
+          %a#select-none #{_("Select None")}
   = render :partial=>"common/tupane"
 
   %div.left{:class => left_panel_width ? left_panel_width : 'column_panel_' + columns.length.to_s }
@@ -34,11 +41,11 @@
                 
       - if url.nil?
         %form#search_form.search{"data-url" => search_index_path()}
-          = text_field_tag(:search, params[:search], {:type => "text", :placeholder => "Filter...", :class => "auto_complete_input ui-autocomplete-input"})
+          = text_field_tag(:search, params[:search], {:type => "text", :placeholder => "Search...", :class => "auto_complete_input ui-autocomplete-input"})
           %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
       - else
         %form#search_form.search{"data-url" => url_for(url)}
-          = text_field_tag(:search, params[:search], {:type => "text", :placeholder => "Filter...", :class => "auto_complete_input ui-autocomplete-input"})
+          = text_field_tag(:search, params[:search], {:type => "text", :placeholder => "Search...", :class => "auto_complete_input ui-autocomplete-input"})
           %button.action{:form => "search_form", :id => "search_button"} #{_("Search")}
 
     #list.list.clear.expand_list{:class=>("ajaxScroll" if ajax_scroll), "data-scroll_url"=>ajax_scroll, "data-page_size"=>current_user.page_size}

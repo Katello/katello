@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.37
+Version:        0.1.49
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,50 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Tue Jan 03 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.49-1
+- 771352 - SAM does not need to use the katello-jobs
+
+* Thu Dec 22 2011 Mike McCune <mmccune@redhat.com> 0.1.48-1
+- 768191 - ensure we have elasticsearch running before seed
+  (mmccune@redhat.com)
+
+* Thu Dec 22 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.47-1
+- 769540 - katello-configure fails: katelloschema
+
+* Wed Dec 21 2011 Mike McCune <mmccune@redhat.com> 0.1.46-1
+- 768191 - adding a default config for elasticsearch
+* Wed Dec 21 2011 Mike McCune <mmccune@redhat.com> 0.1.45-1
+- rolling back to previous rev so we can re-tag (mmccune@redhat.com)
+* Wed Dec 21 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.44-1
+- Revert "769540 - katello-configure fails: katelloschema"
+- Gave create db access to katello user
+- 768191 - forgot the include so we actually execute the ES config
+- 768191 - first cut at getting elasticsearch configured
+
+* Wed Dec 21 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.43-1
+- 769540 - katello-configure fails: katelloschema
+- mbacovsk's public key
+- tstrachota's public key
+- Revert "765813 - Puppet: create-nss-db fails on RHEL 6.2 [TEMP FIX]"
+
+* Mon Dec 19 2011 Shannon Hughes <shughes@redhat.com> 0.1.42-1
+- 766933 - katello.yml perms - reformatting source (lzap+git@redhat.com)
+
+* Fri Dec 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.41-1
+- 766933 - katello.yml now deployed with correct perms
+
+* Fri Dec 16 2011 Ivan Necas <inecas@redhat.com> 0.1.40-1
+- Fix syntax error in dependency specification in katello service
+  (inecas@redhat.com)
+
+* Fri Dec 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.39-1
+- puppet - migrate script depends on katello.yml
+
+* Fri Dec 16 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.38-1
+- puppet - katello-jobs now depends on katello
+- adding debug options to the katello.yml
+- 767812 - compress our javascript and CSS
+
 * Wed Dec 14 2011 Shannon Hughes <shughes@redhat.com> 0.1.37-1
 - system engine build 
 

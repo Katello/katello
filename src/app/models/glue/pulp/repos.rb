@@ -24,6 +24,9 @@ module Glue::Pulp::Repos
       before_destroy :destroy_repos_orchestration
 
       has_and_belongs_to_many :filters, :uniq => true, :before_add => :add_filters_orchestration, :before_remove => :remove_filters_orchestration
+
+      # required for GPG key url generation
+      include Rails.application.routes.url_helpers
     end
   end
 
@@ -48,12 +51,12 @@ module Glue::Pulp::Repos
   end
 
   # create content for custom repo
-  def create_content(name, path)
+  def create_content(name, path, gpg_key = nil)
     new_content = Glue::Candlepin::ProductContent.new({
       :content => {
         :name => name,
         :contentUrl => path,
-        :gpgUrl => "",
+        :gpgUrl => yum_gpg_key_url(gpg_key),
         :type => "yum",
         :label => "#{self.id}-#{name}",
         :vendor => Provider::CUSTOM
@@ -64,8 +67,6 @@ module Glue::Pulp::Repos
     add_content new_content
     new_content.content
   end
-
-
 
   # repo path for custom product repos (RH repo paths are derivated from
   # content url)
@@ -202,7 +203,7 @@ module Glue::Pulp::Repos
       }
       to_ret
     end
-    
+
     def get_distribution env, id
       self.repos(env).map do |repo|
         repo.distributions.find_all {|d| d.id == id }
@@ -343,7 +344,7 @@ module Glue::Pulp::Repos
     def add_repo(name, url, repo_type, gpg = nil)
       check_for_repo_conflicts(name)
       key = EnvironmentProduct.find_or_create(self.organization.locker, self)
-      content = create_content(name, Glue::Pulp::Repos.custom_content_path(self, name))
+      content = create_content(name, Glue::Pulp::Repos.custom_content_path(self, name), gpg)
       repo = Repository.create!(:environment_product => key, :pulp_id => repo_id(name),
           :groupid => Glue::Pulp::Repos.groupid(self, self.locker, content),
           :relative_path => Glue::Pulp::Repos.custom_repo_path(self.locker, self, name),
@@ -537,5 +538,16 @@ module Glue::Pulp::Repos
         raise Errors::ConflictException.new(_("There is already a repo with the name [ %s ] for product [ %s ]") % [repo_name, self.name])
       end
     end
+
+    private
+
+    def yum_gpg_key_url(gpg_key)
+      gpg_key.nil? ? "" : content_api_gpg_key_url(gpg_key, :host => AppConfig.host + ENV['RAILS_RELATIVE_URL_ROOT'].to_s, :protocol => 'https')
+    rescue => e
+      msg = "problem setting up yum GPG URL: #{e}"
+      errors.add :base, msg
+      Rails.logger.error msg
+    end
+
   end
 end

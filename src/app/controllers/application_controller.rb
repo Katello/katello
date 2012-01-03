@@ -10,7 +10,6 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'api/api_controller'
 require 'util/threadsession'
 require 'cgi'
 require 'base64'
@@ -401,6 +400,74 @@ class ApplicationController < ActionController::Base
     "#{exception.class}: #{exception.message}\n" << exception.backtrace.join("\n")
   end
 
+
+  def render_panel_direct(obj_class, options, search, start, sort, filters=[], load=false)
+
+    search = '*' if search == ''
+
+    options[:accessor] ||= "id"
+    options[:columns] = options[:col]
+    options[:initial_action] ||= :edit
+
+    page_size = current_user.page_size
+
+    @items = []
+
+    begin
+      results = obj_class.search :load=>load do
+         query { string search}
+         sort {by sort[0], sort[1] }
+
+         filters = [filters] if !filters.is_a? Array
+         if !filters.empty?
+
+           filters.each{|i|
+            filter  :terms, i
+           }
+
+         end
+
+         size page_size
+         from start
+      end
+      @items = results
+
+    rescue Tire::Search::SearchRequestFailed => e
+      Rails.logger.error(e.class)
+
+      options[:total_count] = 0
+      options[:total_results] = 0
+
+    end
+
+    render_panel_results(@items, options)
+  end
+
+  def render_panel_results(results, options)
+    
+    options[:total_count] = results.empty? ? 0 : results.total
+    options[:total_results] = results.empty? ? 0 : results.total
+    options[:collection] = results
+    
+    @items = results
+
+    if options[:list_partial]
+      rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)
+    else
+      rendered_html = render_to_string(:partial=>"common/list_items", :locals=>options)
+    end
+
+    
+
+    render :json => {:html => rendered_html,
+                      :results_count => options[:total_count],
+                      :total_items => options[:total_results],
+                      :current_items => options[:collection].length }
+
+    retain_search_history
+    
+  end
+
   def render_panel_items(items, options, search, start)
     @items = items
     
@@ -416,15 +483,15 @@ class ApplicationController < ActionController::Base
     # array, it is assumed to be based upon results from a pulp/candlepin request, in which case search is
     # not currently supported
     if @items.kind_of? ActiveRecord::Relation
-      @items_searched = @items.search_for(search)
-      @items_offset = @items_searched.limit(current_user.page_size).offset(start)
+      items_searched = @items.search_for(search)
+      items_offset = items_searched.limit(current_user.page_size).offset(start)
     else
-      @items_searched = @items
-      @items_offset = @items_searched[start.to_i..start.to_i+current_user.page_size]
+      items_searched = @items
+      items_offset = items_searched[start.to_i..start.to_i+current_user.page_size]
     end
 
-    options[:total_results] = @items_searched.count
-    options[:collection] ||= @items_offset
+    options[:total_results] = items_searched.count
+    options[:collection] ||= items_offset
     
     if options[:list_partial]
       rendered_html = render_to_string(:partial=>options[:list_partial], :locals=>options)

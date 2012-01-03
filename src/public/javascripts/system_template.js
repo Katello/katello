@@ -1156,7 +1156,7 @@ $(document).ready(function() {
                             default_tab     :  "products",
                             bbq_tag         :  "products",
                             base_icon       :  'home_img',
-                            enable_search   :  false,
+                            enable_filter   :  false,
                             tab_change_cb   :  function(hash_id) {
                                 KT.templates.reset_page();
                             }
@@ -1176,7 +1176,7 @@ $(document).ready(function() {
                                 KT.templates.reset_page();
                                 KT.actions.register_distro_select();
                             },
-                            enable_search   :  true,
+                            enable_filter   :  true,
                             enable_float	:  true
                         });
 

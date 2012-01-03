@@ -11,47 +11,75 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
+require 'helpers/repo_test_data'
 
 describe DistributionsController do
   include LoginHelperMethods
   include LocaleHelperMethods
+  include AuthorizationHelperMethods
+
+  let(:distribution_id) { RepoTestData.repo_distributions["id"] }
+  let(:distribution) { [RepoTestData.repo_distributions] }
 
   before (:each) do
     login_user
     set_default_locale
-    Glue::Pulp::Distribution.stub!(:find).and_return
+    @organization = new_test_org
+    @provider = Provider.create!(:provider_type=>Provider::CUSTOM, :name=>"foo1", :organization=>@organization)
+    @product = MemoStruct.new(:provider => @provider, :id => 1)
+  end
+
+  let(:authorized_user) do
+    user_with_permissions { |u| u.can(:read, :product, @product.id, @organization) }
+  end
+  let(:unauthorized_user) do
+    user_without_permissions
   end
 
   describe "GET show" do
+    let(:action) {:show}
+    let(:req) { get :show, :id => distribution_id }
+    # TODO enable permission tests once they are implemented in the controller
+    #it_should_behave_like "protected action"
+
     it "should lookup the distribution" do
-      Glue::Pulp::Distribution.should_receive(:find).once.with(10)
-      get :show, :id => 10
+      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
+      req
     end
 
     it "renders show partial" do
-      get :show, :id => 10
+      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
+      req
       response.should render_template(:partial => "_show")
     end
 
     it "should be successful" do
-      get :show, :id => 10
+      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
+      req
       response.should be_success
     end
   end
 
   describe "GET filelist" do
+    let(:action) {:filelist}
+    let(:req) { get :filelist, :id => distribution_id }
+    # TODO enable permission tests once they are implemented in the controller
+    #it_should_behave_like "protected action"
+
     it "should lookup the distribution" do
-      Glue::Pulp::Distribution.should_receive(:find).once.with(10)
-      get :filelist, :id => 10
+      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
+      req
     end
 
     it "renders the file list partial" do
-      get :filelist, :id => 10
+      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
+      req
       response.should render_template(:partial => "_filelist")
     end
 
     it "should be successful" do
-      get :filelist, :id => 10
+      Glue::Pulp::Distribution.should_receive(:find).once.with(distribution_id).and_return(distribution)
+      req
       response.should be_success
     end
   end

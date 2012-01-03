@@ -233,7 +233,7 @@ class Sync(SingleProviderAction):
         result = run_async_task_with_status(task, ProgressBar())
 
         if task.failed():
-            errors = [json.loads(t["result"])['errors'][0] for t in task.get_hashes() if t['state'] == 'error']
+            errors = [t["result"]['errors'][0] for t in task.get_hashes() if t['state'] == 'error']
             print _("Provider [ %s ] failed to sync: %s" % (providerName, errors))
             return os.EX_DATAERR
         elif task.cancelled():

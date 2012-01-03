@@ -21,6 +21,10 @@ class NoticesController < ApplicationController
   include AutoCompleteSearch
   helper_method :sort_column, :sort_direction
 
+  def section_id
+     'notifications'
+  end
+
   def notices_authorize
     user = current_user
     true

@@ -29,6 +29,7 @@ from katello.client.core import (
   product,
   repo,
   packagegroup,
+  permission,
   distribution,
   package,
   errata,
@@ -74,6 +75,9 @@ def setup_admin(admin):
     user_cmd.add_action('update', user.Update())
     user_cmd.add_action('delete', user.Delete())
     user_cmd.add_action('report', user.Report())
+    user_cmd.add_action('assign_role', user.AssignRole(True))
+    user_cmd.add_action('unassign_role', user.AssignRole(False))
+    user_cmd.add_action('list_roles', user.ListRoles())
     admin.add_command('user', user_cmd)
 
     user_role_cmd = user_role.UserRole()
@@ -83,6 +87,10 @@ def setup_admin(admin):
     user_role_cmd.add_action('update', user_role.Update())
     user_role_cmd.add_action('delete', user_role.Delete())
     admin.add_command('user_role', user_role_cmd)
+
+    permission_cmd = permission.Permission()
+    permission_cmd.add_action('available_verbs', permission.ListAvailableVerbs())
+    admin.add_command('permission', permission_cmd)
 
     admin.add_command('ping', ping.Status())
 
@@ -147,6 +155,8 @@ def setup_admin(admin):
     system_cmd.add_action('facts', system.Facts())
     system_cmd.add_action('update', system.Update())
     system_cmd.add_action('report', system.Report())
+    system_cmd.add_action('tasks', system.TasksList())
+    system_cmd.add_action('task', system.TaskInfo())
     admin.add_command('system', system_cmd)
 
     template_cmd = template.Template()
