@@ -12,6 +12,14 @@
 
 class ActivationKey < ActiveRecord::Base
   include Authorization
+  include IndexedModel
+
+  index_options :extended_json=>:extended_json
+
+  mapping do
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+  end
+
 
   belongs_to :organization
   belongs_to :environment, :class_name => "KTEnvironment"
@@ -164,4 +172,11 @@ class ActivationKey < ActiveRecord::Base
     end
     ret
   end
+
+  def extended_json
+    to_ret = {:environment=>self.environment.name, :name_sort=>name.downcase}
+    to_ret[:template] = self.system_template.name if self.system_template
+    to_ret
+  end
+
 end
