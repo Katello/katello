@@ -507,7 +507,7 @@ class Changeset < ActiveRecord::Base
     to_env   = self.environment
 
     package_names = packages_for_dep_calc(product).map{ |p| p.name }.uniq
-    return [] if package_names.empty?
+    return {} if package_names.empty?
 
     from_repos = not_included_repos(product, from_env).map{ |r| r.pulp_id }
 
