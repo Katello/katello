@@ -145,7 +145,7 @@ describe SystemsController do
 
       controller.stub!(:errors)
       controller.stub!(:notice)
-      controller.stub(:search_validate).and_return(true)
+      controller.stub(:search_validate).and_return(false)
       
       Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Candlepin::Consumer.stub!(:update).and_return(true)
