@@ -73,9 +73,7 @@ Requires:       rubygem(sass)
 Requires:       rubygem(chunky_png)
 Requires:       rubygem(tire)
 
-# bz 743816 temp fix until yum update makes to z stream
 %if 0%{?rhel} == 6
-Requires:       yum >= 3.2.29-21
 Requires:       redhat-logos >= 60.0.14
 %endif
 
