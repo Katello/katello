@@ -464,9 +464,7 @@ class User < ActiveRecord::Base
 
 
   def extended_index_attrs
-    {
-        :username_sort => username.downcase
-    }
+    {:username_sort => username.downcase}
   end
 
   private

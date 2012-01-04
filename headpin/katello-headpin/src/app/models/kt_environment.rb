@@ -335,4 +335,16 @@ class KTEnvironment < ActiveRecord::Base
       }.with_indifferent_access
     end
   end
+
+  def after_save
+    if self.name_changed?
+      self.organization.reload
+      self.organization.update_index
+    end
+  end
+
+  def after_destroy
+    self.organization.update_index
+  end
+
 end
