@@ -60,13 +60,10 @@ describe ActivationKeysController do
   describe "GET index" do
 
     it "attempts to retain request in search history" do
-      controller.should_receive(:retain_search_history)
+      controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+        controller.stub(:render)
+      }
       get :items
-    end
-
-    it "returns activation keys" do
-      get :items
-      assigns[:items].should include ActivationKey.find(@a_key.id)
     end
 
     it "renders the index for 2 pane" do
