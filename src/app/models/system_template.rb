@@ -395,6 +395,8 @@ class SystemTemplate < ActiveRecord::Base
     if self.name_changed?
       keys = ActivationKey.where(:system_template_id=>self.id)
       ActivationKey.index.import(keys) if !keys.empty?
+      changesets =  Changeset.joins(:system_templates).where("system_templates.id"=>self.id)
+      Changeset.index.import(changesets)
     end
   end
 

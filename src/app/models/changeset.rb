@@ -19,12 +19,14 @@ end
 class Changeset < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
+  include IndexedModel
+  
+  index_options :extended_json=>:extended_index_attrs
 
 
-  #include IndexedModel
-  #
-  #index_options :extended_json=>:extended_index_attrs
-
+  mapping do
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+  end
 
   NEW = 'new'
   REVIEW = 'review'
@@ -541,11 +543,14 @@ class Changeset < ActiveRecord::Base
     errata = self.errata.collect{|err| err.display_name}
     products = self.products.collect{|prod| prod.name}
     repos = self.repos.collect{|repo| repo.name}
+    templates = self.system_templates.collect{|t| t.name}
     {
+      :name_sort=> self.name.downcase,
       :package=>pkgs,
       :errata=>errata,
       :product=>products,
-      :repo=>repos
+      :repo=>repos,
+      :system_templates=>templates
     }
   end
 
