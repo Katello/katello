@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.147
+Version:        0.1.161
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -42,6 +42,7 @@ Summary:        Common bits for all Katello instances
 Requires:       httpd
 Requires:       mod_ssl
 Requires:       openssl
+Requires:       elasticsearch
 Requires:       rubygems
 Requires:       rubygem(rails) >= 3.0.10
 Requires:       rubygem(multimap)
@@ -70,6 +71,7 @@ Requires:       rubygem(thin)
 Requires:       rubygem(fssm)
 Requires:       rubygem(sass)
 Requires:       rubygem(chunky_png)
+Requires:       rubygem(tire)
 
 # bz 743816 temp fix until yum update makes to z stream
 %if 0%{?rhel} == 6
@@ -346,6 +348,101 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Jan 03 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.160-1
+- moving /distributions API into /repositories path
+- disabling auto-complete on tupane pages
+- system templates - fix packages, groups and repos to be consistent w/
+  promotions
+- system templates - fix label on template tree for repos
+- system templates - fix specs broken by addition of repo
+- system template - updates to tdl for handling templates containing individual
+  repos
+- system template - update to allow adding individual repos to template
+- auto_search_complete - allow controller to provide object for permissions
+  check
+- Add missing Copyright headers.
+- Added permission to list the readable repositories in an environment
+
+* Mon Jan 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.157-1
+- api perms review - activation keys
+- 751033 - adding subscriptions to activation key exception
+- perms - changesets permission review
+
+* Fri Dec 23 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.156-1
+- api perms - changesets unittests
+- api perms - changesets
+- permission coverage rake spec improvement
+- 768047 - promotions - let user know if promotion fails
+- 754609 - Sync status on dashboard now rounded percent.
+
+* Thu Dec 22 2011 Ivan Necas <inecas@redhat.com> 0.1.155-1
+- periodic rebuild
+* Wed Dec 21 2011 Mike McCune <mmccune@redhat.com> 0.1.154-1
+- removing indexing for changesets, as its not needed currently
+  (jsherril@redhat.com)
+- make sure that katello prefix is part of the gpg url (ohadlevy@redhat.com)
+* Wed Dec 21 2011 Justin Sherrill <jsherril@redhat.com> 0.1.153-1
+- fixing routes.js (jsherril@redhat.com)
+- reverting to old package behavior (jsherril@redhat.com)
+- unit test fix (jsherril@redhat.com)
+- fixing broken unit tests
+- ignoring tire if running tests
+- Search: Adds button disabling on unsearchable content within sliding tree.
+  (ehelms@redhat.com)
+- making filters more flexible within application controller
+  (jsherril@redhat.com)
+- fixing provider search to not show redhat provider (jsherril@redhat.com)
+- adding elasticsearch plugin log to logrotate for katello
+  (jsherril@redhat.com)
+- changing system templates auto complete to use elastic search
+  (jsherril@redhat.com)
+- adding package search for promotions (jsherril@redhat.com)
+- Merge branch 'search' of ssh://git.fedorahosted.org/git/katello into search
+  (paji@redhat.com)
+- Added a way to delete the search indices when the DB was reset
+  (paji@redhat.com)
+- Search: Adds search on sliding tree to bbq. (ehelms@redhat.com)
+- Search: Enables simple form search widget for content sliding tree on
+  promotion page. (ehelms@redhat.com)
+- Search: Adds ability to enable a full search widget within a sliding tree and
+  adds to the content tree on promotions page. (ehelms@redhat.com)
+- Sliding Tree: Refactor to sliding tree to turn the previous search widget
+  into a pure filter widget. (ehelms@redhat.com)
+- Search: Changes to sliding tree filtering to make way for adding sliding tree
+  search. (ehelms@redhat.com)
+- making user sorting be on a non-analyzed login attribute
+  (jsherril@redhat.com)
+- Adding delayed job after kicking off repo sync to index packages, made
+  packages sortable (jsherril@redhat.com)
+- fixing ordering for systems (jsherril@redhat.com)
+- converting to not use a generic katello index for each model and fixing sort
+  on systems and provider (jsherril@redhat.com)
+- Merge branch 'master' into search (mmccune@redhat.com)
+- 768191 - adding elasticsearch to our specfile (mmccune@redhat.com)
+- test (jsherril@redhat.com)
+- test (jsherril@redhat.com)
+- adding initial system searching (jsherril@redhat.com)
+- product/repo saving for providers (jsherril@redhat.com)
+- adding provider searching (jsherril@redhat.com)
+- controller support for indexed (jsherril@redhat.com)
+- search - initial full text search additions (jsherril@redhat.com)
+- Gemfile Update - adding Tire to gemfile (jsherril@redhat.com)
+
+* Wed Dec 21 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.151-1
+
+* Tue Dec 20 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.149-1
+- 
+
+* Mon Dec 19 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.148-1
+- Revert "765888 - Error during promotion"
+- ak - fixing unit tests
+- ak - subscribing according products
+- Bug 768388 - Perpetual spinner cursor upon changing a user's org.
+  https://bugzilla.redhat.com/show_bug.cgi?id=768388 + Incorrectly loading
+  env_select.js twice which was causing javascript errors   and these resulted
+  in spinner not clearing
+- Changes organizations tupane subnavigation to be consistent with others.
+
 * Wed Dec 14 2011 Ivan Necas <inecas@redhat.com> 0.1.144-1
 - 753804 - fix for duplicite product name exception (inecas@redhat.com)
 - 741656 - fix query on resource type for search (bbuckingham@redhat.com)

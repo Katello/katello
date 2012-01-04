@@ -25,7 +25,8 @@ shared_examples_for "protected action" do
   end
   context "I have sufficient rights" do
     it "should let me to it" do
-      unless defined? on_success
+      if !defined?(on_success) && !defined?(before_success)
+
         controller.stub(action)
         controller.stub(:render)
       end
@@ -40,11 +41,20 @@ shared_examples_for "protected action" do
 
       req
       on_success if defined?(on_success)
+
+      
+      response.should be_success
+
+      if ENV['PERMISSION_COVERAGE'] and defined? authorized_user
+        File.open(ENV['PERMISSION_COVERAGE'], 'a') do |f|
+          f.write "||!#{controller.class.name}||#{action}||!#{authorized_user.own_role.permissions.map(&:to_short_text).inspect}||\n"
+        end
+      end
     end
   end
   context "I have not sufficient rights" do
     it "should not let me to it" do
-      unless defined? on_failure
+      if !defined?(on_success) && !defined?(before_success)
         @controller.stub(action)
         @controller.stub(:render)
       end

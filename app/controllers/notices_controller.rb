@@ -16,8 +16,14 @@
 class NoticesController < ApplicationController
   skip_before_filter :authorize,:require_org
   before_filter :notices_authorize
+  before_filter :readable_by, :only => [:auto_complete_search]
+
   include AutoCompleteSearch
   helper_method :sort_column, :sort_direction
+
+  def section_id
+     'notifications'
+  end
 
   def notices_authorize
     user = current_user
@@ -105,4 +111,9 @@ class NoticesController < ApplicationController
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
   end
 
+  def readable_by
+    # this is used by auto search complete as input to 'readable'... to provide results based on the content readable
+    # to the user...
+    @readable_by = current_user
+  end
 end

@@ -7,6 +7,7 @@ gem 'thin', '>=1.2.11'
 
 gem 'json'
 gem 'rest-client', :require => 'rest_client'
+gem 'tire'
 gem 'jammit'
 gem 'pg'
 # gem 'bson_ext', '>= 1.0.4'

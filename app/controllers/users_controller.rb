@@ -1,4 +1,4 @@
-#
+ #
 # Copyright 2011 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public
@@ -58,13 +58,11 @@ class UsersController < ApplicationController
     if User.any_readable?
       if params[:only]
         users = [@user]
+        render_panel_items(users, @panel_options, nil, params[:offset])
       else
-        users = User.readable
+        render_panel_direct(User, @panel_options, params[:search], params[:offset], [:username_sort, 'asc'])
       end
-    else
-      users = [current_user]
     end
-    render_panel_items(users, @panel_options, params[:search], params[:offset])
   end
 
   def edit

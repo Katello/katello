@@ -12,6 +12,7 @@
 
 class TaskStatus < ActiveRecord::Base
   serialize :progress
+  serialize :result
   serialize :parameters, Hash
   class Status
     WAITING = :waiting
