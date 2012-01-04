@@ -66,7 +66,7 @@ AsyncOperation = Struct.new(:status_id, :username, :object, :method_name, :args)
     s.update_attributes!(
         :state => TaskStatus::Status::ERROR,
         :finish_time => current_time,
-        :result => {:errors => [exception.message, exception.backtrace.join("/n")]}.to_json)
+        :result => {:errors => [exception.message, exception.backtrace.join("/n")]})
   end
 
   def success
