@@ -17,27 +17,23 @@ describe Api::DistributionsController do
 
   before(:each) do
     login_user_api
+    @repo = mock(Glue::Pulp::Repo)
   end
 
   describe "get a listing of distributions" do
-    
-    before(:each) do
-      @repo = mock(Glue::Pulp::Repo)
-    end    
-    
     it "should call pulp find repo api" do
-      
       Repository.should_receive(:find).once.with(1).and_return(@repo)
       @repo.should_receive(:distributions)
-      
       get 'index', :repository_id => 1
     end
   end
 
   describe "show a distribution" do
     it "should call pulp find distribution api" do
+      Repository.should_receive(:find).once.with(1).and_return(@repo)
+      @repo.should_receive(:has_distribution?).once.with(1).and_return(true)
       Glue::Pulp::Distribution.should_receive(:find).once.with(1)
-      get 'show', :id => 1
+      get 'show', :id => 1, :repository_id => 1
     end
   end
 

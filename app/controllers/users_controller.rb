@@ -60,13 +60,7 @@ class UsersController < ApplicationController
         users = [@user]
         render_panel_items(users, @panel_options, nil, params[:offset])
       else
-        search = '*'
-        search = params[:search] if params[:search] && params[:search] != ''
-
-        #  def render_panel_direct(obj_class, options, search, start, sort, filters)
-
-        render_panel_direct(User, @panel_options, search, params[:offset], [:login_sort, 'asc'])
-
+        render_panel_direct(User, @panel_options, params[:search], params[:offset], [:username_sort, 'asc'])
       end
     end
   end

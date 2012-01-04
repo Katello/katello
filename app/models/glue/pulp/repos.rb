@@ -328,7 +328,7 @@ module Glue::Pulp::Repos
       Glue::Pulp::Repo.repo_id(self.name.to_s, content_name.to_s, env_name, self.organization.name)
     end
 
-    def repository_url(content_url)
+    def repo_url(content_url)
       if self.provider.provider_type == Provider::CUSTOM
         url = content_url.dup
       else
@@ -378,7 +378,7 @@ module Glue::Pulp::Repos
         ca = File.read(CDN::CdnResource.ca_file)
 
         substituted_paths(pc.content.contentUrl).each do |(substitutions, path)|
-          feed_url = repository_url(path)
+          feed_url = repo_url(path)
           arch = substitutions["basearch"] || "noarch"
           repo_name = [pc.content.name, substitutions.values].flatten.compact.join(" ").gsub(/[^a-z0-9\-_ ]/i,"")
           version = CDN::Utils.parse_version(substitutions["releasever"])
@@ -423,7 +423,7 @@ module Glue::Pulp::Repos
       added_content.each do |pc|
         if !(self.environments.map(&:name).any? {|name| pc.content.name.include?(name)}) || pc.content.name.include?('Locker')
           Rails.logger.debug "creating repository #{repo_id(pc.content.name)}"
-          self.add_repo(pc.content.name, repository_url(pc.content.contentUrl), pc.content.type)
+          self.add_repo(pc.content.name, repo_url(pc.content.contentUrl), pc.content.type)
         else
           raise "new content was added to environment other than Locker. use promotion instead."
         end
@@ -441,7 +441,7 @@ module Glue::Pulp::Repos
       #
       #changed_content.each do |pc|
       #  Pulp::Repository.update(repo_id(pc.content.name), {
-      #    :feed => repository_url(pc.content.contentUrl)
+      #    :feed => repo_url(pc.content.contentUrl)
       #  })
       #end
     end

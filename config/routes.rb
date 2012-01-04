@@ -173,6 +173,7 @@ Src::Application.routes.draw do
       get :items
       get :product_packages
       get :product_comps
+      get :product_repos
     end
     member do
       get :promotion_details
@@ -207,6 +208,10 @@ Src::Application.routes.draw do
   match '/providers/:id' => 'providers#update', :via => :post
 
   match '/repositories/:id/enable_repo' => 'repositories#enable_repo', :via => :put, :as => :enable_repo
+
+  resources :repositories, :only => [:new, :create, :edit, :destroy] do
+    get :auto_complete_locker, :on => :collection
+  end
 
   resources :promotions, :only =>[] do
     collection do
@@ -449,7 +454,7 @@ Src::Application.routes.draw do
       end
       resources :packages, :only => [:index]
       resources :errata, :only => [:index]
-      resources :distributions, :only => [:index]
+      resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
       member do
         get :package_groups
         get :package_group_categories
@@ -479,7 +484,6 @@ Src::Application.routes.draw do
 
     resources :packages, :only => [:show]
     resources :errata, :only => [:index, :show]
-    resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
 
     resources :users do
       get :report, :on => :collection
@@ -509,6 +513,7 @@ Src::Application.routes.draw do
 
     # support for rhsm --------------------------------------------------------
     match '/consumers' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
+    match '/hypervisors' => 'systems#hypervisors_update', :via => :post
     resources :consumers, :controller => 'systems'
     match '/owners/:organization_id/environments' => 'environments#index', :via => :get
     match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get

@@ -487,6 +487,11 @@ KT.panel = (function ($) {
                 }
                 else if (!refresh) {
                     closePanel();
+                    
+                    if( search_element.val() !== "" && search === undefined ){
+                        search_element.val('');
+                        $('#search_form').trigger('submit');
+                    }
                 }
             }
             return false;
@@ -731,7 +736,6 @@ KT.panel.list = (function () {
                             expand_list = $('.expand_list');
                         }
                         retrievingNewContent = false;
-                        console.log(data);
                         expand_list.append(data['html']);
                         $('.list-spinner').remove();
                         if (data['current_items'] === 0) {
@@ -751,7 +755,9 @@ KT.panel.list = (function () {
             options = options || {};
             
             setupSearch(resource_type, options);
-            KT.search.enableAutoComplete(KT.routes['auto_complete_search_' + resource_type + '_path']());
+
+            // DISABLING AUTO COMPLETE for now
+            //KT.search.enableAutoComplete(KT.routes['auto_complete_search_' + resource_type + '_path']());
             KT.panel.control_bbq = false;
             
             $(window).bind('hashchange', KT.panel.hash_change);
@@ -858,6 +864,15 @@ KT.panel.list = (function () {
                         button.removeAttr('disabled');
                     }
                 });
+            });
+
+            $('#search').live('change', function(){
+                var value = $(this).val();
+
+                if( value === "" ){
+                    $.bbq.removeState("search");
+                    $('#search_form').trigger('submit');
+                }
             });
         };
     return {

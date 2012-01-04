@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: version 0.0.1\n"
-"POT-Creation-Date: 2011-11-30 13:41+0100\n"
+"POT-Creation-Date: 2012-01-04 10:26-0500\n"
 "PO-Revision-Date: 2011-01-10 17:59-0700\n"
 "Last-Translator: Jason E. Rist <jrist@redhat.com>\n"
 "Language-Team: Japanese\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: app/views/promotions/show.html.haml:93
+#: app/views/promotions/show.html.haml:98
 msgid " Changesets"
 msgstr "コンテンツ管理"
 
-#: app/views/promotions/show.html.haml:164
+#: app/views/promotions/show.html.haml:169
 msgid " Content"
 msgstr "コンテンツロッカー"
 
@@ -28,12 +28,12 @@ msgstr "コンテンツロッカー"
 msgid " Red Hat, Inc."
 msgstr " Red Hat, Inc."
 
-#: app/views/common/_panel.html.haml:33
+#: app/views/common/_panel.html.haml:40
 #, fuzzy
 msgid " Total "
 msgstr "システム"
 
-#: app/controllers/users_controller.rb:96
+#: app/controllers/users_controller.rb:105
 msgid " created successfully."
 msgstr "正常に作成されました。"
 
@@ -45,11 +45,11 @@ msgstr "環境は、そのパス上に既に環境に設定することはでき
 msgid " items selected."
 msgstr ""
 
-#: app/views/common/_panel.html.haml:26
+#: app/views/common/_panel.html.haml:33
 msgid " of  "
 msgstr ""
 
-#: app/views/common/_panel.html.haml:30
+#: app/views/common/_panel.html.haml:37
 #, fuzzy
 msgid " results "
 msgstr "検索"
@@ -57,6 +57,10 @@ msgstr "検索"
 #: app/helpers/translation_helper.rb:15
 #: app/views/providers/redhat/_import_history.html.haml:14
 msgid "%s ago"
+msgstr ""
+
+#: app/controllers/api/system_packages_controller.rb:84
+msgid "%s is not a valid package name"
 msgstr ""
 
 #: app/controllers/providers_controller.rb:73
@@ -73,6 +77,11 @@ msgstr ""
 msgid "(Entire product selected)"
 msgstr ""
 
+#: app/views/system_packages/_packages.html.haml:6
+msgid "(Loaded %X of %Y Total)"
+msgstr ""
+
+#: app/views/system_packages/_packages.html.haml:90
 #: app/views/filters/_products.html.haml:34
 msgid "+ Add"
 msgstr ""
@@ -82,18 +91,23 @@ msgstr ""
 msgid "+ All"
 msgstr ""
 
-#: app/views/common/_panel.html.haml:20
+#: app/views/common/_panel.html.haml:27
 msgid "+ New "
 msgstr ""
 
-#: app/views/promotions/show.html.haml:158
-#: app/views/promotions/show.html.haml:162
+#: app/views/promotions/show.html.haml:163
+#: app/views/promotions/show.html.haml:167
 msgid "+ New Changeset"
 msgstr "コンテンツ管理"
 
-#: app/views/system_templates/index.html.haml:113
+#: app/views/system_templates/index.html.haml:105
 msgid "+ New Template"
 msgstr ""
+
+#: app/views/system_packages/_packages.html.haml:91
+#, fuzzy
+msgid "- Remove"
+msgstr "コンテンツプロバイダー"
 
 #: app/views/common/403.html.haml:2
 msgid "403 - Permission denied"
@@ -123,17 +137,17 @@ msgid ""
 "order to reset this password, click the URL below."
 msgstr ""
 
-#: app/models/kt_environment.rb:316
+#: app/models/kt_environment.rb:317
 #, fuzzy
 msgid "Access Changesets in Environment"
 msgstr "環境を作成する"
 
-#: app/models/kt_environment.rb:311
+#: app/models/kt_environment.rb:312
 #, fuzzy
 msgid "Access Environment Contents"
 msgstr "環境"
 
-#: app/models/organization.rb:107
+#: app/models/organization.rb:126
 #, fuzzy
 msgid "Access Organization"
 msgstr "新しい組織"
@@ -142,7 +156,7 @@ msgstr "新しい組織"
 msgid "Access Package Filters"
 msgstr ""
 
-#: app/models/provider.rb:114
+#: app/models/provider.rb:123
 #, fuzzy
 msgid "Access Provider"
 msgstr "コンテンツプロバイダー"
@@ -152,28 +166,28 @@ msgstr "コンテンツプロバイダー"
 msgid "Access Roles"
 msgstr "保存の役割"
 
-#: app/models/organization.rb:108
+#: app/models/organization.rb:127
 #, fuzzy
 msgid "Access Systems"
 msgstr "システム"
 
-#: app/models/kt_environment.rb:312
+#: app/models/kt_environment.rb:313
 #, fuzzy
 msgid "Access Systems in Environment"
 msgstr "環境を作成する"
 
-#: app/models/user.rb:339
+#: app/models/user.rb:353
 #, fuzzy
 msgid "Access Users"
 msgstr "ユーザー"
 
-#: app/models/activation_key.rb:65
+#: app/models/activation_key.rb:143
 msgid "Access all Activation Keys"
 msgstr ""
 
+#: app/models/resource_type.rb:94
 #: app/controllers/activation_keys_controller.rb:271
-#: app/models/resource_type.rb:94 lib/navigation/systems.rb:50
-#: config/headpin_navigation.rb:92 config/katello_navigation.rb:90
+#: lib/navigation/systems.rb:50
 #, fuzzy
 msgid "Activation Keys"
 msgstr "アクション"
@@ -186,13 +200,15 @@ msgid ""
 "system, system template to apply to the system...etc."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7 app/views/roles/index.html.haml:9
-#: app/views/filters/_packages.html.haml:25
-#: app/views/common/_common_i18n.html.haml:3
-#: app/views/system_templates/index.html.haml:12
 #: app/views/system_templates/_product_comps.html.haml:6
-#: app/views/system_templates/_product_packages.html.haml:6
+#: app/views/system_templates/_repositories.html.haml:8
 #: app/views/system_templates/_products.html.haml:9
+#: app/views/system_templates/_product_packages.html.haml:6
+#: app/views/system_templates/_product_repos.html.haml:6
+#: app/views/system_templates/index.html.haml:6
+#: app/views/filters/_packages.html.haml:25 app/views/roles/index.html.haml:9
+#: app/views/promotions/show.html.haml:8
+#: app/views/common/_common_i18n.html.haml:3
 msgid "Add"
 msgstr "追加"
 
@@ -201,12 +217,51 @@ msgstr "追加"
 msgid "Add Global Permission"
 msgstr "アクセス許可を追加する"
 
-#: app/views/organizations/_edit.html.haml:47
+#: app/views/organizations/_edit.html.haml:48
 msgid "Add New Environment"
 msgstr "環境"
 
-#: app/views/roles/_edit.html.haml:93 app/views/roles/index.html.haml:9
-#: app/views/roles/_permissions.html.haml:6
+#: app/views/system_packages/_packages.html.haml:6
+msgid "Add Package Canceled"
+msgstr ""
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Add Package Complete"
+msgstr "リポジトリーの追加"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Add Package Error"
+msgstr "グループ"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Add Package Group Canceled"
+msgstr "グループ"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Add Package Group Complete"
+msgstr "グループ"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Add Package Group Error"
+msgstr "グループ"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Add Package Group Timeout"
+msgstr "グループ"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Add Package Timeout"
+msgstr "グループ"
+
+#: app/views/roles/_permissions.html.haml:6 app/views/roles/index.html.haml:9
+#: app/views/roles/_edit.html.haml:93
 msgid "Add Permission"
 msgstr "アクセス許可を追加する"
 
@@ -233,8 +288,17 @@ msgstr "サブスクリプション"
 msgid "Add to Key"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "Added:"
+msgstr ""
+
+#: app/helpers/system_packages_helper.rb:28
+#, fuzzy
+msgid "Adding Package Group..."
+msgstr "グループ"
+
+#: app/helpers/system_packages_helper.rb:16
+msgid "Adding Package..."
 msgstr ""
 
 #: app/views/roles/index.html.haml:9
@@ -242,7 +306,6 @@ msgid "Adding..."
 msgstr ""
 
 #: app/views/operations/index.html.haml:2 lib/navigation/administration.rb:45
-#: config/headpin_navigation.rb:110 config/katello_navigation.rb:108
 msgid "Administration"
 msgstr "登録"
 
@@ -250,13 +313,12 @@ msgstr "登録"
 msgid "Advisory"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:208 app/models/resource_type.rb:99
-#: app/views/roles/index.html.haml:9
+#: app/models/resource_type.rb:99 app/helpers/breadcrumb_helper.rb:209
+#: app/views/roles/index.html.haml:9 app/views/roles/_permission.html.haml:23
+#: app/views/roles/_permission.html.haml:33
 #: app/views/roles/_closed_permission.html.haml:11
 #: app/views/roles/_closed_permission.html.haml:20
-#: app/views/roles/_permission.html.haml:23
-#: app/views/roles/_permission.html.haml:33 lib/navigation/systems.rb:33
-#: config/headpin_navigation.rb:73 config/katello_navigation.rb:70
+#: lib/navigation/systems.rb:33
 msgid "All"
 msgstr "すべて"
 
@@ -265,19 +327,19 @@ msgstr "すべて"
 msgid "All Repositories"
 msgstr "リポジトリーの追加"
 
-#: app/views/promotions/show.html.haml:149
+#: app/views/promotions/show.html.haml:154
 msgid ""
 "An environment does not exist to promote content to.  If you would like to "
 "manage changesets and content, please create a new environment."
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:125
+#: app/views/system_templates/index.html.haml:115
 msgid ""
 "An error has occured when communicating with the server, please refresh the "
 "page to retrieve the current System Template"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:65
+#: app/views/promotions/show.html.haml:70
 msgid ""
 "An error has occured when communicating with the server, please refresh the "
 "page to retrieve the current changeset."
@@ -287,8 +349,7 @@ msgstr ""
 msgid "Applied"
 msgstr ""
 
-#: lib/navigation/systems.rb:101 config/headpin_navigation.rb:96
-#: config/katello_navigation.rb:94
+#: lib/navigation/systems.rb:95
 #, fuzzy
 msgid "Applied Subscriptions"
 msgstr "サブスクリプション"
@@ -297,9 +358,9 @@ msgstr "サブスクリプション"
 msgid "Apply Selected Plan to Selected Products"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:75
-#: app/views/systems/_packages.html.haml:18
-#: app/views/subscriptions/index.html.haml:18
+#: app/views/subscriptions/index.html.haml:17
+#: app/views/providers/redhat/_subscription_details.html.haml:8
+#: app/views/systems/_edit.html.haml:49
 msgid "Arch"
 msgstr ""
 
@@ -307,7 +368,7 @@ msgstr ""
 msgid "Architecture"
 msgstr ""
 
-#: app/views/systems/_new.html.haml:22
+#: app/views/systems/_new.html.haml:23
 msgid "Architecture:"
 msgstr ""
 
@@ -315,13 +376,17 @@ msgstr ""
 msgid "Are you sure you want to delete this GPG Key?"
 msgstr ""
 
-#: app/views/filters/_edit.html.haml:8 app/views/filters/_packages.html.haml:6
 #: app/views/filters/_products.html.haml:12
+#: app/views/filters/_edit.html.haml:8
 msgid "Are you sure you want to delete this filster?"
 msgstr ""
 
-#: app/views/providers/_edit.html.haml:8
+#: app/views/filters/_packages.html.haml:6
+msgid "Are you sure you want to delete this filter?"
+msgstr ""
+
 #: app/views/providers/_products_repos.html.haml:8
+#: app/views/providers/_edit.html.haml:8
 msgid "Are you sure you want to delete this provider?"
 msgstr ""
 
@@ -341,20 +406,27 @@ msgstr ""
 msgid "Are you sure you want to remove this role?"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:92
+#: app/views/systems/_edit.html.haml:8
+msgid "Are you sure you want to remove this system?"
+msgstr ""
+
+#: app/views/system_templates/index.html.haml:84
 msgid "Are you sure you want to remove this template?"
 msgstr ""
 
-#: app/views/notices/show.html.haml:41 app/views/promotions/show.html.haml:124
 #: app/views/users/_edit.html.haml:6
-#: app/views/roles/_self_role_edit.html.haml:6
+msgid "Are you sure you want to remove this user?"
+msgstr ""
+
 #: app/views/environments/_edit.html.haml:10
-#: app/views/gpg_keys/_edit.html.haml:8
-#: app/views/common/_common_i18n.html.haml:3
+#: app/views/activation_keys/_applied_subscriptions.html.haml:7
 #: app/views/activation_keys/_available_subscriptions.html.haml:7
 #: app/views/activation_keys/_edit.html.haml:15
-#: app/views/activation_keys/_applied_subscriptions.html.haml:7
+#: app/views/gpg_keys/_edit.html.haml:8
+#: app/views/roles/_self_role_edit.html.haml:6
+#: app/views/notices/show.html.haml:16 app/views/promotions/show.html.haml:129
 #: app/views/sync_plans/_edit.html.haml:11
+#: app/views/common/_common_i18n.html.haml:3
 msgid "Are you sure?"
 msgstr ""
 
@@ -366,16 +438,16 @@ msgstr ""
 msgid "Associated Bugs"
 msgstr ""
 
-#: app/controllers/api/systems_controller.rb:229
+#: app/controllers/api/systems_controller.rb:264
 msgid "At least one activation key must be provided"
 msgstr ""
 
-#: app/controllers/organizations_controller.rb:141
+#: app/models/organization.rb:82
 msgid "At least one organization must exist."
 msgstr ""
 
-#: app/models/system_template.rb:127
-msgid "At least one product must be present to export a TDL"
+#: app/models/system_template.rb:130
+msgid "At least one product or repository must be present to export a TDL"
 msgstr ""
 
 #: app/views/dashboard/index.html.haml:6
@@ -383,23 +455,18 @@ msgstr ""
 msgid "Available Errata"
 msgstr "すべてのエラータ"
 
-#: app/views/systems/_subs.html.haml:57 lib/navigation/systems.rb:107
-#: config/headpin_navigation.rb:98 config/katello_navigation.rb:96
+#: app/views/systems/_subs.html.haml:57 lib/navigation/systems.rb:101
 #, fuzzy
 msgid "Available Subscriptions"
 msgstr "サブスクリプション"
 
-#: app/views/common/404.html.haml:7 app/views/common/500.html.haml:15
+#: app/views/common/500.html.haml:15 app/views/common/404.html.haml:7
 #: app/views/common/403.html.haml:8
 msgid "Back"
 msgstr ""
 
-#: lib/navigation/content_management.rb:28 config/headpin_navigation.rb:31
-#: config/katello_navigation.rb:28
-msgid "Basics"
-msgstr ""
-
 #: app/views/subscriptions/index.html.haml:19
+#: app/views/providers/redhat/_subscription_details.html.haml:10
 msgid "Begins"
 msgstr ""
 
@@ -411,8 +478,7 @@ msgstr ""
 msgid "Build Host"
 msgstr ""
 
-#: lib/navigation/systems.rb:41 config/headpin_navigation.rb:83
-#: config/katello_navigation.rb:80
+#: lib/navigation/systems.rb:41
 #, fuzzy
 msgid "By Environments"
 msgstr "環境"
@@ -421,19 +487,19 @@ msgstr "環境"
 msgid "Can't update Locker environment"
 msgstr "環境を作成する"
 
-#: app/views/roles/_permission.html.haml:42
-#: app/views/systems/_actions.html.haml:12
 #: app/views/sync_management/index.html.haml:5
-#: app/views/common/_edit_i18n.html.haml:4
 #: app/views/activation_keys/_edit.html.haml:73
+#: app/views/roles/_permission.html.haml:42
+#: app/views/common/_edit_i18n.html.haml:4
+#: app/views/systems/_actions.html.haml:12
 msgid "Cancel"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:12
+#: app/views/system_templates/index.html.haml:6
 msgid "Cancel Add"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "Cancel Review"
 msgstr ""
 
@@ -441,7 +507,12 @@ msgstr ""
 msgid "Canceled."
 msgstr ""
 
-#: app/models/user.rb:92
+#: app/models/activation_key.rb:43
+#, fuzzy
+msgid "Cannot create activation keys in Locker environment "
+msgstr "環境を作成する"
+
+#: app/models/user.rb:106
 msgid "Cannot delete currently logged user"
 msgstr ""
 
@@ -450,7 +521,7 @@ msgstr ""
 msgid "Cannot export templates for the Locker environment."
 msgstr "環境を作成する"
 
-#: app/controllers/system_templates_controller.rb:281
+#: app/controllers/system_templates_controller.rb:285
 #, fuzzy
 msgid "Cannot modify a template that is another environment"
 msgstr "環境を作成する"
@@ -484,37 +555,34 @@ msgstr ""
 msgid "Change Password:"
 msgstr ""
 
-#: lib/navigation/content_management.rb:187 config/headpin_navigation.rb:53
-#: config/katello_navigation.rb:50
+#: lib/navigation/content_management.rb:181
 msgid "Changelog"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:112
+#: app/views/promotions/show.html.haml:117
 #, fuzzy
 msgid "Changeset Details"
 msgstr "コンテンツ管理"
 
-#: lib/navigation/content_management.rb:143 config/headpin_navigation.rb:65
-#: config/katello_navigation.rb:62
+#: lib/navigation/content_management.rb:143
 msgid "Changeset History"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "Changeset is empty."
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:28
-#: app/controllers/changesets_controller.rb:288
-#: app/views/promotions/show.html.haml:145
-#: app/views/promotions/show.html.haml:148
+#: app/controllers/changesets_controller.rb:283
+#: app/helpers/breadcrumb_helper.rb:29 app/views/promotions/show.html.haml:150
+#: app/views/promotions/show.html.haml:153
 msgid "Changesets"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:88
+#: app/views/systems/_edit.html.haml:62
 msgid "Checked In"
 msgstr ""
 
-#: app/views/systems/_new.html.haml:37
+#: app/views/systems/_new.html.haml:39
 #, fuzzy
 msgid "Choose Environment:"
 msgstr "環境を作成する"
@@ -524,13 +592,13 @@ msgstr "環境を作成する"
 msgid "Choose a product.."
 msgstr "作成"
 
-#: app/views/users/_edit_environment.html.haml:19
+#: app/views/users/_edit_environment.html.haml:26
 msgid "Choose new defaults:"
 msgstr ""
 
+#: app/views/gpg_keys/_new.html.haml:21 app/views/gpg_keys/_new.html.haml:35
+#: app/views/gpg_keys/_edit.html.haml:37
 #: app/views/users/_edit_form.html.haml:41
-#: app/views/gpg_keys/_edit.html.haml:37 app/views/gpg_keys/_new.html.haml:21
-#: app/views/gpg_keys/_new.html.haml:35
 msgid "Clear"
 msgstr ""
 
@@ -542,7 +610,7 @@ msgstr ""
 msgid "Clear the Search"
 msgstr ""
 
-#: app/controllers/users_controller.rb:238
+#: app/controllers/users_controller.rb:247
 msgid "Cleared"
 msgstr ""
 
@@ -560,7 +628,7 @@ msgid ""
 "Click edit permission from the bar below to edit the current permission."
 msgstr ""
 
-#: app/controllers/organizations_controller.rb:85
+#: app/controllers/organizations_controller.rb:88
 msgid "Click on 'Add Environment' to create the first environment"
 msgstr ""
 
@@ -568,9 +636,10 @@ msgstr ""
 msgid "Click to edit"
 msgstr ""
 
+#: app/views/roles/_edit.html.haml:11
 #: app/views/layouts/_tupane_layout.html.haml:15
 #: app/views/layouts/_tupane_layout.html.haml:20
-#: app/views/roles/_edit.html.haml:11
+#: app/views/common/_edit_i18n.html.haml:4
 msgid "Close"
 msgstr "閉じる"
 
@@ -579,11 +648,11 @@ msgstr "閉じる"
 msgid "Close Add Permission"
 msgstr "アクセス許可を追加する"
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "Close Details"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:12
+#: app/views/system_templates/index.html.haml:6
 #, fuzzy
 msgid "Close Edit"
 msgstr "閉じる"
@@ -605,15 +674,16 @@ msgstr ""
 msgid "Confirm Password:"
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:53 app/views/users/_new.html.haml:34
+#: app/views/users/_new.html.haml:33 app/views/users/_edit_form.html.haml:53
 msgid "Confirm:"
 msgstr ""
 
+#: app/views/subscriptions/index.html.haml:14
 #: app/views/providers/redhat/_subscription_details.html.haml:5
 msgid "Consumed"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:120
+#: app/helpers/breadcrumb_helper.rb:121
 msgid "Content"
 msgstr "コンテンツロッカー"
 
@@ -621,19 +691,19 @@ msgstr "コンテンツロッカー"
 msgid "Content Download URL: "
 msgstr ""
 
-#: lib/navigation/content_management.rb:45 config/headpin_navigation.rb:23
-#: config/katello_navigation.rb:20
+#: lib/navigation/content_management.rb:45
 msgid "Content Management"
 msgstr "コンテンツ管理"
 
-#: app/views/changesets/_edit.html.haml:26
 #: app/views/system_templates/_promotion_details.html.haml:13
+#: app/views/changesets/_edit.html.haml:26
 #, fuzzy
 msgid "Contents:"
 msgstr "コンテンツロッカー"
 
+#: app/views/subscriptions/index.html.haml:15
+#: app/views/providers/redhat/_subscription_details.html.haml:6
 #: app/views/systems/_subs.html.haml:17
-#: app/views/subscriptions/index.html.haml:16
 msgid "Contract"
 msgstr "コンテンツロッカー"
 
@@ -641,12 +711,17 @@ msgstr "コンテンツロッカー"
 msgid "Copyright &copy; "
 msgstr ""
 
-#: app/controllers/api/products_controller.rb:74
+#: app/models/organization.rb:78
+#, fuzzy
+msgid "Could not delete organization '%s'."
+msgstr "新しい組織"
+
+#: app/controllers/api/products_controller.rb:76
 #, fuzzy
 msgid "Couldn't find environment '%s'"
 msgstr "環境を作成する"
 
-#: app/controllers/api/activation_keys_controller.rb:69
+#: app/controllers/api/activation_keys_controller.rb:68
 #, fuzzy
 msgid "Couldn't find pool '%s' in activation_key '%s'"
 msgstr "環境を作成する"
@@ -656,7 +731,7 @@ msgstr "環境を作成する"
 msgid "Couldn't find provider '%s'"
 msgstr "環境を作成する"
 
-#: app/controllers/api/sync_controller.rb:73
+#: app/controllers/api/sync_controller.rb:77
 msgid "Couldn't find subject of synchronization"
 msgstr ""
 
@@ -670,7 +745,7 @@ msgstr "作成"
 msgid "Create Environment"
 msgstr "環境を作成する"
 
-#: app/models/organization.rb:116
+#: app/models/organization.rb:135
 #, fuzzy
 msgid "Create Organization"
 msgstr "新しい組織"
@@ -684,7 +759,7 @@ msgstr "リポジトリーの追加"
 msgid "Create Product"
 msgstr "作成"
 
-#: app/models/provider.rb:113
+#: app/models/provider.rb:122
 #, fuzzy
 msgid "Create Provider"
 msgstr "作成"
@@ -698,12 +773,12 @@ msgstr "リポジトリーの追加"
 msgid "Create Roles"
 msgstr "保存の役割"
 
-#: app/models/user.rb:338
+#: app/models/user.rb:352
 #, fuzzy
 msgid "Create Users"
 msgstr "作成"
 
-#: app/views/notices/show.html.haml:22
+#: app/views/notices/show.html.haml:25
 msgid "Created (UTC)"
 msgstr "作成"
 
@@ -712,37 +787,39 @@ msgstr "作成"
 msgid "Current Organization"
 msgstr "新しい組織"
 
-#: app/views/subscriptions/index.html.haml:5
 #: app/views/dashboard/_subscriptions.haml:33
+#: app/views/subscriptions/index.html.haml:5
 msgid "Current Subscriptions"
 msgstr "サブスクリプション"
 
-#: lib/navigation/content_management.rb:76 config/headpin_navigation.rb:30
-#: config/katello_navigation.rb:27
+#: lib/navigation/content_management.rb:76
 msgid "Custom"
 msgstr ""
 
-#: lib/navigation/dashboard.rb:17 config/headpin_navigation.rb:11
-#: config/katello_navigation.rb:8
+#: lib/navigation/dashboard.rb:17
 msgid "Dashboard"
 msgstr "ダッシュボード"
 
-#: app/views/users/_edit_environment.html.haml:14
+#: app/views/organizations/_download_debug_certificate.html.haml:8
+msgid "Debug Certificate"
+msgstr ""
+
+#: app/views/users/_edit_environment.html.haml:21
 #, fuzzy
 msgid "Default Environment:"
 msgstr "環境を作成する"
 
-#: app/views/users/_edit_environment.html.haml:10
-#: app/views/users/_new.html.haml:49
+#: app/views/users/_new.html.haml:48
+#: app/views/users/_edit_environment.html.haml:17
 #, fuzzy
 msgid "Default Organization:"
 msgstr "新しい組織"
 
-#: app/views/notices/show.html.haml:41
+#: app/views/notices/show.html.haml:16
 msgid "Delete All"
 msgstr "検索"
 
-#: app/models/organization.rb:117
+#: app/models/organization.rb:136
 #, fuzzy
 msgid "Delete Organization"
 msgstr "新しい組織"
@@ -752,7 +829,7 @@ msgstr "新しい組織"
 msgid "Delete Package Filters"
 msgstr "検索"
 
-#: app/models/provider.rb:116
+#: app/models/provider.rb:125
 #, fuzzy
 msgid "Delete Provider"
 msgstr "コンテンツプロバイダー"
@@ -762,12 +839,12 @@ msgstr "コンテンツプロバイダー"
 msgid "Delete Roles"
 msgstr "検索"
 
-#: app/models/organization.rb:111
+#: app/models/organization.rb:130
 #, fuzzy
 msgid "Delete Systems"
 msgstr "システム"
 
-#: app/models/user.rb:341
+#: app/models/user.rb:355
 #, fuzzy
 msgid "Delete Users"
 msgstr "検索"
@@ -776,53 +853,51 @@ msgstr "検索"
 msgid "Deleted provider [ %s ]"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:60 app/views/promotions/show.html.haml:7
-#: lib/navigation/content_management.rb:181 config/headpin_navigation.rb:52
-#: config/katello_navigation.rb:49
+#: app/helpers/breadcrumb_helper.rb:61 app/views/promotions/show.html.haml:8
+#: lib/navigation/content_management.rb:175
 msgid "Dependencies"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "Dependency of "
 msgstr ""
 
-#: app/views/changesets/_new.html.haml:15
-#: app/views/providers/_form.html.haml:12
-#: app/views/providers/_edit.html.haml:28 app/views/notices/show.html.haml:26
-#: app/views/products/_edit.html.haml:21 app/views/products/_new.html.haml:13
-#: app/views/roles/_new.html.haml:14
-#: app/views/organizations/_edit.html.haml:17
-#: app/views/organizations/_new.html.haml:17
-#: app/views/environments/_edit.html.haml:23
-#: app/views/environments/_new.html.haml:19
 #: app/views/distributions/_show.html.haml:17
-#: app/views/errata/_show.html.haml:80 app/views/systems/_edit.html.haml:63
-#: app/views/filters/_edit.html.haml:27 app/views/filters/_new.html.haml:18
-#: app/views/system_templates/_edit.html.haml:7
+#: app/views/organizations/_new.html.haml:17
+#: app/views/organizations/_edit.html.haml:18
+#: app/views/errata/_show.html.haml:80
 #: app/views/system_templates/_new.html.haml:15
-#: app/views/activation_keys/_edit.html.haml:42
+#: app/views/system_templates/_edit.html.haml:7
+#: app/views/changesets/_new.html.haml:15 app/views/products/_new.html.haml:13
+#: app/views/products/_edit.html.haml:21
+#: app/views/environments/_new.html.haml:19
+#: app/views/environments/_edit.html.haml:23
 #: app/views/activation_keys/_new.html.haml:15
+#: app/views/activation_keys/_edit.html.haml:42
+#: app/views/filters/_new.html.haml:18 app/views/filters/_edit.html.haml:27
+#: app/views/roles/_new.html.haml:14 app/views/notices/show.html.haml:29
 #: app/views/sync_plans/_form.html.haml:10
 #: app/views/sync_plans/_edit.html.haml:20
 #: app/views/packages/_show.html.haml:17
+#: app/views/providers/_form.html.haml:12
+#: app/views/providers/_edit.html.haml:28 app/views/systems/_edit.html.haml:37
 msgid "Description"
 msgstr "概要"
 
-#: app/views/changesets/_edit.html.haml:16
-#: app/views/promotions/show.html.haml:118 app/views/roles/_edit.html.haml:40
-#: app/views/roles/_edit.html.haml:76
+#: app/views/changesets/_edit.html.haml:16 app/views/roles/_edit.html.haml:40
+#: app/views/roles/_edit.html.haml:76 app/views/promotions/show.html.haml:123
 #, fuzzy
 msgid "Description:"
 msgstr "概要"
 
-#: app/views/changesets/_edit.html.haml:5
-#: lib/navigation/content_management.rb:175
-#: lib/navigation/content_management.rb:204
-#: lib/navigation/content_management.rb:221
-#: lib/navigation/content_management.rb:251 config/headpin_navigation.rb:51
-#: config/headpin_navigation.rb:57 config/headpin_navigation.rb:61
-#: config/katello_navigation.rb:48 config/katello_navigation.rb:54
-#: config/katello_navigation.rb:58
+#: app/views/changesets/_edit.html.haml:5 lib/navigation/administration.rb:35
+#: lib/navigation/systems.rb:84 lib/navigation/systems.rb:107
+#: lib/navigation/content_management.rb:35
+#: lib/navigation/content_management.rb:193
+#: lib/navigation/content_management.rb:210
+#: lib/navigation/content_management.rb:227
+#: lib/navigation/content_management.rb:251
+#: lib/navigation/content_management.rb:268 lib/navigation/organization.rb:51
 msgid "Details"
 msgstr ""
 
@@ -834,17 +909,17 @@ msgstr ""
 msgid "Disable/enable is not supported for custom repositories."
 msgstr ""
 
-#: app/controllers/users_controller.rb:237
+#: app/controllers/users_controller.rb:246
 msgid "Disabled help tips have been re-enabled."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
 #: app/views/dashboard/_systems.html.haml:17
+#: app/views/promotions/show.html.haml:8
 #, fuzzy
 msgid "Distribution"
 msgstr "概要"
 
-#: app/models/system_template.rb:303
+#: app/models/system_template.rb:314
 #, fuzzy
 msgid "Distribution '%s' not found in this template."
 msgstr "コンテンツ管理"
@@ -853,10 +928,10 @@ msgstr "コンテンツ管理"
 msgid "Distribution '%s' was not found in Pulp."
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:64 app/helpers/breadcrumb_helper.rb:169
+#: app/helpers/breadcrumb_helper.rb:65 app/helpers/breadcrumb_helper.rb:170
 #: app/views/changesets/_edit.html.haml:58
-#: app/views/promotions/show.html.haml:7
 #: app/views/promotions/_detail.html.haml:30
+#: app/views/promotions/show.html.haml:8
 #, fuzzy
 msgid "Distributions"
 msgstr "概要"
@@ -871,13 +946,14 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
+#: app/views/organizations/_download_debug_certificate.html.haml:11
 #: app/views/system_templates/_download.html.haml:12
-#: app/views/system_templates/index.html.haml:106
+#: app/views/system_templates/index.html.haml:98
 #: app/views/packages/_show.html.haml:82
 msgid "Download"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:83
+#: app/views/system_templates/index.html.haml:75
 #, fuzzy
 msgid "Download System Template"
 msgstr "システム"
@@ -887,15 +963,15 @@ msgstr "システム"
 msgid "Duration"
 msgstr "概要"
 
-#: app/views/promotions/show.html.haml:7
-#: app/views/promotions/show.html.haml:133
-#: app/views/system_templates/index.html.haml:12
-#: app/views/system_templates/index.html.haml:91
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/index.html.haml:83
+#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:138
 msgid "Edit Details"
 msgstr ""
 
-#: app/views/systems/_new.html.haml:3
 #: app/views/activation_keys/_edit.html.haml:5
+#: app/views/systems/_new.html.haml:4
 #, fuzzy
 msgid "Edit Environment"
 msgstr "環境"
@@ -910,7 +986,7 @@ msgstr ""
 msgid "Edit Package Filters"
 msgstr ""
 
-#: app/views/roles/_edit.html.haml:98 app/views/roles/index.html.haml:9
+#: app/views/roles/index.html.haml:9 app/views/roles/_edit.html.haml:98
 #, fuzzy
 msgid "Edit Permission"
 msgstr "アクセス許可を追加する"
@@ -937,23 +1013,27 @@ msgstr "編集する"
 msgid "Edit Role Details"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:80
+#: app/views/system_templates/index.html.haml:72
 msgid "Edit System Template"
 msgstr ""
 
-#: app/controllers/api/activation_keys_controller.rb:108
-#: app/controllers/api/products_controller.rb:81
+#: app/controllers/api/products_controller.rb:83
+#: app/controllers/api/activation_keys_controller.rb:107
 msgid "Either organization id or environment id needs to be specified"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:115
+#: app/controllers/api/system_packages_controller.rb:93
+msgid "Either packages or groups  must be provided"
+msgstr ""
+
+#: app/views/system_templates/index.html.haml:107
 #, fuzzy
 msgid "Eligible Content"
 msgstr "コンテンツロッカー"
 
-#: app/views/users/_edit_form.html.haml:67 app/views/users/_new.html.haml:43
 #: app/views/password_resets/new.html.haml:16
 #: app/views/password_resets/new.html.haml:26
+#: app/views/users/_new.html.haml:42 app/views/users/_edit_form.html.haml:67
 msgid "Email Address:"
 msgstr ""
 
@@ -961,8 +1041,14 @@ msgstr ""
 msgid "Email sent to '%{e}' with password reset instructions."
 msgstr ""
 
-#: app/controllers/password_resets_controller.rb:68
+#: app/controllers/password_resets_controller.rb:72
 msgid "Email sent to '%{e}' with valid login user names."
+msgstr ""
+
+#: app/controllers/system_packages_controller.rb:56
+#: app/controllers/system_packages_controller.rb:89
+msgid ""
+"Empty request received to install Packages or Package Groups System '%{s}'."
 msgstr ""
 
 #: app/views/providers/redhat/show.html.haml:42
@@ -978,11 +1064,16 @@ msgstr ""
 msgid "End Date"
 msgstr ""
 
-#: app/views/users/_new.html.haml:57 app/views/environments/_edit.html.haml:5
+#: app/views/system_packages/_packages.html.haml:88
+msgid "Enter Selected Content..."
+msgstr ""
+
 #: app/views/system_templates/_download.html.haml:8
-#: app/views/activation_keys/_edit.html.haml:49
-#: app/views/activation_keys/_new.html.haml:22
 #: app/views/dashboard/_errata.haml:31
+#: app/views/environments/_edit.html.haml:5
+#: app/views/activation_keys/_new.html.haml:22
+#: app/views/activation_keys/_edit.html.haml:49
+#: app/views/users/_new.html.haml:56
 msgid "Environment"
 msgstr "環境"
 
@@ -996,7 +1087,7 @@ msgstr "環境"
 msgid "Environment Name"
 msgstr "環境"
 
-#: app/views/organizations/_edit.html.haml:21
+#: app/views/organizations/_edit.html.haml:22
 msgid "Environment Promotion Paths"
 msgstr "環境"
 
@@ -1004,21 +1095,25 @@ msgstr "環境"
 msgid "Environment cannot be in its own promotion path"
 msgstr ""
 
-#: app/models/resource_type.rb:93 lib/navigation/administration.rb:29
+#: app/views/systems/_new.html.haml:45
+#, fuzzy
+msgid "Environment:"
+msgstr "環境"
+
+#: app/models/resource_type.rb:93 lib/navigation/administration.rb:23
 msgid "Environments"
 msgstr "環境"
 
-#: app/helpers/breadcrumb_helper.rb:52 app/helpers/breadcrumb_helper.rb:125
-#: app/helpers/breadcrumb_helper.rb:156
-#: app/views/changesets/_edit.html.haml:54
-#: app/views/promotions/show.html.haml:7
+#: app/helpers/breadcrumb_helper.rb:53 app/helpers/breadcrumb_helper.rb:126
+#: app/helpers/breadcrumb_helper.rb:157
+#: app/views/changesets/_edit.html.haml:54 app/views/dashboard/_errata.haml:9
 #: app/views/promotions/_detail.html.haml:9
 #: app/views/promotions/_detail.html.haml:22
-#: app/views/dashboard/_errata.haml:9
+#: app/views/promotions/show.html.haml:8
 msgid "Errata"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "Erratum"
 msgstr ""
 
@@ -1035,14 +1130,15 @@ msgstr ""
 msgid "Error while deleting provider [ %s ]: %s"
 msgstr ""
 
-#: app/models/system_template.rb:130
+#: app/models/system_template.rb:133
 msgid "Exactly one distribution must be present to export a TDL"
 msgstr ""
 
+#: app/views/organizations/_download_debug_certificate.html.haml:6
 #: app/views/changesets/_content_type.html.haml:7
-#: app/views/providers/_products_repos.html.haml:36
-#: app/views/common/_env_select.html.haml:8
 #: app/views/activation_keys/_subscriptions.html.haml:22
+#: app/views/common/_env_select.html.haml:8
+#: app/views/providers/_products_repos.html.haml:36
 msgid "Expand"
 msgstr ""
 
@@ -1050,8 +1146,9 @@ msgstr ""
 msgid "Expand/Contract All"
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:19 app/views/systems/_subs.html.haml:65
 #: app/views/subscriptions/index.html.haml:20
+#: app/views/providers/redhat/_subscription_details.html.haml:11
+#: app/views/systems/_subs.html.haml:19 app/views/systems/_subs.html.haml:65
 msgid "Expires"
 msgstr ""
 
@@ -1059,27 +1156,32 @@ msgstr ""
 msgid "Fact"
 msgstr ""
 
-#: lib/navigation/systems.rb:84 config/headpin_navigation.rb:78
-#: config/headpin_navigation.rb:87 config/katello_navigation.rb:75
-#: config/katello_navigation.rb:85
+#: lib/navigation/systems.rb:78
 msgid "Facts"
 msgstr ""
 
-#: app/views/products/_new.html.haml:37
 #: app/views/distributions/_filelist.html.haml:14
+#: app/views/products/_new.html.haml:37
 msgid "File"
 msgstr ""
 
-#: lib/navigation/content_management.rb:193
-#: lib/navigation/content_management.rb:227 config/headpin_navigation.rb:54
-#: config/headpin_navigation.rb:62 config/katello_navigation.rb:51
-#: config/katello_navigation.rb:59
+#: lib/navigation/content_management.rb:187
+#: lib/navigation/content_management.rb:221
 msgid "Filelist"
 msgstr ""
 
-#: app/controllers/filters_controller.rb:205 app/views/layouts/_org.haml:12
-#: app/views/common/_filter_table.html.haml:3
+#: app/controllers/filters_controller.rb:217
+#: app/views/system_templates/index.html.haml:51
+#: app/views/roles/_edit.html.haml:14 app/views/roles/_edit.html.haml:18
+#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:102
+#: app/views/promotions/show.html.haml:104
+#: app/views/promotions/show.html.haml:105 app/views/layouts/_org.haml:12
 msgid "Filter"
+msgstr ""
+
+#: app/views/system_packages/_packages.html.haml:62
+msgid "Filter on loaded packages..."
 msgstr ""
 
 #: app/views/common/_filter_table.html.haml:2
@@ -1103,14 +1205,14 @@ msgid "Full Access"
 msgstr ""
 
 #: app/views/changesets/_edit.html.haml:43
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "Full Products"
 msgstr "追加製品"
 
 #: app/controllers/gpg_keys_controller.rb:159
-#: app/views/products/_edit.html.haml:26 app/views/products/_new.html.haml:18
-#: app/views/repositories/_edit.html.haml:27
+#: app/views/products/_new.html.haml:18 app/views/products/_edit.html.haml:26
 #: app/views/repositories/_new.html.haml:25
+#: app/views/repositories/_edit.html.haml:27
 msgid "GPG Key"
 msgstr ""
 
@@ -1131,17 +1233,7 @@ msgid ""
 "associated with the given entity."
 msgstr ""
 
-#: lib/navigation/systems.rb:60 lib/navigation/systems.rb:95
-#: lib/navigation/content_management.rb:262
-#: lib/navigation/administration.rb:23 config/headpin_navigation.rb:75
-#: config/headpin_navigation.rb:85 config/headpin_navigation.rb:94
-#: config/headpin_navigation.rb:113 config/katello_navigation.rb:72
-#: config/katello_navigation.rb:82 config/katello_navigation.rb:92
-#: config/katello_navigation.rb:111
-msgid "General"
-msgstr ""
-
-#: app/helpers/breadcrumb_helper.rb:242
+#: app/helpers/breadcrumb_helper.rb:243
 #, fuzzy
 msgid "Global Permissions"
 msgstr "アクセス許可を追加する"
@@ -1159,8 +1251,8 @@ msgid ""
 "with."
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:3
 #: app/views/password_resets/edit.html.haml:5
+#: app/views/users/_edit_form.html.haml:3
 msgid "Good"
 msgstr ""
 
@@ -1168,19 +1260,23 @@ msgstr ""
 msgid "Group"
 msgstr "グループ"
 
-#: app/views/systems/_edit.html.haml:32
+#: app/views/systems/_edit.html.haml:83
 msgid "Guest"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:43
+#: app/views/systems/_edit.html.haml:94
 msgid "Guests"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:35 app/views/systems/_edit.html.haml:40
+#: lib/navigation/organization.rb:57
+msgid "History"
+msgstr ""
+
+#: app/views/systems/_edit.html.haml:86 app/views/systems/_edit.html.haml:91
 msgid "Host"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:25
+#: app/views/systems/_edit.html.haml:76
 msgid "Host & Guest Info"
 msgstr ""
 
@@ -1188,12 +1284,12 @@ msgstr ""
 msgid "I remembered my login credentials."
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:17
+#: app/views/systems/_edit.html.haml:21
 msgid "ID"
 msgstr ""
 
 #: app/views/systems/_list_system_show.html.haml:18
-#: app/views/systems/_list_system.html.haml:19
+#: app/views/systems/_list_system.html.haml:21
 msgid "IP: "
 msgstr ""
 
@@ -1236,6 +1332,14 @@ msgstr "環境"
 msgid "Inline Help Enabled:"
 msgstr ""
 
+#: app/controllers/system_packages_controller.rb:53
+msgid "Install of Package Groups '%{g}' scheduled for System '%{s}'."
+msgstr ""
+
+#: app/controllers/system_packages_controller.rb:43
+msgid "Install of Packages '%{p}' scheduled for System '%{s}'."
+msgstr ""
+
 #: app/views/dashboard/_subscriptions.haml:26
 msgid "Insufficient Entitlements"
 msgstr ""
@@ -1250,7 +1354,7 @@ msgstr ""
 msgid "Invalid Subscriptions"
 msgstr "サブスクリプション"
 
-#: app/controllers/repositories_controller.rb:53
+#: app/controllers/repositories_controller.rb:55
 msgid "Invalid Url"
 msgstr ""
 
@@ -1260,7 +1364,7 @@ msgid ""
 "'%{possible_types}'"
 msgstr ""
 
-#: app/controllers/changesets_controller.rb:165
+#: app/controllers/changesets_controller.rb:159
 msgid "Invalid state"
 msgstr ""
 
@@ -1282,7 +1386,7 @@ msgstr ""
 msgid "It is not allowed to import manifest for a custom provider."
 msgstr ""
 
-#: app/helpers/application_helper.rb:29
+#: app/helpers/branding_helper.rb:16
 msgid "Katello"
 msgstr ""
 
@@ -1303,7 +1407,6 @@ msgid "Katello Version: "
 msgstr ""
 
 #: app/views/systems/_list_system_show.html.haml:15
-#: app/views/systems/_list_system.html.haml:16
 msgid "Kernel: "
 msgstr ""
 
@@ -1312,7 +1415,7 @@ msgstr ""
 msgid "Key"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:98
+#: app/views/systems/_edit.html.haml:72
 msgid "Last Booted"
 msgstr ""
 
@@ -1325,7 +1428,7 @@ msgstr ""
 msgid "Latest Notifications"
 msgstr "通知"
 
-#: app/views/notices/show.html.haml:24
+#: app/views/notices/show.html.haml:27
 msgid "Level"
 msgstr ""
 
@@ -1333,8 +1436,7 @@ msgstr ""
 msgid "License"
 msgstr ""
 
-#: lib/navigation/organization.rb:28 config/headpin_navigation.rb:106
-#: config/katello_navigation.rb:104
+#: lib/navigation/organization.rb:34
 msgid "List"
 msgstr ""
 
@@ -1355,13 +1457,13 @@ msgstr ""
 msgid "Loading"
 msgstr "コンテンツ管理"
 
-#: app/views/dashboard/_ajax_entry.html.haml:10
+#: app/views/dashboard/_ajax_entry.html.haml:11
 #, fuzzy
 msgid "Loading "
 msgstr "コンテンツ管理"
 
-#: app/views/promotions/show.html.haml:7
-#: app/views/promotions/show.html.haml:106
+#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:111
 msgid "Loading Changeset"
 msgstr "コンテンツ管理"
 
@@ -1375,20 +1477,20 @@ msgstr "アクセス許可を追加する"
 msgid "Loading Role"
 msgstr "コンテンツ管理"
 
-#: app/views/system_templates/index.html.haml:69
+#: app/views/system_templates/index.html.haml:61
 msgid "Loading System Template"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "Loading dependencies."
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:79
+#: app/views/systems/_edit.html.haml:53
 msgid "Location"
 msgstr "通知"
 
 #: app/controllers/environments_controller.rb:91
-#: app/views/organizations/_edit.html.haml:31
+#: app/views/organizations/_edit.html.haml:32
 msgid "Locker"
 msgstr "コンテンツロッカー"
 
@@ -1413,7 +1515,7 @@ msgstr "ログイン成功"
 msgid "Login Unknown"
 msgstr ""
 
-#: app/views/layouts/_header.haml:22 app/views/layouts/_footer.haml:4
+#: app/views/layouts/_header.haml:23 app/views/layouts/_footer.haml:4
 msgid "Logout"
 msgstr "ログアウト"
 
@@ -1421,40 +1523,45 @@ msgstr "ログアウト"
 msgid "Logout Successful"
 msgstr "ログアウト成功"
 
-#: app/models/system_template.rb:354
+#: app/views/subscriptions/index.html.haml:18
+#: app/views/providers/redhat/_subscription_details.html.haml:9
+msgid "Machine Type"
+msgstr ""
+
+#: app/models/system_template.rb:365
 msgid "Manage All System Templates"
 msgstr ""
 
-#: app/models/kt_environment.rb:317
+#: app/models/kt_environment.rb:318
 #, fuzzy
 msgid "Manage Changesets in Environment"
 msgstr "環境を作成する"
 
-#: app/models/organization.rb:113
+#: app/models/organization.rb:132
 #, fuzzy
 msgid "Manage GPG Keys"
 msgstr "システム"
 
-#: app/models/organization.rb:106
+#: app/models/organization.rb:125
 msgid "Manage Organization and Environments"
 msgstr ""
 
-#: app/models/provider.rb:115
+#: app/models/provider.rb:124
 #, fuzzy
 msgid "Manage Provider and Products"
 msgstr "コンテンツプロバイダー"
 
-#: app/models/organization.rb:110
+#: app/models/organization.rb:129
 #, fuzzy
 msgid "Manage Systems"
 msgstr "システム"
 
-#: app/models/kt_environment.rb:314
+#: app/models/kt_environment.rb:315
 #, fuzzy
 msgid "Manage Systems in Environment"
 msgstr "環境を作成する"
 
-#: app/models/activation_key.rb:66
+#: app/models/activation_key.rb:144
 msgid "Manage all Activation Keys"
 msgstr ""
 
@@ -1462,6 +1569,7 @@ msgstr ""
 msgid "Manifest import for provider [ %s ] failed"
 msgstr ""
 
+#: app/views/organizations/_events.html.haml:16
 #: app/views/providers/redhat/_import_history.html.haml:3
 msgid "Message"
 msgstr ""
@@ -1470,42 +1578,39 @@ msgstr ""
 msgid "More >>"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:175
+#: app/views/promotions/show.html.haml:186
 msgid "More details"
 msgstr ""
 
-#: app/views/systems/_packages.html.haml:27
 #: app/views/systems/_products.html.haml:24
 msgid "More..."
 msgstr ""
 
-#: app/models/changeset.rb:37
+#: app/models/changeset.rb:43
 msgid "Must be unique within an environment"
 msgstr ""
 
-#: app/views/changesets/_new.html.haml:10
-#: app/views/providers/_form.html.haml:6
-#: app/views/providers/_edit.html.haml:22
-#: app/views/providers/redhat/_subscription_details.html.haml:4
-#: app/views/products/_edit.html.haml:16 app/views/products/_new.html.haml:8
-#: app/views/roles/_new.html.haml:9 app/views/organizations/_new.html.haml:12
-#: app/views/environments/_edit.html.haml:18
-#: app/views/environments/_new.html.haml:13
 #: app/views/distributions/_show.html.haml:11
-#: app/views/gpg_keys/_edit.html.haml:25 app/views/gpg_keys/_new.html.haml:9
-#: app/views/systems/_edit.html.haml:59
-#: app/views/systems/_packages.html.haml:16
-#: app/views/filters/_edit.html.haml:22 app/views/filters/_new.html.haml:13
-#: app/views/system_templates/_edit.html.haml:4
+#: app/views/organizations/_new.html.haml:12
 #: app/views/system_templates/_new.html.haml:10
 #: app/views/system_templates/_promotion_details.html.haml:9
-#: app/views/activation_keys/_edit.html.haml:37
+#: app/views/system_templates/_edit.html.haml:4
+#: app/views/system_packages/_packages.html.haml:68
+#: app/views/changesets/_new.html.haml:10 app/views/products/_new.html.haml:8
+#: app/views/products/_edit.html.haml:16
+#: app/views/environments/_new.html.haml:13
+#: app/views/environments/_edit.html.haml:18
 #: app/views/activation_keys/_new.html.haml:9
-#: app/views/sync_plans/_form.html.haml:5
+#: app/views/activation_keys/_edit.html.haml:37
+#: app/views/filters/_new.html.haml:13 app/views/filters/_edit.html.haml:22
+#: app/views/gpg_keys/_new.html.haml:9 app/views/gpg_keys/_edit.html.haml:25
+#: app/views/roles/_new.html.haml:9 app/views/sync_plans/_form.html.haml:5
 #: app/views/sync_plans/_edit.html.haml:17
-#: app/views/repositories/_edit.html.haml:17
 #: app/views/repositories/_new.html.haml:15
-#: app/views/packages/_show.html.haml:11
+#: app/views/repositories/_edit.html.haml:17
+#: app/views/packages/_show.html.haml:11 app/views/providers/_form.html.haml:6
+#: app/views/providers/redhat/_subscription_details.html.haml:4
+#: app/views/providers/_edit.html.haml:22 app/views/systems/_edit.html.haml:33
 msgid "Name"
 msgstr "名"
 
@@ -1513,14 +1618,13 @@ msgstr "名"
 msgid "Name can not be blank."
 msgstr ""
 
-#: app/views/systems/_new.html.haml:17
+#: app/views/systems/_new.html.haml:18
 msgid "Name of Your System:"
 msgstr ""
 
-#: app/views/changesets/_edit.html.haml:11
 #: app/views/changesets/_name.html.haml:3
-#: app/views/promotions/show.html.haml:115 app/views/roles/_edit.html.haml:35
-#: app/views/roles/_edit.html.haml:73
+#: app/views/changesets/_edit.html.haml:11 app/views/roles/_edit.html.haml:35
+#: app/views/roles/_edit.html.haml:73 app/views/promotions/show.html.haml:120
 msgid "Name:"
 msgstr "名"
 
@@ -1536,12 +1640,12 @@ msgstr ""
 msgid "New Changeset"
 msgstr "コンテンツ管理"
 
-#: app/views/users/_edit_environment.html.haml:29
+#: app/views/users/_edit_environment.html.haml:36
 #, fuzzy
 msgid "New Default Environment"
 msgstr "環境を作成する"
 
-#: app/views/users/_edit_environment.html.haml:22
+#: app/views/users/_edit_environment.html.haml:29
 #, fuzzy
 msgid "New Default Organization:"
 msgstr "新しい組織"
@@ -1575,11 +1679,11 @@ msgstr ""
 msgid "New System Template"
 msgstr ""
 
-#: app/views/users/_new.html.haml:10
+#: app/views/users/_new.html.haml:9
 msgid "New User"
 msgstr "ユーザー"
 
-#: app/views/systems/_new.html.haml:11 app/views/systems/_new.html.haml:48
+#: app/views/systems/_new.html.haml:12 app/views/systems/_new.html.haml:55
 #, fuzzy
 msgid "New system"
 msgstr "システム"
@@ -1605,7 +1709,7 @@ msgstr "なし"
 msgid "No Subscriptions Available"
 msgstr "サブスクリプション"
 
-#: app/views/system_templates/index.html.haml:12
+#: app/views/system_templates/index.html.haml:6
 msgid "No System Templates are currently defined"
 msgstr ""
 
@@ -1622,16 +1726,17 @@ msgstr ""
 msgid "No changesets found."
 msgstr "コンテンツ管理"
 
-#: app/views/users/_edit_environment.html.haml:34
-#: app/views/users/_new.html.haml:4 app/views/users/_new.html.haml:62
+#: app/views/users/_new.html.haml:3 app/views/users/_new.html.haml:61
+#: app/views/users/_edit_environment.html.haml:3
+#: app/views/users/_edit_environment.html.haml:41
 msgid ""
 "No default environment. Select an organization to choose from available "
 "environments."
 msgstr ""
 
-#: app/controllers/users_controller.rb:187
-#: app/views/users/_edit_environment.html.haml:12
-#: app/views/users/_edit_environment.html.haml:16
+#: app/controllers/users_controller.rb:196
+#: app/views/users/_edit_environment.html.haml:19
+#: app/views/users/_edit_environment.html.haml:23
 msgid "No default set for this user."
 msgstr ""
 
@@ -1640,12 +1745,12 @@ msgstr ""
 msgid "No distributions available."
 msgstr "サブスクリプション"
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 #, fuzzy
 msgid "No distributions exist in this changeset."
 msgstr "コンテンツ管理"
 
-#: app/views/organizations/_edit.html.haml:40
+#: app/views/organizations/_edit.html.haml:41
 msgid ""
 "No environments are available in this organization. Please add some "
 "environments to be able register systems to this organization."
@@ -1657,13 +1762,13 @@ msgid ""
 "some to be able to create activation keys."
 msgstr ""
 
-#: app/views/users/_new.html.haml:64 app/views/common/_env_select.html.haml:2
+#: app/views/common/_env_select.html.haml:2 app/views/users/_new.html.haml:63
 msgid ""
 "No environments are currently available in this organization.  Please add "
 "some to be able to set user default."
 msgstr ""
 
-#: app/views/users/_edit_environment.html.haml:36
+#: app/views/users/_edit_environment.html.haml:43
 msgid ""
 "No environments are currently available in this organization. Saving will "
 "set user to no default environment."
@@ -1673,13 +1778,22 @@ msgstr ""
 msgid "No errata available."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "No errata exist in this changeset."
 msgstr ""
 
 #: app/models/errors.rb:43
 msgid "No errors"
 msgstr ""
+
+#: app/views/organizations/_events.html.haml:27
+msgid "No event history found for %s"
+msgstr ""
+
+#: app/models/system_task.rb:127
+#, fuzzy
+msgid "No new packages installed"
+msgstr "リポジトリーの追加"
 
 #: app/views/system_templates/_product_comps.html.haml:3
 msgid "No package groups available."
@@ -1697,23 +1811,32 @@ msgstr ""
 msgid "No packages available."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "No packages exist in this changeset."
 msgstr ""
 
-#: app/views/promotions/_products.html.haml:5
+#: app/models/system_task.rb:125
+msgid "No packages removed"
+msgstr ""
+
+#: app/models/system_task.rb:123
+#, fuzzy
+msgid "No packages updated"
+msgstr "役割は、更新された"
+
 #: app/views/system_templates/_products.html.haml:5
+#: app/views/promotions/_products.html.haml:5
 msgid "No products"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:12
+#: app/views/system_templates/index.html.haml:6
 msgid ""
 "No products are currently associated with this system template.  Please "
 "associate a product that contains distributions in order to select a "
 "distribution."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 #, fuzzy
 msgid "No products exist in the changeset."
 msgstr "コンテンツ管理"
@@ -1730,16 +1853,26 @@ msgstr ""
 msgid "No repos available for promotion"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/system_templates/_repositories.html.haml:3
+#, fuzzy
+msgid "No repositories"
+msgstr "リポジトリーの追加"
+
+#: app/views/system_templates/_product_repos.html.haml:3
+#, fuzzy
+msgid "No repositories available."
+msgstr "サブスクリプション"
+
+#: app/views/promotions/show.html.haml:8
 msgid "No repositories exist in this changeset."
 msgstr ""
 
-#: app/views/providers/redhat/_subscription_details.html.haml:41
+#: app/views/providers/redhat/_subscription_details.html.haml:55
 #, fuzzy
 msgid "No subscriptions have been imported."
 msgstr "サブスクリプション"
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "No system templates exist in the changeset."
 msgstr ""
 
@@ -1749,11 +1882,11 @@ msgstr ""
 
 #: app/models/product.rb:96 app/views/roles/_closed_permission.html.haml:13
 #: app/views/systems/_subscription_details.html.haml:7
-#: app/views/systems/_edit.html.haml:46 app/views/systems/_edit.html.haml:99
+#: app/views/systems/_edit.html.haml:73 app/views/systems/_edit.html.haml:97
 msgid "None"
 msgstr "なし"
 
-#: app/views/system_templates/index.html.haml:12
+#: app/views/system_templates/index.html.haml:6
 msgid ""
 "None of the associated products contain distributions, please select a "
 "product that contains at least one distribution."
@@ -1768,16 +1901,32 @@ msgstr "なし"
 msgid "Not Applied"
 msgstr ""
 
+#: app/models/activation_key.rb:71
+msgid "Not enough entitlements in pools (%d), required: %d, available: %d"
+msgstr ""
+
 #: app/views/organizations/_new.html.haml:34
 msgid "Note: This will be set as your initial default environment."
 msgstr ""
 
-#: app/views/systems/_new.html.haml:27
+#: app/views/systems/_new.html.haml:28
 msgid "Number of Sockets or LPARs:"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:67
+#: app/models/activation_key.rb:88
+msgid "Number of consumed entitlements exceeded quantity for %s"
+msgstr ""
+
+#: app/models/activation_key.rb:95
+msgid "Number of sockets must be higher than 0 for system %s"
+msgstr ""
+
+#: app/views/systems/_edit.html.haml:41
 msgid "OS"
+msgstr ""
+
+#: app/views/systems/_list_system.html.haml:15
+msgid "OS: "
 msgstr ""
 
 #: app/views/providers/_products_repos.html.haml:18
@@ -1793,7 +1942,24 @@ msgstr ""
 msgid "On:"
 msgstr ""
 
-#: app/models/provider.rb:51
+#: app/controllers/system_packages_controller.rb:45
+#: app/controllers/system_packages_controller.rb:78
+msgid "One or more errors found in Package names '%{s}'."
+msgstr ""
+
+#: app/views/system_packages/_packages.html.haml:6
+msgid "One or more of the groups provided has an action pending."
+msgstr ""
+
+#: app/views/system_packages/_packages.html.haml:6
+msgid "One or more of the packages provided has an action pending."
+msgstr ""
+
+#: app/views/system_packages/_packages.html.haml:6
+msgid "One or more package names are invalid."
+msgstr ""
+
+#: app/models/provider.rb:60
 msgid "Only one Red Hat provider permitted for an Organization"
 msgstr ""
 
@@ -1801,17 +1967,21 @@ msgstr ""
 msgid "Only show syncing."
 msgstr ""
 
-#: app/helpers/application_helper.rb:33
+#: app/helpers/branding_helper.rb:20
 msgid "Open Source Systems Management"
 msgstr ""
 
-#: app/controllers/organizations_controller.rb:182
+#: app/controllers/organizations_controller.rb:201
 msgid "Organization"
 msgstr "組織"
 
-#: app/controllers/organizations_controller.rb:180
-#: app/models/resource_type.rb:91 lib/navigation/organization.rb:17
-#: config/headpin_navigation.rb:105 config/katello_navigation.rb:103
+#: app/controllers/organizations_controller.rb:136
+msgid "Organization '%s' has been scheduled for background deletion."
+msgstr ""
+
+#: app/models/resource_type.rb:91
+#: app/controllers/organizations_controller.rb:199
+#: lib/navigation/organization.rb:23
 msgid "Organizations"
 msgstr "組織"
 
@@ -1822,16 +1992,16 @@ msgid ""
 "organization and then click on the desired environment."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
 #: app/views/errata/_packages.html.haml:15
+#: app/views/promotions/show.html.haml:8
 msgid "Package"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:76
+#: app/views/promotions/show.html.haml:81
 msgid "Package Dependencies"
 msgstr ""
 
-#: app/controllers/filters_controller.rb:203
+#: app/controllers/filters_controller.rb:215
 #: lib/navigation/content_management.rb:153
 #, fuzzy
 msgid "Package Filters"
@@ -1849,50 +2019,83 @@ msgstr ""
 msgid "Package Group"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:376 app/helpers/breadcrumb_helper.rb:398
-#: app/views/system_templates/_product_detail.html.haml:7
-#: app/views/system_templates/index.html.haml:12
+#: app/models/system_task.rb:21 app/models/system_task.rb:56
+#, fuzzy
+msgid "Package Group Install"
+msgstr "グループ"
+
+#: app/models/system_task.rb:23 app/models/system_task.rb:58
+#, fuzzy
+msgid "Package Group Remove"
+msgstr "グループ"
+
+#: app/models/system_task.rb:22 app/models/system_task.rb:57
+#, fuzzy
+msgid "Package Group Update"
+msgstr "グループ"
+
+#: app/helpers/breadcrumb_helper.rb:381 app/helpers/breadcrumb_helper.rb:401
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/_product_detail.html.haml:10
+#: app/views/system_packages/_packages.html.haml:79
 #, fuzzy
 msgid "Package Groups"
+msgstr "グループ"
+
+#: app/models/system_task.rb:18 app/models/system_task.rb:53
+#, fuzzy
+msgid "Package Install"
+msgstr "グループ"
+
+#: app/models/system_task.rb:20 app/models/system_task.rb:55
+#, fuzzy
+msgid "Package Remove"
 msgstr "グループ"
 
 #: app/views/packages/_show.html.haml:46
 msgid "Package Size"
 msgstr ""
 
-#: app/models/system_template.rb:280
+#: app/models/system_task.rb:19 app/models/system_task.rb:54
+#, fuzzy
+msgid "Package Update"
+msgstr "グループ"
+
+#: app/models/system_template.rb:291
 msgid "Package group '%s' not found in this template."
 msgstr ""
 
-#: app/models/system_template.rb:292
+#: app/models/system_template.rb:303
 msgid "Package group category '%s' not found in this template."
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:48 app/helpers/breadcrumb_helper.rb:152
-#: app/helpers/breadcrumb_helper.rb:372 app/helpers/breadcrumb_helper.rb:396
-#: app/views/changesets/_edit.html.haml:52
-#: app/views/promotions/show.html.haml:7
-#: app/views/promotions/_detail.html.haml:18
-#: app/views/system_templates/_product_detail.html.haml:4
-#: app/views/system_templates/index.html.haml:12
+#: app/helpers/breadcrumb_helper.rb:49 app/helpers/breadcrumb_helper.rb:153
+#: app/helpers/breadcrumb_helper.rb:377 app/helpers/breadcrumb_helper.rb:398
 #: app/views/system_templates/_promotion_details.html.haml:29
-#: lib/navigation/systems.rb:78 lib/navigation/content_management.rb:210
-#: config/headpin_navigation.rb:58 config/headpin_navigation.rb:79
-#: config/headpin_navigation.rb:88 config/katello_navigation.rb:55
-#: config/katello_navigation.rb:76 config/katello_navigation.rb:86
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/_product_detail.html.haml:7
+#: app/views/system_packages/_packages.html.haml:77
+#: app/views/changesets/_edit.html.haml:52
+#: app/views/promotions/_detail.html.haml:18
+#: app/views/promotions/show.html.haml:8 lib/navigation/systems.rb:72
+#: lib/navigation/content_management.rb:204
 msgid "Packages"
 msgstr ""
 
-#: app/models/system_template.rb:268
+#: app/controllers/api/system_packages_controller.rb:103
+msgid "Packages must be provided"
+msgstr ""
+
+#: app/models/system_template.rb:279
 msgid "Parameter '%s' not found in the template."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "Partial Products"
 msgstr "作成"
 
-#: app/views/users/_edit_form.html.haml:3
 #: app/views/password_resets/edit.html.haml:5
+#: app/views/users/_edit_form.html.haml:3
 msgid "Password Strength"
 msgstr ""
 
@@ -1900,7 +2103,7 @@ msgstr ""
 msgid "Password Unknown"
 msgstr ""
 
-#: app/controllers/password_resets_controller.rb:53
+#: app/controllers/password_resets_controller.rb:57
 msgid "Password has been reset for user '%{s}'."
 msgstr ""
 
@@ -1909,8 +2112,8 @@ msgstr ""
 msgid "Password reset token has expired for user '%{s}'."
 msgstr ""
 
-#: app/views/users/_new.html.haml:26
 #: app/views/password_resets/edit.html.haml:22
+#: app/views/users/_new.html.haml:25
 msgid "Password:"
 msgstr ""
 
@@ -1931,7 +2134,7 @@ msgstr ""
 msgid "Permission For:"
 msgstr "アクセス許可を追加する"
 
-#: app/helpers/breadcrumb_helper.rb:238
+#: app/helpers/breadcrumb_helper.rb:239
 msgid "Permissions"
 msgstr "アクセス許可を追加する"
 
@@ -1939,8 +2142,10 @@ msgstr "アクセス許可を追加する"
 msgid "Permissions for this role."
 msgstr ""
 
+#: app/models/system.rb:71 app/controllers/activation_keys_controller.rb:340
+#: app/controllers/providers_controller.rb:281
+#: app/controllers/subscriptions_controller.rb:57
 #: app/helpers/systems_helper.rb:42
-#: app/controllers/activation_keys_controller.rb:340 app/models/system.rb:60
 msgid "Physical"
 msgstr ""
 
@@ -1954,13 +2159,13 @@ msgstr ""
 msgid "Plan"
 msgstr ""
 
+#: app/controllers/api/systems_controller.rb:80
 #: app/controllers/api/subscriptions_controller.rb:36
-#: app/controllers/api/systems_controller.rb:77
 msgid "Please provide pool and quantity"
 msgstr ""
 
+#: app/controllers/api/systems_controller.rb:87
 #: app/controllers/api/subscriptions_controller.rb:43
-#: app/controllers/api/systems_controller.rb:84
 msgid "Please provide pool id"
 msgstr ""
 
@@ -1980,35 +2185,39 @@ msgid ""
 "current users with this role."
 msgstr ""
 
-#: app/views/environments/_edit.html.haml:29
+#: app/models/activation_key.rb:83
+msgid "Pool %s has no product associated"
+msgstr ""
+
 #: app/views/environments/_new.html.haml:24
+#: app/views/environments/_edit.html.haml:29
 msgid "Prior Environment"
 msgstr "環境"
 
-#: app/views/promotions/show.html.haml:68
+#: app/views/promotions/show.html.haml:73
 msgid "Processing changeset modifications, please wait."
 msgstr ""
 
+#: app/views/sync_management/index.html.haml:21
+#: app/views/dashboard/_errata.haml:11
+#: app/views/subscriptions/index.html.haml:13
+#: app/views/promotions/show.html.haml:8
 #: app/views/providers/_products_repos.html.haml:39
 #: app/views/providers/redhat/_repo_whitelist.html.haml:3
-#: app/views/promotions/show.html.haml:7
 #: app/views/systems/_products.html.haml:16
-#: app/views/sync_management/index.html.haml:21
-#: app/views/subscriptions/index.html.haml:13
-#: app/views/dashboard/_errata.haml:11
 msgid "Product"
 msgstr ""
 
-#: app/models/system_template.rb:233 app/models/system_template.rb:250
+#: app/models/system_template.rb:244 app/models/system_template.rb:261
 msgid "Product '%s' is already present in the template."
 msgstr ""
 
-#: app/models/system_template.rb:231 app/models/system_template.rb:248
+#: app/models/system_template.rb:242 app/models/system_template.rb:259
 #, fuzzy
 msgid "Product '%s' not found in this environment."
 msgstr "環境を作成する"
 
-#: app/views/systems/_subs.html.haml:41 app/views/systems/_subs.html.haml:98
+#: app/views/systems/_subs.html.haml:41 app/views/systems/_subs.html.haml:99
 #, fuzzy
 msgid "Product Name: "
 msgstr "追加製品"
@@ -2018,29 +2227,27 @@ msgstr "追加製品"
 msgid "Product(s) in this environment"
 msgstr "環境を作成する"
 
-#: app/views/repositories/_edit.html.haml:4
 #: app/views/repositories/_new.html.haml:2
+#: app/views/repositories/_edit.html.haml:4
 msgid "Product: "
 msgstr "追加製品"
 
-#: app/helpers/breadcrumb_helper.rb:133 app/helpers/breadcrumb_helper.rb:361
-#: app/helpers/breadcrumb_helper.rb:397 app/views/promotions/show.html.haml:7
-#: app/views/promotions/_detail.html.haml:6
-#: app/views/gpg_keys/_products_repos.html.haml:20
-#: app/views/system_templates/index.html.haml:12
+#: app/helpers/breadcrumb_helper.rb:134 app/helpers/breadcrumb_helper.rb:362
+#: app/helpers/breadcrumb_helper.rb:399
 #: app/views/system_templates/_promotion_details.html.haml:21
-#: config/headpin_navigation.rb:77 config/katello_navigation.rb:74
-#: config/katello_navigation.rb:84
+#: app/views/system_templates/index.html.haml:6
+#: app/views/gpg_keys/_products_repos.html.haml:20
+#: app/views/promotions/_detail.html.haml:6
+#: app/views/promotions/show.html.haml:8
 msgid "Products"
 msgstr ""
 
-#: lib/navigation/content_management.rb:34 config/headpin_navigation.rb:33
-#: config/katello_navigation.rb:30
+#: lib/navigation/content_management.rb:28
 msgid "Products & Repositories"
 msgstr ""
 
 #: lib/navigation/content_management.rb:245
-#: lib/navigation/content_management.rb:268
+#: lib/navigation/content_management.rb:262
 #, fuzzy
 msgid "Products and Repositories"
 msgstr "リポジトリーの追加"
@@ -2053,23 +2260,23 @@ msgstr ""
 msgid "Progress:"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:142
+#: app/views/promotions/show.html.haml:147
 msgid "Promote"
 msgstr ""
 
-#: app/models/kt_environment.rb:318
+#: app/models/kt_environment.rb:319
 #, fuzzy
 msgid "Promote Changesets in Environment"
 msgstr "環境を作成する"
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "Promote to "
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
 #: app/views/promotions/_distributions.html.haml:11
 #: app/views/promotions/_package_items.html.haml:5
 #: app/views/promotions/_repo_items.html.haml:5
+#: app/views/promotions/show.html.haml:8
 msgid "Promoted"
 msgstr ""
 
@@ -2077,7 +2284,7 @@ msgstr ""
 msgid "Promoting"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "Promoting..."
 msgstr ""
 
@@ -2085,8 +2292,11 @@ msgstr ""
 msgid "Promotion Date:"
 msgstr ""
 
-#: lib/navigation/content_management.rb:133 config/headpin_navigation.rb:49
-#: config/katello_navigation.rb:46
+#: app/views/promotions/show.html.haml:8
+msgid "Promotion Failed"
+msgstr ""
+
+#: lib/navigation/content_management.rb:133
 msgid "Promotions"
 msgstr ""
 
@@ -2094,7 +2304,7 @@ msgstr ""
 msgid "Promotions Overview"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:80
+#: app/views/promotions/show.html.haml:85
 msgid ""
 "Promotions allow you to promote content from one environment to the next "
 "along a promotion path. Once you have created a changeset, clicking \"Add\" "
@@ -2104,7 +2314,7 @@ msgid ""
 "commit it to the next environment."
 msgstr ""
 
-#: app/controllers/providers_controller.rb:231
+#: app/controllers/providers_controller.rb:234
 msgid "Provider"
 msgstr "コンテンツプロバイダー"
 
@@ -2112,9 +2322,8 @@ msgstr "コンテンツプロバイダー"
 msgid "Provider: "
 msgstr "コンテンツプロバイダー"
 
-#: app/controllers/providers_controller.rb:229 app/models/resource_type.rb:95
-#: lib/navigation/content_management.rb:56 config/headpin_navigation.rb:24
-#: config/katello_navigation.rb:21
+#: app/models/resource_type.rb:95 app/controllers/providers_controller.rb:232
+#: lib/navigation/content_management.rb:56
 msgid "Providers"
 msgstr "コンテンツプロバイダー"
 
@@ -2131,7 +2340,6 @@ msgid "Provides"
 msgstr "コンテンツプロバイダー"
 
 #: app/views/systems/_subs.html.haml:18 app/views/systems/_subs.html.haml:63
-#: app/views/subscriptions/index.html.haml:14
 msgid "Quantity"
 msgstr ""
 
@@ -2139,12 +2347,11 @@ msgstr ""
 msgid "Queued."
 msgstr ""
 
-#: app/models/system_template.rb:355
+#: app/models/system_template.rb:366
 msgid "Read All System Templates"
 msgstr ""
 
-#: lib/navigation/content_management.rb:67 config/headpin_navigation.rb:26
-#: config/katello_navigation.rb:23
+#: lib/navigation/content_management.rb:67
 #, fuzzy
 msgid "Red Hat"
 msgstr " Red Hat, Inc."
@@ -2154,41 +2361,42 @@ msgstr " Red Hat, Inc."
 msgid "Red Hat Provider Details"
 msgstr "コンテンツプロバイダー"
 
-#: app/models/provider.rb:57
+#: app/models/provider.rb:66
 msgid "Red Hat provider can not be deleted"
 msgstr ""
 
-#: app/models/organization.rb:109
+#: app/models/organization.rb:128
 #, fuzzy
 msgid "Register Systems"
 msgstr "登録"
 
-#: app/models/kt_environment.rb:313
+#: app/models/kt_environment.rb:314
 #, fuzzy
 msgid "Register Systems in Environment"
 msgstr "環境を作成する"
 
-#: app/views/systems/_edit.html.haml:93
+#: app/views/systems/_edit.html.haml:67
 msgid "Registered"
 msgstr "登録"
 
-#: app/views/systems/_edit.html.haml:71
+#: app/views/systems/_edit.html.haml:45
 msgid "Release"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
-#: app/views/promotions/show.html.haml:128 app/views/roles/index.html.haml:9
-#: app/views/systems/_actions.html.haml:13
-#: app/views/common/_common_i18n.html.haml:3
-#: app/views/system_templates/index.html.haml:96
+#: app/views/system_templates/index.html.haml:88
+#: app/views/system_packages/_packages.html.haml:113
 #: app/views/activation_keys/_applied_subscriptions.html.haml:36
 #: app/views/activation_keys/_applied_subscriptions.html.haml:37
+#: app/views/roles/index.html.haml:9 app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:133
+#: app/views/common/_common_i18n.html.haml:3
+#: app/views/systems/_actions.html.haml:13
 msgid "Remove"
 msgstr ""
 
+#: app/views/activation_keys/_applied_subscriptions.html.haml:7
 #: app/views/activation_keys/_available_subscriptions.html.haml:7
 #: app/views/activation_keys/_edit.html.haml:15
-#: app/views/activation_keys/_applied_subscriptions.html.haml:7
 #, fuzzy
 msgid "Remove Activation Key"
 msgstr "新しい組織"
@@ -2197,14 +2405,14 @@ msgstr "新しい組織"
 msgid "Remove Environment"
 msgstr "新しい環境"
 
-#: app/views/filters/_edit.html.haml:8 app/views/filters/_packages.html.haml:6
 #: app/views/filters/_products.html.haml:12
+#: app/views/filters/_packages.html.haml:6 app/views/filters/_edit.html.haml:8
 #, fuzzy
 msgid "Remove Filter"
 msgstr "役割を削除する"
 
-#: app/views/gpg_keys/_edit.html.haml:8
 #: app/views/gpg_keys/_products_repos.html.haml:8
+#: app/views/gpg_keys/_edit.html.haml:8
 #, fuzzy
 msgid "Remove GPG Key"
 msgstr "役割を削除する"
@@ -2212,6 +2420,46 @@ msgstr "役割を削除する"
 #: app/views/organizations/_edit.html.haml:8
 msgid "Remove Organization"
 msgstr "新しい組織"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Remove Package Canceled"
+msgstr "コンテンツ管理"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Remove Package Complete"
+msgstr "コンテンツ管理"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Remove Package Error"
+msgstr "コンテンツ管理"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Remove Package Group Canceled"
+msgstr "コンテンツ管理"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Remove Package Group Complete"
+msgstr "コンテンツ管理"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Remove Package Group Error"
+msgstr "コンテンツ管理"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Remove Package Group Timeout"
+msgstr "コンテンツ管理"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Remove Package Timeout"
+msgstr "コンテンツ管理"
 
 #: app/views/filters/_packages.html.haml:39
 #, fuzzy
@@ -2222,8 +2470,8 @@ msgstr "コンテンツ管理"
 msgid "Remove Product"
 msgstr "コンテンツプロバイダー"
 
-#: app/views/providers/_edit.html.haml:8
 #: app/views/providers/_products_repos.html.haml:8
+#: app/views/providers/_edit.html.haml:8
 msgid "Remove Provider"
 msgstr "コンテンツプロバイダー"
 
@@ -2239,34 +2487,49 @@ msgstr "役割を削除する"
 msgid "Remove Sync Plan"
 msgstr ""
 
+#: app/views/systems/_edit.html.haml:8
+#, fuzzy
+msgid "Remove System"
+msgstr "登録"
+
 #: app/views/systems/_actions.html.haml:7
 #, fuzzy
 msgid "Remove System(s)"
 msgstr "登録"
 
-#: app/models/kt_environment.rb:315
+#: app/models/kt_environment.rb:316
 #, fuzzy
 msgid "Remove Systems in Environment"
 msgstr "新しい環境"
 
-#: app/views/users/_edit.html.haml:6
 #: app/views/roles/_self_role_edit.html.haml:6
+#: app/views/users/_edit.html.haml:6
 msgid "Remove User"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "Removed:"
 msgstr "コンテンツプロバイダー"
+
+#: app/helpers/system_packages_helper.rb:32
+#, fuzzy
+msgid "Removing Package Group..."
+msgstr "グループ"
+
+#: app/helpers/system_packages_helper.rb:24
+#, fuzzy
+msgid "Removing Package..."
+msgstr "コンテンツ管理"
 
 #: app/views/roles/index.html.haml:9
 msgid "Removing..."
 msgstr ""
 
-#: app/controllers/application_controller.rb:280
+#: app/controllers/application_controller.rb:279
 msgid "Rendering 404:"
 msgstr ""
 
-#: app/controllers/application_controller.rb:294
+#: app/controllers/application_controller.rb:293
 msgid "Rendering 500:"
 msgstr ""
 
@@ -2278,19 +2541,23 @@ msgstr ""
 msgid "Repo id or environment must be provided"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:165
+#: app/helpers/breadcrumb_helper.rb:166
 msgid "Repos"
 msgstr "レポート"
 
-#: app/helpers/breadcrumb_helper.rb:56 app/views/changesets/_edit.html.haml:56
-#: app/views/promotions/show.html.haml:7
-#: app/views/promotions/_detail.html.haml:26
+#: app/helpers/breadcrumb_helper.rb:57 app/helpers/breadcrumb_helper.rb:373
+#: app/helpers/breadcrumb_helper.rb:400
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/_product_detail.html.haml:4
+#: app/views/changesets/_edit.html.haml:56
 #: app/views/gpg_keys/_products_repos.html.haml:28
+#: app/views/promotions/_detail.html.haml:26
+#: app/views/promotions/show.html.haml:8
 msgid "Repositories"
 msgstr "リポジトリーの追加"
 
+#: app/views/promotions/show.html.haml:8
 #: app/views/providers/_products_repos.html.haml:47
-#: app/views/promotions/show.html.haml:7
 msgid "Repository"
 msgstr "リポジトリーの追加"
 
@@ -2303,7 +2570,7 @@ msgstr "リポジトリーの追加"
 msgid "Repository cannot be disabled since it has already been promoted."
 msgstr ""
 
-#: app/controllers/password_resets_controller.rb:94
+#: app/controllers/password_resets_controller.rb:98
 msgid "Request received has either an invalid or expired token.  Token: '%{t}'"
 msgstr ""
 
@@ -2325,8 +2592,8 @@ msgstr "検索"
 msgid "Revert Filter"
 msgstr "検索"
 
-#: app/views/promotions/show.html.haml:7
-#: app/views/promotions/show.html.haml:138
+#: app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:143
 msgid "Review"
 msgstr ""
 
@@ -2338,17 +2605,11 @@ msgstr "役割"
 msgid "Role Details"
 msgstr ""
 
-#: app/controllers/roles_controller.rb:57 app/models/resource_type.rb:98
+#: app/models/resource_type.rb:98 app/controllers/roles_controller.rb:57
 #: app/views/roles/_self_role_edit.html.haml:13
-#: lib/navigation/administration.rb:65 config/headpin_navigation.rb:117
-#: config/katello_navigation.rb:115
+#: lib/navigation/administration.rb:29 lib/navigation/administration.rb:65
 msgid "Roles"
 msgstr "ロール"
-
-#: lib/navigation/administration.rb:35 config/headpin_navigation.rb:114
-#: config/katello_navigation.rb:112
-msgid "Roles & Permissions"
-msgstr "アクセス許可を追加する"
 
 #: app/controllers/sync_management_controller.rb:25
 msgid "Running."
@@ -2358,20 +2619,21 @@ msgstr ""
 msgid "SLA"
 msgstr ""
 
+#: app/views/organizations/_new.html.haml:36
+#: app/views/system_templates/_new.html.haml:21
+#: app/views/system_templates/index.html.haml:6
+#: app/views/system_templates/index.html.haml:93
+#: app/views/activation_keys/_new.html.haml:40
+#: app/views/activation_keys/_edit.html.haml:74
+#: app/views/password_resets/edit.html.haml:36
+#: app/views/filters/_new.html.haml:23 app/views/gpg_keys/_new.html.haml:19
+#: app/views/roles/_new.html.haml:18 app/views/roles/_permission.html.haml:39
+#: app/views/sync_plans/_form.html.haml:31
+#: app/views/common/_edit_i18n.html.haml:4
 #: app/views/providers/_form.html.haml:17
 #: app/views/users/_edit_form.html.haml:61
-#: app/views/users/_edit_environment.html.haml:45
-#: app/views/roles/_permission.html.haml:39 app/views/roles/_new.html.haml:18
-#: app/views/organizations/_new.html.haml:36
-#: app/views/gpg_keys/_new.html.haml:19 app/views/systems/_new.html.haml:42
-#: app/views/filters/_new.html.haml:23 app/views/common/_edit_i18n.html.haml:4
-#: app/views/system_templates/index.html.haml:12
-#: app/views/system_templates/index.html.haml:101
-#: app/views/system_templates/_new.html.haml:21
-#: app/views/activation_keys/_edit.html.haml:74
-#: app/views/activation_keys/_new.html.haml:40
-#: app/views/sync_plans/_form.html.haml:31
-#: app/views/password_resets/edit.html.haml:36
+#: app/views/users/_edit_environment.html.haml:52
+#: app/views/systems/_new.html.haml:49
 msgid "Save"
 msgstr ""
 
@@ -2388,7 +2650,7 @@ msgstr "リポジトリーの追加"
 msgid "Save Roles"
 msgstr "保存の役割"
 
-#: app/views/users/_new.html.haml:75
+#: app/views/users/_new.html.haml:74
 msgid "Save User"
 msgstr ""
 
@@ -2396,7 +2658,7 @@ msgstr ""
 msgid "Save as Favorite"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:73
+#: app/views/system_templates/index.html.haml:65
 msgid "Saving System Template"
 msgstr ""
 
@@ -2404,28 +2666,36 @@ msgstr ""
 msgid "Saving..."
 msgstr ""
 
-#: app/views/roles/_closed_permission.html.haml:8
 #: app/views/roles/_permission.html.haml:20
+#: app/views/roles/_closed_permission.html.haml:8
 msgid "Scope"
 msgstr "範囲"
 
-#: app/views/notices/show.html.haml:10 app/views/promotions/show.html.haml:97
-#: app/views/promotions/show.html.haml:100 app/views/roles/_edit.html.haml:14
-#: app/views/roles/_edit.html.haml:18 app/views/common/_panel.html.haml:38
-#: app/views/common/_panel.html.haml:42
-#: app/views/system_templates/index.html.haml:58
-#: app/views/system_templates/index.html.haml:62
+#: app/views/system_templates/index.html.haml:54
+#: app/views/notices/show.html.haml:19 app/views/promotions/show.html.haml:8
+#: app/views/promotions/show.html.haml:173
+#: app/views/promotions/show.html.haml:174
+#: app/views/promotions/show.html.haml:175
+#: app/views/common/_panel.html.haml:45 app/views/common/_panel.html.haml:49
 msgid "Search"
 msgstr "検索"
 
+#: app/views/system_templates/index.html.haml:6
 #: app/views/filters/index.html.haml:18
-#: app/views/system_templates/index.html.haml:12
 msgid "Search available package names..."
 msgstr ""
 
+#: app/views/system_templates/index.html.haml:6
 #: app/views/filters/index.html.haml:18
-#: app/views/system_templates/index.html.haml:12
 msgid "Search available product names..."
+msgstr ""
+
+#: app/views/system_templates/index.html.haml:6
+msgid "Search available repository names..."
+msgstr ""
+
+#: app/views/promotions/show.html.haml:8
+msgid "Search is not available for the current content"
 msgstr ""
 
 #: app/views/sync_management/index.html.haml:38
@@ -2436,9 +2706,9 @@ msgstr "検索"
 msgid "Select Architecture"
 msgstr ""
 
-#: app/views/systems/_actions.html.haml:18
 #: app/views/sync_management/index.html.haml:35
-#: app/views/common/_panel.html.haml:11
+#: app/views/common/_panel.html.haml:18
+#: app/views/systems/_actions.html.haml:18
 msgid "Select None"
 msgstr "検索"
 
@@ -2464,8 +2734,8 @@ msgstr "リポジトリーの追加"
 msgid "Select a System Template"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:399
-#: app/views/system_templates/index.html.haml:12
+#: app/helpers/breadcrumb_helper.rb:402
+#: app/views/system_templates/index.html.haml:6
 #, fuzzy
 msgid "Selected Distribution"
 msgstr "概要"
@@ -2474,19 +2744,19 @@ msgstr "概要"
 msgid "Send Login"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:208
+#: app/helpers/breadcrumb_helper.rb:209
 msgid "Severity: Critical"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:208
+#: app/helpers/breadcrumb_helper.rb:209
 msgid "Severity: Important"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:209
+#: app/helpers/breadcrumb_helper.rb:210
 msgid "Severity: Low"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:208
+#: app/helpers/breadcrumb_helper.rb:209
 msgid "Severity: Moderate"
 msgstr ""
 
@@ -2503,11 +2773,11 @@ msgstr ""
 msgid "Sockets"
 msgstr "コンテンツロッカー"
 
-#: lib/navigation/systems.rb:72
+#: lib/navigation/systems.rb:66
 msgid "Software"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid ""
 "Some changeset modifications have not finished processing, are you sure you "
 "want to leave the page?  By leaving you may lose some modifications."
@@ -2541,19 +2811,19 @@ msgstr ""
 msgid "Start Time"
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:3
 #: app/views/password_resets/edit.html.haml:5
+#: app/views/users/_edit_form.html.haml:3
 msgid "Strong"
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:109 app/views/systems/_subs.html.haml:110
+#: app/views/systems/_subs.html.haml:110 app/views/systems/_subs.html.haml:111
 #, fuzzy
 msgid "Subscribe"
 msgstr "サブスクリプション"
 
+#: app/views/activation_keys/_subscriptions.html.haml:4
 #: app/views/providers/redhat/show.html.haml:39
 #: app/views/systems/_subs.html.haml:15 app/views/systems/_subs.html.haml:60
-#: app/views/activation_keys/_subscriptions.html.haml:4
 #, fuzzy
 msgid "Subscription"
 msgstr "サブスクリプション"
@@ -2573,10 +2843,7 @@ msgid ""
 "and selecting individual repositories to be enabled."
 msgstr ""
 
-#: lib/navigation/organization.rb:36 lib/navigation/systems.rb:66
-#: config/headpin_navigation.rb:76 config/headpin_navigation.rb:86
-#: config/headpin_navigation.rb:107 config/katello_navigation.rb:73
-#: config/katello_navigation.rb:83 config/katello_navigation.rb:105
+#: lib/navigation/systems.rb:60 lib/navigation/organization.rb:42
 msgid "Subscriptions"
 msgstr "サブスクリプション"
 
@@ -2599,16 +2866,16 @@ msgstr "サブスクリプション"
 msgid "Success"
 msgstr "ログイン成功"
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "Summary:"
 msgstr ""
 
-#: app/views/subscriptions/index.html.haml:17
+#: app/views/subscriptions/index.html.haml:16
+#: app/views/providers/redhat/_subscription_details.html.haml:7
 msgid "Support Level"
 msgstr ""
 
-#: lib/navigation/content_management.rb:86 config/headpin_navigation.rb:40
-#: config/katello_navigation.rb:37
+#: lib/navigation/content_management.rb:86
 msgid "Sync Management"
 msgstr "同期管理"
 
@@ -2617,8 +2884,7 @@ msgid "Sync Overview"
 msgstr ""
 
 #: app/controllers/sync_plans_controller.rb:46
-#: lib/navigation/content_management.rb:105 config/headpin_navigation.rb:42
-#: config/katello_navigation.rb:39
+#: lib/navigation/content_management.rb:105
 msgid "Sync Plans"
 msgstr ""
 
@@ -2626,19 +2892,17 @@ msgstr ""
 msgid "Sync Plans applied successfully."
 msgstr ""
 
-#: app/models/organization.rb:112
+#: app/models/organization.rb:131
 #, fuzzy
 msgid "Sync Products"
 msgstr "追加製品"
 
-#: lib/navigation/content_management.rb:113 config/headpin_navigation.rb:43
-#: config/katello_navigation.rb:40
+#: lib/navigation/content_management.rb:113
 msgid "Sync Schedule"
 msgstr ""
 
 #: app/views/sync_management/index.html.haml:16
-#: lib/navigation/content_management.rb:96 config/headpin_navigation.rb:41
-#: config/katello_navigation.rb:38
+#: lib/navigation/content_management.rb:96
 msgid "Sync Status"
 msgstr ""
 
@@ -2660,20 +2924,20 @@ msgstr "システム"
 msgid "System Current Subscription(s)"
 msgstr "サブスクリプション"
 
-#: app/views/systems/_edit.html.haml:84
+#: app/views/systems/_edit.html.haml:58
 msgid "System Events"
 msgstr "システム"
 
-#: app/views/systems/_edit.html.haml:13
+#: app/views/systems/_edit.html.haml:17
 msgid "System Info"
 msgstr "システム"
 
-#: app/views/layouts/_header.haml:20
+#: app/views/layouts/_header.haml:21
 #, fuzzy
 msgid "System Notifications"
 msgstr "通知"
 
-#: app/views/systems/_edit.html.haml:56
+#: app/views/systems/_edit.html.haml:29
 msgid "System Properties"
 msgstr ""
 
@@ -2682,54 +2946,53 @@ msgstr ""
 msgid "System Subscription Status"
 msgstr "サブスクリプション"
 
-#: app/views/promotions/show.html.haml:7
-#: app/views/activation_keys/_edit.html.haml:59
 #: app/views/activation_keys/_new.html.haml:35
+#: app/views/activation_keys/_edit.html.haml:59
+#: app/views/promotions/show.html.haml:8
 #, fuzzy
 msgid "System Template"
 msgstr "システム"
 
-#: app/helpers/breadcrumb_helper.rb:136
-#: app/controllers/system_templates_controller.rb:85
-#: app/models/resource_type.rb:92 app/views/changesets/_edit.html.haml:34
-#: app/views/promotions/show.html.haml:7
+#: app/models/resource_type.rb:92
+#: app/controllers/system_templates_controller.rb:81
+#: app/helpers/breadcrumb_helper.rb:137
+#: app/views/system_templates/index.html.haml:47
+#: app/views/changesets/_edit.html.haml:34
 #: app/views/promotions/_detail.html.haml:12
-#: app/views/system_templates/index.html.haml:54
-#: lib/navigation/content_management.rb:121 config/headpin_navigation.rb:46
-#: config/katello_navigation.rb:43
+#: app/views/promotions/show.html.haml:8
+#: lib/navigation/content_management.rb:121
 #, fuzzy
 msgid "System Templates"
 msgstr "システム"
 
-#: app/views/system_templates/index.html.haml:44
+#: app/views/system_templates/index.html.haml:39
 msgid ""
 "System Templates allow you to create a template for what a system should "
 "look like.  This includes what products are subscribed and what packages are "
 "installed."
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:29
+#: app/views/systems/_edit.html.haml:80
 #, fuzzy
 msgid "System Type"
 msgstr "システム"
 
-#: app/views/systems/_new.html.haml:32
+#: app/views/systems/_new.html.haml:33
 #, fuzzy
 msgid "System Type:"
 msgstr "システム"
 
-#: app/controllers/systems_controller.rb:175
+#: app/controllers/systems_controller.rb:186
 msgid "System subscriptions updated."
 msgstr "サブスクリプション"
 
-#: app/controllers/systems_controller.rb:314
+#: app/controllers/systems_controller.rb:296
 #: app/views/dashboard/_errata.haml:21 lib/navigation/systems.rb:22
-#: config/headpin_navigation.rb:71 config/katello_navigation.rb:68
 msgid "Systems"
 msgstr "システム"
 
-#: app/controllers/system_templates_controller.rb:87
-#: app/controllers/system_templates_controller.rb:89
+#: app/controllers/system_templates_controller.rb:83
+#: app/controllers/system_templates_controller.rb:85
 msgid "Template"
 msgstr ""
 
@@ -2737,7 +3000,7 @@ msgstr ""
 msgid "Template can have parent templates only from the same environment"
 msgstr ""
 
-#: app/models/system_template.rb:139
+#: app/models/system_template.rb:142
 msgid "Template cannot be exported"
 msgstr ""
 
@@ -2745,11 +3008,11 @@ msgstr ""
 msgid "Template imported"
 msgstr ""
 
-#: app/models/system_template.rb:156
+#: app/models/system_template.rb:159
 msgid "Template is not complete and will likely fail."
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:388
+#: app/helpers/breadcrumb_helper.rb:390
 msgid "Templates"
 msgstr ""
 
@@ -2759,39 +3022,39 @@ msgstr ""
 msgid "Templates can be updated only in a Locker environment"
 msgstr "環境を作成する"
 
-#: app/controllers/organizations_controller.rb:126
+#: app/models/organization.rb:80
 msgid ""
 "The current organization cannot be deleted. Please switch to a different "
 "organization before deleting."
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:12
+#: app/views/system_templates/index.html.haml:6
 msgid ""
 "The current template \"$TEMPLATE\" has been modified.  Would you like to "
 "save the changes?"
 msgstr ""
 
-#: app/views/system_templates/index.html.haml:12
+#: app/views/system_templates/index.html.haml:6
 msgid ""
 "The current template \"$TEMPLATE\" has been modified. If you leave, any "
 "changes will be lost.\""
 msgstr ""
 
-#: app/controllers/users_controller.rb:189
+#: app/controllers/users_controller.rb:198
 msgid "The default you supplied was the same as the old default."
 msgstr ""
 
-#: app/models/system_template.rb:242 app/models/system_template.rb:259
+#: app/models/system_template.rb:253 app/models/system_template.rb:270
 msgid "The environment still has content that belongs to product '%s'."
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:3
 #: app/views/password_resets/edit.html.haml:5
+#: app/views/users/_edit_form.html.haml:3
 msgid "The password should not contain the username."
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:3
 #: app/views/password_resets/edit.html.haml:5
+#: app/views/users/_edit_form.html.haml:3
 msgid "The passwords do not match"
 msgstr ""
 
@@ -2799,7 +3062,7 @@ msgstr ""
 msgid "The system is not currently consuming any subscriptions."
 msgstr ""
 
-#: app/models/system_template.rb:496
+#: app/models/system_template.rb:507
 msgid "The template has children templates."
 msgstr ""
 
@@ -2816,13 +3079,14 @@ msgid ""
 "Permission in the action bar below to add a permission to this organization."
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:106
 #: app/views/activation_keys/_subscriptions.html.haml:54
+#: app/views/systems/_subs.html.haml:107
 #, fuzzy
 msgid "There are no more subscriptions available."
 msgstr "サブスクリプション"
 
 #: app/views/errata/_packages.html.haml:27
+#: app/views/system_packages/_packages.html.haml:100
 msgid "There are no packages to display."
 msgstr ""
 
@@ -2830,15 +3094,19 @@ msgstr ""
 msgid "There are no tags for the resource type you have chosen."
 msgstr ""
 
-#: app/models/glue/pulp/repos.rb:496
+#: app/models/glue/pulp/repos.rb:538
 msgid "There is already a repo with the name [ %s ] for product [ %s ]"
+msgstr ""
+
+#: app/controllers/api/system_packages_controller.rb:99
+msgid "This action doesn't support pacakge groups"
 msgstr ""
 
 #: app/views/changesets/_edit.html.haml:29
 msgid "This changeset contains no content."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "This changeset is currently being promoted."
 msgstr ""
 
@@ -2846,6 +3114,7 @@ msgstr ""
 msgid "This template contains no content."
 msgstr ""
 
+#: app/views/organizations/_events.html.haml:14
 #: app/views/sync_plans/_form.html.haml:25
 #: app/views/sync_plans/_edit.html.haml:29
 msgid "Time"
@@ -2855,32 +3124,36 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
+#: app/views/common/_panel.html.haml:8
+msgid ""
+"To view the details of an item on the left, simply click on a single row.<br/"
+"><br/>To select multiple rows, hold the Control Key and click multiple rows."
+"<br/><br/>If you don't need this help anymore, please click the close button "
+"in the top right of this box."
+msgstr ""
+
 #: app/views/dashboard/_subscriptions.haml:41
 #, fuzzy
 msgid "Total Systems"
 msgstr "システム"
 
-#: app/views/subscriptions/index.html.haml:15
-msgid "Trend"
-msgstr ""
-
-#: app/views/roles/_closed_permission.html.haml:3
-#: app/views/roles/_permission.html.haml:13
 #: app/views/errata/_show.html.haml:24 app/views/errata/_show.html.haml:56
-#: app/views/activation_keys/_subscriptions.html.haml:5
 #: app/views/dashboard/_errata.haml:7
+#: app/views/activation_keys/_subscriptions.html.haml:5
+#: app/views/roles/_permission.html.haml:13
+#: app/views/roles/_closed_permission.html.haml:3
 msgid "Type"
 msgstr "タイプ"
 
-#: app/helpers/breadcrumb_helper.rb:209
+#: app/helpers/breadcrumb_helper.rb:210
 msgid "Type: Bug Fix"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:209
+#: app/helpers/breadcrumb_helper.rb:210
 msgid "Type: Enhancement"
 msgstr ""
 
-#: app/helpers/breadcrumb_helper.rb:209
+#: app/helpers/breadcrumb_helper.rb:210
 msgid "Type: Security"
 msgstr ""
 
@@ -2889,13 +3162,17 @@ msgid "Types"
 msgstr "タイプ"
 
 #: app/views/products/_new.html.haml:24
-#: app/views/repositories/_edit.html.haml:22
 #: app/views/repositories/_new.html.haml:20
+#: app/views/repositories/_edit.html.haml:22
 msgid "URL"
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:21
+#: app/views/systems/_edit.html.haml:25
 msgid "UUID"
+msgstr ""
+
+#: app/models/activation_key.rb:86
+msgid "Unable to determine quantity for pool %s"
 msgstr ""
 
 #: app/controllers/providers_controller.rb:109
@@ -2906,11 +3183,22 @@ msgstr ""
 msgid "Unable to retrieve subscription manifest for provider '%{name}."
 msgstr ""
 
-#: app/views/systems/_edit.html.haml:37
+#: app/controllers/system_packages_controller.rb:86
+msgid "Uninstall of Package Groups '%{p}' scheduled for System '%{s}'."
+msgstr ""
+
+#: app/controllers/system_packages_controller.rb:68
+#: app/controllers/system_packages_controller.rb:76
+msgid "Uninstall of Packages '%{p}' scheduled for System '%{s}'."
+msgstr ""
+
+#: app/views/systems/_edit.html.haml:88
 msgid "Unknown"
 msgstr ""
 
-#: app/views/systems/_subs.html.haml:86
+#: app/views/subscriptions/index.html.haml:39
+#: app/views/providers/redhat/_subscription_details.html.haml:30
+#: app/views/systems/_subs.html.haml:87
 msgid "Unlimited"
 msgstr ""
 
@@ -2918,24 +3206,66 @@ msgstr ""
 msgid "Unsubscribe"
 msgstr ""
 
+#: app/views/system_packages/_packages.html.haml:112
+#, fuzzy
+msgid "Update"
+msgstr "更新"
+
+#: app/views/system_packages/_packages.html.haml:111
+#, fuzzy
+msgid "Update All"
+msgstr "保存の役割"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Update Package Canceled"
+msgstr "リポジトリーの追加"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Update Package Complete"
+msgstr "リポジトリーの追加"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Update Package Error"
+msgstr "リポジトリーの追加"
+
+#: app/views/system_packages/_packages.html.haml:6
+#, fuzzy
+msgid "Update Package Timeout"
+msgstr "リポジトリーの追加"
+
 #: app/models/role.rb:108
 #, fuzzy
 msgid "Update Roles"
 msgstr "保存の役割"
 
-#: app/models/user.rb:340
+#: app/models/user.rb:354
 #, fuzzy
 msgid "Update Users"
 msgstr "編集する"
+
+#: app/controllers/system_packages_controller.rb:108
+msgid "Update of Packages '%{p}' scheduled for System '%{s}'."
+msgstr ""
+
+#: app/controllers/system_packages_controller.rb:106
+msgid "Update of all packages scheduled for System '%{s}'."
+msgstr ""
 
 #: app/views/errata/_show.html.haml:36
 msgid "Updated"
 msgstr "更新"
 
-#: app/views/providers/redhat/show.html.haml:31
-#: app/views/gpg_keys/_edit.html.haml:30 app/views/gpg_keys/_edit.html.haml:35
+#: app/helpers/system_packages_helper.rb:20
+msgid "Updating Package..."
+msgstr ""
+
 #: app/views/gpg_keys/_new.html.haml:28 app/views/gpg_keys/_new.html.haml:33
+#: app/views/gpg_keys/_edit.html.haml:30 app/views/gpg_keys/_edit.html.haml:35
 #: app/views/common/_edit_i18n.html.haml:4
+#: app/views/providers/redhat/show.html.haml:31
 msgid "Upload"
 msgstr ""
 
@@ -2947,11 +3277,11 @@ msgstr "サブスクリプション"
 msgid "Uploading"
 msgstr ""
 
-#: app/controllers/users_controller.rb:261
+#: app/controllers/users_controller.rb:274
 msgid "User"
 msgstr "ユーザー"
 
-#: app/views/notices/show.html.haml:15
+#: app/views/notices/show.html.haml:13
 msgid "User Notifications"
 msgstr "通知"
 
@@ -2959,36 +3289,34 @@ msgstr "通知"
 msgid "User assignments for this role"
 msgstr ""
 
-#: app/controllers/application_controller.rb:220
+#: app/controllers/application_controller.rb:219
 msgid "User does not belong to an organization."
 msgstr ""
 
-#: app/controllers/users_controller.rb:182
+#: app/controllers/users_controller.rb:191
 #, fuzzy
 msgid "User environment updated successfully."
 msgstr "正常に作成されました。"
 
-#: app/views/notices/show.html.haml:13
+#: app/views/notices/show.html.haml:9
 msgid ""
 "User notifications lists all notifications generated by a user as well as "
 "global notifications that are sent to all users."
 msgstr ""
 
-#: app/controllers/users_controller.rb:118
-#: app/controllers/users_controller.rb:207
+#: app/controllers/users_controller.rb:127
+#: app/controllers/users_controller.rb:216
 msgid "User updated successfully."
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:22 app/views/users/_new.html.haml:20
 #: app/views/password_resets/new.html.haml:13
+#: app/views/users/_new.html.haml:19 app/views/users/_edit_form.html.haml:22
 #, fuzzy
 msgid "Username:"
 msgstr "ユーザー"
 
-#: app/helpers/breadcrumb_helper.rb:240
-#: app/controllers/users_controller.rb:259 app/models/resource_type.rb:97
-#: lib/navigation/administration.rb:56 config/headpin_navigation.rb:111
-#: config/katello_navigation.rb:109
+#: app/models/resource_type.rb:97 app/controllers/users_controller.rb:272
+#: app/helpers/breadcrumb_helper.rb:241 lib/navigation/administration.rb:56
 msgid "Users"
 msgstr "ユーザー"
 
@@ -3005,18 +3333,20 @@ msgstr ""
 msgid "Verb(s):"
 msgstr "動詞"
 
-#: app/views/roles/_closed_permission.html.haml:17
 #: app/views/roles/_permission.html.haml:30
+#: app/views/roles/_closed_permission.html.haml:17
 msgid "Verbs"
 msgstr "動詞"
 
-#: app/views/users/_edit_form.html.haml:3
 #: app/views/password_resets/edit.html.haml:5
+#: app/views/users/_edit_form.html.haml:3
 msgid "Very Weak"
 msgstr ""
 
+#: app/models/system.rb:71 app/controllers/activation_keys_controller.rb:346
+#: app/controllers/providers_controller.rb:279
+#: app/controllers/subscriptions_controller.rb:55
 #: app/helpers/systems_helper.rb:43
-#: app/controllers/activation_keys_controller.rb:346 app/models/system.rb:60
 msgid "Virtual"
 msgstr ""
 
@@ -3026,12 +3356,12 @@ msgid ""
 "repository within this product"
 msgstr ""
 
-#: app/views/users/_edit_form.html.haml:3
 #: app/views/password_resets/edit.html.haml:5
+#: app/views/users/_edit_form.html.haml:3
 msgid "Weak"
 msgstr ""
 
-#: app/controllers/application_controller.rb:249
+#: app/controllers/application_controller.rb:248
 msgid "Welcome Back!"
 msgstr "先頭へようこそ！"
 
@@ -3043,12 +3373,12 @@ msgstr ""
 msgid "You are not authorised to perform this action."
 msgstr "あなたはこのアクションを実行する権限がありません。"
 
-#: app/controllers/api/sync_controller.rb:80
+#: app/controllers/api/sync_controller.rb:84
 #, fuzzy
 msgid "You can synchronize repositories only in locker environment'"
 msgstr "環境を作成する"
 
-#: app/controllers/application_controller.rb:487
+#: app/controllers/application_controller.rb:554
 msgid ""
 "You current organization is no longer valid. It is possible that the "
 "organization has been deleted, please log back in to continue."
@@ -3080,8 +3410,8 @@ msgstr ""
 msgid "You might want to log out and log back in again to clear your cookies."
 msgstr ""
 
-#: app/controllers/application_controller.rb:238
-#: app/controllers/application_controller.rb:477
+#: app/controllers/application_controller.rb:237
+#: app/controllers/application_controller.rb:544
 msgid "You must be logged in to access that page."
 msgstr "あなたはそのページにアクセスするには、ログインする必要があります。"
 
@@ -3097,7 +3427,7 @@ msgstr ""
 msgid "You must select at least one verb."
 msgstr ""
 
-#: app/views/systems/_new.html.haml:50
+#: app/views/systems/_new.html.haml:57
 msgid ""
 "You need to create an environment for this org before you can create a "
 "system."
@@ -3111,7 +3441,7 @@ msgstr ""
 "あなたは不正なユーザ名またはパスワードの組み合わせを入力した、もう一度試して"
 "ください。"
 
-#: app/views/promotions/show.html.haml:174
+#: app/views/promotions/show.html.haml:185
 msgid ""
 "Your update has applied successfully, but during that time another user has "
 "also made an update."
@@ -3125,7 +3455,7 @@ msgstr ""
 msgid "activation_key"
 msgstr ""
 
-#: app/models/user.rb:50
+#: app/models/user.rb:63
 msgid "at least 5 characters"
 msgstr ""
 
@@ -3142,17 +3472,17 @@ msgstr ""
 msgid "cannot contain characters other than alpha numerals,'_', '-'."
 msgstr ""
 
-#: app/controllers/changesets_controller.rb:299
+#: app/controllers/changesets_controller.rb:294
 msgid "changeset"
 msgstr ""
 
-#: app/controllers/system_templates_controller.rb:267
+#: app/controllers/system_templates_controller.rb:273
 msgid ""
 "contained the selected distribution for this template.  Please select "
 "another distribution to ensure a working system template."
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "currently editing this changeset"
 msgstr "コンテンツ管理"
 
@@ -3164,11 +3494,11 @@ msgstr ""
 msgid "environment required"
 msgstr "環境"
 
-#: app/controllers/filters_controller.rb:215
+#: app/controllers/filters_controller.rb:227
 msgid "filter"
 msgstr ""
 
-#: app/controllers/gpg_keys_controller.rb:170
+#: app/controllers/gpg_keys_controller.rb:171
 msgid "gpg_key"
 msgstr ""
 
@@ -3178,11 +3508,11 @@ msgstr ""
 msgid "is already in the template"
 msgstr ""
 
-#: app/models/katello_url_format_validator.rb:48 app/models/provider.rb:75
+#: app/models/provider.rb:84 app/models/katello_url_format_validator.rb:48
 msgid "is invalid"
 msgstr ""
 
-#: app/models/provider.rb:74
+#: app/models/provider.rb:83
 msgid "is too long"
 msgstr ""
 
@@ -3214,12 +3544,16 @@ msgstr ""
 msgid "none"
 msgstr ""
 
-#: app/views/roles/_edit.html.haml:55 app/views/roles/_edit.html.haml:62
-#: app/views/roles/_edit.html.haml:69 app/views/gpg_keys/_new.html.haml:24
+#: app/models/system_task.rb:137
+msgid "obsoleted"
+msgstr ""
+
+#: app/views/gpg_keys/_new.html.haml:24 app/views/roles/_edit.html.haml:55
+#: app/views/roles/_edit.html.haml:62 app/views/roles/_edit.html.haml:69
 msgid "or"
 msgstr ""
 
-#: app/controllers/organizations_controller.rb:195
+#: app/controllers/organizations_controller.rb:214
 msgid "organization"
 msgstr "組織"
 
@@ -3231,11 +3565,11 @@ msgstr ""
 msgid "product"
 msgstr ""
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 msgid "promote_confirm"
 msgstr ""
 
-#: app/controllers/providers_controller.rb:240
+#: app/controllers/providers_controller.rb:243
 msgid "provider"
 msgstr "コンテンツプロバイダー"
 
@@ -3243,11 +3577,16 @@ msgstr "コンテンツプロバイダー"
 msgid "pulp_id must be unique within one organization"
 msgstr ""
 
+#: app/models/system_task.rb:143
+#, fuzzy
+msgid "removed"
+msgstr "コンテンツプロバイダー"
+
 #: app/controllers/roles_controller.rb:252
 msgid "role"
 msgstr ""
 
-#: app/controllers/sync_management_controller.rb:216
+#: app/controllers/sync_management_controller.rb:224
 msgid "sync did not complete successfully"
 msgstr ""
 
@@ -3255,29 +3594,35 @@ msgstr ""
 msgid "sync_plan"
 msgstr ""
 
-#: app/controllers/systems_controller.rb:349
+#: app/controllers/systems_controller.rb:331
+#: app/controllers/system_packages_controller.rb:188
 msgid "system"
 msgstr "システム"
 
-#: app/views/promotions/show.html.haml:7
+#: app/views/promotions/show.html.haml:8
 #, fuzzy
 msgid "system templates"
 msgstr "システム"
 
-#: app/controllers/system_templates_controller.rb:88
+#: app/controllers/system_templates_controller.rb:84
 msgid "template"
 msgstr ""
 
-#: app/models/provider.rb:68
+#: app/models/provider.rb:77
 msgid ""
 "the following attributes can not be updated for the Red Hat provider: [ %s ]"
 msgstr ""
 
-#: app/controllers/users_controller.rb:269
+#: app/models/system_task.rb:134
+#, fuzzy
+msgid "updated"
+msgstr "更新"
+
+#: app/controllers/users_controller.rb:282
 msgid "user"
 msgstr ""
 
-#: app/views/common/_panel.html.haml:23
+#: app/views/common/_panel.html.haml:30
 msgid "viewing"
 msgstr ""
 
@@ -3319,8 +3664,8 @@ msgstr ""
 #~ msgid "Role created."
 #~ msgstr "役割を作成"
 
-#~ msgid "Role updated."
-#~ msgstr "役割は、更新された"
+#~ msgid "Roles & Permissions"
+#~ msgstr "アクセス許可を追加する"
 
 #, fuzzy
 #~ msgid "Save As"
