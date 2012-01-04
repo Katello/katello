@@ -18,6 +18,7 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.user_role import UserRoleAPI
+from katello.client.api.permission import PermissionAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, system_exit
@@ -87,18 +88,37 @@ class Info(UserRoleAction):
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name', help=_("user role name (required)"))
+        self.parser.add_option('--permission_details', dest='perm_details', action='store_true', help=_("print details about each of role's permissions"))
 
     def check_options(self):
         self.require_option('name')
 
+    def getPermissions(self, roleId):
+         permApi = PermissionAPI()
+         return permApi.permissions(roleId)
+
+    def formatPermission(self, p, details=True):
+        if details:
+            verbs = ', '.join([v['verb'] for v in p['verbs']])
+            tags  = ', '.join([t['formatted']['display_name'] for t in p['tags']])
+            type  = p['resource_type']['name']
+            return _("%s\n\tfor: %s\n\tverbs: %s\n\ton: %s") % (p['name'], type, verbs, tags)
+        else:
+            return p['name']
+
     def run(self):
         name = self.get_option('name')
+        permDetails = self.get_option('perm_details')
 
         role = self.get_role(name)
+        permissions = self.getPermissions(role['id'])
+
+        role['permissions'] = "\n".join([self.formatPermission(p, permDetails) for p in permissions])
 
         self.printer.addColumn('id')
         self.printer.addColumn('name')
         self.printer.addColumn('description')
+        self.printer.addColumn('permissions', multiline=True)
 
         self.printer.setHeader(_("User Role Information"))
         self.printer.printItem(role)

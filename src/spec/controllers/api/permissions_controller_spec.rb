@@ -13,7 +13,7 @@
 require 'spec_helper.rb'
 include OrchestrationHelper
 
-describe Api::RolesController do
+describe Api::PermissionsController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include AuthorizationHelperMethods
@@ -22,105 +22,100 @@ describe Api::RolesController do
   let(:user_without_read_permissions) { user_without_permissions }
   let(:user_with_create_permissions) { user_with_permissions { |u| u.can(:create, :roles) } }
   let(:user_without_create_permissions) { user_with_permissions { |u| u.can(:read, :roles) } }
-  let(:user_with_update_permissions) { user_with_permissions { |u| u.can(:update, :roles) } }
-  let(:user_without_update_permissions) { user_with_permissions { |u| u.can(:read, :roles) } }
   let(:user_with_destroy_permissions) { user_with_permissions { |u| u.can(:delete, :roles) } }
   let(:user_without_destroy_permissions) { user_with_permissions { |u| u.can(:update, :roles) } }
 
   let(:role_id) { 123 }
+  let(:perm_id) { 456 }
 
   before (:each) do
-    @role= Role.new(:name => "test_role", :description=> "role description")
+    @role = Role.new(:name => "test_role", :description=> "role description")
+    @perm = Permission.new(:name => "permission_x", :description => "permission description", :role => @role)
     Role.stub(:find).with(role_id).and_return(@role)
+    Permission.stub(:find).with(perm_id).and_return(@perm)
 
     login_user_api
   end
 
-  describe "list roles" do
+  describe "list permissions" do
     let(:action) { :index }
-    let(:req) { get :index }
+    let(:req) { get :index, :role_id => role_id }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
 
-    it 'should find all roles' do
-      Role.should_receive(:readable).and_return(Role)
-      Role.should_receive(:non_self).once.and_return(Role)
-      Role.should_receive(:where).once.and_return(Role)
-      req
-    end
-  end
-
-  describe "show role" do
-    let(:action) { :show }
-    let(:req) { get :show, :id => role_id }
-    let(:authorized_user) { user_with_read_permissions }
-    let(:unauthorized_user) { user_without_read_permissions }
-    it_should_behave_like "protected action"
-
-    it 'should find a role' do
+    it 'should find the role' do
       Role.should_receive(:find).with(role_id)
       req
     end
+
+    it 'should find all permissions associated with the role' do
+      @role.permissions.should_receive(:where).and_return([])
+      req
+    end
   end
 
-  describe "create role" do
-    let(:role_params) { {'name' => 'role_1'} }
+  describe "show permission" do
+    let(:action) { :show }
+    let(:req) { get :show, :role_id => role_id, :id => perm_id }
+    let(:authorized_user) { user_with_read_permissions }
+    let(:unauthorized_user) { user_without_read_permissions }
+    it_should_behave_like "protected action"
+
+    it 'should find the permission' do
+      Permission.should_receive(:find).with(perm_id)
+      req
+    end
+  end
+
+  describe "create permission" do
+    let(:perm_name) { 'permission_y' }
+    let(:perm_desc) { 'permission_y description' }
+    let(:resource_type) { 'environments' }
+    let(:perm_params) { {:name => perm_name, :description => perm_desc, 'type' => resource_type, 'verbs' => [], 'tags' => [], :role_id => role_id} }
     let(:action) { :create }
-    let(:req) { post :create, :role => role_params }
+    let(:req) { post :create, perm_params }
     let(:authorized_user) { user_with_create_permissions }
     let(:unauthorized_user) { user_without_create_permissions }
     it_should_behave_like "protected action"
 
-    it 'should create a role' do
-        Role.should_receive(:create!).with(role_params)
+
+    it 'should find the role' do
+      Role.should_receive(:find).with(role_id)
+      req
+    end
+
+    it 'should create a permission' do
+        #TODO: enhance!!!
+        @resource_type = ResourceType.new(:name => resource_type)
+        ResourceType.should_receive(:find_or_create_by_name).with(resource_type).and_return(@resource_type)
+
+        expected_params = {
+            :name => perm_name,
+            :description => perm_desc,
+            :role => @role,
+            :resource_type => @resource_type
+        }
+
+        Permission.should_receive(:create!).with(hash_including(expected_params))
         req
     end
   end
 
-  describe "update role" do
-    let(:role_params) { {'name' => 'role_1'} }
-    let(:action) { :update }
-    let(:req) { put :update, :id => role_id, :role => role_params }
-    let(:authorized_user) { user_with_update_permissions }
-    let(:unauthorized_user) { user_without_update_permissions }
-    it_should_behave_like "protected action"
-
-    before :each do
-      @role.stub(:save!).and_return(true)
-      @role.stub(:update_attributes!).and_return(true)
-    end
-
-    it 'should find the role' do
-      Role.should_receive(:find).with(role_id)
-      req
-    end
-
-    it 'should update role\'s params' do
-      @role.should_receive(:update_attributes!).with(role_params)
-      req
-    end
-
-    it 'should save the changes' do
-      @role.should_receive(:save!)
-      req
-    end
-  end
-
-  describe "destroy role" do
+  describe "destroy permission" do
     let(:action) { :destroy }
-    let(:req) { delete :destroy, :id => role_id }
+    let(:req) { delete :destroy, :role_id => role_id, :id => perm_id }
     let(:authorized_user) { user_with_destroy_permissions }
     let(:unauthorized_user) { user_without_destroy_permissions }
     it_should_behave_like "protected action"
 
-    it 'should find the role' do
-      Role.should_receive(:find).with(role_id)
+    it 'should find the permission' do
+      Permission.should_receive(:find).with(perm_id)
       req
     end
 
-    it 'should destroy the role' do
-      @role.should_receive(:destroy)
+    it 'should destroy the permission' do
+      @perm.should_receive(:destroy)
       req
     end
 
