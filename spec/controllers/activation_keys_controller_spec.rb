@@ -62,6 +62,7 @@ describe ActivationKeysController do
     it "attempts to retain request in search history" do
       controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
         controller.stub(:render)
+        filters[:organization_id].first.should == @organization.id
       }
       get :items
     end
