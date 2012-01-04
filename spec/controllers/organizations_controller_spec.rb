@@ -39,9 +39,9 @@ describe OrganizationsController do
       end
 
       let(:before_success) do
-        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
           found = nil
-          filters.each{|f|  found = f['id'] if f['id'] }
+          search_options[:filter].each{|f|  found = f['id'] if f['id'] }
           assert !found.include?(@org1.id)
           assert found.include?(@organization.id)
           controller.stub(:render)
@@ -76,6 +76,8 @@ describe OrganizationsController do
     set_default_locale
     controller.stub!(:notice)
     controller.stub!(:errors)
+    controller.stub(:search_validate).and_return(true)
+
   end
   
   describe "create a root org" do        
@@ -93,7 +95,6 @@ describe OrganizationsController do
         response.should_not redirect_to(:action => 'new')
         response.should be_success
         assigns[:organization].name.should == OrgControllerTest::ORGANIZATION[:name]
-
       end
 
       it 'should create organization and account for spaces' do

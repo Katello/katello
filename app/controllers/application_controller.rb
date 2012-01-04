@@ -400,14 +400,32 @@ class ApplicationController < ActionController::Base
     "#{exception.class}: #{exception.message}\n" << exception.backtrace.join("\n")
   end
 
+  #verify if the specific object with the given id, matches a given search string
+  def search_validate(obj_class, id, search)
+    obj_class.index.refresh
+    search = '*' if search.nil? || search == ''
+    results = obj_class.search do
+      query { string search}
+      filter :terms, :id=>[id]
+    end
+    print results.inspect
+    results.total > 0
+  end
 
-  def render_panel_direct(obj_class, options, search, start, sort, filters=[], load=false)
+  # search_options
+  #    :filter  -  Filter to apply to search. Array of hashes.  Each key/value within the hash
+  #                  is OR'd, whereas each HASH itself is AND'd together
+  #    :load  - whether or not to load the active record object (defaults to false)
+  def render_panel_direct(obj_class, panel_options, search, start, sort, search_options={})
+  
+    filters = search_options[:filter] || []
+    load = search_options[:load] || false
 
     search = '*' if search.nil? || search== ''
 
-    options[:accessor] ||= "id"
-    options[:columns] = options[:col]
-    options[:initial_action] ||= :edit
+    panel_options[:accessor] ||= "id"
+    panel_options[:columns] = panel_options[:col]
+    panel_options[:initial_action] ||= :edit
 
     page_size = current_user.page_size
 
@@ -435,12 +453,12 @@ class ApplicationController < ActionController::Base
     rescue Tire::Search::SearchRequestFailed => e
       Rails.logger.error(e.class)
 
-      options[:total_count] = 0
-      options[:total_results] = 0
+      panel_options[:total_count] = 0
+      panel_options[:total_results] = 0
 
     end
 
-    render_panel_results(@items, options)
+    render_panel_results(@items, panel_options)
   end
 
   def render_panel_results(results, options)

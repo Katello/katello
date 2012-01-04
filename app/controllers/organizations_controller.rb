@@ -49,7 +49,7 @@ class OrganizationsController < ApplicationController
   def items
     ids = Organization.readable.collect{|o| o.id}
     render_panel_direct(Organization, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
-                        [{"id"=>ids}])
+                        :filter=>[{"id"=>ids}])
   end
 
   def new
@@ -57,6 +57,7 @@ class OrganizationsController < ApplicationController
   end
 
   def create
+    
     begin
       if params[:envname] && params[:envname] != ''
         @new_env = KTEnvironment.new(:name => params[:envname], :description => params[:envdescription])
@@ -84,7 +85,7 @@ class OrganizationsController < ApplicationController
       render :text=> error.to_s, :status=>:bad_request and return
     end
 
-    if Organization.where(:id => @organization.id).search_for(params[:search]).include?(@organization)
+    if search_validate(Organization, @organization.id, params[:search])
       notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
       render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
     else
@@ -109,7 +110,7 @@ class OrganizationsController < ApplicationController
       @organization.update_attributes!(params[:organization])
       notice _("Organization '#{@organization["name"]}' was updated.")
 
-      if not Organization.where(:id => @organization.id).search_for(params[:search]).include?(@organization)
+      if not search_validate(Organization, @organization.id, params[:search])
         notice _("'#{@organization["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
       end
 
