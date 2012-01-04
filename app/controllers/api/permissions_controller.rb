@@ -22,14 +22,12 @@ class Api::PermissionsController < Api::ApiController
     index_test = lambda{Role.any_readable?}
     create_test = lambda{Role.creatable?}
     read_test = lambda{Role.any_readable?}
-    edit_test = lambda{Role.editable?}
     delete_test = lambda{Role.deletable?}
 
      {
        :index => index_test,
        :show => read_test,
        :create => create_test,
-       :update => edit_test,
        :destroy => delete_test,
        :available_verbs => read_test
      }
@@ -44,7 +42,6 @@ class Api::PermissionsController < Api::ApiController
   end
 
   def create
-
     new_params = {
       :name => params[:name],
       :description => params[:description],
