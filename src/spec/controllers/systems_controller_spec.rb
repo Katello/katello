@@ -169,7 +169,6 @@ describe SystemsController do
         controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
           options[:list_partial].should == "systems/list_systems"
           controller.stub(:render)
-
         }
         get :items
         response.should be_success

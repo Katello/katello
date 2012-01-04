@@ -6,7 +6,7 @@ module IndexedModel
       if !Rails.env.test?
         include Tire::Model::Search
         include Tire::Model::Callbacks
-        index_name AppConfig.elastic_index + '_' +  self.name.downcase
+        index_name AppConfig.elastic_index + '_' +  self.base_class.name.downcase
       else
         #stub mapping
         def self.mapping
@@ -25,6 +25,12 @@ module IndexedModel
           document_type model.document_type
         end
       end
+    end
+  end
+
+  #mocked methods for testing
+  if Rails.env.test?
+    def update_index
     end
   end
 
