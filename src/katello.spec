@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.162
+Version:        0.1.163
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -348,6 +348,9 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Jan 04 2012 Ivan Necas <inecas@redhat.com> 0.1.163-1
+- periodic rebuild
+
 * Tue Jan 03 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.160-1
 - moving /distributions API into /repositories path
 - disabling auto-complete on tupane pages
