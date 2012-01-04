@@ -36,16 +36,6 @@ class Organization < ActiveRecord::Base
 
   default_scope  where(:task_id=>nil) #ignore organizations that are being deleted
 
-
-  scoped_search :on => :name, :complete_value => true, :rename => :'organization.name'
-  scoped_search :on => :description, :complete_value => true, :rename => :'organization.description'
-  scoped_search :in => :environments, :on => :name, :complete_value => true, :rename => :'environment.name'
-  scoped_search :in => :environments, :on => :description, :complete_value => true, :rename => :'environment.description'
-  scoped_search :in => :providers, :on => :name, :complete_value => true, :rename => :'provider.name'
-  scoped_search :in => :providers, :on => :description, :complete_value => true, :rename => :'provider.description'
-  scoped_search :in => :providers, :on => :provider_type, :complete_value => {:redhat => :'Red Hat', :custom => :'Custom'}, :rename => :'provider.type'
-  scoped_search :in => :providers, :on => :repository_url, :complete_value => true, :rename => :'provider.url'
-
   before_create :create_locker
   before_create :create_redhat_provider
   validates :name, :uniqueness => true, :presence => true, :katello_name_format => true

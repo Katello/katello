@@ -58,7 +58,7 @@ class SystemTemplate < ActiveRecord::Base
   after_initialize :save_content_state
   before_save :update_revision
   before_destroy :check_children
-
+  after_save :update_related_index
 
   def init_parameters
     ActiveSupport::JSON.decode((self.parameters_json or "{}"))
@@ -390,6 +390,13 @@ class SystemTemplate < ActiveRecord::Base
 
 
   protected
+
+  def update_related_index
+    if self.name_changed?
+      keys = ActivationKey.where(:system_template_id=>self.id)
+      ActivationKey.index.import(keys) if !keys.empty?
+    end
+  end
 
   def promote_template from_env, to_env
     #clone the template
