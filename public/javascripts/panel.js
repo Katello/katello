@@ -864,6 +864,16 @@ KT.panel.list = (function () {
                     $.bbq.removeState("search");
                     $('#search_form').trigger('submit');
                 }
+            }).live('keypress', function(event){
+                var button = $('#search_button');
+
+                if( event.keyCode === 13 ){
+                    event.preventDefault();
+                    
+                    if( button.attr('disabled') !== "disabled" ){
+                        $('#search_form').trigger('submit');
+                    }
+                }
             });
         };
     return {
