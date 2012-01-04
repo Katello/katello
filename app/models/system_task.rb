@@ -142,8 +142,7 @@ class SystemTask < ActiveRecord::Base
             return ""
           end
           msg = details[:event_messages][task.state]
-          r = msg + [p.length]
-          return n_(r[0], r[1], p.length-1) % [p.first, p.length - 1]
+          return n_(msg[0], msg[1], p.length) % [p.first, p.length - 1]
       end
     end
 
