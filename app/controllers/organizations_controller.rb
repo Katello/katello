@@ -66,7 +66,7 @@ class OrganizationsController < ApplicationController
 
       @organization = Organization.new(:name => params[:name], :description => params[:description], :cp_key => params[:name].tr(' ', '_'))
       @organization.save!
-      
+
       if @new_env
         @new_env.organization = @organization
         @new_env.prior = @organization.locker
@@ -83,7 +83,7 @@ class OrganizationsController < ApplicationController
 
       render :text=> error.to_s, :status=>:bad_request and return
     end
-    
+
     if Organization.where(:id => @organization.id).search_for(params[:search]).include?(@organization)
       notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
       render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
@@ -108,13 +108,13 @@ class OrganizationsController < ApplicationController
 
       @organization.update_attributes!(params[:organization])
       notice _("Organization '#{@organization["name"]}' was updated.")
-      
+
       if not Organization.where(:id => @organization.id).search_for(params[:search]).include?(@organization)
         notice _("'#{@organization["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
       end
-      
+
       render :text => escape_html(result)
-      
+
     rescue Exception => error
       errors error
 
@@ -137,7 +137,6 @@ class OrganizationsController < ApplicationController
     render :partial => "common/list_remove", :locals => {:id=> id, :name=> controller_display_name}
   rescue Exception => error
     errors error.to_s
-    debugger
     render :text=> error.to_s, :status=>:bad_request and return
   end
 
