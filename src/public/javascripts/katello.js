@@ -236,7 +236,7 @@ KT.common = (function() {
             var orgbox = $('#orgbox');
             var orgboxapi = null;
             button.removeAttr('href');
-            button.mouseup(function(switcher) {
+            button.click(function(switcher) {
                 box.fadeToggle('fast');
                 button.toggleClass('active');
                 if(button.hasClass('active')){
