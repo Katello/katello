@@ -63,6 +63,11 @@ describe ChangesetsController do
     end
 
     it "should return a portion of changesets for an environment" do
+      controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+        filters[0][:environment_id].should == [@env.id]
+        controller.stub(:render)
+      }
+
       get :items, :env_id=>@env.id
       response.should be_success
     end
@@ -213,9 +218,15 @@ describe ChangesetsController do
       let(:unauthorized_user) do
         user_without_permissions
       end
-      let(:on_success) do
-        assigns(:items).should include @cs
-        assigns(:environment).should == @env3
+      
+      let(:before_success) do
+        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+          filter_coll = {}
+          filters.each{|f| filter_coll.merge!(f)}
+          filter_coll[:environment_id].should == [@env3.id]
+          filter_coll[:state].should == ["promoted"]
+          controller.stub(:render)
+        }
       end
       it_should_behave_like "protected action"
     end
