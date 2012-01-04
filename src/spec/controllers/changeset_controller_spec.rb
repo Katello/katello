@@ -63,8 +63,8 @@ describe ChangesetsController do
     end
 
     it "should return a portion of changesets for an environment" do
-      controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
-        filters[0][:environment_id].should == [@env.id]
+      controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
+        search_options[:filter][0][:environment_id].should == [@env.id]
         controller.stub(:render)
       }
 
@@ -220,9 +220,9 @@ describe ChangesetsController do
       end
       
       let(:before_success) do
-        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
           filter_coll = {}
-          filters.each{|f| filter_coll.merge!(f)}
+          search_options[:filter].each{|f| filter_coll.merge!(f)}
           filter_coll[:environment_id].should == [@env3.id]
           filter_coll[:state].should == ["promoted"]
           controller.stub(:render)

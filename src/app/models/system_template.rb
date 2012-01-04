@@ -394,9 +394,9 @@ class SystemTemplate < ActiveRecord::Base
   def update_related_index
     if self.name_changed?
       keys = ActivationKey.where(:system_template_id=>self.id)
-      ActivationKey.index.import(keys) if !keys.empty?
+      ActivationKey.index_import(keys) if !keys.empty?
       changesets =  Changeset.joins(:system_templates).where("system_templates.id"=>self.id)
-      Changeset.index.import(changesets)
+      Changeset.index_import(changesets) if !changesets.empty?
     end
   end
 

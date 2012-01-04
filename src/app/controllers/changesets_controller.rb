@@ -63,8 +63,7 @@ class ChangesetsController < ApplicationController
   #extended scroll for changeset_history
   def items
     render_panel_direct(Changeset, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
-        [{:environment_id=>[@environment.id]}, {:state=>[Changeset::PROMOTED]}])
-    #render_panel_items(@environment.changeset_history, @panel_options, params[:search], params[:offset])
+        :filter=>[{:environment_id=>[@environment.id]}, {:state=>[Changeset::PROMOTED]}])
   end
 
   #similar to index, but only renders the actual list of the 2 pane

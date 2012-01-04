@@ -89,7 +89,7 @@ class SystemsController < ApplicationController
       if saved
         notice _("System '#{@system['name']}' was created.")
 
-        if System.where(:id => @system.id).search_for(params[:search]).include?(@system)
+        if search_validate(System, @system.id, params[:search])
           render :partial=>"systems/list_systems",
             :locals=>{:accessor=>"id", :columns=>['name', 'lastCheckin','created' ], :collection=>[@system], :name=> controller_display_name}
         else
@@ -106,34 +106,23 @@ class SystemsController < ApplicationController
   end
 
   def index
-      @systems = System.readable(current_organization).search_for(params[:search])
-      retain_search_history
-      @systems = sort_order_limit(@systems)
   end
 
   def environments
     accesible_envs = KTEnvironment.systems_readable(current_organization)
 
     begin
-
       @systems = []
-
       setup_environment_selector(current_organization, accesible_envs)
       if @environment
         # add the environment id as a search filter.. this will be passed to the app by scoped_search as part of
         # the auto_complete_search requests
         @panel_options[:search_env] = @environment.id
-
-        @systems = System.search_for(params[:search]).where(:environment_id => @environment.id)
-        retain_search_history
-        @systems = sort_order_limit(@systems)
-
       end
       
       render :index, :locals=>{:envsys => 'true', :accessible_envs=> accesible_envs}
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
-      @systems = System.search_for ''
       render :index, :status=>:bad_request
     end
   end
@@ -144,11 +133,12 @@ class SystemsController < ApplicationController
     if params[:env_id]
       find_environment
       filters = {:environment_id=>[params[:env_id]]}
-      render_panel_direct(System, @panel_options, search, params[:offset], order, filters, true)
     else
       filters = {:organization_id=>[current_organization.id]}
-      render_panel_direct(System, @panel_options, search, params[:offset], order, filters, true)
     end
+    render_panel_direct(System, @panel_options, search, params[:offset], order,
+                        {:filter=>filters, :load=>true})
+
   end
 
   def split_order order
@@ -214,7 +204,7 @@ class SystemsController < ApplicationController
       @system.update_attributes!(params[:system])
       notice _("System '#{@system["name"]}' was updated.")
       
-      if not System.where(:id => @system.id).search_for(params[:search]).include?(@system)
+      if not search_validate(System, @system.id, params[:search])
         notice _("'#{@system["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
       end
 
