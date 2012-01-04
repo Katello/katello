@@ -25,7 +25,7 @@ class DistributionAPI(KatelloAPI):
         dist_list = self.server.GET(path)[1]
         return dist_list
 
-    def distribution(self, distribution_id):
-        path = "/api/distributions/%s/" % distribution_id
+    def distribution(self, repoId, distribution_id):
+        path = "/api/repositories/%s/distributions/%s/" % (repoId, distribution_id)
         data = self.server.GET(path)[1]
         return data

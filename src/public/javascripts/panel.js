@@ -722,6 +722,7 @@ KT.panel.list = (function () {
                             expand_list = $('.expand_list');
                         }
                         retrievingNewContent = false;
+                        console.log(data);
                         expand_list.append(data['html']);
                         $('.list-spinner').remove();
                         if (data['current_items'] === 0) {
@@ -741,7 +742,9 @@ KT.panel.list = (function () {
             options = options || {};
             
             setupSearch(resource_type, options);
-            KT.search.enableAutoComplete(KT.routes['auto_complete_search_' + resource_type + '_path']());
+
+            // DISABLING AUTO COMPLETE for now
+            //KT.search.enableAutoComplete(KT.routes['auto_complete_search_' + resource_type + '_path']());
             KT.panel.control_bbq = false;
             
             $(window).bind('hashchange', KT.panel.hash_change);
@@ -831,8 +834,10 @@ KT.panel.list = (function () {
                 $(this).ajaxSubmit({
                     url: url,
                     data: data,
+                    cache: false,
                     success: function (data) {
-                        element.find('section').append(data['html']);
+                        var to_append = data.html ? data.html : data;
+                        element.find('section').append(to_append);
                         element.find('.spinner').hide();
                         button.removeAttr('disabled');
                         element.find('section').fadeIn();
@@ -845,7 +850,7 @@ KT.panel.list = (function () {
                     error: function (e) {
                         button.removeAttr('disabled');
                     }
-                })
+                });
             });
         };
     return {

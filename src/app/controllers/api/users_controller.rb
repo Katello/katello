@@ -12,7 +12,7 @@
 
 class Api::UsersController < Api::ApiController
 
-  before_filter :find_user, :only => [:show, :update, :destroy]
+  before_filter :find_user, :only => [:show, :update, :destroy, :add_role, :remove_role, :list_roles]
   before_filter :find_user_by_username, :only => [:list_owners]
   before_filter :authorize
   respond_to :json
@@ -34,6 +34,9 @@ class Api::UsersController < Api::ApiController
        :update => edit_test,
        :destroy => delete_test,
        :list_owners => list_owners_test,
+       :add_role => edit_test,
+       :remove_role => edit_test,
+       :list_roles => edit_test,
        :report => index_test
      }
   end
@@ -65,6 +68,25 @@ class Api::UsersController < Api::ApiController
     render :text => _("Deleted user '#{params[:id]}'"), :status => 200
   end
 
+  def list_roles
+    render :json => @user.roles.non_self.to_json
+  end
+
+  def add_role
+    role = Role.find(params[:role_id])
+    @user.roles << role
+    @user.save!
+    render :text => _("User '#{@user.username}' assigned to role '#{role.name}'"), :status => 200
+  end
+
+  def remove_role
+    role = Role.find(params[:id])
+    @user.roles.delete(role)
+    @user.save!
+    render :text => _("User '#{@user.username}' unassigned from role '#{role.name}'"), :status => 200
+
+  end
+
   def report
     users_report = User.report_table(:all,
         :only => [:username, :created_at, :updated_at],
@@ -79,7 +101,7 @@ class Api::UsersController < Api::ApiController
   end
 
   def find_user
-    @user = User.find(params[:id])
+    @user = User.find(params[:user_id] || params[:id])
     raise HttpErrors::NotFound, _("Couldn't find user '#{params[:id]}'") if @user.nil?
     @user
   end
