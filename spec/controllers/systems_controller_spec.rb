@@ -53,8 +53,8 @@ describe SystemsController do
           end
 
           let(:before_success) do
-            controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
-              filters[:organization_id].should include(@organization.id)
+            controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
+              search_options[:filter][:organization_id].should include(@organization.id)
               controller.stub(:render)
             }
           end
@@ -78,8 +78,8 @@ describe SystemsController do
           end
           
           let(:before_success) do
-            controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
-              filters[:organization_id].should include(@organization.id)
+            controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
+              search_options[:filter][:organization_id].should include(@organization.id)
               controller.stub(:render)
             }
           end
@@ -145,7 +145,8 @@ describe SystemsController do
 
       controller.stub!(:errors)
       controller.stub!(:notice)
-
+      controller.stub(:search_validate).and_return(true)
+      
       Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Candlepin::Consumer.stub!(:update).and_return(true)
 
@@ -176,7 +177,7 @@ describe SystemsController do
 
       describe 'with an offset' do
         pending "should return a portion of systems" do
-          controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+          controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
             options[:list_partial].should == "systems/list_systems"
             start.should == 25
             controller.stub(:render)
@@ -218,7 +219,6 @@ describe SystemsController do
           @environment2.save!
           @system2 = System.create!(:name=>"verbose2", :environment => @environment2, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
           get :environments, :env_id => @environment2.id
-          assigns[:systems].should include System.find(@system2.id)
           response.should be_success
         end
       end

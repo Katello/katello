@@ -78,9 +78,9 @@ describe ProvidersController do
         user_without_permissions
       end
       let(:before_success) do
-        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
           found = nil
-          filters.each{|f|  found = f['id'] if f['id'] }
+          search_options[:filter].each{|f|  found = f['id'] if f['id'] }
           assert found.include?(@provider.id)
           assert !found.include?(@provider2.id)
           controller.stub(:render)
