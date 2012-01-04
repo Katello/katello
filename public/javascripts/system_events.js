@@ -110,14 +110,12 @@ KT.events = function() {
 
             search_button.bind('click', function(evt){
                 evt.preventDefault();
-                console.log("binding the get call");
                 $.ajax({
                     type: "GET",
                     url: search_field.data('search_url'),
                     data: {search: search_field.val()},
                     cache: false,
                     success: function(data) {
-                        console.log(data);
                         spinner.fadeOut();
                         $("#event_items").html(data["html"]);
                         $('#filter').keyup();
