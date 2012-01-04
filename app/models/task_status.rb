@@ -38,12 +38,29 @@ class TaskStatus < ActiveRecord::Base
     end
   end
 
-  index_options :json=>{:only=> [:state, :parameters, :result, :task_type,
-                     :organization_id, :system_ids, :start_time, :finish_time ]}
+  index_options :json=>{:only=> [:state, :parameters, :result,
+                     :organization_id, :system_ids, :start_time, :finish_time ]},
+                :extended_json=>:extended_index_attrs
 
   mapping do
-    indexes :start_time, :type=>'date'
-    indexes :finish_time, :type=>'date'
+   indexes :start_time, :type=>'date'
+   indexes :finish_time, :type=>'date'
+   indexes :task_type, :analyzer => 'snowball'
+  end
+
+
+
+  def extended_index_attrs
+    ret = {}
+    ret[:username] = user.username if user
+    if task_type
+      tt = task_type
+      unless system_tasks.nil? ||  system_tasks.empty?
+        tt = SystemTask::TYPES[task_type][:name]
+      end
+      ret[:task_type] = tt
+    end
+    ret
   end
 
 
