@@ -59,7 +59,7 @@ describe PulpTaskStatus do
 
     context "TaskStatus should have correct attributes for a failed task" do
       before { @t = PulpTaskStatus.using_pulp_task(pulp_task_with_error) }
-      specify { @t.result.should == {:errors => [pulp_task_with_error[:exception], pulp_task_with_error[:traceback]]}.to_json }
+      specify { @t.result.should == {:errors => [pulp_task_with_error[:exception], pulp_task_with_error[:traceback]]} }
     end
 
     context "refreshing TaskStatus with latest from pulp" do

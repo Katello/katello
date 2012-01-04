@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 module OrchestrationHelper
-
+  
   CERT = <<EOCERT
 -----BEGIN CERTIFICATE-----
 MIIF7DCCBVWgAwIBAgIIB1AMflT0SrswDQYJKoZIhvcNAQEFBQAwRjElMCMGA1UE
@@ -78,6 +78,7 @@ rKH9OkgKEvwkf8zQjO/XSvuoac83uBEFgKXJwYLHPA3U20JrchKU7klLwzSsmrXA
 5JP55pqMjeCZBj2fNkfWrcNPQVdxq25zggRbM6Bmsl0JylpTr3Mt
 -----END RSA PRIVATE KEY-----
 EOKEY
+
 
   def disable_product_orchestration
     Candlepin::Product.stub!(:get).and_return([{:productContent => []}])

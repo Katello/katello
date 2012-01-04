@@ -14,7 +14,7 @@ class SystemsController < ApplicationController
   include AutoCompleteSearch
   include SystemsHelper
 
-  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :bulk_destroy, :new, :create]
+  before_filter :find_system, :except =>[:index, :auto_complete_search, :items, :environments, :env_items, :bulk_destroy, :destroy, :new, :create]
   before_filter :find_systems, :only=>[:bulk_destroy]
 
   skip_before_filter :authorize
@@ -25,7 +25,7 @@ class SystemsController < ApplicationController
   before_filter :search_filter, :only => [:auto_complete_search]
 
   # two pane columns and mapping for sortable fields
-  COLUMNS = {'name' => 'name', 'lastCheckin' => 'lastCheckin'}
+  COLUMNS = {'name' => 'name_sort', 'lastCheckin' => 'lastCheckin'}
 
   def rules
     edit_system = lambda{System.find(params[:id]).editable?}
@@ -51,6 +51,7 @@ class SystemsController < ApplicationController
       :edit => read_system,
       :show => read_system,
       :facts => read_system,
+      :destroy=> delete_systems,
       :bulk_destroy => delete_systems
     }
   end
@@ -138,12 +139,25 @@ class SystemsController < ApplicationController
   end
 
   def items
+    order = split_order(params[:order])
+    search = params[:search]
     if params[:env_id]
       find_environment
-      render_panel_items(System.readable(current_organization).where(:environment_id => @environment.id), @panel_options, params[:search], params[:offset])
+      filters = {:environment_id=>[params[:env_id]]}
+      render_panel_direct(System, @panel_options, search, params[:offset], order, filters, true)
     else
-      render_panel_items(System.readable(current_organization), @panel_options, params[:search], params[:offset])
+      filters = {:organization_id=>[current_organization.id]}
+      render_panel_direct(System, @panel_options, search, params[:offset], order, filters, true)
     end
+  end
+
+  def split_order order
+    if order
+      order.split
+    else
+      [:name_sort, "ASC"]
+    end
+
   end
 
   def subscriptions
@@ -240,6 +254,23 @@ class SystemsController < ApplicationController
     errors e
     render :text=>e, :status=>500
   end
+
+  def destroy
+    id = params[:id]
+    system = find_system
+    system.destroy
+    if system.destroyed?
+      notice _("#{system.name} Removed Successfully")
+      #render and do the removal in one swoop!
+      render :partial => "common/list_remove", :locals => {:id => id, :name=>controller_display_name} and return
+    end
+    errors "", {:list_items => system.errors.to_a}
+    render :text => @system.errors, :status=>:ok
+  rescue Exception => e
+    errors e
+    render :text=>e, :status=>500
+  end
+
 
 
   private

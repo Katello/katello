@@ -11,15 +11,12 @@
  http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 */
 
-
-
 KT.options = {
     action_bar: undefined,
     template_tree: undefined,
     content_tree: undefined,
     current_template: undefined,
     templates: undefined
-    
 };
 
 KT.templates = function() {
@@ -30,7 +27,6 @@ KT.templates = function() {
         download: undefined,
         discard_dialog: undefined,
         save_dialog: undefined
-
     },
     fetch_template = function(template_id, callback) {
         $("#tree_loading").css("z-index", 300);
@@ -91,6 +87,13 @@ KT.templates = function() {
             trail: ['templates', template_root],
             url: ''
         };
+        bc['repos_' + id] = {
+            cache: null,
+            client_render: true,
+            name: i18n.repos,
+            trail: ['templates', template_root],
+            url: ''
+        };
         bc['distribution_' + id] = {
             cache: null,
             client_render: true,
@@ -105,7 +108,6 @@ KT.templates = function() {
             trail: ['templates', template_root],
             url: ''
         };
-        
     },
     in_array =  function(name, array) {
         var to_ret = -1;
@@ -154,6 +156,20 @@ KT.templates = function() {
     remove_package_group = function(name) {
         generic_remove(name, KT.options.current_template.package_groups);
     },
+    has_repo = function(name) {
+        return in_array(name, KT.options.current_template.repos) > -1;
+    },
+    add_repo = function(name) {
+      var repos = KT.options.current_template.repos;
+      if (!has_repo(name)) {
+        repos.push({name:name});
+      }
+      KT.options.current_template.modified = true;
+      KT.options.template_tree.rerender_content();
+    },
+    remove_repo = function(name) {
+        generic_remove(name, KT.options.current_template.repos);
+    },
     reset_page = function() {
         
         if (KT.options.current_template === undefined || !KT.permissions.editable) {
@@ -162,6 +178,7 @@ KT.templates = function() {
             buttons.save.addClass("disabled");
             buttons.download.addClass("disabled");
             $('.package_add_remove').hide();
+            $('.repo_add_remove').hide();
             $('.product_add_remove').hide();
         }
         else {
@@ -175,10 +192,10 @@ KT.templates = function() {
                 buttons.save.addClass("disabled");
             }
 
-
-            //handle packages & groups
+            //handle packages, groups & repos
             $.each( [["package", KT.options.current_template.packages],
-                     ["package_group", KT.options.current_template.package_groups]], function(index, item) {
+                     ["package_group", KT.options.current_template.package_groups],
+                     ["repo", KT.options.current_template.repos]], function(index, item) {
                 var type = item[0];
                 var array = item[1];
                 
@@ -265,7 +282,6 @@ KT.templates = function() {
         KT.options.current_template.distribution = id;
         KT.options.current_template.modified = true;
         KT.templates.reset_page();
-        
     };
     
     return {
@@ -281,6 +297,9 @@ KT.templates = function() {
         add_package: add_package,
         remove_package: remove_package,
         has_package: has_package,
+        add_repo: add_repo,
+        remove_repo: remove_repo,
+        has_repo: has_repo,
         add_product: add_product,
         remove_product: remove_product,
         has_product: has_product,
@@ -289,8 +308,6 @@ KT.templates = function() {
         remove_package_group: remove_package_group,
         set_distro: set_distro
     };
-
-
 }();
 
 
@@ -335,6 +352,9 @@ KT.template_renderer = function() {
                 }
                 else if (node === "packages") {
                     content = packages();
+                }
+                else if (node == "repos") {
+                    content = repos();
                 }
                 else if (node === "products") {
                     content = products();
@@ -386,7 +406,31 @@ KT.template_renderer = function() {
         html +=  '<ul class="filterable">';
         $.each(KT.options.current_template.packages, function(index, item) {
             html += package_item(item.name);
-            
+        });
+        return html + "</ul>";
+    },
+    repo_item = function(name, id) {
+        var html = '<li class="">';
+        html += '<div class="simple_link" id=repo_"' + id + '">';
+        html += '<span class="sort_attr">' + name + '</span>';
+        if (KT.permissions.editable) {
+            html += '<a id="" class="fr st_button remove_repo" data-id="' + id + '" data-name="'+ name + '">';
+            html += i18n.remove + '</a>';
+        }
+        html += "</div></li>";
+        return html ;
+    },
+    repos = function() {
+        var html = "";
+        if (KT.permissions.editable) {
+            html += '<ul><li class="content_input_item"><form id="add_repo_form">';
+            html += '<input id="add_repo_input" type="text" size="33"><form>  ';
+            html += '<a id="add_repo" class="fr st_button ">' + i18n.add_plus + '</a>';
+            html += ' </li></ul>';
+        }
+        html +=  '<ul class="filterable">';
+        $.each(KT.options.current_template.repos, function(index, item) {
+            html += repo_item(item.name, item.id);
         });
         return html + "</ul>";
     },
@@ -412,7 +456,6 @@ KT.template_renderer = function() {
         html +=  '<ul class="filterable">';
         $.each(KT.options.current_template.products, function(index, item) {
             html += product_item(item.name, item.id);
-
         });
         return html + "</ul>";
     },
@@ -428,7 +471,6 @@ KT.template_renderer = function() {
         html +=  '<ul class="filterable">';
         $.each(KT.options.current_template.package_groups, function(index, item) {
             html += comps_item(item.name);
-
         });
         return html + "</ul>";
     },
@@ -474,7 +516,7 @@ KT.template_renderer = function() {
     },
     details = function(t_id) {
         var html = "<ul>";
-        $.each([['products_', i18n.products], ['packages_', i18n.packages], ['comps_', i18n.package_groups],
+        $.each([['products_', i18n.products], ['repos_', i18n.repos], ['packages_', i18n.packages], ['comps_', i18n.package_groups],
             ['distribution_', i18n.selected_distribution]],
             function(index, item_set) {
                 html += list_item(item_set[0] + t_id, item_set[1], true);
@@ -500,7 +542,6 @@ KT.template_renderer = function() {
         render_hash: render_hash
     };
 }();
-
 
 
 KT.auto_complete_box = function(params) {
@@ -543,7 +584,6 @@ KT.auto_complete_box = function(params) {
                 $('#' + settings.input_id).focus();
             }
         });
-
     },
     add_success_cleanup = function() {
         //re-lookup all items, since a redraw may have happened
@@ -562,11 +602,9 @@ KT.auto_complete_box = function(params) {
     error = function() {
         var input = $("#" + settings.input_id);
         input.addClass("error");
-
     };
 
     //initialization
-
     var input = $("#" + settings.input_id);
     var form = $("#" + settings.form_id);
     var add_btn = $("#" + settings.add_btn_id);
@@ -599,9 +637,9 @@ KT.auto_complete_box = function(params) {
 
 
 KT.product_actions = (function() {
-    var current_input = undefined;
+    var current_input = undefined,
     
-    var register_autocomplete = function() {
+    register_autocomplete = function() {
         current_input = KT.auto_complete_box({
             values:       Object.keys(KT.product_hash),
             default_text: i18n.product_search_text,
@@ -629,7 +667,6 @@ KT.product_actions = (function() {
             var name = btn.attr("data-name");
 
             if (name && id) {
-
                 KT.templates.remove_product(name, id);
             }
         });
@@ -648,7 +685,6 @@ KT.product_actions = (function() {
                 current_input.manually_add(name, KT.product_hash[name]);
             }
         });
-
     };
 
     return {
@@ -658,11 +694,72 @@ KT.product_actions = (function() {
 
 })();
 
+KT.repo_actions = (function() {
+    var current_input = undefined,
+
+    //called everytime 'repos is loaded'
+    register_autocomplete = function() {
+        current_input = KT.auto_complete_box({
+            values:       KT.routes.auto_complete_locker_repositories_path(),
+            default_text: i18n.repo_search_text,
+            input_id:     "add_repo_input",
+            form_id:      "add_repo_form",
+            add_btn_id:   "add_repo",
+            add_cb:       verify_add_repo
+        });
+    },
+    verify_add_repo = function(name, cleanup_cb){
+        $.ajax({
+            type: "GET",
+            url: KT.routes.auto_complete_locker_repositories_path(),
+            data: {term:name},
+            cache: false,
+            success: function(data){
+                if ($.inArray(name, data) > -1) {
+                    KT.templates.add_repo(name);
+                }
+                else {
+                    current_input.error();
+                }
+                cleanup_cb();
+            },
+            error: KT.templates.throw_error
+        });
+    },
+    //called once on page load
+    register_events = function() {
+        $(".remove_repo").live('click', function() {
+            var repo = $(this).siblings("span").text();
+            if (repo && repo.length > 0) {
+                KT.templates.remove_repo(repo);
+            }
+        });
+
+        $(".repo_add_remove").live('click', function(){
+            var btn = $(this);
+            var name = btn.attr("data-name");
+            if (KT.templates.has_repo(name)) {
+                //need to remove
+                KT.templates.remove_repo(name);
+            }
+            else {
+                //need to add
+                btn.html("<img  src='images/spinner.gif'>");
+                current_input.manually_add(name);
+            }
+        });
+    };
+    return {
+        register_events: register_events,
+        register_autocomplete: register_autocomplete
+    };
+})();
+
 KT.package_actions = (function() {
-    var current_input = undefined;
+    var current_input = undefined,
 
     //called everytime 'packages is loaded'
-    var register_autocomplete = function() {
+    register_autocomplete = function() {
         current_input = KT.auto_complete_box({
             values:       KT.routes.auto_complete_locker_packages_path(),
             default_text: i18n.package_search_text,
@@ -724,7 +821,6 @@ KT.package_actions = (function() {
                 current_input.manually_add(name);
             }
         });
-
     };
     return {
         register_events: register_events,
@@ -874,20 +970,17 @@ KT.actions =  (function(){
         buttons.edit.find(".text").text(i18n.edit_label);
     },
     toggle_list = {
+        'template_edit': { container 	: 'edit_template_container',
+                        button		: 'edit_template',
+                        setup_fn	: toggle_edit
 
-            'template_edit': { container 	: 'edit_template_container',
-                            button		: 'edit_template',
-                            setup_fn	: toggle_edit
-
-            },
-            'template_download': { container 	: 'download_template_container',
-                                button		: 'download_template',
-                                setup_fn: toggle_download
-            }
+        },
+        'template_download': { container 	: 'download_template_container',
+                            button		: 'download_template',
+                            setup_fn: toggle_download
+        }
     },
-
     register_events = function() {
-
         $("#panel").delegate('form[id^=new_system_template]', 'submit', function(e) {
             var button = $('#template_save');
             var  slide_button = $('#add_template');
@@ -945,6 +1038,7 @@ KT.actions =  (function(){
             var current = KT.options.current_template;
             var data = {
                 packages: current.packages,
+                repos: current.repos,
                 products: current.products,
                 package_groups: current.package_groups,
                 distribution: current.distribution
@@ -993,13 +1087,8 @@ KT.template_download = {
         // add the options to the system template select... this select exists on an insert form
         // or as part of the environment edit dialog
         $("#activation_key_system_template_id").html(options);
-
-
      }
-
 };
-
-
 
 //Setup jeditable stuff
 KT.editable = {
@@ -1043,11 +1132,8 @@ KT.editable = {
                 }
             });
         });
-
     }
 };
-
-
 
 $(document).ready(function() {
 
@@ -1061,8 +1147,6 @@ $(document).ready(function() {
 
     $("#modified_dialog").dialog({modal: true, width: 400, autoOpen: false});
 
-
-
     KT.panel.list.set_extended_cb(KT.templates.reset_page);
 
     KT.options.templates = KT.template_breadcrumb["templates"].templates;
@@ -1072,7 +1156,7 @@ $(document).ready(function() {
                             default_tab     :  "products",
                             bbq_tag         :  "products",
                             base_icon       :  'home_img',
-                            enable_search   :  false,
+                            enable_filter   :  false,
                             tab_change_cb   :  function(hash_id) {
                                 KT.templates.reset_page();
                             }
@@ -1086,20 +1170,20 @@ $(document).ready(function() {
                             render_cb       :  KT.template_renderer.render_hash,
                             tab_change_cb   :  function(hash) {
                                 KT.package_actions.register_autocomplete();
+                                KT.repo_actions.register_autocomplete();
                                 KT.product_actions.register_autocomplete();
                                 KT.package_group_actions.register_autocomplete();
                                 KT.templates.reset_page();
                                 KT.actions.register_distro_select();
                             },
-                            enable_search   :  true,
+                            enable_filter   :  true,
                             enable_float	:  true
                         });
-
- 
 
     KT.options.action_bar = sliding_tree.ActionBar(KT.actions.toggle_list);
     KT.actions.register_events();
     KT.package_actions.register_events();
+    KT.repo_actions.register_events();
     KT.product_actions.register_events();
     KT.package_group_actions.register_events();
 
@@ -1112,6 +1196,4 @@ $(document).ready(function() {
             return i18n.leave_page.replace("$TEMPLATE",  KT.options.current_template.name);
         }
     };
-
-
 });

@@ -16,8 +16,9 @@ module BreadcrumbHelper
     cache = false || params[:cache] #default to false
     hash[id] = {:name=>name, :url=>url, :trail=>trail, :cache=>cache}
     hash[id][:content] = params[:content] if params[:content]
-    hash[id][:scrollable] = true if params[:scrollable]
+    hash[id][:scrollable] = params[:scrollable] ? true : false
     hash[id][:client_render] = true if params[:client_render]
+    hash[id][:searchable] = true if params[:searchable]
     hash[id] = hash[id].merge(attributes)
   end
 end
@@ -28,7 +29,7 @@ module ChangesetBreadcrumbs
     add_crumb_node!(bc, "changesets", "", _("Changesets"), [], {:client_render => true})
 
     @changesets.each{|cs|
-      cs_info = {:is_new=>cs.state == Changeset::NEW}
+      cs_info = {:is_new=>cs.state == Changeset::NEW, :state=>cs.state}
       if (cs.state == Changeset::PROMOTING)
         prog = cs.task_status.progress
         if prog
@@ -149,7 +150,7 @@ module ContentBreadcrumbs
 
      #product_packages
      add_crumb_node!(bc, packages_bc_id(prod), packages_promotion_path(@environment.name, :product_id=>prod.id, :changeset_id=>changeset_id(@changeset)),
-        _("Packages"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true})
+        _("Packages"), [content_crumb_id,products_crumb_id, product_id], {:scrollable=>true, :searchable => true})
 
      #product_errata
      add_crumb_node!(bc, errata_id, nil,
@@ -367,6 +368,10 @@ module TemplateContentBreadcrumb
      add_crumb_node!(bc, product_id, "",
         prod.name, [products_crumb_id], {:cache=>true, :content=>render(:partial=>"product_detail", :locals=>{:product=>prod})})
 
+     #product.repositories
+     add_crumb_node!(bc, repos_bc_id(prod), product_repos_system_templates_path(:product_id=>prod.id),
+        prod.name + " " +  _("Repositories"), [products_crumb_id, product_id], {:scrollable=>true})
+
      #product,packages
      add_crumb_node!(bc, packages_bc_id(prod), product_packages_system_templates_path(:product_id=>prod.id),
         prod.name + " " +  _("Packages"), [products_crumb_id, product_id], {:scrollable=>true})
@@ -374,12 +379,9 @@ module TemplateContentBreadcrumb
      #product,comps
      add_crumb_node!(bc, comps_bc_id(prod), product_comps_system_templates_path(:product_id=>prod.id),
         prod.name + " " +  _("Package Groups"), [products_crumb_id, product_id], {:scrollable=>true})
-
-
    end
    bc.to_json
   end
-
 
   def generate_template_breadcrumb
     bc = {}
@@ -395,14 +397,13 @@ module TemplateContentBreadcrumb
 
       add_crumb_node!(bc, packages_bc_id(template), "", _("Packages"), [root_id, template_id], {:client_render => true})
       add_crumb_node!(bc, products_bc_id(template), "", _("Products"), [root_id, template_id], {:client_render => true})
+      add_crumb_node!(bc, repos_bc_id(template), "", _("Repositories"), [root_id, template_id], {:client_render => true})
       add_crumb_node!(bc, comps_bc_id(template), "", _("Package Groups"), [root_id, template_id], {:client_render => true})
       add_crumb_node!(bc, distro_bc_id(template), "", _("Selected Distribution"), [root_id, template_id], {:client_render => true})
-
     }
 
     bc.to_json
   end
-
 
   def template_bc_id template
     "details_#{template.id}"
@@ -412,8 +413,12 @@ module TemplateContentBreadcrumb
     "packages_#{template.id}"
   end
 
-   def comps_bc_id template
+  def comps_bc_id template
     "comps_#{template.id}"
+  end
+
+  def repos_bc_id template
+    "repos_#{template.id}"
   end
 
   def product_bc_id product
@@ -432,6 +437,4 @@ module TemplateContentBreadcrumb
   def template_list
     @templates.collect{|t| {:template_id=>t.id, :template_name=>t.name, :url=>object_system_template_path(t.id)} }
   end
-
 end
-
