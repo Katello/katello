@@ -403,7 +403,7 @@ class ApplicationController < ActionController::Base
 
   def render_panel_direct(obj_class, options, search, start, sort, filters=[], load=false)
 
-    search = '*' if search == ''
+    search = '*' if search.nil? || search== ''
 
     options[:accessor] ||= "id"
     options[:columns] = options[:col]

@@ -10,24 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-module HttpErrors
-
-  class WrappedError < StandardError
-    attr_reader :original
-
-    def initialize(msg, original=$!)
-      super(msg)
-      @original = original
-    end
-  end
-
-  # application general errors
-  class AppError < WrappedError; end
-  class ApiError < AppError; end
-
-  # specific errors
-  class NotFound < WrappedError; end
-  class BadRequest < WrappedError; end
-  class Conflict < WrappedError; end
-
+class SystemTemplateRepository < ActiveRecord::Base
+  belongs_to :system_template
+  belongs_to :repository
 end

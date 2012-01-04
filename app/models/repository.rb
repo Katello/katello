@@ -65,6 +65,15 @@ class Repository < ActiveRecord::Base
     !(redhat?)
   end
 
+  scope :readable, lambda { |env|
+    if env.contents_readable?
+      joins(:environment_product).where("environment_products.environment_id" => env.id)
+    else
+      #none readable
+      where("1=0")
+    end
+  }
+
   def extended_index_attrs
     {:environment=>self.environment.name, :environment_id=>self.environment.id,
      :product=>self.product.name, :product_id=> self.product.id}
@@ -95,7 +104,5 @@ class Repository < ActiveRecord::Base
       self.gpg_key = product.gpg_key
     end
   end
-
-
 
 end

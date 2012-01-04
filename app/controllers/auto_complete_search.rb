@@ -23,16 +23,18 @@ module AutoCompleteSearch
       # an example filter could be something like: {:organization_id => current_organization}
       @filter = {} if @filter.nil?
 
+      # if desired, the calling controller may provide the object to be passed to the readable permissions check...
+      # this will ensure the user only sees content they have permissions for...
+      if @readable_by.nil?
+        @readable_by = current_organization
+      end
+
       # scoped_search provides the ability to pass a filter parameter in the request... on pages that have the
       # environment selector, we use this filter to communicate which environment the results should be provided for...
       if !params[:filter].nil? and eval(controller_name.singularize.camelize).respond_to?('by_env')
-        @items = eval(controller_name.singularize.camelize).readable(current_organization).by_env(params[:filter]).complete_for(params[:search], @filter)
+        @items = eval(controller_name.singularize.camelize).readable(@readable_by).by_env(params[:filter]).complete_for(params[:search], @filter)
       else
-        if (controller_name == "notices")
-          @items = eval(controller_name.singularize.camelize).readable(current_user).complete_for(params[:search], @filter)
-        else
-          @items = eval(controller_name.singularize.camelize).readable(current_organization).complete_for(params[:search], @filter)
-        end
+        @items = eval(controller_name.singularize.camelize).readable(@readable_by).complete_for(params[:search], @filter)
       end
 
       @items = @items.map do |item|
