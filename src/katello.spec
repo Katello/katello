@@ -346,6 +346,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Wed Jan 04 2012 Shannon Hughes <shughes@redhat.com> 0.1.165-2
+- se build (shughes@redhat.com)
 * Wed Jan 04 2012 Shannon Hughes <shughes@redhat.com> 0.1.165-1
 - 766977 fixing org box dropdown mouse sensitivity (shughes@redhat.com)
 - Add elastic search to the debug collection (bkearney@redhat.com)
