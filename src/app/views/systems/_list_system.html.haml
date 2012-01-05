@@ -1,24 +1,3 @@
-.block.tall{:id => "#{name}_#{item.send(accessor)}", "data-ajax_url" => system_events_path(item.id)}
-  %div
-    %div{:class => 'column_2'}
-      .product
-        .status_icon{:class => "#{item.send('compliance_color')}"}
-      %div.one-line-ellipsis{:style => "padding-top: 2px;"}
-        = item.send('name')
-    %div{:class => 'column_2'}
-      = get_checkin(item)
+.block.tall{:id => "#{name}_#{item.send(accessor)}", "data-ajax_url" => url_for(:action=> 'edit', :id => item.send(accessor))}
+  = render :partial=>"systems/list_system_show", :locals=>{:item => item}
 
-  %div
-    %div{:class => 'column_1'}
-      %ul
-        %li
-          &nbsp;&nbsp;
-          = _('OS: ')
-          = item.send('distribution_name')
-          &nbsp;&nbsp;
-          = item.send('arch')
-        %li
-          &nbsp;&nbsp;
-          = _('IP: ')
-          = item.send('ip')
-  .arrow-right
