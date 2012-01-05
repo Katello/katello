@@ -51,7 +51,57 @@ $(document).ready(function() {
 
   KT.systems_page.registerActions();
 
-  //end doc ready
+  //$('#sub_submit').live('submit', KT.systems_page.submitAction);
+  //$('#unsub_submit').live('submit', KT.systems_page.submitAction);
+    
+
+    $('#unsubscribe').live('ajax:complete', function(evt, data, status, xhr){
+        var id = $('.left').find('.active');
+        console.log("#unsubscribe ajax:complete " + id.attr('id'));
+        KT.panel.list.refresh(id.attr('id'), id.attr('data-ajax_url'));
+    });
+    $('#subscribe').live('ajax:complete', function(evt, data, status, xhr){
+        var id = $('.left').find('.active');
+        console.log("#subscribe ajax:complete " + id.attr('id'));
+        KT.panel.list.refresh(id.attr('value'), id.attr('data-ajax_url'));
+    });
+/*
+  $('#unsub_submit').live('click', function(e) {
+      e.preventDefault();
+      var unsubform = $('#unsubscribe');
+      var button = unsubform.find('input[type|="submit"]');
+      button.attr("disabled","disabled");
+      unsubform.ajaxSubmit({
+          success: function(data) {
+              button.removeAttr('disabled');
+              notices.checkNotices();
+              var id = $('#panel_element_id')
+              KT.panel.list.refresh(id.attr('value'), id.attr('data-ajax_url'));
+          }, error: function(e) {
+              button.removeAttr('disabled');
+              notices.checkNotices();
+          }
+      });
+  });
+
+  $('#sub_submit').live('click', function(e) {
+      e.preventDefault();
+      var subform = $('#subscribe');
+      var button = subform.find('input[type|="submit"]');
+      button.attr("disabled","disabled");
+      subform.ajaxSubmit({
+          success: function(data) {
+              button.removeAttr('disabled');
+              notices.checkNotices();
+              var id = $('#panel_element_id')
+              KT.panel.list.refresh(id.attr('value'), id.attr('data-ajax_url'));
+          }, error: function(e) {
+              button.removeAttr('disabled');
+              notices.checkNotices();
+          }
+      });
+  });
+*/
 });
 
 KT.systems_page = (function() {
