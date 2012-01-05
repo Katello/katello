@@ -29,9 +29,16 @@ Config()
 
 class SyncPlanAction(Action):
 
+    interval_choices = ['none', 'hourly', 'daily', 'weekly']
+
     def __init__(self):
         super(SyncPlanAction, self).__init__()
         self.api = SyncPlanAPI()
+
+    def build_datetime(self, date, time):
+        return date.strip()+"T"+time.strip()+"Z"
+
+
 
 # sync_plan actions ------------------------------------------------------------
 
@@ -99,7 +106,6 @@ class Info(SyncPlanAction):
 class Create(SyncPlanAction):
 
     description = _('create an environment')
-    interval_choices = ['none', 'hourly', 'daily', 'weekly']
 
     def setup_parser(self):
         self.parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
@@ -115,9 +121,6 @@ class Create(SyncPlanAction):
         self.require_option('org')
         self.require_option('name')
         self.require_option('date')
-
-    def build_datetime(self, date, time):
-        return date.strip()+"T"+time.strip()+"Z"
 
     def run(self):
         name        = self.get_option('name')
@@ -137,6 +140,45 @@ class Create(SyncPlanAction):
             print _("Could not create environment [ %s ]") % plan['name']
             return os.EX_DATAERR
 
+
+class Update(SyncPlanAction):
+
+    description =  _('update a sync plan')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
+        self.parser.add_option('--new_name', dest='new_name', help=_("new sync plan name"))
+        self.parser.add_option('--org', dest='org', help=_("organization name (required)"))
+        self.parser.add_option("--description", dest="description", help=_("plan description"))
+        self.parser.add_option('--interval', dest='interval',
+            help=_("interval of recurring synchronizations (choices: [%s], default: none)") % ', '.join(self.interval_choices),
+            default='none', choices=self.interval_choices)
+        self.parser.add_option("--date", dest="date", help=_("date of first synchronization (required, format: YYYY-MM-DD)"))
+        self.parser.add_option("--time", dest="time", help=_("time of first synchronization (format: HH:MM:SS, default: 00:00:00)"), default="00:00:00")
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+        self.require_option('date')
+
+    def run(self):
+        name        = self.get_option('name')
+        new_name    = self.get_option('new_name')
+        org_name    = self.get_option('org')
+        description = self.get_option('description')
+        interval    = self.get_option('interval')
+        date        = self.get_option('date')
+        time        = self.get_option('time')
+
+        plan = get_sync_plan(org_name, name)
+        if plan == None:
+            return os.EX_DATAERR
+
+        sync_date = self.build_datetime(date, time)
+
+        plan = self.api.update(org_name, plan["id"], new_name, sync_date, interval, description)
+        print _("Successfully updated sync plan [ %s ]") % name
+        return os.EX_OK
 
 
 class Delete(SyncPlanAction):

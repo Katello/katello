@@ -24,11 +24,20 @@ class SyncPlanAPI(KatelloAPI):
             "name": name,
             "description": description,
             "interval": interval,
-            "sync_date": sync_date,
-            "organization_id": org_id
+            "sync_date": sync_date
         }
         path = "/api/organizations/%s/sync_plans/" % str(org_id)
         return self.server.POST(path, {"sync_plan": data})[1]
+
+    def update(self, org_id, plan_id, name, sync_date, interval, description):
+        data = {}
+        data = self.update_dict(data, "name", name)
+        data = self.update_dict(data, "description", description)
+        data = self.update_dict(data, "interval", interval)
+        data = self.update_dict(data, "sync_date", sync_date)
+
+        path = "/api/organizations/%s/sync_plans/%s" % (str(org_id), str(plan_id))
+        return self.server.PUT(path, {"sync_plan": data})[1]
 
     def sync_plans(self, org_id, query={}):
         path = "/api/organizations/%s/sync_plans/" % str(org_id)
