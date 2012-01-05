@@ -61,7 +61,7 @@ class SearchController < ApplicationController
       end
     rescue Exception => error
       Rails.logger.error error.to_s
-      errors error.to_s
+      notice error.to_s, {:level => :error}
     end
 
     # return the search details after adding a new favorite
@@ -73,7 +73,7 @@ class SearchController < ApplicationController
       current_user.search_favorites.destroy(params[:id])
     rescue Exception => error
       Rails.logger.error error.to_s
-      errors error.to_s
+      notice error.to_s, {:level => :error}
     end
 
     # return the search details after removing the favorite
@@ -102,7 +102,7 @@ class SearchController < ApplicationController
 
     rescue ScopedSearch::QueryNotSupported => error
       Rails.logger.error error.to_s
-      errors _("Unable to save as favorite. '#{params[:favorite]}' is an invalid search.")
+      notice _("Unable to save as favorite. '#{params[:favorite]}' is an invalid search."), {:level => :error}
       return false
     end
     return true

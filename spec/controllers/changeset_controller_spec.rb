@@ -31,7 +31,6 @@ describe ChangesetsController do
     login_user
     set_default_locale
     controller.stub!(:notice)
-    controller.stub!(:errors)
 
     @org = new_test_org
 
@@ -127,21 +126,17 @@ describe ChangesetsController do
       end
     end
 
-
-
     it 'should cause an error notification if name is left blank' do
-      controller.should_receive(:errors)
+      controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
       post 'create', {:env_id => @env.id, :name => ''}
       response.should_not be_success
     end
 
     it 'should cause an exception if no environment id is present' do
-      controller.should_receive(:errors)
+      controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
       post 'create', {:changesets => { :name => 'Test/Changeset 4.5'}}
       response.should_not be_success
     end
-
-    
 
   end
 
@@ -158,7 +153,7 @@ describe ChangesetsController do
     end
 
     it 'should raise an exception if no such changeset exists' do
-      controller.should_receive(:errors)
+      controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
       delete 'destroy', :id=>20
       response.should_not be_success
       Changeset.exists?(:id=>@changeset.id).should be_true

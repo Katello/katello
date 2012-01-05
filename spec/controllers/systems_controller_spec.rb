@@ -19,8 +19,6 @@ describe SystemsController do
   include OrchestrationHelper
   include AuthorizationHelperMethods
 
-
-
   describe "rules" do
     let(:uuid) { '1234' }
     before (:each) do
@@ -143,7 +141,6 @@ describe SystemsController do
       @env2 = KTEnvironment.new(:name => 'env2', :prior => @env1.id, :organization => @organization)
       @env2.save!
 
-      controller.stub!(:errors)
       controller.stub!(:notice)
       controller.stub(:search_validate).and_return(false)
       
@@ -188,7 +185,7 @@ describe SystemsController do
       end
 
       it "should throw an exception when the search parameters are invalid" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         get :items, :search => 1
         response.should_not be_success
       end

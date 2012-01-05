@@ -110,7 +110,7 @@ class ActivationKeysController < ApplicationController
       render :partial => "available_subscriptions_update.js.haml"
 
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
       render :nothing => true
     end
   end
@@ -134,7 +134,7 @@ class ActivationKeysController < ApplicationController
       render :partial => "applied_subscriptions_update.js.haml"
 
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
       render :nothing => true
     end
   end
@@ -190,7 +190,7 @@ class ActivationKeysController < ApplicationController
     end
   rescue Exception => error
     Rails.logger.error error.to_s
-    errors error
+    notice error, {:level => :error}
     render :text => error, :status => :bad_request
   end
 
@@ -223,7 +223,7 @@ class ActivationKeysController < ApplicationController
       render :text => escape_html(result)
 
     rescue Exception => error
-      errors error
+      notice error, {:level => :error}
 
       respond_to do |format|
         format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -242,7 +242,7 @@ class ActivationKeysController < ApplicationController
         raise
       end
     rescue Exception => e
-      errors e.to_s
+      notice e.to_s, {:level => :error}
     end
   end
 
@@ -252,7 +252,7 @@ class ActivationKeysController < ApplicationController
     begin
       @activation_key = ActivationKey.find(params[:id])
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
 
       # flash_to_headers is an after_filter executed on the application controller;
       # however, a render from within a before_filter will halt the filter chain.
