@@ -28,7 +28,6 @@ class SystemTemplate < ActiveRecord::Base
   include LazyAccessor
   include AsyncOrchestration
 
-  #has_many :products
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :system_templates
   has_and_belongs_to_many :changesets
 
