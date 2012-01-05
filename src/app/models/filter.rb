@@ -16,7 +16,13 @@ class Filter < ActiveRecord::Base
   include Glue::Pulp::Filter if (AppConfig.use_cp and AppConfig.use_pulp)
   include Glue
   include Authorization
+  include IndexedModel
 
+  index_options :extended_json=>:extended_index_attrs, :json=>{:except=>[:pulp_id, :package_list]}
+
+  mapping do
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+  end
 
   validates :pulp_id, :presence => true
   validates_presence_of :organization_id
@@ -26,14 +32,6 @@ class Filter < ActiveRecord::Base
   has_and_belongs_to_many :products, :uniq => true
 
   alias_attribute :name, :pulp_id
-
-  scoped_search :on => :pulp_id, :complete_value => true
-  
-  scope :readable, lambda {|org|
-    readable_items(org)
-  }
-
-
 
 
 
@@ -92,12 +90,16 @@ class Filter < ActiveRecord::Base
   end
 
 
-
   def as_json(options)
     options.nil? ?
         super(:methods => [:name], :exclude => :pulp_id) :
         super(options.merge(:methods => [:name], :exclude => :pulp_id) {|k, v1, v2| [v1, v2].flatten })
   end
+
+  def extended_index_attrs
+    {:name_sort=>name.downcase, :name=>name, :packages=>self.package_list, :products=>self.products.collect{|p| p.name}}
+  end
+
 
 end
 
