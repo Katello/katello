@@ -99,7 +99,7 @@ class SystemsController < ApplicationController
       end
 
     rescue Exception => error
-      errors error
+      notice error, {:level => :error}
       Rails.logger.info error.backtrace.join("\n")
       render :text => error, :status => :bad_request
     end
@@ -122,7 +122,7 @@ class SystemsController < ApplicationController
       
       render :index, :locals=>{:envsys => 'true', :accessible_envs=> accesible_envs}
     rescue Exception => error
-      errors error.to_s, {:level => :message, :persist => false}
+      notice error.to_s, {:level => :error, :persist => false}
       render :index, :status=>:bad_request
     end
   end
@@ -177,7 +177,7 @@ class SystemsController < ApplicationController
 
       end
     rescue Exception => error
-      errors error.to_s, {:level => :message, :persist => false}
+      notice error.to_s, {:level => :error, :persist => false}
       render :nothing => true
     end
   end
@@ -213,7 +213,7 @@ class SystemsController < ApplicationController
         format.js
       end
     rescue Exception => error
-      errors error.to_s, {:persist => false}
+      notice error.to_s, {:level => :error, :persist => false}
       respond_to do |format|
         format.html { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
         format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -241,7 +241,7 @@ class SystemsController < ApplicationController
     notice _("#{@systems.length} Systems Removed Successfully")
     render :text=>""
   rescue Exception => e
-    errors e
+    notice e, {:level => :error}
     render :text=>e, :status=>500
   end
 
@@ -254,10 +254,10 @@ class SystemsController < ApplicationController
       #render and do the removal in one swoop!
       render :partial => "common/list_remove", :locals => {:id => id, :name=>controller_display_name} and return
     end
-    errors "", {:list_items => system.errors.to_a}
+    notice "", {:level => :error, :list_items => system.errors.to_a}
     render :text => @system.errors, :status=>:ok
   rescue Exception => e
-    errors e
+    notice e, {:level => :error}
     render :text=>e, :status=>500
   end
 

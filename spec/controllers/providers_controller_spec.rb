@@ -23,7 +23,6 @@ describe ProvidersController do
     login_user
     set_default_locale
     controller.stub!(:notice)
-    controller.stub!(:errors)
 
     @org = new_test_org
     current_organization=@org
@@ -32,7 +31,6 @@ describe ProvidersController do
 
   PROVIDER_NAME = "a name"
   ANOTHER_PROVIDER_NAME = "another name"
-
 
   describe "update a provider subscriptions" do
     before(:each) do
@@ -58,9 +56,6 @@ describe ProvidersController do
     end
 
   end
-
-
-
 
   describe "rules" do
     before (:each) do
@@ -105,6 +100,5 @@ describe ProvidersController do
       it_should_behave_like "protected action"
     end
   end
-
 
 end

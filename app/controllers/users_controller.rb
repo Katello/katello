@@ -110,13 +110,13 @@ class UsersController < ApplicationController
         render :json => { :no_match => true }
       end
     rescue Exception => error
-      errors error
+      notice error, {:level => :error}
       #transaction, if something goes wrong with the creation of the permission, we will need to delete the user
       @user.destroy if @user.id
       render :json=>@user.errors, :status=>:bad_request
     end
   rescue Exception => error
-    errors error
+    notice error, {:level => :error}
     render :json=>@user.errors, :status=>:bad_request
   end
   
@@ -134,7 +134,7 @@ class UsersController < ApplicationController
 
       render :text => attr and return
     end
-    errors "", {:list_items => @user.errors.to_a}
+    notice "", {:level => :error, :list_items => @user.errors.to_a}
     render :text => @user.errors, :status=>:ok
   end
 
@@ -196,12 +196,12 @@ class UsersController < ApplicationController
         render :json => {:org => _("No default set for this user."), :env => _("No default set for this user.")} and return
       else
         err_msg = N_("The default you supplied was the same as the old default.")
-        errors err_msg
+        notice err_msg, {:level => :error}
         render(:text => err_msg, :status => 400) and return
       end
 
     rescue Exception => error
-      errors error.message
+      notice error.message, {:level => :error}
       render :text =>error.message, :status=>400
     end
   end
@@ -221,7 +221,7 @@ class UsersController < ApplicationController
       
       render :nothing => true and return
     end
-    errors "", {:list_items => @user.errors.to_a}
+    notice "", {:level => :error, :list_items => @user.errors.to_a}
     render :text => @user.errors, :status=>:ok
   end
 
@@ -234,10 +234,10 @@ class UsersController < ApplicationController
       #render and do the removal in one swoop!
       render :partial => "common/list_remove", :locals => {:id => @id, :name=>controller_display_name} and return
     end
-    errors "", {:list_items => @user.errors.to_a}
+    notice "", {:level => :error, :list_items => @user.errors.to_a}
     render :text => @user.errors, :status=>:ok
   rescue Exception => error
-    errors "", {:list_items => @user.errors.to_a}
+    notice "", {:level => :error, :list_items => @user.errors.to_a}
     render :json=>@user.errors, :status=>:bad_request
   end
 

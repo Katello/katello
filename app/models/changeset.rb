@@ -16,13 +16,15 @@ class NotInLockerValidator < ActiveModel::Validator
   end
 end
 
+require 'util/notices'
+
 class Changeset < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
-  include IndexedModel
-  
-  index_options :extended_json=>:extended_index_attrs
+  include Katello::Notices
 
+  include IndexedModel
+  index_options :extended_json=>:extended_index_attrs
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -326,6 +328,10 @@ class Changeset < ActiveRecord::Base
   rescue Exception => e
     self.state = Changeset::FAILED
     self.save!
+
+    error_text = _("Promotion of changeset '%{name}' failed." % {:name => self.name})
+    error_text += _("%{newline}Reason: %{reason}" % {:reason => e.to_s, :newline => "<br />"})
+    notice error_text, {:level => :error, :synchronous_request => false, :request_type => "changesets___promote"}
 
     raise e
   end
