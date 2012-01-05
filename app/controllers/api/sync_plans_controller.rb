@@ -39,11 +39,21 @@ class Api::SyncPlansController < Api::ApiController
   end
 
   def create
+    sync_date = params[:sync_plan][:sync_date]
+    if not sync_date.kind_of? Time
+        raise _("Date format is incorrect.")
+    end
+
     params[:sync_plan][:organization] = @organization
     render :json => SyncPlan.create!(params[:sync_plan]).to_json
   end
 
   def update
+    sync_date = params[:sync_plan][:sync_date]
+    if not sync_date.nil? and not sync_date.kind_of? Time
+        raise _("Date format is incorrect.")
+    end
+
     @plan.update_attributes!(params[:sync_plan])
     @plan.save!
     render :json => @plan
