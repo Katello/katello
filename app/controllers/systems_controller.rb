@@ -188,7 +188,7 @@ class SystemsController < ApplicationController
       end
     rescue Exception => error
       errors error.to_s, {:level => :message, :persist => false}
-      render :nothing => true
+      render :nothing => true, :status => :bad_request
     end
   end
 
