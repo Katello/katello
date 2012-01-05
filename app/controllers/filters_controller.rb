@@ -64,8 +64,8 @@ class FiltersController < ApplicationController
   end
 
   def items
-    render_panel_items(Filter.readable(current_organization).order('lower(pulp_id)'), @panel_options,
-                       params[:search], params[:offset])
+    render_panel_direct(Filter, @panel_options, params[:search], params[:offset], [:name_sort, :asc],
+      {:filter=>{:organization_id=>[current_organization.id]}})
   end
 
   def auto_complete_products_repos
@@ -102,7 +102,7 @@ class FiltersController < ApplicationController
     @filter.save!
     notice _("Package Filter '#{@filter.name}' has been updated.")
 
-    if not Filter.where(:id => @filter.id).search_for(params[:search]).include?(@filter)
+    if not search_validate(Filter, @filter.id, params[:search]) 
       notice _("'#{@filter["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
     end
 
@@ -125,7 +125,7 @@ class FiltersController < ApplicationController
   def create
     @filter = Filter.create!(params[:filter].merge({:organization_id=>current_organization.id}))
     notice N_("Filter #{@filter.name} created successfully.")
-    if !Filter.where(:id => @filter.id).search_for(params[:search]).include?(@filter)
+    if !search_validate(Filter, @filter.id, params[:search]) 
 
       notice _("'#{@filter.name}' did not meet the current search criteria and is not being shown."),
              { :level => 'message', :synchronous_request => false }
@@ -177,13 +177,16 @@ class FiltersController < ApplicationController
 
   def add_packages
     pkgs = params[:packages]
-    @filter.set_packages(pkgs)
+    @filter.package_list += (pkgs)
+    @filter.package_list.uniq!
+    @filter.save!
     render :json=>pkgs
   end
 
   def remove_packages
     pkgs = params[:packages]
-    @filter.del_packages(pkgs)
+    @filter.package_list -= pkgs
+    @filter.save!
     render :text=>""
   end
 
