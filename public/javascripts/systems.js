@@ -48,51 +48,27 @@ KT.panel.set_expand_cb(function(){
   	KT.panel.list.registerPage('systems', options);
 }());
 
-
 $(document).ready(function() {
-  $('#update_subscriptions').live('submit', function(e) {
-     e.preventDefault();
-     var button = $(this).find('input[type|="submit"]');
-      button.attr("disabled","disabled");
-     $(this).ajaxSubmit({
-         success: function(data) {
-               button.removeAttr('disabled');
-               notices.checkNotices();
-         }, error: function(e) {
-               button.removeAttr('disabled');
-               notices.checkNotices();
-         }
-     });
-  });
-
-  //Set the callback on the environment selector
-  /*env_select.click_callback = function(env_id) {
-    KT.subs.save_selected_environment(env_id);
-   };*/
-  // check if we are viewing systems by environment
-  
-  	/*var selected = $.bbq.getState("env_id");
-	if(selected !== undefined) {
-		env_select.set_selected(selected);
-	}
-   
-  if (window.env_select !== undefined) {
-    env_select.click_callback = KT.systems_page.env_change;
-  }
-    //env_select.click_callback = systems_page.env_change;
-    $.bbq.pushState({env_id : env_select.get_selected_env()});
-    env_select.click_callback = function(env_id) {
-        $.bbq.pushState({env_id : env_id});
-    };
-  }*/
-
   KT.panel.set_expand_cb(function() {
     KT.subs.initialize_edit();
   });
 
   KT.systems_page.registerActions();
 
-  //end doc ready
+    // These run after the subscribe/unsubscribe forms have been submitted to update
+    // the left hand list entry (which reflects the subscribed status of the system).
+    $('#unsubscribe').live('ajax:complete', function(evt, data, status, xhr){
+        var id = $('.left').find('.active');
+        var url = id.attr('data-ajax_url');
+        url = url.substring(0, url.length - 5);  // Strip off trailing '/edit'
+        KT.panel.list.refresh(id.attr('id'), url);
+    });
+    $('#subscribe').live('ajax:complete', function(evt, data, status, xhr){
+        var id = $('.left').find('.active');
+        var url = id.attr('data-ajax_url');
+        url = url.substring(0, url.length - 5);  // Strip off trailing '/edit'
+        KT.panel.list.refresh(id.attr('id'), url);
+    });
 });
 
 KT.systems_page = (function() {

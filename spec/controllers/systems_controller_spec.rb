@@ -232,9 +232,11 @@ describe SystemsController do
         assigns[:system].name.should == "foo"
       end
 
-      it "should update a subscription" do
+      # The params to #update_subscriptions are entirely wrong here. The only reason the test
+      # used to pass was because the error handler was not passing back an error status
+      it "should not update a subscription" do
         put :update_subscriptions, { :id => @system.id, :system => { :name=> "foo" }}
-        response.should be_success
+        response.should_not be_success
       end
 
       it "should throw an error with bad parameters" do

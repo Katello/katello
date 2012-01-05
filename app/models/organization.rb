@@ -31,6 +31,7 @@ class Organization < ActiveRecord::Base
   has_many :filters, :dependent => :destroy, :inverse_of => :organization
   has_many :gpg_keys, :dependent => :destroy, :inverse_of => :organization
   has_many :permissions, :dependent => :destroy, :inverse_of => :organization
+  has_many :sync_plans, :dependent => :destroy, :inverse_of => :organization
 
   attr_accessor :statistics
 
@@ -148,7 +149,7 @@ class Organization < ActiveRecord::Base
 
   READ_PERM_VERBS = [:read, :create, :update, :delete]
   SYNC_PERM_VERBS = [:sync]
-  
+
 
   def extended_index_attrs
     {:name_sort=>name.downcase, :environment=>self.environments.collect{|e| e.name}}
