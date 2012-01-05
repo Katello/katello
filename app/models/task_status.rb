@@ -42,22 +42,11 @@ class TaskStatus < ActiveRecord::Base
                      :organization_id, :system_ids, :start_time, :finish_time ]},
                 :extended_json=>:extended_index_attrs
 
-      settings  :index => {
-                :analysis => {
-                 :analyzer => {
-                   :default => {
-                       "tokenizer"  => "lowercase",
-                      "type"   => "snowball",
-                   }
-                 }
-               }
-                } do
-        mapping do
-         indexes :start_time, :type=>'date'
-         indexes :finish_time, :type=>'date'
-        end
-
-      end
+  mapping do
+   indexes :start_time, :type=>'date'
+   indexes :finish_time, :type=>'date'
+   indexes :status, :type=>'string', :analyzer => 'snowball'
+  end
 
   def extended_index_attrs
     ret = {}
