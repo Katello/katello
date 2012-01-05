@@ -380,6 +380,7 @@ Src::Application.routes.draw do
         get :repositories, :on => :member
         resources :changesets, :only => [:index, :create]
       end
+      resources :sync_plans
       resources :tasks, :only => [:index]
       resources :providers, :only => [:index]
       resources :systems, :only => [:index] do
@@ -506,6 +507,7 @@ Src::Application.routes.draw do
 
     # support for rhsm --------------------------------------------------------
     match '/consumers' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
+    match '/hypervisors' => 'systems#hypervisors_update', :via => :post
     resources :consumers, :controller => 'systems'
     match '/owners/:organization_id/environments' => 'environments#index', :via => :get
     match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get

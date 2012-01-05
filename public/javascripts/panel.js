@@ -478,6 +478,11 @@ KT.panel = (function ($) {
                 }
                 else if (!refresh) {
                     closePanel();
+                    
+                    if( search_element.val() !== "" && search === undefined ){
+                        search_element.val('');
+                        $('#search_form').trigger('submit');
+                    }
                 }
             }
             return false;
@@ -647,7 +652,7 @@ KT.panel.list = (function () {
             else {
                 current_items_count += current;
                 total_items_count += total;
-                results_items_count = results;
+                results_items_count += results;
             }
             $('#total_items_count').html(total_items_count);
             $('#current_items_count').html(current_items_count);
@@ -731,7 +736,6 @@ KT.panel.list = (function () {
                             expand_list = $('.expand_list');
                         }
                         retrievingNewContent = false;
-                        console.log(data);
                         expand_list.append(data['html']);
                         $('.list-spinner').remove();
                         if (data['current_items'] === 0) {
@@ -840,6 +844,7 @@ KT.panel.list = (function () {
                 if (!page_load) {
                     KT.panel.closePanel();
                 }
+                        
                 $(this).ajaxSubmit({
                     url: url,
                     data: data,
@@ -860,6 +865,25 @@ KT.panel.list = (function () {
                         button.removeAttr('disabled');
                     }
                 });
+            });
+
+            $('#search').live('change', function(){
+                var value = $(this).val();
+
+                if( value === "" ){
+                    $.bbq.removeState("search");
+                    $('#search_form').trigger('submit');
+                }
+            }).live('keypress', function(event){
+                var button = $('#search_button');
+
+                if( event.keyCode === 13 ){
+                    event.preventDefault();
+                    
+                    if( button.attr('disabled') !== "disabled" ){
+                        $('#search_form').trigger('submit');
+                    }
+                }
             });
         };
     return {

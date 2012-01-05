@@ -19,7 +19,6 @@ describe GpgKeysController do
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
 
-
   module GPGKeyControllerTest
     GPGKEY_INVALID = {}
     GPGKEY_NAME_INVALID = {:name => ""}
@@ -81,7 +80,7 @@ describe GpgKeysController do
 
     describe "with invalid GPG Key id" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         get :show, :id => 9999
       end
 
@@ -120,7 +119,7 @@ describe GpgKeysController do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         get :edit, :id => 9999
       end
 
@@ -182,7 +181,7 @@ describe GpgKeysController do
 
     describe "with invalid params" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         post :create, GPGKeyControllerTest::GPGKEY_INVALID
       end
 
@@ -277,26 +276,27 @@ describe GpgKeysController do
             @gpg_key_file = mock(Object)
             @gpg_key_file.stub_chain(:tempfile, :path).and_return('test_key.gpg')
             @gpg_key_file.stub!(:read).and_return("This is uploaded key data.")
-            GPGKeyControllerTest::GPGKEY_CONTENT_UPLOAD = { :content_upload => @gpg_key_file }
+            
+            @GPGKEY_CONTENT_UPLOAD = { :content_upload => @gpg_key_file }
           end
           
           it "should update requested field - content_upload" do
-            put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_CONTENT_UPLOAD
+            put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
             assigns[:gpg_key].content.should eq(@gpg_key_file.read)
           end
     
           it "should generate a success notice" do
             controller.should_receive(:notice)
-            put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_CONTENT_UPLOAD
+            put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
           end
     
           it "should not redirect from edit view" do
-            put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_CONTENT_UPLOAD
+            put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
             response.should_not be_redirect
           end
     
           it "should be successful" do
-            put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_CONTENT_UPLOAD
+            put :update, :id => @gpg_key.id, :gpg_key => @GPGKEY_CONTENT_UPLOAD
             response.should be_success
           end
         end
@@ -304,7 +304,7 @@ describe GpgKeysController do
 
       describe "with invalid params" do
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME_INVALID
         end
 
@@ -317,7 +317,7 @@ describe GpgKeysController do
 
     describe "with invalid GPG Key ID" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         put :update, :id => 9999, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME
       end
 
@@ -366,7 +366,7 @@ describe GpgKeysController do
 
     describe "with invalid GPG Key id" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         delete :destroy, :id => 9999
       end
 

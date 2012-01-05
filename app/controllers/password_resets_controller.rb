@@ -37,14 +37,14 @@ class PasswordResetsController < ApplicationController
 
   def edit
     if @user.password_reset_sent_at < password_reset_expiration.minutes.ago
-      errors _("Password reset token has expired for user '%{s}'." % {:s => @user.username}), {:persist => false}
+      notice _("Password reset token has expired for user '%{s}'." % {:s => @user.username}), {:level => :error, :persist => false}
       redirect_to new_password_reset_path
     end
   end
 
   def update
     if @user.password_reset_sent_at < password_reset_expiration.minutes.ago
-      errors _("Password reset token has expired for user '%{s}'." % {:s => @user.username}), {:persist => false}
+      notice _("Password reset token has expired for user '%{s}'." % {:s => @user.username}), {:level => :error, :persist => false}
       redirect_to new_password_reset_path and return
     end
 
@@ -58,7 +58,7 @@ class PasswordResetsController < ApplicationController
       render :text => ""
 
     rescue Exception => e
-      errors e.to_s, {:persist => false}
+      notice e.to_s, {:level => :error, :persist => false}
       render :text => e.to_s, :status => :bad_request
     end
   end
@@ -95,7 +95,7 @@ class PasswordResetsController < ApplicationController
     begin
       @user = User.find_by_password_reset_token!(params[:id])
     rescue Exception => error
-      errors _("Request received has either an invalid or expired token.  Token: '%{t}'" % {:t => params[:id]}), {:persist => false}
+      notice _("Request received has either an invalid or expired token.  Token: '%{t}'" % {:t => params[:id]}), {:level => :error, :persist => false}
       redirect_to root_url
       execute_after_filters
     end

@@ -79,7 +79,7 @@ describe RepositoriesController do
     describe "Create a Repo" do
 
       it "should reject invalid urls" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         post :create, invalidrepo
         response.should_not be_success
       end

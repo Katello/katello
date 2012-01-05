@@ -14,9 +14,10 @@ class Api::SystemsController < Api::ApiController
   respond_to :json
 
   before_filter :verify_presence_of_organization_or_environment, :only => [:create, :index, :activate]
-  before_filter :find_organization, :only => [:create, :index, :activate, :report, :tasks]
+  before_filter :find_organization, :only => [:create, :hypervisors_update, :index, :activate, :report, :tasks]
   before_filter :find_only_environment, :only => [:create]
   before_filter :find_environment, :only => [:create, :index, :report, :tasks]
+  before_filter :find_environment_by_name, :only => [:hypervisors_update]
   before_filter :find_system, :only => [:destroy, :show, :update, :regenerate_identity_certificates,
                                         :upload_package_profile, :errata, :package_profile, :subscribe,
                                         :unsubscribe, :subscriptions, :pools]
@@ -28,6 +29,7 @@ class Api::SystemsController < Api::ApiController
   def rules
     index_systems = lambda { System.any_readable?(@organization) }
     register_system = lambda { System.registerable?(@environment, @organization) }
+    register_hypervisor = lambda { User.consumer? }
     edit_system = lambda { @system.editable? or User.consumer? }
     read_system = lambda { @system.readable? or User.consumer? }
     delete_system = lambda { @system.deletable? or User.consumer? }
@@ -35,6 +37,7 @@ class Api::SystemsController < Api::ApiController
     {
       :new => register_system,
       :create => register_system,
+      :hypervisors_update => register_hypervisor,
       :regenerate_identity_certificates => edit_system,
       :update => edit_system,
       :index => index_systems,
@@ -57,6 +60,11 @@ class Api::SystemsController < Api::ApiController
   def create
     system = System.create!(params.merge({:environment => @environment}))
     render :json => system.to_json
+  end
+
+  def hypervisors_update
+    cp_response, hypervisors = System.register_hypervisors(@environment, params.except(:controller, :action))
+    render :json => cp_response
   end
 
   # used for registering with activation keys
@@ -218,6 +226,10 @@ class Api::SystemsController < Api::ApiController
         @environment = @organization.environments.first and return
       end
     end
+  end
+
+  def find_environment_by_name
+    @environment = @organization.environments.find_by_name!(params[:env])
   end
 
   def find_environment

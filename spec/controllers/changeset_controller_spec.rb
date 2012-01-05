@@ -31,7 +31,6 @@ describe ChangesetsController do
     login_user
     set_default_locale
     controller.stub!(:notice)
-    controller.stub!(:errors)
 
     @org = new_test_org
 
@@ -63,6 +62,11 @@ describe ChangesetsController do
     end
 
     it "should return a portion of changesets for an environment" do
+      controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
+        search_options[:filter][0][:environment_id].should == [@env.id]
+        controller.stub(:render)
+      }
+
       get :items, :env_id=>@env.id
       response.should be_success
     end
@@ -122,21 +126,17 @@ describe ChangesetsController do
       end
     end
 
-
-
     it 'should cause an error notification if name is left blank' do
-      controller.should_receive(:errors)
+      controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
       post 'create', {:env_id => @env.id, :name => ''}
       response.should_not be_success
     end
 
     it 'should cause an exception if no environment id is present' do
-      controller.should_receive(:errors)
+      controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
       post 'create', {:changesets => { :name => 'Test/Changeset 4.5'}}
       response.should_not be_success
     end
-
-    
 
   end
 
@@ -153,7 +153,7 @@ describe ChangesetsController do
     end
 
     it 'should raise an exception if no such changeset exists' do
-      controller.should_receive(:errors)
+      controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
       delete 'destroy', :id=>20
       response.should_not be_success
       Changeset.exists?(:id=>@changeset.id).should be_true
@@ -213,9 +213,15 @@ describe ChangesetsController do
       let(:unauthorized_user) do
         user_without_permissions
       end
-      let(:on_success) do
-        assigns(:items).should include @cs
-        assigns(:environment).should == @env3
+      
+      let(:before_success) do
+        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
+          filter_coll = {}
+          search_options[:filter].each{|f| filter_coll.merge!(f)}
+          filter_coll[:environment_id].should == [@env3.id]
+          filter_coll[:state].should == ["promoted"]
+          controller.stub(:render)
+        }
       end
       it_should_behave_like "protected action"
     end

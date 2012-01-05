@@ -30,7 +30,6 @@ describe UsersController do
 
     before(:each) do
       controller.stub!(:notice)
-      controller.stub!(:errors)
       @organization = new_test_org
       @environment = KTEnvironment.create!(:name => 'first-env', :prior => @organization.locker.id, :organization => @organization)
     end
@@ -71,7 +70,6 @@ describe UsersController do
     
     before(:each) do
       controller.stub!(:notice)
-      controller.stub!(:errors)
       controller.stub!(:escape_html)
 
       @user = User.new
