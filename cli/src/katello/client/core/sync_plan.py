@@ -63,6 +63,39 @@ class List(SyncPlanAction):
         return os.EX_OK
 
 
+class Info(SyncPlanAction):
+
+    description = _('print info about a sync plan')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
+        self.parser.add_option('--org', dest='org', help=_("organization name (required)"))
+
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+
+    def run(self):
+        org_name = self.get_option('org')
+        plan_name = self.get_option('name')
+
+        plan = get_sync_plan(org_name, plan_name)
+        if plan == None:
+            return os.EX_DATAERR
+
+        plan['start_date'] = format_date(plan['sync_date'])
+        self.printer.addColumn('id')
+        self.printer.addColumn('name')
+        self.printer.addColumn('description', multiline=True)
+        self.printer.addColumn('start_date')
+        self.printer.addColumn('interval')
+
+        self.printer.setHeader(_("Sync Plan Info"))
+        self.printer.printItem(plan)
+
+        return os.EX_OK
+
+
 class Delete(SyncPlanAction):
 
     description = _('delete a sync plan')
