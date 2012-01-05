@@ -18,7 +18,8 @@ class Permission < ActiveRecord::Base
   has_many :tags, :class_name=>"PermissionTag", :inverse_of=>:permission
 
   before_save :cleanup_tags_verbs
-
+  after_save :update_related_index
+  
   validates :name, :presence => true, :katello_name_format => true
   validates :description, :katello_description_format => true
   validates_uniqueness_of :name, :scope => [:organization_id, :role_id], :message => N_("must be unique within an organization scope")
@@ -140,6 +141,14 @@ class Permission < ActiveRecord::Base
     self.tags.clear if self.all_tags?
     self.verbs.clear if self.all_verbs?
   end
+
+
+  def update_related_index
+    if self.name_changed?
+      self.role.update_index
+    end
+  end
+  
 
 end
 
