@@ -29,10 +29,10 @@ describe Api::SystemPackagesController do
   let(:packages) { %w[zsh bash] }
 
   before(:each) do
-    login_user
+    login_user(:mock => false)
     set_default_locale
     disable_org_orchestration
-
+    User.current = @user
     Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
     Candlepin::Consumer.stub!(:update).and_return(true)
 
