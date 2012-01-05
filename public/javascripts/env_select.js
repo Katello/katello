@@ -104,9 +104,9 @@ var env_select =   {
         return false;
     },
     reset_hover: function() {
-        $('#path-widget').hoverIntent({
+        $('#path-container').hoverIntent({
             over:env_select.expand,
-            timeout:750,
+            timeout:500,
             interval: 200,
             out:env_select.close
         });
