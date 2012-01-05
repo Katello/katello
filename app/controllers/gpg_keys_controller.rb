@@ -83,8 +83,8 @@ class GpgKeysController < ApplicationController
     @gpg_key = GpgKey.create!( gpg_key_params.merge({ :organization => current_organization }) )
 
     notice _("GPG Key '#{@gpg_key['name']}' was created.")
-    
-    if GpgKey.where(:id => @gpg_key.id).search_for(params[:search]).include?(@gpg_key)
+
+    if search_validate(GpgKey, @gpg_key.id, params[:search])
       render :partial=>"common/list_item", :locals=>{:item=>@gpg_key, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
     else
       notice _("'#{@gpg_key["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
@@ -108,7 +108,7 @@ class GpgKeysController < ApplicationController
 
     notice _("GPG Key '#{@gpg_key["name"]}' was updated.")
     
-    if not GpgKey.where(:id => @gpg_key.id).search_for(params[:search]).include?(@gpg_key)
+    if not search_validate(GpgKey, @gpg_key.id, params[:search])
       notice _("'#{@gpg_key["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
     end
     
