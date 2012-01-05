@@ -55,20 +55,16 @@ describe SystemEventsController do
         specify "status call does the right thing" do
           get :status, :system_id => @system.id, :id => @task.task_status.id
           response.should be_success
-          response.body.should == [@task.task_status].to_json
+          JSON.parse(response.body).first["id"].should == @task.task_status.id
         end
 
         specify "status call does the right thing for multi tasks" do
           task1 = @system.install_packages("baz")
           get :status, :system_id => @system.id, :id => [@task.task_status.id, task1.task_status.id]
           response.should be_success
-          response.body.should == [@task.task_status, task1.task_status].to_json
+          JSON.parse(response.body).collect{|item| item['id']}.should == [@task.task_status.id, task1.task_status.id]
         end
 
-
-        #specify do
-        #  response.should render_template("items",:with=> {:locals => [@system,1, @task]})
-        #end
       end
 
     end
