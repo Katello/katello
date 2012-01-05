@@ -91,7 +91,7 @@ class SyncPlansController < ApplicationController
       end
 
       rescue Exception => e
-        errors e.to_s
+        notice e.to_s, {:level => :error}
 
         respond_to do |format|
           format.html { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -107,7 +107,7 @@ class SyncPlansController < ApplicationController
       @plan.destroy
       notice N_("Sync plan '#{@plan[:name]}' was deleted.")
     rescue Exception => e
-      errors e.to_s
+      notice e.to_s, {:level => :error}
     end
     render :partial => "common/list_remove", :locals => {:id=>@id, :name=>controller_display_name}
   end
@@ -144,7 +144,7 @@ class SyncPlansController < ApplicationController
       end
     rescue Exception => error
       Rails.logger.error error.to_s
-      errors error
+      notice error, {:level => :error}
       render :text => error, :status => :bad_request
     end
   end
@@ -155,7 +155,7 @@ class SyncPlansController < ApplicationController
     begin
       @plan = SyncPlan.find(params[:id])
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
     end

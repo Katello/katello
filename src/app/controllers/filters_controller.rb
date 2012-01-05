@@ -108,7 +108,7 @@ class FiltersController < ApplicationController
 
     render :text=>to_ret
   rescue Exception=>e
-    errors e
+    notice e, {:level => :error}
     render :text=>e, :status=>500
   end
 
@@ -136,7 +136,7 @@ class FiltersController < ApplicationController
     end
     
   rescue Exception=> e
-    errors e
+    notice e, {:level => :error}
     render :text=>e, :status=>500
   end
 
@@ -164,7 +164,7 @@ class FiltersController < ApplicationController
     notice N_("Sucessfully updated '#{@filter.name}' package filter.")
     render :text=>''
   rescue Exception => e
-    errors e
+    notice e, {:level => :error}
     render :text=>'', :status=>500
   end
 
@@ -193,7 +193,7 @@ class FiltersController < ApplicationController
     notice _("Package Filter #{@filter.name} deleted.")
     render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
   rescue Exception => e
-    errors e
+    notice e, {:level => :error}
     render :text=>e, :status=>500
   end
 
@@ -206,7 +206,7 @@ class FiltersController < ApplicationController
   def find_filter
     @filter = Filter.find(params[:id])
   rescue => e
-    errors e
+    notice e, {:level => :error}
     render :text=>e, :status=>500 and return false
   end
 

@@ -94,7 +94,7 @@ describe PasswordResetsController do
 
     it "should generate an error notice, if exception raised" do
       @testuser.stub!(:update_attributes!).and_raise(Exception)
-      controller.should_receive(:errors)
+      controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
       put :update, @params
     end
   end
