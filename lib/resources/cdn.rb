@@ -41,6 +41,7 @@ module CDN
       end
       load_proxy_settings
 
+      @url = url
       @uri = URI.parse(url)
       @net = net_http_class.new(@uri.host, @uri.port)
       @net.use_ssl = @uri.is_a?(URI::HTTPS)
@@ -88,6 +89,8 @@ module CDN
         raise RestClient::ServerBrokeConnection
       rescue Timeout::Error
         raise RestClient::RequestTimeout
+      rescue RestClient::ResourceNotFound
+        raise Errors::NotFound.new(_("CDN loading error: %s not found") % (url+path))
       end
     end
 
@@ -129,14 +132,24 @@ module CDN
       @resource = CdnResource.new(@url, @options)
     end
 
+    # precalcuclate all paths at once - let's you discover errors and stop
+    # before it causes more pain
+    def precalculate(paths_with_vars)
+      @precalculated_substitutions = nil
+      @precalculated_substitutions = paths_with_vars.uniq.reduce({}) do |ret, path_with_vars|
+        ret[path_with_vars] = substitute_vars(path_with_vars); ret
+      end
+    end
+
   # takes path e.g. "/rhel/server/5/$releasever/$basearch/os"
   # returns hash substituting variables:
   #
-     { {"releasever" => "6Server", "basearch" => "i386"} =>  "/rhel/server/5/6Server/i386/os",
-       {"releasever" => "6Server", "basearch" => "x86_64"} =>  "/rhel/server/5/6Server/x84_64/os"}
+  #  { {"releasever" => "6Server", "basearch" => "i386"} =>  "/rhel/server/5/6Server/i386/os",
+  #    {"releasever" => "6Server", "basearch" => "x86_64"} =>  "/rhel/server/5/6Server/x84_64/os"}
   #
   # values are loaded from CDN
     def substitute_vars(path_with_vars)
+      return @precalculated_substitutions[path_with_vars] if @precalculated_substitutions
       paths_with_vars    = { {} => path_with_vars}
       paths_without_vars = {}
 
@@ -151,10 +164,6 @@ module CDN
           paths_without_vars[substitutions] = path
         end
       end
-
-      #File.open(File.join(Rails.root,"tmp","example_cdn_paths.rb"), "a") do |f|
-        #f << %["#{path_with_vars}" => #{paths_without_vars.pretty_print_inspect},\n\n]
-      #end
 
       return paths_without_vars
     end
