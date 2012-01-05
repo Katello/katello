@@ -24,10 +24,11 @@ class SyncPlanAPI(KatelloAPI):
             "name": name,
             "description": description,
             "interval": interval,
-            "organization_id": orgId
+            "sync_date": sync_date,
+            "organization_id": org_id
         }
         path = "/api/organizations/%s/sync_plans/" % str(org_id)
-        return self.server.POST(path, data)[1]
+        return self.server.POST(path, {"sync_plan": data})[1]
 
     def sync_plans(self, org_id, query={}):
         path = "/api/organizations/%s/sync_plans/" % str(org_id)

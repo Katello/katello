@@ -96,6 +96,49 @@ class Info(SyncPlanAction):
         return os.EX_OK
 
 
+class Create(SyncPlanAction):
+
+    description = _('create an environment')
+    interval_choices = ['none', 'hourly', 'daily', 'weekly']
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
+        self.parser.add_option('--org', dest='org', help=_("organization name (required)"))
+        self.parser.add_option("--description", dest="description", help=_("plan description"))
+        self.parser.add_option('--interval', dest='interval',
+            help=_("interval of recurring synchronizations (choices: [%s], default: none)") % ', '.join(self.interval_choices),
+            default='none', choices=self.interval_choices)
+        self.parser.add_option("--date", dest="date", help=_("date of first synchronization (required, format: YYYY-MM-DD)"))
+        self.parser.add_option("--time", dest="time", help=_("time of first synchronization (format: HH:MM:SS, default: 00:00:00)"), default="00:00:00")
+
+    def check_options(self):
+        self.require_option('org')
+        self.require_option('name')
+        self.require_option('date')
+
+    def build_datetime(self, date, time):
+        return date.strip()+"T"+time.strip()+"Z"
+
+    def run(self):
+        name        = self.get_option('name')
+        org_name    = self.get_option('org')
+        description = self.get_option('description')
+        interval    = self.get_option('interval')
+        date        = self.get_option('date')
+        time        = self.get_option('time')
+
+        sync_date = self.build_datetime(date, time)
+
+        plan = self.api.create(org_name, name, sync_date, interval, description)
+        if is_valid_record(plan):
+            print _("Successfully created environment [ %s ]") % plan['name']
+            return os.EX_OK
+        else:
+            print _("Could not create environment [ %s ]") % plan['name']
+            return os.EX_DATAERR
+
+
+
 class Delete(SyncPlanAction):
 
     description = _('delete a sync plan')
