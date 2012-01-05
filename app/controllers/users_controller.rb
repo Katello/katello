@@ -55,13 +55,11 @@ class UsersController < ApplicationController
   # Render list of users. Note that if the current user does not have permission
   # to view all users, the results are restricted to just themselves.
   def items
-    if User.any_readable?
-      if params[:only]
-        users = [@user]
-        render_panel_items(users, @panel_options, nil, params[:offset])
-      else
-        render_panel_direct(User, @panel_options, params[:search], params[:offset], [:username_sort, 'asc'])
-      end
+    if !params[:only] && User.any_readable?
+      render_panel_direct(User, @panel_options, params[:search], params[:offset], [:username_sort, 'asc'])
+    else
+      users = [@user]
+      render_panel_items(users, @panel_options, nil, params[:offset])
     end
   end
 
