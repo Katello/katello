@@ -48,7 +48,8 @@ class GpgKeysController < ApplicationController
   end
 
   def items
-    render_panel_items(GpgKey.readable(current_organization), @panel_options, params[:search], params[:offset])
+    render_panel_direct(GpgKey, @panel_options, params[:search], params[:offset], [:name, :asc],
+      :filter=>{:organization_id=>[current_organization.id]})
   end
 
   def show
