@@ -30,7 +30,8 @@ class Api::SyncPlansController < Api::ApiController
   end
 
   def index
-    render :json => @organization.sync_plans.to_json
+    query_params.delete :organization_id
+    render :json => @organization.sync_plans.where(query_params).to_json
   end
 
   def show
