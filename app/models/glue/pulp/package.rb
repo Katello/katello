@@ -68,7 +68,7 @@ class Glue::Pulp::Package < Glue::Pulp::SimplePackage
 
   def self.search query, start, page_size, repoids=nil, not_repoids=nil, sort=[:nvrea_sort, "ASC"]
     query_down = query.downcase
-    query = "name:#{query}" if [':', 'and', 'org', 'not'].all?{|s| !query_down.include?(s)}
+    query = "name:#{query}" if AppConfig.simple_search_tokens.any?{|s| !query_down.match(s)}
     search = Tire.search self.index do
       query do
         string query

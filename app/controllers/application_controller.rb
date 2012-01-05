@@ -278,7 +278,11 @@ class ApplicationController < ActionController::Base
     filters = search_options[:filter] || []
     load = search_options[:load] || false
 
-    search = '*' if search.nil? || search== ''
+    if search.nil? || search== ''
+      search = '*'
+    elsif search_options[:simple_query] && AppConfig.simple_search_tokens.any?{|s| !search.downcase.match(s)}
+      search = search_options[:simple_query]
+    end
 
     panel_options[:accessor] ||= "id"
     panel_options[:columns] = panel_options[:col]

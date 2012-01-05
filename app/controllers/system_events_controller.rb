@@ -84,9 +84,12 @@ class SystemEventsController < ApplicationController
         ""
       end
     end
+    search = params[:search]
     render_panel_direct(TaskStatus, {:no_search_history => true,:render_list_proc => render_proc},
-                        params[:search], params[:offset], [:finish_time, 'DESC'],
-                        {:system_ids => [@system.id]}, true)
+                        search, params[:offset], [:finish_time, 'DESC'],
+                        :filters => {:system_ids => [@system.id]},
+                        :load => true,
+                        :simple_query => "status:#{search} OR #{search}" )
   end
 
   protected
