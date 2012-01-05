@@ -57,7 +57,7 @@ module Navigation
     def systems_navigation
       [
         { :key => :general,
-          :name =>N_("General"),
+          :name =>N_("Details"),
           :if => lambda{@system},
           :options => {:class=>"navigation_element"},
           :items => systems_subnav
