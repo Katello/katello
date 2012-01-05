@@ -25,8 +25,8 @@ class Filter < ActiveRecord::Base
   end
 
   validates :pulp_id, :presence => true
-  validates_presence_of :organization_id
-  validates_uniqueness_of :pulp_id, :scope => :organization_id, :message => N_("pulp_id must be unique within one organization")
+  validates_presence_of :organization_id, :message => N_("Name cannot be blank.")
+  validates_uniqueness_of :pulp_id, :scope => :organization_id, :message => N_("Name must be unique within one organization")
 
   belongs_to :organization
   has_and_belongs_to_many :products, :uniq => true
