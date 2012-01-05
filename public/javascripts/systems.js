@@ -51,61 +51,20 @@ $(document).ready(function() {
 
   KT.systems_page.registerActions();
 
-  //$('#sub_submit').live('submit', KT.systems_page.submitAction);
-  //$('#unsub_submit').live('submit', KT.systems_page.submitAction);
-    
-
+    // These run after the subscribe/unsubscribe forms have been submitted to update
+    // the left hand list entry (which reflects the subscribed status of the system).
     $('#unsubscribe').live('ajax:complete', function(evt, data, status, xhr){
         var id = $('.left').find('.active');
         var url = id.attr('data-ajax_url');
         url = url.substring(0, url.length - 5);  // Strip off trailing '/edit'
-        console.log("#unsubscribe ajax:complete " + id.attr('id') + "  " + url);
         KT.panel.list.refresh(id.attr('id'), url);
     });
     $('#subscribe').live('ajax:complete', function(evt, data, status, xhr){
         var id = $('.left').find('.active');
         var url = id.attr('data-ajax_url');
         url = url.substring(0, url.length - 5);  // Strip off trailing '/edit'
-        console.log("#unsubscribe ajax:complete " + id.attr('id') + "  " + url);
         KT.panel.list.refresh(id.attr('id'), url);
     });
-/*
-  $('#unsub_submit').live('click', function(e) {
-      e.preventDefault();
-      var unsubform = $('#unsubscribe');
-      var button = unsubform.find('input[type|="submit"]');
-      button.attr("disabled","disabled");
-      unsubform.ajaxSubmit({
-          success: function(data) {
-              button.removeAttr('disabled');
-              notices.checkNotices();
-              var id = $('#panel_element_id')
-              KT.panel.list.refresh(id.attr('value'), id.attr('data-ajax_url'));
-          }, error: function(e) {
-              button.removeAttr('disabled');
-              notices.checkNotices();
-          }
-      });
-  });
-
-  $('#sub_submit').live('click', function(e) {
-      e.preventDefault();
-      var subform = $('#subscribe');
-      var button = subform.find('input[type|="submit"]');
-      button.attr("disabled","disabled");
-      subform.ajaxSubmit({
-          success: function(data) {
-              button.removeAttr('disabled');
-              notices.checkNotices();
-              var id = $('#panel_element_id')
-              KT.panel.list.refresh(id.attr('value'), id.attr('data-ajax_url'));
-          }, error: function(e) {
-              button.removeAttr('disabled');
-              notices.checkNotices();
-          }
-      });
-  });
-*/
 });
 
 KT.systems_page = (function() {
