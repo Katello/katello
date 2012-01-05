@@ -11,6 +11,16 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class GpgKey < ActiveRecord::Base
+  include IndexedModel
+
+
+  index_options :extended_json=>:extended_index_attrs
+
+  mapping do
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+  end
+
+
   has_many :repositories, :inverse_of => :gpg_key
   has_many :products, :inverse_of => :gpg_key
 
@@ -55,6 +65,10 @@ class GpgKey < ActiveRecord::Base
   
   def self.any_readable? organization
     organization.readable? || organization.gpg_keys_manageable? || ::Provider.any_readable?(organization)
+  end
+
+  def extended_index_attrs
+    {:name_sort=>name.downcase}
   end
 
 end
