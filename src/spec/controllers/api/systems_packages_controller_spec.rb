@@ -41,7 +41,7 @@ describe Api::SystemPackagesController do
 
     @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
     @environment_1 = KTEnvironment.create!(:name => 'test_1', :prior => @organization.locker.id, :organization => @organization)
-    @system = System.create!(:environment => @environment_1, :uuid => "1234", :name => "system.example.com", :cp_type => 'system')
+    @system = System.create!(:environment => @environment_1, :uuid => "1234", :name => "system.example.com", :cp_type => 'system', :facts => {})
     System.stub(:first => @system)
   end
 
