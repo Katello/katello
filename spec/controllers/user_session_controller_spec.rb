@@ -27,7 +27,6 @@ describe UserSessionsController do
     
     before(:each) do
       controller.stub!(:notice)
-      controller.stub!(:errors)
 
       disable_user_orchestration
 
@@ -49,7 +48,7 @@ describe UserSessionsController do
     end
 
     it "should not have valid org selected" do 
-      controller.should_receive(:errors)
+      controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
       org = new_test_org
       User.current = @user
       post :set_org, {:org_id => org.id } 

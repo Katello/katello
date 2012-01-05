@@ -19,7 +19,6 @@ describe GpgKeysController do
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
 
-
   module GPGKeyControllerTest
     GPGKEY_INVALID = {}
     GPGKEY_NAME_INVALID = {:name => ""}
@@ -81,7 +80,7 @@ describe GpgKeysController do
 
     describe "with invalid GPG Key id" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         get :show, :id => 9999
       end
 
@@ -120,7 +119,7 @@ describe GpgKeysController do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         get :edit, :id => 9999
       end
 
@@ -182,7 +181,7 @@ describe GpgKeysController do
 
     describe "with invalid params" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         post :create, GPGKeyControllerTest::GPGKEY_INVALID
       end
 
@@ -305,7 +304,7 @@ describe GpgKeysController do
 
       describe "with invalid params" do
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME_INVALID
         end
 
@@ -318,7 +317,7 @@ describe GpgKeysController do
 
     describe "with invalid GPG Key ID" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         put :update, :id => 9999, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME
       end
 
@@ -367,7 +366,7 @@ describe GpgKeysController do
 
     describe "with invalid GPG Key id" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         delete :destroy, :id => 9999
       end
 

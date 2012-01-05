@@ -91,7 +91,7 @@ class GpgKeysController < ApplicationController
     end
   rescue Exception => error
     Rails.logger.error error.to_s
-    return_error = errors(error)
+    return_error = notice(error, {:level => :error})
     render :json => return_error.to_json, :status => :bad_request
   end
 
@@ -114,7 +114,7 @@ class GpgKeysController < ApplicationController
     render :text => escape_html(gpg_key_params.values.first)
 
   rescue Exception => error
-    errors error
+    notice error, {:level => :error}
 
     respond_to do |format|
       format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -131,7 +131,7 @@ class GpgKeysController < ApplicationController
         raise
       end
     rescue Exception => e
-      errors e
+      notice e, {:level => :error}
     end
   end
 
@@ -141,7 +141,7 @@ class GpgKeysController < ApplicationController
     begin
       @gpg_key = GpgKey.find(params[:id])
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
 
       # flash_to_headers is an after_filter executed on the application controller;
       # however, a render from within a before_filter will halt the filter chain.
