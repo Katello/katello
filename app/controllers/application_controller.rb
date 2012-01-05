@@ -11,11 +11,13 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'util/threadsession'
+require 'util/notices'
 require 'cgi'
 require 'base64'
 
 class ApplicationController < ActionController::Base
   layout 'katello'
+  include Katello::Notices
   clear_helpers
 
   helper_method :current_organization
@@ -63,112 +65,6 @@ class ApplicationController < ActionController::Base
   include Menu
   def section_id
     'generic'
-  end
-
-  # Generate a notice:
-  #
-  # notice:              The text to include
-  # options:             Optional hash containing various optional parameters.  This includes:
-  #   level:               The type of notice to be generated.  Supported values include:
-  #                        :message, :success (Default), :warning, :error
-  #   synchronous_request: true. if this notice is associated with an event where
-  #                        the user would expect to receive a response immediately
-  #                        as part of a response. This typically applies for events
-  #                        involving things such as create, update and delete.
-  #   persist:             true, if this notice should be stored via ActiveRecord.
-  #                        Note: this option only applies when synchronous_request is true.
-  #   list_items:          Array of items to include with the generated notice (text).  If included,
-  #                        the array will be converted to a string (separated by newlines) and
-  #                        concatenated with the notice text.  This is useful in scenarios where
-  #                        there are several validation errors occur from a single form submit.
-  #   details:             String containing additional details.  This would typically be to store
-  #                        information such as a stack trace that is in addition to the notice text.
-  def notice notice, options = {}
-
-    notice = "" if notice.nil?
-
-    # set the defaults
-    level = :success
-    synchronous_request = true
-
-    persist = true
-    global = false
-    details = nil
-
-    unless options.nil?
-      level = options[:level] unless options[:level].nil?
-      synchronous_request = options[:synchronous_request] unless options[:synchronous_request].nil?
-      persist = options[:persist] unless options[:persist].nil?
-      global = options[:global] unless options[:global].nil?
-      details = options[:details] unless options[:details].nil?
-    end
-
-    notice_dialog = build_notice(notice, options[:list_items], options[:include_class_name])
-
-    notice_string = notice_dialog["notices"].join("<br />")
-    if notice_dialog.has_key?("validation_errors")
-      notice_string = notice_string + notice_dialog["validation_errors"].join("<br />")
-    end
-
-    if synchronous_request
-      # On a sync request, the client should expect to receive a notification
-      # immediately without polling.  In order to support this, we will send a flash
-      # notice.
-      if !details.nil?
-        notice_dialog["notices"].push( _("#{self.class.helpers.link_to('Click here', notices_path)} for more details."))
-      end
-      
-      flash[level] = notice_dialog.to_json
-
-      if persist
-        # create & store notice... but mark as 'viewed'
-        new_notice = Notice.create(:text => notice_string, :details => details, :level => level, :global => global,
-                                   :request_type => requested_action, :user_notices => [UserNotice.new(:user => current_user)])
-
-        unless new_notice.nil?
-          user_notice = current_user.user_notices.where(:notice_id => new_notice.id).first
-          unless user_notice.nil?
-            user_notice.viewed = true
-            user_notice.save!
-          end
-        end
-      end
-    else
-      # On an async request, the client shouldn't expect to receive a notification
-      # immediately. As a result, we'll store the notification and it will be
-      # retrieved by the client on it's next polling interval.
-      #
-      # create & store notice... and mark as 'not viewed'
-      Notice.create!(:text => notice_string, :details => details, :level => level, :global => global,
-                     :request_type => requested_action, :user_notices => [UserNotice.new(:user => current_user, :viewed=>false)])
-    end
-    
-    return notice_dialog
-    
-  end
-
-
-  # Generate an error notice:
-  #
-  # summary:             the text to include
-  # options:             Hash containing various optional parameters.  This includes:
-  #   level:               The type of notice to be generated.  Supported values include:
-  #                        :message, :success (Default), :warning, :error
-  #   synchronous_request: true. if this notice is associated with an event where
-  #                        the user would expect to receive a response immediately
-  #                        as part of a response. This typically applies for events
-  #                        involving things such as create, update and delete.
-  #   persist:             true, if this notice should be stored via ActiveRecord.
-  #                        Note: this option only applies when synchronous_request is true.
-  #   list_items:          Array of items to include with the generated notice.  If included,
-  #                        the array will be converted to a string (separated by newlines) and
-  #                        concatenated with the notice text.  This is useful in scenarios where
-  #                        there are several validation errors occur from a single form submit.
-  #   details:             String containing additional details.  This would typically be to store
-  #                        information such as a stack trace that is in addition to the notice text.
-  def errors summary, options = {}
-    options[:level] = :error
-    notice summary, options
   end
 
   def flash_to_headers
@@ -234,7 +130,7 @@ class ApplicationController < ActionController::Base
       return true
     else
       #user not logged
-      errors _("You must be logged in to access that page."), {:persist => false}
+      notice _("You must be logged in to access that page."), {:level => true, :persist => false}
 
       #save original uri and redirect to login page
       session[:original_uri] = request.fullpath
@@ -291,7 +187,7 @@ class ApplicationController < ActionController::Base
   def render_error(exception = nil)
     if exception
       logger.info _("Rendering 500:") + "#{exception.message}"
-      errors exception.to_s
+      notice exception.to_s, {:level => :error}
     end
     respond_to do |format|
       format.html { render :template => "common/500", :layout => "katello", :status => 500,
@@ -319,45 +215,6 @@ class ApplicationController < ActionController::Base
       end
     rescue Exception => error
       log_exception(error)
-    end
-  end
-
-  def build_notice notice, list_items, error_class_name = nil
-    items = { "notices" => [] }
-
-    if notice.kind_of? Array
-      notice.each do |item|
-        handle_notice_type item, items
-      end
-    elsif notice.kind_of? String
-      unless list_items.nil? or list_items.length == 0
-        notice = notice + list_items.join("<br />")
-      end
-      items["notices"].push(notice)
-    else
-      handle_notice_type notice, items, error_class_name
-    end
-    return items
-  end
-
-  def handle_notice_type notice, items, error_class_name = nil
-    if notice.kind_of? ActiveRecord::RecordInvalid
-      items["validation_errors"] = notice.record.errors.full_messages.to_a.map do |er|
-        if error_class_name
-          error_class_name + " " + er
-        else
-          er
-        end
-      end
-      return items
-    elsif notice.kind_of? RestClient::InternalServerError
-      items["notices"].push(notice.response)
-      return items
-    elsif notice.kind_of?(RuntimeError) || notice.kind_of?(StandardError)
-      items["notices"].push(notice.message)
-    else
-      Rails.logger.error("Received unrecognized notice: " + notice.inspect)
-      items["notices"].push(notice)
     end
   end
 
@@ -400,14 +257,32 @@ class ApplicationController < ActionController::Base
     "#{exception.class}: #{exception.message}\n" << exception.backtrace.join("\n")
   end
 
+  #verify if the specific object with the given id, matches a given search string
+  def search_validate(obj_class, id, search)
+    obj_class.index.refresh
+    search = '*' if search.nil? || search == ''
+    results = obj_class.search do
+      query { string search}
+      filter :terms, :id=>[id]
+    end
+    print results.inspect
+    results.total > 0
+  end
 
-  def render_panel_direct(obj_class, options, search, start, sort, filters=[], load=false)
+  # search_options
+  #    :filter  -  Filter to apply to search. Array of hashes.  Each key/value within the hash
+  #                  is OR'd, whereas each HASH itself is AND'd together
+  #    :load  - whether or not to load the active record object (defaults to false)
+  def render_panel_direct(obj_class, panel_options, search, start, sort, search_options={})
+  
+    filters = search_options[:filter] || []
+    load = search_options[:load] || false
 
     search = '*' if search.nil? || search== ''
 
-    options[:accessor] ||= "id"
-    options[:columns] = options[:col]
-    options[:initial_action] ||= :edit
+    panel_options[:accessor] ||= "id"
+    panel_options[:columns] = panel_options[:col]
+    panel_options[:initial_action] ||= :edit
 
     page_size = current_user.page_size
 
@@ -435,12 +310,12 @@ class ApplicationController < ActionController::Base
     rescue Tire::Search::SearchRequestFailed => e
       Rails.logger.error(e.class)
 
-      options[:total_count] = 0
-      options[:total_results] = 0
+      panel_options[:total_count] = 0
+      panel_options[:total_results] = 0
 
     end
 
-    render_panel_results(@items, options)
+    render_panel_results(@items, panel_options)
   end
 
   def render_panel_results(results, options)
@@ -511,7 +386,7 @@ class ApplicationController < ActionController::Base
   def catch_exceptions
     yield
   rescue Exception => error
-    errors error
+    notice error, {:level => :error}
     #render :text => error, :status => :bad_request
     render_error(error)
   end
@@ -541,7 +416,7 @@ class ApplicationController < ActionController::Base
       execute_after_filters
       return false
     else
-      errors _("You must be logged in to access that page."), {:persist => false}
+      notice _("You must be logged in to access that page."), {:level => :error, :persist => false}
       execute_after_filters
       redirect_to new_user_session_url and return false
     end
@@ -551,7 +426,7 @@ class ApplicationController < ActionController::Base
     logger.error exception.message
     execute_after_filters
     logout
-    errors _("You current organization is no longer valid. It is possible that the organization has been deleted, please log back in to continue."),{:persist => false}
+    notice _("You current organization is no longer valid. It is possible that the organization has been deleted, please log back in to continue."),{:level => :error, :persist => false}
     redirect_to new_user_session_url and return false
   end
 

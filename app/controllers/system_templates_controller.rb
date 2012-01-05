@@ -201,7 +201,7 @@ class SystemTemplatesController < ApplicationController
     render :text=>result
 
   rescue Exception => e
-    errors e
+    notice e, {:level => :error}
     render :text=>e, :status=>:bad_request
   end
 
@@ -210,7 +210,7 @@ class SystemTemplatesController < ApplicationController
       notice _("Template '#{@template.name}' was deleted.")
       render :partial => "common/list_remove", :locals => {:id => @template.id, :name=>"details"}
   rescue Exception => e
-      errors e.to_s
+      notice e.to_s, {:level => :error}
       render :text=> e, :status=>:bad_request
   end
 
@@ -253,7 +253,7 @@ class SystemTemplatesController < ApplicationController
     render :json=>{:name=>@template.name, :id=>@template.id}
 
   rescue Exception => e
-    errors e
+    notice e, {:level => :error}
     render :text => e, :status => :bad_request
   end
   
@@ -284,7 +284,7 @@ class SystemTemplatesController < ApplicationController
     find_read_only_template
     raise _("Cannot modify a template that is another environment") if !@template.environment.locker?
   rescue Exception => e
-    errors e
+    notice e, {:level => :error}
     render :text=>e, :status=>400 and return false
   end
 

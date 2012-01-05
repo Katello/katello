@@ -23,7 +23,6 @@ describe ProvidersController do
     login_user
     set_default_locale
     controller.stub!(:notice)
-    controller.stub!(:errors)
 
     @org = new_test_org
     current_organization=@org
@@ -32,7 +31,6 @@ describe ProvidersController do
 
   PROVIDER_NAME = "a name"
   ANOTHER_PROVIDER_NAME = "another name"
-
 
   describe "update a provider subscriptions" do
     before(:each) do
@@ -59,9 +57,6 @@ describe ProvidersController do
 
   end
 
-
-
-
   describe "rules" do
     before (:each) do
       @organization = new_test_org
@@ -78,9 +73,9 @@ describe ProvidersController do
         user_without_permissions
       end
       let(:before_success) do
-        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
           found = nil
-          filters.each{|f|  found = f['id'] if f['id'] }
+          search_options[:filter].each{|f|  found = f['id'] if f['id'] }
           assert found.include?(@provider.id)
           assert !found.include?(@provider2.id)
           controller.stub(:render)
@@ -105,6 +100,5 @@ describe ProvidersController do
       it_should_behave_like "protected action"
     end
   end
-
 
 end
