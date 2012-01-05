@@ -57,13 +57,17 @@ $(document).ready(function() {
 
     $('#unsubscribe').live('ajax:complete', function(evt, data, status, xhr){
         var id = $('.left').find('.active');
-        console.log("#unsubscribe ajax:complete " + id.attr('id'));
-        KT.panel.list.refresh(id.attr('id'), id.attr('data-ajax_url'));
+        var url = id.attr('data-ajax_url');
+        url = url.substring(0, url.length - 5);  // Strip off trailing '/edit'
+        console.log("#unsubscribe ajax:complete " + id.attr('id') + "  " + url);
+        KT.panel.list.refresh(id.attr('id'), url);
     });
     $('#subscribe').live('ajax:complete', function(evt, data, status, xhr){
         var id = $('.left').find('.active');
-        console.log("#subscribe ajax:complete " + id.attr('id'));
-        KT.panel.list.refresh(id.attr('value'), id.attr('data-ajax_url'));
+        var url = id.attr('data-ajax_url');
+        url = url.substring(0, url.length - 5);  // Strip off trailing '/edit'
+        console.log("#unsubscribe ajax:complete " + id.attr('id') + "  " + url);
+        KT.panel.list.refresh(id.attr('id'), url);
     });
 /*
   $('#unsub_submit').live('click', function(e) {
