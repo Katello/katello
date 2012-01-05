@@ -81,7 +81,7 @@ class SystemEventsController < ApplicationController
       if items && !items.empty?
         render_to_string(:partial => 'more_events', :locals => {:cycle_extra => false, :system => @system, :tasks=> items})
       else
-        ""
+        "<tr><td>" + _("No events matching your search criteria.") + "</td></tr>"
       end
     end
     search = params[:search]
