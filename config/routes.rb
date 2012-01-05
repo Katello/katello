@@ -380,6 +380,7 @@ Src::Application.routes.draw do
         get :repositories, :on => :member
         resources :changesets, :only => [:index, :create]
       end
+      resources :sync_plans
       resources :tasks, :only => [:index]
       resources :providers, :only => [:index]
       resources :systems, :only => [:index] do
