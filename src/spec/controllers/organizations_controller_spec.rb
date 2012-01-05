@@ -75,9 +75,7 @@ describe OrganizationsController do
     login_user
     set_default_locale
     controller.stub!(:notice)
-    controller.stub!(:errors)
     controller.stub(:search_validate).and_return(true)
-
   end
   
   describe "create a root org" do        
@@ -114,7 +112,7 @@ describe OrganizationsController do
     
     describe 'with invalid paramaters' do
       it 'should generate an error notice' do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         post 'create', { :name => "", :description => "" }
         response.should_not be_success
       end
@@ -187,12 +185,11 @@ describe OrganizationsController do
         Organization.stub!(:first).and_return(@organization)
       end
       it "should generate an errors notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         delete 'destroy', :id => @organization.id
         response.should_not be_success
       end
     end
-
 
     describe "exception is thrown in katello api" do
       before (:each) do
@@ -202,7 +199,7 @@ describe OrganizationsController do
       end
       
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         delete 'destroy', :id =>  OrgControllerTest::ORG_ID
         response.should_not be_success
       end
@@ -250,7 +247,7 @@ describe OrganizationsController do
       end
       
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         put 'update', :id => OrgControllerTest::ORG_ID
       end
       

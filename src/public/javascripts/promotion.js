@@ -1428,6 +1428,9 @@ var changesetStatusActions = (function($){
             });*/
         },
         failed = function(id){
+            // if the promotion failed, check the server for additional details (via notices)
+            notices.checkNotices();
+
             var changeset = $('#' + id);
             changeset.find(".changeset_status label").text(i18n.promotion_failed);
             changeset.attr('title', i18n.promotion_failed);

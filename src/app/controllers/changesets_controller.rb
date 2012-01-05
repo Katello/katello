@@ -125,7 +125,7 @@ class ChangesetsController < ApplicationController
       }
     rescue Exception => error
       Rails.logger.error error.to_s
-      errors error
+      notice error, {:level => :error}
       render :json=>error, :status=>:bad_request
     end
   end
@@ -233,7 +233,7 @@ class ChangesetsController < ApplicationController
       ChangesetUser.destroy_all(:changeset_id => @changeset.id)
       notice _("Started promotion of '#{@changeset.name}' to #{@environment.name} environment")
     rescue Exception => e
-        errors  "Failed to promote: #{e.to_s}"
+        notice "Failed to promote: #{e.to_s}", {:level => :error}
         render :text=>e.to_s, :status=>500
         return
     end
@@ -274,7 +274,7 @@ class ChangesetsController < ApplicationController
     begin
       @changeset = Changeset.find(params[:id])
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
       execute_after_filters
       render :text=>error.to_s, :status=>:bad_request
     end
