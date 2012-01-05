@@ -8,6 +8,7 @@
       = check_box_tag "autoheal", value=@system.autoheal, @system.autoheal
       Auto-heal
   = form_tag update_subscriptions_system_path, :id=>"unsubscribe", :method=>"post", :remote=>true do
+    -#= hidden_field_tag "commit", "unsubscribe"
     .tree
       %table#unsubscribeTable
         %thead
@@ -52,6 +53,7 @@
           = submit_tag _('Unsubscribe'), :class => 'update_subscriptions submit dialogbutton', :id=>"unsub_submit"
 .grid_8
   = form_tag update_subscriptions_system_path, :id=>"subscribe", :method=>"post", :remote=>true do
+    -#= hidden_field_tag "commit", "subscribe"
     %h5 #{_("Available Subscriptions")}
     .tree
       %table#subscribeTable
