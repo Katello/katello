@@ -85,15 +85,15 @@ module Navigation
 
     def systems_subnav
       [
-        { :key => :events,
-          :name =>_("Events"),
-          :url => lambda{system_events_path(@system.id)},
-          :if => lambda{@system},
-          :options => {:class=>"third_level navigation_element"},
-        },
         { :key => :system_info,
           :name =>N_("System Info"),
           :url => lambda{edit_system_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"third_level navigation_element"},
+        },
+        { :key => :events,
+          :name =>_("Events"),
+          :url => lambda{system_events_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"third_level navigation_element"},
         },
