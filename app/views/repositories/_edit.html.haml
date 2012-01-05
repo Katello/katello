@@ -25,4 +25,8 @@
   %fieldset
     .grid_2.ra
       %label #{_("GPG Key")}:
-    .grid_5.la{'name' => 'gpg_key', 'class' => ("editable edit_select" if editable), 'data-url' => update_repo_gpg_key_provider_product_repository_path(@provider.id, @product.id, @repository.id), 'data-options' => gpg_keys_edit } #{@repository.gpg_key.name if @repository.gpg_key}
+    - if gpg_keys.length != 0
+      .grid_5.la{'name' => 'gpg_key', 'class' => ("editable edit_select" if editable), 'data-url' => update_repo_gpg_key_provider_product_repository_path(@provider.id, @product.id, @repository.id), 'data-options' => gpg_keys_edit } #{@repository.gpg_key.name if @repository.gpg_key}
+    - else
+      .grid_5.la
+        #{_("None defined for this Organization.")}
