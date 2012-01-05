@@ -31,7 +31,6 @@ describe EnvironmentsController do
     ORGANIZATION = {:id => 1, :name => "organization_name", :description => "organization_description", :cp_key=>"foo"}
   end
 
-
   describe "rules" do
     before (:each) do
       new_test_org
@@ -62,12 +61,12 @@ describe EnvironmentsController do
       it_should_behave_like "protected action"
     end
   end
+
   describe "other-tests" do
     before (:each) do
       login_user
       set_default_locale
       controller.stub!(:notice)
-      controller.stub!(:errors)
 
       #Candlepin::Owner.stub!(:merge_to).and_return @org
       @env = mock(KTEnvironment, EnvControllerTest::ENVIRONMENT)
@@ -169,7 +168,7 @@ describe EnvironmentsController do
         end
 
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           put 'update', :env_id => @env.id, :org_id => @org.cp_key, :kt_environment => {:name => EnvControllerTest::NEW_ENV_NAME}
         end
 

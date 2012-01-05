@@ -91,7 +91,7 @@ class RolesController < ApplicationController
       render :json => { :no_match => true }
     end
   rescue Exception => error
-    errors error
+    notice error, {:level => :error}
     render :json=>error.to_s, :status=>:bad_request
   end
 
@@ -119,7 +119,7 @@ class RolesController < ApplicationController
         render :json=>params[:role]
       end
     rescue Exception => error
-      errors error
+      notice error, {:level => :error}
       respond_to do |format|
         format.html { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
         format.js { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -140,7 +140,7 @@ class RolesController < ApplicationController
         raise
       end
     rescue Exception => error
-      errors error
+      notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
     end
   end
@@ -192,7 +192,7 @@ class RolesController < ApplicationController
     notice _("Permission '#{@permission.name}' was updated.")
     render :json => to_return
   rescue Exception => error
-      errors error
+      notice error, {:level => :error}
       render :json=>@permission.errors, :status=>:bad_request
   end
 
@@ -215,7 +215,7 @@ class RolesController < ApplicationController
       notice _("Permission '#{@perm.name}' was created.")
       render :json => to_return
     rescue Exception => error
-      errors error
+      notice error, {:level => :error}
       render :json=>@role.errors, :status=>:bad_request
     end
   end

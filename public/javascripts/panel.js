@@ -661,7 +661,7 @@ KT.panel.list = (function () {
             else {
                 current_items_count += current;
                 total_items_count += total;
-                results_items_count = results;
+                results_items_count += results;
             }
             $('#total_items_count').html(total_items_count);
             $('#current_items_count').html(current_items_count);
@@ -844,6 +844,7 @@ KT.panel.list = (function () {
                 if (!page_load) {
                     KT.panel.closePanel();
                 }
+                        
                 $(this).ajaxSubmit({
                     url: url,
                     data: data,

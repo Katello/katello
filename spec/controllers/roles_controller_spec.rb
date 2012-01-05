@@ -32,14 +32,12 @@ describe RolesController do
     set_default_locale
     
     controller.stub!(:notice)
-    controller.stub!(:errors)
     
     @organization = new_test_org 
     controller.stub!(:current_organization).and_return(@organization)
     
     @admin = Role.create(RolesControllerTest::ADMIN)
   end
-
 
   describe "create a role" do
 

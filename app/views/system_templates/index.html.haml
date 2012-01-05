@@ -105,7 +105,8 @@
           #{_('+ New Template')}
           .arrow-right
       %h2= _("Eligible Content")
-      .tree_breadcrumb.clickable.clear
+      .breadcrumb_search.clear.clickable
+        .tree_breadcrumb
       .sliding_container
         #list.list.sliding_list{"data-page_size"=>current_user.page_size}
           .slider_one.has_content.slider
