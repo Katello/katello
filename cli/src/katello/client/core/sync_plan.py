@@ -21,7 +21,7 @@ from katello.client.api.sync_plan import SyncPlanAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, format_date
-from katello.client.api.utils import get_environment
+from katello.client.api.utils import get_sync_plan
 
 Config()
 
@@ -63,6 +63,29 @@ class List(SyncPlanAction):
         return os.EX_OK
 
 
+class Delete(SyncPlanAction):
+
+    description = _('delete a sync plan')
+
+    def setup_parser(self):
+        self.parser.add_option('--name', dest='name', help=_("name of the sync plan (required)"))
+        self.parser.add_option('--org', dest='org', help=_("organization name (required)"))
+
+    def check_options(self):
+        self.require_option('name')
+        self.require_option('org')
+
+    def run(self):
+        org_name = self.get_option('org')
+        plan_name = self.get_option('name')
+
+        plan = get_sync_plan(org_name, plan_name)
+        if plan == None:
+            return os.EX_DATAERR
+
+        self.api.delete(org_name, plan["id"])
+        print _("Successfully deleted sync plan [ %s ]") % plan_name
+        return os.EX_OK
 
 
 # environment command ------------------------------------------------------------

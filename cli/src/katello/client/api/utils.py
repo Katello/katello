@@ -24,6 +24,7 @@ from katello.client.api.template import TemplateAPI
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.api.user import UserAPI
 from katello.client.api.user_role import UserRoleAPI
+from katello.client.api.sync_plan import SyncPlanAPI
 from katello.client.api.permission import PermissionAPI
 
 def get_organization(orgName):
@@ -134,6 +135,12 @@ def get_role(name):
         print _("Cannot find user role [ %s ]") % (name)
     return role
 
+def get_sync_plan(org_name, name):
+    plan_api = SyncPlanAPI()
+    plan = plan_api.sync_plan_by_name(org_name, name)
+    if plan == None:
+        print _("Cannot find sync plan [ %s ]") % (name)
+    return plan
 
 def get_permission(role_name, permission_name):
     permission_api = PermissionAPI()
