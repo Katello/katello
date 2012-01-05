@@ -9,8 +9,10 @@ class katello::service {
     notify  => Exec["reload-apache2"];
   }
 
-  service {"katello-jobs":
-    ensure  => running, enable => true, hasstatus => true, hasrestart => true,
-    require => Service["katello"]
+  if $katello::params::deployment == 'katello' {
+    service {"katello-jobs":
+      ensure  => running, enable => true, hasstatus => true, hasrestart => true,
+      require => Service["katello"]
+    }
   }
 }

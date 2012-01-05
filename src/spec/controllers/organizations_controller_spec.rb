@@ -37,9 +37,15 @@ describe OrganizationsController do
       let(:unauthorized_user) do
         user_without_permissions
       end
-      let(:on_success) do
-        assigns(:items).should_not include @org1
-        assigns(:items).should include @organization
+
+      let(:before_success) do
+        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+          found = nil
+          filters.each{|f|  found = f['id'] if f['id'] }
+          assert !found.include?(@org1.id)
+          assert found.include?(@organization.id)
+          controller.stub(:render)
+        }
       end
 
       it_should_behave_like "protected action"
@@ -128,9 +134,12 @@ describe OrganizationsController do
     end
 
     it 'should allow for an offset' do
+      controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+        start.should == 5
+        controller.stub(:render)
+      }
       get 'items', :offset=>5
       response.should be_success
-      assigns[:items_offset].should_not include @organization
     end
   end
   

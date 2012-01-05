@@ -77,6 +77,7 @@ describe PromotionsController, :katello => true do
     end
 
     it "should be successful when requesting packages" do
+      Glue::Pulp::Package.stub(:search).and_return(["test"])
       get 'packages', :id=>@env.name, :product_id => @product.id
       response.should be_success
       assigns(:environment).should == @env

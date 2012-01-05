@@ -20,6 +20,12 @@ class Changeset < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
 
+
+  #include IndexedModel
+  #
+  #index_options :extended_json=>:extended_index_attrs
+
+
   NEW = 'new'
   REVIEW = 'review'
   PROMOTED = 'promoted'
@@ -501,7 +507,7 @@ class Changeset < ActiveRecord::Base
     to_env   = self.environment
 
     package_names = packages_for_dep_calc(product).map{ |p| p.name }.uniq
-    return [] if package_names.empty?
+    return {} if package_names.empty?
 
     from_repos = not_included_repos(product, from_env).map{ |r| r.pulp_id }
 
@@ -527,6 +533,20 @@ class Changeset < ActiveRecord::Base
   def find_repo repo_id, product_cpid
     product = find_product_by_cpid(product_cpid)
     product.repos(self.environment.prior).where("repositories.id" => repo_id).first
+  end
+
+
+  def extended_index_attrs
+    pkgs = self.packages.collect{|pkg| pkg.display_name}
+    errata = self.errata.collect{|err| err.display_name}
+    products = self.products.collect{|prod| prod.name}
+    repos = self.repos.collect{|repo| repo.name}
+    {
+      :package=>pkgs,
+      :errata=>errata,
+      :product=>products,
+      :repo=>repos
+    }
   end
 
 end

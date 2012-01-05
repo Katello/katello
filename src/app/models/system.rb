@@ -24,6 +24,15 @@ class System < ActiveRecord::Base
   include Glue
   include Authorization
   include AsyncOrchestration
+  include IndexedModel
+
+  index_options :extended_json=>:extended_index_attrs,
+                :json=>{:only=>[:name, :description, :environment_id, :id, :uuid, :created_at, :lastCheckin]}
+
+  mapping do
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+    indexes :lastCheckin, :type=>'date'
+  end
 
   acts_as_reportable
 
@@ -169,6 +178,13 @@ class System < ActiveRecord::Base
     SystemTask.refresh_for_system(self)
   end
 
+
+
+  def extended_index_attrs
+    {:facts=>self.facts, :organization_id=>self.organization.id, :name_sort=>name.downcase}
+  end
+
+
   private
     def save_system_task pulp_task, task_type, parameters_type, parameters
       SystemTask.make(self, pulp_task, task_type, parameters_type => parameters)
@@ -178,4 +194,5 @@ class System < ActiveRecord::Base
       self.description = "Initial Registration Params" unless self.description
       self.location = "None" unless self.location
     end
+
 end

@@ -290,9 +290,18 @@ module Glue::Pulp::Repo
     return false
   end
 
-  def sync 
-    [Pulp::Repository.sync(self.pulp_id)]
+  def sync
+    tasks = [Pulp::Repository.sync(self.pulp_id)]
+    self.async(:organization=>self.environment.organization).index_after_sync tasks
+    tasks
   end
+
+    def index_after_sync tasks
+      PulpTaskStatus::wait_for_tasks tasks
+      self.index_packages
+      #self.index_errata
+    end
+
 
   def sync_start
     status = self.sync_status

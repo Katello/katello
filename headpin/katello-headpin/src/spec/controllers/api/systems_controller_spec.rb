@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper.rb'
+require 'helpers/system_test_data.rb'
 include OrchestrationHelper
 
 describe Api::SystemsController do
@@ -158,6 +159,33 @@ describe Api::SystemsController do
     end
 
   end
+
+  describe "create a hypervisor" do
+
+    before do
+      User.stub(:consumer? => true)
+    end
+
+    let(:virt_who_params) { {"env"=>@environment_1.name, "host2"=>["GUEST3", "GUEST4"], "owner"=>@organization.name} }
+
+    it "requires either environment_id, owner, or organization_id to be specified" do
+      post :create
+      response.code.should == "500"
+    end
+
+    it "creates hypervisor" do
+      System.should_receive(:register_hypervisors).with(@environment_1, virt_who_params)
+      post :hypervisors_update, virt_who_params
+    end
+
+    it "sends back candlepin response" do
+      cp_response = {"created" => SystemTestData.new_hypervisor}
+      System.stub(:register_hypervisors => [cp_response, []])
+      post :hypervisors_update, virt_who_params
+      JSON.parse(response.body).should == cp_response
+    end
+  end
+
 
   describe "list systems" do
     before(:each) do

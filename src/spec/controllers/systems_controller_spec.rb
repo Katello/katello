@@ -16,7 +16,10 @@ describe SystemsController do
   include LoginHelperMethods
   include LocaleHelperMethods
   include SystemHelperMethods
+  include OrchestrationHelper
   include AuthorizationHelperMethods
+
+
 
   describe "rules" do
     let(:uuid) { '1234' }
@@ -48,9 +51,14 @@ describe SystemsController do
           let(:unauthorized_user) do
             user_without_permissions
           end
-          let(:on_success) do
-            assigns[:items].should include @system
+
+          let(:before_success) do
+            controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+              filters[:organization_id].should include(@organization.id)
+              controller.stub(:render)
+            }
           end
+
           it_should_behave_like "protected action"
         end
 
@@ -68,10 +76,14 @@ describe SystemsController do
           let(:unauthorized_user) do
             user_without_permissions
           end
-          let(:on_success) do
-            assigns[:items].should include @system2
-            assigns[:items].should_not include @system
+          
+          let(:before_success) do
+            controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+              filters[:organization_id].should include(@organization.id)
+              controller.stub(:render)
+            }
           end
+          
           it_should_behave_like "protected action"
         end
 
@@ -154,18 +166,23 @@ describe SystemsController do
       end
 
       it "should render the first 25 systems" do
+        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+          options[:list_partial].should == "systems/list_systems"
+          controller.stub(:render)
+        }
         get :items
         response.should be_success
-        response.should render_template("list_systems")
-        assigns[:items_offset].collect{|sys| sys.id}.should == @systems[0..24]
       end
 
       describe 'with an offset' do
         pending "should return a portion of systems" do
+          controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+            options[:list_partial].should == "systems/list_systems"
+            start.should == 25
+            controller.stub(:render)
+          }
           get :items, :offset=>25
           response.should be_success
-          response.should render_template("list_systems")
-          assigns[:items_offset].should include System.where(:name => "bar35")
         end
       end
 

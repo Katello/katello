@@ -32,6 +32,9 @@ module ApplicationConfiguration
 
       @ostruct = hashes2ostruct(@hash)
 
+      @ostruct.elastic_index = 'katello' unless @ostruct.respond_to?(:elastic_index)
+      @ostruct.elastic_url = 'http://localhost:9200' unless @ostruct.respond_to?(:elastic_url)
+
       # candlepin and pulp are turned on by default
       @ostruct.use_cp = true unless @ostruct.respond_to?(:use_cp)
       @ostruct.use_pulp = true unless @ostruct.respond_to?(:use_pulp)

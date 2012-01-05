@@ -119,7 +119,10 @@ class ProvidersController < ApplicationController
   end
 
   def items
-    render_panel_items(Provider.readable(current_organization).custom.order('providers.name'), @panel_options, params[:search], params[:offset])
+    
+    ids = Provider.readable(current_organization).collect{|p| p.id}
+    render_panel_direct(Provider, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
+                        [{"id"=>ids}, {:provider_type=>[Provider::CUSTOM.downcase]}])
   end
 
   def show

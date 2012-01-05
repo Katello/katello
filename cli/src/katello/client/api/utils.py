@@ -23,6 +23,8 @@ from katello.client.api.provider import ProviderAPI
 from katello.client.api.template import TemplateAPI
 from katello.client.api.changeset import ChangesetAPI
 from katello.client.api.user import UserAPI
+from katello.client.api.user_role import UserRoleAPI
+from katello.client.api.permission import PermissionAPI
 
 def get_organization(orgName):
     organization_api = OrganizationAPI()
@@ -125,3 +127,22 @@ def get_user(userName):
         print _("Could not fing user [ %s ]") % (userName)
     return user
 
+def get_role(name):
+    user_role_api = UserRoleAPI()
+    role = user_role_api.role_by_name(name)
+    if role == None:
+        print _("Cannot find user role [ %s ]") % (name)
+    return role
+
+
+def get_permission(role_name, permission_name):
+    permission_api = PermissionAPI()
+
+    role = get_role(role_name)
+    if role == None:
+        return None
+
+    perm = permission_api.permission_by_name(role['id'], permission_name)
+    if perm == None:
+        print _("Cannot find permission [ %s ] for user role [ %s ]") % (role_name, permission_name)
+    return perm

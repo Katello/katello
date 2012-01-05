@@ -15,6 +15,15 @@ class Provider < ActiveRecord::Base
   include Glue
   include Authorization
   include KatelloUrlHelper
+  include IndexedModel
+
+
+  index_options :extended_json=>:extended_index_attrs, :json=>{:except=>[]}
+
+  mapping do
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+  end
+
 
   REDHAT = 'Red Hat'
   CUSTOM = 'Custom'
@@ -165,6 +174,18 @@ class Provider < ActiveRecord::Base
     hash
   end
 
+  def extended_index_attrs
+    products = []
+    #products = self.products.map{|prod|
+    #  {:provider_name=>prod.name, :repos=>prod.repos(self.organization.locker).collect{|repo| repo.name}}
+    #}
+    {
+      :products=>products,
+      :name_sort=>name.downcase
+
+    }
+  end
+
   protected
 
    def sanitize_repository_url
@@ -191,5 +212,9 @@ class Provider < ActiveRecord::Base
   READ_PERM_VERBS = [:read, :update] if !AppConfig.katello?
   EDIT_PERM_VERBS = [:create, :update] if AppConfig.katello?
   EDIT_PERM_VERBS = [:update] if !AppConfig.katello?
+
+
+
+
 end
 

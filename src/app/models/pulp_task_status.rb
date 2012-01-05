@@ -34,7 +34,7 @@ class PulpTaskStatus < TaskStatus
         :start_time => sync[:start_time],
         :finish_time => sync[:finish_time],
         :progress => sync[:progress],
-        :result => sync[:result].nil? ? {:errors => [sync[:exception], sync[:traceback]]}.to_json : sync[:result]
+        :result => sync[:result].nil? ? {:errors => [sync[:exception], sync[:traceback]]} : sync[:result]
     ) { |t| yield t if block_given? }
   end
 
@@ -52,7 +52,7 @@ class PulpTaskStatus < TaskStatus
         :state => pulp_task[:state],
         :finish_time => pulp_task[:finish_time],
         :progress => pulp_task[:progress],
-        :result => pulp_task[:result].nil? ? {:errors => [pulp_task[:exception], pulp_task[:traceback]]}.to_json : pulp_task[:result]
+        :result => pulp_task[:result].nil? ? {:errors => [pulp_task[:exception], pulp_task[:traceback]]} : pulp_task[:result]
     }
     task_status.save! if not task_status.new_record?
     task_status
