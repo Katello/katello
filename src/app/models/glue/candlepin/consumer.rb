@@ -316,7 +316,7 @@ module Glue::Candlepin::Consumer
 
     def compliant_until
       if self.compliance['compliantUntil']
-        Date.parse(self.compliance['compliantUntil']).strftime("%m/%d/%Y")
+        Date.parse(self.compliance['compliantUntil'])
       end
     end
 
