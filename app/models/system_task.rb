@@ -110,7 +110,7 @@ class SystemTask < ActiveRecord::Base
               :timed_out =>[N_('%s erratum install timed out'), N_('%s (%s other errata) install timed out')],
           },
          :user_message => _('Errata Install scheduled by %s')
-
+      }
   }.with_indifferent_access
 
   TYPES.each_pair do |name, value|
