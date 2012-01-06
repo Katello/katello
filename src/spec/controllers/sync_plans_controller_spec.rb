@@ -10,6 +10,7 @@ describe SyncPlansController do
   describe "rules" do
     before (:each) do
       new_test_org
+      controller.stub(:search_validate).and_return(true)
     end
     describe "GET index" do
       before do
@@ -43,7 +44,7 @@ describe SyncPlansController do
     before (:each) do
       login_user
       set_default_locale
-
+      controller.stub(:search_validate).and_return(true)
       @org = new_test_org
       controller.stub!(:current_organization).and_return(@org)
     end
