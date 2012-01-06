@@ -19,7 +19,6 @@ describe GpgKeysController, :katello => true do
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
 
-
   module GPGKeyControllerTest
     GPGKEY_INVALID = {}
     GPGKEY_NAME_INVALID = {:name => ""}
@@ -31,7 +30,7 @@ describe GpgKeysController, :katello => true do
   before(:each) do
     set_default_locale
     login_user({:mock => false})
-
+    controller.stub(:validate_search).and_return(true)
     @file = mock(Object)
     @file.stub_chain(:tempfile, :path).and_return('test_key.gpg')
     @file.stub!(:read).and_return("This is uploaded key data.")
@@ -81,7 +80,7 @@ describe GpgKeysController, :katello => true do
 
     describe "with invalid GPG Key id" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         get :show, :id => 9999
       end
 
@@ -120,7 +119,7 @@ describe GpgKeysController, :katello => true do
 
     describe "with invalid activation key id" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         get :edit, :id => 9999
       end
 
@@ -132,6 +131,9 @@ describe GpgKeysController, :katello => true do
   end
 
   describe "POST create" do
+    before :each do
+      controller.stub(:search_validate).and_return(true)
+    end
     describe "with valid params" do
       describe "that include a copy/pasted GPG Key" do
         it "should be successful" do
@@ -182,7 +184,7 @@ describe GpgKeysController, :katello => true do
 
     describe "with invalid params" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         post :create, GPGKeyControllerTest::GPGKEY_INVALID
       end
 
@@ -202,6 +204,7 @@ describe GpgKeysController, :katello => true do
     
     describe "with exclusive search parameters" do
       it "should return no match indicator" do
+        controller.stub(:search_validate).and_return(false)
         @gpg_key_params_pasted[:search] = 'name ~ Fake'
         post :create, @gpg_key_params_pasted
         response.body.should eq("{\"no_match\":true}")
@@ -215,6 +218,9 @@ describe GpgKeysController, :katello => true do
   end
 
   describe "PUT update" do
+    before :each do
+      controller.stub(:search_validate).and_return(true)
+    end
 
     describe "authorization rules should behave like" do
       let(:action) { :update }
@@ -305,7 +311,7 @@ describe GpgKeysController, :katello => true do
 
       describe "with invalid params" do
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME_INVALID
         end
 
@@ -318,7 +324,7 @@ describe GpgKeysController, :katello => true do
 
     describe "with invalid GPG Key ID" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         put :update, :id => 9999, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME
       end
 
@@ -337,6 +343,7 @@ describe GpgKeysController, :katello => true do
     
     describe "with exclusive search parameters" do
       it "should generate message notice" do
+        controller.stub(:search_validate).and_return(false)
         controller.should_receive(:notice).twice
         put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME, :search => 'name ~ Fake'
       end
@@ -367,7 +374,7 @@ describe GpgKeysController, :katello => true do
 
     describe "with invalid GPG Key id" do
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         delete :destroy, :id => 9999
       end
 
