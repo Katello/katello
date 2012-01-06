@@ -120,7 +120,7 @@ class SystemsController < ApplicationController
         @panel_options[:search_env] = @environment.id
       end
       
-      render :index, :locals=>{:envsys => 'true', :accessible_envs=> accesible_envs}
+      render :index, :locals=>{:envsys => true, :accessible_envs=> accesible_envs}
     rescue Exception => error
       notice error.to_s, {:level => :error, :persist => false}
       render :index, :status=>:bad_request
