@@ -518,7 +518,6 @@ class Changeset < ActiveRecord::Base
     return {} if package_names.empty?
 
     from_repos = not_included_repos(product, from_env).map{ |r| r.pulp_id }
-
     dependencies = Pulp::Package.dep_solve(package_names, from_repos)['resolved']
     dependencies
   end
@@ -529,9 +528,9 @@ class Changeset < ActiveRecord::Base
     dependencies.each_pair do |package_name, dep_packages|
       dep_packages.each do |dep_package|
         new_dependencies << ChangesetDependency.new(:package_id => dep_package['id'],
-                                                    :display_name => dep_package['name'],
+                                                    :display_name => dep_package['filename'],
                                                     :product_id => product.id,
-                                                    :dependency_of => package_name,
+                                                    :dependency_of => '???',
                                                     :changeset => self)
       end
     end
