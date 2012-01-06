@@ -56,7 +56,7 @@ module Navigation
 
     def systems_navigation
       [
-        { :key => :general,
+        { :key => :details,
           :name =>N_("Details"),
           :url => lambda{edit_system_path(@system.id)},
           :if => lambda{@system},
@@ -80,6 +80,12 @@ module Navigation
           :url => lambda{packages_system_system_packages_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
+        },
+        { :key => :errata,
+          :name =>N_("Errata"),
+          :url => lambda{system_errata_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"navigation_element"},
         }
       ]
     end
@@ -98,9 +104,9 @@ module Navigation
           :if => lambda{@system},
           :options => {:class=>"third_level navigation_element"},
         },
-        { :key => :errata,
-          :name =>N_("Errata"),
-          :url => lambda{system_errata_path(@system.id)},
+        { :key => :facts,
+          :name =>_("Facts"),
+          :url => lambda{facts_system_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"third_level navigation_element"},
         }
