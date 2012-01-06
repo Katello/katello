@@ -21,18 +21,20 @@ KT.panel.set_expand_cb(function(){
 });
 
 (function(){
-	var options = { create : 'new_system' };
-	
-	if (window.env_select !== undefined) {
+    var options = { create : 'new_system' };
 
-        // When the env changes, update the pre-populated attributes
+    if (window.env_select !== undefined) {
+
+        // When the systems index page env selector changes, update the pre-populated attributes
         env_select.env_changed_callback = function(env_id) {
-            $('#new').attr('data-ajax_url', KT.routes.new_system_path() + '?env_id=' + env_id);
+            if(env_select.envsys == true){
+                $('#new').attr('data-ajax_url', KT.routes.new_system_path() + '?env_id=' + env_id);
+            }
             $('#system_environment_id').attr('value', env_id);
         };
 
-		$.extend(options, { 'extra_params' :
-					[ { hash_id 	: 'env_id', 
+        $.extend(options, { 'extra_params' :
+					[ { hash_id 	: 'env_id',
 						init_func 	: function(){
 							var state = $.bbq.getState('env_id'); 
 							
