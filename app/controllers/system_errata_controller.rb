@@ -45,9 +45,14 @@ class SystemErrataController < ApplicationController
     filter_type = params[:filter_type] if params[:filter_type]
     errata_state = params[:errata_state] if params[:errata_state]
     chunk_size = current_user.page_size
-    errata, total_errata = get_errata(offset.to_i, offset.to_i+chunk_size, filter_type, errata_state)
+    errata, total_count, results_count = get_errata(offset.to_i, offset.to_i+chunk_size, filter_type, errata_state)
         
-    render :partial => "systems/errata/items", :locals => { :errata => errata, :editable => @system.editable? }    
+    rendered_html = render_to_string(:partial=>"systems/errata/items", :locals => { :errata => errata, :editable => @system.editable? })
+
+    render :json => {:html => rendered_html,
+                      :results_count => results_count,
+                      :total_count => total_count,
+                      :current_count => errata.length + offset.to_i }
   end
 
   def install
@@ -80,18 +85,20 @@ class SystemErrataController < ApplicationController
     types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
 
     errata_list = @system.errata
+    total_errata_count = errata_list.length
 
     errata_list = filter_by_type(errata_list, filter_type)
     errata_list = filter_by_state(errata_list, errata_state)
     
+    filtered_errata_count = errata_list.length
+
     errata_list = errata_list.sort { |a,b|
       a.id.downcase <=> b.id.downcase 
     }
     
-    total_errata = errata_list.length
     errata_list = errata_list[start...finish]
     
-    return errata_list, total_errata
+    return errata_list, total_errata_count, filtered_errata_count
   end
 
   def filter_by_type errata_list, filter_type

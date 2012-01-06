@@ -26,12 +26,12 @@ KT.system.errata = function() {
             init_status_check();
     	},
     	register_events = function(){
-    		$('#display_errata_type').live('change', filter_errata);
-    		$('#select_all_errata').live('change', select_all_errata);
-    		$('#errata_state_radio_applied').live('change', filter_errata);
-    		$('#errata_state_radio_outstanding').live('change', filter_errata);
-            $('#run_errata_button').live('click', add_errata);
-    		load_more.live('click', get_errata);
+    		$('#display_errata_type').bind('change', filter_errata);
+    		$('#select_all_errata').bind('change', select_all_errata);
+    		$('#errata_state_radio_applied').bind('change', filter_errata);
+    		$('#errata_state_radio_outstanding').bind('change', filter_errata);
+            $('#run_errata_button').bind('click', add_errata);
+    		load_more.bind('click', get_errata);
     	},
         init_status_check = function(){
             var timeout = 8000;
@@ -49,7 +49,7 @@ KT.system.errata = function() {
     		var type = get_current_filter(),
     			state = get_current_state();
     		
-    		insert_data([], false);
+    		insert_data({ "html" : "", "results_count" : 0, "total_count" : 0, "current_count" : 0}, false);
     		show_spinner(true);
     		
 			$.ajax({
@@ -86,7 +86,6 @@ KT.system.errata = function() {
     			data	: { filter_type : value, offset : offset },
     		}).success(function(data){
     			insert_data(data, true);
-    			update_counts();
     		});
     	},
         add_errata = function(){
@@ -135,22 +134,25 @@ KT.system.errata = function() {
                 actions_updater.stop();
             }
         },
-    	insert_data = function(html, append){
+    	insert_data = function(data, append){
+            var html = data["html"];
+
     		if( append ){
     			table_body.append(html);
     		} else {
     			table_body.html(html);
     		}
-    		update_counts();
+    		update_counts(data);
     	},
-    	update_counts = function(){
-    		var current_count = table_body.find('tr').length,
-    			total_count = $('#loaded_summary').data('total');
+    	update_counts = function(data){
+    		var current_count = data["current_count"],
+    			total_count = data["total_count"],
+                results_count = data["results_count"];
     		
-    		$('#loaded_summary').data('current_count', current_count);
-    		$('#loaded_summary').html(i18n.x_of_y_errata(current_count, total_count));
+    		$('#loaded_summary').data('current_count', current_count),
+    		$('#loaded_summary').html(i18n.x_of_y_errata(current_count, results_count, total_count));
     		
-    		if( current_count === total_count ){
+    		if( current_count === results_count ){
     			load_more.hide();
     		} else {
     			load_more.show();
