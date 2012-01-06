@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.169
+Version:        0.1.170
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -346,6 +346,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Jan 06 2012 Mike McCune <mmccune@redhat.com> 0.1.170-1
+- updated translation strings (shughes@redhat.com)
+- Bug 768953 - Creating a new system from the webui fails to display
+  Environment ribbon correctly
 * Fri Jan 06 2012 Ivan Necas <inecas@redhat.com> 0.1.168-1
 - 771911 - keep facts on system update (inecas@redhat.com)
 
