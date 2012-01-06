@@ -30,7 +30,7 @@ describe GpgKeysController do
   before(:each) do
     set_default_locale
     login_user({:mock => false})
-
+    controller.stub(:validate_search).and_return(true)
     @file = mock(Object)
     @file.stub_chain(:tempfile, :path).and_return('test_key.gpg')
     @file.stub!(:read).and_return("This is uploaded key data.")
@@ -131,6 +131,9 @@ describe GpgKeysController do
   end
 
   describe "POST create" do
+    before :each do
+      controller.stub(:search_validate).and_return(true)
+    end
     describe "with valid params" do
       describe "that include a copy/pasted GPG Key" do
         it "should be successful" do
@@ -201,6 +204,7 @@ describe GpgKeysController do
     
     describe "with exclusive search parameters" do
       it "should return no match indicator" do
+        controller.stub(:search_validate).and_return(false)
         @gpg_key_params_pasted[:search] = 'name ~ Fake'
         post :create, @gpg_key_params_pasted
         response.body.should eq("{\"no_match\":true}")
@@ -214,6 +218,9 @@ describe GpgKeysController do
   end
 
   describe "PUT update" do
+    before :each do
+      controller.stub(:search_validate).and_return(true)
+    end
 
     describe "authorization rules should behave like" do
       let(:action) { :update }
@@ -336,6 +343,7 @@ describe GpgKeysController do
     
     describe "with exclusive search parameters" do
       it "should generate message notice" do
+        controller.stub(:search_validate).and_return(false)
         controller.should_receive(:notice).twice
         put :update, :id => @gpg_key.id, :gpg_key => GPGKeyControllerTest::GPGKEY_NAME, :search => 'name ~ Fake'
       end
