@@ -46,12 +46,12 @@ class ProductsController < ApplicationController
   def create
     begin
       product_params = params[:product]
-      gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] != ""
+      gpg = GpgKey.readable(current_organization).find(product_params[:gpg_key]) if product_params[:gpg_key] and product_params[:gpg_key] != ""
       @provider.add_custom_product(product_params[:name], product_params[:description], product_params[:url], gpg)
       notice _("Product '#{product_params[:name]}' created.")
     rescue Exception => error
       Rails.logger.error error.to_s
-      errors error
+      notice error, {:level => :error}
     end
     render :json => ""
   end
@@ -86,7 +86,7 @@ class ProductsController < ApplicationController
       end
 
     rescue Exception => e
-      errors e.to_s
+      notice e.to_s, {:level => :error}
 
       respond_to do |format|
         format.html { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -101,7 +101,7 @@ class ProductsController < ApplicationController
       notice _("Product '#{@product[:name]}' removed.")
     rescue Exception => error
       Rails.logger.error error.to_s
-      errors error.to_s
+      notice error.to_s, {:level => :error}
     end
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@product.provider_id)}
   end
@@ -113,7 +113,7 @@ class ProductsController < ApplicationController
       @provider = @product.provider if @product  #don't trust the provider_id coming in if we don't need it
       @provider ||= Provider.find(params[:provider_id])
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
     end
@@ -123,7 +123,7 @@ class ProductsController < ApplicationController
     begin
       @product = Product.find(params[:id])
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
     end

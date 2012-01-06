@@ -45,7 +45,11 @@ shared_examples_for "protected action" do
       
       response.should be_success
 
-
+      if ENV['PERMISSION_COVERAGE'] and defined? authorized_user
+        File.open(ENV['PERMISSION_COVERAGE'], 'a') do |f|
+          f.write "||!#{controller.class.name}||#{action}||!#{authorized_user.own_role.permissions.map(&:to_short_text).inspect}||\n"
+        end
+      end
     end
   end
   context "I have not sufficient rights" do

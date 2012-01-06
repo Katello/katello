@@ -65,6 +65,13 @@ Src::Application.routes.draw do
   end
 
   resources :systems do
+    resources :events, :only => [:index, :show], :controller => "system_events" do
+      collection do
+        get :status
+        get :more_events
+        get :items
+      end
+    end
     resources :system_packages, :only => {} do
       collection do
         put :add
@@ -173,6 +180,7 @@ Src::Application.routes.draw do
       get :items
       get :product_packages
       get :product_comps
+      get :product_repos
     end
     member do
       get :promotion_details
@@ -207,6 +215,10 @@ Src::Application.routes.draw do
   match '/providers/:id' => 'providers#update', :via => :post
 
   match '/repositories/:id/enable_repo' => 'repositories#enable_repo', :via => :put, :as => :enable_repo
+
+  resources :repositories, :only => [:new, :create, :edit, :destroy] do
+    get :auto_complete_locker, :on => :collection
+  end
 
   resources :promotions, :only =>[] do
     collection do
@@ -325,7 +337,11 @@ Src::Application.routes.draw do
         get :errata
         get :pools
       end
+      collection do
+        match "/tasks/:id" => "systems#task_show", :via => :get
+      end
       resources :subscriptions, :only => [:create, :index, :destroy]
+      resource :packages, :action => [:create, :update, :destroy], :controller => :system_packages
     end
 
     resources :providers, :except => [:index] do
@@ -378,10 +394,15 @@ Src::Application.routes.draw do
         get :repositories, :on => :member
         resources :changesets, :only => [:index, :create]
       end
+      resources :sync_plans
       resources :tasks, :only => [:index]
       resources :providers, :only => [:index]
       resources :systems, :only => [:index] do
         get :report, :on => :collection
+
+        collection do
+          get :tasks
+        end
       end
       match '/systems' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
       resources :activation_keys, :only => [:index]
@@ -441,7 +462,7 @@ Src::Application.routes.draw do
       end
       resources :packages, :only => [:index]
       resources :errata, :only => [:index]
-      resources :distributions, :only => [:index]
+      resources :distributions, :only => [:index, :show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
       member do
         get :package_groups
         get :package_group_categories
@@ -471,7 +492,6 @@ Src::Application.routes.draw do
 
     resources :packages, :only => [:show]
     resources :errata, :only => [:index, :show]
-    resources :distributions, :only => [:show], :constraints => { :id => /[0-9a-zA-Z\-\+%_.]+/ }
 
     resources :users do
       get :report, :on => :collection
@@ -501,6 +521,7 @@ Src::Application.routes.draw do
 
     # support for rhsm --------------------------------------------------------
     match '/consumers' => 'systems#activate', :via => :post, :constraints => RegisterWithActivationKeyContraint.new
+    match '/hypervisors' => 'systems#hypervisors_update', :via => :post
     resources :consumers, :controller => 'systems'
     match '/owners/:organization_id/environments' => 'environments#index', :via => :get
     match '/owners/:organization_id/pools' => 'candlepin_proxies#get', :via => :get

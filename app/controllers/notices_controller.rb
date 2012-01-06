@@ -16,8 +16,14 @@
 class NoticesController < ApplicationController
   skip_before_filter :authorize,:require_org
   before_filter :notices_authorize
+  before_filter :readable_by, :only => [:auto_complete_search]
+
   include AutoCompleteSearch
   helper_method :sort_column, :sort_direction
+
+  def section_id
+     'notifications'
+  end
 
   def notices_authorize
     user = current_user
@@ -29,7 +35,7 @@ class NoticesController < ApplicationController
       @notices = current_user.notices.search_for(params[:search]).order(sort_column + " " + sort_direction)
       retain_search_history
     rescue Exception => error
-      errors error.to_s, {:level => :message, :persist => false}
+      notice error.to_s, {:level => :error, :persist => false}
       @notices = current_user.notices.search_for ''
     end
   end
@@ -60,7 +66,7 @@ class NoticesController < ApplicationController
       end
 
     rescue Exception => e
-      errors e.to_s
+      notice e.to_s, {:level => :error}
 
       respond_to do |format|
         format.html { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -89,7 +95,7 @@ class NoticesController < ApplicationController
       end    
 
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
     end
 
     redirect_to :action => "show"
@@ -105,4 +111,9 @@ class NoticesController < ApplicationController
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
   end
 
+  def readable_by
+    # this is used by auto search complete as input to 'readable'... to provide results based on the content readable
+    # to the user...
+    @readable_by = current_user
+  end
 end

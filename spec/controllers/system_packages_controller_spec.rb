@@ -29,7 +29,6 @@ describe SystemPackagesController do
       @environment = KTEnvironment.new(:name => 'test', :prior => @organization.locker.id, :organization => @organization)
       @environment.save!
 
-      controller.stub!(:errors)
       controller.stub!(:notice)
 
       Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
@@ -92,7 +91,7 @@ describe SystemPackagesController do
         end
 
         it 'should generate an error notice, if no package names provided' do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           @system.should_not_receive(:install_packages)
           put :add, :system_id => @system.id, :packages => ""
           response.should be_success
@@ -100,7 +99,7 @@ describe SystemPackagesController do
         end
 
         it 'should return an error notice, if no packages structure provided' do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           @system.should_not_receive(:install_packages)
           put :add, :system_id => @system.id
           response.should be_success
@@ -130,7 +129,7 @@ describe SystemPackagesController do
         end
 
         it 'should generate an error notice, if no groups names provided' do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           @system.should_not_receive(:install_package_groups)
           put :add, :system_id => @system.id, :groups => ""
           response.should be_success
@@ -138,7 +137,7 @@ describe SystemPackagesController do
         end
 
         it 'should return an error notice, if no group structure provided' do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           @system.should_not_receive(:install_package_groups)
           put :add, :system_id => @system.id
           response.should be_success
@@ -174,7 +173,7 @@ describe SystemPackagesController do
         end
 
         it 'should generate an error notice, if no packages provided' do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           @system.should_not_receive(:uninstall_packages)
           put :remove, :system_id => @system.id, :packages => ""
           response.should be_success
@@ -182,7 +181,7 @@ describe SystemPackagesController do
         end
 
         it 'should return an error notice, if no packages structure provided' do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           @system.should_not_receive(:uninstall_packages)
           put :remove, :system_id => @system.id
           response.should be_success
@@ -212,7 +211,7 @@ describe SystemPackagesController do
         end
 
         it 'should generate an error notice, if no group names provided' do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           @system.should_not_receive(:uninstall_package_groups)
           put :remove, :system_id => @system.id, :groups => ""
           response.should be_success
@@ -220,7 +219,7 @@ describe SystemPackagesController do
         end
 
         it 'should return an error notice, if no groups structure provided' do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           @system.should_not_receive(:uninstall_package_groups)
           put :remove, :system_id => @system.id
           response.should be_success

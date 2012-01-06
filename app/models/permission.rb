@@ -80,12 +80,16 @@ class Permission < ActiveRecord::Base
     self.resource_type= ResourceType.find_or_create_by_name(attributes[:name])
   end
 
-  def to_text
-    v = (all_verbs? && "any action") || verbs.collect { |v| v.verb }.join(',')
-    t = (all_tags? && "all scopes") || "scopes #{tags.join(',')}"
+  def to_short_text
+    v = (all_verbs? && "any action") || (verbs.empty? && "no action") || verbs.collect { |v| v.verb }.join(',')
+    t = (all_tags? && "on all scopes") || (tags.empty? && "") || "on scopes #{tags.join(',')}"
     name = (all_types? && "all_resources") || resource_type.name
-    org_id = (organization && "in organization #{organization.id}") || " across all organizations."
-    "Role #{role.name}'s allowed to perform #{v} on #{t} for #{name} #{org_id}"
+    org_id = (organization && "in organization #{organization.id}") || " across all orgs"
+    "#{v} #{t} for #{name} #{org_id}".split.join(' ') # remove double whitespace
+  end
+
+  def to_text
+    "Role #{role.name}'s allowed to perform #{to_text}"
   end
 
   def to_abbrev_text
@@ -120,13 +124,22 @@ class Permission < ActiveRecord::Base
     end
   end
 
+  def as_json(*args)
+    ret = super.as_json(*args)
+    ret[:tags] = self.tags.collect do |t|
+        t[:formatted] = Tag.formatted(self.resource_type.name, t.tag_id)
+        t
+    end
+    ret[:verbs] = self.verbs
+    ret[:resource_type] = self.resource_type
+    ret
+  end
+
   private
   def cleanup_tags_verbs
     self.tags.clear if self.all_tags?
     self.verbs.clear if self.all_verbs?
   end
-
-
 
 end
 

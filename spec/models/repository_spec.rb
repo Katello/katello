@@ -58,6 +58,25 @@ describe Repository do
       @repo = Repository.create!(:environment_product => @ep, :name => "testrepo",:pulp_id=>"1010", :enabled => true)
 
     end
+
+    context "Repo readables" do
+      before do
+        @repo.stub(:promoted?).and_return(false)
+      end
+      specify "user with content perms on env can access " do
+        User.current = user_with_permissions{|u|
+          u.can([:read_contents], :environments, @organization.locker.id, @organization)}
+        Repository.readable(@organization.locker).should == [@repo]
+      end
+      specify "user without content perms on env cannot access " do
+        User.current = user_without_permissions
+        Repository.readable(@organization.locker).should == []
+      end
+
+
+    end
+
+
     context "disabling a repo" do
       context "if the repo is not promoted disable operation should work" do
         before do
@@ -86,5 +105,7 @@ describe Repository do
 
     end
   end
+
+
 
 end

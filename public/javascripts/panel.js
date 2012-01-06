@@ -110,11 +110,17 @@ $(document).ready(function () {
             url: $(this).attr('href'),
             dataType: 'html',
             success: function (data) {
+            	var callbacks = KT.panel.get_expand_cb(),
+                	cb = function(){};
+            	
                 thisPanel.find(".panel-content").html(data);
                 KT.common.jscroll_init($('.scroll-pane'));
     			KT.common.jscroll_resize($('.jspPane'));
                 KT.panel.panelResize($('#panel_main'), false);
-                KT.panel.get_expand_cb()();
+                
+                for( cb in callbacks ){
+                	callbacks[cb]();
+                }
             }
         });
         return false;
@@ -200,7 +206,7 @@ KT.panel = (function ($) {
         current_scroll = 0,
         panels_list = [],
         left_list_content = "",
-        expand_cb = function () {},
+        expand_cb = [],
         //callback after a pane is loaded
         contract_cb = function () {},
         switch_content_cb = function () {},
@@ -264,21 +270,24 @@ KT.panel = (function ($) {
                 dataType: 'html',
                 success: function (data, status, xhr) {
                     var pc = panelContent.html(data);
-                    
+                    var callback;
                     spinner.hide();
                     pc.fadeIn(function () {
                         $(".panel-content :input:visible:enabled:first").focus();
                     });
                     
                     KT.common.jscroll_init($('.scroll-pane'));
-    				KT.common.jscroll_resize($('.jspPane'));
+    				        KT.common.jscroll_resize($('.jspPane'));
                     
                     if (isSubpanel) {
                         panelResize($('#subpanel_main'), isSubpanel);
                     } else {
                         panelResize($('#panel_main'), isSubpanel);
                     }
-                    expand_cb(name);
+                    
+                    for( callback in expand_cb ){
+                    	expand_cb[callback](name);
+                    }
                     // Add a handler for ellipsis
                     $(".one-line-ellipsis").ellipsis(true);
                 },
@@ -478,6 +487,11 @@ KT.panel = (function ($) {
                 }
                 else if (!refresh) {
                     closePanel();
+                    
+                    if( search_element.val() !== "" && search === undefined ){
+                        search_element.val('');
+                        $('#search_form').trigger('submit');
+                    }
                 }
             }
             return false;
@@ -605,10 +619,10 @@ KT.panel = (function ($) {
         })();
     return {
         set_expand_cb: function (callBack) {
-            expand_cb = callBack;
+            expand_cb.push(callBack);
         },
         get_expand_cb: function () {
-            return expand_cb
+            return expand_cb;
         },
         set_contract_cb: function (callBack) {
             contract_cb = callBack;
@@ -647,7 +661,7 @@ KT.panel.list = (function () {
             else {
                 current_items_count += current;
                 total_items_count += total;
-                results_items_count = results;
+                results_items_count += results;
             }
             $('#total_items_count').html(total_items_count);
             $('#current_items_count').html(current_items_count);
@@ -684,8 +698,17 @@ KT.panel.list = (function () {
                 success: function (data) {
                     notices.checkNotices();
                     jQid.html(data);
-                    // obtain the value from column_1 and place it in pane_heading
-                    $('.pane_heading').html(jQid.children('div:first').html());
+                    // Obtain the value from column_1 and place it in pane_heading. This is
+                    // to accommodate changes to an item's name, for example, and have it
+                    // dynamically update in both left list and the right title.
+                    //
+                    // Unless an explicit #heading_title element exists, use the first div
+                    // (which was the previous default behavior).
+                    var heading_title = jQid.find('#heading_title');
+                    if (heading_title.length == 0) {
+                        heading_title = jQid.children('div:first');
+                    }
+                    $('.pane_heading').html(heading_title.html());
                     if (success_cb) {
                         success_cb();
                     }
@@ -722,7 +745,6 @@ KT.panel.list = (function () {
                             expand_list = $('.expand_list');
                         }
                         retrievingNewContent = false;
-                        console.log(data);
                         expand_list.append(data['html']);
                         $('.list-spinner').remove();
                         if (data['current_items'] === 0) {
@@ -742,7 +764,9 @@ KT.panel.list = (function () {
             options = options || {};
             
             setupSearch(resource_type, options);
-            KT.search.enableAutoComplete(KT.routes['auto_complete_search_' + resource_type + '_path']());
+
+            // DISABLING AUTO COMPLETE for now
+            //KT.search.enableAutoComplete(KT.routes['auto_complete_search_' + resource_type + '_path']());
             KT.panel.control_bbq = false;
             
             $(window).bind('hashchange', KT.panel.hash_change);
@@ -829,6 +853,7 @@ KT.panel.list = (function () {
                 if (!page_load) {
                     KT.panel.closePanel();
                 }
+                        
                 $(this).ajaxSubmit({
                     url: url,
                     data: data,
@@ -849,6 +874,25 @@ KT.panel.list = (function () {
                         button.removeAttr('disabled');
                     }
                 });
+            });
+
+            $('#search').live('change', function(){
+                var value = $(this).val();
+
+                if( value === "" ){
+                    $.bbq.removeState("search");
+                    $('#search_form').trigger('submit');
+                }
+            }).live('keypress', function(event){
+                var button = $('#search_button');
+
+                if( event.keyCode === 13 ){
+                    event.preventDefault();
+                    
+                    if( button.attr('disabled') !== "disabled" ){
+                        $('#search_form').trigger('submit');
+                    }
+                }
             });
         };
     return {

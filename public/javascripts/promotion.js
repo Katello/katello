@@ -324,7 +324,9 @@ var promotion_page = (function($){
                     if( changeset_breadcrumb.hasOwnProperty(id) ){
                         if( id.split("_")[0] === "changeset" ){
                             changeset = changeset_breadcrumb[id];
-                            if( !changeset.is_new && ( changeset.progress === null || changeset.progress === undefined ) ){
+                            if ( changeset.state === "failed") {
+                                changesetStatusActions.initProgressBar(id, changeset.progress, i18n.promotion_failed);
+                            }else if( !changeset.is_new && ( changeset.progress === null || changeset.progress === undefined ) ){
                                 changesetStatusActions.setLocked(id);
                             } else if( changeset.progress !== null && changeset.progress !== undefined ){
                                 changesetStatusActions.initProgressBar(id, changeset.progress);
@@ -479,8 +481,7 @@ var promotion_page = (function($){
                     $('#review_changeset').addClass("disabled");
                 }
 
-
-                if (current_changeset.is_new()) {
+                if (current_changeset.is_new() || current_changeset.state() === "failed") {
                     cancel_btn.hide();
                     
                     $("#changeset_tree .tree_breadcrumb").removeClass("locked_breadcrumb");
@@ -489,8 +490,6 @@ var promotion_page = (function($){
                     $('#locked_icon').remove();
                     $('#review_changeset > span').html(i18n.review);
                     $('#promote_changeset').addClass("disabled");
-
-
                 }
                 else { //in review stage
                     cancel_btn.show();
@@ -667,25 +666,26 @@ var changeset_obj = function(data_struct) {
         products = data_struct.products,
         templates = data_struct.system_templates,
         is_new = data_struct.is_new,
+        state = data_struct.state,
+        has_failed = false, // used to indicate if there was a previous failed promo attempt since the page loaded
         name = data_struct.name,
         description = data_struct.description;
 
-
-    var change_state = function(state, on_success, on_error) {
+    var change_state = function(new_state, on_success, on_error) {
           $.ajax({
             contentType:"application/json",
             type: "PUT",
             url: KT.common.rootURL() + "changesets/" + id,
-            data: JSON.stringify({timestamp:timestamp, state:state}),
+            data: JSON.stringify({timestamp:timestamp, state:new_state}),
             cache: false,
             success: function(data) {
                 timestamp = data.timestamp;
-                is_new = (state === "new");
+                is_new = (new_state === "new");
+                state = new_state;
                 on_success();
             },
             error: function(data) {
                 if (data.changeset) {
-                    alert("The changeset has changed");
                     promotion_page.set_changeset( changeset_obj(data.changeset) );
                 }
                 else {
@@ -726,6 +726,8 @@ var changeset_obj = function(data_struct) {
         getProducts: function(){return products;},
         getTemplates: function() {return templates;},
         is_new : function() {return is_new;},
+        state : function() {return state;},
+        has_failed : function() {return has_failed;},
         set_timestamp:function(ts) { timestamp = ts; },
         timestamp: function(){return timestamp;},
         productCount: function(){
@@ -810,6 +812,7 @@ var changeset_obj = function(data_struct) {
                     on_success();
                 }
                 changeset_breadcrumb['changeset_' + id].is_new = true;
+                changeset_breadcrumb['changeset_' + id].state = "new";
                 changeset_breadcrumb['changeset_' + id].progress = 0;
                 promotion_page.get_changeset_tree().render_content('changesets');
 
@@ -899,7 +902,7 @@ var registerEvents = function(){
         }
         button.addClass("disabled");
         var cs = promotion_page.get_changeset();
-        if(cs.is_new()) { //move to review
+        if(cs.is_new() || cs.state() === "failed") { //move to review
             var review_func = function() {
                 cs.review(function() {
                     button.removeClass("disabled");
@@ -1097,7 +1100,6 @@ var promotionsRenderer = (function(){
                 
                 if (promotion_page.get_changeset() === undefined) {
                     promotion_page.fetch_changeset(changeset_id, function() {
-
                         render_cb(getContent(page, changeset_id, product_id));
                     });
                 }
@@ -1112,7 +1114,7 @@ var promotionsRenderer = (function(){
              //   product_id = hash.split("_")[2],
              //   key = hash.split("_")[0],
             var    changeset = promotion_page.get_changeset(),
-                inReviewPhase = !changeset.is_new();
+                inReviewPhase = (!changeset.is_new() && (changeset.state() !== "failed"));
             
             if (key === 'package-cs'){
                 return templateLibrary.listItems(changeset.getProducts(), "package", product_id, !inReviewPhase);
@@ -1391,15 +1393,22 @@ var changesetStatusActions = (function($){
                 $('#cslist .slider .link_details:not(:has(.progressbar)):not(:has(.locked_icon))').css('margin-left', '20px');
             }
         },
-        initProgressBar = function(id, status){
-            var changeset = $('#' + id);
+        initProgressBar = function(id, status, status_text){
+            var changeset = $('#' + id),
+                status_title = status_text;
+
+            if (status_text === undefined) {
+                status_text = i18n.promoting;
+                status_title = i18n.changeset_progress
+            }
+
             changeset.css('margin-left', '0');
             changeset.prepend('<span class="changeset_status"><span class="progressbar"></span><label></label></span>');
             changeset.find('.changeset_status label').text(status + '%');
             //changeset.find('.progressbar').progressbar({value: status});
             changeset.addClass('being_promoted');
-            changeset.attr('title', i18n.changeset_progress);
-            changeset.find('.changeset_status label').text(i18n.promoting);
+            changeset.attr('title', status_title);
+            changeset.find('.changeset_status label').text(status_text);
             set_margins();
         },
         setProgress = function(id, progress){
@@ -1409,7 +1418,7 @@ var changesetStatusActions = (function($){
         },
         finish = function(id){
             var changeset = $('#' + id);
-            changeset.find(".changeset_status").html(i18n.promoted);
+            changeset.find(".changeset_status label").text(i18n.promoted);
             changeset.attr('title', i18n.promoted);
             /*changeset.parent().fadeOut(3000, function(){
                 changeset.parent().remove();
@@ -1417,6 +1426,16 @@ var changesetStatusActions = (function($){
                     $('#cslist .slider .link_details').animate({'margin-left' : '0'}, 200);
                 }
             });*/
+        },
+        failed = function(id){
+            // if the promotion failed, check the server for additional details (via notices)
+            notices.checkNotices();
+
+            var changeset = $('#' + id);
+            changeset.find(".changeset_status label").text(i18n.promotion_failed);
+            changeset.attr('title', i18n.promotion_failed);
+
+            changeset_breadcrumb[id].has_failed = true;
         },
         setLocked = function(id){
             var changeset = $('#' + id);
@@ -1441,14 +1460,26 @@ var changesetStatusActions = (function($){
                 global: false,
                 minTimeout: timeout,
                 maxTimeout: timeout
-            }, function(data){
-                if( data.progress === 100 ){
+            }, function(data, success){
+
+                setProgress(data.id, data.progress);
+
+                if (success === "notmodified") {
+                  // received a 304 not modified...
+                  var changeset_id = 'changeset_' + id;
+                  if (changeset_breadcrumb[changeset_id].has_failed === true) {
+                      // attempting to promote this changeset previously failed..., so if the promotion progress
+                      // remains 'not modified' that implies that it failed again...
+                      failed(changeset_id);
+                      updater.stop();
+                  }
+                } else if ((data.progress === 100) || (data.state === 'promoted')){
                     delete changeset_breadcrumb['changeset_' + id];
-                    setProgress(data.id, data.progress);
                     finish(data.id);
                     updater.stop();
-                } else {
-                    setProgress(data.id, data.progress);
+                } else if (data.state === 'failed') {
+                    failed(data.id);
+                    updater.stop();
                 }
             });
         };

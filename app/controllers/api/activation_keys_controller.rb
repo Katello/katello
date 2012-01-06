@@ -18,7 +18,6 @@ class Api::ActivationKeysController < Api::ApiController
   before_filter :find_organization, :only => [:index]
   before_filter :find_activation_key, :only => [:show, :update, :destroy, :add_pool, :remove_pool]
   before_filter :find_pool, :only => [:add_pool, :remove_pool]
-  before_filter :authorize
 
   def rules
     read_test = lambda{ActivationKey.readable?(@organization)}

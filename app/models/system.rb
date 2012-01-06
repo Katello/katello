@@ -27,7 +27,7 @@ class System < ActiveRecord::Base
   include IndexedModel
 
   index_options :extended_json=>:extended_index_attrs,
-                :json=>{:only=>[:name, :environment_id, :id, :created_at, :lastCheckin]}
+                :json=>{:only=>[:name, :description, :environment_id, :id, :uuid, :created_at, :lastCheckin]}
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -55,12 +55,7 @@ class System < ActiveRecord::Base
   scope :by_env, lambda { |env| where('environment_id = ?', env) unless env.nil?}
   scope :completer_scope, lambda { |options| readable(options[:organization_id])}
 
-  scoped_search :on => :name, :complete_value => true
-  scoped_search :on => :description, :complete_value => true
-  scoped_search :on => :location, :complete_value => true
-  scoped_search :on => :uuid, :complete_value => true
-  scoped_search :on => :id, :complete_value => true
-
+  
   class << self
     def architectures
       { 'x86' => :'i386', 'Itanium' => :'ia64', 'x86_64' => :x86_64, 'PowerPC' => :ppc,

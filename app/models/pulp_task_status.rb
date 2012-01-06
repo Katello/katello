@@ -13,7 +13,7 @@
 
 
 class PulpTaskStatus < TaskStatus
-
+  use_index_of TaskStatus
   def self.wait_for_tasks async_tasks
     async_tasks = async_tasks.collect do |t|
       PulpTaskStatus.using_pulp_task(t)
@@ -28,14 +28,21 @@ class PulpTaskStatus < TaskStatus
 
 
   def self.using_pulp_task(sync)
-    self.new(
-        :uuid => sync[:id],
-        :state => sync[:state],
-        :start_time => sync[:start_time],
-        :finish_time => sync[:finish_time],
-        :progress => sync[:progress],
-        :result => sync[:result].nil? ? {:errors => [sync[:exception], sync[:traceback]]}.to_json : sync[:result]
-    ) { |t| yield t if block_given? }
+    t = self.new { |t| yield t if block_given? }
+    PulpTaskStatus.dump_state(sync, t)
+  end
+
+  def self.dump_state(pulp_status, task_status)
+    task_status.attributes = {
+    :uuid => pulp_status[:id],
+    :state => pulp_status[:state],
+    :start_time => pulp_status[:start_time],
+    :finish_time => pulp_status[:finish_time],
+    :progress => pulp_status[:progress],
+    :result => pulp_status[:result].nil? ? {:errors => [pulp_status[:exception], pulp_status[:traceback]]} : pulp_status[:result]
+    }
+    task_status.save! if not task_status.new_record?
+    task_status
   end
 
   def refresh
@@ -52,7 +59,7 @@ class PulpTaskStatus < TaskStatus
         :state => pulp_task[:state],
         :finish_time => pulp_task[:finish_time],
         :progress => pulp_task[:progress],
-        :result => pulp_task[:result].nil? ? {:errors => [pulp_task[:exception], pulp_task[:traceback]]}.to_json : pulp_task[:result]
+        :result => pulp_task[:result].nil? ? {:errors => [pulp_task[:exception], pulp_task[:traceback]]} : pulp_task[:result]
     }
     task_status.save! if not task_status.new_record?
     task_status

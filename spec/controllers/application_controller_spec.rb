@@ -57,6 +57,10 @@ describe ApplicationController do
   end
 
   describe 'create a notification that is synchronous' do
+    before (:each) do
+      User.stub!(:current).and_return(@user)
+    end
+
     describe 'with the notice as a string' do
       it 'should generate a notice' do
         controller.notice(@notice_string)
@@ -117,8 +121,12 @@ describe ApplicationController do
   end
   
   describe 'create an errors notification' do
+    before (:each) do
+      User.stub!(:current).and_return(@user)
+    end
+
     it 'should have the level set to :error' do
-      controller.errors(@notice_string)
+      controller.notice(@notice_string, {:level => :error})
       Notice.count.should == 1
       notice = Notice.search_for(@notice_string)[0]
       notice.level.should == "error"

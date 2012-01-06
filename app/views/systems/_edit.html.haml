@@ -1,14 +1,5 @@
 = javascript :edit_helpers
-
-= content_for :title do 
-  #{@system.name}
-
-= content_for :remove_item do
-  -if @system.deletable?
-    = link_to _("Remove System"), { :controller => "systems", :action => "destroy" }, :confirm => _('Are you sure you want to remove this system?'), :method => :delete, :class=>"remove_item", :remote=>true
-
-= content_for :navigation do
-  = render_navigation(:items => systems_navigation, :expand_all => true, :level => 1)
+= render :partial => "system_tupane_header_nav"
 
 = content_for :content do
   #system
