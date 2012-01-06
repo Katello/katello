@@ -20,7 +20,6 @@ describe SystemTemplatesController do
   include AuthorizationHelperMethods
   include OrchestrationHelper
 
-
   describe "Controller tests" do
     before(:each) do
       set_default_locale
@@ -30,17 +29,14 @@ describe SystemTemplatesController do
 
       @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @organization.locker)
       @system_template_2 = SystemTemplate.create!(:name => 'template2', :environment => @organization.locker)
-
     end
 
     describe "GET index" do
-
       it "requests system template using search criteria" do
         SystemTemplate.should_receive(:search_for) {SystemTemplate}
         SystemTemplate.stub_chain(:where, :limit)
         get :index
       end
-
 
       it "returns system templates" do
         controller.should_receive(:retain_search_history)
@@ -49,7 +45,6 @@ describe SystemTemplatesController do
         response.should render_template(:index)
         response.should be_success
       end
-
     end
 
     describe "GET download" do
@@ -64,13 +59,12 @@ describe SystemTemplatesController do
 
       describe "with invalid template id" do
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           get :download, :id => -1, :environment_id => -1
           response.should_not be_success
         end
       end
     end
-
 
     describe "GET show" do
       describe "with valid template id" do
@@ -79,13 +73,11 @@ describe SystemTemplatesController do
           response.should render_template(:partial => "common/_list_update")
           response.should be_success
         end
-
-
       end
 
       describe "with invalid template id" do
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           get :show, :id => 9999
           response.should_not be_success
         end
@@ -107,14 +99,12 @@ describe SystemTemplatesController do
           get :edit, :id => @system_template_1.id
           response.should render_template(:partial => "_edit")
           response.should be_success
-
         end
-
       end
 
       describe "with invalid template id" do
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           get :edit, :id => 9999
           response.should_not be_success
         end
@@ -133,25 +123,23 @@ describe SystemTemplatesController do
           assigns[:template].description.should eq(params[:description])
           response.should be_success
         end
-
       end
 
       describe "with invalid params" do
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           post :create, :template => {}
           response.should_not be_success
         end
       end
     end
 
-
     describe "Put update_content" do
       describe "with valid params" do
 
         it "should return succesfully being blank" do
           controller.should_receive(:notice)
-          put :update_content, :id=>@system_template_1.id, :packages=>[], :products=>[], :package_groups=>[]
+          put :update_content, :id=>@system_template_1.id, :packages=>[], :products=>[], :repos=>[], :package_groups=>[]
           response.should be_success
         end
 
@@ -175,7 +163,7 @@ describe SystemTemplatesController do
           SystemTemplatePackGroup.stub(:new).and_return(stpg)
 
           controller.should_receive(:notice)
-          put :update_content, :id=>@system_template_1.id, :packages=>[pkg1], :products=>[prd1], :package_groups=>[pkg_grp1]
+          put :update_content, :id=>@system_template_1.id, :packages=>[pkg1], :products=>[prd1], :repos=>[], :package_groups=>[pkg_grp1]
           response.should be_success
 
           SystemTemplate.find(@system_template_1.id).package_groups.length.should == 1
@@ -185,8 +173,6 @@ describe SystemTemplatesController do
     end
 
     describe "PUT update" do
-
-
       describe "with valid template id" do
         describe "with valid params" do
           it "should update requested field - name" do
@@ -202,12 +188,11 @@ describe SystemTemplatesController do
             assigns[:template].description.should eq("bar")
             response.should be_success
           end
-
         end
 
         describe "with invalid params" do
           it "should generate an error notice" do
-            controller.should_receive(:errors)
+            controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
             put :update, :id => @system_template_1.id, :system_template=>{:name=>""}
             response.should_not be_success
           end
@@ -216,7 +201,7 @@ describe SystemTemplatesController do
 
       describe "with invalid template  id" do
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           put :update, :id => 9999,  :system_template=>{:description=>"bar"}
           response.should_not be_success
         end
@@ -229,7 +214,7 @@ describe SystemTemplatesController do
 
         end
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           put :update, :id => @system_template_3.id,  :system_template=>{:description=>"bar"}
           response.should_not be_success
         end
@@ -253,15 +238,12 @@ describe SystemTemplatesController do
 
       describe "with invalid template id" do
         it "should generate an error notice" do
-          controller.should_receive(:errors)
+          controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
           delete :destroy, :id => 9999
           response.should_not be_success
         end
-
       end
     end
-
-
   end
 
   describe "rules" do
@@ -271,8 +253,8 @@ describe SystemTemplatesController do
       @organization = new_test_org
       @testuser = User.create!(:username=>"TestUser", :password=>"foobar", :email=>"TestUser@somewhere.com")
       @system_template_1 = SystemTemplate.create!(:name => 'template1', :environment => @organization.locker)
-
     end
+
     describe "GET index" do
       let(:action) {:index}
       let(:req) {get 'index' }
@@ -349,9 +331,5 @@ describe SystemTemplatesController do
 
       it_should_behave_like "protected action"
     end
-
   end
-
-
-
 end

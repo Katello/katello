@@ -12,7 +12,7 @@
 
 require 'spec_helper'
 include OrchestrationHelper
-
+include UserHelperMethods
 describe PulpTaskStatus do
 
   context "proxy TaskStatus for pulp task" do
@@ -59,15 +59,17 @@ describe PulpTaskStatus do
 
     context "TaskStatus should have correct attributes for a failed task" do
       before { @t = PulpTaskStatus.using_pulp_task(pulp_task_with_error) }
-      specify { @t.result.should == {:errors => [pulp_task_with_error[:exception], pulp_task_with_error[:traceback]]}.to_json }
+      specify { @t.result.should == {:errors => [pulp_task_with_error[:exception], pulp_task_with_error[:traceback]]} }
     end
 
     context "refreshing TaskStatus with latest from pulp" do
       before(:each) do
         disable_org_orchestration
-
         @organization = Organization.create!(:name => 'test_org', :cp_key => 'test_org')
-        @t = PulpTaskStatus.using_pulp_task(pulp_task_without_error) {|t| t.organization = @organization }
+        @t = PulpTaskStatus.using_pulp_task(pulp_task_without_error) do |t|
+          t.organization = @organization
+          t.user = new_user
+        end
         @t.save!
 
         Pulp::Task.stub(:find).and_return(updated_pulp_task)

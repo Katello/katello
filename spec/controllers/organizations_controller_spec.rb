@@ -37,9 +37,15 @@ describe OrganizationsController do
       let(:unauthorized_user) do
         user_without_permissions
       end
-      let(:on_success) do
-        assigns(:items).should_not include @org1
-        assigns(:items).should include @organization
+
+      let(:before_success) do
+        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
+          found = nil
+          search_options[:filter].each{|f|  found = f['id'] if f['id'] }
+          assert !found.include?(@org1.id)
+          assert found.include?(@organization.id)
+          controller.stub(:render)
+        }
       end
 
       it_should_behave_like "protected action"
@@ -69,7 +75,7 @@ describe OrganizationsController do
     login_user
     set_default_locale
     controller.stub!(:notice)
-    controller.stub!(:errors)
+    controller.stub(:search_validate).and_return(true)
   end
   
   describe "create a root org" do        
@@ -87,7 +93,6 @@ describe OrganizationsController do
         response.should_not redirect_to(:action => 'new')
         response.should be_success
         assigns[:organization].name.should == OrgControllerTest::ORGANIZATION[:name]
-
       end
 
       it 'should create organization and account for spaces' do
@@ -107,7 +112,7 @@ describe OrganizationsController do
     
     describe 'with invalid paramaters' do
       it 'should generate an error notice' do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         post 'create', { :name => "", :description => "" }
         response.should_not be_success
       end
@@ -128,6 +133,10 @@ describe OrganizationsController do
     end
 
     it 'should allow for an offset' do
+      controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+        start.should == 5
+        controller.stub(:render)
+      }
       get 'items', :offset=>5
       response.should be_success
     end
@@ -176,12 +185,11 @@ describe OrganizationsController do
         Organization.stub!(:first).and_return(@organization)
       end
       it "should generate an errors notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         delete 'destroy', :id => @organization.id
         response.should_not be_success
       end
     end
-
 
     describe "exception is thrown in katello api" do
       before (:each) do
@@ -191,7 +199,7 @@ describe OrganizationsController do
       end
       
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         delete 'destroy', :id =>  OrgControllerTest::ORG_ID
         response.should_not be_success
       end
@@ -239,7 +247,7 @@ describe OrganizationsController do
       end
       
       it "should generate an error notice" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         put 'update', :id => OrgControllerTest::ORG_ID
       end
       

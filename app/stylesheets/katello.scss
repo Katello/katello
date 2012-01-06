@@ -666,120 +666,125 @@ footer {
   width:  100%;
   margin:0 auto;
   min-height:600px;
-}
-/* right side of 2 pane below the sliding pane */
-.right {
-    float:right;
-    width:448px;
-    min-height: 300px;
-    height: 300px;
-    padding: 20px;
-    border: 1px solid $border_color;
-    @include border-right-radius(5px);
-    background-color: $lightergrey_color;
-    margin-top: 79px;
-    position: relative;
-    .panel_action {
-        .disabled {
-          &:hover {
-            text-decoration: none;
-            cursor: normal;
-          }
+    /* right side of 2 pane below the sliding pane */
+    .right {
+        float:right;
+        width:448px;
+        min-height: 300px;
+        height: 300px;
+        padding: 20px;
+        border: 1px solid $border_color;
+        @include border-right-radius(5px);
+        background-color: $lightergrey_color;
+        margin-top: 79px;
+        position: relative;
+        .panel_action {
+            .disabled {
+              &:hover {
+                text-decoration: none;
+                cursor: normal;
+              }
+            }
+            .options {
+              display: none;
+              @include border-radius(5px);
+              @include box-shadow(rgba(0,0,0,0.4), 2px, 2px, 2px);
+              background-color: white;
+              border: 1px solid $border_color;
+              padding: 15px;
+              margin: 4px auto;
+              width: 85%;
+              .actions {
+                  float: right;
+              }
+            }
         }
-        .options {
-          display: none;
-          @include border-radius(5px);
-          @include box-shadow(rgba(0,0,0,0.4), 2px, 2px, 2px);
-          background-color: white;
-          border: 1px solid $border_color;
-          padding: 15px;
-          margin: 4px auto;
-          width: 85%;
-          .actions {
-              float: right;
-          }
+        #select-result {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 18px;
+            color: $lightgrey_color;
+        }
+        #select-none {
+            position: absolute;
+            top: 36px;
+            right: 10px;
+        }
+        .helptip_area {
+            float: left;
+            width: 62%;
+            clear: both;
         }
     }
-    #select-result {
-        position: absolute;
-        right: 10px;
-        top: 10px;
-        font-size: 18px;
-        color: $lightgrey_color;
-    }
-    #select-none {
-        position: absolute;
-        top: 36px;
-        right: 10px;
-    }
-}
 
-/* left side of 2 pane that has clickable links */
-.column_panel_1 { width: 300px; }
-.column_panel_2 { width: 375px; }
-.column_panel_3 { width: 450px; }
-.left {
-  float:left;
-  min-height:500px;
-  position:relative;
-  z-index: 100;
+    /* left side of 2 pane that has clickable links */
+    .column_panel_1 { width: 300px; }
+    .column_panel_2 { width: 375px; }
+    .column_panel_3 { width: 450px; }
+    .left {
+      float:left;
+      min-height:500px;
+      position:relative;
+      z-index: 100;
 
-  h2 {
-      margin-bottom: 0;
-  }
-  #new {
-      border-bottom: 0 none;
-      padding: 8px;
-      position: absolute;
-      margin: 0;
-      clear: right;
-      text-align: center;
-      width: 10em;
-      right: 0;
-      height: 2em;
-      height: 21px;
-      font-size: 100% !important;
-      &.block{
-          &.active{
-              .arrow-right {
-                  border-bottom: 19px solid transparent;
-                  border-left: 17px solid $kselected_color;
-                  border-top: 18px solid transparent;
-                  right: -17px;
+      h2 {
+          margin-bottom: 0;
+      }
+      #new {
+          border-bottom: 0 none;
+          padding: 8px;
+          position: absolute;
+          margin: 0;
+          clear: right;
+          text-align: center;
+          width: 10em;
+          right: 0;
+          height: 2em;
+          height: 21px;
+          font-size: 100% !important;
+          &.block{
+              &.active{
+                  .arrow-right {
+                      border-bottom: 19px solid transparent;
+                      border-left: 17px solid $kselected_color;
+                      border-top: 18px solid transparent;
+                      right: -17px;
+                  }
+              }
+              &:hover {
+                .arrow-right {
+                  border-left: 17px solid $listhover_color;
+                }
               }
           }
+      }
+       /* search forms */
+      .search {
+        float: right;
+        margin-bottom: 6px;
+        margin-top: 6px;
+        margin-right: 6px;
+        position: relative;
+        clear: right;
+        button {
+          position: absolute;
+          width: 16px; height: 16px;
+          text-indent: -4000em;
+          margin: -8px 0 0;
+          background-position: 0 0;
+          border: none;
+          padding: 0;
           &:hover {
-            .arrow-right {
-              border-left: 17px solid $listhover_color;
-            }
+            @include no-box-shadow;
           }
-      }
-  }
-   /* search forms */
-  .search {
-    float: right;
-    margin-bottom: 6px;
-    margin-top: 6px;
-    margin-right: 6px;
-    position: relative;
-    clear: right;
-    button {
-      position: absolute;
-      width: 16px; height: 16px;
-      text-indent: -4000em;
-      margin: -8px 0 0;
-      background-position: 0 0;
-      border: none;
-      padding: 0;
-      &:hover {
-        @include no-box-shadow;
+        }
+        input[type="text"] {
+          float: right; /* webkit adds an extra padding and makes the widget narrower */
+          width: 215px;
+        }
       }
     }
-    input[type="text"] {
-      float: right; /* webkit adds an extra padding and makes the widget narrower */
-      width: 215px;
-    }
-  }
 }
 .block_head {
   background-color: lighten($stroke_color,8%);
@@ -955,6 +960,9 @@ footer {
     right: 82px;
     position: absolute;
     top: 9px;
+    &:hover {
+        color: red;
+    }
   }
   
   h2 {
@@ -1257,10 +1265,12 @@ footer {
     float: left; }
   .arrow_icon {
     height: 11px;
-    width: 13px;
+    width: 9px;
+    top: 10px;
+    right: 10px;
+    position: relative;
     background: $arrow_icon;
     float: right;
-    margin: 10px 10px 0 0;
   }
   &.active {
     @include background-image(linear-gradient(rgb(61, 136, 151), rgb(121, 185, 199)));
@@ -1365,10 +1375,33 @@ footer {
   font-size: 120%;
 }
 
+.status_icons {
+    margin-right: 5px;
+     .check_icon {
+       width: 16px;
+       height: 16px;
+       @include action-icon($check_icon_black);
+       margin-left: 0px;
+     }
+
+     .error_icon {
+       width: 16px;
+       @include action-icon($warning_icon_black);
+       margin-left: 0px;
+     }
+}
+
 .validation_error_input {
   border-color: $validation_error_color;
 }
 .validation_error_text {
   color: $validation_error_color;
   font-weight: 600;
+}
+
+.deletable, .deletable a {
+    color: darkRed;
+    &:hover {
+        color: red;
+    }
 }

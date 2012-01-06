@@ -17,6 +17,7 @@ module Glue::Candlepin::Consumer
   def self.included(base)
     base.send :include, LazyAccessor
     base.send :include, InstanceMethods
+    base.send :extend, ClassMethods
 
     base.class_eval do
       before_save :save_candlepin_orchestration
@@ -67,7 +68,7 @@ module Glue::Candlepin::Consumer
 
     def validate_cp_consumer
       if new_record?
-        validates_inclusion_of :cp_type, :in => %w( system )
+        validates_inclusion_of :cp_type, :in => %w( system hypervisor)
         validates_presence_of :facts
       end
     end
@@ -76,13 +77,17 @@ module Glue::Candlepin::Consumer
       Rails.logger.info "Creating a consumer in candlepin: #{name}"
       consumer_json = Candlepin::Consumer.create(self.organization.cp_key, self.name, self.cp_type, self.facts, self.installedProducts, self.autoheal)
 
+      load_from_cp(consumer_json)
+    rescue => e
+      Rails.logger.error "Failed to create candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
+      raise e
+    end
+
+    def load_from_cp(consumer_json)
       self.uuid = consumer_json[:uuid]
       convert_from_cp_fields(consumer_json).each do |k,v|
         instance_variable_set("@#{k}", v) if respond_to?("#{k}=")
       end
-    rescue => e
-      Rails.logger.error "Failed to create candlepin consumer #{name}: #{e}, #{e.backtrace.join("\n")}"
-      raise e
     end
 
     def update_candlepin_consumer
@@ -152,6 +157,8 @@ module Glue::Candlepin::Consumer
 
     def save_candlepin_orchestration
       case orchestration_for
+        when :hypervisor
+          # it's already saved = do nothing
         when :create
           queue.create(:name => "create candlepin consumer: #{self.name}", :priority => 2, :action => [self, :set_candlepin_consumer])
         when :update
@@ -180,8 +187,7 @@ module Glue::Candlepin::Consumer
     end
 
     def arch=(arch)
-      @facts ||= {}
-      facts["uname.machine"] = arch
+      facts["uname.machine"] = arch if @facts
     end
 
     def sockets
@@ -189,8 +195,7 @@ module Glue::Candlepin::Consumer
     end
 
     def sockets=(sock)
-      @facts ||= {}
-      facts["cpu.cpu_socket(s)"] = sock
+      facts["cpu.cpu_socket(s)"] = sock if @facts
     end
 
     def guest
@@ -198,15 +203,12 @@ module Glue::Candlepin::Consumer
     end
 
     def guest=(val)
-      @facts ||= {}
-      facts["virt.is_guest"] = val
-
+      facts["virt.is_guest"] = val if @facts
     end
 
     def name=(val)
       super(val)
-      @facts ||= {}
-      facts["network.hostname"] = val
+      facts["network.hostname"] = val if @facts
     end
 
     def distribution_name
@@ -316,7 +318,7 @@ module Glue::Candlepin::Consumer
 
     def compliant_until
       if self.compliance['compliantUntil']
-        convert_time(self.compliance['compliantUntil'])
+        Date.parse(self.compliance['compliantUntil'])
       end
     end
 
@@ -324,6 +326,27 @@ module Glue::Candlepin::Consumer
       return 'green' if self.compliance['compliantProducts'].include? product_id
       return 'yellow' if self.compliance['partiallyCompliantProducts'].include? product_id
       return 'red'
+    end
+  end
+
+  module ClassMethods
+
+    def create_hypervisor(environment_id, hypervisor_json)
+      hypervisor = Hypervisor.new(:environment_id => environment_id)
+      hypervisor.name = hypervisor_json[:name]
+      hypervisor.cp_type = 'hypervisor'
+      hypervisor.orchestration_for = :hypervisor
+      hypervisor.load_from_cp(hypervisor_json)
+      hypervisor.save!
+      hypervisor
+    end
+
+    def register_hypervisors(environment, hypervisors_attrs)
+      consumers_attrs = Candlepin::Consumer.register_hypervisors(hypervisors_attrs)
+      created = consumers_attrs[:created].map do |hypervisor_attrs|
+        System.create_hypervisor(environment.id, hypervisor_attrs)
+      end
+      return consumers_attrs, created
     end
   end
 

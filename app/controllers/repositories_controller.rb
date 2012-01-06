@@ -11,7 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class RepositoriesController < ApplicationController
-
+  include AutoCompleteSearch
   include KatelloUrlHelper
 
   respond_to :html, :js
@@ -22,6 +22,7 @@ class RepositoriesController < ApplicationController
   before_filter :find_repository, :only => [:edit, :destroy, :enable_repo, :update_gpg_key]
 
   def rules
+    read_any_test = lambda{Provider.any_readable?(current_organization)}
     read_test = lambda{@product.readable?}
     edit_test = lambda{@product.editable?}
     org_edit = lambda{current_organization.editable?}
@@ -31,7 +32,8 @@ class RepositoriesController < ApplicationController
       :edit =>read_test,
       :update_gpg_key => edit_test,
       :destroy => edit_test,
-      :enable_repo => org_edit
+      :enable_repo => org_edit,
+      :auto_complete_locker => read_any_test
     }
   end
 
@@ -51,7 +53,7 @@ class RepositoriesController < ApplicationController
     begin
       repo_params = params[:repo]
       raise _('Invalid Url') if !kurl_valid?(repo_params[:feed])
-      gpg = GpgKey.readable(current_organization).find(repo_params[:gpg_key]) if repo_params[:gpg_key] != ""
+      gpg = GpgKey.readable(current_organization).find(repo_params[:gpg_key]) if repo_params[:gpg_key] and repo_params[:gpg_key] != ""
       # Bundle these into one call, perhaps move to Provider
       # Also fix the hard coded yum
       @product.add_repo(repo_params[:name], repo_params[:feed], 'yum', gpg)
@@ -59,7 +61,7 @@ class RepositoriesController < ApplicationController
 
     rescue Exception => error
       Rails.logger.error error.to_s
-      errors error
+      notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
     end
     notice _("Repository '#{repo_params[:name]}' created.")
@@ -80,7 +82,7 @@ class RepositoriesController < ApplicationController
       notice _("Repository '#{@repository.name}' updated.")
     rescue Exception => error
       Rails.logger.error error.to_s
-      errors error
+      notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
     end
     render :text => escape_html(result)
@@ -105,13 +107,20 @@ class RepositoriesController < ApplicationController
     render :partial => "common/post_delete_close_subpanel", :locals => {:path=>products_repos_provider_path(@provider.id)}
   end
 
+  def auto_complete_locker
+    # retrieve and return a list (array) of repo names in locker that contain the 'term' that was passed in
+    name = params[:term]
+    repos = Repository.readable(current_organization.locker).select(:name).where("name LIKE ?", "#{name}%")
+    render :json => repos.map{|repo| repo.name}
+  end
+
   protected
 
   def find_provider
     begin
       @provider = Provider.find(params[:provider_id])
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
     end
@@ -121,7 +130,7 @@ class RepositoriesController < ApplicationController
     begin
       @product = Product.find(params[:product_id])
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
     end
@@ -131,7 +140,7 @@ class RepositoriesController < ApplicationController
     begin
       @repository = Repository.find(params[:id])
     rescue Exception => error
-      errors _("Couldn't find repository with ID=#{params[:id]}")
+      notice _("Couldn't find repository with ID=#{params[:id]}"), {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
     end

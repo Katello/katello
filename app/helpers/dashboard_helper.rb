@@ -81,7 +81,7 @@ module DashboardHelper
   def sync_percentage(product)
     stat =product.sync_status.progress
     return 0 if stat.total_size == 0
-    "%.0f" % (stat.total_size - stat.size_left)*100/stat.total_size
+    "%.0f" % ((stat.total_size - stat.size_left)*100/stat.total_size).to_s
   end
 
 

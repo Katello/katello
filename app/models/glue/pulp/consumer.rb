@@ -37,6 +37,7 @@ module Glue::Pulp::Consumer
     end
 
     def destroy_pulp_orchestration
+      return true if self.is_a? Hypervisor
       queue.create(:name => "delete pulp consumer: #{self.name}", :priority => 3, :action => [self, :del_pulp_consumer])
     end
 
@@ -115,6 +116,7 @@ module Glue::Pulp::Consumer
     end
 
     def save_pulp_orchestration
+      return true if self.is_a? Hypervisor
       case orchestration_for
         when :create
           queue.create(:name => "create pulp consumer: #{self.name}", :priority => 3, :action => [self, :set_pulp_consumer])

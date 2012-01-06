@@ -27,9 +27,13 @@ describe Api::RolesController do
   let(:user_with_destroy_permissions) { user_with_permissions { |u| u.can(:delete, :roles) } }
   let(:user_without_destroy_permissions) { user_with_permissions { |u| u.can(:update, :roles) } }
 
+  let(:role_id) { 123 }
+
   before (:each) do
     @role= Role.new(:name => "test_role", :description=> "role description")
-    Role.stub(:find).with("123").and_return(@role)
+    Role.stub(:find).with(role_id).and_return(@role)
+
+    login_user_api
   end
 
   describe "list roles" do
@@ -38,38 +42,89 @@ describe Api::RolesController do
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
+
+    it 'should find all roles' do
+      Role.should_receive(:readable).and_return(Role)
+      Role.should_receive(:non_self).once.and_return(Role)
+      Role.should_receive(:where).once.and_return(Role)
+      req
+    end
   end
 
   describe "show role" do
     let(:action) { :show }
-    let(:req) { get :show, :id => "123" }
+    let(:req) { get :show, :id => role_id }
     let(:authorized_user) { user_with_read_permissions }
     let(:unauthorized_user) { user_without_read_permissions }
     it_should_behave_like "protected action"
+
+    it 'should find a role' do
+      Role.should_receive(:find).with(role_id)
+      req
+    end
   end
 
   describe "create role" do
+    let(:role_params) { {'name' => 'role_1'} }
     let(:action) { :create }
-    let(:req) { post :create }
+    let(:req) { post :create, :role => role_params }
     let(:authorized_user) { user_with_create_permissions }
     let(:unauthorized_user) { user_without_create_permissions }
     it_should_behave_like "protected action"
+
+    it 'should create a role' do
+        Role.should_receive(:create!).with(role_params)
+        req
+    end
   end
 
   describe "update role" do
+    let(:role_params) { {'name' => 'role_1'} }
     let(:action) { :update }
-    let(:req) { put :update, :id => "123" }
+    let(:req) { put :update, :id => role_id, :role => role_params }
     let(:authorized_user) { user_with_update_permissions }
     let(:unauthorized_user) { user_without_update_permissions }
     it_should_behave_like "protected action"
+
+    before :each do
+      @role.stub(:save!).and_return(true)
+      @role.stub(:update_attributes!).and_return(true)
+    end
+
+    it 'should find the role' do
+      Role.should_receive(:find).with(role_id)
+      req
+    end
+
+    it 'should update role\'s params' do
+      @role.should_receive(:update_attributes!).with(role_params)
+      req
+    end
+
+    it 'should save the changes' do
+      @role.should_receive(:save!)
+      req
+    end
   end
 
   describe "destroy role" do
     let(:action) { :destroy }
-    let(:req) { delete :destroy, :id => "123" }
+    let(:req) { delete :destroy, :id => role_id }
     let(:authorized_user) { user_with_destroy_permissions }
     let(:unauthorized_user) { user_without_destroy_permissions }
     it_should_behave_like "protected action"
+
+    it 'should find the role' do
+      Role.should_receive(:find).with(role_id)
+      req
+    end
+
+    it 'should destroy the role' do
+      @role.should_receive(:destroy)
+      req
+    end
+
   end
+
 end
 

@@ -1,3 +1,15 @@
+#
+# Copyright 2011 Red Hat, Inc.
+#
+# This software is licensed to you under the GNU General Public
+# License as published by the Free Software Foundation; either version
+# 2 of the License (GPLv2) or (at your option) any later version.
+# There is NO WARRANTY for this software, express or implied,
+# including the implied warranties of MERCHANTABILITY,
+# NON-INFRINGEMENT, or FITNESS FOR A PARTICULAR PURPOSE. You should
+# have received a copy of GPLv2 along with this software; if not, see
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
+
 class FiltersController < ApplicationController
 
   include AutoCompleteSearch
@@ -96,7 +108,7 @@ class FiltersController < ApplicationController
 
     render :text=>to_ret
   rescue Exception=>e
-    errors e
+    notice e, {:level => :error}
     render :text=>e, :status=>500
   end
 
@@ -124,7 +136,7 @@ class FiltersController < ApplicationController
     end
     
   rescue Exception=> e
-    errors e
+    notice e, {:level => :error}
     render :text=>e, :status=>500
   end
 
@@ -152,7 +164,7 @@ class FiltersController < ApplicationController
     notice N_("Sucessfully updated '#{@filter.name}' package filter.")
     render :text=>''
   rescue Exception => e
-    errors e
+    notice e, {:level => :error}
     render :text=>'', :status=>500
   end
 
@@ -181,7 +193,7 @@ class FiltersController < ApplicationController
     notice _("Package Filter #{@filter.name} deleted.")
     render :partial => "common/list_remove", :locals => {:id=>params[:id], :name=>controller_display_name}
   rescue Exception => e
-    errors e
+    notice e, {:level => :error}
     render :text=>e, :status=>500
   end
 
@@ -194,7 +206,7 @@ class FiltersController < ApplicationController
   def find_filter
     @filter = Filter.find(params[:id])
   rescue => e
-    errors e
+    notice e, {:level => :error}
     render :text=>e, :status=>500 and return false
   end
 

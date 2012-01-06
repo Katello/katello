@@ -25,10 +25,10 @@ class User < ActiveRecord::Base
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:except=>[:password, :password_reset_token,
                                   :password_reset_sent_at, :helptips_enabled,
-                                  :disabled, :own_role_id]}
+                                  :disabled, :own_role_id, :login]}
 
   mapping do
-    indexes :login_sort, :type => 'string', :index => :not_analyzed
+    indexes :username_sort, :type => 'string', :index => :not_analyzed
   end
 
 
@@ -464,9 +464,7 @@ class User < ActiveRecord::Base
 
 
   def extended_index_attrs
-    {
-        :login_sort => login.downcase
-    }
+    {:username_sort => username.downcase}
   end
 
   private
