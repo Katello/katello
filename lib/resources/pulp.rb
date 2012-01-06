@@ -433,11 +433,6 @@ module Pulp
   class Task < PulpResource
     class << self
       def find uuids
-        return find_all uuids if Array === uuids
-        find_all([uuids]).first
-      end
-
-      def find_all uuids
         ids = "id=#{uuids.join('&id=')}"
         query_url = path  + "?state=archived&state=current&#{ids}"
         response = get(query_url, self.default_headers)

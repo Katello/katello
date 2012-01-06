@@ -54,7 +54,7 @@ class PulpTaskStatus < TaskStatus
   end
 
   def self.refresh task_status
-    pulp_task = Pulp::Task.find(task_status.uuid)
+    pulp_task = Pulp::Task.find([task_status.uuid]).first
     task_status.attributes = {
         :state => pulp_task[:state],
         :finish_time => pulp_task[:finish_time],
