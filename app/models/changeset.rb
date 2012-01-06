@@ -517,23 +517,43 @@ class Changeset < ActiveRecord::Base
     package_names = packages_for_dep_calc(product).map{ |p| p.name }.uniq
     return {} if package_names.empty?
 
-    from_repos = not_included_repos(product, from_env).map{ |r| r.pulp_id }
+    from_repos = not_included_repos(product, from_env)
+    to_repos = product.repos(to_env)
 
-    dependencies = Pulp::Package.dep_solve(package_names, from_repos)
+    dependencies = calc_dependencies_for_packages package_names, from_repos, to_repos
     dependencies
+  end
+
+  def calc_dependencies_for_packages package_names, from_repos, to_repos
+    from_repos_names = from_repos.map{ |r| r.pulp_id }
+
+    @next_env_pkg_ids ||= package_ids(to_repos)
+    dependencies = []
+
+    resolved_deps = Pulp::Package.dep_solve(package_names, from_repos_names)['resolved']
+    resolved_deps = resolved_deps.values.flatten(1)
+
+    dependencies = resolved_deps.reject {|dep| not @next_env_pkg_ids.index(dep['id']).nil? }
+    dependencies
+  end
+
+  def package_ids repos
+    pkg_ids = []
+    repos.each do |repo|
+      pkg_ids += repo.packages.collect { |pkg| pkg.id }
+    end
+    pkg_ids
   end
 
   def build_dependencies product, dependencies
     new_dependencies = []
 
-    dependencies.each_pair do |package_name, dep_packages|
-      dep_packages.each do |dep_package|
-        new_dependencies << ChangesetDependency.new(:package_id => dep_package['id'],
-                                                    :display_name => dep_package['name'],
+    dependencies.each do |dep|
+        new_dependencies << ChangesetDependency.new(:package_id => dep['id'],
+                                                    :display_name => dep['filename'],
                                                     :product_id => product.id,
-                                                    :dependency_of => package_name,
+                                                    :dependency_of => '???',
                                                     :changeset => self)
-      end
     end
     new_dependencies
   end
