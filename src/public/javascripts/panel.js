@@ -63,6 +63,8 @@ $(document).ready(function () {
                     activeBlock.addClass('active');
                     activeBlock.find('.arrow-right').hide();
                 }
+            } else if (event.ctrlKey && !thisPanel.hasClass('opened') && !(event.target.id == "new") && activeBlock.hasClass('active') && $('.block.active').length > 1) {
+              activeBlock.removeClass('active');
             } else {
                 if(activeBlock.hasClass('active') && thisPanel.hasClass('opened')){
                     KT.panel.closePanel(thisPanel);
