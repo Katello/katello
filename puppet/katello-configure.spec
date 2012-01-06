@@ -2,7 +2,7 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.50
+Version:        0.1.51
 Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Fri Jan 06 2012 Ivan Necas <inecas@redhat.com> 0.1.51-1
+- 768420 - config Pulp for new content location (for Pulp 0.1.256) (inecas@redhat.com)
+
 * Fri Jan 06 2012 Ivan Necas <inecas@redhat.com> 0.1.50-1
 - 772210 - make /var/run/elasticsearch dir to fix installation
   (inecas@redhat.com)
