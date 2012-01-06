@@ -12,8 +12,8 @@
 
 class Api::ChangesetsController < Api::ApiController
 
-  before_filter :find_environment
   before_filter :find_changeset, :only => [:show, :destroy, :promote, :dependencies]
+  before_filter :find_environment
   before_filter :authorize
 
   def rules
@@ -78,10 +78,6 @@ class Api::ChangesetsController < Api::ApiController
       @environment = KTEnvironment.find(params[:environment_id])
       raise HttpErrors::NotFound, _("Couldn't find environment '#{params[:environment_id]}'") if @environment.nil?
       @environment
-    else
-      #didnt' find an environment, just do the first the user has access to
-      list = KTEnvironment.changesets_readable(current_organization).where(:locker=>false)
-      @environment ||= list.first || current_organization.locker
     end
   end
 
