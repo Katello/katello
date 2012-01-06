@@ -86,8 +86,8 @@ class SystemEventsController < ApplicationController
     end
     search = params[:search]
     render_panel_direct(TaskStatus, {:no_search_history => true,:render_list_proc => render_proc},
-                        search, params[:offset], [:finish_time, 'DESC'],
-                        :filters => {:system_ids => [@system.id]},
+                        search, params[:offset], [:finish_time, 'desc'],
+                        :filter => {:system_ids => [@system.id]},
                         :load => true,
                         :simple_query => "status:#{search} OR #{search}" )
   end
@@ -109,7 +109,7 @@ class SystemEventsController < ApplicationController
 
   helper_method :tasks
   def tasks(page_size = current_user.page_size)
-    @system.tasks.order("updated_at desc").limit(page_size)
+    @system.tasks.order("finish_time desc").limit(page_size)
   end
 
   helper_method :total_events_length
