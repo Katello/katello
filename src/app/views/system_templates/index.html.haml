@@ -1,11 +1,5 @@
-
-
-
 = javascript :panel, :edit, :system_template
 = include_editable_i18n
-
-
-
 
 = javascript do
   :javascript
@@ -21,6 +15,7 @@
 
     localize({
       "products": '#{_('Products')}',
+      "repos": '#{_('Repositories')}',
       "packages": '#{_('Packages')}',
       "package_groups": '#{_("Package Groups")}',
       "selected_distribution": '#{_("Selected Distribution")}',
@@ -32,22 +27,20 @@
       "need_product": '#{_("No products are currently associated with this system template.  Please associate a product that contains distributions in order to select a distribution.")}',
       "need_distro_product": '#{_("None of the associated products contain distributions, please select a product that contains at least one distribution.")}',
       "save" : '#{_("Save")}',
+      "repo_search_text": '#{_("Search available repository names...")}',
       "package_search_text": '#{_("Search available package names...")}',
       "product_search_text": '#{_("Search available product names...")}',
       "modify_message": '#{_('The current template "$TEMPLATE" has been modified.  Would you like to save the changes?')}',
       "leave_page": '#{_('The current template "$TEMPLATE" has been modified. If you leave, any changes will be lost."')}'
       });
 
-
 = help_tip_button
 .grid_16
   = help_tip(_('System Templates allow you to create a template for what a system should look like.  This includes what ' + |
                'products are subscribed and what packages are installed.'))   |
 
-
 #system_templates.grid_16
   #container
-
 
     .right_tree.sliding_tree
       #template_tree
@@ -112,13 +105,12 @@
           #{_('+ New Template')}
           .arrow-right
       %h2= _("Eligible Content")
-      .tree_breadcrumb.clickable.clear
+      .breadcrumb_search.clear.clickable
+        .tree_breadcrumb
       .sliding_container
         #list.list.sliding_list{"data-page_size"=>current_user.page_size}
           .slider_one.has_content.slider
           .slider_two.no_content.slider
-
-
 
 #error_dialog{:style=>"display: none"}
   = _("An error has occured when communicating with the server, please refresh the page to retrieve the current System Template")

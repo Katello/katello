@@ -5,6 +5,7 @@ describe CDN::CdnVarSubstitutor do
 
   let(:provider_url) { "https://cdn.redhat.com" }
   let(:path_with_variables) { "/content/dist/rhel/server/5/$releasever/$basearch/os" }
+  let(:another_path_with_variables) { "/content/dist/rhel/server/6/$releasever/$basearch/os" }
   let(:connect_options) do
     {:ssl_client_cert => "456",:ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123"}
   end
@@ -41,6 +42,28 @@ describe CDN::CdnVarSubstitutor do
     subject
   end
 
+  describe "batch substitutions calculation" do
+    it "should calculate all substitutions at once" do
+      subject.should_receive(:substitute_vars).with(path_with_variables).and_return([])
+      subject.should_receive(:substitute_vars).with(another_path_with_variables).and_return([])
+      subject.precalculate([path_with_variables, another_path_with_variables])
+    end
+
+    it "should use the precalculated results for substitutions" do
+      stub_successful_cdn_requests(["6","61"],["i386", "x86_64"])
+      subject.precalculate([path_with_variables])
+      subject.should_not_receive :for_each_substitute_of_next_var # doesn't calculate results
+      substitutions_with_urls = subject.substitute_vars(path_with_variables)
+      substitutions_with_urls.should have(4).items
+    end
+
+    it "should describe why it failed when some listing unavailable" do
+      stub_not_found_cdn_request
+      expect { subject.precalculate([path_with_variables]) }.to raise_error Errors::NotFound, /\/content\/dist\/rhel\/server\/5\/listing not found/
+    end
+  end
+
+
   it "should handle error codes from CDN" do
     stub_forbidden_cdn_requests
     lambda { subject.substitute_vars(path_with_variables) }.should raise_error RestClient::Forbidden
@@ -61,9 +84,11 @@ describe CDN::CdnVarSubstitutor do
   end
 
   def stub_forbidden_cdn_requests
-    stub_cdn_requests do |req,headers|
-      mock(:code => 403, :body => nil)
-    end
+    stub_cdn_requests { |req,headers| mock(:code => 403, :body => nil) }
+  end
+
+  def stub_not_found_cdn_request
+    stub_cdn_requests { |req,headers| mock(:code => 404, :body => nil) }
   end
 
   def stub_cdn_requests(&block)

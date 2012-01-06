@@ -2,14 +2,12 @@ require 'spec_helper'
 
 describe FiltersController do
 
-
   include LoginHelperMethods
   include LocaleHelperMethods
   include ProductHelperMethods
   include OrganizationHelperMethods
   include AuthorizationHelperMethods
   include OrchestrationHelper
-
 
   before(:each) do
 
@@ -19,7 +17,6 @@ describe FiltersController do
       disable_product_orchestration
 
   end
-
 
   describe "Controller tests" do
     before(:each) do
@@ -54,13 +51,12 @@ describe FiltersController do
       end
 
       it "posts to create a filter should not be sucessful if no name" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         post :create, :filter => {}
         response.should_not be_success
       end
 
     end
-
 
     describe "edit a filter" do
       it "should recieve a valid filter for edit" do
@@ -69,7 +65,7 @@ describe FiltersController do
       end
 
       it "should not recieve a valid filter for edit a non-existant id" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         get :edit, :id=>-1
         response.should_not be_success
       end
@@ -82,7 +78,7 @@ describe FiltersController do
       end
 
       it "should not recieve a valid filter for edit a non-existant id" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         get :products, :id=>-1
         response.should_not be_success
       end
@@ -95,7 +91,7 @@ describe FiltersController do
       end
 
       it "should not recieve a valid filter for edit a non-existant id" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         get :packages, :id=>-1
         response.should_not be_success
       end
@@ -136,7 +132,7 @@ describe FiltersController do
       end
       
       it "should not be successful with a valid filter" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         delete :destroy, :id=>-12343
         response.should_not be_success
       end
@@ -167,7 +163,7 @@ describe FiltersController do
       end
 
       it "should not allow for updating of products for an invalid filter" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         post :update_products, :id=>"-1", :products=>[@product.id]
         response.should_not be_success
       end

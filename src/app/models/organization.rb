@@ -15,7 +15,15 @@ class Organization < ActiveRecord::Base
   include Glue::Candlepin::Owner if AppConfig.use_cp
   include Glue if AppConfig.use_cp
   include Authorization
-  
+  include IndexedModel
+
+  index_options :extended_json=>:extended_index_attrs,
+                :json=>{:except=>[:debug_cert, :events]}
+
+  mapping do
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+  end
+
   has_many :activation_keys, :dependent => :destroy
   has_many :providers, :dependent => :destroy
   has_many :environments, :class_name => "KTEnvironment", :conditions => {:locker => false}, :dependent => :destroy, :inverse_of => :organization
@@ -23,20 +31,11 @@ class Organization < ActiveRecord::Base
   has_many :filters, :dependent => :destroy, :inverse_of => :organization
   has_many :gpg_keys, :dependent => :destroy, :inverse_of => :organization
   has_many :permissions, :dependent => :destroy, :inverse_of => :organization
+  has_many :sync_plans, :dependent => :destroy, :inverse_of => :organization
 
   attr_accessor :statistics
 
   default_scope  where(:task_id=>nil) #ignore organizations that are being deleted
-
-
-  scoped_search :on => :name, :complete_value => true, :rename => :'organization.name'
-  scoped_search :on => :description, :complete_value => true, :rename => :'organization.description'
-  scoped_search :in => :environments, :on => :name, :complete_value => true, :rename => :'environment.name'
-  scoped_search :in => :environments, :on => :description, :complete_value => true, :rename => :'environment.description'
-  scoped_search :in => :providers, :on => :name, :complete_value => true, :rename => :'provider.name'
-  scoped_search :in => :providers, :on => :description, :complete_value => true, :rename => :'provider.description'
-  scoped_search :in => :providers, :on => :provider_type, :complete_value => {:redhat => :'Red Hat', :custom => :'Custom'}, :rename => :'provider.type'
-  scoped_search :in => :providers, :on => :repository_url, :complete_value => true, :rename => :'provider.url'
 
   before_create :create_locker
   before_create :create_redhat_provider
@@ -150,5 +149,10 @@ class Organization < ActiveRecord::Base
 
   READ_PERM_VERBS = [:read, :create, :update, :delete]
   SYNC_PERM_VERBS = [:sync]
+
+
+  def extended_index_attrs
+    {:name_sort=>name.downcase, :environment=>self.environments.collect{|e| e.name}}
+  end
 
 end

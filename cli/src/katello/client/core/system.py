@@ -1,5 +1,5 @@
 #
-# Katello Repos actions
+# Katello System actions
 # Copyright (c) 2010 Red Hat, Inc.
 #
 # This software is licensed to you under the GNU General Public License,
@@ -18,9 +18,12 @@ import os
 from gettext import gettext as _
 
 from katello.client.api.system import SystemAPI
+from katello.client.api.task_status import SystemTaskStatusAPI
 from katello.client.config import Config
 from katello.client.core.base import Action, Command
 from katello.client.core.utils import is_valid_record, Printer, convert_to_mime_type, attachment_file_name, save_report
+from katello.client.core.utils import run_spinner_in_bg, wait_for_async_task, SystemAsyncTask, format_task_errors
+import re
 
 Config()
 
@@ -127,7 +130,7 @@ class Info(SystemAction):
 
 class InstalledPackages(SystemAction):
 
-    description = _('display the installed packages of a system')
+    description = _('display and manipulate with the installed packages of a system')
 
     def setup_parser(self):
         self.parser.add_option('--org', dest='org',
@@ -136,16 +139,39 @@ class InstalledPackages(SystemAction):
                        help=_("system name (required)"))
         self.parser.add_option('--environment', dest='environment',
                        help=_("environment name"))
+        self.parser.add_option('--install', dest='install',
+                       help=_("packages to be installed remotely on the system, package names are separated with comma"))
+        self.parser.add_option('--remove', dest='remove',
+                       help=_("packages to be removed remotely from the system, package names are separated with comma"))
+        self.parser.add_option('--update', dest='update',
+                       help=_("packages to be updated on the system, use --all to update all packages, package names are separated with comma"))
+        self.parser.add_option('--install_groups', dest='install_groups',
+                       help=_("package groups to be installed remotely on the system, group names are separated with comma"))
+        self.parser.add_option('--remove_groups', dest='remove_groups',
+                       help=_("package groups to be removed remotely from the system, group names are separated with comma"))
 
     def check_options(self):
         self.require_option('org')
         self.require_option('name')
+        remote_options = [self.get_option(option) for option in ['install', 'remove', 'update', 'install_groups', 'remove_groups']]
+        if len([1 for o in remote_options if o]) > 1:
+            self.add_option_error(_('You can specify at most one install/remove/update action per call'))
+
 
     def run(self):
         org_name = self.get_option('org')
         env_name = self.get_option('environment')
         sys_name = self.get_option('name')
         verbose = self.get_option('verbose')
+
+        install = self.get_option('install')
+        remove = self.get_option('remove')
+        update = self.get_option('update')
+        install_groups = self.get_option('install_groups')
+        remove_groups = self.get_option('remove_groups')
+        packages_separator = ","
+
+        task = None
 
         if env_name is None:
             self.printer.setHeader(_("Package Information for System [ %s ] in Org [ %s ]") % (sys_name, org_name))
@@ -157,7 +183,39 @@ class InstalledPackages(SystemAction):
         if not systems:
             return os.EX_DATAERR
 
-        packages = self.api.packages(systems[0]['uuid'])
+        system_id = systems[0]['uuid']
+
+        if install:
+            task = self.api.install_packages(system_id, install.split(packages_separator))
+        if remove:
+            task = self.api.remove_packages(system_id, remove.split(packages_separator))
+        if update:
+            if update == '--all':
+                 update_packages = []
+            else:
+                update_packages = update.split(packages_separator)
+            task = self.api.update_packages(system_id, update_packages)
+        if install_groups:
+            task = self.api.install_package_groups(system_id, install_groups.split(packages_separator))
+        if remove_groups:
+            task = self.api.remove_package_groups(system_id, remove_groups.split(packages_separator))
+
+        if task:
+            uuid = task["uuid"]
+            print (_("Performing remote action [ %s ]... ") % uuid)
+            task = SystemAsyncTask(task)
+            run_spinner_in_bg(wait_for_async_task, [task])
+            if task.succeeded():
+                print _("Remote action finished:")
+                print task.get_result_description()
+                return os.EX_OK
+            else:
+                print _("Remote action failed:")
+                print task.get_result_description()
+                return os.EX_DATAERR
+
+        packages = self.api.packages(system_id)
+
 
         for p in packages:
             p['name_version_release_arch'] = "%s-%s-%s.%s" % \
@@ -177,6 +235,83 @@ class InstalledPackages(SystemAction):
         self.printer.printItems(packages)
 
         return os.EX_OK
+
+class TasksList(SystemAction):
+
+    description = _('display status of remote tasks')
+
+    def setup_parser(self):
+        self.parser.add_option('--org', dest='org',
+                       help=_("organization name eg: foo.example.com (required)"))
+        self.parser.add_option('--name', dest='name',
+                       help=_("system name"))
+        self.parser.add_option('--environment', dest='environment',
+                       help=_("environment name"))
+
+    def check_options(self):
+        self.require_option('org')
+
+    def run(self):
+        org_name = self.get_option('org')
+        env_name = self.get_option('environment')
+        sys_name = self.get_option('name')
+        verbose = self.get_option('verbose')
+
+        self.printer.setHeader(_("Remote tasks"))
+
+        tasks = self.api.tasks(org_name, env_name, sys_name)
+
+
+        for t in tasks:
+            t['result'] = "\n" + t['result_description']
+
+        if verbose:
+            self.printer.addColumn('system_name', name=_("System"))
+            self.printer.addColumn('description', name=_("Action"))
+            self.printer.addColumn('created_at', name=_("Started"), time_format=True)
+            self.printer.addColumn('finish_time', name=_("Finished"), time_format=True)
+            self.printer.addColumn('state', name=_("Status"))
+            self.printer.addColumn('result', name=_("Result"))
+        else:
+            self.printer.addColumn('uuid', name=_("Task id"))
+            self.printer.addColumn('system_name', name=_("System"))
+            self.printer.addColumn('description', name=_("Action"))
+            self.printer.addColumn('state', name=_("Status"))
+
+        self.printer.printItems(tasks)
+
+        return os.EX_OK
+
+class TaskInfo(SystemAction):
+
+    description = _('display status of remote task')
+
+    def setup_parser(self):
+        self.parser.add_option('--id', dest='id',
+                       help=_("UUID of the task"))
+
+    def check_options(self):
+        self.require_option('id')
+
+    def run(self):
+        uuid = self.get_option('id')
+
+        self.printer.setHeader(_("Remote task"))
+
+        task = SystemTaskStatusAPI().status(uuid)
+        task['result'] = "\n" + task['result_description']
+
+        self.printer.addColumn('system_name', name=_("System"))
+        self.printer.addColumn('description', name=_("Action"))
+        self.printer.addColumn('created_at', name=_("Started"), time_format=True)
+        self.printer.addColumn('finish_time', name=_("Finished"), time_format=True)
+        self.printer.addColumn('state', name=_("Status"))
+        self.printer.addColumn('result', name=_("Result"))
+        self.printer.printItem(task)
+
+        return os.EX_OK
+
+
 
 class Facts(SystemAction):
 
@@ -475,7 +610,7 @@ class Update(SystemAction):
         response = self.api.update(system_uuid, updates)
 
         if is_valid_record(response):
-            print _("Successfully updated system [ %s ]") % systems[0]['name']
+            print _("Successfully updated system [ %s ]") % response['name']
         else:
             print _("Could not update system [ %s ]") % systems[0]['name']
 

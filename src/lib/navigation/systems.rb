@@ -56,11 +56,11 @@ module Navigation
 
     def systems_navigation
       [
-        { :key => :details,
+        { :key => :general,
           :name =>N_("Details"),
           :url => lambda{edit_system_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"content second_level"},
+          :options => {:class=>"navigation_element"},
           :items => systems_subnav
         },
         { :key => :subscriptions,
@@ -80,29 +80,29 @@ module Navigation
           :url => lambda{packages_system_system_packages_path(@system.id)},
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
-        },
-        { :key => :errata,
-          :name =>N_("Errata"),
-          :url => lambda{system_errata_path(@system.id)},
-          :if => lambda{@system},
-          :options => {:class=>"navigation_element"}
         }
       ]
     end
 
     def systems_subnav
       [
-        { :key => :general,
-          :name =>N_("General"),
+        { :key => :system_info,
+          :name =>N_("System Info"),
           :url => lambda{edit_system_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"third_level"},
+          :options => {:class=>"third_level navigation_element"},
         },
-        { :key => :facts,
-          :name =>N_("Facts"),
-          :url => lambda{facts_system_path(@system.id)},
+        { :key => :events,
+          :name =>_("Events"),
+          :url => lambda{system_events_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"third_level"}
+          :options => {:class=>"third_level navigation_element"},
+        },
+        { :key => :errata,
+          :name =>N_("Errata"),
+          :url => lambda{system_errata_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"third_level navigation_element"},
         }
       ]
     end

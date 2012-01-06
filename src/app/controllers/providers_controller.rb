@@ -71,7 +71,7 @@ class ProvidersController < ApplicationController
         display_message = parse_display_message(error.response)
         error_text = _("Subscription manifest upload for provider '%{name}' failed." % {:name => @provider.name})
         error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
-        errors error_text
+        notice error_text, {:level => :error}
         Rails.logger.error "error uploading subscriptions."
         Rails.logger.error error
         Rails.logger.error error.backtrace.join("\n")
@@ -80,7 +80,7 @@ class ProvidersController < ApplicationController
       redhat_provider
     else
       # user didn't provide a manifest to upload
-      errors _("Subscription manifest must be specified on upload.")
+      notice _("Subscription manifest must be specified on upload."), {:level => :error}
       render :nothing => true
     end
   end
@@ -94,7 +94,7 @@ class ProvidersController < ApplicationController
       display_message = parse_display_message(error.response)
       error_text = _("Unable to retrieve subscription manifest for provider '%{name}." % {:name => @provider.name})
       error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
-      errors error_text, {:synchronous_request => false}
+      notice error_text, {:level => :error, :synchronous_request => false}
       Rails.logger.error "Error fetching subscriptions from Candlepin"
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
@@ -108,7 +108,7 @@ class ProvidersController < ApplicationController
       display_message = parse_display_message(error.response)
       error_text = _("Unable to retrieve subscription history for provider '%{name}." % {:name => @provider.name})
       error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
-      errors error_text, {:synchronous_request => false}
+      notice error_text, {:level => :error, :synchronous_request => false}
       Rails.logger.error "Error fetching subscription history from Candlepin"
       Rails.logger.error error
       Rails.logger.error error.backtrace.join("\n")
@@ -122,9 +122,7 @@ class ProvidersController < ApplicationController
     
     ids = Provider.readable(current_organization).collect{|p| p.id}
     render_panel_direct(Provider, @panel_options, params[:search], params[:offset], [:name_sort, 'asc'],
-                        [{"id"=>ids}, {:provider_type=>[Provider::CUSTOM.downcase]}])
-
-    #render_panel_items(Provider.readable(current_organization).custom.order('providers.name'), @panel_options, params[:search], params[:offset])
+                  {:filter=>[{"id"=>ids}, {:provider_type=>[Provider::CUSTOM.downcase]}]})
   end
 
   def show
@@ -156,7 +154,7 @@ class ProvidersController < ApplicationController
       end
     rescue Exception => error
       Rails.logger.error error.to_s
-      errors error
+      notice error, {:level => :error}
       render :text => error, :status => :bad_request
     end
   end
@@ -173,7 +171,7 @@ class ProvidersController < ApplicationController
         raise
       end
     rescue Exception => e
-      errors e.to_s
+      notice e.to_s, {:level => :error}
     end
   end
 
@@ -204,7 +202,7 @@ class ProvidersController < ApplicationController
       end
 
     rescue Exception => e
-      errors e.to_s
+      notice e.to_s, {:level => :error}
 
       respond_to do |format|
         format.html { render :partial => "layouts/notification", :status => :bad_request, :content_type => 'text/html' and return}
@@ -219,7 +217,7 @@ class ProvidersController < ApplicationController
     begin
       @provider = Provider.find(params[:id])
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
     end

@@ -28,6 +28,7 @@ class RequiredCLIOptionsTests(CLIOptionTestCase):
 class UserRoleInfoTest(CLIActionTestCase):
 
     ROLE = test_data.USER_ROLES[0]
+    PERMISSIONS = test_data.PERMISSIONS
 
     OPTIONS = {
         'name': ROLE['name'],
@@ -42,6 +43,7 @@ class UserRoleInfoTest(CLIActionTestCase):
 
         self.mock(self.action.api, 'role', self.ROLE)
         self.mock(self.action.api, 'roles', [self.ROLE])
+        self.mock(self.action, 'getPermissions', self.PERMISSIONS)
 
     def test_finds_role(self):
         self.action.run()

@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.153
+Version:        0.1.168
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -73,9 +73,7 @@ Requires:       rubygem(sass)
 Requires:       rubygem(chunky_png)
 Requires:       rubygem(tire)
 
-# bz 743816 temp fix until yum update makes to z stream
 %if 0%{?rhel} == 6
-Requires:       yum >= 3.2.29
 Requires:       redhat-logos >= 60.0.14
 %endif
 
@@ -348,6 +346,58 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Jan 06 2012 Ivan Necas <inecas@redhat.com> 0.1.168-1
+- 771911 - keep facts on system update (inecas@redhat.com)
+
+* Thu Jan 05 2012 Mike McCune <mmccune@redhat.com> 0.1.167-1
+- Periodic rebuild with tons of new stuff, check git for features
+* Wed Jan 04 2012 Shannon Hughes <shughes@redhat.com> 0.1.165-1
+- 766977 fixing org box dropdown mouse sensitivity (shughes@redhat.com)
+- Add elastic search to the debug collection (bkearney@redhat.com)
+- 750117 - Fixes issue with duplicate search results being returned that
+  stemmed from pressing enter within the search field too many times.
+  (ehelms@redhat.com)
+- translated strings from zanata (shughes@redhat.com)
+- 752177 - Adds clearing of search hash when search input is cleared manually
+  or via Clear from dropdown. (ehelms@redhat.com)
+- 769905 remove yum 3.2.29 requirements from katello (shughes@redhat.com)
+
+* Wed Jan 04 2012 Ivan Necas <inecas@redhat.com> 0.1.163-1
+- periodic rebuild
+
+* Tue Jan 03 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.160-1
+- moving /distributions API into /repositories path
+- disabling auto-complete on tupane pages
+- system templates - fix packages, groups and repos to be consistent w/
+  promotions
+- system templates - fix label on template tree for repos
+- system templates - fix specs broken by addition of repo
+- system template - updates to tdl for handling templates containing individual
+  repos
+- system template - update to allow adding individual repos to template
+- auto_search_complete - allow controller to provide object for permissions
+  check
+- Add missing Copyright headers.
+- Added permission to list the readable repositories in an environment
+
+* Mon Jan 02 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.157-1
+- api perms review - activation keys
+- 751033 - adding subscriptions to activation key exception
+- perms - changesets permission review
+
+* Fri Dec 23 2011 Lukas Zapletal <lzap+git@redhat.com> 0.1.156-1
+- api perms - changesets unittests
+- api perms - changesets
+- permission coverage rake spec improvement
+- 768047 - promotions - let user know if promotion fails
+- 754609 - Sync status on dashboard now rounded percent.
+
+* Thu Dec 22 2011 Ivan Necas <inecas@redhat.com> 0.1.155-1
+- periodic rebuild
+* Wed Dec 21 2011 Mike McCune <mmccune@redhat.com> 0.1.154-1
+- removing indexing for changesets, as its not needed currently
+  (jsherril@redhat.com)
+- make sure that katello prefix is part of the gpg url (ohadlevy@redhat.com)
 * Wed Dec 21 2011 Justin Sherrill <jsherril@redhat.com> 0.1.153-1
 - fixing routes.js (jsherril@redhat.com)
 - reverting to old package behavior (jsherril@redhat.com)

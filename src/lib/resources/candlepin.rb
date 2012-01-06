@@ -99,6 +99,14 @@ module Candlepin
         JSON.parse(response).with_indifferent_access
       end
 
+      def register_hypervisors params
+        url = "/candlepin/hypervisors"
+        url << "?owner=#{params[:owner]}&env=#{params[:env]}"
+        attrs = params.except(:owner, :env)
+        response = self.post(url, attrs.to_json, self.default_headers).body
+        JSON.parse(response).with_indifferent_access
+      end
+
       def update uuid, facts, guest_ids = nil, installedProducts = nil, autoheal = nil
         attrs = {:facts => facts, :guestIds => guest_ids, :installedProducts => installedProducts, :autoheal => autoheal}.delete_if {|k,v| v.nil?}
         unless attrs.empty?

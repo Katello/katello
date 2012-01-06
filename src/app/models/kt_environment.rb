@@ -90,6 +90,9 @@ class KTEnvironment < ActiveRecord::Base
   validates_with PathDescendentsValidator
 
 
+  after_save :update_related_index
+  after_destroy :delete_related_index
+
    ERROR_CLASS_NAME = "Environment"
 
 
@@ -319,4 +322,17 @@ class KTEnvironment < ActiveRecord::Base
       :promote_changesets => N_("Promote Changesets in Environment")
     }.with_indifferent_access
   end
+
+  def update_related_index
+    if self.name_changed?
+      self.organization.reload #must reload organization, otherwise old name is saved
+      self.organization.update_index
+      ActivationKey.index.import(self.activation_keys) if !self.activation_keys.empty?
+    end
+  end
+
+  def delete_related_index
+    self.organization.update_index
+  end
+
 end

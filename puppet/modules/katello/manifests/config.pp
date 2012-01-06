@@ -143,13 +143,15 @@ class katello::config {
                   Class["candlepin::service"], 
                   Class["pulp::service"], 
                   File["${katello::params::log_base}"], 
-                  File["${katello::params::config_dir}/katello.yml"]
+                  File["${katello::params::config_dir}/katello.yml"],
+                  Postgres::Createdb[$katello::params::db_name]
                 ],
                 'headpin' => [
                   Class["candlepin::service"],
                   Class["thumbslug::service"],
                   File["${katello::params::log_base}"],
-                  File["${katello::params::config_dir}/katello.yml"]
+                  File["${katello::params::config_dir}/katello.yml"],
+                  Postgres::Createdb[$katello::params::db_name]
                 ],
                 default => [],
     },

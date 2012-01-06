@@ -25,7 +25,7 @@ class Repository < ActiveRecord::Base
   include Authorization
   include AsyncOrchestration
   include IndexedModel
-  
+
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:except=>[:pulp_repo_facts, :groupid, :environment_product_id]}
 
@@ -65,6 +65,15 @@ class Repository < ActiveRecord::Base
     !(redhat?)
   end
 
+  scope :readable, lambda { |env|
+    if env.contents_readable?
+      joins(:environment_product).where("environment_products.environment_id" => env.id)
+    else
+      #none readable
+      where("1=0")
+    end
+  }
+
   def extended_index_attrs
     {:environment=>self.environment.name, :environment_id=>self.environment.id,
      :product=>self.product.name, :product_id=> self.product.id}
@@ -78,7 +87,7 @@ class Repository < ActiveRecord::Base
     pkgs = self.packages.collect{|pkg| pkg.as_json.merge(pkg.index_options)}
     Tire.index Glue::Pulp::Package.index do
       create :mappings => Glue::Pulp::Package.index_mapping
-      import pkgs               
+      import pkgs
     end if !pkgs.empty?
   end
 
@@ -95,7 +104,5 @@ class Repository < ActiveRecord::Base
       self.gpg_key = product.gpg_key
     end
   end
-
-
 
 end

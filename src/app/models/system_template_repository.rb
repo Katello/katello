@@ -10,5 +10,7 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-class KatelloTaskStatus < TaskStatus
+class SystemTemplateRepository < ActiveRecord::Base
+  belongs_to :system_template
+  belongs_to :repository
 end

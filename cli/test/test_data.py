@@ -255,7 +255,7 @@ SYNC_RESULT_NOT_SYNCED = [
 
 SYNC_RESULT_WITHOUT_ERROR = [
   {
-    "result": "{\"errors\":[null,null]}",
+    "result": {"errors":[None,None]},
     "created_at": None,
     "uuid": "6d3d8711-cf28-11e0-b10e-f0def13c24e5",
     "updated_at": None,
@@ -297,7 +297,7 @@ SYNC_RESULT_WITHOUT_ERROR = [
 
 SYNC_RESULT_WITH_ERROR = [
   {
-    "result": "{\"errors\":[\"some error 1\",\"some error 2\"]}",
+    "result": {"errors": ["some error 1","some error 2"]},
     "created_at": None,
     "uuid": "6d3d8711-cf28-11e0-b10e-f0def13c24e5",
     "updated_at": None,
@@ -316,7 +316,7 @@ SYNC_RESULT_WITH_ERROR = [
     "start_time": "2011-08-25T14:42:16Z"
   },
   {
-    "result": "{\"errors\":[null,null]}",
+    "result": {"errors":[None,None]},
     "created_at": None,
     "uuid": "6d523975-cf28-11e0-b196-f0def13c24e5",
     "updated_at": None,
@@ -338,7 +338,7 @@ SYNC_RESULT_WITH_ERROR = [
 
 SYNC_RESULT_CANCELLED = [
   {
-    "result": "{\"errors\":[null,null]}",
+    "result": {"errors":[None,None]},
     "created_at": None,
     "uuid": "6d3d8711-cf28-11e0-b10e-f0def13c24e5",
     "updated_at": None,
@@ -357,7 +357,7 @@ SYNC_RESULT_CANCELLED = [
     "start_time": "2011-08-25T14:42:16Z"
   },
   {
-    "result": "{\"errors\":[null,null]}",
+    "result": {"errors":[None,None]},
     "created_at": None,
     "uuid": "6d523975-cf28-11e0-b196-f0def13c24e5",
     "updated_at": None,
@@ -380,7 +380,7 @@ SYNC_RESULT_CANCELLED = [
 
 SYNC_RUNNING_RESULT = [
   {
-    "result": "{\"errors\":[null,null]}",
+    "result": {"errors":[None,None]},
     "created_at": "2011-08-25T14:44:17Z",
     "uuid": "b57a9d75-cf28-11e0-8a7a-f0def13c24e5",
     "updated_at": "2011-08-25T14:44:17Z",
@@ -400,7 +400,7 @@ SYNC_RUNNING_RESULT = [
     "start_time": None
   },
   {
-    "result": "{\"errors\":[null,null]}",
+    "result": {"errors":[None,None]},
     "created_at": "2011-08-25T14:44:17Z",
     "uuid": "b58a9635-cf28-11e0-8ae3-f0def13c24e5",
     "updated_at": "2011-08-25T14:44:17Z",
@@ -794,4 +794,115 @@ USER_ROLES = [
     'name': 'role2',
     'description': 'description of role 2'
 }
+]
+
+AVAILABLE_PERMISSIONS = {
+  "environments": {
+    "name": "Environments",
+    "verbs": [
+      {
+        "name": "read_changesets",
+        "display_name": "Access Changesets in Environment"
+      },
+      {
+        "name": "read_contents",
+        "display_name": "Access Environment Contents"
+      },
+      {
+        "name": "read_systems",
+        "display_name": "Access Systems in Environment"
+      }
+    ],
+    "tags": [
+
+    ],
+    "global": False
+  },
+  "organizations": {
+    "name": "Organizations",
+    "verbs": [
+      {
+        "name": "read",
+        "display_name": "Access Organization"
+      },
+      {
+        "name": "read_systems",
+        "display_name": "Access Systems"
+      },
+      {
+        "name": "delete_systems",
+        "display_name": "Delete Systems"
+      }
+    ],
+    "tags": [
+
+    ],
+    "global": False
+  },
+  "all": {
+    "name": "All",
+    "verbs": [
+
+    ],
+    "tags": [
+
+    ],
+    "global": False
+  }
+}
+
+
+PERMISSIONS = [
+  {
+    "name": "test_environment_permission",
+    "resource_type": {
+      "name": "environments",
+      "created_at": "2011-12-21T10:39:58Z",
+      "updated_at": "2011-12-21T10:39:58Z",
+      "id": 4
+    },
+    "tags": [
+      {
+        "created_at": "2011-12-22T09:58:54Z",
+        "tag_id": 1,
+        "permission_id": 15,
+        "updated_at": "2011-12-22T09:58:54Z",
+        "id": 12,
+        "formatted": {
+          "name": 1,
+          "display_name": "Locker"
+        }
+      },
+      {
+        "created_at": "2011-12-22T09:58:54Z",
+        "tag_id": 1,
+        "permission_id": 15,
+        "updated_at": "2011-12-22T09:58:54Z",
+        "id": 13,
+        "formatted": {
+          "name": 1,
+          "display_name": "Locker"
+        }
+      }
+    ],
+    "created_at": "2011-12-22T09:58:54Z",
+    "all_verbs": False,
+    "updated_at": "2011-12-22T09:58:54Z",
+    "role_id": 1,
+    "all_tags": False,
+    "id": 15,
+    "verbs": [
+      {
+        "verb": "register_systems",
+        "created_at": "2011-12-22T09:57:50Z",
+        "permission_id": "15",
+        "updated_at": "2011-12-22T09:57:50Z",
+        "id": 5,
+        "verb_id": "5"
+      }
+    ],
+    "description": None,
+    "resource_type_id": 4,
+    "organization_id": 1
+  }
 ]

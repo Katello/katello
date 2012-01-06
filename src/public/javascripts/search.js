@@ -61,8 +61,12 @@ var favorite = (function() {
             client_common.destroy(url, favorite.success, favorite.error);
         },
         clear : function(data){
-        	$('#search').val('');
-        	$('#search_form').submit();
+            var search_form = $('#search_form'),
+                search_input = search_form.find('#search');
+
+            search_input.val('');
+            search_input.change();
+       	    $('#search_form').submit();
         	$('.qdropdown').hide();
         }
     }
