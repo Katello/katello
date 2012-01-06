@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.166
+Version:        0.1.167
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -346,6 +346,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Thu Jan 05 2012 Mike McCune <mmccune@redhat.com> 0.1.167-1
+- Periodic rebuild with tons of new stuff, check git for features
 * Wed Jan 04 2012 Shannon Hughes <shughes@redhat.com> 0.1.165-1
 - 766977 fixing org box dropdown mouse sensitivity (shughes@redhat.com)
 - Add elastic search to the debug collection (bkearney@redhat.com)
