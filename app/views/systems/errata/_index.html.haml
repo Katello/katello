@@ -3,7 +3,7 @@
 = javascript do
   :javascript
     localize({
-      "x_of_y_errata" : function(x,y){ return '#{_("Loaded %X of %Y Total")}'.replace("%X", x).replace("%Y", y); },
+      "x_of_y_errata" : function(x,y,z){ return '#{_("Viewing %X of %Y results (%Z Total Errata)")}'.replace("%X", x).replace("%Y", y).replace("%Z", z); },
       "errata_installing" : '#{_("Installing")}',
       "errata_install_finished" : '#{_("Finished")}'
       });
@@ -16,14 +16,15 @@
       #{_("Display")}
     %span
       = select_tag "display_errata_type", '<option value="All">All Errata</option><option>Bug</option><option>Enhancement</option><option>Security</option>'.html_safe
-    %span
-      = radio_button_tag "errata_state_radio", "outstanding", true
-      %label
-        #{_("Outstanding")}
-    %span
-      = radio_button_tag "errata_state_radio", "applied"
-      %label
-        #{_("Applied")}
+    -#
+      %span
+        = radio_button_tag "errata_state_radio", "outstanding", true
+        %label
+          #{_("Outstanding")}
+      %span
+        = radio_button_tag "errata_state_radio", "applied"
+        %label
+          #{_("Applied")}
 
 = content_for :content do
   - if errata.length > 0
@@ -32,7 +33,7 @@
         %thead
           - if editable
             %th
-              = check_box_tag "select_all_errata", "select_all_errata"
+              -# = check_box_tag "select_all_errata", "select_all_errata"
           %th
             #{_("TYPE")}
           %th
@@ -51,7 +52,7 @@
     - if errata.length > 0
       %a#load_more_errata{"data-scroll_url"=>url_for(system_errata_path(@system.id)), "data-page_size"=>current_user.page_size, "data-offset"=>offset, :class=>"fl"} #{_("Load %{n} More" % {:n => offset})}
       %span.fl{:id => 'loaded_summary', :style => 'margin-left: 20px;', 'data-total' => total_errata, "data-current_count" => offset }
-        #{_("Loaded of %{n} of %{t} Total" % {:n => offset, :t => total_errata })}
+        #{_("Viewing %{n} of %{t} results (%{t} Total Errata)" % {:n => offset, :t => total_errata })}
   
       - if editable
         %span.fr
