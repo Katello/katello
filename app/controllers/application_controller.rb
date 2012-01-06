@@ -277,9 +277,9 @@ class ApplicationController < ActionController::Base
   
     filters = search_options[:filter] || []
     load = search_options[:load] || false
-
+    all_rows = false
     if search.nil? || search== ''
-      search = '*'
+      all_rows = true
     elsif search_options[:simple_query] && AppConfig.simple_search_tokens.any?{|s| !search.downcase.match(s)}
       search = search_options[:simple_query]
     end
@@ -294,20 +294,29 @@ class ApplicationController < ActionController::Base
 
     begin
       results = obj_class.search :load=>load do
-         query { string search}
-         sort {by sort[0], sort[1] }
+        query do
+          if all_rows
+            all
+          else
+            string search
+          end
 
-         filters = [filters] if !filters.is_a? Array
-         if !filters.empty?
+        end
 
-           filters.each{|i|
-            filter  :terms, i
-           }
 
-         end
+        sort {by sort[0], sort[1].downcase }
 
-         size page_size
-         from start
+        filters = [filters] if !filters.is_a? Array
+        if !filters.empty?
+
+         filters.each{|i|
+          filter  :terms, i
+         }
+
+        end
+
+        size page_size
+        from start
       end
       @items = results
 
