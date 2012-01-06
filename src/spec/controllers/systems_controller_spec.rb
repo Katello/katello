@@ -19,8 +19,6 @@ describe SystemsController do
   include OrchestrationHelper
   include AuthorizationHelperMethods
 
-
-
   describe "rules" do
     let(:uuid) { '1234' }
     before (:each) do
@@ -53,8 +51,8 @@ describe SystemsController do
           end
 
           let(:before_success) do
-            controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
-              filters[:organization_id].should include(@organization.id)
+            controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
+              search_options[:filter][:organization_id].should include(@organization.id)
               controller.stub(:render)
             }
           end
@@ -78,8 +76,8 @@ describe SystemsController do
           end
           
           let(:before_success) do
-            controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
-              filters[:organization_id].should include(@organization.id)
+            controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
+              search_options[:filter][:organization_id].should include(@organization.id)
               controller.stub(:render)
             }
           end
@@ -143,9 +141,9 @@ describe SystemsController do
       @env2 = KTEnvironment.new(:name => 'env2', :prior => @env1.id, :organization => @organization)
       @env2.save!
 
-      controller.stub!(:errors)
       controller.stub!(:notice)
-
+      controller.stub(:search_validate).and_return(false)
+      
       Candlepin::Consumer.stub!(:create).and_return({:uuid => uuid, :owner => {:key => uuid}})
       Candlepin::Consumer.stub!(:update).and_return(true)
 
@@ -176,7 +174,7 @@ describe SystemsController do
 
       describe 'with an offset' do
         pending "should return a portion of systems" do
-          controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
+          controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
             options[:list_partial].should == "systems/list_systems"
             start.should == 25
             controller.stub(:render)
@@ -187,7 +185,7 @@ describe SystemsController do
       end
 
       it "should throw an exception when the search parameters are invalid" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         get :items, :search => 1
         response.should_not be_success
       end
@@ -218,7 +216,6 @@ describe SystemsController do
           @environment2.save!
           @system2 = System.create!(:name=>"verbose2", :environment => @environment2, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
           get :environments, :env_id => @environment2.id
-          assigns[:systems].should include System.find(@system2.id)
           response.should be_success
         end
       end
@@ -235,9 +232,11 @@ describe SystemsController do
         assigns[:system].name.should == "foo"
       end
 
-      it "should update a subscription" do
+      # The params to #update_subscriptions are entirely wrong here. The only reason the test
+      # used to pass was because the error handler was not passing back an error status
+      it "should not update a subscription" do
         put :update_subscriptions, { :id => @system.id, :system => { :name=> "foo" }}
-        response.should be_success
+        response.should_not be_success
       end
 
       it "should throw an error with bad parameters" do

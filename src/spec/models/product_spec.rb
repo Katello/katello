@@ -25,9 +25,10 @@ describe Product, :katello => true do
 
     @organization = Organization.create!(:name => ProductTestData::ORG_ID, :cp_key => 'admin-org-37070')
     @provider     = @organization.redhat_provider
-    @substitutor_mock = mock
-    @substitutor_mock.stub!(:substitute_vars).and_return do |path|
-      {{} =>  path}
+    @substitutor_mock = CDN::CdnVarSubstitutor.new("https://cdn.redhat.com", {:ssl_client_cert => "456",:ssl_ca_file => "fake-ca.pem", :ssl_client_key => "123"})
+    @substitutor_mock.stub!(:precalculate).and_return do |paths|
+      # we pretend, that all paths are substituted to themseves
+      @substitutor_mock.instance_variable_set("@precalculated_substitutions", Hash.new {|h,k| {{} => k} })
     end
 
     CDN::CdnVarSubstitutor.stub(:new => @substitutor_mock)
@@ -236,14 +237,18 @@ describe Product, :katello => true do
 
       describe "product major/minor versions" do
         before do
-          @substitutor_mock.stub!(:substitute_vars).and_return do |path|
+          @substitutor_mock.stub!(:precalculate).and_return do |paths|
             ret = {}
-            [ {"releasever" => "6Server", "basearch" => "x86_64"},
-              {"releasever" => "6.0", "basearch" => "x86_64"},
-              {"releasever" => "6.1", "basearch" => "x86_64"}].each do |substitutions|
-              ret[substitutions] = substitutions.inject(path) {|new_path,(var,val)| new_path.gsub("$#{var}", val)}
-             end
-            ret
+            paths.each do |path|
+              path_substitutions = {}
+              [ {"releasever" => "6Server", "basearch" => "x86_64"},
+                {"releasever" => "6.0", "basearch" => "x86_64"},
+                {"releasever" => "6.1", "basearch" => "x86_64"}].each do |substitutions|
+                path_substitutions[substitutions] = substitutions.inject(path) {|new_path,(var,val)| new_path.gsub("$#{var}", val)}
+              end
+              ret[path] = path_substitutions
+            end
+            @substitutor_mock.instance_variable_set("@precalculated_substitutions", ret)
           end
           env_product = mock_model(EnvironmentProduct, {:id => 1})
           EnvironmentProduct.stub(:find_or_create).and_return(env_product)

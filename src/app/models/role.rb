@@ -12,6 +12,15 @@
 
 class Role < ActiveRecord::Base
   include Authorization
+  include IndexedModel
+
+  index_options :extended_json=>:extended_index_attrs, :json=>{:except=>[]}
+
+  mapping do
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+  end
+
+
 
   acts_as_reportable
 
@@ -116,5 +125,12 @@ class Role < ActiveRecord::Base
 
   private
   READ_PERM_VERBS = [:read,:update, :create,:delete]
+
+  def extended_index_attrs
+    {:name_sort=>name.downcase,
+     :permissions=>self.permissions.collect{|p| p.name},
+    }
+  end
+
 
 end

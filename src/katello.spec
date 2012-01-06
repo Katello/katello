@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.163
+Version:        0.1.169
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -73,9 +73,7 @@ Requires:       rubygem(sass)
 Requires:       rubygem(chunky_png)
 Requires:       rubygem(tire)
 
-# bz 743816 temp fix until yum update makes to z stream
 %if 0%{?rhel} == 6
-Requires:       yum >= 3.2.29-21
 Requires:       redhat-logos >= 60.0.14
 %endif
 
@@ -348,6 +346,22 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Fri Jan 06 2012 Ivan Necas <inecas@redhat.com> 0.1.168-1
+- 771911 - keep facts on system update (inecas@redhat.com)
+
+* Thu Jan 05 2012 Mike McCune <mmccune@redhat.com> 0.1.167-1
+- Periodic rebuild with tons of new stuff, check git for features
+* Wed Jan 04 2012 Shannon Hughes <shughes@redhat.com> 0.1.165-1
+- 766977 fixing org box dropdown mouse sensitivity (shughes@redhat.com)
+- Add elastic search to the debug collection (bkearney@redhat.com)
+- 750117 - Fixes issue with duplicate search results being returned that
+  stemmed from pressing enter within the search field too many times.
+  (ehelms@redhat.com)
+- translated strings from zanata (shughes@redhat.com)
+- 752177 - Adds clearing of search hash when search input is cleared manually
+  or via Clear from dropdown. (ehelms@redhat.com)
+- 769905 remove yum 3.2.29 requirements from katello (shughes@redhat.com)
+
 * Wed Jan 04 2012 Ivan Necas <inecas@redhat.com> 0.1.163-1
 - periodic rebuild
 

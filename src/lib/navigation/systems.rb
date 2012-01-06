@@ -56,6 +56,12 @@ module Navigation
 
     def systems_navigation
       a = [
+        { :key => :general,
+          :name =>N_("Details"),
+          :if => lambda{@system},
+          :options => {:class=>"navigation_element"},
+          :items => systems_subnav
+        },
         { :key => :subscriptions,
           :name =>N_("Subscriptions"),
           :url => lambda{subscriptions_system_path(@system.id)},
@@ -75,19 +81,30 @@ module Navigation
           :if => lambda{@system},
           :options => {:class=>"navigation_element"}
         } if AppConfig.katello?
-      a << { :key => :facts,
+      a
+    end
+
+    def systems_subnav
+      [
+        { :key => :system_info,
+          :name =>N_("System Info"),
+          :url => lambda{edit_system_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"third_level navigation_element"},
+        },
+        { :key => :events,
+          :name =>_("Events"),
+          :url => lambda{system_events_path(@system.id)},
+          :if => lambda{@system},
+          :options => {:class=>"third_level navigation_element"},
+        },
+        { :key => :facts,
           :name =>N_("Facts"),
           :url => lambda{facts_system_path(@system.id)},
           :if => lambda{@system},
-          :options => {:class=>"navigation_element"}
-        }
-      a << { :key => :details,
-          :name =>N_("Details"),
-          :url => lambda{edit_system_path(@system.id)},
-          :if => lambda{@system},
-          :options => {:class=>"navigation_element"}
-        }
-      a
+          :options => {:class=>"third_level navigation_element"}
+        },
+      ]
     end
 
     def activation_keys_navigation

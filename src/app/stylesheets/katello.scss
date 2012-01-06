@@ -1260,10 +1260,12 @@ footer {
     float: left; }
   .arrow_icon {
     height: 11px;
-    width: 13px;
+    width: 9px;
+    top: 10px;
+    right: 10px;
+    position: relative;
     background: $arrow_icon;
     float: right;
-    margin: 10px 10px 0 0;
   }
   &.active {
     @include background-image(linear-gradient(rgb(61, 136, 151), rgb(121, 185, 199)));
@@ -1366,6 +1368,22 @@ footer {
   border: 1px solid $tree-border_color;
   background-color: $white_color;
   font-size: 120%;
+}
+
+.status_icons {
+    margin-right: 5px;
+     .check_icon {
+       width: 16px;
+       height: 16px;
+       @include action-icon($check_icon_black);
+       margin-left: 0px;
+     }
+
+     .error_icon {
+       width: 16px;
+       @include action-icon($warning_icon_black);
+       margin-left: 0px;
+     }
 }
 
 .validation_error_input {

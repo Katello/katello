@@ -296,11 +296,11 @@ module Glue::Pulp::Repo
     tasks
   end
 
-    def index_after_sync tasks
-      PulpTaskStatus::wait_for_tasks tasks
-      self.index_packages
-      #self.index_errata
-    end
+  def index_after_sync tasks
+    PulpTaskStatus::wait_for_tasks tasks
+    self.index_packages
+    #self.index_errata
+  end
 
 
   def sync_start
@@ -349,7 +349,7 @@ module Glue::Pulp::Repo
   def sync_status
     sync_statuses.first
   end
-    
+
   def sync_statuses
     @sync_status = self._get_most_recent_sync_status() if @sync_status.nil?
     @sync_status
@@ -360,7 +360,7 @@ module Glue::Pulp::Repo
     return ::PulpSyncStatus::Status::NOT_SYNCED if status.nil?
     status.state
   end
-    
+
   def synced?
     sync_history = self.sync_status
     !sync_history.nil? && successful_sync?(sync_history)
@@ -424,12 +424,12 @@ module Glue::Pulp::Repo
     begin
       history = [Pulp::Repository.sync_status(pulp_id)]
     rescue
-      history = Pulp::Repository.sync_history(pulp_id) 
+      history = Pulp::Repository.sync_history(pulp_id)
     end
     return [::PulpSyncStatus.new(:state => ::PulpSyncStatus::Status::NOT_SYNCED)] if (history.nil? or history.empty?)
     history.collect{|item| ::PulpSyncStatus.using_pulp_task(item)}
   end
-    
+
   private
 
   def get_groupid_param name

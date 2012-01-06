@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe FiltersController, :katello => true do
 
-
   include LoginHelperMethods
   include LocaleHelperMethods
   include ProductHelperMethods
@@ -10,16 +9,15 @@ describe FiltersController, :katello => true do
   include AuthorizationHelperMethods
   include OrchestrationHelper
 
-
   before(:each) do
 
       set_default_locale
       login_user
       disable_filter_orchestration
       disable_product_orchestration
+      controller.stub(:search_validate).and_return(true)
 
   end
-
 
   describe "Controller tests" do
     before(:each) do
@@ -38,10 +36,11 @@ describe FiltersController, :katello => true do
 
     describe "GET items" do
       it "requests filters using search criteria" do
-
+        controller.should_receive(:render_panel_direct)
+        controller.stub(:render)
         get :items
         response.should be_success
-        assigns(:items)
+        
       end
     end
 
@@ -54,13 +53,12 @@ describe FiltersController, :katello => true do
       end
 
       it "posts to create a filter should not be sucessful if no name" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         post :create, :filter => {}
         response.should_not be_success
       end
 
     end
-
 
     describe "edit a filter" do
       it "should recieve a valid filter for edit" do
@@ -69,7 +67,7 @@ describe FiltersController, :katello => true do
       end
 
       it "should not recieve a valid filter for edit a non-existant id" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         get :edit, :id=>-1
         response.should_not be_success
       end
@@ -82,7 +80,7 @@ describe FiltersController, :katello => true do
       end
 
       it "should not recieve a valid filter for edit a non-existant id" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         get :products, :id=>-1
         response.should_not be_success
       end
@@ -95,7 +93,7 @@ describe FiltersController, :katello => true do
       end
 
       it "should not recieve a valid filter for edit a non-existant id" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         get :packages, :id=>-1
         response.should_not be_success
       end
@@ -136,7 +134,7 @@ describe FiltersController, :katello => true do
       end
       
       it "should not be successful with a valid filter" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         delete :destroy, :id=>-12343
         response.should_not be_success
       end
@@ -167,7 +165,7 @@ describe FiltersController, :katello => true do
       end
 
       it "should not allow for updating of products for an invalid filter" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         post :update_products, :id=>"-1", :products=>[@product.id]
         response.should_not be_success
       end
@@ -217,12 +215,12 @@ describe FiltersController, :katello => true do
       let(:unauthorized_user) do
         user_without_permissions
       end
-      let(:on_success) do
-        assigns(:items).should_not include @filter2
-        assigns(:items).should include @filter
+      let(:before_success) do
+        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
+          search_options[:filter][:organization_id].should include(@organization.id)
+          controller.stub(:render)
+        }
       end
-
-      
       it_should_behave_like "protected action"
     end
 

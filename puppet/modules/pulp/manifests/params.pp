@@ -10,7 +10,7 @@ class pulp::params {
   $repo_auth = true
 
   #repos
-  $cert_location               = "/etc/pki/content"
+  $cert_location               = "/etc/pki/pulp/content"
   $global_cert_location        = $cert_location
   $protected_repo_listing_file = "${cert_location}/pulp-protected-repos"
   #crl
