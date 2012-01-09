@@ -12,6 +12,7 @@
 
 class Api::PingController < Api::ApiController
 
+  # anyone who is authenticated can ask for status
   skip_before_filter :authorize
 
   def index
@@ -21,5 +22,4 @@ class Api::PingController < Api::ApiController
   def status
     render :json => {:version => "katello/#{AppConfig.katello_version}", :result => true}
   end
-
 end
