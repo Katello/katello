@@ -304,7 +304,7 @@ class ApplicationController < ActionController::Base
         end
 
 
-        sort {by sort[0], sort[1].downcase }
+        sort {by sort[0], sort[1].to_s.downcase }
 
         filters = [filters] if !filters.is_a? Array
         if !filters.empty?
