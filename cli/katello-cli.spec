@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jan 09 2012 Shannon Hughes <shughes@redhat.com> 0.1.34-2
+- se build (shughes@redhat.com)
+
 * Fri Jan 06 2012 Ivan Necas <inecas@redhat.com> 0.1.34-1
 - 771911 - CLI - update success message after system update (inecas@redhat.com)
 
