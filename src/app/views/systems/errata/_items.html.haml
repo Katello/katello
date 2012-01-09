@@ -14,3 +14,5 @@
         = image_tag('spinner.gif', :alt => _('Loading'))
         %span.errata_status_text
           #{_('Installing')}
+    %td      
+      %span.details-icon.errata-info{ "data-title" => e.title, "data-issued" => e.issued, "data-description" => e.description, "data-id" => e.id, "data-packages" => e.pkglist.to_json }
