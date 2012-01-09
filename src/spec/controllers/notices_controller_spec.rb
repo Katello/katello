@@ -21,7 +21,6 @@ describe NoticesController do
     @user = login_user :mock => false
     set_default_locale
     
-    controller.stub!(:errors)
     controller.stub!(:notice)
   end
   

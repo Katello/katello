@@ -14,49 +14,176 @@ class SystemTask < ActiveRecord::Base
   belongs_to :system
   belongs_to :task_status
 
+  TYPES = {
+      #package tasks
+     :package_install => {
+          :english_name =>N_("Package Install"),
+          :type => :package,
+          :event_messages => {
+              :running => [N_('installing package...'),N_('installing packages...')],
+              :waiting => [N_('installing package...'),N_('installing packages...')],
+              :finished => [N_('%s package install'), N_('%s (%s other packages) install.')],
+              :error=> [N_('%s package install failed'), N_('%s (%s other packages) install failed')],
+              :cancelled => [N_('%s package install cancelled'), N_('%s (%s other packages) install cancelled')],
+              :timed_out =>[N_('%s package install timed out'), N_('%s (%s other packages) install timed out')],
+          },
+         :user_message => _('Package Install scheduled by %s')
 
-  TYPES = { :package_install => {:name => _("Package Install")},
-            :package_update =>  {:name => _("Package Update")},
-            :package_remove => {:name => _("Package Remove")},
-            :package_group_install => { :name => _("Package Group Install")},
-            :package_group_update => {:name => _("Package Group Update")},
-            :package_group_remove => {:name => _("Package Group Remove")},
+      },
+      :package_update => {
+          :english_name =>N_("Package Update"),
+          :type => :package,
+          :event_messages => {
+              :running => [N_('updating package...'), N_('updating packages...')],
+              :waiting => [N_('updating package...'), N_('updating packages...')],
+              :finished =>[ N_('%s package update'), N_('%s (%s other packages) update')],
+              :error => [N_('%s package update failed'), N_('%s (%s other packages) update failed')],
+              :cancelled =>[N_('%s package update cancelled'), N_('%s (%s other packages) update cancelled')],
+              :timed_out =>[N_('%s package update timed out'), N_('%s (%s other packages) update timed out')],
+          },
+          :user_message => _('Package Update scheduled by %s')
+      },
+      :package_remove => {
+          :english_name =>N_("Package Remove"),
+          :type => :package,
+          :event_messages => {
+              :running => [N_('removing package...'), N_('removing packages...')],
+              :waiting => [N_('removing package...'), N_('removing packages...')],
+              :finished => [N_('%s package removal'), N_('%s (%s other packages) removal')],
+              :error => [N_('%s package remove failed'), N_('%s (%s other packages) remove failed')],
+              :cancelled => [N_('%s package remove cancelled'), N_('%s (%s other packages) remove cancelled')],
+              :timed_out => [N_('%s package remove timed out'), N_('%s (%s other packages) remove timed out')],
+          },
+          :user_message => _('Package Remove scheduled by %s')
+      },
+      #package group tasks
+      :package_group_install => {
+          :english_name =>N_("Package Group Install"),
+          :type => :package_group,
+          :event_messages => {
+              :running => [N_('installing package group...'),N_('installing package groups...')],
+              :waiting => [N_('installing package group...'),N_('installing package groups...')],
+              :finished => [N_('%s package group install'), N_('%s (%s other package groups) install')],
+              :error=> [N_('%s package group install failed'), N_('%s (%s other package groups) install failed')],
+              :cancelled => [N_('%s package group install cancelled'), N_('%s (%s other package groups) install cancelled')],
+              :timed_out =>[N_('%s package group install timed out'), N_('%s (%s other package groups) install timed out')],
+          },
+          :user_message => _('Package Group Install scheduled by %s')
+      },
+      :package_group_update => {
+          :english_name =>N_("Package Group Update"),
+          :type => :package_group,
+          :event_messages => {
+              :running => [N_('updating package group...'), N_('updating package groups...')],
+              :waiting => [N_('updating package group...'), N_('updating package groups...')],
+              :finished =>[ N_('%s package group update'), N_('%s (%s other package groups) update')],
+              :error => [N_('%s package group update failed'), N_('%s (%s other package groups) update failed')],
+              :cancelled =>[N_('%s package group update cancelled'), N_('%s (%s other package groups) update cancelled')],
+              :timed_out =>[N_('%s package group update timed out'), N_('%s (%s other package groups) update timed out')],
+
+          },
+          :user_message => _('Package Group Update scheduled by %s')
+      },
+      :package_group_remove => {
+          :english_name =>N_("Package Group Remove"),
+          :type => :package_group,
+          :event_messages => {
+              :running => [N_('removing package group...'), N_('removing package groups...')],
+              :waiting => [N_('removing package group...'), N_('removing package groups...')],
+              :finished => [N_('%s package group removal'), N_('%s (%s other package groups) removal')],
+              :error => [N_('%s package group remove failed'), N_('%s (%s other package groups) remove failed')],
+              :cancelled => [N_('%s package group remove cancelled'), N_('%s (%s other package groups) remove cancelled')],
+              :timed_out => [N_('%s package group remove timed out'), N_('%s (%s other package groups) remove timed out')],
+
+          },
+          :user_message => _('Package Group Remove scheduled by %s')
+      },
+
   }.with_indifferent_access
 
+  TYPES.each_pair do |name, value|
+    value[:name] = _(value[:english_name])
+  end
 
-  def self.refresh(ids)
-    ids.each do |id|
-      TaskStatus.find(id).refresh_pulp
+
+  class << self
+    def pending_message_for task
+      details = SystemTask::TYPES[task.task_type]
+      case details[:type]
+        when :package
+          p = task.parameters[:packages]
+          unless p && p.length > 0
+            if "package_update" == task.task_type
+              return _("all packages")
+            end
+            return ""
+          end
+          if p.length == 1
+            return p.first
+          else
+            return  _("%s (%s other packages)") % [p.first, p.length - 1]
+          end
+      end
+
+    end
+    def message_for task
+      details = SystemTask::TYPES[task.task_type]
+      case details[:type]
+        when :package
+          p = task.parameters[:packages]
+          unless p && p.length > 0
+            if "package_update" == task.task_type
+              case task.state
+                when "running"
+                  return "updating"
+                when "waiting"
+                  return "updating"
+                when "error"
+                  return _("all packages update failed")
+                else
+                  return _("all packages update")
+              end
+            end
+            return ""
+          end
+          msg = details[:event_messages][task.state]
+          return n_(msg[0], msg[1], p.length) % [p.first, p.length - 1]
+      end
+    end
+
+    def refresh(ids)
+      unless ids.nil? || ids.empty?
+        uuids = TaskStatus.select(:uuid).where(:id => ids).collect{|t| t.uuid}
+        ret = Pulp::Task.find(uuids)
+        ret.each do |pulp_task|
+          PulpTaskStatus.dump_state(pulp_task, TaskStatus.find_by_uuid(pulp_task["id"]))
+        end
+      end
+    end
+
+    def refresh_for_system(sid)
+      query = SystemTask.select(:task_status_id).joins(:task_status).where(:system_id => sid)
+      ids = query.where("task_statuses.state"=>[:waiting, :running]).collect {|row| row[:task_status_id]}
+      refresh(ids)
+      TaskStatus.where("task_statuses.id in (#{query.to_sql})")
+    end
+
+    def make system, pulp_task, task_type, parameters
+      task_status = TaskStatus.new(
+         :organization => system.organization,
+         :task_type => task_type,
+         :parameters => parameters,
+         :systems => [system]
+      )
+      task_status.merge_pulp_task!(pulp_task)
+      task_status.save!
+      task_status.system_tasks.first
     end
   end
 
-  def self.refresh_for_system(sid)
-    query = SystemTask.select(:task_status_id).joins(:task_status).where(:system_id => sid)
-    ids = query.where("task_statuses.state"=>[:waiting, :running]).collect {|row| row[:task_status_id]}
-    refresh(ids)
-    TaskStatus.where("task_statuses.id in (#{query.to_sql})")
-  end
-
-  def self.make system, pulp_task, task_type, parameters
-    task_status = PulpTaskStatus.using_pulp_task(pulp_task) do |t|
-       t.organization = system.organization
-       t.task_type = task_type
-       t.parameters = parameters
-    end
-    task_status.save!
-
-    system_task = SystemTask.create!(:system => system, :task_status => task_status)
-    system_task
-  end
-
+  # non self methods
   def humanize_type
-    { :package_install => _("Package Install"),
-      :package_update =>  _("Package Update"),
-      :package_remove => _("Package Remove"),
-      :package_group_install => _("Package Group Install"),
-      :package_group_update => _("Package Group Update"),
-      :package_group_remove => _("Package Group Remove"),
-    }[task_status.task_type.to_sym].to_s
+    TYPES[task_status.task_type][:name]
   end
 
   def humanize_parameters
@@ -141,7 +268,7 @@ class SystemTask < ActiveRecord::Base
       else
       verb = case action
              when :removed then _("removed")
-             else ("installed")
+             else _("installed")
              end
       ret << packages.map{|i| "#{i} #{verb}"}.join("\n")
       end
@@ -172,6 +299,5 @@ class SystemTask < ActiveRecord::Base
     ret[:system_name] = system.name
     ret
   end
-
 
 end

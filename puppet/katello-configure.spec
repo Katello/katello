@@ -2,8 +2,8 @@
 %global homedir %{_datarootdir}/katello/install
 
 Name:           katello-configure
-Version:        0.1.49
-Release:        2%{?dist}
+Version:        0.1.52
+Release:        1%{?dist}
 Summary:        Configuration tool for Katello
 
 Group:          Applications/Internet
@@ -56,8 +56,15 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
-* Tue Jan 03 2012 Shannon Hughes <shughes@redhat.com> 0.1.49-2
-- se build (shughes@redhat.com)
+* Mon Jan 09 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.52-1
+- 772574 - enabling pulp-testing repo
+
+* Fri Jan 06 2012 Ivan Necas <inecas@redhat.com> 0.1.51-1
+- 768420 - config Pulp for new content location (for Pulp 0.1.256) (inecas@redhat.com)
+
+* Fri Jan 06 2012 Ivan Necas <inecas@redhat.com> 0.1.50-1
+- 772210 - make /var/run/elasticsearch dir to fix installation
+  (inecas@redhat.com)
 
 * Tue Jan 03 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.49-1
 - 771352 - SAM does not need to use the katello-jobs

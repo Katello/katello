@@ -11,6 +11,7 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class TaskStatus < ActiveRecord::Base
+  serialize :result
   serialize :progress
   serialize :result
   serialize :parameters, Hash
@@ -22,11 +23,58 @@ class TaskStatus < ActiveRecord::Base
     CANCELED = :canceled
     TIMED_OUT = :timed_out
   end
-
+  include IndexedModel
   include Authorization
   belongs_to :organization
-
+  belongs_to :user
   before_save :setup_task_type
+
+  has_many :system_tasks
+  has_many :systems, :through => :system_tasks 
+
+  before_save do |status|
+    unless status.user
+      status.user = User.current
+    end
+  end
+
+  index_options :json=>{:only=> [:parameters, :result,
+                     :organization_id, :system_ids, :start_time, :finish_time ]},
+                :extended_json=>:extended_index_attrs
+
+  mapping do
+   indexes :start_time, :type=>'date'
+   indexes :finish_time, :type=>'date'
+   indexes :status, :type=>'string', :analyzer => 'snowball'
+  end
+
+  def extended_index_attrs
+    ret = {}
+    ret[:username] = user.username if user
+
+    ret[:status] = state.to_s
+    ret[:status] += " pending" if pending?
+    if state.to_s == "error" || state.to_s == "timed_out"
+      ret[:status] += " fail failure"
+    end
+
+    case state.to_s
+      when "finished"
+        ret[:status] += " completed"
+      when "timed_out"
+        ret[:status] += " timed out"
+    end
+
+    if task_type
+      tt = task_type
+      unless system_tasks.nil? ||  system_tasks.empty?
+        tt = SystemTask::TYPES[task_type][:english_name]
+      end
+      ret[:status] +=" #{tt}"
+    end
+    ret
+  end
+
 
   def initialize(attrs = nil)
     unless attrs.nil?
@@ -53,11 +101,27 @@ class TaskStatus < ActiveRecord::Base
     self
   end
 
+  def merge_pulp_task!(pulp_task)
+    PulpTaskStatus.dump_state(pulp_task, self)
+  end
 
   def refresh_pulp
     PulpTaskStatus.refresh(self)
   end
 
+  def pending?
+    self.state.to_s == "waiting" || self.state.to_s == "running"
+  end
+
+  def as_json(options = {})
+    json = super :methods => :pending?
+    json.merge(options) if options
+  end
+
+  # used by search  to filter tasks by systems :)
+  def system_filter_clause
+    {:system_ids => system_ids}
+  end
 
   protected
   def setup_task_type

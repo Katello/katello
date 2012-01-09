@@ -610,7 +610,7 @@ class Update(SystemAction):
         response = self.api.update(system_uuid, updates)
 
         if is_valid_record(response):
-            print _("Successfully updated system [ %s ]") % systems[0]['name']
+            print _("Successfully updated system [ %s ]") % response['name']
         else:
             print _("Could not update system [ %s ]") % systems[0]['name']
 

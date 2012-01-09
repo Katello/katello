@@ -10,6 +10,7 @@ describe SyncPlansController do
   describe "rules" do
     before (:each) do
       new_test_org
+      controller.stub(:search_validate).and_return(true)
     end
     describe "GET index" do
       before do
@@ -43,7 +44,7 @@ describe SyncPlansController do
     before (:each) do
       login_user
       set_default_locale
-
+      controller.stub(:search_validate).and_return(true)
       @org = new_test_org
       controller.stub!(:current_organization).and_return(@org)
     end
@@ -77,7 +78,7 @@ describe SyncPlansController do
       end
 
       it "should have a valid date" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         plan_create[:sync_plan].should_not be_nil
         data = plan_create
         data[:sync_plan][:plan_date] = '01/101/11'
@@ -87,7 +88,7 @@ describe SyncPlansController do
       end
 
       it "should have a unique name" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         SyncPlan.create!  :name => 'myplan', :interval => 'weekly', :sync_date => DateTime.now, :organization => controller.current_organization
         SyncPlan.first.should_not be_nil
         post :create, plan_create
@@ -95,7 +96,7 @@ describe SyncPlansController do
       end
 
       it "should not have a nil name" do
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         data = plan_create
         data[:sync_plan][:name] = ''
         post :create, data
@@ -164,21 +165,21 @@ describe SyncPlansController do
 
       it "should not update bad sync dates" do
         SyncPlan.first.should_not be_nil
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         put :update, :id => @plan.id, :sync_plan => {:date => '11/111111/11'}
         response.should_not be_success
       end
 
       it "should not update bad sync time" do
         SyncPlan.first.should_not be_nil
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         put :update, :id => @plan.id, :sync_plan => {:time => '30:00 pmm'}
         response.should_not be_success
       end
 
       it "should not update a blank name" do
         SyncPlan.first.should_not be_nil
-        controller.should_receive(:errors)
+        controller.should_receive(:notice).with(anything(), hash_including(:level => :error))
         put :update, :id => @plan.id, :sync_plan => {:name => ''}
         response.should_not be_success
       end

@@ -53,7 +53,7 @@ class RepositoriesController < ApplicationController
     begin
       repo_params = params[:repo]
       raise _('Invalid Url') if !kurl_valid?(repo_params[:feed])
-      gpg = GpgKey.readable(current_organization).find(repo_params[:gpg_key]) if repo_params[:gpg_key] != ""
+      gpg = GpgKey.readable(current_organization).find(repo_params[:gpg_key]) if repo_params[:gpg_key] and repo_params[:gpg_key] != ""
       # Bundle these into one call, perhaps move to Provider
       # Also fix the hard coded yum
       @product.add_repo(repo_params[:name], repo_params[:feed], 'yum', gpg)
@@ -61,7 +61,7 @@ class RepositoriesController < ApplicationController
 
     rescue Exception => error
       Rails.logger.error error.to_s
-      errors error
+      notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
     end
     notice _("Repository '#{repo_params[:name]}' created.")
@@ -82,7 +82,7 @@ class RepositoriesController < ApplicationController
       notice _("Repository '#{@repository.name}' updated.")
     rescue Exception => error
       Rails.logger.error error.to_s
-      errors error
+      notice error, {:level => :error}
       render :text=> error.to_s, :status=>:bad_request and return
     end
     render :text => escape_html(result)
@@ -120,7 +120,7 @@ class RepositoriesController < ApplicationController
     begin
       @provider = Provider.find(params[:provider_id])
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
     end
@@ -130,7 +130,7 @@ class RepositoriesController < ApplicationController
     begin
       @product = Product.find(params[:product_id])
     rescue Exception => error
-      errors error.to_s
+      notice error.to_s, {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
     end
@@ -140,7 +140,7 @@ class RepositoriesController < ApplicationController
     begin
       @repository = Repository.find(params[:id])
     rescue Exception => error
-      errors _("Couldn't find repository with ID=#{params[:id]}")
+      notice _("Couldn't find repository with ID=#{params[:id]}"), {:level => :error}
       execute_after_filters
       render :text => error, :status => :bad_request
     end

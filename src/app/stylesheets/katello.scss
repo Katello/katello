@@ -869,6 +869,10 @@ footer {
       width: 0;
       z-index: 220;
     }
+    &:hover {
+        background-color: darken($kselected_color, 10%);
+        .arrow-right { border-left-color:darken($kselected_color, 10%); }
+    }
     a, a:hover, a:visited, a:active, a:link {
      font-color: $white_color;
     }
@@ -1031,7 +1035,6 @@ footer {
     padding: 4px;
     height: 2.7em;
     &:hover {
-      background-color: $listhover_color;
       color: $white_color;
       
       .st_button {
@@ -1368,6 +1371,22 @@ footer {
   border: 1px solid $tree-border_color;
   background-color: $white_color;
   font-size: 120%;
+}
+
+.status_icons {
+    margin-right: 5px;
+     .check_icon {
+       width: 16px;
+       height: 16px;
+       @include action-icon($check_icon_black);
+       margin-left: 0px;
+     }
+
+     .error_icon {
+       width: 16px;
+       @include action-icon($warning_icon_black);
+       margin-left: 0px;
+     }
 }
 
 .validation_error_input {

@@ -12,11 +12,20 @@
 
 class SyncPlan < ActiveRecord::Base
   include Glue
+  include IndexedModel
 
-  NONE = 'none';
-  HOURLY = 'hourly';
-  DAILY = 'daily';
-  WEEKLY = 'weekly';
+  index_options :extended_json=>:extended_index_attrs
+
+  mapping do
+    indexes :name_sort, :type => 'string', :index => :not_analyzed
+    indexes :sync_date, :type=>'date'
+  end
+
+  
+  NONE = 'none'
+  HOURLY = 'hourly'
+  DAILY = 'daily'
+  WEEKLY = 'weekly'
   TYPES = [NONE, HOURLY, DAILY, WEEKLY]
   DURATION = { NONE => '', HOURLY => 'T1H', DAILY => 'T24H', WEEKLY => '7D' }
   WEEK_DAYS = (%W(Sunday Monday Tuesday Wednesday Thursday Friday)).collect{|d| N_(d)}
@@ -64,4 +73,9 @@ class SyncPlan < ActiveRecord::Base
   def plan_zone
     self.sync_date.strftime('%Z')
   end
+
+  def extended_index_attrs
+    {:name_sort=>name.downcase}
+  end
+
 end

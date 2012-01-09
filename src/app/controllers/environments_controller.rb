@@ -123,7 +123,7 @@ class EnvironmentsController < ApplicationController
   def find_organization
     org_id = params[:organization_id] || params[:org_id]
     @organization = Organization.first(:conditions => {:cp_key => org_id})
-    errors _("Couldn't find organization '#{org_id}'") if @organization.nil?
+    notice _("Couldn't find organization '#{org_id}'"), {:level => :error} if @organization.nil?
   end
 
   def find_environment
@@ -131,7 +131,7 @@ class EnvironmentsController < ApplicationController
       env_id = (params[:id].blank? ? nil : params[:id]) || params[:env_id]
       @environment = KTEnvironment.find env_id
     rescue Exception => error
-      errors _("Couldn't find environment with ID=#{env_id}")
+      notice _("Couldn't find environment with ID=#{env_id}", {:level => :error})
       execute_after_filters
       render :text => error, :status => :bad_request
     end

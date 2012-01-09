@@ -28,7 +28,6 @@ class SystemTemplate < ActiveRecord::Base
   include LazyAccessor
   include AsyncOrchestration
 
-  #has_many :products
   belongs_to :environment, :class_name => "KTEnvironment", :inverse_of => :system_templates
   has_and_belongs_to_many :changesets
 
@@ -58,7 +57,7 @@ class SystemTemplate < ActiveRecord::Base
   after_initialize :save_content_state
   before_save :update_revision
   before_destroy :check_children
-
+  after_save :update_related_index
 
   def init_parameters
     ActiveSupport::JSON.decode((self.parameters_json or "{}"))
@@ -391,6 +390,15 @@ class SystemTemplate < ActiveRecord::Base
 
   protected
 
+  def update_related_index
+    if self.name_changed?
+      keys = ActivationKey.where(:system_template_id=>self.id)
+      ActivationKey.index_import(keys) if !keys.empty?
+      changesets =  Changeset.joins(:system_templates).where("system_templates.id"=>self.id)
+      Changeset.index_import(changesets) if !changesets.empty?
+    end
+  end
+
   def promote_template from_env, to_env
     #clone the template
     tpl_copy = to_env.system_templates.find_by_name(self.name)
@@ -424,9 +432,9 @@ class SystemTemplate < ActiveRecord::Base
         p = p.with_indifferent_access
 
         #check if there's where to promote them
-        repo = Repository.find_by_pulp_id(p[:repo_id])
+        repo = Repository.find(p[:repo_id])
         if repo.is_cloned_in? to_env
-          #remember the packages in a hash, we add them all together in one time
+          #remember the packages in a hash, we add them all one time
           clone = repo.get_clone to_env
           pkgs_promote[clone] ||= []
           pkgs_promote[clone] << p[:id]
