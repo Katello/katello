@@ -59,10 +59,10 @@ class Filter < ActiveRecord::Base
 
   def self.list_verbs  global = false
     {
-       :create => N_("Create Package Filters"),
-       :read => N_("Access Package Filters"),
-       :delete => N_("Delete Package Filters"),
-       :update => N_("Edit Package Filters")
+       :create => _("Administer Package Filters"),
+       :read => _("Read Package Filters"),
+       :delete => _("Delete Package Filters"),
+       :update => _("Modify Package Filters")
     }.with_indifferent_access
   end
 

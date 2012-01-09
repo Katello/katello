@@ -112,10 +112,10 @@ class Role < ActiveRecord::Base
 
   def self.list_verbs global = false
     {
-    :create => N_("Create Roles"),
-    :read => N_("Access Roles"),
-    :update => N_("Update Roles"),
-    :delete => N_("Delete Roles"),
+    :create => _("Administer Roles"),
+    :read => _("Read Roles"),
+    :update => _("Modify Roles"),
+    :delete => _("Delete Roles"),
     }.with_indifferent_access
   end
 
