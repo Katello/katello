@@ -126,7 +126,6 @@ class Organization < ActiveRecord::Base
     :create => _("Administer Organization"),
     :delete => _("Delete Organization")
     }) if global
-
     org_verbs.with_indifferent_access
 
   end
