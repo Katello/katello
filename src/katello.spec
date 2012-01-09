@@ -346,6 +346,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Mon Jan 09 2012 Shannon Hughes <shughes@redhat.com> 0.1.171-2
+- se build (shughes@redhat.com)
 * Fri Jan 06 2012 Mike McCune <mmccune@redhat.com> 0.1.170-1
 - updated translation strings (shughes@redhat.com)
 - Bug 768953 - Creating a new system from the webui fails to display
