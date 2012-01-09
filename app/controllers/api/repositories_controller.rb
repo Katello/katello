@@ -26,11 +26,6 @@ class Api::RepositoriesController < Api::ApiController
     render :json => content
   end
 
-  def index
-    render :json => Repository.where(:enabled => true) if not query_params[:include_disabled]
-    render :json => Repository.all if query_params[:include_disabled]
-  end
-
   def show
     render :json => @repository.to_hash
   end
