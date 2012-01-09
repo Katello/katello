@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/katello-configure.1*
 
 %changelog
+* Mon Jan 09 2012 Shannon Hughes <shughes@redhat.com> 0.1.52-2
+- se build (shughes@redhat.com)
+
 * Mon Jan 09 2012 Lukas Zapletal <lzap+git@redhat.com> 0.1.52-1
 - 772574 - enabling pulp-testing repo
 
