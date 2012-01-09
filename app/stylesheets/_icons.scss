@@ -3,7 +3,7 @@
   float: left;
   width: 16px;
   height: 16px;
-  margin-top: 4px;
+  margin-top: 0px;
 }
 .security_icon {
   background: $shield_icon_black;
@@ -16,4 +16,9 @@
 .bugzilla_icon {
   background: $bug_icon_black;
   @extend .errata_icon;
+}
+.details-icon {
+  background: $details_icon_grey;
+  @extend .errata_icon;
+  &:hover { background: $details_icon_black; }
 }
