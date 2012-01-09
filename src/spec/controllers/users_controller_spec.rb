@@ -24,6 +24,7 @@ describe UsersController do
     disable_user_orchestration
     login_user
     set_default_locale
+    controller.stub(:search_validate).and_return(true)
   end
 
   describe "create a user" do

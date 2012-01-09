@@ -66,13 +66,6 @@ class ChangesetsController < ApplicationController
         :filter=>[{:environment_id=>[@environment.id]}, {:state=>[Changeset::PROMOTED]}])
   end
 
-  #similar to index, but only renders the actual list of the 2 pane
-  def list
-    @changesets = @environment.changeset_history.search_for(params[:search]).limit(current_user.page_size)
-    @columns = ['name'] #from index
-    render :partial=>"list", :locals=>{:name=>controller_display_name}
-  end
-
   def edit
     render :partial=>"edit", :layout => "tupane_layout", :locals=>{:editable=>@environment.changesets_manageable?, :name=>controller_display_name}
   end
@@ -137,22 +130,14 @@ class ChangesetsController < ApplicationController
     if params[:name]
       @changeset.name = params[:name]
       @changeset.save!
-      
-      if not Changeset.where(:id => @changeset.id).search_for(params[:search]).include?(@changeset)
-        notice _("'#{@changeset["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
-      end
-      
+
       render :json=>{:name=> params[:name], :timestamp => @changeset.updated_at.to_i.to_s} and return
     end
 
     if params[:description]
       @changeset.description = params[:description]
       @changeset.save!
-      
-      if not Changeset.where(:id => @changeset.id).search_for(params[:search]).include?(@changeset)
-        notice _("'#{@changeset["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
-      end
-      
+            
       render :json=>{:description=> params[:description], :timestamp => @changeset.updated_at.to_i.to_s} and return
     end
 
