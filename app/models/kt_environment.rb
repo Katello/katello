@@ -312,14 +312,14 @@ class KTEnvironment < ActiveRecord::Base
 
   def self.list_verbs global = false
     {
-      :read_contents => N_("Access Environment Contents"),
-      :read_systems => N_("Access Systems in Environment"),
-      :register_systems =>N_("Register Systems in Environment"),
-      :update_systems => N_("Manage Systems in Environment"),
-      :delete_systems => N_("Remove Systems in Environment"),
-      :read_changesets => N_("Access Changesets in Environment"),
-      :manage_changesets => N_("Manage Changesets in Environment"),
-      :promote_changesets => N_("Promote Changesets in Environment")
+      :read_contents => _("Read Environment Contents"),
+      :read_systems => _("Read Systems in Environment"),
+      :register_systems =>_("Register Systems in Environment"),
+      :update_systems => _("Modify Systems in Environment"),
+      :delete_systems => _("Remove Systems in Environment"),
+      :read_changesets => _("Read Changesets in Environment"),
+      :manage_changesets => _("Administer Changesets in Environment"),
+      :promote_changesets => _("Promote Changesets in Environment")
     }.with_indifferent_access
   end
 
