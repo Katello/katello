@@ -32,6 +32,7 @@ KT.system.errata = function() {
     		$('#errata_state_radio_outstanding').bind('change', filter_errata);
             $('#run_errata_button').bind('click', add_errata);
     		load_more.bind('click', get_errata);
+            $('.errata-info').tipsy({ gravity: 'e', live : true, html : true, title : generateInfoToolTip, hoverable : true, delayOut : 250, opacity : 1 });
     	},
         init_status_check = function(){
             var timeout = 8000;
@@ -194,6 +195,33 @@ KT.system.errata = function() {
             }
 
             return rows;
+        },
+        generateInfoToolTip = function(){
+            var html = '',
+                element = $(this),
+                packages_list = [],
+                generate_packages = function(){
+                    var packages = element.data('packages')[0]["packages"],
+                        i = 0, 
+                        length = packages.length,
+                        html = "";
+                    
+                    for(i; i < length; i += 1){
+                        html += "<li>" + packages[i]["filename"] + '</li>';
+                    }
+
+                    return html;
+                }; 
+           
+            packages_list = generate_packages();
+
+            html += '<div style="margin:5px 0;"><label class="fl ra">ID:</label>' + '<p>' + element.data('id') + '</p></div>';
+            html += '<div style="margin:5px 0;"><label class="fl ra">Title:</label>' + '<p>' + element.data('title') + '</p></div>';
+            html += '<div style="margin:5px 0;"><label class="fl ra">Issued:</label>' + '<p>' + element.data('issued') + '</p></div>';
+            html += '<div style="margin:5px 0;"><label class="fl ra">Description:</label>' + '<p><br/>' + element.data('description') + '</p></div>';
+            html += '<div style="margin:5px 0;"><label class="fl" style="text-align:left;">Packages:</label>' + '<ul style="margin:0 0 0 4px;" class="la"><br/>' + packages_list + '</ul></div>';            
+
+            return html;
         };
 	    
     return {
