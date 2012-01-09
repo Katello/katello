@@ -118,10 +118,10 @@ class Provider < ActiveRecord::Base
 
   def self.list_verbs  global = false
     {
-       :create => N_("Create Provider"),
-       :read => N_("Access Provider"),
-       :update => N_("Manage Provider and Products"),
-       :delete => N_("Delete Provider"),
+       :create => _("Administer Providers"),
+       :read => _("Read Providers"),
+       :update => _("Modify Providers and Administer Products"),
+       :delete => _("Delete Providers"),
     }.with_indifferent_access
   end
 

@@ -148,8 +148,8 @@ class ActivationKey < ActiveRecord::Base
 
   def self.list_verbs global = false
     {
-      :read_all => N_("Access all Activation Keys"),
-      :manage_all => N_("Manage all Activation Keys")
+      :read_all => _("Read Activation Keys"),
+      :manage_all => _("Administer Activation Keys")
     }.with_indifferent_access
   end
 

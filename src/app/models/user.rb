@@ -349,10 +349,10 @@ class User < ActiveRecord::Base
 
   def self.list_verbs global = false
     {
-    :create => N_("Create Users"),
-    :read => N_("Access Users"),
-    :update => N_("Update Users"),
-    :delete => N_("Delete Users")
+    :create => _("Administer Users"),
+    :read => _("Read Users"),
+    :update => _("Modify Users"),
+    :delete => _("Delete Users")
     }.with_indifferent_access
   end
 
