@@ -50,7 +50,7 @@ class SystemTemplatesController < ApplicationController
   def index
     @environment = current_organization.locker
     @products = Product.readable(current_organization).joins(:environments).where("environments.id = #{@environment.id}")
-    @templates = SystemTemplate.search_for(params[:search]).where(:environment_id => current_organization.locker.id).limit(current_user.page_size)
+    @templates = SystemTemplate.where(:environment_id => current_organization.locker.id).limit(current_user.page_size)
 
     product_hash = {}
     @products.each{|prd|  product_hash[prd.name] = prd.id}
@@ -67,15 +67,7 @@ class SystemTemplatesController < ApplicationController
                              :product_hash => product_hash, :package_groups => package_groups, :distro_map=>distro_map}
   end
   
-  def items
-    start = params[:offset]
-    @templates = SystemTemplate.readable(current_organization).search_for(params[:search])
-    @panel_options[:num_items] = @templates.count
-    @templates = @templates.limit(current_user.page_size).offset(start)
-    render_panel_items @templates, @panel_options
-    retain_search_history
-  end
-  
+
   def setup_options
     columns = ['name']
     @panel_options = { :title => _('System Templates'),
