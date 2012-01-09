@@ -15,7 +15,7 @@
 .grid_6
   = link_to _("Delete All"), {:action => "destroy_all", :controller => "notices"}, :method => :delete, :confirm => _('Are you sure?'), :class=>'deletable'
   %form.fr#search_form.search{"data-url" => search_index_path()}
-    = auto_complete_field_tag_jquery(:search, params[:search], {:type => "text", :placeholder => "Filter..."},{ :delay => 100, :min_length => -1 })
+    = text_field_tag(:search, params[:search], {:type => "text", :placeholder => "Filter..."})
     %button.action{:form => "search_form"} #{_("Search")}
 
 .grid_16
@@ -26,7 +26,7 @@
       %th
         = sortable "level", _("Level")
       %th
-        = sortable "text", _("Description")
+        = _("Description")
     %tbody
       - for notice in @notices
         - if notice.details.nil?

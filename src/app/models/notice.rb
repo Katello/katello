@@ -12,6 +12,18 @@
 
 class Notice < ActiveRecord::Base
   include Authorization
+  include IndexedModel
+
+
+  index_options :extended_json=>:extended_index_attrs,
+                :json=>{:only=>[:text, :created_at, :details, :level]}
+
+  mapping do
+    indexes :level_sort, :type => 'string', :index => :not_analyzed
+    indexes :created_at, :type=>'date'
+  end
+
+
   has_many :notice_statuses
   has_many :user_notices
   has_many :users, :through => :user_notices
@@ -30,9 +42,6 @@ class Notice < ActiveRecord::Base
 
   scope :readable, lambda { |user| joins(:users).where('users.id' => user) }
 
-  scoped_search :on => :level, :complete_value => true
-  scoped_search :on => :text, :complete_value => true, :rename => :description
-  scoped_search :on => :created_at, :complete_value => true, :rename => :created
 
   def to_s
     "#{level}: #{text}"
@@ -49,6 +58,10 @@ class Notice < ActiveRecord::Base
   end
 
   private
+
+  def extended_index_attrs
+    {:level_sort=>level.to_s.downcase, :user_ids=>self.users.collect{|u| u.id}}
+  end
 
   def add_to_all_users
     if global
