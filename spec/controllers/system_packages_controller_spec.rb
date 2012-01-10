@@ -49,6 +49,7 @@ describe SystemPackagesController do
           @system = System.create!(:name=>"verbose", :environment => @environment, :cp_type=>"system", :facts=>{"Test1"=>1, "verbose_facts" => "Test facts"})
 
           Pulp::Consumer.stub!(:installed_packages).and_return([])
+          Candlepin::Consumer.stub!(:events).and_return([])
         end
 
         it "should show packages" do
