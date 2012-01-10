@@ -66,6 +66,15 @@ class Filter < ActiveRecord::Base
     }.with_indifferent_access
   end
 
+  def self.read_verbs
+    [:read]
+  end
+
+  def self.no_tag_verbs
+    Filter.list_verbs.keys
+  end
+
+
   def self.creatable? org
     User.allowed_to?([:create], :filters, nil, org)
   end

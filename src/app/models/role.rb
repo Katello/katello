@@ -77,6 +77,32 @@ class Role < ActiveRecord::Base
     User.where(:own_role_id => self.id).first
   end
 
+  def self.make_readonly_role name, organization = nil
+    #nil for organization implies all orgs
+    role = Role.find_or_create_by_name(
+            :name => name, :description => 'Read only role.')
+    resource_perms = {}
+    ResourceType::TYPES.keys.each do |key|
+      resource_perms[key] = ResourceType.model_for(key).read_verbs if key.to_s != "all"
+    end
+
+    resource_perms.each_pair do |key, verbs|
+      perm_name =  "Read #{key.to_s.capitalize}"
+      unless Permission.where(:role_id => role, :name => perm_name).count > 0
+        Permission.create!(:role => role,
+                     :resource_type => ResourceType.find_or_create_by_name(key),
+                     :all_tags => true,
+                     :verbs => verbs.collect{|verb| Verb.find_or_create_by_verb(verb)},
+                     :name => perm_name,
+                     :organization=> organization,
+                     :description => "Read #{key.to_s.capitalize} permission")
+      end
+    end
+
+    role
+
+  end
+
   # returns the candlepin role (for RHSM)
   def self.candlepin_role
     Role.find_by_name('candlepin_role')
@@ -117,6 +143,10 @@ class Role < ActiveRecord::Base
     :update => _("Modify Roles"),
     :delete => _("Delete Roles"),
     }.with_indifferent_access
+  end
+
+  def self.read_verbs
+    [:read]
   end
 
   def self.no_tag_verbs
