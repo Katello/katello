@@ -64,5 +64,46 @@ describe Permission do
 
  end
 
+ context "checking locked roles" do
+   context "create check" do
+     let(:role) {Role.create!(:name => "locked_role",:locked => true)}
+     specify do
+       lambda{Permission.create!(:name => "Foo", :role=>role, :all_types => true)}.should raise_error(ActiveRecord::RecordInvalid)
+     end
+   end
+
+   context "update check" do
+     let(:role) do
+        r = Role.create!(:name => "role")
+        Permission.create!(:name => "Foo", :role=>r, :all_types => true)
+        r.update_attributes!(:locked => true)
+        r
+     end
+     let(:user) do
+       User.find_or_create_by_username(
+           :username => 'fooo100',
+           :password => "password",
+           :email => 'fooo@somewhere.com'
+           )
+     end
+     specify do
+       lambda{role.permissions.first.update_attributes!(:all_verbs=>true)}.should raise_error(ActiveRecord::RecordInvalid)
+     end
+     specify do
+       lambda{role.permissions.first.destroy}.should raise_error(ActiveRecord::ReadOnlyRecord)
+     end
+     specify do
+        lambda{role.update_attributes!(:name=>"boo")}.should raise_error(ActiveRecord::RecordInvalid)
+     end
+     specify do
+        lambda{role.update_attributes!(:description=>"description")}.should raise_error(ActiveRecord::RecordInvalid)
+     end
+     specify do
+        lambda{role.update_attributes!(:users=>[user])}.should_not raise_error(ActiveRecord::RecordInvalid)
+     end
+   end
+
+ end
+
 
 end
