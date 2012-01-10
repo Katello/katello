@@ -204,7 +204,8 @@ class OrganizationsController < ApplicationController
                :accessor => :cp_key,
                :ajax_load  => true,
                :ajax_scroll => items_organizations_path(),
-               :enable_create => Organization.creatable?}
+               :enable_create => Organization.creatable?,
+               :search_class=>Organization}
   end
 
   def search_filter

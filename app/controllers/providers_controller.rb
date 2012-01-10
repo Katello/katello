@@ -236,6 +236,7 @@ class ProvidersController < ApplicationController
              :ajax_load => true,
              :ajax_scroll=>items_providers_path(),
              :initial_action => :products_repos,
+             :search_class => Provider,
              :enable_create => Provider.creatable?(current_organization)}
   end
 

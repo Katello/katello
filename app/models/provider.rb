@@ -17,7 +17,8 @@ class Provider < ActiveRecord::Base
   include KatelloUrlHelper
   include IndexedModel
 
-  index_options :extended_json=>:extended_index_attrs, :json=>{:except=>[]}
+  index_options :extended_json=>:extended_index_attrs,
+                :display_attrs=>[:name, :product, :repo, :description]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -169,14 +170,12 @@ class Provider < ActiveRecord::Base
   end
 
   def extended_index_attrs
-    products = []
-    #products = self.products.map{|prod|
-    #  {:provider_name=>prod.name, :repos=>prod.repos(self.organization.locker).collect{|repo| repo.name}}
-    #}
+    products = self.products.map{|prod|
+      {:product=>prod.name, :repo=>prod.repos(self.organization.locker).collect{|repo| repo.name}}
+    }
     {
       :products=>products,
       :name_sort=>name.downcase
-
     }
   end
 
