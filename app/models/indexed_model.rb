@@ -11,21 +11,6 @@ module IndexedModel
           self.index.import(list)
         end
 
-        def self.indexed_attributes
-          attrs = self.new.attributes.keys.collect{|key| key.to_sym}
-          attrs += self.lazy_attributes if self.respond_to?(:lazy_attributes)
-
-          if self.class_index_options[:json]
-            options = self.class_index_options[:json]
-            if options[:only]
-              attrs = options[:only]
-            elsif options[:except]
-              attrs -= options[:except]
-            end
-          end
-          attrs
-        end
-
         def self.display_attributes
           self.class_index_options[:display_attrs]
         end
@@ -68,12 +53,25 @@ module IndexedModel
 
   end
 
+  def indexed_attributes
+    attrs = self.attributes.keys.collect{|key| key.to_sym}
+    attrs += self.class.lazy_attributes if self.respond_to?(:lazy_attributes)
 
+    if self.class.class_index_options[:json]
+      options = self.class.class_index_options[:json]
+      if options[:only]
+        attrs = options[:only]
+      elsif options[:except]
+        attrs -= options[:except]
+      end
+    end
+    attrs
+  end
 
   def to_indexed_json
     to_ret = {}
 
-    attrs = self.class.indexed_attributes
+    attrs = self.indexed_attributes
 
     (attrs).each{|attr|
       to_ret[attr] = self.send(attr)
