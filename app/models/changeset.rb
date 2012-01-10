@@ -24,7 +24,8 @@ class Changeset < ActiveRecord::Base
   include Katello::Notices
 
   include IndexedModel
-  index_options :extended_json=>:extended_index_attrs
+  index_options :extended_json=>:extended_index_attrs,
+                :display_attrs=>[:name, :description, :package, :errata, :product, :repo, :system_template]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -576,7 +577,7 @@ class Changeset < ActiveRecord::Base
       :errata=>errata,
       :product=>products,
       :repo=>repos,
-      :system_templates=>templates
+      :system_template=>templates
     }
   end
 
