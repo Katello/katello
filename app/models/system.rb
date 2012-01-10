@@ -29,7 +29,7 @@ class System < ActiveRecord::Base
   
   index_options :extended_json=>:extended_index_attrs,
                 :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
-                :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin, "Any Fact"]
+                :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed

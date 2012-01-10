@@ -5,7 +5,7 @@
 = javascript do
   - if search_class
     :javascript
-      KT.panel_search_autocomplete = $.parseJSON('#{escape_javascript(search_class.display_attributes.sort.to_json)}');
+      KT.panel_search_autocomplete = $.parseJSON('#{escape_javascript(search_class.display_attributes.collect{|a| a.to_s + ":"}.to_json)}');
 
 #container
   .right
