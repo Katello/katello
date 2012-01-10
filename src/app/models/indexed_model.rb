@@ -44,7 +44,6 @@ module IndexedModel
 
 
   def to_indexed_json
-
     to_ret = {}
     attrs = attributes.keys.collect{|key| key.to_sym}
     attrs += self.lazy_attributes if self.respond_to?(:lazy_attributes)

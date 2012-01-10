@@ -14,16 +14,15 @@ class Role < ActiveRecord::Base
   include Authorization
   include IndexedModel
 
-  index_options :extended_json=>:extended_index_attrs, :json=>{:except=>[]}
+  index_options :extended_json=>:extended_index_attrs
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
   end
 
-
-
   acts_as_reportable
 
+  attr_accessor :self_role #used to indicate during user creation that a role is intended to be a self role
   has_many :roles_users
   has_many :users, :through => :roles_users
   has_many :permissions, :dependent => :destroy,:inverse_of =>:role, :class_name=>"Permission"
@@ -159,8 +158,8 @@ class Role < ActiveRecord::Base
   def extended_index_attrs
     {:name_sort=>name.downcase,
      :permissions=>self.permissions.collect{|p| p.name},
+     :self_role=>(self_role_for_user != nil || self.self_role == true)
     }
   end
-
 
 end
