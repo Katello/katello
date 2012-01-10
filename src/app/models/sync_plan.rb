@@ -14,7 +14,8 @@ class SyncPlan < ActiveRecord::Base
   include Glue
   include IndexedModel
 
-  index_options :extended_json=>:extended_index_attrs
+  index_options :extended_json=>:extended_index_attrs,
+                :display_attrs=>[:name, :sync_date, :description, :interval]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
