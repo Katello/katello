@@ -200,7 +200,8 @@ class FiltersController < ApplicationController
         :ajax_scroll=>items_filters_path(),
         :enable_create=> Filter.creatable?(current_organization),
         :initial_action=>:packages,
-        :ajax_load=>true
+        :ajax_load=>true,
+        :search_class=>Filter
     }
   end
 
