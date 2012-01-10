@@ -39,11 +39,11 @@ class SystemEventsController < ApplicationController
     # call that Katello passes through to Candlepin record the task explicitly.
     events = @system.events
     events.each {|event|
-      pulp_status = {:id => event[:id], :state => event[:type],
+      event_status = {:id => event[:id], :state => event[:type],
                      :start_time => event[:timestamp], :finish_time => event[:timestamp],
                      :progress => "100", :result => event[:messageText]}
-      task = @system.tasks.where("#{TaskStatus.table_name}.uuid" => pulp_status[:id]).first
-      task ||= SystemTask.make(@system, pulp_status, :candlepin_event, :event => event)
+      task = @system.tasks.where("#{TaskStatus.table_name}.uuid" => event_status[:id]).first
+      task ||= SystemTask.make(@system, event_status, :candlepin_event, :event => event)
     }
 
     render :partial=>"events", :layout => "tupane_layout", :locals=>{:system => @system,
@@ -55,7 +55,11 @@ class SystemEventsController < ApplicationController
     task = @system.tasks.where("#{TaskStatus.table_name}.id" => params[:id]).first
     task_template = SystemTask::TYPES[task.task_type]
     type = task_template[:name]
-    user_message = task_template[:user_message] % task.user.username
+    if task_template[:user_message]
+      user_message = task_template[:user_message] % task.user.username
+    else
+      user_message = task_template[:english_name]
+    end
     render :partial=>"details", :layout => "tupane_layout", :locals=>{:type => type, :user_message => user_message,
                                                   :system => @system, :task =>task,
                                                   :system_task => find_system_task(task, @system) }
