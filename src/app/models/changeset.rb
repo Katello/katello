@@ -529,9 +529,11 @@ class Changeset < ActiveRecord::Base
 
     all_deps = []
     to_resolve = package_names
-    
     while not to_resolve.empty?
+
       deps = get_promotable_dependencies_for_packages to_resolve, from_repos, to_repos
+      deps = Katello::PackageUtils::filter_latest_packages_by_name deps
+
 
       all_deps += deps
       to_resolve = deps.map{ |d| d['provides'] }.flatten.uniq - all_deps
