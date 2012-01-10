@@ -16,7 +16,7 @@
 %global confdir deploy/common
 
 Name:           katello
-Version:        0.1.172
+Version:        0.1.173
 Release:        1%{?dist}
 Summary:        A package for managing application life-cycle for Linux systems
 BuildArch:      noarch
@@ -346,6 +346,10 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Jan 10 2012 Ivan Necas <inecas@redhat.com> 0.1.173-1
+- katello-agent - fix task refreshing (inecas@redhat.com)
+- fixing self roles showing up in the UI (jsherril@redhat.com)
+
 * Tue Jan 10 2012 Ivan Necas <inecas@redhat.com> 0.1.172-1
 - repetitive build
 
