@@ -153,6 +153,10 @@ class ActivationKey < ActiveRecord::Base
     }.with_indifferent_access
   end
 
+  def self.read_verbs
+    [:read_all]
+  end
+
   def self.no_tag_verbs
     ActivationKey.list_verbs.keys
   end

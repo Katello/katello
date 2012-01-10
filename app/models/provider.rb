@@ -125,6 +125,10 @@ class Provider < ActiveRecord::Base
     }.with_indifferent_access
   end
 
+  def self.read_verbs
+    [:read]
+  end
+
   def self.no_tag_verbs
     [:create]
   end

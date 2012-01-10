@@ -323,6 +323,11 @@ class KTEnvironment < ActiveRecord::Base
     }.with_indifferent_access
   end
 
+  def self.read_verbs
+    [:read_contents, :read_changesets, :read_systems]
+  end
+
+
   def update_related_index
     if self.name_changed?
       self.organization.reload #must reload organization, otherwise old name is saved
