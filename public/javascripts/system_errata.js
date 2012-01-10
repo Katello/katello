@@ -32,7 +32,14 @@ KT.system.errata = function() {
     		$('#errata_state_radio_outstanding').bind('change', filter_errata);
             $('#run_errata_button').bind('click', add_errata);
     		load_more.bind('click', get_errata);
-            $('.errata-info').tipsy({ gravity: 'e', live : true, html : true, title : generateInfoToolTip, hoverable : true, delayOut : 250, opacity : 1 });
+            $('.errata-info').tipsy({ gravity: 'e', live : true, html : true, title : generateInfoToolTip, hoverable : true, delayOut : 250, opacity : 1, 
+                                    stickyClick : function(element, state){ 
+                                        if (state === 'on'){
+                                            $(element).addClass('details-icon-hover').removeClass('details-icon');
+                                        } else {
+                                            $(element).addClass('details-icon').removeClass('details-icon-hover');
+                                        }
+                                    }});
     	},
         init_status_check = function(){
             var timeout = 8000;
@@ -218,7 +225,8 @@ KT.system.errata = function() {
             html += '<div style="margin:5px 0;"><label class="fl ra">ID:</label>' + '<p>' + element.data('id') + '</p></div>';
             html += '<div style="margin:5px 0;"><label class="fl ra">Title:</label>' + '<p>' + element.data('title') + '</p></div>';
             html += '<div style="margin:5px 0;"><label class="fl ra">Issued:</label>' + '<p>' + element.data('issued') + '</p></div>';
-            html += '<div style="margin:5px 0;"><label class="fl ra">Description:</label>' + '<p><br/>' + element.data('description') + '</p></div>';
+            html += '<div style="margin:5px 0;"><label class="fl ra">Reference:</label>' + '<p><a target="new" href="' +  element.data('reference_url') + '">' + element.data('reference_url') + '</a></p></div>';
+            html += '<div style="margin:5px 0;"><label class="fl ra">Description:</label>' + '<p><br/><pre>' + element.data('description') + '</pre></p></div>';
             html += '<div style="margin:5px 0;"><label class="fl" style="text-align:left;">Packages:</label>' + '<ul style="margin:0 0 0 4px;" class="la"><br/>' + packages_list + '</ul></div>';            
 
             return html;
