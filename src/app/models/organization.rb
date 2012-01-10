@@ -18,7 +18,8 @@ class Organization < ActiveRecord::Base
   include IndexedModel
 
   index_options :extended_json=>:extended_index_attrs,
-                :json=>{:except=>[:debug_cert, :events]}
+                :json=>{:except=>[:debug_cert, :events]},
+                :display_attrs=>[:name, :description, :environment]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed

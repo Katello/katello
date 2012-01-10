@@ -767,8 +767,10 @@ KT.panel.list = (function () {
             
             setupSearch(resource_type, options);
 
-            // DISABLING AUTO COMPLETE for now
-            //KT.search.enableAutoComplete(KT.routes['auto_complete_search_' + resource_type + '_path']());
+            if (KT.panel_search_autocomplete){
+              KT.search.enableAutoComplete({data:KT.panel_search_autocomplete});
+            }
+
             KT.panel.control_bbq = false;
             
             $(window).bind('hashchange', KT.panel.hash_change);
