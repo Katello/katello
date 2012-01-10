@@ -128,8 +128,8 @@ describe ApplicationController do
     it 'should have the level set to :error' do
       controller.notice(@notice_string, {:level => :error})
       Notice.count.should == 1
-      notice = Notice.search_for(@notice_string)[0]
-      notice.level.should == "error"
+      Notice.first.level.should == "error"
+      
     end
   end
   

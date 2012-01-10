@@ -59,12 +59,21 @@ class Filter < ActiveRecord::Base
 
   def self.list_verbs  global = false
     {
-       :create => N_("Create Package Filters"),
-       :read => N_("Access Package Filters"),
-       :delete => N_("Delete Package Filters"),
-       :update => N_("Edit Package Filters")
+       :create => _("Administer Package Filters"),
+       :read => _("Read Package Filters"),
+       :delete => _("Delete Package Filters"),
+       :update => _("Modify Package Filters")
     }.with_indifferent_access
   end
+
+  def self.read_verbs
+    [:read]
+  end
+
+  def self.no_tag_verbs
+    Filter.list_verbs.keys
+  end
+
 
   def self.creatable? org
     User.allowed_to?([:create], :filters, nil, org)

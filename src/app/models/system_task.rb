@@ -169,7 +169,7 @@ class SystemTask < ActiveRecord::Base
     end
 
     def make system, pulp_task, task_type, parameters
-      task_status = TaskStatus.new(
+      task_status = PulpTaskStatus.new(
          :organization => system.organization,
          :task_type => task_type,
          :parameters => parameters,

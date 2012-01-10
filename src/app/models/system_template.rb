@@ -361,10 +361,15 @@ class SystemTemplate < ActiveRecord::Base
   #### Permissions
   def self.list_verbs global = false
     {
-      :manage_all => N_("Manage All System Templates"),
-      :read_all => N_("Read All System Templates")
+      :manage_all => _("Administer System Templates"),
+      :read_all => _("Read System Templates")
    }.with_indifferent_access
   end
+
+  def self.read_verbs
+    [:read_all]
+  end
+
 
   def self.no_tag_verbs
     SystemTemplate.list_verbs.keys

@@ -92,7 +92,7 @@ class User < ActiveRecord::Base
   before_save do |u|
     if u.new_record? and u.own_role.nil?
       # create the own_role where the name will be a string consisting of username and 20 random chars
-      r = Role.create!(:name => "#{u.username}_#{Password.generate_random_string(20)}")
+      r = Role.create!(:name => "#{u.username}_#{Password.generate_random_string(20)}", :self_role=>true)
       u.roles << r unless u.roles.include? r
       u.own_role = r
 #      u.save!
@@ -349,11 +349,15 @@ class User < ActiveRecord::Base
 
   def self.list_verbs global = false
     {
-    :create => N_("Create Users"),
-    :read => N_("Access Users"),
-    :update => N_("Update Users"),
-    :delete => N_("Delete Users")
+    :create => _("Administer Users"),
+    :read => _("Read Users"),
+    :update => _("Modify Users"),
+    :delete => _("Delete Users")
     }.with_indifferent_access
+  end
+
+  def self.read_verbs
+    [:read]
   end
 
   def self.no_tag_verbs
