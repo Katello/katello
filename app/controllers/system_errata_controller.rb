@@ -83,6 +83,8 @@ class SystemErrataController < ApplicationController
 
   def get_errata start, finish, filter_type="All", errata_state="outstanding"
     types = [Glue::Pulp::Errata::SECURITY, Glue::Pulp::Errata::ENHANCEMENT, Glue::Pulp::Errata::BUGZILLA]
+    errata_state = errata_state || "outstanding"
+    filter_type = filter_type || "All"    
 
     errata_list = @system.errata
     total_errata_count = errata_list.length
