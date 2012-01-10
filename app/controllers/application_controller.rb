@@ -306,13 +306,10 @@ class ApplicationController < ActionController::Base
         sort {by sort[0], sort[1].to_s.downcase }
 
         filters = [filters] if !filters.is_a? Array
-        if !filters.empty?
-
-         filters.each{|i|
+        filters.each{|i|
           filter  :terms, i
-         }
           
-        end
+        } if !filters.empty?
 
         size page_size if page_size > 0
         from start
