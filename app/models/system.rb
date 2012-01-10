@@ -26,8 +26,10 @@ class System < ActiveRecord::Base
   include AsyncOrchestration
   include IndexedModel
 
+  
   index_options :extended_json=>:extended_index_attrs,
-                :json=>{:only=>[:name, :description, :environment_id, :id, :uuid, :created_at, :lastCheckin]}
+                :json=>{:only=> [:name, :description, :id, :uuid, :created_at, :lastCheckin, :environment_id]},
+                :display_attrs=>[:name, :description, :id, :uuid, :created_at, :lastCheckin, "Any Fact"]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed

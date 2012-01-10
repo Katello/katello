@@ -294,7 +294,8 @@ class SystemsController < ApplicationController
                       :list_partial => 'systems/list_systems',
                       :ajax_load  => true,
                       :ajax_scroll => items_systems_path(),
-                      :actions => System.deletable?(@environment, current_organization) ? 'actions' : nil
+                      :actions => System.deletable?(@environment, current_organization) ? 'actions' : nil,
+                      :search_class=>System
                       }
   end
 
