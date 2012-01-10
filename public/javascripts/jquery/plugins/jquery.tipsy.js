@@ -42,7 +42,7 @@
                 if (this.options.hoverable) {
                     $tip.hover(tipOver, tipOut);
                 }
-
+                
                 var pos = $.extend({}, this.$element.offset(), {
                     width: this.$element[0].offsetWidth,
                     height: this.$element[0].offsetHeight
@@ -166,25 +166,50 @@
         
         function enter() {
             var tipsy = get(this);
-            tipsy.hoverState = 'in';
-            if (options.delayIn == 0) {
-                tipsy.show();
-            } else {
-                tipsy.fixTitle();
-                setTimeout(function() { if (tipsy.hoverState == 'in') tipsy.show(); }, options.delayIn);
+            if( options.activeTip === undefined ){
+                tipsy.hoverState = 'in';
+                if (options.delayIn == 0) {
+                    tipsy.show();
+                } else {
+                    tipsy.fixTitle();
+                    setTimeout(function() { if (tipsy.hoverState == 'in') tipsy.show(); }, options.delayIn);
+                }
             }
         };
         
         function leave() {
             var tipsy = get(this);
-            tipsy.hoverState = 'out';
-            if (options.delayOut == 0) {
-                tipsy.hide();
-            } else {
-                setTimeout(function() { if (tipsy.hoverState == 'out' && !tipsy.hoverTooltip) tipsy.hide(); }, options.delayOut);
+            if( tipsy.clickState !== 'on' ){
+                tipsy.hoverState = 'out';
+                if (options.delayOut == 0) {
+                    tipsy.hide();
+                } else {
+                    setTimeout(function() { if (tipsy.hoverState == 'out' && !tipsy.hoverTooltip) tipsy.hide(); }, options.delayOut);
+                }
             }
         };
         
+        function sticky() {
+            var tipsy = get(this),
+                activeTip;
+            if( options.activeTip !== undefined ){
+                activeTip = get(options.activeTip);
+                activeTip.hide();
+                options.stickyClick(options.activeTip, 'off');
+                options.activeTip = undefined;
+            }
+            if( tipsy.clickState === 'on' ){
+                tipsy.hide();
+                tipsy.clickState = 'off';
+                options.activeTip = undefined;
+            } else {
+                tipsy.show();
+                tipsy.clickState = 'on';
+                options.activeTip = this;
+            }
+            options.stickyClick(this, tipsy.clickState);
+        }
+
         if (!options.live) this.each(function() { get(this); });
         
         if (options.trigger != 'manual') {
@@ -194,6 +219,10 @@
             this[binder](eventIn, enter)[binder](eventOut, leave);
         }
         
+        if (options.stickyClick) {
+            this['live']('click', sticky);
+        }
+
         return this;
         
     };
@@ -208,6 +237,7 @@
         html: false,
         live: false,
         hoverable: false,
+        stickyClick: false,
         offset: 0,
         opacity: 0.8,
         title: 'title',
