@@ -102,15 +102,8 @@ class SystemTask < ActiveRecord::Base
           :english_name =>N_("Candlepin Event"),
           :type => :candlepin_event,
           :event_messages => {
-              :running => [N_('removing package group...'), N_('removing package groups...')],
-              :waiting => [N_('removing package group...'), N_('removing package groups...')],
-              :finished => [N_('%s package group removal'), N_('%s (%s other package groups) removal')],
-              :error => [N_('%s package group remove failed'), N_('%s (%s other package groups) remove failed')],
-              :cancelled => [N_('%s package group remove cancelled'), N_('%s (%s other package groups) remove cancelled')],
-              :timed_out => [N_('%s package group remove timed out'), N_('%s (%s other package groups) remove timed out')],
-
           },
-          :user_message => _('Candlepin Event scheduled by %s')
+          :user_message => nil
       },
 
   }.with_indifferent_access
