@@ -11,6 +11,27 @@ module IndexedModel
           self.index.import(list)
         end
 
+        def self.indexed_attributes
+          attrs = self.new.attributes.keys.collect{|key| key.to_sym}
+          attrs += self.lazy_attributes if self.respond_to?(:lazy_attributes)
+
+          if self.class_index_options[:json]
+            options = self.class_index_options[:json]
+            if options[:only]
+              attrs = options[:only]
+            elsif options[:except]
+              attrs -= options[:except]
+            end
+          end
+          attrs
+        end
+
+        def self.display_attributes
+          self.class_index_options[:display_attrs]
+        end
+
+
+
       else
         #stub mapping
         def self.mapping
@@ -21,6 +42,11 @@ module IndexedModel
       cattr_accessor :class_index_options
 
 
+      ##
+      #  :json  - normal to_json options,  :only or :except allowed
+      #  :extended_json  - function to call to return a hash to merge into document
+      #  :display_attrs  - list of attributes to display as searchable
+      ##
       def self.index_options options={}
           self.class_index_options = options
       end
@@ -43,20 +69,12 @@ module IndexedModel
   end
 
 
+
   def to_indexed_json
     to_ret = {}
-    attrs = attributes.keys.collect{|key| key.to_sym}
-    attrs += self.lazy_attributes if self.respond_to?(:lazy_attributes)
-    
-    if self.class.class_index_options[:json]
-      options = self.class.class_index_options[:json]
-      if options[:only]
-        attrs = options[:only]
-      elsif options[:except]
-        attrs -= options[:except]
-      end
-    end
-    
+
+    attrs = self.class.indexed_attributes
+
     (attrs).each{|attr|
       to_ret[attr] = self.send(attr)
     }
@@ -64,7 +82,7 @@ module IndexedModel
     if self.class.class_index_options[:extended_json]
       to_ret.merge!(self.send(self.class.class_index_options[:extended_json]))
     end
-        
+
     to_ret.to_json
   end
 
