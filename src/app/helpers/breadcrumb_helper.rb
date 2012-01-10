@@ -234,8 +234,9 @@ end
 module RolesBreadcrumbs
   def generate_roles_breadcrumb
     bc = {}
+
     add_crumb_node!(bc, "roles", "", _(@role.name), [],
-                    {:client_render => true})
+                    {:client_render => true},{:locked => @role.locked?})
     add_crumb_node!(bc, "role_permissions", "", _("Permissions"), ['roles'],
                     {:client_render => true})
     add_crumb_node!(bc, "role_users", "", _("Users"), ['roles'],

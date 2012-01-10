@@ -10,6 +10,17 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
+
+class LockValidator < ActiveModel::Validator
+  def validate(record)
+    if record.locked?
+      if record.name_changed? || record.description_changed?
+        record.errors[:base] << _("Cannot change the name or description of a locked role.")
+      end
+    end
+  end
+end
+
 class Role < ActiveRecord::Base
   include Authorization
   include IndexedModel
@@ -27,8 +38,6 @@ class Role < ActiveRecord::Base
   has_many :users, :through => :roles_users
   has_many :permissions, :dependent => :destroy,:inverse_of =>:role, :class_name=>"Permission"
   has_one :owner, :class_name => 'User', :foreign_key => "own_role_id"
-  has_many :search_tags, :class_name => 'Tag'
-  has_many :search_verbs, :class_name => 'Verb'
   has_many :resource_types, :through => :permissions
 
   # scope to facilitate retrieving roles that are 'non-self' roles... group() so that unique roles are returned
@@ -36,6 +45,8 @@ class Role < ActiveRecord::Base
 
   validates :name, :uniqueness => true, :katello_name_format => true, :presence => true
   validates :description, :katello_description_format => true
+  validates_with LockValidator, :on => :update
+
   #validates_associated :permissions
   accepts_nested_attributes_for :permissions, :allow_destroy => true
 
@@ -115,7 +126,7 @@ class Role < ActiveRecord::Base
   end
 
   def self.editable?
-   User.allowed_to?([:update, :create], :roles, nil)
+    User.allowed_to?([:update, :create], :roles, nil)
   end
 
   def self.deletable?
