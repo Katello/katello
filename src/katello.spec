@@ -346,6 +346,8 @@ if [ $1 -eq 0 ] ; then
 fi
 
 %changelog
+* Tue Jan 10 2012 Shannon Hughes <shughes@redhat.com> 0.1.174-2
+- se build (shughes@redhat.com)
 * Tue Jan 10 2012 Mike McCune <mmccune@redhat.com> 0.1.174-1
 - fixing critical issue with 2pane search rendering
 * Tue Jan 10 2012 Ivan Necas <inecas@redhat.com> 0.1.173-1
