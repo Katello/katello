@@ -127,7 +127,7 @@ KT.roles.permissionWidget = function(){
                        									flow['details'].container.hide();
                        									done_button.hide();
                        									next_button.show();
-                       									previous_button.show();
+                       									previous_button.hide();
                        									progress_bar.setProgress(25);
                        								} else if( roleActions.getCurrentOrganization() === 'global' ) {
                        									current_stage = 'verbs';
@@ -458,6 +458,7 @@ KT.roles.permissionWidget = function(){
                 all_types_button.addClass('selected');
                 flow['verbs'].container.hide();
 	            flow['tags'].container.hide();
+	            previous_button.hide();
                 
             	if( mode === 'create' ){
 	                current_stage = 'resource_type';
@@ -482,7 +483,8 @@ KT.roles.permissionWidget = function(){
             	if( mode === 'create' ){
 	                flow['tags'].container.hide();
 	                flow['details'].container.hide();
-	                current_stage = 'verbs';
+	                flow['verbs'].container.hide();
+	                current_stage = 'resource_type';
 	                next_button.show();
 	                done_button.hide();
 	                previous_button.hide();
