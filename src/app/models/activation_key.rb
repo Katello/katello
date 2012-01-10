@@ -14,7 +14,7 @@ class ActivationKey < ActiveRecord::Base
   include Authorization
   include IndexedModel
 
-  index_options :extended_json=>:extended_json
+  index_options :extended_json=>:extended_json, :display_attrs=>[:name, :description, :environment, :template]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
