@@ -130,6 +130,11 @@ class Organization < ActiveRecord::Base
 
   end
 
+  def self.read_verbs
+    [:read, :read_systems]
+  end
+
+
   def self.no_tag_verbs
     [:create]
   end
