@@ -23,9 +23,12 @@ raise "Unable to create super-admin role: #{format_errors superadmin_role}" if s
 superadmin_role_perm = Permission.find_or_create_by_name(:name=> "super-admin-perm", :role => superadmin_role, :all_types => true)
 raise "Unable to create super-admin role permission: #{format_errors superadmin_role_perm}" if superadmin_role_perm.nil? or superadmin_role_perm.errors.size > 0
 
+superadmin_role.update_attributes(:locked => true)
+
 # create read *everything* role and assign permissions to it
 reader_role = Role.make_readonly_role('Read Everything')
 raise "Unable to create reader role: #{format_errors reader_role}" if reader_role.nil? || reader_role.errors.size > 0
+reader_role.update_attributes(:locked => true)
 
 # create the super admin if none exist - it must be created before any statement in the seed.rb script
 User.current = user_admin = User.find_by_username('admin')

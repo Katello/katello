@@ -1034,7 +1034,7 @@ var rolesRenderer = (function($){
                 options.no_slide = true;
                 render_cb(templateLibrary.usersList(roles_breadcrumb, options));
             } else if( hash === 'global' ) {
-                if (permissions.create_roles || permissions.update_roles) {
+                if ((!roles_breadcrumb.roles.locked) && (permissions.create_roles || permissions.update_roles)) {
                     options.show_button = true;
                 }
                 
@@ -1052,7 +1052,7 @@ var rolesRenderer = (function($){
             var options = {};
             
             if( key === 'organization' ){
-                if (permissions.create_roles || permissions.update_roles) {
+                if ((!roles_breadcrumb.roles.locked) && (permissions.create_roles || permissions.update_roles)) {
                     options.show_button = true;
                 }
 
