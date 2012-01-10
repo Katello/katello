@@ -172,9 +172,25 @@ class SystemTask < ActiveRecord::Base
 
     def refresh_for_system(sid)
       query = SystemTask.select(:task_status_id).joins(:task_status).where(:system_id => sid)
+
       ids = query.where("task_statuses.state"=>[:waiting, :running]).collect {|row| row[:task_status_id]}
       refresh(ids)
-      TaskStatus.where("task_statuses.id in (#{query.to_sql})")
+      statuses = TaskStatus.where("task_statuses.id in (#{query.to_sql})")
+
+      # Since Candlepin events are not recorded as tasks, fetch them for this system and add them
+      # here. The alternative to this lazy loading of Candlepin tasks would be to have each API
+      # call that Katello passes through to Candlepin record the task explicitly.
+      system = System.find(sid)
+      system.events.each {|event|
+        event_status = {:id => event[:id], :state => event[:type],
+                       :start_time => event[:timestamp], :finish_time => event[:timestamp],
+                       :progress => "100", :result => event[:messageText]}
+        # Find or create task
+        task = statuses.where("#{TaskStatus.table_name}.uuid" => event_status[:id]).first
+        task ||= SystemTask.make(system, event_status, :candlepin_event, :event => event)
+      }
+
+      statuses = TaskStatus.where("task_statuses.id in (#{query.to_sql})")
     end
 
     def make system, pulp_task, task_type, parameters
