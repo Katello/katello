@@ -12,7 +12,7 @@ module IndexedModel
         end
 
         def self.display_attributes
-          self.class_index_options[:display_attrs]
+          self.class_index_options[:display_attrs].sort{|a,b| a.to_s <=> b.to_s}
         end
 
 
