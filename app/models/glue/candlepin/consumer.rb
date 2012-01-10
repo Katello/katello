@@ -42,6 +42,7 @@ module Glue::Candlepin::Consumer
         guests_attributes.map { |attr| System.new(attr) }
       }
       lazy_accessor :compliance, :initializer => lambda { Candlepin::Consumer.compliance(uuid) }
+      lazy_accessor :events, :initializer => lambda { Candlepin::Consumer.events(uuid) }
 
       validate :validate_cp_consumer
     end

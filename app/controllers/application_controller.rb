@@ -283,7 +283,7 @@ class ApplicationController < ActionController::Base
 
     if search.nil? || search== ''
       all_rows = true
-    elsif search_options[:simple_query] && AppConfig.simple_search_tokens.any?{|s| !search.downcase.match(s)}
+    elsif search_options[:simple_query] && !AppConfig.simple_search_tokens.any?{|s| search.downcase.match(s)}
       search = search_options[:simple_query]
     end
 
