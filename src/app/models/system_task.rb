@@ -130,8 +130,14 @@ class SystemTask < ActiveRecord::Base
           else
             return  _("%s (%s other packages)") % [p.first, p.length - 1]
           end
+        when :package_group
+          p = task.parameters[:groups]
+          if p.length == 1
+            return p.first
+          else
+            return  _("%s (%s other package groups)") % [p.first, p.length - 1]
+          end
       end
-
     end
     def message_for task
       details = SystemTask::TYPES[task.task_type]
@@ -157,6 +163,11 @@ class SystemTask < ActiveRecord::Base
           return n_(msg[0], msg[1], p.length) % [p.first, p.length - 1]
         when :candlepin_event
           return task.result
+        when :package_group
+          p = task.parameters[:groups]
+          msg = details[:event_messages][task.state]
+          return n_(msg[0], msg[1], p.length) % [p.first, p.length - 1]
+
       end
     end
 
