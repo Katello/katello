@@ -24,7 +24,8 @@ class Changeset < ActiveRecord::Base
   include Katello::Notices
 
   include IndexedModel
-  index_options :extended_json=>:extended_index_attrs
+  index_options :extended_json=>:extended_index_attrs,
+                :display_attrs=>[:name, :description, :package, :errata, :product, :repo, :system_template]
 
   mapping do
     indexes :name_sort, :type => 'string', :index => :not_analyzed
@@ -517,23 +518,56 @@ class Changeset < ActiveRecord::Base
     package_names = packages_for_dep_calc(product).map{ |p| p.name }.uniq
     return {} if package_names.empty?
 
-    from_repos = not_included_repos(product, from_env).map{ |r| r.pulp_id }
+    from_repos = not_included_repos(product, from_env)
+    to_repos = product.repos(to_env)
 
-    dependencies = Pulp::Package.dep_solve(package_names, from_repos)
+    dependencies = calc_dependencies_for_packages package_names, from_repos, to_repos
     dependencies
+  end
+
+  def calc_dependencies_for_packages package_names, from_repos, to_repos
+
+    all_deps = []
+    to_resolve = package_names
+    while not to_resolve.empty?
+
+      deps = get_promotable_dependencies_for_packages to_resolve, from_repos, to_repos
+      deps = Katello::PackageUtils::filter_latest_packages_by_name deps
+
+
+      all_deps += deps
+      to_resolve = deps.map{ |d| d['provides'] }.flatten.uniq - all_deps
+    end
+    all_deps
+  end
+
+  def get_promotable_dependencies_for_packages package_names, from_repos, to_repos
+    from_repo_ids = from_repos.map{ |r| r.pulp_id }
+    @next_env_pkg_ids ||= package_ids(to_repos)
+
+    resolved_deps = Pulp::Package.dep_solve(package_names, from_repo_ids)['resolved']
+    resolved_deps = resolved_deps.values.flatten(1)
+    resolved_deps = resolved_deps.reject {|dep| not @next_env_pkg_ids.index(dep['id']).nil? }
+    resolved_deps
+  end
+
+  def package_ids repos
+    pkg_ids = []
+    repos.each do |repo|
+      pkg_ids += repo.packages.collect { |pkg| pkg.id }
+    end
+    pkg_ids
   end
 
   def build_dependencies product, dependencies
     new_dependencies = []
 
-    dependencies.each_pair do |package_name, dep_packages|
-      dep_packages.each do |dep_package|
-        new_dependencies << ChangesetDependency.new(:package_id => dep_package['id'],
-                                                    :display_name => dep_package['name'],
+    dependencies.each do |dep|
+        new_dependencies << ChangesetDependency.new(:package_id => dep['id'],
+                                                    :display_name => dep['filename'],
                                                     :product_id => product.id,
-                                                    :dependency_of => package_name,
+                                                    :dependency_of => '???',
                                                     :changeset => self)
-      end
     end
     new_dependencies
   end
@@ -556,7 +590,7 @@ class Changeset < ActiveRecord::Base
       :errata=>errata,
       :product=>products,
       :repo=>repos,
-      :system_templates=>templates
+      :system_template=>templates
     }
   end
 

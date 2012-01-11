@@ -43,7 +43,11 @@ class SystemEventsController < ApplicationController
     task = @system.tasks.where("#{TaskStatus.table_name}.id" => params[:id]).first
     task_template = SystemTask::TYPES[task.task_type]
     type = task_template[:name]
-    user_message = task_template[:user_message] % task.user.username
+    if task_template[:user_message]
+      user_message = task_template[:user_message] % task.user.username
+    else
+      user_message = task_template[:english_name]
+    end
     render :partial=>"details", :layout => "tupane_layout", :locals=>{:type => type, :user_message => user_message,
                                                   :system => @system, :task =>task,
                                                   :system_task => find_system_task(task, @system) }
@@ -86,8 +90,8 @@ class SystemEventsController < ApplicationController
     end
     search = params[:search]
     render_panel_direct(TaskStatus, {:no_search_history => true,:render_list_proc => render_proc},
-                        search, params[:offset], [:finish_time, 'DESC'],
-                        :filters => {:system_ids => [@system.id]},
+                        search, params[:offset], [:finish_time, 'desc'],
+                        :filter => {:system_ids => [@system.id]},
                         :load => true,
                         :simple_query => "status:#{search} OR #{search}" )
   end
@@ -109,7 +113,7 @@ class SystemEventsController < ApplicationController
 
   helper_method :tasks
   def tasks(page_size = current_user.page_size)
-    @system.tasks.order("updated_at desc").limit(page_size)
+    @system.tasks.order("finish_time desc").limit(page_size)
   end
 
   helper_method :total_events_length

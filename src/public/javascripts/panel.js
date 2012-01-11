@@ -63,6 +63,8 @@ $(document).ready(function () {
                     activeBlock.addClass('active');
                     activeBlock.find('.arrow-right').hide();
                 }
+            } else if (event.ctrlKey && !thisPanel.hasClass('opened') && !(event.target.id == "new") && activeBlock.hasClass('active') && $('.block.active').length > 1) {
+              activeBlock.removeClass('active');
             } else {
                 if(activeBlock.hasClass('active') && thisPanel.hasClass('opened')){
                     KT.panel.closePanel(thisPanel);
@@ -765,8 +767,10 @@ KT.panel.list = (function () {
             
             setupSearch(resource_type, options);
 
-            // DISABLING AUTO COMPLETE for now
-            //KT.search.enableAutoComplete(KT.routes['auto_complete_search_' + resource_type + '_path']());
+            if (KT.panel_search_autocomplete){
+              KT.search.enableAutoComplete({data:KT.panel_search_autocomplete});
+            }
+
             KT.panel.control_bbq = false;
             
             $(window).bind('hashchange', KT.panel.hash_change);
@@ -884,12 +888,18 @@ KT.panel.list = (function () {
                     $('#search_form').trigger('submit');
                 }
             }).live('keypress', function(event){
-                var button = $('#search_button');
+                var button = $('#search_button'),
+                    value = $(this).val();
 
                 if( event.keyCode === 13 ){
                     event.preventDefault();
                     
                     if( button.attr('disabled') !== "disabled" ){
+                        if( value === "" ){
+                            $.bbq.removeState("search");
+                        } else {
+                            $.bbq.pushState({ "search" : value });
+                        }
                         $('#search_form').trigger('submit');
                     }
                 }

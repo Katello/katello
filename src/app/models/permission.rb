@@ -18,11 +18,13 @@ class Permission < ActiveRecord::Base
   has_many :tags, :class_name=>"PermissionTag", :inverse_of=>:permission
 
   before_save :cleanup_tags_verbs
-
+  after_save :update_related_index
+  
   validates :name, :presence => true, :katello_name_format => true
   validates :description, :katello_description_format => true
   validates_uniqueness_of :name, :scope => [:organization_id, :role_id], :message => N_("must be unique within an organization scope")
 
+  before_destroy :check_locked
 
   before_destroy do |p|
     p.tags.destroy_all
@@ -31,6 +33,10 @@ class Permission < ActiveRecord::Base
 
   class PermissionValidator < ActiveModel::Validator
     def validate(record)
+      if record.role.locked?
+        record.errors[:base] << _("Cannot add/remove or change permissions related to a locked role.")
+      end
+
       if record.all_verbs? && !record.verbs.empty?
         record.errors[:base] << N_("Cannot specify a verb if all_verbs is selected.")
       end
@@ -139,6 +145,20 @@ class Permission < ActiveRecord::Base
   def cleanup_tags_verbs
     self.tags.clear if self.all_tags?
     self.verbs.clear if self.all_verbs?
+  end
+
+
+  def update_related_index
+    if self.name_changed?
+      self.role.update_index
+    end
+  end
+
+
+  def check_locked
+    if self.role.locked?
+      raise ActiveRecord::ReadOnlyRecord, _("Cannot add/remove or change permissions related to a locked role.")
+    end
   end
 
 end

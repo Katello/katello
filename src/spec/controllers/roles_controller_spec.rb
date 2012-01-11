@@ -35,7 +35,7 @@ describe RolesController do
     
     @organization = new_test_org 
     controller.stub!(:current_organization).and_return(@organization)
-    
+    controller.stub(:search_validate).and_return(true)
     @admin = Role.create(RolesControllerTest::ADMIN)
   end
 
@@ -129,10 +129,13 @@ describe RolesController do
     end
    
     it "should render list of roles" do
+
+      controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
+        controller.stub(:render)
+      }
+
       get :items
       response.should be_success
-      response.should render_template("list_items")
-      assigns[:items].should include Role.find_by_name("bar%05d" % 8)
     end
     
   end
@@ -152,8 +155,10 @@ describe RolesController do
       let(:unauthorized_user) do
         user_without_permissions
       end
-      let(:on_success) do
-        assigns(:items).should include @role
+      let(:before_success) do
+        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
+          controller.stub(:render)
+        }
       end
 
       it_should_behave_like "protected action"

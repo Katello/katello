@@ -30,7 +30,7 @@ describe ActivationKeysController do
   before(:each) do
     set_default_locale
     login_user
-
+    controller.stub(:search_validate).and_return(true)
     @organization = new_test_org
     @environment_1 = KTEnvironment.create!(:name => 'dev', :prior => @organization.locker.id, :organization => @organization)
     @environment_2 = KTEnvironment.create!(:name => 'prod', :prior => @environment_1.id, :organization => @organization)

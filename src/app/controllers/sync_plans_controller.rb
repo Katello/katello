@@ -38,7 +38,9 @@ class SyncPlansController < ApplicationController
   end
   
   def items
-    render_panel_items(SyncPlan.where(:organization_id => current_organization.id), @panel_options, params[:search], params[:offset])
+    render_panel_direct(SyncPlan, @panel_options, params[:search], params[:offset], [:name_sort, :asc],
+                        { :filter=>{:organization_id=>[current_organization.id]}})
+    
   end
   
   def setup_options
@@ -49,7 +51,8 @@ class SyncPlansController < ApplicationController
                  :name => controller_display_name,
                  :ajax_load => true,
                  :ajax_scroll => items_sync_plans_path(),
-                 :enable_create => current_organization.syncable? } 
+                 :enable_create => current_organization.syncable?,
+                 :search_class=>SyncPlan}
   end
 
   def edit
@@ -82,7 +85,7 @@ class SyncPlansController < ApplicationController
       updated_plan.save!
       notice N_("Sync Plan '#{updated_plan.name}' was updated.")
 
-      if not SyncPlan.where(:id => updated_plan.id).search_for(params[:search]).include?(updated_plan)
+      if not search_validate(SyncPlan, updated_plan.id, params[:search])
         notice _("'#{updated_plan["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
       end
 
@@ -136,7 +139,7 @@ class SyncPlansController < ApplicationController
       @plan = SyncPlan.create! params[:sync_plan].merge({:organization => current_organization})
       notice N_("Sync Plan '#{@plan['name']}' was created.")
       
-      if SyncPlan.where(:id => @plan.id).search_for(params[:search]).include?(@plan) 
+      if search_validate(SyncPlan, @plan.id, params[:search])
         render :partial=>"common/list_item", :locals=>{:item=>@plan, :accessor=>"id", :columns=>['name', 'interval'], :name=>controller_display_name}
       else
         notice _("'#{@plan["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }

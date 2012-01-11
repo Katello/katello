@@ -50,7 +50,8 @@ class RolesController < ApplicationController
    end
   
   def items
-    render_panel_items(Role.readable.non_self, @panel_options, params[:search], params[:offset])
+    render_panel_direct(Role, @panel_options,  params[:search], params[:offset], [:name_sort, :asc],
+                        {:filter=>[{:self_role=>[false]}]})
   end
   
   def setup_options
@@ -59,8 +60,10 @@ class RolesController < ApplicationController
                  :create => _('Role'),
                  :name => controller_display_name,
                  :ajax_load  => true,
+                 :list_partial => 'roles/list_roles',
                  :ajax_scroll => items_roles_path(),
-                 :enable_create=> Role.creatable?}
+                 :enable_create=> Role.creatable?,
+                 :search_class=>Role}
   end
   
   def new
@@ -84,7 +87,7 @@ class RolesController < ApplicationController
     @role = Role.create!(params[:role])
     notice _("Role '#{@role.name}' was created.")
     
-    if Role.where(:id => @role.id).search_for(params[:search]).include?(@role)
+    if search_validate(Role, @role.id, params[:search])
       render :partial=>"common/list_item", :locals=>{:item=>@role, :accessor=>"id", :columns=>["name"], :name=>controller_display_name}
     else
       notice _("'#{@role["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
@@ -112,7 +115,7 @@ class RolesController < ApplicationController
         @role.update_attributes!(params[:role])
         notice _("Role '#{@role.name}' was updated.")
         
-        if not Role.where(:id => @role.id).search_for(params[:search]).include?(@role)
+        if not search_validate(Role, @role.id, params[:search])
           notice _("'#{@role["name"]}' no longer matches the current search criteria."), { :level => :message, :synchronous_request => true }
         end
         
