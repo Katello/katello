@@ -75,6 +75,10 @@ class Repository < ActiveRecord::Base
     end
   }
 
+  scope :readable_in_org, lambda {|org|
+    joins(:environment_product).where("environment_products.environment_id" =>  KTEnvironment.content_readable(org))
+  }
+
   def extended_index_attrs
     {:environment=>self.environment.name, :environment_id=>self.environment.id,
      :product=>self.product.name, :product_id=> self.product.id}
