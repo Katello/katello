@@ -86,10 +86,11 @@ module ApplicationHelper
     enable_create = options[:enable_create]
     enable_create = true if enable_create.nil?
     enable_sort = options[:enable_sort] ? options[:enable_sort] : false
+
     render :partial => "common/panel", 
            :locals => {
-             :title => options[:title], 
-             :name => options[:name], 
+             :title => options[:title],
+             :name => options[:name],
              :create => options[:create],
              :enable_create => enable_create,
              :enable_sort => enable_sort,
@@ -97,13 +98,14 @@ module ApplicationHelper
              :custom_rows => options[:custom_rows],
              :collection => collection,
              :accessor=>options[:accessor],
-             :url=>options[:url], 
+             :url=>options[:url],
              :left_panel_width=>options[:left_panel_width],
              :ajax_load => options[:ajax_load],
              :ajax_scroll =>options[:ajax_scroll],
              :search_env =>options[:search_env],
              :initial_action=>options[:initial_action] || :edit,
-             :actions=>options[:actions]}
+             :actions=>options[:actions],
+             :search_class=>options[:search_class]}
   end
 
   def one_panel(panel_id, collection, options)

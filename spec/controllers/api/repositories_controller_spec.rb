@@ -33,18 +33,6 @@ describe Api::RepositoriesController do
 
   end
 
-  describe "get a listing of repositories" do
-    it 'should list only enabled repositories' do
-      Repository.should_receive(:where).with(hash_including(:enabled => true)).and_return([])
-      get 'index'
-    end
-
-    it 'should list all repositories' do
-      Repository.should_receive(:all).and_return([])
-      get 'index', :include_disabled => true
-    end
-  end
-
   describe "show a repository" do
     it 'should call pulp glue layer' do
       repo_mock = mock(Glue::Pulp::Repo)

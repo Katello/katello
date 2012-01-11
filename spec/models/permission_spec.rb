@@ -290,6 +290,7 @@ describe Permission do
     describe "Creating a permission with all_types" do
       before(:each) do
         @perm = Permission.new(:name=>"aname", :resource_type =>ResourceType.find_or_create_by_name(:all))
+        @perm.role = @role
       end
 
       specify "shouldn't be allowed without all_tags '" do

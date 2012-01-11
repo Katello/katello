@@ -15,6 +15,7 @@ describe FiltersController do
       login_user
       disable_filter_orchestration
       disable_product_orchestration
+      controller.stub(:search_validate).and_return(true)
 
   end
 
@@ -35,10 +36,11 @@ describe FiltersController do
 
     describe "GET items" do
       it "requests filters using search criteria" do
-
+        controller.should_receive(:render_panel_direct)
+        controller.stub(:render)
         get :items
         response.should be_success
-        assigns(:items)
+        
       end
     end
 
@@ -170,17 +172,8 @@ describe FiltersController do
       
     end
 
-    describe "Auto complete products" do
-      it "should return a valid product" do
-        get :auto_complete_products_repos, :term=>@product.name
-        response.should be_success
-      end
-    end
   end
 
-
-
-  
   describe "rules" do
     before (:each) do
       disable_user_orchestration
@@ -213,12 +206,12 @@ describe FiltersController do
       let(:unauthorized_user) do
         user_without_permissions
       end
-      let(:on_success) do
-        assigns(:items).should_not include @filter2
-        assigns(:items).should include @filter
+      let(:before_success) do
+        controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, search_options|
+          search_options[:filter][:organization_id].should include(@organization.id)
+          controller.stub(:render)
+        }
       end
-
-      
       it_should_behave_like "protected action"
     end
 

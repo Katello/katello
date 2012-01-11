@@ -146,7 +146,7 @@ class ProvidersController < ApplicationController
                                                                     :organization => current_organization})
       notice _("Provider '#{@provider['name']}' was created.")
       
-      if Provider.where(:id => @provider.id).search_for(params[:search]).include?(@provider) 
+      if search_validate(Provider, @provider.id, params[:search])
         render :partial=>"common/list_item", :locals=>{:item=>@provider, :accessor=>"id", :columns=>['name'], :name=>controller_display_name}
       else
         notice _("'#{@provider["name"]}' did not meet the current search criteria and is not being shown."), { :level => 'message', :synchronous_request => false }
@@ -193,7 +193,7 @@ class ProvidersController < ApplicationController
       updated_provider.save!
       notice _("Provider '#{updated_provider.name}' was updated.")
 
-      if not Provider.where(:id => updated_provider.id).search_for(params[:search]).include?(updated_provider)
+      if not search_validate(Provider, updated_provider.id, params[:search])       
         notice _("'#{updated_provider["name"]}' no longer matches the current search criteria."), { :level => 'message', :synchronous_request => false }
       end
 
@@ -236,6 +236,7 @@ class ProvidersController < ApplicationController
              :ajax_load => true,
              :ajax_scroll=>items_providers_path(),
              :initial_action => :products_repos,
+             :search_class => Provider,
              :enable_create => Provider.creatable?(current_organization)}
   end
 

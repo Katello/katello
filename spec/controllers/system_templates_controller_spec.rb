@@ -33,7 +33,6 @@ describe SystemTemplatesController do
 
     describe "GET index" do
       it "requests system template using search criteria" do
-        SystemTemplate.should_receive(:search_for) {SystemTemplate}
         SystemTemplate.stub_chain(:where, :limit)
         get :index
       end

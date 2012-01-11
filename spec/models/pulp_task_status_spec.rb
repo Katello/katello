@@ -23,7 +23,7 @@ describe PulpTaskStatus do
           :start_time => Time.now,
           :finish_time => Time.now,
           :result => "hurray"
-      }
+      }.with_indifferent_access
     end
 
     let(:updated_pulp_task) do
@@ -33,7 +33,7 @@ describe PulpTaskStatus do
           :start_time => Time.now,
           :finish_time => Time.now + 60,
           :result => "yippie"
-      }
+      }.with_indifferent_access
     end
 
     let(:pulp_task_with_error) do
@@ -44,7 +44,7 @@ describe PulpTaskStatus do
           :finish_time => Time.now,
           :exception => "exception",
           :traceback => "traceback"
-      }
+      }.with_indifferent_access
     end
 
     context "TaskStatus should have correct attributes for a completed task" do
@@ -72,11 +72,11 @@ describe PulpTaskStatus do
         end
         @t.save!
 
-        Pulp::Task.stub(:find).and_return(updated_pulp_task)
+        Pulp::Task.stub(:find).and_return([updated_pulp_task])
       end
 
       it "should fetch data from pulp" do
-        Pulp::Task.should_receive(:find).once.with(@t.uuid).and_return(updated_pulp_task)
+        Pulp::Task.should_receive(:find).once.with([@t.uuid]).and_return([updated_pulp_task])
         @t.refresh
       end
 

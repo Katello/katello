@@ -277,10 +277,13 @@ class ApplicationController < ActionController::Base
   
     filters = search_options[:filter] || []
     load = search_options[:load] || false
+    all_rows = false
+    skip_render = search_options[:skip_render] || false
+    page_size = search_options[:page_size] || current_user.page_size
 
     if search.nil? || search== ''
-      search = '*'
-    elsif search_options[:simple_query] && AppConfig.simple_search_tokens.any?{|s| !search.downcase.match(s)}
+      all_rows = true
+    elsif search_options[:simple_query] && !AppConfig.simple_search_tokens.any?{|s| search.downcase.match(s)}
       search = search_options[:simple_query]
     end
 
@@ -288,26 +291,28 @@ class ApplicationController < ActionController::Base
     panel_options[:columns] = panel_options[:col]
     panel_options[:initial_action] ||= :edit
 
-    page_size = current_user.page_size
-
     @items = []
 
     begin
       results = obj_class.search :load=>load do
-         query { string search}
-         sort {by sort[0], sort[1] }
+        query do
+          if all_rows
+            all
+          else
+            string search
+          end
+        end
 
-         filters = [filters] if !filters.is_a? Array
-         if !filters.empty?
+        sort {by sort[0], sort[1].to_s.downcase }
 
-           filters.each{|i|
-            filter  :terms, i
-           }
+        filters = [filters] if !filters.is_a? Array
+        filters.each{|i|
+          filter  :terms, i
+          
+        } if !filters.empty?
 
-         end
-
-         size page_size
-         from start
+        size page_size if page_size > 0
+        from start
       end
       @items = results
 
@@ -319,7 +324,8 @@ class ApplicationController < ActionController::Base
 
     end
 
-    render_panel_results(@items, panel_options)
+    render_panel_results(@items, panel_options) if !skip_render
+    return @items
   end
 
   def render_panel_results(results, options)

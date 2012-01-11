@@ -415,6 +415,7 @@ Src::Application.routes.draw do
 
     resources :changesets, :only => [:show, :destroy] do
       post :promote, :on => :member, :action => :promote
+      get :dependencies, :on => :member, :action => :dependencies
       resources :products, :controller => :changesets_content do
         post   :index, :on => :collection, :action => :add_product
         delete :destroy, :on => :member, :action => :remove_product
@@ -456,7 +457,7 @@ Src::Application.routes.draw do
     resources :puppetclasses, :only => [:index]
     resources :ping, :only => [:index]
 
-    resources :repositories, :only => [:index, :show, :create, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
+    resources :repositories, :only => [:show, :create, :destroy], :constraints => { :id => /[0-9a-zA-Z\-_.]*/ } do
       resources :sync, :only => [:index, :create] do
         delete :index, :on => :collection, :action => :cancel
       end

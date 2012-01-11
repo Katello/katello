@@ -20,19 +20,26 @@ KT.panel.set_expand_cb(function(){
 	KT.menu.hoverMenu('#panel .third_level:first-child', { top : '75px' });
 });
 
-(function(){
-	var options = { create : 'new_system' };
-	
-	if (window.env_select !== undefined) {
 
-        // When the env changes, update the pre-populated attributes
+
+
+KT.panel_search_autocomplete = KT.panel_search_autocomplete.concat(["distribution.name:", "distribution.version:", "network.hostname:", "network.ipaddr:", "...Any System Fact"]);
+
+(function(){
+    var options = { create : 'new_system' };
+
+    if (window.env_select !== undefined) {
+
+        // When the systems index page env selector changes, update the pre-populated attributes
         env_select.env_changed_callback = function(env_id) {
-            $('#new').attr('data-ajax_url', KT.routes.new_system_path() + '?env_id=' + env_id);
+            if(env_select.envsys == true){
+                $('#new').attr('data-ajax_url', KT.routes.new_system_path() + '?env_id=' + env_id);
+            }
             $('#system_environment_id').attr('value', env_id);
         };
 
-		$.extend(options, { 'extra_params' :
-					[ { hash_id 	: 'env_id', 
+        $.extend(options, { 'extra_params' :
+					[ { hash_id 	: 'env_id',
 						init_func 	: function(){
 							var state = $.bbq.getState('env_id'); 
 							
@@ -49,6 +56,7 @@ KT.panel.set_expand_cb(function(){
 }());
 
 $(document).ready(function() {
+
   KT.panel.set_expand_cb(function() {
     KT.subs.initialize_edit();
   });
