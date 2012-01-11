@@ -886,12 +886,18 @@ KT.panel.list = (function () {
                     $('#search_form').trigger('submit');
                 }
             }).live('keypress', function(event){
-                var button = $('#search_button');
+                var button = $('#search_button'),
+                    value = $(this).val();
 
                 if( event.keyCode === 13 ){
                     event.preventDefault();
                     
                     if( button.attr('disabled') !== "disabled" ){
+                        if( value === "" ){
+                            $.bbq.removeState("search");
+                        } else {
+                            $.bbq.pushState({ "search" : value });
+                        }
                         $('#search_form').trigger('submit');
                     }
                 }
