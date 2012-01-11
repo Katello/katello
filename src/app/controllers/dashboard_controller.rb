@@ -60,15 +60,6 @@ class DashboardController < ApplicationController
       errata_hash[e.id] = e
     end
 
-#    (rand(quantity + 1 )).times{|num|
-#      errata = OpenStruct.new
-#      errata.e_id = "RHSA-2011-01-#{num}"
-#      errata.systems = ([1]*(rand(10) + 1)).collect{|i| "server-" + rand(10).to_s + ".example.com"}
-#      errata.e_type = types[rand(3)]
-#      errata.product = "Red Hat Enterprise Linux 6.0"
-#      to_ret << errata
-#    }
-
     render :partial=>"errata", :locals=>{:quantity=> quantity, :repos => repos, :n_errata => n_errata,
                                          :systems_hash => systems_hash, :errata_hash => errata_hash}
   end
