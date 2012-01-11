@@ -22,7 +22,7 @@ module Navigation
         { :key => :environment,
           :name =>N_("Environments"),
           :url => lambda{edit_environment_user_path(@user.id)},
-          :if => lambda {@user && current_organization()},
+          :if => lambda {@user},
           :options => {:class=>"navigation_element"}
         },
         { :key => :roles,
