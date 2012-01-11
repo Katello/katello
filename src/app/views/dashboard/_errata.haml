@@ -1,5 +1,3 @@
-
-
 #dashboard_errata.big_widget{"data-quantity"=>quantity, "data-id"=>"errata"}
   .list
     .block_head.clear
@@ -10,7 +8,9 @@
       .column_head.col_3
         #{_('Product')}
     .scroll-pane
-      -for errata in errata_summary(quantity)
+      -for element in n_errata
+        - errata = errata_hash[element[0]]
+        - systems = element[1]
         .errata
           %div.errata_item
             .col_1
@@ -18,9 +18,9 @@
             .col_2.one-line-ellipsis
               %div.collapsed
               %span
-                #{errata.e_id} (#{errata.systems.length} #{_('Systems')})
+                #{errata.id} (#{systems.length} #{_('Systems')})
             .col_3.one-line-ellipsis
-              #{errata.product}
+              #{errata_product_names(errata, repos)}
           %div.system_list
             .subheader
               .col_1
@@ -29,15 +29,12 @@
                 #{_("System")}
               .subcol_3
                 #{_("Environment")}
-            - for sys in errata.systems
+            - for s in systems
+              - system = systems_hash[s]
               .system
                 .col_1
                   &nbsp;
-                .subcol_2
-                  %a
-                    =sys
-                .subcol_3
-                  %a
-                    Production
-
-
+                .subcol_2.one-line-ellipsis
+                  = link_to system.name, system_path_helper(system)
+                .subcol_3.one-line-ellipsis
+                  #{system.environment.name}

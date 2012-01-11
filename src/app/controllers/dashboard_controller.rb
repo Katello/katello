@@ -31,7 +31,46 @@ class DashboardController < ApplicationController
   end
 
   def errata
-    render :partial=>"errata", :locals=>{:quantity=> quantity}
+    # retrieve the list of repos that are readable by the user, but since a system cannot be registered to Locker,
+    # skip repos in Locker
+    repos = Repository.readable_in_org(current_organization, true)
+    errata_by_consumer = Glue::Pulp::Errata.errata_by_consumer(repos)
+
+    # grab the N (i.e. quantity) errata that have the most systems associated with them
+    n_errata = errata_by_consumer.sort_by{|a,b| b.length}.reverse[0..quantity-1]
+
+    system_uuids = Set.new
+    errata_ids = Set.new
+    n_errata.each do |e|
+      errata_ids.add(e[0])
+      e[1].each do |s|
+        system_uuids.add(s)
+      end
+    end
+
+    # retrieve the systems (id, name and env)
+    systems = System.readable(current_organization).where(:uuid => system_uuids.to_a)
+    systems_hash = {}
+    systems.each{|system| systems_hash[system.uuid] = system}
+
+    # retrieve the errata (type/product)
+    errata_hash = {}
+    errata_ids.each do |errata_id|
+      e = Glue::Pulp::Errata.find(errata_id)
+      errata_hash[e.id] = e
+    end
+
+#    (rand(quantity + 1 )).times{|num|
+#      errata = OpenStruct.new
+#      errata.e_id = "RHSA-2011-01-#{num}"
+#      errata.systems = ([1]*(rand(10) + 1)).collect{|i| "server-" + rand(10).to_s + ".example.com"}
+#      errata.e_type = types[rand(3)]
+#      errata.product = "Red Hat Enterprise Linux 6.0"
+#      to_ret << errata
+#    }
+
+    render :partial=>"errata", :locals=>{:quantity=> quantity, :repos => repos, :n_errata => n_errata,
+                                         :systems_hash => systems_hash, :errata_hash => errata_hash}
   end
 
   def promotions
