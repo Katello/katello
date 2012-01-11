@@ -86,7 +86,9 @@ class OrganizationsController < ApplicationController
     end
 
     if search_validate(Organization, @organization.id, params[:search])
-      notice [_("Organization '#{@organization["name"]}' was created."), _("Click on 'Add Environment' to create the first environment")]
+      collected = [_("Organization '#{@organization["name"]}' was created.")]
+      collected.push(_("Click on 'Add Environment' to create the first environment")) if @new_env.nil?
+      notice collected
       render :partial=>"common/list_item", :locals=>{:item=>@organization, :accessor=>"cp_key", :columns=>['name'], :name=>controller_display_name}
     else
       notice _("Organization '#{@organization["name"]}' was created.")
