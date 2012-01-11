@@ -149,6 +149,13 @@ class SystemTask < ActiveRecord::Base
           else
             return  _("%s (%s other package groups)") % [p.first, p.length - 1]
           end
+        when :errata
+          p = task.parameters[:errata_ids]
+          if p.length == 1
+            return p.first
+          else
+            return  _("%s (%s other errata)") % [p.first, p.length - 1]
+          end
       end
     end
     def message_for task
@@ -177,6 +184,10 @@ class SystemTask < ActiveRecord::Base
           return task.result
         when :package_group
           p = task.parameters[:groups]
+          msg = details[:event_messages][task.state]
+          return n_(msg[0], msg[1], p.length) % [p.first, p.length - 1]
+        when :errata
+          p = task.parameters[:errata_ids]
           msg = details[:event_messages][task.state]
           return n_(msg[0], msg[1], p.length) % [p.first, p.length - 1]
 
